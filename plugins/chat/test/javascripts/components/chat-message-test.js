@@ -3,7 +3,7 @@ import { clearRender, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-message", function (hooks) {
@@ -44,6 +44,20 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     assert.true(
       exists(".chat-message-text.-hidden .chat-message-expand"),
       "has the correct css class and expand button within"
+    );
+  });
+
+  test("message with mark html tag", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message({
+      message: "what <mark>test</mark>",
+    });
+    await this.message.cook();
+    await render(template);
+
+    assert.true(
+      query(".chat-message-text")
+        .innerHTML.trim()
+        .includes("<p>what <mark>test</mark></p>")
     );
   });
 

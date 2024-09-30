@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { classNames } from "@ember-decorators/component";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
@@ -21,10 +22,10 @@ const TITLES = {
   [EDIT_SHARED_DRAFT]: "composer.edit_shared_draft",
 };
 
-export default Component.extend({
-  classNames: ["composer-action-title"],
-  options: alias("model.replyOptions"),
-  action: alias("model.action"),
+@classNames("composer-action-title")
+export default class ComposerActionTitle extends Component {
+  @alias("model.replyOptions") options;
+  @alias("model.action") action;
 
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
@@ -57,7 +58,7 @@ export default Component.extend({
         );
       }
     }
-  },
+  }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
     let editTitle = `
@@ -75,7 +76,7 @@ export default Component.extend({
     }
 
     return htmlSafe(editTitle);
-  },
+  }
 
   _formatReplyToTopic(link) {
     return htmlSafe(
@@ -83,12 +84,12 @@ export default Component.extend({
         "model.topic.id"
       )}">${link.anchor}</a>`
     );
-  },
+  }
 
   _formatReplyToUserPost(avatar, link) {
     const htmlLink = `<a class="user-link" href="${link.href}">${escape(
       link.anchor
     )}</a>`;
     return htmlSafe(`${avatar}${htmlLink}`);
-  },
-});
+  }
+}

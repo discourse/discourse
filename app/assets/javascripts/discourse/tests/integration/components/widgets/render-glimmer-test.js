@@ -1,4 +1,5 @@
-import ClassicComponent from "@ember/component";
+import ClassicComponent, { setComponentTemplate } from "@ember/component";
+import templateOnly from "@ember/component/template-only";
 import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -123,6 +124,9 @@ class ToggleDemoWidget extends Widget {
   }
 }
 
+const SimpleComponent = templateOnly();
+setComponentTemplate(hbs`<div class="component-shim"></div>`, SimpleComponent);
+
 module("Integration | Component | Widget | render-glimmer", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -142,6 +146,11 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       "div.initial-wrapper-class",
       hbs`{{@setWrapperElementAttrs class=(concat-class "static-extra-class" @data.extraClass) data-some-attr=@data.dataAttrValue}}`
     );
+    registerWidgetShim(
+      "render-glimmer-test-component-shim",
+      "div.initial-wrapper-class",
+      SimpleComponent
+    );
   });
 
   hooks.afterEach(function () {
@@ -150,6 +159,7 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     this.registry.unregister("component:demo-component");
     deleteFromRegistry("render-glimmer-test-shim");
     deleteFromRegistry("render-glimmer-test-wrapper-attrs");
+    deleteFromRegistry("render-glimmer-test-component-shim");
   });
 
   test("argument handling", async function (assert) {
@@ -228,6 +238,14 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       ["init", "didReceiveAttrs", "didInsertElement"],
       "component can be reinitialized"
     );
+  });
+
+  test("rendering component directly", async function (assert) {
+    await render(hbs`
+      <MountWidget @widget="render-glimmer-test-component-shim" />
+    `);
+
+    assert.dom("div.component-shim").exists();
   });
 
   test("trigger widget actions from component", async function (assert) {

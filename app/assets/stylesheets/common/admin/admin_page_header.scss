@@ -1,0 +1,60 @@
+.admin-page-header,
+.admin-page-subheader {
+  &__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: var(--space-2);
+
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: column;
+    }
+
+    h1,
+    h3 {
+      margin: 0;
+    }
+
+    .admin-page-header__actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      @media (max-width: $mobile-breakpoint) {
+        flex-direction: column;
+      }
+
+      button {
+        margin-left: var(--space-2);
+
+        @media (max-width: $mobile-breakpoint) {
+          width: 100%;
+          margin-bottom: var(--space-2);
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  .admin-nav-submenu {
+    background: transparent;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      background: transparent;
+
+      &:before {
+        display: none;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .nav-pills {
+      width: auto;
+      margin: 0;
+    }
+  }
+}

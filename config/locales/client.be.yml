@@ -157,7 +157,6 @@ be:
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
-      contact_info: "У выпадку сур'ёзных праблем з гэтым сайтам, калі ласка, звяжыцеся з намі праз %{contact_info}."
       activities:
         posts:
           one: "%{formatted_number} запіс"
@@ -793,6 +792,10 @@ be:
       header_title: "жаданы!"
       title: "рэгістрацыя"
       failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
+      progress_bar:
+        signup: "рэгістрацыя"
+        approve: "ўхваляць"
+        login: "Увайсці"
     forgot_password:
       title: "Скід пароля"
       action: "Я забыўся (а) пароль"
@@ -1486,6 +1489,7 @@ be:
       spreadsheet:
         about: "Аб тэме"
   admin_js:
+    settings: "Налады"
     admin:
       moderator: "Мадэратар"
       tags:
@@ -1656,6 +1660,7 @@ be:
           description: "Апісанне"
           edit: "рэдагаваць"
           delete: "Выдаліць"
+          flags_tab: "сцягі"
           form:
             save: "захаваць"
             name: "імя"
@@ -1683,7 +1688,7 @@ be:
         menu:
           backups: "Бэкапы"
           logs: "Логі"
-        none: "No backup available."
+        none: "No backup available"
         read_only:
           enable:
             title: "Ўключыць рэжым толькі для чытання"
@@ -1712,7 +1717,6 @@ be:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
-            is_disabled: "Restore is disabled in the site settings."
             label: "Restore"
             title: "Restore the backup"
           rollback:

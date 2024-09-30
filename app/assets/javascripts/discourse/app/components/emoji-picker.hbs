@@ -48,7 +48,7 @@
           {{on "input" (action "onFilterChange")}}
         />
 
-        {{d-icon "search"}}
+        {{d-icon "magnifying-glass"}}
       </div>
 
       <div
@@ -65,7 +65,7 @@
               <div class="section-header">
                 <span class="title">{{i18n "emoji_picker.recent"}}</span>
                 <DButton
-                  @icon="trash-alt"
+                  @icon="trash-can"
                   @action={{this.onClearRecent}}
                   class="trash-recent"
                 />

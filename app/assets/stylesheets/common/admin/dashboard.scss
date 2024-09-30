@@ -1,8 +1,6 @@
 .admin-reports,
 .dashboard-next {
   &.admin-contents {
-    margin: 10px 0 0 0;
-
     nav {
       position: relative;
       width: calc(100% + 10px);
@@ -147,7 +145,8 @@
     .admin-report {
       grid-column: span 4;
 
-      &.consolidated-page-views {
+      &.consolidated-page-views,
+      &.site-traffic {
         grid-column: span 12;
       }
     }
@@ -247,21 +246,26 @@
     .problem-messages {
       margin-bottom: 1em;
 
-      &.priority-high {
-        background-color: var(--danger-low);
-        border: 1px solid var(--danger-medium);
-      }
-
       ul {
         margin: 0 0 0 1.25em;
 
         li.dashboard-problem {
           padding: 0.5em 0.5em;
+
+          .notice {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .message {
+            margin-right: var(--space-4);
+          }
         }
       }
     }
 
-    .d-icon-exclamation-triangle {
+    .d-icon-triangle-exclamation {
       color: var(--danger);
     }
 

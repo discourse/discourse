@@ -40,14 +40,14 @@ class ReviewablePost < Reviewable
     reject =
       actions.add_bundle(
         "#{id}-reject",
-        icon: "times",
+        icon: "xmark",
         label: "reviewables.actions.reject.bundle_title",
       )
 
     if post.trashed?
-      build_action(actions, :reject_and_keep_deleted, icon: "trash-alt", bundle: reject)
+      build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
     elsif guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :reject_and_delete, icon: "trash-alt", bundle: reject)
+      build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
     end
 
     if guardian.can_suspend?(target_created_by)
@@ -141,7 +141,6 @@ end
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
-#  reviewable_by_group_id  :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null

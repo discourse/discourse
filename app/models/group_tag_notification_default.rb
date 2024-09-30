@@ -34,9 +34,14 @@ class GroupTagNotificationDefault < ActiveRecord::Base
       changed = true
     end
 
-    (tag_ids - old_ids).each do |id|
-      self.create!(group: group, tag_id: id, notification_level: notification_levels[level])
-      changed = true
+    new_records_attrs =
+      (tag_ids - old_ids).map do |tag_id|
+        { group_id: group.id, tag_id: tag_id, notification_level: notification_levels[level] }
+      end
+
+    unless new_records_attrs.empty?
+      result = GroupTagNotificationDefault.insert_all(new_records_attrs)
+      changed = true if result.rows.length > 0
     end
 
     changed

@@ -495,7 +495,13 @@ cs:
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
               same_as_current: "je stejné jako vaše současné heslo."
+              same_as_previous: "je stejné jako vaše předchozí heslo."
+              same_as_name: "je stejné jako vaše jméno."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
+            username:
+              same_as_password: "je stejné jako vaše heslo."
+            name:
+              same_as_password: "je stejné jako vaše heslo."
         user_email:
           attributes:
             user_id:
@@ -1540,6 +1546,22 @@ cs:
       Chcete-li se zapojit do diskuse, klikněte na níže uvedený odkaz:
 
       %{topic_url}
+    account_exists:
+      text_body_template: |
+        Právě jste se pokusili vytvořit účet na %{site_name}, nebo jste se pokusili změnit e-mail účtu na %{email}. Účet pro %{email} však již existuje.
+
+        Pokud jste zapomněli heslo, [resetujte jej nyní](%{base_url}/password-reset).
+
+        Pokud jste se nepokoušeli vytvořit účet pro %{email} nebo změnit svou e-mailovou adresu, nebojte se – tuto zprávu můžete bezpečně ignorovat.
+
+        Máte-li jakékoli dotazy, [kontaktujte náš přátelský personál](%{base_url}/about).
+    account_second_factor_disabled:
+      text_body_template: |
+        Na vašem účtu na %{site_name} bylo vypnuto dvoufaktorové ověřování. Nyní se můžete přihlásit pouze pomocí hesla; další ověřovací kód již není vyžadován.
+
+        Pokud jste se nerozhodli dvoufaktorové ověřování vypnout, mohl někdo váš účet kompromitovat.
+
+        Máte-li jakékoli dotazy, [obraťte se na náš přátelský personál](%{base_url}/about).
     digest:
       since_last_visit: "Od vaší poslední návštěvy"
       new_topics: "Nová témata"
@@ -1577,6 +1599,13 @@ cs:
         %{base_url}/session/email-login/%{email_token}.
     set_password:
       title: "Nastavit heslo"
+      text_body_template: |
+        Někdo požádal o přidání hesla k vašemu účtu na [%{site_name}](%{base_url}). Případně se můžete přihlásit pomocí jakékoli podporované online služby (Google, Facebook atd.), která je spojena s touto ověřenou e-mailovou adresou.
+
+        Pokud jste tuto žádost nepodali, můžete tento e-mail bez obav ignorovat.
+
+        Pro výběr hesla klikněte na následující odkaz:
+        %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "Přihlášení správce"
       subject_template: "[%{email_prefix}] Přihlášení"

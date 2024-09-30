@@ -9,6 +9,10 @@ const DEPRECATION_WORKFLOW = [
     handler: "silence",
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },
+  {
+    handler: "silence",
+    matchId: "discourse.fontawesome-6-upgrade",
+  },
 ];
 
 export default DEPRECATION_WORKFLOW;

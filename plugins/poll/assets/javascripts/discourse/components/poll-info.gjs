@@ -204,7 +204,7 @@ export default class PollInfoComponent extends Component {
           {{/if}}
           {{#if this.resultsStaffOnly}}
             <li class="results-staff-only">
-              {{icon "shield-alt"}}
+              {{icon "shield-halved"}}
               <span>{{this.resultsStaffOnlyTitle}}</span>
             </li>
           {{/if}}

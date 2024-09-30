@@ -7,6 +7,8 @@ import RenderGlimmerContainer from "discourse/components/render-glimmer-containe
 import raw from "discourse/helpers/raw";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { compile } from "discourse-common/lib/raw-handlebars";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import {
   addRawTemplate,
   removeRawTemplate,
@@ -103,5 +105,43 @@ module("Integration | Helper | raw", function (hooks) {
     </template>);
 
     assert.dom("span.bar").hasText(/^baz$/);
+  });
+
+  test("#each helper preserves the outer context", async function (assert) {
+    const template = `
+      {{#each items as |item|}}
+        {{string}} {{item}}
+      {{/each}}
+    `;
+    addRawTemplate("raw-test", compile(template));
+
+    const items = [1, 2];
+    await render(<template>
+      <span>{{raw "raw-test" string="foo" items=items}}</span>
+    </template>);
+
+    assert.dom("span").hasText("foo 1 foo 2");
+  });
+
+  test("#each helper handles getters", async function (assert) {
+    const template = `
+      {{#each items as |item|}}
+        {{string}} {{item}}
+      {{/each}}
+    `;
+    const compiledTemplate = compile(template);
+
+    class Test {
+      items = [1, 2];
+
+      get string() {
+        return "foo";
+      }
+    }
+
+    const object = new Test();
+
+    const output = compiledTemplate(object, RUNTIME_OPTIONS);
+    assert.true(/\s*foo 1\s*foo 2\s*/.test(output));
   });
 });

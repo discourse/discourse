@@ -22,7 +22,7 @@
                 <DButton
                   @action={{fn (mut wc.editing) true}}
                   @disabled={{wc.system}}
-                  @icon="pencil-alt"
+                  @icon="pencil"
                 />
               {{/if}}
               <DButton @action={{fn this.up wc}} @icon="chevron-up" />
@@ -30,20 +30,24 @@
               <DButton
                 @action={{fn this.delete wc}}
                 @disabled={{wc.system}}
-                @icon="times"
+                @icon="xmark"
               />
             </div>
           </li>
         {{/each}}
       </ul>
     </div>
-    <DButton @action={{this.add}} @label="admin.badges.new" />
+    <DButton
+      @action={{this.add}}
+      class="badge-groupings__add-grouping"
+      @label="admin.badges.new"
+    />
   </:body>
   <:footer>
     <DButton
       @action={{this.saveAll}}
       @label="admin.badges.save"
-      class="btn-primary"
+      class="btn-primary badge-groupings__save"
       @disabled={{this.submitDisabled}}
     />
     <DButton

@@ -42,6 +42,8 @@ class FKForm extends Component {
       setProperties: this.setProperties,
       submit: this.onSubmit,
       reset: this.onReset,
+      addError: this.addError,
+      removeError: this.removeError,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -92,6 +94,11 @@ class FKForm extends Component {
       title,
       message,
     });
+  }
+
+  @action
+  removeError(name) {
+    this.formData.removeError(name);
   }
 
   @action
@@ -220,6 +227,7 @@ class FKForm extends Component {
 
       await this.args.validate?.(this.formData.draftData, {
         addError: this.addError,
+        removeError: this.removeError,
       });
     } finally {
       this.isValidating = false;

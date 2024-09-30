@@ -3,26 +3,28 @@ import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { isBlank } from "@ember/utils";
+import { classNameBindings } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
 import { highlightPost } from "discourse/lib/utilities";
 import Scrolling from "discourse/mixins/scrolling";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 
-export default Component.extend(Scrolling, {
-  userFilters: alias("topic.userFilters"),
-  classNameBindings: [
-    "multiSelect",
-    "topic.archetype",
-    "topic.is_warning",
-    "topic.category.read_restricted:read_restricted",
-    "topic.deleted:deleted-topic",
-  ],
-  menuVisible: true,
-  SHORT_POST: 1200,
+@classNameBindings(
+  "multiSelect",
+  "topic.archetype",
+  "topic.is_warning",
+  "topic.category.read_restricted:read_restricted",
+  "topic.deleted:deleted-topic"
+)
+export default class DiscourseTopic extends Component.extend(Scrolling) {
+  @alias("topic.userFilters") userFilters;
+  @alias("topic.postStream") postStream;
 
-  postStream: alias("topic.postStream"),
-  dockAt: 0,
+  menuVisible = true;
+  SHORT_POST = 1200;
+  dockAt = 0;
 
   @observes("enteredAt")
   _enteredTopic() {
@@ -33,22 +35,22 @@ export default Component.extend(Scrolling, {
       schedule("afterRender", this.scrolled);
       this.set("lastEnteredAt", this.enteredAt);
     }
-  },
+  }
 
   _highlightPost(postNumber, options = {}) {
     if (isBlank(options.jump) || options.jump !== false) {
       scheduleOnce("afterRender", null, highlightPost, postNumber);
     }
-  },
+  }
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.appEvents.on("discourse:focus-changed", this, "gotFocus");
     this.appEvents.on("post:highlight", this, "_highlightPost");
-  },
+  }
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     this.bindScrolling();
     window.addEventListener("resize", this.scrolled);
@@ -57,31 +59,31 @@ export default Component.extend(Scrolling, {
       ".cooked a, a.track-link",
       (e) => ClickTrack.trackClick(e, getOwner(this))
     );
-  },
+  }
 
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy(...arguments);
 
     // this happens after route exit, stuff could have trickled in
     this.appEvents.off("discourse:focus-changed", this, "gotFocus");
     this.appEvents.off("post:highlight", this, "_highlightPost");
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.unbindScrolling();
     window.removeEventListener("resize", this.scrolled);
 
     // Unbind link tracking
     $(this.element).off("click.discourse-redirect", ".cooked a, a.track-link");
-  },
+  }
 
   gotFocus(hasFocus) {
     if (hasFocus) {
       this.scrolled();
     }
-  },
+  }
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
   @bind
@@ -95,5 +97,5 @@ export default Component.extend(Scrolling, {
 
     // Trigger a scrolled event
     this.appEvents.trigger("topic:scrolled", offset);
-  },
-});
+  }
+}

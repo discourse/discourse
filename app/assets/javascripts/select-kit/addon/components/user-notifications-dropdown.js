@@ -1,28 +1,30 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBox.extend({
-  modal: service(),
+@classNames("user-notifications", "user-notifications-dropdown")
+@selectKitOptions({
+  headerIcon: "userNotificationIcon",
+  showCaret: true,
+})
+export default class UserNotificationsDropdown extends DropdownSelectBox {
+  @service modal;
 
-  classNames: ["user-notifications", "user-notifications-dropdown"],
-
-  selectKitOptions: {
-    headerIcon: "userNotificationIcon",
-    showCaret: true,
-  },
-
-  userNotificationIcon: computed("mainCollection.[]", "value", function () {
+  @computed("mainCollection.[]", "value")
+  get userNotificationIcon() {
     return (
       this.mainCollection &&
       this.mainCollection.find((row) => row.id === this.value).icon
     );
-  }),
+  }
 
-  content: computed(function () {
+  @computed
+  get content() {
     const content = [];
 
     content.push({
@@ -49,14 +51,16 @@ export default DropdownSelectBox.extend({
     }
 
     return content;
-  }),
+  }
 
   changeToNormal() {
     this.updateNotificationLevel({ level: "normal" }).catch(popupAjaxError);
-  },
+  }
+
   changeToMuted() {
     this.updateNotificationLevel({ level: "mute" }).catch(popupAjaxError);
-  },
+  }
+
   changeToIgnored() {
     this.modal.show(IgnoreDurationModal, {
       model: {
@@ -64,15 +68,14 @@ export default DropdownSelectBox.extend({
         enableSelection: false,
       },
     });
-  },
+  }
 
-  actions: {
-    onChange(level) {
-      this[level]();
+  @action
+  onChange(level) {
+    this[level]();
 
-      // hack but model.ignored/muted is not
-      // getting updated after updateNotificationLevel
-      this.set("value", level);
-    },
-  },
-});
+    // hack but model.ignored/muted is not
+    // getting updated after updateNotificationLevel
+    this.set("value", level);
+  }
+}

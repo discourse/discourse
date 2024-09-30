@@ -4,6 +4,7 @@ import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
 import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
 import highlightSearch from "discourse/lib/highlight-search";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
@@ -66,16 +67,15 @@ export default class PostCooked {
     // todo should be a better way of detecting if it is composer preview
     this._isInComposerPreview = !this.decoratorHelper;
 
-    const cookedDiv = this._computeCooked();
-    this.cookedDiv = cookedDiv;
+    this.cookedDiv = this._computeCooked();
 
-    this._insertQuoteControls(cookedDiv);
-    this._showLinkCounts(cookedDiv);
-    this._applySearchHighlight(cookedDiv);
-    this._initUserStatusOnMentions();
-    this._decorateAndAdopt(cookedDiv);
+    this._insertQuoteControls(this.cookedDiv);
+    this._showLinkCounts(this.cookedDiv);
+    this._applySearchHighlight(this.cookedDiv);
+    this._decorateMentions();
+    this._decorateAndAdopt(this.cookedDiv);
 
-    return cookedDiv;
+    return this.cookedDiv;
   }
 
   destroy() {
@@ -236,7 +236,7 @@ export default class PostCooked {
         blockQuote.appendChild(div);
       } catch (e) {
         if ([403, 404].includes(e.jqXHR.status)) {
-          const icon = e.jqXHR.status === 403 ? "lock" : "far-trash-alt";
+          const icon = e.jqXHR.status === 403 ? "lock" : "trash-can";
           blockQuote.innerHTML = `<div class='expanded-quote icon-only'>${iconHTML(
             icon
           )}</div>`;
@@ -365,9 +365,7 @@ export default class PostCooked {
 
     if (
       (this.attrs.firstPost || this.attrs.embeddedPost) &&
-      this.ignoredUsers &&
-      this.ignoredUsers.length > 0 &&
-      this.ignoredUsers.includes(this.attrs.username)
+      this.ignoredUsers?.includes?.(this.attrs.username)
     ) {
       cookedDiv.classList.add("post-ignored");
       cookedDiv.innerHTML = I18n.t("post.ignored");
@@ -378,44 +376,65 @@ export default class PostCooked {
     return cookedDiv;
   }
 
-  _initUserStatusOnMentions() {
+  _decorateMentions() {
     if (!this._isInComposerPreview) {
-      this._trackMentionedUsersStatus();
-      this._rerenderUserStatusOnMentions();
+      destroyUserStatusOnMentions();
     }
+
+    this._extractMentions().forEach(({ mentions, user }) => {
+      if (!this._isInComposerPreview) {
+        this._trackMentionedUserStatus(user);
+        this._rerenderUserStatusOnMentions(mentions, user);
+      }
+
+      const classes = applyValueTransformer("mentions-class", [], {
+        user,
+      });
+
+      mentions.forEach((mention) => {
+        mention.classList.add(...classes);
+      });
+    });
   }
 
-  _rerenderUserStatusOnMentions() {
-    destroyUserStatusOnMentions();
-    this._post()?.mentioned_users?.forEach((user) =>
-      this._rerenderUserStatusOnMention(this.cookedDiv, user)
-    );
-  }
-
-  _rerenderUserStatusOnMention(postElement, user) {
-    const href = getURL(`/u/${user.username.toLowerCase()}`);
-    const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
-
+  _rerenderUserStatusOnMentions(mentions, user) {
     mentions.forEach((mention) => {
       updateUserStatusOnMention(
-        getOwnerWithFallback(this._post()),
+        getOwnerWithFallback(this),
         mention,
         user.status
       );
     });
   }
 
-  _trackMentionedUsersStatus() {
-    this._post()?.mentioned_users?.forEach((user) => {
-      user.statusManager?.trackStatus?.();
-      user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
+  _rerenderUsersStatusOnMentions() {
+    this._extractMentions().forEach(({ mentions, user }) => {
+      this._rerenderUserStatusOnMentions(mentions, user);
     });
+  }
+
+  _extractMentions() {
+    return (
+      this._post()?.mentioned_users?.map((user) => {
+        const href = getURL(`/u/${user.username.toLowerCase()}`);
+        const mentions = this.cookedDiv.querySelectorAll(
+          `a.mention[href="${href}"]`
+        );
+
+        return { user, mentions };
+      }) || []
+    );
+  }
+
+  _trackMentionedUserStatus(user) {
+    user.statusManager?.trackStatus?.();
+    user.on?.("status-changed", this, "_rerenderUsersStatusOnMentions");
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
       user.statusManager?.stopTrackingStatus?.();
-      user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
+      user.off?.("status-changed", this, "_rerenderUsersStatusOnMentions");
     });
   }
 

@@ -131,7 +131,7 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
-  validateForm(data, { addError }) {
+  validateForm(data, { addError, removeError }) {
     if (!data.icon && !data.image_url) {
       addError("icon", {
         title: "Icon",
@@ -141,6 +141,9 @@ export default class AdminBadgesShowController extends Controller {
         title: "Image",
         message: I18n.t("admin.badges.icon_or_image"),
       });
+    } else {
+      removeError("image_url");
+      removeError("icon");
     }
   }
 
@@ -202,18 +205,23 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
+  registerApi(api) {
+    this.formApi = api;
+  }
+
+  @action
   async handleDelete() {
     if (!this.model?.id) {
       return this.router.transitionTo("adminBadges.index");
     }
 
-    const adminBadges = this.adminBadges.model;
     return this.dialog.yesNoConfirm({
       message: I18n.t("admin.badges.delete_confirm"),
       didConfirm: async () => {
         try {
+          await this.formApi.reset();
           await this.model.destroy();
-          adminBadges.removeObject(this.model);
+          this.adminBadges.model.removeObject(this.model);
           this.router.transitionTo("adminBadges.index");
         } catch {
           this.dialog.alert(I18n.t("generic_error"));

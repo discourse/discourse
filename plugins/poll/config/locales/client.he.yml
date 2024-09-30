@@ -118,6 +118,8 @@ he:
         label: "אפשרויות"
         ranked_choice:
           abstain: "הימנעות"
+          highest_priority: "(העדיפות הגבוהה ביותר)"
+          lowest_priority: "(העדיפות הנמוכה ביותר)"
           login: "יש להיכנס כדי להצביע!"
       error_while_toggling_status: "חלה שגיאה בשינוי המצב של סקר זה, עמך הסליחה."
       error_while_casting_votes: "חלה שגיאה בהצבעתך, עמך הסליחה."

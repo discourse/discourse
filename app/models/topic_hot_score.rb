@@ -141,7 +141,7 @@ class TopicHotScore < ActiveRecord::Base
       FROM topics
       WHERE topics.id IN (
         SELECT topic_id FROM topic_ids
-      ) AND ths.topic_id = topics.id
+      ) AND ths.topic_id = topics.id AND topics.created_at <= :now
     SQL
 
     DB.exec(sql, args)

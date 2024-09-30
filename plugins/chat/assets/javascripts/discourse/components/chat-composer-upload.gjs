@@ -35,7 +35,7 @@ export default class ChatComposerUpload extends Component {
               {{dIcon "far-image"}}
             {{/if}}
           {{else}}
-            {{dIcon "file-alt"}}
+            {{dIcon "file-lines"}}
           {{/if}}
         </div>
 
@@ -70,7 +70,7 @@ export default class ChatComposerUpload extends Component {
 
         <DButton
           @action={{@onCancel}}
-          @icon="times"
+          @icon="xmark"
           @title="chat.remove_upload"
           class="btn-flat chat-composer-upload__remove-btn"
         />

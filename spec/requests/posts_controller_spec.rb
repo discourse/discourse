@@ -59,7 +59,8 @@ RSpec.shared_examples "finding and showing post" do
       end
 
       it "can find posts in the allowed category" do
-        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        post.topic.category.update!(topic_id: topic.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
         get url
         expect(response.status).to eq(200)
       end
@@ -602,7 +603,8 @@ RSpec.describe PostsController do
 
       before do
         SiteSetting.enable_category_group_moderation = true
-        post.topic.category.update!(reviewable_by_group_id: group.id, topic_id: topic.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
+        post.topic.category.update!(topic_id: topic.id)
         sign_in(user_gm)
       end
 
@@ -2105,6 +2107,41 @@ RSpec.describe PostsController do
       end
     end
 
+    context "when the history on a specific post is hidden" do
+      it "works when hiding a revision" do
+        sign_in(admin)
+
+        message =
+          MessageBus
+            .track_publish("/topic/#{post.topic.id}") do
+              put "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}/hide"
+            end
+            .first
+
+        expect(response.status).to eq(200)
+        expect(message.data[:type]).to eq(:revised)
+        expect(message.data[:version]).to eq(2)
+        expect(post_revision.reload[:hidden]).to eq(true)
+      end
+
+      it "works when showing a revision" do
+        post_revision.update!(hidden: true)
+        sign_in(admin)
+
+        message =
+          MessageBus
+            .track_publish("/topic/#{post.topic.id}") do
+              put "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}/show"
+            end
+            .first
+
+        expect(response.status).to eq(200)
+        expect(message.data[:type]).to eq(:revised)
+        expect(message.data[:version]).to eq(2)
+        expect(post_revision.reload[:hidden]).to eq(false)
+      end
+    end
+
     context "when post is hidden" do
       before do
         post.hidden = true
@@ -2845,7 +2882,7 @@ RSpec.describe PostsController do
 
       before do
         SiteSetting.enable_category_group_moderation = true
-        topic.category.update!(reviewable_by_group_id: group.id)
+        Fabricate(:category_moderation_group, category: topic.category, group:)
 
         sign_in(user)
       end
@@ -2868,8 +2905,7 @@ RSpec.describe PostsController do
       end
 
       it "prevents a group moderator from altering notes outside of their category" do
-        moderatable_group = Fabricate(:group)
-        topic.category.update!(reviewable_by_group_id: moderatable_group.id)
+        topic.category.category_moderation_groups.where(group:).delete_all
 
         put "/posts/#{public_post.id}/notice.json", params: { notice: "Hello" }
 

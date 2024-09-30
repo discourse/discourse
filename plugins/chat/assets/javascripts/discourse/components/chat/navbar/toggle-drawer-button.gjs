@@ -10,8 +10,8 @@ export default class ChatNavbarToggleDrawerButton extends Component {
     <DButton
       @icon={{if
         this.chatStateManager.isDrawerExpanded
-        "angle-double-down"
-        "angle-double-up"
+        "angles-down"
+        "angles-up"
       }}
       @action={{this.chat.toggleDrawer}}
       @title={{if

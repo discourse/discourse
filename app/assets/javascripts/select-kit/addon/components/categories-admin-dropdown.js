@@ -1,21 +1,22 @@
 import { computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["categories-admin-dropdown"],
-  classNames: ["categories-admin-dropdown"],
-
-  selectKitOptions: {
-    icons: ["wrench", "caret-down"],
-    showFullTitle: false,
-    autoFilterable: false,
-    filterable: false,
-    none: "select_kit.components.categories_admin_dropdown.title",
-    focusAfterOnChange: false,
-  },
-
-  content: computed(function () {
+@classNames("categories-admin-dropdown")
+@selectKitOptions({
+  icons: ["wrench", "caret-down"],
+  showFullTitle: false,
+  autoFilterable: false,
+  filterable: false,
+  none: "select_kit.components.categories_admin_dropdown.title",
+  focusAfterOnChange: false,
+})
+@pluginApiIdentifiers(["categories-admin-dropdown"])
+export default class CategoriesAdminDropdown extends DropdownSelectBoxComponent {
+  @computed
+  get content() {
     const items = [
       {
         id: "create",
@@ -29,11 +30,11 @@ export default DropdownSelectBoxComponent.extend({
       id: "reorder",
       name: I18n.t("categories.reorder.title"),
       description: I18n.t("categories.reorder.title_long"),
-      icon: "random",
+      icon: "shuffle",
     });
 
     return items;
-  }),
+  }
 
   _onChange(value, item) {
     if (item.onChange) {
@@ -41,5 +42,5 @@ export default DropdownSelectBoxComponent.extend({
     } else if (this.onChange) {
       this.onChange(value, item);
     }
-  },
-});
+  }
+}

@@ -82,7 +82,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="communityOwner"
         @title={{i18n "admin.config_areas.about.community_owner"}}
-        @subtitle={{i18n "admin.config_areas.about.community_owner_help"}}
+        @description={{i18n "admin.config_areas.about.community_owner_help"}}
         @format="large"
         as |field|
       >
@@ -96,7 +96,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="contactEmail"
         @title={{i18n "admin.config_areas.about.contact_email"}}
-        @subtitle={{i18n "admin.config_areas.about.contact_email_help"}}
+        @description={{i18n "admin.config_areas.about.contact_email_help"}}
         @type="email"
         @format="large"
         as |field|
@@ -111,7 +111,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="contactURL"
         @title={{i18n "admin.config_areas.about.contact_url"}}
-        @subtitle={{i18n "admin.config_areas.about.contact_url_help"}}
+        @description={{i18n "admin.config_areas.about.contact_url_help"}}
         @type="url"
         @format="large"
         as |field|
@@ -126,7 +126,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="contactUsername"
         @title={{i18n "admin.config_areas.about.site_contact_name"}}
-        @subtitle={{i18n "admin.config_areas.about.site_contact_group_help"}}
+        @description={{i18n "admin.config_areas.about.site_contact_name_help"}}
         @onSet={{this.setContactUsername}}
         @format="large"
         as |field|
@@ -143,7 +143,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <form.Field
         @name="contactGroupName"
         @title={{i18n "admin.config_areas.about.site_contact_group"}}
-        @subtitle={{i18n "admin.config_areas.about.site_contact_group_help"}}
+        @description={{i18n "admin.config_areas.about.site_contact_group_help"}}
         @onSet={{this.setContactGroup}}
         @format="large"
         as |field|

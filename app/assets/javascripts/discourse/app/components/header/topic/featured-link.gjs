@@ -1,13 +1,10 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import icon from "discourse-common/helpers/d-icon";
 
 export default class FeaturedLink extends Component {
-  @service header;
-
   get meta() {
-    return extractLinkMeta(this.header.topicInfo);
+    return extractLinkMeta(this.args.topicInfo);
   }
 
   <template>
@@ -18,7 +15,7 @@ export default class FeaturedLink extends Component {
         target={{this.meta.target}}
         href={{this.meta.href}}
       >
-        {{icon "external-link-alt"}}
+        {{icon "up-right-from-square"}}
         {{this.meta.domain}}
       </a>
     {{/if}}

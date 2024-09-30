@@ -26,7 +26,7 @@ module Chat
     model :channel
     step :enforce_membership
     model :membership
-    policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
+    policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::Policy::MessageCreation
     model :reply, optional: true
     policy :ensure_reply_consistency
     model :thread, optional: true

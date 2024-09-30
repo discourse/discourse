@@ -1,19 +1,19 @@
 import Component from "@ember/component";
 import { or } from "@ember/object/computed";
+import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  classNames: ["controls", "save-button"],
-
-  buttonDisabled: or("model.isSaving", "saveDisabled"),
+@classNames("controls", "save-button")
+export default class SaveControls extends Component {
+  @or("model.isSaving", "saveDisabled") buttonDisabled;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     this.set("saved", false);
-  },
+  }
 
   @discourseComputed("model.isSaving")
   savingText(saving) {
     return saving ? "saving" : "save";
-  },
-});
+  }
+}

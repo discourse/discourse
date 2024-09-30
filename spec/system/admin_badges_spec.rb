@@ -30,7 +30,7 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("show_posts")).to be_disabled
       expect(form.field("show_posts")).to be_unchecked
       expect(form.field("icon")).to be_enabled
-      expect(form.field("icon")).to have_value("user-edit")
+      expect(form.field("icon")).to have_value("user-pen")
       expect(form.container("name")).to have_content(badge.name.strip)
       expect(form.container("description")).to have_content(badge.description.strip)
       expect(form.container("long_description")).to have_content(badge.long_description.strip)
@@ -43,7 +43,7 @@ describe "Admin Badges Page", type: :system do
       badges_page.form.field("enabled").accept
       badges_page.form.field("name").fill_in("a name")
       badges_page.form.field("badge_type_id").select(BadgeType::Bronze)
-      badges_page.form.field("icon").select("ambulance")
+      badges_page.form.field("icon").select("truck-medical")
       badges_page.form.field("description").fill_in("a description")
       badges_page.form.field("long_description").fill_in("a long_description")
       badges_page.form.field("badge_grouping_id").select(BadgeGrouping::GettingStarted)
@@ -75,11 +75,11 @@ describe "Admin Badges Page", type: :system do
       badge = Badge.find(Badge::Autobiographer)
       badge.update!(image_upload_id: Fabricate(:image_upload).id)
 
-      badges_page.visit_page(Badge::Autobiographer).choose_icon("ambulance").submit_form
+      badges_page.visit_page(Badge::Autobiographer).choose_icon("truck-medical").submit_form
 
       expect(badges_page).to have_saved_form
       expect(badge.reload.image_upload_id).to be_blank
-      expect(badge.icon).to eq("ambulance")
+      expect(badge.icon).to eq("truck-medical")
     end
   end
 
@@ -91,6 +91,25 @@ describe "Admin Badges Page", type: :system do
 
       expect(badges_page.form.field("auto_revoke")).to be_unchecked
       expect(badges_page.form.field("target_posts")).to be_unchecked
+    end
+  end
+
+  context "when deleting a badge" do
+    let(:dialog) { PageObjects::Components::Dialog.new }
+
+    it "deletes a badge" do
+      badges_page.new_page
+      badges_page.form.field("enabled").accept
+      badges_page.form.field("name").fill_in("a name")
+      badges_page.form.field("badge_type_id").select(BadgeType::Bronze)
+      badges_page.form.field("icon").select("truck-medical")
+      badges_page.submit_form
+      expect(badges_page).to have_saved_form
+      badges_page.form.field("name").fill_in("another name")
+      badges_page.delete_badge
+      dialog.click_yes
+
+      expect(page).to have_current_path("/admin/badges")
     end
   end
 end

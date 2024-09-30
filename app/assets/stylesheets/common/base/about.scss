@@ -6,9 +6,14 @@
     max-width: 1100px;
   }
 
+  &__header {
+    max-width: 1100px;
+  }
+
   &__left-side {
     flex: 1 1 650px;
   }
+
   &__right-side {
     flex: 1 2 200px;
   }
@@ -34,6 +39,7 @@
 
     @include breakpoint(tablet) {
       margin-bottom: 1em;
+
       &:last-child {
         margin-bottom: 0;
       }
@@ -42,8 +48,19 @@
 
   &__banner {
     margin-bottom: 1em;
-    min-height: 300px;
-    max-height: 300px;
+    width: 100%;
+    height: auto; // Let the height scale with the width
+    position: relative; // Ensure the container can handle absolute positioning for the image
+    padding-top: 27.27%; // Maintain the aspect ratio (300px/1100px * 100)
+
+    &-img {
+      position: absolute; // Allow to fill the full space
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Ensures the image fills the container while preserving aspect ratio
+    }
   }
 
   &__activities-item {
@@ -95,9 +112,11 @@ section.about {
     flex-wrap: wrap;
     align-items: center;
     gap: 0 0.35em;
+
     .d-icon {
       color: var(--primary-high);
     }
+
     .badge-category__wrapper {
       font-size: var(--font-0);
       align-self: baseline;
@@ -108,10 +127,15 @@ section.about {
     table {
       td {
         padding: 0.67em;
+
         &:not(:first-child) {
           text-align: center;
         }
       }
+    }
+
+    .stats-table-footer {
+      max-width: 30em;
     }
   }
 }

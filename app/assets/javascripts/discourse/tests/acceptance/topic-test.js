@@ -104,7 +104,7 @@ acceptance("Topic", function (needs) {
   test("Showing and hiding the edit controls", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    await click("#topic-title .d-icon-pencil-alt");
+    await click("#topic-title .d-icon-pencil");
 
     assert.ok(exists("#edit-title"), "it shows the editing controls");
     assert.ok(
@@ -122,7 +122,7 @@ acceptance("Topic", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    await click("#topic-title .d-icon-pencil-alt");
+    await click("#topic-title .d-icon-pencil");
     await fillIn("#edit-title", "this is the new title");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(4);
@@ -172,7 +172,7 @@ acceptance("Topic", function (needs) {
 
   test("Updating the topic title with emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("#topic-title .d-icon-pencil-alt");
+    await click("#topic-title .d-icon-pencil");
 
     await fillIn("#edit-title", "emojis title :bike: :blonde_woman:t6:");
 
@@ -186,7 +186,7 @@ acceptance("Topic", function (needs) {
 
   test("Updating the topic title with unicode emojis", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("#topic-title .d-icon-pencil-alt");
+    await click("#topic-title .d-icon-pencil");
 
     await fillIn("#edit-title", "emojis title 👨‍🌾🙏");
 
@@ -201,7 +201,7 @@ acceptance("Topic", function (needs) {
   test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
     this.siteSettings.enable_inline_emoji_translation = true;
     await visit("/t/internationalization-localization/280");
-    await click("#topic-title .d-icon-pencil-alt");
+    await click("#topic-title .d-icon-pencil");
 
     await fillIn("#edit-title", "Test🙂Title");
 
@@ -258,7 +258,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/topic-for-group-moderators/2480");
 
     assert.ok(exists(".category-moderator"), "it has a class applied");
-    assert.ok(exists(".d-icon-shield-alt"), "it shows an icon");
+    assert.ok(exists(".d-icon-shield-halved"), "it shows an icon");
   });
 
   test("Suspended user posts", async function (assert) {

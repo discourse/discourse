@@ -114,11 +114,13 @@ export default Mixin.create({
       if (!this.element) {
         return;
       }
-
       this._textarea.selectionStart = from;
       this._textarea.selectionEnd = from + length;
-      if (opts.scroll) {
-        const oldScrollPos = this._textarea.scrollTop;
+      if (opts.scroll === true || typeof opts.scroll === "number") {
+        const oldScrollPos =
+          typeof opts.scroll === "number"
+            ? opts.scroll
+            : this._textarea.scrollTop;
         if (!this.capabilities.isIOS) {
           this._textarea.focus();
         }
@@ -147,15 +149,21 @@ export default Mixin.create({
     });
 
     if (opts.index && opts.regex) {
-      let i = -1;
-      const newValue = val.replace(opts.regex, (match) => {
-        i++;
-        return i === opts.index ? newVal : match;
-      });
-      this.set("value", newValue);
+      if (!opts.regex.global) {
+        throw new Error("Regex must be global");
+      }
+
+      const regex = new RegExp(opts.regex);
+      let match;
+      for (let i = 0; i <= opts.index; i++) {
+        match = regex.exec(val);
+      }
+
+      if (match) {
+        this._insertAt(match.index, match.index + match[0].length, newVal);
+      }
     } else {
-      // Replace value (side effect: cursor at the end).
-      this.set("value", val.replace(oldVal, newVal));
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal);
     }
 
     if (
@@ -329,7 +337,11 @@ export default Mixin.create({
   _insertAt(start, end, text) {
     this._textarea.setSelectionRange(start, end);
     this._textarea.focus();
-    document.execCommand("insertText", false, text);
+    if (start !== end && text === "") {
+      document.execCommand("delete", false);
+    } else {
+      document.execCommand("insertText", false, text);
+    }
   },
 
   extractTable(text) {
@@ -577,6 +589,7 @@ export default Mixin.create({
       let autocompletePrefix = `${indentationLevel}${newPrefix}`;
       let autocompletePostfix = text.substring(offset);
       const autocompletePrefixLength = autocompletePrefix.length;
+      let scrollPosition;
 
       /*
         For numeric items, we have to also replace the rest of the
@@ -597,6 +610,7 @@ export default Mixin.create({
           numericBullet + 1
         );
         autocompletePrefix += autocompletePostfix;
+        scrollPosition = this._textarea.scrollTop;
 
         this.replaceText(
           text.substring(offset, offset + autocompletePrefix.length),
@@ -609,7 +623,9 @@ export default Mixin.create({
         this._insertAt(offset, offset, autocompletePrefix);
       }
 
-      this.selectText(offset + autocompletePrefixLength, 0);
+      this.selectText(offset + autocompletePrefixLength, 0, {
+        scroll: scrollPosition,
+      });
     } else {
       // Clear the new autocompleted list item if there is no other text.
       const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;

@@ -10,6 +10,11 @@ export default class AdminPluginNavManager extends Service {
   @service currentUser;
   @tracked currentPlugin;
 
+  // NOTE (martin) This is a temporary solution so we know whether to
+  // show the expanded header / nav on the admin plugin list or not.
+  // This will be removed when all plugins follow the new "show route" pattern.
+  @tracked viewingPluginsList = false;
+
   get currentUserUsingAdminSidebar() {
     return this.currentUser?.use_admin_sidebar;
   }

@@ -7,6 +7,14 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.1] - 2024-08-21
+
+- Added support for `shortcut` in `addComposerToolbarPopupMenuOption` which allows to add a keyboard shortcut to the popup menu option.
+
+## [1.37.0] - 2024-08-19
+
+- Added `addAboutPageActivity` which allows plugins/TCs to register a custom site activity item in the new /about page. Requires the server-side `register_stat` plugin API.
+
 ## [1.36.0] - 2024-08-06
 
 - Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked and before a search log is created 

@@ -454,7 +454,7 @@ RSpec.describe "users" do
       produces "application/json"
       response "200", "response" do
         let(:id) { Fabricate(:user).id }
-        let(:params) {}
+        let(:params) { { "reason" => "up to me", "silenced_till" => "2301-08-15" } }
 
         expected_response_schema = load_spec_schema("user_silence_response")
         schema(expected_response_schema)

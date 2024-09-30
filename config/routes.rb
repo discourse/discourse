@@ -161,6 +161,8 @@ Discourse::Application.routes.draw do
         post "reset-bounce-score"
         put "disable_second_factor"
         delete "sso_record"
+        get "similar-users.json" => "users#similar_users"
+        put "delete_associated_accounts"
       end
       get "users/:id.json" => "users#show", :defaults => { format: "json" }
       get "users/:id/:username" => "users#show",
@@ -365,6 +367,7 @@ Discourse::Application.routes.draw do
                :format => :json
 
           get "logs" => "backups#logs"
+          get "settings" => "backups#index"
           get "status" => "backups#status"
           delete "cancel" => "backups#cancel"
           post "rollback" => "backups#rollback"
@@ -399,6 +402,8 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
       end
+
+      resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"
@@ -1612,6 +1617,7 @@ Discourse::Application.routes.draw do
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
     get "/theme-qunit" => "qunit#theme"
+    get "/theme-tests", to: redirect("/theme-qunit")
 
     # This is a special route that is used when theme QUnit tests are run through testem which appends a testem_id to the
     # path. Unfortunately, testem's proxy support does not allow us to easily remove this from the path, so we have to

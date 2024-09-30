@@ -327,6 +327,7 @@ he:
     now: "ממש עכשיו"
     read_more: "מידע נוסף"
     more: "עוד"
+    more_options: "אפשרויות נוספות"
     x_more:
       one: "עוד %{count}"
       two: "עוד %{count}"
@@ -376,8 +377,10 @@ he:
       post_count: "פוסטים"
       user_count: "הרשמות"
       active_user_count: "משתמשים פעילים"
+      visitor_count: "מבקרים"
+      eu_visitor_count: "מבקרים מהאיחוד האירופי"
       contact: "יצירת קשר אתנו"
-      contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור אתנו קשר דרך: %{contact_info}."
+      contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור קשר דרך: %{contact_info}."
       site_activity: "פעילות באתר"
       view_more: "להציג עוד"
       view_less: "להציג פחות"
@@ -407,6 +410,18 @@ he:
           two: "שני לייקים"
           many: "%{formatted_number} לייקים"
           other: "%{formatted_number} לייקים"
+        visitors_MF: |
+          { total_count, plural,
+              one {מבקר או מבקרת}
+              two {שני או שתי מבקרים או מבקרות}
+              many {{total_formatted_number} מבקרים או מבקרות}
+            other {{total_formatted_number} מבקרים או מבקרות}
+          }, בערך { eu_count, plural,
+              one {{eu_formatted_number}}
+              two {{eu_formatted_number}}
+              many {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } מהאיחוד האירופי
         periods:
           last_7_days: "ב־7 הימים האחרונים"
           today: "היום"
@@ -2221,6 +2236,7 @@ he:
           other {# שגיאות בדקה}
         }.
     learn_more: "מידע נוסף…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>מידע נוסף…</a>"
     mute: השתק
     unmute: ביטול השתקה
     last_post: פורסמו
@@ -2305,6 +2321,11 @@ he:
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
       activation_title: "הפעלת החשבון שלך"
       already_have_account: "כבר יש לך חשבון?"
+      progress_bar:
+        signup: "הרשמה"
+        activate: "הפעלה"
+        approve: "אישור"
+        login: "כניסה"
     forgot_password:
       title: "אתחול סיסמה"
       action: "שכחתי את הסיסמה שלי"
@@ -2511,6 +2532,7 @@ he:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} גדול מהגודל המרבי המותר %{max_file_size}"
+        size_too_small: "%{provided_file_size} קטן מהגודל המזערי המותר %{min_file_size}"
     emoji_picker:
       filter_placeholder: חיפוש אחר אמוג׳י
       smileys_&_emotion: חייכנים ורגש
@@ -5102,6 +5124,7 @@ he:
     powered_by_discourse: "מופעל על גבי Discourse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
+    settings: "הגדרות"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5136,7 +5159,7 @@ he:
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         new_features:
           title: "מה חדש"
-          subtitle: "לפרטים נוספים על יכולות חדשות השיפורים שאנו מוסיפים כל הזמן, כדאי לגשת אל <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>הערות ההוצאה לאור</a>."
+          subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
           previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "מידע נוסף…"
         last_checked: "נבדק לאחרונה"
@@ -5258,6 +5281,7 @@ he:
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
+            automatic_tooltip: "הקבוצה הזאת היא אוטומטית, אי אפשר למחוק אותה והחברים נוספים ונמחקים ממנה אוטומטית"
             trust_levels_title: "דרגת אמון המוענקת אוטומטית למשתמשים כאשר הם נוספים:"
             effects: אפקטים
             trust_levels_none: "ללא"
@@ -5682,6 +5706,8 @@ he:
           back: "חזרה לסימונים"
           delete: "מחיקה"
           delete_confirm: 'למחוק את „%{name}”?'
+          flags_tab: "סימונים"
+          settings: "הגדרות סימונים"
           form:
             add_header: "הוספת סימון"
             edit_header: "עריכת סימון"
@@ -5707,7 +5733,8 @@ he:
             move_down: "העברה למטה"
       plugins:
         title: "הרחבות (Plugins)"
-        installed: "הרחבות מותקנות"
+        installed: "תוספים מותקנים"
+        description: "תוספי Discourse שהתקנת או תוספים שמותקנים באירוח של Discourse באופן מובנה, כל אלו יופיעו ברשימה הזאת."
         name: "שם"
         none_installed: "אין לך הרחבות מותקנות"
         version: "גרסה"
@@ -5745,10 +5772,13 @@ he:
         legacy: "מיושן"
       backups:
         title: "גיבויים"
+        files_title: "גיבוי קבצים"
+        description: "הגיבויים של Discourse כולל את מסד הנתונים המלא של האתר שמכיל את כל תוכן האתר: נושאים, פוסטים, משתמשים, קבוצות, הגדרות, ערכות עיצוב ועוד, הוא עשוי להכיל את הקבצים שהועלו כתלות באופן יצירת קובץ הגיבוי."
         menu:
           backups: "גיבויים"
+          backup_files: "גיבוי קבצים"
           logs: "יומנים"
-        none: "אין גיבוי זמין."
+        none: "אין גיבוי זמין"
         read_only:
           enable:
             title: "הפעלת מצב קריאה-בלבד"
@@ -5786,12 +5816,12 @@ he:
           download:
             label: "הורדה"
             title: "שליחת הודעה בדוא״ל עם קישור להורדה"
-            alert: "קישור להורדת גיבוי זה נשלח אליכם."
+            alert: "קישור להורדת גיבוי זה נשלח אליכם"
           destroy:
             title: "הסרת הגיבוי"
             confirm: "להשמיד את הגיבוי הזה?"
           restore:
-            is_disabled: "שחזור אינו מאופשר לפי הגדרות האתר."
+            is_disabled: "השחזור מושבת כעת. כדי להפעיל אותו, יש לגשת <a href='%{url}'>להגדרות האתר</a>."
             label: "שחזור"
             title: "שחזר את הגיבוי"
             confirm: "לשחזר את הגיבוי הזה?"
@@ -6932,6 +6962,7 @@ he:
         show_overriden: "להציג רק את אלו שנדרסו"
         show_outdated: "להציג רק מיושן/שגוי"
         show_untranslated: "להציג רק לא מתורגמות"
+        only_show_selected_locale: "להציג תוצאות בשפה הנבחרת בלבד"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
         no_results: "לא נמצאו טקסטים תואמים באתר"

@@ -109,7 +109,12 @@ describe Chat::Publisher do
             { thread.id.to_s => thread.reload.last_message.created_at.iso8601(3) },
           )
           expect(data["thread_tracking"]).to eq(
-            { "unread_count" => 1, "mention_count" => 0, "last_reply_created_at" => nil },
+            {
+              "unread_count" => 1,
+              "mention_count" => 0,
+              "watched_threads_unread_count" => 0,
+              "last_reply_created_at" => nil,
+            },
           )
         end
       end
@@ -119,7 +124,12 @@ describe Chat::Publisher do
           expect(data["thread_id"]).to eq(thread.id)
           expect(data["unread_thread_overview"]).to eq({})
           expect(data["thread_tracking"]).to eq(
-            { "unread_count" => 0, "mention_count" => 0, "last_reply_created_at" => nil },
+            {
+              "unread_count" => 0,
+              "mention_count" => 0,
+              "watched_threads_unread_count" => 0,
+              "last_reply_created_at" => nil,
+            },
           )
         end
       end

@@ -404,4 +404,20 @@ RSpec.describe Jobs::CleanUpUploads do
     Jobs::CleanUpUploads.new.execute(nil)
     expect(ExternalUploadStub.pluck(:id)).to contain_exactly(external_stub1.id, external_stub3.id)
   end
+
+  it "does not delete create external upload stubs for 2 days if debug mode is on" do
+    SiteSetting.enable_upload_debug_mode = true
+    external_stub1 =
+      Fabricate(
+        :external_upload_stub,
+        status: ExternalUploadStub.statuses[:created],
+        created_at: 2.hours.ago,
+      )
+    Jobs::CleanUpUploads.new.execute(nil)
+    expect(ExternalUploadStub.pluck(:id)).to contain_exactly(external_stub1.id)
+
+    SiteSetting.enable_upload_debug_mode = false
+    Jobs::CleanUpUploads.new.execute(nil)
+    expect(ExternalUploadStub.pluck(:id)).to be_empty
+  end
 end

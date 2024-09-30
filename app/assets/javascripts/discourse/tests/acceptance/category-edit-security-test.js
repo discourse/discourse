@@ -20,7 +20,7 @@ acceptance("Category Edit - Security", function (needs) {
     const badgeName = firstRow.querySelector(".group-name-label").innerText;
     assert.strictEqual(badgeName, "everyone");
 
-    assert.strictEqual(count(".d-icon-check-square"), 3);
+    assert.strictEqual(count(".d-icon-square-check"), 3);
   });
 
   test("removing a permission", async function (assert) {
@@ -59,11 +59,11 @@ acceptance("Category Edit - Security", function (needs) {
     const addedRow = [...queryAll(".row-body")].at(-1);
 
     assert.strictEqual(
-      addedRow.querySelector(".group-name-label").innerText,
+      addedRow.querySelector(".group-name-link").innerText,
       "staff"
     );
     assert.strictEqual(
-      addedRow.querySelectorAll(".d-icon-check-square").length,
+      addedRow.querySelectorAll(".d-icon-square-check").length,
       3,
       "new row permissions match default 'everyone' permissions"
     );
@@ -93,7 +93,7 @@ acceptance("Category Edit - Security", function (needs) {
       "everyone"
     );
     assert.strictEqual(
-      firstRow.querySelectorAll(".d-icon-check-square").length,
+      firstRow.querySelectorAll(".d-icon-square-check").length,
       1,
       "adds only 'See' permission for a new row"
     );

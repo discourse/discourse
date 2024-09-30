@@ -1,23 +1,38 @@
 {{#if this.showTopNav}}
-  <div class="admin-controls">
-    <HorizontalOverflowNav class="main-nav nav plugin-nav">
-      <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
-      {{#each this.adminRoutes as |route|}}
-        {{#if route.use_new_show_route}}
-          <NavItem
-            @route={{route.full_location}}
-            @label={{route.label}}
-            @routeParam={{route.location}}
-          />
-        {{else}}
-          <NavItem @route={{route.full_location}} @label={{route.label}} />
-        {{/if}}
-      {{/each}}
-    </HorizontalOverflowNav>
+  <div class="admin-page-header">
+    <DBreadcrumbsContainer />
+    <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
+    <DBreadcrumbsItem
+      @path="/admin/plugins"
+      @label={{i18n "admin.plugins.title"}}
+    />
+    <div class="admin-nav-submenu">
+      <HorizontalOverflowNav class="main-nav nav plugin-nav">
+        <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
+        {{#each this.adminRoutes as |route|}}
+          {{#if route.use_new_show_route}}
+            <NavItem
+              @route={{route.full_location}}
+              @label={{route.label}}
+              @routeParam={{route.location}}
+              @class="admin-plugin-tab-nav-item"
+              data-plugin-nav-tab-id={{route.plugin_id}}
+            />
+          {{else}}
+            <NavItem
+              @route={{route.full_location}}
+              @label={{route.label}}
+              @class="admin-plugin-tab-nav-item"
+              data-plugin-nav-tab-id={{route.plugin_id}}
+            />
+          {{/if}}
+        {{/each}}
+      </HorizontalOverflowNav>
+    </div>
   </div>
 {{/if}}
 
-<div class="admin-container">
+<div class="admin-container -no-header">
   {{#each this.brokenAdminRoutes as |route|}}
     <div class="alert alert-error">
       {{i18n "admin.plugins.broken_route" name=(i18n route.label)}}

@@ -4,7 +4,7 @@
       <div class="floated-buttons">
         {{#if this.currentUser.staff}}
           <a href={{this.banner.url}} class="btn btn-transparent edit-banner">
-            {{d-icon "pencil-alt"}}
+            {{d-icon "pencil"}}
             {{#if this.site.desktopView}}
               {{html-safe (i18n "banner.edit")}}
             {{/if}}
@@ -12,7 +12,7 @@
         {{/if}}
 
         <DButton
-          @icon="times"
+          @icon="xmark"
           @action={{this.dismiss}}
           @title="banner.close"
           class="btn-transparent close"

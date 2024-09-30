@@ -128,9 +128,9 @@ export function mapRoutes() {
     }
   });
 
-  return BareRouter.extend({
-    rootURL: getURL("/"),
-  }).map(function () {
+  return class extends BareRouter {
+    rootURL = getURL("/");
+  }.map(function () {
     tree.mapRoutes(this);
     this.route("unknown", { path: "*path" });
   });

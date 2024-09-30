@@ -16,6 +16,7 @@ en_GB:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
   themes:
     bad_color_scheme: "Can not update theme, invalid colour palette"
     import_error:

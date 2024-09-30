@@ -9,21 +9,23 @@
   ],
   "dependencies": {
     "@babel/core": "^7.25.2",
-    "deprecation-silencer": "1.0.0",
-    "discourse-widget-hbs": "1.0.0",
+    "deprecation-silencer": "workspace:1.0.0",
+    "discourse-hbr": "workspace:1.0.0",
+    "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.1",
+    "ember-template-imports": "^4.1.2",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~5.10.0",
-    "webpack": "^5.93.0"
+    "ember-cli": "~5.11.0",
+    "webpack": "^5.95.0"
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 9"
   },
   "ember": {
     "edition": "default"

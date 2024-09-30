@@ -1,24 +1,26 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  classNames: ["topic-notifications-button"],
-  classNameBindings: ["isLoading"],
-  appendReason: true,
-  showFullTitle: true,
-  notificationLevel: null,
-  topic: null,
-  showCaret: true,
-  isLoading: false,
+@classNames("topic-notifications-button")
+@classNameBindings("isLoading")
+export default class TopicNotificationsButton extends Component {
+  appendReason = true;
+  showFullTitle = true;
+  notificationLevel = null;
+  topic = null;
+  showCaret = true;
+  isLoading = false;
 
-  icon: computed("isLoading", function () {
+  @computed("isLoading")
+  get icon() {
     return this.isLoading ? "spinner" : null;
-  }),
+  }
 
   @action
   changeTopicNotificationLevel(levelId) {
@@ -28,7 +30,7 @@ export default Component.extend({
         .updateNotifications(levelId)
         .finally(() => this.set("isLoading", false));
     }
-  },
+  }
 
   @discourseComputed(
     "topic",
@@ -70,7 +72,7 @@ export default Component.extend({
         basePath: getURL(""),
       });
     }
-  },
+  }
 
   // The user may have changed their category or tag tracking settings
   // since this topic was tracked/watched based on those settings in the
@@ -112,5 +114,5 @@ export default Component.extend({
     }
 
     return false;
-  },
-});
+  }
+}

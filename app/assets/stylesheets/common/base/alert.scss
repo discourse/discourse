@@ -36,6 +36,10 @@
       z-index: z("base");
     }
   }
+
+  &.-top-margin {
+    margin-top: 1em;
+  }
 }
 
 a.alert.clickable {

@@ -13,7 +13,7 @@ acceptance(
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",
-          icon: "cog",
+          icon: "gear",
           action() {
             assert.step("action called");
             done();
@@ -31,7 +31,7 @@ acceptance(
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",
-          icon: "cog",
+          icon: "gear",
           action() {},
           anonymousOnly: true,
         });
@@ -51,7 +51,7 @@ acceptance(
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",
-          icon: "cog",
+          icon: "gear",
           action() {
             assert.step("action called");
             done();
@@ -70,7 +70,7 @@ acceptance(
       withPluginApi("0.13.1", (api) => {
         api.registerTopicFooterButton({
           id: "my-button",
-          icon: "cog",
+          icon: "gear",
           action() {},
         });
       });

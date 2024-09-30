@@ -17,7 +17,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
     container: discourse/discourse_test:slim
     timeout-minutes: 30
 
@@ -50,20 +50,8 @@ jobs:
           bundle install --jobs 4
           bundle clean
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
-
-      - name: Yarn install
-        run: yarn install --frozen-lockfile
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Rubocop
         if: ${{ !cancelled() }}
@@ -77,21 +65,21 @@ jobs:
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: yarn lint:js
+        run: pnpm lint:js
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: yarn lint:js-plugins
+        run: pnpm lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
-          yarn prettier -v
-          yarn lint:prettier
+          pnpm prettier -v
+          pnpm lint:prettier
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
-        run: yarn lint:hbs
+        run: pnpm lint:hbs
 
       - name: English locale lint (core)
         if: ${{ !cancelled() }}

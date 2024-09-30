@@ -71,16 +71,13 @@
     display: flex;
     flex-direction: column;
 
-    &__item {
-      a {
-        display: block;
-        color: var(--primary);
-        padding: 0.5em 1rem;
+    a {
+      display: block;
+      color: var(--primary);
 
-        &.active {
-          background: var(--d-selected);
-          font-weight: bold;
-        }
+      &.active {
+        background: var(--d-selected);
+        font-weight: bold;
       }
     }
   }

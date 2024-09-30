@@ -336,6 +336,7 @@ div.poll-outer {
     }
 
     .poll-voters-toggle-expand {
+      margin-top: 0.25em;
       width: 100%;
       text-align: center;
 
@@ -434,6 +435,11 @@ div.poll-outer {
 
 .d-editor-preview {
   .poll {
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
     li[data-poll-option-id]:before {
       position: relative;
       vertical-align: baseline;

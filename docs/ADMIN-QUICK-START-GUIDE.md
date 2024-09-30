@@ -6,20 +6,20 @@ Discourse is a powerful and flexible platform with many options for customizatio
 
 To get started, we recommend you follow the sections below for each of the following:
 
-- [ ] Test your email configuration
-- [ ] Complete the setup wizard
-- [ ] Invite a few people to join you
-- [ ] Discuss ideas with your community
-- [ ] Update your welcome topic and guidelines
-- [ ] Adjust other customizations
-- [ ] Repeat!
-- [ ] Launch your community
+- [ ] [Test your email configuration](#email-test-your-email-configuration-2)
+- [ ] [Complete the setup wizard](#magic_wand-complete-the-setup-wizard-3)
+- [ ] [Invite a few people to join you](#handshake-invite-a-few-people-to-join-you-4)
+- [ ] [Discuss ideas with your community](#thought_balloon-discuss-ideas-with-your-community-5)
+- [ ] [Update your welcome topic and guidelines](#wave-update-your-welcome-topic-and-guidelines-6)
+- [ ] [Adjust other customizations](#art-adjust-other-customizations-7)
+- [ ] [Repeat!](#arrows_clockwise-repeat-8)
+- [ ] [Launch your community](#rocket-launch-your-community-9)
 
 > :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
 ## :email: Test your email configuration
 
-Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
+Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](%{base_url}/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
 - You got the test email?
   Great! **Read that email closely**, it has important email deliverability tips.
@@ -30,49 +30,49 @@ Email is required for new account signups and notifications. **Test your email t
 
 ## :magic_wand: Complete the setup wizard
 
-You've already been through the setup wizard, but if you skipped some steps, you can go back now and update some basic settings at this link: [/wizard](/wizard).
+You've already been through the setup wizard, but if you skipped some steps, you can go back now and update some basic settings at this link: [/wizard](%{base_url}/wizard).
 
 ## :handshake: Invite a few people to join you
 
 It's helpful to collaborate with at least one or two other people early that can provide feedback on the decisions you're making about your community.
 - **If your community allows people to freely sign up**, send them the link and ask them to join.
-- **If your community is invite only**, go to [your invites page](/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
+- **If your community is invite only**, go to [your invites page](%{base_url}/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
 
-> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
+> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. You can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap). For more information about bootstrap mode, [see the Discourse Meta documentation](https://meta.discourse.org/t/-/322876).
 
 ## :thought_balloon: Discuss ideas with your community
 
 Now that you have a few collaborators, you can start trying things out together and discussing ideas for your community.
 
-To start a new discussion, click the <kbd>+ New Topic</kbd> button on the [latest topics](/latest) page or within any of the following categories.
+To start a new discussion, click the <kbd>+ New Topic</kbd> button on the [latest topics](%{base_url}/latest) page or within any of the following categories.
 
-- [#Site Feedback](/c/-/2) is for discussions about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
+- [#Site Feedback](%{base_url}/c/-/2) is for discussions about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
 
-- [#General](/c/-/4) is for topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
+- [#General](%{base_url}/c/-/4) is for topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
 
-- [#Staff](/c/-/3) is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators.
+- [#Staff](%{base_url}/c/-/3) is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators.
 
   If you'd like to promote any members to become admins or moderators, visit their user page and click on the <kbd>:wrench: Admin</kbd> button, then click <kbd>Grant Admin</kbd> or <kbd>Grant Moderator</kbd>.
 
-> :bulb: You can use [chat](/chat) for faster paced discussions.
+> :bulb: You can use [chat](%{base_url}/chat) for faster paced discussions.
 
 ## :wave: Update your welcome topic and guidelines
 
-Update the welcome topic in the [#General](/c/-/4) category and the community guidelines on your [FAQ](/faq) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
+Update the welcome topic in the [#General](%{base_url}/c/-/4) category and the community guidelines on your [FAQ](%{base_url}/faq) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
 
 To get you started, think about what you want new members to **know about your community** or **do when they first join**.
 
 ## :art: Adjust other customizations
 
-To customize the look and feel of your community beyond what you configured in the [setup wizard](/wizard), you can change the following settings in the [admin section](/admin):
+To customize the look and feel of your community beyond what you configured in the [setup wizard](%{base_url}/wizard), you can change the following settings in the [admin section](/admin):
 
-- [Logo images](/admin/site_settings/category/branding)
-- [Color schemes](/admin/customize/colors)
-- [Font styles](/admin/site_settings/category/all_results?filter=font)
-- [Site theme](/admin/customize/themes)
-- [Navigation menu](/admin/site_settings/category/navigation)
-- [Custom user fields](/admin/customize/user_fields)
-- [Terms of service and privacy policies](/admin/site_settings/category/legal)
+- [Logo images](%{base_url}/admin/site_settings/category/branding)
+- [Color schemes](%{base_url}/admin/customize/colors)
+- [Font styles](%{base_url}/admin/site_settings/category/all_results?filter=font)
+- [Site theme](%{base_url}/admin/customize/themes)
+- [Navigation menu](%{base_url}/admin/site_settings/category/navigation)
+- [Custom user fields](%{base_url}/admin/customize/user_fields)
+- [Terms of service and privacy policies](%{base_url}/admin/site_settings/category/legal)
 
 [details="Advanced options"]
 
@@ -115,9 +115,9 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Admin guide to tags](https://meta.discourse.org/t/-/121041)
 - [Configuring Discourse Chat](https://meta.discourse.org/t/-/230881)
 - [An Overview of Discourse Chat for users](https://meta.discourse.org/t/-/239695)
-- [All admin documentation topics](https://meta.discourse.org/c/-/53)
-- [All moderator documentation topics](https://meta.discourse.org/c/-/125)
-- [All user documentation topics](https://meta.discourse.org/c/-/126)
+- [Site Management documentation topics](https://meta.discourse.org/c/-/53)
+- [Moderation documentation topics](https://meta.discourse.org/tags/c/documentation/10/moderation)
+- [Using Discourse documentation topics](https://meta.discourse.org/c/-/126)
 
 [details="Additional resources for maintaining your server"]
 

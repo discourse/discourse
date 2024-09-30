@@ -200,10 +200,10 @@ id:
         notifications:
           regular:
             title: "Normal"
-            description: "Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
           tracking:
             title: "Pelacakan"
-            description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+          watching:
+            title: "Melihat"
         participants_other_count:
           other: "+%{count}"
       threads:
@@ -211,6 +211,9 @@ id:
       draft_channel_screen:
         header: "Pesan Baru"
         cancel: "Batal"
+    notifications:
+      chat_watched_thread_label:
+        other: "%{username} dan %{count} lainnya"
     discourse_automation:
       scriptables:
         send_chat_message:

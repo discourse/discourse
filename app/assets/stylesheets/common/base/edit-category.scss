@@ -98,7 +98,7 @@ div.edit-category {
       .permission {
         margin-left: 20px;
       }
-      .d-icon-times-circle {
+      .d-icon-circle-xmark {
         margin-left: 5px;
         color: var(--danger);
       }
@@ -227,8 +227,8 @@ div.edit-category {
     .btn-flat:hover {
       background-color: transparent;
     }
-    .btn-flat .d-icon-check-square,
-    .btn-flat:hover .d-icon-check-square {
+    .btn-flat .d-icon-square-check,
+    .btn-flat:hover .d-icon-square-check {
       color: var(--success);
     }
   }
@@ -236,7 +236,11 @@ div.edit-category {
   .remove-permission {
     margin-left: 0.5em;
     padding: 0.15em;
-    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+
     &:hover {
       color: var(--danger-hover);
     }

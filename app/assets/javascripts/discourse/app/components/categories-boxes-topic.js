@@ -1,10 +1,10 @@
 import Component from "@ember/component";
+import { attributeBindings, tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "li",
-  attributeBindings: ["topic.id:data-topic-id"],
-
+@tagName("li")
+@attributeBindings("topic.id:data-topic-id")
+export default class CategoriesBoxesTopic extends Component {
   @discourseComputed("topic.pinned", "topic.closed", "topic.archived")
   topicStatusIcon(pinned, closed, archived) {
     if (pinned) {
@@ -13,6 +13,6 @@ export default Component.extend({
     if (closed || archived) {
       return "lock";
     }
-    return "far-file-alt";
-  },
-});
+    return "far-file-lines";
+  }
+}

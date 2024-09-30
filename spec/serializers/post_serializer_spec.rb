@@ -284,11 +284,11 @@ RSpec.describe PostSerializer do
     fab!(:topic)
     fab!(:group_user)
     fab!(:post) { Fabricate(:post, topic: topic) }
-
-    before do
-      SiteSetting.enable_category_group_moderation = true
-      topic.category.update!(reviewable_by_group_id: group_user.group.id)
+    fab!(:category_moderation_group) do
+      Fabricate(:category_moderation_group, category: topic.category, group: group_user.group)
     end
+
+    before { SiteSetting.enable_category_group_moderation = true }
 
     it "does nothing for regular users" do
       expect(serialized_post_for_user(nil)[:group_moderator]).to eq(nil)
@@ -365,29 +365,42 @@ RSpec.describe PostSerializer do
   context "with mentions" do
     fab!(:user_status)
     fab!(:user)
-    fab!(:user1) { Fabricate(:user, user_status: user_status) }
-    fab!(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
+
+    let(:username) { "joffrey" }
+    let(:user1) { Fabricate(:user, user_status: user_status, username: username) }
+    let(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
 
-    it "returns mentioned users with user status when user status is enabled" do
-      SiteSetting.enable_user_status = true
+    context "when user status is enabled" do
+      before { SiteSetting.enable_user_status = true }
 
-      json = serializer.as_json
+      it "returns mentioned users with user status" do
+        json = serializer.as_json
+        expect(json[:mentioned_users]).to be_present
+        expect(json[:mentioned_users].length).to be(1)
+        expect(json[:mentioned_users][0]).to_not be_nil
+        expect(json[:mentioned_users][0][:id]).to eq(user1.id)
+        expect(json[:mentioned_users][0][:username]).to eq(user1.username)
+        expect(json[:mentioned_users][0][:name]).to eq(user1.name)
+        expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
+        expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+      end
 
-      expect(json[:mentioned_users]).to be_present
-      expect(json[:mentioned_users].length).to be(1)
-      expect(json[:mentioned_users][0]).to_not be_nil
-      expect(json[:mentioned_users][0][:id]).to eq(user1.id)
-      expect(json[:mentioned_users][0][:username]).to eq(user1.username)
-      expect(json[:mentioned_users][0][:name]).to eq(user1.name)
-      expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
-      expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+      context "when username has a capital letter" do
+        let(:username) { "JoJo" }
+
+        it "returns mentioned users with user status" do
+          expect(serializer.as_json[:mentioned_users][0][:username]).to eq(user1.username)
+        end
+      end
     end
 
-    it "doesn't return mentioned users when user status is disabled" do
-      SiteSetting.enable_user_status = false
-      json = serializer.as_json
-      expect(json[:mentioned_users]).to be_nil
+    context "when user status is disabled" do
+      before { SiteSetting.enable_user_status = false }
+
+      it "doesn't return mentioned users" do
+        expect(serializer.as_json[:mentioned_users]).to be_nil
+      end
     end
   end
 

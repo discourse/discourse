@@ -98,7 +98,7 @@
               />
               <DButton
                 @action={{action "cancelEditingTopic"}}
-                @icon="times"
+                @icon="xmark"
                 @ariaLabel="composer.cancel"
                 class="btn-default cancel-edit"
               />
@@ -110,7 +110,7 @@
                   class="remove-featured-link"
                   title={{i18n "composer.remove_featured_link"}}
                 >
-                  {{d-icon "times-circle"}}
+                  {{d-icon "circle-xmark"}}
                   {{this.featuredLinkDomain}}
                 </a>
               {{/if}}
@@ -151,7 +151,7 @@
                 {{on "click" this.editTopic}}
                 class="edit-topic"
                 title={{i18n "edit_topic"}}
-              >{{d-icon "pencil-alt"}}</a>
+              >{{d-icon "pencil"}}</a>
             {{/if}}
 
             <PluginOutlet
@@ -160,7 +160,13 @@
             />
           </h1>
 
-          <TopicCategory @topic={{this.model}} class="topic-category" />
+          <PluginOutlet
+            @name="topic-category-wrapper"
+            @outletArgs={{hash topic=this.model}}
+          >
+            <TopicCategory @topic={{this.model}} class="topic-category" />
+          </PluginOutlet>
+
         {{/if}}
       </TopicTitle>
 
@@ -428,7 +434,7 @@
                         />
                         <DButton
                           @label="review.delete"
-                          @icon="trash-alt"
+                          @icon="trash-can"
                           @action={{fn (action "deletePending") pending}}
                           class="btn-danger"
                         />
@@ -598,7 +604,7 @@
             {{else}}
               <DButton
                 @action={{action "retryLoading"}}
-                @icon="sync"
+                @icon="arrows-rotate"
                 @label="errors.buttons.again"
                 class="btn-primary topic-retry"
               />

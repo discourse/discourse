@@ -12,18 +12,26 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
+    # If `JOBS` env is not set, `thread-loader` defaults to the number of CPUs - 1 on the machine but we want to cap it
+    # at 2 because benchmarking has shown that anything beyond 2 does not improve build times or the increase is marginal.
+    # Therefore, we cap it so that we don't spawn more processes than necessary.
+    jobs_env_count = (2 if !ENV["JOBS"].present? && Etc.nprocessors > 2)
+
+    compile_command = "CI=1 pnpm --dir=app/assets/javascripts/discourse ember build"
 
     heap_size_limit = check_node_heap_size_limit
 
     if heap_size_limit < 2048
       STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+      jobs_env_count = 0
+
       compile_command =
-        "JOBS=0 CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
+        "CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
     end
 
     ember_env = ENV["EMBER_ENV"] || "production"
     compile_command = "#{compile_command} -prod" if ember_env == "production"
+    compile_command = "JOBS=#{jobs_env_count} #{compile_command}" if jobs_env_count
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -57,7 +65,7 @@ task "assets:precompile:before": %w[
   # is recompiled
   Emoji.clear_cache
 
-  $node_compress = `which terser`.present? && !ENV["SKIP_NODE_UGLIFY"]
+  $node_compress = !ENV["SKIP_NODE_UGLIFY"]
 
   unless ENV["USE_SPROCKETS_UGLIFY"]
     $bypass_sprockets_uglify = true
@@ -158,7 +166,7 @@ def compress_node(from, to)
   base_source_map = assets_path + assets_additional_path
 
   cmd = <<~SH
-    terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
+    pnpm terser '#{assets_path}/#{from}' -m -c -o '#{to_path}' --source-map "base='#{base_source_map}',root='#{source_map_root}',url='#{source_map_url}',includeSources=true"
   SH
 
   STDERR.puts cmd
@@ -230,11 +238,13 @@ def concurrent?
   if ENV["SPROCKETS_CONCURRENT"] == "1"
     concurrent_compressors = []
     executor = Concurrent::FixedThreadPool.new(Concurrent.processor_count)
+
     yield(
       Proc.new do |&block|
         concurrent_compressors << Concurrent::Future.execute(executor: executor) { block.call }
       end
     )
+
     concurrent_compressors.each(&:wait!)
   else
     yield(Proc.new { |&block| block.call })

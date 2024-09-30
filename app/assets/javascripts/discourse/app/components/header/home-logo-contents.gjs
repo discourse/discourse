@@ -11,7 +11,7 @@ const HomeLogoContents = <template>
         @darkUrl={{@logoSmallUrlDark}}
       />
     {{else}}
-      {{icon "home"}}
+      {{icon "house"}}
     {{/if}}
   {{else if @showMobileLogo}}
     <Logo

@@ -3,12 +3,11 @@
 RSpec.describe Admin::FormTemplatesController do
   fab!(:admin)
   fab!(:user)
+  fab!(:form_template)
 
   before { SiteSetting.experimental_form_templates = true }
 
   describe "#index" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -46,8 +45,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#show" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -102,8 +99,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#update" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
@@ -111,13 +106,13 @@ RSpec.describe Admin::FormTemplatesController do
         put "/admin/customize/form-templates/#{form_template.id}.json",
             params: {
               id: form_template.id,
-              name: "Updated Template",
+              name: "Bugs",
               template: "- type: checkbox\n  id: checkbox",
             }
 
         expect(response.status).to eq(200)
         form_template.reload
-        expect(form_template.name).to eq("Updated Template")
+        expect(form_template.name).to eq("Bugs")
         expect(form_template.template).to eq("- type: checkbox\n  id: checkbox")
       end
     end
@@ -145,8 +140,6 @@ RSpec.describe Admin::FormTemplatesController do
   end
 
   describe "#destroy" do
-    fab!(:form_template)
-
     context "when logged in as an admin" do
       before { sign_in(admin) }
 

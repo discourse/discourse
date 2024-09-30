@@ -74,6 +74,41 @@ describe "PostCreatedEdited" do
     end
   end
 
+  context "when skipping posts created via email" do
+    before do
+      automation.upsert_field!("skip_via_email", "boolean", { value: true }, target: "trigger")
+    end
+
+    let(:parent_post) { create_post(title: "hello world topic", raw: "my name is fred") }
+
+    it "fires if the post didn't come via email" do
+      topic = parent_post.topic
+
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is a test reply", topic_id: topic.id)
+        end
+
+      expect(list.length).to eq(1)
+    end
+
+    it "skips the trigger if the post came via email" do
+      topic = parent_post.topic
+
+      list =
+        capture_contexts do
+          PostCreator.create!(
+            user,
+            raw: "this is a test reply",
+            topic_id: topic.id,
+            via_email: true,
+          )
+        end
+
+      expect(list.length).to eq(0)
+    end
+  end
+
   context "when editing/creating a post" do
     it "fires the trigger" do
       post = nil
@@ -129,30 +164,50 @@ describe "PostCreatedEdited" do
 
     context "when group is restricted" do
       fab!(:target_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:another_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
       before do
         automation.upsert_field!(
-          "restricted_group",
-          "group",
-          { value: target_group.id },
+          "restricted_groups",
+          "groups",
+          { value: [target_group.id, another_group.id] },
           target: "trigger",
         )
       end
 
-      it "fires the trigger" do
-        list =
-          capture_contexts do
-            PostCreator.create(
-              user,
-              basic_topic_params.merge(
-                target_group_names: [target_group.name],
-                archetype: Archetype.private_message,
-              ),
-            )
-          end
+      context "when PM is not sent to the group" do
+        it "doesnt fire the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [Fabricate(:group).name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
 
-        expect(list.length).to eq(1)
-        expect(list[0]["kind"]).to eq("post_created_edited")
+          expect(list.length).to eq(0)
+        end
+      end
+
+      context "when PM is sent to the group" do
+        it "fires the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [target_group.name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
       end
 
       context "when the topic is not a PM" do
@@ -263,6 +318,66 @@ describe "PostCreatedEdited" do
 
             expect(list).to be_blank
           end
+        end
+      end
+    end
+
+    context "with original_post_only" do
+      before do
+        automation.upsert_field!(
+          "original_post_only",
+          "boolean",
+          { value: true },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger only for OP" do
+        list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+        expect(list.length).to eq(1)
+
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              basic_topic_params.merge({ topic_id: list[0]["post"].topic_id }),
+            )
+          end
+
+        expect(list.length).to eq(0)
+      end
+    end
+
+    context "when tags is restricted" do
+      fab!(:tag_1) { Fabricate(:tag) }
+
+      before do
+        automation.upsert_field!(
+          "restricted_tags",
+          "tags",
+          { value: [tag_1.name] },
+          target: "trigger",
+        )
+      end
+
+      context "when tag is allowed" do
+        it "fires the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(user, basic_topic_params.merge({ tags: [tag_1.name] }))
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+      end
+
+      context "when tag is not allowed" do
+        it "fires the trigger" do
+          list = capture_contexts { PostCreator.create(user, basic_topic_params.merge()) }
+
+          expect(list.length).to eq(0)
         end
       end
     end

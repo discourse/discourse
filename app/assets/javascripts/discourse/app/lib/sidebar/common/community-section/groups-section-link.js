@@ -26,6 +26,6 @@ export default class GroupsSectionLink extends BaseSectionLink {
   }
 
   get defaultPrefixValue() {
-    return "user-friends";
+    return "user-group";
   }
 }

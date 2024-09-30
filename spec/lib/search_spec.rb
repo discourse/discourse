@@ -9,6 +9,44 @@ RSpec.describe Search do
     Jobs.run_immediately!
   end
 
+  describe ".need_segmenting?" do
+    subject(:search) { described_class }
+
+    context "when data only contains digits" do
+      let(:data) { "510" }
+
+      it { is_expected.not_to be_need_segmenting(data) }
+    end
+
+    context "when data does not only contain digits" do
+      context "when data is a full URL" do
+        let(:data) { "http://localhost/t/-/510" }
+
+        it { is_expected.not_to be_need_segmenting(data) }
+      end
+
+      context "when data is a path" do
+        let(:data) { "/t/-/510" }
+
+        it { is_expected.not_to be_need_segmenting(data) }
+      end
+
+      context "when data makes `URI#path` return `nil`" do
+        let(:data) { "in:solved%20category:50%20order:likes" }
+
+        it "doesn’t raise an error" do
+          expect { search.need_segmenting?(data) }.not_to raise_error
+        end
+      end
+
+      context "when data is something else" do
+        let(:data) { "text" }
+
+        it { is_expected.to be_need_segmenting(data) }
+      end
+    end
+  end
+
   describe "#ts_config" do
     it "maps locales to correct Postgres dictionaries" do
       expect(Search.ts_config).to eq("english")
@@ -1597,10 +1635,38 @@ RSpec.describe Search do
     let!(:post_2) { Fabricate(:post, topic: topic_2) }
 
     describe ".prepare_data" do
-      it "removes punctuations" do
-        SiteSetting.search_tokenize_japanese = true
+      subject(:prepared_data) { Search.prepare_data(data) }
 
-        expect(Search.prepare_data(post.raw)).to eq("This is some japanese text 日本 が 大好き です")
+      let(:data) { post.raw }
+
+      before { SiteSetting.search_tokenize_japanese = true }
+
+      it "removes punctuations" do
+        expect(prepared_data).to eq("This is some japanese text 日本 が 大好き です")
+      end
+
+      context "when providing only an URL" do
+        let(:data) { "http://localhost/t/-/51" }
+
+        it "does not change it" do
+          expect(prepared_data).to eq(data)
+        end
+      end
+
+      context "when providing only a path" do
+        let(:data) { "/t/-/51" }
+
+        it "does not change it" do
+          expect(prepared_data).to eq(data)
+        end
+      end
+
+      context "when providing only an ID" do
+        let(:data) { "51" }
+
+        it "does not change it" do
+          expect(prepared_data).to eq(data)
+        end
       end
     end
 
@@ -1616,31 +1682,68 @@ RSpec.describe Search do
         SiteSetting.refresh!
       end
 
-      it "finds posts containing Japanese text if tokenization is forced" do
-        SiteSetting.search_tokenize_japanese = true
+      context "when tokenization is forced" do
+        before { SiteSetting.search_tokenize_japanese = true }
 
-        expect(Search.execute("日本").posts.map(&:id)).to eq([post_2.id, post.id])
-        expect(Search.execute("日").posts.map(&:id)).to eq([post_2.id, post.id])
+        it "finds posts containing Japanese text" do
+          expect(Search.execute("日本").posts.map(&:id)).to eq([post_2.id, post.id])
+          expect(Search.execute("日").posts.map(&:id)).to eq([post_2.id, post.id])
+        end
       end
 
-      it "find posts containing search term when site's locale is set to Japanese" do
-        SiteSetting.default_locale = "ja"
+      context "when default locale is set to Japanese" do
+        before { SiteSetting.default_locale = "ja" }
 
-        expect(Search.execute("日本").posts.map(&:id)).to eq([post_2.id, post.id])
-        expect(Search.execute("日").posts.map(&:id)).to eq([post_2.id, post.id])
-      end
+        it "find posts containing search term" do
+          expect(Search.execute("日本").posts.map(&:id)).to eq([post_2.id, post.id])
+          expect(Search.execute("日").posts.map(&:id)).to eq([post_2.id, post.id])
+        end
 
-      it "does not include superfluous spaces in blurbs" do
-        SiteSetting.default_locale = "ja"
+        it "does not include superfluous spaces in blurbs" do
+          post.update!(
+            raw: "場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠",
+          )
 
-        post.update!(
-          raw: "場サアマネ織企ういかせ竹域ヱイマ穂基ホ神3予読ずねいぱ松査ス禁多サウ提懸イふ引小43改こょドめ。深とつぐ主思料農ぞかル者杯検める活分えほづぼ白犠",
-        )
+          results = Search.execute("ういかせ竹域", type_filter: "topic")
 
-        results = Search.execute("ういかせ竹域", type_filter: "topic")
+          expect(results.posts.length).to eq(1)
+          expect(results.blurb(results.posts.first)).to include("ういかせ竹域")
+        end
 
-        expect(results.posts.length).to eq(1)
-        expect(results.blurb(results.posts.first)).to include("ういかせ竹域")
+        context "when searching for a topic in particular" do
+          subject(:results) do
+            described_class.execute(
+              term,
+              guardian: Discourse.system_user.guardian,
+              type_filter: "topic",
+              search_for_id: true,
+            )
+          end
+
+          context "when searching by topic ID" do
+            let(:term) { topic.id }
+
+            it "finds the proper post" do
+              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
+            end
+          end
+
+          context "when searching by topic URL" do
+            let(:term) { "http://#{Discourse.current_hostname}/t/-/#{topic.id}" }
+
+            it "finds the proper post" do
+              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
+            end
+          end
+
+          context "when searching by topic path" do
+            let(:term) { "/t/-/#{topic.id}" }
+
+            it "finds the proper post" do
+              expect(results.posts.first).to have_attributes(topic: topic, post_number: 1)
+            end
+          end
+        end
       end
     end
   end
@@ -2735,6 +2838,18 @@ RSpec.describe Search do
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
     ensure
       Search.advanced_filters.delete(/^min_chars:(\d+)$/)
+    end
+
+    it "forces custom filters matchers to be case insensitive" do
+      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
+      Search.advanced_filter(/^MIN_CHARS:(\d+)$/) do |posts, match|
+        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      end
+
+      expect(Search.new("advanced Min_Chars:50").execute.posts).to eq([post0])
+    ensure
+      Search.advanced_filters.delete(/^MIN_CHARS:(\d+)$/)
     end
 
     it "allows to define custom order" do

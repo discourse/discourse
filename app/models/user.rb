@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+  ]
+
   include Searchable
   include Roleable
   include HasCustomFields
@@ -13,6 +17,8 @@ class User < ActiveRecord::Base
   PASSWORD_SALT_LENGTH = 16
   TARGET_PASSWORD_ALGORITHM =
     "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+
+  MAX_SIMILAR_USERS = 10
 
   deprecate_column :flag_level, drop_from: "3.2"
 
@@ -77,7 +83,7 @@ class User < ActiveRecord::Base
           dependent: :destroy
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
-  has_many :passwords, class_name: "UserPassword", dependent: :destroy
+  has_one :user_password, class_name: "UserPassword", dependent: :destroy, autosave: true
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -175,7 +181,6 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
-  after_create :refresh_user_directory, if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
@@ -189,6 +194,8 @@ class User < ActiveRecord::Base
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
+  before_save :check_qualification_for_users_directory,
+              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -197,6 +204,8 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
+  after_save :add_to_user_directory,
+             if: Proc.new { SiteSetting.bootstrap_mode_enabled && @qualified_for_users_directory }
 
   after_save do
     if saved_change_to_uploaded_avatar_id?
@@ -945,12 +954,9 @@ class User < ActiveRecord::Base
   end
 
   def password_expired?(password)
-    passwords
-      .where("password_expired_at IS NOT NULL AND password_expired_at < ?", Time.zone.now)
-      .any? do |user_password|
-        user_password.password_hash ==
-          hash_password(password, user_password.password_salt, user_password.password_algorithm)
-      end
+    return false if user_password.nil? || user_password.password_expired_at.nil?
+    user_password.password_hash ==
+      hash_password(password, user_password.password_salt, user_password.password_algorithm)
   end
 
   def confirm_password?(password)
@@ -1871,7 +1877,7 @@ class User < ActiveRecord::Base
 
   def populated_required_custom_fields?
     UserField
-      .required
+      .for_all_users
       .pluck(:id)
       .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
   end
@@ -1882,6 +1888,13 @@ class User < ActiveRecord::Base
 
   def bump_required_fields_version
     update(required_fields_version: UserRequiredFieldsVersion.current)
+  end
+
+  def similar_users
+    User
+      .real
+      .where.not(id: self.id)
+      .where(ip_address: self.ip_address, admin: false, moderator: false)
   end
 
   protected
@@ -2217,8 +2230,16 @@ class User < ActiveRecord::Base
     UserStatus.new(status).validate!
   end
 
-  def refresh_user_directory
-    DirectoryItem.refresh!
+  def check_qualification_for_users_directory
+    if (!self.active_was && self.active) || (!self.approved_was && self.approved) ||
+         (self.id_was.nil? && self.id.present?)
+      @qualified_for_users_directory = true
+    end
+  end
+
+  def add_to_user_directory
+    DirectoryItem.add_missing_users_all_periods
+    @qualified_for_users_directory = false
   end
 end
 
@@ -2231,7 +2252,6 @@ end
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
 #  name                      :string
-#  seen_notification_id      :integer          default(0), not null
 #  last_posted_at            :datetime
 #  password_hash             :string(64)
 #  salt                      :string(32)
@@ -2267,17 +2287,16 @@ end
 #  last_seen_reviewable_id   :integer
 #  password_algorithm        :string(64)
 #  required_fields_version   :integer
+#  seen_notification_id      :bigint           default(0), not null
 #
 # Indexes
 #
-#  idx_users_admin                     (id) WHERE admin
-#  idx_users_moderator                 (id) WHERE moderator
-#  index_users_on_last_posted_at       (last_posted_at)
-#  index_users_on_last_seen_at         (last_seen_at)
-#  index_users_on_name_trgm            (name) USING gist
-#  index_users_on_secure_identifier    (secure_identifier) UNIQUE
-#  index_users_on_uploaded_avatar_id   (uploaded_avatar_id)
-#  index_users_on_username             (username) UNIQUE
-#  index_users_on_username_lower       (username_lower) UNIQUE
-#  index_users_on_username_lower_trgm  (username_lower) USING gist
+#  idx_users_admin                    (id) WHERE admin
+#  idx_users_moderator                (id) WHERE moderator
+#  index_users_on_last_posted_at      (last_posted_at)
+#  index_users_on_last_seen_at        (last_seen_at)
+#  index_users_on_secure_identifier   (secure_identifier) UNIQUE
+#  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
+#  index_users_on_username            (username) UNIQUE
+#  index_users_on_username_lower      (username_lower) UNIQUE
 #

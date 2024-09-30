@@ -66,7 +66,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Reader
   b.name = "Reader"
-  b.default_icon = "book-reader"
+  b.default_icon = "book-open-reader"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -80,7 +80,7 @@ end
 Badge.seed do |b|
   b.id = Badge::ReadGuidelines
   b.name = "Read Guidelines"
-  b.default_icon = "file-alt"
+  b.default_icon = "file-lines"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = false
@@ -223,7 +223,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Autobiographer
   b.name = "Autobiographer"
-  b.default_icon = "user-edit"
+  b.default_icon = "user-pen"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.query = BadgeQueries::Autobiographer
@@ -247,7 +247,7 @@ end
 Badge.seed do |b|
   b.id = Badge::WikiEditor
   b.name = "Wiki Editor"
-  b.default_icon = "far-edit"
+  b.default_icon = "far-pen-to-square"
   b.badge_type_id = BadgeType::Bronze
   b.multiple_grant = false
   b.target_posts = true
@@ -300,7 +300,7 @@ end
 Badge.seed do |b|
   b.id = Badge::Anniversary
   b.name = "Anniversary"
-  b.default_icon = "birthday-cake"
+  b.default_icon = "cake-candles"
   b.badge_type_id = BadgeType::Silver
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.query = nil

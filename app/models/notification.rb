@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
+  self.ignored_columns = [
+    :old_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+  ]
+
   attr_accessor :acting_user
   attr_accessor :acting_username
 
@@ -160,6 +164,7 @@ class Notification < ActiveRecord::Base
         new_features: 37,
         admin_problems: 38,
         linked_consolidated: 39,
+        chat_watched_thread: 40,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -407,7 +412,6 @@ end
 #
 # Table name: notifications
 #
-#  id                :integer          not null, primary key
 #  notification_type :integer          not null
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
@@ -418,6 +422,7 @@ end
 #  post_number       :integer
 #  post_action_id    :integer
 #  high_priority     :boolean          default(FALSE), not null
+#  id                :bigint           not null, primary key
 #
 # Indexes
 #

@@ -59,9 +59,8 @@ after_initialize do
         config.allowed_group_ids += SiteSetting.edit_all_post_groups.split("|").map(&:to_i)
       end
 
-      if SiteSetting.enable_category_group_moderation? &&
-           group_id = topic.category&.reviewable_by_group_id
-        config.allowed_group_ids << group_id
+      if SiteSetting.enable_category_group_moderation? && topic.category
+        config.allowed_group_ids.push(*topic.category.moderating_groups.pluck(:id))
       end
 
       config

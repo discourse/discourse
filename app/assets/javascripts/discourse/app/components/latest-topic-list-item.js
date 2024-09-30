@@ -1,16 +1,19 @@
 import Component from "@ember/component";
 import {
+  attributeBindings,
+  classNameBindings,
+} from "@ember-decorators/component";
+import {
   navigateToTopic,
   showEntrance,
 } from "discourse/components/topic-list-item";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  attributeBindings: ["topic.id:data-topic-id"],
-  classNameBindings: [":latest-topic-list-item", "unboundClassNames"],
-
-  showEntrance,
-  navigateToTopic,
+@attributeBindings("topic.id:data-topic-id")
+@classNameBindings(":latest-topic-list-item", "unboundClassNames")
+export default class LatestTopicListItem extends Component {
+  showEntrance = showEntrance;
+  navigateToTopic = navigateToTopic;
 
   click(e) {
     // for events undefined has a different meaning than false
@@ -19,10 +22,10 @@ export default Component.extend({
     }
 
     return this.unhandledRowClick(e, this.topic);
-  },
+  }
 
   // Can be overwritten by plugins to handle clicks on other parts of the row
-  unhandledRowClick() {},
+  unhandledRowClick() {}
 
   @discourseComputed("topic")
   unboundClassNames(topic) {
@@ -45,5 +48,5 @@ export default Component.extend({
     );
 
     return classes.join(" ");
-  },
-});
+  }
+}

@@ -117,14 +117,14 @@ export default class ThemesListItem extends Component {
               {{/if}}
               {{#if @theme.isPendingUpdates}}
                 {{icon
-                  "sync"
+                  "arrows-rotate"
                   title="admin.customize.theme.updates_available_tooltip"
                   class="light-grey-icon"
                 }}
               {{/if}}
               {{#if @theme.isBroken}}
                 {{icon
-                  "exclamation-circle"
+                  "circle-exclamation"
                   class="broken-indicator"
                   title="admin.customize.theme.broken_theme_tooltip"
                 }}

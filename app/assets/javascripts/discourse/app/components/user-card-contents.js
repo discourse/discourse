@@ -1,98 +1,114 @@
-import Component from "@ember/component";
-import EmberObject, { action, set } from "@ember/object";
+import EmberObject, { action, computed, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import { propertyNotEqual, setting } from "discourse/lib/computed";
+import {
+  attributeBindings,
+  classNameBindings,
+  classNames,
+} from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
+import CardContentsBase from "discourse/components/card-contents-base";
+import { setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
-  elementId: "user-card",
-  classNames: "user-card",
-  avatarSelector: "[data-user-card]",
-  avatarDataAttrKey: "userCard",
-  mentionSelector: "a.mention",
-  classNameBindings: [
-    "visible:show",
-    "showBadges",
-    "user.card_background_upload_url::no-bg",
-    "isFixed:fixed",
-    "usernameClass",
-    "primaryGroup",
-  ],
-  attributeBindings: ["labelledBy:aria-labelledby"],
-  allowBackgrounds: setting("allow_profile_backgrounds"),
-  showBadges: setting("enable_badges"),
+@classNames("user-card")
+@classNameBindings(
+  "visible:show",
+  "showBadges",
+  "user.card_background_upload_url::no-bg",
+  "isFixed:fixed",
+  "usernameClass",
+  "primaryGroup"
+)
+@attributeBindings("labelledBy:aria-labelledby")
+export default class UserCardContents extends CardContentsBase.extend(
+  CanCheckEmails,
+  CleansUp
+) {
+  elementId = "user-card";
+  avatarSelector = "[data-user-card]";
+  avatarDataAttrKey = "userCard";
+  mentionSelector = "a.mention";
 
-  postStream: alias("topic.postStream"),
-  enoughPostsForFiltering: gte("topicPostCount", 2),
-  showFilter: and(
-    "viewingTopic",
-    "postStream.hasNoFilters",
-    "enoughPostsForFiltering"
-  ),
-  showName: propertyNotEqual("user.name", "user.username"),
-  hasUserFilters: gt("postStream.userFilters.length", 0),
-  showMoreBadges: gt("moreBadgesCount", 0),
-  showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
-  linkWebsite: not("user.isBasic"),
+  @setting("allow_profile_backgrounds") allowBackgrounds;
+  @setting("enable_badges") showBadges;
+  @setting("display_local_time_in_user_card") showUserLocalTime;
+
+  @alias("topic.postStream") postStream;
+
+  @gte("topicPostCount", 2) enoughPostsForFiltering;
+
+  @and("viewingTopic", "postStream.hasNoFilters", "enoughPostsForFiltering")
+  showFilter;
+
+  @gt("postStream.userFilters.length", 0) hasUserFilters;
+  @gt("moreBadgesCount", 0) showMoreBadges;
+  @and("viewingAdmin", "showName", "user.canBeDeleted") showDelete;
+  @not("user.isBasic") linkWebsite;
+  @or("user.suspend_reason", "user.bio_excerpt") isSuspendedOrHasBio;
+  @and("user.staged", "canCheckEmails") showCheckEmail;
+
+  user = null;
+
+  // If inside a topic
+  topicPostCount = null;
+
+  @and(
+    "user.featured_topic",
+    "siteSettings.allow_featured_topic_on_user_profiles"
+  )
+  showFeaturedTopic;
+
+  @computed("user.name", "user.username")
+  get showName() {
+    return this.user.name !== this.user.username;
+  }
 
   @discourseComputed("user")
   labelledBy(user) {
     return user ? "discourse-user-card-title" : null;
-  },
+  }
 
   @discourseComputed("user")
   hasLocaleOrWebsite(user) {
     return user.location || user.website_name || this.userTimezone;
-  },
+  }
 
   @discourseComputed("user.status")
   hasStatus() {
     return this.siteSettings.enable_user_status && this.user.status;
-  },
+  }
 
   @discourseComputed("user.status.emoji")
   userStatusEmoji(emoji) {
     return emojiUnescape(escapeExpression(`:${emoji}:`));
-  },
-
-  isSuspendedOrHasBio: or("user.suspend_reason", "user.bio_excerpt"),
-  showCheckEmail: and("user.staged", "canCheckEmails"),
-
-  user: null,
-
-  // If inside a topic
-  topicPostCount: null,
-
-  showFeaturedTopic: and(
-    "user.featured_topic",
-    "siteSettings.allow_featured_topic_on_user_profiles"
-  ),
-
-  showUserLocalTime: setting("display_local_time_in_user_card"),
+  }
 
   @discourseComputed("user.staff")
-  staff: (isStaff) => (isStaff ? "staff" : ""),
+  staff(isStaff) {
+    return isStaff ? "staff" : "";
+  }
 
   @discourseComputed("user.trust_level")
-  newUser: (trustLevel) => (trustLevel === 0 ? "new-user" : ""),
+  newUser(trustLevel) {
+    return trustLevel === 0 ? "new-user" : "";
+  }
 
   @discourseComputed("user.name")
   nameFirst(name) {
     return prioritizeNameInUx(name);
-  },
+  }
 
   @discourseComputed("user")
   userTimezone(user) {
@@ -100,20 +116,22 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       return;
     }
     return user.get("user_option.timezone");
-  },
+  }
 
   @discourseComputed("userTimezone")
   formattedUserLocalTime(timezone) {
     return moment.tz(timezone).format(I18n.t("dates.time"));
-  },
+  }
 
   @discourseComputed("username")
-  usernameClass: (username) => (username ? `user-card-${username}` : ""),
+  usernameClass(username) {
+    return username ? `user-card-${username}` : "";
+  }
 
   @discourseComputed("username", "topicPostCount")
   filterPostsLabel(username, count) {
     return I18n.t("topic.filter_to", { username, count });
-  },
+  }
 
   @discourseComputed("user.user_fields.@each.value")
   publicUserFields() {
@@ -130,25 +148,27 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         })
         .compact();
     }
-  },
+  }
 
   @discourseComputed("user.trust_level")
   removeNoFollow(trustLevel) {
     return trustLevel > 2 && !this.siteSettings.tl3_links_no_follow;
-  },
+  }
 
   @discourseComputed("user.badge_count", "user.featured_user_badges.length")
-  moreBadgesCount: (badgeCount, badgeLength) => badgeCount - badgeLength,
+  moreBadgesCount(badgeCount, badgeLength) {
+    return badgeCount - badgeLength;
+  }
 
   @discourseComputed("user.time_read", "user.recent_time_read")
   showRecentTimeRead(timeRead, recentTimeRead) {
     return timeRead !== recentTimeRead && recentTimeRead !== 0;
-  },
+  }
 
   @discourseComputed("user.recent_time_read")
   recentTimeRead(recentTimeReadSeconds) {
     return durationTiny(recentTimeReadSeconds);
-  },
+  }
 
   @discourseComputed("showRecentTimeRead", "user.time_read", "recentTimeRead")
   timeReadTooltip(showRecent, timeRead, recentTimeRead) {
@@ -162,7 +182,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
         time_read: durationTiny(timeRead),
       });
     }
-  },
+  }
 
   @observes("user.card_background_upload_url")
   addBackground() {
@@ -177,17 +197,17 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
     this.element.style.backgroundImage = bg;
-  },
+  }
 
   @discourseComputed("user.primary_group_name")
   primaryGroup(primaryGroup) {
     return `group-${primaryGroup}`;
-  },
+  }
 
   @discourseComputed("user.profile_hidden", "user.inactive")
   contentHidden(profileHidden, inactive) {
     return profileHidden || inactive;
-  },
+  }
 
   async _showCallback(username) {
     this.setProperties({ visible: true, loading: true });
@@ -215,7 +235,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     } finally {
       this.set("loading", null);
     }
-  },
+  }
 
   _close() {
     this.user?.statusManager.stopTrackingStatus();
@@ -225,12 +245,12 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       topicPostCount: null,
     });
 
-    this._super(...arguments);
-  },
+    super._close(...arguments);
+  }
 
   cleanUp() {
     this._close();
-  },
+  }
 
   @action
   handleShowUser(event) {
@@ -243,36 +263,40 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     // refactoring this to a glimmer component.
     this.showUser(this.user);
     this._close();
-  },
+  }
 
-  actions: {
-    close() {
-      this._close();
-    },
+  @action
+  close() {
+    this._close();
+  }
 
-    composePM(user, post) {
-      this._close();
-      this.composePrivateMessage(user, post);
-    },
+  @action
+  composePM(user, post) {
+    this._close();
+    this.composePrivateMessage(user, post);
+  }
 
-    cancelFilter() {
-      this.postStream.cancelFilter();
-      this.postStream.refresh();
-      this._close();
-    },
+  @action
+  cancelFilter() {
+    this.postStream.cancelFilter();
+    this.postStream.refresh();
+    this._close();
+  }
 
-    filterPosts() {
-      this.filterPosts(this.user);
-      this._close();
-    },
+  @action
+  handleFilterPosts() {
+    this.filterPosts(this.user);
+    this._close();
+  }
 
-    deleteUser() {
-      this.user.delete();
-      this._close();
-    },
+  @action
+  deleteUser() {
+    this.user.delete();
+    this._close();
+  }
 
-    checkEmail(user) {
-      user.checkEmail();
-    },
-  },
-});
+  @action
+  checkEmail(user) {
+    user.checkEmail();
+  }
+}

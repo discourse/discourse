@@ -13,6 +13,9 @@ hu:
       total_votes:
         one: "összes szavazat"
         other: "összes szavazat"
+      votes:
+        one: "%{count} szavazat"
+        other: "%{count} szavazat"
       average_rating: "Átlagos értékelés: <strong>%{average}</strong>."
       public:
         title: "A szavazatok <strong>nyilvánosak</strong>."
@@ -25,16 +28,39 @@ hu:
           title: "Az eredmények a <strong>szavazás lezárásakor</strong> lesznek megjelenítve."
         staff:
           title: "Az eredményeket csak a <strong>stábtagok</strong> láthatják."
+        tabs:
+          votes: "Szavazatok"
+          outcome: "Eredmény"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
+            other: "Legalább <strong>%{count}</strong> lehetőséget válasszon."
+          up_to_max_options:
+            one: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
+            other: "Legfeljebb <strong>%{count}</strong> lehetőséget válasszon."
+          x_options:
+            one: "<strong>%{count}</strong> lehetőséget válasszon."
+            other: "<strong>%{count}</strong> lehetőséget válasszon."
+          between_min_and_max_options: "<strong>%{min} és %{max}</strong> között válasszon."
       cast-votes:
         title: "Szavazat leadása"
         label: "Szavazzon most!"
       show-results:
         title: "Eredmények megjelenítése"
         label: "Eredmények"
+      show-tally:
+        title: "Szavazási eredmények megjelenítése a szavazatok száma szerint"
+        label: "Összesítés megjelenítése"
+      show-percentage:
+        title: "Szavazási eredmények százalékos megjelenítése"
+        label: "Megjelenítés százalékban"
       remove-vote:
         title: "Saját szavazat eltávolítása"
+        label: "Szavazás visszavonása"
       hide-results:
         title: "Vissza a szavazataihoz"
+        label: "Szavazás"
       group-results:
         title: "Szavazatok csoportosítása felhasználói mező szerint"
         label: "Bontás megjelenítése"
@@ -59,9 +85,26 @@ hu:
         percentage: "Százalék"
         count: "Számláló"
       ranked_choice:
+        title:
+          rounds: "Forduló"
+          outcome: "Eredmény"
         none: "Egyik sem"
+        majority: "Többség"
+        eliminated: "Kiesett"
+        round: "Forduló"
+        winner:
+          one: "Az első forduló után %{winner} a győztes."
+          other: "%{count} forduló után %{winner} a győztes."
+        tied:
+          one: "Egy forduló után döntetlen a következő jelöltek között:"
+          other: "%{count} forduló után döntetlen a következő jelöltek között:"
       options:
         label: "Beállítások"
+        ranked_choice:
+          abstain: "Tartózkodás"
+          highest_priority: "(legmagasabb prioritás)"
+          lowest_priority: "(legalacsonyabb prioritás)"
+          login: "Jelentkezzen be a szavazáshoz!"
       error_while_toggling_status: "Sajnáljuk, hiba történt a szavazás állapotának átváltásakor."
       error_while_casting_votes: "Sajnáljuk, hiba történt a szavazata leadásakor."
       error_while_fetching_voters: "Sajnáljuk, hiba történt a szavazók megjelenítésekor."
@@ -80,6 +123,7 @@ hu:
           label: Típus
           regular: Egyetlen választás
           multiple: Többválasztós
+          ranked_choice: Rangsorolt választás
           number: Számszerű értékelés
         poll_result:
           label: Eredmények megjelenítése…

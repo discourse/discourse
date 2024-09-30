@@ -1,18 +1,23 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["tags-admin-dropdown"],
-  classNames: ["tags-admin-dropdown"],
-  actionsMapping: null,
+@classNames("tags-admin-dropdown")
+@selectKitOptions({
+  icons: ["wrench", "caret-down"],
+  showFullTitle: false,
+})
+@pluginApiIdentifiers("tags-admin-dropdown")
+export default class TagsAdminDropdown extends DropdownSelectBoxComponent {
+  actionsMapping = null;
 
-  selectKitOptions: {
-    icons: ["wrench", "caret-down"],
-    showFullTitle: false,
-  },
-
-  content: computed(function () {
+  @computed
+  get content() {
     return [
       {
         id: "manageGroups",
@@ -30,18 +35,13 @@ export default DropdownSelectBoxComponent.extend({
         id: "deleteUnusedTags",
         name: I18n.t("tagging.delete_unused"),
         description: I18n.t("tagging.delete_unused_description"),
-        icon: "trash-alt",
+        icon: "trash-can",
       },
     ];
-  }),
+  }
 
-  actions: {
-    onChange(id) {
-      const action = this.actionsMapping[id];
-
-      if (action) {
-        action();
-      }
-    },
-  },
-});
+  @action
+  onChange(id) {
+    this.actionsMapping[id]?.();
+  }
+}

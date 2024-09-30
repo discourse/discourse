@@ -19,9 +19,7 @@ RSpec.describe Chat::UpdateThread do
     let(:params) { { guardian: guardian, thread_id: thread.id, title: title } }
 
     context "when all steps pass" do
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
+      it { is_expected.to run_successfully }
 
       it "updates the title of the thread" do
         result

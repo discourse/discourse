@@ -173,6 +173,7 @@ ja:
     broken_decorator_alert: "サイトのいずれかの投稿コンテンツデコレータでエラーが発生したため、投稿が正しく表示されない可能性があります。"
     broken_page_change_alert: "onPageChange ハンドラーでエラーが発生しました。詳細は、ブラウザの開発者ツールを確認してください。"
     broken_plugin_alert: "プラグイン '%{name}' が原因"
+    broken_transformer_alert: "エラーが発生しました。サイトが正しく動作しない可能性があります。"
     critical_deprecation:
       notice: "<b>[管理者からのお知らせ]</b> 次回の Discourse コアの変更に対応するために、お使いのテーマまたはプラグインの 1 つを更新する必要があります。"
       id: "(id:<em>%{id}</em>)"
@@ -239,6 +240,7 @@ ja:
     now: "たった今"
     read_more: "もっと読む"
     more: "もっと"
+    more_options: "その他のオプション"
     x_more:
       other: "他 %{count}"
     never: "なし"
@@ -279,15 +281,36 @@ ja:
       post_count: "投稿"
       user_count: "登録数"
       active_user_count: "アクティブユーザー数"
+      visitor_count: "訪問者"
+      eu_visitor_count: "欧州連合からの訪問者"
+      traffic_info_footer_MF: |
+        過去 6 か月において、このサイトは毎月およそ { total_visitors, plural,
+            other {# 人}
+        } に配信され、内 { eu_visitors, plural,
+            other {# 人}
+        } は欧州連合からのアクセスでした。
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
+      site_activity: "サイトのアクティビティ"
+      view_more: "さらに表示"
+      view_less: "表示を減らす"
       activities:
         topics:
           other: "%{formatted_number}トピック"
         posts:
-          other: "投稿 %{formatted_number} 件"
+          other: "%{formatted_number} 投稿"
+        active_users:
+          other: "%{formatted_number} アクティブユーザー"
+        sign_ups:
+          other: "%{formatted_number} 登録"
         likes:
-          other: "「いいね！」 %{formatted_number}"
+          other: "%{formatted_number}「いいね！」"
+        visitors_MF: |
+          { total_count, plural,
+              other {訪問者数 {total_formatted_number} 人}
+          }、EU からの訪問者数約 { eu_count, plural,
+              other {{eu_formatted_number} 人}
+          }
         periods:
           last_7_days: "過去 7 日間"
           today: "今日"
@@ -299,6 +322,12 @@ ja:
       moderator_count:
         other: "%{formatted_number} モデレーター"
       report_inappropriate_content: "不適切なコンテンツに遭遇した場合は、モデレーターや管理者にお伝えください。ご連絡の前に必ずログインしてください。"
+      site_age:
+        less_than_one_month: "1 か月未満前に作成"
+        month:
+          other: "%{count} か月前に作成"
+        year:
+          other: "%{count} 年前に作成"
     bookmarked:
       title: "ブックマーク"
       edit_bookmark: "ブックマークを編集"
@@ -654,6 +683,7 @@ ja:
       never: "なし"
       last_custom: "最後のカスタム日時"
       custom: "カスタムの日付と時刻"
+      more_options: "その他のオプション…"
       select_timeframe: "時間枠を選択してください"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> が<a href='%{topicUrl}'>トピック</a>を作成しました"
@@ -1277,6 +1307,54 @@ ja:
         warnings: "運営スタッフからの警告"
         read_more_in_group: "もっと読みますか？%{groupLink} で他のメッセージを閲覧できます。"
         read_more: "もっと読みますか？<a href='%{basePath}/u/%{username}/messages'>個人メッセージ</a>で他のメッセージを閲覧できます。"
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 件の未読</a>メッセージがあります}
+              }
+              { NEW, plural,
+                   =0 {}
+                other { また、残り <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># 件の未読</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># 件の新着</a>メッセージがあります。または {groupLink} で他のメッセージを閲覧してください}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                other {<a href="{basePath}/u/{username}/messages/unread"># 件の未読</a>メッセージがあります}
+              }
+              { NEW, plural,
+                   =0 {}
+                other { また、残り <a href="{basePath}/u/{username}/messages/new"># 件の新着</a>メッセージがあります。または他の<a href="{basePath}/u/{username}/messages">個人メッセージ</a>を閲覧してください}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                other {残り <a href="{basePath}/u/{username}/messages/unread"># 件の未読</a>メッセージがあります。または、他の<a href="{basePath}/u/{username}/messages">個人メッセージ</a>を閲覧してください}
+              }
+              { NEW, plural,
+                   =0 {}
+                other {残り <a href="{basePath}/u/{username}/messages/new"># 件の新着</a>メッセージがあります。または、他の<a href="{basePath}/u/{username}/messages">個人メッセージ</a>を閲覧してください}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "アカウント"
         security: "セキュリティ"
@@ -1479,12 +1557,12 @@ ja:
           account_specific: "あなたの %{provider} アカウント '%{account_description}' が認証に使用されます。"
           generic: "あなたの %{provider} アカウントが認証に使用されます。"
       activate_account:
-        action: "クリックしてアカウントを確認する"
+        action: "クリックしてアカウントを有効化する"
         already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
         please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
         continue_button: "%{site_name} に進む"
         welcome_to: "%{site_name} へようこそ！"
-        approval_required: "このフォーラムにアクセスするにはモデレーターによる承認が必要です。承認されるとメールで通知されます！"
+        approval_required: "このフォーラムにアクセスするには、モデレーターがあなたの新規アカウントを手動で承認する必要があります。承認されるとメールで通知されます！"
       name:
         title: "名前"
         instructions: "あなたの氏名 (オプション) です。"
@@ -1857,7 +1935,33 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            other {1 時間あたりのエラー件数 (#)}
+        }</a> はサイトで設定されている {limit, plural,
+            other {1 時間あたりのエラー件数 (#)}
+        } の制限に達しました。
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            other {1 分あたりのエラー件数 (#)}
+        }</a> はサイトで設定されている {limit, plural,
+            other {1 分あたりのエラー件数 (#)}
+        } の制限に達しました。
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            other {1 時間あたりのエラー件数 (#)}
+        }</a> はサイトで設定されている { limit, plural,
+            other {1 時間あたりのエラー件数 (#)}
+        } の制限を超えました。
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            other {1 分あたりのエラー件数 (#)}
+        }</a> はサイトで設定されている {limit, plural,
+            other {1 分あたりのエラー件数 (#)}
+        } の制限を超えました。
     learn_more: "もっと読む…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>詳細…</a>"
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終投稿
@@ -1933,6 +2037,10 @@ ja:
       associate: "アカウントをお持ちですか？<a href='%{associate_link}'>ログイン</a>して %{provider} アカウントにリンクします。"
       activation_title: "アカウントの有効化"
       already_have_account: "すでにアカウントをお持ちですか？"
+      progress_bar:
+        signup: "アカウントを登録"
+        approve: "承認"
+        login: "ログイン"
     forgot_password:
       title: "パスワードをリセット"
       action: "パスワードを忘れました"
@@ -2124,6 +2232,7 @@ ja:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} は許容される %{max_file_size} の最大値を超えています"
+        size_too_small: "%{provided_file_size} は最低許容サイズの %{min_file_size} を下回っています"
     emoji_picker:
       filter_placeholder: 絵文字を探す
       smileys_&_emotion: スマイルと感情
@@ -3528,6 +3637,7 @@ ja:
         none: "サブカテゴリなし"
       colors_disabled: "category style が none であるため色を選択できません。"
     flagging:
+      title: "ご報告ありがとうございます！"
       action: "投稿を通報"
       take_action: "対応する…"
       take_action_options:
@@ -3572,6 +3682,7 @@ ja:
         left:
           other: "残り %{count}"
     flagging_topic:
+      title: "ご報告ありがとうございます！"
       action: "トピックを通報"
       notify_action: "メッセージ"
     topic_map:
@@ -4009,6 +4120,7 @@ ja:
         everyone_can_use: "全員がタグを使用できます。"
         usable_only_by_groups: "タグは全員に表示されますが、次のグループのみが使用できます。"
         visible_only_to_groups: "タグは次のグループにのみ表示されます"
+        cannot_save: "タググループを保存できません。少なくとも 1 つのタグが存在し、タググループ名が空ではなく 100 文字以下であり、タグ権限のグループが選択されていることを確認してください。"
         tags_placeholder: "タグを検索または作成"
         parent_tag_placeholder: "オプション"
         select_groups_placeholder: "グループを選択…"
@@ -4335,6 +4447,7 @@ ja:
     powered_by_discourse: "Discourse 提供"
   admin_js:
     type_to_filter: "入力してフィルタ..."
+    settings: "設定"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -4369,6 +4482,7 @@ ja:
         problems_found: "現在のサイト設定に基づいたアドバイス"
         new_features:
           title: "新機能"
+          subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
           previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
         last_checked: "最終チェック"
@@ -4893,6 +5007,7 @@ ja:
           back: "通報に戻る"
           delete: "削除"
           delete_confirm: '"%{name}" を削除してもよろしいですか？'
+          flags_tab: "旗"
           form:
             add_header: "通報を追加"
             edit_header: "通報を編集"
@@ -4918,7 +5033,6 @@ ja:
             move_down: "下に移動"
       plugins:
         title: "プラグイン"
-        installed: "インストール済みプラグイン"
         name: "名前"
         none_installed: "インストール済みのプラグインはありません。"
         version: "バージョン"
@@ -4956,10 +5070,13 @@ ja:
         legacy: "レガシー"
       backups:
         title: "バックアップ"
+        files_title: "バックアップファイル"
+        description: "Discourse のバックアップには、トピック、投稿、ユーザー、グループ、設定、テーマなど、サイトのすべてを含むサイトの完全なデータベースが含まれます。バックアップファイルの作成方法に応じて、アップロードが含まれる場合や含まれない場合があります。"
         menu:
           backups: "バックアップ"
+          backup_files: "バックアップファイル"
           logs: "ログ"
-        none: "バックアップはありません。"
+        none: "バックアップはありません"
         read_only:
           enable:
             title: "閲覧専用モードを有効にする"
@@ -4997,12 +5114,12 @@ ja:
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
-            alert: "バックアップのダウンロードリンクがメールで送られました。"
+            alert: "このバックアップのダウンロードリンクがメールで送信されました"
           destroy:
             title: "バックアップの削除"
             confirm: "このバックアップを削除してもよろしいですか？"
           restore:
-            is_disabled: "復元はサイト設定で無効になっています。"
+            is_disabled: "復元は現在無効になっています。有効にするには、<a href='%{url}'>サイト設定</a>にアクセスしてください。"
             label: "復元"
             title: "バックアップの復元"
             confirm: "バックアップを復元してもよろしいですか？"
@@ -5011,7 +5128,7 @@ ja:
             title: "データベースを前回の状態に戻す"
             confirm: "データベースを以前の稼働状態にロールバックしてもよろしいですか？"
         location:
-          local: "ロカールストレージ"
+          local: "ローカルストレージ"
           s3: "S3"
         backup_storage_error: "バックアップストレージへのアクセスに失敗しました: %{error_message}"
       export_csv:
@@ -6104,6 +6221,7 @@ ja:
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
         show_untranslated: "未翻訳のみを表示"
+        only_show_selected_locale: "選択したロケールの結果のみを表示"
         locale: "言語:"
         more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
         no_results: "一致するサイトテキストは見つかりませんでした"

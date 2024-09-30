@@ -46,6 +46,8 @@ export default class UserThreads extends Component {
       if (tracking) {
         thread.tracking.mentionCount = tracking.mention_count;
         thread.tracking.unreadCount = tracking.unread_count;
+        thread.tracking.watchedThreadsUnreadCount =
+          tracking.watched_threads_unread_count;
       }
 
       this.trackChannel(thread.channel);

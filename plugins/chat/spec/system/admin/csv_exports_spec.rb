@@ -1,26 +1,32 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat CSV exports", type: :system do
-  fab!(:admin)
+RSpec.describe "Admin Chat CSV exports", type: :system do
+  let(:dialog) { PageObjects::Components::Dialog.new }
   let(:csv_export_pm_page) { PageObjects::Pages::CSVExportPM.new }
+  fab!(:current_user) { Fabricate(:admin) }
 
   before do
     Jobs.run_immediately!
-    sign_in(admin)
+    sign_in(current_user)
     chat_system_bootstrap
   end
 
-  xit "exports chat messages" do
+  it "exports chat messages" do
+    Jobs.run_immediately!
     message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
     message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
     message_3 = Fabricate(:chat_message, created_at: 1.months.ago)
     message_4 = Fabricate(:chat_message, created_at: Time.now)
 
     visit "/admin/plugins/chat"
-    click_button "Create export"
+    click_button I18n.t("js.chat.admin.export_messages.create_export")
+    dialog.click_yes
 
-    visit "/u/#{admin.username}/messages"
-    click_link "[Chat Message] Data export complete"
+    visit "/u/#{current_user.username}/messages"
+    click_link I18n.t(
+                 "system_messages.csv_export_succeeded.subject_template",
+                 export_title: "Chat Message",
+               )
     expect(csv_export_pm_page).to have_download_link
     exported_data = csv_export_pm_page.download_and_extract
 

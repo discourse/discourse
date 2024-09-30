@@ -193,7 +193,7 @@ def spec(plugin, parallel: false, argv: nil)
 
   # reject system specs as they are slow and need dedicated setup
   files =
-    Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
+    Dir.glob("plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
 
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
@@ -221,7 +221,7 @@ task "plugin:turbo_spec", %i[plugin argv] do |_, args|
 end
 
 desc "run plugin qunit tests"
-task "plugin:qunit", %i[plugin timeout] do |t, args|
+task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
   rake = "#{Rails.root}/bin/rake"
@@ -238,9 +238,7 @@ task "plugin:qunit", %i[plugin timeout] do |t, args|
     end
 
   cmd += "TARGET='#{target}' "
-
   cmd += "#{rake} qunit:test"
-  cmd += "[#{args[:timeout]}]" if args[:timeout]
 
   system cmd
   exit $?.exitstatus

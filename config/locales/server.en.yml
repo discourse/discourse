@@ -60,6 +60,13 @@ en:
   remove_posts_deleted_by_author: "Deleted by author"
   redirect_warning: "We were unable to verify that the link you selected was actually posted to the forum. If you wish to proceed anyway, select the link below."
   on_another_topic: "On another topic"
+
+  topic_category_changed: "From %{from} to %{to}"
+  topic_tag_changed:
+    added_and_removed: "Added %{added} and removed %{removed}"
+    added: "Added %{added}"
+    removed: "Removed %{removed}"
+
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
@@ -605,6 +612,9 @@ en:
         one: "%{count} user has been added to the group."
         other: "%{count} users have been added to the group."
     errors:
+      default_notification_level_users_limit:
+        one: "Default notification level can't be set on groups larger than %{count} user. Incorrect group: %{group_name}"
+        other: "Default notification level can't be set on groups larger than %{count} users. Incorrect group: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' is not a valid trust level."
       can_not_modify_automatic: "You cannot modify an automatic group"
       member_already_exist:
@@ -632,6 +642,20 @@ en:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      everyone: "Automatic group including all members"
+      staff: "Automatic group including admins and moderators"
+      admins: "Responsible for configuring and maintaining this site, with access to all member and activity data"
+      moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
+      trust_level_0: "New members with limited abilities, who are learning community norms and functionality"
+
+      trust_level_1: "Members with more trust, who have shown initial engagement by reading hand can now access more functions. All members of this group are also members of the trust_level_0 group."
+
+      trust_level_2: "Active members who have consistently contributed overtime and gained full citizenship privileges. All members of this group are also members of the trust_level_1 and trust_level_0 groups."
+
+      trust_level_3: "Highly engaged, long-term contributors, who form the backbone of the community and have gained limited moderation privileges. All members of this group are also members of the trust_level_2, trust_level_1 and trust_level_0 groups."
+
+      trust_level_4: "Manually promoted members, recognized by their exemplary contributions and entrusted with additional moderation privileges. All members of this group are also members of the trust_level_3, trust_level_2, trust_level_1 and trust_level_0 groups."
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
     request_accepted_pm:
@@ -733,6 +757,7 @@ en:
               reply_by_email_disabled: "Reply by email has been disabled."
               send_to_email_disabled: "Sorry, you cannot send personal messages to email."
               target_user_not_found: "One of the users you are sending this message to could not be found."
+              too_large_group: "The group: %{group_name}, has too many users to receive a message. Limit is %{limit}."
               unable_to_update: "There was an error updating that topic."
               unable_to_tag: "There was an error tagging the topic."
               unable_to_unlist: "Sorry, you cannot create an unlisted topic."
@@ -1245,6 +1270,7 @@ en:
       wrong_move: "Flag cannot be moved"
       system: "System flag cannot be updated or deleted."
       used: "Flag cannot be updated or deleted because has already been used."
+      unique_name: "Flag name must be unique"
   reports:
     default:
       labels:
@@ -1346,7 +1372,17 @@ en:
         page_view_crawler: "Known Crawler"
         page_view_other: "Other pageviews"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
+    site_traffic:
+      title: "Site traffic"
+      xaxis:
+        page_view_anon_browser: "Pageviews (anonymous)"
+        page_view_logged_in_browser: "Pageviews (logged in)"
+        page_view_crawler: "Known crawlers"
+        page_view_other: "Other traffic"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other traffic."
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -1840,7 +1876,7 @@ en:
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
-    allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
+    allowed_iframes: "A list of iframe src URL prefixes that Discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
@@ -1854,8 +1890,8 @@ en:
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
     top_menu: "Determine which items appear in the homepage navigation, and in what order."
-    post_menu: "Determine which items appear on the post menu, and in what order."
-    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
+    post_menu: "Configure the visibility and order of default post menu items. Additional items added by plugins or themes are managed separately and won’t appear in this list."
+    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on. Additional items added by plugins or themes are managed separately and won’t appear in this list."
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
@@ -2209,6 +2245,7 @@ en:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
+    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
@@ -2477,7 +2514,7 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
+    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2608,6 +2645,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
+    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
@@ -2664,7 +2702,7 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
-    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/316549"
+    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Enable the redesigned /about page for specific groups."
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
@@ -2672,6 +2710,7 @@ en:
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
+    about_page_hidden_groups: "Do not show members of specific groups on the /about page."
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Remove the Moderation Flags link from the admin sidebar."
 

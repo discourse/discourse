@@ -6,16 +6,16 @@ import { seenUser } from "discourse/lib/user-presence";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
-const DiscourseRoute = Route.extend({
-  router: service(),
+export default class DiscourseRoute extends Route {
+  @service router;
 
   willTransition() {
     seenUser();
-  },
+  }
 
   _refreshTitleOnce() {
     this.send("_collectTitleTokens", []);
-  },
+  }
 
   @action
   _collectTitleTokens(tokens) {
@@ -31,19 +31,19 @@ const DiscourseRoute = Route.extend({
       }
     }
     return true;
-  },
+  }
 
   @action
   refreshTitle() {
     once(this, this._refreshTitleOnce);
-  },
+  }
 
   redirectIfLoginRequired() {
     const app = this.controllerFor("application");
     if (app.get("loginRequired")) {
       this.router.replaceWith("login");
     }
-  },
+  }
 
   openTopicDraft() {
     deprecated(
@@ -55,7 +55,7 @@ const DiscourseRoute = Route.extend({
         .lookup("service:composer")
         .openNewTopic({ preferDraft: true });
     }
-  },
+  }
 
   isCurrentUser(user) {
     if (!this.currentUser) {
@@ -63,7 +63,5 @@ const DiscourseRoute = Route.extend({
     }
 
     return user.id === this.currentUser.id;
-  },
-});
-
-export default DiscourseRoute;
+  }
+}

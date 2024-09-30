@@ -306,7 +306,8 @@ RSpec.describe PostDestroyer do
           before do
             SiteSetting.enable_category_group_moderation = true
             review_group = Fabricate(:group)
-            review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+            review_category = Fabricate(:category)
+            Fabricate(:category_moderation_group, category: review_category, group: review_group)
             @reply.topic.update!(category: review_category)
             review_group.users << review_user
           end
@@ -552,7 +553,8 @@ RSpec.describe PostDestroyer do
       before do
         SiteSetting.enable_category_group_moderation = true
         review_group = Fabricate(:group)
-        review_category = Fabricate(:category, reviewable_by_group_id: review_group.id)
+        review_category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category: review_category, group: review_group)
         post.topic.update!(category: review_category)
         review_group.users << review_user
       end
@@ -1142,6 +1144,15 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "destroys the post when force_destroy is true for posts by deleted users" do
+      regular_post = Fabricate(:post, post_number: 2)
+      UserDestroyer.new(admin).destroy(regular_post.user, delete_posts: true)
+      regular_post.reload
+
+      PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
+      expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

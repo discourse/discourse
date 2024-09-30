@@ -91,7 +91,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
       </:body>
       <:footer>
         <DButton
-          @icon="sign-out-alt"
+          @icon="right-from-bracket"
           @disabled={{this.disableMoveButton}}
           @action={{this.moveMessages}}
           @label="chat.move_to_channel.confirm_move"

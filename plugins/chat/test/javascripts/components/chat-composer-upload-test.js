@@ -68,7 +68,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       hbs`<ChatComposerUpload @isDone={{true}} @upload={{this.upload}} />`
     );
 
-    assert.true(exists(".d-icon-file-alt"));
+    assert.true(exists(".d-icon-file-lines"));
     assert.strictEqual(query(".file-name").innerText.trim(), "some file.pdf");
     assert.strictEqual(query(".extension-pill").innerText.trim(), "pdf");
   });

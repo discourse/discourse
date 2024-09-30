@@ -67,7 +67,7 @@ module(
           @value={{this.value}}
           @content={{this.content}}
           @options={{hash
-            icon="times"
+            icon="xmark"
             showFullTitle=this.showFullTitle
             none=this.none
           }}

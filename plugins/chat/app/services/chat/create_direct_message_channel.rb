@@ -27,11 +27,11 @@ module Chat
     model :target_users
     policy :can_create_direct_message
     policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
+           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
     model :user_comm_screener
     policy :actor_allows_dms
     policy :targets_allow_dms_from_user,
-           class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
+           class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
     step :set_optional_name

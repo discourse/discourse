@@ -1,6 +1,8 @@
 import Component from "@ember/component";
-export default Component.extend({
-  tagName: "h3",
-  // icon name defined here so it can be easily overridden in theme components
-  lockIcon: "lock",
-});
+import { tagName } from "@ember-decorators/component";
+
+@tagName("h3")
+export default class CategoryTitleLink extends Component {}
+
+// icon name defined on prototype so it can be easily overridden in theme components
+CategoryTitleLink.prototype.lockIcon = "lock";

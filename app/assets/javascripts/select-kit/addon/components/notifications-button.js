@@ -1,25 +1,29 @@
 import { computed, setProperties } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import { allLevels, buttonDetails } from "discourse/lib/notification-levels";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["notifications-button"],
-  classNames: ["notifications-button"],
-  content: allLevels,
-  nameProperty: "key",
-
-  selectKitOptions: {
-    autoFilterable: false,
-    filterable: false,
-    i18nPrefix: "",
-    i18nPostfix: "",
-  },
+@classNames("notifications-button")
+@selectKitOptions({
+  autoFilterable: false,
+  filterable: false,
+  i18nPrefix: "",
+  i18nPostfix: "",
+})
+@pluginApiIdentifiers("notifications-button")
+export default class NotificationsButton extends DropdownSelectBoxComponent {
+  content = allLevels;
+  nameProperty = "key";
 
   getTitle(key) {
     const { i18nPrefix, i18nPostfix } = this.selectKit.options;
     return I18n.t(`${i18nPrefix}.${key}${i18nPostfix}.title`);
-  },
+  }
 
   modifyComponentForRow(_, content) {
     if (content) {
@@ -28,7 +32,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
     return "notifications-button/notifications-button-row";
-  },
+  }
 
   modifySelection(content) {
     content = content || {};
@@ -39,9 +43,10 @@ export default DropdownSelectBoxComponent.extend({
       icon: this.buttonForValue.icon,
     });
     return content;
-  },
+  }
 
-  buttonForValue: computed("value", function () {
+  @computed("value")
+  get buttonForValue() {
     return buttonDetails(this.value);
-  }),
-});
+  }
+}

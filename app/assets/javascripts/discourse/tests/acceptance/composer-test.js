@@ -10,8 +10,10 @@ import {
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { translateModKey } from "discourse/lib/utilities";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
@@ -618,7 +620,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
@@ -627,7 +629,7 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -635,14 +637,14 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
+    await menu.selectRowByName("toggle-whisper");
 
     await click(".toggle-fullscreen");
 
     await menu.expand();
 
     assert.ok(
-      menu.rowByName(I18n.t("composer.toggle_whisper")).exists(),
+      menu.rowByName("toggle-whisper").exists(),
       "whisper toggling is still present when going fullscreen"
     );
   });
@@ -732,7 +734,7 @@ acceptance("Composer", function (needs) {
     await selectKit(".toolbar-popup-menu-options").expand();
 
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_whisper")
+      "toggle-whisper"
     );
 
     assert.strictEqual(
@@ -752,7 +754,7 @@ acceptance("Composer", function (needs) {
 
     await selectKit(".toolbar-popup-menu-options").expand();
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
-      I18n.t("composer.toggle_unlisted")
+      "toggle-invisible"
     );
 
     assert.ok(
@@ -938,7 +940,7 @@ acceptance("Composer", function (needs) {
 
     sinon.stub(Draft, "get").resolves({
       draft:
-        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "times"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
+        '{"reply":"Hey there","action":"createTopic","title":"Draft topic","categoryId":2,"tags":["fun", "xmark"],"archetypeId":"regular","metaData":null,"composerTime":25269,"typingTime":8100}',
       draft_sequence: 0,
       draft_key: NEW_TOPIC_KEY,
     });
@@ -953,15 +955,15 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
     assert.strictEqual(
       selectKit(".mini-tag-chooser").header().value(),
-      "fun,times"
+      "fun,xmark"
     );
   });
 
   test("Deleting the text content of the first post in a private message", async function (assert) {
     await visit("/t/34");
 
-    await click("#post_1 .d-icon-ellipsis-h");
-    await click("#post_1 .d-icon-pencil-alt");
+    await click("#post_1 .d-icon-ellipsis");
+    await click("#post_1 .d-icon-pencil");
     await fillIn(".d-editor-input", "");
 
     assert.strictEqual(
@@ -997,7 +999,7 @@ acceptance("Composer", function (needs) {
       "save button says Save Edit"
     );
     assert.strictEqual(
-      count(".save-or-cancel button.create svg.d-icon-pencil-alt"),
+      count(".save-or-cancel button.create svg.d-icon-pencil"),
       1,
       "save button has pencil icon"
     );
@@ -1402,6 +1404,93 @@ acceptance("composer buttons API", function (needs) {
   needs.user();
   needs.settings({
     allow_uncategorized_topics: true,
+  });
+
+  test("buttons can support a shortcut", async function (assert) {
+    withPluginApi("0", (api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: (toolbarEvent) => {
+          toolbarEvent.applySurround("**", "**");
+        },
+        shortcut: "alt+b",
+        icon: "far-bold",
+        name: "bold",
+        title: "some_title",
+        label: "some_label",
+
+        condition: () => {
+          return true;
+        },
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+    await fillIn(".d-editor-input", "hello the world");
+
+    const editor = document.querySelector(".d-editor-input");
+    editor.setSelectionRange(6, 9); // select the text input in the composer
+
+    await triggerKeyEvent(
+      ".d-editor-input",
+      "keydown",
+      "B",
+      Object.assign({ altKey: true }, metaModifier)
+    );
+
+    assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
+
+    const dropdown = selectKit(".toolbar-popup-menu-options");
+    await dropdown.expand();
+
+    const row = dropdown.rowByName("bold").el();
+    assert
+      .dom(row)
+      .hasAttribute(
+        "title",
+        I18n.t("some_title") +
+          ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
+        "it shows the title with shortcut"
+      );
+    assert
+      .dom(row)
+      .hasText(
+        I18n.t("some_label") +
+          ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
+        "it shows the label with shortcut"
+      );
+  });
+
+  test("buttons can support a shortcut that triggers a custom action", async function (assert) {
+    withPluginApi("1.37.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "smile",
+          group: "extras",
+          icon: "far-face-smile",
+          shortcut: "ALT+S",
+          shortcutAction: (toolbarEvent) => {
+            toolbarEvent.addText(":smile: from keyboard");
+          },
+          sendAction: (event) => {
+            event.addText(":smile: from click");
+          },
+        });
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+    await click(".post-controls button.reply");
+
+    const editor = document.querySelector(".d-editor-input");
+    await triggerKeyEvent(
+      ".d-editor-input",
+      "keydown",
+      "S",
+      Object.assign({ altKey: true }, metaModifier)
+    );
+
+    assert.dom(editor).hasValue(":smile: from keyboard");
   });
 
   test("buttons can be added conditionally", async function (assert) {

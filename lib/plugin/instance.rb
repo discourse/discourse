@@ -49,7 +49,6 @@ class Plugin::Instance
   # Memoized array readers
   %i[
     assets
-    color_schemes
     initializers
     javascripts
     locales
@@ -593,12 +592,6 @@ class Plugin::Instance
   end
 
   def notify_after_initialize
-    color_schemes.each do |c|
-      unless ColorScheme.where(name: c[:name]).exists?
-        ColorScheme.create_from_base(name: c[:name], colors: c[:colors])
-      end
-    end
-
     initializers.each do |callback|
       begin
         callback.call(self)
@@ -730,10 +723,6 @@ class Plugin::Instance
 
   def register_service_worker(file, opts = nil)
     service_workers << [File.join(File.dirname(path), "assets", file), opts]
-  end
-
-  def register_color_scheme(name, colors)
-    color_schemes << { name: name, colors: colors }
   end
 
   def register_seed_data(key, value)
@@ -1121,7 +1110,25 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
-  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
+  #
+  # TODO(osama): remove show_in_ui when experimental_redesigned_about_page_groups is removed
+  def register_stat(
+    name,
+    show_in_ui: (
+      not_using_deprecated_arg = true
+      false
+    ),
+    expose_via_api: false,
+    &block
+  )
+    if !not_using_deprecated_arg
+      Discourse.deprecate(
+        "`show_in_ui` argument of the `register_stat` API is deprecated. Please use the `addAboutPageActivity` JS API instead if you want your custom stat to be shown on the about page.",
+        since: "3.4.0.beta2",
+        drop_from: "3.5.0.beta1",
+      )
+    end
+
     # We do not want to register and display the same group multiple times.
     return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 

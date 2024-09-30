@@ -20,6 +20,7 @@ class Report
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
   include Reports::ConsolidatedPageViewsBrowserDetection
+  include Reports::SiteTraffic
   include Reports::DailyEngagedUsers
   include Reports::DauByMau
   include Reports::Emails
@@ -223,6 +224,11 @@ class Report
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
+  # Only used for testing.
+  def Report.remove_report(name)
+    singleton_class.instance_eval { remove_method("report_#{name}") }
+  end
+
   def self._get(type, opts = nil)
     opts ||= {}
 
@@ -294,19 +300,35 @@ class Report
     report
   end
 
+  # NOTE: Once use_legacy_pageviews is always false or no longer needed
+  # we will no longer support the page_view_anon and page_view_logged_in reports,
+  # they can be removed.
   def self.req_report(report, filter = nil)
     data =
       if filter == :page_view_total
-        # For this report we intentionally do not want to count mobile pageviews
-        # or "browser" pageviews. See `ConsolidatedPageViewsBrowserDetection` for
-        # browser pageviews.
-        ApplicationRequest.where(
-          req_type: [
-            ApplicationRequest.req_types[:page_view_crawler],
-            ApplicationRequest.req_types[:page_view_anon],
-            ApplicationRequest.req_types[:page_view_logged_in],
-          ].flatten,
-        )
+        # For this report we intentionally do not want to count mobile pageviews.
+        if SiteSetting.use_legacy_pageviews
+          # We purposefully exclude "browser" pageviews. See
+          # `ConsolidatedPageViewsBrowserDetection` for browser pageviews.
+          ApplicationRequest.where(
+            req_type: [
+              ApplicationRequest.req_types[:page_view_crawler],
+              ApplicationRequest.req_types[:page_view_anon],
+              ApplicationRequest.req_types[:page_view_logged_in],
+            ].flatten,
+          )
+        else
+          # We purposefully exclude "crawler" pageviews here and by
+          # only doing browser pageviews we are excluding "other" pageviews
+          # too. This is to reflect what is shown in the "Site traffic" report
+          # by default.
+          ApplicationRequest.where(
+            req_type: [
+              ApplicationRequest.req_types[:page_view_anon_browser],
+              ApplicationRequest.req_types[:page_view_logged_in_browser],
+            ].flatten,
+          )
+        end
       else
         ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
       end

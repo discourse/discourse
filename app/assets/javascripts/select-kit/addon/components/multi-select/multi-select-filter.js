@@ -1,11 +1,11 @@
 import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
 
-export default SelectKitFilterComponent.extend({
-  classNames: ["multi-select-filter"],
-
+@classNames("multi-select-filter")
+export default class MultiSelectFilter extends SelectKitFilterComponent {
   @discourseComputed("placeholder", "selectKit.hasSelection")
   computedPlaceholder(placeholder, hasSelection) {
     if (this.hidePlaceholderWithSelection && hasSelection) {
@@ -13,7 +13,7 @@ export default SelectKitFilterComponent.extend({
     }
 
     return isEmpty(placeholder) ? "" : placeholder;
-  },
+  }
 
   @action
   onPaste(event) {
@@ -33,5 +33,5 @@ export default SelectKitFilterComponent.extend({
 
       return false;
     }
-  },
-});
+  }
+}

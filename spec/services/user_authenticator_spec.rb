@@ -81,6 +81,15 @@ RSpec.describe UserAuthenticator do
       expect(session[:authentication]).to eq(nil)
     end
 
+    it "sets the authenticated_with_oauth flag in the session" do
+      user = Fabricate(:user, email: "user53@discourse.org")
+      session = { authentication: github_auth(true) }
+
+      UserAuthenticator.new(user, session).finish
+
+      expect(session[:authenticated_with_oauth]).to be true
+    end
+
     it "raises an error for non-boolean values" do
       user = Fabricate(:user, email: "user53@discourse.org")
       session = { authentication: github_auth("string") }

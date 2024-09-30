@@ -255,11 +255,14 @@ export default class GlimmerHeader extends Component {
           @sidebarEnabled={{@sidebarEnabled}}
           @toggleNavigationMenu={{this.toggleNavigationMenu}}
           @showSidebar={{@showSidebar}}
+          @topicInfo={{@topicInfo}}
+          @topicInfoVisible={{@topicInfoVisible}}
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
               {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
+                  @topicInfoVisible={{@topicInfoVisible}}
                   @showCreateAccount={{@showCreateAccount}}
                   @showLogin={{@showLogin}}
                   @canSignUp={{@canSignUp}}
@@ -312,7 +315,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=(this.header.topicInfoVisible)}}
+        @outletArgs={{hash minimized=(@topicInfoVisible)}}
       />
     </header>
   </template>

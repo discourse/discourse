@@ -1,28 +1,34 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "li",
-  classNameBindings: [
-    "active",
-    "content.hasIcon:has-icon",
-    "content.classNames",
-    "isHidden:hidden",
-    "content.name",
-  ],
-  attributeBindings: ["content.title:title"],
-  hidden: false,
-  activeClass: "",
-  hrefLink: null,
-  filterMode: tracked(),
+@tagName("li")
+@classNameBindings(
+  "active",
+  "content.hasIcon:has-icon",
+  "content.classNames",
+  "isHidden:hidden",
+  "content.name"
+)
+@attributeBindings("content.title:title")
+export default class NavigationItem extends Component {
+  @tracked filterMode;
+
+  hidden = false;
+  activeClass = "";
+  hrefLink = null;
 
   @dependentKeyCompat
   get filterType() {
     return filterTypeForMode(this.filterMode);
-  },
+  }
 
   @discourseComputed("content.filterType", "filterType", "content.active")
   active(contentFilterType, filterType, active) {
@@ -30,7 +36,7 @@ export default Component.extend({
       return active;
     }
     return contentFilterType === filterType;
-  },
+  }
 
   @discourseComputed("content.count", "content.name")
   isHidden(count, name) {
@@ -42,14 +48,15 @@ export default Component.extend({
       (name === "new" || name === "unread") &&
       count < 1
     );
-  },
+  }
 
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
     const content = this.content;
 
-    let href = content.get("href");
-    let urlSearchParams = new URLSearchParams();
+    let [href, searchParams] = content.get("href")?.split("?") || [];
+
+    let urlSearchParams = new URLSearchParams(searchParams);
     let addParamsEvenIfEmpty = false;
 
     // Include the category id if the option is present
@@ -75,17 +82,18 @@ export default Component.extend({
 
     if (
       this.siteSettings.desktop_category_page_style ===
-      "categories_and_latest_topics_created_date"
+        "categories_and_latest_topics_created_date" &&
+      urlSearchParams.get("order") == null
     ) {
       urlSearchParams.set("order", "created");
     }
 
     const queryString = urlSearchParams.toString();
-    if (addParamsEvenIfEmpty || queryString) {
-      href += `?${queryString}`;
+    if (addParamsEvenIfEmpty || (queryString && href)) {
+      href = (href || "") + `?${queryString}`;
     }
     this.set("hrefLink", href);
 
     this.set("activeClass", this.active ? "active" : "");
-  },
-});
+  }
+}

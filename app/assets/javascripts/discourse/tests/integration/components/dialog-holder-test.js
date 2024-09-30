@@ -271,7 +271,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
       message: "An alert with custom buttons",
       buttons: [
         {
-          icon: "cog",
+          icon: "gear",
           label: "Danger ahead",
           class: "btn-danger",
           action: () => {

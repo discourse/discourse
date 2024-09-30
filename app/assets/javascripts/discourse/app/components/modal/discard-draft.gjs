@@ -31,7 +31,7 @@ export default class DiscardDraftModal extends Component {
 
       <:footer>
         <DButton
-          @icon="far-trash-alt"
+          @icon="trash-can"
           @label="post.cancel_composer.discard"
           @action={{this.discardDraft}}
           class="btn-danger discard-draft"

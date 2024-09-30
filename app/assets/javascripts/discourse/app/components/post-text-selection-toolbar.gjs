@@ -225,7 +225,7 @@ export default class PostTextSelectionToolbar extends Component {
 
           {{#if @data.canEditPost}}
             <DButton
-              @icon="pencil-alt"
+              @icon="pencil"
               @label="post.quote_edit"
               @title="post.quote_edit_shortcut"
               class="btn-flat quote-edit-label"

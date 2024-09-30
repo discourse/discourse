@@ -29,6 +29,8 @@ RSpec.describe Chat::ListChannelThreadMessages do
     end
 
     context "when thread exists" do
+      it { is_expected.to run_successfully }
+
       it "finds the correct channel" do
         expect(result.thread).to eq(thread)
       end
@@ -44,7 +46,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
       context "with system user" do
         fab!(:user) { Discourse.system_user }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
   end
@@ -80,7 +82,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
 
   context "when target_message_exists" do
     context "when no target_message_id is given" do
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
     end
 
     context "when target message is not found" do
@@ -95,7 +97,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
       end
       let(:optional_params) { { target_message_id: target_message.id } }
 
-      it { is_expected.to be_a_success }
+      it { is_expected.to run_successfully }
     end
 
     context "when target message is trashed" do
@@ -115,13 +117,13 @@ RSpec.describe Chat::ListChannelThreadMessages do
           Fabricate(:chat_message, chat_channel: thread.channel, thread: thread, user: user)
         end
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
 
       context "when user is admin" do
         fab!(:user) { Fabricate(:admin) }
 
-        it { is_expected.to be_a_success }
+        it { is_expected.to run_successfully }
       end
     end
   end

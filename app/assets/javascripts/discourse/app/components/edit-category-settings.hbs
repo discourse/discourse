@@ -120,11 +120,10 @@
   {{#if this.siteSettings.enable_category_group_moderation}}
     <section class="field reviewable-by-group">
       <label>{{i18n "category.reviewable_by_group"}}</label>
-      <GroupSelector
-        @groupFinder={{this.groupFinder}}
-        @single="true"
-        @groupNames={{this.category.reviewable_by_group_name}}
-        @placeholderKey="category.review_group_name"
+      <GroupChooser
+        @content={{this.site.groups}}
+        @value={{this.category.moderating_group_ids}}
+        @onChange={{this.onCategoryModeratingGroupsChange}}
       />
     </section>
   {{/if}}

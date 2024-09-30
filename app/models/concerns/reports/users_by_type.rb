@@ -23,7 +23,7 @@ module Reports::UsersByType
       if admins > 0
         report.data << {
           url: url.call("admins"),
-          icon: "shield-alt",
+          icon: "shield-halved",
           key: "admins",
           x: label.call("admin"),
           y: admins,
@@ -34,7 +34,7 @@ module Reports::UsersByType
       if moderators > 0
         report.data << {
           url: url.call("moderators"),
-          icon: "shield-alt",
+          icon: "shield-halved",
           key: "moderators",
           x: label.call("moderator"),
           y: moderators,

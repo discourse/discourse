@@ -40,7 +40,7 @@ acceptance("Composer - Draft saving", function (needs) {
       "the draft wasn't saved, a warning is rendered"
     );
     assert.ok(
-      exists("div#draft-status svg.d-icon-exclamation-triangle"),
+      exists("div#draft-status svg.d-icon-triangle-exclamation"),
       "an exclamation icon is rendered"
     );
 

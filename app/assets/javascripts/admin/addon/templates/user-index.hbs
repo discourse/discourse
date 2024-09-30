@@ -157,6 +157,17 @@
           />
         {{/if}}
       </div>
+      {{#if (and this.currentUser.admin this.associatedAccounts)}}
+        <div class="controls">
+          <DButton
+            @action={{this.deleteAssociatedAccounts}}
+            @icon="trash-can"
+            @label="admin.users.delete_associated_accounts.text"
+            @title="admin.users.delete_associated_accounts.title"
+            class="btn-danger"
+          />
+        </div>
+      {{/if}}
     </div>
   {{/if}}
 
@@ -232,7 +243,7 @@
       {{#if this.canDisableSecondFactor}}
         <DButton
           @action={{this.disableSecondFactor}}
-          @icon="unlock-alt"
+          @icon="unlock-keyhole"
           @label="user.second_factor.disable"
           class="btn-default"
         />
@@ -365,7 +376,7 @@
       {{#if this.model.can_revoke_admin}}
         <DButton
           @action={{this.revokeAdmin}}
-          @icon="shield-alt"
+          @icon="shield-halved"
           @label="admin.user.revoke_admin"
           class="btn-default"
         />
@@ -373,7 +384,7 @@
       {{#if this.model.can_grant_admin}}
         <DButton
           @action={{this.grantAdmin}}
-          @icon="shield-alt"
+          @icon="shield-halved"
           @label="admin.user.grant_admin"
           class="btn-default grant-admin"
         />
@@ -388,7 +399,7 @@
       {{#if this.model.can_revoke_moderation}}
         <DButton
           @action={{this.revokeModeration}}
-          @icon="shield-alt"
+          @icon="shield-halved"
           @label="admin.user.revoke_moderation"
           class="btn-default"
         />
@@ -396,7 +407,7 @@
       {{#if this.model.can_grant_moderation}}
         <DButton
           @action={{this.grantModeration}}
-          @icon="shield-alt"
+          @icon="shield-halved"
           @label="admin.user.grant_moderation"
           class="btn-default"
         />
@@ -423,7 +434,7 @@
           />
           <DButton
             @action={{this.restoreTrustLevel}}
-            @icon="times"
+            @icon="xmark"
             class="cancel no-text"
           />
         </div>
@@ -543,13 +554,15 @@
           />
           {{i18n "admin.user.silence_explanation"}}
         {{else}}
-          <DButton
-            @action={{this.showSilenceModal}}
-            @icon="microphone-slash"
-            @label="admin.user.silence"
-            class="btn-danger silence-user"
-          />
-          {{i18n "admin.user.silence_explanation"}}
+          {{#if this.model.canSilence}}
+            <DButton
+              @action={{this.showSilenceModal}}
+              @icon="microphone-slash"
+              @label="admin.user.silence"
+              class="btn-danger silence-user"
+            />
+            {{i18n "admin.user.silence_explanation"}}
+          {{/if}}
         {{/if}}
       </ConditionalLoadingSpinner>
     </div>
@@ -583,7 +596,7 @@
         <div class="controls">
           <DButton
             @label="admin.user.clear_penalty_history.title"
-            @icon="times"
+            @icon="xmark"
             @action={{this.clearPenaltyHistory}}
             class="btn-default"
           />
@@ -616,7 +629,7 @@
         <div class="controls">
           <DButton @icon="check" @action={{this.saveCustomGroups}} class="ok" />
           <DButton
-            @icon="times"
+            @icon="xmark"
             @action={{this.resetCustomGroups}}
             class="cancel"
           />
@@ -642,7 +655,7 @@
               class="ok"
             />
             <DButton
-              @icon="times"
+              @icon="xmark"
               @action={{this.resetPrimaryGroup}}
               class="cancel"
             />
@@ -692,7 +705,7 @@
         {{#if this.model.post_count}}
           <DButton
             @action={{this.showDeletePostsConfirmation}}
-            @icon="far-trash-alt"
+            @icon="trash-can"
             @label="admin.user.delete_posts.button"
             class="btn-danger"
           />
@@ -780,7 +793,7 @@
           <div class="controls">
             <DButton
               @action={{this.deleteSSORecord}}
-              @icon="far-trash-alt"
+              @icon="trash-can"
               @label="admin.user.discourse_connect.delete_sso_record"
               class="btn-danger"
             />
@@ -875,7 +888,7 @@
     {{#if this.model.can_be_anonymized}}
       <DButton
         @label="admin.user.anonymize"
-        @icon="exclamation-triangle"
+        @icon="triangle-exclamation"
         @action={{this.anonymize}}
         class="btn-danger btn-anonymize"
       />
@@ -884,7 +897,7 @@
     {{#if this.model.canBeDeleted}}
       <DButton
         @label="admin.user.delete"
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{this.destroyUser}}
         class="btn-danger btn-user-delete"
       />
@@ -893,7 +906,7 @@
     {{#if this.model.can_be_merged}}
       <DButton
         @label="admin.user.merge.button"
-        @icon="arrows-alt-h"
+        @icon="left-right"
         @action={{this.promptTargetUser}}
         class="btn-danger btn-user-merge"
       />
@@ -904,7 +917,7 @@
     <div class="clearfix"></div>
     <br />
     <div class="pull-right">
-      {{d-icon "exclamation-triangle"}}
+      {{d-icon "triangle-exclamation"}}
       {{this.deleteExplanation}}
     </div>
   {{/if}}

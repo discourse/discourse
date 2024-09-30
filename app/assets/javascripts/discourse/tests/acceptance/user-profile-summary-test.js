@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
@@ -27,6 +27,21 @@ acceptance("User Profile - Summary", function (needs) {
     assert.ok(
       exists(".top-categories-section .category-link"),
       "top categories"
+    );
+  });
+
+  test("Top Categories Search", async function (assert) {
+    await visit("/u/eviltrout/summary");
+
+    await click(".top-categories-section .reply-count a");
+    assert.strictEqual(currentURL(), "/search?q=%40eviltrout%20%23bug");
+
+    await visit("/u/eviltrout/summary");
+
+    await click(".top-categories-section .topic-count a");
+    assert.strictEqual(
+      currentURL(),
+      "/search?q=%40eviltrout%20%23bug%20in%3Afirst"
     );
   });
 });

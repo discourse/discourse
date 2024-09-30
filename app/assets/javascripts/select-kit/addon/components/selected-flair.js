@@ -1,5 +1,5 @@
+import { tagName } from "@ember-decorators/component";
 import SelectedNameComponent from "select-kit/components/selected-name";
 
-export default SelectedNameComponent.extend({
-  tagName: "",
-});
+@tagName("")
+export default class SelectedFlair extends SelectedNameComponent {}

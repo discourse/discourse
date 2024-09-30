@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe(Flags::UpdateFlag) do
-  fab!(:flag)
-
   subject(:result) do
     described_class.call(
       id: flag.id,
@@ -14,6 +12,8 @@ RSpec.describe(Flags::UpdateFlag) do
       enabled: enabled,
     )
   end
+
+  fab!(:flag)
 
   after { flag.destroy }
 
@@ -43,6 +43,15 @@ RSpec.describe(Flags::UpdateFlag) do
     it { is_expected.to fail_a_contract }
   end
 
+  context "when title is not unique" do
+    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:flag_2) { Fabricate(:flag, name: "edited custom flag name") }
+
+    it { is_expected.to fail_a_policy(:unique_name) }
+
+    after { Flag.destroy_by(name: "edited custom flag name") }
+  end
+
   context "when title is too long" do
     fab!(:current_user) { Fabricate(:admin) }
     let(:name) { "a" * 201 }
@@ -67,9 +76,7 @@ RSpec.describe(Flags::UpdateFlag) do
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 
-    it "sets the service result as successful" do
-      expect(result).to be_a_success
-    end
+    it { is_expected.to run_successfully }
 
     it "updates the flag" do
       result

@@ -1,17 +1,21 @@
 import { computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["group-member-dropdown"],
-  classNames: ["group-member-dropdown"],
-
-  selectKitOptions: {
-    icon: "wrench",
-    showFullTitle: false,
-  },
-
-  content: computed("member.owner", "member.primary", function () {
+@classNames("group-member-dropdown")
+@selectKitOptions({
+  icon: "wrench",
+  showFullTitle: false,
+})
+@pluginApiIdentifiers("group-member-dropdown")
+export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
+  @computed("member.owner", "member.primary")
+  get content() {
     const items = [
       {
         id: "removeMember",
@@ -19,7 +23,7 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t("groups.members.remove_member_description", {
           username: this.get("member.username"),
         }),
-        icon: "user-times",
+        icon: "user-xmark",
       },
     ];
 
@@ -31,7 +35,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.remove_owner_description", {
             username: this.get("member.username"),
           }),
-          icon: "shield-alt",
+          icon: "shield-halved",
         });
       } else {
         items.push({
@@ -40,7 +44,7 @@ export default DropdownSelectBoxComponent.extend({
           description: I18n.t("groups.members.make_owner_description", {
             username: this.get("member.username"),
           }),
-          icon: "shield-alt",
+          icon: "shield-halved",
         });
       }
     } else if (this.canEditGroup && !this.member.owner) {
@@ -50,7 +54,7 @@ export default DropdownSelectBoxComponent.extend({
         description: I18n.t("groups.members.make_owner_description", {
           username: this.get("member.username"),
         }),
-        icon: "shield-alt",
+        icon: "shield-halved",
       });
     }
 
@@ -77,5 +81,5 @@ export default DropdownSelectBoxComponent.extend({
     }
 
     return items;
-  }),
-});
+  }
+}

@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
+import I18n from "discourse-i18n";
 import PollOptionRankedChoice from "./poll-option-ranked-choice";
 
 export default class PollOptionsComponent extends Component {
@@ -25,6 +26,36 @@ export default class PollOptionsComponent extends Component {
   sendRank(option, rank = 0) {
     this.args.sendOptionSelect(option, rank);
   }
+
+  get rankedChoiceDropdownContent() {
+    let rankedChoiceDropdownContent = [];
+
+    rankedChoiceDropdownContent.push({
+      id: 0,
+      name: I18n.t("poll.options.ranked_choice.abstain"),
+    });
+
+    this.args.options.forEach((option, i) => {
+      option.rank = 0;
+      let priority = "";
+
+      if (i === 0) {
+        priority = ` ${I18n.t("poll.options.ranked_choice.highest_priority")}`;
+      }
+
+      if (i === this.args.options.length - 1) {
+        priority = ` ${I18n.t("poll.options.ranked_choice.lowest_priority")}`;
+      }
+
+      rankedChoiceDropdownContent.push({
+        id: i + 1,
+        name: (i + 1).toString() + priority,
+      });
+    });
+
+    return rankedChoiceDropdownContent;
+  }
+
   <template>
     <ul
       class={{concatClass
@@ -36,7 +67,7 @@ export default class PollOptionsComponent extends Component {
         {{#if @isRankedChoice}}
           <PollOptionRankedChoice
             @option={{option}}
-            @rankedChoiceDropdownContent={{@rankedChoiceDropdownContent}}
+            @rankedChoiceDropdownContent={{this.rankedChoiceDropdownContent}}
             @sendRank={{this.sendRank}}
           />
         {{else}}
@@ -45,7 +76,7 @@ export default class PollOptionsComponent extends Component {
               <button {{on "click" (fn this.sendClick option)}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{icon "far-check-square"}}
+                    {{icon "far-square-check"}}
                   {{else}}
                     {{icon "circle"}}
                   {{/if}}
@@ -62,7 +93,7 @@ export default class PollOptionsComponent extends Component {
               <button onclick={{routeAction "showLogin"}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{icon "far-check-square"}}
+                    {{icon "far-square-check"}}
                   {{else}}
                     {{icon "circle"}}
                   {{/if}}

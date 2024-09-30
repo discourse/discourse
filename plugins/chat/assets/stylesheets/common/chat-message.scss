@@ -64,13 +64,18 @@
     min-width: 0;
     width: 100%;
 
+    mark {
+      background-color: var(--highlight);
+    }
+
     code {
       box-sizing: border-box;
       font-size: var(--font-down-1);
       width: 100%;
     }
 
-    a.mention {
+    a.mention,
+    span.mention.--wide {
       @include mention;
 
       &.highlighted {
@@ -79,7 +84,7 @@
     }
 
     // unlinked, invalid mention
-    span.mention {
+    span.mention:not(--wide) {
       color: var(--primary-high);
     }
 

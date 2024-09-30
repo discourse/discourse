@@ -318,7 +318,6 @@ lt:
       like_count: "Patinka"
       topic_count: "Temos"
       post_count: "Įrašai"
-      contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -1745,6 +1744,10 @@ lt:
       disclaimer: "Registruodamiesi sutinkate su <a href='%{privacy_link}' target='blank'>privatumo politika</a> ir <a href='%{tos_link}' target='blank'>paslaugų teikimo sąlygomis</a>."
       title: "Registruotis"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
+      progress_bar:
+        signup: "Registruotis"
+        approve: "Patvirtinti"
+        login: "Prisijungti"
     forgot_password:
       title: "Slaptažodžio atkūrimas"
       action: "Pamiršau savo slaptažodį"
@@ -3644,6 +3647,7 @@ lt:
         about: "Apie"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
+    settings: "Nustatymai"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
@@ -3972,6 +3976,7 @@ lt:
           edit: "Redaguoti"
           delete: "Pašalinti"
           delete_confirm: 'Ar tikrai norite ištrinti „%{name}“?'
+          flags_tab: "Pažymėk!"
           form:
             save: "Išsaugoti"
             name: "Vardas"
@@ -3981,7 +3986,6 @@ lt:
             post: "žinutės"
       plugins:
         title: "Plugins"
-        installed: "Installed Plugins"
         name: "Vardas"
         none_installed: "Neturi instaliavęs jokių plugins'ų"
         version: "Versija"
@@ -4009,7 +4013,7 @@ lt:
         menu:
           backups: "Atsarginės kopijos"
           logs: "Įrašai"
-        none: "Nėra galimų atsarginių kopijų."
+        none: "Nėra galimų atsarginių kopijų"
         read_only:
           enable:
             title: "Įjungti skaitymo (read-only) režimą"
@@ -4040,12 +4044,11 @@ lt:
           download:
             label: "Atsisiųsti"
             title: "Siųsti laišką su atsisiuntimo nuoroda"
-            alert: "Šios atsarginės kopijos atsisiuntimo nuoroda jums buvo išsiųsta el. paštu."
+            alert: "Šios atsarginės kopijos atsisiuntimo nuoroda jums buvo išsiųsta el. paštu"
           destroy:
             title: "Ištrinti atsarginę kopiją"
             confirm: "Ar tikrai norite ištrinti šią atsarginę kopiją?"
           restore:
-            is_disabled: "Atkurimas yra išjungtas svetainės nustatymuose."
             label: "Atkurti"
             title: "Atkurti atsarginę kopiją"
             confirm: "Ar tikrai norite atkurti šią atsarginę kopiją?"
@@ -4054,7 +4057,6 @@ lt:
             title: "Atkurti duomenų bazę iki ankstesnės busenos."
             confirm: "Ar tikrai norite grąžinti duomenų bazę į ankstesnę darbo būseną?"
         location:
-          local: "Vietinė saugykla"
           s3: "S3"
         backup_storage_error: "Nepavyko pasiekti atsarginių kopijų saugyklos: %{error_message}"
       export_csv:

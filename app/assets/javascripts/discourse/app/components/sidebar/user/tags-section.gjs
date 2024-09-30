@@ -94,7 +94,7 @@ export default class SidebarUserTagsSection extends Component {
           title=(i18n "sidebar.sections.tags.header_action_title")
         )
       }}
-      @headerActionsIcon="pencil-alt"
+      @headerActionsIcon="pencil"
       @collapsable={{@collapsable}}
     >
       {{#each this.sectionLinks as |sectionLink|}}

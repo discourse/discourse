@@ -43,7 +43,7 @@ import I18n from "discourse-i18n";
         { id: 1, label: "foo.bar" },
         "separator",
         { id: 2, translatedLabel: "FooBar" },
-        { id: 3 label: "foo.baz", icon: "times" },
+        { id: 3 label: "foo.baz", icon: "xmark" },
         { id: 4, html: "<b>foo</b>" }
       ]
       ```
