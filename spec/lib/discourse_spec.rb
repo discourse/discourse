@@ -253,6 +253,16 @@ RSpec.describe Discourse do
     end
 
     describe ".enable_readonly_mode" do
+      it "doesn't expire when expires is false" do
+        Discourse.enable_readonly_mode(user_readonly_mode_key, expires: false)
+        expect(Discourse.redis.ttl(user_readonly_mode_key)).to eq(-1)
+      end
+
+      it "expires when expires is true" do
+        Discourse.enable_readonly_mode(user_readonly_mode_key, expires: true)
+        expect(Discourse.redis.ttl(user_readonly_mode_key)).not_to eq(-1)
+      end
+
       it "adds a key in redis and publish a message through the message bus" do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
       end
