@@ -29,7 +29,7 @@ module DiscourseAutomation
         )
 
       if automation.scriptable&.forced_triggerable
-        automation.trigger = scriptable.forced_triggerable[:triggerable].to_s
+        automation.trigger = automation.scriptable.forced_triggerable[:triggerable].to_s
       end
 
       automation.save!
