@@ -168,6 +168,7 @@ export default class MediaOptimizationWorkerService extends Service {
           if (this.processedImageCount > 4) {
             this.logIfDebug("Terminating worker to release memory in WASM.");
             this.stopWorker();
+            this.processedImageCount = 0;
           }
 
           break;
