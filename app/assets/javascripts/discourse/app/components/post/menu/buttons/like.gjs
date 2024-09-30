@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import discourseLater from "discourse-common/lib/later";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -38,8 +38,16 @@ export default class PostMenuLikeButton extends Component {
   }
 
   @action
-  toggleAnimation(value) {
-    this.isAnimated = value;
+  async toggleLike() {
+    this.isAnimated = true;
+
+    return new Promise((resolve) => {
+      discourseLater(async () => {
+        this.isAnimated = false;
+        await this.args.buttonActions.toggleLike();
+        resolve();
+      }, 400);
+    });
   }
 
   <template>
@@ -61,13 +69,7 @@ export default class PostMenuLikeButton extends Component {
           ...attributes
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
-          @action={{fn
-            @buttonActions.like
-            (hash
-              onBeforeToggle=(fn this.toggleAnimation true)
-              onAfterToggle=(fn this.toggleAnimation false)
-            )
-          }}
+          @action={{this.toggleLike}}
           @icon={{if @post.liked "d-liked" "d-unliked"}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}

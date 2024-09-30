@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -15,7 +15,6 @@ import DAG from "discourse/lib/dag";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
-import discourseLater from "discourse-common/lib/later";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
 import PostMenuAdminButton from "./menu/buttons/admin";
@@ -96,7 +95,7 @@ export default class PostMenu extends Component {
       copyLink: this.args.copyLink,
       deletePost: this.args.deletePost,
       editPost: this.args.editPost,
-      like: this.like,
+      toggleLike: this.toggleLike,
       openAdminMenu: this.openAdminMenu,
       recoverPost: this.args.recoverPost,
       replyToPost: this.args.replyToPost,
@@ -308,7 +307,7 @@ export default class PostMenu extends Component {
   }
 
   @action
-  async like({ onBeforeToggle, onAfterToggle } = {}) {
+  async toggleLike() {
     if (!this.currentUser) {
       this.keyValueStore &&
         this.keyValueStore.set({
@@ -324,14 +323,11 @@ export default class PostMenu extends Component {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
-    return new Promise((resolve) => {
-      discourseLater(async () => {
-        onBeforeToggle?.();
-        await this.#toggleLike();
-        onAfterToggle?.();
-        resolve();
-      }, 400);
-    });
+    await this.args.toggleLike();
+
+    if (!this.collapsed) {
+      await this.#fetchWhoLiked();
+    }
   }
 
   @action
@@ -402,14 +398,6 @@ export default class PostMenu extends Component {
     }
 
     this.#fetchWhoRead();
-  }
-
-  @action
-  async #toggleLike() {
-    await this.args.toggleLike();
-    if (!this.collapsed) {
-      await this.#fetchWhoLiked();
-    }
   }
 
   get #configuredItems() {
