@@ -16,11 +16,18 @@ export default {
       }
 
       // Restrict feature to browsers that support OffscreenCanvas
-      // which should rule out buggy old iOS Safari
       if (typeof OffscreenCanvas === "undefined") {
         return;
       }
       if (!("createImageBitmap" in self)) {
+        return;
+      }
+
+      // prior to v18, Safari has WASM memory growth bugs
+      // eg https://github.com/emscripten-core/emscripten/issues/19144
+      let match = window.navigator.userAgent.match(/Mobile\/([0-9]+)\./);
+      let safariVersion = match ? parseInt(match[1], 10) : null;
+      if (capabilities.isSafari && safariVersion && safariVersion < 18) {
         return;
       }
 

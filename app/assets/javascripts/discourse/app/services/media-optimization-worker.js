@@ -29,6 +29,7 @@ export default class MediaOptimizationWorkerService extends Service {
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
   promiseResolvers = null;
+  processedImageCount = 0;
 
   async optimizeImage(data, opts = {}) {
     this.promiseResolvers = this.promiseResolvers || {};
@@ -162,6 +163,12 @@ export default class MediaOptimizationWorkerService extends Service {
           );
 
           this.promiseResolvers[e.data.fileId](optimizedFile);
+
+          this.processedImageCount++;
+          if (this.processedImageCount > 4) {
+            this.logIfDebug("Terminating worker to release memory in WASM.");
+            this.stopWorker();
+          }
 
           break;
         case "error":
