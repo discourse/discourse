@@ -29,7 +29,8 @@ export default class MediaOptimizationWorkerService extends Service {
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
   promiseResolvers = null;
-  processedImageCount = 0;
+  workerDoneCount = 0;
+  workerPendingCount = 0;
 
   async optimizeImage(data, opts = {}) {
     this.promiseResolvers = this.promiseResolvers || {};
@@ -99,6 +100,7 @@ export default class MediaOptimizationWorkerService extends Service {
         },
         [imageData.data.buffer]
       );
+      this.workerPendingCount++;
     });
   }
 
@@ -148,7 +150,9 @@ export default class MediaOptimizationWorkerService extends Service {
       this.workerInstalled = false;
       this.worker.terminate();
       this.worker = null;
+      this.workerDoneCount = 0;
     }
+    this.workerPendingCount = 0;
   }
 
   registerMessageHandler() {
@@ -164,11 +168,11 @@ export default class MediaOptimizationWorkerService extends Service {
 
           this.promiseResolvers[e.data.fileId](optimizedFile);
 
-          this.processedImageCount++;
-          if (this.processedImageCount > 4) {
+          this.workerDoneCount++;
+          this.workerPendingCount--;
+          if (this.workerDoneCount > 4 && this.workerPendingCount === 0) {
             this.logIfDebug("Terminating worker to release memory in WASM.");
             this.stopWorker();
-            this.processedImageCount = 0;
           }
 
           break;
@@ -182,6 +186,7 @@ export default class MediaOptimizationWorkerService extends Service {
           }
 
           this.promiseResolvers[e.data.fileId]();
+          this.workerPendingCount--;
           break;
         case "installed":
           this.logIfDebug("Worker installed.");
