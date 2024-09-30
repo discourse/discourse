@@ -17,7 +17,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: debian-12
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
