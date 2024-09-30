@@ -24,6 +24,10 @@ export default class AdminPluginConfigPage extends Component {
     return classes.join(" ");
   }
 
+  get actionsOutletName() {
+    return `admin-plugin-config-page-actions-${this.args.plugin.kebabCaseName}`;
+  }
+
   linkText(navLink) {
     if (navLink.label) {
       return i18n(navLink.label);
@@ -68,10 +72,12 @@ export default class AdminPluginConfigPage extends Component {
           {{/if}}
         </:tabs>
         <:actions as |actions|>
-          <PluginOutlet
-            @name="admin-plugin-config-page-actions"
-            @outletArgs={{hash plugin=@plugin actions=actions}}
-          />
+          <div class={{this.actionsOutletName}}>
+            <PluginOutlet
+              @name={{this.actionsOutletName}}
+              @outletArgs={{hash plugin=@plugin actions=actions}}
+            />
+          </div>
         </:actions>
       </AdminPageHeader>
 
