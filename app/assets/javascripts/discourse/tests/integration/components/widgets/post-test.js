@@ -721,11 +721,25 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("toggle moderator post", async function (assert) {
     this.currentUser.set("moderator", true);
+
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", {
+      id: 123,
+    });
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 2,
+      deleted_at: new Date().toISOString(),
+      can_permanently_delete: true,
+      topic,
+    });
+
     this.set("args", { canManage: true });
+    this.set("post", post);
     this.set("togglePostType", () => (this.toggled = true));
 
     await render(hbs`
-      <MountWidget @widget="post" @args={{this.args}} @togglePostType={{this.togglePostType}} />
+      <MountWidget @widget="post" @args={{this.args}} @model={{this.post}} @togglePostType={{this.togglePostType}} />
       <DMenus/>`);
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -803,11 +817,21 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("change owner", async function (assert) {
     this.currentUser.admin = true;
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    const post = store.createRecord("post", {
+      id: 1,
+      post_number: 1,
+      hidden: true,
+      topic,
+    });
+
     this.set("args", { canManage: true });
+    this.set("post", post);
     this.set("changePostOwner", () => (this.owned = true));
 
     await render(hbs`
-      <MountWidget @widget="post" @args={{this.args}} @changePostOwner={{this.changePostOwner}} />
+      <MountWidget @widget="post" @args={{this.args}} @model={{this.post}} @changePostOwner={{this.changePostOwner}} />
       <DMenus/>
     `);
 
