@@ -171,8 +171,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -466,8 +466,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-app-version:
         specifier: ^7.0.0
         version: 7.0.0(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
@@ -668,8 +668,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -768,8 +768,8 @@ importers:
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
     devDependencies:
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       webpack:
         specifier: ^5.95.0
         version: 5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)
@@ -808,8 +808,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -888,8 +888,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -967,8 +967,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -1046,8 +1046,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~5.11.0
-        version: 5.11.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~5.12.0
+        version: 5.12.0(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -4358,8 +4358,8 @@ packages:
     resolution: {integrity: sha512-rk7GY+FmLn/2e22HsZs0Ycrz8HQ1W3Fv+2TFOuEFW9optnDXDgkntPBIl6gact/LHsfBM5RKbM3dHsIIeLgl0Q==}
     engines: {node: 10.* || >= 12.*}
 
-  ember-cli@5.11.0:
-    resolution: {integrity: sha512-G+Fp194KLZy6NHC9c2i1ZlCB2SurxAMd5Hg61o9kRH4rogjDeoVUC3uiQ/mmrdn5DWRSnS0bfXV+i7+W4wu1Ug==}
+  ember-cli@5.12.0:
+    resolution: {integrity: sha512-48ZOoUZTXsav37RIYY9gyCR35yo64mhzfv5YHtTbsZZwLv/HjvTz27X0CTvkfVQaOWHYDFekxdp9ppaKz84VNA==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -4771,10 +4771,6 @@ packages:
   exponential-backoff@3.1.1:
     resolution: {integrity: sha512-dX7e/LHVJ6W3DE1MHWi9S1EYzDESENfLrYohG2G++ovZrYOkm4Knwa0mc1cn84xJOR4KEU0WSchhLbd0UklbHw==}
 
-  express@4.20.0:
-    resolution: {integrity: sha512-pLdae7I6QqShF5PnNTCVn4hI91Dx0Grkn2+IAsMTgMIKuQVte2dN9PeGSSAME2FR8anOhVA62QDIUaWVfEXVLw==}
-    engines: {node: '>= 0.10.0'}
-
   express@4.21.0:
     resolution: {integrity: sha512-VqcNGcj/Id5ZT1LZ/cfihi3ttTn+NJmkli2eZADigjq29qTlWi/hAQ43t/VLPq8+UX06FCEx3ByOYet6ZFblng==}
     engines: {node: '>= 0.10.0'}
@@ -4882,10 +4878,6 @@ packages:
 
   finalhandler@1.1.2:
     resolution: {integrity: sha512-aAWcW57uxVNrQZqFXjITpW3sIUQmHGG3qSb9mUah9MgMC4NeWhNOlNjXEYq3HjRAvL6arUviZGGJsBg6z0zsWA==}
-    engines: {node: '>= 0.8'}
-
-  finalhandler@1.2.0:
-    resolution: {integrity: sha512-5uXcUVftlQMFnWC9qu/svkWv3GTd2PfUhK/3PLkYNAe7FbqJMt3515HaxE6eRL74GdsriiwujiawdaB1BpEISg==}
     engines: {node: '>= 0.8'}
 
   finalhandler@1.3.1:
@@ -6041,17 +6033,8 @@ packages:
   lodash._isiterateecall@3.0.9:
     resolution: {integrity: sha512-De+ZbrMu6eThFti/CSzhRvTKMgQToLxbij58LMfM8JnYDNSOjkjTCIaa8ixglOeGh2nyPlakbt5bJWJ7gvpYlQ==}
 
-  lodash.assignin@4.2.0:
-    resolution: {integrity: sha512-yX/rx6d/UTVh7sSVWVSIMjfnz95evAgDFdb1ZozC35I9mSFCkmzptOzevxjgbQUsc78NR44LVHWjsoMQXy9FDg==}
-
   lodash.camelcase@4.3.0:
     resolution: {integrity: sha512-TwuEnCnxbc3rAvhf/LbG7tJUDzhqXyFnv3dtzLOPgCG/hODL7WFnsbwktkD7yUV0RrreP/l1PALq/YSg6VvjlA==}
-
-  lodash.castarray@4.4.0:
-    resolution: {integrity: sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==}
-
-  lodash.clonedeep@4.5.0:
-    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
 
   lodash.debounce@3.1.1:
     resolution: {integrity: sha512-lcmJwMpdPAtChA4hfiwxTtgFeNAaow701wWUgVUqeD0XJF7vMXIN+bu/2FJSGxT0NUbZy9g9VFrlOFfPjl+0Ew==}
@@ -6061,9 +6044,6 @@ packages:
 
   lodash.defaultsdeep@4.6.1:
     resolution: {integrity: sha512-3j8wdDzYuWO3lM3Reg03MuQR957t287Rpcxp1njpEa8oDrikb+FwGdW3n+FELh/A6qib6yPit0j/pv9G/yeAqA==}
-
-  lodash.find@4.6.0:
-    resolution: {integrity: sha512-yaRZoAV3Xq28F1iafWN1+a0rflOej93l1DQUejs3SZ41h2O9UJBoS9aueGjPDgAl4B6tPC0NuuchLKaDQQ3Isg==}
 
   lodash.flatten@3.0.2:
     resolution: {integrity: sha512-jCXLoNcqQRbnT/KWZq2fIREHWeczrzpTR0vsycm96l/pu5hGeAntVBG0t7GuM/2wFqmnZs3d1eGptnAH2E8+xQ==}
@@ -6091,9 +6071,6 @@ packages:
 
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
-
-  lodash.uniqby@4.7.0:
-    resolution: {integrity: sha512-e/zcLx6CSbmaEgFHCA7BnoQKyCtKMxnuWrJygbwPs/AIn+IMKl66L8/s+wBUn5LRw2pZx3bUHibiV1b6aTWIww==}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -7051,10 +7028,6 @@ packages:
     resolution: {integrity: sha512-uCxGtn8VE9PlKhdFJX/zZySi9K3Ufr3qUZe28jxJoZUqiMJOi+SFh2zhiFDSjWqZIDkc0FtnaCC+rewW3MYXmg==}
     engines: {node: '>=18'}
 
-  qs@6.11.0:
-    resolution: {integrity: sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q==}
-    engines: {node: '>=0.6'}
-
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
@@ -7400,20 +7373,12 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  send@0.18.0:
-    resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
-    engines: {node: '>= 0.8.0'}
-
   send@0.19.0:
     resolution: {integrity: sha512-dW41u5VfLXu8SJh5bwRmyYUbAoSB3c9uQh6L8h/KtsFREPWpbX1lrljJo186Jc4nmci/sGUZ9a0a0J2zgfq2hw==}
     engines: {node: '>= 0.8.0'}
 
   serialize-javascript@6.0.2:
     resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
-
-  serve-static@1.16.0:
-    resolution: {integrity: sha512-pDLK8zwl2eKaYrs8mrPZBJua4hMplRWJ1tIFksVC3FtBEBnl8dxgeHtsaMS8DhS9i4fLObaon6ABoc4/hQGdPA==}
-    engines: {node: '>= 0.8.0'}
 
   serve-static@1.16.2:
     resolution: {integrity: sha512-VqpjJZKadQB/PEbEwvFdO43Ax5dFBZ2UECszz8bQ7pi7wt//PWe1P6MN7eCnjsatYtBT6EuiClbjSWP2WrIoTw==}
@@ -7828,11 +7793,6 @@ packages:
   terser@5.34.1:
     resolution: {integrity: sha512-FsJZ7iZLd/BXkz+4xrRTGJ26o/6VTjQytUk8b8OxkwcD2I+79VPJlz7qss1+zE7h8GNIScFqXcDyJ/KqBYZFVA==}
     engines: {node: '>=10'}
-    hasBin: true
-
-  testem@3.10.1:
-    resolution: {integrity: sha512-42c4e7qlAelwMd8O3ogtVGRbgbr6fJnX6H51ACOIG1V1IjsKPlcQtxPyOwaL4iikH22Dfh+EyIuJnMG4yxieBQ==}
-    engines: {node: '>= 7.*'}
     hasBin: true
 
   testem@3.15.2:
@@ -13277,7 +13237,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli@5.11.0(handlebars@4.7.8)(underscore@1.13.6):
+  ember-cli@5.12.0(handlebars@4.7.8)(underscore@1.13.6):
     dependencies:
       '@pnpm/find-workspace-dir': 6.0.3
       broccoli: 3.5.2
@@ -13313,7 +13273,7 @@ snapshots:
       ensure-posix-path: 1.1.1
       execa: 5.1.1
       exit: 0.1.2
-      express: 4.20.0
+      express: 4.21.0
       filesize: 10.1.4
       find-up: 5.0.0
       find-yarn-workspace-root: 2.0.0
@@ -13356,7 +13316,7 @@ snapshots:
       sort-package-json: 1.57.0
       symlink-or-copy: 1.3.1
       temp: 0.9.4
-      testem: 3.10.1(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6)
+      testem: 3.15.2(handlebars@4.7.8)(underscore@1.13.6)
       tiny-lr: 2.0.0
       tree-sync: 2.1.0
       walk-sync: 3.0.0
@@ -14123,42 +14083,6 @@ snapshots:
 
   exponential-backoff@3.1.1: {}
 
-  express@4.20.0:
-    dependencies:
-      accepts: 1.3.8
-      array-flatten: 1.1.1
-      body-parser: 1.20.3
-      content-disposition: 0.5.4
-      content-type: 1.0.5
-      cookie: 0.6.0
-      cookie-signature: 1.0.6
-      debug: 2.6.9
-      depd: 2.0.0
-      encodeurl: 2.0.0
-      escape-html: 1.0.3
-      etag: 1.8.1
-      finalhandler: 1.2.0
-      fresh: 0.5.2
-      http-errors: 2.0.0
-      merge-descriptors: 1.0.3
-      methods: 1.1.2
-      on-finished: 2.4.1
-      parseurl: 1.3.3
-      path-to-regexp: 0.1.10
-      proxy-addr: 2.0.7
-      qs: 6.11.0
-      range-parser: 1.2.1
-      safe-buffer: 5.2.1
-      send: 0.19.0
-      serve-static: 1.16.0
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      type-is: 1.6.18
-      utils-merge: 1.0.1
-      vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
-
   express@4.21.0:
     dependencies:
       accepts: 1.3.8
@@ -14329,18 +14253,6 @@ snapshots:
       on-finished: 2.3.0
       parseurl: 1.3.3
       statuses: 1.5.0
-      unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
-
-  finalhandler@1.2.0:
-    dependencies:
-      debug: 2.6.9
-      encodeurl: 1.0.2
-      escape-html: 1.0.3
-      on-finished: 2.4.1
-      parseurl: 1.3.3
-      statuses: 2.0.1
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -15658,13 +15570,7 @@ snapshots:
 
   lodash._isiterateecall@3.0.9: {}
 
-  lodash.assignin@4.2.0: {}
-
   lodash.camelcase@4.3.0: {}
-
-  lodash.castarray@4.4.0: {}
-
-  lodash.clonedeep@4.5.0: {}
 
   lodash.debounce@3.1.1:
     dependencies:
@@ -15673,8 +15579,6 @@ snapshots:
   lodash.debounce@4.0.8: {}
 
   lodash.defaultsdeep@4.6.1: {}
-
-  lodash.find@4.6.0: {}
 
   lodash.flatten@3.0.2:
     dependencies:
@@ -15696,8 +15600,6 @@ snapshots:
   lodash.throttle@4.1.1: {}
 
   lodash.uniq@4.5.0: {}
-
-  lodash.uniqby@4.7.0: {}
 
   lodash@4.17.21: {}
 
@@ -16723,10 +16625,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  qs@6.11.0:
-    dependencies:
-      side-channel: 1.0.6
-
   qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
@@ -17092,24 +16990,6 @@ snapshots:
 
   semver@7.6.3: {}
 
-  send@0.18.0:
-    dependencies:
-      debug: 2.6.9
-      depd: 2.0.0
-      destroy: 1.2.0
-      encodeurl: 1.0.2
-      escape-html: 1.0.3
-      etag: 1.8.1
-      fresh: 0.5.2
-      http-errors: 2.0.0
-      mime: 1.6.0
-      ms: 2.1.3
-      on-finished: 2.4.1
-      range-parser: 1.2.1
-      statuses: 2.0.1
-    transitivePeerDependencies:
-      - supports-color
-
   send@0.19.0:
     dependencies:
       debug: 2.6.9
@@ -17131,15 +17011,6 @@ snapshots:
   serialize-javascript@6.0.2:
     dependencies:
       randombytes: 2.1.0
-
-  serve-static@1.16.0:
-    dependencies:
-      encodeurl: 1.0.2
-      escape-html: 1.0.3
-      parseurl: 1.3.3
-      send: 0.18.0
-    transitivePeerDependencies:
-      - supports-color
 
   serve-static@1.16.2:
     dependencies:
@@ -17643,95 +17514,6 @@ snapshots:
       acorn: 8.12.1
       commander: 2.20.3
       source-map-support: 0.5.21
-
-  testem@3.10.1(handlebars@4.7.8)(lodash@4.17.21)(underscore@1.13.6):
-    dependencies:
-      '@xmldom/xmldom': 0.8.10
-      backbone: 1.6.0
-      bluebird: 3.7.2
-      charm: 1.0.2
-      commander: 2.20.3
-      compression: 1.7.4
-      consolidate: 0.16.0(handlebars@4.7.8)(lodash@4.17.21)(mustache@4.2.0)(underscore@1.13.6)
-      execa: 1.0.0
-      express: 4.21.0
-      fireworm: 0.7.2
-      glob: 7.2.3
-      http-proxy: 1.18.1
-      js-yaml: 3.14.1
-      lodash.assignin: 4.2.0
-      lodash.castarray: 4.4.0
-      lodash.clonedeep: 4.5.0
-      lodash.find: 4.6.0
-      lodash.uniqby: 4.7.0
-      mkdirp: 1.0.4
-      mustache: 4.2.0
-      node-notifier: 10.0.1
-      npmlog: 6.0.2
-      printf: 0.6.1
-      rimraf: 3.0.2
-      socket.io: 4.7.5
-      spawn-args: 0.2.0
-      styled_string: 0.0.1
-      tap-parser: 7.0.0
-      tmp: 0.0.33
-    transitivePeerDependencies:
-      - arc-templates
-      - atpl
-      - babel-core
-      - bracket-template
-      - bufferutil
-      - coffee-script
-      - debug
-      - dot
-      - dust
-      - dustjs-helpers
-      - dustjs-linkedin
-      - eco
-      - ect
-      - ejs
-      - haml-coffee
-      - hamlet
-      - hamljs
-      - handlebars
-      - hogan.js
-      - htmling
-      - jade
-      - jazz
-      - jqtpl
-      - just
-      - liquid-node
-      - liquor
-      - lodash
-      - marko
-      - mote
-      - nunjucks
-      - plates
-      - pug
-      - qejs
-      - ractive
-      - razor-tmpl
-      - react
-      - react-dom
-      - slm
-      - squirrelly
-      - supports-color
-      - swig
-      - swig-templates
-      - teacup
-      - templayed
-      - then-jade
-      - then-pug
-      - tinyliquid
-      - toffee
-      - twig
-      - twing
-      - underscore
-      - utf-8-validate
-      - vash
-      - velocityjs
-      - walrus
-      - whiskers
 
   testem@3.15.2(handlebars@4.7.8)(underscore@1.13.6):
     dependencies:
