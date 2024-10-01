@@ -1332,6 +1332,7 @@ id:
     not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
     missing_user_field: "Anda belum mengisi semua kolom yang diperlukan pengguna"
+    second_factor_title: "Otentikasi Dua-Faktor"
     too_many_authenticators: "Maaf, Anda tidak dapat memiliki lebih dari 50 autentikator. Harap hapus yang sudah ada dan coba lagi."
     too_many_security_keys: "Maaf, Anda tidak boleh memiliki lebih dari 50 kunci keamanan. Silakan hapus yang sudah ada dan coba lagi."
   admin:

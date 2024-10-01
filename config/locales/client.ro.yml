@@ -1110,8 +1110,8 @@ ro:
         disable: "Dezactivează notificări"
         enable: "Activează notificările"
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
-      dismiss: "Înlătură"
-      dismiss_notifications: "Elimină tot"
+      dismiss: "Respinge"
+      dismiss_notifications: "Respinge tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
       no_messages_title: "Nu ai niciun mesaj"
       no_messages_body: >
@@ -1839,7 +1839,7 @@ ro:
         title_too_short:
           one: "Titlul trebuie să aibă minim %{count} caracter"
           few: "Titlul trebuie să aibă minim %{count} caractere"
-          other: "Titlul trebuie să aibă minim %{count} caractere"
+          other: "Titlul trebuie să aibă minim %{count} de caractere"
         title_too_long:
           one: "Titlul nu poate avea mai mult de %{count} caracter"
           few: "Titlul nu poate avea mai mult de %{count} (de) caractere"
@@ -1958,7 +1958,7 @@ ro:
             one: "Sigur faci asta? Ai o notificare importantă."
             few: "Sigur faci asta? Ai %{count} notificări importante."
             other: "Sigur faci asta? Ai %{count} de notificări importante."
-        dismiss: "Înlătură"
+        dismiss: "Respinge"
         cancel: "Anulează"
       popup:
         mentioned: '%{username} te-a menţionat în "%{topic}" - %{site_title}'
@@ -2094,11 +2094,12 @@ ro:
         select_all: "Selectează tot"
         clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
+        relist_topics: "Relistează subiecte"
         defer: "Marchează ca necitite"
         delete: "Șterge subiecte"
-        dismiss: "Abandonează"
+        dismiss: "Respinge"
         dismiss_read: "Abandonează toate necitite"
-        dismiss_button: "Abandonează..."
+        dismiss_button: "Respinge..."
         dismiss_tooltip: "Abandonează numai postările noi sau oprește urmărirea subiectelor"
         also_dismiss_topics: "Încetează urmărirea subiectelor astfel încât să nu mai îmi apară niciodată ca necitite"
         dismiss_new: "Anulează cele noi"
@@ -2730,7 +2731,10 @@ ro:
         rows_with_featured_topics: "Rânduri cu subiecte promovate"
       settings_sections:
         general: "General"
+        appearance: "Aspect"
         email: "Email"
+      list_filters:
+        none: "nicio subcategorie"
     flagging:
       title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
       action: "Semnalează articol"
@@ -2767,6 +2771,7 @@ ro:
         off_topic: "Este pe lângă subiect"
         inappropriate: "Este inadecvat"
         spam: "Este spam"
+        illegal: "Este ilegal"
       custom_placeholder_notify_user: "Fii specific, constructiv și întotdeauna amabil."
       notify_user_textarea_label: "Mesaj pentru utilizator"
       custom_placeholder_notify_moderators: "Spune-ne exact ceea ce te preocupă, și dă-ne și legături relevante și exemple de câte ori este posibil."
@@ -3197,6 +3202,7 @@ ro:
               content: "Subiecte"
             faq:
               content: "Întrebări frecvente"
+              title: "Reguli generale pentru utilizarea acestui site"
             guidelines:
               content: "Reguli generale"
               title: "Reguli generale pentru utilizarea acestui site"
@@ -3333,6 +3339,7 @@ ro:
         show_traffic_report: "Arată raportul detaliat cu privire la trafic"
         general_tab: "General"
         security_tab: "Securitate"
+        reports_tab: "Rapoarte"
         report_filter_any: "oricare"
         disabled: Dezactivat
         reports:
@@ -3359,6 +3366,8 @@ ro:
       flags:
         description: "Descriere"
         enabled: "Activat?"
+        more_options:
+          title: "Mai multe opțiuni"
       groups:
         new:
           title: "Grup nou"
@@ -3555,6 +3564,8 @@ ro:
             description: "Descriere"
             topic: "discuții"
             post: "Postări"
+          more_options:
+            title: "Mai multe opțiuni"
       plugins:
         title: "Plugin-uri"
         installed: "Module instalate"
@@ -3810,6 +3821,7 @@ ro:
           reset: "Resetare la valorile implicite"
       email:
         title: "Email"
+        settings: "Setări email"
         templates: "Șabloane"
         templates_title: "Șabloane de email"
         preview_digest: "Rezumat previzualizare"
@@ -3980,6 +3992,7 @@ ro:
             text: "Consolidează"
             title: "Crează noi înregistrari cu subrețele blocate dacă există cel puțin 'min_ban_entries_for_roll_up' înregistrări."
         search_logs:
+          title: "Caută jurnale"
           term: "Termen"
           searches: "Căutări"
           types:
@@ -3989,6 +4002,7 @@ ro:
         logster:
           title: "Jurnal erori"
       watched_words:
+        title: "Cuvinte urmărite"
         search: "caută"
         clear_filter: "Șterge"
         html: "(html)"

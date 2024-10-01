@@ -60,7 +60,7 @@ ro:
         groups:
           unreachable_1: "@%{group} nu permite mențiuni."
           unreachable_multiple:
-            one: "@%{group} și %{count} alt grup nu permit mențiuni."
+            one: "@%{group} și încă %{count} grup nu permit mențiuni."
             few: "@%{group} și %{count} alte grupuri nu permit mențiuni."
             other: "@%{group} și %{count} alte grupuri nu permit mențiuni."
       reply: "Răspunde"
@@ -109,6 +109,7 @@ ro:
         add_to_channel: "Adaugă la canal"
         title: Mesaj nou
         prefix: "Către:"
+        no_results: Fără rezultate
         group_name: "Nume grup discuție (opțional)"
         members_counter:
           one: "%{count}/%{max} membru"
@@ -185,6 +186,7 @@ ro:
       emoji_picker:
         objects: "Obiecte"
         flags: "Semnalări"
+        no_results: "Fără rezultate"
       thread:
         title: "Titlu"
         replies:

@@ -65,6 +65,12 @@ pl_PL:
           many: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że te wiadomości zostały przeniesione. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
           other: "Przenosisz <strong>%{count}</strong> wiadomości. Wybierz kanał docelowy. W kanale <strong>%{channelTitle}</strong> zostanie utworzona wiadomość zastępcza, aby wskazać, że te wiadomości zostały przeniesione. Pamiętaj, że łańcuchy odpowiedzi nie zostaną zachowane w nowym kanale, a wiadomości w starym kanale nie będą już wyświetlane jako odpowiedzi na przeniesione wiadomości."
         confirm_move: "Przenieś wiadomości"
+      delete_messages:
+        confirm:
+          one: "Czy na pewno chcesz usunąć tę wiadomość?"
+          few: "Czy na pewno chcesz usunąć te %{count} wiadomości?"
+          many: "Czy na pewno chcesz usunąć te %{count} wiadomości?"
+          other: "Czy na pewno chcesz usunąć te %{count} wiadomości?"
       channel_settings:
         title: "Ustawienia kanału"
         edit: "Edytuj"
@@ -243,6 +249,9 @@ pl_PL:
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
         description: "Nie wysyłaj powiadomień dla wzmianek dotyczących całego kanału (@here i @all)"
+      show_thread_title_prompts:
+        title: "Pokaż podpowiedzi tytułu wątku"
+        description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."
       open: "Otwórz czat"
       open_full_page: "Otwórz czat na pełnym ekranie"
       close_full_page: "Zamknij czat pełnoekranowy"

@@ -11,13 +11,33 @@ te:
       actions:
         agree_and_suspend:
           title: "సభ్యుడిని సస్పెండు చేయి"
+          description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని సస్పెండ్ చేయండి."
+        agree_and_silence:
+          title: "సభ్యుని నిశ్శబ్దం చేయండి"
+          description: "ఫిర్యాదుతో అంగీకరిస్తు సభ్యుని నిశబ్దం చేయండి."
         disagree:
           title: "ఒప్పుకోకు"
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} మరియు %{count} ఇతర"
+          other: "%{comma_separated_usernames} మరియు %{count} ఇతరులు"
+    mention_warning:
+      dismiss: "తీసివేయండి"
+    category_channel:
+      errors:
+        is_already_in_use: "ఇప్పటికే వాడుకలో ఉంది"
+    onebox:
+      thread_title_connector: "లో"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      from: "%{site_name}"
+  unsubscribe:
+    chat_summary:
+      never: ఎప్పటికీ వద్దు

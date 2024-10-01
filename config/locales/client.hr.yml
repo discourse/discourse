@@ -2437,6 +2437,10 @@ hr:
         few: "<span class='multi-user'>%{username} i %{count} druga</span> %{description}"
         other: "<span class='multi-user'>%{username} i %{count} drugih</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username} i %{count} drugi"
+        few: "%{username} i %{count} druga"
+        other: "%{username} i %{count} drugih"
       liked_consolidated_description:
         one: "se sviđa vaš %{count} post"
         few: "se sviđa vaših %{count} postova"
@@ -2863,6 +2867,8 @@ hr:
       move_to_inbox:
         title: "Premjesti u ulaznu poštu"
         help: "Premjestite poruku nazad u dolazni pretinac"
+      defer:
+        title: "Označi kao nepročitano"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitano"
@@ -4729,6 +4735,7 @@ hr:
           components:
             title: "Komponente"
       email_settings:
+        title: "E-mail postavke"
         sidebar_link:
           appearance: "Izgled"
           preview_summary: "Sažetak pregleda"
@@ -4818,6 +4825,7 @@ hr:
         upload:
           label: "Učitaj"
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
+          uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
@@ -4894,6 +4902,7 @@ hr:
           all_filter: "Sve"
           enabled_filter: "Omogućeno"
           disabled_filter: "Onemogućeno"
+          updates_available_filter: "Ažuriranja dostupna"
         theme:
           theme: "Tema"
           component: "Komponenta"
@@ -5072,6 +5081,7 @@ hr:
           all_filter: "Sve"
           active_filter: "Aktivno"
           inactive_filter: "Neaktivan"
+          updates_available_filter: "Ažuriranja dostupna"
           schema:
             fields:
               required: "*potrebno"
@@ -5974,6 +5984,7 @@ hr:
         help: "Dodajte nove emojije koji će biti dostupni svima. Povucite i ispustite više datoteka odjednom bez unosa naziva da biste stvorili emojije koristeći njihove nazive datoteka. Odabrana grupa će se koristiti za sve datoteke koje se dodaju u isto vrijeme. Također možete kliknuti \"Dodaj novi emoji\" da otvorite alat za odabir datoteka."
         add: "Dodaj novi emoji"
         choose_files: "Odaberite Datoteke"
+        uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -6041,6 +6052,7 @@ hr:
       step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Učitaj datoteku"
+      uploading: "Prijenos…"
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:
         one: "Vaša zajednica ima %{count} djelatnika (vi)."

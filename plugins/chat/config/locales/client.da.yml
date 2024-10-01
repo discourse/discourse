@@ -247,11 +247,13 @@ da:
         activities: "Aktiviteter"
         flags: "Flag"
         symbols: "Symboler"
+        no_results: "Ingen resultater"
       thread:
         title: "Titel"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
+        label: Tråd
         settings: "Indstillinger"
         last_reply: "seneste svar"
         notifications:

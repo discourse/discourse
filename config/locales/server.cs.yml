@@ -1097,6 +1097,7 @@ cs:
     top_uploads:
       labels:
         filename: Název souboru
+        author: Autor
     top_ignored_users:
       title: "Nejvíce ignorovaní/ztišení uživatelé"
       labels:
@@ -1137,6 +1138,7 @@ cs:
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
   site_settings:
     disabled: "vypnuto"
+    default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
@@ -1186,6 +1188,7 @@ cs:
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata nebudou uvedena, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
+    disable_watched_word_checking_in_user_fields: "zakázat kontrolu sledovaných slov v uživatelských polích."
     enable_fast_edit: "Přidá do nabídky výběru příspěvku tlačítko pro úpravu malého výběru v řádku."
     enable_quote_copy: "Přidá do nabídky výběru příspěvku tlačítko pro zkopírování výběru do schránky jako markdown citaci."
     default_include_tl0_in_digests: "Ve výchozím nastavení zahrnout příspěvky od nových uživatelů do souhrnných e-mailů. Uživatelé si to mohou změnit ve svých osobních nastaveních."
@@ -1199,8 +1202,14 @@ cs:
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     errors:
       invalid_email: "Neplatná emailová adresa."
+      invalid_integer_min_max: "Hodnota musí být mezi %{min} a %{max}."
       invalid_integer: "Hodnota musí být celé číslo."
       invalid_string: "Neplatná hodnota."
+      invalid_string_min:
+        one: "Musí mít alespoň %{count} znak."
+        few: "Musí mít alespoň %{count} znaky."
+        many: "Musí mít alespoň %{count} znaků."
+        other: "Musí mít alespoň %{count} znaků."
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
     keywords:
@@ -1238,6 +1247,7 @@ cs:
     within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorie"
+      topic: "Výsledky"
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
@@ -1246,7 +1256,7 @@ cs:
   frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
-    not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+    not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Toto jsou nejpopulárnější témata od vaší poslední návštěvy."
   change_owner:
     post_revision_text: "Převedeno vlastnictví"
   publish_page:
@@ -1297,6 +1307,7 @@ cs:
     email_too_long: "Vámi zadaný e-mail je příliš dlouhý. Názvy poštovních schránek nesmí mít více než 254 znaků a názvy domén nesmí mít více než 253 znaků."
     wrong_invite_code: "Zadaný kód pozvánky byl nesprávný."
     reserved_username: "Toto uživatelské jméno není povoleno."
+    missing_user_field: "Nevyplnili jste všechna požadovaná uživatelská pole"
     auth_complete: "Ověřování je dokončeno."
     click_to_continue: "Pro pokračování klikněte zde."
     already_logged_in: "Promiňte! Tato pozvánka je určena pro nové uživatele, kteří ještě nemají existující účet."
@@ -1328,6 +1339,12 @@ cs:
         updating_user_ids: "Aktualizace ID uživatele…"
   user:
     username:
+      short:
+        one: "musí mít alespoň %{count} znak"
+        few: "musí mít alespoň %{count} znaky"
+        many: "musí mít alespoň %{count} znaků"
+        other: "musí mít alespoň %{count} znaků"
+      characters: "musí obsahovat pouze čísla, písmena bez diakritiky, pomlčky, tečky a podtržítka"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
     email:
@@ -1578,7 +1595,7 @@ cs:
       popular_posts: "Populární příspěvky"
       more_new: "Novinky pro vás"
       subject_template: "[%{email_prefix}] Přehled"
-      unsubscribe: "Tento souhrn je odeslán z %{site_link}, když jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení."
+      unsubscribe: "Tento souhrn je odeslán z %{site_link} poté, co jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení odběru."
       your_email_settings: "vaše nastavení e-mailů"
       click_here: "klikněte zde"
     forgot_password:
@@ -1843,6 +1860,8 @@ cs:
                 label: "Veřejné"
               private:
                 label: "Soukromé"
+          chat_enabled:
+            placeholder: "Povolit chat"
       ready:
         description: "A je to! Provedli jste základní nastavení komunity. Nyní se na to můžete vrhnout a porozhlédnout se, napsat uvítací téma a posílat pozvánky!<br><br>Bavte se!"
       styling:
@@ -1888,6 +1907,7 @@ cs:
       replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
       posted: '%{username} přispěl do "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} vytvořil nové téma "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"
       confirm_body: "Upozornění úspěšně zapnuta."
       custom: "Upozornění od %{username} na %{site_title}"

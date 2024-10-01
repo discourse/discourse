@@ -92,6 +92,9 @@ ro:
               label: Etichete
         post:
           fields:
+            creator:
+              label: Creator
+              updated_user_context: Utilizatorul actualizat
             topic:
               label: ID discuție
         topic:

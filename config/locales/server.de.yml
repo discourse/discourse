@@ -2409,7 +2409,7 @@ de:
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link „Meldungsgründe“ aus der Administrator-Seitenleiste."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link „Moderationsmeldungen“ aus der Administrator-Seitenleiste."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

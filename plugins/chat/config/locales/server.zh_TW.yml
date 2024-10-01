@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    chat_enabled: "啟用聊天."
   chat:
     deleted_chat_username: 已刪除
     errors:

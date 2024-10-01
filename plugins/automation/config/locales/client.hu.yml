@@ -235,9 +235,14 @@ hu:
             user:
               label: Felhasználó
       models:
+        trigger:
+          name:
+            label: Trigger
         automation:
           name:
             label: Név
+          trigger:
+            label: Trigger
           version:
             label: Verzió
           enabled:

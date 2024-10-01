@@ -48,6 +48,8 @@ pl_PL:
             label: Tytuł
           raw:
             label: Treść
+          delay:
+            label: Opóźnienie (minuty)
         group:
           label: Grupa
         text:
@@ -57,6 +59,8 @@ pl_PL:
           fields:
             badge:
               label: Odznaka
+            only_first_grant:
+              label: Tylko przy pierwszym przyznaniu
         stalled_topic:
           durations:
             PT1H: "Jedna godzina"
@@ -67,6 +71,11 @@ pl_PL:
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
             P1Y: "Rok"
+          fields:
+            categories:
+              label: Ograniczony do kategorii
+            tags:
+              label: Ograniczony do tagów
         recurring:
           every: Co
           frequencies:
@@ -92,6 +101,13 @@ pl_PL:
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
             P1Y: "Rok"
+          fields:
+            restricted_category:
+              label: Ograniczone do kategorii
+            stalled_after:
+              label: Opóźnienie wyzwalania
+            retriggered_after:
+              label: Opóźnienie ponownego wyzwalania
         user_added_to_group:
           fields:
             joined_group:
@@ -128,6 +144,8 @@ pl_PL:
               label: Kategoria
             restricted_group:
               label: Grupa
+            ignore_group_members:
+              label: Ignoruj członków grupy
           created: Utworzono
           edited: Edytowany
         user_updated:
@@ -230,15 +248,20 @@ pl_PL:
             update_user_title_and_flair:
               label: Zaktualizuj tytuł i znacznik użytkownika
               description: Opcjonalnie, zaktualizuj tytuł i znacznik użytkownika
+            remove_members_without_badge:
+              label: Usuń istniejących członków bez odznaki
             badge:
               label: Odznaka
               description: Wybierz odznakę
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: Zawieś do (domyślnie)
             reason:
               label: Powód (domyślny)
             actor:
               label: Użytkownik
+              description: "Użytkownik odpowiedzialny za zawieszenie (domyślnie: system)"
         pin_topic:
           fields:
             pinnable_topic:

@@ -1482,6 +1482,7 @@ id:
       disable: "Tunjukkan Tulisan yang Dihapus"
     private_message_info:
       title: "Pesan"
+      add: "Tambahkan…"
       leave_message: "Apakah Anda yakin ingin meninggalkan pesan ini?"
       remove_allowed_user: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
       remove_allowed_group: "Apakah Anda yakin ingin menghapus %{name} dari pesan ini?"
@@ -1514,12 +1515,14 @@ id:
       username: "Pengguna"
       password: "Kata Sandi"
       show_password: "Tunjukkan"
+      second_factor_title: "Otentikasi Dua-Faktor"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
       password_expired: "Kata sandi kedaluwarsa. Silakan <a href='%{reset_url}'>atur ulang kata sandi Anda</a>."
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
       blank_username_or_password: "Silahkan masukkan email atau nama pengguna dan kata sandi anda"
       reset_password: "Atur Ulang Kata Sandi"
+      previous_sign_up: "Sudah memiliki akun?"
       or: "atau"
       requires_invite: "Maaf, akses ke forum ini hanya melalui undangan."
       resend_title: "Kirim Ulang Email Aktivasi"
@@ -1577,6 +1580,8 @@ id:
       no_content: Tidak ditemukan yang cocok
       create: "Buat: &#39;%{content}&#39;"
       components:
+        bulk_select_topics_dropdown:
+          title: "Aksi Massal"
         bulk_select_bookmarks_dropdown:
           title: "Aksi Massal"
     date_time_picker:
@@ -1621,6 +1626,7 @@ id:
       view_new_post: "Lihat posting baru Anda"
       saving: "Menyimpan"
       saved: "Tersimpan!"
+      uploading: "Mengunggah…"
       quote_post_title: "Kutip seluruh tulisan"
       bold_label: "B"
       bold_title: "Strong"
@@ -1698,6 +1704,7 @@ id:
     search:
       most_liked: "Paling Disukai"
       select_all: "Pilih Semua"
+      clear_all: "Hapus Semua"
       title: "Cari"
       full_page_title: "Cari"
       results: "hasil"
@@ -1729,6 +1736,7 @@ id:
       bulk:
         confirm: "Konfirmasi"
         select_all: "Pilih Semua"
+        clear_all: "Hapus Semua"
         defer: "Tandai belum dibaca"
         dismiss: "Bubar"
         dismiss_new_modal:
@@ -1741,6 +1749,7 @@ id:
             other: "Abaikan %{count} balasan baru"
           replies: "Abaikan balasan baru"
           untrack: "Berhenti melacak topik ini agar tidak lagi muncul di daftar baru saya"
+        actions: "Aksi Massal"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
         selected_count:
           other: "%{count} dipilih"
@@ -1794,6 +1803,13 @@ id:
       slow_mode_update:
         enable: "Aktifkan"
         remove: "Nonaktifkan"
+        hours: "Jam:"
+        durations:
+          2_hours: "2 Jam"
+          4_hours: "4 Jam"
+          8_hours: "8 Jam"
+          12_hours: "12 Jam"
+          24_hours: "24 Jam"
       topic_status_update:
         when: "Ketika:"
         time_frame_required: "Silakan pilih kerangka waktu"
@@ -1884,6 +1900,15 @@ id:
       revisions:
         controls:
           first: "Revisi pertama"
+        displays:
+          inline:
+            button: "HTML"
+          side_by_side:
+            button: "HTML"
+      raw_email:
+        displays:
+          html_part:
+            button: "HTML"
       bookmarks:
         create: "Buat penanda"
         edit: "Sunting penanda"
@@ -2006,6 +2031,11 @@ id:
         title: "Kategori"
       unread:
         title: "Belum dibaca"
+        title_with_count:
+          other: "Belum dibaca (%{count})"
+      unseen:
+        title: "Tak terlihat"
+        lower_title: "tak terlihat"
       new:
         lower_title_with_count:
           other: "%{count} baru"
@@ -2163,6 +2193,7 @@ id:
             new: "Baru"
             new_with_count: "Baru (%{count})"
             unread: "Belum dibaca"
+            unread_with_count: "Belum dibaca (%{count})"
             archive: "Arsip"
         tags:
           header_link_text: "Label"
@@ -2182,6 +2213,7 @@ id:
               title: "Semua topik"
             faq:
               content: "FAQ"
+              title: "Panduan untuk menggunakan situs ini"
             guidelines:
               content: "Panduan"
               title: "Panduan untuk menggunakan situs ini"
@@ -2404,6 +2436,7 @@ id:
           logs: "Log"
         upload:
           label: "Unggah"
+          uploading: "Mengunggah…"
         settings: "Pengaturan"
         operations:
           cancel:
@@ -2425,6 +2458,8 @@ id:
         new: "New"
         new_style: "preview"
         delete: "Hapus"
+        copy_to_clipboard: "Menyalin ke Clipboard"
+        copy_to_clipboard_error: "Terjadi kesalahan saat menyalin data ke Clipboard"
         email_templates:
           title: "Email"
           subject: "Judul"
@@ -2555,6 +2590,7 @@ id:
         search: "cari"
         clear_filter: "Bersihkan"
         html: "(html)"
+        clear_all: Hapus Semua
         form:
           add: "Menambahkan"
           html_label: "HTML"
@@ -2731,6 +2767,7 @@ id:
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"
       emoji:
+        uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"
       embedding:
@@ -2752,6 +2789,7 @@ id:
   wizard_js:
     wizard:
       step-text: "Langkah"
+      uploading: "Mengunggah…"
       invites:
         add_user: "menambahkan"
         roles:

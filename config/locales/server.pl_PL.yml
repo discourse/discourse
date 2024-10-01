@@ -156,6 +156,7 @@ pl_PL:
         not_valid_topic_value: "musi być prawidłowym identyfikatorem tematu"
         humanize_not_valid_post_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem postu."
         not_valid_post_value: "musi być prawidłowym identyfikatorem posta"
+        not_valid_groups_value: "musi być tablicą prawidłowych identyfikatorów grup"
         humanize_not_valid_tags_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłową tablicą nazw tagów."
         not_valid_tags_value: "musi być tablicą prawidłowych nazw tagów"
         humanize_not_valid_upload_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem przesyłania."
@@ -176,6 +177,7 @@ pl_PL:
       maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników etapowych zarejestrowanych przez email."
       no_subject: "(brak tematu)"
       no_body: "(brak treści wpisu)"
+      attachments: "(załączniki)"
       missing_attachment: "(Brakuje załącznika %{filename})"
       continuing_old_discussion:
         one: "Kontynuacja dyskusji z [%{title}](%{url}), ponieważ została utworzona ponad %{count} dzień temu."
@@ -273,6 +275,8 @@ pl_PL:
     site_settings:
       invalid_site_setting: "Brak ustawienia o nazwie '%{name}'."
       invalid_category_id: "Podana kategoria nie istnieje"
+      site_setting_is_hidden: "Nie masz uprawnień do zmiany ukrytych ustawień"
+      site_setting_is_unconfigurable: "Nie masz uprawnień do zmiany ustawień niekonfigurowalnych"
       invalid_choice:
         one: "'%{name}' jest nieprawidłowym wyborem."
         few: "'%{name}' są nieprawidłowym wyborem."
@@ -683,6 +687,7 @@ pl_PL:
               same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_current: "Hasło jest takie samo jak aktualne."
+              same_as_previous: "jest takie samo jak Twoje poprzednie hasło."
               same_as_name: "jest takie samo, jak twoje imię."
               unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
             username:
@@ -737,6 +742,7 @@ pl_PL:
             base:
               invalid_url: "Adres URL zamiany jest nieprawidłowy"
               invalid_tag_list: "Zastępcza lista tagów jest nieprawidłowa"
+              invalid_html: "Kod HTML można stosować wyłącznie w celu zastąpienia"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -752,6 +758,8 @@ pl_PL:
   discourse_welcome_topic:
     title: "Witamy w %{site_title}! :wave:"
   admin_quick_start_title: "Przewodnik administratora: Pierwsze kroki"
+  topic_view_stats:
+    invalid_date: "Data jest w nieprawidłowym formacie, użyj RRRR-MM-DD"
   category:
     topic_prefix: "O kategorii %{category}"
     replace_paragraph: "(W miejsce tego paragrafu wstaw krótki opis nowej kategorii. Będzie on wyświetlany na karcie wyboru kategorii, więc postaraj się go utrzymać poniżej 200 znaków.)"
@@ -1245,6 +1253,7 @@ pl_PL:
       title: "Wizyty użytkowników"
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
+      description: "Liczba wizyt zalogowanych użytkowników."
     signups:
       title: "Podpisy"
       xaxis: "Dzień"
@@ -1285,9 +1294,11 @@ pl_PL:
       yaxis: "Dzień"
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
     consolidated_page_views_browser_detection:
+      title: "Skonsolidowane odsłony z wykrywaniem przeglądarki (eksperymentalne)"
       xaxis:
         page_view_anon_browser: "Anonimowa przeglądarka"
         page_view_logged_in_browser: "Zalogowana przeglądarka"
+        page_view_crawler: "Znany robot internetowy"
         page_view_other: "Inne wyświetlenia strony"
       yaxis: "Dzień"
     dau_by_mau:
@@ -1565,14 +1576,31 @@ pl_PL:
   dashboard:
     problem:
       twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
+      group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
       rails_env: "Twój serwer działa w trybie %{env}"
       host_names: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
       queue_size: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
       ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
+      google_oauth2_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie przy użyciu Google OAuth2 (enable_google_oauth2_logins), ale identyfikator klienta i jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      facebook_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      twitter_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      github_config: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
+      s3_upload_config: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
+      s3_backup_config: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
+      s3_cdn: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
+      image_magick: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
+      failing_emails: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
       subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
       translation_overrides: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>teksty witryny</a>."
+      email_polling_errored_recently:
+        one: "Email polling wygenerował błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
+        few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
+        many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
+        other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
       missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś/łaś klucza API używanego do weryfikacji wiadomości z webhooka."
       bad_favicon_url: "Nie można załadować favicony. Sprawdź ustawienia favicony w <a href='%{base_path}/admin/site_settings'>ustawieniach witryny</a>."
+      poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a> i dostawcę usług."
+      poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
       force_https: "Twoja strona używa SSL. Ale `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` nie jest jeszcze włączone w ustawieniach witryny."
       out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:%{themes_list}"
       unreachable_themes: "Nie mogliśmy sprawdzić aktualizacji w następujących motywach:%{themes_list}"
@@ -1967,10 +1995,13 @@ pl_PL:
     min_trust_to_allow_self_wiki: "Wymagany poziom zaufania, by wpis użytkownika uczynić wiki."
     min_trust_to_send_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Minimalny poziom zaufania wymagany do tworzenia nowych wiadomości osobistych."
     min_trust_to_send_email_messages: "Minimalny poziom zaufania jest wymagany do wysyłania osobistych wiadomości pocztą e-mail."
+    send_email_messages_allowed_groups: "Grupy, które mogą wysyłać osobiste wiadomości e-mail. Administratorzy i moderatorzy zawsze mogą wysyłać osobiste wiadomości e-mail."
     min_trust_to_flag_posts: "Minimalny poziom zaufania potrzebny do flagowania wpisów"
+    flag_post_allowed_groups: "Grupy, które mogą flagować posty. Administratorzy i moderatorzy zawsze mogą oznaczać posty flagami."
     min_trust_to_post_links: "Minimalny poziom zaufania potrzebny do umieszczania linków we wpisach"
     post_links_allowed_groups: "Grupy, które mogą zawierać linki w postach. Administratorzy i moderatorzy zawsze mogą publikować linki."
     min_trust_to_post_embedded_media: "Minimalny poziom zaufania wymagany do osadzania elementów multimedialnych w poście"
+    embedded_media_post_allowed_groups: "Użytkownicy w tych grupach mogą osadzać elementy multimedialne w postach. Administratorzy i moderatorzy zawsze mogą osadzać elementy multimedialne."
     min_trust_level_to_allow_profile_background: "Minimalny poziom zaufania wymagany do przesłania tła profilu"
     min_trust_level_to_allow_user_card_background: "Minimalny poziom zaufania wymagany do przesłania tła karty użytkownika"
     min_trust_level_to_allow_invite: "Minimalny poziom zaufania wymagany do zapraszania użytkowników"
@@ -2241,6 +2272,7 @@ pl_PL:
     approve_post_count: "Liczba wpisów od nowego lub podstawowego użytkownika, które muszą zostać zatwierdzone"
     approve_unless_trust_level: "Posty tworzone przez użytkowników poniżej tego poziomu zaufania muszą zostać zatwierdzone"
     approve_new_topics_unless_trust_level: "Nowe tematy utworzone przez użytkowników poniżej tego poziomu zaufania muszą zostać zatwierdzone"
+    approve_new_topics_unless_allowed_groups: "Nowe tematy tworzone przez użytkowników spoza tych grup muszą zostać zatwierdzone. Tematy tworzone przez administratorów i moderatorów są zawsze zatwierdzane."
     approve_unless_staged: "Nowe tematy i posty tworzone przez użytkowników etapowych muszą zostać zatwierdzone."
     notify_about_queued_posts_after: "Jeśli są posty, które czekały na sprawdzenie dłużej niż tyle godzin, wyślij powiadomienie do wszystkich moderatorów. Ustaw na 0, aby wyłączyć te powiadomienia."
     reviewable_revision_reasons: "Lista powodów, które można wybrać w przypadku odrzucenia wpisu oczekującego w kolejce do sprawdzenia z poprawką. Zawsze dostępne są również inne, co pozwala na wprowadzenie niestandardowego powodu."
@@ -4707,6 +4739,7 @@ pl_PL:
     limited_to_one_tag_from_group: "Tagi %{tags} nie mogą być używane jednocześnie. Prosimy o uwzględnienie tylko jednego z nich."
     invalid_target_tag: "nie może być synonimem synonimu"
     synonyms_exist: "nie jest dozwolone, gdy istnieją synonimy"
+    user_not_permitted: "Nie masz uprawnień do tagowania tematów"
   rss_by_tag: "Tematy otagowane %{tag}"
   finish_installation:
     congratulations: "Gratulacje, zainstalowałeś/łaś Discourse!"
@@ -4747,18 +4780,31 @@ pl_PL:
           default_locale:
             label: "Język"
       privacy:
+        title: "Dostęp członków"
         fields:
           login_required:
             label: "Widoczność"
+            description: "Czy Twoja społeczność jest publiczna czy prywatna?"
             choices:
               public:
                 label: "Publiczne"
               private:
                 label: "Prywatne"
           invite_only:
+            label: "Rejestracja"
+            description: "Jak członkowie mogą dołączyć do tej społeczności?"
             choices:
+              sign_up:
+                label: "Przez rejestracje"
               invite_only:
                 label: "Tylko zaproszenie"
+          must_approve_users:
+            description: "Czy chcesz zatwierdzać konta użytkowników?"
+            choices:
+              "no":
+                label: "Nie, nowi członkowie mogą dołączyć natychmiast"
+              "yes":
+                label: "Tak, nowi członkowie muszą zostać zatwierdzeni przez moderatorów"
           chat_enabled:
             placeholder: "Włącz czat"
             extra_description: "Współpracuj ze swoimi członkami w czasie rzeczywistym"
@@ -4949,6 +4995,9 @@ pl_PL:
       agree_and_hide:
         title: "Ukryj post"
         description: "Zgódź się z flagą i ukryj ten post + automatycznie wyślij użytkownikowi wiadomość z prośbą o jego edycję."
+      agree_and_edit:
+        title: "Zgadzam się i edytuj post"
+        description: "Zgódź się z flagą i otwórz okno kompozytora, aby edytować post."
       delete_single:
         title: "Usuń"
       delete:
