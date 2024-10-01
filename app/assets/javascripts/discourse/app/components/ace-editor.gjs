@@ -72,11 +72,15 @@ export default class AceEditor extends Component {
     this.editor.getSession().setValue(this.args.content || "");
     this.skipChangePropagation = false;
 
+    let finished = false;
     if (isTesting()) {
-      let finished = false;
       registerWaiter(() => finished);
       this.editor.renderer.once("afterRender", () => (finished = true));
     }
+
+    return () => {
+      finished = true;
+    };
   });
 
   constructor() {
