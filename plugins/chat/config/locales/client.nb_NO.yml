@@ -41,6 +41,7 @@ nb_NO:
       bookmark_message: "Bokmerke"
       bookmark_message_edit: "Rediger bokmerke"
       save: "Lagre"
+      select: "Velg"
       sounds:
         none: "Ingen"
       exit: "forrige"
@@ -69,6 +70,10 @@ nb_NO:
       direct_message_creator:
         title: Ny Melding
         prefix: "Til:"
+      channel:
+        memberships_count:
+          one: "%{count} medlem"
+          other: "%{count} medlemmer"
       create_channel:
         type: "Type"
         types:

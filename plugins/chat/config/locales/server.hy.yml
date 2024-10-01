@@ -24,6 +24,10 @@ hy:
         single_user: "%{username}"
     mention_warning:
       dismiss: "չեղարկել"
+    onebox:
+      x_members:
+        one: "%{count} անդամ"
+        other: "%{count} անդամ"
   discourse_push_notifications:
     popup:
       chat_mention:

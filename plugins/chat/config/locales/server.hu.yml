@@ -6,6 +6,9 @@
 
 hu:
   site_settings:
+    chat_separate_sidebar_mode: "Külön oldalsávos módok megjelenítése a fórum és a chat számára."
+    chat_enabled: "Csevegés engedélyezése."
+    enable_public_channels: "Nyilvános csatornák engedélyezése kategóriák alapján."
     chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."
@@ -19,6 +22,7 @@ hu:
     errors:
       chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
   system_messages:
+    private_channel_title: "Csatorna %{id}"
     chat_channel_archive_complete:
       title: "A csevegőcsatorna archiválása kész"
       subject_template: "A csevegőcsatorna archiválása sikeresen befejeződött"
@@ -38,10 +42,15 @@ hu:
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
+      message_too_long:
+        one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterből állhatnak."
+        other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterből állhatnak."
       draft_too_long: "A vázlat túl hosszú."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
+      not_accepting_dms: "Sajnáljuk, %{username} jelenleg nem fogad üzeneteket."
+      user_cannot_send_direct_messages: "Sajnos nem tud közvetlen üzeneteket küldeni."
     reviewables:
       actions:
         agree:
@@ -69,6 +78,8 @@ hu:
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
         disagree:
           title: "Elutasítás"
+        ignore:
+          title: "Ne csináljon semmit"
     channel:
       archive:
         first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
@@ -82,6 +93,12 @@ hu:
           other: "%{comma_separated_usernames} és még %{count} fő"
     mention_warning:
       dismiss: "elvetés"
+      invite: "Meghívás a csatornára"
+      group_mentions_disabled: "%{first_identifier} nem engedélyezi a megemlítéseket."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} és még %{count} csoport nem engedélyezi a megemlítést."
+        other: "%{first_identifier} és még %{count} csoport nem engedélyezi a megemlítést."
+      global_mentions_disallowed: "A @here és @all említések le vannak tiltva ezen a csatornán."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"

@@ -9,4 +9,6 @@ te:
     discourse_local_dates:
       create:
         form:
+          date_title: తేదీ
           time_title: కాలం
+          timezone: సమయమండలం
