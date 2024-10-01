@@ -13,6 +13,8 @@ el:
         title: Κατηγορία δημιουργήθηκε/επεξεργάστηκε
       point_in_time:
         title: Σημείο στο χρόνο
+      user_promoted:
+        transition_placeholder: "από %{from_level_name} σε %{to_level_name}"
       topic:
         title: Θέμα
     scriptables:

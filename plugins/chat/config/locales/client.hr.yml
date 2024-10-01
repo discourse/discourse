@@ -141,6 +141,7 @@ hr:
       bookmark_message: "Zabilješka"
       bookmark_message_edit: "Uredi oznaku"
       save: "Spremi"
+      select: "Odaberite"
       unread_threads_count:
         one: "Imate %{count} nepročitanu raspravu"
         few: "Imate %{count} nepročitane rasprave"

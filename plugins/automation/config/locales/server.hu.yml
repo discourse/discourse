@@ -10,6 +10,8 @@ hu:
       user_removed_from_group:
         title: Felhasználó eltávolítva a csoportból
         description: Amikor egy felhasználót eltávolítanak a megadott csoportból, az automatizálás aktiválódik
+      user_promoted:
+        transition_placeholder: "%{from_level_name} -től %{to_level_name}-ig"
       topic:
         title: Téma
     scriptables:
