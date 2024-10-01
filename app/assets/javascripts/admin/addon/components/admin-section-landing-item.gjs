@@ -26,11 +26,11 @@ export default class AdminSectionLandingItem extends Component {
     }
   }
 
-  get subTitle() {
-    if (this.args.subTitleLabelTranslated) {
-      return this.args.subTitleLabelTranslated;
-    } else if (this.args.subTitleLabel) {
-      return i18n(this.args.subTitleLabel);
+  get tagline() {
+    if (this.args.taglineLabelTranslated) {
+      return this.args.taglineLabelTranslated;
+    } else if (this.args.taglineLabel) {
+      return i18n(this.args.taglineLabel);
     }
   }
 
@@ -53,10 +53,8 @@ export default class AdminSectionLandingItem extends Component {
         </div>
       {{/if}}
       <div class="admin-section-landing-item__content">
-        {{#if this.subTitle}}
-          <h4
-            class="admin-section-landing-item__subtitle"
-          >{{this.subTitle}}</h4>
+        {{#if this.tagline}}
+          <h4 class="admin-section-landing-item__tagline">{{this.tagline}}</h4>
         {{/if}}
 
         {{#if @titleRoute}}
