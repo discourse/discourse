@@ -548,8 +548,10 @@ createWidget("post-contents", {
     };
 
     if (
-      !postMenuWidgetExtensionsAdded &&
-      this.currentUser?.use_glimmer_post_menu
+      this.siteSettings.glimmer_post_menu_mode === "enabled" ||
+      ((this.siteSettings.glimmer_post_menu_mode === "auto" ||
+        this.currentUser?.use_auto_glimmer_post_menu) &&
+        !postMenuWidgetExtensionsAdded)
     ) {
       const filteredRepliesView =
         this.siteSettings.enable_filtered_replies_view;

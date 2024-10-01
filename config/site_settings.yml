@@ -3289,6 +3289,15 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+  glimmer_post_menu_mode:
+    client: true
+    hidden: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
   experimental_glimmer_post_menu_groups:
     client: true
     type: group_list
