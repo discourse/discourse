@@ -31,8 +31,6 @@ const RANKED_CHOICE_OUTCOME = {
   ],
 };
 
-const EMPTY_RANKED_CHOICE_OUTCOME = {};
-
 module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -63,7 +61,7 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
 
   test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
     this.setProperties({
-      rankedChoiceOutcome: EMPTY_RANKED_CHOICE_OUTCOME,
+      rankedChoiceOutcome: {},
     });
 
     await render(
