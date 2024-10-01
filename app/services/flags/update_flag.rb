@@ -3,29 +3,27 @@
 class Flags::UpdateFlag
   include Service::Base
 
-  contract
-  model :flag
-  policy :not_system
-  policy :not_used
-  policy :invalid_access
-  policy :unique_name
-
-  transaction do
-    step :update
-    step :log
-  end
-
-  class Contract
+  contract do
     attribute :name, :string
     attribute :description, :string
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
+
     validates :name, presence: true
     validates :description, presence: true
     validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
     validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
     validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
+  end
+  model :flag
+  policy :not_system
+  policy :not_used
+  policy :invalid_access
+  policy :unique_name
+  transaction do
+    step :update
+    step :log
   end
 
   private

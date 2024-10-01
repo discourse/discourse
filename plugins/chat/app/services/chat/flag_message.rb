@@ -26,27 +26,22 @@ module Chat
     #     the force_review option.
 
     #   @return [Service::Base::Context]
-    contract
-    model :message
-    policy :can_flag_message_in_channel
-    step :flag_message
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :message_id, :integer
-      validates :message_id, presence: true
-
       attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
       attribute :flag_type_id, :integer
-      validates :flag_type_id, inclusion: { in: ->(_flag_type) { ::ReviewableScore.types.values } }
-
       attribute :message, :string
       attribute :is_warning, :boolean
       attribute :take_action, :boolean
       attribute :queue_for_review, :boolean
+
+      validates :message_id, presence: true
+      validates :channel_id, presence: true
+      validates :flag_type_id, inclusion: { in: ->(_flag_type) { ::ReviewableScore.types.values } }
     end
+    model :message
+    policy :can_flag_message_in_channel
+    step :flag_message
 
     private
 

@@ -4,20 +4,18 @@ class UpdateSiteSetting
   include Service::Base
 
   policy :current_user_is_admin
-  contract
-  step :convert_name_to_sym
-  policy :setting_is_visible
-  policy :setting_is_configurable
-  step :cleanup_value
-  step :save
-
-  class Contract
+  contract do
     attribute :setting_name
     attribute :new_value
     attribute :allow_changing_hidden, :boolean, default: false
 
     validates :setting_name, presence: true
   end
+  step :convert_name_to_sym
+  policy :setting_is_visible
+  policy :setting_is_configurable
+  step :cleanup_value
+  step :save
 
   private
 

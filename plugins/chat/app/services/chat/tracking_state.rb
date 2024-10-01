@@ -33,25 +33,16 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
-    step :cast_thread_and_channel_ids_to_integer
-    model :report
-
-    # @!visibility private
-    class Contract
-      attribute :channel_ids, default: []
-      attribute :thread_ids, default: []
+    contract do
+      attribute :channel_ids, :array, default: []
+      attribute :thread_ids, :array, default: []
       attribute :include_missing_memberships, default: false
       attribute :include_threads, default: false
       attribute :include_read, default: true
     end
+    model :report
 
     private
-
-    def cast_thread_and_channel_ids_to_integer(contract:)
-      contract.thread_ids = contract.thread_ids.map(&:to_i)
-      contract.channel_ids = contract.channel_ids.map(&:to_i)
-    end
 
     def fetch_report(contract:, guardian:)
       ::Chat::TrackingStateReportQuery.call(

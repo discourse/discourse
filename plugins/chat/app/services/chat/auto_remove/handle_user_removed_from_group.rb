@@ -20,7 +20,11 @@ module Chat
     class HandleUserRemovedFromGroup
       include Service::Base
 
-      contract
+      contract do
+        attribute :user_id, :integer
+
+        validates :user_id, presence: true
+      end
       step :assign_defaults
       policy :chat_enabled
       policy :not_everyone_allowed
@@ -29,12 +33,6 @@ module Chat
       step :remove_if_outside_chat_allowed_groups
       step :remove_from_private_channels
       step :publish
-
-      class Contract
-        attribute :user_id, :integer
-
-        validates :user_id, presence: true
-      end
 
       private
 
