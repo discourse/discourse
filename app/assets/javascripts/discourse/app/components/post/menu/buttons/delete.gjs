@@ -11,7 +11,25 @@ export const BUTTON_ACTION_MODE_RECOVERING_TOPIC = "recovering-topic";
 
 export default class PostMenuDeleteButton extends Component {
   static shouldRender(args) {
-    return args.post.can_edit;
+    return !!PostMenuDeleteButton.modeFor(args.post);
+  }
+
+  static modeFor(post) {
+    if (post.canRecoverTopic) {
+      return BUTTON_ACTION_MODE_RECOVER_TOPIC;
+    } else if (post.canDeleteTopic) {
+      return BUTTON_ACTION_MODE_DELETE_TOPIC;
+    } else if (post.canRecover) {
+      return BUTTON_ACTION_MODE_RECOVER;
+    } else if (post.canDelete) {
+      return BUTTON_ACTION_MODE_DELETE;
+    } else if (post.showFlagDelete) {
+      return BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
+    } else if (post.isRecovering) {
+      return BUTTON_ACTION_MODE_RECOVERING;
+    } else if (post.isRecoveringTopic) {
+      return BUTTON_ACTION_MODE_RECOVERING_TOPIC;
+    }
   }
 
   get className() {
@@ -98,21 +116,7 @@ export default class PostMenuDeleteButton extends Component {
   }
 
   get #activeMode() {
-    if (this.args.post.canRecoverTopic) {
-      return BUTTON_ACTION_MODE_RECOVER_TOPIC;
-    } else if (this.args.post.canDeleteTopic) {
-      return BUTTON_ACTION_MODE_DELETE_TOPIC;
-    } else if (this.args.post.canRecover) {
-      return BUTTON_ACTION_MODE_RECOVER;
-    } else if (this.args.post.canDelete) {
-      return BUTTON_ACTION_MODE_DELETE;
-    } else if (this.args.post.showFlagDelete) {
-      return BUTTON_ACTION_MODE_SHOW_FLAG_DELETE;
-    } else if (this.args.post.isRecovering) {
-      return BUTTON_ACTION_MODE_RECOVERING;
-    } else if (this.args.post.isRecoveringTopic) {
-      return BUTTON_ACTION_MODE_RECOVERING_TOPIC;
-    }
+    return this.constructor.modeFor(this.args.post);
   }
 
   <template>
