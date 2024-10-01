@@ -26,7 +26,7 @@
     "jsdoc": "^4.0.0",
     "lefthook": "^1.7.18",
     "licensee": "^11.1.0",
-    "lint-to-the-future": "^2.0.0",
+    "lint-to-the-future": "^2.1.0",
     "lint-to-the-future-ember-template": "^1.1.1",
     "lint-to-the-future-eslint": "^2.0.1",
     "magnific-popup": "1.1.0",

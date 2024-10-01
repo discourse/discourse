@@ -92,8 +92,8 @@ importers:
         specifier: ^11.1.0
         version: 11.1.0(patch_hash=55h346kvblvnigtrwrsh4hpona)
       lint-to-the-future:
-        specifier: ^2.0.0
-        version: 2.0.0(encoding@0.1.13)
+        specifier: ^2.1.0
+        version: 2.1.0(encoding@0.1.13)
       lint-to-the-future-ember-template:
         specifier: ^1.1.1
         version: 1.2.0(ember-template-lint@6.0.0)
@@ -6029,8 +6029,8 @@ packages:
     peerDependencies:
       eslint: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  lint-to-the-future@2.0.0:
-    resolution: {integrity: sha512-gutEHLC1w5Ivh4nKQTuNV9lwnXKuUtwZ1kWOhVZVAhs6dsw71IBzS28+Kt1KiNFCds/TVkbj4OFQ2sXQaPtrkg==}
+  lint-to-the-future@2.1.0:
+    resolution: {integrity: sha512-Z7TSnsd2XEml9KcNMghFOnHZ1WqL3xHhuZzw20FPC6kR7yFTQtsAVj7/tVhIkgpRYSvWaH/E+bebPXxN/4jCVw==}
     engines: {node: 10.* || >= 12}
     hasBin: true
 
@@ -12465,7 +12465,7 @@ snapshots:
       get-func-name: 2.0.2
       loupe: 2.3.6
       pathval: 1.1.1
-      type-detect: 4.0.8
+      type-detect: 4.1.0
 
   chalk@2.4.2:
     dependencies:
@@ -15670,7 +15670,7 @@ snapshots:
       semver: 7.6.3
       walk-sync: 3.0.0
 
-  lint-to-the-future@2.0.0(encoding@0.1.13):
+  lint-to-the-future@2.1.0(encoding@0.1.13):
     dependencies:
       chai: 4.3.7
       commander: 9.5.0
