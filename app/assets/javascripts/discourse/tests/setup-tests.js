@@ -425,7 +425,8 @@ function patchFailedAssertion() {
         stateString += `, pending requests: ${settledState.pendingRequestCount}`;
       }
 
-      stateString += `checkWaiters: ${Test.checkWaiters()}`;
+      stateString += `, checkWaiters: ${Test.checkWaiters()}`;
+      stateString += `, ${JSON.stringify(settledState.debugInfo)}`;
 
       // eslint-disable-next-line no-console
       console.warn(
