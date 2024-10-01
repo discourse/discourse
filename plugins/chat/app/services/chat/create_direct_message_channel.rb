@@ -23,7 +23,18 @@ module Chat
     #   @option params_to_create [Boolean] upsert
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :name, :string
+      attribute :target_usernames, :array
+      attribute :target_groups, :array
+      attribute :upsert, :boolean, default: false
+
+      validate :target_presence
+
+      def target_presence
+        target_usernames.present? || target_groups.present?
+      end
+    end
     model :target_users
     policy :can_create_direct_message
     policy :satisfies_dms_max_users_limit,
@@ -37,20 +48,6 @@ module Chat
     step :set_optional_name
     step :update_memberships
     step :recompute_users_count
-
-    # @!visibility private
-    class Contract
-      attribute :name, :string
-      attribute :target_usernames, :array
-      attribute :target_groups, :array
-      attribute :upsert, :boolean, default: false
-
-      validate :target_presence
-
-      def target_presence
-        target_usernames.present? || target_groups.present?
-      end
-    end
 
     private
 

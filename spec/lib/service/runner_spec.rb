@@ -38,18 +38,17 @@ RSpec.describe Service::Runner do
   class FailedContractService
     include Service::Base
 
-    class Contract
+    contract do
       attribute :test
+
       validates :test, presence: true
     end
-
-    contract
   end
 
   class SuccessContractService
     include Service::Base
 
-    contract
+    contract {}
   end
 
   class FailureWithModelService

@@ -11,12 +11,12 @@ module Service
   # Currently, there are 5 types of steps:
   #
   # * +contract(name = :default)+: used to validate the input parameters,
-  #   typically provided by a user calling an endpoint. A special embedded
-  #   +Contract+ class has to be defined to holds the validations. If the
-  #   validations fail, the step will fail. Otherwise, the resulting contract
-  #   will be available in +context[:contract]+. When calling +step(name)+ or
-  #   +model(name = :model)+ methods after validating a contract, the contract
-  #   should be used as an argument instead of context attributes.
+  #   typically provided by a user calling an endpoint. A block has to be
+  #   defined to hold the validations. If the validations fail, the step will
+  #   fail. Otherwise, the resulting contract will be available in
+  #   +context[:contract]+. When calling +step(name)+ or +model(name = :model)+
+  #   methods after validating a contract, the contract should be used as an
+  #   argument instead of context attributes.
   # * +model(name = :model)+: used to instantiate a model (either by building
   #   it or fetching it from the DB). If a falsy value is returned, then the
   #   step will fail. Otherwise the resulting object will be assigned in
