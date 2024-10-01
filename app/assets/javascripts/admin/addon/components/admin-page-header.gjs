@@ -1,17 +1,27 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import i18n from "discourse-common/helpers/i18n";
 import {
+  DangerActionListItem,
   DangerButton,
+  DefaultActionListItem,
   DefaultButton,
+  PrimaryActionListItem,
   PrimaryButton,
+  WrappedActionListItem,
+  WrappedButton,
 } from "admin/components/admin-page-action-button";
+import DMenu from "float-kit/components/d-menu";
 
 export default class AdminPageHeader extends Component {
+  @service site;
+
   get title() {
     if (this.args.titleLabelTranslated) {
       return this.args.titleLabelTranslated;
@@ -41,14 +51,42 @@ export default class AdminPageHeader extends Component {
           <h1 class="admin-page-header__title">{{this.title}}</h1>
         {{/if}}
 
-        <div class="admin-page-header__actions">
-          {{yield
-            (hash
-              Primary=PrimaryButton Default=DefaultButton Danger=DangerButton
-            )
-            to="actions"
-          }}
-        </div>
+        {{#if (has-block "actions")}}
+          <div class="admin-page-header__actions">
+            {{#if this.site.mobileView}}
+              <DMenu
+                @identifier="admin-page-header-mobile-actions"
+                @title={{i18n "more_options"}}
+                @icon="ellipsis-vertical"
+                class="btn-small"
+              >
+                <:content>
+                  <DropdownMenu class="admin-page-header__mobile-actions">
+                    {{yield
+                      (hash
+                        Primary=PrimaryActionListItem
+                        Default=DefaultActionListItem
+                        Danger=DangerActionListItem
+                        Wrapped=WrappedActionListItem
+                      )
+                      to="actions"
+                    }}
+                  </DropdownMenu>
+                </:content>
+              </DMenu>
+            {{else}}
+              {{yield
+                (hash
+                  Primary=PrimaryButton
+                  Default=DefaultButton
+                  Danger=DangerButton
+                  Wrapped=WrappedButton
+                )
+                to="actions"
+              }}
+            {{/if}}
+          </div>
+        {{/if}}
       </div>
 
       {{#if this.description}}

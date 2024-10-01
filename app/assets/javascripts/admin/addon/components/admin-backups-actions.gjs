@@ -56,7 +56,6 @@ export default class AdminBackupsActions extends Component {
         @action={{routeAction "cancelOperation"}}
         @title="admin.backups.operations.cancel.title"
         @label="admin.backups.operations.cancel.label"
-        @icon="xmark"
         class="admin-backups__cancel"
       />
     {{else}}
@@ -64,7 +63,6 @@ export default class AdminBackupsActions extends Component {
         @action={{routeAction "showStartBackupModal"}}
         @title="admin.backups.operations.backup.title"
         @label="admin.backups.operations.backup.label"
-        @icon="rocket"
         class="admin-backups__start"
       />
     {{/if}}
@@ -74,14 +72,12 @@ export default class AdminBackupsActions extends Component {
         @action={{routeAction "rollback"}}
         @label="admin.backups.operations.rollback.label"
         @title="admin.backups.operations.rollback.title"
-        @icon="truck-medical"
         @disabled={{this.rollbackDisabled}}
         class="admin-backups__rollback"
       />
     {{/if}}
 
     <@actions.Default
-      @icon={{if this.site.isReadOnly "far-eye-slash" "far-eye"}}
       @action={{this.toggleReadOnlyMode}}
       @disabled={{@backups.isOperationRunning}}
       @title={{if
