@@ -1001,6 +1001,10 @@ def apply_base_chrome_options(options)
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
 
+  if remote_debug_port = ENV["CHROME_REMOTE_DEBUGGING_PORT"]
+    options.add_argument("--remote-debugging-port=#{remote_debug_port}")
+  end
+
   # A file that contains just a list of paths like so:
   #
   # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0

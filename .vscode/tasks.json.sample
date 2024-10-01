@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "deps/yarn",
+      "label": "deps/pnpm",
       "type": "shell",
-      "command": "yarn install",
+      "command": "pnpm install",
       "presentation": {
         "reveal": "always",
         "group": "deps",
@@ -28,7 +28,7 @@
     {
       "label": "deps/all",
       "dependsOn": [
-        "deps/yarn",
+        "deps/pnpm",
         "deps/bundle"
       ],
       "problemMatcher": []
@@ -58,10 +58,19 @@
       "isBackground": true
     },
     {
+      "label": "dev/ensure-admin",
+      "type": "shell",
+      "command": "bin/rails",
+      "args":["runner", "User.create!(username: \"admin\", password: \"DiscourseAdminPassword\", email: \"admin@example.com\", admin: true).activate if User.human_users.count == 0"],
+      "problemMatcher": [],
+      "isBackground": true
+    },
+    {
       "label": "shortcuts/boot-dev",
       "dependsOn": [
         "deps/all",
         "dev/migrate",
+        "dev/ensure-admin",
         "dev/server"
       ],
       "dependsOrder": "sequence",

@@ -67,6 +67,17 @@ pnpm_env["FORWARD_HOST"] = "true" if ARGV.include?("--forward-host")
 
 if ARGV.include?("-u") || ARGV.include?("--unicorn")
   unicorn_env = { "DISCOURSE_PORT" => ENV["DISCOURSE_PORT"] || "4200" }
+
+  if command == "server" && ENV["CODESPACE_NAME"]
+    unicorn_env.merge!(
+      {
+        "DISCOURSE_PORT" => "443",
+        "DISCOURSE_FORCE_HTTPS" => "1",
+        "DISCOURSE_FORCE_HOSTNAME" => "#{ENV["CODESPACE_NAME"]}-4200.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}"
+      }
+    )
+  end
+
   unicorn_pid = spawn(unicorn_env, __dir__ + "/unicorn")
   ember_cli_pid = nil
 
