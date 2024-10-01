@@ -241,7 +241,7 @@ export default function () {
       "adminSection",
       { path: "/section", resetNamespace: true },
       function () {
-        this.route("test");
+        this.route("account");
       }
     );
   });
