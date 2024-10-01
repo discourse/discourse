@@ -1544,6 +1544,7 @@ zh_TW:
       discord:
         name: "Discord"
         title: "使用 Discord 登入"
+        sr_title: "使用 Discord 登入"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -2675,6 +2676,7 @@ zh_TW:
         lower_title: "未讀"
       hot:
         title: "熱門"
+        lower_title: "熱門"
       new:
         lower_title_with_count:
           other: "%{count} 近期"
@@ -3011,6 +3013,9 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
+      panels:
+        forum:
+          label: 論壇
       no_results:
         title: "沒有結果"
     welcome_topic_banner:

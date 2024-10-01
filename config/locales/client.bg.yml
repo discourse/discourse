@@ -1977,6 +1977,8 @@ bg:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Въведете"
+    conditional_loading_section:
+      loading: Зареждане…
     category_row:
       subcategory_count:
         one: "+%{count} подкатегория"
@@ -2094,6 +2096,7 @@ bg:
       saving: "Запаметяване"
       saved: "Запазено!"
       saved_draft: "Публикуването на чернова е в ход. Докоснете, за да възобновите."
+      uploading: "Качване…"
       show_preview: "Покажи преглед"
       hide_preview: "скрий преглед"
       quote_post_title: "Цитирай цялата публикация"
@@ -3637,6 +3640,7 @@ bg:
         upload:
           label: "Качи"
           title: "Качи бекъп за тази инстанция"
+          uploading: "Качване…"
           error: "Появи се грешка при качването на '%{filename}': %{message}"
         settings: "Настройки"
         operations:
@@ -4366,6 +4370,7 @@ bg:
       emoji:
         title: "Емотикони "
         add: "Добави нова емотикона "
+        uploading: "Качване…"
         name: "Име "
         group: "Група"
         image: "Изображение "
@@ -4418,6 +4423,7 @@ bg:
       back: "Назад"
       next: "Напред"
       step-text: "Стъпка"
+      uploading: "Качване…"
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
       invites:
         add_user: "добавяне"

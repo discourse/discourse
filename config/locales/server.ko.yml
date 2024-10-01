@@ -1250,8 +1250,23 @@ ko:
       host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
       queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
       ram: "당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요."
+      google_oauth2_config: '서버가 Google OAuth2 (enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 클라이언트 ID 및 클라이언트 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      facebook_config: '서버는 페이스북(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 앱 ID 및 앱 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      twitter_config: '서버가 트위터(enable_twitter_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 키 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 안내서를 참조하십시오</a>.'
+      github_config: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      s3_upload_config: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
+      s3_cdn: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
+      image_magick: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
+      failing_emails: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
       subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
+      email_polling_errored_recently:
+        other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='%{base_path}/logs' target='_blank'>로그</a>에서 확인하세요."
       missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
+      bad_favicon_url: "파비콘이로드되지 않습니다. <a href='%{base_path}/admin/site_settings'>사이트</a> 설정에서 즐겨 찾기 아이콘 설정을 확인하십시오."
+      poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
+      poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
+      force_https: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
+      watched_words: "감시 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/customize/watched_words'>감시 단어 설정</a>을 확인하거나 사이트 설정의 'watched words regular expressions'을 비활성화하십시오."
   site_settings:
     allow_bulk_invite: "CSV 파일 업로드를 통한 일괄 초대 허용"
     disabled: "비활성화됨"

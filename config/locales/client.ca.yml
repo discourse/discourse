@@ -36,6 +36,7 @@ ca:
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
       long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, AAAA"
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       wrap_ago: "fa %{date} "
       wrap_on: "el %{date}"

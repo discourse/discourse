@@ -2367,6 +2367,9 @@ da:
         selected:
           one: "Du har valgt <b>%{count}</b> indlæg."
           other: "Du har valgt <b>%{count}</b> indlæg."
+        selected_count:
+          one: "%{count} valgt"
+          other: "%{count} valgt"
         change_tags: "Erstat Mærker"
         append_tags: "Tilføj Mærker"
         choose_new_tags: "Vælg nye mærker for dette emne"
@@ -2410,6 +2413,8 @@ da:
         optional: (valgfri)
       archive_topics:
         name: "Arkiv"
+      archive_messages:
+        name: "Flyt til arkiv"
       move_messages_to_inbox:
         name: "Flyt til indbakke"
       append_tags:
@@ -2435,6 +2440,7 @@ da:
         help: "Flyt beskeder tilbage til Indbakke"
       defer:
         help: "Markér emne som ulæst"
+        title: "Markér som ulæst"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -4165,6 +4171,9 @@ da:
             description: "Beskrivelse"
             topic: "emner"
             post: "indlæg"
+          more_options:
+            move_up: "Flyt op"
+            move_down: "Flyt ned"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"
@@ -4349,6 +4358,9 @@ da:
           convert_theme_tooltip: "Konverter dette tema til komponent"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrugte komponenter:"
+          selected:
+            one: "%{count} valgt"
+            other: "%{count} valgt"
           cancel: "Annuller"
           broken_theme_tooltip: "Dette tema har fejl i dets CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponent er deaktiveret"

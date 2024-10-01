@@ -72,7 +72,9 @@ te:
       component_no_color_scheme: "థీమ్ భాగాలు రంగుల పాలెట్‌లను కలిగి ఉండకూడదు"
     settings_errors:
       invalid_yaml: "అందించిన YAML చెల్లదు."
+      data_type_inclusion: "%{name} టైపు కు మద్దతు లేదు. మద్దతు ఉన్న టేపులు `integer`, `bool`, `list`, `enum` మరియు `upload`"
       default_value_missing: "సెట్టింగ్ `%{name}` కి డిఫాల్ట్ విలువ లేదు."
+      number_value_not_valid_min_max: "ఇది తప్పనిసరిగా %{min} మరియు %{max} మధ్య ఉండాలి."
       objects:
         required: "తప్పనిసరిగా ఉండాలి"
         invalid_type: "%{type} చెల్లుబాటు అయ్యే రకం కాదు"
@@ -817,6 +819,7 @@ te:
       labels:
         level: స్థాయి
       description: "ట్రస్ట్ స్థాయి ప్రకారం సమూహపరచబడిన సభ్యుల సంఖ్య."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       title: "ఒక్కో రకం సభ్యులు"
       xaxis: "రకం"
@@ -1845,6 +1848,7 @@ te:
       category: "వర్గాలు"
       topic: "ఫలితాలు"
       user: "సభ్యులు"
+    results_page: "'%{term}' కోసం శోధన ఫలితాలు"
     audio: "[ఆడియో]"
     video: "[వీడియో]"
   discourse_connect:
@@ -1865,6 +1869,10 @@ te:
     invalid_second_factor_method: "ఎంచుకున్న రెండు-కారకాల పద్ధతి చెల్లదు."
     security_key_alternative: "మరొక మార్గం ప్రయత్నించండి"
     security_key_authenticate: "సెక్యూరిటీ కీతో ప్రమాణీకరించండి"
+    security_key_not_allowed_error: "సెక్యూరిటీ కీ ప్రమాణీకరణ ప్రక్రియ సమయం ముగిసింది లేదా రద్దు చేయబడింది."
+    security_key_no_matching_credential_error: "అందించిన సెక్యూరిటీ కీలో సరిపోలే ఆధారాలు ఏవీ కనుగొనబడలేదు."
+    security_key_support_missing_error: "మీ ప్రస్తుత పరికరం లేదా బ్రౌజర్ సెక్యూరిటీ కీల వినియోగానికి మద్దతు ఇవ్వదు. దయచేసి వేరే పద్ధతిని ఉపయోగించండి."
+    not_approved: "మీ ఖాతా ఇంకా ఆమోదించబడలేదు. మీరు లాగిన్ చేయడానికి సిద్ధంగా ఉన్నప్పుడు ఇమెయిల్ ద్వారా మీకు తెలియజేయబడుతుంది."
     incorrect_username_email_or_password: "తప్పు సభ్యుని పేరు లేదా ఈమెయిల్ లేదా సంకేతపదం"
     incorrect_password: "తప్పు పాస్వర్డ్"
     incorrect_password_or_passkey: "పాస్‌వర్డ్ లేదా పాస్‌కీ తప్పు"
@@ -2257,9 +2265,11 @@ te:
     welcome_message: "# [ %{title} కు స్వాగతం] (#స్వాగతం)"
   upload:
     edit_reason: "చిత్రాల స్థానిక కాపీలను డౌన్‌లోడ్ చేసారు"
+    unauthorized: "క్షమించండి, మీరు అప్‌లోడ్ చేయడానికి ప్రయత్నిస్తున్న ఫైల్‌కు అధికారం లేదు (అధీకృత పొడిగింపులు: %{authorized_extensions})."
     pasted_image_filename: "అతికించిన చిత్రం"
     file_missing: "క్షమించండి, అప్‌లోడ్ చేయడానికి మీరు తప్పనిసరిగా ఫైల్‌ను అందించాలి."
     cannot_promote_failure: "అప్‌లోడ్ పూర్తి చేయడం సాధ్యం కాదు, ఇది ఇప్పటికే పూర్తయి ఉండవచ్చు లేదా మునుపు విఫలమై ఉండవచ్చు."
+    size_zero_failure: "క్షమించండి, ఏదో తప్పు జరిగినట్లు కనిపిస్తోంది, మీరు అప్‌లోడ్ చేయడానికి ప్రయత్నిస్తున్న ఫైల్ 0 బైట్‌లు. దయచేసి మళ్లీ ప్రయత్నించండి."
     images:
       size_not_found: "క్షమించండి, కానీ మేము చిత్రం యొక్క పరిమాణం నిర్ణయించలేదు. బహుశా మీ చిత్రం పాడై ఉండవచ్చు?"
   skipped_email_log:
@@ -2641,6 +2651,12 @@ te:
                 label: "తాజా విషయాలు"
               categories_only:
                 label: "వర్గాలు మాత్రమే"
+              categories_with_featured_topics:
+                label: "ఫీచర్ చేసిన విషయాలతో వర్గాలు"
+              categories_and_latest_topics:
+                label: "వర్గాలు మరియు తాజా విషయాలు"
+              categories_and_latest_topics_created_date:
+                label: "వర్గాలు మరియు తాజా విషయాలు (సృష్టించిన తేదీ ద్వారా క్రమబద్ధీకరించండి)"
               categories_and_top_topics:
                 label: "వర్గాలు మరియు అగ్ర విషయాలు"
               categories_boxes:
@@ -2698,8 +2714,16 @@ te:
       review_by: "ద్వారా సమీక్ష"
   discourse_push_notifications:
     popup:
+      mentioned: '%{username} మిమ్మల్ని "%{topic}" లో ప్రస్తావించారు - %{site_title}'
+      group_mentioned: '%{username} మిమ్మల్ని "%{topic}" లో ప్రస్తావించారు - %{site_title}'
+      quoted: '%{username} మిమ్మల్ని "%{topic}"లో కోట్ చేసారు - %{site_title}'
+      replied: '%{username} మీకు "%{topic}"లో ప్రత్యుత్తరం ఇచ్చారు - %{site_title}'
+      posted: '%{username} "%{topic}"- %{site_title}లో పోస్ట్ చేసారు'
+      linked: '%{username} "%{topic}" - %{site_title} నుండి మీ పోస్ట్‌కి లింక్ చేసారు'
+      watching_first_post: '%{username} కొత్త విషయం సృష్టించారు "%{topic}" - %{site_title}'
       confirm_title: "నోటిఫికేషన్‌లు ప్రారంభించబడ్డాయి - %{site_title}"
       confirm_body: "విజయం! నోటిఫికేషన్‌లు ప్రారంభించబడ్డాయి."
+      custom: "%{site_title}లో %{username} నుండి నోటిఫికేషన్"
   staff_action_logs:
     not_found: "కనుగొనబడలేదు"
     unknown: "తెలియని"

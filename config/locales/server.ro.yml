@@ -550,6 +550,7 @@ ro:
       title: "Necorespunzător"
     illegal:
       title: "Ilegal"
+      short_description: "Acest lucru este ilegal"
       email_title: 'Un articol din „%{title}” necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -885,6 +886,12 @@ ro:
       queue_size: "Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi Sidekiq workers."
       ram: "Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie."
       subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
+      email_polling_errored_recently:
+        one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+        few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+        other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+      poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
+      poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"

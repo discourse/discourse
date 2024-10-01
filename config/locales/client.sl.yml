@@ -166,6 +166,8 @@ sl:
       facebook: "Deli na Facebooku"
       email: "Pošlji po e-pošti"
       url: "Kopiraj in deli URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Je naredil temo javno %{when}"
       private_topic: "Je spremenil temo v zasebno sporočilo %{when}"

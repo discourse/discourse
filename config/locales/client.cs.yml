@@ -38,11 +38,11 @@ cs:
       long_with_year: "D. M. YYYY, H:mm"
       long_with_year_no_time: "D. M. YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
-      long_date_with_year: "MMM D, RRRR LT"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "D. MMMM, H:mm"
       long_date_with_year_without_time: "MMM D, YYYY"
       long_date_without_year_with_linebreak: "D. MMMM <br/>H:mm"
-      long_date_with_year_with_linebreak: "MMM D, RRRR <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, YYYY <br/>LT"
       wrap_ago: "před %{date}"
       wrap_on: "%{date}"
       tiny:
@@ -125,7 +125,7 @@ cs:
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
-        date_year: "MMM D, RRRR"
+        date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
           one: "před %{count} minutou"
@@ -220,7 +220,7 @@ cs:
     emails_are_disabled: "Všechny odchozí e-maily byly globálně zakázány správcem. Nebudou zasílána žádná e-mailová oznámení jakéhokoli druhu."
     emails_are_disabled_non_staff: "Odchozí e-maily byly zakázány pro uživatele, kteří nejsou personál."
     software_update_prompt:
-      message: "Aktualizovali jsme tyto stránky, <span>obnovte je prosím</span> , aby vše fungovalo hladce."
+      message: "Aktualizovali jsme tyto stránky. Aby vše fungovalo hladce, <span>obnovte je, prosím.</span>"
       dismiss: "Označit jako přečtené"
     bootstrap_mode: "Začínáme"
     back_button: "Zpět"
@@ -2507,7 +2507,7 @@ cs:
           label: "Sdílený koncept"
           desc: "Navrhněte téma, které bude viditelné pouze pro povolené uživatele"
         toggle_topic_bump:
-          label: "Pošťouchnout téma (nastavit datum)"
+          label: "Odpovědět bez pošťouchnutí"
           desc: "Odpovědět bez změny posledního data odpovědi"
       reload: "Znovu načíst"
       ignore: "ignorovat"
@@ -2974,7 +2974,7 @@ cs:
         bookmarks: "V tématech nemáte žádné záložky."
         category: "V kategorii %{category} nejsou žádná témata."
         top: "Nejsou tu žádná populární témata."
-        hot: "Nejsou tu žádná populární témata."
+        hot: "Nejsou tu žádná žhavá témata."
         filter: "Nejsou tu žádná témata."
         educate:
           new: '<p>Zde se zobrazí vaše nová témata. Ve výchozím nastavení jsou témata považována za nová a zobrazí se u nich indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> , pokud byla vytvořena v posledních 2 dnech.</p><p>Navštivte své <a href="%{userPrefsUrl}">předvolby</a> a změňte to.</p>'
@@ -4170,7 +4170,7 @@ cs:
           many: "Nová (%{count})"
           other: "Nová (%{count})"
         help: "témata vytvořená za posledních několik dní"
-        all: "Celkem"
+        all: "Vše"
         all_with_count: "Vše (%{count})"
         topics: "Témata"
         topics_with_count: "Témata (%{count})"
@@ -4444,7 +4444,7 @@ cs:
       description: "Popis (max. 1000 znaků)"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
-      sort_by_name: "jména"
+      sort_by_name: "názvu"
       manage_groups: "Spravovat skupiny štítků"
       manage_groups_description: "Definice skupin pro organizaci štítků"
       upload: "Nahrát štítky"
@@ -4861,7 +4861,7 @@ cs:
         meta_doc: "Prohlédněte si naši <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>dokumentaci</a> , kde najdete podrobný přehled o reportech."
         sidebar_title: "Přehledy"
         sidebar_link:
-          all: "Celkem"
+          all: "Vše"
       new_features:
         title: "Co je nového"
       dashboard:
@@ -5253,25 +5253,34 @@ cs:
         title: "Účet"
         sidebar_link:
           backups: "Zálohy"
+          whats_new:
+            title: "Co je nového"
       community:
         title: "Komunita"
         sidebar_link:
+          about_your_site: "O vašem webu"
           badges: "Odznaky"
+          login_and_authentication: "Přihlášení a ověřování"
           notifications: "Upozornění"
           permalinks: "Trvalé odkazy"
           trust_levels: "Úrovně důvěry"
           users: "Uživatelé"
-          user_fields: "User Fields"
+          user_fields: "Uživatelská pole"
           watched_words: "Sledovaná slova"
           legal: "Právní záležitosti"
+          moderation_flags: "Nastavení moderování"
       appearance:
         title: "Vzhled"
         sidebar_link:
-          emoji: "Smajlíky :)"
+          font_style: "Styl písma"
+          site_logo: "Logo webu"
+          color_schemes: "Barevná schémata"
+          emoji: "Emoji"
           navigation: "Navigace"
           themes: "Motivy"
           components:
             title: "Komponenty"
+          site_texts: "Texty"
       email_settings:
         title: "Nastavení e-mailu"
         sidebar_link:
@@ -5299,6 +5308,7 @@ cs:
           staff_action_logs: "Protokoly akcí redaktorů"
       config_areas:
         about:
+          header: "O vašem webu"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           optional: "(volitelné)"
           update: "Aktualizovat"
@@ -5316,6 +5326,8 @@ cs:
             topic: "témata"
             post: "příspěvky"
             chat_message: "zprávy v chatu"
+          more_options:
+            title: "Další možnosti"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"
@@ -5335,7 +5347,7 @@ cs:
         sidebar_link:
           installed: "Nainstalováno"
       advanced:
-        title: "Pokročilý"
+        title: "Pokročilé"
         sidebar_link:
           api_keys: "Klíče API"
           developer: "Vývojáři"
@@ -5346,7 +5358,7 @@ cs:
           onebox: "Onebox"
           files: "Soubory"
           other_options: "Ostatní"
-          search: "Vyhledat"
+          search: "Prohledat"
           experimental: "Experimentální"
           all_site_settings: "Všechna nastavení"
       navigation_menu:
@@ -5461,7 +5473,7 @@ cs:
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
         component:
-          all_filter: "Celkem"
+          all_filter: "Vše"
           used_filter: "Použitý"
           unused_filter: "Nepoužitý"
           enabled_filter: "Zapnuto"
@@ -5527,7 +5539,7 @@ cs:
           edit_css_html_help: "Neupravili jste žádné CSS nebo HTML"
           delete_upload_confirm: "Smazat toto nahrávání? (Motiv CSS by mohl přestat fungovat!)"
           import_web_tip: "Úložiště obsahující motiv"
-          import_web_advanced: "Pokročilý…"
+          import_web_advanced: "Pokročilé…"
           is_private: "Motiv je v soukromém git úložišti"
           public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
@@ -5570,7 +5582,7 @@ cs:
           yaml:
             text: "YAML"
             title: "Definovat nastavení motivu ve formátu YAML"
-          all_filter: "Celkem"
+          all_filter: "Vše"
           active_filter: "Aktivní"
           inactive_filter: "Neaktivní"
           updates_available_filter: "Dostupné aktualizace"
@@ -5824,6 +5836,7 @@ cs:
           title: "Hledání"
           term: "Období"
           searches: "Vyhledávání"
+          click_through_rate: "CTR"
           types:
             all_search_types: "Vyhledávat všechny typy"
             header: "Hlavička"
@@ -5960,6 +5973,7 @@ cs:
         suspended_until: "(až %{until})"
         suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být suspendován"
+        post_edits: "Úpravy příspěvků"
         penalty_post_actions: "Co byste chtěli udělat s tímto přidruženým příspěvkem?"
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
@@ -6007,6 +6021,7 @@ cs:
         approve_success: "Uživatel byl schválen a byl mu zaslán aktivační email s instrukcemi."
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byly jim rozeslány notifikace."
         time_read: "Čas strávený čtením"
+        post_edits_count: "Úpravy příspěvků"
         anonymize: "Anonymní uživatel"
         anonymize_confirm: "Opravdu chcete tento účet anonymizovat? Tím se změní uživatelské jméno a e-mail a vyčistí všechny informace v profilu."
         anonymize_yes: "Ano, udělejte tento účet anonymním"
@@ -6130,7 +6145,7 @@ cs:
           delete_sso_record: "Smazat záznam SSO"
           confirm_delete: "Opravdu chcete smazat tento záznam DiscourseConnect?"
       user_fields:
-        title: "User Fields"
+        title: "Uživatelská pole"
         help: "Přidej fields, které tvoji uživatelé mohou vyplnit."
         create: "Vytvořit rozšíření"
         untitled: "Untitled"
@@ -6176,9 +6191,18 @@ cs:
         revert_confirm: "Opravdu chcete vrátit změny?"
         go_back: "Zpět na hledání"
         recommended: "Doporučujeme uzpůsobit následující text tak, aby vám vyhovoval:"
-        show_overriden: "Zobrazit pouze změněná nastavení"
+        show_overriden: "Zobrazit pouze změněné"
+        show_outdated: "Zobrazit pouze zastaralé/neplatné"
+        show_untranslated: "Zobrazit pouze nepřeložené"
+        locale: "Jazyk:"
+        more_than_50_results: "K dispozici je více než 50 výsledků. Zpřesněte prosím vyhledávání."
         no_results: "Nebyly nalezeny žádné odpovídající texty"
+        interpolation_keys: "Dostupné interpolační klíče:"
         outdated:
+          title: "Tento překlad je zastaralý"
+          description: "Původní překlad tohoto klíče se od vytvoření tohoto přepisu změnil. Zkontrolujte prosím níže, zda váš překlad odpovídá provedeným změnám."
+          old_default: "Původní text"
+          new_default: "Nový text"
           dismiss: "Označit jako přečtené"
       settings:
         show_overriden: "Zobrazit pouze přepsané"

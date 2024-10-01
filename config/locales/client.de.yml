@@ -4751,7 +4751,7 @@ de:
             type_of_web_hook_event:
               label: "Art des Ereignisses"
       flags:
-        title: "Meldungsgründe"
+        title: "Moderationsmeldungen"
         description: "Beschreibung"
         enabled: "Aktiviert?"
         more_options:
@@ -5101,7 +5101,7 @@ de:
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
-          moderation_flags: "Meldungsgründe"
+          moderation_flags: "Moderationsmeldungen"
       appearance:
         title: "Erscheinungsbild"
         sidebar_link:
@@ -5193,13 +5193,13 @@ de:
             your_organization_saved: "Deine Organisation wurde gespeichert"
           saved: "gespeichert!"
         flags:
-          header: "Meldungsgründe"
+          header: "Moderationsmeldungen"
           subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Seite jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           description: "Beschreibung"
           enabled: "Aktiviert?"
           add: "Meldungsgrund hinzufügen"
           edit: "Bearbeiten"
-          back: "Zurück zu den Meldungsgründen"
+          back: "Zurück zu den Moderationsmeldungen"
           delete: "Löschen"
           delete_confirm: 'Möchtest du wirklich „%{name}“ löschen?'
           form:

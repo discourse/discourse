@@ -202,7 +202,7 @@ hu:
     broken_page_change_alert: "Egy onPageChange kezelő hibát jelzett. További információért nézze meg a böngésző fejlesztői eszközeit."
     broken_plugin_alert: "A '%{name}' bővítmény okozta."
     critical_deprecation:
-      notice: "<b>[Admin Notice]</b> Az egyik témád vagy bővítményed frissítésre szorul a Discourse magjának közelgő változásaival való kompatibilitás érdekében."
+      notice: "<b>[Admin Értesítés]</b> Az egyik témád vagy bővítményed frissítésre szorul a Discourse magjának közelgő változásaival való kompatibilitás érdekében."
       id: "(azonosító<em>%{id}</em>)"
       linked_id: "(azonosító:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Azonosított téma: <a target='_blank' href='%{path}'>'%{name}'</a>."
@@ -2507,7 +2507,7 @@ hu:
           other: "%{count} új üzenetértesítés"
         new_reviewable:
           one: "%{count} új felülvizsgálandó"
-          other: "%{count} új felülvizsgálható"
+          other: "%{count} új felülvizsgálandó"
       title: "értesítések a @név megemlítésekről, a hozzászólásaira adott válaszokról, üzenetekről stb."
       none: "Jelenleg nem lehet betölteni az értesítéseket."
       empty: "Nem található értesítés."
@@ -3224,7 +3224,7 @@ hu:
         title: "Téma kiemelése"
         pin: "Ez a téma a %{categoryLink} kategória tetején jelenjen meg, amíg"
         unpin: "Téma eltávolítása a(z) %{categoryLink} kategória elejéről."
-        unpin_until: "Téma eltávolítása a(z) %{categoryLink} kategória elejéről, vagy várakozz<strong>%{until}</strong>."
+        unpin_until: "Téma eltávolítása a(z) %{categoryLink} kategória elejéről, vagy várjon amíg <strong>%{until}</strong>."
         pin_note: "A felhasználók saját maguk számára feloldhatják a témát."
         pin_validation: "A téma kitűzéséhez dátum szükséges."
         not_pinned: "Nincsenek kiemelt témák a(z) %{categoryLink} kategóriában. "
@@ -3779,7 +3779,7 @@ hu:
         general: "Általános"
         moderation: "Moderálás"
         appearance: "Megjelenés"
-        email: "E-mail"
+        email: "E-mail:"
       list_filters:
         all: "minden téma"
         none: "nincsenek alkategóriák"
@@ -4177,7 +4177,7 @@ hu:
         community:
           name: Közösség
         trust_level:
-          name: Bizalmi szint
+          name: 'Bizalmi szint:'
         other:
           name: Egyéb
         posting:
@@ -6629,7 +6629,7 @@ hu:
           aborted: Kérjük, tölts fel egy CSV-t, amely tartalmazza a felhasználók email címét vagy felhasználónevét.
           success:
             one: "A CSV-adatokat megkaptuk, és %{count} felhasználó hamarosan megkapja a jelvényét."
-            other: "A CSV-adatokat megkaptuk, és %{count} felhasználó hamarosan megkapja a jelvényüket."
+            other: "A CSV-adatokat megkaptuk, és %{count} felhasználó hamarosan megkapja a jelvényét."
           csv_has_unmatched_users: "A következő bejegyzések szerepelnek a CSV-fájlban, de nem egyeztethetők össze a meglévő felhasználókkal, ezért nem kapják meg a jelvényt:"
           csv_has_unmatched_users_truncated_list:
             one: "A CSV-fájlban %{count} bejegyzés volt, amelyeket nem lehetett a meglévő felhasználókkal párosítani, ezért nem kapják meg a jelvényt."
