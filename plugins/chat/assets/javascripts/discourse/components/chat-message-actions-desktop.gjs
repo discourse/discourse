@@ -184,7 +184,7 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
             <DropdownSelectBox
               @options={{hash
-                icon="ellipsis-v"
+                icon="ellipsis-vertical"
                 placement="left"
                 customStyle="true"
                 btnCustomClasses="btn-flat"

@@ -1,7 +1,7 @@
 <th data-sort-order='{{order}}' class='{{view.className}} topic-list-data' scope="col" {{#if view.ariaSort}}aria-sort='{{view.ariaSort}}'{{/if}}>
   {{~#if canBulkSelect}}
     {{~#if showBulkToggle}}
-      {{raw "flat-button" class="bulk-select" icon="tasks" title="topics.bulk.toggle"}}
+      {{raw "flat-button" class="bulk-select" icon="list-check" title="topics.bulk.toggle"}}
     {{/if ~}}
     {{~#if bulkSelectEnabled}}
       <span class='bulk-select-topics'>

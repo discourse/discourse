@@ -94,9 +94,11 @@ export function registerUnbound(name, fn) {
     { id: "discourse.register-unbound" }
   );
 
-  _helpers[name] = Helper.extend({
-    compute: (params, args) => fn(...params, args),
-  });
+  _helpers[name] = class extends Helper {
+    compute(params, args) {
+      return fn(...params, args);
+    }
+  };
 
   registerRawHelper(name, fn);
 }

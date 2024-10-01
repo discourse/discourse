@@ -7,20 +7,20 @@ import { longDate } from "discourse/lib/formatter";
 import { historyHeat } from "discourse/widgets/post-edits-indicator";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  modal: service(),
+export default class ReviewablePostEdits extends Component {
+  @service modal;
 
-  hasEdits: gt("reviewable.post_version", 1),
+  @gt("reviewable.post_version", 1) hasEdits;
 
   @discourseComputed("reviewable.post_updated_at")
   historyClass(updatedAt) {
     return historyHeat(this.siteSettings, new Date(updatedAt));
-  },
+  }
 
   @discourseComputed("reviewable.post_updated_at")
   editedDate(updatedAt) {
     return longDate(updatedAt);
-  },
+  }
 
   @action
   showEditHistory(event) {
@@ -36,5 +36,5 @@ export default Component.extend({
         },
       });
     });
-  },
-});
+  }
+}

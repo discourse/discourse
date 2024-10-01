@@ -215,6 +215,8 @@ sk:
       removed_user: "Odstránený %{who} %{when}"
       removed_group: "Odstránený %{who} %{when}"
       autobumped: "Automaticky obnovené %{when}"
+      tags_changed: "Tagy aktualizované %{when}"
+      category_changed: "Kategória bola aktualizovaná %{when}"
       autoclosed:
         enabled: "Uzavreté %{when}"
         disabled: "Otvorené %{when}"
@@ -375,8 +377,22 @@ sk:
       post_count: "Príspevky"
       user_count: "Registrácie"
       active_user_count: "Aktívni používatelia"
+      visitor_count: "Návštevníci"
+      eu_visitor_count: "Návštevníci z Európskej únie"
+      traffic_info_footer_MF: |
+        Za posledných 6 mesiacov táto stránka poskytla obsah približne { total_visitors, plural,
+            one {# ľuďom}
+            few {# ľuďom}
+            many {# ľuďom}
+          other {# ľuďom}
+        } každý mesiac, pričom približne { eu_visitors, plural,
+            one {# ľuďom}
+            few {# ľuďom}
+            many {# ľuďom}
+          other {# ľuďom}
+        } z Európskej únie.
       contact: "Kontaktujte nás"
-      contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
+      contact_info: "V prípade kritického problému alebo naliehavej záležitosti týkajúcej sa tejto stránky kontaktujte %{contact_info}."
       site_activity: "Aktivita na webe"
       view_more: "Zobraziť viac"
       view_less: "Zobraziť menej"
@@ -406,6 +422,18 @@ sk:
           few: "%{formatted_number} lajkov"
           many: "%{formatted_number} lajky"
           other: "%{formatted_number} lajky"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} návštevník}
+              few {{total_formatted_number} návštevníci}
+              many {{total_formatted_number} návštevníci}
+            other {{total_formatted_number} návštevníci}
+          }, o { eu_count, plural,
+              one {~{eu_formatted_number}}
+              few {{eu_formatted_number}~}
+              many {{eu_formatted_number}~}
+            other {{eu_formatted_number}~}
+          } z EÚ
         periods:
           last_7_days: "za posledných 7 dní"
           today: "dnes"
@@ -2292,6 +2320,7 @@ sk:
           other {# chyby/minúta}
         }.
     learn_more: "Zistite viac…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Viac informácií na…</a>"
     mute: Ignorovať
     unmute: Prestať ignorovať
     last_post: Odoslané
@@ -2382,6 +2411,11 @@ sk:
       associate: "Máte už účet? <a href='%{associate_link}'>Prihláste sa</a> a prepojte svoj účet %{provider} ."
       activation_title: "Aktivujte si účet"
       already_have_account: "Už máte účet?"
+      progress_bar:
+        signup: "Registrovať sa"
+        activate: "Aktivovať"
+        approve: "Schváliť"
+        login: "Prihlásenie"
     forgot_password:
       title: "Obnovenie hesla"
       action: "Zabudol som svoje heslo"
@@ -5217,7 +5251,7 @@ sk:
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
         new_features:
           title: "Čo je nové"
-          subtitle: "Ďalšie podrobnosti o nových funkciách a vylepšeniach, ktoré neustále pridávame, nájdete v časti <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes' target='_blank'>Poznámky k vydaniu</a>."
+          subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
         last_checked: "Naposledy overené"
@@ -5339,6 +5373,7 @@ sk:
             publish_read_state: "Na skupinových správach zverejniť stav čítania skupiny"
           membership:
             automatic: Automaticky
+            automatic_tooltip: "Táto skupina je automatická, nemôžete ju vymazať a jej členovia sa pridávajú a odstraňujú automaticky."
             trust_levels_title: "Stupeň dôvery automaticky udelený členom po ich pridaní:"
             effects: Efekty
             trust_levels_none: "Žiadny"
@@ -5763,6 +5798,8 @@ sk:
           back: "Späť k príznakom"
           delete: "Odstrániť"
           delete_confirm: 'Naozaj chcete odstrániť „%{name}“?'
+          flags_tab: "Označenia"
+          settings: "Nastavenia príznakov"
           form:
             add_header: "Pridať príznak"
             edit_header: "Upraviť príznak"
@@ -5788,7 +5825,8 @@ sk:
             move_down: "Posunúť sa nadol"
       plugins:
         title: "Pluginy"
-        installed: "Nainštalované pluginy"
+        installed: "Nainštalované doplnky"
+        description: "V tomto zozname sa zobrazia všetky nainštalované zásuvné moduly Discourse alebo zásuvné moduly, ktoré sú predinštalované v rámci hostingu Discourse."
         name: "Meno"
         none_installed: "Nemáte nainštalované žiadne pluginy."
         version: "Verzia"
@@ -5826,10 +5864,13 @@ sk:
         legacy: "Odkaz"
       backups:
         title: "Zálohy"
+        files_title: "Súbory zálohy"
+        description: "Zálohy Discourse obsahujú celú databázu webu, ktorá obsahuje všetko na webe: témy, príspevky, používateľov, skupiny, nastavenia, témy atď. V závislosti od spôsobu vytvorenia záložného súboru môže, ale nemusí obsahovať odoslané súbory."
         menu:
           backups: "Zálohy"
+          backup_files: "Záloha sa nepodarila"
           logs: "Logy"
-        none: "Nie je dostupná žiadna záloha."
+        none: "Nie je dostupná žiadna záloha"
         read_only:
           enable:
             title: "Zapnúť režim len na čítanie"
@@ -5867,12 +5908,12 @@ sk:
           download:
             label: "Stiahnuť"
             title: "Odoslať e-mail s odkazom na stiahnutie"
-            alert: "Odkaz na stiahnutie tejto zálohy vám bol zaslaný e-mailom."
+            alert: "Odkaz na stiahnutie tejto zálohy vám bol zaslaný e-mailom"
           destroy:
             title: "Odstrániť zálohu"
             confirm: "Ste si istý, že chcete odstrániť túto zálohu?"
           restore:
-            is_disabled: "Obnovenie je vypnuté na Nastaveniach stránky."
+            is_disabled: "Obnovenie je v súčasnosti vypnuté. Ak ju chcete povoliť, navštívte <a href='%{url}'>nastavenia stránky</a>."
             label: "Obnoviť"
             title: "Obnoviť zálohu"
             confirm: "Ste si istý, že chcete obnoviť túto zálohu?"
@@ -7019,6 +7060,7 @@ sk:
         show_overriden: "Ukázať iba zmenené"
         show_outdated: "Zobraziť len neaktuálne/neplatné"
         show_untranslated: "Zobraziť len nepreložené"
+        only_show_selected_locale: "Zobrazenie výsledkov len vo vybranom jazyku"
         locale: "Jazyk:"
         more_than_50_results: "K dispozícii je viac ako 50 výsledkov. Upresnite prosím vyhľadávanie."
         no_results: "Nenašli sa žiadne zodpovedajúce texty"

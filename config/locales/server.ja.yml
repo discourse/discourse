@@ -52,6 +52,11 @@ ja:
   remove_posts_deleted_by_author: "作成者によって削除"
   redirect_warning: "選択されたリンクがこのフォーラムに実際に投稿されていることを確認できませんでした。このまま進むには、下のリンクを選択してください。"
   on_another_topic: "別のトピック"
+  topic_category_changed: "%{from} から %{to}"
+  topic_tag_changed:
+    added_and_removed: "%{added} を追加して %{removed} を削除しました"
+    added: "%{added} を追加しました"
+    removed: "%{removed} を削除しました"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} の #%{post_number}"
@@ -1688,6 +1693,7 @@ ja:
     max_reply_history: "in-reply-toを展開するときに展開する返信の最大数"
     topics_per_period_in_top_summary: "デフォルトの人気トピックの要約に表示される人気トピックの数"
     topics_per_period_in_top_page: "人気トピックの 'もっと表示' を展開したときに、人気トピックに表示する人気トピックの数"
+    redirect_users_to_top_page: "新規ユーザーと長期間不在のユーザーを自動的にトップページにリダイレクトします。'トップメニュー' サイト設定に 'トップ' が存在する場合にのみ適用されます。"
     top_page_default_timeframe: "匿名ユーザーのデフォルトのトップページ期間 (ログインユーザーの場合は最終アクセスに基づいて自動的に調整されます)。"
     moderators_view_emails: "モデレーターによるユーザーのメールアドレスの閲覧を許可します。"
     prioritize_username_in_ux: "ユーザーページ、ユーザーカード、および投稿の最初にユーザー名を表示する (無効にすると先に名前が表示されます)"
@@ -1889,6 +1895,7 @@ ja:
     min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     edit_post_allowed_groups: "投稿を編集できるグループ。管理者とモデレーターは投稿をいつでも編集できます。"
     min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
+    self_wiki_allowed_groups: "これらのグループのユーザーが自分の投稿を Wiki に設定できるようにします。管理者とモデレーターは自分の投稿をいつでも Wiki に設定できます。"
     min_trust_to_send_messages: "非推奨。代わりに '個人メッセージが有効なグループ' 設定を使用してください。新しい個人メッセージを作成するのに必要な最低限の信頼レベルです。"
     min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     send_email_messages_allowed_groups: "メールで個人メッセージを送信できるグループ。管理者とモデレーターはいつでもメールで個人メッセージを送信できます。"
@@ -1962,6 +1969,7 @@ ja:
     tos_url: "使用する利用規約が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     privacy_policy_url: "使用するプライバシーポリシーが他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     log_anonymizer_details: "匿名化された後に、ユーザーの詳細をログに保持するかどうか。"
+    display_eu_visitor_stats: "/about ページにグローバル訪問者数と EU の訪問者数を表示します。"
     newuser_spam_host_threshold: "`newuser_spam_host_threshold` 投稿内で新規ユーザーが迷惑とみなされる前に、同じホストにリンクを投稿できる回数。"
     allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザーはこれらのドメインへのリンクを使って投稿を作成することができます。"
     staff_like_weight: "スタッフの「いいね！」に与えられる重み (スタッフ以外の「いいね！」には 1 の重みがあります。)"
@@ -2162,6 +2170,7 @@ ja:
     embed_username_required: "トピック作成用のユーザー名が必要です。"
     notify_about_reviewable_item_after: "この時間の経過後に未処理のレビュー待ち項目がある場合、モデレーターに個人メッセージを送信します。無効にするには 0 に設定します。"
     delete_drafts_older_than_n_days: "(n) 日以上変更されていない下書きを削除します。"
+    delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまでに待機する日数。-1 に設定すると削除されません。0 に設定すると直ちに削除されます。"
     bootstrap_mode_min_users: "ブートストラップモードを無効にして「はじめに」ボタンを削除するために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
@@ -2273,6 +2282,7 @@ ja:
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
     force_lowercase_tags: "すべての新しいタグが完全に小文字になるように強制する。"
+    create_post_for_category_and_tag_changes: "トピックのカテゴリまたはタグが変更されたときに、小さなアクション投稿を作成する"
     automatically_clean_unused_tags: "どのトピックやプライベートメッセージにも使用されていないタグを毎日自動的に削除します。"
     watched_precedence_over_muted: "ミュートしているものも含むウォッチ中のカテゴリまたはタグ内のトピックについて通知する"
     company_name: "会社または組織の名前。空白のままにすると、定型の利用規約またはプライバシーに関する通知は提供されません。"
@@ -2305,6 +2315,8 @@ ja:
     use_email_for_username_and_name_suggestions: "メールアドレスの最初の部分をユーザー名と名前の提案に使用します。これにより、完全なメールアドレスが簡単に推測できるようになることに注意してください (大半の人が `gmail.com` などの一般的なサービスを使用しているため)。"
     use_name_for_username_suggestions: "ユーザー名を提案する際に、ユーザーの氏名を使用します。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
+    show_bottom_topic_map: "トピックに 10 件以上の返信がある場合、トピックの下にトピックマップを表示します。"
+    show_topic_map_in_topics_without_replies: "トピックに返信がない場合でもトピックマップを表示します。"
     splash_screen: "サイトアセットの読み込み中に一時的なローディング画面を表示します"
     navigation_menu: "サイトのメインナビゲーションメニューとして、サイドバーかヘッダーのドロップダウンを指定します。推奨はサイドバーです。"
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
@@ -2314,6 +2326,7 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     enable_experimental_bookmark_redesign_groups: "実験的: 投稿のブックマークのクイックアクセスメニューと新たに改良されたモーダルを表示します"
+    glimmer_header_mode: "新しい 'glimmer' ヘッダーの実装が使用されるかどうかを制御します。'auto' の場合、すべてのテーマとプラグインの準備が整うと自動的に有効になります。https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "実験的: 新しい 'glimmer' トピックリストの実装を有効にします。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "実験的: フォームのテンプレート機能を有効にします。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
     admin_sidebar_enabled_groups: "指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
@@ -2344,6 +2357,7 @@ ja:
       invalid_reply_by_email_address: "値に '%{reply_key}' を含める必要があり、通知メールとは異なる必要があります。"
       invalid_alternative_reply_by_email_addresses: "すべての値には '%{reply_key}' が含まれている必要があり、通知メールとは異なるものである必要があります。"
       invalid_domain_hostname: "* または ? 文字は使用できません。"
+      invalid_allowed_iframes_url: "iframe の url は http:// または https:// で開始し、1 つ以上の '/' が追加されている必要があります"
       invalid_csp_script_src: "値は 'unsafe-eval' または 'wasm-unsafe-eval' のいずれか、またはサポートされているハッシュアルゴリズムが sha256、sha384、または sha512 の '<hash algorithm>-<base64 value>' の形態である必要があります。入力が一重引用符で囲まれていることを確認してください。"
       pop3_polling_host_is_empty: "POP3 ポーリングを有効にする前に、'pop3 polling host' を設定する必要があります。"
       pop3_polling_username_is_empty: "POP3 ポーリングを有効にする前に、'pop3 polling username' を設定する必要があります。"
@@ -2510,6 +2524,7 @@ ja:
     autoclosed_disabled: "このトピックはオープンになりました。新しい返信を投稿できます。"
     autoclosed_disabled_lastpost: "このトピックはオープンになりました。新しい返信を投稿できます。"
     auto_deleted_by_timer: "タイマーにより自動的に削除されました。"
+    auto_deleted_by_merge: "マージにより自動的に削除されました。"
   login:
     invalid_second_factor_method: "選択された二要素方式は無効です。"
     not_enabled_second_factor_method: "選択された二要素方式は、アカウントで有効になっていません。"
@@ -4728,18 +4743,31 @@ ja:
           default_locale:
             label: "言語"
       privacy:
+        title: "メンバーアクセス"
         fields:
           login_required:
             label: "表示状態"
+            description: "コミュニティーは公開ですか、非公開ですか？"
             choices:
               public:
                 label: "公開"
               private:
                 label: "非公開"
           invite_only:
+            label: "登録"
+            description: "メンバーはこのコミュニティーにどのように参加できますか？"
             choices:
+              sign_up:
+                label: "登録"
               invite_only:
                 label: "招待のみ"
+          must_approve_users:
+            description: "メンバーアカウントを承認しますか？"
+            choices:
+              "no":
+                label: "いいえ。新しいメンバーはすぐに参加できます"
+              "yes":
+                label: "はい。新しいメンバーはモデレーターの承認が必要です"
           chat_enabled:
             placeholder: "チャットを有効にする"
             extra_description: "メンバーとリアルタイムで交流"

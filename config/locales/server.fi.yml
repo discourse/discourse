@@ -52,6 +52,11 @@ fi:
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
   redirect_warning: "Emme pystyneet varmistamaan, että klikkaamasi linkki on oikeasti lähetetty foorumille. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   on_another_topic: "Toisessa ketjussa"
+  topic_category_changed: "Alueelta %{from} alueelle %{to}"
+  topic_tag_changed:
+    added_and_removed: "Lisättiin %{added} ja poistettiin %{removed}"
+    added: "Lisättiin %{added}"
+    removed: "Poistettu tunniste %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} käyttäjältä %{username}"
@@ -1762,6 +1767,7 @@ fi:
     max_reply_history: "Maksimimäärä laajennettavia vastauksia, kun \"vastauksena\" laajennetaan"
     topics_per_period_in_top_summary: "Ketjujen lukumäärä, joka näytetään oletuksena Suositut-listauksissa."
     topics_per_period_in_top_page: "Ketjujen lukumäärä, joka näytetään laajennetussa Suositut-listauksessa."
+    redirect_users_to_top_page: "Ohjaa uudet ja pitkään poissa olleet käyttäjät automaattisesti ylätason sivulle. Tätä käytetään vain, kun \"top\" on \"top menu\" -sivustoasetuksessa."
     top_page_default_timeframe: "Oletusarvoinen yläsivun ajanjakso anonyymeille käyttäjille (säädetään automaattisesti kirjautuneille käyttäjille heidän viimeisimmän vierailunsa perusteella)."
     moderators_view_emails: "Salli valvojien tarkastella käyttäjien sähköpostiosoitteita."
     prioritize_username_in_ux: "Näytä käyttäjätunnus ensimmäisenä käyttäjäsivulla, -kortissa ja viesteissä (jos poistetaan käytöstä, nimi näytetään ensin)"
@@ -1963,6 +1969,7 @@ fi:
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
     edit_post_allowed_groups: "Ryhmät, jotka voivat muokata viestejä. Ylläpitäjät ja valvojat voivat aina muokata viestejä."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
+    self_wiki_allowed_groups: "Salli näiden ryhmien käyttäjien luoda oma viestiwiki. Ylläpitäjät ja valvojat voivat aina luoda oman viestiwikin."
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien yksityisviestin luomiseen vaadittava vähimmäisluottamustaso."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
     send_email_messages_allowed_groups: "Ryhmät, jotka voivat lähettää yksityisviestejä sähköpostitse. Ylläpitäjät ja valvojat voivat aina lähettää yksityisviestejä sähköpostitse."
@@ -2036,6 +2043,7 @@ fi:
     tos_url: "Jos haluat ylläpitää käyttöehtoja sivuston ulkopuolella, syötä URL tähän."
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
     log_anonymizer_details: "Säilytetäänkö käyttäjän tiedot lokissa anonymisoinnin jälkeen."
+    display_eu_visitor_stats: "Näytä maailmanlaajuisten ja EU-vierailijoiden määrä /about-sivulla."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viestissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
     allowed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     staff_like_weight: "Kuinka paljon painoa annetaan henkilökunnan tykkäyksille (muiden kuin henkilökunnan tykkäysten paino on 1)"
@@ -2236,6 +2244,7 @@ fi:
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
     notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     delete_drafts_older_than_n_days: "Poista luonnokset, joita ei ole muutettu yli (n) päivään."
+    delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 1, tynkäketjuja ei poisteta koskaan. Jos arvo on 0, ne poistetaan välittömästi."
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen käytöstä ja Aloittaminen-painikkeen poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
@@ -2346,6 +2355,7 @@ fi:
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
+    create_post_for_category_and_tag_changes: "Luo pieni tapahtumaviesti ketjun alueiden tai tunnisteiden muuttuessa"
     automatically_clean_unused_tags: "Poista automaattisesti tunnisteet, joita ei käytetä missään aiheissa tai yksityisviesteissä päivittäin."
     watched_precedence_over_muted: "Ilmoita minulle ketjuista alueilla tai tunnisteissa, joita tarkkailen, jotka kuuluvat myös sellaiseen, jonka olen vaimentanut"
     company_name: "Yrityksesi tai organisaatiosi nimi. Jos tyhjä, ei yleisiä palveluehtojen ja tietosuojailmoituksen pohjaa tarjota."
@@ -2378,6 +2388,8 @@ fi:
     use_email_for_username_and_name_suggestions: "Käytä sähköpostiosoitteiden ensimmäistä osaa käyttäjätunnus- ja -nimiehdotuksiin. Huomioi, että tämän avulla ihmisten on helpompi arvata käyttäjän sähköpostiosoite (koska suuri osa ihmisistä käyttää yleisesti käytettyjä palveluita, kuten Gmailia)."
     use_name_for_username_suggestions: "Käytä käyttäjän koko nimeä käyttäjätunnusten ehdottamiseen."
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
+    show_bottom_topic_map: "Näyttää ketjukartan ketjun alaosassa, kun siinä on vähintään 10 vastausta."
+    show_topic_map_in_topics_without_replies: "Näyttää ketjukartan, vaikka ketjussa ei olisi vastauksia."
     splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
     navigation_menu: "Määritä sivupalkki tai yläpalkin avattava valikko sivustosi päänavigointivalikoksi. Sivupalkki on suositeltu."
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
@@ -2387,6 +2399,7 @@ fi:
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     enable_experimental_bookmark_redesign_groups: "KOKEELLINEN: näytä kirjanmerkkien pikavalikko viesteissä ja uusi uudistettu modaali"
+    glimmer_header_mode: "Hallitse, käytetäänkö uutta glimmer-yläpalkkiuudistusta. Arvo \"auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
@@ -2419,6 +2432,7 @@ fi:
       invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       invalid_domain_hostname: "Ei saa sisältää merkkejä * tai ?."
+      invalid_allowed_iframes_url: "Iframe-URL-osoitteiden alussa on oltava http:// tai https:// ja niissä täytyy olla vähintään yksi ylimääräinen \"/\""
       invalid_csp_script_src: "Arvon täytyy olla joko \"unsafe-eval\" tai \"wasm-unsafe-eval\" tai muodossa '<hash algorithm>-<base64 value>', jossa tuetut salausalgoritmit ovat sha256, sha384 tai sha512. Varmista, että syötteesi on puolilainausmerkeissä."
       pop3_polling_host_is_empty: "Sinun täytyy asettaa 'pop3 polling host' ennen POP3-pollauksen käyttöönottoa."
       pop3_polling_username_is_empty: "Sinun täytyy asettaa 'pop3 polling username' ennen POP3-pollauksen käyttöönottoa."
@@ -2605,6 +2619,7 @@ fi:
     autoclosed_disabled: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     autoclosed_disabled_lastpost: "Tämä ketju on nyt avattu. Uusia vastauksia voi taas kirjoittaa."
     auto_deleted_by_timer: "Poistettiin ajastetusti."
+    auto_deleted_by_merge: "Automaattisesti poistettu yhdistämisellä."
   login:
     invalid_second_factor_method: "Valittu kaksivaiheinen tunnistustapa ei kelpaa."
     not_enabled_second_factor_method: "Valittu kaksivaiheinen tunnistustapa ei ole käytössä tililläsi."
@@ -4763,18 +4778,31 @@ fi:
           default_locale:
             label: "Kieli"
       privacy:
+        title: "Jäsenten pääsy"
         fields:
           login_required:
             label: "Näkyvyys"
+            description: "Onko yhteisösi julkinen vai yksityinen?"
             choices:
               public:
                 label: "Julkinen"
               private:
                 label: "Yksityinen"
           invite_only:
+            label: "Rekisteröityminen"
+            description: "Kuinka jäsenet voivat liittyä tähän yhteisöön?"
             choices:
+              sign_up:
+                label: "Rekisteröityminen"
               invite_only:
                 label: "Vain kutsusta"
+          must_approve_users:
+            description: "Haluatko hyväksyä jäsenten tilit?"
+            choices:
+              "no":
+                label: "En, uudet jäsenet voivat liittyä heti"
+              "yes":
+                label: "Kyllä, valvojien täytyy hyväksyä uudet jäsenet"
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"

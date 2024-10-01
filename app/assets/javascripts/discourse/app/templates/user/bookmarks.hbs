@@ -18,11 +18,15 @@
         @type="text"
         @value={{this.searchTerm}}
         placeholder={{i18n "bookmarks.search_placeholder"}}
-        @enter={{action "search"}}
+        @enter={{this.search}}
         id="bookmark-search"
         autocomplete="off"
       />
-      <DButton @action={{this.search}} @icon="search" class="btn-primary" />
+      <DButton
+        @action={{this.search}}
+        @icon="magnifying-glass"
+        class="btn-primary"
+      />
     </div>
     {{#if this.nothingFound}}
       <div class="alert alert-info">{{i18n "user.no_bookmarks_search"}}</div>

@@ -24,10 +24,10 @@ export default class FKControlCode extends Component {
 
   <template>
     <AceEditor
-      @content={{readonly this.initialValue}}
+      @content={{this.initialValue}}
+      @onChange={{this.handleInput}}
       @mode={{@lang}}
       @disabled={{@field.disabled}}
-      @onChange={{this.handleInput}}
       class="form-kit__control-code"
       style={{this.style}}
       ...attributes

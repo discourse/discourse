@@ -28,12 +28,14 @@ RSpec.describe "Move message to channel", type: :system do
       fab!(:group_1) { Fabricate(:group) }
       fab!(:channel_1) { Fabricate(:private_category_channel, group: group_1) }
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category: channel_1.category, group: group_1)
+      end
 
       before do
         SiteSetting.enable_category_group_moderation = true
         group_1.add(current_user)
         channel_1.add(current_user)
-        channel_1.chatable.update!(reviewable_by_group_id: group_1.id)
       end
 
       it "is available" do

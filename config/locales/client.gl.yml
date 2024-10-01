@@ -252,7 +252,6 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacte connosco en %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -1601,6 +1600,10 @@ gl:
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
       title: "Crear conta"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, ténteo coa ligazón de «Esqueceume o contrasinal»"
+      progress_bar:
+        signup: "Crear conta"
+        approve: "Aprobar"
+        login: "Acceder"
     forgot_password:
       title: "Contrasinal restabelecido"
       action: "Esquecín o meu contrasinal"
@@ -3726,6 +3729,7 @@ gl:
           edit: "Editar"
           delete: "Eliminar"
           delete_confirm: 'Confirma a eliminación de «%{name}»?'
+          flags_tab: "Alertas"
           form:
             save: "Gardar"
             name: "Nome"
@@ -3735,7 +3739,6 @@ gl:
             post: "publicacións"
       plugins:
         title: "Complementos"
-        installed: "Complementos instalados"
         name: "Nome"
         none_installed: "Non ten ningún complemento instalado."
         version: "Versión"
@@ -3764,7 +3767,7 @@ gl:
         menu:
           backups: "Copias de seguranza"
           logs: "Rexistros"
-        none: "Non hai copia de seguranza dispoñíbel."
+        none: "Non hai copia de seguranza dispoñíbel"
         read_only:
           enable:
             title: "Activar modo que só permite lectura"
@@ -3795,12 +3798,11 @@ gl:
           download:
             label: "Descargar"
             title: "Enviar correo electrónico coa ligazón de descarga"
-            alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza."
+            alert: "Recibiu un correo electrónico coa ligazón para descargar esta copia de seguranza"
           destroy:
             title: "Eliminar a copia de seguranza"
             confirm: "Confirma a destrución desta copia de seguranza?"
           restore:
-            is_disabled: "«Restabelecer» está desactivado na configuración do sitio."
             label: "Restabelecer"
             title: "Restabelecer a copia de seguranza"
             confirm: "Confirma a restauración desta copia de seguranza?"
@@ -3809,7 +3811,6 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirma a reversión da base de datos ao estado de funcionamento anterior?"
         location:
-          local: "Almacén local"
           s3: "S3"
         backup_storage_error: "Erro ao acceder ao almacenamento da copia de seguranza: %{error_message}"
       export_csv:

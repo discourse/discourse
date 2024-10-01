@@ -21,10 +21,10 @@
   }
 
   .d-icon {
-    color: var(--primary-low-mid);
+    color: var(--primary-medium);
 
     &:hover {
-      color: var(--primary-low-mid);
+      color: var(--primary-medium);
     }
 
     .is-focused & {
@@ -32,6 +32,7 @@
     }
 
     .is-disabled & {
+      color: var(--primary-low-mid);
       cursor: not-allowed;
     }
   }

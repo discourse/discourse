@@ -22,7 +22,7 @@ RSpec.describe "Chat | composer | channel", type: :system do
           :chat_message,
           use_service: true,
           chat_channel: channel_1,
-          message: "<mark>not marked</mark>",
+          message: "<abbr>abbr</abbr>",
         )
       end
 
@@ -33,7 +33,7 @@ RSpec.describe "Chat | composer | channel", type: :system do
 
         expect(channel_page.composer.message_details).to have_message(
           id: message_1.id,
-          exact_text: "<mark>not marked</mark>",
+          exact_text: "<abbr>abbr</abbr>",
         )
       end
     end

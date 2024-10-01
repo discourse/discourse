@@ -8,7 +8,8 @@
   "keywords": [],
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 9"
   }
 }

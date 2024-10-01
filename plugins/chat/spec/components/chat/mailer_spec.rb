@@ -23,7 +23,9 @@ describe Chat::Mailer do
   end
 
   def expect_enqueued
-    expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
+    expect {
+      expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
+    }.to_not output.to_stderr_from_any_process
     expect(Jobs::UserEmail.jobs.size).to eq(1)
   end
 

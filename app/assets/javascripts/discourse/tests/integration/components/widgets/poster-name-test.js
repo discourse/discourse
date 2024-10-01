@@ -44,7 +44,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     assert.ok(exists("span.staff"));
     assert.ok(exists("span.admin"));
     assert.ok(exists("span.moderator"));
-    assert.ok(exists(".d-icon-shield-alt"));
+    assert.ok(exists(".d-icon-shield-halved"));
     assert.ok(exists("span.new-user"));
     assert.ok(exists("span.group--fish"));
   });

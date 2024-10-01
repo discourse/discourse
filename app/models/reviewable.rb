@@ -7,6 +7,8 @@ class Reviewable < ActiveRecord::Base
     ReviewableUser: BasicReviewableUserSerializer,
   }
 
+  self.ignored_columns = [:reviewable_by_group_id]
+
   class UpdateConflict < StandardError
   end
 
@@ -17,13 +19,11 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
-  before_save :apply_review_group
   attr_accessor :created_new
   validates_presence_of :type, :status, :created_by_id
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
   belongs_to :target_created_by, class_name: "User"
-  belongs_to :reviewable_by_group, class_name: "Group"
 
   # Optional, for filtering
   belongs_to :topic
@@ -264,15 +264,6 @@ class Reviewable < ActiveRecord::Base
     )
   end
 
-  def apply_review_group
-    unless SiteSetting.enable_category_group_moderation? && category.present? &&
-             category.reviewable_by_group_id
-      return
-    end
-
-    self.reviewable_by_group_id = category.reviewable_by_group_id
-  end
-
   def actions_for(guardian, args = nil)
     args ||= {}
 
@@ -408,14 +399,17 @@ class Reviewable < ActiveRecord::Base
     group_ids =
       SiteSetting.enable_category_group_moderation? ? user.group_users.pluck(:group_id) : []
 
-    result.where(
-      "(reviewables.reviewable_by_moderator AND :staff) OR (reviewables.reviewable_by_group_id IN (:group_ids))",
-      staff: user.staff?,
-      group_ids: group_ids,
-    ).where(
-      "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
-      Guardian.new(user).allowed_category_ids,
-    )
+    result
+      .left_joins(category: :category_moderation_groups)
+      .where(
+        "(reviewables.reviewable_by_moderator AND :moderator) OR (category_moderation_groups.group_id IN (:group_ids))",
+        moderator: user.moderator?,
+        group_ids: group_ids,
+      )
+      .where(
+        "reviewables.category_id IS NULL OR reviewables.category_id IN (?)",
+        Guardian.new(user).allowed_category_ids,
+      )
   end
 
   def self.pending_count(user)
@@ -670,12 +664,12 @@ class Reviewable < ActiveRecord::Base
     bundle ||=
       actions.add_bundle(
         "reject_user",
-        icon: "user-times",
+        icon: "user-xmark",
         label: "reviewables.actions.reject_user.title",
       )
 
     actions.add(:delete_user, bundle: bundle) do |a|
-      a.icon = "user-times"
+      a.icon = "user-xmark"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.require_reject_reason = require_reject_reason
     end
@@ -768,7 +762,6 @@ end
 #  status                  :integer          default("pending"), not null
 #  created_by_id           :integer          not null
 #  reviewable_by_moderator :boolean          default(FALSE), not null
-#  reviewable_by_group_id  :integer
 #  category_id             :integer
 #  topic_id                :integer
 #  score                   :float            default(0.0), not null

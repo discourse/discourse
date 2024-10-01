@@ -29,8 +29,8 @@ RSpec.describe PostActionTypeView do
     )
     expect(post_action_type_view.score_types).to eq({ needs_approval: 9 })
 
-    flag = Fabricate(:flag, name: "custom", enabled: false)
-    expect(PostActionTypeView.new.disabled_flag_types).to eq({ custom: flag.id })
+    flag = Fabricate(:flag, name: "flag", enabled: false)
+    expect(PostActionTypeView.new.disabled_flag_types).to eq({ custom_flag: flag.id })
     flag.destroy!
   end
 

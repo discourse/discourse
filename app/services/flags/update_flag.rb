@@ -8,6 +8,7 @@ class Flags::UpdateFlag
   policy :not_system
   policy :not_used
   policy :invalid_access
+  policy :unique_name
 
   transaction do
     step :update
@@ -28,6 +29,10 @@ class Flags::UpdateFlag
   end
 
   private
+
+  def unique_name(id:, name:)
+    !Flag.custom.where(name: name).where.not(id: id).exists?
+  end
 
   def fetch_flag(id:)
     Flag.find(id)

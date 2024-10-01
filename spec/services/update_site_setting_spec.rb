@@ -1,71 +1,74 @@
 # frozen_string_literal: true
 
-describe(UpdateSiteSetting) do
-  fab!(:admin)
+RSpec.describe UpdateSiteSetting do
+  subject(:result) { described_class.call(params) }
 
-  def call_service(name, value, user: admin, allow_changing_hidden: false)
-    described_class.call(
-      setting_name: name,
-      new_value: value,
-      guardian: user.guardian,
-      allow_changing_hidden:,
-    )
+  describe described_class::Contract, type: :model do
+    subject(:contract) { described_class.new }
+
+    it { is_expected.to validate_presence_of :setting_name }
   end
 
-  context "when setting_name is blank" do
-    it "fails the service contract" do
-      expect(call_service(nil, "blah whatever")).to fail_a_contract
+  fab!(:admin)
+  let(:params) { { setting_name:, new_value:, guardian:, allow_changing_hidden: } }
+  let(:setting_name) { :title }
+  let(:new_value) { "blah whatever" }
+  let(:guardian) { admin.guardian }
+  let(:allow_changing_hidden) { false }
 
-      expect(call_service(:"", "blah whatever")).to fail_a_contract
-    end
+  context "when setting_name is blank" do
+    let(:setting_name) { nil }
+
+    it { is_expected.to fail_a_contract }
   end
 
   context "when a non-admin user tries to change a setting" do
-    it "fails the current_user_is_admin policy" do
-      expect(call_service(:title, "some new title", user: Fabricate(:moderator))).to fail_a_policy(
-        :current_user_is_admin,
-      )
-      expect(SiteSetting.title).not_to eq("some new title")
-    end
+    let(:guardian) { Guardian.new }
+
+    it { is_expected.to fail_a_policy(:current_user_is_admin) }
   end
 
   context "when the user changes a hidden setting" do
+    let(:setting_name) { :max_category_nesting }
+    let(:new_value) { 3 }
+
     context "when allow_changing_hidden is false" do
-      it "fails the setting_is_visible policy" do
-        expect(call_service(:max_category_nesting, 3)).to fail_a_policy(:setting_is_visible)
-        expect(SiteSetting.max_category_nesting).not_to eq(3)
-      end
+      it { is_expected.to fail_a_policy(:setting_is_visible) }
     end
 
     context "when allow_changing_hidden is true" do
+      let(:allow_changing_hidden) { true }
+
+      it { is_expected.to run_successfully }
+
       it "updates the specified setting" do
-        expect(call_service(:max_category_nesting, 3, allow_changing_hidden: true)).to be_success
-        expect(SiteSetting.max_category_nesting).to eq(3)
+        expect { result }.to change { SiteSetting.max_category_nesting }.to(3)
       end
     end
   end
 
   context "when the user changes a visible setting" do
+    let(:new_value) { "hello this is title" }
+
+    it { is_expected.to run_successfully }
+
     it "updates the specified setting" do
-      expect(call_service(:title, "hello this is title")).to be_success
-      expect(SiteSetting.title).to eq("hello this is title")
-    end
-
-    it "cleans up the new setting value before using it" do
-      expect(call_service(:suggested_topics, "308viu")).to be_success
-      expect(SiteSetting.suggested_topics).to eq(308)
-
-      expect(call_service(:max_image_size_kb, "8zf843")).to be_success
-      expect(SiteSetting.max_image_size_kb).to eq(8843)
+      expect { result }.to change { SiteSetting.title }.to(new_value)
     end
 
     it "creates an entry in the staff action logs" do
-      expect do expect(call_service(:max_image_size_kb, 44_543)).to be_success end.to change {
-        UserHistory.where(
-          action: UserHistory.actions[:change_site_setting],
-          subject: "max_image_size_kb",
-        ).count
+      expect { result }.to change {
+        UserHistory.where(action: UserHistory.actions[:change_site_setting], subject: "title").count
       }.by(1)
+    end
+
+    context "when value needs cleanup" do
+      let(:setting_name) { :max_image_size_kb }
+      let(:new_value) { "8zf843" }
+
+      it "cleans up the new setting value before using it" do
+        expect { result }.to change { SiteSetting.max_image_size_kb }.to(8843)
+      end
     end
   end
 end

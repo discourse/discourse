@@ -327,7 +327,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     });
 
     await render(hbs`
-      <DButton @icon="times" @action={{this.onClick}}>
+      <DButton @icon="xmark" @action={{this.onClick}}>
         <SingleSelect
           @value={{this.value}}
           @content={{this.content}}

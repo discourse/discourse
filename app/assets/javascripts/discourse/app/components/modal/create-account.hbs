@@ -21,16 +21,17 @@
         this.model.authOptions.auth_provider
       }}
     >
-      <div class="login-welcome-header" id="create-account-title">
-        <h1 class="login-title">{{i18n "create_account.header_title"}}</h1>
-        <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
-        <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+      <SignupProgressBar @step="signup" />
+      <WelcomeHeader
+        id="create-account-title"
+        @header={{i18n "create_account.header_title"}}
+        @subheader={{i18n "create_account.subheader_title"}}
+      >
         <PluginOutlet
           @name="create-account-header-bottom"
           @outletArgs={{hash showLogin=(route-action "showLogin")}}
         />
-      </div>
-
+      </WelcomeHeader>
       {{#if this.showCreateForm}}
         <form id="login-form">
           {{#if this.associateHtml}}
@@ -86,7 +87,6 @@
               id="username-validation"
             />
             {{#unless this.usernameValidation.reason}}
-
               <span class="more-info" id="username-validation-more-info">
                 {{i18n "user.username.instructions"}}
               </span>
@@ -137,7 +137,7 @@
                       (unless this.capsLockOn "hidden")
                     }}
                   >
-                    {{d-icon "exclamation-triangle"}}
+                    {{d-icon "triangle-exclamation"}}
                     {{i18n "login.caps_lock_warning"}}
                   </div>
                 </div>
@@ -307,9 +307,11 @@
 
   <:footer>
     {{#if (and this.showCreateForm this.site.mobileView)}}
-      <div class="disclaimer">
-        {{html-safe this.disclaimerHtml}}
-      </div>
+      {{#if this.disclaimerHtml}}
+        <div class="disclaimer">
+          {{html-safe this.disclaimerHtml}}
+        </div>
+      {{/if}}
       <div class="d-modal__footer-buttons">
         <DButton
           @action={{this.createAccount}}

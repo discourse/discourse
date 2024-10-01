@@ -388,6 +388,23 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tag/happy-monkey2/info", () => {
+      return helper.response({
+        __rest_serializer: "1",
+        tag_info: {
+          id: 13,
+          name: "happy-monkey2",
+          description: "happy monkey description",
+          topic_count: 1,
+          staff: false,
+          synonyms: [],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      });
+    });
+
     server.delete("/tag/planters/synonyms/containers", () =>
       helper.response({ success: true })
     );

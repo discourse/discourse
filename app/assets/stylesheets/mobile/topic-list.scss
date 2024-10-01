@@ -359,7 +359,8 @@ td .main-link {
   .num.posts-map {
     font-size: var(--font-up-2);
     padding: 0;
-    button {
+    > button,
+    > a {
       padding: 0;
     }
   }

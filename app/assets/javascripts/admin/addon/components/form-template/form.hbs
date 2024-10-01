@@ -25,7 +25,7 @@
       {{/each}}
       <DButton
         @label="admin.form_templates.validations_modal.button_title"
-        @icon="check-circle"
+        @icon="circle-check"
         @action={{this.showValidationOptionsModal}}
         class="btn-flat btn-icon-text form-templates__validations-modal-button"
       />
@@ -40,7 +40,11 @@
   </div>
 
   <div class="control-group">
-    <AceEditor @content={{this.templateContent}} @mode="yaml" />
+    <AceEditor
+      @content={{this.templateContent}}
+      @onChange={{fn (mut this.templateContent)}}
+      @mode="yaml"
+    />
   </div>
 
   <div class="footer-buttons">
@@ -54,14 +58,14 @@
 
     <DButton
       @label="admin.form_templates.new_template_form.cancel"
-      @icon="times"
+      @icon="xmark"
       @action={{this.onCancel}}
     />
 
     {{#if this.isEditing}}
       <DButton
         @label="admin.form_templates.view_template.delete"
-        @icon="trash-alt"
+        @icon="trash-can"
         @action={{this.onDelete}}
         class="btn-danger"
       />

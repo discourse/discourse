@@ -1,19 +1,22 @@
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
 const UNPINNED = "unpinned";
 const PINNED = "pinned";
 
-export default DropdownSelectBoxComponent.extend({
-  pluginApiIdentifiers: ["pinned-options"],
-  classNames: ["pinned-options"],
-
-  selectKitOptions: {
-    showCaret: true,
-  },
-
+@classNames("pinned-options")
+@selectKitOptions({
+  showCaret: true,
+})
+@pluginApiIdentifiers("pinned-options")
+export default class PinnedOptions extends DropdownSelectBoxComponent {
   modifySelection(content) {
     const pinnedGlobally = this.get("topic.pinned_globally");
     const pinned = this.value;
@@ -26,9 +29,10 @@ export default DropdownSelectBoxComponent.extend({
     content.name = state;
     content.icon = `thumbtack${state === UNPINNED ? " unpinned" : ""}`;
     return content;
-  },
+  }
 
-  content: computed(function () {
+  @computed
+  get content() {
     const globally = this.topic.pinned_globally ? "_globally" : "";
 
     return [
@@ -49,7 +53,7 @@ export default DropdownSelectBoxComponent.extend({
           : I18n.t("topic_statuses.unpinned.help"),
       },
     ];
-  }),
+  }
 
   @action
   onChange(value) {
@@ -60,5 +64,5 @@ export default DropdownSelectBoxComponent.extend({
     } else {
       return topic.rePin();
     }
-  },
-});
+  }
+}

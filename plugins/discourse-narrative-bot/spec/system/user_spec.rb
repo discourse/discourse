@@ -11,12 +11,14 @@ describe "Narrative Bot PM", type: :system do
       Jobs.run_immediately!
       SiteSetting.enable_user_tips = true
       SiteSetting.discourse_narrative_bot_enabled = true
-      # shortcut to generate welcome post since we're not going through user creation or first login
-      user.enqueue_bot_welcome_post
     end
 
     it "does not delete the narrative bot PM when skipping all tips" do
       sign_in user
+
+      # shortcut to generate welcome post since we're not going through user creation or first login
+      user.enqueue_bot_welcome_post
+
       visit "/"
 
       tooltip = PageObjects::Components::Tooltips.new("user-tip")

@@ -51,15 +51,13 @@ export default class NavigationBarComponent extends Component {
             <:content>
               <DropdownMenu {{on "click" this.dMenu.close}} as |dropdown|>
                 {{#each @navItems as |navItem|}}
-                  <dropdown.item>
-                    <NavigationItem
-                      @tagName="div"
-                      @content={{navItem}}
-                      @filterMode={{@filterMode}}
-                      @category={{@category}}
-                      class={{concat "nav-item_" navItem.name}}
-                    />
-                  </dropdown.item>
+                  <NavigationItem
+                    @content={{navItem}}
+                    @filterMode={{@filterMode}}
+                    @category={{@category}}
+                    class={{concat "nav-item_" navItem.name}}
+                  />
+
                 {{/each}}
                 <dropdown.item>
                   <PluginOutlet

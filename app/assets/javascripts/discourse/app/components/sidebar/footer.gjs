@@ -61,7 +61,7 @@ export default class SidebarFooter extends Component {
             <DButton
               @action={{this.toggleMobileView}}
               @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
-              @icon={{if this.site.mobileView "desktop" "mobile-alt"}}
+              @icon={{if this.site.mobileView "desktop" "mobile-screen-button"}}
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
             />
           {{/if}}

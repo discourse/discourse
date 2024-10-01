@@ -165,5 +165,25 @@ describe "Topic" do
         }.by(1)
       end
     end
+
+    context "when creating the post fails" do
+      before do
+        @orig_logger = Rails.logger
+        Rails.logger = @fake_logger = FakeLogger.new
+      end
+
+      after { Rails.logger = @orig_logger }
+
+      it "logs a warning" do
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.to change {
+          Topic.count
+        }.by(1)
+        expect { UserUpdater.new(user, user).update(location: "Japan") }.not_to change {
+          Topic.count
+        }
+
+        expect(Rails.logger.warnings.first).to match(/Title has already been used/)
+      end
+    end
   end
 end

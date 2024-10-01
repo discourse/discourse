@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheckTracker do
-  before { described_class.any_instance.stubs(:check).returns(stub(max_blips: 1, priority: "low")) }
-
   describe "validations" do
     let(:record) { described_class.new(identifier: "twitter_login") }
 
@@ -21,6 +19,23 @@ RSpec.describe ProblemCheckTracker do
 
     context "when the problem check tracker doesn't exist yet" do
       it { expect(described_class[:facebook_login]).to be_previously_new_record }
+    end
+  end
+
+  describe "#check" do
+    before do
+      Fabricate(:problem_check_tracker, identifier: "twitter_login")
+      Fabricate(:problem_check_tracker, identifier: "missing_check")
+    end
+
+    context "when the tracker has a corresponding check" do
+      it { expect(described_class[:twitter_login].check.new).to be_a(ProblemCheck) }
+    end
+
+    context "when the checking logic of the tracker has been removed or renamed" do
+      it do
+        expect { described_class[:missing_check].check }.to change { described_class.count }.by(-1)
+      end
     end
   end
 
@@ -169,7 +184,10 @@ RSpec.describe ProblemCheckTracker do
     context "when there are still blips to go" do
       let(:blips) { 0 }
 
+      before { ProblemCheck::TwitterLogin.stubs(:max_blips).returns(1) }
+
       it "does not sound the alarm" do
+        puts ProblemCheck::TwitterLogin.max_blips
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
           AdminNotice.problem.count
         }
@@ -210,6 +228,32 @@ RSpec.describe ProblemCheckTracker do
           AdminNotice.problem.count
         }.by(-1)
       end
+    end
+  end
+
+  describe "#reset" do
+    let(:problem_tracker) do
+      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
+    end
+
+    let(:original_attributes) do
+      {
+        blips: 0,
+        last_problem_at: 1.week.ago,
+        last_success_at: Time.current,
+        last_run_at: 24.hours.ago,
+        next_run_at: nil,
+      }
+    end
+
+    let(:updated_attributes) { { blips: 0 } }
+
+    it do
+      freeze_time
+
+      expect { problem_tracker.reset(next_run_at: 24.hours.from_now) }.to change {
+        problem_tracker.attributes
+      }.to(hash_including(updated_attributes))
     end
   end
 end

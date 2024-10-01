@@ -339,4 +339,96 @@ describe Chat do
       ).by(1)
     end
   end
+
+  describe "when using topic tags changed trigger automation" do
+    describe "with the send message script" do
+      fab!(:automation_1) do
+        Fabricate(
+          :automation,
+          trigger: DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED,
+          script: :send_chat_message,
+        )
+      end
+      fab!(:tag_1) { Fabricate(:tag) }
+      fab!(:user_1) { Fabricate(:admin) }
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+
+      before do
+        SiteSetting.discourse_automation_enabled = true
+        SiteSetting.tagging_enabled = true
+
+        automation_1.upsert_field!(
+          "watching_tags",
+          "tags",
+          { value: [tag_1.name] },
+          target: "trigger",
+        )
+        automation_1.upsert_field!(
+          "chat_channel_id",
+          "text",
+          { value: channel_1.id },
+          target: "script",
+        )
+        automation_1.upsert_field!(
+          "message",
+          "message",
+          { value: "[{{topic_title}}]({{topic_url}})" },
+          target: "script",
+        )
+      end
+
+      it "sends the message" do
+        DiscourseTagging.tag_topic_by_names(topic_1, Guardian.new(user_1), [tag_1.name])
+
+        expect(channel_1.chat_messages.last.message).to eq(
+          "[#{topic_1.title}](#{topic_1.relative_url})",
+        )
+      end
+    end
+  end
+
+  describe "when using post_edited_created trigger automation" do
+    describe "with the send message script" do
+      fab!(:automation_1) do
+        Fabricate(
+          :automation,
+          trigger: DiscourseAutomation::Triggers::POST_CREATED_EDITED,
+          script: :send_chat_message,
+        )
+      end
+      fab!(:user_1) { Fabricate(:admin) }
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+
+      before do
+        SiteSetting.discourse_automation_enabled = true
+
+        automation_1.upsert_field!(
+          "chat_channel_id",
+          "text",
+          { value: channel_1.id },
+          target: "script",
+        )
+        automation_1.upsert_field!(
+          "message",
+          "message",
+          { value: "[{{topic_title}}]({{topic_url}})" },
+          target: "script",
+        )
+      end
+
+      it "sends the message" do
+        PostCreator.create(
+          user_1,
+          { title: "hello world topic", raw: "my name is fred", archetype: Archetype.default },
+        )
+
+        topic_1 = Topic.last
+
+        expect(channel_1.chat_messages.last.message).to eq(
+          "[#{topic_1.title}](#{topic_1.relative_url})",
+        )
+      end
+    end
+  end
 end

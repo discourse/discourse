@@ -1,13 +1,14 @@
+import { classNames } from "@ember-decorators/component";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import DropdownSelectBoxHeaderComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-header";
 
-export default DropdownSelectBoxHeaderComponent.extend({
-  classNames: ["notifications-filter-header", "btn-flat"],
-  label: fmt("value", "user.user_notifications.filters.%@"),
+@classNames("notifications-filter-header", "btn-flat")
+export default class NotificationsFilterHeader extends DropdownSelectBoxHeaderComponent {
+  @fmt("value", "user.user_notifications.filters.%@") label;
 
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
     return isExpanded ? "caret-up" : "caret-down";
-  },
-});
+  }
+}

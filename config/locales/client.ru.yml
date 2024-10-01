@@ -215,6 +215,8 @@ ru:
       removed_user: "Удалил(а) %{who} %{when}"
       removed_group: "Удалил(а) %{who} %{when}"
       autobumped: "Автоматически поднято %{when}"
+      tags_changed: "Теги обновлены %{when}"
+      category_changed: "Категория обновлена %{when}"
       autoclosed:
         enabled: "Закрыл(а) тему %{when}"
         disabled: "Открыл(а) тему %{when}"
@@ -255,6 +257,7 @@ ru:
     broken_decorator_alert: "Сообщения могут отображаться неправильно: один из декораторов контента сообщений вызвал ошибку."
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
+    broken_transformer_alert: "Произошла ошибка. Ваш сайт может работать некорректно."
     critical_deprecation:
       notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse."
       id: "(ID:<em>%{id}</em>)"
@@ -374,24 +377,63 @@ ru:
       post_count: "Сообщения"
       user_count: "Регистрации"
       active_user_count: "Активные пользователи"
+      visitor_count: "Посетители"
+      eu_visitor_count: "Посетители из Европейского союза"
+      traffic_info_footer_MF: |
+        За последние 6 месяцев этот сайт предоставлял контент примерно { total_visitors, plural,
+            one {# посетителю}
+            few {# посетителям}
+            many {# посетителям}
+          other {# посетителю}
+        } каждый месяц, причем из Европейского союза предположительно — { eu_visitors, plural,
+            one {# посетитель}
+            few {# посетителя}
+            many {# посетителей}
+          other {# посетителя}
+        }.
       contact: "Связаться с нами"
-      contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
+      contact_info: "В случае возникновения критической ошибки или срочного вопроса по этому сайту свяжитесь с нами: %{contact_info}."
+      site_activity: "Активность на сайте"
+      view_more: "Показать больше"
+      view_less: "Показать меньше"
       activities:
         topics:
           one: "%{formatted_number} тема"
-          few: "%{formatted_number} тем"
-          many: "%{formatted_number} темы"
+          few: "%{formatted_number} темы"
+          many: "%{formatted_number} тем"
           other: "%{formatted_number} темы"
         posts:
-          one: "%{formatted_number} запись"
-          few: "%{formatted_number} записи"
-          many: "%{formatted_number} записей"
-          other: "%{formatted_number} записей"
+          one: "%{formatted_number} публикация"
+          few: "%{formatted_number} публикации"
+          many: "%{formatted_number} публикаций"
+          other: "%{formatted_number} публикации"
+        active_users:
+          one: "%{formatted_number} активный пользователь"
+          few: "%{formatted_number} активных пользователя"
+          many: "%{formatted_number} активных пользователей"
+          other: "Активных пользователей: %{formatted_number}"
+        sign_ups:
+          one: "%{formatted_number} регистрация"
+          few: "%{formatted_number} регистрации"
+          many: "%{formatted_number} регистраций"
+          other: "%{formatted_number} регистрации"
         likes:
           one: "%{formatted_number} лайк"
-          few: "%{formatted_number} лайков"
-          many: "%{formatted_number} лайка"
+          few: "%{formatted_number} лайка"
+          many: "%{formatted_number} лайков"
           other: "%{formatted_number} лайка"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} посетитель}
+              few {{total_formatted_number} посетителя}
+              many {{total_formatted_number} посетителей}
+            other {{total_formatted_number} посетителя}
+          }, при этом из ЕС — { eu_count, plural,
+              one {{eu_formatted_number}}
+              few {{eu_formatted_number}}
+              many {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          }
         periods:
           last_7_days: "за последние 7 дней"
           today: "сегодня"
@@ -412,6 +454,18 @@ ru:
         many: "%{formatted_number} модераторов"
         other: "%{formatted_number} модератора"
       report_inappropriate_content: "Если вы столкнетесь с неприемлемым контентом, смело обращайтесь к нашим модераторам и администраторам. Для этого войдите в аккаунт."
+      site_age:
+        less_than_one_month: "Создано < 1 месяца назад"
+        month:
+          one: "Создано %{count} месяц назад"
+          few: "Создано %{count} месяца назад"
+          many: "Создано %{count} месяцев назад"
+          other: "Создано %{count} месяца назад"
+        year:
+          one: "Создано %{count} год назад"
+          few: "Создано %{count} года назад"
+          many: "Создано %{count} лет назад"
+          other: "Создано %{count} года назад"
     bookmarked:
       title: "Закладки"
       edit_bookmark: "Изменить закладку"
@@ -833,6 +887,7 @@ ru:
       never: "Никогда"
       last_custom: "Использовать ранее установленные дату и время"
       custom: "Установить дату и время"
+      more_options: "Другие варианты…"
       select_timeframe: "Выбор периода"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> создал(а) <a href='%{topicUrl}'>тему</a>"
@@ -1513,6 +1568,78 @@ ru:
         warnings: "Официальные предупреждения"
         read_more_in_group: "Хотите почитать ещё? Просмотрите другие сообщения в группе %{groupLink}."
         read_more: "Хотите почитать ещё? Просмотрите другие сообщения в разделе «<a href='%{basePath}/u/%{username}/messages'>Личные сообщения</a>»."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанное сообщение</a>}
+                   few {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанных сообщения</a>}
+                   many {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанных сообщений</a>}
+                other {Остались непрочитанные сообщения: <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { и <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новое</a> сообщение, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   few { и <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новых</a> сообщения, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   many { и <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новых</a> сообщений, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                other { и <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># нового</a> сообщения, также вы можете просмотреть другие сообщения в группе {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанное</a> сообщение, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   few {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанных</a> сообщения, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   many {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># непрочитанных</a> сообщений, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                other {Остались непрочитанные сообщения: <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">#</a>, также вы можете просмотреть другие сообщения в группе {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Осталось <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новое</a> сообщение, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   few {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новых</a> сообщения, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                   many {Остались <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># новых</a> сообщений, также вы можете просмотреть другие сообщения в группе {groupLink}}
+                other {Остались новые сообщения: <a href="{basePath}/u/{username}/messages/group/{groupName}/new">#</a>, также вы можете просмотреть другие сообщения в группе {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># непрочитанное сообщение</a>}
+                   few {<a href="{basePath}/u/{username}/messages/unread"># непрочитанных сообщения</a>}
+                   many {<a href="{basePath}/u/{username}/messages/unread"># непрочитанных сообщений</a>}
+                other {Непрочитанных сообщений: <a href="{basePath}/u/{username}/messages/unread">#,</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { и <a href="{basePath}/u/{username}/messages/new"># новое</a> сообщение, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   few { и <a href="{basePath}/u/{username}/messages/new"># новых</a> сообщения, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   many { и <a href="{basePath}/u/{username}/messages/new"># новых</a> сообщений, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                other { и новые сообщения <a href="{basePath}/u/{username}/messages/new">(#)</a>, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Осталось <a href="{basePath}/u/{username}/messages/unread"># непрочитанное</a> сообщение, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   few {Остались <a href="{basePath}/u/{username}/messages/unread"># непрочитанных</a> сообщения, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   many {Остались <a href="{basePath}/u/{username}/messages/unread"># непрочитанных</a> сообщений, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                other {Остались непрочитанные сообщения <a href="{basePath}/u/{username}/messages/unread">(#),</a> также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Осталось <a href="{basePath}/u/{username}/messages/new"># новое</a> сообщение, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   few {Осталось <a href="{basePath}/u/{username}/messages/new"># новых</a> сообщения, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                   many {Осталось <a href="{basePath}/u/{username}/messages/new"># новых</a> сообщений, также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+                other {Остались новые сообщения <a href="{basePath}/u/{username}/messages/new">(#),</a> также вы можете просмотреть другие <a href="{basePath}/u/{username}/messages">личные сообщения</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Аккаунт"
         security: "Безопасность"
@@ -1729,7 +1856,7 @@ ru:
         please_continue: "Новый аккаунт подтвержден; вы будете перенаправлены на главную страницу."
         continue_button: "Перейти на сайт %{site_name}"
         welcome_to: "Добро пожаловать на сайт %{site_name}!"
-        approval_required: "Чтобы вы смогли зайти на форум, ваш аккаунт должен быть вручную подтвержден модератором. Когда аккаунт будет одобрен, вы получите письмо!"
+        approval_required: "Чтобы вы смогли зайти на форум, ваш аккаунт должен вручную одобрить модератор. Когда аккаунт будет одобрен, вы получите письмо!"
       name:
         title: "Имя"
         instructions: "Ваше полное имя (необязательно)."
@@ -2141,7 +2268,57 @@ ru:
       logout_disabled: "Выход отключён, пока сайт находится в режиме «только для чтения»"
     staff_writes_only_mode:
       enabled: "Сайт находится в режиме «только для персонала». Продолжайте просмотр, но отвечать, ставить лайки и выполнять другие действия, влияющие на контент, могут только сотрудники."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# ошибка/час}
+            few {# ошибки/час}
+            many {# ошибок/час}
+          other {# ошибки/час}
+        }</a> достигнут предел настройки сайта в {limit, plural,
+            one {# ошибка/час}
+            few {# ошибки/час}
+            many {# ошибок/час}
+          other {# ошибки/час}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# ошибка/минуту}
+            few {# ошибки/минуту}
+            many {# ошибок/минуту}
+          other {# ошибки/минуту}
+        }</a> достигнут предел настройки сайта в { limit, plural,
+            one {# ошибку/минуту}
+            few {# ошибки/минуту}
+            many {# ошибок/минуту}
+          other {# ошибки/минуту}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# ошибка/час}
+            few {# ошибки/час}
+            many {# ошибок/час}
+          other {# ошибки/час}
+        }</a> превышен лимит настройки сайта в { limit, plural,
+            one {# ошибку/час}
+            few {# ошибки/час}
+            many {# ошибок/час}
+          other {# ошибки/час}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# ошибка/минуту}
+            few {# ошибки/минуту}
+            many {# ошибок/минуту}
+          other {# ошибки/минуту}
+        }</a> превышен лимит настройки сайта в { limit, plural,
+            one {# ошибку/минуту}
+            few {# ошибки/минуту}
+            many {# ошибок/минуту}
+          other {# ошибки/минуту}
+        }.
     learn_more: "Подробнее…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Подробнее…</a>"
     mute: Отключить
     unmute: Включить
     last_post: Последнее сообщение
@@ -2226,6 +2403,10 @@ ru:
       associate: "Уже есть аккаунт? <a href='%{associate_link}'>Войдите в систему</a> для привязки аккаунта %{provider}."
       activation_title: "Активируйте свой аккаунт"
       already_have_account: "Уже есть аккаунт?"
+      progress_bar:
+        signup: "Зарегистрироваться"
+        approve: "Одобрить"
+        login: "Войти"
     forgot_password:
       title: "Сброс пароля"
       action: "Пароль утерян"
@@ -2432,6 +2613,7 @@ ru:
     file_size_input:
       error:
         size_too_large: "Размер файла %{provided_file_size} больше максимально допустимого — %{max_file_size}"
+        size_too_small: "Размер файла %{provided_file_size} меньше минимально допустимого — %{min_file_size}"
     emoji_picker:
       filter_placeholder: Поиск эмодзи
       smileys_&_emotion: Смайлики и эмоции
@@ -4091,6 +4273,7 @@ ru:
         none: "без подкатегорий"
       colors_disabled: "Вы не можете выбирать цвета, поскольку не указан стиль категории (category style = none)."
     flagging:
+      title: "Благодарим за поддержание порядка в нашем сообществе!"
       action: "Пожаловаться на сообщение"
       take_action: "Принять меры…"
       take_action_options:
@@ -4144,6 +4327,7 @@ ru:
           many: "Осталось %{count} символов"
           other: "Остались %{count} символа"
     flagging_topic:
+      title: "Благодарим за поддержание порядка в нашем сообществе!"
       action: "Пожаловаться на тему"
       notify_action: "Сообщение"
     topic_map:
@@ -4662,6 +4846,7 @@ ru:
         everyone_can_use: "Все могут использовать теги"
         usable_only_by_groups: "Теги видны всем, но использовать их могут только указанные группы"
         visible_only_to_groups: "Теги видны только указанным группам"
+        cannot_save: "Невозможно сохранить группу тегов. Убедитесь, что выбран хотя бы один тег, имя группы тегов непустое и содержит менее 100 символов, и указаны соответствующие группы, если выбрано ограничение по использованию тегов."
         tags_placeholder: "Найти или создать тег"
         parent_tag_placeholder: "Необязательно"
         select_groups_placeholder: "Выберите группы…"
@@ -5059,6 +5244,7 @@ ru:
         problems_found: "Несколько советов по текущим настройкам сайта"
         new_features:
           title: "Что нового"
+          subtitle: "Мы регулярно выпускаем обновления с новыми функциями и улучшениями. На этой странице перечислены ключевые моменты, а полный список доступен по ссылке «Подробнее»."
           previous_announcements: "Вы можете увидеть предыдущие анонсы новых функций на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Подробнее…"
         last_checked: "Последняя проверка"
@@ -5604,6 +5790,7 @@ ru:
           back: "Вернуться к меткам"
           delete: "Удалить"
           delete_confirm: 'Действительно удалить тему «%{name}»?'
+          flags_tab: "Жалобы"
           form:
             add_header: "Добавление метки"
             edit_header: "Изменение метки"
@@ -5629,7 +5816,6 @@ ru:
             move_down: "Вниз"
       plugins:
         title: "Плагины"
-        installed: "Установленные плагины"
         name: "Название"
         none_installed: "Нет ни одного установленного плагина."
         version: "Версия"
@@ -5667,8 +5853,11 @@ ru:
         legacy: "Старая версия"
       backups:
         title: "Резервные копии"
+        files_title: "Резервные файлы"
+        description: "Резервные копии Discourse включают в себя полную базу данных сайта, где хранится всё: темы, публикации, пользователи, группы, настройки, темы оформления и т. д. В зависимости от того, как создается файл резервной копии, он может включать или не включать загрузки."
         menu:
           backups: "Резервные копии"
+          backup_files: "Резервные файлы"
           logs: "Журналы"
         none: "Нет доступных резервных копий"
         read_only:
@@ -5708,12 +5897,12 @@ ru:
           download:
             label: "Скачать"
             title: "Отправить письмо со ссылкой для скачивания"
-            alert: "Вам была отправлена ссылка для скачивания резервной копии."
+            alert: "Вам была отправлена ссылка для скачивания резервной копии"
           destroy:
             title: "Удалить резервную копию"
             confirm: "Действительно удалить резервную копию?"
           restore:
-            is_disabled: "Восстановление отключено в настройках сайта."
+            is_disabled: "Восстановление в данный момент отключено. Чтобы включить его, зайдите в <a href='%{url}'>настройки сайта</a>."
             label: "Восстановить"
             title: "Восстановить резервную копию"
             confirm: "Действительно восстановить эту резервную копию?"
@@ -6864,6 +7053,7 @@ ru:
         show_overriden: "Показывать только изменённые значения"
         show_outdated: "Показать только устаревшие и недействительные"
         show_untranslated: "Показать только непереведенное"
+        only_show_selected_locale: "Показывать результаты только в выбранной локали"
         locale: "Язык:"
         more_than_50_results: "Найдено более 50 результатов. Уточните параметры поиска."
         no_results: "Подходящие тексты на сайте не найдены"

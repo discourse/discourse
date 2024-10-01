@@ -30,7 +30,7 @@ zh_CN:
     chat_editing_grace_period: "在发送聊天后 (n) 秒内进行编辑时，不会在聊天消息旁边显示（已编辑）标签。"
     chat_editing_grace_period_max_diff_low_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 0 和 1）。"
     chat_editing_grace_period_max_diff_high_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 2 及以上）。"
-    chat_preferred_index: "加载/聊天 时首选项标签页。"
+    chat_preferred_index: "加载/聊天时的首选项标签页。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"

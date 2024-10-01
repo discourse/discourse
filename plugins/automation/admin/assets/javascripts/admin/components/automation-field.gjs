@@ -10,6 +10,7 @@ import DaCustomFields from "./fields/da-custom-fields";
 import DaDateTimeField from "./fields/da-date-time-field";
 import DaEmailGroupUserField from "./fields/da-email-group-user-field";
 import DaGroupField from "./fields/da-group-field";
+import DaGroupsField from "./fields/da-groups-field";
 import DaKeyValueField from "./fields/da-key-value-field";
 import DaMessageField from "./fields/da-message-field";
 import DaPeriodField from "./fields/da-period-field";
@@ -41,6 +42,7 @@ const FIELD_COMPONENTS = {
   "trust-levels": DaTrustLevelsField,
   category: DaCategoryField,
   group: DaGroupField,
+  groups: DaGroupsField,
   choices: DaChoicesField,
   category_notification_level: DaCategoryNotificationlevelField,
   email_group_user: DaEmailGroupUserField,

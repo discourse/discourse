@@ -74,7 +74,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
         <div class="sidebar__edit-navigation-menu__filter">
           <div class="sidebar__edit-navigation-menu__filter-input">
             {{icon
-              "search"
+              "magnifying-glass"
               class="sidebar__edit-navigation-menu__filter-input-icon"
             }}
 
@@ -118,7 +118,7 @@ export default class SidebarEditNavigationMenuModal extends Component {
             <DButton
               @action={{@resetToDefaults}}
               @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
-              @icon="undo"
+              @icon="arrow-rotate-left"
               @disabled={{@saving}}
               class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
             />

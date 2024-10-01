@@ -128,6 +128,34 @@ RSpec.describe UsersController do
           expect(session[:current_user_id]).to be_blank
         end
       end
+
+      context "when bootstrap mode is enabled" do
+        before { SiteSetting.bootstrap_mode_enabled = true }
+
+        it "adds the user to the user directory" do
+          token = Fabricate(:email_token, user: inactive_user)
+
+          expect do put "/u/activate-account/#{token.token}" end.to change {
+            DirectoryItem.where(user_id: inactive_user.id).count
+          }.by(DirectoryItem.period_types.count)
+
+          expect(response.status).to eq(200)
+        end
+      end
+
+      context "when bootstrap mode is disabled" do
+        before { SiteSetting.bootstrap_mode_enabled = false }
+
+        it "adds the user to the user directory" do
+          token = Fabricate(:email_token, user: inactive_user)
+
+          expect do put "/u/activate-account/#{token.token}" end.not_to change {
+            DirectoryItem.where(user_id: inactive_user.id).count
+          }
+
+          expect(response.status).to eq(200)
+        end
+      end
     end
 
     context "when cookies contains a destination URL" do

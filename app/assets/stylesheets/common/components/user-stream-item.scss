@@ -33,6 +33,10 @@
 
   .user-stream-item__details {
     flex-grow: 1;
+    min-width: 0;
+    .badge-category__wrapper {
+      width: 100%;
+    }
   }
 
   .stream-topic-title {
@@ -175,7 +179,7 @@
     &.d-icon-heart {
       color: var(--love);
     }
-    &.d-icon-far-trash-alt {
+    &.d-icon-trash-can {
       color: var(--secondary);
     }
   }

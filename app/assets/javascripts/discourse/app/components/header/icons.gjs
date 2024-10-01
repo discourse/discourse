@@ -67,7 +67,7 @@ export default class Icons extends Component {
           {{#unless this.hideSearchButton}}
             <Dropdown
               @title="search.title"
-              @icon="search"
+              @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
               @active={{this.search.visible}}

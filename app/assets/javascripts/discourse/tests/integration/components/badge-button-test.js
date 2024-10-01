@@ -52,11 +52,11 @@ module("Integration | Component | badge-button", function (hooks) {
   });
 
   test("icon", async function (assert) {
-    this.set("badge", { icon: "times" });
+    this.set("badge", { icon: "xmark" });
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".d-icon.d-icon-times"));
+    assert.ok(exists(".d-icon.d-icon-xmark"));
   });
 
   test("accepts block", async function (assert) {

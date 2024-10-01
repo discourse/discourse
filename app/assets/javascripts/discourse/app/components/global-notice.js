@@ -16,15 +16,15 @@ export function addGlobalNotice(text, id, options = {}) {
 
 const GLOBAL_NOTICE_DISMISSED_PROMPT_KEY = "dismissed-global-notice-v2";
 
-const Notice = EmberObject.extend({
-  logsNoticeService: service("logsNotice"),
+class Notice extends EmberObject {
+  @service("logsNotice") logsNoticeService;
 
-  text: null,
-  id: null,
-  options: null,
+  text = null;
+  id = null;
+  options = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     const defaults = {
       // can this banner be hidden
@@ -47,8 +47,8 @@ const Notice = EmberObject.extend({
       "options",
       Object.assign(defaults, this.options || {})
     );
-  },
-});
+  }
+}
 
 @tagName("")
 export default class GlobalNotice extends Component {

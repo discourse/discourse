@@ -2,14 +2,15 @@
   @data={{this.formData}}
   @onSubmit={{this.handleSubmit}}
   @validate={{this.validateForm}}
+  @onRegisterApi={{this.registerApi}}
   class="badge-form current-badge content-body"
   as |form data|
 >
 
-  <h1 class="current-badge-header">
+  <h2 class="current-badge-header">
     {{iconOrImage data}}
     <span class="badge-display-name">{{data.name}}</span>
-  </h1>
+  </h2>
 
   <form.Field
     @name="enabled"
@@ -32,7 +33,7 @@
         @route="adminSiteText"
         @query={{hash q=(concat this.textCustomizationPrefix "name")}}
       >
-        {{d-icon "pencil-alt"}}
+        {{d-icon "pencil"}}
       </LinkTo>
     </form.Container>
   {{else}}
@@ -115,7 +116,7 @@
           @route="adminSiteText"
           @query={{hash q=(concat this.textCustomizationPrefix "description")}}
         >
-          {{d-icon "pencil-alt"}}
+          {{d-icon "pencil"}}
         </LinkTo>
       </form.Container>
     {{else}}
@@ -144,7 +145,7 @@
             q=(concat this.textCustomizationPrefix "long_description")
           }}
         >
-          {{d-icon "pencil-alt"}}
+          {{d-icon "pencil"}}
         </LinkTo>
       </form.Container>
     {{else}}
@@ -295,7 +296,10 @@
     <form.Submit />
 
     {{#unless this.readOnly}}
-      <form.Button @action={{this.handleDelete}} class="btn-danger">
+      <form.Button
+        @action={{this.handleDelete}}
+        class="badge-form__delete-badge-btn btn-danger"
+      >
         {{i18n "admin.badges.delete"}}
       </form.Button>
     {{/unless}}

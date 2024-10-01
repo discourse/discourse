@@ -39,6 +39,10 @@ fi:
       chat_messages_count: "Chat-viestit"
       chat_channels_count: "Chat-kanavat"
       chat_users_count: "Chat-käyttäjät"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} chat-viesti"
+          other: "%{formatted_number} chat-viestuä"
     chat:
       text_copied: Teksti kopioitiin leikepöydälle
       link_copied: Linkki kopioitiin leikepöydälle
@@ -130,7 +134,6 @@ fi:
       header_indicator_preference:
         title: "Näytä aktiivisuusilmaisin yläpalkissa"
         all_new: "Kaikki uudet viestit"
-        dm_and_mentions: "Yksityisviestit ja maininnat"
         only_mentions: "Vain maininnat"
         never: "Ei koskaan"
       separate_sidebar_mode:
@@ -547,10 +550,10 @@ fi:
         notifications:
           regular:
             title: "Normaali"
-            description: "Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
           tracking:
             title: "Seuranta"
-            description: "Tämän ketjun uusien vastausten määrä näkyy ketjuluettelossa ja kanavassa. Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
+          watching:
+            title: "Tarkkailu"
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"

@@ -32,6 +32,16 @@ module DiscourseAutomation
              previous_frequency != frequency
           automation.pending_automations.destroy_all
         elsif automation.pending_automations.present?
+          log_debugging_info(
+            id: automation.id,
+            start_date:,
+            interval:,
+            frequency:,
+            previous_start_date:,
+            previous_interval:,
+            previous_frequency:,
+            now: Time.zone.now,
+          )
           return
         end
 
@@ -55,19 +65,19 @@ module DiscourseAutomation
             RRule::Rule
               .new("FREQ=DAILY;INTERVAL=#{interval}", dtstart: start_date)
               .between(Time.now, interval_end.days.from_now)
-              .first
+              .find { |date| date > Time.zone.now }
           when "weekday"
             max_weekends = (interval_end.to_f / 5).ceil
             RRule::Rule
               .new("FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", dtstart: start_date)
               .between(Time.now.end_of_day, max_weekends.weeks.from_now)
               .drop(interval - 1)
-              .first
+              .find { |date| date > Time.zone.now }
           when "week"
             RRule::Rule
               .new("FREQ=WEEKLY;INTERVAL=#{interval};BYDAY=#{byday}", dtstart: start_date)
               .between(Time.now.end_of_week, interval_end.weeks.from_now)
-              .first
+              .find { |date| date > Time.zone.now }
           when "month"
             count = 0
             (start_date.beginning_of_month.to_date..start_date.end_of_month.to_date).each do |date|
@@ -77,17 +87,39 @@ module DiscourseAutomation
             RRule::Rule
               .new("FREQ=MONTHLY;INTERVAL=#{interval};BYDAY=#{count}#{byday}", dtstart: start_date)
               .between(Time.now, interval_end.months.from_now)
-              .first
+              .find { |date| date > Time.zone.now }
           when "year"
             RRule::Rule
               .new("FREQ=YEARLY;INTERVAL=#{interval}", dtstart: start_date)
               .between(Time.now, interval_end.years.from_now)
-              .first
+              .find { |date| date > Time.zone.now }
           end
 
-        if next_trigger_date && next_trigger_date > Time.zone.now
+        if next_trigger_date
           automation.pending_automations.create!(execute_at: next_trigger_date)
+        else
+          log_debugging_info(
+            id: automation.id,
+            start_date:,
+            interval:,
+            frequency:,
+            previous_start_date:,
+            previous_interval:,
+            previous_frequency:,
+            byday:,
+            interval_end:,
+            next_trigger_date:,
+            now: Time.zone.now,
+          )
+          nil
         end
+      end
+
+      def self.log_debugging_info(context)
+        return if !SiteSetting.discourse_automation_enable_recurring_debug
+        str = "[automation] scheduling recurring automation debug: "
+        str += context.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")
+        Rails.logger.warn(str)
       end
     end
   end

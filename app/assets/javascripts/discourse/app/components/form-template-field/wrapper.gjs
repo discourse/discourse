@@ -87,7 +87,7 @@ export default class FormTemplateFieldWrapper extends Component {
           />
         {{/each}}
       </div>
-    {{else}}
+    {{else if this.error}}
       <div class="alert alert-error">
         {{this.error}}
       </div>

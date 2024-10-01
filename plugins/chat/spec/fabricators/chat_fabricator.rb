@@ -178,8 +178,8 @@ Fabricator(:chat_webhook_event, class_name: "Chat::WebhookEvent") do
 end
 
 Fabricator(:incoming_chat_webhook, class_name: "Chat::IncomingWebhook") do
-  name { sequence(:name) { |i| "#{i + 1}" } }
-  key { sequence(:key) { |i| "#{i + 1}" } }
+  name { sequence(:name) { |i| "Test webhook #{i + 1}" } }
+  emoji { %w[:joy: :rocket: :handshake:].sample }
   chat_channel { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
 end
 

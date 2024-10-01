@@ -285,7 +285,6 @@ sr:
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
-      contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
       activities:
         posts:
           one: "%{formatted_number} poruka"
@@ -1049,6 +1048,10 @@ sr:
       header_title: "Добро дошли!"
       title: "Registrujte se"
       failed: "Nešto nije u redu, možda je ovaj e-mail već registrovan, pokušajte s linkom za zaboravljenu šifru."
+      progress_bar:
+        signup: "Registrujte se"
+        approve: "Odobri"
+        login: "Prijava"
     forgot_password:
       action: "Zaboravio/la sam šifru"
       invite: "Upišite svoje korisničko ime ili e-mail adresu, pa ćemo vam poslati e-mail za ponovno postavljanje šifre."
@@ -2038,6 +2041,7 @@ sr:
           enabled: "Omgućeno"
           edit: "Izmeni"
           delete: "Obriši"
+          flags_tab: "Zastave"
           form:
             save: "Sačuvaj"
             name: "Ime foruma"
@@ -2069,7 +2073,7 @@ sr:
         menu:
           backups: "Sigurnosne kopije"
           logs: "Logovi"
-        none: "Nema dostupne kopije."
+        none: "Nema dostupne kopije"
         read_only:
           enable:
             title: "Omogući samo-čitanje modul."
@@ -2098,7 +2102,6 @@ sr:
             title: "Ukloni kopiju"
             confirm: "Jeste li sigurni da želite uništiti ovu sigurnosnu kopiju?"
           restore:
-            is_disabled: "Obnova je onemogućena u podešavanjima stranice."
             label: "Obnovi"
             title: "Obnovi sigurnosnu kopiju"
           rollback:

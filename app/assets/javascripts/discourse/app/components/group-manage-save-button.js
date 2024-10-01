@@ -8,17 +8,19 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  modal: service(),
-  saving: null,
-  disabled: false,
-  updateExistingUsers: null,
-  hasFlair: or("model.flair_icon", "model.flair_upload_id"),
+export default class GroupManageSaveButton extends Component {
+  @service modal;
+
+  saving = null;
+  disabled = false;
+  updateExistingUsers = null;
+
+  @or("model.flair_icon", "model.flair_upload_id") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? I18n.t("saving") : I18n.t("save");
-  },
+  }
 
   @discourseComputed(
     "model.visibility_level",
@@ -39,12 +41,12 @@ export default Component.extend({
         group_name: this.model.name,
       });
     }
-  },
+  }
 
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
-  },
+  }
 
   @action
   save() {
@@ -86,7 +88,7 @@ export default Component.extend({
         }
       })
       .finally(() => this.set("saving", false));
-  },
+  }
 
   @action
   async editGroupNotifications(json) {
@@ -97,5 +99,5 @@ export default Component.extend({
       },
     });
     this.save();
-  },
-});
+  }
+}

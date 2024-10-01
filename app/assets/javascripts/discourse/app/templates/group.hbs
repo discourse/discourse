@@ -40,6 +40,18 @@
             {{this.model.name}}
           </div>
         {{/if}}
+
+        {{#if this.model.automatic}}
+          <DTooltip class="admin-group-automatic-tooltip">
+            <:trigger>
+              {{d-icon "gear"}}
+              {{i18n "admin.groups.manage.membership.automatic"}}
+            </:trigger>
+            <:content>
+              {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
+            </:content>
+          </DTooltip>
+        {{/if}}
       </div>
 
       <div class="group-details-button">
@@ -53,7 +65,7 @@
           {{#if this.model.automatic}}
             <DButton
               @action={{this.toggleDeleteTooltip}}
-              @icon="question-circle"
+              @icon="circle-question"
               @label="admin.groups.delete"
               class="btn-default"
             />
@@ -61,7 +73,7 @@
             <DButton
               @action={{this.destroyGroup}}
               @disabled={{this.destroying}}
-              @icon="trash-alt"
+              @icon="trash-can"
               @label="admin.groups.delete"
               class="btn-danger"
               data-test-selector="delete-group-button"
@@ -95,6 +107,7 @@
         <p>{{html-safe this.model.bio_cooked}}</p>
       </div>
     {{/if}}
+
   </div>
 
   <div class="user-content-wrapper">

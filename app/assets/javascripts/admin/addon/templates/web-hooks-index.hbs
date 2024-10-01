@@ -47,12 +47,12 @@
                   class="btn btn-default no-text"
                   title={{i18n "admin.web_hooks.edit"}}
                 >
-                  {{d-icon "far-edit"}}
+                  {{d-icon "far-pen-to-square"}}
                 </LinkTo>
 
                 <DButton
                   @action={{fn this.destroyWebhook webhook}}
-                  @icon="times"
+                  @icon="xmark"
                   @title="delete"
                   class="destroy btn-danger"
                 />

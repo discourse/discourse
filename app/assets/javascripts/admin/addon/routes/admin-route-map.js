@@ -214,6 +214,7 @@ export default function () {
           this.route("index", { path: "/" });
           this.route("new");
           this.route("edit", { path: "/:flag_id" });
+          this.route("settings");
         });
 
         this.route("about");

@@ -52,7 +52,14 @@ module Chat
               include_read: include_read,
             )
             .map do |ct|
-              [ct.channel_id, { mention_count: ct.mention_count, unread_count: ct.unread_count }]
+              [
+                ct.channel_id,
+                {
+                  mention_count: ct.mention_count,
+                  unread_count: ct.unread_count,
+                  watched_threads_unread_count: ct.watched_threads_unread_count,
+                },
+              ]
             end
             .to_h
       end
@@ -85,6 +92,7 @@ module Chat
                 channel_id: tt.channel_id,
                 mention_count: tt.mention_count,
                 unread_count: tt.unread_count,
+                watched_threads_unread_count: tt.watched_threads_unread_count,
               }
 
               if include_last_reply_details

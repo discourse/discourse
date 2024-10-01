@@ -61,6 +61,7 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   get isCommunityHealthVisible() {
     return [
       "consolidated_page_views",
+      "site_traffic",
       "signups",
       "topics",
       "posts",
@@ -98,6 +99,13 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   topReferredTopicsOptions() {
     return {
       table: { total: false, limit: 8 },
+    };
+  }
+
+  @discourseComputed
+  siteTrafficOptions() {
+    return {
+      stackedChart: { hiddenLabels: ["page_view_other", "page_view_crawler"] },
     };
   }
 

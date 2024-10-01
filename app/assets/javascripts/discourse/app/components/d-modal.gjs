@@ -350,7 +350,7 @@ export default class DModal extends Component {
                 </div>
               {{else if this.dismissable}}
                 <DButton
-                  @icon="times"
+                  @icon="xmark"
                   @action={{this.handleCloseButton}}
                   @title="modal.close"
                   class="btn-transparent modal-close"

@@ -56,6 +56,9 @@ ja:
       pm_created:
         title: 個人メッセージの作成
         description: 有効な PM が作成されると、自動化がトリガーされます。
+      topic_tags_changed:
+        title: トピックタグの変更
+        description: トピックのタグが変更されると、自動化がトリガーされます
       topic:
         title: トピック
         description: 関連付けられたスクリプトは特定のトピックでのみ使用されます。これは、検証を行うスクリプトなどに役立ちます。

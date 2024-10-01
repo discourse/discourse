@@ -646,6 +646,29 @@ third line`
     assert.strictEqual(textarea.getAttribute("dir"), "rtl");
   });
 
+  test("toolbar event supports replaceText", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "replace-text",
+          icon: "xmark",
+          group: "extras",
+          action: () => {
+            toolbar.context.newToolbarEvent().replaceText("hello", "goodbye");
+          },
+          condition: () => true,
+        });
+      });
+    });
+
+    this.value = "hello";
+
+    await render(hbs`<DEditor @value={{this.value}} />`);
+    await click("button.replace-text");
+
+    assert.strictEqual(this.value, "goodbye");
+  });
+
   testCase(
     `doesn't jump to bottom with long text`,
     async function (assert, textarea) {
@@ -667,7 +690,7 @@ third line`
         toolbar.addButton({
           id: "emoji",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           action: () => toolbar.context.send("emoji"),
         });
       });
@@ -709,7 +732,7 @@ third line`
         toolbar.addButton({
           id: "shown",
           group: "extras",
-          icon: "far-smile",
+          icon: "far-face-smile",
           action: () => {},
           condition: () => true,
         });
@@ -717,7 +740,7 @@ third line`
         toolbar.addButton({
           id: "not-shown",
           group: "extras",
-          icon: "far-frown",
+          icon: "far-face-frown",
           action: () => {},
           condition: () => false,
         });

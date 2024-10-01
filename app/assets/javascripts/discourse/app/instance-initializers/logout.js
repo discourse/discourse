@@ -1,3 +1,5 @@
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import logout from "discourse/lib/logout";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -5,13 +7,13 @@ import I18n from "discourse-i18n";
 let _showingLogout = false;
 
 // Subscribe to "logout" change events via the Message Bus
-export default {
-  after: "message-bus",
+class LogoutInit {
+  @service messageBus;
+  @service dialog;
+  @service currentUser;
 
-  initialize(owner) {
-    this.messageBus = owner.lookup("service:message-bus");
-    this.dialog = owner.lookup("service:dialog");
-    this.currentUser = owner.lookup("service:current-user");
+  constructor(owner) {
+    setOwner(this, owner);
 
     if (this.currentUser) {
       this.messageBus.subscribe(
@@ -19,7 +21,7 @@ export default {
         this.onMessage
       );
     }
-  },
+  }
 
   teardown() {
     if (this.currentUser) {
@@ -28,7 +30,7 @@ export default {
         this.onMessage
       );
     }
-  },
+  }
 
   @bind
   onMessage() {
@@ -40,10 +42,23 @@ export default {
 
     this.dialog.alert({
       message: I18n.t("logout"),
-      confirmButtonLabel: "home",
+      confirmButtonLabel: "house",
       didConfirm: logout,
       didCancel: logout,
       shouldDisplayCancel: false,
     });
+  }
+}
+
+export default {
+  after: "message-bus",
+
+  initialize(owner) {
+    this.instance = new LogoutInit(owner);
+  },
+
+  teardown() {
+    this.instance.teardown();
+    this.instance = null;
   },
 };

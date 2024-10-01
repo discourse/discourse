@@ -173,7 +173,7 @@ export default class BookmarkMenu extends Component {
       this.toasts.success({
         duration: 1500,
         data: {
-          icon: "trash-alt",
+          icon: "trash-can",
           message: I18n.t("bookmarks.deleted_bookmark_success"),
         },
       });
@@ -251,7 +251,7 @@ export default class BookmarkMenu extends Component {
         <DropdownMenu as |dropdown|>
           {{#unless this.showEditDeleteMenu}}
             <dropdown.item class="bookmark-menu__title">
-              {{icon "check-circle"}}
+              {{icon "circle-check"}}
               <span>{{i18n "bookmarks.bookmarked_success"}}</span>
             </dropdown.item>
           {{/unless}}
@@ -262,7 +262,7 @@ export default class BookmarkMenu extends Component {
               data-menu-option-id="edit"
             >
               <DButton
-                @icon="pencil-alt"
+                @icon="pencil"
                 @label="edit"
                 @action={{this.onEditBookmark}}
                 @class="bookmark-menu__row-btn btn-transparent"
@@ -275,7 +275,7 @@ export default class BookmarkMenu extends Component {
               data-menu-option-id="delete"
             >
               <DButton
-                @icon="trash-alt"
+                @icon="trash-can"
                 @label="delete"
                 @action={{this.onRemoveBookmark}}
                 @class="bookmark-menu__row-btn btn-transparent btn-danger"

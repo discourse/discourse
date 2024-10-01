@@ -52,6 +52,11 @@ he:
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   redirect_warning: "לא הצלחנו לאמת שהקישור שבחרת אכן פורסם לפורום. כדי להמשיך בכל אופן, נא לבחור בקישור שלהלן."
   on_another_topic: "בנושא אחר"
+  topic_category_changed: "מ־%{from} עד %{to}"
+  topic_tag_changed:
+    added_and_removed: "נוספו %{added} והוסרו %{removed}"
+    added: "נוספו %{added}"
+    removed: "הוסרו %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "מס׳ %{post_number}"
     topic_page_title_post_number_by_user: "מס׳ %{post_number} מאת %{username}"
@@ -669,6 +674,10 @@ he:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      everyone: "קבוצה אוטומטית שכוללת את כל החברים"
+      staff: "קבוצה אוטומטית שכוללת מנהלים ומפקחים"
+      admins: "אחראי על הגדרת ותחזוקת האתר, עם גישה לנתוני כל החברים והפעילות"
     request_membership_pm:
       title: "בקשת חברות עבור ‎@%{group_name}‎"
     request_accepted_pm:
@@ -2186,6 +2195,7 @@ he:
     tos_url: "אם מסמך תנאי השירות המיועד שלך מתארח במקום אחר, כאן יש לספק את הכתובת המלאה אליו."
     privacy_policy_url: "אם מסמך מדיניות הפרטיות המיועד שלך מתארח במקום אחר, כאן יש לספק את הכתובת המלאה אליו."
     log_anonymizer_details: "האם לשמור את פרטי המשתמש ביומן לאחר הפעלת אלמוניות."
+    display_eu_visitor_stats: "הצגת מספר המבקרים העולמיים ודרך האיחוד האירופי בדף ‎/about."
     newuser_spam_host_threshold: "מספר הפעמים שמשתמשים חדשים יכולים לקשר לאותו מחשב במסגרת `newuser_spam_host_threshold` הפרסומים שלהם לפני שייחשבו ספאם."
     allowed_spam_host_domains: "רשימה של שמות תחום (domains) שיוחרגו מבדיקת הספאם. משתמשים חדשים לעולם לא יוגבלו ביצירת פוסטים חדשים עם קישורים לשמות תחום אלו."
     staff_like_weight: "כמה משקל לתת ללייקים מהסגל (לייקים שאינם מהסגל נשקלים כ־1.)"
@@ -2498,6 +2508,7 @@ he:
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
+    create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
     automatically_clean_unused_tags: "למחוק אוטומטית תגיות שאין בהן שימוש באף נושא או הודעה פרטית על בסיס יומי."
     watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
     company_name: "שם החברה או הארגון שלך. בהעדר תוכן לא יסופקו תבניות תנאי שירות או הצהרת פרטיות."
@@ -2541,6 +2552,7 @@ he:
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
     enable_experimental_bookmark_redesign_groups: "ניסיוני: הצגת תפריט גישה מהירה לסימניות על פוסטים וחלונית בורחת חדשה"
+    experimental_redesigned_about_page_groups: "ניסיוני: הפעלת עמוד ה־‎/about שעוצב מחדש לקבוצות מסוימות."
     glimmer_header_mode: "שליטה האם להשתמש במימוש הכותרת החדש ‚glimmer’.‏ ‚auto’ יפעיל אותה אוטומטית לאחר שכל ערכות העיצוב והתוספים שלך מוכנים. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "ניסיוני: אפשר את התכונה החדשה של רשימת הנושאים 'glimmer'. תכונה זו נמצאת בפיתוח פעיל ואינה מיועדת לשימוש בproduction. אין לפתח ערכות נושא/תוספים איתה עד שהשחרור יוכרז סופית."
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."

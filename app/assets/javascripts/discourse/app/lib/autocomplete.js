@@ -176,7 +176,7 @@ export default function (options) {
     const divs = transformed.map((itm) => {
       let d = $(
         `<div class='item'><span>${itm}<a class='remove' href>${iconHTML(
-          "times"
+          "xmark"
         )}</a></span></div>`
       );
       const $parent = me.parent();

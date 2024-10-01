@@ -99,7 +99,7 @@ RSpec.describe PostAction do
       before do
         SiteSetting.enable_category_group_moderation = true
         group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
-        post.topic.category.update!(reviewable_by_group_id: group.id)
+        Fabricate(:category_moderation_group, category: post.topic.category, group:)
       end
 
       it "notifies via pm" do
@@ -791,7 +791,7 @@ RSpec.describe PostAction do
         PostActionCreator.new(
           Discourse.system_user,
           post,
-          PostActionType.types[:flag_without_message],
+          PostActionType.types[:custom_flag_without_message],
           message: "WAT",
         ).perform
 
@@ -824,7 +824,7 @@ RSpec.describe PostAction do
         PostActionCreator.new(
           Discourse.system_user,
           post,
-          PostActionType.types[:flag_with_message],
+          PostActionType.types[:custom_flag_with_message],
           message: "WAT",
         ).perform
 

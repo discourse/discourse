@@ -24,4 +24,17 @@ module("Integration | Component | da-message-field", function (hooks) {
 
     assert.strictEqual(this.field.metadata.value, "Hello World");
   });
+
+  test("render placeholders", async function (assert) {
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "message",
+    });
+    this.automation.placeholders = ["foo", "bar"];
+
+    await render(
+      hbs`<AutomationField @automation={{this.automation}} @field={{this.field}}  />`
+    );
+
+    assert.dom(".placeholders-list").hasText("foo bar");
+  });
 });

@@ -75,7 +75,7 @@ export default class Members extends Component {
   <template>
     <div class="chat-message-creator__members-container">
       <div class="chat-message-creator__members">
-        {{icon "search"}}
+        {{icon "magnifying-glass"}}
 
         {{#each @members as |member|}}
           <Member

@@ -5,12 +5,6 @@
 {{body-class "search-page"}}
 
 <section class="search-container">
-  <ScrollTracker
-    @name="full-page-search"
-    @tag={{this.searchTerm}}
-    class="hidden"
-  />
-
   <div class="search-header" role="search">
     <h1 class="search-page-heading">
       {{#if this.hasResults}}
@@ -39,7 +33,7 @@
       />
       <DButton
         @action={{fn (action "search") (hash collapseFilters=true)}}
-        @icon="search"
+        @icon="magnifying-glass"
         @label="search.search_button"
         @ariaLabel="search.search_button"
         @disabled={{this.searchButtonDisabled}}
@@ -120,7 +114,7 @@
           {{#if this.bulkSelectEnabled}}
             {{#if this.hasUnselectedResults}}
               <DButton
-                @icon="check-square"
+                @icon="square-check"
                 @action={{action "selectAll"}}
                 @label="search.select_all"
                 class="btn-default bulk-select-all"

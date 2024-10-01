@@ -38,7 +38,6 @@ import discourseLater from "discourse-common/lib/later";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
@@ -931,12 +930,17 @@ export default class TopicController extends Controller.extend(
 
   @action
   jumpBottom() {
-    // When a topic only has one lengthy post
-    const jumpEnd = this.model.highest_post_number === 1 ? true : false;
+    const highestPostNumber = this.model.highest_post_number;
+
+    if (document.getElementById(`post_${highestPostNumber}`)) {
+      // Do nothing when the last post is already rendered.
+      // This ensures the browser handles keyboard shortcuts like End.
+      return;
+    }
 
     DiscourseURL.routeTo(this.get("model.lastPostUrl"), {
       skipIfOnScreen: false,
-      jumpEnd,
+      jumpEnd: false,
       keepFilter: true,
     });
   }

@@ -1,5 +1,24 @@
 .fk-d-menu-modal {
   .d-modal__body {
-    padding: 0.5rem 0;
+    padding: 0.5em 0;
+  }
+
+  h3 {
+    padding-top: 0.25em;
+  }
+
+  .dropdown-menu {
+    li a:focus-visible {
+      outline: 0;
+    }
+  }
+
+  li > .btn,
+  li > a {
+    padding: 0.75em 1rem;
+  }
+
+  li > a {
+    display: block;
   }
 }

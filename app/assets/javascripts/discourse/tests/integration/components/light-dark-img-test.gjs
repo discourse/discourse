@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import LigthDarkImg from "discourse/components/light-dark-img";
+import LightDarkImg from "discourse/components/light-dark-img";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
@@ -21,7 +21,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template><LigthDarkImg /></template>);
+    await render(<template><LightDarkImg /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.ok(!exists("img"), "there is no img tag");
@@ -32,7 +32,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template><LigthDarkImg @lightImg={{lightSrc}} /></template>);
+    await render(<template><LightDarkImg @lightImg={{lightSrc}} /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.strictEqual(count("img"), 1, "there is an img tag");
@@ -49,7 +49,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("darkModeAvailable", false);
 
     await render(<template>
-      <LigthDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
     </template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
@@ -66,7 +66,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><LigthDarkImg /></template>);
+    await render(<template><LightDarkImg /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.ok(!exists("img"), "there is no img tag");
@@ -77,7 +77,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", false);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><LigthDarkImg @lightImg={{lightSrc}} /></template>);
+    await render(<template><LightDarkImg @lightImg={{lightSrc}} /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.strictEqual(count("img"), 1, "there is an img tag");
@@ -94,7 +94,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("darkModeAvailable", true);
 
     await render(<template>
-      <LigthDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
     </template>);
 
     assert.strictEqual(count("picture"), 1, "there is a picture tag");
@@ -116,7 +116,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template><LigthDarkImg /></template>);
+    await render(<template><LightDarkImg /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.ok(!exists("img"), "there is no img tag");
@@ -127,7 +127,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", false);
 
-    await render(<template><LigthDarkImg @lightImg={{lightSrc}} /></template>);
+    await render(<template><LightDarkImg @lightImg={{lightSrc}} /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.strictEqual(count("img"), 1, "there is an img tag");
@@ -144,7 +144,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("darkModeAvailable", false);
 
     await render(<template>
-      <LigthDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
     </template>);
 
     assert.strictEqual(count("picture"), 1, "there is a picture tag");
@@ -166,7 +166,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><LigthDarkImg /></template>);
+    await render(<template><LightDarkImg /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.ok(!exists("img"), "there is no img tag");
@@ -177,7 +177,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("defaultColorSchemeIsDark", true);
     this.session.set("darkModeAvailable", true);
 
-    await render(<template><LigthDarkImg @lightImg={{lightSrc}} /></template>);
+    await render(<template><LightDarkImg @lightImg={{lightSrc}} /></template>);
 
     assert.ok(!exists("picture"), "there is no picture tag");
     assert.strictEqual(count("img"), 1, "there is an img tag");
@@ -194,7 +194,7 @@ module("Integration | Component | light-dark-img", function (hooks) {
     this.session.set("darkModeAvailable", true);
 
     await render(<template>
-      <LigthDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
+      <LightDarkImg @lightImg={{lightSrc}} @darkImg={{darkSrc}} />
     </template>);
 
     assert.strictEqual(count("picture"), 1, "there is a picture tag");

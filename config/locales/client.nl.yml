@@ -159,6 +159,8 @@ nl:
       removed_user: "Heeft %{who} %{when} verwijderd"
       removed_group: "Heeft %{who} %{when} verwijderd"
       autobumped: "Heeft %{when} automatisch gebumpt"
+      tags_changed: "Tags bijgewerkt %{when}"
+      category_changed: "Categorie bijgewerkt %{when}"
       autoclosed:
         enabled: "%{when} gesloten"
         disabled: "%{when} geopend"
@@ -199,6 +201,7 @@ nl:
     broken_decorator_alert: "Berichten worden mogelijk niet correct weergegeven omdat een van de bewerkers van de inhoud op je site een fout heeft gemeld."
     broken_page_change_alert: "Een onPageChange-handler heeft een fout gegenereerd. Controleer de browserontwikkelaarstools voor meer informatie."
     broken_plugin_alert: "Veroorzaakt door plug-in '%{name}'"
+    broken_transformer_alert: "Er is een fout opgetreden. Je site werkt mogelijk niet goed."
     critical_deprecation:
       notice: "<b>[Beheerderskennisgeving]</b> Een van je thema's of plug-ins moet worden bijgewerkt voor compatibiliteit met aankomende kernwijzigingen in Discourse."
       id: "(ID: <em>%{id}</em>)"
@@ -310,8 +313,13 @@ nl:
       post_count: "Berichten"
       user_count: "Registraties"
       active_user_count: "Actieve gebruikers"
+      visitor_count: "Bezoekers"
+      eu_visitor_count: "Bezoekers uit de Europese Unie"
       contact: "Contact"
-      contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
+      contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact op via %{contact_info}."
+      site_activity: "Siteactiviteit"
+      view_more: "Meer weergeven"
+      view_less: "Minder weergeven"
       activities:
         topics:
           one: "%{formatted_number} topic"
@@ -319,9 +327,23 @@ nl:
         posts:
           one: "%{formatted_number} bericht"
           other: "%{formatted_number} berichten"
+        active_users:
+          one: "%{formatted_number} actieve gebruiker"
+          other: "%{formatted_number} actieve gebruikers"
+        sign_ups:
+          one: "%{formatted_number} registratie"
+          other: "%{formatted_number} registraties"
         likes:
           one: "%{formatted_number} like"
           other: "%{formatted_number} likes"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} bezoeker}
+            other {{total_formatted_number} bezoekers}
+          }, ongeveer { eu_count, plural,
+              one {{eu_formatted_number}}
+            other {{eu_formatted_number}}
+          } uit de EU
         periods:
           last_7_days: "de afgelopen 7 dagen"
           today: "vandaag"
@@ -336,6 +358,14 @@ nl:
         one: "%{formatted_number} moderator"
         other: "%{formatted_number} moderators"
       report_inappropriate_content: "Als je ongepaste inhoud tegenkomt, aarzel dan niet om onze moderators en beheerders aan te spreken. Vergeet niet je aan te melden voordat je contact opneemt."
+      site_age:
+        less_than_one_month: "< 1 maand geleden gemaakt"
+        month:
+          one: "%{count} maand geleden gemaakt"
+          other: "%{count} maanden geleden gemaakt"
+        year:
+          one: "%{count} jaar geleden gemaakt"
+          other: "%{count} jaar geleden gemaakt"
     bookmarked:
       title: "Bladwijzer"
       edit_bookmark: "Bladwijzer bewerken"
@@ -713,6 +743,7 @@ nl:
       never: "Nooit"
       last_custom: "Laatste aangepaste datumtijd"
       custom: "Aangepaste datum en tijd"
+      more_options: "Meer opties…"
       select_timeframe: "Selecteer een tijdsbestek"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> heeft <a href='%{topicUrl}'>het topic</a> geplaatst"
@@ -1355,6 +1386,62 @@ nl:
         warnings: "Officiële waarschuwingen"
         read_more_in_group: "Wil je meer lezen? Bekijk andere berichten in %{groupLink}."
         read_more: "Wil je meer lezen? Bekijk andere berichten in <a href='%{basePath}/u/%{username}/messages'>persoonlijke berichten</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { en <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other { en <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ongelezen</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuw</a> bericht resterend, of bekijk andere berichten in {groupLink}}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nieuwe</a> berichten resterend, of bekijk andere berichten in {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { en <a href="{basePath}/u/{username}/messages/new"># nieuw</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other { en <a href="{basePath}/u/{username}/messages/new"># nieuwe</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/unread"># ongelezen</a> berichten resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Er is <a href="{basePath}/u/{username}/messages/new"># nieuw</a> bericht resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+                other {Er zijn <a href="{basePath}/u/{username}/messages/new"># nieuw</a> berichten resterend, of bekijk andere <a href="{basePath}/u/{username}/messages">persoonlijke berichten</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Account"
         security: "Beveiliging"
@@ -1951,7 +2038,41 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }</a> heeft de site-instellingslimiet bereikt van {limit, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }.
+      reached_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }</a> heeft de site-instellingslimiet bereikt van { limit, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }.
+      exceeded_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }</a> heeft de site-instellingslimiet overschreden van { limit, plural,
+            one {# fout/uur}
+          other {# fouten/uur}
+        }.
+      exceeded_minute_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }</a> heeft de site-instellingslimiet overschreden van { limit, plural,
+            one {# fout/minuut}
+          other {# fouten/minuut}
+        }.
     learn_more: "Meer informatie…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Meer informatie…</a>"
     mute: Dempen
     unmute: Dempen opheffen
     last_post: Geplaatst
@@ -2030,6 +2151,10 @@ nl:
       associate: "Heb je al een account? <a href='%{associate_link}'>Meld je aan</a> om je %{provider}-account te koppelen."
       activation_title: "Activeer je account"
       already_have_account: "Heb je al een account?"
+      progress_bar:
+        signup: "Registreren"
+        approve: "Goedkeuren"
+        login: "Aanmelden"
     forgot_password:
       title: "Wachtwoord herstellen"
       action: "Ik ben mijn wachtwoord vergeten"
@@ -2226,6 +2351,7 @@ nl:
     file_size_input:
       error:
         size_too_large: "%{provided_file_size} is groter dan de maximaal toegestane %{max_file_size}"
+        size_too_small: "%{provided_file_size} is kleiner dan de minimaal vereiste %{min_file_size}"
     emoji_picker:
       filter_placeholder: Emoji zoeken
       smileys_&_emotion: Smileys en emoji's
@@ -3715,6 +3841,7 @@ nl:
         none: "geen subcategorieën"
       colors_disabled: "Je kunt geen kleuren selecteren omdat je categoriestijl 'none' is."
     flagging:
+      title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Bericht markeren"
       take_action: "Actie ondernemen…"
       take_action_options:
@@ -3762,6 +3889,7 @@ nl:
           one: "%{count} resterend"
           other: "%{count} resterend"
     flagging_topic:
+      title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Topic markeren"
       notify_action: "Bericht"
     topic_map:
@@ -4226,6 +4354,7 @@ nl:
         everyone_can_use: "Tags kunnen door iedereen worden gebruikt"
         usable_only_by_groups: "Tags zijn zichtbaar voor iedereen, maar alleen de volgende groepen kunnen ze gebruiken"
         visible_only_to_groups: "Tags zijn alleen zichtbaar voor de volgende groepen"
+        cannot_save: "Kan taggroep niet opslaan. Zorg dat er minimaal één tag aanwezig is, dat de naam van de taggroep niet leeg en korter dan 100 tekens is en dat er een groep is geselecteerd voor tagstoestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
         select_groups_placeholder: "Selecteer groepen…"
@@ -4599,6 +4728,7 @@ nl:
         problems_found: "Advies op basis van je huidige website-instellingen"
         new_features:
           title: "Wat is er nieuw"
+          subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
           previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
         last_checked: "Laatst gecontroleerd"
@@ -5073,6 +5203,7 @@ nl:
           header: "Over je site"
           general_settings: "Algemene instellingen"
           community_name: "Communitynaam"
+          community_name_placeholder: "Voorbeeldcommunity"
           community_summary: "Samenvatting van de community"
           community_description: "Beschrijving van de community"
           banner_image: "Bannerafbeelding"
@@ -5080,9 +5211,11 @@ nl:
             Deze wordt gebruikt op je Over-pagina. Aanbevolen grootte: 800x300 pixels. Geaccepteerde bestandstypen: JPG, PNG en SVG tot 10 MB.
           contact_information: "Contactgegevens"
           community_owner: "Communityeigenaar"
+          community_owner_placeholder: "Piet Jansen"
           community_owner_help: |
             Naam van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_email: "E-mailadres contactpersoon"
+          contact_email_placeholder: "contact@piet-jansen.com"
           contact_email_help: |
             E-mailadres van de belangrijkste contactpersoon die verantwoordelijk is voor deze website. Wordt gebruikt voor kritieke meldingen en wordt weergegeven op de /over-pagina. Zichtbaar voor anonieme gebruiker op openbare sites.
           contact_url: "Contact-URL"
@@ -5097,14 +5230,17 @@ nl:
             Een geldige naam van een groep die wordt uitgenodigd voor alle automatisch gestuurde privéberichten.
           your_organization: "Je organisatie"
           company_name: "Bedrijfsnaam"
+          company_name_placeholder: "Voorbeeldbedrijf BV"
           company_name_help: |
             Naam van je bedrijf of organisatie.
           company_name_warning: |
             Als dit leeg wordt gelaten worden er geen standaard Gebruiksvoorwaarden of Privacyverklaring verstrekt.
           governing_law: "Toepasselijk recht"
+          governing_law_placeholder: "Nederland"
           governing_law_help: |
             Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en de Privacyverklaring. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet.
           city_for_disputes: "Plaats voor geschillen"
+          city_for_disputes_placeholder: "Den Haag"
           city_for_disputes_help: |
             Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum.
           optional: "(optioneel)"
@@ -5124,6 +5260,7 @@ nl:
           back: "Terug naar markeringen"
           delete: "Verwijderen"
           delete_confirm: 'Weet je zeker dat je ''%{name}'' wilt verwijderen?'
+          flags_tab: "Markeringen"
           form:
             add_header: "Markering toevoegen"
             edit_header: "Markering bewerken"
@@ -5149,7 +5286,6 @@ nl:
             move_down: "Omlaag verplaatsen"
       plugins:
         title: "Plug-ins"
-        installed: "Geïnstalleerde plug-ins"
         name: "Naam"
         none_installed: "Je hebt geen plug-ins geïnstalleerd."
         version: "Versie"
@@ -5187,10 +5323,13 @@ nl:
         legacy: "Verouderd"
       backups:
         title: "Back-ups"
+        files_title: "Back-upbestanden"
+        description: "Discourse-back-ups bevatten de volledige sitedatabase, die alles op de site bevat: topics, berichten, gebruikers, groepen, instellingen, thema's, enzovoort. Afhankelijk van hoe het back-upbestand is gemaakt, bevat het wel of geen uploads."
         menu:
           backups: "Back-ups"
+          backup_files: "Back-upbestanden"
           logs: "Logs"
-        none: "Geen back-up beschikbaar."
+        none: "Geen back-up beschikbaar"
         read_only:
           enable:
             title: "Alleen-lezenmodus inschakelen"
@@ -5228,12 +5367,12 @@ nl:
           download:
             label: "Downloaden"
             title: "E-mail met downloadlink sturen"
-            alert: "Er is een link naar je gestuurd via e-mail om deze back-up te downloaden."
+            alert: "Er is een link naar je gestuurd via e-mail om deze back-up te downloaden"
           destroy:
             title: "De back-up verwijderen"
             confirm: "Weet je zeker dat je deze back-up wilt verwijderen?"
           restore:
-            is_disabled: "Herstellen is uitgeschakeld in de website-instellingen."
+            is_disabled: "Herstellen is momenteel uitgeschakeld. Ga naar de <a href='%{url}'>site-instellingen</a> om het in te schakelen."
             label: "Herstellen"
             title: "De back-up herstellen"
             confirm: "Weet je zeker dat je deze back-up wilt herstellen?"
@@ -6541,6 +6680,9 @@ nl:
             one: "Je CSV-bestand is ontvangen en %{count} gebruiker krijgt over enkele ogenblikken een badge."
             other: "Je CSV-bestand is ontvangen en %{count} gebruikers krijgen over enkele ogenblikken hun badge."
           csv_has_unmatched_users: "De volgende vermeldingen komen voor in het CSV-bestand, maar ze kunnen niet worden gekoppeld aan bestaande gebruikers en krijgen daarom de badge niet:"
+          csv_has_unmatched_users_truncated_list:
+            one: "Er was %{count} vermelding in het CSV-bestand die niet konden worden gekoppeld aan bestaande gebruikers en daarom de badge niet zal ontvangen."
+            other: "Er waren %{count} vermeldingen in het CSV-bestand die niet konden worden gekoppeld aan bestaande gebruikers en daarom de badge niet zullen ontvangen. Vanwege het grote aantal niet-overeenkomende vermeldingen worden alleen de eerste 100 weergegeven:"
           replace_owners: De badge van vorige eigenaren verwijderen
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:

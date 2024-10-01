@@ -4,6 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 module(
@@ -30,13 +31,13 @@ module(
       );
     });
 
-    test("direct message to multiple folks shows their names", async function (assert) {
+    test("direct message to multiple folks shows their names when not a group", async function (assert) {
       pretender.get("/chat/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
         chatable_type: "DirectMessage",
         chatable: {
-          group: true,
+          group: false,
           users: [
             { name: "Tomtom" },
             { name: "Steaky" },
@@ -50,6 +51,30 @@ module(
       assert.strictEqual(
         query(".chat-composer__input").placeholder,
         "Chat with Tomtom, Steaky, @zorro"
+      );
+    });
+
+    test("direct message to group shows Chat in group", async function (assert) {
+      pretender.get("/chat/emojis.json", () => [200, [], {}]);
+
+      this.channel = ChatChannel.create({
+        chatable_type: "DirectMessage",
+        title: "Meetup Chat",
+        chatable: {
+          group: true,
+          users: [
+            { username: "user1" },
+            { username: "user2" },
+            { username: "user3" },
+          ],
+        },
+      });
+
+      await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
+
+      assert.strictEqual(
+        query(".chat-composer__input").placeholder,
+        I18n.t("chat.placeholder_group")
       );
     });
 

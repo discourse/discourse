@@ -140,6 +140,8 @@ ca:
       removed_user: "Ha suprimit %{who} %{when}"
       removed_group: "Ha suprimit %{who} %{when}"
       autobumped: "Elevat automàticament %{when}"
+      tags_changed: "Etiquetes actualitzades el %{when}"
+      category_changed: "Categoria actualitzada el %{when}"
       autoclosed:
         enabled: "Tancat %{when}"
         disabled: "Obert %{when}"
@@ -262,7 +264,6 @@ ca:
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
-      contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
       activities:
         topics:
           one: "%{formatted_number} tema"
@@ -1439,6 +1440,10 @@ ca:
       disclaimer: "Registrant-vos, accepteu la <a href='%{privacy_link}' target='blank'>política de privacitat</a> i les <a href='%{tos_link}' target='blank'>condicions del servei</a>."
       title: "Registre"
       failed: "Alguna cosa ha anat malament. Potser aquest correu electrònic ja ha estat registrat; proveu-ho amb l'enllaç de contrasenya oblidada"
+      progress_bar:
+        signup: "Registre"
+        approve: "Aprova"
+        login: "Inicia la sessió"
     forgot_password:
       title: "Restabliment de contrasenya"
       action: "He oblidat la contrasenya"
@@ -3261,6 +3266,7 @@ ca:
           edit: "Edita"
           delete: "Suprimeix"
           delete_confirm: 'Esteu segur que voleu suprimir "%{name}"?'
+          flags_tab: "Banderes"
           form:
             save: "Desa"
             name: "Nom"
@@ -3270,7 +3276,6 @@ ca:
             post: "publicacions"
       plugins:
         title: "Connectors"
-        installed: "Connectors instal·lats"
         name: "Nom"
         none_installed: "No teniu cap connector instal·lat."
         version: "Versió"
@@ -3299,7 +3304,7 @@ ca:
         menu:
           backups: "Còpies de seguretat"
           logs: "Registres"
-        none: "No hi ha cap còpia de seguretat disponible."
+        none: "No hi ha cap còpia de seguretat disponible"
         read_only:
           enable:
             title: "Activa el mode només de lectura"
@@ -3330,12 +3335,11 @@ ca:
           download:
             label: "Descarrega"
             title: "Envia correu amb enllaç de descàrrega"
-            alert: "Us hem enviat per correu un enllaç per a descarregar aquesta còpia de seguretat."
+            alert: "Us hem enviat per correu un enllaç per a descarregar aquesta còpia de seguretat"
           destroy:
             title: "Elimina la còpia de seguretat"
             confirm: "Esteu segur que voleu destruir aquesta còpia de seguretat?"
           restore:
-            is_disabled: "S'ha desactivat la restauració en la configuració del lloc web."
             label: "Restaura"
             title: "Restaura la còpia de seguretat"
             confirm: "Esteu segur que voleu restaurar aquesta còpia de seguretat?"
@@ -3344,7 +3348,6 @@ ca:
             title: "Reverteix la base de dades a l'estat de funcionament previ"
             confirm: "Esteu segur que voleu revertir la base de dades a l'estat de funcionament previ?"
         location:
-          local: "Emmagatzematge local"
           s3: "S3"
         backup_storage_error: "Error d'accés a l'emmagatzematge de còpia de seguretat: %{error_message}"
       export_csv:

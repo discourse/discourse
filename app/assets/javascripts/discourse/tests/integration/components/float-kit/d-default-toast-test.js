@@ -87,7 +87,7 @@ module(
           actions: [
             {
               label: "cancel",
-              icon: "times",
+              icon: "xmark",
               class: "btn-danger",
               action: () => {},
             },

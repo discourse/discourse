@@ -24,6 +24,10 @@ export default class AdminPlugin {
     return this.name.replaceAll("-", "_");
   }
 
+  get kebabCaseName() {
+    return this.name.replaceAll(" ", "-").replaceAll("_", "-");
+  }
+
   get translatedCategoryName() {
     // We do this because the site setting list is grouped by category,
     // with plugins that have their root site setting key defined as `plugins:`

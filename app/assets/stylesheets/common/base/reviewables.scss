@@ -141,11 +141,10 @@
   }
 }
 
-.reviewable-actions .claimed-actions {
+.claimed-actions {
   display: flex;
   flex: 1 1 100%;
   margin-right: 0;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 0.5em;
 }

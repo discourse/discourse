@@ -66,7 +66,12 @@ class DiscourseJsProcessor
 
     def self.build_theme_transpiler
       FileUtils.rm_rf("tmp/theme-transpiler") # cleanup old files - remove after Jan 2025
-      Discourse::Utils.execute_command("node", "app/assets/javascripts/theme-transpiler/build.js")
+      Discourse::Utils.execute_command(
+        "pnpm",
+        "-C=app/assets/javascripts/theme-transpiler",
+        "node",
+        "build.js",
+      )
     end
 
     def self.build_production_theme_transpiler

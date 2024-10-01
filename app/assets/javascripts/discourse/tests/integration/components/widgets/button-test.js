@@ -8,12 +8,15 @@ module("Integration | Component | Widget | button", function (hooks) {
   setupRenderingTest(hooks);
 
   test("icon only button", async function (assert) {
-    this.set("args", { icon: "far-smile" });
+    this.set("args", { icon: "far-face-smile" });
 
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
     assert.ok(exists("button.btn.btn-icon.no-text"), "it has all the classes");
-    assert.ok(exists("button .d-icon.d-icon-far-smile"), "it has the icon");
+    assert.ok(
+      exists("button .d-icon.d-icon-far-face-smile"),
+      "it has the icon"
+    );
   });
 
   test("icon and text button", async function (assert) {

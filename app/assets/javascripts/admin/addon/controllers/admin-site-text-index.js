@@ -20,13 +20,21 @@ export default class AdminSiteTextIndexController extends Controller {
   @tracked overridden;
   @tracked outdated;
   @tracked untranslated;
+  @tracked onlySelectedLocale;
 
   @tracked model;
 
   @tracked searching = false;
   @tracked preferred = false;
 
-  queryParams = ["q", "overridden", "outdated", "locale", "untranslated"];
+  queryParams = [
+    "q",
+    "overridden",
+    "outdated",
+    "locale",
+    "untranslated",
+    "onlySelectedLocale",
+  ];
 
   get resolvedOverridden() {
     return [true, "true"].includes(this.overridden) ?? false;
@@ -38,6 +46,10 @@ export default class AdminSiteTextIndexController extends Controller {
 
   get resolvedUntranslated() {
     return [true, "true"].includes(this.untranslated) ?? false;
+  }
+
+  get resolvedOnlySelectedLocale() {
+    return [true, "true"].includes(this.onlySelectedLocale) ?? false;
   }
 
   get resolvedLocale() {
@@ -59,6 +71,7 @@ export default class AdminSiteTextIndexController extends Controller {
         outdated: this.resolvedOutdated,
         locale: this.resolvedLocale,
         untranslated: this.resolvedUntranslated,
+        only_selected_locale: this.resolvedOnlySelectedLocale,
       });
     } finally {
       this.searching = false;
@@ -114,6 +127,17 @@ export default class AdminSiteTextIndexController extends Controller {
       this.untranslated = null;
     } else {
       this.untranslated = true;
+    }
+    this.searching = true;
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  toggleOnlySelectedLocale() {
+    if (this.resolvedOnlySelectedLocale) {
+      this.onlySelectedLocale = null;
+    } else {
+      this.onlySelectedLocale = true;
     }
     this.searching = true;
     discourseDebounce(this, this._performSearch, 400);

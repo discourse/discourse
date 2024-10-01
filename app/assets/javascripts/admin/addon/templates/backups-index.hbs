@@ -13,7 +13,7 @@
 
 {{#if this.status.restoreDisabled}}
   <div class="backup-message alert alert-info">
-    {{dIcon "info-circle"}}
+    {{dIcon "circle-info"}}
     {{html-safe
       (i18n
         "admin.backups.operations.restore.is_disabled"
@@ -46,14 +46,14 @@
           <DMenu
             @identifier="backup-item-menu"
             @title={{i18n "more_options"}}
-            @icon="ellipsis-v"
+            @icon="ellipsis-vertical"
             class="btn-small"
           >
             <:content>
               <DropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
-                    @icon="far-trash-alt"
+                    @icon="trash-can"
                     @action={{fn (route-action "destroyBackup") backup}}
                     @disabled={{this.status.isOperationRunning}}
                     @title={{this.deleteTitle}}

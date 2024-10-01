@@ -3,7 +3,7 @@ import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
 export default class WebhookStatus extends Component {
-  iconNames = ["far-circle", "times-circle", "circle", "circle"];
+  iconNames = ["far-circle", "circle-xmark", "circle", "circle"];
   iconClasses = ["text-muted", "text-danger", "text-successful", "text-muted"];
 
   get status() {

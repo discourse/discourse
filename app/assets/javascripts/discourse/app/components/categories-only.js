@@ -1,10 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend({
-  tagName: "",
-  showMuted: false,
+@tagName("")
+export default class CategoriesOnly extends Component {
+  showMuted = false;
 
   @discourseComputed("showMutedCategories", "filteredCategories.length")
   mutedToggleIcon(showMutedCategories, filteredCategoriesLength) {
@@ -17,12 +18,12 @@ export default Component.extend({
     }
 
     return "plus";
-  },
+  }
 
   @discourseComputed("showMuted", "filteredCategories.length")
   showMutedCategories(showMuted, filteredCategoriesLength) {
     return showMuted || filteredCategoriesLength === 0;
-  },
+  }
 
   @discourseComputed("categories", "categories.length")
   filteredCategories(categories, categoriesLength) {
@@ -31,7 +32,7 @@ export default Component.extend({
     }
 
     return categories.filter((cat) => !cat.isHidden);
-  },
+  }
 
   @discourseComputed("categories", "categories.length")
   mutedCategories(categories, categoriesLength) {
@@ -45,11 +46,11 @@ export default Component.extend({
     }
 
     return categories.filterBy("hasMuted");
-  },
+  }
 
   @action
   toggleShowMuted(event) {
     event?.preventDefault();
     this.toggleProperty("showMuted");
-  },
-});
+  }
+}

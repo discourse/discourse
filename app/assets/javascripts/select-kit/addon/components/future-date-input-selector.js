@@ -1,40 +1,45 @@
+import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { classNames } from "@ember-decorators/component";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import {
+  pluginApiIdentifiers,
+  selectKitOptions,
+} from "select-kit/components/select-kit";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 
-export default ComboBoxComponent.extend({
-  pluginApiIdentifiers: ["future-date-input-selector"],
-  classNames: ["future-date-input-selector"],
-  isCustom: equal("value", "custom"),
-  userTimezone: null,
+@classNames("future-date-input-selector")
+@selectKitOptions({
+  autoInsertNoneItem: false,
+  headerComponent:
+    "future-date-input-selector/future-date-input-selector-header",
+})
+@pluginApiIdentifiers("future-date-input-selector")
+export default class FutureDateInputSelector extends ComboBoxComponent {
+  @equal("value", "custom") isCustom;
 
-  selectKitOptions: {
-    autoInsertNoneItem: false,
-    headerComponent:
-      "future-date-input-selector/future-date-input-selector-header",
-  },
+  userTimezone = null;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.userTimezone = this.currentUser.user_option.timezone;
-  },
+  }
 
   modifyComponentForRow() {
     return "future-date-input-selector/future-date-input-selector-row";
-  },
+  }
 
-  actions: {
-    onChange(value) {
-      if (value !== "custom" && !isEmpty(value)) {
-        const { time } = this.content.find((x) => x.id === value);
-        if (time) {
-          this.onChangeInput?.(time.locale("en").format(FORMAT));
-        }
+  @action
+  _onChange(value) {
+    if (value !== "custom" && !isEmpty(value)) {
+      const { time } = this.content.find((x) => x.id === value);
+      if (time) {
+        this.onChangeInput?.(time.locale("en").format(FORMAT));
       }
+    }
 
-      this.onChange?.(value);
-    },
-  },
-});
+    this.onChange?.(value);
+  }
+}

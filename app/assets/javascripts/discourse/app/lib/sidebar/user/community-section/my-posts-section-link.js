@@ -100,7 +100,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get defaultPrefixValue() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return "pencil-alt";
+      return "pencil";
     }
     return "user";
   }

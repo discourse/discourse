@@ -44,6 +44,8 @@ RSpec.describe Chat::FlagMessage do
     context "when all steps pass" do
       fab!(:current_user) { Fabricate(:admin) }
 
+      it { is_expected.to run_successfully }
+
       it "flags the message" do
         expect { result }.to change { Reviewable.count }.by(1)
 

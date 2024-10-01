@@ -75,7 +75,7 @@ export default {
         grant_count: 10,
         allow_title: true,
         multiple_grant: false,
-        icon: "fa-cog",
+        icon: "fa-gear",
         listable: true,
         enabled: true,
         badge_grouping_id: 8,

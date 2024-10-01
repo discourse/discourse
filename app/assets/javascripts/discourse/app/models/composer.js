@@ -108,7 +108,7 @@ export const SAVE_LABELS = {
 };
 
 export const SAVE_ICONS = {
-  [EDIT]: "pencil-alt",
+  [EDIT]: "pencil",
   [EDIT_SHARED_DRAFT]: "far-clipboard",
   [REPLY]: "reply",
   [CREATE_TOPIC]: "plus",

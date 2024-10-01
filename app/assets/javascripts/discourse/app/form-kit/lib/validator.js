@@ -1,3 +1,4 @@
+import { isBlank } from "@ember/utils";
 import I18n from "discourse-i18n";
 
 export default class Validator {
@@ -114,7 +115,7 @@ export default class Validator {
         }
         break;
       default:
-        if (!value) {
+        if (isBlank(value)) {
           error = true;
         }
     }

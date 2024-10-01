@@ -1,23 +1,28 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import {
+  attributeBindings,
+  classNames,
+  tagName,
+} from "@ember-decorators/component";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  tagName: "div",
-  classNames: ["directory-table__column-header", "sortable"],
-  attributeBindings: ["title", "colspan", "ariaSort:aria-sort", "role"],
-  role: "columnheader",
-  labelKey: null,
-  chevronIcon: null,
-  columnIcon: null,
-  translated: false,
-  automatic: false,
-  onActiveRender: null,
-  pressedState: null,
-  ariaLabel: null,
+@tagName("div")
+@classNames("directory-table__column-header", "sortable")
+@attributeBindings("title", "colspan", "ariaSort:aria-sort", "role")
+export default class TableHeaderToggle extends Component {
+  role = "columnheader";
+  labelKey = null;
+  chevronIcon = null;
+  columnIcon = null;
+  translated = false;
+  automatic = false;
+  onActiveRender = null;
+  pressedState = null;
+  ariaLabel = null;
 
   @discourseComputed("order", "field", "asc")
   ariaSort() {
@@ -26,14 +31,16 @@ export default Component.extend({
     } else {
       return "none";
     }
-  },
+  }
+
   toggleProperties() {
     if (this.order === this.field) {
       this.set("asc", this.asc ? null : true);
     } else {
       this.setProperties({ order: this.field, asc: null });
     }
-  },
+  }
+
   toggleChevron() {
     if (this.order === this.field) {
       let chevron = iconHTML(this.asc ? "chevron-up" : "chevron-down");
@@ -41,32 +48,35 @@ export default Component.extend({
     } else {
       this.set("chevronIcon", null);
     }
-  },
+  }
+
   click() {
     this.toggleProperties();
-  },
+  }
+
   keyPress(e) {
     if (e.which === 13) {
       this.toggleProperties();
     }
-  },
+  }
+
   didReceiveAttrs() {
-    this._super(...arguments);
+    super.didReceiveAttrs(...arguments);
     if (!this.automatic && !this.translated) {
       this.set("labelKey", this.field);
     }
     this.set("id", `table-header-toggle-${this.field.replace(/\s/g, "")}`);
     this.toggleChevron();
     this._updateA11yAttributes();
-  },
+  }
 
   didRender() {
-    this._super(...arguments);
+    super.didRender(...arguments);
 
     if (this.onActiveRender && this.chevronIcon) {
       this.onActiveRender(this.element);
     }
-  },
+  }
 
   _updateA11yAttributes() {
     let criteria = "";
@@ -99,10 +109,11 @@ export default Component.extend({
     } else {
       this.set("pressedState", "false");
     }
-  },
+  }
+
   _focusHeader() {
     schedule("afterRender", () => {
       document.getElementById(this.id)?.focus();
     });
-  },
-});
+  }
+}

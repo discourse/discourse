@@ -4,12 +4,12 @@ import { ajax } from "discourse/lib/ajax";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { afterRender } from "discourse-common/utils/decorators";
 
-export default Component.extend({
+export default class PendingPost extends Component {
   didRender() {
-    this._super(...arguments);
+    super.didRender(...arguments);
     this._loadOneboxes();
     this._resolveUrls();
-  },
+  }
 
   @afterRender
   _loadOneboxes() {
@@ -21,10 +21,10 @@ export default Component.extend({
       this.siteSettings.max_oneboxes_per_post,
       true
     );
-  },
+  }
 
   @afterRender
   _resolveUrls() {
     resolveAllShortUrls(ajax, this.siteSettings, this.element, this.opts);
-  },
-});
+  }
+}

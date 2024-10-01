@@ -1,9 +1,9 @@
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
 
-export default Component.extend({
+export default class Checkboxes extends Component {
   init(...args) {
-    this._super(...args);
+    super.init(...args);
     this.set("field.value", this.field.value || []);
 
     for (let choice of this.field.choices) {
@@ -11,7 +11,7 @@ export default Component.extend({
         set(choice, "checked", true);
       }
     }
-  },
+  }
 
   @action
   changed(checkbox) {
@@ -29,5 +29,5 @@ export default Component.extend({
       }
     }
     this.set("field.value", newFieldValue);
-  },
-});
+  }
+}

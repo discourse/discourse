@@ -235,11 +235,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("content close argument", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="times" @action={{args.close}} /></:content></DMenu>`
+      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="xmark" @action={{args.close}} /></:content></DMenu>`
     );
     await open();
 
-    await click(".d-icon-times");
+    await click(".d-icon-xmark");
 
     assert.dom(".fk-d-menu").doesNotExist();
   });
@@ -263,7 +263,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await getOwner(this).lookup("service:menu").close("test");
 
-    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+    assert.dom(".fk-d-menu.test-content").doesNotExist();
   });
 
   test("get a menu by identifier", async function (assert) {
@@ -276,7 +276,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await activeMenu.close();
 
-    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+    assert.dom(".fk-d-menu.test-content").doesNotExist();
   });
 
   test("opening a menu with the same identifier", async function (assert) {
@@ -302,13 +302,13 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await click(".first.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists();
-    assert.dom(".fk-d-menu__content.second").doesNotExist();
+    assert.dom(".fk-d-menu.first").exists();
+    assert.dom(".fk-d-menu.second").doesNotExist();
 
     await click(".second.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").doesNotExist();
-    assert.dom(".fk-d-menu__content.second").exists();
+    assert.dom(".fk-d-menu.first").doesNotExist();
+    assert.dom(".fk-d-menu.second").exists();
   });
 
   test("empty @identifier/@groupIdentifier", async function (assert) {
@@ -318,13 +318,13 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await click(".first.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists();
-    assert.dom(".fk-d-menu__content.second").doesNotExist();
+    assert.dom(".fk-d-menu.first").exists();
+    assert.dom(".fk-d-menu.second").doesNotExist();
 
     await click(".second.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu__content.first").exists("it doesn’t autoclose");
-    assert.dom(".fk-d-menu__content.second").exists();
+    assert.dom(".fk-d-menu.first").exists("it doesn’t autoclose");
+    assert.dom(".fk-d-menu.second").exists();
   });
 
   test("@class", async function (assert) {
@@ -333,7 +333,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").exists();
-    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu.first").exists();
   });
 
   test("@triggerClass", async function (assert) {
@@ -342,7 +342,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").exists();
-    assert.dom(".fk-d-menu__content.first").doesNotExist();
+    assert.dom(".fk-d-menu.first").doesNotExist();
   });
 
   test("@contentClass", async function (assert) {
@@ -351,6 +351,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(".fk-d-menu__trigger.first").doesNotExist();
-    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu.first").exists();
   });
 });

@@ -55,7 +55,7 @@ esbuild
       process: `{ "env": { "EMBER_ENV": "production" } }`,
     },
     external: ["fs", "path"],
-    entryPoints: ["./app/assets/javascripts/theme-transpiler/transpiler.js"],
+    entryPoints: ["./transpiler.js"],
     plugins: [wasmPlugin],
   })
   .then(() => {});

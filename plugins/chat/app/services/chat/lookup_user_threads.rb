@@ -103,6 +103,7 @@ module Chat
           "user_chat_thread_memberships.notification_level IN (?)",
           [
             ::Chat::UserChatThreadMembership.notification_levels[:normal],
+            ::Chat::UserChatThreadMembership.notification_levels[:watching],
             ::Chat::UserChatThreadMembership.notification_levels[:tracking],
           ],
         )

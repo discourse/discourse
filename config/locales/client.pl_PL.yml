@@ -215,6 +215,8 @@ pl_PL:
       removed_user: "%{who} Został usunięty %{when}"
       removed_group: "%{who} Został usunięty %{when}"
       autobumped: "Automatycznie podbity %{when}"
+      tags_changed: "Tagi zaktualizowane %{when}"
+      category_changed: "Kategoria zaktualizowana %{when}"
       autoclosed:
         enabled: "Zamknięcie %{when}"
         disabled: "Otworzenie %{when}"
@@ -255,6 +257,7 @@ pl_PL:
     broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
+    broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
     critical_deprecation:
       notice: "<b>[Powiadomienie administratora]</b> Jeden z twoich motywów lub wtyczek wymaga aktualizacji w celu zapewnienia zgodności z nadchodzącymi zmianami rdzenia Discourse."
       id: "(id:<em>%{id}</em>)"
@@ -375,7 +378,9 @@ pl_PL:
       user_count: "Rejestracje"
       active_user_count: "Aktywni użytkownicy"
       contact: "Skontaktuj się z nami"
-      contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
+      site_activity: "Aktywność w witrynie"
+      view_more: "Zobacz więcej"
+      view_less: "Zobacz mniej"
       activities:
         topics:
           one: "%{formatted_number} temat"
@@ -402,6 +407,18 @@ pl_PL:
         many: "%{formatted_number} Członków"
         other: "%{formatted_number} Członków"
       report_inappropriate_content: "Jeśli natkniesz się na nieodpowiednie treści, nie wahaj się i rozpocznij rozmowę z naszymi moderatorami i administratorami. Pamiętaj, aby zalogować się przed kontaktem."
+      site_age:
+        less_than_one_month: "Utworzono < 1 miesiąc temu"
+        month:
+          one: "Utworzono %{count} miesiąc temu"
+          few: "Utworzono %{count} miesiące temu"
+          many: "Utworzono %{count} miesięcy temu"
+          other: "Utworzono %{count} miesięcy temu"
+        year:
+          one: "Utworzono %{count} rok temu"
+          few: "Utworzono %{count} lata temu"
+          many: "Utworzono %{count} lat temu"
+          other: "Utworzono %{count} lat temu"
     bookmarked:
       title: "Zakładka"
       edit_bookmark: "Edytuj zakładkę"
@@ -823,6 +840,7 @@ pl_PL:
       never: "Nigdy"
       last_custom: "Ostatnia niestandardowa data i godzina"
       custom: "Niestandardowa data i godzina"
+      more_options: "Więcej opcji…"
       select_timeframe: "Wybierz przedział czasowy"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> tworzy <a href='%{topicUrl}'>temat</a>"
@@ -2192,6 +2210,10 @@ pl_PL:
       associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
       activation_title: "Aktywuj swoje konto"
       already_have_account: "Masz już konto?"
+      progress_bar:
+        signup: "Rejestracja"
+        approve: "Zatwierdź"
+        login: "Logowanie"
     forgot_password:
       title: "Reset hasła"
       action: "Zapomniałem(-łam) hasła"
@@ -5110,6 +5132,7 @@ pl_PL:
             publish_read_state: "Wyświetlaj status przeczytania w grupowych wiadomościach"
           membership:
             automatic: Automatyczne
+            automatic_tooltip: "Ta grupa jest automatyczna, nie można jej usunąć, a członkowie są dodawani i usuwani automatycznie"
             trust_levels_title: "Domyślny poziom zaufania przyznawany dodawanym użytkownikom:"
             effects: Efekty
             trust_levels_none: "Brak"
@@ -5504,6 +5527,7 @@ pl_PL:
           back: "Powrót do flag"
           delete: "Usuń"
           delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
+          flags_tab: "Flagi"
           form:
             add_header: "Dodaj flagę"
             edit_header: "Edytuj flagę"
@@ -5522,7 +5546,6 @@ pl_PL:
             move_down: "Przenieś niżej"
       plugins:
         title: "Wtyczki"
-        installed: "Zainstalowane wtyczki"
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"
@@ -5563,7 +5586,7 @@ pl_PL:
         menu:
           backups: "Kopie zapasowe"
           logs: "Logi"
-        none: "Brak kopii zapasowych."
+        none: "Brak kopii zapasowych"
         read_only:
           enable:
             title: "Włącz tryb tylko do odczytu"
@@ -5601,12 +5624,11 @@ pl_PL:
           download:
             label: "Pobierz"
             title: "Wyślij e-mail z linkiem do pobrania"
-            alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem."
+            alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem"
           destroy:
             title: "Usuń kopię zapasową"
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
-            is_disabled: "Przywracanie jest zablokowane w ustawieniach."
             label: "Przywróć"
             title: "Przywróć kopię zapasową"
             confirm: "Czy na pewno chcesz przywrócić tę kopię zapasową?"
@@ -5615,7 +5637,6 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy jesteś pewien, że chcesz przywrócić bazę danych do ostatniej działającej wersji?"
         location:
-          local: "Lokalne miejsce"
           s3: "S3"
         backup_storage_error: "Nie można uzyskać dostępu do miejsca zapisywania kopii zapasowej: %{error_message}"
       export_csv:

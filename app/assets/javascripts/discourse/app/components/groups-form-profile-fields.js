@@ -2,18 +2,21 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default Component.extend({
-  disableSave: null,
-  nameInput: null,
+export default class GroupsFormProfileFields extends Component {
+  disableSave = null;
+  nameInput = null;
+
+  @not("model.automatic") canEdit;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
     const name = this.get("model.name");
 
     if (name) {
@@ -21,14 +24,12 @@ export default Component.extend({
     } else {
       this.set("disableSave", true);
     }
-  },
-
-  canEdit: not("model.automatic"),
+  }
 
   @discourseComputed("basicNameValidation", "uniqueNameValidation")
   nameValidation(basicNameValidation, uniqueNameValidation) {
     return uniqueNameValidation ? uniqueNameValidation : basicNameValidation;
-  },
+  }
 
   @observes("nameInput")
   _validateName() {
@@ -62,11 +63,11 @@ export default Component.extend({
     return this._failedInputValidation(
       I18n.t("admin.groups.new.name.checking")
     );
-  },
+  }
 
   checkGroupNameDebounced() {
     discourseDebounce(this, this._checkGroupName, 500);
-  },
+  }
 
   _checkGroupName() {
     if (isEmpty(this.nameInput)) {
@@ -101,7 +102,7 @@ export default Component.extend({
         }
       })
       .catch(popupAjaxError);
-  },
+  }
 
   _failedInputValidation(reason) {
     this.set("disableSave", true);
@@ -111,5 +112,5 @@ export default Component.extend({
       options.reason = reason;
     }
     this.set("basicNameValidation", EmberObject.create(options));
-  },
-});
+  }
+}

@@ -43,6 +43,11 @@ bg:
   disable_remote_images_download_reason: "Изтеглянето на отдалечени изображения беше изключено, защото няма достатъчно място на хард диска."
   anonymous: "Анонимен"
   remove_posts_deleted_by_author: "Изтрит от автора"
+  topic_category_changed: "От %{from} до %{to}"
+  topic_tag_changed:
+    added_and_removed: "Добавен е %{added} и е премахнат %{removed}"
+    added: "Добавен %{added}"
+    removed: "Премахнат %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} от %{username} "
@@ -909,6 +914,7 @@ bg:
     default_categories_watching: "Списък с категории, които са прегледани, по подразбиране."
     default_categories_tracking: "Списък с категории, които са следени, по подразбиране."
     default_categories_muted: "Списък с категории, които са заглушени, по подразбиране."
+    create_post_for_category_and_tag_changes: "Създайте малка публикация за действие, когато категорията или етикетите на тема се променят"
     watched_precedence_over_muted: "Уведомявай ме за теми в категории или етикети, които гледам, които също принадлежат към такива, които съм заглушил"
     experimental_new_new_view_groups: 'ЕКСПЕРИМЕНТАЛНО: Активирайте нов списък с теми, който комбинира непрочетени и нови теми и направете връзката „Всичко“ в страничната лента връзка към него.'
     enable_custom_sidebar_sections: "ЕКСПЕРИМЕНТАЛНО: Активирайте персонализирани раздели в страничната лента"

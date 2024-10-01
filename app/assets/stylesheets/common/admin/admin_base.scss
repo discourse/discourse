@@ -142,6 +142,18 @@ $mobile-breakpoint: 700px;
       max-width: 100px;
     }
   }
+
+  .admin-table-row-controls {
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    justify-content: flex-end;
+
+    .fk-d-menu__trigger {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .admin-contents table.grid {
@@ -249,7 +261,7 @@ $mobile-breakpoint: 700px;
         word-wrap: break-word;
       }
     }
-    button.edit {
+    .site-text-edit {
       float: right;
     }
 
@@ -451,6 +463,10 @@ $mobile-breakpoint: 700px;
 
   .admin-section {
     margin-bottom: 1em;
+  }
+
+  &.-no-header {
+    margin-top: 1em;
   }
 
   .username {
@@ -790,7 +806,7 @@ section.details {
   .d-icon-check {
     color: var(--success);
   }
-  .d-icon-times {
+  .d-icon-xmark {
     color: var(--danger);
   }
 }
@@ -1067,6 +1083,7 @@ a.inline-editable-field {
 @import "common/admin/api";
 @import "common/admin/backups";
 @import "common/admin/plugins";
+@import "common/admin/site-settings";
 @import "common/admin/admin_config_area";
 @import "common/admin/admin_reports";
 @import "common/admin/admin_report";

@@ -92,7 +92,7 @@
               />
               {{#if this.canRemoveOption}}
                 <DButton
-                  @icon="trash-alt"
+                  @icon="trash-can"
                   @action={{fn this.removeOption option}}
                 />
               {{/if}}
@@ -257,7 +257,7 @@
 
     <DButton
       @action={{this.toggleAdvanced}}
-      @icon="cog"
+      @icon="gear"
       @title={{if
         this.showAdvanced
         "poll.ui_builder.hide_advanced"

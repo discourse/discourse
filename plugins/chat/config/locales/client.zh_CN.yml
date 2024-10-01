@@ -39,6 +39,9 @@ zh_CN:
       chat_messages_count: "聊天消息"
       chat_channels_count: "聊天频道"
       chat_users_count: "聊天用户"
+      activities:
+        chat_messages:
+          other: "%{formatted_number} 条聊天消息"
     chat:
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
@@ -127,7 +130,7 @@ zh_CN:
       header_indicator_preference:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
-        dm_and_mentions: "直接消息和提及"
+        dm_and_mentions: "直接消息、提及和关注的消息串"
         only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:
@@ -564,10 +567,10 @@ zh_CN:
         notifications:
           regular:
             title: "正常"
-            description: "如果其他人在此消息串中提及 (@) 您的名字，您将收到通知。"
           tracking:
             title: "跟踪"
-            description: "此消息串将在消息串列表和频道中显示的新回复数。如果其他人在此消息串中提及 (@) 您的名字，您将收到通知。"
+          watching:
+            title: "关注"
         participants_other_count:
           other: "+%{count}"
       thread_title_toast:
@@ -592,6 +595,8 @@ zh_CN:
       chat_invitation: "邀请您加入聊天频道"
       chat_invitation_html: "<span>%{username}</span><span> 邀请您加入一个聊天频道</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        other: "%{username} 和其他 %{count} 人"
       popup:
         chat_mention:
           direct: '在“%{channel}”中提及您'
