@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import {
@@ -34,16 +35,11 @@ export default class AdminSectionLandingItem extends Component {
     }
   }
 
-  get cssClasses() {
-    const classes = ["admin-section-landing-item"];
-    if (this.args.icon) {
-      classes.push("-has-icon");
-    }
-    return classes.join(" ");
-  }
-
   <template>
-    <div class={{this.cssClasses}} ...attributes>
+    <div
+      class={{concatClass "admin-section-landing-item" (if @icon "-has-icon")}}
+      ...attributes
+    >
       {{#if @imageUrl}}
         <img class="admin-section-landing-item__image" src={{@imageUrl}} />
       {{/if}}
