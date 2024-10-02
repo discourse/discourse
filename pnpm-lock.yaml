@@ -503,7 +503,7 @@ importers:
         version: 3.0.1(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
       ember-modifier:
         specifier: ^4.2.0
-        version: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5))
+        version: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
       ember-on-resize-modifier:
         specifier: ^2.0.2
         version: 2.0.2(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0))
@@ -523,8 +523,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       ember-test-waiters:
-        specifier: ^2.1.3
-        version: 2.1.3(@babel/core@7.25.2)
+        specifier: 2.0.1
+        version: 2.0.1(@babel/core@7.25.2)
       float-kit:
         specifier: workspace:1.0.0
         version: link:../float-kit
@@ -4511,8 +4511,8 @@ packages:
     resolution: {integrity: sha512-gGJzzBw6CsBB9gfk9/4qw0+iOSvhlqvUe4jIZKDf4waMkgVLtnPdFUWMocfFvUnJS7IitwKB/iTgIctD4RgH7w==}
     engines: {node: 18.* || 20.* || >= 22.*}
 
-  ember-test-waiters@2.1.3:
-    resolution: {integrity: sha512-xDjvq8/1C3b9z3NGpez7aslbq5gsLrxsdjD3apyziHkImh/PTeXZr2bxo/YAUgOwGOtpZ1So0fIsppiSN0u1Ng==}
+  ember-test-waiters@2.0.1:
+    resolution: {integrity: sha512-nvIMuy6+ZS1mvTwl+7sUIFakRFyrNpU++PZbAxZ8brfiwf+hNpgy6LLZPF5k3raPCce86RZAcC8skYpBHpO+oQ==}
     engines: {node: 10.* || >= 12.*}
 
   ember-this-fallback@0.4.0:
@@ -10080,7 +10080,7 @@ snapshots:
       '@glint/template': 1.4.1-unstable.ff9ea6c
     optionalDependencies:
       ember-cli-htmlbars: 6.3.0
-      ember-modifier: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5))
+      ember-modifier: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
 
   '@glint/environment-ember-template-imports@1.4.1-unstable.ff9ea6c(@glint/environment-ember-loose@1.4.1-unstable.ff9ea6c(@glimmer/component@1.1.2(@babel/core@7.25.2))(@glint/template@1.4.1-unstable.ff9ea6c)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5))))(@glint/template@1.4.1-unstable.ff9ea6c)':
     dependencies:
@@ -12887,7 +12887,7 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-modifier@4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)):
+  ember-modifier@4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0))):
     dependencies:
       '@embroider/addon-shim': 1.8.9
       decorator-transforms: 2.0.0(patch_hash=dre3eimzrhlapntwzf7qrwrwqi)(@babel/core@7.25.2)
@@ -12904,7 +12904,7 @@ snapshots:
       ember-auto-import: 2.8.1(@glint/template@1.4.1-unstable.ff9ea6c)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0))
       ember-cli-babel: 7.26.11
       ember-cli-htmlbars: 5.7.2
-      ember-modifier: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5))
+      ember-modifier: 4.2.0(@babel/core@7.25.2)(ember-source@5.5.0(@babel/core@7.25.2)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
       ember-resize-observer-service: 1.1.0
     transitivePeerDependencies:
       - '@babel/core'
@@ -13087,11 +13087,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-test-waiters@2.1.3(@babel/core@7.25.2):
+  ember-test-waiters@2.0.1(@babel/core@7.25.2):
     dependencies:
       ember-cli-babel: 7.26.11
       ember-cli-typescript: 3.1.4(@babel/core@7.25.2)
-      ember-cli-version-checker: 5.1.2
       semver: 7.6.3
     transitivePeerDependencies:
       - '@babel/core'
