@@ -19,7 +19,7 @@
     "@glimmer/syntax": "^0.92.3",
     "@highlightjs/cdn-assets": "^11.10.0",
     "@json-editor/json-editor": "2.15.1",
-    "@messageformat/core": "^3.3.0",
+    "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.36.2",
     "decorator-transforms": "^2.0.0",
