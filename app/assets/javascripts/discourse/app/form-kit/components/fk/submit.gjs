@@ -6,9 +6,14 @@ export default class FKSubmit extends Component {
     return this.args.label ?? "submit";
   }
 
+  get icon() {
+    return this.args.icon ?? null;
+  }
+
   <template>
     <DButton
       @label={{this.label}}
+      @icon={{this.icon}}
       @action={{@onSubmit}}
       @forwardEvent="true"
       class="btn-primary form-kit__button"

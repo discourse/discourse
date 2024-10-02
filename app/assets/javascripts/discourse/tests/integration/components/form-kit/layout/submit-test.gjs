@@ -24,6 +24,7 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
     await click("button");
 
     assert.dom(".form-kit__button.btn-primary").hasText(I18n.t("submit"));
+    assert.dom(".form-kit__button svg").doesNotExist();
     assert.deepEqual(value, 1);
   });
 
@@ -37,6 +38,16 @@ module("Integration | Component | FormKit | Layout | Submit", function (hooks) {
     assert
       .dom(".form-kit__button")
       .hasText(I18n.t("cancel"), "it allows to override the label");
+  });
+
+  test("@icon", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Submit @label="cancel" @icon="check" />
+      </Form>
+    </template>);
+
+    assert.dom(".form-kit__button svg.d-icon-check").exists();
   });
 
   test("@isLoading", async function (assert) {
