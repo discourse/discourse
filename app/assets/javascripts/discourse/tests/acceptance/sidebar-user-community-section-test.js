@@ -90,13 +90,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ),
       "additional section links are hidden when clicking outside"
     );
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='false']"
-      ),
-      "aria-expanded toggles to false when additional links are hidden"
-    );
   });
 
   test("clicking on everything link", async function (assert) {
@@ -1133,6 +1126,47 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     await click(".btn-sidebar-toggle");
 
     assert.ok(teardownCalled, "section link teardown callback was called");
+  });
+
+  test("pressing esc closes the more menu", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
+
+    assert.ok(exists(".sidebar-more-section-links-details-content"));
+
+    const event = new KeyboardEvent("keydown", { key: "Escape" });
+    document.dispatchEvent(event);
+
+    assert.notOk(exists(".sidebar-more-section-links-details-content"));
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ).getAttribute("aria-expanded"),
+      "false",
+      "aria-expanded is set to false after closing the menu"
+    );
+  });
+
+  test("first link is focused when the more menu is opened", async function (assert) {
+    await visit("/");
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
+
+    const firstLink = query(
+      ".sidebar-more-section-links-details-content-wrapper a"
+    );
+
+    assert.strictEqual(
+      document.activeElement,
+      firstLink,
+      "first link is focused"
+    );
   });
 });
 

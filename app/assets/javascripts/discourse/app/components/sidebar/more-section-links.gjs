@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import icon from "discourse-common/helpers/d-icon";
@@ -11,12 +12,13 @@ import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import MoreSectionLink from "./more-section-link";
 import SectionLinkButton from "./section-link-button";
-
 export default class SidebarMoreSectionLinks extends Component {
   @service router;
 
   @tracked activeSectionLink;
   @tracked open = false;
+
+  #lastFocusEvent;
 
   constructor() {
     super(...arguments);
@@ -26,7 +28,7 @@ export default class SidebarMoreSectionLinks extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#removeClickEventListener();
+    this.#removeEventListeners();
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
 
@@ -69,28 +71,75 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
-  @action
-  registerClickListener() {
-    this.#addClickEventListener();
+  @bind
+  closeOnEscape(event) {
+    if (event.key === "Escape" && this.open) {
+      this.open = false;
+    }
   }
 
-  @action
-  unregisterClickListener() {
-    this.#removeClickEventListener();
+  @bind
+  closeOnFocusOut(event) {
+    this.#lastFocusEvent = event;
+    scheduleOnce("afterRender", this, this.#handleFocusOut);
+  }
+
+  #handleFocusOut() {
+    const container = document.querySelector(
+      ".sidebar-more-section-links-details-content"
+    );
+    const toggleButton = document.querySelector(
+      ".sidebar-more-section-links-details-summary"
+    );
+
+    if (
+      container &&
+      !container.contains(this.#lastFocusEvent.relatedTarget) &&
+      toggleButton !== this.#lastFocusEvent.relatedTarget // focusing out to the toggle shouldn't close the menu
+    ) {
+      this.open = false;
+    }
   }
 
   @action
   toggleSectionLinks(event) {
     event.stopPropagation();
     this.open = !this.open;
+
+    if (this.open) {
+      scheduleOnce("afterRender", this, this.#focusFirstLink);
+    }
   }
 
-  #removeClickEventListener() {
-    document.removeEventListener("click", this.closeDetails);
+  #focusFirstLink() {
+    const firstLink = document.querySelector(
+      ".sidebar-more-section-links-details-content-wrapper a"
+    );
+    if (firstLink) {
+      firstLink.focus();
+    }
   }
 
-  #addClickEventListener() {
+  #addEventListeners() {
     document.addEventListener("click", this.closeDetails);
+    document.addEventListener("keydown", this.closeOnEscape);
+    document.addEventListener("focusout", this.closeOnFocusOut);
+  }
+
+  #removeEventListeners() {
+    document.removeEventListener("click", this.closeDetails);
+    document.removeEventListener("keydown", this.closeOnEscape);
+    document.removeEventListener("focusout", this.closeOnFocusOut);
+  }
+
+  @action
+  registerEventListeners() {
+    this.#addEventListeners();
+  }
+
+  @action
+  unregisterEventListeners() {
+    this.#removeEventListeners();
   }
 
   #isOutsideDetailsClick(event) {
@@ -140,8 +189,8 @@ export default class SidebarMoreSectionLinks extends Component {
     {{#if this.open}}
       <div class="sidebar-more-section-links-details">
         <div
-          {{didInsert this.registerClickListener}}
-          {{willDestroy this.unregisterClickListener}}
+          {{didInsert this.registerEventListeners}}
+          {{willDestroy this.unregisterEventListeners}}
           class="sidebar-more-section-links-details-content-wrapper"
         >
 
