@@ -1162,4 +1162,8 @@ class ApplicationController < ActionController::Base
   def clean_xml
     response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
   end
+
+  def service_params
+    params.to_unsafe_h.merge(guardian:)
+  end
 end

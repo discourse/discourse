@@ -120,7 +120,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    User::Suspend.call do
+    User::Suspend.call(service_params) do
       on_success do
         render_json_dump(
           suspension: {
@@ -315,7 +315,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    User::Silence.call do
+    User::Silence.call(service_params) do
       on_success do
         render_json_dump(
           silence: {
