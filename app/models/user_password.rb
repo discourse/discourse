@@ -14,6 +14,7 @@ class UserPassword < ActiveRecord::Base
   after_save :clear_raw_password
 
   def password
+    # this getter method is still required, but we store the set password in @raw_password instead of making it easily accessible from the getter
     nil
   end
 
