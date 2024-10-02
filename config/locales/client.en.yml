@@ -157,7 +157,7 @@ en:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
       close: "close"
-      twitter: "Share on Twitter"
+      twitter: "Share on X"
       facebook: "Share on Facebook"
       email: "Send via email"
       url: "Copy and share URL"
