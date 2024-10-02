@@ -1,6 +1,6 @@
-import { buildWaiter } from "ember-test-waiters";
+import { buildWaiter } from "@ember/test-waiters";
 
-const WAITER = buildWaiter("after-frame-paint-waiter");
+const WAITER = buildWaiter("after-frame-paint");
 
 /**
  * Runs `callback` shortly after the next browser Frame is produced.
