@@ -15,7 +15,7 @@ class RedisSnapshot
 
     values = redis.pipelined { |batch| keys.each { |key| batch.dump(key) } }
 
-    new(keys.zip(values).delete_if { |k, v| v.nil? })
+    new(keys.zip(values))
   end
 
   def initialize(dump)
