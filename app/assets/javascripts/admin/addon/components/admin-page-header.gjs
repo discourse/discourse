@@ -86,6 +86,39 @@ export default class AdminPageHeader extends Component {
               }}
             {{/if}}
           </div>
+        {{else if @headerActionComponent}}
+          <div class="admin-page-header__actions">
+            {{#if this.site.mobileView}}
+              <DMenu
+                @identifier="admin-page-header-mobile-actions"
+                @title={{i18n "more_options"}}
+                @icon="ellipsis-vertical"
+                class="btn-small"
+              >
+                <:content>
+                  <DropdownMenu class="admin-page-header__mobile-actions">
+                    <@headerActionComponent
+                      @actions={{hash
+                        Primary=PrimaryActionListItem
+                        Default=DefaultActionListItem
+                        Danger=DangerActionListItem
+                        Wrapped=WrappedActionListItem
+                      }}
+                    />
+                  </DropdownMenu>
+                </:content>
+              </DMenu>
+            {{else}}
+              <@headerActionComponent
+                @actions={{hash
+                  Primary=PrimaryButton
+                  Default=DefaultButton
+                  Danger=DangerButton
+                  Wrapped=WrappedButton
+                }}
+              />
+            {{/if}}
+          </div>
         {{/if}}
       </div>
 

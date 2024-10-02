@@ -1,15 +1,15 @@
 <AdminPageSubheader @titleLabel="admin.backups.files_title">
   <:actions as |actions|>
-    <actions.Wrapped>
+    <actions.Wrapped as |wrapped|>
       {{#if this.localBackupStorage}}
         <UppyBackupUploader
-          class="btn-transparent"
+          class={{wrapped.buttonClass}}
           @done={{route-action "uploadSuccess"}}
           @localBackupStorage={{this.localBackupStorage}}
         />
       {{else}}
         <UppyBackupUploader
-          class="btn-transparent"
+          class={{wrapped.buttonClass}}
           @done={{route-action "remoteUploadSuccess"}}
         />
       {{/if}}
