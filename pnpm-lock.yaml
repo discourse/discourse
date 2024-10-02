@@ -276,8 +276,8 @@ importers:
         specifier: 2.15.1
         version: 2.15.1
       '@messageformat/core':
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^3.4.0
+        version: 3.4.0
       '@messageformat/runtime':
         specifier: ^3.0.1
         version: 3.0.1
@@ -2354,8 +2354,8 @@ packages:
     resolution: {integrity: sha512-F5z53uvRIF4dYfFfJP3a2Cqg+4P1dgJchJsFnsZE0eZp0LK8X7g2J0CsJHRgns+skpXOlM7n5vFGwkWCWj8qJg==}
     engines: {node: 12.* || >= 14}
 
-  '@messageformat/core@3.3.0':
-    resolution: {integrity: sha512-YcXd3remTDdeMxAlbvW6oV9d/01/DZ8DHUFwSttO3LMzIZj3iO0NRw+u1xlsNNORFI+u0EQzD52ZX3+Udi0T3g==}
+  '@messageformat/core@3.4.0':
+    resolution: {integrity: sha512-NgCFubFFIdMWJGN5WuQhHCNmzk7QgiVfrViFxcS99j7F5dDS5EP6raR54I+2ydhe4+5/XTn/YIEppFaqqVWHsw==}
 
   '@messageformat/date-skeleton@1.0.1':
     resolution: {integrity: sha512-jPXy8fg+WMPIgmGjxSlnGJn68h/2InfT0TNSkVx0IGXgp4ynnvYkbZ51dGWmGySEK+pBiYUttbQdu5XEqX5CRg==}
@@ -10709,7 +10709,7 @@ snapshots:
       tslib: 2.7.0
       upath: 2.0.1
 
-  '@messageformat/core@3.3.0':
+  '@messageformat/core@3.4.0':
     dependencies:
       '@messageformat/date-skeleton': 1.0.1
       '@messageformat/number-skeleton': 1.2.0
