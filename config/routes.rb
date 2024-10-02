@@ -403,6 +403,7 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
     end # admin namespace
 

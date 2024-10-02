@@ -5563,6 +5563,16 @@ en:
           spam: "Spam settings"
           staff_action_logs: "Staff Action Logs"
 
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backups"
+            description: "Take a backup of your site's data"
+          whats_new:
+            title: "What's New"
+            description: "Discover new releases and improvements to Discourse"
+
       config_areas:
         about:
           header: "About your site"
