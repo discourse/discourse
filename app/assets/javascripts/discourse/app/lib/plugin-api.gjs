@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.1";
+export const PLUGIN_API_VERSION = "1.37.2";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -2646,7 +2646,7 @@ class PluginApi {
   /**
    * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
    *
-   * @param {String} Name of a FontAwesome 5 icon
+   * @param {String} Name of a FontAwesome icon
    */
   registerCustomCategorySectionLinkLockIcon(icon) {
     return registerCustomCategoryLockIcon(icon);
@@ -2670,7 +2670,7 @@ class PluginApi {
    * @param {string} arg.categoryId - The id of the category
    * @param {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
    * @param {string} arg.prefixValue - The value of the prefix to use.
-   *                                    For "icon", pass in the name of a FontAwesome 5 icon.
+   *                                    For "icon", pass in the name of a FontAwesome icon.
    *                                    For "image", pass in the src of the image.
    *                                    For "text", pass in the text to display.
    *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
@@ -2706,7 +2706,7 @@ class PluginApi {
    *
    * @param {Object} arg - An object
    * @param {string} arg.tagName - The name of the tag
-   * @param {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @param {string} arg.prefixValue - The name of a FontAwesome icon.
    * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
@@ -3002,7 +3002,7 @@ class PluginApi {
    *   return class extends UserMenuTab {
    *     id = "custom-tab-id";
    *     panelComponent = MyCustomPanelGlimmerComponent;
-   *     icon = "some-fa5-icon";
+   *     icon = "some-fa-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
