@@ -66,6 +66,10 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
       hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
     );
 
-    assert.ok(true, "No exception was thrown");
+    assert.strictEqual(
+      count("table.poll-results-ranked-choice tr"),
+      1,
+      "there are no rounds of ranked choice displayed, only the header"
+    );
   });
 });
