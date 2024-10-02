@@ -142,12 +142,6 @@ class FieldHelper {
     }
   }
 
-  hasSubtitle(subtitle, message) {
-    this.context
-      .dom(this.element.querySelector(".form-kit__container-subtitle"))
-      .hasText(subtitle, message);
-  }
-
   hasDescription(description, message) {
     switch (this.element.dataset.controlType) {
       case "checkbox": {
@@ -162,7 +156,7 @@ class FieldHelper {
       }
       default: {
         this.context
-          .dom(this.element.querySelector(".form-kit__meta-description"))
+          .dom(this.element.querySelector(".form-kit__container-description"))
           .hasText(description, message);
       }
     }

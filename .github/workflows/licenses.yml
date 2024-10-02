@@ -17,7 +17,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
@@ -50,30 +50,16 @@ jobs:
         run: |
           gem install licensed
 
-      - name: Get yarn cache directory
-        id: yarn-cache-dir
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - name: Yarn cache
-        uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
-
       - name: Check RubyGems Licenses
         if: ${{ !cancelled() }}
         run: |
           licensed cache
           licensed status
 
-      - name: Yarn install
-        run: yarn install
+      - name: pnpm install
+        run: pnpm install
 
-      - name: Check Yarn Licenses
+      - name: Check JS Licenses
         if: ${{ !cancelled() }}
         run: |
-          yarn global add licensee
-          yarn global upgrade licensee
-          licensee --errors-only
+          pnpm licensee --errors-only

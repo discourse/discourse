@@ -248,7 +248,7 @@
           aria-label={{i18n "search.advanced.post.min.aria_label"}}
           {{on "input" (with-event-value this.onChangeSearchTermMinPostCount)}}
         />
-        {{d-icon "arrows-alt-h"}}
+        {{d-icon "left-right"}}
         <Input
           @type="number"
           @value={{readonly this.searchedTerms.max_posts}}
@@ -274,7 +274,7 @@
           aria-label={{i18n "search.advanced.min_views.aria_label"}}
           {{on "input" (with-event-value this.onChangeSearchTermMinViews)}}
         />
-        {{d-icon "arrows-alt-h"}}
+        {{d-icon "left-right"}}
         <Input
           @type="number"
           @value={{readonly this.searchedTerms.max_views}}
@@ -292,7 +292,7 @@
     <div class="second-search-button">
       <DButton
         @action={{this.search}}
-        @icon="search"
+        @icon="magnifying-glass"
         @label="search.search_button"
         @ariaLabel="search.search_button"
         @disabled={{this.searchButtonDisabled}}

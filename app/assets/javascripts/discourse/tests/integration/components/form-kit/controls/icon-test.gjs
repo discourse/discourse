@@ -10,7 +10,7 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
 
   hooks.beforeEach(function () {
     pretender.get("/svg-sprite/picker-search", () =>
-      response(200, [{ id: "pencil-alt", name: "pencil-alt" }])
+      response(200, [{ id: "pencil", name: "pencil" }])
     );
   });
 
@@ -26,10 +26,10 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
       </Form>
     </template>);
 
-    await formKit().field("foo").select("pencil-alt");
+    await formKit().field("foo").select("pencil");
     await formKit().submit();
 
-    assert.deepEqual(data.foo, "pencil-alt");
-    assert.form().field("foo").hasValue("pencil-alt");
+    assert.deepEqual(data.foo, "pencil");
+    assert.form().field("foo").hasValue("pencil");
   });
 });

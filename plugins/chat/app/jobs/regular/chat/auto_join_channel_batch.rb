@@ -2,9 +2,9 @@
 
 module Jobs
   module Chat
-    class AutoJoinChannelBatch < ServiceJob
-      def execute(args)
-        with_service(::Chat::AutoJoinChannelBatch, **args) do
+    class AutoJoinChannelBatch < ::Jobs::Base
+      def execute(*)
+        ::Chat::AutoJoinChannelBatch.call(*) do
           on_failure { Rails.logger.error("Failed with unexpected error") }
           on_failed_contract do |contract|
             Rails.logger.error(contract.errors.full_messages.join(", "))

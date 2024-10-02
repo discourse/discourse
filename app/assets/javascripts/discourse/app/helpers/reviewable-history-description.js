@@ -8,7 +8,7 @@ export default function reviewableHistoryDescription(rh) {
   switch (rh.reviewable_history_type) {
     case EDITED:
       return htmlSafe(
-        iconHTML("pencil-alt") + " " + I18n.t("review.history.edited")
+        iconHTML("pencil") + " " + I18n.t("review.history.edited")
       );
     default:
       return htmlSafe(htmlStatus(rh.status));

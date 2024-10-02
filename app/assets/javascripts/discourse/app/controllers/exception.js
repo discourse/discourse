@@ -127,7 +127,7 @@ export default class ExceptionController extends Controller {
         classes: "btn-primary",
         action: this.tryLoading,
         key: "errors.buttons.again",
-        icon: "sync",
+        icon: "arrows-rotate",
       },
       ButtonLoadPage: {
         classes: "btn-primary",

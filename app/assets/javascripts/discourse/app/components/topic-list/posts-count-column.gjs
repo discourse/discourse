@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopicEntrance from "discourse/components/topic-list/topic-entrance";
 import element from "discourse/helpers/element";
 import number from "discourse/helpers/number";
 import I18n from "discourse-i18n";
@@ -55,17 +54,13 @@ export default class PostsCountColumn extends Component {
     <this.wrapperElement
       class="num posts-map posts {{this.likesHeat}} topic-list-data"
     >
-      <TopicEntrance
-        @topic={{@topic}}
-        @title={{this.title}}
-        @triggerClass="btn-link posts-map badge-posts {{this.likesHeat}}"
-      >
+      <a href={{@topic.firstPostUrl}} class="badge-posts">
         <PluginOutlet
           @name="topic-list-before-reply-count"
           @outletArgs={{hash topic=@topic}}
         />
         {{number @topic.replyCount noTitle="true"}}
-      </TopicEntrance>
+      </a>
     </this.wrapperElement>
   </template>
 }

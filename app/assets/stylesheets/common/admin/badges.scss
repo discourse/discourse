@@ -5,6 +5,7 @@
   .badges {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     .badges-header {
       display: flex;
       align-items: center;
@@ -19,21 +20,8 @@
     .content-list {
       flex: 0 0 27%;
     }
-    .current-badges {
-      display: flex;
-      justify-content: center;
-      flex: 1 1 72%;
-    }
   }
-  .badges-header {
-    padding: 10px 0;
-    border-top: 1px solid var(--primary-low);
-    border-bottom: 1px solid var(--primary-low);
-    .badges-heading {
-      margin: 0;
-      padding: 0 10px;
-    }
-  }
+
   .content-list {
     .admin-badge-list {
       height: 70vh;
@@ -67,7 +55,7 @@
 
   .current-badge-header {
     display: flex;
-    gap: 1em;
+    gap: 0.5em;
     align-items: center;
     font-size: var(--font-up-2-rem);
 
@@ -77,7 +65,7 @@
     }
 
     .d-icon {
-      font-size: 36px;
+      font-size: var(--font-up-2-rem);
     }
 
     .badge-display-name {
@@ -112,6 +100,14 @@
   margin: 15px 0 0 15px;
   float: left;
   max-width: 70%;
+
+  &.admin-page-action-button {
+    margin-top: 0;
+
+    @media (max-width: $mobile-breakpoint) {
+      max-width: 100%;
+    }
+  }
 
   .bulk-award-status-icon {
     margin-right: 3px;

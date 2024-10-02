@@ -131,7 +131,12 @@ export default class Login extends Component {
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
-          if (destinationUrl) {
+          const ssoDestinationUrl = cookie("sso_destination_url");
+
+          if (ssoDestinationUrl) {
+            removeCookie("sso_destination_url");
+            window.location.assign(ssoDestinationUrl);
+          } else if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
           } else {

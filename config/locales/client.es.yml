@@ -2161,6 +2161,7 @@ es:
       already_have_account: "¿Ya tienes una cuenta?"
       progress_bar:
         signup: "Registrarse"
+        activate: "Activo"
         approve: "Aprobar"
         login: "Iniciar sesión"
     forgot_password:
@@ -4856,6 +4857,7 @@ es:
             publish_read_state: "Publicar confirmaciones de lectura en los mensajes grupales"
           membership:
             automatic: Automático
+            automatic_tooltip: "Este grupo es automático, no puedes eliminarlo y los miembros se añaden y eliminan automáticamente"
             trust_levels_title: "Nivel de confianza concedido automáticamente a miembros cuando son añadidos:"
             effects: Efectos
             trust_levels_none: "Ninguno"
@@ -5268,6 +5270,7 @@ es:
           delete: "Eliminar"
           delete_confirm: '¿Seguro que quieres eliminar «%{name}»?'
           flags_tab: "Banderas"
+          settings: "Ajustes de avisos"
           form:
             add_header: "Añadir bandera"
             edit_header: "Editar bandera"
@@ -5294,6 +5297,7 @@ es:
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
+        description: "Cualquier complemento de Discourse que haya instalado, o complementos que vengan preinstalados con el alojamiento de Discourse, aparecerán en esta lista."
         name: "Nombre"
         none_installed: "No tienes plugins instalados."
         version: "Versión"

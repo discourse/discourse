@@ -53,6 +53,114 @@ RSpec.describe Statistics do
   fab!(:users) { Fabricate.times(5, :user) }
   let(:date) { DateTime.parse("2024-03-01 13:00") }
 
+  describe ".users" do
+    before { User.real.destroy_all }
+
+    it "doesn't count silenced or inactive users" do
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(0)
+      expect(res[:count]).to eq(0)
+
+      user = Fabricate(:user, active: true)
+      user2 = Fabricate(:user, active: true)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(2)
+      expect(res[:"7_days"]).to eq(2)
+      expect(res[:"30_days"]).to eq(2)
+      expect(res[:count]).to eq(2)
+
+      user.update!(active: false)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(1)
+      expect(res[:"7_days"]).to eq(1)
+      expect(res[:"30_days"]).to eq(1)
+      expect(res[:count]).to eq(1)
+
+      user2.update!(silenced_till: 1.month.from_now)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(0)
+      expect(res[:count]).to eq(0)
+    end
+
+    it "doesn't include unapproved users if must_approve_users setting is true" do
+      SiteSetting.must_approve_users = false
+
+      user = Fabricate(:user, active: true, approved: false)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(1)
+      expect(res[:"7_days"]).to eq(1)
+      expect(res[:"30_days"]).to eq(1)
+      expect(res[:count]).to eq(1)
+
+      SiteSetting.must_approve_users = true
+      # changing the site setting approves all existing users
+      # flip this one back to unapproved
+      user.reload.update!(approved: false)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(0)
+      expect(res[:count]).to eq(0)
+
+      user.update!(approved: true)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(1)
+      expect(res[:"7_days"]).to eq(1)
+      expect(res[:"30_days"]).to eq(1)
+      expect(res[:count]).to eq(1)
+    end
+
+    it "counts users in the time windows they were created in" do
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(0)
+      expect(res[:count]).to eq(0)
+
+      Fabricate(:user, active: true, created_at: 31.days.ago)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(0)
+      expect(res[:count]).to eq(1)
+
+      Fabricate(:user, active: true, created_at: 28.days.ago)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(0)
+      expect(res[:"30_days"]).to eq(1)
+      expect(res[:count]).to eq(2)
+
+      Fabricate(:user, active: true, created_at: 6.days.ago)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(0)
+      expect(res[:"7_days"]).to eq(1)
+      expect(res[:"30_days"]).to eq(2)
+      expect(res[:count]).to eq(3)
+
+      Fabricate(:user, active: true, created_at: 6.hours.ago)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(1)
+      expect(res[:"7_days"]).to eq(2)
+      expect(res[:"30_days"]).to eq(3)
+      expect(res[:count]).to eq(4)
+    end
+  end
+
   describe ".participating_users" do
     it "returns no participating users by default" do
       pu = described_class.participating_users

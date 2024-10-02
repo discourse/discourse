@@ -54,8 +54,9 @@ export default class NavigationItem extends Component {
     super.didReceiveAttrs(...arguments);
     const content = this.content;
 
-    let href = content.get("href");
-    let urlSearchParams = new URLSearchParams();
+    let [href, searchParams] = content.get("href")?.split("?") || [];
+
+    let urlSearchParams = new URLSearchParams(searchParams);
     let addParamsEvenIfEmpty = false;
 
     // Include the category id if the option is present
@@ -81,14 +82,15 @@ export default class NavigationItem extends Component {
 
     if (
       this.siteSettings.desktop_category_page_style ===
-      "categories_and_latest_topics_created_date"
+        "categories_and_latest_topics_created_date" &&
+      urlSearchParams.get("order") == null
     ) {
       urlSearchParams.set("order", "created");
     }
 
     const queryString = urlSearchParams.toString();
-    if (addParamsEvenIfEmpty || queryString) {
-      href += `?${queryString}`;
+    if (addParamsEvenIfEmpty || (queryString && href)) {
+      href = (href || "") + `?${queryString}`;
     }
     this.set("hrefLink", href);
 

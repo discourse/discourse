@@ -212,6 +212,7 @@ module DiscourseTagging
         topic,
         old_tag_names: old_tag_names,
         new_tag_names: topic.tags.map(&:name),
+        user: guardian.user,
       )
 
       true

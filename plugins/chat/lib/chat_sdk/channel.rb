@@ -2,8 +2,6 @@
 
 module ChatSDK
   class Channel
-    include WithServiceHelper
-
     # Retrieves messages from a specified channel.
     #
     # @param channel_id [Integer] The ID of the chat channel from which to fetch messages.
@@ -14,17 +12,11 @@ module ChatSDK
     #   ChatSDK::Channel.messages(channel_id: 1, guardian: Guardian.new)
     #
     def self.messages(channel_id:, guardian:, **params)
-      new.messages(channel_id: channel_id, guardian: guardian, **params)
+      new.messages(channel_id:, guardian:, **params)
     end
 
     def messages(channel_id:, guardian:, **params)
-      with_service(
-        Chat::ListChannelMessages,
-        channel_id: channel_id,
-        guardian: guardian,
-        **params,
-        direction: "future",
-      ) do
+      Chat::ListChannelMessages.call(channel_id:, guardian:, **params, direction: "future") do
         on_success { result.messages }
         on_failure { raise "Unexpected error" }
         on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }

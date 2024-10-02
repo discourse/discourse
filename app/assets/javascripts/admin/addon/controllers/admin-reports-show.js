@@ -16,6 +16,12 @@ export default class AdminReportsShowController extends Controller {
       options.table.limit = 10;
     }
 
+    if (type === "site_traffic") {
+      options.stackedChart = {
+        hiddenLabels: ["page_view_other", "page_view_crawler"],
+      };
+    }
+
     options.chartGrouping = this.chart_grouping;
 
     return options;

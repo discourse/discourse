@@ -5294,7 +5294,6 @@ pt_BR:
             move_down: "Mover para baixo"
       plugins:
         title: "Plugins"
-        installed: "Plugins nstalados"
         name: "Nome"
         none_installed: "Você não tem nenhum plugin instalado."
         version: "Versão"

@@ -57,7 +57,12 @@ class ThemeSettingsMigrationsRunner
 
   def self.loader_js_lib_content
     @loader_js_lib_content ||=
-      File.read(File.join(Rails.root, "node_modules/loader.js/dist/loader/loader.js"))
+      File.read(
+        File.join(
+          Rails.root,
+          "app/assets/javascripts/discourse/node_modules/loader.js/dist/loader/loader.js",
+        ),
+      )
   end
 
   def initialize(theme, limit: 100, timeout: 100, memory: 2.megabytes)

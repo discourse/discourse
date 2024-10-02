@@ -53,7 +53,7 @@
       class="btn-primary"
     />
     <DButton
-      @icon="times"
+      @icon="xmark"
       @action={{this.cancel}}
       @disabled={{this.host.isSaving}}
       class="btn-danger"
@@ -81,7 +81,7 @@
     {{this.user}}
   </td>
   <td class="controls">
-    <DButton @icon="pencil-alt" @action={{this.edit}} />
-    <DButton @icon="far-trash-alt" @action={{this.delete}} class="btn-danger" />
+    <DButton @icon="pencil" @action={{this.edit}} />
+    <DButton @icon="trash-can" @action={{this.delete}} class="btn-danger" />
   </td>
 {{/if}}

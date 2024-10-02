@@ -11,7 +11,7 @@ export default class ChatMessageCreatorSearchInput extends Component {
     <div class="chat-message-creator__search-input-container">
       <div class="chat-message-creator__search-input">
         {{icon
-          "search"
+          "magnifying-glass"
           class="chat-message-creator__search-input__search-icon"
         }}
         <Input

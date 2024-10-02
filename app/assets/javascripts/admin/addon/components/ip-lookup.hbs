@@ -9,7 +9,7 @@
 {{#if this.show}}
   <div class="location-box">
     <a href class="close pull-right" {{on "click" this.hide}}>{{d-icon
-        "times"
+        "xmark"
       }}</a>
     {{#if this.copied}}
       <DButton
@@ -58,7 +58,7 @@
         {{#if this.other_accounts.length}}
           <DButton
             @action={{this.deleteOtherAccounts}}
-            @icon="exclamation-triangle"
+            @icon="triangle-exclamation"
             @translatedLabel={{i18n
               "ip_lookup.delete_other_accounts"
               count=this.otherAccountsToDelete

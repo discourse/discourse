@@ -3938,7 +3938,6 @@ pt:
             post: "mensagens"
       plugins:
         title: "Plugins"
-        installed: "Plugins Instalados"
         name: "Nome"
         none_installed: "Não tem nenhum plugin instalado."
         version: "Versão"

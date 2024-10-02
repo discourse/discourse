@@ -22,11 +22,20 @@
 
         <div class="section-body">
           <div class="charts">
-            <AdminReport
-              @dataSourceName="consolidated_page_views"
-              @forcedModes="stacked-chart"
-              @filters={{this.filters}}
-            />
+            {{#if this.siteSettings.use_legacy_pageviews}}
+              <AdminReport
+                @dataSourceName="consolidated_page_views"
+                @forcedModes="stacked-chart"
+                @filters={{this.filters}}
+              />
+            {{else}}
+              <AdminReport
+                @dataSourceName="site_traffic"
+                @forcedModes="stacked-chart"
+                @reportOptions={{this.siteTrafficOptions}}
+                @filters={{this.filters}}
+              />
+            {{/if}}
 
             <AdminReport
               @dataSourceName="signups"

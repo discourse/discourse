@@ -142,7 +142,6 @@ he:
       header_indicator_preference:
         title: "הצגת מחוון פעילות בכותרת"
         all_new: "כל ההודעות החדשות"
-        dm_and_mentions: "הודעות ישירות ואזכורים"
         only_mentions: "רק אזכורים"
         never: "לעולם לא"
       separate_sidebar_mode:
@@ -652,10 +651,10 @@ he:
         notifications:
           regular:
             title: "רגיל"
-            description: "תישלח אליך התראה אם @שמך מוזכר בשרשור הזה."
           tracking:
             title: "מעקב"
-            description: "מספר התגובות החדשות בשרשור הזה יופיע ברשימת השרשורים ובערוץ. תישלח אליך התראה אם הזכירו את @שמך בשרשור הזה."
+          watching:
+            title: "במעקב"
         participants_other_count:
           one: "+%{count}"
           two: "+%{count}"

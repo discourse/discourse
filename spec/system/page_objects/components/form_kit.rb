@@ -84,7 +84,7 @@ module PageObjects
 
       def fill_in(value)
         case control_type
-        when "input-text", "password"
+        when "input-text", "password", "input-date"
           component.find("input").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)

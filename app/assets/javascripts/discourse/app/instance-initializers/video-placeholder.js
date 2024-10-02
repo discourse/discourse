@@ -44,7 +44,7 @@ export default {
               const notice = document.createElement("div");
               notice.className = "notice";
               notice.innerHTML =
-                iconHTML("exclamation-triangle") +
+                iconHTML("triangle-exclamation") +
                 " " +
                 I18n.t("cannot_render_video");
 

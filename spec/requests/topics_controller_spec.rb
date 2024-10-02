@@ -233,7 +233,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving to a new topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
@@ -388,7 +391,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving to an existing topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: group_user.user, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: group_user.user, post_number: 2, topic: topic) }
@@ -439,7 +445,10 @@ RSpec.describe TopicsController do
     end
 
     describe "moving chronologically to an existing topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) do
         Fabricate(
@@ -715,7 +724,10 @@ RSpec.describe TopicsController do
     end
 
     describe "merging into another topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) { Fabricate(:post, user: post_author1, post_number: 1, topic: topic) }
       fab!(:p2) { Fabricate(:post, user: post_author2, post_number: 2, topic: topic) }
@@ -752,7 +764,10 @@ RSpec.describe TopicsController do
     end
 
     describe "merging chronologically into another topic as a group moderator" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
       fab!(:p1) do
         Fabricate(
@@ -1152,7 +1167,10 @@ RSpec.describe TopicsController do
     end
 
     describe "when logged in as a group member with reviewable status" do
-      fab!(:category) { Fabricate(:category, reviewable_by_group: group_user.group) }
+      fab!(:category)
+      fab!(:category_moderation_group) do
+        Fabricate(:category_moderation_group, category:, group: group_user.group)
+      end
       fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
@@ -2418,6 +2436,25 @@ RSpec.describe TopicsController do
         end
 
       expect(second_request_queries.count).to eq(first_request_queries.count)
+    end
+
+    it "does not result in N+1 queries loading mentioned users" do
+      SiteSetting.enable_user_status = true
+
+      post =
+        Fabricate(
+          :post,
+          raw:
+            "post with many mentions: @#{user.username}, @#{user_2.username}, @#{admin.username}, @#{moderator.username}",
+        )
+
+      queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
+
+      user_statuses_queries = queries.filter { |q| q =~ /FROM "?user_statuses"?/ }
+      expect(user_statuses_queries.size).to eq(2) # for current user and for all mentioned users
+
+      user_options_queries = queries.filter { |q| q =~ /FROM "?user_options"?/ }
+      expect(user_options_queries.size).to eq(1) # for all mentioned users
     end
 
     context "with registered redirect_to_correct_topic_additional_query_parameters" do
@@ -4970,7 +5007,7 @@ RSpec.describe TopicsController do
       it "allows a category moderator to create a delete timer" do
         user.update!(trust_level: TrustLevel[4])
         Group.user_trust_level_change!(user.id, user.trust_level)
-        topic.category.update!(reviewable_by_group: user.groups.first)
+        Fabricate(:category_moderation_group, category: topic.category, group: user.groups.first)
 
         sign_in(user)
 

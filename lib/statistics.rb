@@ -70,11 +70,15 @@ class Statistics
   end
 
   def self.users
+    query = User.real.not_silenced.activated
+
+    query = query.where(approved: true) if SiteSetting.must_approve_users
+
     {
-      last_day: User.real.where("created_at > ?", 1.day.ago).count,
-      "7_days": User.real.where("created_at > ?", 7.days.ago).count,
-      "30_days": User.real.where("created_at > ?", 30.days.ago).count,
-      count: User.real.count,
+      last_day: query.where("created_at > ?", 1.day.ago).count,
+      "7_days": query.where("created_at > ?", 7.days.ago).count,
+      "30_days": query.where("created_at > ?", 30.days.ago).count,
+      count: query.count,
     }
   end
 

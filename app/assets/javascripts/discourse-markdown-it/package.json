@@ -19,19 +19,24 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.8.9",
-    "discourse-common": "1.0.0",
-    "ember-auto-import": "^2.7.4",
-    "markdown-it": "^14.0.0"
+    "discourse-common": "workspace:1.0.0",
+    "discourse-i18n": "workspace:1.0.0",
+    "ember-auto-import": "^2.8.1",
+    "markdown-it": "14.0.0",
+    "pretty-text": "workspace:1.0.0",
+    "truth-helpers": "workspace:1.0.0",
+    "xss": "^1.0.15"
   },
   "peerDependencies": {
-    "discourse-i18n": "1.0.0",
-    "pretty-text": "1.0.0",
+    "discourse-i18n": "workspace:1.0.0",
+    "pretty-text": "workspace:1.0.0",
     "xss": "*"
   },
   "engines": {
     "node": ">= 18",
-    "npm": "please-use-yarn",
-    "yarn": ">= 1.21.1"
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": ">= 9"
   },
   "ember": {
     "edition": "octane"

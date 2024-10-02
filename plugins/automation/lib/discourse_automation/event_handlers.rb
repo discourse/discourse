@@ -12,6 +12,11 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          original_post_only = automation.trigger_field("original_post_only")
+          if original_post_only["value"]
+            next if topic.posts_count > 1
+          end
+
           first_post_only = automation.trigger_field("first_post_only")
           if first_post_only["value"]
             next if post.user.user_stat.post_count != 1
@@ -44,15 +49,20 @@ module DiscourseAutomation
             next if !category_ids.include?(restricted_category["value"])
           end
 
-          restricted_group_id = automation.trigger_field("restricted_group")["value"]
-          if restricted_group_id.present?
+          restricted_tags = automation.trigger_field("restricted_tags")
+          if restricted_tags["value"]
+            next if (restricted_tags["value"] & topic.tags.map(&:name)).empty?
+          end
+
+          restricted_group_ids = automation.trigger_field("restricted_groups")["value"]
+          if restricted_group_ids.present?
             next if !topic.private_message?
 
             target_group_ids = topic.allowed_groups.pluck(:id)
-            next if restricted_group_id != target_group_ids.first
+            next if (restricted_group_ids & target_group_ids).empty?
 
-            ignore_group_members = automation.trigger_field("ignore_group_members")
-            next if ignore_group_members["value"] && post.user.in_any_groups?([restricted_group_id])
+            ignore_group_members = automation.trigger_field("ignore_group_members")["value"]
+            next if ignore_group_members && post.user.in_any_groups?(restricted_group_ids)
           end
 
           ignore_automated = automation.trigger_field("ignore_automated")
@@ -66,7 +76,15 @@ module DiscourseAutomation
             next if selected_action == :edited && action != :edit
           end
 
-          automation.trigger!("kind" => name, "action" => action, "post" => post)
+          automation.trigger!(
+            "kind" => name,
+            "action" => action,
+            "post" => post,
+            "placeholders" => {
+              "topic_url" => topic.relative_url,
+              "topic_title" => topic.title,
+            },
+          )
         end
     end
 
@@ -200,7 +218,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names)
+    def self.handle_topic_tags_changed(topic, old_tag_names, new_tag_names, user)
       name = DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
 
       DiscourseAutomation::Automation
@@ -230,6 +248,11 @@ module DiscourseAutomation
             "topic" => topic,
             "removed_tags" => removed_tags,
             "added_tags" => added_tags,
+            "user" => user,
+            "placeholders" => {
+              "topic_url" => topic.relative_url,
+              "topic_title" => topic.title,
+            },
           )
         end
     end
@@ -330,7 +353,7 @@ module DiscourseAutomation
           next if categories && !categories.include?(post.topic.category_id)
 
           tags = fields.dig("tags", "value")
-          next if tags && (tags & post.topic.tags.map(&:name)).empty?
+          next if tags&.any? && (tags & post.topic.tags.map(&:name)).empty?
 
           DiscourseAutomation::UserGlobalNotice
             .where(identifier: automation.id)

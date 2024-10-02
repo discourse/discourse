@@ -119,6 +119,9 @@
         "chat_quoted": {
           "type": "integer"
         },
+        "chat_watched_thread": {
+          "type": "integer"
+        },
         "assigned": {
           "type": "integer"
         },

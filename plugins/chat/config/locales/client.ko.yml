@@ -75,7 +75,6 @@ ko:
       header_indicator_preference:
         title: "헤더에 활동 표시"
         all_new: "모든 새 메시지"
-        dm_and_mentions: "DM과 맨션"
         never: "알림 받지 않기"
       enable: "채팅 활성화"
       flag: "신고"
@@ -317,6 +316,8 @@ ko:
             title: "일반"
           tracking:
             title: "알림"
+          watching:
+            title: "모든 알림"
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:

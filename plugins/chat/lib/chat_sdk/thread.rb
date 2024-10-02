@@ -2,8 +2,6 @@
 
 module ChatSDK
   class Thread
-    include WithServiceHelper
-
     # Updates the title of a specified chat thread.
     #
     # @param title [String] The new title for the chat thread.
@@ -76,13 +74,7 @@ module ChatSDK
     end
 
     def messages(thread_id:, guardian:, direction: "future", **params)
-      with_service(
-        Chat::ListChannelThreadMessages,
-        thread_id: thread_id,
-        guardian: guardian,
-        direction: direction,
-        **params,
-      ) do
+      Chat::ListChannelThreadMessages.call(thread_id:, guardian:, direction:, **params) do
         on_success { result.messages }
         on_failed_policy(:can_view_thread) { raise "Guardian can't view thread" }
         on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
@@ -91,7 +83,7 @@ module ChatSDK
     end
 
     def update(**params)
-      with_service(Chat::UpdateThread, **params) do
+      Chat::UpdateThread.call(params) do
         on_model_not_found(:channel) do
           raise "Couldn’t find channel with id: `#{params[:channel_id]}`"
         end

@@ -2,8 +2,16 @@
 
 module RailsMultisite
   class ConnectionManagement
+    def self.each_active_connection(&blk)
+      if ENV["RAILS_DB"]
+        blk.call(current_db)
+      else
+        each_connection(&blk)
+      end
+    end
+
     def self.safe_each_connection
-      self.each_connection do |db|
+      each_active_connection do |db|
         begin
           yield(db) if block_given?
         rescue PG::ConnectionBad, PG::UnableToSend, PG::ServerError

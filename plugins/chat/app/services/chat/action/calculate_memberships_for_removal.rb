@@ -18,52 +18,12 @@ module Chat
     # Here, we can efficiently query the channel category permissions and figure
     # out which of the users provided should have their [Chat::UserChatChannelMembership]
     # records removed based on those security cases.
-    class CalculateMembershipsForRemoval
-      def self.call(scoped_users_query:, channel_ids: nil)
-        channel_permissions_map =
-          DB.query(<<~SQL, readonly: CategoryGroup.permission_types[:readonly])
-          WITH category_group_channel_map AS (
-            SELECT category_groups.group_id,
-              category_groups.permission_type,
-              chat_channels.id AS channel_id
-            FROM category_groups
-            INNER JOIN categories ON categories.id = category_groups.category_id
-            INNER JOIN chat_channels ON categories.id = chat_channels.chatable_id
-              AND chat_channels.chatable_type = 'Category'
-          )
+    class CalculateMembershipsForRemoval < Service::ActionBase
+      option :scoped_users_query
+      option :channel_ids, [], optional: true
 
-          SELECT chat_channels.id AS channel_id,
-            chat_channels.chatable_id AS category_id,
-            (
-              SELECT string_agg(category_group_channel_map.group_id::varchar, ',')
-              FROM category_group_channel_map
-              WHERE category_group_channel_map.permission_type < :readonly AND
-                category_group_channel_map.channel_id = chat_channels.id
-            ) AS groups_with_write_permissions,
-              (
-              SELECT string_agg(category_group_channel_map.group_id::varchar, ',')
-              FROM category_group_channel_map
-              WHERE category_group_channel_map.permission_type = :readonly AND
-                category_group_channel_map.channel_id = chat_channels.id
-            ) AS groups_with_readonly_permissions,
-            categories.read_restricted
-            FROM category_group_channel_map
-            INNER JOIN chat_channels ON chat_channels.id = category_group_channel_map.channel_id
-            INNER JOIN categories ON categories.id = chat_channels.chatable_id
-            WHERE chat_channels.chatable_type = 'Category'
-            #{channel_ids.present? ? "AND chat_channels.id IN (#{channel_ids.join(",")})" : ""}
-            GROUP BY chat_channels.id, chat_channels.chatable_id, categories.read_restricted
-            ORDER BY channel_id
-          SQL
-
-        scoped_memberships =
-          Chat::UserChatChannelMembership
-            .joins(:chat_channel)
-            .where(user_id: scoped_users_query.select(:id))
-            .where(chat_channel_id: channel_permissions_map.map(&:channel_id))
-
+      def call
         memberships_to_remove = []
-
         scoped_memberships.find_each do |membership|
           channel_permission =
             channel_permissions_map.find { |cpm| cpm.channel_id == membership.chat_channel_id }
@@ -101,6 +61,54 @@ module Chat
         end
 
         memberships_to_remove
+      end
+
+      private
+
+      def channel_permissions_map
+        @channel_permissions_map ||=
+          DB.query(<<~SQL, readonly: CategoryGroup.permission_types[:readonly])
+          WITH category_group_channel_map AS (
+            SELECT category_groups.group_id,
+              category_groups.permission_type,
+              chat_channels.id AS channel_id
+            FROM category_groups
+            INNER JOIN categories ON categories.id = category_groups.category_id
+            INNER JOIN chat_channels ON categories.id = chat_channels.chatable_id
+              AND chat_channels.chatable_type = 'Category'
+          )
+
+          SELECT chat_channels.id AS channel_id,
+            chat_channels.chatable_id AS category_id,
+            (
+              SELECT string_agg(category_group_channel_map.group_id::varchar, ',')
+              FROM category_group_channel_map
+              WHERE category_group_channel_map.permission_type < :readonly AND
+                category_group_channel_map.channel_id = chat_channels.id
+            ) AS groups_with_write_permissions,
+              (
+              SELECT string_agg(category_group_channel_map.group_id::varchar, ',')
+              FROM category_group_channel_map
+              WHERE category_group_channel_map.permission_type = :readonly AND
+                category_group_channel_map.channel_id = chat_channels.id
+            ) AS groups_with_readonly_permissions,
+            categories.read_restricted
+            FROM category_group_channel_map
+            INNER JOIN chat_channels ON chat_channels.id = category_group_channel_map.channel_id
+            INNER JOIN categories ON categories.id = chat_channels.chatable_id
+            WHERE chat_channels.chatable_type = 'Category'
+            #{channel_ids.present? ? "AND chat_channels.id IN (#{channel_ids.join(",")})" : ""}
+            GROUP BY chat_channels.id, chat_channels.chatable_id, categories.read_restricted
+            ORDER BY channel_id
+          SQL
+      end
+
+      def scoped_memberships
+        @scoped_memberships ||=
+          Chat::UserChatChannelMembership
+            .joins(:chat_channel)
+            .where(user_id: scoped_users_query.select(:id))
+            .where(chat_channel_id: channel_permissions_map.map(&:channel_id))
       end
     end
   end

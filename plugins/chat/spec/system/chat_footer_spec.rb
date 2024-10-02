@@ -153,6 +153,17 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
 
         expect(page).to have_no_css("#c-footer-threads .c-unread-indicator")
       end
+
+      it "is urgent for watched thread messages" do
+        thread.membership_for(current_user).update!(
+          notification_level: ::Chat::NotificationLevels.all[:watching],
+        )
+
+        visit("/")
+        chat_page.open_from_header
+
+        expect(page).to have_css("#c-footer-threads .c-unread-indicator.-urgent")
+      end
     end
   end
 end

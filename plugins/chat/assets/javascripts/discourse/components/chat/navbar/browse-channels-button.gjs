@@ -20,7 +20,7 @@ export default class ChatNavbarBrowseChannelsButton extends Component {
         class="btn no-text btn-flat c-navbar__browse-button"
         title={{this.browseChannelsLabel}}
       >
-        {{icon "pencil-alt"}}
+        {{icon "pencil"}}
       </LinkTo>
     {{/if}}
   </template>

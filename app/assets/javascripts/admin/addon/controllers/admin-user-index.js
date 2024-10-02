@@ -78,8 +78,8 @@ export default class AdminUserIndexController extends Controller.extend(
   @discourseComputed("model.associated_accounts")
   associatedAccounts(associatedAccounts) {
     return associatedAccounts
-      .map((provider) => `${provider.name} (${provider.description})`)
-      .join(", ");
+      ?.map((provider) => `${provider.name} (${provider.description})`)
+      ?.join(", ");
   }
 
   @discourseComputed("model.user_fields.[]")
@@ -320,6 +320,16 @@ export default class AdminUserIndexController extends Controller.extend(
   }
 
   @action
+  deleteAssociatedAccounts() {
+    this.dialog.yesNoConfirm({
+      message: I18n.t("admin.user.delete_associated_accounts_confirm"),
+      didConfirm: () => {
+        this.model.deleteAssociatedAccounts().catch(popupAjaxError);
+      },
+    });
+  }
+
+  @action
   anonymize() {
     const user = this.model;
 
@@ -350,7 +360,7 @@ export default class AdminUserIndexController extends Controller.extend(
       class: "delete-user-modal",
       buttons: [
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("admin.user.anonymize_yes"),
           class: "btn-danger",
           action: () => performAnonymize(),
@@ -425,7 +435,7 @@ export default class AdminUserIndexController extends Controller.extend(
           },
         },
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("admin.user.delete_and_block"),
           class: "btn-danger",
           action: () => {

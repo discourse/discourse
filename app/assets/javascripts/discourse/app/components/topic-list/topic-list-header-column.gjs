@@ -9,7 +9,6 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class TopicListHeaderColumn extends Component {
-  @service modal;
   @service router;
 
   get localizedName() {
@@ -88,7 +87,7 @@ export default class TopicListHeaderColumn extends Component {
             title={{i18n "topics.bulk.toggle"}}
             class="btn-flat bulk-select"
           >
-            {{icon "tasks"}}
+            {{icon "list-check"}}
           </button>
         {{/if}}
 

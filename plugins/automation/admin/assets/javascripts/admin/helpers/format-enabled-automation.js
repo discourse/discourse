@@ -11,7 +11,7 @@ export default function formatEnabledAutomation(enabled, trigger) {
     );
   } else {
     return htmlSafe(
-      iconHTML("times", {
+      iconHTML("xmark", {
         class: "disabled-automation",
         title: "discourse_automation.models.automation.disabled.label",
       })

@@ -12,14 +12,19 @@ RSpec.describe Jobs::Chat::NotifyWatching do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
-  def run_job
+  def run_job(message)
     described_class.new.execute(chat_message_id: message.id, except_user_ids: except_user_ids)
   end
 
-  def notification_messages_for(user)
+  def notification_messages_for(user, chat_message: message)
     MessageBus
-      .track_publish { run_job }
+      .track_publish { run_job(chat_message) }
       .filter { |m| m.channel == "/chat/notification-alert/#{user.id}" }
+  end
+
+  def track_core_notification(user:, message:, type: ::Notification.types[:chat_watched_thread])
+    described_class.new.execute(chat_message_id: message.id)
+    Notification.where(user: user, notification_type: type).last
   end
 
   context "for a category channel" do
@@ -60,6 +65,77 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           excerpt: message.message,
         },
       )
+    end
+
+    context "with watched threads" do
+      fab!(:chat_message) { Fabricate(:chat_message, chat_channel: channel, user: user1) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: chat_message) }
+      fab!(:thread_message) do
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, user: user2)
+      end
+
+      before { channel.update!(threading_enabled: true) }
+
+      context "with channel notification_level is always" do
+        before do
+          always = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
+          membership1.update!(desktop_notification_level: always, mobile_notification_level: always)
+        end
+
+        it "creates a core notification when watching the thread" do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+
+          notification = track_core_notification(user: user1, message: thread_message)
+
+          expect(notification).to be_present
+          expect(notification.notification_type).to eq(Notification.types[:chat_watched_thread])
+        end
+
+        it "does not create a core notification when not watching the thread" do
+          notification = track_core_notification(user: user1, message: thread_message)
+
+          expect(notification).to be_nil
+        end
+
+        it "does not create a core notification when the channel is muted" do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+          membership1.update!(muted: true)
+          notification = track_core_notification(user: user1, message: thread_message)
+
+          expect(notification).to be_nil
+        end
+      end
+
+      context "without channel notifications" do
+        before do
+          thread.membership_for(user1).update!(
+            notification_level: Chat::NotificationLevels.all[:watching],
+          )
+        end
+
+        it "creates a core notification for watched threads" do
+          expect { run_job(thread_message) }.to change { Notification.count }
+        end
+
+        it "does not create a core notification if channel is muted" do
+          membership1.update!(muted: true)
+          expect { run_job(thread_message) }.not_to change { Notification.count }
+        end
+
+        it "does not create a desktop notification" do
+          messages = notification_messages_for(user1)
+          expect(messages).to be_empty
+        end
+
+        it "does not create a mobile notification" do
+          PostAlerter.expects(:push_notification).never
+          run_job(thread_message)
+        end
+      end
     end
 
     context "with chat_notification_translation_args plugin_modifier" do

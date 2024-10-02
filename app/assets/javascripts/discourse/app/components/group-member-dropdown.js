@@ -23,7 +23,7 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
         description: I18n.t("groups.members.remove_member_description", {
           username: this.get("member.username"),
         }),
-        icon: "user-times",
+        icon: "user-xmark",
       },
     ];
 
@@ -35,7 +35,7 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
           description: I18n.t("groups.members.remove_owner_description", {
             username: this.get("member.username"),
           }),
-          icon: "shield-alt",
+          icon: "shield-halved",
         });
       } else {
         items.push({
@@ -44,7 +44,7 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
           description: I18n.t("groups.members.make_owner_description", {
             username: this.get("member.username"),
           }),
-          icon: "shield-alt",
+          icon: "shield-halved",
         });
       }
     } else if (this.canEditGroup && !this.member.owner) {
@@ -54,7 +54,7 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
         description: I18n.t("groups.members.make_owner_description", {
           username: this.get("member.username"),
         }),
-        icon: "shield-alt",
+        icon: "shield-halved",
       });
     }
 

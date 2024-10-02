@@ -1,1 +1,16 @@
-<AdminConfigAreas::About @data={{this.model.site_settings}} />
+<AdminPageHeader
+  @titleLabel="admin.config_areas.about.header"
+  @descriptionLabel="admin.config_areas.about.description"
+  @hideTabs={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/config/about"
+      @label={{i18n "admin.config_areas.about.header"}}
+    />
+  </:breadcrumbs>
+</AdminPageHeader>
+
+<div class="admin-container admin-config-page__main-area">
+  <AdminConfigAreas::About @data={{this.model.site_settings}} />
+</div>

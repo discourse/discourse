@@ -24,6 +24,15 @@ RSpec.describe(Flags::CreateFlag) do
     it { is_expected.to fail_a_policy(:invalid_access) }
   end
 
+  context "when title is not unique" do
+    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:flag) { Fabricate(:flag, name: "custom flag name") }
+
+    it { is_expected.to fail_a_policy(:unique_name) }
+
+    after { Flag.destroy_by(name: "custom flag name") }
+  end
+
   context "when applies to is invalid" do
     fab!(:current_user) { Fabricate(:admin) }
     let(:applies_to) { ["User"] }

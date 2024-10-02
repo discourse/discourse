@@ -11,6 +11,7 @@ import { threadNotificationButtonLevels } from "discourse/plugins/chat/discourse
   i18nPrefix: "chat.thread.notifications",
   showFullTitle: false,
   btnCustomClasses: "btn-flat",
+  customStyle: true,
 })
 @pluginApiIdentifiers("thread-notifications-button")
 export default class ChatThreadTrackingDropdown extends NotificationsButtonComponent {

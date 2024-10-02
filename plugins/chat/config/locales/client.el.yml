@@ -136,6 +136,8 @@ el:
             title: "Φυσιολογικό"
           tracking:
             title: "Παρακολουθείται"
+          watching:
+            title: "Επιτηρείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"

@@ -3351,7 +3351,6 @@ zh_TW:
             chat_message: "聊天訊息"
       plugins:
         title: "外掛"
-        installed: "已安裝外掛"
         name: "名稱"
         none_installed: "尚未安裝任何外掛"
         version: "版本"

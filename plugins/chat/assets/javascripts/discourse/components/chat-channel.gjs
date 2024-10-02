@@ -680,6 +680,8 @@ export default class ChatChannel extends Component {
 
     thread.tracking.unreadCount = threadTracking[thread.id].unread_count;
     thread.tracking.mentionCount = threadTracking[thread.id].mention_count;
+    thread.tracking.watchedThreadsUnreadCount =
+      threadTracking[thread.id].watched_threads_unread_count;
   }
 
   #flushIgnoreNextScroll() {

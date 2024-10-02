@@ -19,7 +19,7 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
     );
 
     assert.strictEqual(
-      count(".post-action .d-icon-far-trash-alt"),
+      count(".post-action .d-icon-trash-can"),
       1,
       "it has the deleted icon"
     );

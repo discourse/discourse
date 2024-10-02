@@ -87,6 +87,10 @@ module SiteSettingExtension
     @categories ||= {}
   end
 
+  def areas
+    @areas ||= {}
+  end
+
   def mandatory_values
     @mandatory_values ||= {}
   end
@@ -194,7 +198,8 @@ module SiteSettingExtension
     filter_categories: nil,
     filter_plugin: nil,
     filter_names: nil,
-    filter_allowed_hidden: nil
+    filter_allowed_hidden: nil,
+    filter_area: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -227,6 +232,13 @@ module SiteSettingExtension
       .select do |setting_name, _|
         if filter_categories && filter_categories.any?
           filter_categories.include?(categories[setting_name])
+        else
+          true
+        end
+      end
+      .select do |setting_name, _|
+        if filter_area
+          Array.wrap(areas[setting_name]).include?(filter_area)
         else
           true
         end
@@ -681,6 +693,15 @@ module SiteSettingExtension
 
       categories[name] = opts[:category] || :uncategorized
 
+      if opts[:area]
+        split_areas = opts[:area].split("|")
+        if split_areas.any? { |area| !SiteSetting::VALID_AREAS.include?(area) }
+          raise Discourse::InvalidParameters.new(
+                  "Area is incorrect. Valid areas: #{SiteSetting::VALID_AREAS.join(", ")}",
+                )
+        end
+        areas[name] = split_areas
+      end
       hidden_settings_provider.add_hidden(name) if opts[:hidden]
 
       if GlobalSetting.respond_to?(name)

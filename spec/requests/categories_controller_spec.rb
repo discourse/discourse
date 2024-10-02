@@ -517,7 +517,7 @@ RSpec.describe CategoriesController do
                  slug: "hello-cat",
                  auto_close_hours: 72,
                  search_priority: Searchable::PRIORITIES[:ignore],
-                 reviewable_by_group_name: group.name,
+                 moderating_group_ids: [group.id],
                  permissions: {
                    "everyone" => readonly,
                    "staff" => create_post,
@@ -527,7 +527,7 @@ RSpec.describe CategoriesController do
           expect(response.status).to eq(200)
           cat_json = response.parsed_body["category"]
           expect(cat_json).to be_present
-          expect(cat_json["reviewable_by_group_name"]).to eq(group.name)
+          expect(cat_json["moderating_group_ids"]).to eq([group.id])
           expect(cat_json["name"]).to eq("hello")
           expect(cat_json["slug"]).to eq("hello-cat")
           expect(cat_json["color"]).to eq("ff0")
@@ -634,6 +634,10 @@ RSpec.describe CategoriesController do
   end
 
   describe "#update" do
+    fab!(:mod_group_1) { Fabricate(:group) }
+    fab!(:mod_group_2) { Fabricate(:group) }
+    fab!(:mod_group_3) { Fabricate(:group) }
+
     before { Jobs.run_immediately! }
 
     it "requires the user to be logged in" do
@@ -870,6 +874,47 @@ RSpec.describe CategoriesController do
           expect(category.category_required_tag_groups).to eq([])
           expect(category.custom_fields).to eq({ "field_1" => "hi" })
           expect(category.form_template_ids.count).to eq(0)
+        end
+
+        it "doesn't set category moderation groups if the enable_category_group_moderation setting is false" do
+          SiteSetting.enable_category_group_moderation = false
+
+          put "/categories/#{category.id}.json", params: { moderating_group_ids: [mod_group_1.id] }
+          expect(response.status).to eq(200)
+          expect(category.reload.moderating_groups).to be_blank
+        end
+
+        it "sets category moderation groups if the enable_category_group_moderation setting is true" do
+          SiteSetting.enable_category_group_moderation = true
+
+          put "/categories/#{category.id}.json", params: { moderating_group_ids: [mod_group_1.id] }
+          expect(response.status).to eq(200)
+          expect(category.reload.moderating_groups).to contain_exactly(mod_group_1)
+        end
+
+        it "removes category moderation groups and adds groups according to the moderating_group_ids param" do
+          SiteSetting.enable_category_group_moderation = true
+
+          category.update!(moderating_group_ids: [mod_group_2.id])
+          expect(category.reload.moderating_groups).to contain_exactly(mod_group_2)
+
+          put "/categories/#{category.id}.json",
+              params: {
+                moderating_group_ids: [mod_group_1.id, mod_group_3.id],
+              }
+          expect(response.status).to eq(200)
+          expect(category.reload.moderating_groups).to contain_exactly(mod_group_1, mod_group_3)
+        end
+
+        it "can remove all category moderation groups" do
+          SiteSetting.enable_category_group_moderation = true
+
+          category.update!(moderating_group_ids: [mod_group_2.id, mod_group_1.id])
+          expect(category.reload.moderating_groups).to contain_exactly(mod_group_2, mod_group_1)
+
+          put "/categories/#{category.id}.json", params: { moderating_group_ids: [] }
+          expect(response.status).to eq(200)
+          expect(category.reload.moderating_groups).to be_blank
         end
       end
     end

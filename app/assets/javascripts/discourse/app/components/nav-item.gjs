@@ -20,7 +20,7 @@ export default class NavItem extends Component {
   }
 
   get active() {
-    if (!this.args.route) {
+    if (!this.args.route || !this.router.currentRoute) {
       return;
     }
 

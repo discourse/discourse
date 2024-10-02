@@ -90,7 +90,7 @@ export default class AdminToolsService extends Service {
           message,
           class: "flagging-delete-spammer",
           confirmButtonLabel: "flagging.yes_delete_spammer",
-          confirmButtonIcon: "exclamation-triangle",
+          confirmButtonIcon: "triangle-exclamation",
           didConfirm: () => {
             return ajax(`/admin/users/${userId}.json`, {
               type: "DELETE",

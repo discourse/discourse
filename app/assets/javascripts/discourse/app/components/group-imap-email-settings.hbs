@@ -84,7 +84,7 @@
     <DButton
       @disabled={{or this.missingSettings this.testingSettings}}
       @action={{this.testImapSettings}}
-      @icon="cog"
+      @icon="gear"
       @label="groups.manage.email.test_settings"
       @title="groups.manage.email.settings_required"
       tabindex="12"
@@ -98,7 +98,7 @@
 
     {{#if this.imapSettingsValid}}
       <span class="imap-settings-ok">
-        {{d-icon "check-circle"}}
+        {{d-icon "circle-check"}}
         {{i18n "groups.manage.email.imap_settings_valid"}}
       </span>
     {{/if}}

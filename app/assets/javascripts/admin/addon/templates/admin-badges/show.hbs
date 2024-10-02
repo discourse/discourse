@@ -7,10 +7,10 @@
   as |form data|
 >
 
-  <h1 class="current-badge-header">
+  <h2 class="current-badge-header">
     {{iconOrImage data}}
     <span class="badge-display-name">{{data.name}}</span>
-  </h1>
+  </h2>
 
   <form.Field
     @name="enabled"
@@ -33,7 +33,7 @@
         @route="adminSiteText"
         @query={{hash q=(concat this.textCustomizationPrefix "name")}}
       >
-        {{d-icon "pencil-alt"}}
+        {{d-icon "pencil"}}
       </LinkTo>
     </form.Container>
   {{else}}
@@ -116,7 +116,7 @@
           @route="adminSiteText"
           @query={{hash q=(concat this.textCustomizationPrefix "description")}}
         >
-          {{d-icon "pencil-alt"}}
+          {{d-icon "pencil"}}
         </LinkTo>
       </form.Container>
     {{else}}
@@ -145,7 +145,7 @@
             q=(concat this.textCustomizationPrefix "long_description")
           }}
         >
-          {{d-icon "pencil-alt"}}
+          {{d-icon "pencil"}}
         </LinkTo>
       </form.Container>
     {{else}}

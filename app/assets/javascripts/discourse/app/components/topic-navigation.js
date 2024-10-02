@@ -104,7 +104,7 @@ export default class TopicNavigation extends Component {
     this._checkSize();
   }
 
-  _collapseFullscreen(delay = 500) {
+  _collapseFullscreen(postId, delay = 500) {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
       discourseLater(() => {
@@ -180,7 +180,7 @@ export default class TopicNavigation extends Component {
           duration: durationMs,
           fill: "forwards",
         })
-        .finished.then(() => this._collapseFullscreen(0));
+        .finished.then(() => this._collapseFullscreen(null, 0));
     } else {
       const distancePx = this.pxClosed;
       durationMs = this._swipeEvents.getMaxAnimationTimeMs(

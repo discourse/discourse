@@ -4857,6 +4857,7 @@ de:
             publish_read_state: "In Gruppen-Nachrichten den Lesestatus anzeigen"
           membership:
             automatic: Automatisch
+            automatic_tooltip: "Diese Gruppe ist automatisch, du kannst sie nicht löschen und Mitglieder werden automatisch hinzugefügt und entfernt"
             trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
             effects: Effekte
             trust_levels_none: "Keine"
@@ -5296,7 +5297,8 @@ de:
             move_down: "Nach unten"
       plugins:
         title: "Plug-ins"
-        installed: "Installierte Plug-ins"
+        installed: "Installierte Plugins"
+        description: "Alle Discourse-Plugins, die du installiert hast, oder Plugins, die beim Discourse-Hosting vorinstalliert sind, erscheinen in dieser Liste."
         name: "Name"
         none_installed: "Du hast keine Plug-ins installiert."
         version: "Version"

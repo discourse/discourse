@@ -28,7 +28,7 @@ export default class ComposerToggles extends Component {
   @discourseComputed("composeState")
   toggleIcon(composeState) {
     return composeState === "draft" || composeState === "saving"
-      ? "times"
+      ? "xmark"
       : "chevron-down";
   }
 

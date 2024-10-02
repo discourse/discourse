@@ -13,6 +13,7 @@ import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, skip, test } from "qunit";
 import sinon from "sinon";
 import { clearAboutPageActivities } from "discourse/components/about-page";
+import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
   cleanUpComposerUploadHandler,
   cleanUpComposerUploadMarkdownResolver,
@@ -28,6 +29,7 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
+import { clearCustomStats as clearLegacyAboutPageStats } from "discourse/controllers/about";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
@@ -75,7 +77,6 @@ import {
   setTestPresence,
 } from "discourse/lib/user-presence";
 import { resetUserSearchCache } from "discourse/lib/user-search";
-import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
@@ -88,10 +89,6 @@ import {
   currentSettings,
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
-import {
-  clearExtraHeaderButtons,
-  clearExtraHeaderIcons,
-} from "discourse/widgets/header";
 import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/post-cooked";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { resetDecorators } from "discourse/widgets/widget";
@@ -190,6 +187,7 @@ export function testCleanup(container, app) {
   }
 
   User.resetCurrent();
+  resetMobile();
   resetExtraClasses();
   clearOutletCache();
   clearHTMLCache();
@@ -235,8 +233,6 @@ export function testCleanup(container, app) {
   resetSidebarPanels();
   clearExtraGlimmerHeaderIcons();
   clearExtraGlimmerHeaderButtons();
-  clearExtraHeaderIcons();
-  clearExtraHeaderButtons();
   resetOnKeyUpCallbacks();
   resetLogSearchLinkClickedCallbacks();
   resetItemSelectCallbacks();
@@ -253,6 +249,8 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
+  clearLegacyAboutPageStats();
+  resetWidgetCleanCallbacks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -348,8 +346,6 @@ export function acceptance(name, optionsOrCallback) {
     beforeEach() {
       I18n.testing = true;
 
-      resetMobile();
-
       resetExtraClasses();
       if (mobileView) {
         forceMobile();
@@ -385,16 +381,10 @@ export function acceptance(name, optionsOrCallback) {
 
     afterEach() {
       I18n.testing = false;
-      resetMobile();
-      let app = getApplication();
       options?.afterEach?.call(this);
       if (loggedIn) {
         User.current().statusManager.stopTrackingStatus();
       }
-      testCleanup(this.container, app);
-
-      // We do this after reset so that the willClearRender will have already fired
-      resetWidgetCleanCallbacks();
     },
   };
 

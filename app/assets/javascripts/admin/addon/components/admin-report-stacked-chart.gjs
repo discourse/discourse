@@ -8,10 +8,14 @@ export default class AdminReportStackedChart extends Component {
   get chartConfig() {
     const { model } = this.args;
 
+    const options = this.args.options || {};
+    options.hiddenLabels ??= [];
+
     const chartData = makeArray(model.chartData || model.data).map((cd) => ({
       label: cd.label,
       color: cd.color,
       data: Report.collapse(model, cd.data),
+      req: cd.req,
     }));
 
     const data = {
@@ -21,6 +25,7 @@ export default class AdminReportStackedChart extends Component {
         stack: "pageviews-stack",
         data: cd.data,
         backgroundColor: cd.color,
+        hidden: options.hiddenLabels.includes(cd.req),
       })),
     };
 

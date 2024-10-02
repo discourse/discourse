@@ -16,7 +16,7 @@ profile_print_slowest_examples_count = 10
 use_runtime_info = nil
 enable_system_tests = nil
 disable_system_tests = nil
-retry_and_log_flaky_tests = !!ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"]
+retry_and_log_flaky_tests = ENV["DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS"].to_s == "1"
 
 OptionParser
   .new do |opts|

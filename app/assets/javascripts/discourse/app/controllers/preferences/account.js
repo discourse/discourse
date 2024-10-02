@@ -209,7 +209,7 @@ export default class AccountController extends Controller.extend(
       message: I18n.t("user.delete_account_confirm"),
       buttons: [
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("user.delete_account"),
           class: "btn-danger",
           action: () => {

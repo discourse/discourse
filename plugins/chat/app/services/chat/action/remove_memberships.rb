@@ -2,8 +2,10 @@
 
 module Chat
   module Action
-    class RemoveMemberships
-      def self.call(memberships:)
+    class RemoveMemberships < Service::ActionBase
+      option :memberships
+
+      def call
         memberships
           .destroy_all
           .each_with_object(Hash.new { |h, k| h[k] = [] }) do |obj, hash|

@@ -41,7 +41,7 @@
     <div class="version-status">
       <div class="face">
         <span class="icon critical-updates-available">
-          {{d-icon "far-frown"}}
+          {{d-icon "far-face-frown"}}
         </span>
       </div>
       <div class="version-notes">
@@ -65,11 +65,11 @@
       <div class="face">
         {{#if this.versionCheck.version_check_pending}}
           <span class="icon up-to-date">
-            {{d-icon "far-smile"}}
+            {{d-icon "far-face-smile"}}
           </span>
         {{else}}
           <span class="icon critical-updates-available">
-            {{d-icon "far-frown"}}
+            {{d-icon "far-face-frown"}}
           </span>
         {{/if}}
       </div>
@@ -96,7 +96,7 @@
       <div class="face">
         {{#if this.versionCheck.upToDate}}
           <span class="icon up-to-date">
-            {{d-icon "far-smile"}}
+            {{d-icon "far-face-smile"}}
           </span>
         {{else}}
           <span
@@ -110,7 +110,7 @@
             {{#if this.versionCheck.behindByOneVersion}}
               {{d-icon "far-meh"}}
             {{else}}
-              {{d-icon "far-frown"}}
+              {{d-icon "far-face-frown"}}
             {{/if}}
           </span>
         {{/if}}

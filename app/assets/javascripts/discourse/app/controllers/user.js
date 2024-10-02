@@ -79,7 +79,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
   get collapsedInfoState() {
     return {
       isExpanded: !this.collapsedInfo,
-      icon: this.collapsedInfo ? "angle-double-down" : "angle-double-up",
+      icon: this.collapsedInfo ? "angles-down" : "angles-up",
       label: this.collapsedInfo ? "expand_profile" : "collapse_profile",
       ariaLabel: this.collapsedInfo
         ? "user.sr_expand_profile"
@@ -257,7 +257,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
           },
         },
         {
-          icon: "exclamation-triangle",
+          icon: "triangle-exclamation",
           label: I18n.t("admin.user.delete_and_block"),
           class: "btn-danger",
           action: () => {

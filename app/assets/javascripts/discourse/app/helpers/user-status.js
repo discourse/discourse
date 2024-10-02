@@ -12,7 +12,7 @@ export default function userStatus(user, { currentUser } = {}) {
 
   if (user.admin && currentUser?.staff) {
     return htmlSafe(
-      iconHTML("shield-alt", {
+      iconHTML("shield-halved", {
         label: I18n.t("user.admin", { user: name }),
       })
     );
@@ -20,7 +20,7 @@ export default function userStatus(user, { currentUser } = {}) {
 
   if (user.moderator) {
     return htmlSafe(
-      iconHTML("shield-alt", {
+      iconHTML("shield-halved", {
         label: I18n.t("user.moderator", { user: name }),
       })
     );

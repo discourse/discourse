@@ -61,7 +61,7 @@ export default class AdminFilteredSiteSettings extends Component {
     />
 
     <ConditionalLoadingSpinner @condition={{this.loading}}>
-      <section class="form-horizontal settings">
+      <section class="admin-filtered-site-settings form-horizontal settings">
         {{#each this.visibleSettings as |setting|}}
           <SiteSetting @setting={{setting}} />
         {{/each}}

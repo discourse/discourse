@@ -164,7 +164,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       moderator: false,
       trust_level: 3,
       flair_name: "Band Geeks",
-      flair_url: "fa-times",
+      flair_url: "fa-xmark",
       flair_bg_color: "123456",
       flair_color: "B0B0B0",
       flair_group_id: 41,
@@ -175,7 +175,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     await render(hbs`<UserAvatarFlair @user={{this.args}} />`);
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-times"), "it has the svg icon");
+    assert.ok(exists("svg.d-icon-xmark"), "it has the svg icon");
     assert.strictEqual(
       query(".avatar-flair").getAttribute("style"),
       "background-color: #123456; color: #B0B0B0; ",

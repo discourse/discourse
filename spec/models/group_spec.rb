@@ -94,6 +94,31 @@ RSpec.describe Group do
     end
   end
 
+  describe "#set_message_default_notification_levels!" do
+    context "with too many users in a group" do
+      fab!(:topic)
+      fab!(:large_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+
+      before do
+        SiteSetting.group_pm_user_limit = 1
+        Fabricate.times(2, :user).each { |user| large_group.add(user) }
+      end
+
+      it "raises a GroupPmUserLimitExceededError error" do
+        expect do
+          large_group.reload.set_message_default_notification_levels!(topic)
+        end.to raise_error(
+          Group::GroupPmUserLimitExceededError,
+          I18n.t(
+            "groups.errors.default_notification_level_users_limit",
+            count: SiteSetting.group_pm_user_limit,
+            group_name: large_group.name,
+          ),
+        )
+      end
+    end
+  end
+
   describe "#builtin" do
     context "when verifying enum sequence" do
       before { @builtin = Group.builtin }
@@ -1353,6 +1378,24 @@ RSpec.describe Group do
       group.watching_tags = []
       group.save!
       expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
+    end
+
+    it "can change the notification level for a tag" do
+      GroupTagNotificationDefault.create!(
+        group: group,
+        tag: tag1,
+        notification_level: GroupTagNotificationDefault.notification_levels[:watching],
+      )
+
+      group.watching_tags = [tag1.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching).pluck(:tag_id)).to eq([tag1.id])
+
+      group.watching_tags = []
+      group.tracking_tags = [tag1.name]
+      group.save!
+      expect(GroupTagNotificationDefault.lookup(group, :watching)).to be_empty
+      expect(GroupTagNotificationDefault.lookup(group, :tracking).pluck(:tag_id)).to eq([tag1.id])
     end
 
     it "can apply default notifications for admins group" do

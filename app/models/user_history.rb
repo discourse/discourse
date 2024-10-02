@@ -152,6 +152,10 @@ class UserHistory < ActiveRecord::Base
         custom_emoji_destroy: 113,
         delete_post_permanently: 114,
         delete_topic_permanently: 115,
+        tag_group_create: 116,
+        tag_group_destroy: 117,
+        tag_group_change: 118,
+        delete_associated_accounts: 119,
       )
   end
 
@@ -266,6 +270,10 @@ class UserHistory < ActiveRecord::Base
       custom_emoji_destroy
       delete_post_permanently
       delete_topic_permanently
+      tag_group_create
+      tag_group_destroy
+      tag_group_change
+      delete_associated_accounts
     ]
   end
 
@@ -332,7 +340,9 @@ class UserHistory < ActiveRecord::Base
   end
 
   def new_value_is_json?
-    [UserHistory.actions[:change_theme], UserHistory.actions[:delete_theme]].include?(action)
+    %i[change_theme delete_theme tag_group_create tag_group_destroy tag_group_change]
+      .map { |i| UserHistory.actions[i] }
+      .include?(action)
   end
 
   def previous_value_is_json?

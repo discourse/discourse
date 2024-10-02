@@ -178,7 +178,7 @@ export default class ChatMessageInteractor {
       buttons.push({
         id: "edit",
         name: I18n.t("chat.edit"),
-        icon: "pencil-alt",
+        icon: "pencil",
       });
     }
 
@@ -186,7 +186,7 @@ export default class ChatMessageInteractor {
       buttons.push({
         id: "select",
         name: I18n.t("chat.select"),
-        icon: "tasks",
+        icon: "list-check",
       });
     }
 
@@ -202,7 +202,7 @@ export default class ChatMessageInteractor {
       buttons.push({
         id: "delete",
         name: I18n.t("chat.delete"),
-        icon: "trash-alt",
+        icon: "trash-can",
       });
     }
 
@@ -210,7 +210,7 @@ export default class ChatMessageInteractor {
       buttons.push({
         id: "restore",
         name: I18n.t("chat.restore"),
-        icon: "undo",
+        icon: "arrow-rotate-left",
       });
     }
 
@@ -218,7 +218,7 @@ export default class ChatMessageInteractor {
       buttons.push({
         id: "rebake",
         name: I18n.t("chat.rebake_message"),
-        icon: "sync-alt",
+        icon: "rotate",
       });
     }
 

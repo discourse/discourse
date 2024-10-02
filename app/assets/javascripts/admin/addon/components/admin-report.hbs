@@ -7,7 +7,7 @@
             <ul class="breadcrumb">
               {{#if this.showAllReportsLink}}
                 <li class="item all-reports">
-                  <LinkTo @route="admin.dashboardReports" class="report-url">
+                  <LinkTo @route="adminReports.index" class="report-url">
                     {{i18n "admin.dashboard.all_reports"}}
                   </LinkTo>
                 </li>
@@ -28,7 +28,7 @@
                       @interactive={{this.model.description_link.length}}
                     >
                       <:trigger>
-                        {{d-icon "question-circle"}}
+                        {{d-icon "circle-question"}}
                       </:trigger>
                       <:content>
                         {{#if this.model.description_link}}
@@ -78,21 +78,21 @@
           {{#if this.showError}}
             {{#if this.showTimeoutError}}
               <div class="alert alert-error report-alert timeout">
-                {{d-icon "exclamation-triangle"}}
+                {{d-icon "triangle-exclamation"}}
                 <span>{{i18n "admin.dashboard.timeout_error"}}</span>
               </div>
             {{/if}}
 
             {{#if this.showExceptionError}}
               <div class="alert alert-error report-alert exception">
-                {{d-icon "exclamation-triangle"}}
+                {{d-icon "triangle-exclamation"}}
                 <span>{{i18n "admin.dashboard.exception_error"}}</span>
               </div>
             {{/if}}
 
             {{#if this.showNotFoundError}}
               <div class="alert alert-error report-alert not-found">
-                {{d-icon "exclamation-triangle"}}
+                {{d-icon "triangle-exclamation"}}
                 <span>{{i18n "admin.dashboard.not_found_error"}}</span>
               </div>
             {{/if}}
@@ -115,7 +115,7 @@
             {{else}}
               {{#if this.rateLimitationString}}
                 <div class="alert alert-error report-alert rate-limited">
-                  {{d-icon "thermometer-three-quarters"}}
+                  {{d-icon "temperature-three-quarters"}}
                   <span>{{this.rateLimitationString}}</span>
                 </div>
               {{else}}
@@ -228,7 +228,7 @@
                   <DButton
                     @action={{this.refreshReport}}
                     @label="admin.dashboard.reports.refresh_report"
-                    @icon="sync"
+                    @icon="arrows-rotate"
                     class="refresh-report-btn btn-primary"
                   />
                 </div>

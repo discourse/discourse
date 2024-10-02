@@ -5281,6 +5281,7 @@ he:
             publish_read_state: "בהודעות קבוצתית לפרסם את מצב הקריאה של הקבוצה"
           membership:
             automatic: אוטומטי
+            automatic_tooltip: "הקבוצה הזאת היא אוטומטית, אי אפשר למחוק אותה והחברים נוספים ונמחקים ממנה אוטומטית"
             trust_levels_title: "דרגת אמון המוענקת אוטומטית למשתמשים כאשר הם נוספים:"
             effects: אפקטים
             trust_levels_none: "ללא"
@@ -5732,7 +5733,8 @@ he:
             move_down: "העברה למטה"
       plugins:
         title: "הרחבות (Plugins)"
-        installed: "הרחבות מותקנות"
+        installed: "תוספים מותקנים"
+        description: "תוספי Discourse שהתקנת או תוספים שמותקנים באירוח של Discourse באופן מובנה, כל אלו יופיעו ברשימה הזאת."
         name: "שם"
         none_installed: "אין לך הרחבות מותקנות"
         version: "גרסה"

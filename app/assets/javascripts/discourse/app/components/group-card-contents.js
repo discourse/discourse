@@ -1,12 +1,11 @@
-import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import CardContentsBase from "discourse/components/card-contents-base";
 import { setting } from "discourse/lib/computed";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
-import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -20,8 +19,7 @@ const maxMembersToDisplay = 10;
   "isFixed:fixed",
   "groupClass"
 )
-export default class GroupCardContents extends Component.extend(
-  CardContentsBase,
+export default class GroupCardContents extends CardContentsBase.extend(
   CleansUp
 ) {
   @service composer;

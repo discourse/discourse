@@ -142,7 +142,7 @@ uk:
       header_indicator_preference:
         title: "Показувати індикатор активності в заголовку"
         all_new: "Усі нові повідомлення"
-        dm_and_mentions: "Прямі повідомлення та згадки"
+        dm_and_mentions: "Прямі повідомлення, згадки та переглянуті теми"
         only_mentions: "Тільки згадки"
         never: "Ніколи"
       separate_sidebar_mode:
@@ -684,10 +684,13 @@ uk:
         notifications:
           regular:
             title: "Нормальний"
-            description: "Ви отримаєте сповіщення, якщо хтось згадає ваш @name у цій темі."
+            description: "Отримуйте сповіщення, коли хтось згадує вас у цій темі."
           tracking:
             title: "Стежити"
-            description: "Кількість нових відповідей для цього ланцюжка буде показано в списку ланцюжків і на каналі. Ви отримаєте сповіщення, якщо хтось згадає ваше @name у цій темі."
+            description: "Отримуйте сповіщення, коли хтось згадує вас у цій темі, і переглядайте кількість нових відповідей у списку тем."
+          watching:
+            title: "Слідкувати"
+            description: "Отримувати сповіщення про всі відповіді в цій темі та бачити кількість нових відповідей у списку тем."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -715,6 +718,11 @@ uk:
       chat_invitation: "запросив вас приєднатися до каналу чату"
       chat_invitation_html: "<span>%{username}</span> <span>запросив вас приєднатися до каналу чату</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} та %{username2}"
+        few: "%{username} та %{count} інших"
+        many: "%{username} та %{count} інших"
+        other: "%{username} та %{count} інших"
       popup:
         chat_mention:
           direct: 'згадав вас у «%{channel}»'
@@ -732,6 +740,7 @@ uk:
         chat_mention: "Згадка в чаті"
         chat_invitation: "Запрошення до чату"
         chat_quoted: "Чат процитований"
+        chat_watched_thread: "Потік перегляду чату"
     action_codes:
       chat:
         enabled: '%{who} включив <button class="btn-link open-chat">чат</button> %{when}'

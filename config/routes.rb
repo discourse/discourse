@@ -162,6 +162,7 @@ Discourse::Application.routes.draw do
         put "disable_second_factor"
         delete "sso_record"
         get "similar-users.json" => "users#similar_users"
+        put "delete_associated_accounts"
       end
       get "users/:id.json" => "users#show", :defaults => { format: "json" }
       get "users/:id/:username" => "users#show",
@@ -401,6 +402,8 @@ Discourse::Application.routes.draw do
           collection { put "/" => "about#update" }
         end
       end
+
+      resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"

@@ -199,7 +199,7 @@ export default {
             title: "table_builder.edit.btn_edit",
             label: "table_builder.edit.btn_edit",
             icon: {
-              name: "pencil-alt",
+              name: "pencil",
               class: "edit-table-icon",
             },
           });
