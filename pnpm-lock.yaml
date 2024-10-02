@@ -1091,8 +1091,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^2.0.1
-        version: 2.0.1(patch_hash=ktsray6trrtjm4aalso2qo7nka)
+        specifier: ^2.0.2
+        version: 2.0.2
       decorator-transforms:
         specifier: ^2.0.0
         version: 2.0.0(patch_hash=dre3eimzrhlapntwzf7qrwrwqi)(@babel/core@7.25.7)
@@ -4027,6 +4027,9 @@ packages:
 
   content-tag@2.0.1:
     resolution: {integrity: sha512-jxsETSDs5NbNwyiDuIp672fUMhUyu8Qxc5MOBOJOcgW/fQESI6o5K1LBDrnEE7Bh810a685lWEZHTF4jQYGEEw==}
+
+  content-tag@2.0.2:
+    resolution: {integrity: sha512-qHRyTp02dgzRK2tsCFxZ1H289bZOuSLNpupr6prvnSFq4SFPmNlBKbbE5PCMb+8+Z1a1z+yCVtXvQIGUCCa3lQ==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -11519,7 +11522,7 @@ snapshots:
     dependencies:
       '@glint/environment-ember-loose': 1.4.1-unstable.ff9ea6c(@glimmer/component@1.1.2(@babel/core@7.25.7))(@glint/template@1.4.1-unstable.ff9ea6c)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.25.7))
       '@glint/template': 1.4.1-unstable.ff9ea6c
-      content-tag: 2.0.1(patch_hash=ktsray6trrtjm4aalso2qo7nka)
+      content-tag: 2.0.2
 
   '@glint/template@1.4.1-unstable.ff9ea6c': {}
 
@@ -13564,6 +13567,8 @@ snapshots:
   content-tag@1.2.2: {}
 
   content-tag@2.0.1(patch_hash=ktsray6trrtjm4aalso2qo7nka): {}
+
+  content-tag@2.0.2: {}
 
   content-type@1.0.5: {}
 
