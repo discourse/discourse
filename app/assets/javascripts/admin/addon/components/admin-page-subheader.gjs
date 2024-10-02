@@ -43,13 +43,13 @@ export default class AdminPageSubheader extends Component {
           <div class="admin-page-subheader__actions">
             {{#if this.site.mobileView}}
               <DMenu
-                @identifier="admin-page-header-mobile-actions"
+                @identifier="admin-page-subheader-mobile-actions"
                 @title={{i18n "more_options"}}
                 @icon="ellipsis-vertical"
                 class="btn-small"
               >
                 <:content>
-                  <DropdownMenu class="admin-page-header__mobile-actions">
+                  <DropdownMenu class="admin-page-subheader__mobile-actions">
                     {{yield
                       (hash
                         Primary=PrimaryActionListItem
