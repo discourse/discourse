@@ -538,8 +538,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       jsuites:
-        specifier: ^5.6.4
-        version: 5.6.4
+        specifier: ^5.6.5
+        version: 5.6.5
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
@@ -5854,8 +5854,8 @@ packages:
   jspreadsheet-ce@4.13.4:
     resolution: {integrity: sha512-Rv1xbR5AKme7Nd+vCRsHS05+3h0CtcDYcGseXPOEOWV9Mq7k3z57comq+kjLXJZyEf3CR9kCzIPQsd6tN7Yn6w==}
 
-  jsuites@5.6.4:
-    resolution: {integrity: sha512-OV8dvz+erAqxCBwpDESQ8aoMZ2b0Lj72n5KBYq2Ws3O1H+4Kgd8Wzio5NiyHz2S/Z7SjQLvss7QyPkZ/tvbh2Q==}
+  jsuites@5.6.5:
+    resolution: {integrity: sha512-lFOR/2VXVgFDuhL0tcWDDJZlagC037UQhxsLfuwqQZr9EMYaod0zmn2nb5A0EisgkKZemCQB42y3NhNg90FnmQ==}
 
   just-diff-apply@5.5.0:
     resolution: {integrity: sha512-OYTthRfSh55WOItVqwpefPtNt2VdKsq5AnAK6apdtR6yCH8pr0CmSr710J0Mf+WdQy7K/OzMy7K2MgAfdQURDw==}
@@ -15378,9 +15378,9 @@ snapshots:
   jspreadsheet-ce@4.13.4:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
-      jsuites: 5.6.4
+      jsuites: 5.6.5
 
-  jsuites@5.6.4: {}
+  jsuites@5.6.5: {}
 
   just-diff-apply@5.5.0: {}
 
