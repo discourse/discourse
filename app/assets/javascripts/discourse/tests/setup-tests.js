@@ -2,7 +2,7 @@
 import Application from "../app";
 import "./loader-shims";
 /* eslint-enable simple-import-sort/imports */
-import { Test } from "ember-testing";
+
 import { getOwner } from "@ember/owner";
 import {
   getSettledState,
@@ -424,9 +424,6 @@ function patchFailedAssertion() {
       if (settledState.pendingRequestCount > 0) {
         stateString += `, pending requests: ${settledState.pendingRequestCount}`;
       }
-
-      stateString += `, checkWaiters: ${Test.checkWaiters()}`;
-      stateString += `, ${JSON.stringify(settledState.debugInfo)}`;
 
       // eslint-disable-next-line no-console
       console.warn(
