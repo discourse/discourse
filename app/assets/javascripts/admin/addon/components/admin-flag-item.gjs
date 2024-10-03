@@ -96,20 +96,18 @@ export default class AdminFlagItem extends Component {
   @action
   delete() {
     this.isSaved = false;
-    return this.dialog.yesNoConfirm({
+    this.dialog.yesNoConfirm({
       message: i18n("admin.config_areas.flags.delete_confirm", {
         name: this.args.flag.name,
       }),
-      didConfirm: () => {
-        this.args
-          .deleteFlagCallback(this.args.flag)
-          .then(() => {
-            this.isSaved = true;
-            this.dMenu.close();
-          })
-          .catch((error) => {
-            popupAjaxError(error);
-          });
+      didConfirm: async () => {
+        try {
+          await this.args.deleteFlagCallback(this.args.flag);
+          this.isSaved = true;
+          this.dMenu.close();
+        } catch (error) {
+          popupAjaxError(error);
+        }
       },
       didCancel: () => {
         this.isSaved = true;
