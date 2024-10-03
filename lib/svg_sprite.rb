@@ -109,6 +109,7 @@ module SvgSprite
         fab-threads-square
         fab-twitter
         fab-twitter-square
+        fab-x-twitter
         fab-wikipedia-w
         fab-windows
         far-bell

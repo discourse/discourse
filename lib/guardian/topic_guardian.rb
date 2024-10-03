@@ -224,7 +224,7 @@ module TopicGuardian
   def can_see_topic_ids(topic_ids: [], hide_deleted: true)
     topic_ids = topic_ids.compact
 
-    return topic_ids if is_admin?
+    return topic_ids if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
     return [] if topic_ids.blank?
 
     default_scope = Topic.unscoped.where(id: topic_ids)
@@ -268,7 +268,7 @@ module TopicGuardian
 
   def can_see_topic?(topic, hide_deleted = true)
     return false unless topic
-    return true if is_admin?
+    return true if is_admin? && !SiteSetting.suppress_secured_categories_from_admin
     return false if hide_deleted && topic.deleted_at && !can_see_deleted_topics?(topic.category)
 
     if topic.private_message?
@@ -355,7 +355,9 @@ module TopicGuardian
 
   def can_move_posts?(topic)
     return false if is_silenced?
-    can_perform_action_available_to_group_moderators?(topic)
+    return false unless can_perform_action_available_to_group_moderators?(topic)
+    return false if topic.archetype == "private_message" && !is_staff?
+    true
   end
 
   def affected_by_slow_mode?(topic)

@@ -955,7 +955,7 @@ class BulkImport::Generic < BulkImport::Base
     min = row["min"]
     max = row["max"]
     step = row["step"]
-    visibility = ::Poll.visibilities.key(row["visibility"])
+    visibility = row["visibility"]
     chart_type = ::Poll.chart_types.key(row["chart_type"])
     groups = row["groups"]
     auto_close = to_datetime(row["close_at"])

@@ -17,16 +17,14 @@ module Chat
     #   @param [Integer] channel_id of the channel
 
     #   @return [Service::Base::Context]
-    contract
+    contract do
+      attribute :channel_id, :integer
+
+      validates :channel_id, presence: true
+    end
     model :channel
     step :leave
     step :recompute_users_count
-
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-    end
 
     private
 

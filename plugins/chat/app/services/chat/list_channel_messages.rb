@@ -15,11 +15,34 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :channel_id, :integer
+      attribute :page_size, :integer
+
+      # If this is not present, then we just fetch messages with page_size
+      # and direction.
+      attribute :target_message_id, :integer # (optional)
+      attribute :direction, :string # (optional)
+      attribute :fetch_from_last_read, :boolean # (optional)
+      attribute :target_date, :string # (optional)
+
+      validates :channel_id, presence: true
+      validates :page_size,
+                numericality: {
+                  less_than_or_equal_to: ::Chat::MessagesQuery::MAX_PAGE_SIZE,
+                  only_integer: true,
+                },
+                allow_nil: true
+      validates :direction,
+                inclusion: {
+                  in: Chat::MessagesQuery::VALID_DIRECTIONS,
+                },
+                allow_nil: true
+    end
 
     model :channel
     policy :can_view_channel
-    step :fetch_optional_membership
+    model :membership, optional: true
     step :enabled_threads?
     step :determine_target_message_id
     policy :target_message_exists
@@ -31,40 +54,14 @@ module Chat
     step :update_membership_last_viewed_at
     step :update_user_last_channel
 
-    class Contract
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
-      attribute :page_size, :integer
-      validates :page_size,
-                numericality: {
-                  less_than_or_equal_to: ::Chat::MessagesQuery::MAX_PAGE_SIZE,
-                  only_integer: true,
-                },
-                allow_nil: true
-
-      # If this is not present, then we just fetch messages with page_size
-      # and direction.
-      attribute :target_message_id, :integer # (optional)
-      attribute :direction, :string # (optional)
-      attribute :fetch_from_last_read, :boolean # (optional)
-      attribute :target_date, :string # (optional)
-
-      validates :direction,
-                inclusion: {
-                  in: Chat::MessagesQuery::VALID_DIRECTIONS,
-                },
-                allow_nil: true
-    end
-
     private
 
     def fetch_channel(contract:)
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def fetch_optional_membership(channel:, guardian:)
-      context.membership = channel.membership_for(guardian.user)
+    def fetch_membership(channel:, guardian:)
+      channel.membership_for(guardian.user)
     end
 
     def enabled_threads?(channel:)

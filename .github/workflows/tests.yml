@@ -29,7 +29,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: ${{ ((github.ref == 'refs/heads/main') && 'debian-12') || 'ubuntu-22.04-8core' }}
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
@@ -44,6 +44,7 @@ jobs:
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -255,6 +256,13 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Minio cache
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.MINIO_RUNNER_INSTALL_DIR }}
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+
       - name: Ensure latest minio binary installed for Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
@@ -358,7 +366,7 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: ${{ ((github.ref == 'refs/heads/main') && 'debian-12') || 'ubuntu-22.04-8core' }}
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
@@ -397,7 +405,7 @@ jobs:
       - name: Core QUnit
         working-directory: ./app/assets/javascripts/discourse
         run: |
-          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2 + 1)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
+          pnpm ember exam --path /tmp/emberbuild --load-balance --parallel=$(($(nproc) / 2)) --launch "${{ env.TESTEM_BROWSER }}" --write-execution-file --random
         timeout-minutes: 15
 
       - uses: actions/upload-artifact@v4

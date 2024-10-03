@@ -19,22 +19,19 @@ module Chat
     #   @option params_to_edit [String,nil] title
     #   @return [Service::Base::Context]
 
-    contract
-    model :thread, :fetch_thread
-    policy :can_view_channel
-    policy :can_edit_thread
-    policy :threading_enabled_for_channel
-    step :update
-    step :publish_metadata
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :thread_id, :integer
       attribute :title, :string
 
       validates :thread_id, presence: true
       validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
+    model :thread
+    policy :can_view_channel
+    policy :can_edit_thread
+    policy :threading_enabled_for_channel
+    step :update
+    step :publish_metadata
 
     private
 

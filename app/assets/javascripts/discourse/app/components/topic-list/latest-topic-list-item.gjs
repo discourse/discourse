@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
-import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
 import TopicPostBadges from "discourse/components/topic-post-badges";
@@ -16,12 +15,8 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 
 export default class LatestTopicListItem extends Component {
-  @service appEvents;
-
   get tagClassNames() {
-    if (this.args.topic.tags) {
-      return this.args.topic.tags.map((tagName) => `tag-${tagName}`);
-    }
+    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
   }
 
   <template>

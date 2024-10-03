@@ -10,29 +10,49 @@ te:
       site_settings:
         chat_separate_sidebar_mode:
           always: "ఎల్లప్పుడూ"
+          never: "ఎప్పటికీ వద్దు"
     chat:
+      back_to_forum: "ఫోరం"
       deleted_chat_username: తొలగించారు
       dates:
         yesterday: "నిన్న"
+      create: "సృష్టించండి"
       cancel: "రద్దుచేయి"
       channel_settings:
         edit: "సవరణ"
         add: "కలుపు"
+        join: "చేరండి"
+        leave: "వదిలేయండి"
       close: "మూసివేయి"
       remove: "తొలగించు"
       delete: "తొలగించు"
+      edited: "సవరించబడింది"
       muted: "నిశ్శబ్దం"
       joined: "చేరినారు"
+      email_frequency:
+        never: "ఎప్పటికీ వద్దు"
+      header_indicator_preference:
+        never: "ఎప్పటికీ వద్దు"
+      enable: "చాట్‌ని ప్రారంభించండి"
       flag: "కేతనం"
+      join: "చేరండి"
+      last_visit: "చివరి సందర్శన"
       reply: "జవాబు"
       edit: "సవరణ"
       rebake_message: "హెచే టీ యం యల్ పునర్నిర్మించు"
       bookmark_message: "పేజీక"
+      bookmark_message_edit: "బుక్‌మార్క్‌ని సవరించండి"
       save: "భద్రపరుచు"
+      select: "ఎంచుకోండి"
+      sounds:
+        none: "ఏదీ లేదు"
       exit: "వెనుకకు"
+      channel_status:
+        closed: "మూసివేయబడినవి"
       browse:
         back: "వెనుకకు"
         filter_all: అన్ని
+        filter_closed: మూసివేయబడినవి
       chat_message_separator:
         today: ఈరోజు
         yesterday: నిన్న
@@ -46,7 +66,11 @@ te:
           members: సభ్యులు
           settings: అమరికలు
       new_message_modal:
+        no_items: "అంశాలు లేవు"
         filter: "జల్లెడ"
+      direct_message_creator:
+        title: కొత్త సందేశం
+        no_results: ఫలితాలు లేవు
       create_channel:
         type: "రకం"
         types:
@@ -55,10 +79,19 @@ te:
       composer:
         italic_text: "వాలు పాఠ్యం"
         bold_text: "బొద్దు పాఠ్యం"
+        send: "పంపండి"
+      notification_levels:
+        never: "ఎప్పటికీ వద్దు"
       settings:
+        follow: "చేరండి"
         followed: "చేరినారు"
+        threading_enabled: "ప్రారంభించబడింది"
+        threading_disabled: "నిలిపివేయబడింది"
         notifications: "ప్రకటనలు"
+        preview: "ప్రివ్యూ"
         save: "భద్రపరుచు"
+        saved: "సేవ్ చేయబడింది"
+        unfollow: "వదిలేయండి"
         admin_title: "అధికారి"
         settings_title: "అమరికలు"
         category_label: "వర్గం"
@@ -82,19 +115,40 @@ te:
           title: "కొత్త విషయానికి జరుపు"
         existing_topic:
           title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
+        new_message:
+          title: "కొత్త సందేశానికి తరలించండి"
       retention_reminders:
         short:
           one: "%{count} రోజు"
           other: "%{count} రోజులు"
       emoji_picker:
+        objects: "వస్తువులు"
+        activities: "కార్యకలాపాలు"
         flags: "కేతనాలు"
+        symbols: "చిహ్నాలు"
+        no_results: "ఫలితాలు లేవు"
       thread:
         title: "శీర్షిక"
+        replies:
+          one: "%{count} ప్రత్యుత్తరం"
+          other: "%{count} ప్రత్యుత్తరాలు"
         settings: "అమరికలు"
+        last_reply: "చివరి ప్రత్యుత్తరం"
         notifications:
+          regular:
+            title: "సాధారణ పరిమాణం"
           tracking:
             title: "గమనిస్తున్నారు"
           watching:
             title: "అనుసరిస్తున్నారు"
       draft_channel_screen:
+        header: "కొత్త సందేశం"
         cancel: "రద్దుచేయి"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
+    discourse_automation:
+      scriptables:
+        send_chat_message:
+          fields:
+            message:
+              label: సందేశం పంపించండి

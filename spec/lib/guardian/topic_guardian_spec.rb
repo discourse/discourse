@@ -291,6 +291,8 @@ RSpec.describe TopicGuardian do
         list = guardian.filter_allowed_categories(list)
 
         expect(list.count).to eq(0)
+
+        expect(guardian.can_see?(private_topic)).to eq(false)
       end
     end
   end

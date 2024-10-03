@@ -354,6 +354,7 @@ registerButton("copyLink", () => {
     icon: "d-post-share",
     className: "post-action-menu__copy-link",
     title: "post.controls.copy_title",
+    ariaLive: "polite",
   };
 });
 

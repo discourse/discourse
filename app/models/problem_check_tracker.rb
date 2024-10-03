@@ -32,15 +32,25 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def no_problem!(next_run_at: nil)
-    now = Time.current
-
-    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
-
+    reset
     silence_the_alarm
   end
 
+  def reset(next_run_at: nil)
+    now = Time.current
+
+    update!(blips: 0, last_run_at: now, last_success_at: now, next_run_at:)
+  end
+
   def check
-    ProblemCheck[identifier]
+    check = ProblemCheck[identifier]
+
+    return check if check.present?
+
+    silence_the_alarm
+    destroy
+
+    nil
   end
 
   private

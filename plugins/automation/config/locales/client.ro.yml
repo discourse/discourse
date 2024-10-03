@@ -59,10 +59,18 @@ ro:
               label: ID discuție
         post_created_edited:
           fields:
+            original_post_only:
+              label: Doar articolul original
+              description: Se va declanșa doar dacă articolul este articolul original în subiect
+            restricted_tags:
+              label: Etichete
+              description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
             restricted_category:
               label: Categorie
             restricted_group:
               label: Grup
+            restricted_groups:
+              label: Grupuri
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"
@@ -95,6 +103,9 @@ ro:
               label: Etichete
         post:
           fields:
+            creator:
+              label: Creator
+              updated_user_context: Utilizatorul actualizat
             topic:
               label: ID discuție
         topic:

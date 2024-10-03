@@ -20,7 +20,10 @@ module Chat
     #   @param [Integer] offset
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :limit, :integer
+      attribute :offset, :integer
+    end
     step :set_limit
     step :set_offset
     model :threads
@@ -28,12 +31,6 @@ module Chat
     step :fetch_memberships
     step :fetch_participants
     step :build_load_more_url
-
-    # @!visibility private
-    class Contract
-      attribute :limit, :integer
-      attribute :offset, :integer
-    end
 
     private
 

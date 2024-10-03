@@ -13,11 +13,17 @@ pl_PL:
       topic:
         title: Temat
     scriptables:
+      post:
+        title: Utwórz post
+        description: Utwórz post na określony temat
       topic:
         title: Utwórz temat
+        description: Utwórz temat jako określony użytkownik
       pin_topic:
         title: Przypnij temat
       close_topic:
         title: Zamknij temat
       append_last_checked_by:
+        summary: Sprawdź dokument
+        details: "Wykonaj kontrolę dokumentu: "
         button_text: Zrobione

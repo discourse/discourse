@@ -4,23 +4,39 @@ import discourseLater from "discourse-common/lib/later";
 // Send bg color to webview so iOS status bar matches site theme
 export default {
   after: "inject-objects",
+  retryCount: 0,
 
   initialize(owner) {
     const caps = owner.lookup("service:capabilities");
     if (caps.isAppWebview) {
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .addListener(this.updateAppBackground);
+        .addEventListener("change", this.updateAppBackground);
       this.updateAppBackground();
     }
   },
-  updateAppBackground() {
+
+  updateAppBackground(delay = 500) {
     discourseLater(() => {
-      const header = document.querySelector(".d-header-wrap .d-header");
-      if (header) {
-        const styles = window.getComputedStyle(header);
-        postRNWebviewMessage("headerBg", styles.backgroundColor);
+      if (this.headerBgColor()) {
+        postRNWebviewMessage("headerBg", this.headerBgColor());
+      } else {
+        this.retry();
       }
-    }, 500);
+    }, delay);
+  },
+
+  headerBgColor() {
+    const header = document.querySelector(".d-header-wrap .d-header");
+    if (header) {
+      return window.getComputedStyle(header)?.backgroundColor;
+    }
+  },
+
+  retry() {
+    if (this.retryCount < 2) {
+      this.retryCount++;
+      this.updateAppBackground(1000);
+    }
   },
 };

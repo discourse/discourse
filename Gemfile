@@ -287,3 +287,5 @@ group :migrations, optional: true do
   # CLI
   gem "ruby-progressbar"
 end
+
+gem "dry-initializer", "~> 3.1"

@@ -157,7 +157,7 @@ en:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
       close: "close"
-      twitter: "Share on Twitter"
+      twitter: "Share on X"
       facebook: "Share on Facebook"
       email: "Send via email"
       url: "Copy and share URL"
@@ -5077,6 +5077,7 @@ en:
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
+        dismiss_notice: "Dismiss"
         new_features:
           title: "What's new"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -5561,6 +5562,16 @@ en:
           security: "Security settings"
           spam: "Spam settings"
           staff_action_logs: "Staff Action Logs"
+
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backups"
+            description: "Take a backup of your site's data"
+          whats_new:
+            title: "What's New"
+            description: "Discover new releases and improvements to Discourse"
 
       config_areas:
         about:
@@ -6362,6 +6373,7 @@ en:
             tag_group_create: "create tag group"
             tag_group_destroy: "delete tag group"
             tag_group_change: "change tag group"
+            delete_associated_accounts: "delete associated accounts"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6591,6 +6603,9 @@ en:
         check_sso:
           title: "Reveal SSO payload"
           text: "Show"
+        delete_associated_accounts:
+          title: "Delete all associated accounts for this user"
+          text: "Delete associated accounts"
 
       user:
         suspend_failed: "Something went wrong suspending this user %{error}"
@@ -6708,6 +6723,7 @@ en:
         post_edits_count: "Post Edits"
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
+        delete_associated_accounts_confirm: "Are you SURE you want to delete associated accounts from this account? They may not be able to log in."
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"

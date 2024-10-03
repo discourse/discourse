@@ -13,6 +13,8 @@ te:
         label: "ఎగుమతి"
       close:
         label: "మూసివేయి"
+      breakdown:
+        count: "సంఖ్య"
       ranked_choice:
         none: "ఏదీ లేదు"
       options:
@@ -20,3 +22,7 @@ te:
       ui_builder:
         poll_type:
           label: రకం
+        poll_config:
+          step: దశ
+        show_advanced: "అధునాతన ఎంపికలను చూపించండి"
+        hide_advanced: "అధునాతన ఎంపికలను దాచండి"

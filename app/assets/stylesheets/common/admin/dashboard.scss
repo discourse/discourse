@@ -246,16 +246,21 @@
     .problem-messages {
       margin-bottom: 1em;
 
-      &.priority-high {
-        background-color: var(--danger-low);
-        border: 1px solid var(--danger-medium);
-      }
-
       ul {
         margin: 0 0 0 1.25em;
 
         li.dashboard-problem {
           padding: 0.5em 0.5em;
+
+          .notice {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+
+          .message {
+            margin-right: var(--space-4);
+          }
         }
       }
     }
