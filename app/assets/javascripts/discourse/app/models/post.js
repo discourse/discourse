@@ -204,8 +204,8 @@ export default class Post extends RestModel {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   }
 
-  get canEditStaffNotes() {
-    return !!this.topic.details.can_edit_staff_notes;
+  get canBookmark() {
+    return !!this.currentUser;
   }
 
   get canDelete() {
@@ -219,6 +219,10 @@ export default class Post extends RestModel {
 
   get canDeleteTopic() {
     return this.firstPost && !this.deleted && this.topic.details.can_delete;
+  }
+
+  get canEditStaffNotes() {
+    return !!this.topic.details.can_edit_staff_notes;
   }
 
   get canFlag() {

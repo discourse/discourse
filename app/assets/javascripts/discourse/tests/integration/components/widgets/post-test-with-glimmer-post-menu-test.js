@@ -45,9 +45,9 @@ module(
       this.set("args", { shareUrl: "/example", post_number: 1, topic });
 
       await render(hbs`
-      <MountWidget @widget="post"
-                   @model={{this.post}}
-                   @args={{this.args}} />`);
+        <MountWidget @widget="post"
+                     @model={{this.post}}
+                     @args={{this.args}} />`);
 
       assert.ok(exists(".names"), "includes poster name");
       assert.ok(exists("a.post-date"), "includes post date");
@@ -65,7 +65,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
+          <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
       );
 
       assert.strictEqual(queryAll(".badge.clicks")[0].innerText, "1");
@@ -94,7 +94,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
+          <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
       );
 
       assert.strictEqual(count(".badge.clicks"), 2);
@@ -107,9 +107,9 @@ module(
       this.set("showHistory", () => (this.historyShown = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @showHistory={{this.showHistory}} />
-    `);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @showHistory={{this.showHistory}} />
+      `);
 
       await click(".post-info .wiki");
       assert.ok(
@@ -123,9 +123,9 @@ module(
       this.set("editPost", () => (this.editPostCalled = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @editPost={{this.editPost}} />
-    `);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @editPost={{this.editPost}} />
+      `);
 
       await click(".post-info .wiki");
       assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
@@ -137,7 +137,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showRawEmail={{this.showRawEmail}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showRawEmail={{this.showRawEmail}} />`
       );
 
       await click(".post-info.via-email");
@@ -153,7 +153,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showRawEmail={{this.showRawEmail}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showRawEmail={{this.showRawEmail}} />`
       );
 
       await click(".post-info.via-email");
@@ -169,7 +169,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showHistory={{this.showHistory}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showHistory={{this.showHistory}} />`
       );
 
       await click(".post-info.edits button");
@@ -182,7 +182,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showHistory={{this.showHistory}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showHistory={{this.showHistory}} />`
       );
 
       await click(".post-info.edits");
@@ -196,7 +196,7 @@ module(
       this.set("args", { isWhisper: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(count(".topic-post.whisper"), 1);
       assert.strictEqual(count(".post-info.whisper"), 1);
@@ -217,7 +217,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
       );
 
       assert.strictEqual(count("button.like-count"), 1);
@@ -240,7 +240,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
       );
 
       assert.ok(!exists("button.like-count"));
@@ -251,7 +251,7 @@ module(
       this.set("args", { shareUrl: "http://share-me.example.com" });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(exists(".actions button.share"), "it renders a share button");
     });
@@ -260,7 +260,7 @@ module(
       this.set("args", { shareUrl: "http://share-me.example.com" });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(
         exists(".actions button.post-action-menu__copy-link"),
@@ -278,7 +278,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post-menu" @args={{this.args}} @toggleLike={{this.toggleLike}} />`
+          <MountWidget @widget="post-menu" @args={{this.args}} @toggleLike={{this.toggleLike}} />`
       );
 
       assert.ok(exists(".actions button.like"));
@@ -303,7 +303,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post-menu" @args={{this.args}} @showLogin={{this.showLogin}} />`
+          <MountWidget @widget="post-menu" @args={{this.args}} @showLogin={{this.showLogin}} />`
       );
 
       assert.ok(exists(".actions button.like"));
@@ -327,7 +327,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @editPost={{this.editPost}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @editPost={{this.editPost}} />`
       );
 
       await click("button.edit");
@@ -339,7 +339,7 @@ module(
       this.set("args", { canEdit: false });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.edit"), "button is not displayed");
     });
@@ -350,7 +350,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @deletePost={{this.deletePost}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @deletePost={{this.deletePost}} />`
       );
 
       await click("button.delete");
@@ -361,23 +361,18 @@ module(
       this.post.topic.details.can_delete = false;
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.delete"), `button is not displayed`);
     });
 
     test(`delete topic button - can't delete when topic author without permission`, async function (assert) {
-      this.post.topic.details.can_delete = false;
-      this.post.yours = false;
-
-      this.set("args", {
-        canDeleteTopic: false,
-        showFlagDelete: true,
-        canFlag: true,
-      });
+      this.post.can_delete = false;
+      this.post.yours = true;
+      this.post.actionByName.off_topic = { can_act: true };
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(count("button.create-flag"), 1, `button is displayed`);
       assert.strictEqual(count("button.delete"), 1, `button is displayed`);
@@ -389,12 +384,14 @@ module(
     });
 
     test("recover topic button", async function (assert) {
-      this.set("args", { canRecoverTopic: true });
+      this.post.topic.deleted_at = new Date().toISOString();
+      this.post.topic.details.can_recover = true;
+
       this.set("recoverPost", () => (this.recovered = true));
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @recoverPost={{this.recoverPost}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @recoverPost={{this.recoverPost}} />`
       );
 
       await click("button.recover");
@@ -402,21 +399,23 @@ module(
     });
 
     test(`recover topic button - can't recover`, async function (assert) {
-      this.set("args", { canRecoverTopic: false });
+      this.post.topic.deleted_at = new Date().toISOString();
+      this.post.topic.details.can_recover = false;
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.recover"), `button is not displayed`);
     });
 
     test("delete post button", async function (assert) {
-      this.set("args", { canDelete: true, canFlag: true });
+      this.post.can_delete = true;
+
       this.set("deletePost", () => (this.deletePostCalled = true));
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @deletePost={{this.deletePost}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @deletePost={{this.deletePost}} />`
       );
 
       await click("button.delete");
@@ -424,35 +423,34 @@ module(
     });
 
     test(`delete post button - can't delete`, async function (assert) {
-      this.set("args", { canDelete: false });
+      this.post.can_delete = false;
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.delete"), `button is not displayed`);
     });
 
     test(`delete post button - can't delete, can't flag`, async function (assert) {
-      this.set("args", {
-        canDeleteTopic: false,
-        showFlagDelete: false,
-        canFlag: false,
-      });
+      this.post.can_delete = false;
+      this.post.actionByName = {};
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.delete"), `delete button is not displayed`);
       assert.ok(!exists("button.create-flag"), `flag button is not displayed`);
     });
 
     test("recover post button", async function (assert) {
-      this.set("args", { canRecover: true });
+      this.post.deleted_at = new Date().toISOString();
+      this.post.can_recover = true;
+
       this.set("recoverPost", () => (this.recovered = true));
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @recoverPost={{this.recoverPost}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @recoverPost={{this.recoverPost}} />`
       );
 
       await click("button.recover");
@@ -460,21 +458,23 @@ module(
     });
 
     test(`recover post button - can't recover`, async function (assert) {
-      this.set("args", { canRecover: false });
+      this.post.deleted_at = new Date().toISOString();
+      this.post.can_recover = false;
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.recover"), `button is not displayed`);
     });
 
     test(`flagging`, async function (assert) {
-      this.set("args", { canFlag: true });
+      this.post.actionByName.off_topic = { can_act: true };
+
       this.set("showFlags", () => (this.flagsShown = true));
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showFlags={{this.showFlags}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @showFlags={{this.showFlags}} />`
       );
 
       assert.strictEqual(count("button.create-flag"), 1);
@@ -487,16 +487,16 @@ module(
       this.set("args", { canFlag: false });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.create-flag"));
     });
 
     test(`flagging: can't flag when post is hidden`, async function (assert) {
-      this.set("args", { canFlag: true, hidden: true });
+      this.post.actionByName.off_topic = { can_act: false };
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.create-flag"));
     });
@@ -505,7 +505,7 @@ module(
       this.set("args", { read: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(exists(".read-state.read"));
     });
@@ -514,7 +514,7 @@ module(
       this.set("args", { read: false });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(exists(".read-state"));
     });
@@ -527,7 +527,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("a.reply-to-tab"), "hides the tab");
       assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
@@ -541,7 +541,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(exists("a.reply-to-tab"), "shows the tab");
       assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
@@ -556,7 +556,7 @@ module(
       this.siteSettings.suppress_reply_directly_above = false;
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
       await click("a.reply-to-tab");
@@ -570,7 +570,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @expandHidden={{this.expandHidden}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @expandHidden={{this.expandHidden}} />`
       );
 
       await click(".topic-body .expand-hidden");
@@ -583,7 +583,7 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @expandHidden={{this.expandHidden}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @expandHidden={{this.expandHidden}} />`
       );
 
       assert.ok(
@@ -593,13 +593,11 @@ module(
     });
 
     test("expand first post", async function (assert) {
-      const store = getOwner(this).lookup("service:store");
       this.set("args", { expandablePost: true });
-      this.set("post", store.createRecord("post", { id: 1234 }));
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
       );
 
       await click(".topic-body .expand-post");
@@ -607,10 +605,20 @@ module(
     });
 
     test("can't bookmark", async function (assert) {
-      this.set("args", { canBookmark: false });
+      this.owner.unregister("service:current-user");
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic", { id: 123 });
+      this.post = store.createRecord("post", {
+        id: 1,
+        post_number: 1,
+        topic,
+        like_count: 3,
+        actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
+      });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+      // await pauseTest();
 
       assert.ok(!exists("button.bookmark"));
       assert.ok(!exists("button.bookmarked"));
@@ -624,7 +632,8 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @toggleBookmark={{this.toggleBookmark}} />`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                       @toggleBookmark={{this.toggleBookmark}} />`
       );
 
       assert.strictEqual(count(".post-menu-area .bookmark"), 1);
@@ -635,18 +644,18 @@ module(
       this.set("args", { canManage: false });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists(".post-menu-area .show-post-admin-menu"));
     });
 
     test("show admin menu", async function (assert) {
-      this.set("args", { canManage: true });
+      this.currentUser.admin = true;
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
-        <DMenus/>`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
+          <DMenus/>`
       );
 
       assert
@@ -682,9 +691,9 @@ module(
 
       await render(
         hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                     @permanentlyDeletePost={{this.permanentlyDeletePost}} />
-        <DMenus/>`
+          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                       @permanentlyDeletePost={{this.permanentlyDeletePost}} />
+          <DMenus/>`
       );
 
       await click(".post-menu-area .show-post-admin-menu");
@@ -716,10 +725,10 @@ module(
       this.set("permanentlyDeletePost", () => (this.deleted = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @permanentlyDeletePost={{this.permanentlyDeletePost}} />
-      <DMenus/>
-    `);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @permanentlyDeletePost={{this.permanentlyDeletePost}} />
+        <DMenus/>
+      `);
 
       await click(".post-menu-area .show-post-admin-menu");
 
@@ -752,9 +761,9 @@ module(
       this.set("togglePostType", () => (this.toggled = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @togglePostType={{this.togglePostType}} />
-      <DMenus/>`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @togglePostType={{this.togglePostType}} />
+        <DMenus/>`);
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -782,9 +791,9 @@ module(
       this.set("rebakePost", () => (this.baked = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @rebakePost={{this.rebakePost}} />
-      <DMenus/>`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @rebakePost={{this.rebakePost}} />
+        <DMenus/>`);
 
       await click(".post-menu-area .show-post-admin-menu");
       await click(
@@ -805,10 +814,10 @@ module(
       this.set("unhidePost", () => (unhidden = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                   @unhidePost={{this.unhidePost}} />
-      <DMenus/>
-    `);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
+                     @unhidePost={{this.unhidePost}} />
+        <DMenus/>
+      `);
 
       await click(".post-menu-area .show-post-admin-menu");
 
@@ -859,8 +868,8 @@ module(
       this.set("replyToPost", () => (this.replied = true));
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @replyToPost={{this.replyToPost}} />
-    `);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @replyToPost={{this.replyToPost}} />
+      `);
 
       await click(".post-controls .create");
       assert.ok(this.replied);
@@ -870,7 +879,7 @@ module(
       this.set("args", { canCreatePost: false });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists(".post-controls .create"));
     });
@@ -879,17 +888,19 @@ module(
       this.set("args", { replyCount: 0 });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.show-replies"));
     });
 
     test("replies - multiple replies", async function (assert) {
       this.siteSettings.suppress_reply_directly_below = true;
-      this.set("args", { replyCount: 2, replyDirectlyBelow: true });
+      this.post.reply_count = 2;
+
+      this.set("args", { replyDirectlyBelow: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(count("button.show-replies"), 1);
     });
@@ -899,7 +910,7 @@ module(
       this.set("args", { replyCount: 1, replyDirectlyBelow: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(!exists("button.show-replies"));
     });
@@ -909,7 +920,7 @@ module(
       this.set("args", { id: 6654, replyCount: 1, replyDirectlyBelow: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       await click("button.show-replies");
       assert.strictEqual(count("section.embedded-posts.bottom .cooked"), 1);
@@ -922,7 +933,7 @@ module(
       this.set("args", { topic, post_number: 1, topicMap: true });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".topic-map").exists();
     });
@@ -938,7 +949,7 @@ module(
       this.set("args", { topic, post_number: 1 });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".topic-map").exists();
     });
@@ -961,7 +972,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
       assert.dom(".topic-map__users-trigger").doesNotExist();
       assert.dom(".topic-map__users-list a.poster").exists({ count: 2 });
     });
@@ -990,7 +1001,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
       assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
 
       await click(".topic-map__users-trigger");
@@ -1017,7 +1028,7 @@ module(
       this.set("args", { topic, post_number: 1 });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".topic-map").exists({ count: 1 });
       assert.dom(".topic-map__links-content").doesNotExist();
@@ -1038,7 +1049,7 @@ module(
       this.set("args", { topic, post_number: 1 });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".topic-map").exists();
       assert.dom(".summarization-button .top-replies").doesNotExist();
@@ -1055,7 +1066,7 @@ module(
       this.set("args", { topic, post_number: 1 });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".summarization-button .top-replies").exists({ count: 1 });
     });
@@ -1075,7 +1086,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.dom(".topic-map__private-message-map").exists({ count: 1 });
       assert.dom(".topic-map__private-message-map .user").exists({ count: 1 });
@@ -1098,7 +1109,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(
         query(".post-notice.returning-user:not(.old)").innerText.trim(),
@@ -1121,7 +1132,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.strictEqual(
         query(".post-notice.old.new-user").innerText.trim(),
@@ -1136,7 +1147,7 @@ module(
       });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       const link = query(".group-request a");
       assert.strictEqual(
@@ -1160,7 +1171,7 @@ module(
       this.set("args", { user });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.ok(exists(".user-status-message"));
     });
@@ -1176,7 +1187,7 @@ module(
       this.set("args", { user });
 
       await render(hbs`
-      <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       assert.notOk(exists(".user-status-message"));
     });
