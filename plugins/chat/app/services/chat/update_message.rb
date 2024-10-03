@@ -120,12 +120,11 @@ module Chat
       prev_message = message.message_before_last_save || message.message_was
       return if !should_create_revision(message, prev_message, guardian)
 
-      context.revision =
-        message.revisions.create!(
-          old_message: prev_message,
-          new_message: message.message,
-          user_id: guardian.user.id,
-        )
+      context[:revision] = message.revisions.create!(
+        old_message: prev_message,
+        new_message: message.message,
+        user_id: guardian.user.id,
+      )
     end
 
     def should_create_revision(new_message, prev_message, guardian)
@@ -151,7 +150,7 @@ module Chat
     end
 
     def publish(message:, guardian:, contract:)
-      edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
+      edit_timestamp = context[:revision]&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
 

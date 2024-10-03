@@ -26,7 +26,7 @@ module ServiceMatchers
     private
 
     def error_message_with_inspection(message)
-      inspector = StepsInspector.new(result)
+      inspector = Service::StepsInspector.new(result)
       "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
     end
   end
@@ -89,7 +89,7 @@ module ServiceMatchers
     end
 
     def error_message_with_inspection(message)
-      inspector = StepsInspector.new(result)
+      inspector = Service::StepsInspector.new(result)
       "#{message}\n\n#{inspector.inspect}\n\n#{inspector.error}"
     end
 
@@ -158,7 +158,7 @@ module ServiceMatchers
   end
 
   def inspect_steps(result)
-    inspector = StepsInspector.new(result)
+    inspector = Service::StepsInspector.new(result)
     puts "Steps:"
     puts inspector.inspect
     puts "\nFirst error:"

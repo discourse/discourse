@@ -63,13 +63,13 @@ module Chat
 
     def determine_target_message_id(contract:, membership:, guardian:, thread:)
       if contract.fetch_from_last_message
-        context.target_message_id = thread.last_message_id
+        context[:target_message_id] = thread.last_message_id
       elsif contract.fetch_from_first_message
-        context.target_message_id = thread.original_message_id
+        context[:target_message_id] = thread.original_message_id
       elsif contract.fetch_from_last_read || !contract.target_message_id
-        context.target_message_id = membership&.last_read_message_id
+        context[:target_message_id] = membership&.last_read_message_id
       elsif contract.target_message_id
-        context.target_message_id = contract.target_message_id
+        context[:target_message_id] = contract.target_message_id
       end
     end
 
@@ -99,8 +99,8 @@ module Chat
             contract.fetch_from_first_message || contract.fetch_from_last_message,
         )
 
-      context.can_load_more_past = messages_data[:can_load_more_past]
-      context.can_load_more_future = messages_data[:can_load_more_future]
+      context[:can_load_more_past] = messages_data[:can_load_more_past]
+      context[:can_load_more_future] = messages_data[:can_load_more_future]
 
       [
         messages_data[:messages],
