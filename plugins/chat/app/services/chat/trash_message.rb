@@ -17,7 +17,13 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :message_id, :integer
+      attribute :channel_id, :integer
+
+      validates :message_id, presence: true
+      validates :channel_id, presence: true
+    end
     model :message
     policy :invalid_access
     transaction do
@@ -28,14 +34,6 @@ module Chat
       step :update_thread_reply_cache
     end
     step :publish_events
-
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-      attribute :channel_id, :integer
-      validates :message_id, presence: true
-      validates :channel_id, presence: true
-    end
 
     private
 

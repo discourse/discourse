@@ -145,6 +145,7 @@ cs:
       upload: "Připojit soubor"
       exit: "zpět"
       channel_status:
+        archived: "Archivované"
         closed: "Uzavřeno"
         open: "Otevřít"
       browse:
@@ -180,6 +181,7 @@ cs:
       direct_message_creator:
         title: Nová zpráva
         prefix: "Komu:"
+        no_results: Žádné výsledky
         members_counter:
           one: "%{count}/%{max} člena"
           few: "%{count}/%{max} členů"
@@ -294,6 +296,7 @@ cs:
         flags: "Nahlášení"
         symbols: "Symboly"
         search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
+        no_results: "Žádné výsledky"
       thread:
         title: "Nadpis"
         replies:

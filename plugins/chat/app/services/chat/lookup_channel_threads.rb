@@ -24,7 +24,19 @@ module Chat
     #   @param [Integer] offset
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :channel_id, :integer
+      attribute :limit, :integer
+      attribute :offset, :integer
+
+      validates :channel_id, presence: true
+      validates :limit,
+                numericality: {
+                  less_than_or_equal_to: THREADS_LIMIT,
+                  only_integer: true,
+                },
+                allow_nil: true
+    end
     step :set_limit
     step :set_offset
     model :channel
@@ -35,22 +47,6 @@ module Chat
     step :fetch_memberships
     step :fetch_participants
     step :build_load_more_url
-
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
-      attribute :limit, :integer
-      validates :limit,
-                numericality: {
-                  less_than_or_equal_to: THREADS_LIMIT,
-                  only_integer: true,
-                },
-                allow_nil: true
-
-      attribute :offset, :integer
-    end
 
     private
 

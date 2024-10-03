@@ -6,18 +6,16 @@ RSpec.describe StepsInspector do
 
     model :model
     policy :policy
-    contract
+    contract do
+      attribute :parameter
+
+      validates :parameter, presence: true
+    end
     transaction do
       step :in_transaction_step_1
       step :in_transaction_step_2
     end
     step :final_step
-
-    class Contract
-      attribute :parameter
-
-      validates :parameter, presence: true
-    end
   end
 
   subject(:inspector) { described_class.new(result) }

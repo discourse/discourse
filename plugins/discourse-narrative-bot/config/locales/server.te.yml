@@ -6,6 +6,8 @@
 
 te:
   discourse_narrative_bot:
+    quote:
+      trigger: "కోట్"
     magic_8_ball:
       answers:
         "9": "అవును"

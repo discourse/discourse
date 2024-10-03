@@ -29,17 +29,7 @@ module Chat
 
     policy :public_channels_enabled
     policy :can_create_channel
-    contract
-    model :category, :fetch_category
-    policy :category_channel_does_not_exist
-    transaction do
-      model :channel, :create_channel
-      model :membership, :create_membership
-    end
-    step :enforce_automatic_channel_memberships
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
@@ -55,6 +45,13 @@ module Chat
       validates :category_id, presence: true
       validates :name, length: { maximum: SiteSetting.max_topic_title_length }
     end
+    model :category
+    policy :category_channel_does_not_exist
+    transaction do
+      model :channel, :create_channel
+      model :membership, :create_membership
+    end
+    step :enforce_automatic_channel_memberships
 
     private
 

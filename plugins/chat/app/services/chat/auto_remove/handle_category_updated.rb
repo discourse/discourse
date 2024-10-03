@@ -14,7 +14,11 @@ module Chat
     class HandleCategoryUpdated
       include Service::Base
 
-      contract
+      contract do
+        attribute :category_id, :integer
+
+        validates :category_id, presence: true
+      end
       step :assign_defaults
       policy :chat_enabled
       model :category
@@ -22,12 +26,6 @@ module Chat
       model :users
       step :remove_users_without_channel_permission
       step :publish
-
-      class Contract
-        attribute :category_id, :integer
-
-        validates :category_id, presence: true
-      end
 
       private
 

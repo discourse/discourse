@@ -78,10 +78,12 @@ module Service
         steps << ModelStep.new(name, step_name, optional: optional)
       end
 
-      def contract(name = :default, class_name: self::Contract, default_values_from: nil)
+      def contract(name = :default, default_values_from: nil, &block)
+        contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
+        const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(
           name,
-          class_name: class_name,
+          class_name: contract_class,
           default_values_from: default_values_from,
         )
       end
@@ -214,20 +216,6 @@ module Service
     included do
       # The global context which is available from any step.
       attr_reader :context
-
-      # @!visibility private
-      # Internal class used to setup the base contract of the service.
-      self::Contract =
-        Class.new do
-          include ActiveModel::API
-          include ActiveModel::Attributes
-          include ActiveModel::AttributeMethods
-          include ActiveModel::Validations::Callbacks
-
-          def raw_attributes
-            @attributes.values_before_type_cast
-          end
-        end
     end
 
     class_methods do
@@ -306,10 +294,10 @@ module Service
     #   end
 
     # @!scope class
-    # @!method contract(name = :default, class_name: self::Contract, default_values_from: nil)
+    # @!method contract(name = :default, default_values_from: nil, &block)
     # @param name [Symbol] name for this contract
-    # @param class_name [Class] a class defining the contract
     # @param default_values_from [Symbol] name of the model to get default values from
+    # @param block [Proc] a block containing validations
     # Checks the validity of the input parameters.
     # Implements ActiveModel::Validations and ActiveModel::Attributes.
     #
@@ -317,9 +305,7 @@ module Service
     # (can be customized by providing the +name+ argument).
     #
     # @example
-    #   contract
-    #
-    #   class Contract
+    #   contract do
     #     attribute :name
     #     validates :name, presence: true
     #   end
