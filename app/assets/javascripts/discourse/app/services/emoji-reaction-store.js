@@ -35,7 +35,6 @@ export default class EmojiReactionStore extends Service {
 
   get storedFavorites() {
     let value = this.store.getObject(this.USER_EMOJIS_STORE_KEY) || [];
-    console.log("Getting storedFavorites", value);
 
     if (value.length < 1) {
       if (!this.siteSettings.default_emoji_reactions) {

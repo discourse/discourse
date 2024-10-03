@@ -107,7 +107,6 @@ export default class EmojiPicker extends Component {
 
   @action
   clearFavorites() {
-    console.log("clear favorites");
     this.emojiReactionStore.favorites = [];
   }
 
@@ -291,38 +290,33 @@ export default class EmojiPicker extends Component {
 
   @action
   didRequestSection(section) {
-    const scrollableContent = document.querySelector(
-      ".emoji-picker__scrollable-content"
-    );
-
-    this.filteredEmojis = null;
-
-    // we disable scroll listener during requesting section
-    // to avoid it from detecting another section during scroll to requested section
-    this.scrollObserverEnabled = false;
-    this.addVisibleSections([section]);
-    this.lastVisibleSection = section;
-
-    // iOS hack to avoid blank div when requesting section during momentum
-    if (scrollableContent && this.capabilities.isIOS) {
-      document.querySelector(
-        ".emoji-picker__scrollable-content"
-      ).style.overflow = "hidden";
-    }
-
     schedule("afterRender", () => {
-      const firstEmoji = document.querySelector(
-        `.emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`
+      const scrollableContent = document.querySelector(
+        ".emoji-picker__scrollable-content"
       );
 
-      const targetEmoji =
-        [
-          ...document.querySelectorAll(
-            `.emoji-picker__section[data-section="${section}"] .emoji`
-          ),
-        ].find((emoji) => emoji.offsetTop > firstEmoji.offsetTop) || firstEmoji;
+      this.filteredEmojis = null;
 
-      targetEmoji.focus();
+      // we disable scroll listener during requesting section
+      // to avoid it from detecting another section during scroll to requested section
+      this.scrollObserverEnabled = false;
+      this.addVisibleSections([section]);
+      this.lastVisibleSection = section;
+
+      // iOS hack to avoid blank div when requesting section during momentum
+      if (scrollableContent && this.capabilities.isIOS) {
+        document.querySelector(
+          ".emoji-picker__scrollable-content"
+        ).style.overflow = "hidden";
+      }
+
+      const targetEmoji = document.querySelector(
+        `.emoji-picker__section[data-section="${section}"]`
+      );
+
+      targetEmoji.scrollIntoView({
+        block: "start",
+      });
 
       later(() => {
         // iOS hack to avoid blank div when requesting section during momentum
