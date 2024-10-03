@@ -81,6 +81,7 @@ module Jobs
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
           channel_id: @chat_channel.id,
+          is_direct_message_channel: @is_direct_message_channel,
         }
 
         if @chat_message.in_thread? && !membership.muted?

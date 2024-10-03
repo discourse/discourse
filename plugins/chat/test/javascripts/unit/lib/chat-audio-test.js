@@ -85,7 +85,7 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
 
-    this.handleNotification({ isDirectMessageChannel: true });
+    this.handleNotification({ is_direct_message_channel: true });
 
     assert.ok(this.playStub.calledOnce);
   });
@@ -94,7 +94,7 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
 
-    this.handleNotification({ isDirectMessageChannel: false });
+    this.handleNotification({ is_direct_message_channel: false });
 
     assert.ok(this.playStub.notCalled);
   });
