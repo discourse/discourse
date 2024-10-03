@@ -182,7 +182,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_user_passkeys?
-    SiteSetting.enable_passkeys?
+    SiteSetting.enable_passkeys? && user_is_current_user
   end
 
   def bio_raw
