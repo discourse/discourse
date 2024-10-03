@@ -15,7 +15,12 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :message_id, :integer
+      attribute :channel_id, :integer
+
+      validates :message_id, :channel_id, presence: true
+    end
     model :channel
     model :membership
     policy :invalid_access
@@ -26,14 +31,6 @@ module Chat
       step :mark_associated_mentions_as_read
     end
     step :publish_new_last_read_to_clients
-
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-      attribute :channel_id, :integer
-
-      validates :message_id, :channel_id, presence: true
-    end
 
     private
 

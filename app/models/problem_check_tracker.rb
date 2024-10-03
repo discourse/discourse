@@ -43,7 +43,14 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def check
-    ProblemCheck[identifier]
+    check = ProblemCheck[identifier]
+
+    return check if check.present?
+
+    silence_the_alarm
+    destroy
+
+    nil
   end
 
   private

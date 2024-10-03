@@ -155,6 +155,7 @@ class UserHistory < ActiveRecord::Base
         tag_group_create: 116,
         tag_group_destroy: 117,
         tag_group_change: 118,
+        delete_associated_accounts: 119,
       )
   end
 
@@ -272,6 +273,7 @@ class UserHistory < ActiveRecord::Base
       tag_group_create
       tag_group_destroy
       tag_group_change
+      delete_associated_accounts
     ]
   end
 

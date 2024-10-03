@@ -24,7 +24,7 @@ jobs:
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests with Ruby ${{ matrix.ruby }}
-    runs-on: debian-12
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
     container: discourse/discourse_test:slim
     timeout-minutes: 20
 
@@ -126,11 +126,11 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
-#      - name: Check core database drift
-#        run: |
-#          mkdir /tmp/intermediate_db
-#          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
-#          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
+      #      - name: Check core database drift
+      #        run: |
+      #          mkdir /tmp/intermediate_db
+      #          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
+      #          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec

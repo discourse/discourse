@@ -16,15 +16,13 @@ module Chat
     #   @return [Service::Base::Context]
 
     model :channel, :fetch_channel
-    contract
-    policy :check_channel_permission
-    step :change_status
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :status
+
       validates :status, inclusion: { in: Chat::Channel.editable_statuses.keys }
     end
+    policy :check_channel_permission
+    step :change_status
 
     private
 

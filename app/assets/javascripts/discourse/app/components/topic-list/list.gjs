@@ -11,8 +11,6 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class TopicList extends Component {
   @service currentUser;
-  @service router;
-  @service siteSettings;
 
   @tracked lastCheckedElementId;
 

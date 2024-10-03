@@ -558,6 +558,8 @@ et:
       yaxis: "Päev"
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
+    site_traffic:
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:

@@ -20,7 +20,7 @@ export default {
       ]);
 
       api.renderInOutlet(
-        "admin-plugin-config-page-actions",
+        "admin-plugin-config-page-actions-chat",
         ChatAdminPluginActions
       );
     });

@@ -54,6 +54,21 @@ describe "Reviewables", type: :system do
         expect(composer).to be_opened
         expect(composer.composer_input.value).to eq(post.raw)
       end
+
+      it "should open a modal when suspending a user" do
+        visit("/review")
+
+        select_kit =
+          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
+        select_kit.expand
+
+        select_kit.select_row_by_value("post-agree_and_suspend")
+
+        expect(review_page).to have_css(
+          "#discourse-modal-title",
+          text: I18n.t("js.flagging.take_action_options.suspend.title"),
+        )
+      end
     end
   end
 

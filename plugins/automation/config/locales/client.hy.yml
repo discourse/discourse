@@ -30,8 +30,16 @@ hy:
           fields:
             badge:
               label: Կրծքանշան
+        stalled_topic:
+          durations:
+            P2W: "Երկու շաբաթից"
+            P3M: "Երեք ամսից"
+            P6M: "Վեց ամսից"
+            P1Y: "Մեկ տարուց"
         recurring:
           frequencies:
+            minute: րոպե
+            hour: ժամ
             day: օր
             week: շաբաթ
             month: ամիս
@@ -39,16 +47,26 @@ hy:
           fields:
             recurrence:
               label: Կրկնություն
+        stalled_wiki:
+          durations:
+            P2W: "Երկու շաբաթից"
+            P3M: "Երեք ամսից"
+            P6M: "Վեց ամսից"
+            P1Y: "Մեկ տարուց"
         topic:
           fields:
             restricted_topic:
               label: Թեմայի ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Թեգեր
             restricted_category:
               label: Կատեգորիա
             restricted_group:
               label: Խմբավորել
+            restricted_groups:
+              label: Խմբեր
           created: Ստեղծված
         category_created_edited:
           fields:

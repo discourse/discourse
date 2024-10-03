@@ -33,6 +33,7 @@ class Admin::Config::FlagsController < Admin::AdminController
       end
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_policy(:unique_name) { render_json_error(I18n.t("flags.errors.unique_name")) }
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
@@ -50,6 +51,7 @@ class Admin::Config::FlagsController < Admin::AdminController
       on_failed_policy(:not_system) { render_json_error(I18n.t("flags.errors.system")) }
       on_failed_policy(:not_used) { render_json_error(I18n.t("flags.errors.used")) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_policy(:unique_name) { render_json_error(I18n.t("flags.errors.unique_name")) }
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end

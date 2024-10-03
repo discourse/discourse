@@ -102,13 +102,13 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       update_message!(
         original_message,
         user: current_user,
-        text: "@#{other_user.username} <mark>not marked</mark>",
+        text: "@#{other_user.username} <abbr>not abbr</abbr>",
       )
       chat_page.visit_channel(channel_1)
       channel_page.reply_to(original_message)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
 
       channel_page.fill_composer("reply to message")

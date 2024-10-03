@@ -50,9 +50,9 @@ module Chat
             username:
               (
                 if prefers_name
-                  acting_user.name.presence || "@#{acting_user.username}"
+                  acting_user.name.presence || acting_user.username
                 else
-                  "@#{acting_user.username}"
+                  acting_user.username
                 end
               ),
           )
@@ -65,9 +65,9 @@ module Chat
       formatted_names =
         (
           if prefers_name
-            users.map { |u| u.name.presence || "@#{u.username}" }.sort_by { |name| name[1..-1] }
+            users.map { |u| u.name.presence || u.username }.sort_by { |name| name[1..-1] }
           else
-            users.sort_by(&:username).map { |u| "@#{u.username}" }
+            users.map(&:username).sort
           end
         )
 

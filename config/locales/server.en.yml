@@ -1270,6 +1270,7 @@ en:
       wrong_move: "Flag cannot be moved"
       system: "System flag cannot be updated or deleted."
       used: "Flag cannot be updated or deleted because has already been used."
+      unique_name: "Flag name must be unique"
   reports:
     default:
       labels:
@@ -1875,7 +1876,7 @@ en:
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
-    allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
+    allowed_iframes: "A list of iframe src URL prefixes that Discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
@@ -2483,7 +2484,7 @@ en:
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     penalty_include_post_message: "Automatically include offending post message in email message template when silencing or suspending a user"
-    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
+    svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_required: "Full name is a required field of a user's profile."

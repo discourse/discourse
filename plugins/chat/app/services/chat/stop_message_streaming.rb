@@ -13,20 +13,17 @@ module Chat
     #   @param [Integer] message_id
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
-    contract
+    contract do
+      attribute :message_id, :integer
+
+      validates :message_id, presence: true
+    end
     model :message
     step :enforce_membership
     model :membership
     policy :can_stop_streaming
     step :stop_message_streaming
     step :publish_message_streaming_state
-
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-
-      validates :message_id, presence: true
-    end
 
     private
 

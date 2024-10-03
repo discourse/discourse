@@ -39,6 +39,7 @@ hy:
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"
       bookmark_message: "Էջանշել"
+      bookmark_message_edit: "Խմբագրել Էջանիշը"
       save: "Պահպանել"
       sounds:
         none: "Ոչ մի"
@@ -69,6 +70,10 @@ hy:
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"
+      channel:
+        memberships_count:
+          one: "%{count} անդամ"
+          other: "%{count} անդամ"
       create_channel:
         type: "Տիպը"
         types:

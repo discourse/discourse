@@ -157,6 +157,17 @@
           />
         {{/if}}
       </div>
+      {{#if (and this.currentUser.admin this.associatedAccounts)}}
+        <div class="controls">
+          <DButton
+            @action={{this.deleteAssociatedAccounts}}
+            @icon="trash-can"
+            @label="admin.users.delete_associated_accounts.text"
+            @title="admin.users.delete_associated_accounts.title"
+            class="btn-danger"
+          />
+        </div>
+      {{/if}}
     </div>
   {{/if}}
 

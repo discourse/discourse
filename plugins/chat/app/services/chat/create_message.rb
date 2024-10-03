@@ -22,36 +22,7 @@ module Chat
     #   @param incoming_chat_webhook [Chat::IncomingWebhook]
 
     policy :no_silenced_user
-    contract
-    model :channel
-    step :enforce_membership
-    model :membership
-    policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
-    model :reply, optional: true
-    policy :ensure_reply_consistency
-    model :thread, optional: true
-    policy :ensure_valid_thread_for_channel
-    policy :ensure_thread_matches_parent
-    model :uploads, optional: true
-    step :clean_message
-    model :message_instance, :instantiate_message
-
-    transaction do
-      step :create_excerpt
-      step :update_created_by_sdk
-      step :save_message
-      step :delete_drafts
-      step :post_process_thread
-      step :create_webhook_event
-      step :update_channel_last_message
-      step :update_membership_last_read
-      step :process_direct_message_channel
-    end
-    step :publish_new_thread
-    step :process
-    step :publish_user_tracking_state
-
-    class Contract
+    contract do
       attribute :chat_channel_id, :string
       attribute :in_reply_to_id, :string
       attribute :context_topic_id, :integer
@@ -71,6 +42,32 @@ module Chat
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
     end
+    model :channel
+    step :enforce_membership
+    model :membership
+    policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::Policy::MessageCreation
+    model :reply, optional: true
+    policy :ensure_reply_consistency
+    model :thread, optional: true
+    policy :ensure_valid_thread_for_channel
+    policy :ensure_thread_matches_parent
+    model :uploads, optional: true
+    step :clean_message
+    model :message_instance, :instantiate_message
+    transaction do
+      step :create_excerpt
+      step :update_created_by_sdk
+      step :save_message
+      step :delete_drafts
+      step :post_process_thread
+      step :create_webhook_event
+      step :update_channel_last_message
+      step :update_membership_last_read
+      step :process_direct_message_channel
+    end
+    step :publish_new_thread
+    step :process
+    step :publish_user_tracking_state
 
     private
 

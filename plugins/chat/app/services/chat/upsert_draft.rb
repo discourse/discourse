@@ -20,20 +20,17 @@ module Chat
     #   @param [String] json object as string containing the data of the draft (message, uploads, replyToMsg and editing keys)
     #   @option [Integer] thread_id of the channel
     #   @return [Service::Base::Context]
-    contract
-    model :channel
-    policy :can_upsert_draft
-    step :check_thread_exists
-    step :upsert_draft
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :channel_id, :integer
       validates :channel_id, presence: true
 
       attribute :thread_id, :integer
       attribute :data, :string
     end
+    model :channel
+    policy :can_upsert_draft
+    step :check_thread_exists
+    step :upsert_draft
 
     private
 

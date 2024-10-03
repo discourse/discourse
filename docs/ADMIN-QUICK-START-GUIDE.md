@@ -115,9 +115,9 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Admin guide to tags](https://meta.discourse.org/t/-/121041)
 - [Configuring Discourse Chat](https://meta.discourse.org/t/-/230881)
 - [An Overview of Discourse Chat for users](https://meta.discourse.org/t/-/239695)
-- [All admin documentation topics](https://meta.discourse.org/c/-/53)
-- [All moderator documentation topics](https://meta.discourse.org/c/-/125)
-- [All user documentation topics](https://meta.discourse.org/c/-/126)
+- [Site Management documentation topics](https://meta.discourse.org/c/-/53)
+- [Moderation documentation topics](https://meta.discourse.org/tags/c/documentation/10/moderation)
+- [Using Discourse documentation topics](https://meta.discourse.org/c/-/126)
 
 [details="Additional resources for maintaining your server"]
 

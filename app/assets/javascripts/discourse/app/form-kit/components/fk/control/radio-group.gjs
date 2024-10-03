@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
 import FKControlRadioGroupRadio from "./radio-group/radio";
 
-// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 export default class FKControlRadioGroup extends Component {
   static controlType = "radio-group";
 

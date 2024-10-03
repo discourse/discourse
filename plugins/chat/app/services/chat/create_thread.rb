@@ -16,7 +16,14 @@ module Chat
     #   @option params_to_create [String,nil] title
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :original_message_id, :integer
+      attribute :channel_id, :integer
+      attribute :title, :string
+
+      validates :original_message_id, :channel_id, presence: true
+      validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+    end
     model :channel
     policy :can_view_channel
     policy :threading_enabled_for_channel
@@ -27,16 +34,6 @@ module Chat
       step :fetch_membership
       step :publish_new_thread
       step :trigger_chat_thread_created_event
-    end
-
-    # @!visibility private
-    class Contract
-      attribute :original_message_id, :integer
-      attribute :channel_id, :integer
-      attribute :title, :string
-
-      validates :original_message_id, :channel_id, presence: true
-      validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
 
     private

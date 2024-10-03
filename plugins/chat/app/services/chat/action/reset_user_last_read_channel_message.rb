@@ -2,15 +2,24 @@
 
 module Chat
   module Action
-    class ResetUserLastReadChannelMessage
+    class ResetUserLastReadChannelMessage < Service::ActionBase
       # @param [Array] last_read_message_ids The message IDs to match with the
       #   last_read_message_ids in UserChatChannelMembership which will be reset
       #   to NULL or the most recent non-deleted message in the channel to
       #   update read state.
       # @param [Integer] channel_ids The channel IDs of the memberships to update,
       #   this is used to find the latest non-deleted message in the channel.
-      def self.call(last_read_message_ids, channel_ids)
-        sql = <<~SQL
+      param :last_read_message_ids, []
+      param :channel_ids, []
+
+      def call
+        DB.exec(sql_query, last_read_message_ids:, channel_ids:)
+      end
+
+      private
+
+      def sql_query
+        <<~SQL
          -- update the last_read_message_id to the most recent
          -- non-deleted message in the channel so unread counts are correct.
          -- the cte row_number is necessary to only return a single row
@@ -33,8 +42,6 @@ module Chat
           SET last_read_message_id = NULL
           WHERE last_read_message_id IN (:last_read_message_ids);
         SQL
-
-        DB.exec(sql, last_read_message_ids: last_read_message_ids, channel_ids: channel_ids)
       end
     end
   end
