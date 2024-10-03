@@ -1,13 +1,13 @@
-let pluginHeaderActionComponents = [];
+let pluginHeaderActionComponents = new Map();
 
-export function registerPluginHeaderActionComponent(pluginId, componentKlass) {
-  pluginHeaderActionComponents[pluginId] = componentKlass;
+export function registerPluginHeaderActionComponent(pluginId, componentClass) {
+  pluginHeaderActionComponents.set(pluginId, componentClass);
 }
 
 export function clearPluginHeaderActionComponents() {
-  pluginHeaderActionComponents = {};
+  pluginHeaderActionComponents = new Map();
 }
 
 export function headerActionComponentForPlugin(pluginId) {
-  return pluginHeaderActionComponents[pluginId];
+  return pluginHeaderActionComponents.get(pluginId);
 }

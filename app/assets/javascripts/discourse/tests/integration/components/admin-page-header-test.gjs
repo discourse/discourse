@@ -202,7 +202,7 @@ module("Integration | Component | AdminPageHeader", function (hooks) {
 });
 
 module("Integration | Component | AdminPageHeader | Mobile", function (hooks) {
-  hooks.beforeEach(() => {
+  hooks.beforeEach(function () {
     forceMobile();
   });
 

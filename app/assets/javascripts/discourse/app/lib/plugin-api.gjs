@@ -3265,10 +3265,10 @@ class PluginApi {
    * for that plugin -- one example is "Create export" for chat.
    *
    * @param {string} pluginId - The `dasherizedName` of the plugin using this component.
-   * @param {Class} componentKlass - The JS class of the component to render.
+   * @param {Class} componentClass - The JS class of the component to render.
    */
-  registerPluginHeaderActionComponent(pluginId, componentKlass) {
-    registerPluginHeaderActionComponent(pluginId, componentKlass);
+  registerPluginHeaderActionComponent(pluginId, componentClass) {
+    registerPluginHeaderActionComponent(pluginId, componentClass);
   }
 
   // eslint-disable-next-line no-unused-vars

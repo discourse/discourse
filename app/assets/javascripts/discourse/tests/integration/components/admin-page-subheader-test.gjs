@@ -132,7 +132,7 @@ module("Integration | Component | AdminPageSubheader", function (hooks) {
 module(
   "Integration | Component | AdminPageSubheader | Mobile",
   function (hooks) {
-    hooks.beforeEach(() => {
+    hooks.beforeEach(function () {
       forceMobile();
     });
 
