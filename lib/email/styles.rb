@@ -221,7 +221,7 @@ module Email
 
       html_lang = SiteSetting.default_locale.sub("_", "-")
       style("html", nil, :lang => html_lang, "xml:lang" => html_lang)
-      style("body", "line-height: 1.4; text-align:#{Rtl.new(nil).enabled? ? "right" : "left"};")
+      style("body", "margin: 0; padding: 0; line-height: 1.4; text-align:#{Rtl.new(nil).enabled? ? "right" : "left"};")
       style("body", nil, dir: Rtl.new(nil).enabled? ? "rtl" : "ltr")
 
       style(
