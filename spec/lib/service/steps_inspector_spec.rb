@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe StepsInspector do
+RSpec.describe Service::StepsInspector do
   class DummyService
     include Service::Base
 
@@ -239,7 +239,7 @@ RSpec.describe StepsInspector do
       end
 
       context "when a reason is provided" do
-        before { result["result.policy.policy"].reason = "failed" }
+        before { result["result.policy.policy"][:reason] = "failed" }
 
         it "returns the reason" do
           expect(error).to eq "failed"

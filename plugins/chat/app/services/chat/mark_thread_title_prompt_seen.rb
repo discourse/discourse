@@ -54,7 +54,7 @@ module Chat
           notification_level: Chat::NotificationLevels.all[:normal],
         ) if !membership
       membership.update!(thread_title_prompt_seen: true)
-      context.membership = membership
+      context[:membership] = membership
     end
   end
 end

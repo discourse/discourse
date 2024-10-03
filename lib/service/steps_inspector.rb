@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# = StepsInspector
+# = Service::StepsInspector
 #
 # This class takes a {Service::Base::Context} object and inspects it.
 # It will output a list of steps and what is their known state.
-class StepsInspector
+class Service::StepsInspector
   # @!visibility private
   class Step
     attr_reader :step, :result, :nesting_level

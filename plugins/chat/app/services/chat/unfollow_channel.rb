@@ -32,7 +32,7 @@ module Chat
     end
 
     def unfollow(channel:, guardian:)
-      context.membership = channel.remove(guardian.user)
+      context[:membership] = channel.remove(guardian.user)
     end
   end
 end
