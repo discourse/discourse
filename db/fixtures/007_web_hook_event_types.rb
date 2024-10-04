@@ -46,6 +46,11 @@ WebHookEventType.seed do |b|
   b.group = WebHookEventType.groups[:post]
 end
 WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:post_moved]
+  b.name = "post_moved"
+  b.group = WebHookEventType.groups[:post]
+end
+WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:user_logged_in]
   b.name = "user_logged_in"
   b.group = WebHookEventType.groups[:user]

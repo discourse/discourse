@@ -48,6 +48,7 @@ class WebHookEventType < ActiveRecord::Base
     post_edited: 202,
     post_destroyed: 203,
     post_recovered: 204,
+    post_moved: 205,
     user_logged_in: 301,
     user_logged_out: 302,
     user_confirmed_email: 303,

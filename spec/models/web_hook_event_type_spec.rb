@@ -15,6 +15,7 @@ RSpec.describe WebHookEventType do
           post_edited
           post_destroyed
           post_recovered
+          post_moved
           user_logged_in
           user_logged_out
           user_confirmed_email
