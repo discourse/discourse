@@ -32,7 +32,7 @@ export default class PostMenuFlagButton extends Component {
           </DButton>
         {{/if}}
         <DButton
-          class="create-flag"
+          class="post-action-menu__flag create-flag"
           ...attributes
           @action={{@buttonActions.showFlags}}
           @icon="flag"

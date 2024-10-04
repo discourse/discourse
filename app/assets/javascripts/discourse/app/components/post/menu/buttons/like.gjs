@@ -61,8 +61,9 @@ export default class PostMenuLikeButton extends Component {
         />
         <DButton
           class={{concatClass
-            "btn-icon"
+            "post-action-menu__like"
             "toggle-like"
+            "btn-icon"
             (if this.isAnimated "heart-animation")
             (if @post.liked "has-like fade-out" "like")
           }}
@@ -122,8 +123,9 @@ class LikeCount extends Component {
     {{#if @post.likeCount}}
       <DButton
         class={{concatClass
-          "button-count"
+          "post-action-menu__like-count"
           "like-count"
+          "button-count"
           "highlight-action"
           (if @post.yours "my-likes" "regular-likes")
         }}

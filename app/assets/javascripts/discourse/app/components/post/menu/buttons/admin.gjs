@@ -11,7 +11,7 @@ export default class PostMenuAdminButton extends Component {
   <template>
     {{#if @shouldRender}}
       <DButton
-        class="show-post-admin-menu"
+        class="post-action-menu__admin show-post-admin-menu"
         ...attributes
         @action={{@buttonActions.openAdminMenu}}
         @forwardEvent={{true}}

@@ -9,7 +9,7 @@ export default class PostMenuShowMoreButton extends Component {
   <template>
     {{#if @shouldRender}}
       <DButton
-        class="show-more-actions"
+        class="post-action-menu__show-more show-more-actions"
         ...attributes
         @action={{@buttonActions.showMoreActions}}
         @icon="ellipsis-h"

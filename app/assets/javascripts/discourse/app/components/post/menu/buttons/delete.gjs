@@ -38,9 +38,9 @@ export default class PostMenuDeleteButton extends Component {
       case BUTTON_ACTION_MODE_RECOVER_TOPIC:
       case BUTTON_ACTION_MODE_RECOVERING:
       case BUTTON_ACTION_MODE_RECOVERING_TOPIC:
-        return "recover";
+        return "post-action-menu__recover recover";
       default:
-        return "delete";
+        return "post-action-menu__delete delete";
     }
   }
 

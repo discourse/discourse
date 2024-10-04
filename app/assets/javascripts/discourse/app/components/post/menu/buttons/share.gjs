@@ -2,7 +2,7 @@ import DButton from "discourse/components/d-button";
 
 const PostMenuShareButton = <template>
   <DButton
-    class="share"
+    class="post-action-menu__share share"
     ...attributes
     @action={{@buttonActions.share}}
     @icon="d-post-share"

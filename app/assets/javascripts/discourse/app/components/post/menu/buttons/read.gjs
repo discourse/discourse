@@ -11,7 +11,7 @@ export default class PostMenuReadButton extends Component {
     {{#if @shouldRender}}
       <div class="double-button">
         <DButton
-          class="button-count read-indicator"
+          class="post-action-menu__read read-indicator button-count"
           ...attributes
           @ariaPressed={{@context.isWhoReadVisible}}
           @action={{@buttonActions.toggleWhoRead}}
