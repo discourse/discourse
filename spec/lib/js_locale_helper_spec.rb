@@ -169,14 +169,18 @@ RSpec.describe JsLocaleHelper do
     let(:translated_message) do
       v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
+    let(:fake_logger) { FakeLogger.new }
 
     before do
+      Rails.logger.broadcast_to(fake_logger)
       overriden_translation_ja.update_columns(
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_he.update_columns(value: "{ count, plural, ")
       v8_ctx.eval(output)
     end
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     context "when locale is 'en'" do
       let(:locale) { "en" }
@@ -257,6 +261,11 @@ RSpec.describe JsLocaleHelper do
 
       it "raises an error" do
         expect(output).to match(/Failed to compile message formats/)
+      end
+
+      it "logs which keys are problematic" do
+        output
+        expect(fake_logger.errors).to include(/posts_likes_MF/)
       end
     end
   end
