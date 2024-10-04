@@ -1140,15 +1140,17 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     const event = new KeyboardEvent("keydown", { key: "Escape" });
     document.dispatchEvent(event);
 
-    assert.notOk(exists(".sidebar-more-section-links-details-content"));
+    assert.dom(".sidebar-more-section-links-details-content").doesNotExist();
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-      ).getAttribute("aria-expanded"),
-      "false",
-      "aria-expanded is set to false after closing the menu"
-    );
+      )
+      .hasAria(
+        "expanded",
+        "false",
+        "aria-expanded is set to false after closing the menu"
+      );
   });
 
   test("first link is focused when the more menu is opened", async function (assert) {
