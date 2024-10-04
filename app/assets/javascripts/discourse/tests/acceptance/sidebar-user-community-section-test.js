@@ -2,6 +2,7 @@ import {
   click,
   currentRouteName,
   currentURL,
+  triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -1137,8 +1138,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert.dom(".sidebar-more-section-links-details-content").exists();
 
-    const event = new KeyboardEvent("keydown", { key: "Escape" });
-    document.dispatchEvent(event);
+    await triggerKeyEvent(document, "keydown", "Escape");
 
     assert.dom(".sidebar-more-section-links-details-content").doesNotExist();
 

@@ -28,7 +28,7 @@ export default class SidebarMoreSectionLinks extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#removeEventListeners();
+    this.removeEventListeners();
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
 
@@ -120,26 +120,18 @@ export default class SidebarMoreSectionLinks extends Component {
     }
   }
 
-  #addEventListeners() {
+  @action
+  addEventListeners() {
     document.addEventListener("click", this.closeDetails);
     document.addEventListener("keydown", this.closeOnEscape);
     document.addEventListener("focusout", this.closeOnFocusOut);
   }
 
-  #removeEventListeners() {
+  @action
+  removeEventListeners() {
     document.removeEventListener("click", this.closeDetails);
     document.removeEventListener("keydown", this.closeOnEscape);
     document.removeEventListener("focusout", this.closeOnFocusOut);
-  }
-
-  @action
-  registerEventListeners() {
-    this.#addEventListeners();
-  }
-
-  @action
-  unregisterEventListeners() {
-    this.#removeEventListeners();
   }
 
   #isOutsideDetailsClick(event) {
@@ -189,8 +181,8 @@ export default class SidebarMoreSectionLinks extends Component {
     {{#if this.open}}
       <div class="sidebar-more-section-links-details">
         <div
-          {{didInsert this.registerEventListeners}}
-          {{willDestroy this.unregisterEventListeners}}
+          {{didInsert this.addEventListeners}}
+          {{willDestroy this.removeEventListeners}}
           class="sidebar-more-section-links-details-content-wrapper"
         >
 
