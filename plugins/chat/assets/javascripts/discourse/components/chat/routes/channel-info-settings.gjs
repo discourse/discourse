@@ -62,9 +62,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
     "chat.settings.channel_wide_mentions_label"
   );
   autoJoinLabel = I18n.t("chat.settings.auto_join_users_label");
-  notificationsLevelLabel = I18n.t(
-    "chat.settings.notification_level"
-  );
+  notificationsLevelLabel = I18n.t("chat.settings.notification_level");
 
   get canEditChannel() {
     if (
