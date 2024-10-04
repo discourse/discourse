@@ -553,6 +553,20 @@ createWidget("post-contents", {
         this.currentUser?.use_auto_glimmer_post_menu) &&
         !postMenuWidgetExtensionsAdded)
     ) {
+      if (
+        postMenuWidgetExtensionsAdded &&
+        !postMenuWidgetExtensionsAdded.logged
+      ) {
+        postMenuWidgetExtensionsAdded.logged = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          [
+            "Using the new glimmer post menu but the following plugins and/or themes are using deprecated APIs and may cause your site to not work properly:",
+            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+          ].join("\n- ")
+        );
+      }
+
       const filteredRepliesView =
         this.siteSettings.enable_filtered_replies_view;
       result.push(
@@ -594,6 +608,7 @@ createWidget("post-contents", {
       );
     } else {
       if (
+        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
         postMenuWidgetExtensionsAdded &&
         !postMenuWidgetExtensionsAdded.logged
       ) {
