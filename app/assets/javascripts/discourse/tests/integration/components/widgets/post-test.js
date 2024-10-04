@@ -187,6 +187,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.strictEqual(count(".post-info.whisper"), 1);
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("like count button", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
@@ -219,6 +220,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".who-liked a.trigger-user-card").doesNotExist();
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("like count with no likes", async function (assert) {
     this.set("args", { likeCount: 0 });
 
@@ -230,6 +232,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom("button.like-count").doesNotExist();
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("share button", async function (assert) {
     this.siteSettings.post_menu += "|share";
     this.set("args", { shareUrl: "http://share-me.example.com" });
@@ -240,6 +243,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.ok(exists(".actions button.share"), "it renders a share button");
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("copy link button", async function (assert) {
     this.set("args", { shareUrl: "http://share-me.example.com" });
 
@@ -251,6 +255,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       .exists("it renders a copy link button");
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("liking", async function (assert) {
     const args = { showLike: true, canToggleLike: true, id: 5 };
     this.set("args", args);
@@ -278,6 +283,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".actions button.like-count").doesNotExist();
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("anon liking", async function (assert) {
     this.owner.unregister("service:current-user");
     const args = { showLike: true };
@@ -304,6 +310,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.ok(this.loginShown);
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test("edit button", async function (assert) {
     this.set("args", { canEdit: true });
     this.set("editPost", () => (this.editPostCalled = true));
@@ -317,6 +324,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.ok(this.editPostCalled, "it triggered the edit action");
   });
 
+  // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
   test(`edit button - can't edit`, async function (assert) {
     this.set("args", { canEdit: false });
 

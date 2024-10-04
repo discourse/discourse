@@ -79,22 +79,42 @@ module PageObjects
       end
 
       def click_post_action_button(post, button)
-        case button
-        when :bookmark
-          within_post(post) { find(".bookmark").click }
-        when :reply
-          within_post(post) { find(".post-controls .reply").click }
-        when :flag
-          within_post(post) { find(".post-controls .create-flag").click }
-        when :copy_link
-          within_post(post) { find(".post-controls .post-action-menu__copy-link").click }
-        when :edit
-          within_post(post) { find(".post-controls .edit").click }
+        find_post_action_button(post, button).click
+      end
+
+      def find_post_action_buttons(post)
+        within_post(post) { find(".post-controls .actions") }
+      end
+
+      def find_post_action_button(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { find(button_selector) }
+      end
+
+      def has_post_action_button?(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { has_css?(button_selector) }
+      end
+
+      def has_no_post_action_button?(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { has_no_css?(button_selector) }
+      end
+
+      def has_who_liked_on_post?(post, count: nil)
+        if count
+          return within_post(post) { has_css?(".who-liked a.trigger-user-card", count: count) }
         end
+
+        within_post(post) { has_css?(".who-liked") }
+      end
+
+      def has_no_who_liked_on_post?(post)
+        within_post(post) { has_no_css?(".who-liked") }
       end
 
       def expand_post_admin_actions(post)
-        within_post(post) { find(".show-post-admin-menu").click }
+        click_post_action_button(post, :admin)
       end
 
       def click_post_admin_action_button(post, button)
@@ -256,6 +276,40 @@ module PageObjects
 
       def within_topic_footer_buttons
         within("#topic-footer-buttons") { yield }
+      end
+
+      def selector_for_post_action_button(button)
+        # TODO (saquetim) replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
+        case button
+        when :admin
+          ".post-controls .show-post-admin-menu"
+        when :bookmark
+          ".post-controls .bookmark"
+        when :copy_link, :copyLink
+          ".post-controls .post-action-menu__copy-link"
+        when :delete
+          ".post-controls .delete"
+        when :edit
+          ".post-controls .edit"
+        when :flag
+          ".post-controls .create-flag"
+        when :like
+          ".post-controls .toggle-like"
+        when :like_count
+          ".post-controls .like-count"
+        when :read
+          ".post-controls .read-indicator"
+        when :recover
+          ".post-controls .recover"
+        when :reply
+          ".post-controls .reply"
+        when :share
+          ".post-controls .share"
+        when :show_more
+          ".post-controls .show-more-actions"
+        else
+          raise "Unknown post menu button type: #{button}"
+        end
       end
 
       def is_post_bookmarked(post, bookmarked:, with_reminder: false)
