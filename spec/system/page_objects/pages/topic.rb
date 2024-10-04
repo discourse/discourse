@@ -137,6 +137,14 @@ module PageObjects
         click_post_action_button(post, :admin)
       end
 
+      def has_post_admin_menu?()
+        has_css?("[data-content][data-identifier='admin-post-menu']")
+      end
+
+      def has_no_post_admin_menu?()
+        has_no_css?("[data-content][data-identifier='admin-post-menu']")
+      end
+
       def click_post_admin_action_button(post, button)
         element_klass = "[data-content][data-identifier='admin-post-menu']"
         case button

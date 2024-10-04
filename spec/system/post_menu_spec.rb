@@ -78,6 +78,67 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "admin" do
+        before do
+          SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+          SiteSetting.post_menu_hidden_items = ""
+        end
+
+        it "displays the admin button when the user can manage the post" do
+          # do not display the edit button when unlogged
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :admin)
+          expect(topic_page).to have_no_post_action_button(post2, :admin)
+
+          # display the admin button for all the posts when a moderator is logged
+          sign_in(Fabricate(:moderator))
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :admin)
+          expect(topic_page).to have_post_action_button(post2, :admin)
+
+          # display the admin button for the all the posts when an admin is logged
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :admin)
+          expect(topic_page).to have_post_action_button(post2, :admin)
+        end
+
+        it "displays the admin button when the user can wiki the post / edit staff notices" do
+          # display the admin button when the user can wiki
+          sign_in(Fabricate(:trust_level_4))
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :admin)
+          expect(topic_page).to have_post_action_button(post2, :admin)
+
+          # display the admin button when the user can wiki
+          SiteSetting.self_wiki_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :admin)
+          expect(topic_page).to have_post_action_button(post2, :admin)
+        end
+
+        it "works as expected" do
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_admin_menu
+          topic_page.click_post_action_button(post, :admin)
+          expect(topic_page).to have_post_admin_menu
+        end
+      end
+
       describe "copy link" do
         let(:cdp) { PageObjects::CDP.new }
 
