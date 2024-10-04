@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 import MoreSectionLink from "./more-section-link";
 import SectionLinkButton from "./section-link-button";
 
@@ -123,48 +122,45 @@ export default class SidebarMoreSectionLinks extends Component {
     {{/if}}
 
     <li class="sidebar-section-link-wrapper">
-      <button
-        {{on "click" this.toggleSectionLinks}}
-        aria-expanded={{if this.open "true" "false"}}
-        class="sidebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
+      <DMenu
+        @triggerClass="idebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
+        @contentClass="sidebar-more-section-links-details-content"
+        @modalForMobile={{true}}
+        @autofocus={{true}}
       >
-        <span class="sidebar-section-link-prefix icon">
-          {{icon "ellipsis-vertical"}}
-        </span>
-        <span class="sidebar-section-link-content-text">
-          {{i18n "sidebar.more"}}
-        </span>
-      </button>
-    </li>
+        <:trigger>
+          <span class="sidebar-section-link-prefix icon">
+            {{icon "ellipsis-vertical"}}
+          </span>
+          <span class="sidebar-section-link-content-text">
+            {{i18n "sidebar.more"}}
+          </span>
+        </:trigger>
 
-    {{#if this.open}}
-      <div class="sidebar-more-section-links-details">
-        <div
-          {{didInsert this.registerClickListener}}
-          {{willDestroy this.unregisterClickListener}}
-          class="sidebar-more-section-links-details-content-wrapper"
-        >
-
-          <div class="sidebar-more-section-links-details-content">
-            <ul class="sidebar-more-section-links-details-content-main">
-              {{#each this.sectionLinks as |sectionLink|}}
-                <MoreSectionLink @sectionLink={{sectionLink}} />
-              {{/each}}
-            </ul>
+        <:content>
+          <DropdownMenu as |dropdown|>
+            {{#each this.sectionLinks as |sectionLink|}}
+              <MoreSectionLink
+                @sectionLink={{sectionLink}}
+                class="dropdown-menu__item"
+              />
+            {{/each}}
 
             {{#if @moreButtonAction}}
-              <div class="sidebar-more-section-links-details-content-footer">
+              <dropdown.divider />
+
+              <dropdown.item>
                 <SectionLinkButton
                   @action={{@moreButtonAction}}
                   @icon={{@moreButtonIcon}}
                   @text={{@moreButtonText}}
                   @name="customize"
                 />
-              </div>
+              </dropdown.item>
             {{/if}}
-          </div>
-        </div>
-      </div>
-    {{/if}}
+          </DropdownMenu>
+        </:content>
+      </DMenu>
+    </li>
   </template>
 }
