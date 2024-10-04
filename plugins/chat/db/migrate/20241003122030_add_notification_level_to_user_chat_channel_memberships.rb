@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class AddNotificationLevelToUserChatChannelMemberships < ActiveRecord::Migration[7.1]
-  def change
+  def up
     remove_index :user_chat_channel_memberships, name: "user_chat_channel_memberships_index"
     add_column :user_chat_channel_memberships,
                :notification_level,
