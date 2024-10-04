@@ -1135,7 +1135,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.ok(exists(".sidebar-more-section-links-details-content"));
+    assert.dom(".sidebar-more-section-links-details-content").exists();
 
     const event = new KeyboardEvent("keydown", { key: "Escape" });
     document.dispatchEvent(event);
