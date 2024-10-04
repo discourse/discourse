@@ -1160,15 +1160,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    const firstLink = query(
-      ".sidebar-more-section-links-details-content-wrapper a"
-    );
-
-    assert.strictEqual(
-      document.activeElement,
-      firstLink,
-      "first link is focused"
-    );
+    assert
+      .dom(".sidebar-more-section-links-details-content-wrapper a")
+      .isFocused("first link is focused");
   });
 });
 
