@@ -49,6 +49,14 @@ module PageObjects
         post_by_number(post).has_content? post.raw
       end
 
+      def has_deleted_post?(post)
+        has_css?(".topic-post.deleted:has(#post_#{post.post_number})")
+      end
+
+      def has_no_deleted_post?(post)
+        has_no_css?(".topic-post.deleted:has(#post_#{post.post_number})")
+      end
+
       def has_post_number?(number)
         has_css?("#post_#{number}")
       end
@@ -111,6 +119,18 @@ module PageObjects
 
       def has_no_who_liked_on_post?(post)
         within_post(post) { has_no_css?(".who-liked") }
+      end
+
+      def has_who_read_on_post?(post, count: nil)
+        if count
+          return within_post(post) { has_css?(".who-read a.trigger-user-card", count: count) }
+        end
+
+        within_post(post) { has_css?(".who-read") }
+      end
+
+      def has_no_who_read_on_post?(post)
+        within_post(post) { has_no_css?(".who-read") }
       end
 
       def expand_post_admin_actions(post)

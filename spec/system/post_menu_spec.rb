@@ -9,6 +9,9 @@ describe "Post menu", type: :system do
 
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
+  let(:flag_modal) { PageObjects::Modals::Flag.new }
+  let(:login_modal) { PageObjects::Modals::Login.new }
+  let(:modal) { PageObjects::Modals::Base.new }
 
   %w[enabled disabled].each do |value|
     before do
@@ -90,6 +93,125 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "delete / recover" do
+        before { SiteSetting.post_menu_hidden_items = "" }
+
+        it "displays the delete button only when the user can delete the post" do
+          # do not display the edit button when unlogged
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :delete)
+          expect(topic_page).to have_no_post_action_button(post2, :delete)
+
+          # display the delete button only for the post that `user` can delete
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :delete)
+          expect(topic_page).to have_post_action_button(post2, :delete)
+
+          # display the delete button for the all the posts because an admin is logged
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :delete)
+          expect(topic_page).to have_post_action_button(post2, :delete)
+        end
+
+        it "displays the recover button only when the user can recover the post" do
+          PostDestroyer.new(user, post2).destroy
+
+          # do not display the edit button when unlogged
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :recover)
+          expect(topic_page).to have_no_post_action_button(post2, :recover)
+
+          # do not display the recover button because when `user` deletes teh post. it's just marked for deletion
+          # `user` cannot recover it.
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :recover)
+          expect(topic_page).to have_no_post_action_button(post2, :recover)
+
+          # display the recover button for the deleted post because an admin is logged
+          PostDestroyer.new(admin, post).destroy
+
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :recover)
+        end
+
+        it "deletes a topic" do
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_deleted_post(post)
+          topic_page.click_post_action_button(post, :delete)
+          expect(topic_page).to have_deleted_post(post)
+        end
+
+        it "deletes a post" do
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_deleted_post(post2)
+          topic_page.click_post_action_button(post2, :delete)
+          expect(topic_page).to have_deleted_post(post2)
+        end
+
+        it "shows a flag to delete message when the user is the author but can't delete it without permission" do
+          other_topic = Fabricate(:topic)
+          other_p1 = Fabricate(:post, topic: other_topic, user: user)
+          other_p2 = Fabricate(:post, topic: other_topic, user: Fabricate(:user))
+
+          sign_in(user)
+
+          topic_page.visit_topic(other_topic)
+
+          expect(topic_page).to have_post_action_button(other_p1, :delete)
+          expect(topic_page).to have_post_action_button(other_p1, :flag)
+          topic_page.click_post_action_button(other_p1, :delete)
+
+          expect(topic_page).to have_no_deleted_post(other_p1)
+          expect(modal).to be_open
+          expect(modal).to have_content(I18n.t("js.post.controls.delete_topic_disallowed_modal"))
+        end
+
+        it "recovers a topic" do
+          PostDestroyer.new(admin, post).destroy
+
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_deleted_post(post)
+          topic_page.click_post_action_button(post, :recover)
+          expect(topic_page).to have_no_deleted_post(post)
+        end
+
+        it "recovers a post" do
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_deleted_post(post2)
+          topic_page.click_post_action_button(post2, :delete)
+          expect(topic_page).to have_deleted_post(post2)
+
+          topic_page.click_post_action_button(post2, :recover)
+          expect(topic_page).to have_no_deleted_post(post2)
+        end
+      end
+
       describe "edit" do
         before do
           SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
@@ -154,6 +276,44 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "flag" do
+        before { SiteSetting.post_menu_hidden_items = "" }
+
+        it "displays the flag button only when the user can flag the post" do
+          # do not display the edit button when unlogged
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :flag)
+          expect(topic_page).to have_no_post_action_button(post2, :flag)
+
+          # display the flag button only for the post that `user` can flag
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :flag)
+          expect(topic_page).to have_post_action_button(post2, :flag)
+
+          # display the flag button for the all the posts because an admin is logged
+          sign_in(admin)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :flag)
+          expect(topic_page).to have_post_action_button(post2, :flag)
+        end
+
+        it "works as expected" do
+          sign_in(user)
+
+          topic_page.visit_topic(post2.topic)
+
+          expect(flag_modal).to be_closed
+          topic_page.click_post_action_button(post2, :flag)
+          expect(flag_modal).to be_open
+        end
+      end
+
       describe "like" do
         it "toggles liking a post" do
           unliked_post = Fabricate(:post, topic: topic, like_count: 0)
@@ -204,7 +364,7 @@ describe "Post menu", type: :system do
           # clicking on the like button should display the login modal
           topic_page.click_post_action_button(post2, :like)
 
-          expect(page).to have_css(".d-modal.login-modal")
+          expect(login_modal).to be_open
         end
 
         it "renders the like count as expected" do
@@ -233,6 +393,53 @@ describe "Post menu", type: :system do
           # toggle users who liked off
           topic_page.click_post_action_button(post, :like_count)
           expect(topic_page).to have_no_who_liked_on_post(post)
+        end
+      end
+
+      describe "read" do
+        fab!(:group) { Fabricate(:group, publish_read_state: true) }
+        fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
+        fab!(:group_user2) { Fabricate(:group_user, group: group, user: Fabricate(:user)) }
+        fab!(:pm) { Fabricate(:private_message_topic, allowed_groups: [group]) }
+        fab!(:pm_post1) { Fabricate(:post, topic: pm, user: user, reads: 2, created_at: 1.day.ago) }
+        fab!(:pm_post2) { Fabricate(:post, topic: pm, user: group_user2.user, reads: 0) }
+
+        before do
+          SiteSetting.post_menu = "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply"
+          sign_in(user)
+        end
+
+        it "shows the read indicator when expected" do
+          topic_page.visit_topic(pm)
+          # it shows the read indicator on group pms where publish_read_state = true
+          # when the post has reads > 0
+          expect(topic_page).to have_post_action_button(pm_post1, :read)
+          read_button = topic_page.find_post_action_button(pm_post1, :read)
+          expect(read_button).to have_content(1)
+          # don't show when the post has reads = 0
+          expect(topic_page).to have_no_post_action_button(pm_post2, :read)
+
+          # dont't show on regular posts
+          topic_page.visit_topic(post.topic)
+          expect(topic_page).to have_no_post_action_button(post, :read)
+          expect(topic_page).to have_no_post_action_button(post2, :read)
+        end
+
+        it "toggles the users who read when clicking on the read button" do
+          TopicUser.update_last_read(user, pm.id, 1, 1, 1)
+          TopicUser.update_last_read(admin, pm.id, 2, 1, 1)
+
+          topic_page.visit_topic(pm)
+
+          expect(topic_page).to have_no_who_read_on_post(pm_post1)
+
+          # toggle users who read on
+          topic_page.click_post_action_button(pm_post1, :read)
+          expect(topic_page).to have_who_read_on_post(pm_post1, count: 1)
+
+          # toggle users who read off
+          topic_page.click_post_action_button(pm_post1, :read)
+          expect(topic_page).to have_no_who_read_on_post(pm_post1)
         end
       end
 
