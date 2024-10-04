@@ -164,7 +164,7 @@ describe Jobs::Chat::NotifyMentioned do
     it "skips desktop notifications based on user preferences" do
       message = create_chat_message
       Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
       )
 
       desktop_notification =
@@ -176,7 +176,7 @@ describe Jobs::Chat::NotifyMentioned do
     it "skips push notifications based on user preferences" do
       message = create_chat_message
       Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
       )
 
       PostAlerter.expects(:push_notification).never
@@ -191,7 +191,7 @@ describe Jobs::Chat::NotifyMentioned do
     it "skips desktop notifications based on user muting preferences" do
       message = create_chat_message
       Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         muted: true,
       )
 
@@ -204,7 +204,7 @@ describe Jobs::Chat::NotifyMentioned do
     it "skips push notifications based on user muting preferences" do
       message = create_chat_message
       Chat::UserChatChannelMembership.find_by(chat_channel: public_channel, user: user_2).update!(
-        mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         muted: true,
       )
 

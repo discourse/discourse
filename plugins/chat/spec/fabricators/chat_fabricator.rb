@@ -193,8 +193,7 @@ Fabricator(:user_chat_channel_membership_for_dm, from: :user_chat_channel_member
   user
   chat_channel
   following true
-  desktop_notification_level 2
-  mobile_notification_level 2
+  notification_level 2
 end
 
 Fabricator(:chat_draft, class_name: "Chat::Draft") do

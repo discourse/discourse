@@ -69,8 +69,7 @@ RSpec.describe Chat::CreateDirectMessageChannel do
           expect(membership).to have_attributes(
             following: false,
             muted: false,
-            desktop_notification_level: "always",
-            mobile_notification_level: "always",
+            notification_level: "always",
           )
         end
       end

@@ -44,7 +44,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
     before do
       membership2.update!(
-        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
       )
     end
 
@@ -76,10 +76,11 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
       before { channel.update!(threading_enabled: true) }
 
-      context "with channel notification_level is always" do
+      context "when channel notification_level is always" do
         before do
-          always = Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
-          membership1.update!(desktop_notification_level: always, mobile_notification_level: always)
+          membership1.update!(
+            notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          )
         end
 
         it "creates a core notification when watching the thread" do
@@ -110,8 +111,14 @@ RSpec.describe Jobs::Chat::NotifyWatching do
         end
       end
 
-      context "without channel notifications" do
+      context "when channel notification_level is never" do
         before do
+          membership1.update!(
+            notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+          )
+          membership2.update!(
+            notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
+          )
           thread.membership_for(user1).update!(
             notification_level: Chat::NotificationLevels.all[:watching],
           )
@@ -181,15 +188,14 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       end
     end
 
-    context "when mobile_notification_level is always and desktop_notification_level is none" do
+    context "when notification_level is always" do
       before do
         membership2.update!(
-          desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
-          mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         )
       end
 
-      it "sends a mobile notification" do
+      it "sends push notifications and message bus notifications" do
         PostAlerter.expects(:push_notification).with(
           user2,
           has_entries(
@@ -208,7 +214,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           ),
         )
         messages = notification_messages_for(user2)
-        expect(messages.length).to be_zero
+        expect(messages.length).to eq(1)
       end
 
       context "when the channel is muted via membership preferences" do
@@ -280,7 +286,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
     before do
       membership2.update!(
-        desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+        notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
       )
     end
 
@@ -313,15 +319,14 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       end
     end
 
-    context "when mobile_notification_level is always and desktop_notification_level is none" do
+    context "when notification_level is always" do
       before do
         membership2.update!(
-          desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:never],
-          mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         )
       end
 
-      it "sends a mobile notification" do
+      it "sends both push notifications and message bus notifications" do
         PostAlerter.expects(:push_notification).with(
           user2,
           has_entries(
@@ -340,7 +345,7 @@ RSpec.describe Jobs::Chat::NotifyWatching do
           ),
         )
         messages = notification_messages_for(user2)
-        expect(messages.length).to be_zero
+        expect(messages.length).to eq(1)
       end
 
       context "when the channel is muted via membership preferences" do
