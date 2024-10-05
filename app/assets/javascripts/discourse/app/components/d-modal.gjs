@@ -159,6 +159,12 @@ export default class DModal extends Component {
   }
 
   @action
+  handleWrapperPointerDown(e) {
+    // prevents hamburger menu to close on modal backdrop click
+    e.stopPropagation();
+  }
+
+  @action
   handleWrapperClick(e) {
     if (e.button !== 0) {
       return; // Non-default mouse button
@@ -396,6 +402,7 @@ export default class DModal extends Component {
             enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
+          {{on "pointerdown" this.handleWrapperPointerDown}}
         ></div>
       {{/unless}}
     </ConditionalInElement>
