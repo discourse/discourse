@@ -7,15 +7,15 @@ export default class PollResultsRankedChoiceComponent extends Component {
   get rankedChoiceWinnerText() {
     return htmlSafe(
       I18n.t("poll.ranked_choice.winner", {
-        count: this.args.rankedChoiceOutcome.round_activity.length,
-        winner: this.args.rankedChoiceOutcome.winning_candidate.html,
+        count: this.args.rankedChoiceOutcome?.round_activity?.length,
+        winner: this.args.rankedChoiceOutcome?.winning_candidate?.html,
       })
     );
   }
 
   get rankedChoiceTiedText() {
     return I18n.t("poll.ranked_choice.tied", {
-      count: this.args.rankedChoiceOutcome.round_activity.length,
+      count: this.args.rankedChoiceOutcome?.round_activity?.length,
     });
   }
 
