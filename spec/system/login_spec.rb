@@ -63,7 +63,7 @@ shared_examples "login scenarios" do
       visit activation_link
 
       activate_account.click_activate_account
-      expect(page).to have_current_path("/wizard")
+      expect(page).to have_current_path(%r{/wizard})
     end
 
     it "shows error when when activation link is invalid" do
