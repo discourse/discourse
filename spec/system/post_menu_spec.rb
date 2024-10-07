@@ -529,6 +529,69 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "reply" do
+        before { SiteSetting.post_menu_hidden_items = "" }
+
+        it "displays the reply button only when the user can reply the post" do
+          # do not display the reply button when unlogged
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :reply)
+          expect(topic_page).to have_no_post_action_button(post2, :reply)
+
+          # display the reply button when the user can reply to the post
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :reply)
+          expect(topic_page).to have_post_action_button(post2, :reply)
+        end
+
+        it "displays the reply button less prominently when the topic is a wiki" do
+          wiki_topic = Fabricate(:topic)
+          wiki_post = Fabricate(:post, topic: wiki_topic, user: Fabricate(:user), wiki: true)
+          non_wiki_post = Fabricate(:post, topic: wiki_topic, user: Fabricate(:user), wiki: false)
+
+          # do not display the reply button when unlogged
+          topic_page.visit_topic(wiki_post.topic)
+
+          expect(topic_page).to have_no_post_action_button(wiki_post, :reply)
+          expect(topic_page).to have_no_post_action_button(non_wiki_post, :reply)
+
+          # display the reply button only for the post that `user` can reply
+          sign_in(user)
+
+          topic_page.visit_topic(wiki_post.topic)
+
+          expect(topic_page).to have_post_action_button(wiki_post, :reply)
+          expect(topic_page).to have_post_action_button(non_wiki_post, :reply)
+
+          # display the reply button less prominently for the wiki post, i.e. it's not a create button
+          # and the label is not displayed
+          wiki_post_reply_button = topic_page.find_post_action_button(wiki_post, :reply)
+          expect(wiki_post_reply_button[:class].split("\s")).not_to include("create")
+          expect(wiki_post_reply_button).to have_no_content(I18n.t("js.topic.reply.title"))
+
+          # display the reply as a create button for the non-wiki post and the label should be displayed
+          non_wiki_post_reply_button = topic_page.find_post_action_button(non_wiki_post, :reply)
+          expect(non_wiki_post_reply_button[:class].split("\s")).to include("create")
+          expect(non_wiki_post_reply_button).to have_content(I18n.t("js.topic.reply.title"))
+        end
+
+        it "works as expected" do
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(composer).to be_closed
+          topic_page.click_post_action_button(post, :reply)
+
+          expect(composer).to be_opened
+          expect(composer).to have_content("")
+        end
+      end
+
       describe "share" do
         it "works as expected" do
           topic_page.visit_topic(post.topic)
