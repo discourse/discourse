@@ -119,7 +119,7 @@
       <%= build_plugin_html 'server:header' %>
     <%- end %>
 
-    <section id='main'>
+    <section id='main' <%= async_stylesheets ? "style='display:none;'" : "" %> >
     </section>
 
     <% unless current_user %>
