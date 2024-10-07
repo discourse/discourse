@@ -1,4 +1,4 @@
-import { run } from "@ember/runloop";
+import { bind } from "@ember/runloop";
 import $ from "jquery";
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
@@ -207,32 +207,36 @@ WidgetClickHook.setupDocumentCallback = function () {
     return;
   }
 
-  $(document).on("mouseover.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mouseover.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, (w) => w.mouseOver(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("mouseout.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mouseout.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, (w) => w.mouseOut(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("dblclick.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "dblclick.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
         w.doubleClick(e)
       );
-    });
-  });
+    })
+  );
 
-  $(document).on("click.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "click.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(e));
 
       let node = e.target;
@@ -250,11 +254,12 @@ WidgetClickHook.setupDocumentCallback = function () {
           widget2.clickOutside(e);
         }
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("mousedown.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mousedown.discourse-widget",
+    bind(this, (e) => {
       let node = e.target;
       const $outside = $("[data-mouse-down-outside]");
       $outside.each((i, outNode) => {
@@ -266,47 +271,53 @@ WidgetClickHook.setupDocumentCallback = function () {
           widget2.mouseDownOutside(e);
         }
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("keyup.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "keyup.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(e));
-    });
-  });
+    })
+  );
 
-  $(document).on("keydown.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "keydown.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(e));
-    });
-  });
+    })
+  );
 
-  $(document).on("input.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "input.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("change.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "change.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("touchend.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "touchend.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("mousedown.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mousedown.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(
         e.target,
         MOUSE_DOWN_ATTRIBUTE_NAME,
@@ -315,22 +326,24 @@ WidgetClickHook.setupDocumentCallback = function () {
         },
         { rerender: false }
       );
-    });
-  });
+    })
+  );
 
-  $(document).on("mouseup.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mouseup.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e), {
         rerender: false,
       });
-    });
-  });
+    })
+  );
 
-  $(document).on("mousemove.discourse-widget", (e) => {
-    run(() => {
+  $(document).on(
+    "mousemove.discourse-widget",
+    bind(this, (e) => {
       nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) => w.mouseMove(e));
-    });
-  });
+    })
+  );
 
   _watchingDocument = true;
 };
