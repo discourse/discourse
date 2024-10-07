@@ -1,15 +1,14 @@
 // This class is adapted from emoji-store class in core. We want to maintain separate emoji store for reactions in chat plugin.
 // https://github.com/discourse/discourse/blob/892f7e0506f3a4d40d9a59a4c926ff0a2aa0947e/app/assets/javascripts/discourse/app/services/emoji-store.js
 
-import Service, { service } from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 
-@disableImplicitInjections
-export default class ChatEmojiReactionStore extends Service {
-  @service siteSettings;
+export default class EmojiReactionStore extends Service {
+  @tracked yolo = this.store.getObject(this.USER_EMOJIS_STORE_KEY) ?? [];
 
-  STORE_NAMESPACE = "discourse_chat_emoji_reaction_";
+  STORE_NAMESPACE = "discourse_emoji_reaction_";
   MAX_DISPLAYED_EMOJIS = 20;
   MAX_TRACKED_EMOJIS = this.MAX_DISPLAYED_EMOJIS * 2;
   SKIN_TONE_STORE_KEY = "emojiSelectedDiversity";
@@ -17,13 +16,13 @@ export default class ChatEmojiReactionStore extends Service {
 
   store = new KeyValueStore(this.STORE_NAMESPACE);
 
-  constructor() {
-    super(...arguments);
+  // constructor() {
+  //   super(...arguments);
 
-    if (!this.store.getObject(this.USER_EMOJIS_STORE_KEY)) {
-      this.storedFavorites = [];
-    }
-  }
+  //   if (!this.store.getObject(this.USER_EMOJIS_STORE_KEY)) {
+  //     this.storedFavorites = [];
+  //   }
+  // }
 
   get diversity() {
     return this.store.getObject(this.SKIN_TONE_STORE_KEY) || 1;
@@ -54,7 +53,6 @@ export default class ChatEmojiReactionStore extends Service {
 
   set storedFavorites(value) {
     this.store.setObject({ key: this.USER_EMOJIS_STORE_KEY, value });
-    this.notifyPropertyChange("favorites");
   }
 
   get favorites() {
@@ -66,7 +64,7 @@ export default class ChatEmojiReactionStore extends Service {
   }
 
   set favorites(value = []) {
-    this.store.setObject({ key: this.USER_EMOJIS_STORE_KEY, value });
+    this.storedFavorites = value;
   }
 
   track(code) {

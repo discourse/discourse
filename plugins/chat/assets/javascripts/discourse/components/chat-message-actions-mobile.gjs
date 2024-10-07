@@ -10,6 +10,7 @@ import { and, or } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import EmojiPickerModal from "discourse/components/emoji-picker/modal";
 import concatClass from "discourse/helpers/concat-class";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -19,6 +20,7 @@ export default class ChatMessageActionsMobile extends Component {
   @service chat;
   @service site;
   @service capabilities;
+  @service modal;
 
   @tracked hasExpandedReply = false;
 
@@ -70,9 +72,12 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  openEmojiPicker(_, event) {
+  openEmojiPicker() {
     this.args.closeModal();
-    this.messageInteractor.openEmojiPicker(_, event);
+
+    this.modal.show(EmojiPickerModal, {
+      model: { didSelectEmoji: this.messageInteractor.selectReaction },
+    });
   }
 
   <template>

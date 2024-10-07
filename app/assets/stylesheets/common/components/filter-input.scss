@@ -1,4 +1,4 @@
-.dc-filter-input-container {
+.filter-input-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9,8 +9,8 @@
     border: 1px solid var(--tertiary);
   }
 
-  .dc-filter-input,
-  .dc-filter-input:focus {
+  .filter-input,
+  .filter-input:focus {
     width: 100%;
     margin: 0;
     border: none;
