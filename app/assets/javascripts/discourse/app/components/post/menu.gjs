@@ -201,9 +201,9 @@ export default class PostMenu extends Component {
 
     const items = [
       repliesButton,
-      ...this.registeredButtons
-        .values()
-        .filter((button) => isPresent(button) && button.extraControls),
+      ...Array.from(this.registeredButtons.values()).filter(
+        (button) => isPresent(button) && button.extraControls
+      ),
     ].filter(isPresent);
 
     return DAG.from(
