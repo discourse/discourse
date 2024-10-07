@@ -39,6 +39,7 @@ class PostSerializer < BasicPostSerializer
              :flair_color,
              :flair_group_id,
              :version,
+             :badges,
              :can_edit,
              :can_delete,
              :can_permanently_delete,
@@ -582,6 +583,25 @@ class PostSerializer < BasicPostSerializer
 
   def user_status
     UserStatusSerializer.new(object.user&.user_status, root: false)
+  end
+
+  def include_badges?
+    badges.present?
+  end
+
+  def badges
+    @badges ||=
+      begin
+        badges = object.user_badges.filter { |badge| badge.user_id == object.user_id }
+        return if badges.blank?
+
+        ActiveModel::ArraySerializer.new(
+          badges,
+          each_serializer: UserBadgeSerializer,
+          scope: scope,
+          root: false,
+        )
+      end
   end
 
   def mentioned_users
