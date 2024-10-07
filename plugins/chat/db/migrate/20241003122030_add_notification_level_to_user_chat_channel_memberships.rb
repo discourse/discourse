@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 class AddNotificationLevelToUserChatChannelMemberships < ActiveRecord::Migration[7.1]
-  def up
-    remove_index :user_chat_channel_memberships, name: "user_chat_channel_memberships_index"
-    add_column :user_chat_channel_memberships,
-               :notification_level,
-               :integer,
-               default: 1,
-               null: false
+  disable_ddl_transaction!
 
+  def up
     execute <<~SQL
-      UPDATE user_chat_channel_memberships
-      SET notification_level = mobile_notification_level
+      DROP INDEX CONCURRENTLY IF EXISTS user_chat_channel_memberships_index
     SQL
 
-    add_index :user_chat_channel_memberships,
-              %i[user_id chat_channel_id notification_level following],
-              name: "user_chat_channel_memberships_index"
+    add_column :user_chat_channel_memberships, :notification_level, :integer, default: 1
+
+    execute <<~SQL
+      CREATE INDEX CONCURRENTLY user_chat_channel_memberships_index ON user_chat_channel_memberships using btree (user_id, chat_channel_id, notification_level, following)
+    SQL
   end
 
   def down
