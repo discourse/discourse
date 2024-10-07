@@ -61,6 +61,14 @@ module PageObjects
         has_css?("#post_#{number}")
       end
 
+      def has_replies_expanded?(post)
+        within_post(post) { has_css?(".embedded-posts") }
+      end
+
+      def has_replies_collapsed?(post)
+        within_post(post) { has_no_css?(".embedded-posts") }
+      end
+
       def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
         find(".topic-post:not(.staged) #post_#{post_or_number}", wait: wait)
@@ -329,6 +337,8 @@ module PageObjects
           ".post-controls .read-indicator"
         when :recover
           ".post-controls .recover"
+        when :replies
+          ".post-controls .show-replies"
         when :reply
           ".post-controls .reply"
         when :share

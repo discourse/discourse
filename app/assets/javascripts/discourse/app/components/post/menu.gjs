@@ -226,17 +226,7 @@ export default class PostMenu extends Component {
     if (
       isEmpty(hiddenItems) ||
       !this.collapsed ||
-      !(
-        // TODO extract this logic to a method
-        (
-          this.availableButtons.some(
-            (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
-          ) ||
-          this.extraControls.some(
-            (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
-          )
-        )
-      )
+      !this.isShowMoreButtonAvailable
     ) {
       return [];
     }
@@ -304,6 +294,17 @@ export default class PostMenu extends Component {
 
   get isWikiMode() {
     return this.args.post.wiki && this.args.post.can_edit;
+  }
+
+  get isShowMoreButtonAvailable() {
+    return (
+      this.availableButtons.some(
+        (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
+      ) ||
+      this.extraControls.some(
+        (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
+      )
+    );
   }
 
   @action

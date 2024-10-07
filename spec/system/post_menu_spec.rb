@@ -3,9 +3,9 @@
 describe "Post menu", type: :system do
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic)
-  fab!(:post) { Fabricate(:post, topic: topic, reads: 5, like_count: 6) }
-  fab!(:post2) { Fabricate(:post, user: user, topic: topic, like_count: 0) }
+  fab!(:topic, reload: true)
+  fab!(:post, reload: true) { Fabricate(:post, topic: topic, reads: 5, like_count: 6) }
+  fab!(:post2, reload: true) { Fabricate(:post, user: user, topic: topic, like_count: 0) }
 
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
@@ -158,9 +158,7 @@ describe "Post menu", type: :system do
           expect(bookmark_button[:class].split("\s")).not_to include("bookmarked")
 
           topic_page.click_post_action_button(post, :bookmark)
-
-          bookmark_button = topic_page.find_post_action_button(post, :bookmark)
-          expect(bookmark_button[:class].split("\s")).to include("bookmarked")
+          expect(topic_page).to have_post_bookmarked(post)
         end
       end
 
@@ -529,6 +527,85 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "replies" do
+        fab!(:reply_to_post) do
+          PostCreator.new(
+            Fabricate(:user),
+            raw: "Just a reply to the OP",
+            topic_id: topic.id,
+            reply_to_post_number: post.post_number,
+          ).create
+        end
+        fab!(:post_with_reply, reload: true) do
+          PostCreator.new(topic.user, raw: Fabricate.build(:post).raw, topic_id: topic.id).create
+        end
+        fab!(:reply_to_post_with_reply) do
+          PostCreator.new(
+            Fabricate(:user),
+            raw: "A reply directly below the post",
+            topic_id: topic.id,
+            reply_to_post_number: post_with_reply.post_number,
+          ).create
+        end
+
+        it "doesn't display the replies button when there are no replies" do
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post2, :replies)
+        end
+
+        it "is disabled when the post is deleted" do
+          PostDestroyer.new(admin, post).destroy
+
+          sign_in(admin)
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :replies)
+
+          replies_button = topic_page.find_post_action_button(post, :replies)
+          expect(replies_button[:disabled]).to eq("true")
+        end
+
+        it "displays the replies when clicked" do
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_replies_collapsed(post)
+          topic_page.click_post_action_button(post, :replies)
+          expect(topic_page).to have_replies_expanded(post)
+
+          replies_button = topic_page.find_post_action_button(post, :replies)
+          expect(replies_button[:ariaExpanded]).to eq("true")
+          expect(replies_button[:ariaPressed]).to eq("true")
+        end
+
+        it "is displayed correctly when the reply is directly below" do
+          # it is displayed when there is only one reply directly below and the setting `suppress_reply_directly_below`
+          # is disabled
+          SiteSetting.suppress_reply_directly_below = false
+
+          topic_page.visit_topic(post_with_reply.topic)
+          expect(topic_page).to have_post_action_button(post_with_reply, :replies)
+
+          # it is not displayed when there is only one reply directly below and the setting
+          # `suppress_reply_directly_below` is enabled
+          SiteSetting.suppress_reply_directly_below = true
+
+          topic_page.visit_topic(post_with_reply.topic)
+          expect(topic_page).to have_no_post_action_button(post_with_reply, :replies)
+
+          # it is displayed when there is more than one reply directly below
+          PostCreator.new(
+            Fabricate(:user),
+            raw: "A reply directly below the post",
+            topic_id: topic.id,
+            reply_to_post_number: post_with_reply.post_number,
+          ).create
+
+          topic_page.visit_topic(post_with_reply.topic)
+          expect(topic_page).to have_post_action_button(post_with_reply, :replies)
+        end
+      end
+
       describe "reply" do
         before { SiteSetting.post_menu_hidden_items = "" }
 
@@ -544,7 +621,7 @@ describe "Post menu", type: :system do
 
           topic_page.visit_topic(post.topic)
 
-          expect(topic_page).to have_no_post_action_button(post, :reply)
+          expect(topic_page).to have_post_action_button(post, :reply)
           expect(topic_page).to have_post_action_button(post2, :reply)
         end
 
@@ -600,6 +677,50 @@ describe "Post menu", type: :system do
           topic_page.click_post_action_button(post, :share)
 
           expect(page).to have_css(".d-modal.share-topic-modal")
+        end
+      end
+
+      describe "show more" do
+        before do
+          sign_in(admin)
+
+          SiteSetting.post_menu = "like|copyLink|share|flag|edit|bookmark|delete|admin|reply"
+          SiteSetting.post_menu_hidden_items = "flag|bookmark|edit|delete|admin"
+        end
+
+        it "is not displayed when `post_menu_hidden_items` is empty" do
+          SiteSetting.post_menu_hidden_items = ""
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :show_more)
+        end
+
+        it "is not displayed when there is only one hidden button" do
+          SiteSetting.post_menu_hidden_items = "admin"
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :show_more)
+        end
+
+        it "works as expected" do
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_no_post_action_button(post, :flag)
+          expect(topic_page).to have_no_post_action_button(post, :bookmark)
+          expect(topic_page).to have_no_post_action_button(post, :edit)
+          expect(topic_page).to have_no_post_action_button(post, :delete)
+          expect(topic_page).to have_no_post_action_button(post, :admin)
+
+          expect(topic_page).to have_post_action_button(post, :show_more)
+          topic_page.click_post_action_button(post, :show_more)
+
+          expect(topic_page).to have_post_action_button(post, :flag)
+          expect(topic_page).to have_post_action_button(post, :bookmark)
+          expect(topic_page).to have_post_action_button(post, :edit)
+          expect(topic_page).to have_post_action_button(post, :delete)
+          expect(topic_page).to have_post_action_button(post, :admin)
         end
       end
     end

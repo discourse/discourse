@@ -57,7 +57,7 @@ export default class PostMenuRepliesButton extends Component {
         }}
         @translatedAriaLabel={{i18n
           "post.sr_expand_replies"
-          count=this.replyCount
+          count=@post.reply_count
         }}
         @translatedLabel={{i18n
           (if this.site.mobileView "post.has_replies_count" "post.has_replies")
