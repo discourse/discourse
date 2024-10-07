@@ -561,8 +561,10 @@ createWidget("post-contents", {
         // eslint-disable-next-line no-console
         console.warn(
           [
-            "Using the new glimmer post menu but the following plugins and/or themes are using deprecated APIs and may cause your site to not work properly:",
+            "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
+              "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
             ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+            // TODO add link to meta topic here when the roadmap for the update is announced
           ].join("\n- ")
         );
       }
@@ -618,6 +620,7 @@ createWidget("post-contents", {
           [
             "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
             ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+            // TODO add link to meta topic here when the roadmap for the update is announced
           ].join("\n- ")
         );
       }
@@ -1033,6 +1036,7 @@ createWidget("post-article", {
 });
 
 let addPostClassesCallbacks = null;
+
 export function addPostClassesCallback(callback) {
   addPostClassesCallbacks = addPostClassesCallbacks || [];
   addPostClassesCallbacks.push(callback);
