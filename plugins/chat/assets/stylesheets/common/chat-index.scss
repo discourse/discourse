@@ -31,6 +31,7 @@
   position: relative;
   @include chat-scrollbar();
   height: 100%;
+  padding-bottom: 1rem;
 
   @include breakpoint(mobile-large) {
     @include chat-scrollbar();
