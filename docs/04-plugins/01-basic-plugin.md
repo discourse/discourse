@@ -14,6 +14,8 @@ Make sure you have a development environment of Discourse running on your comput
 
 > :tada: Use https://github.com/discourse/discourse-plugin-skeleton to create a complete discourse plugin skeleton in your plugins directory :tada:
 
+> The skeleton is now bundled in discourse core, `rake plugin:create[plugin-name]` will create a plugin using the skeleton 
+
 When Discourse starts up, it looks in the `plugins` directory for subdirectories containing a `plugin.rb` file. The `plugin.rb` file has two purposes: it is the manifest for your plugin with the required information about your plugin including: its name, contact information and a description. The second purpose is to initialize any ruby code necessary to run your plugin.
 
 In our case, we won't be adding any ruby code but we still need the `plugin.rb`. Let's create the directory `basic-plugin` with the file `plugin.rb` inside it, with the following contents:
