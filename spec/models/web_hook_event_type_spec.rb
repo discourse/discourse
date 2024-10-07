@@ -15,7 +15,6 @@ RSpec.describe WebHookEventType do
           post_edited
           post_destroyed
           post_recovered
-          post_moved
           user_logged_in
           user_logged_out
           user_confirmed_email
@@ -51,6 +50,7 @@ RSpec.describe WebHookEventType do
       SiteSetting.stubs(:topic_voting_enabled).returns(true)
       SiteSetting.stubs(:chat_enabled).returns(true)
       SiteSetting.stubs(:enable_category_experts).returns(true)
+      SiteSetting.stubs(:discourse_global_communities_enabled).returns(true)
       plugins_event_types = WebHookEventType.active.map(&:name) - core_event_types
       expect(plugins_event_types).to match_array(
         %w[
@@ -66,6 +66,7 @@ RSpec.describe WebHookEventType do
           chat_message_restored
           category_experts_approved
           category_experts_unapproved
+          post_moved
         ],
       )
     end

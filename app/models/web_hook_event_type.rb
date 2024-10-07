@@ -124,6 +124,10 @@ class WebHookEventType < ActiveRecord::Base
         [TYPES[:category_experts_approved], TYPES[:category_experts_unapproved]],
       )
     end
+    unless defined?(SiteSetting.discourse_global_communities_enabled) &&
+             SiteSetting.discourse_global_communities_enabled
+      ids_to_exclude.concat([TYPES[:post_moved]])
+    end
     self.where.not(id: ids_to_exclude)
   end
 end
