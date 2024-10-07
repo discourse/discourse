@@ -19,6 +19,11 @@ class DropDeprecatedColumns < ActiveRecord::Migration[7.0]
   }
 
   def up
+    execute <<~SQL
+    DROP TRIGGER IF EXISTS invites_user_id_readonly ON invites;
+    DROP TRIGGER IF EXISTS invites_redeemed_at_readonly ON invites;
+    DROP TRIGGER IF EXISTS user_api_keys_scopes_readonly ON user_api_keys;
+    SQL
     DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }
   end
 
