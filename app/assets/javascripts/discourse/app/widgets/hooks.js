@@ -1,3 +1,4 @@
+import { run } from "@ember/runloop";
 import $ from "jquery";
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
@@ -207,102 +208,128 @@ WidgetClickHook.setupDocumentCallback = function () {
   }
 
   $(document).on("mouseover.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, (w) => w.mouseOver(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, MOUSE_OVER_ATTRIBUTE_NAME, (w) => w.mouseOver(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("mouseout.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, (w) => w.mouseOut(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, MOUSE_OUT_ATTRIBUTE_NAME, (w) => w.mouseOut(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("dblclick.discourse-widget", (e) => {
-    nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
-      w.doubleClick(e)
-    );
+    run(() => {
+      nodeCallback(e.target, DOUBLE_CLICK_ATTRIBUTE_NAME, (w) =>
+        w.doubleClick(e)
+      );
+    });
   });
 
   $(document).on("click.discourse-widget", (e) => {
-    nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(e));
+    run(() => {
+      nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, (w) => w.click(e));
 
-    let node = e.target;
-    const $outside = $("[data-click-outside]");
-    $outside.each((i, outNode) => {
-      if (
-        outNode.contains(node) ||
-        (outNode === node && outNode.style.position === "absolute")
-      ) {
-        return;
-      }
+      let node = e.target;
+      const $outside = $("[data-click-outside]");
+      $outside.each((i, outNode) => {
+        if (
+          outNode.contains(node) ||
+          (outNode === node && outNode.style.position === "absolute")
+        ) {
+          return;
+        }
 
-      const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
-      if (widget2) {
-        widget2.clickOutside(e);
-      }
+        const widget2 = outNode[CLICK_OUTSIDE_ATTRIBUTE_NAME];
+        if (widget2) {
+          widget2.clickOutside(e);
+        }
+      });
     });
   });
 
   $(document).on("mousedown.discourse-widget", (e) => {
-    let node = e.target;
-    const $outside = $("[data-mouse-down-outside]");
-    $outside.each((i, outNode) => {
-      if (outNode.contains(node)) {
-        return;
-      }
-      const widget2 = outNode[MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME];
-      if (widget2) {
-        widget2.mouseDownOutside(e);
-      }
+    run(() => {
+      let node = e.target;
+      const $outside = $("[data-mouse-down-outside]");
+      $outside.each((i, outNode) => {
+        if (outNode.contains(node)) {
+          return;
+        }
+        const widget2 = outNode[MOUSE_DOWN_OUTSIDE_ATTRIBUTE_NAME];
+        if (widget2) {
+          widget2.mouseDownOutside(e);
+        }
+      });
     });
   });
 
   $(document).on("keyup.discourse-widget", (e) => {
-    nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(e));
+    run(() => {
+      nodeCallback(e.target, KEY_UP_ATTRIBUTE_NAME, (w) => w.keyUp(e));
+    });
   });
 
   $(document).on("keydown.discourse-widget", (e) => {
-    nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(e));
+    run(() => {
+      nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, (w) => w.keyDown(e));
+    });
   });
 
   $(document).on("input.discourse-widget", (e) => {
-    nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, INPUT_ATTRIBUTE_NAME, (w) => w.input(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("change.discourse-widget", (e) => {
-    nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, CHANGE_ATTRIBUTE_NAME, (w) => w.change(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("touchend.discourse-widget", (e) => {
-    nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, TOUCH_END_ATTRIBUTE_NAME, (w) => w.touchEnd(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("mousedown.discourse-widget", (e) => {
-    nodeCallback(
-      e.target,
-      MOUSE_DOWN_ATTRIBUTE_NAME,
-      (w) => {
-        w.mouseDown(e);
-      },
-      { rerender: false }
-    );
+    run(() => {
+      nodeCallback(
+        e.target,
+        MOUSE_DOWN_ATTRIBUTE_NAME,
+        (w) => {
+          w.mouseDown(e);
+        },
+        { rerender: false }
+      );
+    });
   });
 
   $(document).on("mouseup.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e), {
-      rerender: false,
+    run(() => {
+      nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e), {
+        rerender: false,
+      });
     });
   });
 
   $(document).on("mousemove.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) => w.mouseMove(e));
+    run(() => {
+      nodeCallback(e.target, MOUSE_MOVE_ATTRIBUTE_NAME, (w) => w.mouseMove(e));
+    });
   });
 
   _watchingDocument = true;
