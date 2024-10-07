@@ -27,7 +27,9 @@ export default class PluginConnector extends Component {
       defineProperty(
         this,
         key,
-        computed("args", () => (this.args || {})[key])
+        computed("args", function () {
+          return args[key];
+        })
       );
     });
 
@@ -44,7 +46,7 @@ export default class PluginConnector extends Component {
       defineProperty(
         this,
         key,
-        computed("deprecatedArgs", () => {
+        computed("deprecatedArgs", function () {
           return deprecatedArgumentValue(deprecatedArgs[key], {
             ...connectorInfo,
             argumentName: key,
