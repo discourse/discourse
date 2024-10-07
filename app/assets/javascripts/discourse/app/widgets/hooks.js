@@ -1,4 +1,3 @@
-/*eslint no-loop-func:0*/
 import $ from "jquery";
 
 const CLICK_ATTRIBUTE_NAME = "_discourse_click_widget";
@@ -134,7 +133,7 @@ function dragStart(e) {
 
 function drag(e) {
   const widget = _currentlyDraggingElement[DRAG_ATTRIBUTE_NAME];
-  if (event.type === "mousemove") {
+  if (e.type === "mousemove") {
     widget.drag(e);
   } else {
     const tt = e.targetTouches[0];
