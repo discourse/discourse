@@ -233,6 +233,8 @@ module Email
         dir: Rtl.new(nil).enabled? ? "rtl" : "ltr",
       )
 
+      style(".email-wrapper", "margin: 12px;")
+
       style("blockquote > :first-child", "margin-top: 0;")
       style("blockquote > :last-child", "margin-bottom: 0;")
       style("blockquote > p", "padding: 0;")
