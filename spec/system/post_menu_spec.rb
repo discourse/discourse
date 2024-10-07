@@ -139,6 +139,31 @@ describe "Post menu", type: :system do
         end
       end
 
+      describe "bookmark" do
+        before { SiteSetting.post_menu_hidden_items = "" }
+
+        it "does not display the bookmark button when the user is anonymous" do
+          topic_page.visit_topic(post.topic)
+          expect(topic_page).to have_no_post_action_button(post, :bookmark)
+        end
+
+        it "works as expected" do
+          sign_in(user)
+
+          topic_page.visit_topic(post.topic)
+
+          expect(topic_page).to have_post_action_button(post, :bookmark)
+
+          bookmark_button = topic_page.find_post_action_button(post, :bookmark)
+          expect(bookmark_button[:class].split("\s")).not_to include("bookmarked")
+
+          topic_page.click_post_action_button(post, :bookmark)
+
+          bookmark_button = topic_page.find_post_action_button(post, :bookmark)
+          expect(bookmark_button[:class].split("\s")).to include("bookmarked")
+        end
+      end
+
       describe "copy link" do
         let(:cdp) { PageObjects::CDP.new }
 

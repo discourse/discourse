@@ -305,42 +305,6 @@ module(
       assert.ok(!exists(".expand-post"), "button is gone");
     });
 
-    test("can't bookmark", async function (assert) {
-      this.owner.unregister("service:current-user");
-      const store = getOwner(this).lookup("service:store");
-      const topic = store.createRecord("topic", { id: 123 });
-      this.post = store.createRecord("post", {
-        id: 1,
-        post_number: 1,
-        topic,
-        like_count: 3,
-        actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
-      });
-
-      await render(hbs`
-        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
-      // await pauseTest();
-
-      assert.ok(!exists("button.bookmark"));
-      assert.ok(!exists("button.bookmarked"));
-    });
-
-    test("bookmark", async function (assert) {
-      const args = { canBookmark: true };
-
-      this.set("args", args);
-      this.set("toggleBookmark", () => (args.bookmarked = true));
-
-      await render(
-        hbs`
-          <MountWidget @widget="post" @model={{this.post}} @args={{this.args}}
-                       @toggleBookmark={{this.toggleBookmark}} />`
-      );
-
-      assert.strictEqual(count(".post-menu-area .bookmark"), 1);
-      assert.ok(!exists("button.bookmarked"));
-    });
-
     test("can't show admin menu when you can't manage", async function (assert) {
       this.set("args", { canManage: false });
 
