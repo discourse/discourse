@@ -3,6 +3,7 @@ const rule = {
   before(state, tagInfo) {
     const attrs = tagInfo.attrs;
     const details = state.push("bbcode_open", "details", 1);
+    state.push("bbcode_open", "summary", 1);
 
     if (attrs.open === "") {
       details.attrs = [["open", ""]];
