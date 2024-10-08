@@ -61,8 +61,7 @@ class UserApiKeysController < ApplicationController
     @application_name = params[:application_name]
     scopes = params[:scopes].split(",")
 
-    # destroy any old keys we had
-    UserApiKey.where(user_id: current_user.id, client_id: params[:client_id]).destroy_all
+    UserApiKey.where(client_id: params[:client_id]).destroy_all
 
     key =
       UserApiKey.create!(
