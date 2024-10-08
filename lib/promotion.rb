@@ -11,6 +11,9 @@ class Promotion
   # Review a user for a promotion. Delegates work to a review_#{trust_level} method.
   # Returns true if the user was promoted, false otherwise.
   def review
+    result = DiscoursePluginRegistry.apply_modifier(:review_trust_level, @user)
+    return result if !result.nil?
+
     # nil users are never promoted
     return false if @user.blank? || !@user.manual_locked_trust_level.nil?
 
@@ -147,6 +150,9 @@ class Promotion
     return if user.manual_locked_trust_level.present?
 
     promotion = Promotion.new(user)
+
+    result = DiscoursePluginRegistry.apply_modifier(:recalculate_trust_level, user)
+    return result if !result.nil?
 
     promotion.review_tl0 if granted_trust_level < TrustLevel[1]
     promotion.review_tl1 if granted_trust_level < TrustLevel[2]
