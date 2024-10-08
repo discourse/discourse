@@ -15,20 +15,12 @@ export default class GroupsIndexRoute extends DiscourseRoute {
   }
 
   async model(params) {
-    const controller = this.controllerFor(this.routeName);
-    controller.set("isLoading", true);
-
-    try {
-      const groups = await this.store.findAll("group", params);
-      return { params, groups };
-    } finally {
-      controller.set("isLoading", false);
-    }
+    const groups = await this.store.findAll("group", params);
+    return { groups };
   }
 
   setupController(controller, model) {
     super.setupController(controller, model);
     controller.set("groups", model.groups);
-    controller.setProperties(model.params);
   }
 }
