@@ -8,16 +8,23 @@ const MORE_MENU = "sidebar-more-section";
 
 export default class SidebarSectionLinkButton extends Component {
   @service menu;
+  @service header;
+  @service siteSettings;
 
   @action
   handleClick() {
     const menuInstance = this.menu.getByIdentifier(MORE_MENU);
 
     this.args.action();
+
     this.menu.close(menuInstance);
 
     if (this.args.toggleNavigationMenu) {
       this.args.toggleNavigationMenu();
+    }
+
+    if (this.siteSettings.navigation_menu === "header dropdown") {
+      this.header.hamburgerVisible = false;
     }
   }
 
