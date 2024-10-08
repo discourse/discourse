@@ -2489,6 +2489,8 @@ ro:
       follow_quote: "mergi la postarea citată"
       show_full: "Arată postarea în întregime"
       collapse: "restrânge"
+      load_more_replies: "încarcă mai multe răspunsuri"
+      sr_load_more_replies: "Încarcă mai multe răspunsuri încorporate"
       expand_collapse: "extinde/restrânge"
       gap:
         one: "vezi un răspuns ascuns"

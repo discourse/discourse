@@ -3401,7 +3401,9 @@ de:
       show_hidden: "Ignorierte Inhalte anzeigen."
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
+      load_more_replies: "weitere Antworten laden"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
+      sr_load_more_replies: "Weitere eingebettete Antworten laden"
       sr_date: "Beitragsdatum"
       sr_expand_replies:
         one: "Dieser Beitrag hat %{count} Antwort"

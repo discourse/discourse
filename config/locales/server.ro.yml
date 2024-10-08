@@ -633,7 +633,7 @@ ro:
     scopes:
       message_bus: "Actualizări directe (live)"
       notifications: "Citește și șterge notificările"
-      push: "Trimite notificările către servicii externe"
+      push: "Notificări instante către servicii externe"
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"

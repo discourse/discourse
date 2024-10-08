@@ -3407,7 +3407,9 @@ ug:
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
+      load_more_replies: "تېخىمۇ كۆپ جاۋابنى يۈكلە"
       sr_collapse_replies: "سىڭدۈرۈلگەن جاۋابنى يىغىدۇ"
+      sr_load_more_replies: "تېخىمۇ كۆپ سىڭدۈرۈلگەن جاۋابنى يۈكلەيدۇ"
       sr_date: "يوللانغان ۋاقتى"
       sr_expand_replies:
         one: "بۇ يازمىدا %{count} جاۋاب بار"

@@ -3691,7 +3691,9 @@ he:
       show_hidden: "צפייה בתוכן שמיועד להתעלמות."
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
+      load_more_replies: "טעינת תגובות נוספות"
       sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_load_more_replies: "טעינת תשובות מוטמעות נוספות"
       sr_date: "תאריך פרסום"
       sr_expand_replies:
         one: "לפוסט הזה יש תגובה אחת"

@@ -86,8 +86,17 @@ pl_PL:
         count: "Liczba"
       ranked_choice:
         title:
+          rounds: "Rundy"
           outcome: "Wynik"
         none: "Brak"
+        majority: "Większość"
+        eliminated: "Wyeliminowane"
+        round: "Runda"
+        winner:
+          one: "Zwycięzcą został %{winner} po jednej rundzie."
+          few: "Zwycięzcą został %{winner} po %{count} rundach."
+          many: "Zwycięzcą został %{winner} po %{count} rundach."
+          other: "Zwycięzcą został %{winner} po %{count} rundach."
       options:
         label: "Opcje"
         ranked_choice:
