@@ -27,16 +27,6 @@ class AddNotificationLevelToUserChatChannelMemberships < ActiveRecord::Migration
   end
 
   def down
-    execute <<~SQL
-      DROP INDEX CONCURRENTLY IF EXISTS user_chat_channel_memberships_index
-    SQL
-
-    remove_column :user_chat_channel_memberships, :notification_level
-
-    execute <<~SQL
-      CREATE INDEX CONCURRENTLY user_chat_channel_memberships_index ON user_chat_channel_memberships using btree (user_id, chat_channel_id, desktop_notification_level, mobile_notification_level, following)
-    SQL
-
-    # raise ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end
