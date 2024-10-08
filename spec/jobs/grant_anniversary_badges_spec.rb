@@ -132,19 +132,23 @@ RSpec.describe Jobs::GrantAnniversaryBadges do
       expect(badge.count).to eq(1)
     end
 
-    it "will award again if a year has passed" do
-      user = Fabricate(:user, created_at: 800.days.ago)
-      Fabricate(:post, user: user, created_at: 450.days.ago)
+    it "will award again if at least a year has passed" do
+      user = Fabricate(:user, created_at: 1_200.days.ago)
+      Fabricate(:post, user: user, created_at: 750.days.ago)
 
-      freeze_time(400.days.ago) { granter.execute({}) }
+      grant_time = 700.days.ago
+      freeze_time(grant_time) { granter.execute({}) }
 
       badge = user.user_badges.where(badge_id: Badge::Anniversary)
       expect(badge.count).to eq(1)
+      expect(badge.first.granted_at).to eq_time(grant_time)
 
       Fabricate(:post, user: user, created_at: 50.days.ago)
       granter.execute({})
-      badge = user.user_badges.where(badge_id: Badge::Anniversary)
+      badge = user.user_badges.where(badge_id: Badge::Anniversary).order(granted_at: :asc)
       expect(badge.count).to eq(2)
+      expect(badge.second.granted_at).to eq_time(badge.first.granted_at + 2.years)
+      expect(badge.second.granted_at.year).to eq(Date.today.year)
     end
 
     it "supports date ranges" do
