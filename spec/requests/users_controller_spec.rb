@@ -380,8 +380,6 @@ RSpec.describe UsersController do
       context "with rate limiting" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "rate limits reset passwords" do
           freeze_time
 
@@ -4410,8 +4408,6 @@ RSpec.describe UsersController do
     end
 
     context "with a session variable" do
-      use_redis_snapshotting
-
       it "raises an error with an invalid session value" do
         post_user
 
@@ -5624,8 +5620,6 @@ RSpec.describe UsersController do
 
   describe "#enable_second_factor_totp" do
     before { sign_in(user1) }
-
-    use_redis_snapshotting
 
     def create_totp
       stub_secure_session_confirmed

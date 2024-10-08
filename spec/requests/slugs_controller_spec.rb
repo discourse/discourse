@@ -30,8 +30,6 @@ RSpec.describe SlugsController do
       describe "rate limiting" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "rate limits" do
           stub_const(SlugsController, "MAX_SLUG_GENERATIONS_PER_MINUTE", 1) do
             post "/slugs.json?name=#{name}"

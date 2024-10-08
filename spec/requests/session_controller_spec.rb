@@ -136,8 +136,6 @@ RSpec.describe SessionController do
     before { SiteSetting.enable_local_logins_via_email = true }
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "allows admins to login" do
@@ -580,8 +578,6 @@ RSpec.describe SessionController do
     end
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "allows staff to login" do
@@ -1366,8 +1362,6 @@ RSpec.describe SessionController do
     end
 
     context "when in readonly mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode }
 
       it "disallows requests" do
@@ -1840,8 +1834,6 @@ RSpec.describe SessionController do
 
   describe "#create" do
     context "when read only mode" do
-      use_redis_snapshotting
-
       before do
         Discourse.enable_readonly_mode
         EmailToken.confirm(email_token.token)
@@ -1860,8 +1852,6 @@ RSpec.describe SessionController do
     end
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before do
         Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
         EmailToken.confirm(email_token.token)
@@ -2044,8 +2034,6 @@ RSpec.describe SessionController do
         end
 
         before { RateLimiter.enable }
-
-        use_redis_snapshotting
 
         it "should return an error response code with the right error message" do
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
@@ -2445,8 +2433,6 @@ RSpec.describe SessionController do
     context "when rate limited" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "rate limits login" do
         SiteSetting.max_logins_per_ip_per_hour = 2
         EmailToken.confirm(email_token.token)
@@ -2736,8 +2722,6 @@ RSpec.describe SessionController do
 
     describe "rate limiting" do
       before { RateLimiter.enable }
-
-      use_redis_snapshotting
 
       it "should correctly rate limits" do
         user = Fabricate(:user)

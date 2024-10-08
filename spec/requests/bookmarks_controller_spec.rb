@@ -11,8 +11,6 @@ RSpec.describe BookmarksController do
   describe "#create" do
     before { sign_in(current_user) }
 
-    use_redis_snapshotting
-
     it "rate limits creates" do
       SiteSetting.max_bookmarks_per_day = 1
       RateLimiter.enable

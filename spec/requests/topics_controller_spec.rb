@@ -2249,8 +2249,6 @@ RSpec.describe TopicsController do
   end
 
   describe "#show" do
-    use_redis_snapshotting
-
     fab!(:private_topic) { pm }
     fab!(:topic) { Fabricate(:post, user: post_author1).topic }
 
