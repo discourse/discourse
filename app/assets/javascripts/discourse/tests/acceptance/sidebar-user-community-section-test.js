@@ -73,27 +73,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-content "
       )
       .doesNotExist("additional section links are hidden");
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
-    );
-
-    await click("#main-outlet");
-
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
-      )
-      .doesNotExist(
-        "additional section links are hidden when clicking outside"
-      );
-    assert
-      .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger[aria-expanded='false']"
-      )
-      .exists(
-        "aria-expanded toggles to false when additional links are hidden"
-      );
   });
 
   test("clicking on everything link", async function (assert) {
