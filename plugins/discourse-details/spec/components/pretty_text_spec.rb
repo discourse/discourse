@@ -28,7 +28,8 @@ RSpec.describe PrettyText do
     MARKDOWN
 
     expect(cooked_html).to match_html <<~HTML
-      <details open>
+      <details open="">
+      <summary></summary>
         <p>bar</p>
       </details>
     HTML
