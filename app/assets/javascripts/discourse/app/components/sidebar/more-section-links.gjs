@@ -1,11 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
-import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 import MoreSectionLink from "./more-section-link";
@@ -25,7 +23,6 @@ export default class SidebarMoreSectionLinks extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.#removeClickEventListener();
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
 
@@ -48,53 +45,6 @@ export default class SidebarMoreSectionLinks extends Component {
   #filterActiveSectionLink(sectionLinks) {
     return sectionLinks.filter((sectionLink) => {
       return sectionLink.name !== this.activeSectionLink.name;
-    });
-  }
-
-  @bind
-  closeDetails(event) {
-    if (event.target.closest(".sidebar-more-section-links-details-summary")) {
-      return;
-    }
-
-    if (this.open) {
-      const isLinkClick =
-        event.target.className.includes("sidebar-section-link") ||
-        event.target.className.includes("--link-button");
-
-      if (isLinkClick || this.#isOutsideDetailsClick(event)) {
-        this.open = false;
-      }
-    }
-  }
-
-  @action
-  registerClickListener() {
-    this.#addClickEventListener();
-  }
-
-  @action
-  unregisterClickListener() {
-    this.#removeClickEventListener();
-  }
-
-  @action
-  toggleSectionLinks(event) {
-    event.stopPropagation();
-    this.open = !this.open;
-  }
-
-  #removeClickEventListener() {
-    document.removeEventListener("click", this.closeDetails);
-  }
-
-  #addClickEventListener() {
-    document.addEventListener("click", this.closeDetails);
-  }
-
-  #isOutsideDetailsClick(event) {
-    return !event.composedPath().some((element) => {
-      return element.className === "sidebar-more-section-links-details";
     });
   }
 
@@ -123,10 +73,12 @@ export default class SidebarMoreSectionLinks extends Component {
 
     <li class="sidebar-section-link-wrapper">
       <DMenu
-        @triggerClass="idebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
+        @triggerClass="sidebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
         @contentClass="sidebar-more-section-links-details-content"
         @modalForMobile={{true}}
         @autofocus={{true}}
+        @placement="bottom"
+        @inline={{true}}
       >
         <:trigger>
           <span class="sidebar-section-link-prefix icon">
@@ -137,12 +89,13 @@ export default class SidebarMoreSectionLinks extends Component {
           </span>
         </:trigger>
 
-        <:content>
+        <:content as |menu|>
           <DropdownMenu as |dropdown|>
             {{#each this.sectionLinks as |sectionLink|}}
               <MoreSectionLink
                 @sectionLink={{sectionLink}}
                 class="dropdown-menu__item"
+                {{on "click" menu.close}}
               />
             {{/each}}
 
@@ -155,6 +108,7 @@ export default class SidebarMoreSectionLinks extends Component {
                   @icon={{@moreButtonIcon}}
                   @text={{@moreButtonText}}
                   @name="customize"
+                  @close={{menu.close}}
                 />
               </dropdown.item>
             {{/if}}
