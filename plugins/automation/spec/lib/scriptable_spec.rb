@@ -214,6 +214,8 @@ describe DiscourseAutomation::Scriptable do
     end
 
     describe ".build_quote" do
+      subject(:quote) { DiscourseAutomation::Scriptable::Utils.build_quote(post) }
+
       fab!(:user) { Fabricate(:user, name: "John Doe", username: "johndoe") }
       fab!(:post) { Fabricate(:post, user: user, raw: "This is a post content", post_number: 1) }
 
@@ -221,8 +223,6 @@ describe DiscourseAutomation::Scriptable do
         SiteSetting.display_name_on_posts = false
         SiteSetting.prioritize_username_in_ux = false
       end
-
-      subject(:quote) { DiscourseAutomation::Scriptable::Utils.build_quote(post) }
 
       context "when post is nil" do
         let(:post) { nil } # Define post as nil in this context
