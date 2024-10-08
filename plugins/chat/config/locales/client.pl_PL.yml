@@ -499,10 +499,8 @@ pl_PL:
         auto_join_users_info: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do kategorii %{category}."
         auto_join_users_info_no_category: "Sprawdzaj co godzinę, którzy użytkownicy byli aktywni w ciągu ostatnich 3 miesięcy. Dodaj ich do tego kanału, jeśli mają dostęp do wybranej kategorii."
         auto_join_users_warning: "Każdy użytkownik, który nie jest członkiem tego kanału i ma dostęp do kategorii %{category} , dołączy do niego. Czy jesteś pewien?"
-        desktop_notification_level: "Powiadomienia na pulpicie"
         follow: "Dołącz"
         followed: "Dołączył"
-        mobile_notification_level: "Mobilne powiadomienia push"
         mute: "Wycisz kanał"
         threading_enabled: "Włączona"
         threading_disabled: "Wyłączone"
@@ -569,10 +567,12 @@ pl_PL:
         username_instructions: "Nazwa użytkownika bota, który publikuje na kanale. Domyślnie \"system\" gdy pozostanie puste."
         instructions: "Przychodzące webhooki mogą być używane przez systemy zewnętrzne do publikowania wiadomości na wyznaczonym kanale czatu jako użytkownik bota za pośrednictwem punktu końcowego <code>/hooks/:key</code>. Ładunek składa się z pojedynczego parametru <code>text</code>, który jest ograniczony do 2000 znaków.<br><br>Obsługujemy również ograniczone parametry <code>tekstu</code> w formacie Slack, wyodrębnianie linków i wzmianek na podstawie formatu <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, ale w tym celu należy użyć punktu końcowego <code>/hooks/:key/slack</code>."
         saved: "Zmiany w webhooku zostały zapisane"
+        created: "Utworzono webhook"
       selection:
         cancel: "Anuluj"
         quote_selection: "Cytat w temacie"
         copy: "Kopiuj"
+        delete: "Usuń (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Przejdź do kanału"
         error: "Wystąpił błąd podczas przenoszenia wiadomości czatu"
         title: "Przenieś czat do tematu"
@@ -659,10 +659,13 @@ pl_PL:
         notifications:
           regular:
             title: "Normalny"
+            description: "Otrzymuj powiadomienia, gdy ktoś wspomni o Tobie w tym wątku."
           tracking:
             title: "Śledzona"
+            description: "Otrzymuj powiadomienia, gdy ktoś wspomni o Tobie w tym wątku i zobacz liczbę nowych odpowiedzi na liście wątków."
           watching:
             title: "Obserwowane"
+            description: "Otrzymuj powiadomienia o wszystkich odpowiedziach w tym wątku i zobacz liczbę nowych odpowiedzi na liście wątków."
         participants_other_count:
           one: "+%{count}"
           few: "+%{count}"
@@ -670,10 +673,14 @@ pl_PL:
           other: "+%{count}"
       thread_title_toast:
         title: "Ustaw tytuł wątku"
+        message: "Pomóż innym odkryć tę konwersację."
         dismiss_action: "Nie pokazuj ponownie"
         primary_action: "Ustaw tytuł"
       thread_title_modal:
         title: "Ustaw tytuł wątku"
+        input_placeholder: "Powiedz innym, o czym jest ta rozmowa..."
+        discourse_ai:
+          title: "Automatycznie generuj tytuły wątków"
       threads:
         open: "Otwórz wątek"
         list: "Wątki"
@@ -702,6 +709,7 @@ pl_PL:
         chat_mention: "Wzmianka na czacie"
         chat_invitation: "Zaproszenie do czatu"
         chat_quoted: "Cytowany czat"
+        chat_watched_thread: "Obserwowany wątek czatu"
     action_codes:
       chat:
         enabled: '%{who} włączone <button class="btn-link open-chat">czat</button> %{when}'

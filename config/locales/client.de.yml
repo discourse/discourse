@@ -141,7 +141,7 @@ de:
       topic_html: 'Thema: <span class="topic-title">%{topicTitle}</span>'
       post: "Beitrag Nr. %{postNumber} von @%{username}"
       close: "Schließen"
-      twitter: "Auf Twitter teilen"
+      twitter: "Teilen auf X"
       facebook: "Auf Facebook teilen"
       email: "Per E-Mail senden"
       url: "URL kopieren und teilen"
@@ -3468,7 +3468,9 @@ de:
       show_hidden: "Ignorierte Inhalte anzeigen."
       deleted_by_author_simple: "(Beitrag vom Verfasser gelöscht)"
       collapse: "zuklappen"
+      load_more_replies: "weitere Antworten laden"
       sr_collapse_replies: "Eingebettete Antworten einklappen"
+      sr_load_more_replies: "Weitere eingebettete Antworten laden"
       sr_date: "Beitragsdatum"
       sr_expand_replies:
         one: "Dieser Beitrag hat %{count} Antwort"
@@ -5212,6 +5214,15 @@ de:
           security: "Sicherheitseinstellungen"
           spam: "Spam-Einstellungen"
           staff_action_logs: "Team-Aktionen-Protokolle"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Backups"
+            description: "Mache ein Backup der Daten deiner Website"
+          whats_new:
+            title: "Was ist neu?"
+            description: "Entdecke neue Versionen und Verbesserungen von Discourse"
       config_areas:
         about:
           header: "Über deine Website"
@@ -6303,7 +6314,7 @@ de:
         post_edits_count: "Beitragsbearbeitungen"
         anonymize: "Benutzer anonymisieren"
         anonymize_confirm: "Möchtest du dieses Konto WIRKLICH anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Informationen im Profil zurückgesetzt."
-        delete_associated_accounts_confirm: "Bist du sicher, dass du die zugehörigen Konten von diesem Konto löschen willst? Möglicherweise können sie sich nicht mehr anmelden."
+        delete_associated_accounts_confirm: "Bist du sicher, dass du alle verknüpften Konten von diesem Konto löschen willst? Der Benutzer kann sich möglicherweise nicht mehr anmelden, wenn sich seine E-Mail geändert hat."
         anonymize_yes: "Ja, dieses Konto anonymisieren"
         anonymize_failed: "Beim Anonymisieren des Kontos ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"

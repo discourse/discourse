@@ -141,7 +141,6 @@ hu:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. bejegyzés, szerző: %{username}"
       close: "bezárás"
-      twitter: "Megosztás Twitteren"
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
@@ -5219,6 +5218,15 @@ hu:
           security: "Biztonsági beállítások"
           spam: "Spam beállítások"
           staff_action_logs: "Stábművelet naplók"
+      section_landing_pages:
+        account:
+          title: "Fiók"
+          backups:
+            title: "Biztonsági mentések"
+            description: "Készítsen biztonsági másolatot webhelye adatairól"
+          whats_new:
+            title: "Újdonságok"
+            description: "Fedezze fel a Discourse új kiadásait és fejlesztéseit"
       config_areas:
         about:
           header: "Az Ön webhelyéről"
@@ -6316,7 +6324,7 @@ hu:
         post_edits_count: "Bejegyzés szerkesztések"
         anonymize: "Felhasználó névtelenítése"
         anonymize_confirm: "TELJESEN biztos, hogy anonimizálni szeretné ezt a fiókot? Ez megváltoztatja a felhasználónevet és az e-mail-címet, és visszaállítja az összes profiladatot."
-        delete_associated_accounts_confirm: "BIZTOS, hogy törölni akarja a kapcsolódó fiókokat ebből a fiókból? Előfordulhat, hogy nem tudnak bejelentkezni."
+        delete_associated_accounts_confirm: "BIZTOS, hogy törölni szeretné az összes társított fiókot ebből a fiókból? Előfordulhat, hogy a felhasználó nem tud bejelentkezni, ha az e-mail címe megváltozott."
         anonymize_yes: "Igen, anonimizálom ezt a fiókot"
         anonymize_failed: "Hiba történt a fiók névtelenítése során."
         delete: "Felhasználó törlése"

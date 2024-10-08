@@ -141,7 +141,6 @@ fi:
       topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "viesti %{postNumber} käyttäjältä @%{username}"
       close: "sulje"
-      twitter: "Jaa Twitterissä"
       facebook: "Jaa Facebookissa"
       email: "Lähetä sähköpostitse"
       url: "Kopioi ja jaa URL"
@@ -5205,6 +5204,13 @@ fi:
           screened_urls: "Seulottavat URL-osoitteet"
           search_logs: "Hakulokit"
           staff_action_logs: "Henkilökunnan toimintalokit"
+      section_landing_pages:
+        account:
+          title: "Tili"
+          backups:
+            title: "Varmuuskopiot"
+          whats_new:
+            title: "Mitä uutta"
       config_areas:
         about:
           header: "Tietoa sivustostasi"

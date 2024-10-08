@@ -109,7 +109,6 @@ id:
       topic_html: 'Topik: <span class="topic-title">%{topicTitle}</span>'
       post: "kiriman #%{postNumber} oleh @%{username}"
       close: "tutup"
-      twitter: "Bagikan di Twitter"
       facebook: "Bagikan di Facebook"
       email: "Kirim lewat email"
       url: "Salin dan bagikan URL"
@@ -2415,6 +2414,9 @@ id:
           sent: "Mengirim"
           received: "Menerima"
           rejected: "Ditolak"
+      section_landing_pages:
+        account:
+          title: "Akun"
       config_areas:
         about:
           community_name: "Nama komunitas"

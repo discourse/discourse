@@ -168,7 +168,7 @@ ro:
       topic_html: 'Subiect: <span class="topic-title">%{topicTitle}</span>'
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
-      twitter: "Distribuie pe Twitter"
+      twitter: "Partajează pe X"
       facebook: "Distribuie pe Facebook"
       email: "Trimite prin e-mail"
       url: "Copiază și distribuie URL"
@@ -2515,6 +2515,8 @@ ro:
       follow_quote: "mergi la postarea citată"
       show_full: "Arată postarea în întregime"
       collapse: "restrânge"
+      load_more_replies: "încarcă mai multe răspunsuri"
+      sr_load_more_replies: "Încarcă mai multe răspunsuri încorporate"
       expand_collapse: "extinde/restrânge"
       gap:
         one: "vezi un răspuns ascuns"
@@ -3578,6 +3580,15 @@ ro:
           security: "Setări de securitate"
           spam: "Setări spam"
           staff_action_logs: "Jurnal de acțiuni ale personalului"
+      section_landing_pages:
+        account:
+          title: "Cont"
+          backups:
+            title: "Copii de siguranță"
+            description: "Fă o copie de siguranță a datelor site-ului tău"
+          whats_new:
+            title: "Ce este nou"
+            description: "Descoperă noile versiuni și îmbunătățiri ale Discourse"
       config_areas:
         about:
           banner_image_help: |
@@ -4198,7 +4209,7 @@ ro:
         time_read: "Timp de citire"
         anonymize: "Transformă în utilizator anonim"
         anonymize_confirm: "Ești SIGUR că vrei să transformi acest cont într-un cont anonim? Operaţiunea va schimba numele utilizatorului şi adresa de email şi va reseta toate informaţiile din profil."
-        delete_associated_accounts_confirm: "Sigur vrei să ștergi conturile asociate din acest cont? Este posibil ca acestea să nu se poată conecta."
+        delete_associated_accounts_confirm: "Sigur vrei să ștergi toate conturile asociate acestui cont? Este posibil ca utilizatorul să nu se poată conecta dacă și-a schimbat adresa de email."
         anonymize_yes: "Da, transformă acest cont în cont anonim"
         anonymize_failed: "A apărut o problemă în timpul transformării contului în cont anonim."
         delete: "Ștergere utilizator"

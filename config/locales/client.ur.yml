@@ -118,7 +118,6 @@ ur:
     share:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
       close: "بند کریں"
-      twitter: "ٹویٹر پر شیئر کریں"
       facebook: "فیس بک پر شیئر کریں"
       email: "ای میل کے ذریعے بھیجیں"
       url: "یو آر ایل کو کاپی اور شیئر کریں"
@@ -4004,6 +4003,11 @@ ur:
           screened_ips: "سکرین کیے گئے IP"
           screened_urls: "سکرین کیے گئے یو.آر.ایل."
           search_logs: "لاگز سرچ کریں"
+      section_landing_pages:
+        account:
+          title: "اکاؤنٹ"
+          backups:
+            title: "بیک اَپس"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
