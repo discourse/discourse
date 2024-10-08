@@ -50,7 +50,6 @@ RSpec.describe WebHookEventType do
       SiteSetting.stubs(:topic_voting_enabled).returns(true)
       SiteSetting.stubs(:chat_enabled).returns(true)
       SiteSetting.stubs(:enable_category_experts).returns(true)
-      SiteSetting.stubs(:discourse_global_communities_enabled).returns(true)
       plugins_event_types = WebHookEventType.active.map(&:name) - core_event_types
       expect(plugins_event_types).to match_array(
         %w[
