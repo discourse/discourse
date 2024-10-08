@@ -78,6 +78,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "additional section links are hidden"
     );
 
+    assert.ok(
+      exists(
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger[aria-expanded='false']"
+      ),
+      "aria-expanded toggles to false when additional links are hidden"
+    );
+
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
@@ -89,13 +96,6 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-content"
       ),
       "additional section links are hidden when clicking outside"
-    );
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger[aria-expanded='false']"
-      ),
-      "aria-expanded toggles to false when additional links are hidden"
     );
   });
 
