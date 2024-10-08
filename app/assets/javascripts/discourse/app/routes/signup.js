@@ -7,8 +7,6 @@ export default class SignupRoute extends DiscourseRoute {
   @service router;
   @service siteSettings;
 
-  controllerName = "signup-page";
-
   beforeModel() {
     if (!this.siteSettings.experimental_full_page_login) {
       this.showCreateAccount();

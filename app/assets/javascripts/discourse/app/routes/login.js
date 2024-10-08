@@ -8,10 +8,6 @@ export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
 
-  // `login-page` because `login` controller is the one for
-  // the login modal
-  controllerName = "login-page";
-
   beforeModel() {
     if (
       !this.siteSettings.login_required &&
