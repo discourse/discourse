@@ -40,7 +40,7 @@ module PageObjects
         end
 
         def click_community_section_more_button
-          community_section.click_button(class: "sidebar-more-section-links-details-summary")
+          community_section.click_button(class: "sidebar-more-section-trigger")
           expect(community_section).to have_css(".sidebar-more-section-links-details")
           self
         end

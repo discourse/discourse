@@ -37,7 +37,7 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
-    if (e.target.closest(".sidebar-more-section-links-details-content")) {
+    if (e.target.closest(".sidebar-more-section-links-content")) {
       return;
     }
 

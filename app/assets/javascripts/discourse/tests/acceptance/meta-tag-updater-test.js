@@ -10,7 +10,7 @@ acceptance("Meta Tag Updater", function (needs) {
   test("updates OG title and URL", async function (assert) {
     await visit("/");
     await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-trigger"
     );
     await click("a[href='/about']");
 
