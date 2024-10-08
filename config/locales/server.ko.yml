@@ -1753,7 +1753,6 @@ ko:
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     auto_handle_queued_age: "이 정도 기간이 지나면 검토 대기 기록을 자동으로 처리합니다. 신고는 무시됩니다. 대기 중인 게시물 및 사용자는 거부됩니다. 이 기능을 비활성화하려면 0으로 설정하세요."
-    svg_icon_subset: "에셋에 포함할 FontAwesome 5 아이콘을 추가합니다. 솔리드 아이콘에는 접두사 'fa-', 일반 아이콘에는 'far-', 브랜드 아이콘에는 'fab-'를 사용하세요."
     full_name_required: "전체 이름은 사용자 프로필의 필수 필드입니다."
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."

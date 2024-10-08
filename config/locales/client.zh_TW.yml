@@ -109,7 +109,6 @@ zh_TW:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
-      twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
       email: "透過電子郵件傳送"
       url: "複製並分享網址"
@@ -3332,6 +3331,11 @@ zh_TW:
           screened_ips: "過濾的 IP 位址"
           screened_urls: "過濾的網址"
           search_logs: "搜尋紀錄"
+      section_landing_pages:
+        account:
+          title: "帳號"
+          backups:
+            title: "備份"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

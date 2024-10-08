@@ -2173,6 +2173,11 @@ sq:
           screened_emails: "Kontroll Email-ash"
           screened_ips: "Kontroll IP-sh"
           screened_urls: "Kontroll URL-sh"
+      section_landing_pages:
+        account:
+          title: "Llogaria"
+          backups:
+            title: "Rezervat"
       config_areas:
         about:
           saved: "u ruajt!"

@@ -141,7 +141,6 @@ nb_NO:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
-      twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-post"
       url: "Kopier og del URL"
@@ -4655,6 +4654,11 @@ nb_NO:
           screened_ips: "Kontrollerte IP-er"
           screened_urls: "Kontrollerte URL-er"
           search_logs: "Søkelogger"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Sikkerhetskopier"
       config_areas:
         about:
           optional: "(valgfritt)"

@@ -123,7 +123,6 @@ ca:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
-      twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
       email: "Envia per correu electrònic"
       url: "Copiar i compartir URL"
@@ -3256,6 +3255,11 @@ ca:
           screened_ips: "IPs sota supervisió"
           screened_urls: "URLs sota supervisió"
           search_logs: "Cerca els registres (logs)"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Còpies de seguretat"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

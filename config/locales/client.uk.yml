@@ -197,7 +197,6 @@ uk:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "допис #%{postNumber} від @%{username}"
       close: "сховати"
-      twitter: "Поділитися у Twitter"
       facebook: "Поділитися у Facebook"
       email: "Надіслати електронною поштою"
       url: "Скопіювати та поширити посилання"
@@ -5734,6 +5733,13 @@ uk:
           security: "Налаштування безпеки"
           spam: "Налаштування спаму"
           staff_action_logs: "Журнали дій персоналу"
+      section_landing_pages:
+        account:
+          title: "Обліковий запис"
+          backups:
+            title: "Резервні копії"
+          whats_new:
+            title: "Що нового"
       config_areas:
         about:
           header: "Про ваш сайт"

@@ -2218,7 +2218,6 @@ fi:
     auto_handle_queued_age: "Käsittele automaattisesti asiat, jotka ovat odottaneet käsittelyä näin monta päivää. Liput ohitetaan. Jonossa olevat viestit ja käyttäjät ohitetaan. Jos asetat 0:ksi, ominaisuus ei ole käytössä."
     penalty_step_hours: "Oletusrangaistukset käyttäjien hiljentämisestä tai hyllyttämisestä tunneissa. Ensimmäisen rikkeen oletusarvo on ensimmäinen arvo, toisen rikkeen toinen jne."
     penalty_include_post_message: "Sisällytä loukkaava viesti automaattisesti sähköpostiviestimalliin, kun käyttäjä hiljennetään tai hyllytetään"
-    svg_icon_subset: "Lisää ylimääräisiä FontAwesome 5 -kuvakkeita, jotka haluat sisällyttää käytettäviisi. Käytä etuliitettä \"fa-\", kun haluat täytetyn kuvakkeen, \"far-\", kun haluat tavallisen ja \"fab-\", kun haluat brändikuvakkeen."
     max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi tulostuksen käytöstä)"
     full_name_required: "Koko nimi on käyttäjäprofiilin pakollinen kenttä."
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."

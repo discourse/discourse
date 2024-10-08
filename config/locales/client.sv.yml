@@ -141,7 +141,6 @@ sv:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
       close: "stäng"
-      twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
@@ -4857,6 +4856,11 @@ sv:
           screened_ips: "Granskade IP-adresser"
           screened_urls: "Granskade URL:er"
           search_logs: "Söklogg"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Säkerhetskopior"
       config_areas:
         about:
           header: "Om din webbplats"

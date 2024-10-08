@@ -197,7 +197,6 @@ ru:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "Сообщение #%{postNumber} от пользователя @%{username}"
       close: "закрыть"
-      twitter: "Поделиться в Твиттере"
       facebook: "Поделиться в Фейсбуке"
       email: "Отправить по электронной почте"
       url: "Копировать ссылку и поделиться"
@@ -5728,6 +5727,13 @@ ru:
           screened_urls: "Проверяемые ссылки"
           search_logs: "Журналы поиска"
           staff_action_logs: "Журналы действий персонала"
+      section_landing_pages:
+        account:
+          title: "Аккаунт"
+          backups:
+            title: "Резервные копии"
+          whats_new:
+            title: "Что нового"
       config_areas:
         about:
           header: "О вашем сайте"

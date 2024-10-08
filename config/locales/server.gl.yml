@@ -1706,7 +1706,6 @@ gl:
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     auto_handle_queued_age: "Xestione automaticamente rexistros que levan moitos días en espera de seren revisados. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabelecer en 0 para desactivar esta funcionalidade."
-    svg_icon_subset: "Engada 5 iconas FontAwesome adicionais que lle gustaría incluír nos seus recursos. Use o prefixo «fa-» para iconas sólidas, «far-» para iconas normais e «fab-» para iconas de marca."
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."

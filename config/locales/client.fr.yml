@@ -141,7 +141,6 @@ fr:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber} par @%{username}"
       close: "fermer"
-      twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
@@ -5198,6 +5197,13 @@ fr:
           screened_urls: "URL sous surveillance"
           search_logs: "Journaux de recherche"
           staff_action_logs: "Journaux d'action du personnel"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Sauvegardes"
+          whats_new:
+            title: "Nouveautés"
       config_areas:
         about:
           header: "À propos de votre site"

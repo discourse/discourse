@@ -9,7 +9,7 @@ hu:
     admin:
       site_settings:
         categories:
-          chat: Chat
+          chat: Csevegés
   js:
     admin:
       site_settings:
@@ -164,6 +164,7 @@ hu:
           unreachable_multiple:
             one: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
             other: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
+          too_many_members_MF: "{ groupCount, plural,  \n     =1 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n     =2 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n  other {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n}\n"
         too_many_mentions:
           one: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
           other: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
@@ -407,10 +408,8 @@ hu:
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
         auto_join_users_warning: "Minden olyan felhasználó, aki nem tagja ennek a csatornának, de hozzáféréssel rendelkezik a %{category} kategóriához, csatlakozni fog. Biztos benne?"
-        desktop_notification_level: "Asztali értesítések"
         follow: "Belépés"
         followed: "Csatlakozott"
-        mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
         threading_enabled: "Engedélyezed"
         threading_disabled: "Kikapcsolt"

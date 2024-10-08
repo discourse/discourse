@@ -113,7 +113,6 @@ vi:
       topic_html: 'Chủ đề:<span class="topic-title">%{topicTitle}</span>'
       post: "bài đăng #%{postNumber} bởi @%{username}"
       close: "đóng"
-      twitter: "Chia sẻ trên Twitter"
       facebook: "Chia sẻ trên Facebook"
       email: "Gửi qua email"
       url: "Sao chép và chia sẻ URL"
@@ -4059,6 +4058,11 @@ vi:
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
           search_logs: "Nhật ký tìm kiếm"
+      section_landing_pages:
+        account:
+          title: "Tài khoản"
+          backups:
+            title: "Bản sao lưu"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
