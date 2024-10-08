@@ -47,7 +47,7 @@
     "@ember/string": "^4.0.0",
     "@ember/test-helpers": "^4.0.4",
     "@ember/test-waiters": "^3.1.0",
-    "@embroider/compat": "^3.6.2",
+    "@embroider/compat": "^3.6.3",
     "@embroider/core": "^3.4.17",
     "@embroider/macros": "^1.16.7",
     "@embroider/router": "^2.1.8",
