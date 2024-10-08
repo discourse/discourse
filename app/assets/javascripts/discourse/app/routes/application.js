@@ -11,6 +11,7 @@ import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import { findAll } from "discourse/models/login-method";
@@ -26,6 +27,7 @@ function isStrictlyReadonly(site) {
 }
 
 export default class ApplicationRoute extends DiscourseRoute {
+  @service capabilities;
   @service clientErrorHandler;
   @service composer;
   @service currentUser;
@@ -290,6 +292,9 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   handleShowLogin() {
+    if (this.capabilities.isAppWebview) {
+      postRNWebviewMessage("showLogin", true);
+    }
     if (this.siteSettings.enable_discourse_connect) {
       const returnPath = cookie("destination_url")
         ? getURL("/")
