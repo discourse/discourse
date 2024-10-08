@@ -11,7 +11,11 @@ export default class SidebarUserSections extends Component {
 
   <template>
     <div class="sidebar-sections">
-      <CustomSections @collapsable={{@collapsableSections}} />
+      <CustomSections
+        @collapsable={{@collapsableSections}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
+      />
+
       <CategoriesSection @collapsable={{@collapsableSections}} />
 
       {{#if this.currentUser.display_sidebar_tags}}

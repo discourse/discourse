@@ -24,7 +24,11 @@ export default class SidebarCustomSections extends Component {
   <template>
     <div class="sidebar-custom-sections">
       {{#each this.sections as |section|}}
-        <CustomSection @sectionData={{section}} @collapsable={{@collapsable}} />
+        <CustomSection
+          @sectionData={{section}}
+          @collapsable={{@collapsable}}
+          @toggleNavigationMenu={{@toggleNavigationMenu}}
+        />
       {{/each}}
     </div>
   </template>
