@@ -382,6 +382,16 @@ pl_PL:
         few: "%{formatted_number} Członków"
         many: "%{formatted_number} Członków"
         other: "%{formatted_number} Członków"
+      admin_count:
+        one: "%{formatted_number} Administrator"
+        few: "%{formatted_number} Administratorzy"
+        many: "%{formatted_number} Administratorów"
+        other: "%{formatted_number} Administratorów"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        few: "%{formatted_number} Moderatorzy"
+        many: "%{formatted_number} Moderatorów"
+        other: "%{formatted_number} Moderatorów"
       report_inappropriate_content: "Jeśli natkniesz się na nieodpowiednie treści, nie wahaj się i rozpocznij rozmowę z naszymi moderatorami i administratorami. Pamiętaj, aby zalogować się przed kontaktem."
     bookmarked:
       title: "Zakładka"
@@ -2089,6 +2099,11 @@ pl_PL:
           few: "Musi mieć co najwyżej %{count} znaki"
           many: "Musi mieć co najwyżej %{count} znaków"
           other: "Musi mieć co najwyżej %{count} znaków"
+        too_short:
+          one: "Musi zawierać co najmniej %{count} znak"
+          few: "Musi zawierać co najmniej %{count} znaki"
+          many: "Musi zawierać co najmniej %{count} znaków"
+          other: "Musi zawierać co najmniej %{count} znaków"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2293,6 +2308,7 @@ pl_PL:
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
       linkedin_oidc:
+        name: "LinkedIn"
         title: "Zaloguj się za pomocą LinkedIn"
         sr_title: "Zaloguj się za pomocą LinkedIn"
       passkey:
@@ -4122,6 +4138,8 @@ pl_PL:
       no_views: Brak statystyk wyświetleń, sprawdź później.
       chart_error: Błąd podczas renderowania wykresu. Spróbuj ponownie.
       views: "Odsłony"
+      predicted_views: "Przewidywane wyświetlenia"
+      so_far: (dotychczas)
       read: odczyt
       minutes: min
     post_links:
@@ -4742,6 +4760,11 @@ pl_PL:
               label: "Ikona"
               validation:
                 blank: "Ikona nie może być pusta"
+                maximum:
+                  one: "Ikona musi być krótsza niż %{count} znak"
+                  few: "Ikona musi być krótsza niż %{count} znaki"
+                  many: "Ikona musi być krótsza niż %{count} znaków"
+                  other: "Ikona musi być krótsza niż %{count} znaków"
             name:
               label: "Pełna nazwa"
               validation:
@@ -4765,6 +4788,11 @@ pl_PL:
             label: "Tytuł sekcji"
             validation:
               blank: "Tytuł nie może być pusty"
+              maximum:
+                one: "Tytuł musi być krótszy niż %{count} znak"
+                few: "Tytuł musi być krótszy niż %{count} znaki"
+                many: "Tytuł musi być krótszy niż %{count} znaków"
+                other: "Tytuł musi być krótszy niż %{count} znaków"
         about:
           header_link_text: "O stronie"
         messages:
@@ -4848,6 +4876,7 @@ pl_PL:
       clear_filter: "Wyczyść filtr"
       no_results:
         title: "Brak wyników"
+        description: 'Nie mogliśmy znaleźć niczego pasującego do ‘%{filter}’.<br><br>Czy chcesz <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">przeszukać ustawienia witryny</a> lub <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">listę użytkowników administratora?</a>'
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -4993,6 +5022,7 @@ pl_PL:
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         new_features:
           title: "Co nowego"
+          subtitle: "Aby uzyskać więcej informacji na temat nowych funkcji i ulepszeń, które cały czas dodajemy, zobacz <a href='https://meta.discourse.org/tags/c/announcements/67/release-notes'target='_blank'>Informacje o wydaniu</a>."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
@@ -5422,6 +5452,7 @@ pl_PL:
           backups: "Kopie zapasowe"
           whats_new:
             title: "Co nowego"
+            keywords: "dziennik zmian|funkcja|wydanie"
       community:
         title: "Społeczność"
         sidebar_link:
@@ -5447,6 +5478,7 @@ pl_PL:
           themes: "Motywy"
           components:
             title: "Komponenty"
+            keywords: "motyw|rozszerzenie"
           site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
@@ -5486,15 +5518,23 @@ pl_PL:
             To zdjęcie zostanie wykorzystane na Twojej stronie "O nas". Zalecany rozmiar: 800x300 pikseli. Akceptowane formaty: JPG, PNG i SVG, do 10 MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
+          community_owner_placeholder: "Jan Kowalski"
           community_owner_help: |
             Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
           contact_email: "E-mail kontaktowy"
+          contact_email_placeholder: "kontakt@jan-kowalski.pl"
+          contact_email_help: |
+            Adres e-mail kluczowej osoby kontaktowej odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na /about. Widoczny dla anonimowych użytkowników na stronach publicznych.
           contact_url: "URL kontaktowy"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
             Adres URL kontaktu dla tej witryny. Jeśli jest obecny, zastępuje kontaktowy adres e-mail na podstronie /about i jest widoczny dla anonimowych użytkowników na stronach publicznych.
           site_contact_name: "Nazwa kontaktu witryny"
+          site_contact_name_help: |
+            Prawidłowa nazwa użytkownika, z której będą wysyłane wszystkie automatyczne wiadomości. Jeśli pozostanie puste, zostanie użyte domyślne konto systemowe.
           site_contact_group: "Grupa kontaktowa witryny"
+          site_contact_group_help: |
+            Prawidłowa nazwa grupy, która jest zapraszana do wszystkich automatycznie wysyłanych wiadomości prywatnych.
           your_organization: "Twoja organizacja"
           company_name: "Nazwa firmy"
           company_name_placeholder: "Przykładowa firma Inc."
@@ -5536,10 +5576,13 @@ pl_PL:
             post: "wpisy"
             chat_message: "wiadomości czatu"
             enabled: "Włącz tę niestandardową flagę po zapisaniu"
+            alert: "Po użyciu flagi niestandardowej można ją wyłączyć, ale nie można jej edytować ani usunąć."
             edit_flag: "Edytuj flagę"
+            non_editable: "Nie możesz edytować tej flagi, ponieważ jest to flaga systemowa lub została już użyta w systemie recenzji, jednak nadal możesz ją wyłączyć."
             delete_flag: "Usuń flagę"
             non_deletable: "Nie możesz usunąć tej flagi, ponieważ jest to flaga systemowa lub została już użyta w systemie recenzji, jednak nadal możesz ją wyłączyć."
             require_message: "Poproś użytkowników o podanie dodatkowych powodów"
+            require_message_description: "Po wybraniu tej flagi zostanie wyświetlone pole tekstowe, w którym użytkownik może podać dodatkowe szczegóły dotyczące powodu oflagowania treści."
           more_options:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
@@ -5625,7 +5668,7 @@ pl_PL:
           download:
             label: "Pobierz"
             title: "Wyślij e-mail z linkiem do pobrania"
-            alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem."
+            alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie mailem."
           destroy:
             title: "Usuń kopię zapasową"
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
@@ -6279,6 +6322,7 @@ pl_PL:
           many: "pokaż %{count} słów"
           other: "pokaż %{count} słów"
         case_sensitive: "(z uwzg. wielkości liter)"
+        html: "(html)"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"

@@ -3765,7 +3765,9 @@ sk:
       show_hidden: "Zobraziť ignorovaný obsah."
       deleted_by_author_simple: "(príspevok vymazaný autorom)"
       collapse: "zbaliť"
+      load_more_replies: "načítať ďalšie odpovede"
       sr_collapse_replies: "Zbaliť vložené odpovede"
+      sr_load_more_replies: "Načítať viac vložených odpovedí"
       sr_date: "Dátum príspevku"
       sr_expand_replies:
         one: "Tento príspevok má %{count} odpoveď."
