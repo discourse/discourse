@@ -222,6 +222,8 @@ describe DiscourseAutomation::Scriptable do
         SiteSetting.prioritize_username_in_ux = false
       end
 
+      subject(:quote) { DiscourseAutomation::Scriptable::Utils.build_quote(post) }
+
       context "when post is nil" do
         it "returns an empty string" do
           expect(DiscourseAutomation::Scriptable::Utils.build_quote(nil)).to eq("")
@@ -229,9 +231,10 @@ describe DiscourseAutomation::Scriptable do
       end
 
       context "when post.raw is nil" do
+        before { post.raw = nil }
+
         it "returns an empty string" do
-          post.raw = nil
-          expect(DiscourseAutomation::Scriptable::Utils.build_quote(post)).to eq("")
+          expect(quote).to eq("")
         end
       end
 
@@ -242,7 +245,6 @@ describe DiscourseAutomation::Scriptable do
         end
 
         it "returns a quote with display name" do
-          quote = DiscourseAutomation::Scriptable::Utils.build_quote(post)
           expect(quote).to eq(
             "[quote=John Doe, post:#{post.post_number}, topic:#{post.topic_id}, username:johndoe]\nThis is a post content\n[/quote]\n\n",
           )
@@ -251,7 +253,6 @@ describe DiscourseAutomation::Scriptable do
 
       context "when display_name_on_posts is false or prioritize_username_in_ux is true" do
         it "returns a quote with username" do
-          quote = DiscourseAutomation::Scriptable::Utils.build_quote(post)
           expect(quote).to eq(
             "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
           )
@@ -266,7 +267,6 @@ describe DiscourseAutomation::Scriptable do
         end
 
         it "returns a quote with username" do
-          quote = DiscourseAutomation::Scriptable::Utils.build_quote(post)
           expect(quote).to eq(
             "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
           )
@@ -280,7 +280,6 @@ describe DiscourseAutomation::Scriptable do
         end
 
         it "returns a quote with username prioritized" do
-          quote = DiscourseAutomation::Scriptable::Utils.build_quote(post)
           expect(quote).to eq(
             "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
           )
