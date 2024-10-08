@@ -126,9 +126,8 @@ acceptance("Login button", function () {
     await visit("/");
     await click("header .login-button");
 
-    assert.strictEqual(
+    assert.true(
       webviewSpy.withArgs('{"showLogin":true}').calledOnce,
-      true,
       "triggers postmessage event"
     );
 
