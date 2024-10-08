@@ -121,8 +121,7 @@ describe Chat::ChannelFetcher do
           user: user1,
           chat_channel: direct_message_channel1,
           following: true,
-          desktop_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
-          mobile_notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
+          notification_level: Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always],
         )
       end
 
