@@ -55,6 +55,8 @@ RSpec.describe GlobalSetting do
         Discourse.stubs(:redis).returns(nil)
       end
 
+      after { GlobalSetting.skip_redis = false }
+
       it "generates a new random key in memory without redis" do
         GlobalSetting.reset_secret_key_base!
         token = GlobalSetting.safe_secret_key_base
