@@ -27,8 +27,19 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_no_section("categories")
     expect(page).to have_no_css(".admin-main-nav")
     filter.click_back_to_forum
-    expect(page).to have_current_path("/latest")
+    expect(page).to have_current_path("/")
     expect(sidebar).to have_no_section("admin-root")
+  end
+
+  context "with subfolder" do
+    before { set_subfolder "/discuss" }
+
+    it "navigates back to homepage correctly" do
+      visit("/discuss/admin")
+
+      filter.click_back_to_forum
+      expect(page).to have_current_path("/discuss/")
+    end
   end
 
   it "displays the panel header" do
@@ -43,14 +54,6 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(["Dashboard", "Users", "All Site Settings"])
   end
 
-  it "respects the user homepage preference for the Back to Forum link" do
-    admin.user_option.update!(
-      homepage_id: UserOption::HOMEPAGES.find { |id, value| value == "categories" }.first,
-    )
-    visit("/admin")
-    expect(page).to have_link("Back to Forum", href: "/categories")
-  end
-
   context "when on mobile" do
     it "shows the admin sidebar links in the header-dropdown when navigating to an admin route and hides them when leaving",
        mobile: true do
@@ -63,7 +66,7 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       expect(sidebar).to have_no_section("community")
       expect(page).to have_no_css(".admin-main-nav")
       filter.click_back_to_forum
-      expect(page).to have_current_path("/latest")
+      expect(page).to have_current_path("/")
       sidebar_dropdown.click
       expect(sidebar).to have_no_section("admin-root")
     end
