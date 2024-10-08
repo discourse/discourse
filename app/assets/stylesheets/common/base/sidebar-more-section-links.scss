@@ -5,14 +5,3 @@
     padding: 0.33rem calc(var(--d-sidebar-row-horizontal-padding) / 3);
   }
 }
-
-.sidebar-more-section-links-details {
-  position: relative;
-  @include breakpoint(tablet) {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    .sidebar-more-section-links-content-main {
-      gap: 0 1em;
-    }
-  }
-}
