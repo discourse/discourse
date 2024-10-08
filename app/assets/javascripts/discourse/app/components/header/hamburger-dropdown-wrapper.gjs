@@ -37,6 +37,10 @@ export default class HamburgerDropdownWrapper extends Component {
 
   @action
   clickOutside(e) {
+    if (e.target.closest(".sidebar-more-section-links-details-content")) {
+      return;
+    }
+
     if (
       e.target.classList.contains("header-cloak") &&
       !prefersReducedMotion()
@@ -101,6 +105,7 @@ export default class HamburgerDropdownWrapper extends Component {
     >
       <SidebarHamburgerDropdown
         @forceMainSidebarPanel={{this.forceMainSidebarPanel}}
+        @toggleNavigationMenu={{this.toggleNavigation}}
       />
     </div>
   </template>

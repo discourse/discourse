@@ -1,14 +1,23 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import icon from "discourse/helpers/d-icon";
 
+const MORE_MENU = "sidebar-more-section";
+
 export default class SidebarSectionLinkButton extends Component {
+  @service menu;
+
   @action
   handleClick() {
-    this.args.action(event);
-    if (this.args.close) {
-      this.args.close();
+    const menuInstance = this.menu.getByIdentifier(MORE_MENU);
+
+    this.args.action();
+    this.menu.close(menuInstance);
+
+    if (this.args.toggleNavigationMenu) {
+      this.args.toggleNavigationMenu();
     }
   }
 

@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -13,7 +16,6 @@ export default class SidebarMoreSectionLinks extends Component {
   @service router;
 
   @tracked activeSectionLink;
-  @tracked open = false;
 
   constructor() {
     super(...arguments);
@@ -66,6 +68,15 @@ export default class SidebarMoreSectionLinks extends Component {
     });
   }
 
+  @action
+  closeMenu(menu) {
+    menu.close();
+
+    if (this.args.toggleNavigationMenu) {
+      this.args.toggleNavigationMenu();
+    }
+  }
+
   <template>
     {{#if this.activeSectionLink}}
       <MoreSectionLink @sectionLink={{this.activeSectionLink}} />
@@ -79,6 +90,7 @@ export default class SidebarMoreSectionLinks extends Component {
         @autofocus={{true}}
         @placement="bottom"
         @inline={{true}}
+        @identifier="sidebar-more-section"
       >
         <:trigger>
           <span class="sidebar-section-link-prefix icon">
@@ -95,7 +107,7 @@ export default class SidebarMoreSectionLinks extends Component {
               <MoreSectionLink
                 @sectionLink={{sectionLink}}
                 class="dropdown-menu__item"
-                {{on "click" menu.close}}
+                {{on "click" (fn this.closeMenu menu)}}
               />
             {{/each}}
 
@@ -108,7 +120,7 @@ export default class SidebarMoreSectionLinks extends Component {
                   @icon={{@moreButtonIcon}}
                   @text={{@moreButtonText}}
                   @name="customize"
-                  @close={{menu.close}}
+                  @toggleNavigationMenu={{@toggleNavigationMenu}}
                 />
               </dropdown.item>
             {{/if}}
