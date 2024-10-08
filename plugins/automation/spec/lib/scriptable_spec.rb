@@ -225,8 +225,10 @@ describe DiscourseAutomation::Scriptable do
       subject(:quote) { DiscourseAutomation::Scriptable::Utils.build_quote(post) }
 
       context "when post is nil" do
+        let(:post) { nil } # Define post as nil in this context
+
         it "returns an empty string" do
-          expect(DiscourseAutomation::Scriptable::Utils.build_quote(nil)).to eq("")
+          expect(quote).to eq("")
         end
       end
 
