@@ -26,9 +26,22 @@ describe "Core extensions" do
     end
 
     describe "#add_automation_scriptable" do
+      class MyScriptableClass
+        def self.call
+          proc { puts "Hello world" }
+        end
+      end
+
       it "adds the scriptable" do
         plugin = Plugin::Instance.new nil, "/tmp/test.rb"
         plugin.add_automation_scriptable(:foo) {}
+
+        expect(DiscourseAutomation::Scriptable.all).to include(:__scriptable_foo)
+      end
+
+      it "adds the scriptable using a class" do
+        plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+        plugin.add_automation_scriptable(:foo, MyScriptableClass)
 
         expect(DiscourseAutomation::Scriptable.all).to include(:__scriptable_foo)
       end

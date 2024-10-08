@@ -285,9 +285,13 @@ module DiscourseAutomation
       end
     end
 
-    def self.add(identifier, &block)
+    def self.add(identifier, scriptable_class = nil, &block)
       @all_scriptables = nil
-      define_method("__scriptable_#{identifier}", &block)
+      if block_given?
+        define_method("__scriptable_#{identifier}", &block)
+      else
+        define_method("__scriptable_#{identifier}", scriptable_class.call)
+      end
     end
 
     def self.remove(identifier)

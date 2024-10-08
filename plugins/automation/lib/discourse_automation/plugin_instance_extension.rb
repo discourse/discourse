@@ -2,8 +2,8 @@
 
 module DiscourseAutomation
   module PluginInstanceExtension
-    def add_automation_scriptable(name, &block)
-      reloadable_patch { DiscourseAutomation::Scriptable.add(name, &block) }
+    def add_automation_scriptable(name, scriptable_class = nil, &block)
+      reloadable_patch { DiscourseAutomation::Scriptable.add(name, scriptable_class, &block) }
     end
 
     def add_automation_triggerable(name, &block)
