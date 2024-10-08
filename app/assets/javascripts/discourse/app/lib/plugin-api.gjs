@@ -61,6 +61,7 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
+import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -3250,6 +3251,24 @@ class PluginApi {
   addAboutPageActivity(name, func) {
     addAboutPageActivity(name, func);
     addLegacyAboutPageStat(name);
+  }
+
+  /**
+   * Registers a component class that will be rendered within the AdminPageHeader component
+   * only on plugins using the AdminPluginConfigPage and the new plugin "show" route.
+   *
+   * This component will be passed an `@actions` argument, with Primary, Default, Danger,
+   * and Wrapped keys, which can be used for various different types of buttons (Wrapped
+   * should be used only in very rare scenarios).
+   *
+   * This component would be used for actions that should be present on the entire UI
+   * for that plugin -- one example is "Create export" for chat.
+   *
+   * @param {string} pluginId - The `dasherizedName` of the plugin using this component.
+   * @param {Class} componentClass - The JS class of the component to render.
+   */
+  registerPluginHeaderActionComponent(pluginId, componentClass) {
+    registerPluginHeaderActionComponent(pluginId, componentClass);
   }
 
   // eslint-disable-next-line no-unused-vars

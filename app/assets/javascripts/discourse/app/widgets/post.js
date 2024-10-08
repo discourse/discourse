@@ -31,9 +31,13 @@ import getURL, {
 import { iconNode } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
-function transformWithCallbacks(post) {
+function transformWithCallbacks(post, topicUrl, store) {
   let transformed = transformBasicPost(post);
   postTransformCallbacks(transformed);
+
+  transformed.customShare = `${topicUrl}/${post.post_number}`;
+  transformed.asPost = store.createRecord("post", post);
+
   return transformed;
 }
 
@@ -162,12 +166,10 @@ createWidget("reply-to-tab", {
       tabindex: "0",
     };
 
-    if (!this.attrs.mobileView) {
+    if (!attrs.mobileView) {
       result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
-      result["aria-expanded"] = this.attrs.repliesAbove.length
-        ? "true"
-        : "false";
+      result["aria-expanded"] = (attrs.repliesAbove.length > 0).toString();
     }
 
     return result;
@@ -526,7 +528,7 @@ createWidget("post-contents", {
 
     const extraState = {
       state: {
-        repliesShown: !!state.repliesBelow.length,
+        repliesShown: state.repliesBelow.length > 0,
         filteredRepliesShown: state.filteredRepliesShown,
       },
     };
@@ -534,31 +536,49 @@ createWidget("post-contents", {
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
+      let children = [];
+
+      repliesBelow.forEach((p) => {
+        children.push(
+          this.attach("embedded-post", p, {
+            model: p.asPost,
+            state: {
+              role: "region",
+              "aria-label": I18n.t("post.sr_embedded_reply_description", {
+                post_number: attrs.post_number,
+                username: p.username,
+              }),
+            },
+          })
+        );
+      });
+
+      children.push(
+        this.attach("button", {
+          title: "post.collapse",
+          icon: "chevron-up",
+          action: "toggleRepliesBelow",
+          actionParam: true,
+          className: "btn collapse-up",
+          translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
+        })
+      );
+
+      if (repliesBelow.length < this.attrs.replyCount) {
+        children.push(
+          this.attach("button", {
+            label: "post.load_more_replies",
+            action: "loadMoreReplies",
+            actionParam: repliesBelow[repliesBelow.length - 1]?.post_number,
+            className: "btn load-more-replies",
+          })
+        );
+      }
+
       result.push(
         h(
           `section.embedded-posts.bottom#embedded-posts__bottom--${this.attrs.post_number}`,
-          [
-            repliesBelow.map((p) => {
-              return this.attach("embedded-post", p, {
-                model: p.asPost,
-                state: {
-                  role: "region",
-                  "aria-label": I18n.t("post.sr_embedded_reply_description", {
-                    post_number: attrs.post_number,
-                    username: p.username,
-                  }),
-                },
-              });
-            }),
-            this.attach("button", {
-              title: "post.collapse",
-              icon: "chevron-up",
-              action: "toggleRepliesBelow",
-              actionParam: "true",
-              className: "btn collapse-up",
-              translatedAriaLabel: I18n.t("post.sr_collapse_replies"),
-            }),
-          ]
+          children
         )
       );
     }
@@ -599,30 +619,28 @@ createWidget("post-contents", {
     }
   },
 
-  toggleRepliesBelow(goToPost = "false") {
-    if (this.state.repliesBelow.length) {
-      this.state.repliesBelow = [];
-      if (goToPost === "true") {
-        DiscourseURL.routeTo(
-          `${this.attrs.topicUrl}/${this.attrs.post_number}`
-        );
-      }
-      return;
-    }
-
-    const post = this.findAncestorModel();
-    const topicUrl = post ? post.get("topic.url") : null;
+  loadMoreReplies(after = 1) {
     return this.store
-      .find("post-reply", { postId: this.attrs.id })
-      .then((posts) => {
-        this.state.repliesBelow = posts.map((p) => {
-          let result = transformWithCallbacks(p);
-
-          result.customShare = `${topicUrl}/${p.post_number}`;
-          result.asPost = this.store.createRecord("post", p);
-          return result;
+      .find("post-reply", { postId: this.attrs.id, after })
+      .then((replies) => {
+        replies.forEach((reply) => {
+          this.state.repliesBelow.push(
+            transformWithCallbacks(reply, this.attrs.topicUrl, this.store)
+          );
         });
       });
+  },
+
+  toggleRepliesBelow(goToPost = false) {
+    if (this.state.repliesBelow.length) {
+      this.state.repliesBelow = [];
+      if (goToPost === true) {
+        const { topicUrl, post_number } = this.attrs;
+        DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
+      }
+    } else {
+      return this.loadMoreReplies();
+    }
   },
 
   expandFirstPost() {
@@ -799,7 +817,7 @@ createWidget("post-article", {
                 title: "post.collapse",
                 icon: "chevron-down",
                 action: "toggleReplyAbove",
-                actionParam: "true",
+                actionParam: true,
                 className: "btn collapse-down",
               }),
               replies,
@@ -835,7 +853,7 @@ createWidget("post-article", {
     return post ? post.get("topic.url") : null;
   },
 
-  toggleReplyAbove(goToPost = "false") {
+  toggleReplyAbove(goToPost = false) {
     const replyPostNumber = this.attrs.reply_to_post_number;
 
     if (this.siteSettings.enable_filtered_replies_view) {
@@ -860,10 +878,9 @@ createWidget("post-article", {
 
     if (this.state.repliesAbove.length) {
       this.state.repliesAbove = [];
-      if (goToPost === "true") {
-        DiscourseURL.routeTo(
-          `${this.attrs.topicUrl}/${this.attrs.post_number}`
-        );
+      if (goToPost === true) {
+        const { topicUrl, post_number } = this.attrs;
+        DiscourseURL.routeTo(`${topicUrl}/${post_number}`);
       }
       return Promise.resolve();
     } else {
@@ -871,12 +888,10 @@ createWidget("post-article", {
       return this.store
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
-          this.state.repliesAbove = posts.map((p) => {
-            let result = transformWithCallbacks(p);
-
-            result.customShare = `${topicUrl}/${p.post_number}`;
-            result.asPost = this.store.createRecord("post", p);
-            return result;
+          posts.forEach((post) => {
+            this.state.repliesAbove.push(
+              transformWithCallbacks(post, topicUrl, this.store)
+            );
           });
         });
     }

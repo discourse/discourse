@@ -6,6 +6,10 @@
   .chat-channel-name {
     font-size: var(--font-up-1-rem);
   }
+
+  .chat-channel-row:last-of-type {
+    border-bottom: 0;
+  }
 }
 
 .c-routes.--direct-messages,

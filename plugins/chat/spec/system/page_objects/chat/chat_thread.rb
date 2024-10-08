@@ -80,7 +80,7 @@ module PageObjects
       end
 
       def has_no_loading_skeleton?
-        has_no_css?(".chat-thread__messages .chat-skeleton")
+        has_no_css?(".chat-thread .chat-skeleton")
       end
 
       def type_in_composer(input)
