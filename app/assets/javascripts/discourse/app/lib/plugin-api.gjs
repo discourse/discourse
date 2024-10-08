@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.1";
+export const PLUGIN_API_VERSION = "1.37.4";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
