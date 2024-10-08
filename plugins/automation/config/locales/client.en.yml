@@ -223,6 +223,9 @@ en:
             watching_tags:
               label: Watching tags
               description: Will trigger only if the topic has any of these tags
+            trigger_with_pms:
+              label: Trigger with PMs
+              description: Will trigger even if the tags were changed in a PM
         after_post_cook:
           fields:
             valid_trust_levels:
