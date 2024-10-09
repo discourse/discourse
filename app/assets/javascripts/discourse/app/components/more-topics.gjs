@@ -161,10 +161,7 @@ export default class MoreTopics extends Component {
             (if this.singleList "single-list")
           }}
         >
-          <this.currentTab.component
-            @topic={{@topic}}
-            @currentUser={{this.currentUser}}
-          />
+          <this.currentTab.component @topic={{@topic}} />
         </div>
 
         {{#if @topic.suggestedTopics.length}}
