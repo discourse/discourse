@@ -413,3 +413,24 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
+
+   merge:
+    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    runs-on: debian-12
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: failed-system-test-screenshots
+          pattern: failed-system-test-screenshots-*
+          delete-merged: true
+          separate-directories:: false
+
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: flaky-test-reports
+          pattern: flaky-test-reports-*
+          delete-merged: true
+          separate-directories: false
