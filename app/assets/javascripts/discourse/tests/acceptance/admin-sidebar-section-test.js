@@ -249,12 +249,12 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
 
     assert.notOk(
       exists(
-        ".sidebar-more-section-links-content .sidebar-section-link[data-link-name='primary']"
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='primary']"
       )
     );
     assert.ok(
       exists(
-        ".sidebar-more-section-links-content .sidebar-section-link[data-link-name='secondary']"
+        ".sidebar-more-section-content .sidebar-section-link[data-link-name='secondary']"
       )
     );
     assert.ok(true);
