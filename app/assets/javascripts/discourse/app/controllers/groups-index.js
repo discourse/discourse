@@ -30,17 +30,6 @@ export default class GroupsIndexController extends Controller {
     return types;
   }
 
-  loadGroups(params) {
-    this.set("isLoading", true);
-
-    this.store
-      .findAll("group", params)
-      .then((groups) => {
-        this.set("groups", groups);
-      })
-      .finally(() => this.set("isLoading", false));
-  }
-
   @action
   onFilterChanged(filter) {
     discourseDebounce(this, this._debouncedFilter, filter, INPUT_DELAY);

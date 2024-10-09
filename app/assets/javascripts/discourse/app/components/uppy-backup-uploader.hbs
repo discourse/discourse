@@ -2,8 +2,9 @@
   class="btn btn-small btn-primary admin-backups-upload"
   disabled={{this.uploading}}
   title={{i18n "admin.backups.upload.title"}}
+  ...attributes
 >
-  {{d-icon "upload"}}{{this.uploadButtonText}}
+  {{this.uploadButtonText}}
   <input
     class="hidden-upload-field"
     disabled={{this.uploading}}

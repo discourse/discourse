@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import NavItem from "discourse/components/nav-item";
-import PluginOutlet from "discourse/components/plugin-outlet";
+import { headerActionComponentForPlugin } from "discourse/lib/admin-plugin-header-actions";
 import i18n from "discourse-common/helpers/i18n";
 import AdminPageHeader from "./admin-page-header";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
@@ -24,6 +23,14 @@ export default class AdminPluginConfigPage extends Component {
     return classes.join(" ");
   }
 
+  get actionsOutletName() {
+    return `admin-plugin-config-page-actions-${this.args.plugin.dasherizedName}`;
+  }
+
+  get headerActionComponent() {
+    return headerActionComponentForPlugin(this.args.plugin.dasherizedName);
+  }
+
   linkText(navLink) {
     if (navLink.label) {
       return i18n(navLink.label);
@@ -38,6 +45,7 @@ export default class AdminPluginConfigPage extends Component {
         @titleLabelTranslated={{@plugin.nameTitleized}}
         @descriptionLabelTranslated={{@plugin.about}}
         @learnMoreUrl={{@plugin.linkUrl}}
+        @headerActionComponent={{this.headerActionComponent}}
       >
         <:breadcrumbs>
 
@@ -67,12 +75,6 @@ export default class AdminPluginConfigPage extends Component {
             {{/each}}
           {{/if}}
         </:tabs>
-        <:actions as |actions|>
-          <PluginOutlet
-            @name="admin-plugin-config-page-actions"
-            @outletArgs={{hash plugin=@plugin actions=actions}}
-          />
-        </:actions>
       </AdminPageHeader>
 
       <div class="admin-plugin-config-page__content">

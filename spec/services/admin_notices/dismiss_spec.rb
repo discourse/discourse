@@ -12,6 +12,14 @@ RSpec.describe(AdminNotices::Dismiss) do
     it { is_expected.to fail_a_policy(:invalid_access) }
   end
 
+  context "when the admin notice has already been dismissed" do
+    fab!(:current_user) { Fabricate(:admin) }
+
+    before { admin_notice.destroy! }
+
+    it { is_expected.to run_successfully }
+  end
+
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 

@@ -3,18 +3,16 @@
 class Flags::ToggleFlag
   include Service::Base
 
-  contract
+  contract do
+    attribute :flag_id, :integer
+
+    validates :flag_id, presence: true
+  end
   model :flag
   policy :invalid_access
-
   transaction do
     step :toggle
     step :log
-  end
-
-  class Contract
-    attribute :flag_id, :integer
-    validates :flag_id, presence: true
   end
 
   private

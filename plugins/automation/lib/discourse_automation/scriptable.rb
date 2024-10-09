@@ -205,6 +205,26 @@ module DiscourseAutomation
         end
       end
 
+      def self.build_quote(post)
+        return "" if post.nil? || post.raw.nil?
+
+        full_name = post.user.name
+        name =
+          if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux
+            full_name || post.username
+          else
+            post.username
+          end
+
+        params = [name, "post:#{post.post_number}", "topic:#{post.topic_id}"]
+
+        if SiteSetting.display_name_on_posts && !SiteSetting.prioritize_username_in_ux && full_name
+          params.push("username:#{post.username}")
+        end
+
+        "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
+      end
+
       def self.send_pm(
         pm,
         sender: Discourse.system_user.username,

@@ -1,4 +1,6 @@
-import Service from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import Service, { service } from "@ember/service";
+import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -12,22 +14,22 @@ import {
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
+const CHANNEL_PREFIX = "/private-message-topic-tracking-state";
+
 // See private_message_topic_tracking_state.rb for documentation
 class PrivateMessageTopicTrackingState extends Service {
-  CHANNEL_PREFIX = "/private-message-topic-tracking-state";
-  inbox = null;
-  filter = null;
-  activeGroup = null;
+  @service currentUser;
+  @service messageBus;
 
-  init() {
-    super.init(...arguments);
-
-    this.states = new Map();
-    this.statesModificationCounter = 0;
-    this.isTracking = false;
-    this.newIncoming = [];
-    this.stateChangeCallbacks = new Map();
-  }
+  @tracked isTracking = false;
+  @tracked isTrackingIncoming = false;
+  @tracked statesModificationCounter = 0;
+  @tracked inbox = null;
+  @tracked filter = null;
+  @tracked activeGroup = null;
+  @tracked newIncoming = new TrackedArray();
+  states = new TrackedMap();
+  stateChangeCallbacks = new Map();
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -62,7 +64,7 @@ class PrivateMessageTopicTrackingState extends Service {
     });
 
     return this._loadInitialState().finally(() => {
-      this.set("isTracking", true);
+      this.isTracking = true;
     });
   }
 
@@ -82,13 +84,11 @@ class PrivateMessageTopicTrackingState extends Service {
     }).length;
   }
 
-  trackIncoming(inbox, filter, group) {
-    this.setProperties({
-      inbox,
-      filter,
-      activeGroup: group,
-      isTrackingIncoming: true,
-    });
+  trackIncoming(inbox, filter, activeGroup) {
+    this.inbox = inbox;
+    this.filter = filter;
+    this.activeGroup = activeGroup;
+    this.isTrackingIncoming = true;
   }
 
   resetIncomingTracking(topicIds) {
@@ -98,21 +98,18 @@ class PrivateMessageTopicTrackingState extends Service {
 
     if (topicIds) {
       const topicIdSet = new Set(topicIds);
-      this.set(
-        "newIncoming",
+      this.newIncoming = new TrackedArray(
         this.newIncoming.filter((id) => !topicIdSet.has(id))
       );
     } else {
-      this.set("newIncoming", []);
+      this.newIncoming = new TrackedArray();
     }
   }
 
   stopIncomingTracking() {
     if (this.isTrackingIncoming) {
-      this.setProperties({
-        isTrackingIncoming: false,
-        newIncoming: [],
-      });
+      this.isTrackingIncoming = false;
+      this.newIncoming = new TrackedArray();
     }
   }
 
@@ -130,11 +127,11 @@ class PrivateMessageTopicTrackingState extends Service {
   }
 
   userChannel() {
-    return `${this.CHANNEL_PREFIX}/user/${this.currentUser.id}`;
+    return `${CHANNEL_PREFIX}/user/${this.currentUser.id}`;
   }
 
   groupChannel(groupId) {
-    return `${this.CHANNEL_PREFIX}/group/${groupId}`;
+    return `${CHANNEL_PREFIX}/group/${groupId}`;
   }
 
   _isNew(topic) {
@@ -248,7 +245,7 @@ class PrivateMessageTopicTrackingState extends Service {
 
   _notifyIncoming(topicId) {
     if (this.isTrackingIncoming && !this.newIncoming.includes(topicId)) {
-      this.newIncoming.pushObject(topicId);
+      this.newIncoming.push(topicId);
     }
   }
 
@@ -280,7 +277,7 @@ class PrivateMessageTopicTrackingState extends Service {
   }
 
   _afterStateChange() {
-    this.incrementProperty("statesModificationCounter");
+    this.statesModificationCounter++;
     this.stateChangeCallbacks.forEach((callback) => callback());
   }
 }

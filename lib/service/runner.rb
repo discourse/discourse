@@ -134,13 +134,9 @@ class Service::Runner
 
   def setup_and_run_service
     runner = self
-    params = object.try(:params) || ActionController::Parameters.new
     object.instance_eval do
       def result = @_result
-      @_result =
-        runner.service.call(
-          params.to_unsafe_h.merge(guardian: try(:guardian), **runner.dependencies),
-        )
+      @_result = runner.service.call(runner.dependencies)
     end
   end
 

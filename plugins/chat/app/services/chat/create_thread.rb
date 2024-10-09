@@ -16,7 +16,14 @@ module Chat
     #   @option params_to_create [String,nil] title
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :original_message_id, :integer
+      attribute :channel_id, :integer
+      attribute :title, :string
+
+      validates :original_message_id, :channel_id, presence: true
+      validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+    end
     model :channel
     policy :can_view_channel
     policy :threading_enabled_for_channel
@@ -27,16 +34,6 @@ module Chat
       step :fetch_membership
       step :publish_new_thread
       step :trigger_chat_thread_created_event
-    end
-
-    # @!visibility private
-    class Contract
-      attribute :original_message_id, :integer
-      attribute :channel_id, :integer
-      attribute :title, :string
-
-      validates :original_message_id, :channel_id, presence: true
-      validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
 
     private
@@ -62,15 +59,14 @@ module Chat
 
     def find_or_create_thread(channel:, original_message:, contract:)
       if original_message.thread_id.present?
-        return context.thread = ::Chat::Thread.find_by(id: original_message.thread_id)
+        return context[:thread] = ::Chat::Thread.find_by(id: original_message.thread_id)
       end
 
-      context.thread =
-        channel.threads.create(
-          title: contract.title,
-          original_message: original_message,
-          original_message_user: original_message.user,
-        )
+      context[:thread] = channel.threads.create(
+        title: contract.title,
+        original_message: original_message,
+        original_message_user: original_message.user,
+      )
       fail!(context.thread.errors.full_messages.join(", ")) if context.thread.invalid?
     end
 
@@ -79,7 +75,7 @@ module Chat
     end
 
     def fetch_membership(guardian:)
-      context.membership = context.thread.membership_for(guardian.user)
+      context[:membership] = context.thread.membership_for(guardian.user)
     end
 
     def publish_new_thread(channel:, original_message:)

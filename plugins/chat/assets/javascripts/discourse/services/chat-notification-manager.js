@@ -1,4 +1,3 @@
-import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import {
   alertChannel,
@@ -146,13 +145,6 @@ export default class ChatNotificationManager extends Service {
     }
   }
 
-  @action
-  async fetchChannel(channelId) {
-    return await this.chatChannelsManager.find(channelId, {
-      fetchIfNotFound: false,
-    });
-  }
-
   @bind
   async onMessage(data) {
     if (data.channel_id === this.chat.activeChannel?.id) {
@@ -160,12 +152,6 @@ export default class ChatNotificationManager extends Service {
     }
 
     if (this.site.desktopView) {
-      const channel = await this.fetchChannel(data.channel_id);
-
-      if (channel) {
-        data.isDirectMessageChannel = channel.isDirectMessageChannel ?? false;
-      }
-
       return onDesktopNotification(
         data,
         this.siteSettings,

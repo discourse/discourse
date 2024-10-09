@@ -5,19 +5,96 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  site_settings:
+    discourse_automation_enabled: "Włącz wtyczkę discourse-automation"
   discourse_automation:
     triggerables:
+      user_badge_granted:
+        title: Przyznano odznakę użytkownikowi
+        doc: Uruchamia automatyzację, gdy użytkownikowi zostanie przyznana odznaka.
+      user_first_logged_in:
+        title: Użytkownik zalogowany po raz pierwszy
+        doc: Uruchamia automatyzację, gdy użytkownik loguje się po raz pierwszy.
+      stalled_topic:
+        title: Wstrzymany temat
+        doc: Wyzwala automatyzację, gdy temat nie otrzymał nowej odpowiedzi od właściciela tematu przez określony czas. Zaleca się określenie zakresu tego wyzwalacza do tagu/kategorii, ponieważ liczba tematów, na które ma on wpływ, może być bardzo wysoka. Jako środek bezpieczeństwa, liczba dotkniętych tematów jest ograniczona do 250.
+      api_call:
+        title: Wywołanie API
+        description: Wykonywanie żądania POST w celu uruchomienia automatyzacji
+      category_created_edited:
+        title: Kategoria utworzona/edytowana
+        description: Gdy kategoria zostanie utworzona lub edytowana, uruchomiona zostanie automatyzacja.
+      point_in_time:
+        title: Punkt w czasie
+        description: Gdy data zostanie osiągnięta, uruchomiona zostanie automatyzacja
+      user_added_to_group:
+        title: Użytkownik dodany do grupy
+        description: Gdy użytkownik zostanie dodany do określonej grupy, uruchomiona zostanie automatyzacja
+      user_removed_from_group:
+        title: Użytkownik usunięty z grupy
+        description: Gdy użytkownik zostanie usunięty z określonej grupy, uruchomiona zostanie automatyzacja
       user_promoted:
+        title: Użytkownik promowany
         description: Gdy użytkownik awansuje z jednego poziomu zaufania na inny
         transition_placeholder: "od %{from_level_name} do %{to_level_name}"
+      post_created_edited:
+        title: Post utworzony/edytowany
+      pm_created:
+        title: Utworzono osobistą wiadomość
+      topic_tags_changed:
+        title: Zmieniono tagi tematu
       topic:
         title: Temat
+      user_updated:
+        title: Po aktualizacji użytkownika
+        description: Gdy użytkownik zaktualizuje jakiekolwiek informacje, zostanie uruchomiona automatyzacja
     scriptables:
+      post:
+        title: Utwórz post
+        description: Utwórz post na określony temat
       topic:
         title: Utwórz temat
+        description: Utwórz temat jako określony użytkownik
+      zapier_webhook:
+        description: Wywołuje zap z kontekstem wyzwalacza jako treścią
+      auto_responder:
+        title: Automatyczna odpowiedź
+        description: Publikuje odpowiedź na post zawierający określone słowa kluczowe
+      auto_tag_topic:
+        title: Automatyczne tagowanie tematu
+        description: Automatyczne dodawanie tagów do tematu
       pin_topic:
         title: Przypnij temat
+        description: Przypina określony temat w określonej dacie
+      banner_topic:
+        title: Utwórz temat bannerowy
+        description: Utwórz baner z tematu
+      gift_exchange:
+        title: Wymiana prezentów
+        description: Umożliwia anonimowe parowanie użytkowników grupy w celu wysyłania sobie prezentów.
+        doc: Wymiana prezentów wymaga istniejącej grupy z co najmniej 3 użytkownikami. W wybranym terminie każdy użytkownik grupy zostanie sparowany z jednym obdarowującym i jednym obdarowywanym.
+      send_pms:
+        title: Wyślij prywatną wiadomość
+        description: Umożliwia wysyłanie wiadomości prywatnych (możliwe opóźnienie).
+        doc: Umożliwia wysyłanie wielu wiadomości do użytkownika. Każda prywatna wiadomość akceptuje opóźnienie.
+      suspend_user_by_email:
+        title: Zawieś użytkownika za pomocą poczty e-mail
+      user_global_notice:
+        title: Globalne powiadomienie użytkownika
+        description: Umożliwia wyświetlenie globalnego powiadomienia dla użytkownika.
+      topic_required_words:
+        title: Wymagane słowa tematu
       close_topic:
         title: Zamknij temat
+      append_last_edited_by:
+        title: Dodaj ostatnio edytowane przez
+        text: "Ostatnio edytowane przez @%{username} %{date_time}"
       append_last_checked_by:
+        title: Dodaj ostatnio sprawdzone przez
+        description: Dodaje szczegóły "ostatnio sprawdzone przez" na dole treści gotowanego postu.
+        text: "Ostatnio sprawdzone przez @%{username} %{date_time}"
+        summary: Sprawdź dokument
+        details: "Wykonaj kontrolę dokumentu: "
         button_text: Zrobione
+      group_category_notification_default:
+        description: "Ustaw domyślny poziom powiadomień kategorii dla członków grupy."

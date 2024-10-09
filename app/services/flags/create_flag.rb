@@ -3,29 +3,32 @@
 class Flags::CreateFlag
   include Service::Base
 
-  contract
-  policy :invalid_access
-  model :flag, :instantiate_flag
-
-  transaction do
-    step :create
-    step :log
-  end
-
-  class Contract
+  contract do
     attribute :name, :string
     attribute :description, :string
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
+
     validates :name, presence: true
     validates :description, presence: true
     validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
     validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
     validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
   end
+  policy :invalid_access
+  policy :unique_name
+  model :flag, :instantiate_flag
+  transaction do
+    step :create
+    step :log
+  end
 
   private
+
+  def unique_name(name:)
+    !Flag.custom.where(name: name).exists?
+  end
 
   def instantiate_flag(name:, description:, applies_to:, require_message:, enabled:)
     Flag.new(

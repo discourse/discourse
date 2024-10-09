@@ -230,8 +230,6 @@ RSpec.describe SearchController do
     context "when rate limited" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search/query.json", params: { term: "wookie" }, env: { REMOTE_ADDR: ip_address }
 
@@ -421,8 +419,6 @@ RSpec.describe SearchController do
 
     context "when rate limited" do
       before { RateLimiter.enable }
-
-      use_redis_snapshotting
 
       def unlimited_request(ip_address = "1.2.3.4")
         get "/search.json", params: { q: "wookie" }, env: { REMOTE_ADDR: ip_address }

@@ -58,9 +58,13 @@ vi:
               label: ID Chủ đề
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Thẻ
             restricted_category:
               label: Danh mục
             restricted_group:
+              label: Nhóm
+            restricted_groups:
               label: Nhóm
           created: Tạo bởi
         category_created_edited:

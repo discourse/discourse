@@ -380,8 +380,6 @@ RSpec.describe UsersController do
       context "with rate limiting" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "rate limits reset passwords" do
           freeze_time
 
@@ -701,6 +699,28 @@ RSpec.describe UsersController do
                password: "testing12352343",
              }
         expect(response.status).to eq(400)
+      end
+    end
+
+    context "when using an encoded email that decodes to an invalid email" do
+      it "blocks the registration" do
+        post_user(email: "=?x?q?hacker=40hackerdomain.com=3e=00?=osama@discourseemail.com")
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["message"]).to eq("Primary email is invalid.")
+        expect(response.parsed_body["user_id"]).to be_blank
+      end
+    end
+
+    context "when using an encoded email that decodes to a valid email" do
+      it "accepts the registration" do
+        post_user(
+          email:
+            "=?utf-8?q?=6f=73=61=6d=61=2d=69=6e=2d=71=2d=65=6e=63=6f=64=69=6e=67?=@discourse.org",
+        )
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(User.find_by(id: response.parsed_body["user_id"])).to be_present
       end
     end
 
@@ -4388,8 +4408,6 @@ RSpec.describe UsersController do
     end
 
     context "with a session variable" do
-      use_redis_snapshotting
-
       it "raises an error with an invalid session value" do
         post_user
 
@@ -5602,8 +5620,6 @@ RSpec.describe UsersController do
 
   describe "#enable_second_factor_totp" do
     before { sign_in(user1) }
-
-    use_redis_snapshotting
 
     def create_totp
       stub_secure_session_confirmed

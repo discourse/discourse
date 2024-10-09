@@ -716,7 +716,6 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
-    Discourse.redis.flushdb
   end
 
   config.after :each do |example|
@@ -743,6 +742,7 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
+    Discourse.redis.flushdb
   end
 
   config.before(:each, type: :multisite) do

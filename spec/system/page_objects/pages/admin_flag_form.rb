@@ -23,6 +23,11 @@ module PageObjects
 
       def click_save
         form.submit
+        expect(page).to have_no_css(
+          ".admin-config.flags.new",
+          wait: Capybara.default_max_wait_time * 3,
+        )
+        expect(page).to have_css(".admin-flag-item__name", wait: Capybara.default_max_wait_time * 3)
       end
 
       def form

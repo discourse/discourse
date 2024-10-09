@@ -149,12 +149,17 @@ zh_CN:
             valid_trust_levels:
               label: 有效信任级别
               description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
+            restricted_tags:
+              label: 标签
+              description: 可选，仅在帖子具有以下任意标签时触发
             restricted_category:
               label: 类别
               description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_group:
               label: 群组
               description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
+            restricted_groups:
+              label: 群组
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器

@@ -44,6 +44,8 @@ RSpec.describe AboutSerializer do
   end
 
   describe "#stats" do
+    after { DiscoursePluginRegistry.reset! }
+
     let(:plugin) { Plugin::Instance.new }
 
     it "serialize exposable stats only" do

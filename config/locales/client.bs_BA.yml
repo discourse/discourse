@@ -138,7 +138,6 @@ bs_BA:
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
-      twitter: "Podijeli na Twitter"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
     action_codes:
@@ -262,6 +261,7 @@ bs_BA:
     suggested_topics:
       pm_title: "Preporučene Poruke"
     about:
+      edit: "Edit this page"
       simple_title: "O nama"
       title: "O Nama %{title}"
       stats: "Statistika sajta"
@@ -1156,7 +1156,7 @@ bs_BA:
         destroy: "Ukloni e-poštu"
         add_email: "Dodaj zamjensku e-poštu"
         no_secondary: "Nema sekundarnih emailova"
-        instructions: "Nikada nije prikazan javnosti."
+        instructions: "Nikada nije prikazan javnosti"
         ok: "Izgleda dobro. Poslat ćemo email sa potvrdom."
         required: "Unesite e-mail adresu"
         invalid: "Molimo vas da unesete validnu email adresu."
@@ -1184,8 +1184,8 @@ bs_BA:
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
         title: "Ime"
-        instructions: "Vaše puno ime (opciono)."
-        instructions_required: "Vaše puno ime."
+        instructions: "Vaše puno ime (opciono)"
+        instructions_required: "Vaše puno ime"
         required: "Unesite ime"
         too_short: "Vaše ime je prekratko."
         ok: "Vaše ime izgleda ok."
@@ -3144,6 +3144,7 @@ bs_BA:
         installed_version: "Installed"
         latest_version: "Zadnje"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
+        dismiss_notice: "Odbaci"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
@@ -3412,8 +3413,11 @@ bs_BA:
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
           search_logs: "Logovi pretrage"
-          security: "Security"
-          spam: "Spam"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4398,10 +4402,6 @@ bs_BA:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
-        badge_intro:
-          title: "Izaberite postojeću značku ili kreirajte novu za početak"
-          what_are_badges_title: "Šta su bedževi?"
-          badge_query_examples_title: "Primjeri upita za oznaku"
       emoji:
         title: "Emoji"
         add: "Dodaj novi emoji"

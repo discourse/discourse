@@ -111,3 +111,26 @@ acceptance("Modal - Login - With no way to login", function (needs) {
     assert.dom(".no-login-methods-configured").exists();
   });
 });
+
+acceptance("Login button", function () {
+  test("with custom event on webview", async function (assert) {
+    const capabilities = this.container.lookup("service:capabilities");
+    sinon.stub(capabilities, "isAppWebview").value(true);
+
+    window.ReactNativeWebView = {
+      postMessage: () => {},
+    };
+
+    const webviewSpy = sinon.spy(window.ReactNativeWebView, "postMessage");
+
+    await visit("/");
+    await click("header .login-button");
+
+    assert.true(
+      webviewSpy.withArgs('{"showLogin":true}').calledOnce,
+      "triggers postmessage event"
+    );
+
+    delete window.ReactNativeWebView;
+  });
+});

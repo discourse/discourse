@@ -1,23 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.describe StepsInspector do
+RSpec.describe Service::StepsInspector do
   class DummyService
     include Service::Base
 
     model :model
     policy :policy
-    contract
+    contract do
+      attribute :parameter
+
+      validates :parameter, presence: true
+    end
     transaction do
       step :in_transaction_step_1
       step :in_transaction_step_2
     end
     step :final_step
-
-    class Contract
-      attribute :parameter
-
-      validates :parameter, presence: true
-    end
   end
 
   subject(:inspector) { described_class.new(result) }
@@ -241,7 +239,7 @@ RSpec.describe StepsInspector do
       end
 
       context "when a reason is provided" do
-        before { result["result.policy.policy"].reason = "failed" }
+        before { result["result.policy.policy"][:reason] = "failed" }
 
         it "returns the reason" do
           expect(error).to eq "failed"

@@ -17,8 +17,24 @@ module Service
     end
 
     # Simple structure to hold the context of the service during its whole lifecycle.
-    class Context < OpenStruct
-      include ActiveModel::Serialization
+    class Context
+      delegate :slice, to: :store
+
+      def initialize(context = {})
+        @store = context.symbolize_keys
+      end
+
+      def [](key)
+        store[key.to_sym]
+      end
+
+      def []=(key, value)
+        store[key.to_sym] = value
+      end
+
+      def to_h
+        store.dup
+      end
 
       # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
@@ -48,26 +64,26 @@ module Service
       #   context.fail("failure": "something went wrong")
       # @return [Context]
       def fail(context = {})
-        merge(context)
+        store.merge!(context.symbolize_keys)
         @failure = true
         self
       end
 
-      # Merges the given context into the current one.
-      # @!visibility private
-      def merge(other_context = {})
-        other_context.each { |key, value| self[key.to_sym] = value }
-        self
-      end
-
       def inspect_steps
-        StepsInspector.new(self)
+        Service::StepsInspector.new(self)
       end
 
       private
 
+      attr_reader :store
+
       def self.build(context = {})
         self === context ? context : new(context)
+      end
+
+      def method_missing(method_name, *args, &block)
+        return super if args.present?
+        store[method_name]
       end
     end
 
@@ -78,10 +94,12 @@ module Service
         steps << ModelStep.new(name, step_name, optional: optional)
       end
 
-      def contract(name = :default, class_name: self::Contract, default_values_from: nil)
+      def contract(name = :default, default_values_from: nil, &block)
+        contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
+        const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(
           name,
-          class_name: class_name,
+          class_name: contract_class,
           default_values_from: default_values_from,
         )
       end
@@ -115,7 +133,7 @@ module Service
         if method.parameters.any? { _1[0] != :keyreq }
           raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a contract?"
         end
-        args = context.to_h.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
+        args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
@@ -178,7 +196,7 @@ module Service
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
-        contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
+        contract = class_name.new(default_values.merge(context.slice(*attributes)))
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
@@ -214,20 +232,6 @@ module Service
     included do
       # The global context which is available from any step.
       attr_reader :context
-
-      # @!visibility private
-      # Internal class used to setup the base contract of the service.
-      self::Contract =
-        Class.new do
-          include ActiveModel::API
-          include ActiveModel::Attributes
-          include ActiveModel::AttributeMethods
-          include ActiveModel::Validations::Callbacks
-
-          def raw_attributes
-            @attributes.values_before_type_cast
-          end
-        end
     end
 
     class_methods do
@@ -306,10 +310,10 @@ module Service
     #   end
 
     # @!scope class
-    # @!method contract(name = :default, class_name: self::Contract, default_values_from: nil)
+    # @!method contract(name = :default, default_values_from: nil, &block)
     # @param name [Symbol] name for this contract
-    # @param class_name [Class] a class defining the contract
     # @param default_values_from [Symbol] name of the model to get default values from
+    # @param block [Proc] a block containing validations
     # Checks the validity of the input parameters.
     # Implements ActiveModel::Validations and ActiveModel::Attributes.
     #
@@ -317,9 +321,7 @@ module Service
     # (can be customized by providing the +name+ argument).
     #
     # @example
-    #   contract
-    #
-    #   class Contract
+    #   contract do
     #     attribute :name
     #     validates :name, presence: true
     #   end
@@ -361,7 +363,6 @@ module Service
 
     # @!visibility private
     def initialize(initial_context = {})
-      @initial_context = initial_context.with_indifferent_access
       @context = Context.build(initial_context.merge(__steps__: self.class.steps))
     end
 

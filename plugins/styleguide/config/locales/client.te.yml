@@ -16,6 +16,8 @@ te:
           title: "నావిగేషను"
         categories_list:
           title: "వర్గాల జాబితా"
+        post:
+          title: "పోస్ట్"
         suggested_topics:
           title: "సూచించే విషయాలు"
         tooltips:

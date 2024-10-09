@@ -17,14 +17,12 @@ class PostActionType < ActiveRecord::Base
       *I18n.available_locales.map do |locale|
         Discourse.cache.normalize_key("post_action_types_#{locale}")
       end,
-    )
-    Discourse.cache.redis.del(
       *I18n.available_locales.map do |locale|
         Discourse.cache.normalize_key("post_action_flag_types_#{locale}")
       end,
+      Discourse.cache.normalize_key(POST_ACTION_TYPE_ALL_FLAGS_KEY),
+      Discourse.cache.normalize_key(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY),
     )
-    Discourse.cache.delete(POST_ACTION_TYPE_ALL_FLAGS_KEY)
-    Discourse.cache.delete(POST_ACTION_TYPE_PUBLIC_TYPE_IDS_KEY)
   end
 
   class << self

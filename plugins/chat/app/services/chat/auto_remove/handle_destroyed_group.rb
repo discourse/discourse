@@ -21,7 +21,11 @@ module Chat
     class HandleDestroyedGroup
       include Service::Base
 
-      contract
+      contract do
+        attribute :destroyed_group_user_ids
+
+        validates :destroyed_group_user_ids, presence: true
+      end
       step :assign_defaults
       policy :chat_enabled
       policy :not_everyone_allowed
@@ -29,12 +33,6 @@ module Chat
       step :remove_users_outside_allowed_groups
       step :remove_users_without_channel_permission
       step :publish
-
-      class Contract
-        attribute :destroyed_group_user_ids
-
-        validates :destroyed_group_user_ids, presence: true
-      end
 
       private
 
@@ -102,11 +100,8 @@ module Chat
 
         return if memberships_to_remove.empty?
 
-        context.merge(
-          users_removed_map:
-            Chat::Action::RemoveMemberships.call(
-              memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
-            ),
+        context[:users_removed_map] = Chat::Action::RemoveMemberships.call(
+          memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
         )
       end
 

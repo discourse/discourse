@@ -60,7 +60,7 @@ module PageObjects
       end
 
       def has_no_flag?(flag)
-        has_no_css?(".admin-flag-item.#{flag}")
+        has_no_css?(".admin-flag-item.#{flag}", wait: Capybara.default_max_wait_time * 3)
       end
 
       def has_saved_flag?(key)
@@ -103,6 +103,7 @@ module PageObjects
 
       def confirm_delete
         find(".dialog-footer .btn-primary").click
+        expect(page).to have_no_css(".dialog-body", wait: Capybara.default_max_wait_time * 3)
         self
       end
 

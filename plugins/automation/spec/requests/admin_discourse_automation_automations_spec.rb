@@ -48,6 +48,48 @@ describe DiscourseAutomation::AdminAutomationsController do
     end
   end
 
+  describe "#create" do
+    let(:script) { "forced_triggerable" }
+
+    before do
+      DiscourseAutomation::Scriptable.add(script) do
+        triggerable! :recurring, { recurrence: { interval: 1, frequency: "day" } }
+      end
+    end
+
+    after { DiscourseAutomation::Scriptable.remove(script) }
+
+    context "when logged in as an admin" do
+      before { sign_in(Fabricate(:admin)) }
+
+      it "creates the 'forced triggerable' automation" do
+        post "/admin/plugins/discourse-automation/automations.json",
+             params: {
+               automation: {
+                 name: "foobar",
+                 script:,
+               },
+             }
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when logged in as a regular user" do
+      before { sign_in(Fabricate(:user)) }
+
+      it "raises a 404" do
+        post "/admin/plugins/discourse-automation/automations.json",
+             params: {
+               automation: {
+                 name: "foobar",
+                 script:,
+               },
+             }
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#update" do
     context "when logged in as an admin" do
       before { sign_in(Fabricate(:admin)) }

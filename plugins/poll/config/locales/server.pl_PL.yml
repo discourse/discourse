@@ -58,8 +58,12 @@ pl_PL:
       few: Do tej ankiety wymagane są co najmniej %{count} głosy.
       many: Do tej ankiety wymagane jest co najmniej %{count} głosów.
       other: Do tej ankiety wymagane jest co najmniej %{count} głosów.
+    ranked_choice:
+      no_group_results_support: "Nieprawidłowy typ ankiety, ranked_choice nie obsługuje wyników grupowych."
     topic_must_be_open_to_toggle_status: "Ankieta musi być otwarta aby zmienić status ankiety."
     only_staff_or_op_can_toggle_status: "Status ankiety może być zmieniony przez autora wpisu lub członka załogi serwisu."
+    errors:
+      poll_not_found: "Nie znaleziono ankiety, proszę potwierdzić parametry."
     insufficient_rights_to_create: "Nie masz zezwolenia na tworzenie ankiet."
     email:
       link_to_poll: "Kliknij, aby zobaczyć ankietę."

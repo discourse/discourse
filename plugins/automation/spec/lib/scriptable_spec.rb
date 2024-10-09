@@ -213,6 +213,82 @@ describe DiscourseAutomation::Scriptable do
       end
     end
 
+    describe ".build_quote" do
+      subject(:quote) { DiscourseAutomation::Scriptable::Utils.build_quote(post) }
+
+      fab!(:user) { Fabricate(:user, name: "John Doe", username: "johndoe") }
+      fab!(:post) { Fabricate(:post, user: user, raw: "This is a post content", post_number: 1) }
+
+      before do
+        SiteSetting.display_name_on_posts = false
+        SiteSetting.prioritize_username_in_ux = false
+      end
+
+      context "when post is nil" do
+        let(:post) { nil } # Define post as nil in this context
+
+        it "returns an empty string" do
+          expect(quote).to eq("")
+        end
+      end
+
+      context "when post.raw is nil" do
+        before { post.raw = nil }
+
+        it "returns an empty string" do
+          expect(quote).to eq("")
+        end
+      end
+
+      context "when display_name_on_posts is true and prioritize_username_in_ux is false" do
+        before do
+          SiteSetting.display_name_on_posts = true
+          SiteSetting.prioritize_username_in_ux = false
+        end
+
+        it "returns a quote with display name" do
+          expect(quote).to eq(
+            "[quote=John Doe, post:#{post.post_number}, topic:#{post.topic_id}, username:johndoe]\nThis is a post content\n[/quote]\n\n",
+          )
+        end
+      end
+
+      context "when display_name_on_posts is false or prioritize_username_in_ux is true" do
+        it "returns a quote with username" do
+          expect(quote).to eq(
+            "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
+          )
+        end
+      end
+
+      context "when full_name is nil and display_name_on_posts is true" do
+        before do
+          user.update(name: nil)
+          SiteSetting.display_name_on_posts = true
+          SiteSetting.prioritize_username_in_ux = false
+        end
+
+        it "returns a quote with username" do
+          expect(quote).to eq(
+            "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
+          )
+        end
+      end
+
+      context "when display_name_on_posts is true and prioritize_username_in_ux is true" do
+        before do
+          SiteSetting.display_name_on_posts = true
+          SiteSetting.prioritize_username_in_ux = true
+        end
+
+        it "returns a quote with username prioritized" do
+          expect(quote).to eq(
+            "[quote=johndoe, post:#{post.post_number}, topic:#{post.topic_id}]\nThis is a post content\n[/quote]\n\n",
+          )
+        end
+      end
+    end
+
     describe ".send_pm" do
       let(:user) { Fabricate(:user) }
 

@@ -7,10 +7,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import emoji from "discourse/helpers/emoji";
-import I18n from "discourse-i18n";
+import i18n from "discourse-common/helpers/i18n";
 import WizardField from "./wizard-field";
-
-const i18n = (...args) => I18n.t(...args);
 
 export default class WizardStepComponent extends Component {
   @tracked saving = false;

@@ -22,16 +22,18 @@ export default class PluginConnector extends Component {
   init() {
     super.init(...arguments);
 
-    const args = this.args || {};
-    Object.keys(args).forEach((key) => {
-      defineProperty(
-        this,
-        key,
-        computed("args", () => (this.args || {})[key])
-      );
-    });
+    if (this.args) {
+      Object.keys(this.args).forEach((key) => {
+        defineProperty(
+          this,
+          key,
+          computed("args", function () {
+            return this.args[key];
+          })
+        );
+      });
+    }
 
-    const deprecatedArgs = this.deprecatedArgs || {};
     const connectorInfo = {
       outletName: this.connector?.outletName,
       connectorName: this.connector?.connectorName,
@@ -40,18 +42,20 @@ export default class PluginConnector extends Component {
       layoutName: this.layoutName,
     };
 
-    Object.keys(deprecatedArgs).forEach((key) => {
-      defineProperty(
-        this,
-        key,
-        computed("deprecatedArgs", () => {
-          return deprecatedArgumentValue(deprecatedArgs[key], {
-            ...connectorInfo,
-            argumentName: key,
-          });
-        })
-      );
-    });
+    if (this.deprecatedArgs) {
+      Object.keys(this.deprecatedArgs).forEach((key) => {
+        defineProperty(
+          this,
+          key,
+          computed("deprecatedArgs", function () {
+            return deprecatedArgumentValue(this.deprecatedArgs[key], {
+              ...connectorInfo,
+              argumentName: key,
+            });
+          })
+        );
+      });
+    }
 
     const connectorClass = this.connector.connectorClass;
     this.set("actions", connectorClass?.actions);
@@ -63,8 +67,8 @@ export default class PluginConnector extends Component {
     }
 
     const merged = buildArgsWithDeprecations(
-      args,
-      deprecatedArgs,
+      this.args,
+      this.deprecatedArgs,
       connectorInfo
     );
     connectorClass?.setupComponent?.call(this, merged, this);

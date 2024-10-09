@@ -5,21 +5,19 @@ VALID_DIRECTIONS = %w[up down]
 class Flags::ReorderFlag
   include Service::Base
 
-  contract
+  contract do
+    attribute :flag_id, :integer
+    attribute :direction, :string
+
+    validates :flag_id, presence: true
+    validates :direction, inclusion: { in: VALID_DIRECTIONS }
+  end
   model :flag
   policy :invalid_access
   policy :invalid_move
-
   transaction do
     step :move
     step :log
-  end
-
-  class Contract
-    attribute :flag_id, :integer
-    attribute :direction, :string
-    validates :flag_id, presence: true
-    validates :direction, inclusion: { in: VALID_DIRECTIONS }
   end
 
   private
