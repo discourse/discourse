@@ -13,6 +13,7 @@ export function registerChatComposerButton(button) {
 
   const defaultButton = {
     id: null,
+    component: null,
     action: null,
     icon: null,
     title: null,
@@ -111,6 +112,7 @@ export function chatComposerButtons(composer, position, context) {
       result.icon = computeButton(composer, button, "icon");
       result.disabled = computeButton(composer, button, "disabled");
       result.priority = computeButton(composer, button, "priority");
+      result.component = button.component;
 
       if (isFunction(button.action)) {
         result.action = () => {

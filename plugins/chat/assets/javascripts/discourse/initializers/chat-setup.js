@@ -83,36 +83,6 @@ class ChatSetupInit {
         });
       }
 
-      api.registerChatComposerButton({
-        label: "chat.emoji",
-        id: "emoji",
-        class: "chat-emoji-btn",
-        icon: "far-face-smile",
-        position: this.site.desktopView ? "inline" : "dropdown",
-        context: "channel",
-        action() {
-          const chatEmojiPickerManager = owner.lookup(
-            "service:chat-emoji-picker-manager"
-          );
-          chatEmojiPickerManager.open({ context: "channel" });
-        },
-      });
-
-      api.registerChatComposerButton({
-        label: "chat.emoji",
-        id: "channel-emoji",
-        class: "chat-emoji-btn",
-        icon: "discourse-emojis",
-        position: "dropdown",
-        context: "thread",
-        action() {
-          const chatEmojiPickerManager = owner.lookup(
-            "service:chat-emoji-picker-manager"
-          );
-          chatEmojiPickerManager.open({ context: "thread" });
-        },
-      });
-
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled
       api.decorateCookedElement((elem) => {

@@ -1,11 +1,8 @@
 import { registerDestructor } from "@ember/destroyable";
-import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class FloatKitCloseOnEscape extends Modifier {
-  @service menu;
-
   constructor(owner, args) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
@@ -15,7 +12,7 @@ export default class FloatKitCloseOnEscape extends Modifier {
     this.closeFn = closeFn;
     this.element = element;
 
-    document.addEventListener("keydown", this.check);
+    document.addEventListener("keydown", this.check, { capture: true });
   }
 
   @bind
@@ -28,6 +25,6 @@ export default class FloatKitCloseOnEscape extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("keydown", this.check);
+    document.removeEventListener("keydown", this.check, { capture: true });
   }
 }
