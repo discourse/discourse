@@ -121,6 +121,8 @@ export default class ComposerService extends Service {
   lastValidatedAt = null;
   isUploading = false;
   isProcessingUpload = false;
+  isCancellable;
+  uploadProgress;
   topic = null;
   linkLookup = null;
   showPreview = true;
@@ -639,7 +641,7 @@ export default class ComposerService extends Service {
   @action
   cancelUpload(event) {
     event?.preventDefault();
-    this.set("model.uploadCancelled", true);
+    this.appEvents.trigger("composer:cancel-upload");
   }
 
   @action

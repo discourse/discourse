@@ -85,12 +85,6 @@ export default class UppyImageUploader extends Component.extend(
     return { imagesOnly: true };
   }
 
-  _uppyReady() {
-    this._onPreProcessComplete(() => {
-      this.set("processing", false);
-    });
-  }
-
   uploadDone(upload) {
     this.setProperties({
       imageFilesize: upload.human_filesize,
@@ -139,9 +133,6 @@ export default class UppyImageUploader extends Component.extend(
 
   @action
   trash() {
-    // uppy needs to be reset to allow for more uploads
-    this._reset();
-
     // the value of the property used for imageUrl should be cleared
     // in this callback. this should be done in cases where imageUrl
     // is bound to a computed property of the parent component.
