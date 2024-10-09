@@ -52,6 +52,7 @@ export default class MoreTopics extends Component {
     );
 
     return applyValueTransformer("more-topics-tabs", defaultTabs, {
+      currentContext: this.context,
       user: this.currentUser,
       topic: this.args.topic,
     });

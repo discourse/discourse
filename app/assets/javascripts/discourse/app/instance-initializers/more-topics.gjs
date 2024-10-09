@@ -28,14 +28,15 @@ export default {
           // Remove "suggested" topics
           return value.filter(
             (entry) =>
-              entry.currentContext !== "topic" ||
+              context.currentContext !== "topic" ||
               entry.id !== "suggested-topics"
           );
         } else {
           // Remove "related" topics
           return value.filter(
             (entry) =>
-              entry.currentContext !== "topic" || entry.id !== "related-topics"
+              context.currentContext !== "topic" ||
+              entry.id !== "related-topics"
           );
         }
       });
