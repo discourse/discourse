@@ -14,7 +14,7 @@ const LoginPageCta = <template>
             @label={{@loginButtonLabel}}
             id="login-button"
             form="login-form"
-            class="btn btn-large btn-primary login-page-cta__login"
+            class="btn-large btn-primary login-page-cta__login"
             tabindex={{unless @showSecondFactor "2"}}
           />
         {{/unless}}

@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -126,10 +125,16 @@ export default class LoginPageController extends Controller {
       );
 
       if (publicKeyCredential) {
-        const authResult = await ajax("/session/passkey/auth.json", {
-          type: "POST",
-          data: { publicKeyCredential },
-        });
+        let authResult;
+        try {
+          authResult = await ajax("/session/passkey/auth.json", {
+            type: "POST",
+            data: { publicKeyCredential },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+          return;
+        }
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
@@ -268,16 +273,6 @@ export default class LoginPageController extends Controller {
           this.securityKeyChallenge = result.challenge;
           this.securityKeyAllowedCredentialIds = result.allowed_credential_ids;
 
-          // only need to focus the 2FA input for TOTP
-          if (!this.showSecurityKey) {
-            schedule("afterRender", () =>
-              document
-                .getElementById("second-factor")
-                .querySelector("input")
-                .focus()
-            );
-          }
-
           return;
         } else if (result.reason === "not_activated") {
           this.showNotActivated({
@@ -368,7 +363,7 @@ export default class LoginPageController extends Controller {
   }
 
   @action
-  async externalLoginAction(loginMethod) {
+  externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }

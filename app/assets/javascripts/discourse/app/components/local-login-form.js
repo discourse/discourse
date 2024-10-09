@@ -24,10 +24,8 @@ export default class LocalLoginForm extends Component {
       : "";
   }
 
-  get secondFactorClass() {
-    return this.args.showSecondFactor || this.args.showSecurityKey
-      ? ""
-      : "hidden";
+  get showSecondFactorForm() {
+    return this.args.showSecondFactor || this.args.showSecurityKey;
   }
 
   get disableLoginFields() {
