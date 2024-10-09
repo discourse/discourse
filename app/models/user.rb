@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
-  self.ignored_columns = [
-    :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
-  ]
+  # TODO(2025-01-15): Remove ignored_columns
+  self.ignored_columns = [:old_seen_notification_id]
 
   include Searchable
   include Roleable

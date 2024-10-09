@@ -2,11 +2,10 @@
 
 module Chat
   class MentionNotification < ActiveRecord::Base
-    self.table_name = "chat_mention_notifications"
+    # TODO(2025-01-15): Remove ignored_columns
+    self.ignored_columns = [:old_notification_id]
 
-    self.ignored_columns = [
-      :old_notification_id, # TODO remove once this column is removed. Migration to drop the column has not been written.
-    ]
+    self.table_name = "chat_mention_notifications"
 
     belongs_to :chat_mention, class_name: "Chat::Mention"
     belongs_to :notification, dependent: :destroy

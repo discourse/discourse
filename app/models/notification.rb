@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
-  self.ignored_columns = [
-    :old_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
-  ]
+  # TODO(2025-01-15): Remove ignored_columns
+  self.ignored_columns = [:old_id]
 
   attr_accessor :acting_user
   attr_accessor :acting_username
