@@ -8,6 +8,7 @@ import { eq, gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
@@ -46,9 +47,14 @@ export default class MoreTopics extends Component {
 
   @cached
   get tabs() {
-    return registeredTabs.filter(
+    const defaultTabs = registeredTabs.filter(
       (tab) => tab.context === this.context || tab.context === "*"
     );
+
+    return applyValueTransformer("more-topics-tabs", defaultTabs, {
+      user: this.currentUser,
+      topic: this.args.topic,
+    });
   }
 
   // TODO: move this
