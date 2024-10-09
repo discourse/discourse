@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 
   .signup-body,
   .login-body {
@@ -178,6 +179,14 @@
     gap: 1rem;
     height: 100%;
     white-space: nowrap;
+
+    .btn-social {
+      border: 1px solid var(--primary-low);
+    }
+  }
+
+  .login-welcome-header {
+    width: 100%;
   }
 
   .btn-social-title {
