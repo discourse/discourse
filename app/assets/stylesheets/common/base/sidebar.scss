@@ -304,11 +304,8 @@
 .sidebar-filter {
   margin-top: 1em;
   margin-bottom: 1em;
-  display: flex;
   border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
-  align-items: center;
-  justify-content: space-between;
   background: var(--secondary);
   width: calc(
     var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding)
@@ -371,8 +368,6 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin: 0 var(--d-sidebar-row-horizontal-padding) 0
-    var(--d-sidebar-row-horizontal-padding);
   color: var(--d-sidebar-link-color);
   width: calc(
     var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding) + 2px
