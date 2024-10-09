@@ -117,6 +117,20 @@ class Plugin::Instance
     }
   end
 
+  def full_admin_route
+    route = self.admin_route
+    return unless route
+
+    ret = route.slice(:location, :label)
+    if route[:use_new_show_route]
+      ret[:full_location] = "adminPlugins.show"
+      ret[:use_new_show_route] = true
+    else
+      ret[:full_location] = "adminPlugins.#{ret[:location]}"
+    end
+    ret
+  end
+
   def configurable?
     true
   end

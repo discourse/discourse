@@ -3,6 +3,19 @@ import { capitalize, dasherize } from "@ember/string";
 import { snakeCaseToCamelCase } from "discourse-common/lib/case-converter";
 import I18n from "discourse-i18n";
 
+export function adminRouteValid(router, adminRoute) {
+  try {
+    if (adminRoute.use_new_show_route) {
+      router.urlFor(adminRoute.full_location, adminRoute.location);
+    } else {
+      router.urlFor(adminRoute.full_location);
+    }
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default class AdminPlugin {
   static create(args = {}) {
     return new AdminPlugin(args);
