@@ -47,9 +47,9 @@ export default class MoreTopics extends Component {
 
   @cached
   get tabs() {
-    const defaultTabs = registeredTabs.filter(
-      (tab) => tab.context === this.context || tab.context === "*"
-    );
+    const defaultTabs = registeredTabs
+      .filter((tab) => tab.context === this.context || tab.context === "*")
+      .filter((tab) => tab.condition({ topic: this.args.topic }));
 
     return applyValueTransformer("more-topics-tabs", defaultTabs, {
       currentContext: this.context,
