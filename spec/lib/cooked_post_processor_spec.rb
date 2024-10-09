@@ -434,6 +434,11 @@ RSpec.describe CookedPostProcessor do
             <p><img src="//test.localhost#{upload.url}" width="50" height="150"></p>
           HTML
         end
+
+        it "does not create thumbnails for small images" do
+          Upload.any_instance.expects(:create_thumbnail!).never
+          cpp.post_process
+        end
       end
 
       context "with large images" do
