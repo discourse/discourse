@@ -24,7 +24,7 @@ export default class MoreTopics extends Component {
   @tracked currentTab = this.tabs[0];
 
   get tabs() {
-    const context = "pm";
+    const context = this.args.topic.get("isPrivateMessage") ? "pm" : "topic";
     return registeredTabs.filter(
       (tab) => tab.context === context || tab.context === "*"
     );
