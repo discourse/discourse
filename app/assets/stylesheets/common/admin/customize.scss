@@ -956,11 +956,11 @@ table.permalinks {
 
 .user-fields {
   h2 {
-    margin-bottom: 10px;
+    margin-bottom: 1em;
   }
   .user-field {
-    padding: 10px;
-    margin-bottom: 10px;
+    padding-block: 0.5em;
+    margin-bottom: 1em;
     border-bottom: 1px solid var(--primary-low);
     .form-display {
       width: 25%;
