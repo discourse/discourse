@@ -23,23 +23,23 @@ export default {
       });
 
       // a plugin example:
-      api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
-        if (context.user.aFeatureFlag) {
-          // Remove "suggested" topics
-          return value.filter(
-            (entry) =>
-              context.currentContext !== "topic" ||
-              entry.id !== "suggested-topics"
-          );
-        } else {
-          // Remove "related" topics
-          return value.filter(
-            (entry) =>
-              context.currentContext !== "topic" ||
-              entry.id !== "related-topics"
-          );
-        }
-      });
+      // api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
+      //   if (context.user?.aFeatureFlag) {
+      //     // Remove "suggested" topics
+      //     return value.filter(
+      //       (entry) =>
+      //         context.currentContext !== "topic" ||
+      //         entry.id !== "suggested-topics"
+      //     );
+      //   } else {
+      //     // Remove "related" topics
+      //     return value.filter(
+      //       (entry) =>
+      //         context.currentContext !== "topic" ||
+      //         entry.id !== "related-topics"
+      //     );
+      //   }
+      // });
     });
   },
 };
