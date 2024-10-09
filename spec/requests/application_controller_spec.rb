@@ -932,8 +932,6 @@ RSpec.describe ApplicationController do
     context "with rate limits" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
         post1 = Fabricate(:post)
@@ -1156,8 +1154,6 @@ RSpec.describe ApplicationController do
 
     before { RateLimiter.enable }
 
-    use_redis_snapshotting
-
     it "is included when API key is rate limited" do
       global_setting :max_admin_api_reqs_per_minute, 1
       api_key = ApiKey.create!(user_id: admin.id).key
@@ -1207,8 +1203,6 @@ RSpec.describe ApplicationController do
       SiteSetting.slow_down_crawler_rate = 128
       SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
     end
-
-    use_redis_snapshotting
 
     it "are rate limited" do
       now = Time.zone.now

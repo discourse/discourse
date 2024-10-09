@@ -163,8 +163,6 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context "when in readonly mode" do
-      use_redis_snapshotting
-
       it "should return a 503" do
         Discourse.enable_readonly_mode
 
@@ -174,8 +172,6 @@ RSpec.describe Users::OmniauthCallbacksController do
     end
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "returns a 503 for non-staff" do

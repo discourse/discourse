@@ -8,8 +8,6 @@ RSpec.describe "RequestTracker in multisite", type: :multisite do
     RateLimiter.clear_all_global!
   end
 
-  use_redis_snapshotting
-
   def call(env, &block)
     Middleware::RequestTracker.new(block).call(env)
   end
