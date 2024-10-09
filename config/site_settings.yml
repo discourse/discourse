@@ -622,6 +622,7 @@ login:
   experimental_full_page_login:
     default: false
     client: true
+    hidden: true
 
 users:
   min_username_length:
