@@ -88,43 +88,44 @@
         </field.RadioGroup>
       </form.Field>
 
-      <form.Fieldset
+      <form.CheckboxGroup
         class="user-field-preferences"
         @title={{i18n "admin.user_fields.preferences"}}
+        as |group|
       >
-        <form.Field
+        <group.Field
           @name="editable"
           @showTitle={{false}}
           @title={{i18n "admin.user_fields.editable.title"}}
           as |field|
         >
           <field.Checkbox disabled={{this.editableDisabled}} />
-        </form.Field>
-        <form.Field
+        </group.Field>
+        <group.Field
           @name="show_on_profile"
           @showTitle={{false}}
           @title={{i18n "admin.user_fields.show_on_profile.title"}}
           as |field|
         >
           <field.Checkbox />
-        </form.Field>
-        <form.Field
+        </group.Field>
+        <group.Field
           @name="show_on_user_card"
           @showTitle={{false}}
           @title={{i18n "admin.user_fields.show_on_user_card.title"}}
           as |field|
         >
           <field.Checkbox />
-        </form.Field>
-        <form.Field
+        </group.Field>
+        <group.Field
           @name="searchable"
           @showTitle={{false}}
           @title={{i18n "admin.user_fields.searchable.title"}}
           as |field|
         >
           <field.Checkbox />
-        </form.Field>
-      </form.Fieldset>
+        </group.Field>
+      </form.CheckboxGroup>
 
       <form.Actions>
         <form.Submit @icon="check" @label="admin.user_fields.save" />
