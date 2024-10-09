@@ -146,8 +146,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.1.0
@@ -242,8 +242,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
       truth-helpers:
         specifier: workspace:1.0.0
         version: link:../truth-helpers
@@ -517,8 +517,8 @@ importers:
         specifier: ~5.5.0
         version: 5.5.0(@babel/core@7.25.7)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0))
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
       ember-test-selectors:
         specifier: ^7.0.0
         version: 7.0.0
@@ -761,8 +761,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
       ember-this-fallback:
         specifier: ^0.4.0
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.5.0(@babel/core@7.25.7)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.26)(esbuild@0.24.0)))
@@ -860,8 +860,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
       truth-helpers:
         specifier: workspace:1.0.0
         version: link:../truth-helpers
@@ -1021,8 +1021,8 @@ importers:
         specifier: ^6.3.0
         version: 6.3.0
       ember-template-imports:
-        specifier: ^4.1.2
-        version: 4.1.2
+        specifier: ^4.1.3
+        version: 4.1.3
     devDependencies:
       '@ember/optional-features':
         specifier: ^2.1.0
@@ -4551,8 +4551,8 @@ packages:
     resolution: {integrity: sha512-OS8TUVG2kQYYwP3netunLVfeijPoOKIs1SvPQRTNOQX4Pu8xGGBEZmrv0U1YTnQn12Eg+p6w/0UdGbUnITjyzw==}
     engines: {node: 12.* || >= 14}
 
-  ember-template-imports@4.1.2:
-    resolution: {integrity: sha512-6A7s+9QlmKkkpTkI0VGDFqyX+HrAsHQKB32VB/vbj/ITTDN/l/CCtEfvN4/LANKoG5yAvbg6q9wzcOjK9XwmWw==}
+  ember-template-imports@4.1.3:
+    resolution: {integrity: sha512-0R7FBozyG2lLH7DxeB8w/PVsdQdG2W+jZx8Y9aPWtfV7qjZlsZ9mfRgn1acF0OD1J5wEUduaSC4MAmWL+A7maQ==}
     engines: {node: 16.* || >= 18}
 
   ember-template-lint@6.0.0:
@@ -14502,10 +14502,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-template-imports@4.1.2:
+  ember-template-imports@4.1.3:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 2.0.1
+      content-tag: 2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34)
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color
