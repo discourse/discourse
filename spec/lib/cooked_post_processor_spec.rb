@@ -401,6 +401,41 @@ RSpec.describe CookedPostProcessor do
         end
       end
 
+      context "with small images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 150, height: 150) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
+          <img src="#{upload.url}">
+          HTML
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
+
+        before { SiteSetting.create_thumbnails = true }
+
+        it "shows the lightbox when both dimensions are above the minimum" do
+          cpp.post_process
+          expect(cpp.html).to match_html <<~HTML
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost#{upload.url}" data-download-href="//test.localhost/#{upload_path}/#{upload.sha1}" title="logo.png"><img src="//test.localhost/#{upload_path}/original/1X/#{upload.sha1}.png" width="150" height="150"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">logo.png</span><span class="informations">150×150 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+          HTML
+        end
+
+        it "does not show lightbox when both dimensions are below the minimum" do
+          upload.update!(width: 50, height: 50)
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><img src="//test.localhost#{upload.url}" width="50" height="50"></p>
+          HTML
+        end
+
+        it "does not show lightbox when either dimension is below the minimum" do
+          upload.update!(width: 50, height: 150)
+          cpp.post_process
+
+          expect(cpp.html).to match_html <<~HTML
+            <p><img src="//test.localhost#{upload.url}" width="50" height="150"></p>
+          HTML
+        end
+      end
+
       context "with large images" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
