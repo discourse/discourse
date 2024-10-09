@@ -153,6 +153,10 @@ export default class MoreTopics extends Component {
   @action
   selectTab(tab) {
     this.currentTab = tab;
+    this.keyValueStore.set({
+      key: `more-topics-preference-${this.context}`,
+      value: tab.id,
+    });
   }
 
   <template>
