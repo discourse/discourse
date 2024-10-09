@@ -25,7 +25,6 @@
       <WelcomeHeader
         id="create-account-title"
         @header={{i18n "create_account.header_title"}}
-        @subheader={{i18n "create_account.subheader_title"}}
       >
         <PluginOutlet
           @name="create-account-header-bottom"
@@ -86,11 +85,11 @@
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            {{#unless this.usernameValidation.reason}}
+            {{!-- {{#unless this.usernameValidation.reason}}
               <span class="more-info" id="username-validation-more-info">
                 {{i18n "user.username.instructions"}}
               </span>
-            {{/unless}}
+            {{/unless}} --}}
           </div>
 
           <PluginOutlet
@@ -126,11 +125,11 @@
                     @validation={{this.passwordValidation}}
                     id="password-validation"
                   />
-                  {{#unless this.passwordValidation.reason}}
+                  {{!-- {{#unless this.passwordValidation.reason}}
                     <span class="more-info" id="password-validation-more-info">
                       {{this.passwordInstructions}}
                     </span>
-                  {{/unless}}
+                  {{/unless}} --}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -214,11 +213,11 @@
                 @validation={{this.nameValidation}}
                 id="fullname-validation"
               />
-              {{#unless this.nameValidation.reason}}
+              {{!-- {{#unless this.nameValidation.reason}}
                 <span class="more-info" id="fullname-validation-more-info">
                   {{this.nameInstructions}}
                 </span>
-              {{/unless}}
+              {{/unless}} --}}
             {{/if}}
           </div>
 
@@ -325,9 +324,9 @@
           <DButton
             @action={{route-action "showLogin"}}
             @disabled={{this.formSubmitted}}
-            @label="log_in"
+            @label="pivot_log_in"
             id="login-link"
-            class="btn-large btn-flat"
+            class="btn-large btn-flat login__alt-cta"
           />
         {{/unless}}
       </div>

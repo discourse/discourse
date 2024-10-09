@@ -5,7 +5,6 @@ $progress-bar-icon-size: 0.8rem;
 .signup-progress-bar {
   width: 100%;
   display: flex;
-  color: var(--primary-low-mid);
   box-sizing: border-box;
   margin-bottom: 1.2em;
 
@@ -14,6 +13,7 @@ $progress-bar-icon-size: 0.8rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    color: var(--primary-low-mid);
 
     &:first-child .signup-progress-bar__circle {
       transform: translateX(50%);
@@ -29,7 +29,12 @@ $progress-bar-icon-size: 0.8rem;
     }
   }
 
+  &__step {
+    display: flex;
+  }
+
   &__step-text {
+    color: var(--primary-high);
     white-space: nowrap;
     width: fit-content;
     transform: translateX(calc(calc($progress-bar-circle-size / 2) - 50%));
@@ -43,10 +48,11 @@ $progress-bar-icon-size: 0.8rem;
         calc(calc($progress-bar-circle-size + $progress-bar-line-width) - 100%)
       );
     }
-  }
 
-  &__step {
-    display: flex;
+    .--active & {
+      font-weight: bold;
+      color: var(--primary);
+    }
   }
 
   &__line {
@@ -56,6 +62,10 @@ $progress-bar-icon-size: 0.8rem;
     height: $progress-bar-line-width;
     width: 100%;
     background-color: var(--primary-low-mid);
+
+    .--completed & {
+      background-color: var(--success);
+    }
   }
 
   &__circle {
@@ -70,27 +80,19 @@ $progress-bar-icon-size: 0.8rem;
     border-radius: 50%;
     border: $progress-bar-line-width solid var(--primary-low-mid);
     background-color: var(--secondary);
-  }
 
-  &__step.--completed {
-    color: var(--primary);
-
-    .signup-progress-bar__circle {
+    .--active & {
+      border-color: var(--success);
+      background: var(--success);
+      box-shadow: 0 0 1px 5px var(--success-low);
+    }
+    .--completed & {
       background-color: var(--success);
-      border: $progress-bar-line-width solid var(--success);
+      border-color: var(--success);
     }
   }
 
   &__line.--completed {
     background-color: var(--success);
-  }
-
-  &__step.--active {
-    .signup-progress-bar__circle {
-      border: $progress-bar-line-width solid var(--success);
-    }
-    + .signup-progress-bar__step-text {
-      font-weight: bold;
-    }
   }
 }
