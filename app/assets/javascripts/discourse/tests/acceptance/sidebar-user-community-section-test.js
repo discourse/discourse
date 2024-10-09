@@ -880,7 +880,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .exists("review link is displayed in the more drawer");
 
@@ -906,7 +906,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     assert
       .dom(
-        ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-content .sidebar-section-link[data-link-name='review']"
+        ".sidebar-section[data-section-name='community'] .sidebar-more-section-content .sidebar-section-link[data-link-name='review']"
       )
       .doesNotExist("review link is not displayed in the more drawer");
   });
