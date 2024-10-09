@@ -158,7 +158,7 @@ export default class MoreTopics extends Component {
         <div
           class={{concatClass
             "more-topics__lists"
-            (if this.singleList "single-list")
+            (if (eq this.tabs.length 1) "single-list")
           }}
         >
           <this.currentTab.component @topic={{@topic}} />
