@@ -14,6 +14,10 @@ import I18n from "discourse-i18n";
 
 export let registeredTabs = [];
 
+export function clearRegisteredTabs() {
+  registeredTabs.length = 0;
+}
+
 export default class MoreTopics extends Component {
   @service currentUser;
   @service keyValueStore;
