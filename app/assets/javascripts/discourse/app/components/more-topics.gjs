@@ -1,52 +1,38 @@
 import Component from "@glimmer/component";
-import { action, computed } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { eq, gt } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
+export let registeredTabs = [];
+
 export default class MoreTopics extends Component {
-  @service site;
-  @service moreTopicsPreferenceTracking;
-  @service pmTopicTrackingState;
-  @service topicTrackingState;
   @service currentUser;
+  @service keyValueStore;
+  @service pmTopicTrackingState;
+  @service site;
+  @service topicTrackingState;
 
-  @action
-  rememberTopicListPreference(value) {
-    this.moreTopicsPreferenceTracking.updatePreference(value);
+  @tracked currentTab = this.tabs[0];
+
+  get tabs() {
+    const context = "pm";
+    return registeredTabs.filter(
+      (tab) => tab.context === context || tab.context === "*"
+    );
   }
 
-  @computed("moreTopicsPreferenceTracking.topicLists")
-  get singleList() {
-    return this.availableTabs.length === 1;
-  }
-
-  @computed("moreTopicsPreferenceTracking.selectedTab")
-  get selectedTab() {
-    return this.moreTopicsPreferenceTracking.selectedTab;
-  }
-
-  @computed("moreTopicsPreferenceTracking.topicLists")
-  get availableTabs() {
-    return this.moreTopicsPreferenceTracking.topicLists;
-  }
-
-  @computed(
-    "pmTopicTrackingState.isTracking",
-    "pmTopicTrackingState.statesModificationCounter",
-    "topicTrackingState.messageCount"
-  )
-  get browseMoreMessage() {
-    return this.args.topic.isPrivateMessage
-      ? this._privateMessageBrowseMoreMessage()
-      : this._topicBrowseMoreMessage();
-  }
-
-  _privateMessageBrowseMoreMessage() {
-    const username = this.currentUser.username;
-    const suggestedGroupName = this.args.topic.suggested_group_name;
+  // TODO: move this
+  get privateMessageBrowseMoreMessage() {
+    const suggestedGroupName = this.args.topic.get("suggested_group_name");
     const inboxFilter = suggestedGroupName ? "group" : "user";
 
     const unreadCount = this.pmTopicTrackingState.lookupCount("unread", {
@@ -67,9 +53,12 @@ export default class MoreTopics extends Component {
           HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
-          username,
+          username: this.currentUser.username,
           groupName: suggestedGroupName,
-          groupLink: this._groupLink(username, suggestedGroupName),
+          groupLink: this.groupLink(
+            this.currentUser.username,
+            suggestedGroupName
+          ),
           basePath: getURL(""),
         });
       } else {
@@ -77,24 +66,28 @@ export default class MoreTopics extends Component {
           HAS_UNREAD_AND_NEW: hasBoth,
           UNREAD: unreadCount,
           NEW: newCount,
-          username,
+          username: this.currentUser.username,
           basePath: getURL(""),
         });
       }
     } else if (suggestedGroupName) {
       return I18n.t("user.messages.read_more_in_group", {
-        groupLink: this._groupLink(username, suggestedGroupName),
+        groupLink: this.groupLink(
+          this.currentUser.username,
+          suggestedGroupName
+        ),
       });
     } else {
       return I18n.t("user.messages.read_more", {
         basePath: getURL(""),
-        username,
+        username: this.currentUser.username,
       });
     }
   }
 
-  _topicBrowseMoreMessage() {
-    let category = this.args.topic.category;
+  // TODO: move this
+  get topicBrowseMoreMessage() {
+    let category = this.args.topic.get("category");
 
     if (category && category.id === this.site.uncategorized_category_id) {
       category = null;
@@ -113,7 +106,7 @@ export default class MoreTopics extends Component {
         HAS_UNREAD_AND_NEW: unreadTopics > 0 && newTopics > 0,
         UNREAD: unreadTopics,
         NEW: newTopics,
-        HAS_CATEGORY: category ? true : false,
+        HAS_CATEGORY: !!category,
         categoryLink: category ? categoryBadgeHTML(category) : null,
         basePath: getURL(""),
       });
@@ -130,9 +123,60 @@ export default class MoreTopics extends Component {
     }
   }
 
-  _groupLink(username, groupName) {
+  groupLink(username, groupName) {
     return `<a class="group-link" href="${getURL(
       `/u/${username}/messages/group/${groupName}`
     )}">${iconHTML("users")} ${groupName}</a>`;
   }
+
+  @action
+  selectTab(tab) {
+    this.currentTab = tab;
+  }
+
+  <template>
+    <div class="more-topics__container">
+      {{#if (gt this.tabs.length 1)}}
+        <div class="row">
+          <ul class="nav nav-pills">
+            {{#each this.tabs as |tab|}}
+              <li>
+                <DButton
+                  @action={{fn this.selectTab tab}}
+                  @translatedLabel={{tab.name}}
+                  @translatedTitle={{tab.name}}
+                  @icon={{tab.icon}}
+                  class={{if (eq tab.id this.currentTab.id) "active"}}
+                />
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
+
+      {{#if this.currentTab}}
+        <div
+          class={{concatClass
+            "more-topics__lists"
+            (if this.singleList "single-list")
+          }}
+        >
+          <this.currentTab.component
+            @topic={{@topic}}
+            @currentUser={{this.currentUser}}
+          />
+        </div>
+
+        {{#if @topic.suggestedTopics.length}}
+          <h3 class="more-topics__browse-more">
+            {{#if @topic.isPrivateMessage}}
+              {{htmlSafe this.privateMessageBrowseMoreMessage}}
+            {{else}}
+              {{htmlSafe this.topicBrowseMoreMessage}}
+            {{/if}}
+          </h3>
+        {{/if}}
+      {{/if}}
+    </div>
+  </template>
 }

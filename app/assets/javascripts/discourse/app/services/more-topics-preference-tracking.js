@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const TOPIC_LIST_PREFERENCE_KEY = "more-topics-list-preference";
@@ -9,16 +10,12 @@ export default class MoreTopicsPreferenceTracking extends Service {
   @service keyValueStore;
 
   @tracked selectedTab = null;
-  @tracked topicLists = [];
+  topicLists = new TrackedMap();
+  memoryTab = this.keyValueStore.get(TOPIC_LIST_PREFERENCE_KEY);
 
-  memoryTab = null;
+  selectTab(value) {
+    this.selectedTab = value;
 
-  init() {
-    super.init(...arguments);
-    this.memoryTab = this.keyValueStore.get(TOPIC_LIST_PREFERENCE_KEY);
-  }
-
-  updatePreference(value) {
     // Don't change the preference when selecting related PMs.
     // It messes with the topics pref.
     const rememberPref = value !== "related-messages";
@@ -27,30 +24,26 @@ export default class MoreTopicsPreferenceTracking extends Service {
       this.keyValueStore.set({ key: TOPIC_LIST_PREFERENCE_KEY, value });
       this.memoryTab = value;
     }
-
-    this.selectedTab = value;
   }
 
   registerTopicList(item) {
     // We have a preference stored and the list exists.
-    if (this.memoryTab && this.memoryTab === item.id) {
+    if (this.memoryTab === item.id) {
       this.selectedTab = item.id;
     }
 
     // Use the first list as a default. Future lists may override this
     // if they match the stored preference.
-    if (!this.selectedTab) {
-      this.selectedTab = item.id;
-    }
+    this.selectedTab ??= item.id;
 
-    this.topicLists = [...this.topicLists, item];
+    this.topicLists.set(item.id, item);
   }
 
   removeTopicList(itemId) {
-    this.topicLists = this.topicLists.filter((item) => item.id !== itemId);
+    this.topicLists.delete(itemId);
 
     if (this.selectedTab === itemId) {
-      this.selectedTab = this.topicLists[0]?.id;
+      this.selectedTab = this.topicLists.keys().next();
     }
   }
 }
