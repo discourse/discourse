@@ -126,12 +126,14 @@
         </form.Field>
       </form.Fieldset>
 
-      <form.Submit @icon="check" @label="admin.user_fields.save" />
-      <DButton
-        @action={{this.cancel}}
-        @label="admin.user_fields.cancel"
-        class="btn-danger cancel"
-      />
+      <form.Actions>
+        <form.Submit @icon="check" @label="admin.user_fields.save" />
+        <form.Button
+          @action={{this.cancel}}
+          @label="admin.user_fields.cancel"
+          class="btn-danger cancel"
+        />
+      </form.Actions>
     </Form>
   {{else}}
     <div class="row">
