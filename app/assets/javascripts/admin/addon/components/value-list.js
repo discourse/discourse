@@ -21,7 +21,7 @@ export default class ValueList extends Component {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
 
-    if (this.inputType === "array") {
+    if (this.inputType === "array" && this.values) {
       this.set("collection", [...this.values] || []);
       return;
     }
