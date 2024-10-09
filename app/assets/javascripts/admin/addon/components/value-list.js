@@ -21,8 +21,8 @@ export default class ValueList extends Component {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
 
-    if (this.inputType === "array" && this.values) {
-      this.set("collection", [...this.values] || []);
+    if (this.inputType === "array") {
+      this.set("collection", this.values ? [...this.values] : []);
       return;
     }
 
@@ -115,6 +115,7 @@ export default class ValueList extends Component {
   }
 
   _saveValues() {
+    console.log(this.onChange, this.args);
     if (this.onChange) {
       this.onChange([...this.collection]);
       return;
