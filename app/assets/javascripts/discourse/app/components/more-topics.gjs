@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -25,12 +25,29 @@ export default class MoreTopics extends Component {
   @service site;
   @service topicTrackingState;
 
-  @tracked currentTab = this.tabs[0];
+  @tracked currentTab = this.initialTab;
 
+  get initialTab() {
+    let savedId = this.keyValueStore.get(
+      `more-topics-preference-${this.context}`
+    );
+
+    // Fallback to the old setting
+    savedId ||= this.keyValueStore.get("more-topics-list-preference");
+
+    return (
+      (savedId && this.tabs.find((tab) => tab.id === savedId)) || this.tabs[0]
+    );
+  }
+
+  get context() {
+    return this.args.topic.get("isPrivateMessage") ? "pm" : "topic";
+  }
+
+  @cached
   get tabs() {
-    const context = this.args.topic.get("isPrivateMessage") ? "pm" : "topic";
     return registeredTabs.filter(
-      (tab) => tab.context === context || tab.context === "*"
+      (tab) => tab.context === this.context || tab.context === "*"
     );
   }
 
