@@ -89,14 +89,14 @@ export default class ChatStateManager extends Service {
 
   didCloseDrawer() {
     withPluginApi("1.8.0", (api) => {
-      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
-      );
-
       if (
         api.getSidebarPanel()?.key === MAIN_PANEL ||
         api.getSidebarPanel()?.key === CHAT_PANEL
       ) {
+        const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
+          this.currentUser
+        );
+
         api.setSidebarPanel(MAIN_PANEL);
 
         if (chatSeparateSidebarMode.fullscreen) {
