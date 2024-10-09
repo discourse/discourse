@@ -1,9 +1,28 @@
-.emoji-picker-modal {
-  .d-modal__header {
-    display: none;
-  }
-
+.fk-d-menu-modal.emoji-picker__menu {
   .d-modal__body {
     padding: 0;
+  }
+
+  .d-modal__container {
+    align-self: flex-start;
+  }
+
+  .emoji-picker__sections-nav {
+    order: 1;
+    height: 50px;
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    box-sizing: border-box;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  .emoji-picker__content {
+    flex-direction: column;
+  }
+
+  .emoji-picker__scrollable-content {
+    height: 100%;
   }
 }

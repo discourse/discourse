@@ -32,8 +32,6 @@
     background: var(--primary-very-low);
     display: flex;
     height: 50px;
-    box-shadow: 0 1px 3px 0 var(--primary-low);
-    z-index: 19898;
   }
 
   &__filter {
@@ -74,7 +72,6 @@
   }
 
   &__sections-nav {
-    border-right: 1px solid var(--primary-low);
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -105,6 +102,10 @@
       background: none;
     }
 
+    &.active {
+      scale: 1.4;
+    }
+
     .emoji {
       width: 21px;
       height: 21px;
@@ -127,6 +128,8 @@
 
   &__section-title-container {
     display: flex;
+    position: sticky;
+    top: -1px; // to avoid an ugly sub 1px gap on retina
   }
 
   &__section-title {
@@ -136,8 +139,6 @@
     font-size: var(--font-down-2);
     font-weight: 700;
     background: rgba(var(--secondary-rgb), 0.95);
-    position: sticky;
-    top: 0;
     z-index: 1;
     width: 100%;
     box-sizing: border-box;

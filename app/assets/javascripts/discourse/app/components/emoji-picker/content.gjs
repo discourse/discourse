@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { later, schedule } from "@ember/runloop";
+import { cancel, later, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import { eq, gt, includes, notEq } from "truth-helpers";
@@ -132,11 +132,17 @@ export default class EmojiPicker extends Component {
   @action
   didInputFilter(value) {
     if (!value?.length) {
+      cancel(this.debouncedFilterHandler);
       this.filteredEmojis = null;
       return;
     }
 
-    discourseDebounce(this, this.debouncedDidInputFilter, value, INPUT_DELAY);
+    this.debouncedFilterHandler = discourseDebounce(
+      this,
+      this.debouncedDidInputFilter,
+      value,
+      INPUT_DELAY
+    );
   }
 
   @action
@@ -373,6 +379,10 @@ export default class EmojiPicker extends Component {
 
       this.lastVisibleSection = sectionElement.dataset.section;
       this.addVisibleSections(visibleSections.map((s) => s.dataset.section));
+
+      document
+        .querySelector(".emoji-picker__section-btn.active")
+        ?.scrollIntoView({ block: "center" });
     }
   }
 
