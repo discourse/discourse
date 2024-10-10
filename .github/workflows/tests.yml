@@ -425,7 +425,7 @@ jobs:
           name: failed-system-test-screenshots
           pattern: failed-system-test-screenshots-*
           delete-merged: true
-          separate-directories:: false
+          separate-directories: false
 
       - name: Merge Artifacts
         uses: actions/upload-artifact/merge@v4
