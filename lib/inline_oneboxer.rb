@@ -44,10 +44,8 @@ class InlineOneboxer
         if topic = Oneboxer.local_topic(url, route, opts)
           opts[:skip_cache] = true
           post_number = [route[:post_number].to_i, topic.highest_post_number].min
-          if post_number > 1
-            opts[:post_number] = post_number
-            opts[:post_author] = post_author_for_title(topic, post_number)
-          end
+          opts[:post_number] = post_number if post_number > 1
+          opts[:post_author] = post_author_for_title(topic, post_number)
           return onebox_for(url, topic.title, opts)
         else
           # not permitted to see topic
@@ -108,7 +106,7 @@ class InlineOneboxer
     title = title && Emoji.gsub_emoji_to_unicode(title)
     title = WordWatcher.censor_text(title) if title.present?
 
-    onebox = { url: url, title: title }
+    onebox = { url: url, title: title, author: opts[:post_author] }
 
     Discourse.cache.write(cache_key(url), onebox, expires_in: 1.day) if !opts[:skip_cache]
     onebox
@@ -119,9 +117,17 @@ class InlineOneboxer
   end
 
   def self.post_author_for_title(topic, post_number)
-    guardian = Guardian.new
-    post = topic.posts.find_by(post_number: post_number)
+    post = nil
+    if post_number == 0
+      post = topic.first_post
+    else
+      post = topic.posts.find_by(post_number: post_number)
+    end
+
     author = post&.user
+
+    guardian = Guardian.new
+
     if author && guardian.can_see_post?(post) && post.post_type == Post.types[:regular]
       author.username
     end
