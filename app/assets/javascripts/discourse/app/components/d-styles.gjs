@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 
 export default class DStyles extends Component {
@@ -74,6 +75,13 @@ export default class DStyles extends Component {
     return css.join("\n");
   }
 
+  get hashtagColors() {
+    return Object.values(getHashtagTypeClasses())
+      .map((hashtagType) => hashtagType.generatePreloadedCssClasses())
+      .flat()
+      .join("\n");
+  }
+
   <template>
     {{! template-lint-disable no-forbidden-elements }}
     <style id="d-styles">
@@ -82,6 +90,8 @@ export default class DStyles extends Component {
         {{this.categoryBackgrounds}}
         {{this.categoryBadges}}
       {{/if}}
+
+      {{this.hashtagColors}}
     </style>
   </template>
 }
