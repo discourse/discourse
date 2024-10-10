@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.2";
+export const PLUGIN_API_VERSION = "1.38.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -23,6 +23,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
+import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
@@ -3269,6 +3270,13 @@ class PluginApi {
    */
   registerPluginHeaderActionComponent(pluginId, componentClass) {
     registerPluginHeaderActionComponent(pluginId, componentClass);
+  }
+
+  /**
+   * Registers stuff
+   */
+  registerMoreTopicsTab(tab) {
+    registeredTabs.push(tab);
   }
 
   // eslint-disable-next-line no-unused-vars
