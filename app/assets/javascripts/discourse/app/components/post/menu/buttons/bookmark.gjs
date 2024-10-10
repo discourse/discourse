@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import BookmarkMenu from "discourse/components/bookmark-menu";
 import PostBookmarkManager from "discourse/lib/post-bookmark-manager";
@@ -8,18 +9,9 @@ export default class PostMenuBookmarkButton extends Component {
     return !!args.post.canBookmark;
   }
 
-  #bookmarkManager;
-
+  @cached
   get bookmarkManager() {
-    // lazy instantiate the bookmark manager only if the component is rendered
-    if (!this.#bookmarkManager) {
-      this.#bookmarkManager = new PostBookmarkManager(
-        getOwner(this),
-        this.args.post
-      );
-    }
-
-    return this.#bookmarkManager;
+    return new PostBookmarkManager(getOwner(this), this.args.post);
   }
 
   <template>
