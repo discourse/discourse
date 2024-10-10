@@ -1324,3 +1324,519 @@ validateForm(data, { addError }) {
 ```hbs
 <Form @validate={{this.validateForm}} />
 ```
+
+# Javascript assertions
+
+## Form
+
+The form element assertions are available at `assert.form(...).*`. By default it will select the first "form" element.
+
+**Parameters**
+
+- `target` (string | HTMLElement): The form element or selector.
+
+### hasErrors()
+
+Asserts that the form has errors.
+
+**Parameters**
+
+- `message` (string): The description of the test.
+
+**Example**
+
+```javascript
+assert.form().hasErrors("the form shows errors");
+```
+
+## Field
+
+The field element assertions are available at `assert.form(...).field(...).*`.
+
+**Parameters**
+
+- `name` (string): The name of the field.
+
+**Example**
+
+```javascript
+assert.form().field("foo");
+```
+
+### hasValue()
+
+Asserts that the `value` of the field matches the `expected` text.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").hasValue("bar", "user has set the value");
+```
+
+### isDisabled()
+
+Asserts that the `field` is disabled.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").isDisabled("the field is disabled");
+```
+
+### isEnabled()
+
+Asserts that the `field` is enabled.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").isEnabled("the field is enabled");
+```
+
+### hasError()
+
+Asserts that the `field` has a specific error.
+
+**Parameters**
+
+- `error` (string): The error message on the field.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").hasError("Required", "it is required");
+```
+
+### hasNoErrors()
+
+Asserts that the `field` has no error.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").hasNoErrors("it is valid");
+```
+
+### exists()
+
+Asserts that the `field` is present.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").exists("it has the food field");
+```
+
+### doesNotExist()
+
+Asserts that the `field` is not present.
+
+**Parameters**
+
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").doesNotExist("it has no food field");
+```
+
+### hasCharCounter()
+
+Asserts that the `field` has a char counter.
+
+**Parameters**
+
+- `current` (integer): The current length of the field.
+- `max` (integer): The max length of the field.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().field("foo").hasCharCounter(2, 5, "it has updated the counter");
+```
+
+## Fieldset
+
+The field element assertions are available at `assert.form(...).fieldset(...).*`.
+
+**Parameters**
+
+- `name` (string): The name of the fieldset.
+
+**Example**
+
+```javascript
+assert.form().fieldset("foo");
+```
+
+### hasTitle()
+
+Asserts that the `title` of the fieldset matches the `expected` value.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().fieldset("foo").hasTitle("bar", "it has the correct title");
+```
+
+### hasDescription()
+
+Asserts that the `description` of the fieldset matches the `expected` value.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert
+  .form()
+  .fieldset("foo")
+  .hasDescription("bar", "it has the correct description");
+```
+
+### includesText()
+
+Asserts that the fieldset has yielded the `expected` value.
+
+**Parameters**
+
+- `expected` (anything): The expected value.
+- `message` (string) [optional]: The description of the test.
+
+**Example**
+
+```javascript
+assert.form().fieldset("foo").includesText("bar", "it has the correct text");
+```
+
+# Javascript helpers
+
+## Form
+
+The FormKit helper allows you to manipulate a form and its fields through a clear and expressive API.
+
+**Example**
+
+```javascript
+import formKit from "discourse/tests/helpers/form-kit";
+
+test("fill in input", async function (assert) {
+  await render(<template>
+    <Form class="my-form" as |form data|>
+      <form.Field @name="foo" as |field|>
+        <field.Input />
+      </form.Field>
+    </Form>
+  </template>);
+
+  const myForm = formKit(".my-form");
+});
+```
+
+### submit()
+
+Submits the associated form.
+
+**Example**
+
+```javascript
+formKit().submit();
+```
+
+### reset()
+
+Resets the associated form.
+
+**Example**
+
+```javascript
+formKit().reset();
+```
+
+## Field
+
+**Parameters**
+
+- `name` (string): The name of the field.
+
+### fillIn()
+
+Can be used on [`<field.Input @type="text" />`](/docs/guides/frontend/form-kit/controls/input), [`<field.Code />`](/docs/guides/frontend/form-kit/controls/code), [`<field.Textarea />`](/docs/guides/frontend/form-kit/controls/textarea), and [`<field.Composer />`](/docs/guides/frontend/form-kit/controls/composer).
+
+**Parameters**
+
+- `value` (string | integer | undefined): The value to set on the input.
+
+**Example**
+
+```javascript
+await formKit().field("foo").fillIn("bar");
+```
+
+### toggle()
+
+Can be used on [`<field.Checkbox />`](/docs/guides/frontend/form-kit/controls/checkbox), [`<field.Toggle />`](/docs/guides/frontend/form-kit/controls/toggle) or [`<field.Password />`](/docs/guides/frontend/form-kit/controls/password)
+
+Will toggle the state of the control. In the case of the password control it will actually toggle the visibility of the field.
+
+**Example**
+
+```javascript
+await formKit().field("foo").toggle();
+```
+
+### accept()
+
+Can be used on [`<field.Checkbox />`](/docs/guides/frontend/form-kit/controls/question).
+
+**Example**
+
+```javascript
+await formKit().field("foo").accept();
+```
+
+### refuse()
+
+Can be used on [`<field.Checkbox />`](/docs/guides/frontend/form-kit/controls/question).
+
+**Example**
+
+```javascript
+await formKit().field("foo").refuse();
+```
+
+### select()
+
+Can be used on [`<field.Select />`](/docs/guides/frontend/form-kit/controls/select), [`<field.Menu />`](/docs/guides/frontend/form-kit/controls/menu), [`<field.Icon />`](/docs/guides/frontend/form-kit/controls/icon), and [`<field.RadioGroup />`](/docs/guides/frontend/form-kit/controls/radio-group).
+
+Will select the given value.
+
+**Parameters**
+
+- `value` (string | integer | undefined): The value to select.
+
+**Example**
+
+```javascript
+await formKit().field("foo").select("bar");
+```
+
+# System specs page object
+
+## Form
+
+The FormKit page object component is available to help you write system specs for your forms.
+
+**Parameters**
+
+- `target` (string | Capybara::Node::Element): The selector or node of the form.
+
+**Example**
+
+```ruby
+form = PageObjects::Components::FormKit.new(".my-form")
+```
+
+```ruby
+form = PageObjects::Components::FormKit.new(find(".my-form"))
+```
+
+### submit
+
+Submits the form
+
+**Example**
+
+```ruby
+form.submit
+```
+
+### reset
+
+Reset the form
+
+**Example**
+
+```ruby
+form.reset
+```
+
+### has_an_alert?
+
+Returns if the field is enabled or not.
+
+**Example**
+
+```ruby
+form.has_an_alert?("message")
+```
+
+```ruby
+expect(form).to have_an_alert("message")
+```
+
+## Field
+
+The `field` helper allows you to interact with a specific field of a form.
+
+**Parameters**
+
+- `name` (string): The name of the field.
+
+**Example**
+
+```ruby
+field = form.field("foo")
+```
+
+### value
+
+Returns the value of the field.
+
+**Example**
+
+```ruby
+field.value
+```
+
+```ruby
+expect(field).to have_value("bar")
+```
+
+### checked?
+
+Returns if the control of a checkbox is checked or not.
+
+**Example**
+
+```ruby
+field.checked?
+```
+
+```ruby
+expect(field).to be_checked
+```
+
+### unchecked?
+
+Returns if the control of a checkbox is unchecked or not.
+
+**Example**
+
+```ruby
+field.unchecked?
+```
+
+```ruby
+expect(field).to be_unchecked
+```
+
+### disabled?
+
+Returns if the field is disabled or not.
+
+**Example**
+
+```ruby
+field.disabled?
+```
+
+```ruby
+expect(field).to be_disabled
+```
+
+### enabled?
+
+Returns if the field is enabled or not.
+
+**Example**
+
+```ruby
+field.enabled?
+```
+
+```ruby
+expect(field).to be_enabled
+```
+
+### toggle
+
+Allows toggling a field. Only available for: [checkbox](/docs/guides/frontend/form-kit/controls/checkbox).
+
+**Example**
+
+```ruby
+field.toggle
+```
+
+### fill_in
+
+Allows filling a field with a given value. Only available for: [input](/docs/guides/frontend/form-kit/controls/input), [text](/docs/guides/frontend/form-kit/controls/text), [code](/docs/guides/frontend/form-kit/controls/code), and [composer](/docs/guides/frontend/form-kit/controls/composer).
+
+**Example**
+
+```ruby
+field.fill_in("bar")
+```
+
+### select
+
+Allows selecting a specified value in a field. Only available for: [select](/docs/guides/frontend/form-kit/controls/select), [icon](/docs/guides/frontend/form-kit/controls/icon), [menu](/docs/guides/frontend/form-kit/controls/menu), [radio-group](/docs/guides/frontend/form-kit/controls/radio-group), and [question](/docs/guides/frontend/form-kit/controls/question).
+
+**Example**
+
+```ruby
+field.select("bar")
+```
+
+### accept
+
+Allows accepting a field. Only available for: [question](/docs/guides/frontend/form-kit/controls/question).
+
+**Example**
+
+```ruby
+field.accept
+```
+
+### refuse
+
+Allows refusing a field. Only available for: [question](/docs/guides/frontend/form-kit/controls/question).
+
+**Example**
+
+```ruby
+field.refuse
+```
