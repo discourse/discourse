@@ -156,6 +156,10 @@ module.exports = function (defaults) {
               },
             }),
           ],
+          splitChunks: {
+            chunks: "all",
+            maxSize: 1 * 1024 * 1024, // 1MB
+          },
         },
         cache: isProduction
           ? false
