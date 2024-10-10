@@ -33,6 +33,9 @@
   .broken-indicator {
     color: var(--danger);
   }
+  &__icons {
+    display: flex;
+  }
   &__icons .btn-flat {
     padding: 0;
   }
