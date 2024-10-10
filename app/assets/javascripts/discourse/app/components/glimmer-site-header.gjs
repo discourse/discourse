@@ -36,6 +36,7 @@ export default class GlimmerSiteHeader extends Component {
   @tracked _dockedHeader = false;
   _animate = false;
   _headerWrap;
+  _mainOutletWrapper;
   _swipeMenuOrigin;
   _applicationElement;
   _resizeObserver;
@@ -74,29 +75,35 @@ export default class GlimmerSiteHeader extends Component {
     // This shows up as a negative value in window.scrollY.
     // We can use this to offset the headerWrap's top offset to avoid
     // jitteriness and bad positioning.
-    const windowOverscroll = Math.min(0, window.scrollY);
+    // const windowOverscroll = Math.min(0, window.scrollY);
+    let mainOutletOffsetTop = Math.max(
+      0,
+      Math.floor(this._mainOutletWrapper.getBoundingClientRect().top) -
+        this._headerWrap.offsetHeight
+    );
 
+    console.log(mainOutletOffsetTop);
     // The headerWrap's top offset can also be a negative value on Safari,
     // because of the changing height of the viewport (due to the URL bar).
     // For our use case, it's best to ensure this is clamped to 0.
-    const headerWrapTop = Math.max(
-      0,
-      Math.floor(this._headerWrap.getBoundingClientRect().top)
-    );
-    let offsetTop = headerWrapTop + windowOverscroll;
+    // const headerWrapTop = Math.max(
+    //   0,
+    //   Math.floor(this._headerWrap.getBoundingClientRect().top)
+    // );
+    // let offsetTop = headerWrapTop + windowOverscroll;
 
     if (DEBUG && isTesting()) {
-      offsetTop -= document
+      mainOutletOffsetTop -= document
         .getElementById("ember-testing-container")
         .getBoundingClientRect().top;
 
-      offsetTop -= 1; // For 1px border on testing container
+      mainOutletOffsetTop -= 1; // For 1px border on testing container
     }
 
     const documentStyle = document.documentElement.style;
     const currentValue =
       parseInt(documentStyle.getPropertyValue("--header-offset"), 10) || 0;
-    const newValue = this._headerWrap.offsetHeight + offsetTop;
+    const newValue = this._headerWrap.offsetHeight + mainOutletOffsetTop;
     if (currentValue !== newValue) {
       documentStyle.setProperty("--header-offset", `${newValue}px`);
     }
@@ -119,6 +126,7 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     this._headerWrap = document.querySelector(".d-header-wrap");
+    this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
     if (this._headerWrap) {
       schedule("afterRender", () => {
         this.headerElement = this._headerWrap.querySelector("header.d-header");
