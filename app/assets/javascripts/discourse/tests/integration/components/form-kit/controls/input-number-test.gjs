@@ -53,7 +53,7 @@ module(
 
       await fillIn("input", "0");
       await formKit().submit();
-      assert.form().field("foo").hasNoError();
+      assert.form().field("foo").hasNoErrors();
     });
   }
 );
