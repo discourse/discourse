@@ -34,19 +34,11 @@ class Demon::Sidekiq < ::Demon::Base
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated
-    Signal.trap("USR1") do
-      begin
-        log_in_trap("Sidekiq reopening logs...")
-        Unicorn::Util.reopen_logs
-        log_in_trap("Sidekiq done reopening logs...")
-      rescue => error
-        log_in_trap(
-          "Error encountered while reopening logs: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
-          level: :error,
-        )
+    Signal.trap("USR1") { reopen_logs }
 
-        exit 1
-      end
+    Signal.trap("USR2") do
+      sleep 1
+      reopen_logs
     end
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]
@@ -74,5 +66,22 @@ class Demon::Sidekiq < ::Demon::Base
     )
 
     exit 1
+  end
+
+  private
+
+  def reopen_logs
+    begin
+      log_in_trap("Sidekiq reopening logs...")
+      Unicorn::Util.reopen_logs
+      log_in_trap("Sidekiq done reopening logs...")
+    rescue => error
+      log_in_trap(
+        "Error encountered while reopening logs: [#{error.class}] #{error.message}\n#{error.backtrace.join("\n")}",
+        level: :error,
+      )
+
+      exit 1
+    end
   end
 end

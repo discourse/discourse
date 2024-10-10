@@ -1223,4 +1223,8 @@ module Discourse
       ) if SiteSetting.set_locale_from_accept_language_header
     locale
   end
+
+  def self.enable_sidekiq_logging?
+    ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+  end
 end
