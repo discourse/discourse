@@ -39,7 +39,10 @@
       <div class="badge-set-title {{if this.hiddenSetTitle 'hidden' ''}}">
         <PluginOutlet
           @name="selectable-user-badges"
-          @outletArgs={{hash selectableUserBadges=this.selectableUserBadges closeAction=this.closeAction}}
+          @outletArgs={{hash
+            selectableUserBadges=this.selectableUserBadges
+            closeAction=this.closeAction
+          }}
         >
           <BadgeTitle
             @selectableUserBadges={{this.selectableUserBadges}}
