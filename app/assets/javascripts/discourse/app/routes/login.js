@@ -27,6 +27,8 @@ export default class LoginRoute extends DiscourseRoute {
   }
 
   setupController(controller) {
+    super.setupController(...arguments);
+
     const { canSignUp } = this.controllerFor("application");
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
