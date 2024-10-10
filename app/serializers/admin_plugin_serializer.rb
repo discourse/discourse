@@ -72,17 +72,7 @@ class AdminPluginSerializer < ApplicationSerializer
   end
 
   def admin_route
-    route = object.admin_route
-    return unless route
-
-    ret = route.slice(:location, :label)
-    if route[:use_new_show_route]
-      ret[:full_location] = "adminPlugins.show"
-      ret[:use_new_show_route] = true
-    else
-      ret[:full_location] = "adminPlugins.#{ret[:location]}"
-    end
-    ret
+    object.full_admin_route
   end
 
   def include_admin_route?

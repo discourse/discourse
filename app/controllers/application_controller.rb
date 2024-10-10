@@ -659,7 +659,7 @@ class ApplicationController < ActionController::Base
             .map do |plugin|
               {
                 name: plugin.name.downcase,
-                admin_route: plugin.admin_route,
+                admin_route: plugin.full_admin_route,
                 enabled: plugin.enabled?,
               }
             end,

@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import SiteSetting from "admin/models/site-setting";
 
@@ -27,7 +28,9 @@ export default class AdminPluginsIndexController extends Controller {
   // NOTE: See also AdminPluginsController, there is some duplication here
   // while we convert plugins to use_new_show_route
   get adminRoutes() {
-    return this.allAdminRoutes.filter((route) => this.routeExists(route));
+    return this.allAdminRoutes.filter((route) =>
+      adminRouteValid(this.router, route)
+    );
   }
 
   get allAdminRoutes() {
@@ -36,18 +39,5 @@ export default class AdminPluginsIndexController extends Controller {
       .map((plugin) => {
         return Object.assign(plugin.adminRoute, { plugin_id: plugin.id });
       });
-  }
-
-  routeExists(route) {
-    try {
-      if (route.use_new_show_route) {
-        this.router.urlFor(route.full_location, route.location);
-      } else {
-        this.router.urlFor(route.full_location);
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }
