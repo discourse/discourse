@@ -242,7 +242,6 @@ export function testCleanup(container, app) {
   resetModelTransformers();
   resetMentions();
   cleanupTemporaryModuleRegistrations();
-  cleanupCssGeneratorTags();
   resetBeforeAuthCompleteCallbacks();
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
@@ -253,12 +252,6 @@ export function testCleanup(container, app) {
   clearLegacyAboutPageStats();
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
-}
-
-function cleanupCssGeneratorTags() {
-  document.querySelector("style#category-color-css-generator")?.remove();
-  document.querySelector("style#category-badge-css-generator")?.remove();
-  document.querySelector("style#hashtag-css-generator")?.remove();
 }
 
 export function discourseModule(name, options) {
