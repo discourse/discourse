@@ -285,7 +285,7 @@ function pluginAdminRouteLinks(router) {
         return true;
       } else {
         warn(
-          `[AdminSidebar] Could not find admin route for ${plugin.name}, route was ${plugin.admin_route.full_location}`,
+          `[AdminSidebar] Could not find admin route for ${plugin.name}, route was ${plugin.admin_route.full_location}. This could be caused by an ad blocker.`,
           { id: "admin-sidebar:pluginAdminRouteLinks" }
         );
         return false;
