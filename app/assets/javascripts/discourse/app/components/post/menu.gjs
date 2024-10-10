@@ -112,7 +112,7 @@ export default class PostMenu extends Component {
 
   @cached
   get staticMethodsContext() {
-    return {
+    return Object.freeze({
       canCreatePost: this.args.canCreatePost,
       collapsed: this.collapsed,
       currentUser: this.currentUser,
@@ -128,18 +128,21 @@ export default class PostMenu extends Component {
       showReadIndicator: this.args.showReadIndicator,
       suppressReplyDirectlyBelow:
         this.siteSettings.suppress_reply_directly_below,
-    };
+    });
   }
 
   get staticMethodsArgs() {
-    return { context: this.staticMethodsContext, post: this.args.post };
+    return Object.freeze({
+      context: this.staticMethodsContext,
+      post: this.args.post,
+    });
   }
 
   get context() {
-    return {
+    return Object.freeze({
       ...this.staticMethodsContext,
       collapsedButtons: this.renderableCollapsedButtons,
-    };
+    });
   }
 
   @cached
