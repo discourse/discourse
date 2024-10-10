@@ -147,8 +147,8 @@ export default class PostMenu extends Component {
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
     // in the value transformer, and the extract the data to be used later to resolve the DAG order
     const buttonsRegistry = applyValueTransformer(
-      "post-menu-registered-buttons",
-      // TODO auto-generate the position cordinates based on the order of the elements
+      "post-menu-buttons",
+      // TODO auto-generate the position coordinates based on the order of the elements
       DAG.from(coreButtonComponents.entries()),
       this.staticMethodsArgs
     );
