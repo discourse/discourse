@@ -33,6 +33,9 @@
   .broken-indicator {
     color: var(--danger);
   }
+  &__icons .btn-flat {
+    padding: 0;
+  }
   &__image-wrapper {
     width: 100%;
     height: 160px;
@@ -90,5 +93,13 @@
     margin-bottom: 0.25em;
     color: var(--primary);
     text-decoration: underline;
+  }
+}
+
+.theme-card .admin-config-area-card {
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
   }
 }

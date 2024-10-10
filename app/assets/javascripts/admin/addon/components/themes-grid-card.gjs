@@ -48,6 +48,7 @@ export default class ThemeCard extends Component {
     "args.theme.isPendingUpdates"
   )
   get themeCardClasses() {
+    console.log(this.args.theme.remote_theme);
     return this.args.theme.isBroken
       ? "--broken"
       : !this.args.theme.enabled
@@ -79,6 +80,12 @@ export default class ThemeCard extends Component {
         return acc + theme.name + ", ";
       }
     }, "");
+  }
+
+  @action
+  updateToLatest() {
+    // TODO (martin)
+    // update theme to latest version
   }
 
   @action
@@ -124,11 +131,13 @@ export default class ThemeCard extends Component {
         {{@theme.name}}
         <span class="theme-card__icons">
           {{#if @theme.isPendingUpdates}}
-            {{icon
-              "sync"
-              title="admin.customize.theme.updates_available_tooltip"
-              class="light-grey-icon"
-            }}
+            <DButton
+              @route="adminCustomizeThemes.show"
+              @routeModels={{this.themeRouteModels}}
+              @icon="sync"
+              @class="btn-flat theme-card__button"
+              @preventFocus={{true}}
+            />
           {{else}}
             {{#if @theme.isBroken}}
               {{icon
