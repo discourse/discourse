@@ -27,16 +27,16 @@ export default {
       //   if (context.user?.aFeatureFlag) {
       //     // Remove "suggested" topics
       //     return value.filter(
-      //       (entry) =>
+      //       (tab) =>
       //         context.currentContext !== "topic" ||
-      //         entry.id !== "suggested-topics"
+      //         tab.id !== "suggested-topics"
       //     );
       //   } else {
       //     // Remove "related" topics
       //     return value.filter(
-      //       (entry) =>
+      //       (tab) =>
       //         context.currentContext !== "topic" ||
-      //         entry.id !== "related-topics"
+      //         tab.id !== "related-topics"
       //     );
       //   }
       // });

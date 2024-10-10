@@ -26,7 +26,7 @@ export default class MoreTopics extends Component {
   @service site;
   @service topicTrackingState;
 
-  @tracked currentTab = this.initialTab;
+  @tracked selectedTab = this.initialTab;
 
   get initialTab() {
     let savedId = this.keyValueStore.get(
@@ -39,6 +39,10 @@ export default class MoreTopics extends Component {
     return (
       (savedId && this.tabs.find((tab) => tab.id === savedId)) || this.tabs[0]
     );
+  }
+
+  get activeTab() {
+    return this.tabs.find((tab) => tab === this.selectedTab) || this.tabs[0];
   }
 
   get context() {
@@ -159,7 +163,7 @@ export default class MoreTopics extends Component {
 
   @action
   selectTab(tab) {
-    this.currentTab = tab;
+    this.selectedTab = tab;
     this.keyValueStore.set({
       key: `more-topics-preference-${this.context}`,
       value: tab.id,
@@ -178,7 +182,7 @@ export default class MoreTopics extends Component {
                   @translatedLabel={{tab.name}}
                   @translatedTitle={{tab.name}}
                   @icon={{tab.icon}}
-                  class={{if (eq tab.id this.currentTab.id) "active"}}
+                  class={{if (eq tab.id this.activeTab.id) "active"}}
                 />
               </li>
             {{/each}}
@@ -186,14 +190,14 @@ export default class MoreTopics extends Component {
         </div>
       {{/if}}
 
-      {{#if this.currentTab}}
+      {{#if this.activeTab}}
         <div
           class={{concatClass
             "more-topics__lists"
             (if (eq this.tabs.length 1) "single-list")
           }}
         >
-          <this.currentTab.component @topic={{@topic}} />
+          <this.activeTab.component @topic={{@topic}} />
         </div>
 
         {{#if @topic.suggestedTopics.length}}
