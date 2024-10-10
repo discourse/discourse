@@ -1167,8 +1167,7 @@ RSpec.describe ApplicationController do
 
     it "is included when user API key is rate limited" do
       global_setting :max_user_api_reqs_per_minute, 1
-      user_api_key =
-        UserApiKey.create!(user_id: admin.id, client_id: "", application_name: "discourseapp")
+      user_api_key = UserApiKey.create!(user_id: admin.id)
       user_api_key.scopes =
         UserApiKeyScope.all_scopes.keys.map do |name|
           UserApiKeyScope.create!(name: name, user_api_key_id: user_api_key.id)
