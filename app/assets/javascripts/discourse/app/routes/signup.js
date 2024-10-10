@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class SignupRoute extends DiscourseRoute {
@@ -10,6 +11,8 @@ export default class SignupRoute extends DiscourseRoute {
   beforeModel() {
     if (!this.siteSettings.experimental_full_page_login) {
       this.showCreateAccount();
+    } else if (this.siteSettings.invite_only) {
+      this.router.replaceWith(`/${defaultHomepage()}`).followRedirects();
     }
   }
 
