@@ -16,7 +16,10 @@ class ThemeField < ActiveRecord::Base
   validate :migration_filename_is_valid, if: :migration_field?
 
   after_save do
-    if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
+    if (
+         self.type_id == ThemeField.types[:theme_screenshot_upload_var] ||
+           self.type_id == ThemeField.types[:theme_upload_var]
+       ) && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
     end
   end
@@ -69,6 +72,7 @@ class ThemeField < ActiveRecord::Base
         theme_var: 4, # No longer used
         yaml: 5,
         js: 6,
+        theme_screenshot_upload_var: 7,
       )
   end
 
