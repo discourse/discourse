@@ -1909,7 +1909,7 @@ RSpec.describe User do
   describe "hash_passwords" do
     let(:too_long) { "x" * (User.max_password_length + 1) }
 
-    def hash(password, salt, algorithm = User::TARGET_PASSWORD_ALGORITHM)
+    def hash(password, salt, algorithm = UserPassword::TARGET_PASSWORD_ALGORITHM)
       User.new.send(:hash_password, password, salt, algorithm)
     end
 
@@ -1930,17 +1930,17 @@ RSpec.describe User do
     end
 
     it "uses the target algorithm for new users" do
-      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
     end
 
     it "can use an older algorithm to verify existing passwords, then upgrade" do
       old_algorithm = "$pbkdf2-sha256$i=5,l=32$"
-      expect(old_algorithm).not_to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(old_algorithm).not_to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
 
       password = "poutine"
       old_hash = hash(password, user.salt, old_algorithm)
 
-      user.update!(password_algorithm: old_algorithm, password_hash: old_hash)
+      user.user_password.update_columns(password_algorithm: old_algorithm, password_hash: old_hash)
 
       expect(user.password_algorithm).to eq(old_algorithm)
       expect(user.password_hash).to eq(old_hash)
@@ -1954,13 +1954,13 @@ RSpec.describe User do
       expect(user.confirm_password?(password)).to eq(true)
 
       # Auto-upgrades to new algorithm
-      expected_new_hash = hash(password, user.salt, User::TARGET_PASSWORD_ALGORITHM)
-      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expected_new_hash = hash(password, user.salt, UserPassword::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
       expect(user.password_hash).to eq(expected_new_hash)
 
       # And persists to the db
       user.reload
-      expect(user.password_algorithm).to eq(User::TARGET_PASSWORD_ALGORITHM)
+      expect(user.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
       expect(user.password_hash).to eq(expected_new_hash)
 
       # And can still log in

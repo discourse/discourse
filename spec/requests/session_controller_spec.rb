@@ -2023,19 +2023,10 @@ RSpec.describe SessionController do
       end
 
       describe "when user's password has been marked as expired" do
-        let!(:expired_user_password) do
-          Fabricate(
-            :expired_user_password,
-            user:,
-            password: "myawesomepassword",
-            password_salt: user.salt,
-            password_algorithm: user.password_algorithm,
-          )
-        end
-
         before { RateLimiter.enable }
 
         it "should return an error response code with the right error message" do
+          UserPasswordExpirer.expire_user_password(user)
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)

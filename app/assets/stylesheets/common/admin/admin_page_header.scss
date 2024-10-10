@@ -7,8 +7,12 @@
     margin-bottom: var(--space-2);
 
     h1,
-    h3 {
+    h2 {
       margin: 0;
+    }
+
+    h2 {
+      font-size: var(--font-up-2);
     }
 
     .admin-page-header__actions {

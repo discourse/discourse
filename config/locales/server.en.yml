@@ -770,7 +770,6 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
-              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -780,6 +779,15 @@ en:
             ip_address:
               blocked: "New registrations are not allowed from your IP address."
               max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+        user_password:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
+              same_as_current: "is the same as your current password."
+              same_as_name: "is the same as your name."
+              unique_characters: "has too many repeated characters. Please use a more secure password."
         user_profile:
           attributes:
             featured_topic_id:

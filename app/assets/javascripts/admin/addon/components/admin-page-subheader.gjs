@@ -38,7 +38,7 @@ export default class AdminPageSubheader extends Component {
   <template>
     <div class="admin-page-subheader">
       <div class="admin-page-subheader__title-row">
-        <h3 class="admin-page-subheader__title">{{this.title}}</h3>
+        <h2 class="admin-page-subheader__title">{{this.title}}</h2>
         {{#if (has-block "actions")}}
           <div class="admin-page-subheader__actions">
             {{#if this.site.mobileView}}
