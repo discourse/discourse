@@ -776,6 +776,23 @@ Specifies the type of alert. Allowed types: `success`, `error`, `warning`, or `i
 </form.Alert>
 ```
 
+## Checkbox Group
+
+`CheckboxGroup` allows grouping checkboxes together.
+
+**Example**
+
+```hbs
+<form.CheckboxGroup @title="Preferences" as |group|>
+  <group.Field @name="editable" @title="Editable" as |field|>
+    <field.Checkbox />
+  </group.Field>
+  <group.Field @name="searchable" @title="Searchable" as |field|>
+    <field.Checkbox />
+  </group.Field>
+</form.CheckboxGroup>
+```
+
 ## Container
 
 `Container` allows you to render a block similar to a field without tying it to specific data. It is useful for custom controls.
