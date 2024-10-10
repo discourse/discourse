@@ -71,26 +71,11 @@ export default class GlimmerSiteHeader extends Component {
 
   @bind
   updateHeaderOffset() {
-    // Safari likes overscolling the page (on both iOS and macOS).
-    // This shows up as a negative value in window.scrollY.
-    // We can use this to offset the headerWrap's top offset to avoid
-    // jitteriness and bad positioning.
-    // const windowOverscroll = Math.min(0, window.scrollY);
     let mainOutletOffsetTop = Math.max(
       0,
       Math.floor(this._mainOutletWrapper.getBoundingClientRect().top) -
         this._headerWrap.offsetHeight
     );
-
-    console.log(mainOutletOffsetTop);
-    // The headerWrap's top offset can also be a negative value on Safari,
-    // because of the changing height of the viewport (due to the URL bar).
-    // For our use case, it's best to ensure this is clamped to 0.
-    // const headerWrapTop = Math.max(
-    //   0,
-    //   Math.floor(this._headerWrap.getBoundingClientRect().top)
-    // );
-    // let offsetTop = headerWrapTop + windowOverscroll;
 
     if (DEBUG && isTesting()) {
       mainOutletOffsetTop -= document
@@ -110,7 +95,7 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  _onScroll() {
+  _recalculateHeaderOffset() {
     schedule("afterRender", this.updateHeaderOffset);
   }
 
@@ -137,9 +122,11 @@ export default class GlimmerSiteHeader extends Component {
         );
       });
 
-      window.addEventListener("scroll", this._onScroll, {
+      window.addEventListener("scroll", this._recalculateHeaderOffset, {
         passive: true,
       });
+
+      this.appEvents.on("page:changed", this, this._recalculateHeaderOffset);
 
       this._itsatrap = new ItsATrap(this.headerElement);
       const dirs = ["up", "down"];
@@ -418,7 +405,8 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
-    window.removeEventListener("scroll", this._onScroll);
+    window.removeEventListener("scroll", this._recalculateHeaderOffset);
+    this.appEvents.off("page:changed", this, this._recalculateHeaderOffset);
     this._resizeObserver?.disconnect();
   }
 
