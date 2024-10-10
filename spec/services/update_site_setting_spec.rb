@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UpdateSiteSetting do
-  subject(:result) { described_class.call(params) }
+  subject(:result) { described_class.call(params:, options:, **dependencies) }
 
   describe described_class::Contract, type: :model do
     subject(:contract) { described_class.new }
@@ -10,7 +10,9 @@ RSpec.describe UpdateSiteSetting do
   end
 
   fab!(:admin)
-  let(:params) { { setting_name:, new_value:, guardian:, allow_changing_hidden: } }
+  let(:params) { { setting_name:, new_value: } }
+  let(:options) { { allow_changing_hidden: } }
+  let(:dependencies) { { guardian: } }
   let(:setting_name) { :title }
   let(:new_value) { "blah whatever" }
   let(:guardian) { admin.guardian }

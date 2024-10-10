@@ -21,13 +21,14 @@ RSpec.describe User::Suspend do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
     fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
 
-    let(:params) { { guardian:, user_id:, reason:, suspend_until:, other_user_ids:, message: } }
+    let(:params) { { user_id:, reason:, suspend_until:, other_user_ids:, message: } }
+    let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
     let(:user_id) { user.id }
     let(:other_user_ids) { other_user.id }

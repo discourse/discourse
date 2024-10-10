@@ -3,11 +3,15 @@
 class UpdateSiteSetting
   include Service::Base
 
+  options do
+    # to have syntax tree leave this as a block
+    attribute :allow_changing_hidden, :boolean, default: false
+  end
+
   policy :current_user_is_admin
   contract do
     attribute :setting_name
     attribute :new_value
-    attribute :allow_changing_hidden, :boolean, default: false
 
     before_validation { self.setting_name = setting_name&.to_sym }
 
@@ -24,8 +28,8 @@ class UpdateSiteSetting
     guardian.is_admin?
   end
 
-  def setting_is_visible(contract:)
-    contract.allow_changing_hidden || !SiteSetting.hidden_settings.include?(contract.setting_name)
+  def setting_is_visible(contract:, options:)
+    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(contract.setting_name)
   end
 
   def setting_is_configurable(contract:)

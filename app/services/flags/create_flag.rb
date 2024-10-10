@@ -26,23 +26,16 @@ class Flags::CreateFlag
 
   private
 
-  def unique_name(name:)
-    !Flag.custom.where(name: name).exists?
-  end
-
-  def instantiate_flag(name:, description:, applies_to:, require_message:, enabled:)
-    Flag.new(
-      name: name,
-      description: description,
-      applies_to: applies_to,
-      require_message: require_message,
-      enabled: enabled,
-      notify_type: true,
-    )
-  end
-
   def invalid_access(guardian:)
     guardian.can_create_flag?
+  end
+
+  def unique_name(contract:)
+    !Flag.custom.where(name: contract.name).exists?
+  end
+
+  def instantiate_flag(contract:)
+    Flag.new(contract.attributes.merge(notify_type: true))
   end
 
   def create(flag:)

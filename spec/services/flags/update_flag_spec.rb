@@ -1,22 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe(Flags::UpdateFlag) do
-  subject(:result) do
-    described_class.call(
-      id: flag.id,
-      guardian: current_user.guardian,
-      name: name,
-      description: description,
-      applies_to: applies_to,
-      require_message: require_message,
-      enabled: enabled,
-    )
-  end
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:flag)
 
-  after { flag.destroy }
-
+  let(:params) { { id: flag.id, name:, description:, applies_to:, require_message:, enabled: } }
+  let(:dependencies) { { guardian: current_user.guardian } }
   let(:name) { "edited custom flag name" }
   let(:description) { "edited custom flag description" }
   let(:applies_to) { ["Topic"] }
@@ -80,11 +70,13 @@ RSpec.describe(Flags::UpdateFlag) do
 
     it "updates the flag" do
       result
-      expect(flag.reload.name).to eq("edited custom flag name")
-      expect(flag.description).to eq("edited custom flag description")
-      expect(flag.applies_to).to eq(["Topic"])
-      expect(flag.require_message).to be true
-      expect(flag.enabled).to be false
+      expect(flag.reload).to have_attributes(
+        name: "edited custom flag name",
+        description: "edited custom flag description",
+        applies_to: ["Topic"],
+        require_message: true,
+        enabled: false,
+      )
     end
 
     it "logs the action" do

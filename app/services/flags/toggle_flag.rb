@@ -3,13 +3,13 @@
 class Flags::ToggleFlag
   include Service::Base
 
+  policy :invalid_access
   contract do
     attribute :flag_id, :integer
 
     validates :flag_id, presence: true
   end
   model :flag
-  policy :invalid_access
   transaction do
     step :toggle
     step :log
@@ -17,12 +17,12 @@ class Flags::ToggleFlag
 
   private
 
-  def fetch_flag(flag_id:)
-    Flag.find(flag_id)
-  end
-
   def invalid_access(guardian:)
     guardian.can_toggle_flag?
+  end
+
+  def fetch_flag(contract:)
+    Flag.find_by(id: contract.flag_id)
   end
 
   def toggle(flag:)

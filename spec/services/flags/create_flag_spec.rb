@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe(Flags::CreateFlag) do
-  subject(:result) do
-    described_class.call(
-      guardian: current_user.guardian,
-      name: name,
-      description: description,
-      applies_to: applies_to,
-      require_message: require_message,
-      enabled: enabled,
-    )
-  end
+  subject(:result) { described_class.call(params:, **dependencies) }
 
+  let(:params) { { name:, description:, applies_to:, require_message:, enabled: } }
+  let(:dependencies) { { guardian: current_user.guardian } }
   let(:name) { "custom flag name" }
   let(:description) { "custom flag description" }
   let(:applies_to) { ["Topic"] }
@@ -26,11 +19,9 @@ RSpec.describe(Flags::CreateFlag) do
 
   context "when title is not unique" do
     fab!(:current_user) { Fabricate(:admin) }
-    fab!(:flag) { Fabricate(:flag, name: "custom flag name") }
+    let!(:flag) { Fabricate(:flag, name: "custom flag name") }
 
     it { is_expected.to fail_a_policy(:unique_name) }
-
-    after { Flag.destroy_by(name: "custom flag name") }
   end
 
   context "when applies to is invalid" do
@@ -71,6 +62,7 @@ RSpec.describe(Flags::CreateFlag) do
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
     let(:applies_to) { ["Topic::Custom"] }
+    let(:flag) { Flag.last }
 
     before do
       DiscoursePluginRegistry.register_flag_applies_to_type(
@@ -79,18 +71,18 @@ RSpec.describe(Flags::CreateFlag) do
       )
     end
 
-    after { Flag.destroy_by(name: "custom flag name") }
-
     it { is_expected.to run_successfully }
 
     it "creates the flag" do
-      result
-      flag = Flag.last
-      expect(flag.name).to eq("custom flag name")
-      expect(flag.description).to eq("custom flag description")
-      expect(flag.applies_to).to eq(["Topic::Custom"])
-      expect(flag.require_message).to be true
-      expect(flag.enabled).to be true
+      expect { result }.to change { Flag.count }.by(1)
+      expect(flag).to have_attributes(
+        name: "custom flag name",
+        description: "custom flag description",
+        applies_to: ["Topic::Custom"],
+        require_message: true,
+        enabled: true,
+        notify_type: true,
+      )
     end
 
     it "logs the action" do
