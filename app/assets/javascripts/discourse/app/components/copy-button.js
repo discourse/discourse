@@ -9,6 +9,12 @@ export default class CopyButton extends Component {
   copyIcon = "copy";
   copyClass = "btn-primary";
 
+  init() {
+    super.init(...arguments);
+
+    this.copyTranslatedLabel = this.translatedLabel;
+  }
+
   @bind
   _restoreButton() {
     if (this.isDestroying || this.isDestroyed) {
@@ -17,6 +23,7 @@ export default class CopyButton extends Component {
 
     this.set("copyIcon", "copy");
     this.set("copyClass", "btn-primary");
+    this.set("copyTranslatedLabel", this.translatedLabel);
   }
 
   @action
@@ -34,6 +41,7 @@ export default class CopyButton extends Component {
 
       this.set("copyIcon", "check");
       this.set("copyClass", "btn-primary ok");
+      this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
 
       discourseDebounce(this._restoreButton, 3000);
     } catch (err) {}

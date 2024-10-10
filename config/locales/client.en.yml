@@ -1962,14 +1962,25 @@ en:
           error: "There was an error generating Invite link"
 
         invite:
-          new_title: "Create Invite"
+          new_title: "Invite members"
           edit_title: "Edit Invite"
 
           instructions: "Share this link to instantly grant access to this site:"
-          copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
-
+          create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
+          copy_link_and_share_it: "Copy the link below and share it to instantly grant access to this site."
+          copy_link: "Copy Link"
+          link_copied: "Link Copied!"
+          link_validity_MF: |
+            Link is valid for up to { user_count, plural,
+                one {# user}
+              other {# users}
+            } and expires in { duration_days, plural,
+                one {# day}
+              other {# days}
+            }.
+          edit_link_options: "Edit link options."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -1981,13 +1992,18 @@ en:
           max_redemptions_allowed: "Max uses"
 
           add_to_groups: "Add to groups"
+          cannot_invite_predefined_groups: |
+            Note: You can't invite users directly to predefined groups (e.g. trust level, admins, moderators, staff). Configure a <a href="%{path}">custom group</a> and set the desired trust level in the group's Effect section.
           invite_to_topic: "Arrive at topic"
           expires_at: "Expire after"
-          custom_message: "Optional personal message"
+          custom_message: "Custom message"
+          custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save Invite"
+          save_invite: "Save"
+          cancel: "Cancel"
+          create_link: "Create Link"
 
           invite_saved: "Invite saved."
 
