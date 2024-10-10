@@ -11,7 +11,7 @@ export default {
         name: i18n("related_messages.pill"),
         context: "pm",
         component: RelatedMessages,
-        condition: ({ topic }) => topic.relatedMessages.length > 0,
+        condition: ({ topic }) => topic.relatedMessages?.length > 0,
       });
 
       api.registerMoreTopicsTab({
@@ -19,7 +19,7 @@ export default {
         name: i18n("suggested_topics.pill"),
         context: "*",
         component: SuggestedTopics,
-        condition: ({ topic }) => topic.suggestedTopics.length > 0,
+        condition: ({ topic }) => topic.suggestedTopics?.length > 0,
       });
 
       // a plugin example:
