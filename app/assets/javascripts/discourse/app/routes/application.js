@@ -1,9 +1,9 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import CreateAccount from "discourse/components/modal/create-account";
-import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
+import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
@@ -20,7 +20,6 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
-import NotActivatedModal from "../components/modal/not-activated";
 
 function isStrictlyReadonly(site) {
   return site.isReadOnly && !site.isStaffWritesOnly;
@@ -208,11 +207,6 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  showForgotPassword() {
-    this.modal.show(ForgotPassword);
-  }
-
-  @action
   showNotActivated(props) {
     this.modal.show(NotActivatedModal, { model: props });
   }
@@ -303,6 +297,10 @@ export default class ApplicationRoute extends DiscourseRoute {
     } else {
       if (this.isOnlyOneExternalLoginMethod) {
         this.login.externalLogin(this.externalLoginMethods[0]);
+      } else if (this.siteSettings.experimental_full_page_login) {
+        this.router.transitionTo("login").then((login) => {
+          login.controller.set("canSignUp", this.controller.canSignUp);
+        });
       } else {
         this.modal.show(LoginModal, {
           model: {
@@ -324,6 +322,12 @@ export default class ApplicationRoute extends DiscourseRoute {
         // we will automatically redirect to the external auth service
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
+        });
+      } else if (this.siteSettings.experimental_full_page_login) {
+        this.router.transitionTo("signup").then((signup) => {
+          Object.keys(createAccountProps || {}).forEach((key) => {
+            signup.controller.set(key, createAccountProps[key]);
+          });
         });
       } else {
         this.modal.show(CreateAccount, { model: createAccountProps });

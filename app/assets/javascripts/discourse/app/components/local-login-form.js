@@ -11,7 +11,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import I18n from "discourse-i18n";
 
-export default class LocalLoginBody extends Component {
+export default class LocalLoginForm extends Component {
   @service modal;
 
   @tracked maskPassword = true;
@@ -24,10 +24,8 @@ export default class LocalLoginBody extends Component {
       : "";
   }
 
-  get secondFactorClass() {
-    return this.args.showSecondFactor || this.args.showSecurityKey
-      ? ""
-      : "hidden";
+  get showSecondFactorForm() {
+    return this.args.showSecondFactor || this.args.showSecurityKey;
   }
 
   get disableLoginFields() {

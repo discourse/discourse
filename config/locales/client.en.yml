@@ -2337,6 +2337,7 @@ en:
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
       already_have_account: "Already have an account?"
+      no_account_yet: "Don't have an account?"
       progress_bar:
         signup: "Sign Up"
         activate: "Activate"
@@ -2378,7 +2379,7 @@ en:
     login:
       header_title: "Welcome back"
       subheader_title: "Log in to your account"
-      title: "Log in"
+      title: "Log In"
       username: "User"
       password: "Password"
       show_password: "Show"

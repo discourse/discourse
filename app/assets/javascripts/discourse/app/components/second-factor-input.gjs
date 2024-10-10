@@ -1,7 +1,19 @@
 import Component from "@glimmer/component";
+import { schedule } from "@ember/runloop";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 
 export default class SecondFactorInput extends Component {
+  constructor() {
+    super(...arguments);
+    this._focusInput();
+  }
+
+  _focusInput() {
+    schedule("afterRender", () => {
+      document.querySelector(".second-factor-token-input").focus();
+    });
+  }
+
   get isTotp() {
     return this.args.secondFactorMethod === SECOND_FACTOR_METHODS.TOTP;
   }
