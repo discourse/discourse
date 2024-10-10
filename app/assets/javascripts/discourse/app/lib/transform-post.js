@@ -53,7 +53,7 @@ export function transformBasicPost(post) {
     title_is_group: post.title_is_group,
     created_at: post.created_at,
     updated_at: post.updated_at,
-    // canDelete: post.can_delete,
+    canDelete: post.can_delete,
     canPermanentlyDelete: false,
     showFlagDelete: false,
     canRecover: post.can_recover,
