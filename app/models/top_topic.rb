@@ -212,6 +212,8 @@ class TopTopic < ActiveRecord::Base
     SQL
 
     DB.exec(sql, from: start_of(period))
+
+    DiscourseEvent.trigger(:top_score_computed, period: period)
   end
 
   def self.start_of(period)

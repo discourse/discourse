@@ -12,8 +12,8 @@ class CategoryList
   attr_accessor :categories, :uncategorized
 
   def self.register_included_association(association)
-    @included_assocations ||= []
-    @included_assocations << association if !@included_assocations.include?(association)
+    @included_associations ||= []
+    @included_associations << association if !@included_associations.include?(association)
   end
 
   def self.included_associations
@@ -24,7 +24,7 @@ class CategoryList
       :uploaded_logo_dark,
       :topic_only_relative_url,
       subcategories: [:topic_only_relative_url],
-    ].concat(@included_assocations || [])
+    ].concat(@included_associations || [])
   end
 
   def initialize(guardian = nil, options = {})

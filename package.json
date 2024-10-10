@@ -34,7 +34,7 @@
     "moment-timezone": "0.5.45",
     "pikaday": "1.8.2",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^23.5.1",
+    "puppeteer-core": "^23.5.2",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "terser": "^5.34.1",
     "typescript": "^5.6.3"
@@ -66,10 +66,10 @@
     "patchedDependencies": {
       "ember-this-fallback@0.4.0": "patches/ember-this-fallback@0.4.0.patch",
       "babel-plugin-debug-macros@0.3.4": "patches/babel-plugin-debug-macros@0.3.4.patch",
-      "decorator-transforms@2.0.0": "patches/decorator-transforms@2.0.0.patch",
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
       "licensee@11.1.0": "patches/licensee@11.1.0.patch",
-      "content-tag@2.0.2": "patches/content-tag@2.0.2.patch"
+      "content-tag@2.0.2": "patches/content-tag@2.0.2.patch",
+      "decorator-transforms@2.2.2": "patches/decorator-transforms@2.2.2.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

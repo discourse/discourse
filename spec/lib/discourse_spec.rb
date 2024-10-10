@@ -48,14 +48,14 @@ RSpec.describe Discourse do
     context "with a non standard port specified" do
       before { SiteSetting.port = 3000 }
 
-      it "returns the non standart port in the base url" do
+      it "returns the non standard port in the base url" do
         expect(Discourse.base_url).to eq("http://foo.com:3000")
       end
     end
   end
 
   describe "asset_filter_options" do
-    it "obmits path if request is missing" do
+    it "omits path if request is missing" do
       opts = Discourse.asset_filter_options(:js, nil)
       expect(opts[:path]).to be_blank
     end
