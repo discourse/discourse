@@ -71,7 +71,7 @@ RSpec.describe Promotion do
       it "allows plugins to control promotion #recalculate" do
         DiscoursePluginRegistry.register_modifier(plugin, recalculate_modifier, &deny_block)
         action = Promotion.recalculate(user)
-        expect(action).to eq(false)
+        expect(action).to eq(nil)
 
         DiscoursePluginRegistry.register_modifier(plugin, recalculate_modifier, &allow_block)
         action = Promotion.recalculate(user)
