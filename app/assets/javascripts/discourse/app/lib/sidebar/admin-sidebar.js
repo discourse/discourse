@@ -1,6 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -11,7 +12,6 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
-import { adminRouteValid } from "admin/models/admin-plugin";
 
 let additionalAdminSidebarSectionLinks = {};
 
