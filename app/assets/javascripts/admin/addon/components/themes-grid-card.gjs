@@ -83,12 +83,6 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  updateToLatest() {
-    // TODO (martin)
-    // update theme to latest version
-  }
-
-  @action
   showPreview() {
     // TODO (martin)
     // bring admin to theme preview of site
