@@ -155,7 +155,13 @@ task "users:disable_2fa", [:username] => [:environment] do |_, args|
   username = args[:username]
   user = find_user(username)
   UserSecondFactor.where(user_id: user.id, method: UserSecondFactor.methods[:totp]).each(&:destroy!)
-  UserSecurityKey.where(user_id: user.id).destroy_all
+  UserSecurityKey.where(
+    user_id: user.id,
+    factor_type: UserSecurityKey.factor_types[:second_factor],
+  ).destroy_all
+  UserSecondFactor.where(user_id: user.id, method: UserSecondFactor.methods[:backup_codes]).each(
+    &:destroy!
+  )
   puts "2FA disabled for #{username}"
 end
 
