@@ -7,6 +7,7 @@ module PageObjects
       include RSpec::Matchers
 
       BODY_SELECTOR = ""
+      MODAL_SELECTOR = ""
 
       def body
         find(".d-modal__body#{BODY_SELECTOR}")
@@ -37,11 +38,11 @@ module PageObjects
       end
 
       def open?
-        has_css?(".modal.d-modal")
+        has_css?(".modal.d-modal#{MODAL_SELECTOR}")
       end
 
       def closed?
-        has_no_css?(".modal.d-modal")
+        has_no_css?(".modal.d-modal#{MODAL_SELECTOR}")
       end
     end
   end

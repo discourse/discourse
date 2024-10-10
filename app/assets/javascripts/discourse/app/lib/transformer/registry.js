@@ -11,4 +11,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "header-notifications-avatar-size",
   "home-logo-href",
   "home-logo-image-url",
+  "post-menu-registered-buttons",
 ]);

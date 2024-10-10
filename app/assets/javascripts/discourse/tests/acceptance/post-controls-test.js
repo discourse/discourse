@@ -30,7 +30,9 @@ acceptance("Post controls", function () {
       "show likes button is now pressed"
     );
 
-    const likesContainer = query("#post_2 .small-user-list.who-liked");
+    const likesContainer = query(
+      "#post_2 .small-user-list.who-liked .small-user-list-content"
+    );
     assert.equal(
       likesContainer.getAttribute("role"),
       "list",

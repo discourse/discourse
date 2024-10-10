@@ -236,6 +236,7 @@ export default class BookmarkMenu extends Component {
   <template>
     <DMenu
       {{didInsert this.setReminderShortcuts}}
+      ...attributes
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
       class={{this.buttonClasses}}
