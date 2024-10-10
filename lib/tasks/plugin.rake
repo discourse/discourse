@@ -184,7 +184,7 @@ task "plugin:install_gems", :plugin do |t, args|
   puts "Done"
 end
 
-def spec(plugin, parallel: false, argv: nil)
+def spec(plugin, files, parallel: false, argv: nil)
   params = []
   params << "--profile" if !parallel
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
@@ -192,8 +192,12 @@ def spec(plugin, parallel: false, argv: nil)
   params << argv if argv
 
   # reject system specs as they are slow and need dedicated setup
-  files =
-    Dir.glob("plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
+  if files.empty?
+    files =
+      Dir.glob("plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
+  else
+    files = files.split(" ")
+  end
 
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
@@ -209,15 +213,15 @@ def spec(plugin, parallel: false, argv: nil)
 end
 
 desc "run plugin specs"
-task "plugin:spec", %i[plugin argv] do |_, args|
-  args.with_defaults(plugin: "*")
-  spec(args[:plugin], argv: args[:argv])
+task "plugin:spec", %i[plugin argv files] do |_, args|
+  args.with_defaults(plugin: "*", files: "")
+  spec(args[:plugin], args[:files], argv: args[:argv])
 end
 
 desc "run plugin specs in parallel"
-task "plugin:turbo_spec", %i[plugin argv] do |_, args|
-  args.with_defaults(plugin: "*")
-  spec(args[:plugin], parallel: true, argv: args[:argv])
+task "plugin:turbo_spec", %i[plugin argv files] do |_, args|
+  args.with_defaults(plugin: "*", files: "")
+  spec(args[:plugin], args[:files], parallel: true, argv: args[:argv])
 end
 
 desc "run plugin qunit tests"
