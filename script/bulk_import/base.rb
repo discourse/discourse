@@ -1908,7 +1908,7 @@ class BulkImport::Base
     message[:id] = @last_chat_message_id += 1
     message[:user_id] ||= Discourse::SYSTEM_USER_ID
     message[:last_editor_id] ||= message[:user_id]
-    message[:message] = (message[:message] || "").scrub.strip.presence || "<Empty imported message>"
+    message[:message] = (message[:message] || "").scrub.strip
     message[:message] = normalize_text(message[:message])
     message[:cooked] = ::Chat::Message.cook(message[:message], user_id: message[:last_editor_id])
     message[:cooked_version] = ::Chat::Message::BAKED_VERSION
