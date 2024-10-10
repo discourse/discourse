@@ -7,16 +7,13 @@
   }
 
   &__label {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    gap: 0.5rem;
+    @include ellipsis;
   }
 
   .emoji {
     height: 1em;
     width: 1em;
-    vertical-align: baseline;
+    vertical-align: middle;
   }
 
   .chat-channel-unread-indicator {
