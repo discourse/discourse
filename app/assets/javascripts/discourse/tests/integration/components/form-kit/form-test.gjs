@@ -187,7 +187,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().reset();
 
-    assert.form().field("foo").hasNoError("it resets the errors");
+    assert.form().field("foo").hasNoErrors("it resets the errors");
   });
 
   test("immutable by default", async function (assert) {
