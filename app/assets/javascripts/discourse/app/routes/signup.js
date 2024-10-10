@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class SignupRoute extends DiscourseRoute {
@@ -9,16 +8,15 @@ export default class SignupRoute extends DiscourseRoute {
   @service siteSettings;
 
   beforeModel() {
-    if (!this.siteSettings.experimental_full_page_login) {
-      this.showCreateAccount();
-    } else if (this.siteSettings.invite_only) {
-      this.router.replaceWith(`/${defaultHomepage()}`).followRedirects();
-    }
+    this.showCreateAccount();
   }
 
   @action
   async showCreateAccount() {
     const { canSignUp } = this.controllerFor("application");
+    if (canSignUp && this.siteSettings.experimental_full_page_login) {
+      return;
+    }
     const route = await this.router
       .replaceWith(
         this.siteSettings.login_required ? "login" : "discovery.latest"
