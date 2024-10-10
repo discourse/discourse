@@ -115,7 +115,6 @@ export default class ValueList extends Component {
   }
 
   _saveValues() {
-    console.log(this.onChange, this.args);
     if (this.onChange) {
       this.onChange([...this.collection]);
       return;

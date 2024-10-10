@@ -9,6 +9,7 @@
       <form.Field
         @name="field_type"
         @title={{i18n "admin.user_fields.type"}}
+        @format="large"
         @validation="required"
         as |field|
       >
@@ -24,6 +25,7 @@
       <form.Field
         @name="name"
         @title={{i18n "admin.user_fields.name"}}
+        @format="large"
         @validation="required"
         as |field|
       >
@@ -33,10 +35,11 @@
       <form.Field
         @name="description"
         @title={{i18n "admin.user_fields.description"}}
+        @format="large"
         @validation="required"
         as |field|
       >
-        <field.Input maxlength="1000" />
+        <field.Input class="user-field-desc" maxlength="1000" />
       </form.Field>
 
       {{#if
@@ -128,7 +131,11 @@
       </form.CheckboxGroup>
 
       <form.Actions>
-        <form.Submit @icon="check" @label="admin.user_fields.save" />
+        <form.Submit
+          class="save"
+          @icon="check"
+          @label="admin.user_fields.save"
+        />
         <form.Button
           @action={{this.cancel}}
           @label="admin.user_fields.cancel"
