@@ -67,9 +67,9 @@
     <div class="control-group advanced-search-topics-posts">
       <div class="controls">
         <fieldset class="grouped-control">
-          <legend class="grouped-control-label">{{i18n
-              "search.advanced.filters.label"
-            }}</legend>
+          <legend class="grouped-control-label">
+            {{i18n "search.advanced.filters.label"}}
+          </legend>
 
           {{#if this.currentUser}}
             <div class="grouped-control-field">
@@ -145,6 +145,27 @@
                 }}</label>
             </div>
           {{/if}}
+
+          {{#each this.inSpecialOptions as |option|}}
+            <div class="grouped-control-field">
+              <Input
+                id={{concat "matching-in-" option.value}}
+                @type="checkbox"
+                class={{concat "in-" option.value}}
+                @checked={{get this.searchedTerms.special.in option.value}}
+                {{on
+                  "click"
+                  (fn this.onChangeSearchTermForSpecialIn option.value)
+                }}
+              />
+              <label
+                class="checkbox-label"
+                for={{concat "matching-in-" option.value}}
+              >
+                {{option.name}}
+              </label>
+            </div>
+          {{/each}}
 
           <ComboBox
             @id="in"

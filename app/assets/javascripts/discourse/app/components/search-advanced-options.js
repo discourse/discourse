@@ -7,6 +7,7 @@ import {
 } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import escapeRegExp from "discourse-common/utils/escape-regexp";
 import I18n from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
@@ -93,6 +94,13 @@ export default class SearchAdvancedOptions extends Component {
   init() {
     super.init(...arguments);
 
+    const allInOptions = this.currentUser
+      ? inOptionsForUsers().concat(inOptionsForAll())
+      : inOptionsForAll();
+
+    const inOptions = allInOptions.filter((option) => !option.special);
+    const inSpecialOptions = allInOptions.filter((option) => option.special);
+
     this.setProperties({
       searchedTerms: {
         username: null,
@@ -118,9 +126,8 @@ export default class SearchAdvancedOptions extends Component {
           days: null,
         },
       },
-      inOptions: this.currentUser
-        ? inOptionsForUsers().concat(inOptionsForAll())
-        : inOptionsForAll(),
+      inOptions,
+      inSpecialOptions,
       statusOptions: statusOptions(),
       postTimeOptions: postTimeOptions(),
       showAllTagsCheckbox: false,
@@ -161,6 +168,13 @@ export default class SearchAdvancedOptions extends Component {
     this.setSearchedTermSpecialInValue(
       "searchedTerms.special.in.seen",
       REGEXP_SPECIAL_IN_SEEN_MATCH
+    );
+
+    this.inSpecialOptions.forEach((option) =>
+      this.setSearchedTermSpecialInValue(
+        `searchedTerms.special.in.${option.value}`,
+        new RegExp(`^in:${escapeRegExp(option.value)}$`, "gi")
+      )
     );
 
     let regExpStatusMatch = this.statusOptions
@@ -481,6 +495,12 @@ export default class SearchAdvancedOptions extends Component {
     this.set("searchedTerms.special.in.title", checked);
     this.updateInRegex(REGEXP_SPECIAL_IN_TITLE_MATCH, "title");
   }
+
+  @action
+  onChangeSearchTermForSpecialIn(name, evt) {
+    this.set("searchedTerms.special.in." + name, evt.target.checked);
+    this.updateInRegex(new RegExp(`^in:${escapeRegExp(name)}$`, "gi"), name);
+  },
 
   @action
   onChangeSearchedTermField(path, updateFnName, value) {
