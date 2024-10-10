@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -24,15 +25,34 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
+import DAG from "discourse/lib/dag";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+
+export function createColumns() {
+  const columns = new DAG();
+  columns.add("topic-list-before-columns");
+  columns.add("bulk-select");
+  columns.add("topic");
+  columns.add("topic-list-after-main-link");
+  columns.add("posters");
+  columns.add("replies");
+  columns.add("likes");
+  columns.add("op-likes");
+  columns.add("views");
+  columns.add("activity");
+  columns.add("topic-list-after-columns");
+  return columns;
+}
 
 export default class TopicListItem extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;
+  @service topicTrackingState;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
@@ -76,6 +96,26 @@ export default class TopicListItem extends Component {
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
+  }
+
+  @cached
+  get columns() {
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-item-columns",
+      createColumns(),
+      context
+    );
   }
 
   navigateToTopic(topic, href) {
@@ -213,78 +253,75 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{! TODO: column DAG "topic-list-before-columns" }}
-
-        {{#if @bulkSelectEnabled}}
-          <td class="bulk-select topic-list-data">
-            <label for="bulk-select-{{@topic.id}}">
-              <input
-                {{on "click" this.onBulkSelectToggle}}
-                checked={{this.isSelected}}
-                type="checkbox"
-                id="bulk-select-{{@topic.id}}"
-                class="bulk-select"
+        {{#each (this.columns.resolve) as |entry|}}
+          {{#if entry.value}}
+            <entry.value @topic={{@topic}} />
+          {{else if (eq entry.key "bulk-select")}}
+            {{#if @bulkSelectEnabled}}
+              <td class="bulk-select topic-list-data">
+                <label for="bulk-select-{{@topic.id}}">
+                  <input
+                    {{on "click" this.onBulkSelectToggle}}
+                    checked={{this.isSelected}}
+                    type="checkbox"
+                    id="bulk-select-{{@topic.id}}"
+                    class="bulk-select"
+                  />
+                </label>
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "topic")}}
+            <TopicCell
+              @topic={{@topic}}
+              @showTopicPostBadges={{@showTopicPostBadges}}
+              @hideCategory={{@hideCategory}}
+              @tagsForUser={{@tagsForUser}}
+              @expandPinned={{this.expandPinned}}
+            />
+          {{else if (eq entry.key "posters")}}
+            {{#if @showPosters}}
+              <PostersColumn @posters={{@topic.featuredUsers}} />
+            {{/if}}
+          {{else if (eq entry.key "replies")}}
+            <PostsCountColumn @topic={{@topic}} />
+          {{else if (eq entry.key "likes")}}
+            {{#if @showLikes}}
+              <td class="num likes topic-list-data">
+                {{#if (gt @topic.like_count 0)}}
+                  <a href={{@topic.summaryUrl}}>
+                    {{number @topic.like_count}}
+                    {{icon "heart"}}
+                  </a>
+                {{/if}}
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "op-likes")}}
+            {{#if @showOpLikes}}
+              <td class="num likes">
+                {{#if (gt @topic.op_like_count 0)}}
+                  <a href={{@topic.summaryUrl}}>
+                    {{number @topic.op_like_count}}
+                    {{icon "heart"}}
+                  </a>
+                {{/if}}
+              </td>
+            {{/if}}
+          {{else if (eq entry.key "views")}}
+            <td
+              class={{concatClass "num views topic-list-data" @topic.viewsHeat}}
+            >
+              <PluginOutlet
+                @name="topic-list-before-view-count"
+                @outletArgs={{hash topic=@topic}}
               />
-            </label>
-          </td>
-        {{/if}}
-
-        <TopicCell
-          @topic={{@topic}}
-          @showTopicPostBadges={{@showTopicPostBadges}}
-          @hideCategory={{@hideCategory}}
-          @tagsForUser={{@tagsForUser}}
-          @expandPinned={{this.expandPinned}}
-        />
-
-        <PluginOutlet
-          @name="topic-list-after-main-link"
-          @outletArgs={{hash topic=@topic}}
-        />
-
-        {{#if @showPosters}}
-          <PostersColumn @posters={{@topic.featuredUsers}} />
-        {{/if}}
-
-        <PostsCountColumn @topic={{@topic}} />
-
-        {{#if @showLikes}}
-          <td class="num likes topic-list-data">
-            {{#if (gt @topic.like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        {{#if @showOpLikes}}
-          <td class="num likes">
-            {{#if (gt @topic.op_like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.op_like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>
-          <PluginOutlet
-            @name="topic-list-before-view-count"
-            @outletArgs={{hash topic=@topic}}
-          />
-          {{number @topic.views numberKey="views_long"}}
-        </td>
-
-        <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
-
-        {{! TODO: column DAG "topic-list-after-columns" }}
+              {{number @topic.views numberKey="views_long"}}
+            </td>
+          {{else if (eq entry.key "activity")}}
+            <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
+          {{/if}}
+        {{/each}}
       {{else}}
         <td class="topic-list-data">
-          {{! TODO: column DAG "topic-list-before-columns" }}
-
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
               <label for="bulk-select-{{@topic.id}}">
