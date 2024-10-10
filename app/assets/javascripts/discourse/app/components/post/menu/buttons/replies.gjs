@@ -40,38 +40,33 @@ export default class PostMenuRepliesButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <DButton
-        class="show-replies btn-icon-text"
-        ...attributes
-        disabled={{this.disabled}}
-        @action={{@buttonActions.toggleReplies}}
-        @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
-        @ariaExpanded={{and
-          @context.repliesShown
-          (not @context.filteredRepliesView)
-        }}
-        @ariaPressed={{unless
-          @context.filteredRepliesView
-          @context.repliesShown
-        }}
-        @translatedAriaLabel={{i18n
-          "post.sr_expand_replies"
-          count=@post.reply_count
-        }}
-        @translatedLabel={{i18n
-          (if this.site.mobileView "post.has_replies_count" "post.has_replies")
-          count=@post.reply_count
-        }}
-        @translatedTitle={{this.translatedTitle}}
-      >
-        {{!--
-               The icon on the replies button is aligned to the right
-               To get the desired effect will use the {{yield}} in the DButton component to our advantage
-               introducing manually the icon after the label
-              --}}
-        {{~icon (if @context.repliesShown "chevron-up" "chevron-down")~}}
-      </DButton>
-    {{/if}}
+    <DButton
+      class="show-replies btn-icon-text"
+      ...attributes
+      disabled={{this.disabled}}
+      @action={{@buttonActions.toggleReplies}}
+      @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
+      @ariaExpanded={{and
+        @context.repliesShown
+        (not @context.filteredRepliesView)
+      }}
+      @ariaPressed={{unless @context.filteredRepliesView @context.repliesShown}}
+      @translatedAriaLabel={{i18n
+        "post.sr_expand_replies"
+        count=@post.reply_count
+      }}
+      @translatedLabel={{i18n
+        (if this.site.mobileView "post.has_replies_count" "post.has_replies")
+        count=@post.reply_count
+      }}
+      @translatedTitle={{this.translatedTitle}}
+    >
+      {{!--
+             The icon on the replies button is aligned to the right
+             To get the desired effect will use the {{yield}} in the DButton component to our advantage
+             introducing manually the icon after the label
+            --}}
+      {{~icon (if @context.repliesShown "chevron-up" "chevron-down")~}}
+    </DButton>
   </template>
 }

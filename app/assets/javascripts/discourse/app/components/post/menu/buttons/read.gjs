@@ -8,28 +8,26 @@ export default class PostMenuReadButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <div class="double-button">
-        <DButton
-          class="post-action-menu__read read-indicator button-count"
-          ...attributes
-          @ariaPressed={{@context.isWhoReadVisible}}
-          @action={{@buttonActions.toggleWhoRead}}
-          @translatedAriaLabel={{i18n
-            "post.sr_post_read_count_button"
-            count=@post.readers_count
-          }}
-          @title="post.controls.read_indicator"
-        >
-          {{@post.readers_count}}
-        </DButton>
-        <DButton
-          ...attributes
-          @action={{@buttonActions.toggleWhoRead}}
-          @icon="book-reader"
-          @title="post.controls.read_indicator"
-        />
-      </div>
-    {{/if}}
+    <div class="double-button">
+      <DButton
+        class="post-action-menu__read read-indicator button-count"
+        ...attributes
+        @ariaPressed={{@context.isWhoReadVisible}}
+        @action={{@buttonActions.toggleWhoRead}}
+        @translatedAriaLabel={{i18n
+          "post.sr_post_read_count_button"
+          count=@post.readers_count
+        }}
+        @title="post.controls.read_indicator"
+      >
+        {{@post.readers_count}}
+      </DButton>
+      <DButton
+        ...attributes
+        @action={{@buttonActions.toggleWhoRead}}
+        @icon="book-reader"
+        @title="post.controls.read_indicator"
+      />
+    </div>
   </template>
 }

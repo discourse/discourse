@@ -10,7 +10,7 @@ import discourseLater from "discourse-common/lib/later";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
-    return args.post.showLike;
+    return args.post.showLike || args.post.likeCount > 0;
   }
 
   @service currentUser;
@@ -51,7 +51,7 @@ export default class PostMenuLikeButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
+    {{#if @post.showLike}}
       <div class="double-button">
         <LikeCount
           ...attributes
@@ -76,7 +76,7 @@ export default class PostMenuLikeButton extends Component {
           @title={{this.title}}
         />
       </div>
-    {{else if @post.likeCount}}
+    {{else}}
       <div class="double-button">
         <LikeCount
           ...attributes

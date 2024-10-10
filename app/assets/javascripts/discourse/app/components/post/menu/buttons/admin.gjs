@@ -9,16 +9,14 @@ export default class PostMenuAdminButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <DButton
-        class="post-action-menu__admin show-post-admin-menu"
-        ...attributes
-        @action={{@buttonActions.openAdminMenu}}
-        @forwardEvent={{true}}
-        @icon="wrench"
-        @label={{if @showLabel "post.controls.admin_action"}}
-        @title="post.controls.admin"
-      />
-    {{/if}}
+    <DButton
+      class="post-action-menu__admin show-post-admin-menu"
+      ...attributes
+      @action={{@buttonActions.openAdminMenu}}
+      @forwardEvent={{true}}
+      @icon="wrench"
+      @label={{if @showLabel "post.controls.admin_action"}}
+      @title="post.controls.admin"
+    />
   </template>
 }

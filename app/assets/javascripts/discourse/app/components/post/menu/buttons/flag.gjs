@@ -17,29 +17,27 @@ export default class PostMenuFlagButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <div class="double-button">
-        {{#if @post.reviewable_id}}
-          <DButton
-            class={{concatClass
-              "button-count"
-              (if (gt @post.reviewable_score_pending_count 0) "has-pending")
-            }}
-            ...attributes
-            @action={{this.navigateToReviewable}}
-          >
-            <span>{{@post.reviewable_score_count}}</span>
-          </DButton>
-        {{/if}}
+    <div class="double-button">
+      {{#if @post.reviewable_id}}
         <DButton
-          class="post-action-menu__flag create-flag"
+          class={{concatClass
+            "button-count"
+            (if (gt @post.reviewable_score_pending_count 0) "has-pending")
+          }}
           ...attributes
-          @action={{@buttonActions.showFlags}}
-          @icon="flag"
-          @label={{if @showLabel "post.controls.flag_action"}}
-          @title="post.controls.flag"
-        />
-      </div>
-    {{/if}}
+          @action={{this.navigateToReviewable}}
+        >
+          <span>{{@post.reviewable_score_count}}</span>
+        </DButton>
+      {{/if}}
+      <DButton
+        class="post-action-menu__flag create-flag"
+        ...attributes
+        @action={{@buttonActions.showFlags}}
+        @icon="flag"
+        @label={{if @showLabel "post.controls.flag_action"}}
+        @title="post.controls.flag"
+      />
+    </div>
   </template>
 }

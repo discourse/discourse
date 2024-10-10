@@ -22,19 +22,17 @@ export default class PostMenuEditButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <DButton
-        class={{concatClass
-          "post-action-menu__edit"
-          "edit"
-          (if @post.wiki "create")
-        }}
-        ...attributes
-        @action={{@buttonActions.editPost}}
-        @icon={{if @post.wiki "far-edit" "pencil-alt"}}
-        @label={{if this.showLabel "post.controls.edit_action"}}
-        @title="post.controls.edit"
-      />
-    {{/if}}
+    <DButton
+      class={{concatClass
+        "post-action-menu__edit"
+        "edit"
+        (if @post.wiki "create")
+      }}
+      ...attributes
+      @action={{@buttonActions.editPost}}
+      @icon={{if @post.wiki "far-edit" "pencil-alt"}}
+      @label={{if this.showLabel "post.controls.edit_action"}}
+      @title="post.controls.edit"
+    />
   </template>
 }

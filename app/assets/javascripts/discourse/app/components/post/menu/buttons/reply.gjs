@@ -19,24 +19,22 @@ export default class PostMenuReplyButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <DButton
-        class={{concatClass
-          "post-action-menu__reply"
-          "reply"
-          (if this.showLabel "create fade-out")
-        }}
-        ...attributes
-        @action={{@buttonActions.replyToPost}}
-        @icon="reply"
-        @label={{if this.showLabel "topic.reply.title"}}
-        @title="post.controls.reply"
-        @translatedAriaLabel={{i18n
-          "post.sr_reply_to"
-          post_number=@post.post_number
-          username=@post.username
-        }}
-      />
-    {{/if}}
+    <DButton
+      class={{concatClass
+        "post-action-menu__reply"
+        "reply"
+        (if this.showLabel "create fade-out")
+      }}
+      ...attributes
+      @action={{@buttonActions.replyToPost}}
+      @icon="reply"
+      @label={{if this.showLabel "topic.reply.title"}}
+      @title="post.controls.reply"
+      @translatedAriaLabel={{i18n
+        "post.sr_reply_to"
+        post_number=@post.post_number
+        username=@post.username
+      }}
+    />
   </template>
 }

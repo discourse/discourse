@@ -120,16 +120,14 @@ export default class PostMenuDeleteButton extends Component {
   }
 
   <template>
-    {{#if @shouldRender}}
-      <DButton
-        class={{this.className}}
-        ...attributes
-        disabled={{this.disabled}}
-        @action={{this.activeAction}}
-        @icon={{this.icon}}
-        @label={{if @showLabel this.label}}
-        @title={{this.title}}
-      />
-    {{/if}}
+    <DButton
+      class={{this.className}}
+      ...attributes
+      disabled={{this.disabled}}
+      @action={{this.activeAction}}
+      @icon={{this.icon}}
+      @label={{if @showLabel this.label}}
+      @title={{this.title}}
+    />
   </template>
 }
