@@ -24,11 +24,11 @@ export default class AdminUserFieldItem extends Component {
   }
 
   get cantMoveUp() {
-    return this.args.userField.id === this.args.firstField.id;
+    return this.args.userField.id === this.args.firstField?.id;
   }
 
   get cantMoveDown() {
-    return this.args.userField.id === this.args.lastField.id;
+    return this.args.userField.id === this.args.lastField?.id;
   }
 
   get isNewRecord() {
