@@ -148,23 +148,38 @@ export default class PostMenu extends Component {
   @cached
   get registeredButtons() {
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
-    // in the value transformer, and the extract the data to be used later to resolve the DAG order
+    // in the value transformer, and extract the data to be used later to resolve the DAG order
     const buttonsRegistry = applyValueTransformer(
       "post-menu-buttons",
       // TODO auto-generate the position coordinates based on the order of the elements
-      DAG.from(coreButtonComponents.entries()),
+      DAG.from(coreButtonComponents.entries(), {
+        // when an item is replaced, we want the new button to inherit the properties defined by static methods in the
+        // button if they're not defined
+        onReplaceItem: (key, newComponent, oldComponent) => {
+          [
+            "alwaysShow",
+            "delegateShouldRenderToTemplate",
+            "extraControls",
+            "shouldRender",
+            "showLabel",
+          ].forEach((method) => {
+            if (
+              typeof newComponent[method] === "undefined" &&
+              typeof oldComponent[method] !== "undefined"
+            ) {
+              newComponent[method] = oldComponent[method];
+            }
+          });
+        },
+      }),
       this.staticMethodsArgs
     );
 
     return new Map(
-      buttonsRegistry.entries().map(([key, properties, position]) => {
+      buttonsRegistry.entries().map(([key, ButtonComponent, position]) => {
         const config = new PostMenuButtonConfig({
           key,
-          Component: properties,
-          alwaysShow: properties.alwaysShow,
-          extraControls: properties.extraControls,
-          shouldRender: properties.shouldRender,
-          showLabel: properties.showLabel,
+          Component: ButtonComponent,
           position,
         });
         setOwner(config, getOwner(this)); // to allow using getOwner in the static functions

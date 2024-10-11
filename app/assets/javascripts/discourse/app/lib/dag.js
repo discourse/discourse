@@ -14,6 +14,10 @@ export default class DAG {
    * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
+   * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
+   * @param {(key: string) => void} [opts.onRemoveItem] - Callback function to be called when an item is removed.
+   * @param {(key: string, newValue: any, oldValue: any, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onReplaceItem] - Callback function to be called when an item is replaced.
+   * @param {(key: string, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onRepositionItem] - Callback function to be called when an item is repositioned.
    * @returns {DAG} A new DAG instance.
    */
   static from(entriesLike, opts) {
@@ -27,6 +31,11 @@ export default class DAG {
   }
 
   #defaultPosition;
+  #addItem;
+  #removeItem;
+  #replaceItem;
+  #repositionItem;
+
   #rawData = new Map();
   #dag = new DAGMap();
 
@@ -37,11 +46,20 @@ export default class DAG {
    * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
+   * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
+   * @param {(key: string) => void} [opts.onRemoveItem] - Callback function to be called when an item is removed.
+   * @param {(key: string, newValue: any, oldValue: any, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onReplaceItem] - Callback function to be called when an item is replaced.
+   * @param {(key: string, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onRepositionItem] - Callback function to be called when an item is repositioned.
    */
   constructor(opts) {
     // allows for custom default positioning of new items added to the DAG, eg
     // new DAG({ defaultPosition: { before: "foo", after: "bar" } });
     this.#defaultPosition = opts?.defaultPosition || {};
+
+    this.#addItem = opts?.onAddItem;
+    this.#removeItem = opts?.onRemoveItem;
+    this.#replaceItem = opts?.onReplaceItem;
+    this.#repositionItem = opts?.onRepositionItem;
   }
 
   /**
@@ -83,7 +101,9 @@ export default class DAG {
       before,
       after,
     });
+
     this.#dag.add(key, value, before, after);
+    this.#addItem?.(key, value, position);
 
     return true;
   }
@@ -108,6 +128,7 @@ export default class DAG {
   delete(key) {
     const deleted = this.#rawData.delete(key);
     this.#refreshDAG();
+    this.#removeItem?.(key);
 
     return deleted;
   }
@@ -123,24 +144,7 @@ export default class DAG {
    * @returns {boolean} True if the item was replaced, false otherwise.
    */
   replace(key, value, position) {
-    // TODO should it return false if value is not defined or null?
-    if (!this.has(key)) {
-      return false;
-    }
-
-    const existingItem = this.#rawData.get(key);
-
-    // mutating the existing item keeps the position in the map in case before/after weren't explicitly set
-    existingItem.value = value;
-
-    if (position) {
-      existingItem.before = position.before;
-      existingItem.after = position.after;
-    }
-
-    this.#refreshDAG();
-
-    return true;
+    return this.#replace(key, value, position);
   }
 
   /**
@@ -159,7 +163,7 @@ export default class DAG {
 
     const { value } = this.#rawData.get(key);
 
-    return this.replace(key, value, position);
+    return this.#replace(key, value, position, { repositionOnly: true });
   }
 
   /**
@@ -190,6 +194,54 @@ export default class DAG {
       }
     });
     return result;
+  }
+
+  /**
+   * Replace an existing item in the map.
+   *
+   * @param {string} key - The key of the item to be replaced.
+   * @param {any} value - The new value of the item.
+   * @param {Object} position - The new position object specifying before/after requirements.
+   * @param {string|string[]} [position.before] - A key or array of keys of items which should appear before this one.
+   * @param {string|string[]} [position.after] - A key or array of keys of items which should appear after this one.
+   * @param {Object} [options] - Additional options.
+   * @param {boolean} [options.repositionOnly=false] - Whether the replacement is for repositioning only.
+   * @returns {boolean} True if the item was replaced, false otherwise.
+   */
+  #replace(
+    key,
+    value,
+    position,
+    { repositionOnly } = { repositionOnly: false }
+  ) {
+    if (!this.has(key)) {
+      return false;
+    }
+
+    const existingItem = this.#rawData.get(key);
+    const oldValue = existingItem.value;
+    const oldPosition = {
+      before: existingItem.before,
+      after: existingItem.after,
+    };
+
+    // mutating the existing item keeps the position in the map in case before/after weren't explicitly set
+    existingItem.value = value;
+
+    if (position) {
+      existingItem.before = position.before;
+      existingItem.after = position.after;
+    }
+
+    this.#refreshDAG();
+
+    if (repositionOnly) {
+      this.#repositionItem?.(key, position, oldPosition);
+    } else {
+      this.#replaceItem?.(key, value, oldValue, position, oldPosition);
+    }
+
+    return true;
   }
 
   /**

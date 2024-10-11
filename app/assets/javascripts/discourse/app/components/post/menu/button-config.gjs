@@ -2,6 +2,7 @@ import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuButtonConfig {
   #Component;
+  #delegateShouldRenderToTemplate;
   #alwaysShow;
   #extraControls;
   #key;
@@ -9,14 +10,20 @@ export default class PostMenuButtonConfig {
   #shouldRender;
   #showLabel;
 
-  constructor(config) {
-    this.#Component = config.Component;
-    this.#alwaysShow = config.alwaysShow;
-    this.#extraControls = config.extraControls;
-    this.#key = config.key;
-    this.#position = config.position;
-    this.#shouldRender = config.shouldRender;
-    this.#showLabel = config.showLabel;
+  constructor({ key, Component, position }) {
+    this.#Component = Component;
+    this.#alwaysShow = Component.alwaysShow;
+    this.#delegateShouldRenderToTemplate =
+      Component.delegateShouldRenderToTemplate;
+    this.#extraControls = Component.extraControls;
+    this.#key = key;
+    this.#position = position;
+    this.#shouldRender = Component.shouldRender;
+    this.#showLabel = Component.showLabel;
+  }
+
+  get Component() {
+    return this.#Component;
   }
 
   @bind
@@ -28,13 +35,20 @@ export default class PostMenuButtonConfig {
     return this.#alwaysShow ?? false;
   }
 
-  @bind
-  showLabel(args) {
-    if (typeof this.#showLabel === "function") {
-      return this.#showLabel(args);
-    }
+  get delegateShouldRenderToTemplate() {
+    return this.#delegateShouldRenderToTemplate ?? false;
+  }
 
-    return this.#showLabel ?? false;
+  get extraControls() {
+    return this.#extraControls;
+  }
+
+  get key() {
+    return this.#key;
+  }
+
+  get position() {
+    return this.#position;
   }
 
   @bind
@@ -46,19 +60,12 @@ export default class PostMenuButtonConfig {
     return this.#shouldRender ?? true;
   }
 
-  get key() {
-    return this.#key;
-  }
+  @bind
+  showLabel(args) {
+    if (typeof this.#showLabel === "function") {
+      return this.#showLabel(args);
+    }
 
-  get Component() {
-    return this.#Component;
-  }
-
-  get position() {
-    return this.#position;
-  }
-
-  get extraControls() {
-    return this.#extraControls;
+    return this.#showLabel ?? false;
   }
 }
