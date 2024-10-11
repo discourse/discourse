@@ -25,7 +25,11 @@ RSpec.describe RemoteTheme do
             }
           },
           "modifiers": {
-            "serialize_topic_excerpts": true
+            "serialize_topic_excerpts": true,
+            "custom_homepage": {
+              "type": "setting",
+              "value": "boolean_setting"
+            }
           }
         }
       JSON
@@ -175,6 +179,7 @@ RSpec.describe RemoteTheme do
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
       expect(theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
+      expect(theme.theme_modifier_set.custom_homepage).to eq(true)
 
       expect(theme.theme_fields.length).to eq(12)
 
@@ -199,6 +204,13 @@ RSpec.describe RemoteTheme do
 
       expect(theme.settings.length).to eq(1)
       expect(theme.settings[:boolean_setting].value).to eq(true)
+
+      # lets change the setting to see modifier reflects
+      theme.update_setting(:boolean_setting, false)
+      theme.save!
+      theme.reload
+
+      expect(theme.theme_modifier_set.custom_homepage).to eq(false)
 
       expect(remote.remote_updated_at).to eq_time(time)
 
