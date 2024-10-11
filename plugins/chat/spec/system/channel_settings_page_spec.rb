@@ -166,6 +166,23 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         ).to eq(false)
       end
     end
+
+    context "when direct message channel" do
+      fab!(:channel_1) do
+        Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
+      end
+
+      before { channel_1.add(current_user) }
+
+      it "can toggle threading" do
+        chat_page.visit_channel_settings(channel_1)
+
+        expect {
+          PageObjects::Components::DToggleSwitch.new(".c-channel-settings__threading-switch").toggle
+          expect(toasts).to have_success(I18n.t("js.saved"))
+        }.to change { channel_1.reload.threading_enabled }.from(true).to(false)
+      end
+    end
   end
 
   context "as staff" do
