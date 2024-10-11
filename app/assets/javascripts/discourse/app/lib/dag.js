@@ -15,7 +15,7 @@ export default class DAG {
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
    * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
-   * @param {(key: string) => void} [opts.onRemoveItem] - Callback function to be called when an item is removed.
+   * @param {(key: string) => void} [opts.onDeleteItem] - Callback function to be called when an item is removed.
    * @param {(key: string, newValue: any, oldValue: any, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onReplaceItem] - Callback function to be called when an item is replaced.
    * @param {(key: string, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onRepositionItem] - Callback function to be called when an item is repositioned.
    * @returns {DAG} A new DAG instance.
@@ -31,10 +31,10 @@ export default class DAG {
   }
 
   #defaultPosition;
-  #addItem;
-  #removeItem;
-  #replaceItem;
-  #repositionItem;
+  #onAddItem;
+  #onDeleteItem;
+  #onReplaceItem;
+  #onRepositionItem;
 
   #rawData = new Map();
   #dag = new DAGMap();
@@ -47,7 +47,7 @@ export default class DAG {
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
    * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
-   * @param {(key: string) => void} [opts.onRemoveItem] - Callback function to be called when an item is removed.
+   * @param {(key: string) => void} [opts.onDeleteItem] - Callback function to be called when an item is removed.
    * @param {(key: string, newValue: any, oldValue: any, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onReplaceItem] - Callback function to be called when an item is replaced.
    * @param {(key: string, newPosition: {before?: string|string[], after?: string|string[]}, oldPosition: {before?: string|string[], after?: string|string[]}) => void} [opts.onRepositionItem] - Callback function to be called when an item is repositioned.
    */
@@ -56,10 +56,10 @@ export default class DAG {
     // new DAG({ defaultPosition: { before: "foo", after: "bar" } });
     this.#defaultPosition = opts?.defaultPosition || {};
 
-    this.#addItem = opts?.onAddItem;
-    this.#removeItem = opts?.onRemoveItem;
-    this.#replaceItem = opts?.onReplaceItem;
-    this.#repositionItem = opts?.onRepositionItem;
+    this.#onAddItem = opts?.onAddItem;
+    this.#onDeleteItem = opts?.onDeleteItem;
+    this.#onReplaceItem = opts?.onReplaceItem;
+    this.#onRepositionItem = opts?.onRepositionItem;
   }
 
   /**
@@ -103,20 +103,9 @@ export default class DAG {
     });
 
     this.#dag.add(key, value, before, after);
-    this.#addItem?.(key, value, position);
+    this.#onAddItem?.(key, value, position);
 
     return true;
-  }
-
-  /**
-   * Returns an array of entries in the DAG. Each entry is a tuple containing the key, value, and position object.
-   *
-   * @returns {Array<[string, any, {before?: string|string[], after?: string|string[]}]>} An array of key-value-position tuples.
-   */
-  entries() {
-    return Array.from(this.#rawData.entries()).map(
-      ([key, { value, before, after }]) => [key, value, { before, after }]
-    );
   }
 
   /**
@@ -128,7 +117,10 @@ export default class DAG {
   delete(key) {
     const deleted = this.#rawData.delete(key);
     this.#refreshDAG();
-    this.#removeItem?.(key);
+
+    if (deleted) {
+      this.#onDeleteItem?.(key);
+    }
 
     return deleted;
   }
@@ -174,6 +166,17 @@ export default class DAG {
    */
   has(key) {
     return this.#rawData.has(key);
+  }
+
+  /**
+   * Returns an array of entries in the DAG. Each entry is a tuple containing the key, value, and position object.
+   *
+   * @returns {Array<[string, any, {before?: string|string[], after?: string|string[]}]>} An array of key-value-position tuples.
+   */
+  entries() {
+    return Array.from(this.#rawData.entries()).map(
+      ([key, { value, before, after }]) => [key, value, { before, after }]
+    );
   }
 
   /**
@@ -236,9 +239,9 @@ export default class DAG {
     this.#refreshDAG();
 
     if (repositionOnly) {
-      this.#repositionItem?.(key, position, oldPosition);
+      this.#onRepositionItem?.(key, position, oldPosition);
     } else {
-      this.#replaceItem?.(key, value, oldValue, position, oldPosition);
+      this.#onReplaceItem?.(key, value, oldValue, position, oldPosition);
     }
 
     return true;
