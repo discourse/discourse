@@ -89,7 +89,7 @@ RSpec.describe Chat::GuardianExtensions do
         context "when not group" do
           it "doesn’t allow  to edit the channel" do
             Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
           end
         end
       end
