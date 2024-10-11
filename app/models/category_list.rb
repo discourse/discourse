@@ -143,7 +143,7 @@ class CategoryList
     query = self.class.order_categories(query)
 
     page = [1, @options[:page].to_i].max
-    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
+    if @options[:parent_category_id].blank?
       query =
         query
           .where(parent_category_id: nil)
@@ -160,7 +160,14 @@ class CategoryList
 
     @categories = query.to_a
 
-    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
+    if !@guardian.can_lazy_load_categories?
+      @categories +=
+        Category
+          .includes(CategoryList.included_associations)
+          .secured(@guardian)
+          .where(id: @categories.map { |c| Category.subcategory_ids(c.id) }.flatten)
+          .where.not(id: @categories.map(&:id))
+    elsif @options[:parent_category_id].blank?
       categories_with_rownum =
         Category
           .secured(@guardian)

@@ -404,7 +404,7 @@ RSpec.describe CategoriesController do
       let!(:category2) { Fabricate(:category, user: admin) }
       let!(:category3) { Fabricate(:category, user: admin) }
 
-      it "paginates results wihen lazy_load_categories is enabled" do
+      it "paginates results" do
         SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
@@ -414,16 +414,6 @@ RSpec.describe CategoriesController do
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
-      end
-
-      it "does not paginate results when lazy_load_categories is disabled" do
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(4)
-
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
       end
     end
   end

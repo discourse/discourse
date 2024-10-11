@@ -76,17 +76,13 @@ export default class CategoriesDisplay extends Component {
     }
   }
 
-  get canLoadMore() {
-    return this.site.lazy_load_categories && this.args.loadMore;
-  }
-
   <template>
     <PluginOutlet
       @name="above-discovery-categories"
       @connectorTagName="div"
       @outletArgs={{hash categories=@categories topics=@topics}}
     />
-    {{#if this.canLoadMore}}
+    {{#if @loadMore}}
       <LoadMore
         @selector=".category:not(.muted-categories *)"
         @action={{@loadMore}}
