@@ -75,14 +75,4 @@
       {{/each}}
     </tbody>
   </table>
-{{else}}
-  <div class="alert alert-info">
-    <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
-    <DButton
-      @label="discourse_automation.create"
-      @icon="plus"
-      @action={{action "newAutomation"}}
-      class="btn-primary"
-    />
-  </div>
 {{/if}}

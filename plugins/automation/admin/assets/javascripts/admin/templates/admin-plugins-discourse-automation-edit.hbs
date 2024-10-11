@@ -10,11 +10,16 @@
 
         <div class="controls">
           <TextField
-            @value={{automationForm.name}}
+            @value={{if
+              (eq automationForm.name this.unnamedAutomationPlaceholder)
+              ""
+              automationForm.name
+            }}
             @type="text"
             @autofocus="autofocus"
             @name="automation-name"
             class="input-large"
+            @input={{action (mut automationForm.name) value="target.value"}}
           />
         </div>
       </div>

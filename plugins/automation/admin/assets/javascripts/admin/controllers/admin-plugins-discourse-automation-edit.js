@@ -6,12 +6,14 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
+import { UNNAMED_AUTOMATION_PLACEHOLDER } from "../utils/automation-placeholder";
 
 export default class AutomationEdit extends Controller {
   @service dialog;
   error = null;
   isUpdatingAutomation = false;
   isTriggeringAutomation = false;
+  unnamedAutomationPlaceholder = UNNAMED_AUTOMATION_PLACEHOLDER;
 
   @reads("model.automation") automation;
   @filterBy("automationForm.fields", "targetType", "script") scriptFields;
@@ -29,11 +31,16 @@ export default class AutomationEdit extends Controller {
   saveAutomation() {
     this.setProperties({ error: null, isUpdatingAutomation: true });
 
+    const updatedAutomationForm = {
+      ...this.automationForm,
+      name: this.automationForm.name,
+    };
+
     return ajax(
       `/admin/plugins/discourse-automation/automations/${this.model.automation.id}.json`,
       {
         type: "PUT",
-        data: JSON.stringify({ automation: this.automationForm }),
+        data: JSON.stringify({ automation: updatedAutomationForm }),
         dataType: "json",
         contentType: "application/json",
       }
