@@ -38,6 +38,7 @@ class Plugin::Metadata
         discourse-gradle-issue
         discourse-graphviz
         discourse-group-tracker
+        discourse-hcaptcha
         discourse-invite-tokens
         discourse-jira
         discourse-lazy-videos
