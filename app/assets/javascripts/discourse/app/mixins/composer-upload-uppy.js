@@ -14,6 +14,7 @@ import {
   displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
+  isImage,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
@@ -202,6 +203,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           return this._abortAndReset();
         }
 
+        const MIN_AUTO_GRID_IMAGES = 3;
+        const imageFiles = Object.values(unhandledFiles)
+          .map((file) => file.name)
+          .filter((name) => isImage(name));
+
+        if (imageFiles?.length >= MIN_AUTO_GRID_IMAGES) {
+          // todo add grid code or call fnc.
+        }
         // uppy uses this new object to track progress of remaining files
         return unhandledFiles;
       },
@@ -318,17 +327,51 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
     });
 
+    const imageUploadExtensions = ["jpg", "jpeg", "png", "gif", "heic"]; // todo get better list (see lib/uploads?)
+    const uploadMarkdowns = [];
+    let imageUploadCount = 0;
+
     this._uppyInstance.on("upload-success", (file, response) => {
       run(async () => {
         if (!this._uppyInstance) {
           return;
         }
+        console.log(
+          "f",
+          file,
+          "r",
+          response,
+          this,
+          this.inProgressUploads.length
+        );
+
         this._removeInProgressUpload(file.id);
         let upload = response.body;
+
         const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
+
+        if (imageUploadExtensions.includes(file.extension)) {
+          imageUploadCount++;
+          uploadMarkdowns.push(markdown);
+          console.log("imageUploadCount", imageUploadCount, uploadMarkdowns);
+
+          if (imageUploadCount >= 3) {
+            const gridMarkdown = `\n[grid]\n${uploadMarkdowns.join(
+              "\n"
+            )}\n[/grid]\n`;
+
+            this.appEvents.trigger(
+              `${this.composerEventPrefix}:insert-text`,
+              gridMarkdown
+            );
+
+            imageUploadCount = 0;
+            uploadMarkdowns.splice(0, uploadMarkdowns.length);
+          }
+        }
 
         cacheShortUploadUrl(upload.short_url, upload);
 
