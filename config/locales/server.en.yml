@@ -2324,7 +2324,7 @@ en:
     blocked_attachment_content_types: "List of keywords used to blocklist attachments based on the content type."
     blocked_attachment_filenames: "List of keywords used to blocklist attachments based on the filename."
 
-    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
+    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Learn more</a>"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     trim_incoming_emails: "Trim part of the incoming emails that isn't relevant."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
