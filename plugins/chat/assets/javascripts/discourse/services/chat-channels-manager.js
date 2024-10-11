@@ -108,7 +108,9 @@ export default class ChatChannelsManager extends Service {
 
   @cached
   get hasThreadedChannels() {
-    return this.allChannels?.some((channel) => channel.threadingEnabled);
+    return this.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
+    );
   }
 
   get allChannels() {
