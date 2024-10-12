@@ -217,6 +217,13 @@ nav.post-controls button.reply .d-icon {
       }
     }
   }
+  .load-more-replies {
+    font-size: var(--font-down-1);
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 150%);
+    padding: 0.35em 0.5em;
+  }
 }
 
 .post-actions {

@@ -2014,7 +2014,6 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
     penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
-    svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera utskrifter)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."

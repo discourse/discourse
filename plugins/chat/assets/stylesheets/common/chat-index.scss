@@ -28,10 +28,10 @@
 
 .channels-list,
 .channels-list-container {
-  padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   @include chat-scrollbar();
   height: 100%;
+  padding-bottom: 1rem;
 
   @include breakpoint(mobile-large) {
     @include chat-scrollbar();

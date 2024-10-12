@@ -43,6 +43,7 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
   status { :open }
   name nil
+  threading_enabled true
   after_create do |channel, attrs|
     if attrs[:with_membership]
       channel.chatable.users.each do |user|
@@ -193,8 +194,7 @@ Fabricator(:user_chat_channel_membership_for_dm, from: :user_chat_channel_member
   user
   chat_channel
   following true
-  desktop_notification_level 2
-  mobile_notification_level 2
+  notification_level 2
 end
 
 Fabricator(:chat_draft, class_name: "Chat::Draft") do

@@ -2218,7 +2218,6 @@ it:
     auto_handle_queued_age: "Gestisci automaticamente i record che sono in attesa di essere rivisti dopo tale numero di giorni. Le segnalazioni saranno ignorate. I messaggi in attesa e gli utenti saranno rifiutati. Impostare su 0 per disattivare questa funzionalità."
     penalty_step_hours: "Penalità predefinite per silenziare o sospendere gli utenti definite in ore. La prima infrazione porta una penalità pari al primo valore, la seconda infrazione porta una penalità pari al secondo valore, ecc."
     penalty_include_post_message: "Quando si silenzia o si sospende un utente, il messaggio offensivo pubblicato viene incluso automaticamente nel modello email"
-    svg_icon_subset: "Aggiungi ulteriori icone FontAwesome 5 che desideri includere nelle tue risorse. Usa il prefisso 'fa-' per le icone solide, 'far-' per le icone regolari e 'fab-' per le icone di marchi."
     max_prints_per_hour_per_user: "Numero massimo di pagine da stampare (imposta a 0 per disattivare stampa)"
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     enable_names: "Mostra il nome completo dell'utente su profilo, scheda utente e email. Disabilita per nascondere il nome completo ovunque."

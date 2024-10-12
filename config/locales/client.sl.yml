@@ -162,7 +162,6 @@ sl:
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"
-      twitter: "Deli na Twitterju"
       facebook: "Deli na Facebooku"
       email: "Pošlji po e-pošti"
       url: "Kopiraj in deli URL"
@@ -3956,6 +3955,11 @@ sl:
           screened_ips: "Nadzorovani IPji"
           screened_urls: "Nadzorovani URLji"
           search_logs: "Dnevnik iskanj"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Varnostne kopije"
       config_areas:
         about:
           optional: "(neobvezno)"

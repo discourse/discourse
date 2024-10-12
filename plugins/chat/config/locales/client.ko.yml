@@ -225,7 +225,6 @@ ko:
       settings:
         channel_threading_label: "스레딩"
         auto_join_users_label: "자동으로 사용자 추가"
-        desktop_notification_level: "데스크톱 알림"
         follow: "가입"
         followed: "가입"
         threading_enabled: "활성화"

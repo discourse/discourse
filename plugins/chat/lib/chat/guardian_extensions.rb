@@ -44,7 +44,7 @@ module Chat
     # name and description can be edited.
     def can_edit_chat_channel?(channel)
       if channel.direct_message_channel?
-        channel.chatable.group && (is_staff? || channel.chatable.user_can_access?(@user))
+        is_staff? || channel.chatable.user_can_access?(@user)
       elsif channel.category_channel?
         is_staff?
       end

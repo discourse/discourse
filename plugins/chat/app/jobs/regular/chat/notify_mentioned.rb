@@ -131,15 +131,12 @@ module Jobs
       def send_notifications(membership, mention_type)
         payload = build_payload_for(membership, identifier_type: mention_type)
 
-        if !membership.desktop_notifications_never? && !membership.muted?
+        if !membership.notifications_never? && !membership.muted?
           ::MessageBus.publish(
             "/chat/notification-alert/#{membership.user_id}",
             payload,
             user_ids: [membership.user_id],
           )
-        end
-
-        if !membership.mobile_notifications_never? && !membership.muted?
           ::PostAlerter.push_notification(membership.user, payload)
         end
       end

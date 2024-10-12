@@ -197,7 +197,7 @@ sk:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
       close: "zatvoriť"
-      twitter: "Zdieľať na Twitteri"
+      twitter: "Zdieľať na X"
       facebook: "Zdieľať na Facebooku"
       email: "Odoslať e-mailom"
       url: "Skopírujte a zdieľajte URL"
@@ -3854,7 +3854,9 @@ sk:
       show_hidden: "Zobraziť ignorovaný obsah."
       deleted_by_author_simple: "(príspevok vymazaný autorom)"
       collapse: "zbaliť"
+      load_more_replies: "načítať ďalšie odpovede"
       sr_collapse_replies: "Zbaliť vložené odpovede"
+      sr_load_more_replies: "Načítať viac vložených odpovedí"
       sr_date: "Dátum príspevku"
       sr_expand_replies:
         one: "Tento príspevok má %{count} odpoveď."
@@ -5740,6 +5742,15 @@ sk:
           security: "Nastavenia zabezpečenia"
           spam: "Nastavenia spamu"
           staff_action_logs: "Záznamy o akciách personálu"
+      section_landing_pages:
+        account:
+          title: "Účet"
+          backups:
+            title: "Zálohy"
+            description: "Urobte si zálohu údajov svojej stránky"
+          whats_new:
+            title: "Čo je nové"
+            description: "Objavte nové verzie a vylepšenia Discourse"
       config_areas:
         about:
           header: "O vašej stránke"
@@ -6853,7 +6864,7 @@ sk:
         post_edits_count: "Úpravy príspevkov"
         anonymize: "Anonymizovať používateľa"
         anonymize_confirm: "Ste si istý že chcete zmeniť tento účet na anonymný? Zmeni to používateľské meno, email a zmažú sa všetky informácie z profilu. "
-        delete_associated_accounts_confirm: "Naozaj chcete odstrániť priradené účty z tohto účtu? Je možné, že sa nebudú môcť prihlásiť."
+        delete_associated_accounts_confirm: "Naozaj chcete odstrániť všetky priradené účty z tohto účtu? Používateľ sa možno nebude môcť prihlásiť, ak sa jeho e-mail zmenil."
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"

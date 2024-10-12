@@ -35,6 +35,7 @@ import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
+import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
@@ -251,6 +252,7 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   clearLegacyAboutPageStats();
   resetWidgetCleanCallbacks();
+  clearPluginHeaderActionComponents();
 }
 
 function cleanupCssGeneratorTags() {
@@ -436,43 +438,12 @@ export function acceptance(name, optionsOrCallback) {
   }
 }
 
-export function controllerFor(controller, model) {
-  deprecated(
-    'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
-    {
-      id: "discourse.controller-for",
-      since: "3.0.0.beta14",
-    }
-  );
-
-  controller = getOwnerWithFallback(this).lookup("controller:" + controller);
-  if (model) {
-    controller.set("model", model);
-  }
-  return controller;
-}
-
 export function fixture(selector) {
   if (selector) {
     return document.querySelector(`#qunit-fixture ${selector}`);
   }
   return document.querySelector("#qunit-fixture");
 }
-
-QUnit.assert.not = function (actual, message) {
-  deprecated("assert.not() is deprecated. Use assert.false() instead.", {
-    since: "2.9.0.beta1",
-    dropFrom: "2.10.0.beta1",
-    id: "discourse.qunit.assert-not",
-  });
-
-  this.pushResult({
-    result: !actual,
-    actual,
-    expected: !actual,
-    message,
-  });
-};
 
 QUnit.assert.blank = function (actual, message) {
   this.pushResult({

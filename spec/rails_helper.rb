@@ -466,11 +466,31 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    if ENV["ELEVATED_UPLOADS_ID"]
-      DB.exec "SELECT setval('uploads_id_seq', 10000)"
-    else
-      DB.exec "SELECT setval('uploads_id_seq', 1)"
+    migrate_column_to_bigint(AllowedPmUser, :allowed_pm_user_id)
+    migrate_column_to_bigint(Bookmark, :bookmarkable_id)
+    migrate_column_to_bigint(IgnoredUser, :ignored_user_id)
+    migrate_column_to_bigint(PostAction, :post_action_type_id)
+    migrate_column_to_bigint(Reviewable, :target_id)
+    migrate_column_to_bigint(ReviewableHistory, :reviewable_id)
+    migrate_column_to_bigint(ReviewableScore, :reviewable_id)
+    migrate_column_to_bigint(ReviewableScore, :reviewable_score_type)
+    migrate_column_to_bigint(SidebarSectionLink, :linkable_id)
+    migrate_column_to_bigint(SidebarSectionLink, :sidebar_section_id)
+    migrate_column_to_bigint(User, :last_seen_reviewable_id)
+    migrate_column_to_bigint(User, :required_fields_version)
+
+    $columns_to_migrate_to_bigint.each do |model, column|
+      if model.is_a?(String)
+        DB.exec("ALTER TABLE #{model} ALTER #{column} TYPE bigint")
+      else
+        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+        model.reset_column_information
+      end
     end
+
+    DB
+      .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
+      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', #{2**32})" }
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
@@ -716,7 +736,6 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
-    Discourse.redis.flushdb
   end
 
   config.after :each do |example|
@@ -743,6 +762,7 @@ RSpec.configure do |config|
 
     unfreeze_time
     ActionMailer::Base.deliveries.clear
+    Discourse.redis.flushdb
   end
 
   config.before(:each, type: :multisite) do
@@ -1016,6 +1036,10 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
+end
+
+def migrate_column_to_bigint(model, column)
+  ($columns_to_migrate_to_bigint ||= []) << [model, column]
 end
 
 class SpecSecureRandom

@@ -141,7 +141,6 @@ tr_TR:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
-      twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
@@ -5206,6 +5205,13 @@ tr_TR:
           screened_urls: "Taranan URL'ler"
           search_logs: "Arama Günlükleri"
           staff_action_logs: "Personel Eylemi Günlükleri"
+      section_landing_pages:
+        account:
+          title: "Hesap"
+          backups:
+            title: "Yedeklemeler"
+          whats_new:
+            title: "Yenilikler"
       config_areas:
         about:
           header: "Siteniz hakkında"

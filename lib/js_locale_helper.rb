@@ -163,7 +163,17 @@ module JsLocaleHelper
       require("discourse-mf");
     JS
   rescue => e
-    Rails.logger.error("Failed to compile message formats for #{locale} '#{e}'")
+    message_formats[locale.to_s]
+      .filter_map do |key, value|
+        next if MessageFormat.compile(locale, value, strict: false)
+      rescue StandardError
+        key
+      end
+      .then do |strings|
+        Rails.logger.error(
+          "Failed to compile message formats for #{locale}.\n\nBroken strings are: #{strings.join(", ")}\n\nError: #{e}",
+        )
+      end
     <<~JS
       console.error("Failed to compile message formats for #{locale}. Some translation strings will be missing.");
     JS

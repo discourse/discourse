@@ -205,7 +205,6 @@ pre.codeblock-buttons:hover {
     border: none;
     > div {
       position: relative;
-      margin-bottom: 1.5em;
       &:last-of-type {
         margin-bottom: 0;
         .row {
@@ -295,6 +294,13 @@ pre.codeblock-buttons:hover {
           background: var(--primary-300);
         }
       }
+    }
+    .load-more-replies {
+      font-size: var(--font-down-1);
+      position: absolute;
+      left: 55%;
+      transform: translate(-50%, 50%);
+      padding: 0.35em 0.5em;
     }
 
     .topic-avatar {

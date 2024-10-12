@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index fce3aeb..c23d8e4 100644
+index a28eb37cf3d1d52ce6042881556b44fe67e0f355..3938062df30cebb58be220bc3dab03c61f1835ad 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -4,10 +4,13 @@ import {

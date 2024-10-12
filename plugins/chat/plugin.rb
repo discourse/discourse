@@ -463,6 +463,7 @@ after_initialize do
     field :sender, component: :user
 
     placeholder :channel_name
+    placeholder :post_quote, triggerable: :post_created_edited
 
     triggerables %i[recurring topic_tags_changed post_created_edited]
 
@@ -470,6 +471,10 @@ after_initialize do
       sender = User.find_by(username: fields.dig("sender", "value")) || Discourse.system_user
       channel = Chat::Channel.find_by(id: fields.dig("chat_channel_id", "value"))
       placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
+
+      if context["kind"] == "post_created_edited"
+        placeholders[:post_quote] = utils.build_quote(context["post"])
+      end
 
       creator =
         ::Chat::CreateMessage.call(

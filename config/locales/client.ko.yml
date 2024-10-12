@@ -113,7 +113,6 @@ ko:
       topic_html: '주제: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"
       close: "닫기"
-      twitter: "트위터에 공유"
       facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
@@ -3950,6 +3949,11 @@ ko:
           screened_ips: "노출된 IP들"
           screened_urls: "노출된 URL들"
           search_logs: "검색 로그"
+      section_landing_pages:
+        account:
+          title: "계정"
+          backups:
+            title: "백업"
       config_areas:
         about:
           community_name: "커뮤니티 이름"

@@ -745,7 +745,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("visiting category discovery no subcategoriees route", async function (assert) {
+  test("visiting category discovery no subcategories route", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
 
     await visit(`/c/${category1.slug}/${category1.id}/none`);

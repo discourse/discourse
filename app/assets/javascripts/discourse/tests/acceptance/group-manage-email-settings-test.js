@@ -218,7 +218,7 @@ acceptance(
 );
 
 acceptance(
-  "Managing Group Email Settings - SMTP and IMAP Enabled - Settings Preflled",
+  "Managing Group Email Settings - SMTP and IMAP Enabled - Settings Prefilled",
   function (needs) {
     needs.user();
     needs.settings({ enable_smtp: true, enable_imap: true });

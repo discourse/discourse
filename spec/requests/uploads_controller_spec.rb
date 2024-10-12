@@ -23,8 +23,6 @@ RSpec.describe UploadsController do
       context "when rate limited" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "should return 429 response code when maximum number of uploads per minute has been exceeded for a user" do
           SiteSetting.max_uploads_per_minute = 1
 
@@ -913,8 +911,6 @@ RSpec.describe UploadsController do
       describe "rate limiting" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "rate limits" do
           SiteSetting.max_presigned_put_per_minute = 1
 
@@ -1084,8 +1080,6 @@ RSpec.describe UploadsController do
 
       describe "rate limiting" do
         before { RateLimiter.enable }
-
-        use_redis_snapshotting
 
         it "rate limits" do
           SiteSetting.max_create_multipart_per_minute = 1
@@ -1279,8 +1273,6 @@ RSpec.describe UploadsController do
 
       describe "rate limiting" do
         before { RateLimiter.enable }
-
-        use_redis_snapshotting
 
         it "rate limits" do
           SiteSetting.max_batch_presign_multipart_per_minute = 1
@@ -1506,8 +1498,6 @@ RSpec.describe UploadsController do
 
       describe "rate limiting" do
         before { RateLimiter.enable }
-
-        use_redis_snapshotting
 
         it "rate limits" do
           SiteSetting.max_complete_multipart_per_minute = 1
