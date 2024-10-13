@@ -400,8 +400,8 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  openEmojiPicker(trigger) {
-    this.menu.show(trigger, {
+  async openEmojiPicker(trigger) {
+    await this.menu.show(trigger, {
       identifier: "emoji-picker",
       groupIdentifier: "emoji-picker",
       component: EmojiPickerVirtual,
@@ -411,6 +411,11 @@ export default class ChatMessageInteractor {
         },
       },
     });
+  }
+
+  @action
+  async closeEmojiPicker() {
+    await this.menu.close("emoji-picker");
   }
 
   @bind
