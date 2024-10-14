@@ -28,7 +28,7 @@ export default class UserField extends RestModel {
   @tracked searchable;
 
   get fieldTypeName() {
-    return UserField.fieldTypes().findBy("id", this.field_type).name;
+    return UserField.fieldTypes().find((ft) => ft.id === this.field_type).name;
   }
 }
 
