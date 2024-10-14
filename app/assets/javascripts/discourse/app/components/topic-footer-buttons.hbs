@@ -29,7 +29,6 @@
     {{#if (eq actionable.type "inline-button")}}
       {{#if (eq actionable.id "bookmark")}}
         <BookmarkMenu
-          @showLabel={{this.showBookmarkLabel}}
           @bookmarkManager={{this.topicBookmarkManager}}
           @buttonClasses="btn-default"
         />
