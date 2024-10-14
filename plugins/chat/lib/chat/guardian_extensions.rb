@@ -98,7 +98,7 @@ module Chat
     end
 
     def can_preview_chat_channel?(chat_channel)
-      return false unless chat_channel.chatable
+      return false if !chat_channel&.chatable
 
       if chat_channel.direct_message_channel?
         chat_channel.chatable.user_can_access?(@user)
