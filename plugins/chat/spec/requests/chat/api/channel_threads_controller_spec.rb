@@ -59,6 +59,15 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         end
       end
 
+      context "when channel was deleted" do
+        before { thread.channel.trash! }
+
+        it "returns 403" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+          expect(response.status).to eq(403)
+        end
+      end
+
       context "when user cannot access the channel" do
         before do
           thread.channel.update!(chatable: Fabricate(:private_category, group: Fabricate(:group)))
