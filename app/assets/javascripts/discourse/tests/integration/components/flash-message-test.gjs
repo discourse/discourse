@@ -14,7 +14,7 @@ module("Integration | Component | flash-message", function (hooks) {
       <FlashMessage @flash={{flash}} @type={{type}} />
     </template>);
 
-    assert.dom(".alert.alert-success").hasText("Success message");
+    assert.dom(".alert.alert-success").hasText(flash);
     assert.dom(".alert").hasClass("alert-success");
   });
 
@@ -26,7 +26,7 @@ module("Integration | Component | flash-message", function (hooks) {
       <FlashMessage @flash={{flash}} @type={{type}} />
     </template>);
 
-    assert.dom(".alert.alert-error").hasText("Error message");
+    assert.dom(".alert.alert-error").hasText(flash);
     assert.dom(".alert").hasClass("alert-error");
   });
 
@@ -38,7 +38,7 @@ module("Integration | Component | flash-message", function (hooks) {
       <FlashMessage @flash={{flash}} @type={{type}} />
     </template>);
 
-    assert.dom(".alert.alert-warning").hasText("Warning message");
+    assert.dom(".alert.alert-warning").hasText(flash);
     assert.dom(".alert").hasClass("alert-warning");
   });
 
@@ -50,7 +50,7 @@ module("Integration | Component | flash-message", function (hooks) {
       <FlashMessage @flash={{flash}} @type={{type}} />
     </template>);
 
-    assert.dom(".alert.alert-info").hasText("Info message");
+    assert.dom(".alert.alert-info").hasText(flash);
     assert.dom(".alert").hasClass("alert-info");
   });
 
