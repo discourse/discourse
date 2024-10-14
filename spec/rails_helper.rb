@@ -678,6 +678,33 @@ RSpec.configure do |config|
     BlockRequestsMiddleware.current_example_location = example.location
   end
 
+  config.after :each do |example|
+    if example.exception && RspecErrorTracker.exceptions.present?
+      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
+
+      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
+
+      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
+        lines << "\n"
+        lines << "Error encountered while proccessing #{path}"
+        lines << "  #{ex.class}: #{ex.message}"
+        ex.backtrace.each_with_index do |line, backtrace_index|
+          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
+            next if line.match?(%r{/gems/})
+          end
+          lines << "    #{line}\n"
+        end
+      end
+
+      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
+      lines << "\n"
+    end
+
+    unfreeze_time
+    ActionMailer::Base.deliveries.clear
+    Discourse.redis.flushdb
+  end
+
   config.after(:each, type: :system) do |example|
     lines = RSpec.current_example.metadata[:extra_failure_lines]
 
@@ -736,33 +763,6 @@ RSpec.configure do |config|
 
     Capybara.reset_session!
     MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
-  end
-
-  config.after :each do |example|
-    if example.exception && RspecErrorTracker.exceptions.present?
-      lines = (RSpec.current_example.metadata[:extra_failure_lines] ||= +"")
-
-      lines << "~~~~~~~ SERVER EXCEPTIONS ~~~~~~~"
-
-      RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
-        lines << "\n"
-        lines << "Error encountered while proccessing #{path}"
-        lines << "  #{ex.class}: #{ex.message}"
-        ex.backtrace.each_with_index do |line, backtrace_index|
-          if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
-            next if line.match?(%r{/gems/})
-          end
-          lines << "    #{line}\n"
-        end
-      end
-
-      lines << "~~~~~~~ END SERVER EXCEPTIONS ~~~~~~~"
-      lines << "\n"
-    end
-
-    unfreeze_time
-    ActionMailer::Base.deliveries.clear
-    Discourse.redis.flushdb
   end
 
   config.before(:each, type: :multisite) do
