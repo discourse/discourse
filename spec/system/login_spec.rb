@@ -110,6 +110,26 @@ shared_examples "login scenarios" do |login_page_object|
     end
   end
 
+  context "when login is required" do
+    before { SiteSetting.login_required = true }
+
+    it "cannot browse annonymously" do
+      visit "/"
+
+      if SiteSetting.experimental_full_page_login
+        expect(page).to have_css(".login-fullpage")
+      else
+        expect(page).to have_css(".login-welcome")
+        expect(page).to have_css(".site-logo")
+        find(".login-welcome .login-button").click
+      end
+
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+  end
+
   context "with two-factor authentication" do
     let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
     let!(:user_second_factor_backup) { Fabricate(:user_second_factor_backup, user: user) }
