@@ -2669,6 +2669,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if channel_id.blank? || user_id.blank?
+      next if row["message"].blank? && row["upload_ids"].blank?
 
       last_editor_id = user_id_from_imported_id(row["last_editor_id"])
       thread_id = chat_thread_id_from_original_id(row["thread_id"])

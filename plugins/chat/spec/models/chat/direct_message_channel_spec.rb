@@ -52,6 +52,12 @@ RSpec.describe Chat::DirectMessageChannel do
     end
   end
 
+  describe "#threading_enabled" do
+    it "defaults to true" do
+      expect(channel.threading_enabled).to be(true)
+    end
+  end
+
   describe "#title" do
     subject(:title) { channel.title(user) }
 

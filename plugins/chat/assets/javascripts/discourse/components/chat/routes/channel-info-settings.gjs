@@ -98,8 +98,12 @@ export default class ChatRouteChannelInfoSettings extends Component {
     return this.args.channel.isCategoryChannel && this.args.channel.isOpen;
   }
 
-  get toggleThreadingAvailable() {
+  get toggleThreadingCategoryChannel() {
     return this.args.channel.isCategoryChannel && this.args.channel.isOpen;
+  }
+
+  get toggleThreadingDirectMessage() {
+    return this.args.channel.isDirectMessageChannel && this.args.channel.isOpen;
   }
 
   get channelWideMentionsDescription() {
@@ -420,6 +424,28 @@ export default class ChatRouteChannelInfoSettings extends Component {
                   </:action>
                 </section.row>
               {{/if}}
+
+              {{#if this.toggleThreadingDirectMessage}}
+                <section.row @label={{this.toggleThreadingLabel}}>
+                  <:action>
+                    <DToggleSwitch
+                      @state={{@channel.threadingEnabled}}
+                      class="c-channel-settings__threading-switch"
+                      {{on
+                        "click"
+                        (fn
+                          this.onToggleThreadingEnabled
+                          @channel.threadingEnabled
+                        )
+                      }}
+                    />
+                  </:action>
+
+                  <:description>
+                    {{this.toggleThreadingDescription}}
+                  </:description>
+                </section.row>
+              {{/if}}
             </form.section>
           {{/if}}
 
@@ -482,7 +508,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                 </section.row>
               {{/if}}
 
-              {{#if this.toggleThreadingAvailable}}
+              {{#if this.toggleThreadingCategoryChannel}}
                 <section.row @label={{this.toggleThreadingLabel}}>
                   <:action>
                     <DToggleSwitch

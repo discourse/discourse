@@ -36,6 +36,7 @@ class SuggestedTopicsBuilder
         end
       end
 
+      results = DiscoursePluginRegistry.apply_modifier(:suggested_topics_add_results, results)
       splice_results(results, priority)
     end
   end

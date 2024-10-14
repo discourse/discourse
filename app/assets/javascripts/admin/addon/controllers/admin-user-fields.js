@@ -28,6 +28,7 @@ export default class AdminUserFieldsController extends Controller {
   createField() {
     const f = this.store.createRecord("user-field", {
       field_type: "text",
+      requirement: "optional",
       position: MAX_FIELDS,
     });
     this.model.pushObject(f);
