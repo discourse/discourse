@@ -34,7 +34,7 @@ module Chat
     private
 
     def clean_term(contract:)
-      context.term = contract.term&.downcase&.strip&.gsub(/^[@#]+/, "")
+      context[:term] = contract.term&.downcase&.strip&.gsub(/^[@#]+/, "")
     end
 
     def fetch_memberships(guardian:)

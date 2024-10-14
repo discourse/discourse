@@ -61,10 +61,6 @@ task "assets:precompile:before": %w[
   STDERR.puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
-  # Ensure we clear emoji cache before pretty-text/emoji/data.js.es6.erb
-  # is recompiled
-  Emoji.clear_cache
-
   $node_compress = !ENV["SKIP_NODE_UGLIFY"]
 
   unless ENV["USE_SPROCKETS_UGLIFY"]
@@ -96,7 +92,7 @@ task "assets:precompile:css" => "environment" do
   # cause CSS uses asset_path
   Rails.application.assets_manifest.reload
 
-  if ENV["DONT_PRECOMPILE_CSS"] == "1"
+  if ENV["DONT_PRECOMPILE_CSS"] == "1" || ENV["SKIP_DB_AND_REDIS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
     STDERR.puts "Start compiling CSS: #{Time.zone.now}"

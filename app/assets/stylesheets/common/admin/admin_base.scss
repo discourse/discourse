@@ -459,7 +459,8 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-container {
-  margin-top: 10px;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
 
   .admin-section {
     margin-bottom: 1em;

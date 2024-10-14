@@ -74,27 +74,25 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: true,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }
         end
 
       if memberships.blank?
-        context.added_user_ids = []
+        context[:added_user_ids] = []
         return
       end
 
-      context.added_user_ids =
-        ::Chat::UserChatChannelMembership
-          .upsert_all(
-            memberships,
-            unique_by: %i[user_id chat_channel_id],
-            returning: Arel.sql("user_id, (xmax = '0') as inserted"),
-          )
-          .select { |row| row["inserted"] }
-          .map { |row| row["user_id"] }
+      context[:added_user_ids] = ::Chat::UserChatChannelMembership
+        .upsert_all(
+          memberships,
+          unique_by: %i[user_id chat_channel_id],
+          returning: Arel.sql("user_id, (xmax = '0') as inserted"),
+        )
+        .select { |row| row["inserted"] }
+        .map { |row| row["user_id"] }
 
       ::Chat::DirectMessageUser.upsert_all(
         context.added_user_ids.map do |id|

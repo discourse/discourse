@@ -296,6 +296,15 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
 
+    it "renders escaped HTML when including a #" do
+      update_message!(message_2, user: other_user, text: "#general <abbr>not abbr</abbr>")
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "#general &lt;abbr&gt;not abbr&lt;/abbr&gt;",
+      )
+    end
+
     it "renders safe HTML like mentions (which are just links) in the reply-to" do
       update_message!(
         message_2,

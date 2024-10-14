@@ -1,16 +1,19 @@
-<div class="admin-config-area">
-  <AdminPageHeader
-    @titleLabel="admin.dashboard.new_features.title"
-    @descriptionLabel="admin.dashboard.new_features.subtitle"
-    @learnMoreUrl="https://meta.discourse.org/tags/c/announcements/67/release-notes"
-  >
-    <:breadcrumbs>
-      <DBreadcrumbsItem
-        @path="/admin/whats-new"
-        @label={{i18n "admin.dashboard.new_features.title"}}
-      />
-    </:breadcrumbs>
-  </AdminPageHeader>
+<AdminPageHeader
+  @titleLabel="admin.dashboard.new_features.title"
+  @descriptionLabel="admin.dashboard.new_features.subtitle"
+  @learnMoreUrl="https://meta.discourse.org/tags/c/announcements/67/release-notes"
+  @hideTabs={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/whats-new"
+      @label={{i18n "admin.dashboard.new_features.title"}}
+    />
+  </:breadcrumbs>
+</AdminPageHeader>
 
-  <DashboardNewFeatures />
+<div class="admin-container admin-config-page__main-area">
+  <div class="admin-config-area">
+    <DashboardNewFeatures />
+  </div>
 </div>

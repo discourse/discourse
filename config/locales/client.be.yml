@@ -1652,6 +1652,11 @@ be:
           screened_emails: "Схаваныя емейлы"
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
+      section_landing_pages:
+        account:
+          title: "Аккаўнт"
+          backups:
+            title: "Бэкапы"
       config_areas:
         about:
           saved: "захавана!"

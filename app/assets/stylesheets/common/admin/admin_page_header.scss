@@ -6,13 +6,13 @@
     align-items: stretch;
     margin-bottom: var(--space-2);
 
-    @media (max-width: $mobile-breakpoint) {
-      flex-direction: column;
+    h1,
+    h2 {
+      margin: 0;
     }
 
-    h1,
-    h3 {
-      margin: 0;
+    h2 {
+      font-size: var(--font-up-2);
     }
 
     .admin-page-header__actions {
@@ -56,5 +56,35 @@
       width: auto;
       margin: 0;
     }
+  }
+}
+
+.admin-page-header {
+  &__title-row {
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: row;
+      align-items: center;
+
+      .admin-page-header__actions {
+        button {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.admin-page-subheader {
+  &__title-row {
+    @media (max-width: $mobile-breakpoint) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+}
+
+.admin-page-action-list-item {
+  .btn-primary {
+    color: var(--primary);
   }
 }

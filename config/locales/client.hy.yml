@@ -141,7 +141,6 @@ hy:
       topic_html: 'Թեմա՝ <span class="topic-title">%{topicTitle}</span>'
       post: "գրառում #%{postNumber} @%{username}-ի կողմից"
       close: "փակել"
-      twitter: "Կիսվել Twitter-ում"
       facebook: "Կիսվել Facebook-ում"
       email: "Ուղարկել էլ-փոստով"
       url: "Պատճենել և կիսվել հղումով"
@@ -3930,6 +3929,11 @@ hy:
           screened_ips: "Ցուցադրված IP-ներ"
           screened_urls: "Ցուցադրված URL-ները"
           search_logs: "Որոնել Գրառումներ"
+      section_landing_pages:
+        account:
+          title: "Հաշիվ"
+          backups:
+            title: "Պահուտսներ"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

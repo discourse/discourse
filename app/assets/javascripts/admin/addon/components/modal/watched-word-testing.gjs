@@ -1,7 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { Textarea } from "@ember/component";
+import { or } from "truth-helpers";
+import DModal from "discourse/components/d-modal";
+import i18n from "discourse-common/helpers/i18n";
 
-export default class WatchedWordTest extends Component {
+export default class WatchedWordTesting extends Component {
   @tracked value;
 
   get isReplace() {
@@ -81,4 +85,51 @@ export default class WatchedWordTest extends Component {
 
     return matches;
   }
+
+  <template>
+    <DModal
+      @title={{i18n
+        "admin.watched_words.test.modal_title"
+        action=@model.watchedWord.name
+      }}
+      @closeModal={{@closeModal}}
+      class="watched-words-test-modal"
+    >
+      <:body>
+        <p>{{i18n "admin.watched_words.test.description"}}</p>
+        <Textarea
+          @value={{this.value}}
+          name="test_value"
+          autofocus="autofocus"
+        />
+
+        {{#if this.matches}}
+          <p>
+            {{i18n "admin.watched_words.test.found_matches"}}
+            <ul>
+              {{#each this.matches as |match|}}
+                <li>
+                  {{#if (or this.isReplace this.isLink)}}
+                    <span class="match">{{match.match}}</span>
+                    &rarr;
+                    <span class="replacement">{{match.replacement}}</span>
+                  {{else if this.isTag}}
+                    <span class="match">{{match.match}}</span>
+                    &rarr;
+                    {{#each match.tags as |tag|}}
+                      <span class="tag">{{tag}}</span>
+                    {{/each}}
+                  {{else}}
+                    {{match}}
+                  {{/if}}
+                </li>
+              {{/each}}
+            </ul>
+          </p>
+        {{else}}
+          <p>{{i18n "admin.watched_words.test.no_matches"}}</p>
+        {{/if}}
+      </:body>
+    </DModal>
+  </template>
 }

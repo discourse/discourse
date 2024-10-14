@@ -137,7 +137,7 @@ jobs:
         run: rm -rf plugins/discourse-ai
 
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache

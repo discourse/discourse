@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsController < Chat::ApiController
   def update
-    Chat::UpdateThreadNotificationSettings.call do
+    Chat::UpdateThreadNotificationSettings.call(service_params) do
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_model_not_found(:thread) { raise Discourse::NotFound }

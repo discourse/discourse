@@ -640,7 +640,7 @@ ro:
     scopes:
       message_bus: "Actualizări directe (live)"
       notifications: "Citește și șterge notificările"
-      push: "Trimite notificările către servicii externe"
+      push: "Notificări instante către servicii externe"
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"
@@ -1165,6 +1165,7 @@ ro:
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
+    svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
     full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."

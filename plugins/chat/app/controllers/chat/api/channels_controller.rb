@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsController < Chat::ApiController
-  CHANNEL_EDITABLE_PARAMS ||= %i[name description slug]
-  CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[
-    auto_join_users
-    allow_channel_wide_mentions
-    threading_enabled
-  ]
+  CHANNEL_EDITABLE_PARAMS ||= %i[name description slug threading_enabled]
+  CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[auto_join_users allow_channel_wide_mentions]
 
   def index
     permitted = params.permit(:filter, :limit, :offset, :status)
@@ -33,7 +29,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def destroy
-    Chat::TrashChannel.call do
+    Chat::TrashChannel.call(service_params) do
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
       on_success { render(json: success_json) }
@@ -59,7 +55,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     # at the moment. This may change in future, at which point we will need to pass in
     # a chatable_type param as well and switch to the correct service here.
     Chat::CreateCategoryChannel.call(
-      channel_params.merge(category_id: channel_params[:chatable_id]),
+      service_params.merge(channel_params.merge(category_id: channel_params[:chatable_id])),
     ) do
       on_success do
         render_serialized(
@@ -104,7 +100,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       auto_join_limiter(channel_from_params).performed!
     end
 
-    Chat::UpdateChannel.call(params_to_edit) do
+    Chat::UpdateChannel.call(service_params.merge(params_to_edit)) do
       on_success do
         render_serialized(
           result.channel,

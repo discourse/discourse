@@ -149,7 +149,6 @@ sr:
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       close: "затвори"
-      twitter: "Подели на Твитеру"
       facebook: "Подели на Фејсбуку"
       email: "Пошаљи е-поштом"
       url: "Копирај и подели линк"
@@ -2032,6 +2031,10 @@ sr:
           screened_emails: "Provereni emailovi"
           screened_ips: "Provereni IP-ovi"
           screened_urls: "Provereni URL-ovi"
+      section_landing_pages:
+        account:
+          backups:
+            title: "Sigurnosne kopije"
       config_areas:
         about:
           saved: "sačuvano!"

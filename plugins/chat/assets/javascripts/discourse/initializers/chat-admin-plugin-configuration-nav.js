@@ -19,10 +19,7 @@ export default {
         },
       ]);
 
-      api.renderInOutlet(
-        "admin-plugin-config-page-actions-chat",
-        ChatAdminPluginActions
-      );
+      api.registerPluginHeaderActionComponent("chat", ChatAdminPluginActions);
     });
   },
 };

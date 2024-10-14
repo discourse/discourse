@@ -120,7 +120,6 @@ da:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
-      twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-mail"
       url: "Kopiér og del URL"
@@ -4174,6 +4173,11 @@ da:
           screened_ips: "Blokerede IPer"
           screened_urls: "Blokerede URLer"
           search_logs: "Søgnings logs"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

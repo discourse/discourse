@@ -59,15 +59,14 @@ module Chat
 
     def find_or_create_thread(channel:, original_message:, contract:)
       if original_message.thread_id.present?
-        return context.thread = ::Chat::Thread.find_by(id: original_message.thread_id)
+        return context[:thread] = ::Chat::Thread.find_by(id: original_message.thread_id)
       end
 
-      context.thread =
-        channel.threads.create(
-          title: contract.title,
-          original_message: original_message,
-          original_message_user: original_message.user,
-        )
+      context[:thread] = channel.threads.create(
+        title: contract.title,
+        original_message: original_message,
+        original_message_user: original_message.user,
+      )
       fail!(context.thread.errors.full_messages.join(", ")) if context.thread.invalid?
     end
 
@@ -76,7 +75,7 @@ module Chat
     end
 
     def fetch_membership(guardian:)
-      context.membership = context.thread.membership_for(guardian.user)
+      context[:membership] = context.thread.membership_for(guardian.user)
     end
 
     def publish_new_thread(channel:, original_message:)

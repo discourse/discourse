@@ -573,6 +573,46 @@ RSpec.describe TopicQuery do
           tagged_topic3,
         )
       end
+
+      context "with hidden tags" do
+        let(:hidden_tag) { Fabricate(:tag, name: "hidden") }
+        let!(:staff_tag_group) do
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+        end
+        let!(:topic_with_hidden_tag) { Fabricate(:topic, tags: [tag, hidden_tag]) }
+
+        it "returns topics with hidden tag to admin" do
+          expect(
+            TopicQuery.new(admin, tags: hidden_tag.name).list_latest.topics,
+          ).to contain_exactly(topic_with_hidden_tag)
+        end
+
+        it "doesn't return topics with hidden tags to anon" do
+          expect(TopicQuery.new(nil, tags: hidden_tag.name).list_latest.topics).to be_empty
+        end
+
+        it "doesn't return topic with hidden tags to non-staff" do
+          expect(TopicQuery.new(user, tags: hidden_tag.name).list_latest.topics).to be_empty
+        end
+
+        it "returns topics with hidden tag to admin when using match_all_tags" do
+          expect(
+            TopicQuery
+              .new(admin, tags: [tag.name, hidden_tag.name], match_all_tags: true)
+              .list_latest
+              .topics,
+          ).to contain_exactly(topic_with_hidden_tag)
+        end
+
+        it "doesn't return topic with hidden tags to non-staff when using match_all_tags" do
+          expect(
+            TopicQuery
+              .new(user, tags: [tag.name, hidden_tag.name], match_all_tags: true)
+              .list_latest
+              .topics,
+          ).to be_empty
+        end
+      end
     end
 
     context "when remove_muted_tags is enabled" do
@@ -1449,8 +1489,6 @@ RSpec.describe TopicQuery do
   end
 
   describe "#list_suggested_for" do
-    use_redis_snapshotting
-
     def clear_cache!
       Discourse.redis.keys("random_topic_cache*").each { |k| Discourse.redis.del k }
     end

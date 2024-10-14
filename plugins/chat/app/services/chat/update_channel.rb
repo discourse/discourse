@@ -66,7 +66,7 @@ module Chat
 
     def update_channel(channel:, contract:)
       channel.assign_attributes(contract.attributes)
-      context.threading_enabled_changed = channel.threading_enabled_changed?
+      context[:threading_enabled_changed] = channel.threading_enabled_changed?
       channel.save!
     end
 

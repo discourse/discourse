@@ -46,6 +46,27 @@ RSpec.describe GlobalSetting do
       new_token = Discourse.redis.without_namespace.get(GlobalSetting::REDIS_SECRET_KEY)
       expect(new_token).to eq(token)
     end
+
+    context "when a secret key is not provided and redis is not used" do
+      before do
+        GlobalSetting.skip_redis = true
+        GlobalSetting.stubs(:secret_key_base).returns("")
+        # Fail tests if redis calls are made
+        Discourse.stubs(:redis).returns(nil)
+      end
+
+      after do
+        GlobalSetting.skip_redis = false
+        Discourse.unstub(:redis)
+      end
+
+      it "generates a new random key in memory without redis" do
+        GlobalSetting.reset_secret_key_base!
+        token = GlobalSetting.safe_secret_key_base
+        new_token = GlobalSetting.safe_secret_key_base
+        expect(new_token).to eq(token)
+      end
+    end
   end
 
   describe ".add_default" do

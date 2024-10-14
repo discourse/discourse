@@ -141,7 +141,7 @@ ug:
       topic_html: 'تېما: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} يوللىغان يازما سانى #%{postNumber}"
       close: "تاقا"
-      twitter: "Twitter دا ھەمبەھىرلەڭ"
+      twitter: "X دا ھەمبەھىر"
       facebook: "Facebook تا ھەمبەھىرلەڭ"
       email: "ئېلخەتتە يوللا"
       url: "تور ئادرېسىنى كۆچۈرۈپ ھەمبەھىرلە"
@@ -3474,7 +3474,9 @@ ug:
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
+      load_more_replies: "تېخىمۇ كۆپ جاۋابنى يۈكلە"
       sr_collapse_replies: "سىڭدۈرۈلگەن جاۋابنى يىغىدۇ"
+      sr_load_more_replies: "تېخىمۇ كۆپ سىڭدۈرۈلگەن جاۋابنى يۈكلەيدۇ"
       sr_date: "يوللانغان ۋاقتى"
       sr_expand_replies:
         one: "بۇ يازمىدا %{count} جاۋاب بار"
@@ -5224,6 +5226,15 @@ ug:
           security: "بىخەتەرلىك تەڭشىكى"
           spam: "ئەخلەت خەت تەڭشىكى"
           staff_action_logs: "باشقۇرغۇچى مەشغۇلات خاتىرىسى"
+      section_landing_pages:
+        account:
+          title: "ھېسابات"
+          backups:
+            title: "زاپاس"
+            description: "تور بېكىتىڭىزنىڭ سانلىق مەلۇماتلىرىنى زاپاسلاڭ"
+          whats_new:
+            title: "يېڭىلىق"
+            description: "Discourse نىڭ يېڭى نەشرى ۋە ياخشىلىنىشلىرىنى بايقاڭ"
       config_areas:
         about:
           header: "تور بېكىتىڭىز ھەققىدە"
@@ -6321,7 +6332,7 @@ ug:
         post_edits_count: "يازما تەھرىر"
         anonymize: "ئىشلەتكۈچىنى نامسىزلاشتۇر"
         anonymize_confirm: "بۇ ھېساباتنى راستتىنلا نامسىزلەشتۈرەمسىز؟ ئىشلەتكۈچى ئىسمى ۋە ئېلخەتنى ئۆزگەرتىپ، بارلىق تەرجىمىھال ئۇچۇرى ئەسلىگە قايتۇرۇلىدۇ."
-        delete_associated_accounts_confirm: "بۇ ھېساباتتىن مۇناسىۋەتلىك ھېساباتلارنى راستتىنلا ئۆچۈرەمسىز؟ ئۇلار تىزىمغا كىرەلمەسلىكى مۇمكىن."
+        delete_associated_accounts_confirm: "بۇ ھېساباتقا مۇناسىۋەتلىك بارلىق ھېساباتلارنى راستتىنلا ئۆچۈرەمسىز؟ ئەگەر ئۇلار ئېلخەتنى ئۆزگەرتكەن بولسا ئىشلەتكۈچى تىزىمغا كىرەلمەسلىكى مۇمكىن."
         anonymize_yes: "ھەئە، بۇ ھېساباتنى نامسىزلاشتۇر"
         anonymize_failed: "ھېساباتنى نامسىزلاشتۇرۇشتا مەسىلە كۆرۈلدى."
         delete: "ئىشلەتكۈچى ئۆچۈر"

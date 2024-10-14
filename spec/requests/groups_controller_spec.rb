@@ -2870,8 +2870,6 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
-        use_redis_snapshotting
-
         it "rate limits anon searches per user" do
           RateLimiter.enable
 

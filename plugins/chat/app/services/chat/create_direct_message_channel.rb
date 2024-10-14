@@ -105,8 +105,7 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: false,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }

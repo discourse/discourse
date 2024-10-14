@@ -113,7 +113,7 @@ zh_CN:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} 发布的帖子 #%{postNumber}"
       close: "关闭"
-      twitter: "分享到 Twitter"
+      twitter: "在 X 上分享"
       facebook: "分享到 Facebook"
       email: "通过电子邮件发送"
       url: "复制并分享 URL"
@@ -4937,6 +4937,15 @@ zh_CN:
           security: "安全设置"
           spam: "垃圾信息设置"
           staff_action_logs: "管理人员操作日志"
+      section_landing_pages:
+        account:
+          title: "帐户"
+          backups:
+            title: "备份"
+            description: "备份你的网站数据"
+          whats_new:
+            title: "最新变化"
+            description: "发现 Discourse 的新版本和改进之处"
       config_areas:
         about:
           header: "关于您的网站"
@@ -5697,6 +5706,7 @@ zh_CN:
             tag_group_create: "创建标签组"
             tag_group_destroy: "删除标签组"
             tag_group_change: "修改标签组"
+            delete_associated_accounts: "删除关联帐户"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -5921,6 +5931,9 @@ zh_CN:
         check_sso:
           title: "显示 SSO 有效负载"
           text: "显示"
+        delete_associated_accounts:
+          title: "删除此用户的所有关联帐户"
+          text: "删除关联帐户"
       user:
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
@@ -6016,6 +6029,7 @@ zh_CN:
         post_edits_count: "帖子编辑"
         anonymize: "对用户进行匿名化处理"
         anonymize_confirm: "确定要对此帐户进行匿名化处理吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
+        delete_associated_accounts_confirm: "你确定要从此帐户删除所有关联帐户吗？如果用户的电子邮件发生变化，则用户可能无法登录。"
         anonymize_yes: "是，对此帐户进行匿名化处理"
         anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"

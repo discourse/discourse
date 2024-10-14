@@ -83,7 +83,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().field("foo").fillIn("");
 
-    assert.form().field("foo").hasNoError();
+    assert.form().field("foo").hasNoErrors();
 
     await formKit().submit();
 
@@ -96,7 +96,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().field("foo").fillIn("t");
 
-    assert.form().field("foo").hasNoError();
+    assert.form().field("foo").hasNoErrors();
     assert.form().field("bar").hasError("Required");
     assert.form().hasErrors({
       bar: "Required",
@@ -187,7 +187,7 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     await formKit().reset();
 
-    assert.form().field("foo").hasNoError("it resets the errors");
+    assert.form().field("foo").hasNoErrors("it resets the errors");
   });
 
   test("immutable by default", async function (assert) {

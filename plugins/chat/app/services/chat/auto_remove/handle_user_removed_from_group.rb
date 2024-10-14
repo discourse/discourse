@@ -81,11 +81,8 @@ module Chat
 
         return if memberships_to_remove.empty?
 
-        context.merge(
-          users_removed_map:
-            Chat::Action::RemoveMemberships.call(
-              memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
-            ),
+        context[:users_removed_map] = Chat::Action::RemoveMemberships.call(
+          memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
         )
       end
 

@@ -139,7 +139,6 @@ bg:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
       close: "затвори"
-      twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
       email: "Изпратете чрез имейл"
       url: "Копирайте и споделете линка"
@@ -3596,6 +3595,11 @@ bg:
           screened_ips: "Проверени IP-та"
           screened_urls: "Проверени URL-та"
           search_logs: "Търсене в логовете"
+      section_landing_pages:
+        account:
+          title: "Профил"
+          backups:
+            title: "Бекъпи"
       config_areas:
         about:
           optional: "(по избор)"

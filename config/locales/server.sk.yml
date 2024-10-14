@@ -2395,7 +2395,7 @@ sk:
     auto_handle_queued_age: "Automaticky spracovávať záznamy, ktoré čakajú na kontrolu po týchto mnohých dňoch. Príznaky budú ignorované. Príspevky vo fronte a používatelia budú odmietnutí. Ak chcete túto funkciu vypnúť, nastavte na 0."
     penalty_step_hours: "Predvolené sankcie za umlčanie alebo pozastavenie používateľov v hodinách. Prvý priestupok je predvolený na prvú hodnotu, druhý priestupok je predvolený na druhú hodnotu atď."
     penalty_include_post_message: "Automatické zahrnutie správy s urážlivým príspevkom do šablóny e-mailovej správy pri umlčaní alebo pozastavení používateľa"
-    svg_icon_subset: "Pridajte ďalšie ikony FontAwesome 5, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony použite prefix \"fa-\", pre bežné ikony \"far-\" a pre ikony značky \"fab-\"."
+    svg_icon_subset: "Pridajte ďalšie ikony FontAwesome, ktoré chcete zahrnúť do svojich aktív. Pre pevné ikony použite prefix \"fa-\", pre bežné ikony \"far-\" a pre ikony značky \"fab-\"."
     max_prints_per_hour_per_user: "Maximálny počet výtlačkov /tlačovej strany (nastavením na 0 sa tlač zakáže)"
     full_name_required: "Na používateľskom profile je vyžadované plné meno."
     enable_names: "Na profile zobraziť plné používateľské meno, karty a emaily používateľa. Vypnite na schovanie plného mena všade."

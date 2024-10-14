@@ -471,7 +471,14 @@ RSpec.describe UserSerializer do
       expect(json[:user_passkeys]).to eq(nil)
     end
 
-    it "includes passkeys if feature is enabled" do
+    it "does not include them if requesting user isn't current user" do
+      SiteSetting.enable_passkeys = true
+      json = UserSerializer.new(user, scope: Guardian.new(), root: false).as_json
+
+      expect(json[:user_passkeys]).to eq(nil)
+    end
+
+    it "includes passkeys if feature is enabled for current user" do
       SiteSetting.enable_passkeys = true
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json

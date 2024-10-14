@@ -47,8 +47,10 @@ module Chat
     end
 
     def create_memberships(channel:, contract:)
-      context.added_user_ids =
-        ::Chat::Action::CreateMembershipsForAutoJoin.call(channel: channel, contract: contract)
+      context[:added_user_ids] = ::Chat::Action::CreateMembershipsForAutoJoin.call(
+        channel: channel,
+        contract: contract,
+      )
     end
 
     def recalculate_user_count(channel:, added_user_ids:)
