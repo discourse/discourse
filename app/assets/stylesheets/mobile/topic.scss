@@ -31,6 +31,73 @@
   top: -100%; // above parent container + some extra space
 }
 
+#topic-progress-wrapper {
+  position: fixed;
+  bottom: 0px;
+  right: 10px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  z-index: z("timeline");
+
+  &.docked {
+    position: initial;
+  }
+
+  html:not(.footer-nav-visible) & {
+    bottom: env(safe-area-inset-bottom);
+  }
+
+  &:not(.docked) {
+    @media screen and (min-width: $reply-area-max-width) {
+      // position to right side of composer
+      right: calc(50% + 10px);
+      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
+    }
+  }
+
+  &.with-transitions {
+    transition: bottom 0.2s, margin-bottom 0.2s;
+
+    #topic-progress .bg {
+      transition: width 0.5s;
+    }
+  }
+}
+
+#topic-progress {
+  position: relative;
+  background-color: var(--secondary);
+  color: var(--tertiary);
+  border: 1px solid var(--tertiary-low);
+  padding: 0.5em 1em;
+
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+
+  .nums {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    z-index: z("base");
+    font-weight: bold;
+  }
+  .d-icon {
+    position: absolute;
+    right: 8px;
+    bottom: 9px;
+    z-index: z("base");
+  }
+  .bg {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--progress-bg-width, 0);
+    background-color: var(--tertiary-low);
+  }
+}
+
 #topic-progress-expanded {
   border: 1px solid var(--primary-low);
   padding: 5px;
@@ -133,6 +200,16 @@ sub sub {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+
+  .create {
+    .d-button-label {
+      display: none;
+    }
+
+    .d-icon {
+      margin-right: 0;
+    }
+  }
 }
 
 .container.posts .topic-navigation {
