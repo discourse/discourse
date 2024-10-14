@@ -13,6 +13,7 @@ module PageObjects
 
       def open
         visit("/login")
+        self
       end
 
       def open_from_header
@@ -51,15 +52,18 @@ module PageObjects
 
       def fill_username(username)
         fill_input("#login-account-name", username)
+        self
       end
 
       def fill_password(password)
         fill_input("#login-account-password", password)
+        self
       end
 
       def fill(username: nil, password: nil)
         fill_username(username) if username
         fill_password(password) if password
+        self
       end
 
       def click_social_button(provider)

@@ -12,10 +12,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     before { Jobs.run_immediately! }
 
     it "can signup" do
-      signup_form.open
-      signup_form.fill_email("johndoe@example.com")
-      signup_form.fill_username("john")
-      signup_form.fill_password("supersecurepassword")
+      signup_form
+        .open
+        .fill_email("johndoe@example.com")
+        .fill_username("john")
+        .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_fields
 
       signup_form.click_create_account
@@ -23,10 +24,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     end
 
     it "can signup and activate account" do
-      signup_form.open
-      signup_form.fill_email("johndoe@example.com")
-      signup_form.fill_username("john")
-      signup_form.fill_password("supersecurepassword")
+      signup_form
+        .open
+        .fill_email("johndoe@example.com")
+        .fill_username("john")
+        .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_fields
 
       signup_form.click_create_account
@@ -73,11 +75,12 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       before { SiteSetting.invite_code = "cupcake" }
 
       it "can signup with valid code" do
-        signup_form.open
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
-        signup_form.fill_code("cupcake")
+        signup_form
+          .open
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
+          .fill_code("cupcake")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
@@ -85,11 +88,12 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       end
 
       it "cannot signup with invalid code" do
-        signup_form.open
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
-        signup_form.fill_code("pudding")
+        signup_form
+          .open
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
+          .fill_code("pudding")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
@@ -109,11 +113,12 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       end
 
       it "can signup when filling the custom field" do
-        signup_form.open
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
-        signup_form.fill_custom_field("Occupation", "Jedi")
+        signup_form
+          .open
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
+          .fill_custom_field("Occupation", "Jedi")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
@@ -121,12 +126,12 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       end
 
       it "cannot signup without filling the custom field" do
-        signup_form.open
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
-
-        signup_form.click_create_account
+        signup_form
+          .open
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
+          .click_create_account
         expect(signup_form).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
         expect(signup_form).to have_no_css(".account-created")
       end
@@ -139,10 +144,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       end
 
       it "can signup but cannot login until approval" do
-        signup_form.open
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
+        signup_form
+          .open
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
         expect(signup_form).to have_valid_fields
         signup_form.click_create_account
 
@@ -164,10 +170,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       end
 
       it "can login directly when using an auto approved email" do
-        signup_form.open
-        signup_form.fill_email("johndoe@awesomeemail.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
+        signup_form
+          .open
+          .fill_email("johndoe@awesomeemail.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
         expect(signup_form).to have_valid_fields
         signup_form.click_create_account
 
@@ -189,9 +196,10 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
 
       it "can signup and activate account" do
         visit("/discuss/signup")
-        signup_form.fill_email("johndoe@example.com")
-        signup_form.fill_username("john")
-        signup_form.fill_password("supersecurepassword")
+        signup_form
+          .fill_email("johndoe@example.com")
+          .fill_username("john")
+          .fill_password("supersecurepassword")
         expect(signup_form).to have_valid_fields
 
         signup_form.click_create_account
@@ -216,10 +224,11 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
     before { SiteSetting.blocked_email_domains = "example.com" }
 
     it "cannot signup" do
-      signup_form.open
-      signup_form.fill_email("johndoe@example.com")
-      signup_form.fill_username("john")
-      signup_form.fill_password("supersecurepassword")
+      signup_form
+        .open
+        .fill_email("johndoe@example.com")
+        .fill_username("john")
+        .fill_password("supersecurepassword")
       expect(signup_form).to have_valid_username
       expect(signup_form).to have_valid_password
       expect(signup_form).to have_content(I18n.t("user.email.not_allowed"))
