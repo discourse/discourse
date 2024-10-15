@@ -5,6 +5,8 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
+import icon from "discourse-common/helpers/d-icon";
+import dIcon from "discourse-common/helpers/d-icon";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
@@ -33,8 +35,7 @@ export default class TableHeaderToggle extends Component {
 
   get chevronIcon() {
     if (this.args.order === this.args.field) {
-      let chevron = iconHTML(this.args.asc ? "chevron-up" : "chevron-down");
-      return htmlSafe(chevron);
+      return this.args.asc ? "chevron-up" : "chevron-down";
     } else {
       return null;
     }
@@ -67,14 +68,17 @@ export default class TableHeaderToggle extends Component {
     return I18n.t("directory.sort.label", { criteria });
   }
 
-  get headerTitle() {
-    let args = {
-      field: this.args.field,
-      labelKey: this.args.labelKey,
-      icon: this.args.icon,
-      translated: this.args.translated,
-    };
-    return directoryTableHeaderTitle(args);
+  get iconName() {
+    return this.args.icon || null;
+  }
+
+  get label() {
+    const labelKey = this.args.labelKey || `directory.${this.args.field}`;
+    return this.args.translated
+      ? this.args.field
+      : I18n.t(`${labelKey}_long`, {
+          defaultValue: I18n.t(labelKey),
+        });
   }
 
   @action
@@ -120,7 +124,9 @@ export default class TableHeaderToggle extends Component {
       colspan={{@colspan}}
       aria-sort={{this.ariaSort}}
       role={{this.role}}
+      {{! template-lint-disable no-invalid-interactive }}
       {{on "click" this.click}}
+      {{! template-lint-disable no-invalid-interactive }}
       {{on "keypress" this.keyPress}}
     >
       <div
@@ -133,8 +139,13 @@ export default class TableHeaderToggle extends Component {
       >
         {{yield}}
         <span class="text">
-          {{{this.headerTitle}}}
-          {{{this.chevronIcon}}}
+          {{#if this.iconName}}
+            {{icon this.iconName}}
+          {{/if}}
+          {{this.label}}
+          {{#if this.chevronIcon}}
+            {{dIcon this.chevronIcon}}
+          {{/if}}
         </span>
       </div>
     </div>
