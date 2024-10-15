@@ -597,6 +597,15 @@ sv:
             ip_address:
               blocked: "Nya registreringar är inte tillåtna från din IP-adress."
               max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
+        user_password:
+          attributes:
+            password:
+              common: "är ett av de 10 000 vanligaste lösenorden. Använd ett säkrare lösenord."
+              same_as_username: "är samma som ditt användarnamn. Använd ett säkrare lösenord."
+              same_as_email: "är samma som din e-postadress. Använd ett säkrare lösenord."
+              same_as_current: "är samma som ert nuvarande lösenord"
+              same_as_name: "är samma som ditt namn."
+              unique_characters: "har för många upprepade tecken. Använd ett säkrare lösenord."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1909,7 +1918,6 @@ sv:
     reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     blocked_attachment_content_types: "Lista med nyckelord som används för att blockera bilagor baserat på innehållstyp."
     blocked_attachment_filenames: "Lista med nyckelord som används för att blockera bilagor baserat på filnamn."
-    forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
     trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."

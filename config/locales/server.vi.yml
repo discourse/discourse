@@ -452,6 +452,15 @@ vi:
             ip_address:
               blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
               max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
+        user_password:
+          attributes:
+            password:
+              common: "là một trong 10000 mật khẩu được sử dụng nhiều nhất. Vui lòng sử dụng một mật khẩu an toàn hơn."
+              same_as_username: "giống với tên đăng nhập của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn."
+              same_as_email: "giống với email của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn"
+              same_as_current: "là giống như mật khẩu hiện tại của bạn."
+              same_as_name: "là giống với tên của bạn."
+              unique_characters: "có quá nhiều ký tự lặp lại. Vui lòng sử dụng mật khẩu an toàn hơn."
         user_profile:
           attributes:
             featured_topic_id:

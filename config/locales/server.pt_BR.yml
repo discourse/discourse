@@ -686,7 +686,6 @@ pt_BR:
               same_as_username: "é igual o seu nome do(a) usuário(a). Use uma senha mais segura."
               same_as_email: "é igual o seu e-mail. Use uma senha mais segura."
               same_as_current: "é igual à sua senha atual."
-              same_as_previous: "é igual à sua senha anterior."
               same_as_name: "é igual ao seu nome."
               unique_characters: "tem muitos caracteres repetidos. Use uma senha mais segura."
             username:
@@ -696,6 +695,15 @@ pt_BR:
             ip_address:
               blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
               max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
+        user_password:
+          attributes:
+            password:
+              common: "é uma das 10.000 senhas mais comuns. Use uma senha mais segura."
+              same_as_username: "é igual o seu nome do(a) usuário(a). Use uma senha mais segura."
+              same_as_email: "é igual o seu e-mail. Use uma senha mais segura."
+              same_as_current: "é igual à sua senha atual."
+              same_as_name: "é igual ao seu nome."
+              unique_characters: "tem muitos caracteres repetidos. Use uma senha mais segura."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2099,7 +2107,6 @@ pt_BR:
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de devolução após X dias."
     blocked_attachment_content_types: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no tipo de conteúdo."
     blocked_attachment_filenames: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no nome do arquivo."
-    forwarded_emails_behaviour: "Como tratar um e-mail encaminhado para o Discourse"
     always_show_trimmed_content: "Sempre exiba a parte cortada dos e-mails recebidos. AVISO: pode revelar endereços de e-mail."
     trim_incoming_emails: "Cortar parte dos e-mails recebidos que não são relevantes."
     private_email: "Não inclua o conteúdo de postagens ou tópicos no título ou corpo do e-mail. OBSERVAÇÃO: também desativa e-mails de compilação."

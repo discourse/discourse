@@ -445,6 +445,15 @@ lt:
             ip_address:
               blocked: "Naujos registracijos neleidžiamos iš jūsų IP adreso."
               max_new_accounts_per_registration_ip: "Naujos registracijos neleidžiamos iš jūsų IP adreso (pasiekta maksimali riba). Susisiekite su administracija."
+        user_password:
+          attributes:
+            password:
+              common: "yra vienas iš 10000 populiariausių slaptažodžių. Prašome pasirinkti saugesnį slaptažodį."
+              same_as_username: "yra toks pats kaip jūsų vartotojo vardas. Naudokite saugesnį slaptažodį."
+              same_as_email: "yra toks pats, kaip jūsų el. paštas. Prašome naudoti saugesnį slaptažodį."
+              same_as_current: "yra toks pats kaip jūsų dabartinis slaptažodis."
+              same_as_name: "yra toks pats kaip jūsų vardas."
+              unique_characters: "yra per daug pasikartojančių simbolių. Naudokite saugesnį slaptažodį."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1373,7 +1382,6 @@ lt:
     reset_bounce_score_after_days: "Automatiškai iš naujo nustatyti atmetimo balą po X dienų."
     blocked_attachment_content_types: "Raktinių žodžių, naudojamų įtraukiant priedus pagal turinio tipą, sąrašas."
     blocked_attachment_filenames: "Raktinių žodžių, naudojamų blokuoti priedus pagal failo pavadinimą, sąrašas."
-    forwarded_emails_behaviour: "Kaip apdoroti persiųstą el. laišką Discourse"
     always_show_trimmed_content: "Visada rodyti apkarpytas gaunamų el. laiškų dalis. ĮSPĖJIMAS: gali atskleisti el. pašto adresus."
     trim_incoming_emails: "Apkarpykite dalį gaunamų el. laiškų, kurie nėra svarbūs."
     relative_date_duration: "Dienų skaičius po paskelbimo, kai paskelbimo datos bus rodomos kaip santykinės (7 d.), o ne absoliučios (vasario 20 d.)."

@@ -229,6 +229,9 @@ de:
             watching_tags:
               label: Überwachte Schlagwörter
               description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
+            trigger_with_pms:
+              label: Auslösen mit PNs
+              description: Wird auch ausgelöst, wenn die Tags in einer PN geändert wurden
         after_post_cook:
           fields:
             valid_trust_levels:

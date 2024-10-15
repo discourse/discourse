@@ -510,7 +510,6 @@ id:
               same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_current: "sama dengan kata sandi saat ini."
-              same_as_previous: "sama dengan kata sandi Anda sebelumnya."
               same_as_name: "sama dengan nama Anda."
               unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
             username:
@@ -520,6 +519,15 @@ id:
             ip_address:
               blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
               max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
+        user_password:
+          attributes:
+            password:
+              common: "adalah satu dari 10000 kata sandi umum. Mohon gunakan kata sandi yang lebih aman."
+              same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
+              same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
+              same_as_current: "sama dengan kata sandi saat ini."
+              same_as_name: "sama dengan nama Anda."
+              unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
         user_profile:
           attributes:
             featured_topic_id:

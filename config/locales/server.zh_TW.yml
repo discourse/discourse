@@ -397,6 +397,15 @@ zh_TW:
             ip_address:
               blocked: "不允許從你的 IP 地址註冊新使用者。"
               max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
+        user_password:
+          attributes:
+            password:
+              common: "這個密碼是 10000 個最常用密碼之一，請使用一個更安全的密碼"
+              same_as_username: "與你的使用者名稱相同。請使用其他更安全的密碼。"
+              same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
+              same_as_current: "與您目前的密碼相同。"
+              same_as_name: "和你的名字一樣"
+              unique_characters: "你的密碼有太多重複字元了。請使用其他更安全的密碼。"
         user_email:
           attributes:
             user_id:
