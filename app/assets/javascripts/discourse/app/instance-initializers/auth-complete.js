@@ -60,19 +60,32 @@ export default {
               const applicationController = owner.lookup(
                 "controller:application"
               );
-              modal.show(LoginModal, {
-                model: {
-                  showNotActivated: (props) =>
-                    applicationRoute.send("showNotActivated", props),
-                  showCreateAccount: (props) =>
-                    applicationRoute.send("showCreateAccount", props),
-                  canSignUp: applicationController.canSignUp,
-                  flash: errorMsg,
-                  flashType: className || "success",
-                  awaitingApproval: options.awaiting_approval,
-                  ...properties,
-                },
-              });
+
+              const loginProps = {
+                canSignUp: applicationController.canSignUp,
+                flash: errorMsg,
+                flashType: className || "success",
+                awaitingApproval: options.awaiting_approval,
+                ...properties,
+              };
+
+              if (siteSettings.experimental_full_page_login) {
+                router.transitionTo("login").then((login) => {
+                  Object.keys(loginProps || {}).forEach((key) => {
+                    login.controller.set(key, loginProps[key]);
+                  });
+                });
+              } else {
+                modal.show(LoginModal, {
+                  model: {
+                    showNotActivated: (props) =>
+                      applicationRoute.send("showNotActivated", props),
+                    showCreateAccount: (props) =>
+                      applicationRoute.send("showCreateAccount", props),
+                    ...loginProps,
+                  },
+                });
+              }
               next(() => callback?.());
             };
 
@@ -117,17 +130,25 @@ export default {
               return;
             }
 
-            next(() =>
-              modal.show(CreateAccount, {
-                model: {
-                  accountEmail: options.email,
-                  accountUsername: options.username,
-                  accountName: options.name,
-                  authOptions: EmberObject.create(options),
-                  skipConfirmation: siteSettings.auth_skip_create_confirm,
-                },
-              })
-            );
+            next(() => {
+              const createAccountProps = {
+                accountEmail: options.email,
+                accountUsername: options.username,
+                accountName: options.name,
+                authOptions: EmberObject.create(options),
+                skipConfirmation: siteSettings.auth_skip_create_confirm,
+              };
+
+              if (siteSettings.experimental_full_page_login) {
+                router.transitionTo("signup").then((login) => {
+                  Object.keys(createAccountProps || {}).forEach((key) => {
+                    login.controller.set(key, createAccountProps[key]);
+                  });
+                });
+              } else {
+                modal.show(CreateAccount, { model: createAccountProps });
+              }
+            });
           }
         });
       });

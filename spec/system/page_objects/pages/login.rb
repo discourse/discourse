@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 module PageObjects
-  module Modals
-    class Login < PageObjects::Modals::Base
+  module Pages
+    class Login < PageObjects::Pages::Base
       def open?
-        super && has_css?(".login-modal")
+        has_css?(".login-fullpage")
       end
 
       def closed?
-        super && has_no_css?(".login-modal")
+        has_no_css?(".login-fullpage")
       end
 
       def open
@@ -22,7 +22,7 @@ module PageObjects
 
       def click(selector)
         if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_css(".d-modal:not(.is-animating)")
+          expect(page).to have_no_css(".d-modal.is-animating")
         end
         find(selector).click
       end
@@ -45,10 +45,9 @@ module PageObjects
 
       def fill_input(selector, text)
         if page.has_css?("html.mobile-view", wait: 0)
-          expect(page).to have_css(".d-modal:not(.is-animating)")
+          expect(page).to have_no_css(".d-modal.is-animating")
         end
         find(selector).fill_in(with: text)
-        self
       end
 
       def fill_username(username)
