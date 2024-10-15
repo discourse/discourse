@@ -3,16 +3,10 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
-import directoryTableHeaderTitle from "discourse/helpers/directory-table-header-title";
-import icon from "discourse-common/helpers/d-icon";
 import dIcon from "discourse-common/helpers/d-icon";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
 export default class TableHeaderToggle extends Component {
-  role = "columnheader";
-
   get id() {
     return `table-header-toggle-${this.args.field.replace(/\s/g, "")}`;
   }
@@ -36,8 +30,6 @@ export default class TableHeaderToggle extends Component {
   get chevronIcon() {
     if (this.args.order === this.args.field) {
       return this.args.asc ? "chevron-up" : "chevron-down";
-    } else {
-      return null;
     }
   }
 
@@ -92,9 +84,7 @@ export default class TableHeaderToggle extends Component {
       newAsc = null;
     }
 
-    if (this.args.onToggle) {
-      this.args.onToggle(newOrder, newAsc);
-    }
+    this.args.onToggle?.(newOrder, newAsc);
 
     this._focusHeader();
   }
@@ -112,7 +102,7 @@ export default class TableHeaderToggle extends Component {
 
   @action
   keyPress(event) {
-    if (event.which === 13) {
+    if (event.key === "Enter") {
       this.toggleProperties();
     }
   }
@@ -123,7 +113,7 @@ export default class TableHeaderToggle extends Component {
       title={{@title}}
       colspan={{@colspan}}
       aria-sort={{this.ariaSort}}
-      role={{this.role}}
+      role="columnheader"
       {{! template-lint-disable no-invalid-interactive }}
       {{on "click" this.click}}
       {{! template-lint-disable no-invalid-interactive }}
@@ -140,7 +130,7 @@ export default class TableHeaderToggle extends Component {
         {{yield}}
         <span class="text">
           {{#if this.iconName}}
-            {{icon this.iconName}}
+            {{dIcon this.iconName}}
           {{/if}}
           {{this.label}}
           {{#if this.chevronIcon}}
