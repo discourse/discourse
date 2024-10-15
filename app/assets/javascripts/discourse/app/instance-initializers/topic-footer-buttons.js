@@ -117,6 +117,7 @@ export default {
       label: "topic.defer.title",
       title: "topic.defer.help",
       action: "deferTopic",
+      classNames: ["defer-topic"],
       displayed() {
         return this.canDefer;
       },
