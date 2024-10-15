@@ -6,7 +6,7 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -115,7 +115,7 @@ module("Integration | Component | Widget | base", function (hooks) {
       hbs`<MountWidget @widget="classname-test" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".test.static.cool-class"), "it has all the classes");
+    assert.dom(".test.static.cool-class").exists("has all the classes");
   });
 
   test("buildAttributes", async function (assert) {
@@ -133,8 +133,8 @@ module("Integration | Component | Widget | base", function (hooks) {
       hbs`<MountWidget @widget="attributes-test" @args={{this.args}} />`
     );
 
-    assert.ok(exists('.test[data-evil="trout"]'));
-    assert.ok(exists('.test[aria-label="accessibility"]'));
+    assert.dom('.test[data-evil="trout"]').exists();
+    assert.dom('.test[aria-label="accessibility"]').exists();
   });
 
   test("buildId", async function (assert) {
@@ -168,7 +168,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="state-test" />`);
 
-    assert.ok(exists("button.test"), "it renders the button");
+    assert.dom("button.test").exists("renders the button");
     assert.dom("button.test").hasText("0 clicks");
 
     await click(query("button"));
@@ -215,8 +215,8 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="attach-test" />`);
 
-    assert.ok(exists(".container"), "renders container");
-    assert.ok(exists(".container .embedded"), "renders attached");
+    assert.dom(".container").exists("renders container");
+    assert.dom(".container .embedded").exists("renders attached");
   });
 
   test("magic attaching by name", async function (assert) {
@@ -229,8 +229,8 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="attach-test" />`);
 
-    assert.ok(exists(".container"), "renders container");
-    assert.ok(exists(".container .embedded"), "renders attached");
+    assert.dom(".container").exists("renders container");
+    assert.dom(".container .embedded").exists("renders attached");
   });
 
   test("custom attrs to a magic attached widget", async function (assert) {
@@ -246,7 +246,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="attach-test" />`);
 
-    assert.ok(exists(".container"), "renders container");
+    assert.dom(".container").exists("renders container");
     assert.dom(".container .value").hasText("hello world");
   });
 
@@ -408,10 +408,9 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="tag-name-override-test" />`);
 
-    assert.ok(
-      exists("section.override"),
-      "renders container with overridden tagName"
-    );
+    assert
+      .dom("section.override")
+      .exists("renders container with overridden tagName");
   });
 
   test("avoids rerendering on prepend", async function (assert) {

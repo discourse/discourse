@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
@@ -21,7 +20,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
 
     assert.dom(".names").exists();
     assert.dom("span.username").exists();
-    assert.ok(exists('a[data-user-card="eviltrout"]'));
+    assert.dom('a[data-user-card="eviltrout"]').exists();
     assert.dom(".username a").hasText("eviltrout");
     assert.dom(".user-title").hasText("Trout Master");
   });

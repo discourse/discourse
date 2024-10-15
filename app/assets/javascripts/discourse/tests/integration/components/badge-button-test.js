@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -28,7 +28,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists('.user-badge[data-badge-name="foo"]'));
+    assert.dom('.user-badge[data-badge-name="foo"]').exists();
   });
 
   test("title", async function (assert) {
