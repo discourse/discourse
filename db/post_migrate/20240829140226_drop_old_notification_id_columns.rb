@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropOldNotificationIdColumns < ActiveRecord::Migration[7.1]
-  DROPPED_COLUMNS ||= {
+  DROPPED_COLUMNS = {
     notifications: %i[old_id],
     shelved_notifications: %i[old_notification_id],
     users: %i[old_seen_notification_id],
