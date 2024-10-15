@@ -89,7 +89,11 @@
   />
 </div>
 
-<PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
+<PinnedButton
+  @pinned={{this.topic.pinned}}
+  @topic={{this.topic}}
+  @appendReason={{false}}
+/>
 
 {{#if this.showNotificationsButton}}
   {{#if this.showNotificationUserTip}}
