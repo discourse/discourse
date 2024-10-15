@@ -10,6 +10,7 @@ const shortcuts = {
   a: <template><a ...attributes>{{yield}}</a></template>,
   button: <template><button ...attributes>{{yield}}</button></template>,
   td: <template><td ...attributes>{{yield}}</td></template>,
+  li: <template><li ...attributes>{{yield}}</li></template>,
 };
 
 /**

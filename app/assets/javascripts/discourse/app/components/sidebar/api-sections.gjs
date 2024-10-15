@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import BaseCustomSidebarSection from "../../lib/sidebar/base-custom-sidebar-section";
+import BaseCustomSidebarSectionLink from "../../lib/sidebar/base-custom-sidebar-section-link";
 import ApiSection from "./api-section";
 import PanelHeader from "./panel-header";
 
@@ -20,20 +22,13 @@ export default class SidebarApiSections extends Component {
       sectionConfigs = this.sidebarState.currentPanel.sections;
     }
 
-    return sectionConfigs.map((Section) => {
-      const SidebarSection = prepareSidebarSectionClass(Section, this.router);
-
-      const sectionInstance = new SidebarSection({
-        filterable:
-          !this.sidebarState.combinedMode &&
-          this.sidebarState.currentPanel.filterable,
+    return sectionConfigs.map((SectionClass) =>
+      initializeSection(SectionClass, {
+        routerService: this.router,
         sidebarState: this.sidebarState,
-      });
-
-      setOwner(sectionInstance, getOwner(this));
-
-      return sectionInstance;
-    });
+        owner: this,
+      })
+    );
   }
 
   get filteredSections() {
@@ -54,15 +49,52 @@ export default class SidebarApiSections extends Component {
   </template>
 }
 
+function initializeSection(SectionClass, opts) {
+  const { sidebarState, owner } = opts;
+
+  const SidebarSection = prepareSidebarSectionClass(SectionClass, opts);
+
+  const sectionInstance = new SidebarSection({
+    filterable:
+      !sidebarState.combinedMode && sidebarState.currentPanel.filterable,
+    sidebarState,
+  });
+
+  setOwner(sectionInstance, getOwner(owner));
+
+  return sectionInstance;
+}
+
 // extends the class provided for the section to add functionality we don't want to be overridable when defining custom
 // sections using the plugin API, like for example the filtering capabilities
-function prepareSidebarSectionClass(Section, routerService) {
-  return class extends Section {
+function prepareSidebarSectionClass(SectionClass, opts) {
+  const { routerService, level = 0 } = opts;
+
+  return class extends SectionClass {
+    #level;
+
     constructor({ filterable, sidebarState }) {
       super();
 
       this.filterable = filterable;
       this.sidebarState = sidebarState;
+      this.#level = level;
+    }
+
+    get level() {
+      return this.#level;
+    }
+
+    @cached
+    get links() {
+      return super.links.map((item) => {
+        return item instanceof BaseCustomSidebarSectionLink
+          ? item
+          : initializeSection(item, {
+              ...opts,
+              level: level + 1,
+            });
+      });
     }
 
     @cached
@@ -75,13 +107,19 @@ function prepareSidebarSectionClass(Section, routerService) {
         return this.links;
       }
 
-      return this.links.filter((link) => {
+      return this.links.filter((item) => {
+        // subsection
+        if (item instanceof BaseCustomSidebarSection) {
+          return item.filteredLinks.length > 0;
+        }
+
+        // standard link
         return (
-          link.text
+          item.text
             .toString()
             .toLowerCase()
             .match(this.sidebarState.sanitizedFilter) ||
-          link.keywords.navigation.some((keyword) =>
+          item.keywords.navigation.some((keyword) =>
             keyword.match(this.sidebarState.sanitizedFilter)
           )
         );
