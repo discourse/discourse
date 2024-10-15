@@ -31,9 +31,6 @@ export default {
           },
         });
       },
-      // dropdown() {
-      //   return this.site.mobileView;
-      // },
       classNames: ["share-and-invite"],
       dependentKeys: [
         "topic.shareUrl",
@@ -52,9 +49,9 @@ export default {
       label: "topic.flag_topic.title",
       title: "topic.flag_topic.help",
       action: "showFlagTopic",
-      // dropdown() {
-      //   return this.site.mobileView;
-      // },
+      dropdown() {
+        return this.site.mobileView;
+      },
       classNames: ["flag-topic"],
       dependentKeys: ["topic.details.can_flag_topic", "topic.isPrivateMessage"],
       displayed() {
@@ -102,9 +99,9 @@ export default {
         "archiveTitle",
         "toggleArchiveMessage",
       ],
-      // dropdown() {
-      //   return this.site.mobileView;
-      // },
+      dropdown() {
+        return this.site.mobileView;
+      },
       displayed() {
         return this.canArchive;
       },
@@ -121,9 +118,9 @@ export default {
       displayed() {
         return this.canDefer;
       },
-      // dropdown() {
-      //   return this.site.mobileView;
-      // },
+      dropdown() {
+        return this.site.mobileView;
+      },
     });
   },
 };
