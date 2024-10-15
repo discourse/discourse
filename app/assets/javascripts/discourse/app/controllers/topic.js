@@ -139,6 +139,11 @@ export default class TopicController extends Controller.extend(
     }
   }
 
+  @discourseComputed("model.isPrivateMessage")
+  showNotificationsButton(isPM) {
+    return !isPM || this.canSendPms;
+  }
+
   @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
   showSharedDraftControls(loaded, isSharedDraft) {
     return loaded && isSharedDraft;

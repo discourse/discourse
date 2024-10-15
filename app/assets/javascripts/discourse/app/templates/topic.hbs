@@ -236,7 +236,21 @@
       {{#if this.site.mobileView}}
         <div class="topic-footer">
 
-          stuff to be moved up here
+          {{#if (or this.model.pinned_globally this.model.pinned_at)}}
+            <PinnedButton
+              @pinned={{this.model.pinned}}
+              @topic={{this.model}}
+              @appendReason={{false}}
+            />
+          {{/if}}
+
+          {{#if this.showNotificationsButton}}
+            <TopicNotificationsButton
+              @notificationLevel={{this.model.details.notification_level}}
+              @topic={{this.model}}
+              @appendReason={{false}}
+            />
+          {{/if}}
 
           <TopicNavigation
             @topic={{this.model}}

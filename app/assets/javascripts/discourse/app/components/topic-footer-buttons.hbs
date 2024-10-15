@@ -106,12 +106,16 @@
     />
   {{/if}}
 
-  <TopicNotificationsButton
-    @notificationLevel={{this.topic.details.notification_level}}
-    @topic={{this.topic}}
-    @appendReason={{false}}
-  />
-{{/if}}
+{{#unless this.site.mobileView}}
+  <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
+
+  {{#if this.showNotificationsButton}}
+    <TopicNotificationsButton
+      @notificationLevel={{this.topic.details.notification_level}}
+      @topic={{this.topic}}
+    />
+  {{/if}}
+{{/unless}}
 
 <PluginOutlet
   @name="after-topic-footer-buttons"
