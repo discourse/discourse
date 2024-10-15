@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Table Builder", function (needs) {
@@ -21,7 +21,7 @@ acceptance("Table Builder", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#post_1 .show-more-actions");
     await click("#post_1 .edit");
-    assert.ok(exists("#reply-control"));
+    assert.dom("#reply-control").exists();
     await click(".d-editor-button-bar .options");
     await selectKit(".toolbar-popup-menu-options").expand();
 

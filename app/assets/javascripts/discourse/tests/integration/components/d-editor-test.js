@@ -13,12 +13,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import {
-  exists,
-  paste,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { paste, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
   setTextareaSelection,
@@ -31,7 +26,7 @@ module("Integration | Component | d-editor", function (hooks) {
   test("preview updates with markdown", async function (assert) {
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    assert.ok(exists(".d-editor-button-bar"));
+    assert.dom(".d-editor-button-bar").exists();
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.strictEqual(this.value, "hello **world**");
@@ -749,8 +744,8 @@ third line`
 
     await render(hbs`<DEditor/>`);
 
-    assert.ok(exists(".d-editor-button-bar button.shown"));
-    assert.notOk(exists(".d-editor-button-bar button.not-shown"));
+    assert.dom(".d-editor-button-bar button.shown").exists();
+    assert.dom(".d-editor-button-bar button.not-shown").doesNotExist();
   });
 
   test("toolbar buttons tabindex", async function (assert) {

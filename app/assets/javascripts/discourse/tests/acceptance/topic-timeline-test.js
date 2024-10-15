@@ -1,10 +1,6 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({
@@ -362,10 +358,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
 
   test("Shows dates of first and last posts", async function (assert) {
     await visit("/t/deleted-topic-with-whisper-post/129");
-    assert.strictEqual(
-      query(".timeline-date-wrapper .now-date").innerText,
-      "Jul 2020"
-    );
+    assert.dom(".timeline-date-wrapper .now-date").hasText("Jul 2020");
   });
 
   test("selecting start-date navigates you to the first post", async function (assert) {

@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Bootstrap Mode Notice", function (needs) {
   needs.user({ admin: true });
@@ -13,12 +13,12 @@ acceptance("Bootstrap Mode Notice", function (needs) {
   test("is displayed if bootstrap mode is enabled", async function (assert) {
     this.siteSettings.bootstrap_mode_enabled = true;
     await visit("/");
-    assert.ok(exists(".bootstrap-mode"));
+    assert.dom(".bootstrap-mode").exists();
   });
 
   test("is hidden if bootstrap mode is disabled", async function (assert) {
     this.siteSettings.bootstrap_mode_enabled = false;
     await visit("/");
-    assert.ok(!exists(".bootstrap-mode"));
+    assert.dom(".bootstrap-mode").doesNotExist();
   });
 });

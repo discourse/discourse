@@ -212,10 +212,10 @@ acceptance("Topic Discovery | Footer", function (needs) {
   // TODO: Needs scroll support in tests
   skip("No footer, then shows footer when all loaded", async function (assert) {
     await visit("/c/dev");
-    assert.ok(!exists(".custom-footer-content"));
+    assert.dom(".custom-footer-content").doesNotExist();
 
     document.querySelector("#ember-testing-container").scrollTop = 100000; // scroll to bottom
     await settled();
-    assert.ok(exists(".custom-footer-content"));
+    assert.dom(".custom-footer-content").exists();
   });
 });

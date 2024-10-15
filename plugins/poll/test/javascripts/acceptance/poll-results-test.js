@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -1767,6 +1766,6 @@ acceptance("Poll results - no voters", function (needs) {
   test("does not show results button", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
 
-    assert.ok(!exists(".toggle-results"));
+    assert.dom(".toggle-results").doesNotExist();
   });
 });

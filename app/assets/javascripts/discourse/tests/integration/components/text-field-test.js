@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | text-field", function (hooks) {
@@ -12,7 +11,7 @@ module("Integration | Component | text-field", function (hooks) {
   test("renders correctly with no properties set", async function (assert) {
     await render(hbs`<TextField />`);
 
-    assert.ok(exists("input[type=text]"));
+    assert.dom("input[type=text]").exists();
   });
 
   test("support a placeholder", async function (assert) {
@@ -20,8 +19,8 @@ module("Integration | Component | text-field", function (hooks) {
 
     await render(hbs`<TextField @placeholderKey="placeholder.i18n.key" />`);
 
-    assert.ok(exists("input[type=text]"));
-    assert.strictEqual(query("input").placeholder, "placeholder.i18n.key");
+    assert.dom("input[type=text]").exists();
+    assert.dom("input").hasAttribute("placeholder", "placeholder.i18n.key");
   });
 
   test("sets the dir attribute to auto when mixed text direction enabled", async function (assert) {

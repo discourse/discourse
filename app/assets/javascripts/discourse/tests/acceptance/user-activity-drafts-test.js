@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "../helpers/qunit-helpers";
+import { acceptance } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Drafts - empty state", function (needs) {
   needs.user();
@@ -15,6 +15,6 @@ acceptance("User Activity / Drafts - empty state", function (needs) {
 
   test("It renders the empty state panel", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
   });
 });

@@ -1,11 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const HELLO =
@@ -34,15 +30,7 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
       1,
       "it has class names"
     );
-    assert.strictEqual(
-      query(".hello-span").innerText,
-      "Hello",
-      "it renders into the outlet"
-    );
-    assert.strictEqual(
-      query(".bye-span").innerText,
-      "Goodbye",
-      "it renders into the outlet"
-    );
+    assert.dom(".hello-span").hasText("Hello", "it renders into the outlet");
+    assert.dom(".bye-span").hasText("Goodbye", "it renders into the outlet");
   });
 });
