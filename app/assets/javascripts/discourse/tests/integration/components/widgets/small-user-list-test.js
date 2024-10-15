@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | small-user-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,8 +18,8 @@ module("Integration | Component | Widget | small-user-list", function (hooks) {
       hbs`<MountWidget @widget="small-user-list" @args={{this.args}} />`
     );
 
-    assert.strictEqual(count('[data-user-card="eviltrout"]'), 1);
-    assert.ok(!exists('[data-user-card="someone"]'));
-    assert.ok(exists(".unknown"), "includes unknown user");
+    assert.dom('[data-user-card="eviltrout"]').exists({ count: 1 });
+    assert.dom('[data-user-card="someone"]').doesNotExist();
+    assert.dom(".unknown").exists("includes unknown user");
   });
 });

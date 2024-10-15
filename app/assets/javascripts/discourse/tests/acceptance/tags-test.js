@@ -230,7 +230,7 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
 
     await visit("/tag/staff-only-tag");
     assert.strictEqual(count("#create-topic:disabled"), 1);
@@ -238,10 +238,10 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
 
     await visit("/tag/staff-only-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
   });
 });
 
@@ -644,7 +644,7 @@ acceptance(
 
     test("load more footer message is present", async function (assert) {
       await visit("/tag/planters");
-      assert.notOk(exists(".topic-list-bottom .footer-message"));
+      assert.dom(".topic-list-bottom .footer-message").doesNotExist();
     });
   }
 );
@@ -724,6 +724,6 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
   });
   test("load more footer message is not present", async function (assert) {
     await visit("/tag/planters");
-    assert.ok(exists(".topic-list-bottom .footer-message"));
+    assert.dom(".topic-list-bottom .footer-message").exists();
   });
 });

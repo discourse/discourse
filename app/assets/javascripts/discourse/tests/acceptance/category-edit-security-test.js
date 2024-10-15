@@ -41,11 +41,12 @@ acceptance("Category Edit - Security", function (needs) {
       availableGroups.rowByValue("everyone").exists(),
       "everyone has been removed and appears in the available groups"
     );
-    assert.strictEqual(
-      query(".row-empty").innerText,
-      I18n.t("category.permissions.no_groups_selected"),
-      "shows message when no groups are selected"
-    );
+    assert
+      .dom(".row-empty")
+      .hasText(
+        I18n.t("category.permissions.no_groups_selected"),
+        "shows message when no groups are selected"
+      );
   });
 
   test("adding a permission", async function (assert) {

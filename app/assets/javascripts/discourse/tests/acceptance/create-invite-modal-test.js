@@ -47,9 +47,9 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
 
-    await assert.ok(exists(".invite-to-groups"));
-    await assert.ok(exists(".invite-to-topic"));
-    await assert.ok(exists(".invite-expires-at"));
+    await assert.dom(".invite-to-groups").exists();
+    await assert.dom(".invite-to-topic").exists();
+    await assert.dom(".invite-expires-at").exists();
   });
 
   test("saving", async function (assert) {
@@ -72,7 +72,7 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await click(".user-invite-buttons .btn:first-child");
 
     await click(".save-invite");
-    assert.ok(exists(".invite-link .btn"));
+    assert.dom(".invite-link .btn").exists();
   });
 });
 
@@ -238,7 +238,7 @@ acceptance(
     test("hides `Arrive at Topic` field on sites with `must_approve_users`", async function (assert) {
       await visit("/u/eviltrout/invited/pending");
       await click(".user-invite-buttons .btn:first-child");
-      assert.ok(!exists(".invite-to-topic"));
+      assert.dom(".invite-to-topic").doesNotExist();
     });
   }
 );

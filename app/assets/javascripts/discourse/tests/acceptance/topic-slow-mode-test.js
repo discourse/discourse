@@ -4,7 +4,6 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -50,11 +49,12 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     // but at least we can make sure that components for choosing date and time are rendered
     // (in case of inactive slow mode it would be only a combo box with text "Select a timeframe",
     // and date picker and time picker wouldn't be rendered)
-    assert.strictEqual(
-      query("div.enabled-until span.name").innerText,
-      I18n.t("time_shortcut.custom"),
-      "enabled until combobox is switched to the option Pick Date and Time"
-    );
+    assert
+      .dom("div.enabled-until span.name")
+      .hasText(
+        I18n.t("time_shortcut.custom"),
+        "enabled until combobox is switched to the option Pick Date and Time"
+      );
 
     assert.ok(exists("input.date-picker"), "date picker is rendered");
     assert.ok(exists("input.time-input"), "time picker is rendered");
@@ -66,21 +66,23 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".topic-admin-slow-mode button");
     await click(".future-date-input-selector-header");
 
-    assert.strictEqual(
-      query("div.d-modal__footer button.btn-primary span").innerText,
-      I18n.t("topic.slow_mode_update.enable"),
-      "shows 'Enable' button when slow mode is disabled"
-    );
+    assert
+      .dom("div.d-modal__footer button.btn-primary span")
+      .hasText(
+        I18n.t("topic.slow_mode_update.enable"),
+        "shows 'Enable' button when slow mode is disabled"
+      );
 
     await visit("/t/a-topic-with-enabled-slow-mode/1");
     await click(".toggle-admin-menu");
     await click(".topic-admin-slow-mode button");
     await click(".future-date-input-selector-header");
 
-    assert.strictEqual(
-      query("div.d-modal__footer button.btn-primary span").innerText,
-      I18n.t("topic.slow_mode_update.update"),
-      "shows 'Update' button when slow mode is enabled"
-    );
+    assert
+      .dom("div.d-modal__footer button.btn-primary span")
+      .hasText(
+        I18n.t("topic.slow_mode_update.update"),
+        "shows 'Update' button when slow mode is enabled"
+      );
   });
 });

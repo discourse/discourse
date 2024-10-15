@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login with email - no social logins", function (needs) {
   needs.settings({ enable_local_logins_via_email: true });
@@ -15,7 +11,7 @@ acceptance("Login with email - no social logins", function (needs) {
     await visit("/");
     await click("header .login-button");
 
-    assert.ok(exists("#email-login-link"));
+    assert.dom("#email-login-link").exists();
   });
 
   test("with login with email disabled", async function (assert) {

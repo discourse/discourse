@@ -130,7 +130,7 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.notOk(exists(".user-menu"));
+    assert.dom(".user-menu").doesNotExist();
   });
 
   test("doesn't show the end date for eternal DnD", async function (assert) {
