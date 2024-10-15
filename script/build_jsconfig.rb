@@ -10,7 +10,6 @@ CORE_NAMESPACES = {
   "discourse/tests/*" => ["app/assets/javascripts/discourse/tests"],
   "discourse-common/*" => ["app/assets/javascripts/discourse-common/addon"],
   "admin/*" => ["app/assets/javascripts/admin/addon"],
-  "wizard/*" => ["app/assets/javascripts/wizard/addon"],
   "pretty-text/*" => ["app/assets/javascripts/pretty-text/addon"],
   "select-kit/*" => ["app/assets/javascripts/select-kit/addon"],
   "float-kit/*" => ["app/assets/javascripts/float-kit/addon"],
@@ -40,6 +39,10 @@ def write_config(package_dir, extras: {})
       },
     },
     "include" => namespaces.flat_map { |ns, paths| paths.map { |p| relative(package_dir, p) } },
+    "exclude" => "**/*.hbs",
+    "glint" => {
+      "environment" => %w[ember-loose ember-template-imports],
+    },
   }
 
   output = <<~JSON
