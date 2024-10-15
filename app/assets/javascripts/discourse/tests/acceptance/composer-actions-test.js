@@ -246,7 +246,9 @@ acceptance("Composer Actions", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     await click('#post_4 a[data-user-card="shade"]');
-    await click(".usercard-controls .compose-pm .btn-primary");
+    await click(
+      ".d-user-card__controls .d-user-card__action:first-of-type .btn-primary"
+    );
     await composerActions.expand();
 
     assert.strictEqual(

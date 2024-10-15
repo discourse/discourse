@@ -1232,6 +1232,26 @@ class User < ActiveRecord::Base
     end
   end
 
+  def avatar_dominant_color
+    dominant_color || update_avatar_dominant_color!
+  end
+
+  def update_avatar_dominant_color!
+    color = self.class.avatar_dominant_color(uploaded_avatar_id, username)
+    update_column(:dominant_color, color) if persisted?
+    color
+  end
+
+  def self.avatar_dominant_color(upload_id, username)
+    color =
+      if upload_id.nil?
+        User.letter_avatar_color(User.normalize_username(username))
+      else
+        Upload.find(upload_id)&.dominant_color
+      end
+    color&.upcase
+  end
+
   # The following count methods are somewhat slow - definitely don't use them in a loop.
   # They might need to be denormalized
   def like_count
@@ -2293,6 +2313,7 @@ end
 #  last_seen_reviewable_id   :integer
 #  required_fields_version   :integer
 #  seen_notification_id      :bigint           default(0), not null
+#  dominant_color            :text
 #
 # Indexes
 #

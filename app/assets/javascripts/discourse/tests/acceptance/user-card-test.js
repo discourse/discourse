@@ -14,13 +14,13 @@ acceptance("User Card", function (needs) {
     await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card .card-content").exists();
+    assert.dom(".d-user-card .d-user-card__main-content").exists();
 
-    await click(".card-huge-avatar");
+    await click(".d-user-card__avatar");
 
     assert.strictEqual(currentURL(), "/u/charlie/summary");
-    assert.dom(".user-card").doesNotExist();
-    assert.dom(".card-content").doesNotExist();
+    assert.dom(".d-user-card").doesNotExist();
+    assert.dom(".d-user-card__main-content").doesNotExist();
   });
 });
 
@@ -37,7 +37,7 @@ acceptance("User Card - Show Local Time", function (needs) {
     await click('a[data-user-card="charlie"]');
 
     assert
-      .dom(".user-card .local-time")
+      .dom(".d-user-card .d-user-card__time")
       .doesNotExist(
         "it does not show the local time if the user card returns a null/undefined timezone for another user"
       );
@@ -59,9 +59,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card .username .name-username-wrapper")
+        .dom(".d-user-card .d-user-card__name.username a")
         .hasText("eviltrout");
-      assert.dom(".user-card .full-name").hasText("Robin Ward");
+      assert.dom(".d-user-card .d-user-card__user-name").hasText("Robin Ward");
     });
   }
 );
@@ -81,9 +81,9 @@ acceptance(
       await click('a[data-user-card="eviltrout"]');
 
       assert
-        .dom(".user-card .full-name .name-username-wrapper")
+        .dom(".d-user-card .d-user-card__name.full-name a")
         .hasText("Robin Ward");
-      assert.dom(".user-card .username").hasText("eviltrout");
+      assert.dom(".d-user-card .d-user-card__user-name").hasText("@eviltrout");
     });
   }
 );
@@ -104,7 +104,7 @@ acceptance("User Card - User Status", function (needs) {
     await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card .user-status").exists();
+    assert.dom(".d-user-card .user-status-message").exists();
   });
 
   test("doesn't show user status if disabled", async function (assert) {
@@ -115,7 +115,7 @@ acceptance("User Card - User Status", function (needs) {
     await click(".topic-map__users-trigger");
     await click('a[data-user-card="charlie"]');
 
-    assert.dom(".user-card .user-status").doesNotExist();
+    assert.dom(".d-user-card .user-status-message").doesNotExist();
   });
 });
 
@@ -141,9 +141,11 @@ acceptance("User Card - Hidden Profile", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click('a[data-user-card="eviltrout"]');
 
-    assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
     assert
-      .dom(".user-card .profile-hidden")
+      .dom(".d-user-card  .d-user-card__name.username")
+      .hasText("eviltrout");
+    assert
+      .dom(".d-user-card .d-user-card__hidden-user")
       .hasText(I18n.t("user.profile_hidden"));
   });
 });
@@ -168,9 +170,11 @@ acceptance("User Card - Inactive user", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click('a[data-user-card="eviltrout"]');
 
-    assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
     assert
-      .dom(".user-card .inactive-user")
+      .dom(".d-user-card  .d-user-card__name.username")
+      .hasText("eviltrout");
+    assert
+      .dom(".d-user-card .d-user-card__inactive-user")
       .hasText(I18n.t("user.inactive_user"));
   });
 });
