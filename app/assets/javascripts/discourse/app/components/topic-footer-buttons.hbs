@@ -19,10 +19,12 @@
   />
 
   {{#if this.site.mobileView}}
-    <TopicFooterMobileDropdown
-      @topic={{this.topic}}
-      @content={{this.dropdownButtons}}
-    />
+    {{#if this.dropdownButtons}}
+      <TopicFooterMobileDropdown
+        @topic={{this.topic}}
+        @content={{this.dropdownButtons}}
+      />
+    {{/if}}
   {{/if}}
 
   {{#each this.inlineActionables as |actionable|}}
