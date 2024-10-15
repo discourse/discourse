@@ -69,10 +69,6 @@ export default class ChatChannelName extends Component {
       <div class="chat-channel-name__label">
         {{replaceEmoji this.channelTitle}}
 
-        {{#if this.unreadIndicator}}
-          <ChatChannelUnreadIndicator @channel={{@channel}} />
-        {{/if}}
-
         {{#if this.showUserStatus}}
           <UserStatusMessage
             @status={{get this.users "0.status"}}
@@ -94,6 +90,10 @@ export default class ChatChannelName extends Component {
           {{yield}}
         {{/if}}
       </div>
+
+      {{#if this.unreadIndicator}}
+        <ChatChannelUnreadIndicator @channel={{@channel}} />
+      {{/if}}
     </div>
   </template>
 }

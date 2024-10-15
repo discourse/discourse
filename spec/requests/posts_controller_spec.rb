@@ -208,6 +208,31 @@ RSpec.describe PostsController do
       expect(json[0]["user_custom_fields"]["hello"]).to eq("world")
       expect(json[0]["user_custom_fields"]["hidden"]).to be_blank
     end
+
+    it "supports pagination" do
+      parent = Fabricate(:post)
+      30.times do
+        reply = Fabricate(:post, topic: parent.topic, reply_to_post_number: parent.post_number)
+        PostReply.create!(post: parent, reply:)
+      end
+
+      get "/posts/#{parent.id}/replies.json", params: { after: parent.post_number }
+      expect(response.status).to eq(200)
+      replies = response.parsed_body
+      expect(replies.size).to eq(20)
+
+      after = replies.last["post_number"]
+
+      get "/posts/#{parent.id}/replies.json", params: { after: }
+      expect(response.status).to eq(200)
+      replies = response.parsed_body
+      expect(replies.size).to eq(10)
+      expect(replies[0][:post_number]).to eq(after + 1)
+
+      get "/posts/#{parent.id}/replies.json", params: { after: 999_999 }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.size).to eq(0)
+    end
   end
 
   describe "#destroy" do

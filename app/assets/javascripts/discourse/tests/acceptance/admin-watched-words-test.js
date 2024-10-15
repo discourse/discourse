@@ -148,7 +148,7 @@ acceptance("Admin - Watched Words", function (needs) {
     assert.dom(".d-modal__body li .tag").hasText("greeting");
   });
 
-  test("showing/hidding words - tag", async function (assert) {
+  test("showing/hiding words - tag", async function (assert) {
     await visit("/admin/customize/watched_words/action/tag");
 
     await click(".show-words-checkbox");

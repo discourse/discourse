@@ -141,7 +141,6 @@ nl:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht %{postNumber} van @%{username}"
       close: "sluiten"
-      twitter: "Delen op Twitter"
       facebook: "Delen op Facebook"
       email: "Verzenden via e-mail"
       url: "URL kopiëren en delen"
@@ -5198,6 +5197,13 @@ nl:
           screened_urls: "Gecontroleerde URL's"
           search_logs: "Zoeken in logs"
           staff_action_logs: "Actielogs personeel"
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Back-ups"
+          whats_new:
+            title: "Wat is er nieuw"
       config_areas:
         about:
           header: "Over je site"

@@ -61,7 +61,7 @@ cs:
         post_created_edited:
           fields:
             restricted_tags:
-              label: Tagy
+              label: Štítky
             restricted_category:
               label: Kategorie
             restricted_group:

@@ -15,7 +15,7 @@ describe "Admin Flags Page", type: :system do
     SiteSetting.custom_flags_limit = 1
   end
 
-  xit "allows admin to disable, change order, create, update and delete flags" do
+  it "allows admin to disable, change order, create, update and delete flags" do
     # disable
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 
@@ -146,38 +146,6 @@ describe "Admin Flags Page", type: :system do
       "It's Illegal",
       "Something Else",
     )
-
-    # custom flag with same name as system flag
-    admin_flags_page.visit.toggle("inappropriate")
-    admin_flags_page.click_add_flag
-    admin_flag_form_page
-      .fill_in_name("Inappropriate")
-      .fill_in_description("New flag description")
-      .select_applies_to("Topic")
-      .select_applies_to("Post")
-      .click_save
-
-    expect(admin_flags_page).to have_flags(
-      "Send @%{username} a message",
-      "Off-Topic",
-      "Inappropriate",
-      "Spam",
-      "Illegal",
-      "Something Else",
-      "Inappropriate",
-    )
-
-    topic_page.visit_topic(post.topic).open_flag_topic_modal
-
-    expect(flag_modal).to have_choices(
-      "It's Spam",
-      "It's Illegal",
-      "Something Else",
-      "Inappropriate",
-    )
-
-    Flag.system.where(name: "inappropriate").update!(enabled: true)
-    admin_flags_page.visit.click_delete_flag("custom_inappropriate").confirm_delete
   end
 
   it "has settings tab" do
@@ -202,6 +170,39 @@ describe "Admin Flags Page", type: :system do
         "tl4 additional flags per day multiplier",
       ],
     )
+  end
+
+  it "allows to create custom flag with same name as system flag" do
+    admin_flags_page.visit
+    admin_flags_page.click_add_flag
+    admin_flag_form_page
+      .fill_in_name("Inappropriate")
+      .fill_in_description("New flag description")
+      .select_applies_to("Topic")
+      .select_applies_to("Post")
+      .click_save
+
+    expect(admin_flags_page).to have_flags(
+      "Send @%{username} a message",
+      "Off-Topic",
+      "Inappropriate",
+      "Spam",
+      "Illegal",
+      "Something Else",
+      "Inappropriate",
+    )
+
+    topic_page.visit_topic(post.topic).open_flag_topic_modal
+
+    expect(flag_modal).to have_choices(
+      "It's Inappropriate",
+      "It's Spam",
+      "It's Illegal",
+      "Something Else",
+      "Inappropriate",
+    )
+
+    admin_flags_page.visit.click_delete_flag("custom_inappropriate").confirm_delete
   end
 
   it "does not allow to move notify user flag" do

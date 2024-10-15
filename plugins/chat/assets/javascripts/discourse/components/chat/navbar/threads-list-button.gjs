@@ -30,7 +30,7 @@ export default class ChatNavbarThreadsListButton extends Component {
           "c-navbar__threads-list-button"
           "btn"
           "no-text"
-          "btn-flat"
+          "btn-transparent"
           (if @channel.threadsManager.unreadThreadCount "has-unreads")
         }}
       >

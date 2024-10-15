@@ -1,4 +1,4 @@
-import { or } from "@ember/object/computed";
+import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import I18n from "discourse-i18n";
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
@@ -12,5 +12,5 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 @pluginApiIdentifiers(["category-notifications-button"])
 @classNames("category-notifications-button")
 export default class CategoryNotificationsButton extends NotificationOptionsComponent {
-  @or("category.deleted") isHidden;
+  @readOnly("category.deleted") isHidden;
 }

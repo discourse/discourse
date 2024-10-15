@@ -156,8 +156,6 @@ RSpec.describe Admin::BackupsController do
       context "with rate limiting enabled" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         after { RateLimiter.disable }
 
         it "is rate limited" do

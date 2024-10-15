@@ -141,7 +141,6 @@ te:
       topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"
       close: "మూసివేయండి"
-      twitter: "ట్విట్టర్లో షేర్ చేయండి"
       facebook: "ఫేస్బుక్లో షేర్ చేయండి"
       email: "ఇమెయిల్ ద్వారా పంపండి"
       url: "లింక్ ని కాపీ చేసి షేర్ చేయండి"
@@ -4879,6 +4878,11 @@ te:
           screened_ips: "స్క్రీన్ చేసిన ఐపీలు"
           screened_urls: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
           search_logs: "లాగ్‌లను శోధించండి"
+      section_landing_pages:
+        account:
+          title: "ఖాతా"
+          backups:
+            title: "బ్యాకప్పులు"
       config_areas:
         about:
           header: "మీ సైట్ గురించి"

@@ -113,7 +113,6 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "Twitter で共有"
       facebook: "Facebook で共有"
       email: "メールで送信"
       url: "URL をコピーして共有"
@@ -4943,6 +4942,13 @@ ja:
           screened_urls: "スクリーン対象 URL"
           search_logs: "検索ログ"
           staff_action_logs: "スタッフの操作ログ"
+      section_landing_pages:
+        account:
+          title: "アカウント"
+          backups:
+            title: "バックアップ"
+          whats_new:
+            title: "新着情報"
       config_areas:
         about:
           header: "サイトについて"

@@ -124,7 +124,6 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
-      twitter: "در توییتر به اشتراک بگذارید"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
@@ -3840,6 +3839,13 @@ fa_IR:
           screened_ips: "نمایش IP ها"
           screened_urls: "URL های نمایش داده شده"
           search_logs: "جستجوی گزارش‌ها"
+      section_landing_pages:
+        account:
+          title: "حساب کاربری"
+          backups:
+            title: "نسخه‌های پشتیبان"
+          whats_new:
+            title: "چه چیزی جدید شده"
       config_areas:
         about:
           header: "درباره سایت شما"

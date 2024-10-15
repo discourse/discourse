@@ -169,7 +169,6 @@ hr:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "objava #%{postNumber} od @%{username}"
       close: "zatvori"
-      twitter: "Podijeli na Twitteru"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
       url: "Kopiraj i podijeli URL"
@@ -4781,6 +4780,13 @@ hr:
           screened_ips: "Provjereni IP-pvi"
           screened_urls: "Provjereni URL-ovi"
           search_logs: "Pretraživanje dnevnika"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Sigurnosne kopije"
+          whats_new:
+            title: "Što je novo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

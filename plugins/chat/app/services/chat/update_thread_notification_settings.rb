@@ -60,7 +60,7 @@ module Chat
         membership.update!(last_read_message_id: thread.last_message_id)
       end
       membership.update!(notification_level: contract.notification_level)
-      context.membership = membership
+      context[:membership] = membership
     end
   end
 end

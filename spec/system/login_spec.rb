@@ -63,7 +63,7 @@ shared_examples "login scenarios" do
       visit activation_link
 
       activate_account.click_activate_account
-      expect(page).to have_current_path("/wizard")
+      expect(page).to have_current_path(%r{/wizard})
     end
 
     it "shows error when when activation link is invalid" do
@@ -81,7 +81,7 @@ shared_examples "login scenarios" do
     it "displays the right message when user's email has been marked as expired" do
       password = "myawesomepassword"
       user.update!(password:)
-      Fabricate(:expired_user_password, user:, password:)
+      UserPasswordExpirer.expire_user_password(user)
 
       login_modal.open
       login_modal.fill(username: user.username, password:)

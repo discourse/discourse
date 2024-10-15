@@ -17,8 +17,24 @@ module Service
     end
 
     # Simple structure to hold the context of the service during its whole lifecycle.
-    class Context < OpenStruct
-      include ActiveModel::Serialization
+    class Context
+      delegate :slice, to: :store
+
+      def initialize(context = {})
+        @store = context.symbolize_keys
+      end
+
+      def [](key)
+        store[key.to_sym]
+      end
+
+      def []=(key, value)
+        store[key.to_sym] = value
+      end
+
+      def to_h
+        store.dup
+      end
 
       # @return [Boolean] returns +true+ if the context is set as successful (default)
       def success?
@@ -48,26 +64,26 @@ module Service
       #   context.fail("failure": "something went wrong")
       # @return [Context]
       def fail(context = {})
-        merge(context)
+        store.merge!(context.symbolize_keys)
         @failure = true
         self
       end
 
-      # Merges the given context into the current one.
-      # @!visibility private
-      def merge(other_context = {})
-        other_context.each { |key, value| self[key.to_sym] = value }
-        self
-      end
-
       def inspect_steps
-        StepsInspector.new(self)
+        Service::StepsInspector.new(self)
       end
 
       private
 
+      attr_reader :store
+
       def self.build(context = {})
         self === context ? context : new(context)
+      end
+
+      def method_missing(method_name, *args, &block)
+        return super if args.present?
+        store[method_name]
       end
     end
 
@@ -117,7 +133,7 @@ module Service
         if method.parameters.any? { _1[0] != :keyreq }
           raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a contract?"
         end
-        args = context.to_h.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
+        args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
         instance.instance_exec(**args, &method)
       end
@@ -180,7 +196,7 @@ module Service
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
-        contract = class_name.new(default_values.merge(context.to_h.slice(*attributes)))
+        contract = class_name.new(default_values.merge(context.slice(*attributes)))
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
@@ -347,7 +363,6 @@ module Service
 
     # @!visibility private
     def initialize(initial_context = {})
-      @initial_context = initial_context.with_indifferent_access
       @context = Context.build(initial_context.merge(__steps__: self.class.steps))
     end
 

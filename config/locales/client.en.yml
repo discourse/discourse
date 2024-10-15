@@ -3728,7 +3728,9 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      load_more_replies: "load more replies"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_load_more_replies: "Load more embedded replies"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
@@ -6723,7 +6725,7 @@ en:
         post_edits_count: "Post Edits"
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
-        delete_associated_accounts_confirm: "Are you SURE you want to delete associated accounts from this account? They may not be able to log in."
+        delete_associated_accounts_confirm: "Are you SURE you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"

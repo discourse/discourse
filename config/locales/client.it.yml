@@ -141,7 +141,6 @@ it:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber} di @%{username}"
       close: "chiudi"
-      twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
       email: "Invia per email"
       url: "Copia e condividi l'URL"
@@ -5205,6 +5204,13 @@ it:
           screened_urls: "URL scansionati"
           search_logs: "Log di ricerca"
           staff_action_logs: "Log azioni staff"
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backup"
+          whats_new:
+            title: "Cosa c'è di nuovo"
       config_areas:
         about:
           header: "Informazioni sul tuo sito"

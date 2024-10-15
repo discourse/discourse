@@ -253,7 +253,6 @@ ar:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber} بواسطة @%{username}"
       close: "إغلاق"
-      twitter: "المشاركة على Twitter"
       facebook: "المشاركة على Facebook"
       email: "المشاركة عبر البريد الإلكتروني"
       url: "نسخ عنوان URL ومشاركته"
@@ -6223,6 +6222,13 @@ ar:
           screened_urls: "عناوين URL الخاضعة للمراقبة"
           search_logs: "سجلات البحث"
           staff_action_logs: "سجلات إجراءات الموظفين"
+      section_landing_pages:
+        account:
+          title: "الحساب"
+          backups:
+            title: "النسخ الاحتياطية"
+          whats_new:
+            title: "ما الجديد"
       config_areas:
         about:
           header: "نبذة عن موقعك"

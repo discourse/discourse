@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsInvitesController < Chat::ApiController
   def create
-    Chat::InviteUsersToChannel.call do
+    Chat::InviteUsersToChannel.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }

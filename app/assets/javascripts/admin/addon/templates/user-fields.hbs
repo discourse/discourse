@@ -1,27 +1,29 @@
-<div class="user-fields">
-  <h2>{{i18n "admin.user_fields.title"}}</h2>
+<div class="admin-config-page__main-area">
+  <div class="user-fields">
+    <h2>{{i18n "admin.user_fields.title"}}</h2>
 
-  <p class="desc">{{i18n "admin.user_fields.help"}}</p>
+    <p class="desc">{{i18n "admin.user_fields.help"}}</p>
 
-  {{#if this.model}}
-    {{#each this.sortedFields as |uf|}}
-      <AdminUserFieldItem
-        @userField={{uf}}
-        @fieldTypes={{this.fieldTypes}}
-        @firstField={{this.firstField}}
-        @lastField={{this.lastField}}
-        @destroyAction={{this.destroyField}}
-        @moveUpAction={{this.moveUp}}
-        @moveDownAction={{this.moveDown}}
-      />
-    {{/each}}
-  {{/if}}
+    {{#if this.model}}
+      {{#each this.sortedFields as |uf|}}
+        <AdminUserFieldItem
+          @userField={{uf}}
+          @fieldTypes={{this.fieldTypes}}
+          @firstField={{this.firstField}}
+          @lastField={{this.lastField}}
+          @destroyAction={{this.destroyField}}
+          @moveUpAction={{this.moveUp}}
+          @moveDownAction={{this.moveDown}}
+        />
+      {{/each}}
+    {{/if}}
 
-  <DButton
-    @disabled={{this.createDisabled}}
-    @action={{this.createField}}
-    @label="admin.user_fields.create"
-    @icon="plus"
-    class="btn-primary"
-  />
+    <DButton
+      @disabled={{this.createDisabled}}
+      @action={{this.createField}}
+      @label="admin.user_fields.create"
+      @icon="plus"
+      class="btn-primary"
+    />
+  </div>
 </div>

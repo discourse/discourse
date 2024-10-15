@@ -174,7 +174,7 @@ class FieldHelper {
       .includesText(error, message);
   }
 
-  hasNoError(message) {
+  hasNoErrors(message) {
     this.context
       .dom(this.element.querySelector(".form-kit__errors"))
       .doesNotExist(message);

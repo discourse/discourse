@@ -143,6 +143,7 @@ ro:
       notification_levels:
         never: "Niciodată"
       settings:
+        notification_level: "Trimite notificări instante"
         follow: "Alătură-te"
         followed: "Înscris"
         threading_enabled: "Activat"

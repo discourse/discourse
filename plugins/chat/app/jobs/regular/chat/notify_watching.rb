@@ -24,7 +24,7 @@ module Jobs
             .where(chat_channel_id: @chat_channel.id)
             .where(following: true)
             .where(
-              "desktop_notification_level = :always OR mobile_notification_level = :always OR users.id IN (SELECT user_id FROM user_chat_thread_memberships WHERE thread_id = :thread_id AND notification_level = :watching)",
+              "notification_level = :always OR users.id IN (SELECT user_id FROM user_chat_thread_memberships WHERE thread_id = :thread_id AND notification_level = :watching)",
               always: always_notification_level,
               thread_id: @chat_message.thread_id,
               watching: ::Chat::NotificationLevels.all[:watching],
@@ -81,6 +81,7 @@ module Jobs
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
           channel_id: @chat_channel.id,
+          is_direct_message_channel: @is_direct_message_channel,
         }
 
         if @chat_message.in_thread? && !membership.muted?
@@ -94,7 +95,7 @@ module Jobs
           thread_membership && create_watched_thread_notification(thread_membership)
         end
 
-        if membership.desktop_notifications_always? && !membership.muted?
+        if membership.notifications_always? && !membership.muted?
           send_notification =
             DiscoursePluginRegistry.push_notification_filters.all? do |filter|
               filter.call(user, payload)
@@ -106,9 +107,7 @@ module Jobs
               user_ids: [user.id],
             )
           end
-        end
 
-        if membership.mobile_notifications_always? && !membership.muted?
           ::PostAlerter.push_notification(user, payload)
         end
       end

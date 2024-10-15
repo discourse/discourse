@@ -158,7 +158,6 @@ lt:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "įrašas #%{postNumber} by @%{username}"
       close: "uždaryti"
-      twitter: "Bendrinkite „Twitter“"
       facebook: "Dalintis „Facebook“"
       email: "Siųsti el. Paštu"
       url: "Nukopijuokite ir bendrinkite URL"
@@ -3962,6 +3961,11 @@ lt:
           screened_ips: "Tikrinti IP adresai"
           screened_urls: "Tikrintos nuorodos"
           search_logs: "Paieškos žurnalas"
+      section_landing_pages:
+        account:
+          title: "Paskyra"
+          backups:
+            title: "Atsarginės kopijos"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

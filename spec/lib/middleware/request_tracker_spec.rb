@@ -258,8 +258,6 @@ RSpec.describe Middleware::RequestTracker do
         )
       end
 
-      use_redis_snapshotting
-
       def log_topic_view(authenticated: false, deferred: false)
         headers = { "action_dispatch.remote_ip" => "127.0.0.1" }
 
@@ -518,8 +516,6 @@ RSpec.describe Middleware::RequestTracker do
       # they can be sensitive to clock skew during test runs
       freeze_time_safe
     end
-
-    use_redis_snapshotting
 
     after { Rails.logger = @orig_logger }
 

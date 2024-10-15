@@ -975,27 +975,6 @@ class Post < ActiveRecord::Base
       .count
   end
 
-  def reply_history(max_replies = 100, guardian = nil)
-    post_ids = DB.query_single(<<~SQL, post_id: id, topic_id: topic_id)
-    WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-          SELECT p.id, p.reply_to_post_number FROM posts AS p
-            WHERE p.id = :post_id
-          UNION
-             SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-               WHERE breadcrumb.reply_to_post_number = p.post_number
-                 AND p.topic_id = :topic_id
-        )
-    SELECT id from breadcrumb
-    WHERE id <> :post_id
-    ORDER by id
-    SQL
-
-    # [1,2,3][-10,-1] => nil
-    post_ids = (post_ids[(0 - max_replies)..-1] || post_ids)
-
-    Post.secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
-  end
-
   MAX_REPLY_LEVEL ||= 1000
 
   def reply_ids(guardian = nil, only_replies_to_single_post: true)

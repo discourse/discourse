@@ -141,7 +141,6 @@ pt_BR:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "postagem #%{postNumber} de @%{username}"
       close: "fechar"
-      twitter: "Compartilhar no Twitter"
       facebook: "Compartilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e compartilhar a URL"
@@ -5206,6 +5205,13 @@ pt_BR:
           screened_urls: "URLs filtradas"
           search_logs: "Registros de pesquisa"
           staff_action_logs: "Registros de ações da equipe"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Backups"
+          whats_new:
+            title: "Novidades"
       config_areas:
         about:
           header: "Sobre seu site"

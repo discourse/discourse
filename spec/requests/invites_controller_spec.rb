@@ -771,8 +771,6 @@ RSpec.describe InvitesController do
       describe "rate limiting" do
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "can send invite email" do
           sign_in(user)
 
@@ -1597,8 +1595,6 @@ RSpec.describe InvitesController do
       SiteSetting.invite_expiry_days = 30
       RateLimiter.enable
     end
-
-    use_redis_snapshotting
 
     it "resends all non-redeemed invites by a user" do
       freeze_time

@@ -29,10 +29,11 @@ export default class ChatAdminPluginActions extends Component {
   }
 
   <template>
-    <@outletArgs.actions.Primary
+    <@actions.Primary
       @label="chat.admin.export_messages.create_export"
       @title="chat.admin.export_messages.create_export"
       @action={{this.confirmExportMessages}}
+      @icon="right-from-bracket"
       class="admin-chat-export"
     />
   </template>

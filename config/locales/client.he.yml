@@ -197,7 +197,7 @@ he:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
-      twitter: "שיתוף בטוויטר"
+      twitter: "שתפו ב-X"
       facebook: "שיתוף בפייסבוק"
       email: "שליחה בדוא״ל"
       url: "העתקה ושיתוף של כתובת"
@@ -3768,7 +3768,9 @@ he:
       show_hidden: "צפייה בתוכן שמיועד להתעלמות."
       deleted_by_author_simple: "(הפוסט נמחק על ידי הכותב)"
       collapse: "צמצום"
+      load_more_replies: "טעינת תגובות נוספות"
       sr_collapse_replies: "צמצום תשובות מוטמעות"
+      sr_load_more_replies: "טעינת תשובות מוטמעות נוספות"
       sr_date: "תאריך פרסום"
       sr_expand_replies:
         one: "לפוסט הזה יש תגובה אחת"
@@ -5648,6 +5650,15 @@ he:
           security: "הגדרות אבטחה"
           spam: "הגדרות ספאם"
           staff_action_logs: "יומני פעולות סגל"
+      section_landing_pages:
+        account:
+          title: "חשבון"
+          backups:
+            title: "גיבויים"
+            description: "גיבוי נתוני האתר שלך"
+          whats_new:
+            title: "מה חדש"
+            description: "חשיפת מהדורות חדשות ושיפורים ב־Discourse"
       config_areas:
         about:
           header: "על האתר שלך"
@@ -6755,7 +6766,7 @@ he:
         post_edits_count: "עריכות של פוסטים"
         anonymize: "הפיכת משתמשים לאלמוניים"
         anonymize_confirm: "<b>באמת<\\b> להפוך חשבון זה לאלמוני? פעולה זו תשנה את שם המשתמש ואת כתובת הדוא״ל ותאפס את כל נתוני הפרופיל."
-        delete_associated_accounts_confirm: "למחוק את החשבונות המשויכים מהחשבון הזה? זה עלול לחסום לך את הכניסה לחשבון."
+        delete_associated_accounts_confirm: "למחוק את החשבונות המשויכים מהחשבון הזה? המשתמש לא יוכל להיכנס או כתובת הדוא״ל שלו הוחלפה."
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"

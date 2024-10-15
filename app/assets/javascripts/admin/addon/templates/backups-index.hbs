@@ -1,13 +1,19 @@
 <AdminPageSubheader @titleLabel="admin.backups.files_title">
-  <:actions>
-    {{#if this.localBackupStorage}}
-      <UppyBackupUploader
-        @done={{route-action "uploadSuccess"}}
-        @localBackupStorage={{this.localBackupStorage}}
-      />
-    {{else}}
-      <UppyBackupUploader @done={{route-action "remoteUploadSuccess"}} />
-    {{/if}}
+  <:actions as |actions|>
+    <actions.Wrapped as |wrapped|>
+      {{#if this.localBackupStorage}}
+        <UppyBackupUploader
+          class={{wrapped.buttonClass}}
+          @done={{route-action "uploadSuccess"}}
+          @localBackupStorage={{this.localBackupStorage}}
+        />
+      {{else}}
+        <UppyBackupUploader
+          class={{wrapped.buttonClass}}
+          @done={{route-action "remoteUploadSuccess"}}
+        />
+      {{/if}}
+    </actions.Wrapped>
   </:actions>
 </AdminPageSubheader>
 
@@ -34,10 +40,9 @@
       <tr class="backup-item-row" data-backup-filename={{backup.filename}}>
         <td class="backup-filename">{{backup.filename}}</td>
         <td class="backup-size">{{human-size backup.size}}</td>
-        <td class="backup-controls">
+        <td class="backup-controls admin-table-row-controls">
           <DButton
             @action={{fn this.download backup}}
-            @icon="download"
             @title="admin.backups.operations.download.title"
             @label="admin.backups.operations.download.label"
             class="btn-default btn-small backup-item-row__download"

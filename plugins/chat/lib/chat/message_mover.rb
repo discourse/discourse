@@ -94,8 +94,8 @@ module Chat
 
       DB.exec <<~SQL
       CREATE TEMPORARY TABLE moved_chat_messages (
-        old_chat_message_id INTEGER,
-        new_chat_message_id INTEGER
+        old_chat_message_id BIGINT,
+        new_chat_message_id BIGINT
       ) ON COMMIT DROP;
 
       CREATE INDEX moved_chat_messages_old_chat_message_id ON moved_chat_messages(old_chat_message_id);
