@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -67,7 +67,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("user_option.likes_notifications_disabled", true);
     this.currentUser.set("can_send_private_messages", true);
     await render(template);
-    assert.ok(!exists("#user-menu-button-likes"));
+    assert.dom("#user-menu-button-likes").doesNotExist();
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
@@ -101,7 +101,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 0);
     await render(template);
-    assert.notOk(exists("#user-menu-button-review-queue"));
+    assert.dom("#user-menu-button-review-queue").doesNotExist();
   });
 
   test("messages tab isn't shown if current user does not have can_send_private_messages permission", async function (assert) {
@@ -112,7 +112,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     await render(template);
 
-    assert.ok(!exists("#user-menu-button-messages"));
+    assert.dom("#user-menu-button-messages").doesNotExist();
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
@@ -132,7 +132,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     await render(template);
 
-    assert.ok(exists("#user-menu-button-messages"));
+    assert.dom("#user-menu-button-messages").exists();
   });
 
   test("reviewables count is shown on the reviewables tab", async function (assert) {
@@ -147,7 +147,9 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("reviewable_count", 0);
     await settled();
 
-    assert.ok(!exists("#user-menu-button-review-queue .badge-notification"));
+    assert
+      .dom("#user-menu-button-review-queue .badge-notification")
+      .doesNotExist();
   });
 
   test("changing tabs", async function (assert) {
@@ -261,7 +263,7 @@ module("Integration | Component | user-menu", function (hooks) {
     });
 
     await click("#user-menu-button-likes");
-    assert.ok(exists("#quick-access-likes.quick-access-panel"));
+    assert.dom("#quick-access-likes.quick-access-panel").exists();
     assert.strictEqual(
       queryParams.filter_by_types,
       "liked,liked_consolidated,reaction",
@@ -278,7 +280,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
 
     await click("#user-menu-button-replies");
-    assert.ok(exists("#quick-access-replies.quick-access-panel"));
+    assert.dom("#quick-access-replies.quick-access-panel").exists();
     assert.strictEqual(
       queryParams.filter_by_types,
       "mentioned,group_mentioned,posted,quoted,replied",
@@ -294,7 +296,7 @@ module("Integration | Component | user-menu", function (hooks) {
     );
 
     await click("#user-menu-button-review-queue");
-    assert.ok(exists("#quick-access-review-queue.quick-access-panel"));
+    assert.dom("#quick-access-review-queue.quick-access-panel").exists();
     activeTabs = queryAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(

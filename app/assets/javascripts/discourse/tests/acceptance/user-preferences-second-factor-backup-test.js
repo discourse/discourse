@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -55,9 +54,6 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
 
     await click(".two-factor-backup-dropdown .select-kit-header");
     await click("li[data-name='Disable']");
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Deleting backup codes"
-    );
+    assert.dom("#dialog-title").hasText("Deleting backup codes");
   });
 });

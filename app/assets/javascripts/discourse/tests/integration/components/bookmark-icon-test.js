@@ -48,7 +48,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
 
     await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
 
-    assert.ok(exists(".d-icon-bookmark.bookmark-icon__bookmarked"));
+    assert.dom(".d-icon-bookmark.bookmark-icon__bookmarked").exists();
     assert.strictEqual(
       query(".svg-icon-title").title,
       I18n.t("bookmarks.created_generic", {
@@ -64,7 +64,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
 
     await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
 
-    assert.ok(exists(".d-icon-bookmark.bookmark-icon"));
+    assert.dom(".d-icon-bookmark.bookmark-icon").exists();
     assert.strictEqual(
       query(".svg-icon-title").title,
       I18n.t("bookmarks.create")

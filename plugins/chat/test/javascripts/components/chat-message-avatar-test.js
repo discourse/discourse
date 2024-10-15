@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -20,7 +20,7 @@ module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
 
     await render(hbs`<Chat::Message::Avatar @message={{this.message}} />`);
 
-    assert.strictEqual(query(".chat-emoji-avatar .emoji").title, "heart");
+    assert.dom(".chat-emoji-avatar .emoji").hasAttribute("title", "heart");
   });
 
   test("user", async function (assert) {

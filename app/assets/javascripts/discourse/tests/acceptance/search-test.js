@@ -108,16 +108,16 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
 
     await clickOutside();
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
 
     await click("#search-button"); // toggle same button
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
   });
 
   test("initial options", async function (assert) {
@@ -522,9 +522,9 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(inSelector.rowByValue("tracking").exists());
     assert.ok(inSelector.rowByValue("bookmarks").exists());
 
-    assert.ok(exists(".search-advanced-options .in-likes"));
-    assert.ok(exists(".search-advanced-options .in-private"));
-    assert.ok(exists(".search-advanced-options .in-seen"));
+    assert.dom(".search-advanced-options .in-likes").exists();
+    assert.dom(".search-advanced-options .in-private").exists();
+    assert.dom(".search-advanced-options .in-seen").exists();
   });
 
   test("topic results - topic search scope - works with empty result sets", async function (assert) {
@@ -541,10 +541,9 @@ acceptance("Search - Authenticated", function (needs) {
 
     assert.strictEqual(count(".search-menu .results .item"), 0);
     assert.strictEqual(count(".search-menu .results .no-results"), 1);
-    assert.strictEqual(
-      query(".search-menu .results .no-results").innerText,
-      I18n.t("search.no_results")
-    );
+    assert
+      .dom(".search-menu .results .no-results")
+      .hasText(I18n.t("search.no_results"));
   });
 
   test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
@@ -755,7 +754,7 @@ acceptance("Search - Authenticated", function (needs) {
       ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
     );
 
-    assert.strictEqual(query("#search-term").value, "hijacked!");
+    assert.dom("#search-term").hasValue("hijacked!");
   });
 
   test("initial options - search history - category context", async function (assert) {
@@ -1193,7 +1192,7 @@ acceptance("Search - assistant", function (needs) {
     );
 
     await fillIn("#search-term", "in:mess");
-    assert.strictEqual(query(firstTarget).innerText, "in:messages");
+    assert.dom(firstTarget).hasText("in:messages");
   });
 
   test("initial options - user search scope - shows users when typing @", async function (assert) {
@@ -1207,7 +1206,7 @@ acceptance("Search - assistant", function (needs) {
     assert.strictEqual(username, "TeaMoe");
 
     await click(firstUser);
-    assert.strictEqual(query("#search-term").value, `@${username}`);
+    assert.dom("#search-term").hasValue(`@${username}`);
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {

@@ -83,7 +83,7 @@ acceptance(
       );
 
       await click("#enable_smtp");
-      assert.ok(exists(".group-smtp-email-settings"));
+      assert.dom(".group-smtp-email-settings").exists();
 
       await click("#prefill_smtp_gmail");
       assert
@@ -326,7 +326,7 @@ acceptance(
       );
 
       const regex = /updated: (.*?) by eviltrout/;
-      assert.ok(exists(".group-email-last-updated-details.for-imap"));
+      assert.dom(".group-email-last-updated-details.for-imap").exists();
       assert.ok(
         regex.test(
           query(".group-email-last-updated-details.for-imap").innerText.trim()

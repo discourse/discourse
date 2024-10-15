@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -17,7 +13,7 @@ acceptance("Spoiler Button", function (needs) {
 
     await visit("/");
 
-    assert.ok(exists("#create-topic"), "the create button is visible");
+    assert.dom("#create-topic").exists("the create button is visible");
 
     await click("#create-topic");
     const categoryChooser = selectKit(".category-chooser");

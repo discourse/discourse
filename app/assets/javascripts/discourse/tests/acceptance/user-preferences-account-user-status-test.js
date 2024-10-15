@@ -36,7 +36,7 @@ acceptance("User Profile - Account - User Status", function (needs) {
   test("doesn't render status block if status is disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
     await visit(`/u/${username}/preferences/account`);
-    assert.notOk(exists(".pref-user-status"));
+    assert.dom(".pref-user-status").doesNotExist();
   });
 
   test("renders status block if status is enabled in site settings", async function (assert) {

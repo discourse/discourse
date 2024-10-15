@@ -199,7 +199,7 @@ acceptance(
       site.set("user_color_schemes", []);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(!exists(".control-group.color-scheme"));
+      assert.dom(".control-group.color-scheme").doesNotExist();
     });
 
     test("light color scheme picker", async function (assert) {

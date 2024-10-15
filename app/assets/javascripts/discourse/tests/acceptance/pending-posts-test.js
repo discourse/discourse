@@ -1,17 +1,15 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Pending posts - no existing pending posts", function (needs) {
   needs.user();
 
   test("No link to pending posts", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(!exists(".action-list [href='/u/eviltrout/activity/pending']"));
+    assert
+      .dom(".action-list [href='/u/eviltrout/activity/pending']")
+      .doesNotExist();
   });
 });
 

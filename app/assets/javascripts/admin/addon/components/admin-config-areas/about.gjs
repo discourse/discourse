@@ -54,31 +54,37 @@ export default class AdminConfigAreasAbout extends Component {
           @heading="admin.config_areas.about.general_settings"
           class="admin-config-area-about__general-settings-section"
         >
-          <AdminConfigAreasAboutGeneralSettings
-            @generalSettings={{this.generalSettings}}
-            @setGlobalSavingStatus={{this.setSavingStatus}}
-            @globalSavingStatus={{this.saving}}
-          />
+          <:content>
+            <AdminConfigAreasAboutGeneralSettings
+              @generalSettings={{this.generalSettings}}
+              @setGlobalSavingStatus={{this.setSavingStatus}}
+              @globalSavingStatus={{this.saving}}
+            />
+          </:content>
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.contact_information"
           class="admin-config-area-about__contact-information-section"
         >
-          <AdminConfigAreasAboutContactInformation
-            @contactInformation={{this.contactInformation}}
-            @setGlobalSavingStatus={{this.setSavingStatus}}
-            @globalSavingStatus={{this.saving}}
-          />
+          <:content>
+            <AdminConfigAreasAboutContactInformation
+              @contactInformation={{this.contactInformation}}
+              @setGlobalSavingStatus={{this.setSavingStatus}}
+              @globalSavingStatus={{this.saving}}
+            />
+          </:content>
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.your_organization"
           class="admin-config-area-about__your-organization-section"
         >
-          <AdminConfigAreasAboutYourOrganization
-            @yourOrganization={{this.yourOrganization}}
-            @setGlobalSavingStatus={{this.setSavingStatus}}
-            @globalSavingStatus={{this.saving}}
-          />
+          <:content>
+            <AdminConfigAreasAboutYourOrganization
+              @yourOrganization={{this.yourOrganization}}
+              @setGlobalSavingStatus={{this.setSavingStatus}}
+              @globalSavingStatus={{this.saving}}
+            />
+          </:content>
         </AdminConfigAreaCard>
       </div>
     </div>

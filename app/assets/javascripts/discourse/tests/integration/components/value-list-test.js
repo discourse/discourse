@@ -62,11 +62,9 @@ module("Integration | Component | value-list", function (hooks) {
 
     await selectKit().expand();
 
-    assert.strictEqual(
-      query(".select-kit-collection li.select-kit-row span.name").innerText,
-      "vinkas",
-      "it adds the removed value to choices"
-    );
+    assert
+      .dom(".select-kit-collection li.select-kit-row span.name")
+      .hasText("vinkas", "it adds the removed value to choices");
   });
 
   test("selecting a value", async function (assert) {

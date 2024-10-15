@@ -20,7 +20,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       hbs`<MountWidget @widget="topic-status" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".topic-status .d-icon-lock"));
+    assert.dom(".topic-status .d-icon-lock").exists();
   });
 
   test("extendability", async function (assert) {
@@ -41,7 +41,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       hbs`<MountWidget @widget="topic-status" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".topic-status .d-icon-far-square-check"));
+    assert.dom(".topic-status .d-icon-far-square-check").exists();
   });
 
   test("toggling pin status", async function (assert) {

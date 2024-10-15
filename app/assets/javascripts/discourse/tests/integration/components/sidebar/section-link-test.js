@@ -45,7 +45,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
     const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
     await render(template);
 
-    assert.strictEqual(query("a").target, "_self");
+    assert.dom("a").hasAttribute("target", "_self");
   });
 
   test("target attribute for link when user set external links in new tab", async function (assert) {
@@ -53,6 +53,6 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
     const template = hbs`<Sidebar::SectionLink @linkName="test" @href="https://discourse.org" />`;
     await render(template);
 
-    assert.strictEqual(query("a").target, "_blank");
+    assert.dom("a").hasAttribute("target", "_blank");
   });
 });

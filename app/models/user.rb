@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
     :salt, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
     :password_hash, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
     :password_algorithm, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
   include Searchable
