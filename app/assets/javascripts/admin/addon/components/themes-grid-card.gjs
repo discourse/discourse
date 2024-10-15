@@ -5,15 +5,16 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
-// NOTE (martin): Much of the JS code in this component is placeholder code. Much
-// of the existing theme logic in /admin/customize/themes has old patterns
+// NOTE (martin): We will need to revisit and improve this component
+// over time.
+//
+// Much of the existing theme logic in /admin/customize/themes has old patterns
 // and technical debt, so anything copied from there to here is subject
 // to change as we improve this incrementally.
 export default class ThemeCard extends Component {
@@ -199,7 +200,7 @@ export default class ThemeCard extends Component {
               rel="noopener noreferrer"
               target="_blank"
               class="btn btn-flat theme-card__button"
-            >{{dIcon "eye"}}</a>
+            >{{icon "eye"}}</a>
             <DButton
               @route="adminCustomizeThemes.show"
               @routeModels={{this.themeRouteModels}}

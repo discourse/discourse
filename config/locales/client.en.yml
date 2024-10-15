@@ -5899,7 +5899,7 @@ en:
           inactive_themes: "Inactive themes:"
           set_default_theme: "Set default"
           default_theme: "Default theme"
-          set_default_success: "Default theme set to: %{theme}"
+          set_default_success: "Default theme set to %{theme}"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"

@@ -18,37 +18,47 @@
     flex-direction: column;
     flex-grow: 1;
   }
+
   &.--active {
     @include theme-card-border(tertiary);
   }
+
   &.--disabled {
     @include theme-card-border(primary);
   }
+
   &.--broken {
     @include theme-card-border(danger);
   }
+
   &.--updates {
     @include theme-card-border(success);
   }
+
   .broken-indicator {
     color: var(--danger);
   }
+
   &__icons {
     display: flex;
   }
+
   &__icons .btn-flat {
     padding: 0;
   }
+
   &__image-wrapper {
     width: 100%;
     height: 160px;
     overflow: hidden;
+
     svg {
       width: 100%;
       top: 0;
       left: 0;
     }
   }
+
   &__image {
     width: 100%;
     height: 100%;
@@ -56,27 +66,33 @@
     object-position: top left;
     border-radius: calc(var(--d-border-radius) + 1px);
   }
+
   .ember-checkbox {
     margin: 0 5px 0 0;
   }
+
   &__checkbox-label {
     margin: 0;
     font-weight: 400;
   }
+
   &__components {
     display: block;
     font-size: var(--font-down-1);
     margin-bottom: 10px;
     color: var(--primary-high);
   }
+
   &__button {
     margin-top: auto;
   }
+
   &__footer {
     margin-top: auto;
     display: flex;
     justify-content: space-between;
   }
+
   .admin-config-area-card__header-action {
     display: flex;
     justify-content: center;
@@ -94,6 +110,7 @@
   justify-content: space-between;
   flex-direction: column;
   font-size: var(--font-down-1);
+
   .external-link {
     margin-bottom: 0.25em;
     color: var(--primary);
