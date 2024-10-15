@@ -33,15 +33,15 @@ export default class ThemesGridPlaceholder extends Component {
       <rect
         width="635.115"
         height="347"
-        fill="{{htmlSafe this.themeColors.secondary}}"
+        fill={{htmlSafe this.themeColors.secondary}}
       />
       <path
         d="M54.9766 79.1039C55.9198 76.0065 59.8623 75.0916 62.0732 77.4571L121.448 140.986C123.659 143.351 122.48 147.223 119.326 147.955L34.621 167.611C31.467 168.343 28.7034 165.386 29.6466 162.288L54.9766 79.1039Z"
-        fill="{{htmlSafe this.themeColors.primary}}"
+        fill={{htmlSafe this.themeColors.primary}}
       />
       <path
         d="M398.487 211.02C400.651 208.611 404.611 209.448 405.615 212.527L432.579 295.196C433.584 298.274 430.879 301.285 427.711 300.615L342.635 282.633C339.467 281.963 338.212 278.115 340.376 275.707L398.487 211.02Z"
-        fill="{{htmlSafe this.themeColors.tertiary}}"
+        fill={{htmlSafe this.themeColors.tertiary}}
       />
       <circle cx="109.357" cy="262.879" r="44.1636" fill="#D1F0FF" />
       <circle cx="365.927" cy="103.048" r="44.1636" fill="#E45735" />
@@ -52,7 +52,7 @@ export default class ThemesGridPlaceholder extends Component {
         height="81.9226"
         rx="4.20606"
         transform="rotate(-15.9297 166.139 68.751)"
-        fill="{{htmlSafe this.themeColors.danger}}"
+        fill={{htmlSafe this.themeColors.danger}}
       />
       <rect
         x="500.521"
@@ -61,7 +61,7 @@ export default class ThemesGridPlaceholder extends Component {
         height="81.9226"
         rx="4.20606"
         transform="rotate(-15.9297 500.521 100.296)"
-        fill="{{htmlSafe this.themeColors.success}}"
+        fill={{htmlSafe this.themeColors.success}}
       />
       <rect
         x="481.857"
@@ -70,7 +70,7 @@ export default class ThemesGridPlaceholder extends Component {
         height="54.6788"
         rx="4.20606"
         transform="rotate(9.12857 481.857 222.921)"
-        fill="{{htmlSafe this.themeColors.love}}"
+        fill={{htmlSafe this.themeColors.love}}
       />
       <rect
         x="176.654"
@@ -79,7 +79,7 @@ export default class ThemesGridPlaceholder extends Component {
         height="54.6788"
         rx="4.20606"
         transform="rotate(-22.7296 176.654 240.608)"
-        fill="{{htmlSafe this.themeColors.primary}}"
+        fill={{htmlSafe this.themeColors.primary}}
       />
     </svg>
   </template>

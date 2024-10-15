@@ -48,7 +48,6 @@ export default class ThemeCard extends Component {
     "args.theme.isPendingUpdates"
   )
   get themeCardClasses() {
-    console.log(this.args.theme.remote_theme);
     return this.args.theme.isBroken
       ? "--broken"
       : !this.args.theme.enabled

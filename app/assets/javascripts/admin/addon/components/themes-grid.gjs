@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
@@ -78,7 +78,7 @@ export default class ThemesGrid extends Component {
   <template>
     <div class="themes-cards-container">
       {{#each this.sortedThemes as |theme|}}
-        <ThemesGridCard @theme={{theme}} @allThemes={{this.args.themes}} />
+        <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
 
       <div class="admin-config-area-card theme-card">
