@@ -43,20 +43,9 @@ export default class ThemeCard extends Component {
       : "btn-default theme-card__button";
   }
 
-  @computed(
-    "args.theme.default",
-    "args.theme.isBroken",
-    "args.theme.enabled",
-    "args.theme.isPendingUpdates"
-  )
+  @computed("args.theme.default")
   get themeCardClasses() {
-    return this.args.theme.isBroken
-      ? "--broken"
-      : !this.args.theme.enabled
-      ? "--disabled"
-      : this.args.theme.isPendingUpdates
-      ? "--updates"
-      : this.args.theme.default
+    return this.args.theme.default
       ? "--active"
       : "";
   }
@@ -122,32 +111,6 @@ export default class ThemeCard extends Component {
     >
       <:header>
         {{@theme.name}}
-        <span class="theme-card__icons">
-          {{#if @theme.isPendingUpdates}}
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="sync"
-              @class="btn-flat theme-card__button"
-              @preventFocus={{true}}
-            />
-          {{else}}
-            {{#if @theme.isBroken}}
-              {{icon
-                "exclamation-circle"
-                class="broken-indicator"
-                title="admin.customize.theme.broken_theme_tooltip"
-              }}
-            {{/if}}
-            {{#unless @theme.enabled}}
-              {{icon
-                "ban"
-                class="light-grey-icon"
-                title="admin.customize.theme.disabled_component_tooltip"
-              }}
-            {{/unless}}
-          {{/if}}
-        </span>
       </:header>
       <:headerAction>
         <Input
@@ -176,7 +139,9 @@ export default class ThemeCard extends Component {
           {{/if}}
         </div>
         <div class="theme-card__content">
-          <p class="theme-card__description">{{@theme.description}}</p>
+          {{#if @theme.description}}
+            <p class="theme-card__description">{{@theme.description}}</p>
+          {{/if}}
           {{#if @theme.childThemes}}
             <span class="theme-card__components">{{i18n
                 "admin.customize.theme.components"
@@ -193,7 +158,38 @@ export default class ThemeCard extends Component {
             @translatedLabel={{i18n this.setDefaultButtonTitle}}
             @disabled={{@theme.default}}
           />
-          <div class="theme-card-footer__actions">
+          {{#if @theme.isPendingUpdates}}
+              <DButton
+                @route="adminCustomizeThemes.show"
+                @routeModels={{this.themeRouteModels}}
+                @icon="sync"
+                @class="btn btn-flat theme-card__button"
+                @title="admin.customize.theme.updates_available_tooltip"
+                @preventFocus={{true}}
+              />
+            {{else}}
+              {{#if @theme.isBroken}}
+                <DButton
+                  @route="adminCustomizeThemes.show"
+                  @routeModels={{this.themeRouteModels}}
+                  @icon="exclamation-circle"
+                  @class="btn btn-flat theme-card__button broken-indicator"
+                  @title="admin.customize.theme.broken_theme_tooltip"
+                  @preventFocus={{true}}
+                />
+              {{/if}}
+              {{#unless @theme.enabled}}
+                <DButton
+                  @route="adminCustomizeThemes.show"
+                  @routeModels={{this.themeRouteModels}}
+                  @icon="ban"
+                  @class="btn btn-flat theme-card__button broken-indicator light-grey-icon"
+                  @title="admin.customize.theme.disabled_component_tooltip"
+                  @preventFocus={{true}}
+                />
+              {{/unless}}
+            {{/if}}
+          <div class="theme-card__footer-actions">
             <a
               href={{this.themePreviewUrl}}
               title={{i18n "admin.customize.explain_preview"}}
