@@ -393,6 +393,16 @@ acceptance(
       );
 
       assert.ok(exists(".show-mores"), "displays the topic incoming info");
+
+      await publishNewToMessageBus({ topicId: 2 });
+
+      assert.strictEqual(
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
+        I18n.t("user.messages.new_with_count", { count: 2 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
     });
 
     test("incoming unread messages while viewing unread", async function (assert) {

@@ -224,6 +224,10 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          if topic.private_message?
+            next if !automation.trigger_field("trigger_with_pms")["value"]
+          end
+
           watching_categories = automation.trigger_field("watching_categories")
           if watching_categories["value"]
             next if !watching_categories["value"].include?(topic.category_id)

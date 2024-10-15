@@ -29,7 +29,7 @@ jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
-    runs-on: debian-12
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
     container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
@@ -44,6 +44,7 @@ jobs:
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
+      MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
 
     strategy:
       fail-fast: false
@@ -130,13 +131,8 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
-      # Remove discourse-ai from stable as it is not compatible with Ruby 3.3 which we are now using for the base image
-      - name: Remove discourse-ai from stable
-        if: matrix.target == 'plugins' && (github.ref_name == 'stable' || github.base_ref == 'stable')
-        run: rm -rf plugins/discourse-ai
-
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache
@@ -255,6 +251,13 @@ jobs:
         if: matrix.build_type == 'system'
         run: bin/ember-cli --build
 
+      - name: Minio cache
+        if: matrix.build_type == 'system' && matrix.target == 'core'
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.MINIO_RUNNER_INSTALL_DIR }}
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+
       - name: Ensure latest minio binary installed for Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: bundle exec ruby script/install_minio_binaries.rb
@@ -303,10 +306,10 @@ jobs:
         shell: bash
 
       - name: Upload failed system test screenshots
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now.
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots
+          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/capybara/*.png
 
       - name: Check for flaky tests report
@@ -332,10 +335,10 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
-          name: flaky-test-reports
+          name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Check Annotations
@@ -358,7 +361,7 @@ jobs:
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: core frontend (${{ matrix.browser }})
-    runs-on: debian-12
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-22.04-8core') || 'debian-12' }}
     container:
       image: discourse/discourse_test:slim-browsers
       options: --user discourse
@@ -405,3 +408,24 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
+
+   merge:
+    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    runs-on: debian-12
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: failed-system-test-screenshots
+          pattern: failed-system-test-screenshots-*
+          delete-merged: true
+          separate-directories: false
+
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: flaky-test-reports
+          pattern: flaky-test-reports-*
+          delete-merged: true
+          separate-directories: false

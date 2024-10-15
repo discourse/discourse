@@ -542,6 +542,12 @@ zh_CN:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_descriptions:
+      everyone: "包括所有成员的自动群组"
+      staff: "包括管理员和版主的自动群组"
+      admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
+      moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
+      trust_level_0: "正在学习社区规范和功能的受限新成员"
     request_membership_pm:
       title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
@@ -1184,7 +1190,15 @@ zh_CN:
         page_view_crawler: "已知爬虫"
         page_view_other: "其他页面浏览量"
       yaxis: "天"
-      description: "登录用户、匿名用户、已知爬虫和其他用户的页面浏览量。此实验性报告可以确保在计算登录/匿名请求之前这些请求来自真实浏览器。"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "页面浏览量（匿名用户）"
+        page_view_logged_in_browser: "页面浏览量（登录用户）"
+        page_view_crawler: "已知爬虫"
+        page_view_other: "其他流量"
+      yaxis: "天"
+      description: "登录用户、匿名用户、已知抓取工具和其他流量的页面浏览量。"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -1663,7 +1677,6 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
-    allowed_iframes: "Discourse 可以安全地在帖子中允许的 iframe src 网域前缀列表"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -1677,8 +1690,6 @@ zh_CN:
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
     top_menu: "确定首页导航中显示的条目，以及显示顺序。"
-    post_menu: "确定帖子菜单中显示的条目，以及显示顺序。"
-    post_menu_hidden_items: "除非点击扩展省略号，否则在帖子菜单中默认隐藏的菜单项。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
@@ -2145,7 +2156,6 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
-    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
@@ -2171,7 +2181,6 @@ zh_CN:
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天未更改的草稿。"
     delete_merged_stub_topics_after_days: "自动删除完全合并的存根话题之前等待的天数。设置为 -1 不会删除。设置为 0 将立即删除。"
-    bootstrap_mode_min_users: "禁用引导模式并移除“开始”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
@@ -2326,7 +2335,6 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
     enable_experimental_bookmark_redesign_groups: "实验性：显示帖子书签的快速访问菜单和重新设计的新模式"
-    glimmer_header_mode: "控制是否使用新的 'glimmer' 标头实现。在所有主题和插件准备就绪后，'auto' 将自动启用。https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "实验性：启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"

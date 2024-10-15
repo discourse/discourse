@@ -100,10 +100,7 @@ registerButton("read-count", (attrs, state) => {
   if (attrs.showReadIndicator) {
     const count = attrs.readCount;
     if (count > 0) {
-      let ariaPressed = "false";
-      if (state?.readers && state.readers.length > 0) {
-        ariaPressed = "true";
-      }
+      let ariaPressed = (state?.readers?.length > 0).toString();
       return {
         action: "toggleWhoRead",
         title: "post.controls.read_indicator",
@@ -151,10 +148,8 @@ function likeCount(attrs, state) {
       addContainer = true;
     }
 
-    let ariaPressed = "false";
-    if (state?.likedUsers && state.likedUsers.length > 0) {
-      ariaPressed = "true";
-    }
+    let ariaPressed = (state?.likedUsers?.length > 0).toString();
+
     return {
       action: "toggleWhoLiked",
       title,
@@ -287,53 +282,52 @@ registerButton("wiki-edit", (attrs) => {
 });
 
 registerButton("replies", (attrs, state, siteSettings) => {
-  const replyCount = attrs.replyCount;
-  if (!replyCount) {
+  const count = attrs.replyCount;
+
+  if (!count) {
     return;
   }
 
-  let action = "toggleRepliesBelow",
-    icon = state.repliesShown ? "chevron-up" : "chevron-down";
+  let title;
+  let action = "toggleRepliesBelow";
+  let icon = state.repliesShown ? "chevron-up" : "chevron-down";
 
   if (siteSettings.enable_filtered_replies_view) {
     action = "toggleFilteredRepliesView";
     icon = state.filteredRepliesShown ? "chevron-up" : "chevron-down";
+    title = state.filteredRepliesShown
+      ? "post.view_all_posts"
+      : "post.filtered_replies_hint";
   }
 
   // Omit replies if the setting `suppress_reply_directly_below` is enabled
   if (
-    replyCount === 1 &&
+    count === 1 &&
     attrs.replyDirectlyBelow &&
     siteSettings.suppress_reply_directly_below
   ) {
     return;
   }
 
-  let ariaPressed;
+  let ariaPressed, ariaExpanded;
+
   if (!siteSettings.enable_filtered_replies_view) {
-    ariaPressed = state.repliesShown ? "true" : "false";
+    ariaPressed = state.repliesShown.toString();
+    ariaExpanded = state.repliesShown.toString();
   }
+
   return {
     action,
     icon,
     className: "show-replies",
-    titleOptions: { count: replyCount },
-    title: siteSettings.enable_filtered_replies_view
-      ? state.filteredRepliesShown
-        ? "post.view_all_posts"
-        : "post.filtered_replies_hint"
-      : "",
-    labelOptions: { count: replyCount },
+    titleOptions: { count },
+    title,
+    labelOptions: { count },
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
     disabled: !!attrs.deleted,
-    translatedAriaLabel: I18n.t("post.sr_expand_replies", {
-      count: replyCount,
-    }),
-    ariaExpanded:
-      !siteSettings.enable_filtered_replies_view && state.repliesShown
-        ? "true"
-        : "false",
+    translatedAriaLabel: I18n.t("post.sr_expand_replies", { count }),
+    ariaExpanded,
     ariaPressed,
     ariaControls: `embedded-posts__bottom--${attrs.post_number}`,
   };
@@ -354,6 +348,7 @@ registerButton("copyLink", () => {
     icon: "d-post-share",
     className: "post-action-menu__copy-link",
     title: "post.controls.copy_title",
+    ariaLive: "polite",
   };
 });
 

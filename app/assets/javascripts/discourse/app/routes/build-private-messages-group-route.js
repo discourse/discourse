@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import createPMRoute from "discourse/routes/build-private-messages-route";
@@ -80,10 +81,10 @@ export default (inboxType, filter) => {
       const userTopicsListController = this.controllerFor("user-topics-list");
       userTopicsListController.set("group", this.group);
 
-      userTopicsListController.set(
-        "pmTopicTrackingState.activeGroup",
-        this.group
+      const pmTopicTrackingState = getOwner(this).lookup(
+        "service:pm-topic-tracking-state"
       );
+      pmTopicTrackingState.activeGroup = this.group;
 
       this.controllerFor("user-private-messages").set("group", this.group);
     }

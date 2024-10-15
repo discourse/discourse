@@ -7,6 +7,10 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.37.2] - 2024-10-02
+
+- Fixed comments and text references to Font Awesome 5 in favor of the more generic Font Awesome due to core now having the latest version and no longer needing to specify version 5.
+
 ## [1.37.1] - 2024-08-21
 
 - Added support for `shortcut` in `addComposerToolbarPopupMenuOption` which allows to add a keyboard shortcut to the popup menu option.

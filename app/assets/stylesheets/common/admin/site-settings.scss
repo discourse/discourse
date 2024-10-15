@@ -1,0 +1,25 @@
+.admin-controls.admin-site-settings-filter-controls
+  .controls
+  .admin-site-settings-filter-controls__input {
+  max-width: 300px;
+}
+
+.admin-controls.admin-site-settings-filter-controls .menu-toggle {
+  margin-left: 0.5em;
+}
+
+.admin-plugin-config-area {
+  &__settings {
+    .admin-site-settings-filter-controls {
+      margin-bottom: 1em;
+    }
+
+    .admin-filtered-site-settings {
+      padding: 0.5em 1em;
+    }
+
+    .setting-label {
+      margin-left: 18px;
+    }
+  }
+}

@@ -48,12 +48,12 @@
     flex-direction: row;
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius-large);
-    background: var(--primary-very-low);
+    background: rgba(var(--primary-very-low-rgb), 0.5);
     min-height: 50px;
     overflow: hidden;
 
     .chat-composer.is-focused & {
-      box-shadow: 0 0 2px 0 rgba(var(--tertiary-rgb), 0.95);
+      box-shadow: 0 0 1px 0 var(--tertiary);
     }
 
     .chat-composer.is-disabled & {

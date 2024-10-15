@@ -35,18 +35,6 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
   });
 
-  test("@subtitle", async function (assert) {
-    await render(<template>
-      <Form as |form|>
-        <form.Field @name="foo" @title="Foo" @subtitle="foo foo" as |field|>
-          <field.Input />
-        </form.Field>
-      </Form>
-    </template>);
-
-    assert.form().field("foo").hasSubtitle("foo foo");
-  });
-
   test("@description", async function (assert) {
     await render(<template>
       <Form as |form|>
@@ -157,6 +145,23 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     assert.dom(".form-kit__container-title").doesNotExist();
+  });
+
+  test("@format full", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @format="full"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
   });
 
   test("@onSet", async function (assert) {

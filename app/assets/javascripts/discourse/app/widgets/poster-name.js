@@ -167,8 +167,20 @@ export default createWidget("poster-name", {
       );
     }
 
+    this.buildTitleObject(attrs, contents);
+
+    if (this.siteSettings.enable_user_status) {
+      this.addUserStatus(contents, attrs);
+    }
+
+    return contents;
+  },
+
+  buildTitleObject(attrs, contents) {
+    const primaryGroupName = attrs.primary_group_name;
     const title = attrs.user_title,
       titleIsGroup = attrs.title_is_group;
+
     if (title && title.length) {
       contents.push(
         this.attach("poster-name-title", {
@@ -178,12 +190,6 @@ export default createWidget("poster-name", {
         })
       );
     }
-
-    if (this.siteSettings.enable_user_status) {
-      this.addUserStatus(contents, attrs);
-    }
-
-    return contents;
   },
 
   addUserStatus(contents, attrs) {

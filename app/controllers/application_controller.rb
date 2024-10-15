@@ -659,7 +659,7 @@ class ApplicationController < ActionController::Base
             .map do |plugin|
               {
                 name: plugin.name.downcase,
-                admin_route: plugin.admin_route,
+                admin_route: plugin.full_admin_route,
                 enabled: plugin.enabled?,
               }
             end,
@@ -1161,5 +1161,9 @@ class ApplicationController < ActionController::Base
 
   def clean_xml
     response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+  end
+
+  def service_params
+    params.to_unsafe_h.merge(guardian:)
   end
 end

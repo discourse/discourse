@@ -152,5 +152,12 @@ RSpec.describe TopTopic do
         0.0000000001,
       ).of(10.602059991328)
     end
+
+    it "triggers a DiscourseEvent for each refreshed period" do
+      events = DiscourseEvent.track_events(:top_score_computed) { TopTopic.refresh! }
+      periods = events.map { |e| e[:params].first[:period] }
+
+      expect(periods).to match_array(%i[daily weekly monthly quarterly yearly all])
+    end
   end
 end

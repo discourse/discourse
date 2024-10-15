@@ -108,7 +108,6 @@ th:
       topic_html: 'กระทู้: <span class="topic-title">%{topicTitle}</span>'
       post: "โพสต์ #%{postNumber} โดย @%{username}"
       close: "ปิด"
-      twitter: "แชร์บนทวิตเตอร์"
       facebook: "แชร์บนเฟสบุ๊ค"
       email: "ส่งทางอีเมล"
       url: "คัดลอกและแชร์ URL"
@@ -923,7 +922,6 @@ th:
         destroy: "ลบอีเมล"
         add_email: "เพิ่มอีเมลสำรอง"
         no_secondary: "ไม่มีอีเมลสำรอง"
-        instructions: "ไม่แสดงเป็นสาธารณะ"
         ok: "เราจะส่งอีเมลไปหาคุณเพื่อยืนยัน"
         required: "กรุณากรอกที่อยู่อีเมล"
         invalid: "กรุณาใส่อีเมลที่ถูกต้อง"
@@ -941,8 +939,8 @@ th:
         welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
       name:
         title: "ชื่อ"
-        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)."
-        instructions_required: "ชื่อเต็มของคุณ."
+        instructions: "ชื่อเต็มของคุณ (ไม่บังคับ)"
+        instructions_required: "ชื่อเต็มของคุณ"
         required: "กรุณากรอกชื่อ"
         too_short: "ชื่อของคุณสั้นไป"
         ok: "ชื่อของคุณเหมาะสม"
@@ -1084,7 +1082,7 @@ th:
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
         ok: "รหัสผ่านของคุณเหมาะสม"
         instructions:
-          other: "อย่างน้อย %{count} ตัวอักษร."
+          other: "อย่างน้อย %{count} ตัวอักษร"
         required: "กรุณากรอกรหัสผ่าน"
       summary:
         title: "สรุปภาพรวม"
@@ -2537,6 +2535,7 @@ th:
         updates_available: "มีการอัปเดต"
         installed_version: "ติดตั้งแล้ว"
         latest_version: "ล่าสุด"
+        dismiss_notice: "ซ่อน"
         new_features:
           learn_more: "เรียนรู้เพิ่มเติม..."
         last_checked: "ตรวจล่าสุด"
@@ -2692,9 +2691,11 @@ th:
           rejected: "ถูกปฏิเสธ"
       security:
         title: "ความปลอดภัย"
-        sidebar_link:
-          security: "ความปลอดภัย"
-          spam: "ขยะ"
+      section_landing_pages:
+        account:
+          title: "บัญชี"
+          backups:
+            title: "สำรอง"
       config_areas:
         about:
           optional: "(ทางเลือก)"
@@ -3274,8 +3275,6 @@ th:
             with_post: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link}
             with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
-        badge_intro:
-          what_are_badges_title: "เหรียญคืออะไร"
         mass_award:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:

@@ -65,7 +65,7 @@ RSpec.describe User::Suspend do
           end
 
           context "when all users can be suspended" do
-            before { allow(Action::User::TriggerPostAction).to receive(:call) }
+            before { allow(User::Action::TriggerPostAction).to receive(:call) }
 
             it "suspends all provided users" do
               result
@@ -74,7 +74,7 @@ RSpec.describe User::Suspend do
 
             it "triggers a post action" do
               result
-              expect(Action::User::TriggerPostAction).to have_received(:call).with(
+              expect(User::Action::TriggerPostAction).to have_received(:call).with(
                 guardian:,
                 post: nil,
                 contract: result[:contract],

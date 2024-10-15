@@ -6,6 +6,10 @@
   .chat-channel-name {
     font-size: var(--font-up-1-rem);
   }
+
+  .chat-channel-row:last-of-type {
+    border-bottom: 0;
+  }
 }
 
 .c-routes.--direct-messages,
@@ -13,4 +17,9 @@
 .c-routes.--threads {
   background: var(--primary-very-low);
   max-width: 100vw;
+}
+
+//thread index
+.chat-side-panel {
+  min-width: 0;
 }

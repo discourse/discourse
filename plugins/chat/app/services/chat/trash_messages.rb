@@ -17,7 +17,13 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :channel_id, :integer
+      attribute :message_ids, :array
+
+      validates :channel_id, presence: true
+      validates :message_ids, length: { minimum: 1, maximum: 200 }
+    end
     model :messages
     policy :can_delete_all_chat_messages
     transaction do
@@ -28,14 +34,6 @@ module Chat
       step :update_thread_reply_cache
     end
     step :publish_events
-
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      attribute :message_ids, :array
-      validates :channel_id, presence: true
-      validates :message_ids, length: { minimum: 1, maximum: 50 }
-    end
 
     private
 

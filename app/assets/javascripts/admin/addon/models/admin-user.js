@@ -287,6 +287,17 @@ export default class AdminUser extends User {
     });
   }
 
+  deleteAssociatedAccounts() {
+    return ajax(`/admin/users/${this.id}/delete_associated_accounts`, {
+      type: "PUT",
+      data: {
+        context: window.location.pathname,
+      },
+    }).then(() => {
+      this.set("associated_accounts", []);
+    });
+  }
+
   destroy(formData) {
     return ajax(`/admin/users/${this.id}.json`, {
       type: "DELETE",

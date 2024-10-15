@@ -162,10 +162,11 @@ sl:
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zapri"
-      twitter: "Deli na Twitterju"
       facebook: "Deli na Facebooku"
       email: "Pošlji po e-pošti"
       url: "Kopiraj in deli URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Je naredil temo javno %{when}"
       private_topic: "Je spremenil temo v zasebno sporočilo %{when}"
@@ -297,6 +298,7 @@ sl:
       title: "Nove in neprebrane teme"
       pm_title: "Predlagana sporočila"
     about:
+      edit: "Uredi to stran"
       simple_title: "O nas"
       title: "O %{title}"
       stats: "Statistika strani"
@@ -1349,7 +1351,6 @@ sl:
         add_email: "Dodajte nadomestni e-poštni naslov"
         auth_override_instructions: "E-naslov se lahko posodobi z naslovom pri ponudniku za overjanje."
         no_secondary: "Ni dodatnih e-naslovov"
-        instructions: "se nikoli ne prikaže javno"
         admin_note: "Opomba: Kadar skrbnik spremeni e-naslov drugega uporabnika, ki ni skrbnik, je to indikator, da je uporabnik izgubil dostop do svojega izvornega e-poštnega računa, zato bo e-poštno sporočilo za ponastavitev gesla poslano na nov naslov. Uporabnikov e-naslov ne bo spremenjen, dokler ne zaključi postopka ponastavitve gesla."
         ok: "Poslali vam bomo e-sporočilo za potrditev."
         required: "Vnesite e-poštni naslov"
@@ -1377,14 +1378,14 @@ sl:
         approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
       name:
         title: "Polno ime"
-        instructions: "Vaše polno ime (neobvezno)."
-        instructions_required: "Vaše polno ime."
+        instructions: "Vaše polno ime (neobvezno)"
+        instructions_required: "Vaše polno ime"
         required: "Vnesite ime"
         too_short: "Ime je prekratko"
         ok: "Vaše ime je ustrezno"
       username:
         title: "Uporabniško ime"
-        instructions: "Unikatno, brez presledkov, kratko."
+        instructions: "Unikatno, brez presledkov, kratko"
         short_instructions: "Ljudje vas lahko omenijo kot @%{username}"
         available: "Vaše uporabniško ime je prosto"
         not_available: "Ni na voljo. Poskusi %{suggestion}?"
@@ -3726,6 +3727,7 @@ sl:
         installed_version: "Nameščeno"
         latest_version: "Najnovejše"
         problems_found: "Nekaj priporočil glede na vaše trenutne nastavitve strani"
+        dismiss_notice: "Opusti"
         new_features:
           learn_more: "Več o tem..."
         last_checked: "Nazadnje preverjeno"
@@ -3953,8 +3955,11 @@ sl:
           screened_ips: "Nadzorovani IPji"
           screened_urls: "Nadzorovani URLji"
           search_logs: "Dnevnik iskanj"
-          security: "Varnost"
-          spam: "Neželeno"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Varnostne kopije"
       config_areas:
         about:
           optional: "(neobvezno)"
@@ -4692,10 +4697,6 @@ sl:
             with_post: <span class="username">%{username}</span> za prispevek v %{link}
             with_post_time: <span class="username">%{username}</span> za prispevek v %{link} ob <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
-        badge_intro:
-          title: "Izberite obstoječo značko ali ustvari novo značko"
-          what_are_badges_title: "Kaj so značke?"
-          badge_query_examples_title: "Primeri poizvedb SQL za značke"
       emoji:
         title: "Emoji"
         add: "Dodaj nov emoji"

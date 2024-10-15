@@ -141,7 +141,6 @@ fr:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber} par @%{username}"
       close: "fermer"
-      twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
@@ -297,6 +296,7 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     about:
+      edit: "Modifier cette page"
       simple_title: "À propos"
       title: "À propos du site %{title}"
       stats: "Statistiques du site"
@@ -1624,7 +1624,7 @@ fr:
         add_email: "Ajouter une adresse e-mail alternative"
         auth_override_instructions: "L'e-mail peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse e-mail secondaire"
-        instructions: "Ne sera pas visible publiquement."
+        instructions: "Ne sera pas visible publiquement"
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse e-mail d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine. Un e-mail de réinitialisation du mot de passe sera donc envoyé à sa nouvelle adresse. L'adresse e-mail de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
         ok: "Nous vous enverrons un e-mail de confirmation"
         required: "Veuillez saisir une adresse e-mail"
@@ -1655,14 +1655,14 @@ fr:
         approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous puissiez accéder au forum. Vous recevrez un e-mail lorsque que votre compte sera approuvé !"
       name:
         title: "Nom"
-        instructions: "Votre nom complet (facultatif)."
-        instructions_required: "Votre nom complet."
+        instructions: "Votre nom complet (facultatif)"
+        instructions_required: "Votre nom complet"
         required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "Unique, sans espace, court."
+        instructions: "Unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayer %{suggestion} ?"
@@ -1877,8 +1877,8 @@ fr:
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
         instructions:
-          one: "Au moins %{count} caractère."
-          other: "Au moins %{count} caractères."
+          one: "Au moins %{count} caractère"
+          other: "Au moins %{count} caractères"
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
         incorrect_password: "Le mot de passe saisi est incorrect."
@@ -4726,6 +4726,7 @@ fr:
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
+        dismiss_notice: "Rejeter"
         new_features:
           title: "Nouveautés"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
@@ -5195,9 +5196,14 @@ fr:
           screened_ips: "IP sous surveillance"
           screened_urls: "URL sous surveillance"
           search_logs: "Journaux de recherche"
-          security: "Sécurité"
-          spam: "Spam"
           staff_action_logs: "Journaux d'action du personnel"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Sauvegardes"
+          whats_new:
+            title: "Nouveautés"
       config_areas:
         about:
           header: "À propos de votre site"
@@ -5207,8 +5213,6 @@ fr:
           community_summary: "Résumé de la communauté"
           community_description: "Description de la communauté"
           banner_image: "Image de bannière"
-          banner_image_help: |
-            Cela sera utilisé sur votre page À propos. Taille recommandée : 800 x 300 pixels. Types acceptés : JPG, PNG et SVG jusqu'à 10 Mo.
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
           community_owner_placeholder: "Johnny Smith"
@@ -6665,10 +6669,6 @@ fr:
             with_post: <span class="username">%{username}</span> pour son message dans %{link}
             with_post_time: <span class="username">%{username}</span> pour son message dans %{link} à <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> à <span class="time">%{time}</span>
-        badge_intro:
-          title: "Choisissez un badge existant ou créez-en un nouveau pour commencer"
-          what_are_badges_title: "Que sont les badges ?"
-          badge_query_examples_title: "Exemple de requête de badge"
         mass_award:
           title: Accorder en masse
           description: Attribuez le même badge à plusieurs utilisateurs à la fois.

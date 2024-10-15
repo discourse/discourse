@@ -16,7 +16,7 @@ export let secondaryCustomSectionLinks = [];
  * @param {string} [args.route] - The Ember route name to generate the href attribute for the link.
  * @param {string} [args.href] - The href attribute for the link.
  * @param {string} [args.title] - The title attribute for the link.
- * @param {string} [args.icon] - The FontAwesome 5 icon to display for the link.
+ * @param {string} [args.icon] - The FontAwesome icon to display for the link.
  * @param {Boolean} [secondary] - Determines whether the section link should be added to the main or secondary section in the "More..." links drawer.
  */
 export function addSectionLink(args, secondary) {

@@ -278,7 +278,7 @@ RSpec.describe "Chat channel", type: :system do
         user: other_user,
         chat_channel: channel_1,
         use_service: true,
-        message: "<mark>not marked</mark>",
+        message: "<abbr>not abbr</abbr>",
       )
     end
 
@@ -292,7 +292,16 @@ RSpec.describe "Chat channel", type: :system do
       chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "&lt;mark&gt;not marked&lt;/mark&gt;",
+        "&lt;abbr&gt;not abbr&lt;/abbr&gt;",
+      )
+    end
+
+    it "renders escaped HTML when including a #" do
+      update_message!(message_2, user: other_user, text: "#general <abbr>not abbr</abbr>")
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "#general &lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
     end
 
@@ -300,12 +309,12 @@ RSpec.describe "Chat channel", type: :system do
       update_message!(
         message_2,
         user: other_user,
-        text: "@#{other_user.username} <mark>not marked</mark>",
+        text: "@#{other_user.username} <abbr>not abbr</abbr>",
       )
       chat_page.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
     end
   end

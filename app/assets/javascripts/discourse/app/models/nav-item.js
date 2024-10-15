@@ -307,19 +307,15 @@ export default class NavItem extends EmberObject {
     "topicTrackingState.messageCount"
   )
   count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
-    const state = this.topicTrackingState;
-
-    if (state) {
-      return state.lookupCount({
-        type: name,
-        category,
-        tagId,
-        noSubcategories,
-        customFilterFn: hasTrackedFilter(currentRouteQueryParams)
-          ? isTrackedTopic
-          : undefined,
-      });
-    }
+    return this.topicTrackingState?.lookupCount({
+      type: name,
+      category,
+      tagId,
+      noSubcategories,
+      customFilterFn: hasTrackedFilter(currentRouteQueryParams)
+        ? isTrackedTopic
+        : undefined,
+    });
   }
 }
 

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import FKCharCounter from "discourse/form-kit/components/fk/char-counter";
 import FKErrors from "discourse/form-kit/components/fk/errors";
-import FKText from "discourse/form-kit/components/fk/text";
 
 export default class FKMeta extends Component {
   get shouldRenderCharCounter() {
@@ -9,12 +8,7 @@ export default class FKMeta extends Component {
   }
 
   get shouldRenderMeta() {
-    return (
-      this.showMeta &&
-      (this.shouldRenderCharCounter ||
-        this.args.error ||
-        this.args.description?.length)
-    );
+    return this.showMeta && (this.shouldRenderCharCounter || this.args.error);
   }
 
   get showMeta() {
@@ -26,8 +20,6 @@ export default class FKMeta extends Component {
       <div class="form-kit__meta">
         {{#if @error}}
           <FKErrors @id={{@field.errorId}} @error={{@error}} />
-        {{else if @description}}
-          <FKText class="form-kit__meta-description">{{@description}}</FKText>
         {{/if}}
 
         {{#if this.shouldRenderCharCounter}}

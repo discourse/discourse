@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
-import FormText from "discourse/form-kit/components/fk/text";
+import FKText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 
@@ -43,6 +44,7 @@ export default class FKControlWrapper extends Component {
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
         (if this.error "has-error")
+        (if (eq @format "full") "--full")
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
@@ -60,10 +62,10 @@ export default class FKControlWrapper extends Component {
         </FKLabel>
       {{/if}}
 
-      {{#if @field.subtitle}}
-        <FormText
-          class="form-kit__container-subtitle"
-        >{{@field.subtitle}}</FormText>
+      {{#if @field.description}}
+        <FKText
+          class="form-kit__container-description"
+        >{{@field.description}}</FKText>
       {{/if}}
 
       <div
@@ -93,12 +95,7 @@ export default class FKControlWrapper extends Component {
           {{yield components}}
         </@component>
 
-        <FKMeta
-          @description={{@field.description}}
-          @value={{@value}}
-          @field={{@field}}
-          @error={{this.error}}
-        />
+        <FKMeta @value={{@value}} @field={{@field}} @error={{this.error}} />
       </div>
     </div>
   </template>

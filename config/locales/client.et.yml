@@ -123,7 +123,6 @@ et:
     share:
       topic_html: 'Teema: <span class="topic-title">%{topicTitle}</span>'
       close: "Sulge"
-      twitter: "Jaga Twitteris"
       facebook: "Jaga Facebookis"
       email: "Jaga e-mailiga"
       url: "Kopeeri ja jaga link"
@@ -243,6 +242,7 @@ et:
       pill: "Soovitatud"
       pm_title: "Soovitatud sõnumid"
     about:
+      edit: "Muuda seda lehekülge"
       simple_title: "Teave"
       title: "Teave %{title} kohta"
       stats: "Statistika"
@@ -1010,7 +1010,7 @@ et:
         resent_label: "meil saadetud"
         update_email: "Muuda meiliaadressi"
         no_secondary: "Teist e-posti pole"
-        instructions: "Ei näidata avalikult."
+        instructions: "Ei näidata avalikult"
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud %{provider} poolt"
@@ -1032,8 +1032,8 @@ et:
         approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
       name:
         title: "Nimi"
-        instructions: "Sinu täisnimi (mittekohustuslik)."
-        instructions_required: "Sinu täisnimi."
+        instructions: "Sinu täisnimi (mittekohustuslik)"
+        instructions_required: "Sinu täisnimi"
         too_short: "Sinu antud nimi on liiga lühike"
         ok: "Paistab, et nimega on asjad korras"
       username:
@@ -2686,6 +2686,7 @@ et:
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et sidekiq töötab."
         installed_version: "Paigaldatud"
         latest_version: "Viimased"
+        dismiss_notice: "Ignoreeri"
         new_features:
           learn_more: "Uuri veel..."
         last_checked: "Viimati kontrollitud"
@@ -2898,8 +2899,11 @@ et:
           screened_ips: "Varjestatud IP-aadressid"
           screened_urls: "Varjestatud URL-d"
           search_logs: "Otsingu logid"
-          security: "Turve"
-          spam: "Spämm"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Varukoopiad"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"

@@ -948,6 +948,9 @@ lt:
       yaxis: "Diena"
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
+    site_traffic:
+      yaxis: "Diena"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Diena"

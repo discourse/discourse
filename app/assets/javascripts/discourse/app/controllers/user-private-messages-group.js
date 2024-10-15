@@ -1,28 +1,20 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 export default class extends Controller {
+  @service pmTopicTrackingState;
   @controller user;
 
   get viewingSelf() {
-    return this.user.viewingSelf;
+    return this.user.get("viewingSelf");
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get newLinkText() {
     return this.#linkText("new");
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get unreadLinkText() {
     return this.#linkText("unread");
   }

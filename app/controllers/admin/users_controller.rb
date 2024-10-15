@@ -26,6 +26,7 @@ class Admin::UsersController < Admin::StaffController
                   disable_second_factor
                   delete_posts_batch
                   sso_record
+                  delete_associated_accounts
                 ]
 
   def index
@@ -119,7 +120,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    User::Suspend.call do
+    User::Suspend.call(service_params) do
       on_success do
         render_json_dump(
           suspension: {
@@ -314,7 +315,7 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    User::Silence.call do
+    User::Silence.call(service_params) do
       on_success do
         render_json_dump(
           silence: {
@@ -511,6 +512,29 @@ class Admin::UsersController < Admin::StaffController
   def sso_record
     guardian.ensure_can_delete_sso_record!(@user)
     @user.single_sign_on_record.destroy!
+    render json: success_json
+  end
+
+  def delete_associated_accounts
+    guardian.ensure_can_delete_user_associated_accounts!(@user)
+    previous_value =
+      @user
+        .user_associated_accounts
+        .select(:provider_name, :provider_uid, :info)
+        .map do |associated_account|
+          {
+            provider: associated_account.provider_name,
+            uid: associated_account.provider_uid,
+            info: associated_account.info,
+          }.to_s
+        end
+        .join(",")
+    StaffActionLogger.new(current_user).log_delete_associated_accounts(
+      @user,
+      previous_value:,
+      context: params[:context],
+    )
+    @user.user_associated_accounts.delete_all
     render json: success_json
   end
 

@@ -48,14 +48,14 @@ RSpec.describe Discourse do
     context "with a non standard port specified" do
       before { SiteSetting.port = 3000 }
 
-      it "returns the non standart port in the base url" do
+      it "returns the non standard port in the base url" do
         expect(Discourse.base_url).to eq("http://foo.com:3000")
       end
     end
   end
 
   describe "asset_filter_options" do
-    it "obmits path if request is missing" do
+    it "omits path if request is missing" do
       opts = Discourse.asset_filter_options(:js, nil)
       expect(opts[:path]).to be_blank
     end
@@ -253,6 +253,16 @@ RSpec.describe Discourse do
     end
 
     describe ".enable_readonly_mode" do
+      it "doesn't expire when expires is false" do
+        Discourse.enable_readonly_mode(user_readonly_mode_key, expires: false)
+        expect(Discourse.redis.ttl(user_readonly_mode_key)).to eq(-1)
+      end
+
+      it "expires when expires is true" do
+        Discourse.enable_readonly_mode(user_readonly_mode_key, expires: true)
+        expect(Discourse.redis.ttl(user_readonly_mode_key)).not_to eq(-1)
+      end
+
       it "adds a key in redis and publish a message through the message bus" do
         expect(Discourse.redis.get(readonly_mode_key)).to eq(nil)
       end

@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelMessagesController < Chat::ApiController
   def index
-    ::Chat::ListChannelMessages.call do
+    ::Chat::ListChannelMessages.call(service_params) do
       on_success { render_serialized(result, ::Chat::MessagesSerializer, root: false) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
@@ -15,7 +15,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   end
 
   def destroy
-    Chat::TrashMessage.call do
+    Chat::TrashMessage.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
@@ -27,7 +27,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   end
 
   def bulk_destroy
-    Chat::TrashMessages.call do
+    Chat::TrashMessages.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:messages) { raise Discourse::NotFound }
@@ -39,7 +39,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   end
 
   def restore
-    Chat::RestoreMessage.call do
+    Chat::RestoreMessage.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
@@ -51,7 +51,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   end
 
   def update
-    Chat::UpdateMessage.call do
+    Chat::UpdateMessage.call(service_params) do
       on_success { render json: success_json.merge(message_id: result[:message].id) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
@@ -68,7 +68,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
     Chat::MessageRateLimiter.run!(current_user)
 
     # users can't force a thread through JSON API
-    Chat::CreateMessage.call(force_thread: false) do
+    Chat::CreateMessage.call(service_params.merge(force_thread: false)) do
       on_success { render json: success_json.merge(message_id: result[:message_instance].id) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }

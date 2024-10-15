@@ -15,7 +15,17 @@ module Chat
     #   @param message [String]
     #   @param upload_ids [Array<Integer>] IDs of uploaded documents
 
-    contract
+    contract do
+      attribute :message_id, :string
+      attribute :message, :string
+      attribute :upload_ids, :array
+      attribute :streaming, :boolean, default: false
+      attribute :strip_whitespaces, :boolean, default: true
+      attribute :process_inline, :boolean, default: Rails.env.test?
+
+      validates :message_id, presence: true
+      validates :message, presence: true, if: -> { upload_ids.blank? }
+    end
     model :message
     model :uploads, optional: true
     step :enforce_membership
@@ -23,29 +33,12 @@ module Chat
     policy :can_modify_channel_message
     policy :can_modify_message
     step :clean_message
-
     transaction do
       step :modify_message
       step :update_excerpt
       step :save_message
       step :save_revision
       step :publish
-    end
-
-    class Contract
-      attribute :message_id, :string
-      validates :message_id, presence: true
-
-      attribute :message, :string
-      validates :message, presence: true, if: -> { upload_ids.blank? }
-
-      attribute :upload_ids, :array
-
-      attribute :streaming, :boolean, default: false
-
-      attribute :strip_whitespaces, :boolean, default: true
-
-      attribute :process_inline, :boolean, default: Rails.env.test?
     end
 
     private
@@ -127,12 +120,11 @@ module Chat
       prev_message = message.message_before_last_save || message.message_was
       return if !should_create_revision(message, prev_message, guardian)
 
-      context.revision =
-        message.revisions.create!(
-          old_message: prev_message,
-          new_message: message.message,
-          user_id: guardian.user.id,
-        )
+      context[:revision] = message.revisions.create!(
+        old_message: prev_message,
+        new_message: message.message,
+        user_id: guardian.user.id,
+      )
     end
 
     def should_create_revision(new_message, prev_message, guardian)
@@ -158,7 +150,7 @@ module Chat
     end
 
     def publish(message:, guardian:, contract:)
-      edit_timestamp = context.revision&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
+      edit_timestamp = context[:revision]&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
 

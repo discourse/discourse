@@ -14,7 +14,6 @@ import { modifier } from "ember-modifier";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import optionalService from "discourse/lib/optional-service";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
@@ -65,7 +64,6 @@ export default class ChatMessage extends Component {
   @service router;
   @service toasts;
   @service modal;
-  @optionalService adminTools;
 
   @tracked isActive = false;
 

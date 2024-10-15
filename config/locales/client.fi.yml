@@ -141,7 +141,6 @@ fi:
       topic_html: 'Ketju: <span class="topic-title">%{topicTitle}</span>'
       post: "viesti %{postNumber} käyttäjältä @%{username}"
       close: "sulje"
-      twitter: "Jaa Twitterissä"
       facebook: "Jaa Facebookissa"
       email: "Lähetä sähköpostitse"
       url: "Kopioi ja jaa URL"
@@ -297,6 +296,7 @@ fi:
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
     about:
+      edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
       title: "Tietoja kohteesta %{title}"
       stats: "Sivuston tilastot"
@@ -1632,7 +1632,7 @@ fi:
         add_email: "Lisää vaihtoehtoinen sähköpostiosoite"
         auth_override_instructions: "Sähköpostiosoite voidaan päivittää todennuksen tarjoajalta."
         no_secondary: "Ei toissijaisia sähköpostiosoitteita"
-        instructions: "Ei tule julkiseksi."
+        instructions: "Ei tule julkiseksi"
         admin_note: "Huomautus: Ylläpitäjä, joka vaihtaa sellaisen käyttäjän sähköpostiosoitteen, joka ei ole ylläpitäjä, tämä tarkoittaa, että käyttäjä on menettänyt pääsyn alkuperäiseen sähköpostitiliinsä, joten salasanan palautussähköposti lähetetään hänen uuteen osoitteeseensa. Käyttäjän sähköpostiosoite vaihtuu vasta, kun salasanan palautusprosessi on suoritettu loppuun."
         ok: "Lähetämme sinulle sähköpostin varmistukseksi"
         required: "Syötä sähköpostiosoitteesi"
@@ -1663,14 +1663,14 @@ fi:
         approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset foorumille. Saat sähköpostin, kun tilisi on hyväksytty."
       name:
         title: "Nimi"
-        instructions: "Koko nimesi (valinnainen)."
-        instructions_required: "Koko nimesi."
+        instructions: "Koko nimesi (valinnainen)"
+        instructions_required: "Koko nimesi"
         required: "Syötä nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
       username:
         title: "Käyttäjätunnus"
-        instructions: "Uniikki, ei välilyöntejä, lyhyt."
+        instructions: "Uniikki, ei välilyöntejä, lyhyt"
         short_instructions: "Muut käyttäjät voivat mainita sinut nimellä @%{username}"
         available: "Käyttäjätunnus on vapaana"
         not_available: "Ei saatavilla. Entä %{suggestion}?"
@@ -1885,8 +1885,8 @@ fi:
         same_as_email: "Salasanasi on sama kuin sähköpostisosoitteesi."
         ok: "Salasana vaikuttaa hyvältä."
         instructions:
-          one: "Vähintään %{count} merkki."
-          other: "Vähintään %{count} merkkiä."
+          one: "Vähintään %{count} merkki"
+          other: "Vähintään %{count} merkkiä"
         required: "Syötä salasana"
         confirm: "Vahvista"
         incorrect_password: "Syötetty salasana on virheellinen."
@@ -4734,6 +4734,7 @@ fi:
         installed_version: "Asennettu"
         latest_version: "Uusin"
         problems_found: "Joitakin suosituksia nykyisiin sivustoasetuksiisi pohjautuen"
+        dismiss_notice: "Selvä"
         new_features:
           title: "Uutta"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
@@ -5202,9 +5203,14 @@ fi:
           screened_ips: "Seulottavat IP:t"
           screened_urls: "Seulottavat URL-osoitteet"
           search_logs: "Hakulokit"
-          security: "Tietoturva"
-          spam: "Roskaposti"
           staff_action_logs: "Henkilökunnan toimintalokit"
+      section_landing_pages:
+        account:
+          title: "Tili"
+          backups:
+            title: "Varmuuskopiot"
+          whats_new:
+            title: "Mitä uutta"
       config_areas:
         about:
           header: "Tietoa sivustostasi"
@@ -5214,8 +5220,6 @@ fi:
           community_summary: "Yhteisön yhteenveto"
           community_description: "Yhteisön kuvaus"
           banner_image: "Bannerikuva"
-          banner_image_help: |
-            Tätä käytetään Tietoa-sivullasi. Suositeltu koko: 800x300px. Hyväksytyt tyypit: JPG, PNG ja SVG, enintään 10 Mt.
           contact_information: "Yhteystiedot"
           community_owner: "Yhteisön omistaja"
           community_owner_placeholder: "Matti Meikäläinen"
@@ -6673,10 +6677,6 @@ fi:
             with_post: <span class="username">%{username}</span> viestille ketjussa %{link}
             with_post_time: <span class="username">%{username}</span> viestille ketjussa %{link} klo <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> klo <span class="time">%{time}</span>
-        badge_intro:
-          title: "Aloita valitsemalla olemassa oleva kunniamerkki tai luomalla uusi"
-          what_are_badges_title: "Mitä kunniamerkit ovat?"
-          badge_query_examples_title: "Esimerkkejä kunniamerkkikyselyistä"
         mass_award:
           title: Joukkomyöntäminen
           description: Myönnä sama kunniamerkki useille käyttäjille kerralla.

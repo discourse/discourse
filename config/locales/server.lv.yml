@@ -272,6 +272,8 @@ lv:
       yaxis: "Diena"
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
+    site_traffic:
+      yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:

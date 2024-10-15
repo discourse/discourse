@@ -2,9 +2,22 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import NavItem from "discourse/components/nav-item";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import i18n from "discourse-common/helpers/i18n";
 import AdminPageHeader from "admin/components/admin-page-header";
+
+const AdminPageHeaderActionsTestComponent = <template>
+  <div class="admin-page-header-actions-test-component">
+    <@actions.Default
+      @route="adminBadges.award"
+      @routeModels="new"
+      @icon="upload"
+      @label="admin.badges.mass_award.title"
+      class="award-badge"
+    />
+  </div>
+</template>;
 
 module("Integration | Component | AdminPageHeader", function (hooks) {
   setupRenderingTest(hooks);
@@ -173,5 +186,61 @@ module("Integration | Component | AdminPageHeader", function (hooks) {
 
     await click(".edit-groupings-btn");
     assert.true(actionCalled);
+  });
+
+  test("@headerActionComponent is rendered with actions arg", async function (assert) {
+    await render(<template>
+      <AdminPageHeader
+        @headerActionComponent={{AdminPageHeaderActionsTestComponent}}
+      />
+    </template>);
+
+    assert
+      .dom(".admin-page-header-actions-test-component .award-badge")
+      .exists();
+  });
+});
+
+module("Integration | Component | AdminPageHeader | Mobile", function (hooks) {
+  hooks.beforeEach(function () {
+    forceMobile();
+  });
+
+  setupRenderingTest(hooks);
+
+  test("action buttons become a dropdown on mobile", async function (assert) {
+    await render(<template>
+      <AdminPageHeader>
+        <:actions as |actions|>
+          <actions.Primary
+            @route="adminBadges.show"
+            @routeModels="new"
+            @icon="plus"
+            @label="admin.badges.new"
+            class="new-badge"
+          />
+
+          <actions.Default
+            @route="adminBadges.award"
+            @routeModels="new"
+            @icon="upload"
+            @label="admin.badges.mass_award.title"
+            class="award-badge"
+          />
+        </:actions>
+      </AdminPageHeader>
+    </template>);
+
+    assert
+      .dom(
+        ".admin-page-header__actions .fk-d-menu__trigger.admin-page-header-mobile-actions-trigger"
+      )
+      .exists();
+
+    await click(".admin-page-header-mobile-actions-trigger");
+
+    assert
+      .dom(".dropdown-menu.admin-page-header__mobile-actions .new-badge")
+      .exists();
   });
 });

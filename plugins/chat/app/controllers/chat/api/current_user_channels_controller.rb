@@ -2,7 +2,7 @@
 
 class Chat::Api::CurrentUserChannelsController < Chat::ApiController
   def index
-    Chat::ListUserChannels.call do
+    Chat::ListUserChannels.call(service_params) do
       on_success do
         render_serialized(
           result.structured,

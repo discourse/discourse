@@ -236,5 +236,13 @@ export default function () {
       path: "/whats-new",
       resetNamespace: true,
     });
+
+    this.route(
+      "adminSection",
+      { path: "/section", resetNamespace: true },
+      function () {
+        this.route("account");
+      }
+    );
   });
 }

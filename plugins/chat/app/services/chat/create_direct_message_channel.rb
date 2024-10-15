@@ -23,23 +23,7 @@ module Chat
     #   @option params_to_create [Boolean] upsert
     #   @return [Service::Base::Context]
 
-    contract
-    model :target_users
-    policy :can_create_direct_message
-    policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
-    model :user_comm_screener
-    policy :actor_allows_dms
-    policy :targets_allow_dms_from_user,
-           class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
-    model :direct_message, :fetch_or_create_direct_message
-    model :channel, :fetch_or_create_channel
-    step :set_optional_name
-    step :update_memberships
-    step :recompute_users_count
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
@@ -51,6 +35,19 @@ module Chat
         target_usernames.present? || target_groups.present?
       end
     end
+    model :target_users
+    policy :can_create_direct_message
+    policy :satisfies_dms_max_users_limit,
+           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+    model :user_comm_screener
+    policy :actor_allows_dms
+    policy :targets_allow_dms_from_user,
+           class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
+    model :direct_message, :fetch_or_create_direct_message
+    model :channel, :fetch_or_create_channel
+    step :set_optional_name
+    step :update_memberships
+    step :recompute_users_count
 
     private
 
@@ -108,8 +105,7 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: false,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }

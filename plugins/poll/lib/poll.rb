@@ -203,142 +203,83 @@ class DiscoursePoll::Poll
   end
 
   def self.serialized_voters(poll, opts = {})
-    limit = (opts["limit"] || 25).to_i
-    limit = 0 if limit < 0
-    limit = 50 if limit > 50
+    preload_serialized_voters!([poll], opts)[poll.id]
+  end
 
-    page = (opts["page"] || 1).to_i
-    page = 1 if page < 1
+  def self.preload_serialized_voters!(polls, opts = {})
+    # This method is used in order to avoid N+1s and preloads serialized voters
+    # for multiple polls from a topic view. After the first call, the serialized
+    # voters are cached in the Poll object and returned from there for future
+    # calls.
 
+    page = [1, (opts["page"] || 1).to_i].max
+    limit = (opts["limit"] || 25).to_i.clamp(1, 50)
     offset = (page - 1) * limit
 
-    option_digest = opts["option_id"].to_s
+    params = {
+      offset: offset,
+      offset_plus_limit: offset + limit,
+      option_digest: opts[:option_id].presence,
+    }
 
-    if poll.number?
-      user_ids =
-        PollVote
-          .where(poll: poll)
-          .group(:user_id)
-          .order("MIN(created_at)")
-          .offset(offset)
-          .limit(limit)
-          .pluck(:user_id)
+    result = {}
 
-      result = User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
-    elsif option_digest.present?
-      poll_option = PollOption.find_by(poll: poll, digest: option_digest)
-
-      raise Discourse::InvalidParameters.new(:option_id) unless poll_option
-
-      if poll.ranked_choice?
-        params = {
-          poll_id: poll.id,
-          option_digest: option_digest,
-          offset: offset,
-          offset_plus_limit: offset + limit,
-        }
-
-        votes = DB.query(<<~SQL, params)
-        SELECT digest, rank, user_id
-          FROM (
-            SELECT digest
-                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
-                  , user_id
-                  , username
-                  , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-              FROM poll_votes pv
-              JOIN poll_options po ON pv.poll_option_id = po.id
-              JOIN users u ON pv.user_id = u.id
-              WHERE pv.poll_id = :poll_id
-                AND po.poll_id = :poll_id
-                AND po.digest = :option_digest
-          ) v
-          WHERE row BETWEEN :offset AND :offset_plus_limit
-          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
-        SQL
-
-        user_ids = votes.map(&:user_id).uniq
-
-        user_hashes =
-          User
-            .where(id: user_ids)
-            .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
-            .to_h
-
-        ranked_choice_users = []
-        votes.each do |v|
-          ranked_choice_users ||= []
-          ranked_choice_users << { rank: v.rank, user: user_hashes[v.user_id] }
-        end
-        user_hashes = ranked_choice_users
+    uncached_poll_ids = []
+    polls.each do |p|
+      if p.serialized_voters_cache&.key?(params)
+        result[p.id] = p.serialized_voters_cache[params]
       else
-        user_ids =
-          PollVote
-            .where(poll: poll, poll_option: poll_option)
-            .group(:user_id)
-            .order("MIN(created_at)")
-            .offset(offset)
-            .limit(limit)
-            .pluck(:user_id)
-
-        user_hashes =
-          User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
+        uncached_poll_ids << p.id
       end
-      result = { option_digest => user_hashes }
-    else
-      params = { poll_id: poll.id, offset: offset, offset_plus_limit: offset + limit }
-      if poll.ranked_choice?
-        votes = DB.query(<<~SQL, params)
-        SELECT digest, rank, user_id
-          FROM (
-            SELECT digest
-                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
-                  , user_id
-                  , username
-                  , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-              FROM poll_votes pv
-              JOIN poll_options po ON pv.poll_option_id = po.id
-              JOIN users u ON pv.user_id = u.id
-              WHERE pv.poll_id = :poll_id
-                AND po.poll_id = :poll_id
-          ) v
-          WHERE row BETWEEN :offset AND :offset_plus_limit
-          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
-        SQL
+    end
+
+    return result if uncached_poll_ids.empty?
+
+    where_clause = params[:option_digest] ? "AND po.digest = :option_digest" : ""
+    query = <<~SQL.gsub("/* where */", where_clause)
+      SELECT poll_id, digest, rank, user_id
+        FROM (
+          SELECT pv.poll_id
+               , po.digest
+               , CASE pv.rank WHEN 0 THEN 'Abstain' ELSE CAST(pv.rank AS text) END AS rank
+               , pv.user_id
+               , u.username
+               , ROW_NUMBER() OVER (PARTITION BY pv.poll_option_id ORDER BY pv.created_at) AS row
+          FROM poll_votes pv
+          JOIN poll_options po ON pv.poll_id = po.poll_id AND pv.poll_option_id = po.id
+          JOIN users u ON pv.user_id = u.id
+          WHERE pv.poll_id IN (:poll_ids)
+                /* where */
+        ) v
+        WHERE row BETWEEN :offset AND :offset_plus_limit
+        ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
+      SQL
+
+    votes = DB.query(query, params.merge(poll_ids: uncached_poll_ids))
+
+    users =
+      User
+        .where(id: votes.map(&:user_id).uniq)
+        .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
+        .to_h
+
+    polls_by_id = polls.index_by(&:id)
+    votes.each do |v|
+      if polls_by_id[v.poll_id].number?
+        result[v.poll_id] ||= []
+        result[v.poll_id] << users[v.user_id]
+      elsif polls_by_id[v.poll_id].ranked_choice?
+        result[v.poll_id] ||= Hash.new { |h, k| h[k] = [] }
+        result[v.poll_id][v.digest] << { rank: v.rank, user: users[v.user_id] }
       else
-        votes = DB.query(<<~SQL, params)
-          SELECT digest, user_id
-            FROM (
-              SELECT digest
-                    , user_id
-                    , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-                FROM poll_votes pv
-                JOIN poll_options po ON pv.poll_option_id = po.id
-                WHERE pv.poll_id = :poll_id
-                  AND po.poll_id = :poll_id
-            ) v
-            WHERE row BETWEEN :offset AND :offset_plus_limit
-        SQL
+        result[v.poll_id] ||= Hash.new { |h, k| h[k] = [] }
+        result[v.poll_id][v.digest] << users[v.user_id]
       end
+    end
 
-      user_ids = votes.map(&:user_id).uniq
-
-      user_hashes =
-        User
-          .where(id: user_ids)
-          .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
-          .to_h
-
-      result = {}
-      votes.each do |v|
-        if poll.ranked_choice?
-          result[v.digest] ||= []
-          result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
-        else
-          result[v.digest] ||= []
-          result[v.digest] << user_hashes[v.user_id]
-        end
-      end
+    polls.each do |p|
+      p.serialized_voters_cache ||= {}
+      p.serialized_voters_cache[params] = result[p.id]
     end
 
     result

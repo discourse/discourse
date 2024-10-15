@@ -23,25 +23,21 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
-    model :thread, :fetch_thread
-    policy :can_view_channel
-    policy :threading_enabled_for_channel
-    transaction { step :create_or_update_membership }
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :thread_id, :integer
       attribute :channel_id, :integer
       attribute :notification_level, :integer
 
       validates :thread_id, :channel_id, :notification_level, presence: true
-
       validates :notification_level,
                 inclusion: {
                   in: Chat::UserChatThreadMembership.notification_levels.values,
                 }
     end
+    model :thread, :fetch_thread
+    policy :can_view_channel
+    policy :threading_enabled_for_channel
+    transaction { step :create_or_update_membership }
 
     private
 
@@ -64,7 +60,7 @@ module Chat
         membership.update!(last_read_message_id: thread.last_message_id)
       end
       membership.update!(notification_level: contract.notification_level)
-      context.membership = membership
+      context[:membership] = membership
     end
   end
 end

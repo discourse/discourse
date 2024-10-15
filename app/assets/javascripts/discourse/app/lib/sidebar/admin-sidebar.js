@@ -1,5 +1,7 @@
 import { cached } from "@glimmer/tracking";
+import { warn } from "@ember/debug";
 import { htmlSafe } from "@ember/template";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 import PreloadStore from "discourse/lib/preload-store";
 import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
@@ -269,9 +271,26 @@ export function addAdminSidebarSectionLink(sectionName, link) {
   additionalAdminSidebarSectionLinks[sectionName].push(link);
 }
 
-function pluginAdminRouteLinks() {
+function pluginAdminRouteLinks(router) {
   return (PreloadStore.get("visiblePlugins") || [])
-    .filter((plugin) => plugin.admin_route && plugin.enabled)
+    .filter((plugin) => {
+      if (!plugin.admin_route || !plugin.enabled) {
+        return false;
+      }
+
+      // Check if the admin route is valid, if it is not the whole admin
+      // interface can break because of this. This can be the case for things
+      // like ad blockers stopping plugin JS from loading.
+      if (adminRouteValid(router, plugin.admin_route)) {
+        return true;
+      } else {
+        warn(
+          `[AdminSidebar] Could not find admin route for ${plugin.name}, route was ${plugin.admin_route.full_location}. This could be caused by an ad blocker.`,
+          { id: "discourse.admin-sidebar:plugin-admin-route-links" }
+        );
+        return false;
+      }
+    })
     .map((plugin) => {
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
@@ -324,7 +343,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       const pluginLinks = navMap.find(
         (section) => section.name === "plugins"
       ).links;
-      pluginAdminRouteLinks().forEach((pluginLink) => {
+      pluginAdminRouteLinks(router).forEach((pluginLink) => {
         if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
           pluginLinks.push(pluginLink);
         }

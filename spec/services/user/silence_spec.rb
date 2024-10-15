@@ -63,7 +63,7 @@ RSpec.describe User::Silence do
           end
 
           context "when all users can be silenced" do
-            before { allow(Action::User::TriggerPostAction).to receive(:call) }
+            before { allow(User::Action::TriggerPostAction).to receive(:call) }
 
             it "silences all provided users" do
               result
@@ -80,7 +80,7 @@ RSpec.describe User::Silence do
 
             it "triggers a post action" do
               result
-              expect(Action::User::TriggerPostAction).to have_received(:call).with(
+              expect(User::Action::TriggerPostAction).to have_received(:call).with(
                 guardian:,
                 post: nil,
                 contract: result[:contract],

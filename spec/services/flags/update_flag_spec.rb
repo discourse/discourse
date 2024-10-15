@@ -43,6 +43,15 @@ RSpec.describe(Flags::UpdateFlag) do
     it { is_expected.to fail_a_contract }
   end
 
+  context "when title is not unique" do
+    fab!(:current_user) { Fabricate(:admin) }
+    fab!(:flag_2) { Fabricate(:flag, name: "edited custom flag name") }
+
+    it { is_expected.to fail_a_policy(:unique_name) }
+
+    after { Flag.destroy_by(name: "edited custom flag name") }
+  end
+
   context "when title is too long" do
     fab!(:current_user) { Fabricate(:admin) }
     let(:name) { "a" * 201 }

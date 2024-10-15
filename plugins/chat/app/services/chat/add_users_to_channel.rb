@@ -22,32 +22,27 @@ module Chat
     #   @option params_to_create [Array<String>] usernames
     #   @option params_to_create [Array<String>] groups
     #   @return [Service::Base::Context]
-    contract
-    model :channel
-    policy :can_add_users_to_channel
-    model :target_users, optional: true
-    policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
-
-    transaction do
-      step :upsert_memberships
-      step :recompute_users_count
-      step :notice_channel
-    end
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :usernames, :array
       attribute :groups, :array
-
       attribute :channel_id, :integer
-      validates :channel_id, presence: true
 
+      validates :channel_id, presence: true
       validate :target_presence
 
       def target_presence
         usernames.present? || groups.present?
       end
+    end
+    model :channel
+    policy :can_add_users_to_channel
+    model :target_users, optional: true
+    policy :satisfies_dms_max_users_limit,
+           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+    transaction do
+      step :upsert_memberships
+      step :recompute_users_count
+      step :notice_channel
     end
 
     private
@@ -79,27 +74,25 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: true,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }
         end
 
       if memberships.blank?
-        context.added_user_ids = []
+        context[:added_user_ids] = []
         return
       end
 
-      context.added_user_ids =
-        ::Chat::UserChatChannelMembership
-          .upsert_all(
-            memberships,
-            unique_by: %i[user_id chat_channel_id],
-            returning: Arel.sql("user_id, (xmax = '0') as inserted"),
-          )
-          .select { |row| row["inserted"] }
-          .map { |row| row["user_id"] }
+      context[:added_user_ids] = ::Chat::UserChatChannelMembership
+        .upsert_all(
+          memberships,
+          unique_by: %i[user_id chat_channel_id],
+          returning: Arel.sql("user_id, (xmax = '0') as inserted"),
+        )
+        .select { |row| row["inserted"] }
+        .map { |row| row["user_id"] }
 
       ::Chat::DirectMessageUser.upsert_all(
         context.added_user_ids.map do |id|
@@ -128,20 +121,17 @@ module Chat
 
       return if added_users.blank?
 
-      result =
-        ::Chat::CreateMessage.call(
-          guardian: Discourse.system_user.guardian,
-          chat_channel_id: channel.id,
-          message:
-            I18n.t(
-              "chat.channel.users_invited_to_channel",
-              invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
-              inviting_user: "@#{guardian.user.username}",
-              count: added_users.count,
-            ),
-        )
-
-      fail!(failure: "Failed to notice the channel") if result.failure?
+      ::Chat::CreateMessage.call(
+        guardian: Discourse.system_user.guardian,
+        chat_channel_id: channel.id,
+        message:
+          I18n.t(
+            "chat.channel.users_invited_to_channel",
+            invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
+            inviting_user: "@#{guardian.user.username}",
+            count: added_users.count,
+          ),
+      ) { on_failure { fail!(failure: "Failed to notice the channel") } }
     end
   end
 end

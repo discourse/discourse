@@ -45,10 +45,14 @@ sw:
               label: Utambulisho wa Mada
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Lebo
             restricted_category:
               label: Kategoria
             restricted_group:
               label: Kikundi
+            restricted_groups:
+              label: Makundi
           created: Imetengenezwa
         category_created_edited:
           fields:

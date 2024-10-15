@@ -137,10 +137,14 @@ hu:
           fields:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
+            restricted_tags:
+              label: Címkék
             restricted_category:
               label: Kategória
             restricted_group:
               label: Csoport
+            restricted_groups:
+              label: Csoportok
           created: Létrehozott
         category_created_edited:
           fields:
@@ -235,9 +239,14 @@ hu:
             user:
               label: Felhasználó
       models:
+        trigger:
+          name:
+            label: Trigger
         automation:
           name:
             label: Név
+          trigger:
+            label: Trigger
           version:
             label: Verzió
           enabled:

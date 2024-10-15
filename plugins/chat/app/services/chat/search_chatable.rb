@@ -16,16 +16,7 @@ module Chat
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
-    contract
-    step :clean_term
-    model :memberships, optional: true
-    model :users, optional: true
-    model :groups, optional: true
-    model :category_channels, optional: true
-    model :direct_message_channels, optional: true
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :term, :string, default: ""
       attribute :include_users, :boolean, default: true
       attribute :include_groups, :boolean, default: true
@@ -33,11 +24,17 @@ module Chat
       attribute :include_direct_message_channels, :boolean, default: true
       attribute :excluded_memberships_channel_id, :integer
     end
+    step :clean_term
+    model :memberships, optional: true
+    model :users, optional: true
+    model :groups, optional: true
+    model :category_channels, optional: true
+    model :direct_message_channels, optional: true
 
     private
 
     def clean_term(contract:)
-      context.term = contract.term&.downcase&.strip&.gsub(/^[@#]+/, "")
+      context[:term] = contract.term&.downcase&.strip&.gsub(/^[@#]+/, "")
     end
 
     def fetch_memberships(guardian:)
@@ -62,7 +59,7 @@ module Chat
       search_category_channels(context, guardian)
     end
 
-    def fetch_direct_message_channels(guardian:, contract:, users:, **args)
+    def fetch_direct_message_channels(guardian:, contract:, users:)
       return unless contract.include_direct_message_channels
       return unless guardian.can_create_direct_message?
       search_direct_message_channels(context, guardian, contract, users)
