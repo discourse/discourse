@@ -70,6 +70,6 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     $(".header-dropdown-toggle.current-user").click();
 
-    assert.ok(exists(".quick-access-panel"));
+    assert.dom(".quick-access-panel").exists();
   });
 });

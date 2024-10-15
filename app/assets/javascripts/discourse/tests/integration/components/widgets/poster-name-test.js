@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,11 +19,11 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".names"));
-    assert.ok(exists("span.username"));
+    assert.dom(".names").exists();
+    assert.dom("span.username").exists();
     assert.ok(exists('a[data-user-card="eviltrout"]'));
-    assert.strictEqual(query(".username a").innerText, "eviltrout");
-    assert.strictEqual(query(".user-title").innerText, "Trout Master");
+    assert.dom(".username a").hasText("eviltrout");
+    assert.dom(".user-title").hasText("Trout Master");
   });
 
   test("extra classes and glyphs", async function (assert) {
@@ -41,12 +41,12 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(exists("span.staff"));
-    assert.ok(exists("span.admin"));
-    assert.ok(exists("span.moderator"));
-    assert.ok(exists(".d-icon-shield-halved"));
-    assert.ok(exists("span.new-user"));
-    assert.ok(exists("span.group--fish"));
+    assert.dom("span.staff").exists();
+    assert.dom("span.admin").exists();
+    assert.dom("span.moderator").exists();
+    assert.dom(".d-icon-shield-halved").exists();
+    assert.dom("span.new-user").exists();
+    assert.dom("span.group--fish").exists();
   });
 
   test("disable display name on posts", async function (assert) {
@@ -57,7 +57,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(!exists(".full-name"));
+    assert.dom(".full-name").doesNotExist();
   });
 
   test("doesn't render a name if it's similar to the username", async function (assert) {
@@ -69,6 +69,6 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.ok(!exists(".second"));
+    assert.dom(".second").doesNotExist();
   });
 });

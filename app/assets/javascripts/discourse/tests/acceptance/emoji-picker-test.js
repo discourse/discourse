@@ -36,7 +36,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await fillIn(".emoji-picker input.filter", "guitar");
 
-    assert.strictEqual(query(`.emoji-picker .results img`).title, "guitar");
+    assert.dom(".emoji-picker .results img").hasAttribute("title", "guitar");
   });
 
   test("emoji picker triggers event when picking emoji", async function (assert) {
@@ -267,7 +267,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
-    assert.notOk(exists(".emoji-picker"));
+    assert.dom(".emoji-picker").doesNotExist();
     assert.strictEqual(
       document.activeElement,
       document.querySelector("textarea"),

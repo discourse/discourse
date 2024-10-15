@@ -12,7 +12,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".user-badge.disabled"));
+    assert.dom(".user-badge.disabled").exists();
   });
 
   test("enabled badge", async function (assert) {
@@ -20,7 +20,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.notOk(exists(".user-badge.disabled"));
+    assert.dom(".user-badge.disabled").doesNotExist();
   });
 
   test("data-badge-name", async function (assert) {
@@ -56,7 +56,7 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".d-icon.d-icon-xmark"));
+    assert.dom(".d-icon.d-icon-xmark").exists();
   });
 
   test("accepts block", async function (assert) {
@@ -68,7 +68,7 @@ module("Integration | Component | badge-button", function (hooks) {
       </BadgeButton>
     `);
 
-    assert.ok(exists(".test"));
+    assert.dom(".test").exists();
   });
 
   test("badgeTypeClassName", async function (assert) {
@@ -76,6 +76,6 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.ok(exists(".user-badge.foo"));
+    assert.dom(".user-badge.foo").exists();
   });
 });

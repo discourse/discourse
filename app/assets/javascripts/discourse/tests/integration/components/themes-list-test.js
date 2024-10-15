@@ -96,11 +96,12 @@ module("Integration | Component | themes-list", function (hooks) {
       1,
       "shows one entry with a message when there is nothing to display"
     );
-    assert.strictEqual(
-      query(".themes-list-container__item span.empty").innerText.trim(),
-      I18n.t("admin.customize.theme.empty"),
-      "displays the right message"
-    );
+    assert
+      .dom(".themes-list-container__item span.empty")
+      .hasText(
+        I18n.t("admin.customize.theme.empty"),
+        "displays the right message"
+      );
   });
 
   test("current tab is components", async function (assert) {
@@ -147,11 +148,12 @@ module("Integration | Component | themes-list", function (hooks) {
       1,
       "shows one entry with a message when there is nothing to display"
     );
-    assert.strictEqual(
-      query(".themes-list-container__item span.empty").innerText.trim(),
-      I18n.t("admin.customize.theme.empty"),
-      "displays the right message"
-    );
+    assert
+      .dom(".themes-list-container__item span.empty")
+      .hasText(
+        I18n.t("admin.customize.theme.empty"),
+        "displays the right message"
+      );
   });
 
   test("themes search is not visible when there are less than 10 themes", async function (assert) {
@@ -184,7 +186,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-search__input"));
+    assert.dom(".themes-list-search__input").exists();
     await fillIn(".themes-list-search__input", "  oSAma ");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
@@ -237,7 +239,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-filter__input"));
+    assert.dom(".themes-list-filter__input").exists();
     assert.deepEqual(themeNames(), [
       "Theme enabled 1",
       "Theme enabled 2",
@@ -327,7 +329,7 @@ module("Integration | Component | themes-list", function (hooks) {
         .filter((name) => !name.includes("OtherComponent"));
     }
 
-    assert.ok(exists(".themes-list-filter__input"));
+    assert.dom(".themes-list-filter__input").exists();
     assert.deepEqual(componentNames(), [
       "Component used 1",
       "Component used 2",

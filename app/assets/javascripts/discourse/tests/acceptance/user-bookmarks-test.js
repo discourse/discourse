@@ -14,7 +14,7 @@ acceptance("User's bookmarks", function (needs) {
 
   test("removing a bookmark with no reminder does not show a confirmation", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(exists(".bookmark-list-item"));
+    assert.dom(".bookmark-list-item").exists();
 
     const dropdown = selectKit(".bookmark-actions-dropdown:nth-of-type(1)");
     await dropdown.expand();
@@ -25,7 +25,7 @@ acceptance("User's bookmarks", function (needs) {
 
   test("it renders search controls if there are bookmarks", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(exists("div.bookmark-search-form"));
+    assert.dom("div.bookmark-search-form").exists();
   });
 });
 
@@ -54,7 +54,7 @@ acceptance("User's bookmarks - reminder", function (needs) {
     assert.ok(exists(".dialog-body"), "it asks for delete confirmation");
 
     await click(".dialog-footer .btn-danger");
-    assert.notOk(exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("bookmarks with reminders have a clear reminder option", async function (assert) {
@@ -86,6 +86,6 @@ acceptance("User's bookmarks - no bookmarks", function (needs) {
       exists("div.bookmark-search-form"),
       "does not render search controls"
     );
-    assert.ok(exists("div.empty-state", "renders the empty-state message"));
+    assert.dom("div.empty-state", "renders the empty-state message").exists();
   });
 });

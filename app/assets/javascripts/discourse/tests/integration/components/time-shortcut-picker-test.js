@@ -130,8 +130,8 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
     await click("#tap_tile_custom");
-    assert.strictEqual(query("#custom-date > input").value, "2100-12-11");
-    assert.strictEqual(query("#custom-time").value, "18:00");
+    assert.dom("#custom-date > input").hasValue("2100-12-11");
+    assert.dom("#custom-time").hasValue("18:00");
   });
 
   test("shows 'Next Monday' instead of 'Monday' on Sundays", async function (assert) {
@@ -140,10 +140,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.strictEqual(
-      query("#tap_tile_start_of_next_business_week .tap-tile-title").innerText,
-      "Next Monday"
-    );
+    assert
+      .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
+      .hasText("Next Monday");
 
     assert.strictEqual(
       query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
@@ -158,10 +157,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.strictEqual(
-      query("#tap_tile_start_of_next_business_week .tap-tile-title").innerText,
-      "Next Monday"
-    );
+    assert
+      .dom("#tap_tile_start_of_next_business_week .tap-tile-title")
+      .hasText("Next Monday");
 
     assert.strictEqual(
       query("div#tap_tile_start_of_next_business_week div.tap-tile-date")
@@ -179,9 +177,8 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.strictEqual(
-      query("div#tap_tile_next_month div.tap-tile-date").innerText,
-      "Feb 1, 8:00 am"
-    );
+    assert
+      .dom("div#tap_tile_next_month div.tap-tile-date")
+      .hasText("Feb 1, 8:00 am");
   });
 });

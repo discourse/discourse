@@ -11,15 +11,11 @@ module("Integration | Component | admin-report", function (hooks) {
   test("default", async function (assert) {
     await render(hbs`<AdminReport @dataSourceName="signups" />`);
 
-    assert.ok(exists(".admin-report.signups"));
+    assert.dom(".admin-report.signups").exists();
 
-    assert.ok(exists(".admin-report.signups", "it defaults to table mode"));
+    assert.dom(".admin-report.signups", "it defaults to table mode").exists();
 
-    assert.strictEqual(
-      query(".header .item.report").innerText.trim(),
-      "Signups",
-      "it has a title"
-    );
+    assert.dom(".header .item.report").hasText("Signups", "it has a title");
 
     await click("[data-trigger]");
 
