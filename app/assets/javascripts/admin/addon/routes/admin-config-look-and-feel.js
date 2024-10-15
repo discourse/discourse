@@ -6,7 +6,7 @@ export default class AdminConfigLookAndFeelRoute extends DiscourseRoute {
   @service router;
 
   beforeModel() {
-    this.router.transitionTo("adminConfig.lookAndFeel.themes");
+    this.router.replaceWith("adminConfig.lookAndFeel.themes");
   }
 
   titleToken() {

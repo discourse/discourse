@@ -77,7 +77,7 @@
     display: flex;
     justify-content: space-between;
   }
-  .admin-config-area-card__optional-action {
+  .admin-config-area-card__header-action {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -87,7 +87,9 @@
   }
 }
 
-.theme-card__content .external-resources {
+.admin-config-area-card.theme-card
+  .admin-config-area-card__content
+  .external-resources {
   display: flex;
   justify-content: space-between;
   flex-direction: column;

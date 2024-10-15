@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import InstallThemeModal from "../components/modal/install-theme";
 import ThemesGridCard from "./themes-grid-card";
 
@@ -81,8 +82,8 @@ export default class ThemesGrid extends Component {
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
 
-      <div class="admin-config-area-card theme-card">
-        <div class="theme-card__content">
+      <AdminConfigAreaCard class="theme-card">
+        <:content>
           <h2 class="theme-card__title">{{i18n
               "admin.config_areas.look_and_feel.themes.new_theme"
             }}</h2>
@@ -102,14 +103,14 @@ export default class ThemesGrid extends Component {
               </a>
             {{/each}}
           </div>
-        </div>
-        <DButton
-          @action={{this.installModal}}
-          @icon="upload"
-          @label="admin.customize.install"
-          class="btn-primary theme-card__button"
-        />
-      </div>
+          <DButton
+            @action={{this.installModal}}
+            @icon="upload"
+            @label="admin.customize.install"
+            class="btn-primary theme-card__button"
+          />
+        </:content>
+      </AdminConfigAreaCard>
     </div>
   </template>
 }

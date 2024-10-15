@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import dIcon from "discourse-common/helpers/d-icon";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
@@ -81,10 +82,8 @@ export default class ThemeCard extends Component {
     }, "");
   }
 
-  @action
-  showPreview() {
-    // TODO (martin)
-    // bring admin to theme preview of site
+  get themePreviewUrl() {
+    return `/admin/themes/${this.args.theme.id}/preview`;
   }
 
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
@@ -120,7 +119,7 @@ export default class ThemeCard extends Component {
     <AdminConfigAreaCard
       class={{concatClass "theme-card" this.themeCardClasses}}
     >
-      <:optionalCustomHeading>
+      <:header>
         {{@theme.name}}
         <span class="theme-card__icons">
           {{#if @theme.isPendingUpdates}}
@@ -148,8 +147,8 @@ export default class ThemeCard extends Component {
             {{/unless}}
           {{/if}}
         </span>
-      </:optionalCustomHeading>
-      <:optionalAction>
+      </:header>
+      <:headerAction>
         <Input
           @type="checkbox"
           @checked={{@theme.user_selectable}}
@@ -162,7 +161,7 @@ export default class ThemeCard extends Component {
         >
           {{i18n "admin.config_areas.look_and_feel.themes.user_selectable"}}
         </label>
-      </:optionalAction>
+      </:headerAction>
       <:content>
         <div class="theme-card__image-wrapper">
           {{#if this.hasScreenshot}}
@@ -194,12 +193,13 @@ export default class ThemeCard extends Component {
             @disabled={{@theme.default}}
           />
           <div class="theme-card-footer__actions">
-            <DButton
-              @action={{this.showPreview}}
-              @icon="eye"
-              @class="btn-flat theme-card__button"
-              @preventFocus={{true}}
-            />
+            <a
+              href={{this.themePreviewUrl}}
+              title={{i18n "admin.customize.explain_preview"}}
+              rel="noopener noreferrer"
+              target="_blank"
+              class="btn btn-flat theme-card__button"
+            >{{dIcon "eye"}}</a>
             <DButton
               @route="adminCustomizeThemes.show"
               @routeModels={{this.themeRouteModels}}

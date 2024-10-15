@@ -18,19 +18,17 @@ export default class AdminConfigAreaCard extends Component {
 
   <template>
     <section class="admin-config-area-card" ...attributes>
-      <div class="admin-config-area-card__top-bar">
+      <div class="admin-config-area-card__header-wrapper">
         {{#if this.hasHeading}}
           <h3
             class="admin-config-area-card__title"
           >{{this.computedHeading}}</h3>
         {{else}}
-          <h3 class="admin-config-area-card__title">{{yield
-              to="optionalCustomHeading"
-            }}</h3>
+          <h3 class="admin-config-area-card__title">{{yield to="header"}}</h3>
         {{/if}}
-        {{#if @optionalAction}}
-          <div class="admin-config-area-card__optional-action">
-            {{yield to="optionalAction"}}
+        {{#if (has-block "headerAction")}}
+          <div class="admin-config-area-card__header-action">
+            {{yield to="headerAction"}}
           </div>
         {{/if}}
       </div>
