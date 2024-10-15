@@ -10,8 +10,8 @@ export default class AdminReportChart extends Component {
 
     const chartData = Report.collapse(
       model,
-      makeArray(model.chartData || model.data, "weekly"),
-      options.chartGrouping
+      makeArray(model.chartData || model.data),
+      options.chartGrouping || "daily"
     );
     const prevChartData = makeArray(model.prevChartData || model.prev_data);
     const labels = chartData.map((d) => d.x);
