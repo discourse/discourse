@@ -70,7 +70,7 @@
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
-  padding: 0.5em 1em;
+  padding: 0.4em 1em; //.4em to match height of buttons
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -182,6 +182,12 @@ sub sub {
   }
 }
 
+.topic-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
   .start-date,
@@ -201,7 +207,10 @@ sub sub {
   align-items: center;
   flex-wrap: wrap;
 
-  .create {
+  .create,
+  .share-and-invite,
+  .flag-topic,
+  .defer-topic {
     .d-button-label {
       display: none;
     }
