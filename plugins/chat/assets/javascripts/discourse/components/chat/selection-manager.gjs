@@ -12,7 +12,7 @@ import I18n from "discourse-i18n";
 import DeleteMessagesConfirm from "discourse/plugins/chat/discourse/components/chat/modal/delete-messages-confirm";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
-const DELETE_COUNT_LIMIT = 50;
+const DELETE_COUNT_LIMIT = 200;
 
 export default class ChatSelectionManager extends Component {
   @service("composer") topicComposer;
