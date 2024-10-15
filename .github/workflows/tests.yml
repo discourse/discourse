@@ -409,7 +409,7 @@ jobs:
           name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
 
-   merge:
+  merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
     runs-on: debian-12
     needs: build
