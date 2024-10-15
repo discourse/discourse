@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -13,6 +13,7 @@ import { createPopper } from "@popperjs/core";
 import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -26,7 +27,6 @@ const REDUCED_WIDTH_THRESHOLD = 500;
 
 export default class ChatMessageActionsDesktop extends Component {
   @service chat;
-  @service chatEmojiPickerManager;
   @service site;
 
   @tracked size = FULL;
@@ -59,29 +59,28 @@ export default class ChatMessageActionsDesktop extends Component {
     this.chat.activeMessage = null;
   }
 
+  get messageContainer() {
+    return chatMessageContainer(this.message.id, this.context);
+  }
+
   @action
   setup(element) {
     this.popper?.destroy();
 
     schedule("afterRender", () => {
-      const messageContainer = chatMessageContainer(
-        this.message.id,
-        this.context
-      );
-
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      const viewport = messageContainer.closest(".popper-viewport");
+      const viewport = this.messageContainer.closest(".popper-viewport");
       this.size =
         viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
 
-      if (!messageContainer) {
+      if (!this.messageContainer) {
         return;
       }
 
-      this.popper = createPopper(messageContainer, element, {
+      this.popper = createPopper(this.messageContainer, element, {
         placement: "top-end",
         strategy: "fixed",
         modifiers: [
@@ -148,12 +147,9 @@ export default class ChatMessageActionsDesktop extends Component {
           {{/if}}
 
           {{#if this.messageInteractor.canInteractWithMessage}}
-            <DButton
-              @action={{this.messageInteractor.openEmojiPicker}}
-              @icon="discourse-emojis"
-              @title="chat.react"
-              @forwardEvent={{true}}
-              class="btn-flat react-btn"
+            <EmojiPicker
+              @didSelectEmoji={{this.messageInteractor.selectReaction}}
+              class="chat-message-reaction"
             />
           {{/if}}
 

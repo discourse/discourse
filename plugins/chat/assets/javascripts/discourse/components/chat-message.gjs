@@ -13,6 +13,7 @@ import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import EmojiPicker from "discourse/components/emoji-picker";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
@@ -56,8 +57,6 @@ export default class ChatMessage extends Component {
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatEmojiReactionStore;
-  @service chatEmojiPickerManager;
   @service chatChannelPane;
   @service chatThreadPane;
   @service chatChannelsManager;
@@ -343,6 +342,11 @@ export default class ChatMessage extends Component {
     ) {
       return;
     }
+
+    if ((event.toElement || event.relatedTarget)?.closest(".emoji-picker")) {
+      return;
+    }
+
     if (!this.secondaryActionsIsExpanded) {
       this.chat.activeMessage = null;
     }
@@ -367,6 +371,8 @@ export default class ChatMessage extends Component {
     if (!this.args.message.expanded) {
       return;
     }
+
+    this.messageInteractor.closeEmojiPicker();
 
     this.chat.activeMessage = {
       model: this.args.message,
@@ -649,12 +655,8 @@ export default class ChatMessage extends Component {
                       {{/each}}
 
                       {{#if this.shouldRenderOpenEmojiPickerButton}}
-                        <DButton
-                          @action={{this.messageInteractor.openEmojiPicker}}
-                          @icon="discourse-emojis"
-                          @title="chat.react"
-                          @forwardEvent={{true}}
-                          class="chat-message-react-btn"
+                        <EmojiPicker
+                          @didSelectEmoji={{this.messageInteractor.selectReaction}}
                         />
                       {{/if}}
                     </div>

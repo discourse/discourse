@@ -10,6 +10,7 @@ import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
+import EmojiPickerVirtual from "discourse/components/emoji-picker/virtual";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
@@ -26,6 +27,7 @@ import {
   inCodeBlock,
   translateModKey,
 } from "discourse/lib/utilities";
+import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
@@ -169,6 +171,7 @@ class Toolbar {
 
     const createdButton = {
       id: buttonAttrs.id,
+      component: buttonAttrs.component,
       tabindex: buttonAttrs.tabindex || "-1",
       className: buttonAttrs.className || buttonAttrs.id,
       label: buttonAttrs.label,
@@ -625,10 +628,20 @@ export default class DEditor extends Component.extend(
           this.emojiStore.track(v.code);
           return `${v.code}:`;
         } else {
-          $textarea.autocomplete({ cancel: true });
-          this.set("emojiPickerIsActive", true);
-          this.set("emojiFilter", v.term);
+          const menuOptions = {
+            identifier: "emoji-picker",
+            component: EmojiPickerVirtual,
+            data: {
+              didSelectEmoji: (emoji) => {
+                this.emojiSelected(emoji);
+              },
+              term: v.term,
+            },
+          };
 
+          const virtualElement = virtualElementFromTextRange();
+          this.menuInstance = this.menu.show(virtualElement, menuOptions);
+          $textarea.autocomplete({ cancel: true });
           return "";
         }
       },
