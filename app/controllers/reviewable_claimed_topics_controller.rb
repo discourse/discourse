@@ -13,7 +13,11 @@ class ReviewableClaimedTopicsController < ApplicationController
       return render_json_error(I18n.t("reviewables.conflict"), status: 409)
     end
 
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
+    reviewables = topic.reviewables.includes(:reviewable_histories)
+
+    Reviewable.transaction do
+      reviewables.find_each { |reviewable| reviewable.log_history(:claimed, current_user) }
+    end
 
     notify_users(topic, current_user)
     render json: success_json
@@ -25,7 +29,12 @@ class ReviewableClaimedTopicsController < ApplicationController
 
     guardian.ensure_can_claim_reviewable_topic!(topic)
     ReviewableClaimedTopic.where(topic_id: topic.id).delete_all
-    topic.reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
+
+    reviewables = topic.reviewables.includes(:reviewable_histories)
+
+    Reviewable.transaction do
+      reviewables.find_each { |reviewable| reviewable.log_history(:unclaimed, current_user) }
+    end
 
     notify_users(topic, nil)
     render json: success_json
