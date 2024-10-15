@@ -3,8 +3,8 @@
 require "demon/base"
 
 class Demon::EmailSync < ::Demon::Base
-  HEARTBEAT_KEY ||= "email_sync_heartbeat"
-  HEARTBEAT_INTERVAL ||= 60.seconds
+  HEARTBEAT_KEY = "email_sync_heartbeat"
+  HEARTBEAT_INTERVAL = 60.seconds
 
   def self.prefix
     "email_sync"

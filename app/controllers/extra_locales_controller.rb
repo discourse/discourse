@@ -9,8 +9,8 @@ class ExtraLocalesController < ApplicationController
                      :redirect_to_profile_if_required,
                      :verify_authenticity_token
 
-  OVERRIDES_BUNDLE ||= "overrides"
-  MD5_HASH_LENGTH ||= 32
+  OVERRIDES_BUNDLE = "overrides"
+  MD5_HASH_LENGTH = 32
   MF_BUNDLE = "mf"
   BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
 

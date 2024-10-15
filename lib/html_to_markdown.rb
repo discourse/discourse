@@ -157,7 +157,7 @@ class HtmlToMarkdown
     send(visitor, node) if respond_to?(visitor, true)
   end
 
-  ALLOWED_IMG_SRCS ||= %w[http:// https:// www.]
+  ALLOWED_IMG_SRCS = %w[http:// https:// www.]
 
   def allowed_hrefs
     @allowed_hrefs ||=
@@ -195,7 +195,7 @@ class HtmlToMarkdown
     end
   end
 
-  ALLOWED ||= %w[kbd del ins small big sub sup dl dd dt mark]
+  ALLOWED = %w[kbd del ins small big sub sup dl dd dt mark]
   ALLOWED.each do |tag|
     define_method("visit_#{tag}") do |node|
       "<#{tag}>#{traverse(node, within_html_block: true)}</#{tag}>"
@@ -210,7 +210,7 @@ class HtmlToMarkdown
     "\n\n#{text}\n\n"
   end
 
-  BLOCKS ||= %w[div tr]
+  BLOCKS = %w[div tr]
   BLOCKS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
@@ -222,7 +222,7 @@ class HtmlToMarkdown
     "\n\n#{traverse(node)}\n\n"
   end
 
-  TRAVERSABLES ||= %w[aside font span thead tbody tfoot u center]
+  TRAVERSABLES = %w[aside font span thead tbody tfoot u center]
   TRAVERSABLES.each { |tag| define_method("visit_#{tag}") { |node| traverse(node) } }
 
   def visit_tt(node)
@@ -290,7 +290,7 @@ class HtmlToMarkdown
     @within_html_block ? "<tr>\n#{text}</tr>\n" : text
   end
 
-  TABLE_CELLS ||= %w[th td]
+  TABLE_CELLS = %w[th td]
   TABLE_CELLS.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
@@ -306,7 +306,7 @@ class HtmlToMarkdown
     end
   end
 
-  LISTS ||= %w[ul ol]
+  LISTS = %w[ul ol]
   LISTS.each do |tag|
     define_method("visit_#{tag}") do |node|
       prefix = block?(node.previous_element) ? "" : "\n"
@@ -330,7 +330,7 @@ class HtmlToMarkdown
     "#{marker}#{text}#{suffix}"
   end
 
-  EMPHASES ||= %w[i em]
+  EMPHASES = %w[i em]
   EMPHASES.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
@@ -347,7 +347,7 @@ class HtmlToMarkdown
     end
   end
 
-  STRONGS ||= %w[b strong]
+  STRONGS = %w[b strong]
   STRONGS.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)
@@ -364,7 +364,7 @@ class HtmlToMarkdown
     end
   end
 
-  STRIKES ||= %w[s strike]
+  STRIKES = %w[s strike]
   STRIKES.each do |tag|
     define_method("visit_#{tag}") do |node|
       text = traverse(node)

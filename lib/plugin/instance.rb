@@ -6,7 +6,8 @@ require "plugin/metadata"
 require "auth"
 
 class Plugin::CustomEmoji
-  CACHE_KEY ||= "plugin-emoji"
+  CACHE_KEY = "plugin-emoji"
+
   def self.cache_key
     @@cache_key ||= CACHE_KEY
   end

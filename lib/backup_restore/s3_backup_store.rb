@@ -2,7 +2,7 @@
 
 module BackupRestore
   class S3BackupStore < BackupStore
-    UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 6.hours.to_i
+    UPLOAD_URL_EXPIRES_AFTER_SECONDS = 6.hours.to_i
 
     delegate :abort_multipart,
              :presign_multipart_part,

@@ -5,9 +5,9 @@ module FileStore
   end
 
   class BaseStore
-    UPLOAD_PATH_REGEX ||= %r{/(original/\d+X/.*)}
-    OPTIMIZED_IMAGE_PATH_REGEX ||= %r{/(optimized/\d+X/.*)}
-    TEMPORARY_UPLOAD_PREFIX ||= "temp/"
+    UPLOAD_PATH_REGEX = %r{/(original/\d+X/.*)}
+    OPTIMIZED_IMAGE_PATH_REGEX = %r{/(optimized/\d+X/.*)}
+    TEMPORARY_UPLOAD_PREFIX = "temp/"
 
     def store_upload(file, upload, content_type = nil)
       upload.url = nil
