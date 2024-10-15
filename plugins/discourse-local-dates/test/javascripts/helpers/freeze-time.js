@@ -2,7 +2,7 @@ import sinon from "sinon";
 
 const PARIS = "Europe/Paris";
 
-export function freezeTime({ date, timezone }, cb) {
+export default function freezeTime({ date, timezone }, cb) {
   date = date || "2020-01-22 10:34";
   const newTimezone = timezone || PARIS;
   const previousZone = moment.tz.guess();
