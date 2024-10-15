@@ -91,6 +91,7 @@ class ThemeModifierSet < ActiveRecord::Base
 
         value =
           target_setting_name.present? ? target_setting_value : theme.settings[setting_name]&.value
+        value = coerce_setting_value(modifier_name, value)
         if read_attribute(modifier_name) != value
           write_attribute(modifier_name, value)
           changed = true
@@ -101,6 +102,15 @@ class ThemeModifierSet < ActiveRecord::Base
   end
 
   private
+
+  def coerce_setting_value(modifier_name, value)
+    type = ThemeModifierSet.modifiers.dig(modifier_name, :type)
+    if type == :boolean
+      value.to_s != "false"
+    elsif type == :string_array
+      value.is_a?(Array) ? value : value.to_s.split("|")
+    end
+  end
 
   # Build the list of modifiers from the DB schema.
   # This allows plugins to introduce new modifiers by adding columns to the table
