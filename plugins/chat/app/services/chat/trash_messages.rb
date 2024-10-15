@@ -22,7 +22,7 @@ module Chat
       attribute :message_ids, :array
 
       validates :channel_id, presence: true
-      validates :message_ids, length: { minimum: 1, maximum: 50 }
+      validates :message_ids, length: { minimum: 1, maximum: 200 }
     end
     model :messages
     policy :can_delete_all_chat_messages
