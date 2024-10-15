@@ -14,6 +14,9 @@ export default class SignupRoute extends DiscourseRoute {
   @action
   async showCreateAccount() {
     const { canSignUp } = this.controllerFor("application");
+    if (canSignUp && this.siteSettings.experimental_full_page_login) {
+      return;
+    }
     const route = await this.router
       .replaceWith(
         this.siteSettings.login_required ? "login" : "discovery.latest"

@@ -1,10 +1,11 @@
-import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import ForgotPassword from "discourse/components/modal/forgot-password";
+import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -19,15 +20,17 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
-import ForgotPassword from "./forgot-password";
 
-export default class Login extends Component {
+export default class LoginPageController extends Controller {
+  @service siteSettings;
+  @service router;
   @service capabilities;
   @service dialog;
-  @service siteSettings;
   @service site;
   @service login;
   @service modal;
+
+  @controller application;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -35,8 +38,6 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked flash = this.args.model.flash;
-  @tracked flashType = this.args.model.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
@@ -50,10 +51,12 @@ export default class Login extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
+  @tracked flash;
+  @tracked flashType;
 
-  get awaitingApproval() {
+  get isAwaitingApproval() {
     return (
-      this.args.model.awaitingApproval &&
+      this.awaitingApproval &&
       !this.canLoginLocal &&
       !this.canLoginLocalWithEmail
     );
@@ -63,9 +66,9 @@ export default class Login extends Component {
     return this.loggingIn || this.loggedIn;
   }
 
-  get modalBodyClasses() {
-    const classes = ["login-modal-body"];
-    if (this.awaitingApproval) {
+  get bodyClasses() {
+    const classes = ["login-body"];
+    if (this.isAwaitingApproval) {
       classes.push("awaiting-approval");
     }
     if (
@@ -105,9 +108,7 @@ export default class Login extends Component {
   }
 
   get showSignupLink() {
-    return (
-      this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
-    );
+    return this.canSignUp && !this.showSecondFactor;
   }
 
   get adminLoginPath() {
@@ -124,10 +125,16 @@ export default class Login extends Component {
       );
 
       if (publicKeyCredential) {
-        const authResult = await ajax("/session/passkey/auth.json", {
-          type: "POST",
-          data: { publicKeyCredential },
-        });
+        let authResult;
+        try {
+          authResult = await ajax("/session/passkey/auth.json", {
+            type: "POST",
+            data: { publicKeyCredential },
+          });
+        } catch (e) {
+          popupAjaxError(e);
+          return;
+        }
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
@@ -187,6 +194,40 @@ export default class Login extends Component {
   }
 
   @action
+  showCreateAccount(createAccountProps = {}) {
+    if (this.site.isReadOnly) {
+      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+    } else {
+      this.handleShowCreateAccount(createAccountProps);
+    }
+  }
+
+  handleShowCreateAccount(createAccountProps) {
+    if (this.siteSettings.enable_discourse_connect) {
+      const returnPath = encodeURIComponent(window.location.pathname);
+      window.location = getURL("/session/sso?return_path=" + returnPath);
+    } else {
+      if (this.isOnlyOneExternalLoginMethod) {
+        // we will automatically redirect to the external auth service
+        this.login.externalLogin(this.externalLoginMethods[0], {
+          signup: true,
+        });
+      } else {
+        this.router.transitionTo("signup").then((login) => {
+          Object.keys(createAccountProps || {}).forEach((key) => {
+            login.controller.set(key, createAccountProps[key]);
+          });
+        });
+      }
+    }
+  }
+
+  @action
+  showNotActivated(props) {
+    this.modal.show(NotActivatedModal, { model: props });
+  }
+
+  @action
   async triggerLogin() {
     if (this.loginDisabled) {
       return;
@@ -232,25 +273,14 @@ export default class Login extends Component {
           this.securityKeyChallenge = result.challenge;
           this.securityKeyAllowedCredentialIds = result.allowed_credential_ids;
 
-          // only need to focus the 2FA input for TOTP
-          if (!this.showSecurityKey) {
-            schedule("afterRender", () =>
-              document
-                .getElementById("second-factor")
-                .querySelector("input")
-                .focus()
-            );
-          }
-
           return;
         } else if (result.reason === "not_activated") {
-          this.args.model.showNotActivated({
+          this.showNotActivated({
             username: this.loginName,
             sentTo: escape(result.sent_to_email),
             currentEmail: escape(result.current_email),
           });
         } else if (result.reason === "suspended") {
-          this.args.closeModal();
           this.dialog.alert(result.error);
         } else if (result.reason === "expired") {
           this.flash = htmlSafe(
@@ -353,7 +383,7 @@ export default class Login extends Component {
       createAccountProps.accountUsername = this.loginName;
       createAccountProps.accountEmail = null;
     }
-    this.args.model.showCreateAccount(createAccountProps);
+    this.showCreateAccount(createAccountProps);
   }
 
   @action
