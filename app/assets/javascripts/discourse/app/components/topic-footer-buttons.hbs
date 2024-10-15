@@ -59,10 +59,36 @@
 
   {{#if this.site.mobileView}}
     {{#if this.dropdownButtons}}
-      <TopicFooterMobileDropdown
-        @topic={{this.topic}}
-        @content={{this.dropdownButtons}}
-      />
+      <DMenu
+        @modalForMobile={{true}}
+        @identifier="topic-footer-mobile-dropdown"
+      >
+        <:trigger>
+          {{d-icon "ellipsis-h"}}
+        </:trigger>
+        <:content>
+          <DropdownMenu as |dropdown|>
+            {{#each this.dropdownButtons as |button|}}
+              <dropdown.item>
+                <DButton
+                  @action={{button.action}}
+                  @icon={{button.icon}}
+                  @translatedLabel={{button.label}}
+                  @translatedTitle={{button.title}}
+                  @translatedAriaLabel={{button.ariaLabel}}
+                  @disabled={{button.disabled}}
+                  id={{concat "topic-footer-button-" button.id}}
+                  class={{concat-class
+                    "btn-default"
+                    "topic-footer-button"
+                    button.classNames
+                  }}
+                />
+              </dropdown.item>
+            {{/each}}
+          </DropdownMenu>
+        </:content>
+      </DMenu>
     {{/if}}
   {{/if}}
 
