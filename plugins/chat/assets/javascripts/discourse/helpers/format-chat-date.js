@@ -11,8 +11,8 @@ export default function formatChatDate(message, options = {}) {
   const title = date.format(I18n.t("dates.long_with_year"));
   const display =
     options.mode === "tiny"
-      ? date.format(I18n.t("chat.dates.time_tiny"))
-      : date.format(I18n.t("chat.dates.time"));
+      ? date.format(I18n.t("dates.time_short"))
+      : date.format(I18n.t("dates.time"));
 
   if (message.staged) {
     return htmlSafe(
