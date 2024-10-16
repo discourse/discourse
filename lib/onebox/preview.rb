@@ -5,7 +5,7 @@ module Onebox
     # see https://bugs.ruby-lang.org/issues/14688
     client_exception =
       defined?(Net::HTTPClientException) ? Net::HTTPClientException : Net::HTTPServerException
-    WEB_EXCEPTIONS ||= [
+    WEB_EXCEPTIONS = [
       client_exception,
       OpenURI::HTTPError,
       Timeout::Error,

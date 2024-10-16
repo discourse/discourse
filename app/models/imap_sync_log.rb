@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ImapSyncLog < ActiveRecord::Base
-  RETAIN_LOGS_DAYS ||= 5
+  RETAIN_LOGS_DAYS = 5
 
   belongs_to :group
 

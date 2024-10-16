@@ -7,15 +7,15 @@ require "version"
 require "git_utils"
 
 module Discourse
-  DB_POST_MIGRATE_PATH ||= "db/post_migrate"
-  REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
+  DB_POST_MIGRATE_PATH = "db/post_migrate"
+  REQUESTED_HOSTNAME = "REQUESTED_HOSTNAME"
   MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
-    URI_REGEXP ||= URI.regexp(%w[http https])
+    URI_REGEXP = URI.regexp(%w[http https])
 
     # TODO: Remove this once we drop support for Ruby 2.
-    EMPTY_KEYWORDS ||= {}
+    EMPTY_KEYWORDS = {}
 
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
@@ -658,17 +658,17 @@ module Discourse
 
   LAST_POSTGRES_READONLY_KEY = "postgres:last_readonly"
 
-  READONLY_MODE_KEY_TTL ||= 60
-  READONLY_MODE_KEY ||= "readonly_mode"
-  PG_READONLY_MODE_KEY ||= "readonly_mode:postgres"
-  PG_READONLY_MODE_KEY_TTL ||= 300
-  USER_READONLY_MODE_KEY ||= "readonly_mode:user"
-  PG_FORCE_READONLY_MODE_KEY ||= "readonly_mode:postgres_force"
+  READONLY_MODE_KEY_TTL = 60
+  READONLY_MODE_KEY = "readonly_mode"
+  PG_READONLY_MODE_KEY = "readonly_mode:postgres"
+  PG_READONLY_MODE_KEY_TTL = 300
+  USER_READONLY_MODE_KEY = "readonly_mode:user"
+  PG_FORCE_READONLY_MODE_KEY = "readonly_mode:postgres_force"
 
   # Pseudo readonly mode, where staff can still write
-  STAFF_WRITES_ONLY_MODE_KEY ||= "readonly_mode:staff_writes_only"
+  STAFF_WRITES_ONLY_MODE_KEY = "readonly_mode:staff_writes_only"
 
-  READONLY_KEYS ||= [
+  READONLY_KEYS = [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
     USER_READONLY_MODE_KEY,

@@ -10,8 +10,8 @@ module Onebox
       requires_iframe_origins "https://www.youtube.com"
       always_https
 
-      WIDTH ||= 480
-      HEIGHT ||= 360
+      WIDTH = 480
+      HEIGHT = 360
 
       def parse_embed_response
         return unless video_id

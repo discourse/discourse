@@ -107,7 +107,7 @@ module Onebox
         ),
       )
 
-    DISCOURSE_ONEBOX ||=
+    DISCOURSE_ONEBOX =
       Sanitize::Config.freeze_config(
         Sanitize::Config.merge(
           ONEBOX,
