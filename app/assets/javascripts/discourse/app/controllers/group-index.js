@@ -239,4 +239,12 @@ export default class GroupIndexController extends Controller {
       this.bulkSelection.removeObject(member);
     }
   }
+
+  @action
+  updateOrder(field, asc) {
+    this.setProperties({
+      order: field,
+      asc,
+    });
+  }
 }
