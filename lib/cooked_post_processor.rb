@@ -183,9 +183,9 @@ class CookedPostProcessor
       img.add_class("animated")
     end
 
-    skip_thumbnail =
-      original_width <= SiteSetting.max_image_width &&
-        original_height <= SiteSetting.max_image_height
+    generate_thumbnail =
+      original_width >= SiteSetting.max_image_width ||
+        original_height >= SiteSetting.max_image_height
 
     user_width, user_height = [original_width, original_height] if user_width.to_i <= 0 &&
       user_height.to_i <= 0
@@ -202,7 +202,7 @@ class CookedPostProcessor
     end
 
     if upload.present?
-      unless skip_thumbnail
+      if generate_thumbnail
         upload.create_thumbnail!(width, height, crop: crop)
 
         each_responsive_ratio do |ratio|
@@ -221,7 +221,7 @@ class CookedPostProcessor
         add_lightbox!(img, original_width, original_height, upload)
       end
 
-      optimize_image!(img, upload, cropped: crop) unless skip_thumbnail
+      optimize_image!(img, upload, cropped: crop) if generate_thumbnail
     end
   end
 
@@ -277,8 +277,8 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url : img["src"]
-    src = UrlHelper.cook_url(src_url || img["src"], secure: @should_secure_uploads)
+    src_url = Upload.secure_uploads_url?(img["src"]) ? img["src"] : upload&.url
+    src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
