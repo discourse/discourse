@@ -32,7 +32,7 @@ export default class TopicNotificationsButton extends Component {
     return this.args.showCaret ?? true;
   }
 
-  get notificationReasonText() {
+  get reasonText() {
     const topic = this.args.topic;
     const level = topic.get("details.notification_level") ?? 1;
     const reason = topic.get("details.notifications_reason_id");
@@ -41,7 +41,7 @@ export default class TopicNotificationsButton extends Component {
     if (typeof reason === "number") {
       let localeStringWithReason = `${localeString}_${reason}`;
 
-      if (this._notificationReasonStale(level, reason)) {
+      if (this._reasonStale(level, reason)) {
         localeStringWithReason += "_stale";
       }
 
@@ -70,7 +70,7 @@ export default class TopicNotificationsButton extends Component {
   // otherwise it is very confusing for the end user to be told they are
   // tracking a topic because of a category, when they are no longer tracking
   // that category.
-  _notificationReasonStale(level, reason) {
+  _reasonStale(level, reason) {
     if (!this.currentUser) {
       return;
     }
@@ -127,7 +127,7 @@ export default class TopicNotificationsButton extends Component {
               headerAriaLabel=(i18n "topic.notifications.title")
             }}
           />
-          <span class="text">{{htmlSafe this.notificationReasonText}}</span>
+          <span class="text">{{htmlSafe this.reasonText}}</span>
         </p>
       {{else}}
         <TopicNotificationsOptions
