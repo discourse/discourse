@@ -26,7 +26,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
     before do
       thread.add(current_user)
-      SiteSetting.chat_allowed_groups = [chatters]
+      SiteSetting.chat_allowed_groups = chatters
     end
 
     context "when params are not valid" do
