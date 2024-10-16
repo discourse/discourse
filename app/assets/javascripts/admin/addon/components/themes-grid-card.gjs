@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
@@ -20,54 +19,6 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 export default class ThemeCard extends Component {
   @service siteSettings;
   @service toasts;
-
-  // NOTE: These 3 shouldn't need @computed, if we convert
-  // theme to a pure JS class with @tracked properties we
-  // won't need to do this.
-  @computed("args.theme.default")
-  get setDefaultButtonIcon() {
-    return this.args.theme.default ? "far-check-square" : "far-square";
-  }
-
-  @computed("args.theme.default")
-  get setDefaultButtonTitle() {
-    return this.args.theme.default
-      ? "admin.customize.theme.default_theme"
-      : "admin.customize.theme.set_default_theme";
-  }
-
-  @computed("args.theme.default")
-  get setDefaultButtonClasses() {
-    return this.args.theme.default
-      ? "btn-primary theme-card__button"
-      : "btn-default theme-card__button";
-  }
-
-  @computed(
-    "args.theme.default",
-    "args.theme.isBroken",
-    "args.theme.enabled",
-    "args.theme.isPendingUpdates"
-  )
-  get themeCardClasses() {
-    return this.args.theme.isBroken
-      ? "--broken"
-      : !this.args.theme.enabled
-      ? "--disabled"
-      : this.args.theme.isPendingUpdates
-      ? "--updates"
-      : this.args.theme.default
-      ? "--active"
-      : "";
-  }
-
-  get imageAlt() {
-    return this.args.theme.name;
-  }
-
-  get hasScreenshot() {
-    return this.args.theme.screenshot ? true : false;
-  }
 
   get themeRouteModels() {
     return ["themes", this.args.theme.id];
@@ -92,91 +43,59 @@ export default class ThemeCard extends Component {
   // Will also need some cleanup when refactoring other theme code.
   @action
   async setDefault() {
-    this.args.theme.set("default", true);
-    this.args.theme.saveChanges("default").then(() => {
-      this.args.allThemes.forEach((theme) => {
-        if (theme.id !== this.args.theme.id) {
-          theme.set("default", !this.args.theme.get("default"));
-        }
-      });
-      this.toasts.success({
-        data: {
-          message: I18n.t("admin.customize.theme.set_default_success", {
-            theme: this.args.theme.name,
-          }),
-        },
-        duration: 2000,
-      });
-    });
-  }
+    let oldDefaultThemeId;
 
-  @action
-  async handleSubmit(event) {
-    this.args.theme.set("user_selectable", event.target.checked);
-    this.args.theme.saveChanges("user_selectable");
+    this.args.theme.set("default", true);
+    this.args.allThemes.forEach((theme) => {
+      if (theme.id !== this.args.theme.id) {
+        if (theme.get("default")) {
+          oldDefaultThemeId = theme.id;
+        }
+
+        theme.set("default", !this.args.theme.get("default"));
+      }
+    });
+
+    const changesSaved = await this.args.theme.saveChanges("default");
+    if (!changesSaved) {
+      this.args.allThemes
+        .find((theme) => theme.id === oldDefaultThemeId)
+        .set("default", true);
+      this.args.theme.set("default", false);
+      return;
+    }
+
+    this.toasts.success({
+      data: {
+        message: I18n.t("admin.customize.theme.set_default_success", {
+          theme: this.args.theme.name,
+        }),
+      },
+      duration: 2000,
+    });
   }
 
   <template>
     <AdminConfigAreaCard
-      class={{concatClass "theme-card" this.themeCardClasses}}
+      class={{concatClass "theme-card" (if @theme.default "-active")}}
+      @translatedHeading={{@theme.name}}
     >
-      <:header>
-        {{@theme.name}}
-        <span class="theme-card__icons">
-          {{#if @theme.isPendingUpdates}}
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="sync"
-              @class="btn-flat theme-card__button"
-              @preventFocus={{true}}
-            />
-          {{else}}
-            {{#if @theme.isBroken}}
-              {{icon
-                "exclamation-circle"
-                class="broken-indicator"
-                title="admin.customize.theme.broken_theme_tooltip"
-              }}
-            {{/if}}
-            {{#unless @theme.enabled}}
-              {{icon
-                "ban"
-                class="light-grey-icon"
-                title="admin.customize.theme.disabled_component_tooltip"
-              }}
-            {{/unless}}
-          {{/if}}
-        </span>
-      </:header>
-      <:headerAction>
-        <Input
-          @type="checkbox"
-          @checked={{@theme.user_selectable}}
-          id="user-select-theme-{{@theme.id}}"
-          onclick={{this.handleSubmit}}
-        />
-        <label
-          class="theme-card__checkbox-label"
-          for="user-select-theme-{{@theme.id}}"
-        >
-          {{i18n "admin.config_areas.look_and_feel.themes.user_selectable"}}
-        </label>
-      </:headerAction>
       <:content>
         <div class="theme-card__image-wrapper">
-          {{#if this.hasScreenshot}}
+          {{#if @theme.screenshot}}
             <img
               class="theme-card__image"
               src={{htmlSafe @theme.screenshot}}
-              alt={{this.imageAlt}}
+              alt={{@theme.name}}
             />
           {{else}}
             <ThemesGridPlaceholder @theme={{@theme}} />
           {{/if}}
         </div>
         <div class="theme-card__content">
-          <p class="theme-card__description">{{@theme.description}}</p>
+          {{#if @theme.description}}
+            <p class="theme-card__description">{{@theme.description}}</p>
+          {{/if}}
           {{#if @theme.childThemes}}
             <span class="theme-card__components">{{i18n
                 "admin.customize.theme.components"
@@ -188,12 +107,52 @@ export default class ThemeCard extends Component {
           <DButton
             @action={{this.setDefault}}
             @preventFocus={{true}}
-            @icon={{this.setDefaultButtonIcon}}
-            @class={{this.setDefaultButtonClasses}}
-            @translatedLabel={{i18n this.setDefaultButtonTitle}}
+            @icon={{if @theme.default "far-check-square" "far-square"}}
+            @class={{concatClass
+              "theme-card__button"
+              (if @theme.default "btn-primary" "btn-default")
+            }}
+            @translatedLabel={{i18n
+              (if
+                @theme.default
+                "admin.customize.theme.default_theme"
+                "admin.customize.theme.set_default_theme"
+              )
+            }}
             @disabled={{@theme.default}}
           />
-          <div class="theme-card-footer__actions">
+          {{#if @theme.isPendingUpdates}}
+            <DButton
+              @route="adminCustomizeThemes.show"
+              @routeModels={{this.themeRouteModels}}
+              @icon="sync"
+              @class="btn btn-flat theme-card__button"
+              @title="admin.customize.theme.updates_available_tooltip"
+              @preventFocus={{true}}
+            />
+          {{else}}
+            {{#if @theme.isBroken}}
+              <DButton
+                @route="adminCustomizeThemes.show"
+                @routeModels={{this.themeRouteModels}}
+                @icon="exclamation-circle"
+                @class="btn btn-flat theme-card__button broken-indicator"
+                @title="admin.customize.theme.broken_theme_tooltip"
+                @preventFocus={{true}}
+              />
+            {{/if}}
+            {{#unless @theme.enabled}}
+              <DButton
+                @route="adminCustomizeThemes.show"
+                @routeModels={{this.themeRouteModels}}
+                @icon="ban"
+                @class="btn btn-flat theme-card__button broken-indicator light-grey-icon"
+                @title="admin.customize.theme.disabled_component_tooltip"
+                @preventFocus={{true}}
+              />
+            {{/unless}}
+          {{/if}}
+          <div class="theme-card__footer-actions">
             <a
               href={{this.themePreviewUrl}}
               title={{i18n "admin.customize.explain_preview"}}
