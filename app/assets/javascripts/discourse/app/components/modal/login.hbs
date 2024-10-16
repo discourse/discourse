@@ -76,7 +76,7 @@
           />
           {{#if this.site.desktopView}}
             <div class="d-modal__footer">
-              <Modal::Login::Footer
+              <LoginPageCta
                 @canLoginLocal={{this.canLoginLocal}}
                 @showSecurityKey={{this.showSecurityKey}}
                 @login={{this.triggerLogin}}
@@ -114,7 +114,7 @@
   <:footer>
     {{#if this.site.mobileView}}
       {{#unless this.hasNoLoginOptions}}
-        <Modal::Login::Footer
+        <LoginPageCta
           @canLoginLocal={{this.canLoginLocal}}
           @showSecurityKey={{this.showSecurityKey}}
           @login={{this.triggerLogin}}

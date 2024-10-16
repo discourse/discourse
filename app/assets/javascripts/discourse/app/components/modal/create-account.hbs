@@ -249,34 +249,13 @@
 
         {{#if this.site.desktopView}}
           <div class="d-modal__footer">
-            {{#if this.disclaimerHtml}}
-              <div class="disclaimer">
-                {{html-safe this.disclaimerHtml}}
-              </div>
-            {{/if}}
-            <div class="d-modal__footer-buttons">
-              <DButton
-                @action={{this.createAccount}}
-                @disabled={{this.submitDisabled}}
-                @label="create_account.title"
-                @isLoading={{this.formSubmitted}}
-                class="btn-large btn-primary"
-              />
-
-              {{#unless this.hasAuthOptions}}
-                <hr />
-                <div class="already-have-account">
-                  {{i18n "create_account.already_have_account"}}
-                </div>
-                <DButton
-                  @action={{route-action "showLogin"}}
-                  @disabled={{this.formSubmitted}}
-                  @label="log_in"
-                  id="login-link"
-                  class="btn-large btn-flat"
-                />
-              {{/unless}}
-            </div>
+            <SignupPageCta
+              @formSubmitted={{this.formSubmitted}}
+              @hasAuthOptions={{this.hasAuthOptions}}
+              @createAccount={{this.createAccount}}
+              @submitDisabled={{this.submitDisabled}}
+              @disclaimerHtml={{this.disclaimerHtml}}
+            />
           </div>
 
           <PluginOutlet
@@ -306,34 +285,12 @@
 
   <:footer>
     {{#if (and this.showCreateForm this.site.mobileView)}}
-      {{#if this.disclaimerHtml}}
-        <div class="disclaimer">
-          {{html-safe this.disclaimerHtml}}
-        </div>
-      {{/if}}
-      <div class="d-modal__footer-buttons">
-        <DButton
-          @action={{this.createAccount}}
-          @disabled={{this.submitDisabled}}
-          @label="create_account.title"
-          @isLoading={{this.formSubmitted}}
-          class="btn-large btn-primary"
-        />
-
-        {{#unless this.hasAuthOptions}}
-          <DButton
-            @action={{route-action "showLogin"}}
-            @disabled={{this.formSubmitted}}
-            @label="pivot_log_in"
-            id="login-link"
-            class="btn-large btn-flat login__alt-cta"
-          />
-        {{/unless}}
-      </div>
-
-      <PluginOutlet
-        @name="create-account-after-modal-footer"
-        @connectorTagName="div"
+      <SignupPageCta
+        @formSubmitted={{this.formSubmitted}}
+        @hasAuthOptions={{this.hasAuthOptions}}
+        @createAccount={{this.createAccount}}
+        @submitDisabled={{this.submitDisabled}}
+        @disclaimerHtml={{this.disclaimerHtml}}
       />
     {{/if}}
   </:footer>
