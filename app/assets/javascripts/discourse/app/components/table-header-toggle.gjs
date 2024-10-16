@@ -64,12 +64,11 @@ export default class TableHeaderToggle extends Component {
   }
 
   get label() {
-    const labelKey = this.args.labelKey || `directory.${this.args.field}`;
+    const labelKey = this.labelKey || `directory.${this.args.field}`;
+
     return this.args.translated
       ? this.args.field
-      : I18n.t(`${labelKey}_long`, {
-          defaultValue: I18n.t(labelKey),
-        });
+      : I18n.t(labelKey + "_long", { defaultValue: I18n.t(labelKey) });
   }
 
   @action
