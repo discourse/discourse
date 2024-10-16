@@ -235,16 +235,7 @@
 
       {{#if this.site.mobileView}}
         <div id="topic-footer-info">
-          {{#if this.showNotificationUserTip}}
-            <UserTip
-              @id="topic_notification_levels"
-              @triggerSelector=".notifications-button"
-              @titleText={{i18n "user_tips.topic_notification_levels.title"}}
-              @contentText={{i18n
-                "user_tips.topic_notification_levels.content"
-              }}
-            />
-          {{/if}}
+
           hey
           <TopicNavigation
             @topic={{this.model}}
