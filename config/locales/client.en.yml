@@ -25,6 +25,8 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_short: "h:mm"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_with_zone: "hh:mm a (z)"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_short_day: "ddd, h:mm a"
