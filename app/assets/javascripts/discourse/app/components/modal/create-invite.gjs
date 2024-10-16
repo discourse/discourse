@@ -57,28 +57,27 @@ export default class CreateInvite extends Component {
   }
 
   get expireAfterOptions() {
-    return [
-      {
-        value: 1,
-        text: I18n.t("dates.medium.x_days", { count: 1 }),
-      },
-      {
-        value: 7,
-        text: I18n.t("dates.medium.x_days", { count: 7 }),
-      },
-      {
-        value: 30,
-        text: I18n.t("dates.medium.x_days", { count: 30 }),
-      },
-      {
-        value: 90,
-        text: I18n.t("dates.medium.x_days", { count: 90 }),
-      },
-      {
-        value: 999999,
-        text: I18n.t("time_shortcut.never"),
-      },
-    ];
+    let list = [1, 7, 30, 90];
+
+    if (!list.includes(this.siteSettings.invite_expiry_days)) {
+      list.push(this.siteSettings.invite_expiry_days);
+    }
+
+    list = list
+      .sort((a, b) => a - b)
+      .map((days) => {
+        return {
+          value: days,
+          text: I18n.t("dates.medium.x_days", { count: days }),
+        };
+      });
+
+    list.push({
+      value: 999999,
+      text: I18n.t("time_shortcut.never"),
+    });
+
+    return list;
   }
 
   @cached
@@ -295,11 +294,13 @@ export default class CreateInvite extends Component {
               {{i18n "user.invited.invite.create_link_to_invite"}}
             </p>
           {{/if}}
-          <p>
+          <p class="link-limits-info">
             {{this.linkValidityMessageFormat}}
-            <a role="button" {{on "click" this.showAdvancedMode}}>{{i18n
-                "user.invited.invite.edit_link_options"
-              }}</a>
+            <a
+              class="edit-link-options"
+              role="button"
+              {{on "click" this.showAdvancedMode}}
+            >{{i18n "user.invited.invite.edit_link_options"}}</a>
           </p>
         {{else}}
           <Form
@@ -371,6 +372,7 @@ export default class CreateInvite extends Component {
                   {{/each}}
                 </field.Select>
               </form.Field>
+              <h2>{{transientData.expiresAfterDays}}</h2>
             {{/if}}
 
             {{#if this.canArriveAtTopic}}
@@ -446,7 +448,7 @@ export default class CreateInvite extends Component {
         <DButton
           @label="user.invited.invite.cancel"
           @action={{this.cancel}}
-          class="btn-transparent"
+          class="btn-transparent cancel-button"
         />
       </:footer>
     </DModal>
