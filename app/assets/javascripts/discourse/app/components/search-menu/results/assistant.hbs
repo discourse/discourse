@@ -1,6 +1,7 @@
 <ul class="search-menu-assistant">
   {{! suggestion type keywords are mapped to SUGGESTION_KEYWORD_MAP }}
   {{#if (eq this.suggestionType "tagIntersection")}}
+    <PluginOutlet @name="search-menu-results-assistant-tag-intersection-top" />
     {{#each @results as |result|}}
       <SearchMenu::Results::AssistantItem
         @tag={{result.tagName}}
@@ -16,6 +17,7 @@
       />
     {{/each}}
   {{else if (eq this.suggestionType "categoryOrTag")}}
+    <PluginOutlet @name="search-menu-results-assistant-category-or-tag-top" />
     {{#each @results as |result|}}
       {{#if result.model}}
         {{! render category }}
@@ -42,6 +44,7 @@
       {{/if}}
     {{/each}}
   {{else if (eq this.suggestionType "user")}}
+    <PluginOutlet @name="search-menu-results-assistant-user-top" />
     {{#if this.userMatchesInTopic}}
       <SearchMenu::Results::AssistantItem
         @extraHint={{true}}
@@ -75,6 +78,10 @@
       {{/each}}
     {{/if}}
   {{else}}
+    <PluginOutlet
+      @name="search-menu-results-assistant-shortcut-top"
+      @outletArgs={{hash suggestionShortcuts=this.suggestionShortcuts}}
+    />
     {{#each this.suggestionShortcuts as |item|}}
       <SearchMenu::Results::AssistantItem
         @slug={{concat this.prefix item}}
