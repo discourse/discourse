@@ -155,6 +155,50 @@ class TopicView
     @personal_message = @topic.private_message?
   end
 
+  def user_badges(badge_names)
+    return if !badge_names.present?
+
+    user_ids = Set.new
+    posts.each { |post| user_ids << post.user_id if post.user_id }
+
+    return if !user_ids.present?
+
+    badges = Badge.where(name: badge_names, enabled: true).to_a
+
+    sql = <<~SQL
+     SELECT user_id, badge_id
+     FROM user_badges
+     WHERE user_id IN (:user_ids) AND badge_id IN (:badge_ids)
+     GROUP BY user_id, badge_id
+     ORDER BY user_id, badge_id
+   SQL
+
+    user_badges = DB.query(sql, user_ids: user_ids, badge_ids: badges.map(&:id))
+
+    mapped_badges = {}
+    user_badges.each do |user_badge|
+      mapped_badges[user_badge.user_id] ||= []
+      mapped_badges[user_badge.user_id] << user_badge.badge_id
+    end
+
+    badge_array =
+      badges.map do |badge|
+        {
+          id: badge.id,
+          name: badge.name,
+          description: badge.description,
+          icon: badge.icon,
+          image_url: badge.image_url,
+          badge_grouping_id: badge.badge_grouping_id,
+        }
+      end
+
+    mapped_badges =
+      mapped_badges.to_a.map { |user_id, badge_ids| { id: user_id, badge_ids: badge_ids } }
+
+    { users: mapped_badges, badges: badge_array }
+  end
+
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
