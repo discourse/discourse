@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import I18n from "discourse-i18n";
 
 export default class TableHeaderToggle extends Component {
@@ -75,21 +74,10 @@ export default class TableHeaderToggle extends Component {
 
   @action
   toggleProperties() {
-    let newAsc = null;
-    let newOrder = this.args.field;
+    const newAsc =
+      this.args.order === this.args.field && !this.args.asc ? true : null;
+    this.args.onToggle?.(this.args.field, newAsc);
 
-    if (this.args.order === this.args.field) {
-      newAsc = this.args.asc ? null : true;
-    } else {
-      newAsc = null;
-    }
-
-    this.args.onToggle?.(newOrder, newAsc);
-
-    this._focusHeader();
-  }
-
-  _focusHeader() {
     schedule("afterRender", () => {
       document.getElementById(this.id)?.focus();
     });
@@ -109,9 +97,8 @@ export default class TableHeaderToggle extends Component {
 
   <template>
     <div
-      class={{concat "directory-table__column-header sortable " @class}}
-      title={{@title}}
-      colspan={{@colspan}}
+      ...attributes
+      class="directory-table__column-header sortable"
       aria-sort={{this.ariaSort}}
       role="columnheader"
       {{! template-lint-disable no-invalid-interactive }}
@@ -130,11 +117,11 @@ export default class TableHeaderToggle extends Component {
         {{yield}}
         <span class="text">
           {{#if this.iconName}}
-            {{dIcon this.iconName}}
+            {{icon this.iconName}}
           {{/if}}
           {{this.label}}
           {{#if this.chevronIcon}}
-            {{dIcon this.chevronIcon}}
+            {{icon this.chevronIcon}}
           {{/if}}
         </span>
       </div>
