@@ -1,4 +1,4 @@
-import { getOwner, setOwner } from "@ember/owner";
+import { setOwner } from "@ember/owner";
 import UppyUploadDebugging from "./upload-debugging";
 
 /**
@@ -47,7 +47,7 @@ export default class UppyWrapper {
 
   constructor(owner) {
     setOwner(this, owner);
-    this.debug = new UppyUploadDebugging(getOwner(this));
+    this.debug = new UppyUploadDebugging(owner);
   }
 
   useUploadPlugin(pluginClass, opts = {}) {

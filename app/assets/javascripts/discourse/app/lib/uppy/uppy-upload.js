@@ -107,7 +107,7 @@ export default class UppyUpload {
 
   constructor(owner, config) {
     setOwner(this, owner);
-    this.uppyWrapper = new UppyWrapper(getOwner(this));
+    this.uppyWrapper = new UppyWrapper(owner);
     this.config = lazyMergeConfig(config);
     validateConfig(this.config);
   }
