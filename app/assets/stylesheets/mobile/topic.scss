@@ -31,114 +31,6 @@
   top: -100%; // above parent container + some extra space
 }
 
-#topic-progress-wrapper {
-  position: fixed;
-  bottom: 0px;
-  right: 10px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-  z-index: z("timeline");
-
-  &.docked {
-    position: initial;
-  }
-
-  html:not(.footer-nav-visible) & {
-    bottom: env(safe-area-inset-bottom);
-  }
-
-  &:not(.docked) {
-    @media screen and (min-width: $reply-area-max-width) {
-      // position to right side of composer
-      right: calc(50% + 10px);
-      margin-right: calc(#{$reply-area-max-width} / 2 * -1);
-    }
-  }
-
-  &.with-transitions {
-    transition: bottom 0.2s, margin-bottom 0.2s;
-
-    #topic-progress .bg {
-      transition: width 0.5s;
-    }
-  }
-}
-
-#topic-progress {
-  position: relative;
-  background-color: var(--secondary);
-  color: var(--tertiary);
-  border: 1px solid var(--tertiary-low);
-  padding: 0.25em 1em;
-
-  /* as a big ol' click target, don't let text inside be selected */
-  @include unselectable;
-
-  .nums {
-    position: relative;
-    width: 100%;
-    text-align: center;
-    z-index: z("base");
-    font-weight: bold;
-  }
-  .d-icon {
-    position: absolute;
-    right: 8px;
-    bottom: 9px;
-    z-index: z("base");
-  }
-  .bg {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: var(--progress-bg-width, 0);
-    background-color: var(--tertiary-low);
-  }
-}
-
-#topic-progress-expanded {
-  border: 1px solid var(--primary-low);
-  padding: 5px;
-  background: var(--secondary);
-
-  position: absolute;
-  bottom: 34px;
-  width: 135px;
-
-  button.full {
-    width: 100%;
-    margin-bottom: 5px;
-    .d-icon {
-      display: block;
-      margin-top: 2px;
-      margin-bottom: 2px;
-      font-size: var(--font-up-2);
-    }
-  }
-  .jump-form {
-    input[type="text"] {
-      float: left;
-      width: 45px;
-      height: 20px;
-      text-align: center;
-      font-size: var(--font-up-1);
-    }
-    button.btn {
-      float: right !important;
-      width: 55px;
-    }
-  }
-  button.btn.jump-prompt {
-    margin: 0;
-  }
-  button.btn.jump-bottom {
-    margin-top: 5px;
-    margin-bottom: 0;
-  }
-}
-
 .topic-error {
   padding: 18px;
   width: 90%;
@@ -182,29 +74,6 @@ sub sub {
   }
 }
 
-#topic-footer {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 0.5rem;
-
-  .pinned-button,
-  .topic-notifications-button {
-    padding-top: 0.25em;
-    .select-kit-selected-name .name {
-      display: none;
-    }
-  }
-
-  .pinned-button {
-    margin-right: auto;
-  }
-
-  // docked progress bar on large screens using mobile view
-  grid-area: posts;
-  grid-row: 3; // after topic map
-}
-
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline {
   .start-date,
@@ -216,28 +85,5 @@ sub sub {
   }
   .topic-category {
     margin-bottom: 0.5rem;
-  }
-}
-
-.topic-footer-main-buttons {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-  .create,
-  .share-and-invite,
-  .flag-topic,
-  .defer-topic {
-    .d-button-label {
-      display: none;
-    }
-
-    .d-icon {
-      margin-right: 0;
-    }
-  }
-
-  .create {
-    margin-left: auto;
   }
 }
