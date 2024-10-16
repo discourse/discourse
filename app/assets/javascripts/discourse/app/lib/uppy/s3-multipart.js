@@ -1,17 +1,26 @@
-import Mixin from "@ember/object/mixin";
+import { setOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import AwsS3Multipart from "@uppy/aws-s3-multipart";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
 
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
 const MB = 1024 * 1024;
 
-export default Mixin.create({
-  _useS3MultipartUploads() {
-    this.set("usingS3MultipartUploads", true);
+export default class UppyS3Multipart {
+  @service siteSettings;
 
-    this._uppyInstance.use(AwsS3Multipart, {
+  constructor(owner, { uploadRootPath, errorHandler, uppyWrapper }) {
+    setOwner(this, owner);
+    this.uploadRootPath = uploadRootPath;
+    this.uppyWrapper = uppyWrapper;
+    this.errorHandler = errorHandler;
+  }
+
+  apply(uppyInstance) {
+    this.uppyInstance = uppyInstance;
+
+    this.uppyInstance.use(AwsS3Multipart, {
       // controls how many simultaneous _chunks_ are uploaded, not files,
       // which in turn controls the minimum number of chunks presigned
       // in each batch (limit / 2)
@@ -36,20 +45,19 @@ export default Mixin.create({
         }
       },
 
-      createMultipartUpload: this._createMultipartUpload,
-      prepareUploadParts: this._prepareUploadParts,
-      completeMultipartUpload: this._completeMultipartUpload,
-      abortMultipartUpload: this._abortMultipartUpload,
+      createMultipartUpload: this.#createMultipartUpload.bind(this),
+      prepareUploadParts: this.#prepareUploadParts.bind(this),
+      completeMultipartUpload: this.#completeMultipartUpload.bind(this),
+      abortMultipartUpload: this.#abortMultipartUpload.bind(this),
 
       // we will need a listParts function at some point when we want to
       // resume multipart uploads; this is used by uppy to figure out
       // what parts are uploaded and which still need to be
     });
-  },
+  }
 
-  @bind
-  _createMultipartUpload(file) {
-    this._uppyInstance.emit("create-multipart", file.id);
+  #createMultipartUpload(file) {
+    this.uppyInstance.emit("create-multipart", file.id);
 
     const data = {
       file_name: file.name,
@@ -71,7 +79,7 @@ export default Mixin.create({
       data,
       // uppy is inconsistent, an error here fires the upload-error event
     }).then((responseData) => {
-      this._uppyInstance.emit("create-multipart-success", file.id);
+      this.uppyInstance.emit("create-multipart-success", file.id);
 
       file.meta.unique_identifier = responseData.unique_identifier;
       return {
@@ -79,10 +87,9 @@ export default Mixin.create({
         key: responseData.key,
       };
     });
-  },
+  }
 
-  @bind
-  _prepareUploadParts(file, partData) {
+  #prepareUploadParts(file, partData) {
     if (file.preparePartsRetryAttempts === undefined) {
       file.preparePartsRetryAttempts = 0;
     }
@@ -96,7 +103,7 @@ export default Mixin.create({
       .then((data) => {
         if (file.preparePartsRetryAttempts) {
           delete file.preparePartsRetryAttempts;
-          this._consoleDebug(
+          this.uppyWrapper.debug.log(
             `[uppy] Retrying batch fetch for ${file.id} was successful, continuing.`
           );
         }
@@ -118,27 +125,26 @@ export default Mixin.create({
           file.preparePartsRetryAttempts += 1;
           const attemptsLeft =
             RETRY_DELAYS.length - file.preparePartsRetryAttempts + 1;
-          this._consoleDebug(
+          this.uppyWrapper.debug.log(
             `[uppy] Fetching a batch of upload part URLs for ${file.id} failed with status ${status}, retrying ${attemptsLeft} more times...`
           );
           return Promise.reject({ source: { status } });
         } else {
-          this._consoleDebug(
+          this.uppyWrapper.debug.log(
             `[uppy] Fetching a batch of upload part URLs for ${file.id} failed too many times, throwing error.`
           );
           // uppy is inconsistent, an error here does not fire the upload-error event
-          this._handleUploadError(file, err);
+          this.handleUploadError(file, err);
         }
       });
-  },
+  }
 
-  @bind
-  _completeMultipartUpload(file, data) {
+  #completeMultipartUpload(file, data) {
     if (file.meta.cancelled) {
       return;
     }
 
-    this._uppyInstance.emit("complete-multipart", file.id);
+    this.uppyInstance.emit("complete-multipart", file.id);
     const parts = data.parts.map((part) => {
       return { part_number: part.PartNumber, etag: part.ETag };
     });
@@ -153,13 +159,12 @@ export default Mixin.create({
       }),
       // uppy is inconsistent, an error here fires the upload-error event
     }).then((responseData) => {
-      this._uppyInstance.emit("complete-multipart-success", file.id);
+      this.uppyInstance.emit("complete-multipart-success", file.id);
       return responseData;
     });
-  },
+  }
 
-  @bind
-  _abortMultipartUpload(file, { key, uploadId }) {
+  #abortMultipartUpload(file, { key, uploadId }) {
     // if the user cancels the upload before the key and uploadId
     // are stored from the createMultipartUpload response then they
     // will not be set, and we don't have to abort the upload because
@@ -184,7 +189,7 @@ export default Mixin.create({
       },
       // uppy is inconsistent, an error here does not fire the upload-error event
     }).catch((err) => {
-      this._handleUploadError(file, err);
+      this.errorHandler(file, err);
     });
-  },
-});
+  }
+}
