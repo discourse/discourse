@@ -416,7 +416,19 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
       end
 
-      it "does not paginate results when lazy_load_categories is disabled" do
+      it "paginates results wihen desktop_category_page_style is categories_only_optimized" do
+        SiteSetting.desktop_category_page_style = "categories_only_optimized"
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+      end
+
+      it "does not paginate results by default" do
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(4)
