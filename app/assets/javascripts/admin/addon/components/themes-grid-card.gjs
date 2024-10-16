@@ -1,13 +1,16 @@
 import Component from "@glimmer/component";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
+import DMenu from "float-kit/components/d-menu";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
 // NOTE (martin): We will need to revisit and improve this component
@@ -78,8 +81,41 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard
       class={{concatClass "theme-card" (if @theme.default "-active")}}
-      @translatedHeading={{@theme.name}}
     >
+      <:header>
+        {{@theme.name}}
+        {{#if @theme.isPendingUpdates}}
+          <DButton
+            @route="adminCustomizeThemes.show"
+            @routeModels={{this.themeRouteModels}}
+            @icon="sync"
+            @class="btn btn-flat theme-card__button"
+            @title="admin.customize.theme.updates_available_tooltip"
+            @preventFocus={{true}}
+          />
+        {{else}}
+          {{#if @theme.isBroken}}
+            <DButton
+              @route="adminCustomizeThemes.show"
+              @routeModels={{this.themeRouteModels}}
+              @icon="exclamation-circle"
+              @class="btn btn-flat theme-card__button broken-indicator"
+              @title="admin.customize.theme.broken_theme_tooltip"
+              @preventFocus={{true}}
+            />
+          {{/if}}
+          {{#unless @theme.enabled}}
+            <DButton
+              @route="adminCustomizeThemes.show"
+              @routeModels={{this.themeRouteModels}}
+              @icon="ban"
+              @class="btn btn-flat theme-card__button broken-indicator light-grey-icon"
+              @title="admin.customize.theme.disabled_component_tooltip"
+              @preventFocus={{true}}
+            />
+          {{/unless}}
+        {{/if}}
+      </:header>
       <:content>
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot}}
@@ -121,52 +157,38 @@ export default class ThemeCard extends Component {
             }}
             @disabled={{@theme.default}}
           />
-          {{#if @theme.isPendingUpdates}}
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="sync"
-              @class="btn btn-flat theme-card__button"
-              @title="admin.customize.theme.updates_available_tooltip"
-              @preventFocus={{true}}
-            />
-          {{else}}
-            {{#if @theme.isBroken}}
-              <DButton
-                @route="adminCustomizeThemes.show"
-                @routeModels={{this.themeRouteModels}}
-                @icon="exclamation-circle"
-                @class="btn btn-flat theme-card__button broken-indicator"
-                @title="admin.customize.theme.broken_theme_tooltip"
-                @preventFocus={{true}}
-              />
-            {{/if}}
-            {{#unless @theme.enabled}}
-              <DButton
-                @route="adminCustomizeThemes.show"
-                @routeModels={{this.themeRouteModels}}
-                @icon="ban"
-                @class="btn btn-flat theme-card__button broken-indicator light-grey-icon"
-                @title="admin.customize.theme.disabled_component_tooltip"
-                @preventFocus={{true}}
-              />
-            {{/unless}}
-          {{/if}}
           <div class="theme-card__footer-actions">
-            <a
-              href={{this.themePreviewUrl}}
-              title={{i18n "admin.customize.explain_preview"}}
-              rel="noopener noreferrer"
-              target="_blank"
-              class="btn btn-flat theme-card__button"
-            >{{icon "eye"}}</a>
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="cog"
-              @class="btn-flat theme-card__button"
-              @preventFocus={{true}}
-            />
+            <DMenu
+              @identifier="theme-card__footer-menu"
+              @triggerClass="theme-card__footer-menu btn-flat"
+              @modalForMobile={{true}}
+              @icon="ellipsis-h"
+              @triggers={{array "click"}}
+            >
+              <:content>
+                <DropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <a
+                      href={{this.themePreviewUrl}}
+                      title={{i18n "admin.customize.explain_preview"}}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      class="btn btn-transparent theme-card__button"
+                    >{{icon "eye"}} {{i18n "admin.customize.theme.preview"}}</a>
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @translatedLabel={{i18n "admin.customize.theme.edit"}}
+                      @route="adminCustomizeThemes.show"
+                      @routeModels={{this.themeRouteModels}}
+                      @icon="cog"
+                      @class="btn-transparent theme-card__button"
+                      @preventFocus={{true}}
+                    />
+                  </dropdown.item>
+                </DropdownMenu>
+              </:content>
+            </DMenu>
           </div>
         </div>
       </:content>
