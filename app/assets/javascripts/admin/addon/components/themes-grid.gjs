@@ -31,12 +31,12 @@ export default class ThemesGrid extends Component {
     },
   ];
 
+  // Always show the default theme first in the list
   get sortedThemes() {
-    // Always show currently set default theme first
     return this.args.themes.sort((a, b) => {
-      if (a.default) {
+      if (a.get("default")) {
         return -1;
-      } else if (b.default) {
+      } else if (b.get("default")) {
         return 1;
       }
     });
@@ -84,10 +84,10 @@ export default class ThemesGrid extends Component {
         {{/each}}
       </div>
       <div class="themes-cards-container__helper">
-        <AdminConfigAreaCard class="theme-card">
-          <:header>
-          {{i18n "admin.config_areas.look_and_feel.themes.new_theme"}}
-          </:header>
+        <AdminConfigAreaCard
+          class="theme-card"
+          @heading="admin.config_areas.look_and_feel.themes.new_theme"
+        >
           <:content>
             <p class="theme-card__description">{{i18n
                 "admin.customize.theme.themes_intro_new"

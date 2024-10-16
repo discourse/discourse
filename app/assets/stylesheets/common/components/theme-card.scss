@@ -7,10 +7,12 @@
   display: grid;
   grid-template-columns: calc(66.66% - 0.5em) calc(33.33% - 0.5em);
   gap: 1em;
+
   @media screen and (max-width: 1300px) {
     display: flex;
     flex-direction: column-reverse;
   }
+
   &__main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(calc(325px - 1em), 1fr));
@@ -28,15 +30,15 @@
     flex-grow: 1;
   }
 
-  &.--active {
+  &.-active {
     @include theme-card-border(tertiary);
   }
 
-  &.--disabled {
+  &.-disabled {
     @include theme-card-border(primary);
   }
 
-  &.--broken {
+  &.-broken {
     @include theme-card-border(danger);
   }
 
