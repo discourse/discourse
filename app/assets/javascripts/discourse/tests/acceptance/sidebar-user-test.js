@@ -77,7 +77,7 @@ acceptance(
       );
 
       assert.notOk(
-        exists(".sidebar-more-section-links-details-summary"),
+        exists(".sidebar-more-section-trigger"),
         "the 'more' dropdown should not be present in header dropdown mode"
       );
     });
