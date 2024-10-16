@@ -1340,13 +1340,7 @@ html.anon #topic-footer-buttons {
     display: flex;
     flex-wrap: wrap;
     align-items: stretch; // aligns items by making them the same height
-    button,
-    details {
-      margin-right: 0.54em;
-    }
-    > * {
-      margin-bottom: 0.5em; // all immediate children should have a bottom margin in case of wrapping
-    }
+    gap: 0.5rem;
     .topic-admin-menu-button-container {
       display: inline-flex;
       .topic-admin-menu-button {
