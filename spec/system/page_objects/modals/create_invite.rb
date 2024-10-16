@@ -2,7 +2,7 @@
 
 module PageObjects
   module Modals
-    class CreateInvite < PageObjects::Pages::Base
+    class CreateInvite < PageObjects::Modals::Base
       GRANTABLE_BADGES_DROPDOWN = ".select-kit"
 
       def modal
@@ -17,12 +17,12 @@ module PageObjects
         within(modal) { find(".save-invite") }
       end
 
-      def cancel_button
-        within(modal) { find(".cancel-button") }
-      end
-
       def copy_button
         within(modal) { find(".copy-button") }
+      end
+
+      def has_copy_button?
+        within(modal) { has_css?(".copy-button") }
       end
 
       def invite_link_input

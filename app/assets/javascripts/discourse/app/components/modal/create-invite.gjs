@@ -163,7 +163,8 @@ export default class CreateInvite extends Component {
 
   get canInviteToGroup() {
     return (
-      this.currentUser.staff || this.currentUser.groups.any((g) => g.owner)
+      this.currentUser.staff ||
+      this.currentUser.groups.any((g) => g.group_user?.owner)
     );
   }
 
@@ -219,7 +220,6 @@ export default class CreateInvite extends Component {
 
   @action
   async createLink() {
-    // TODO: do we need topicId here when the modal is opended via share topic?
     await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
@@ -372,7 +372,6 @@ export default class CreateInvite extends Component {
                   {{/each}}
                 </field.Select>
               </form.Field>
-              <h2>{{transientData.expiresAfterDays}}</h2>
             {{/if}}
 
             {{#if this.canArriveAtTopic}}
