@@ -276,7 +276,6 @@ en:
     multiple_errors: "Multiple errors occurred: %{errors}"
     sign_up: "Sign Up"
     log_in: "Log In"
-    pivot_log_in: "Already have an account?"
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
@@ -2331,7 +2330,6 @@ en:
 
     create_account:
       header_title: "Welcome!"
-      subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -2379,12 +2377,9 @@ en:
 
     login:
       header_title: "Welcome back"
-      subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
       password: "Password"
-      show_password: "Show"
-      hide_password: "Hide"
       show_password_title: "Show password"
       hide_password_title: "Hide password"
       second_factor_title: "Two-Factor Authentication"
@@ -2481,7 +2476,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      existing_user_can_redeem: "Redeem your invitation to a topic or group."
 
     password_reset:
       continue: "Continue to %{site_name}"
