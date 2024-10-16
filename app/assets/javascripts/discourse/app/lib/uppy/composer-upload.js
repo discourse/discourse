@@ -74,7 +74,7 @@ export default class UppyComposerUpload {
     }
   ) {
     setOwner(this, owner);
-    this.uppyWrapper = new UppyWrapper(getOwner(this));
+    this.uppyWrapper = new UppyWrapper(owner);
     this.composerEventPrefix = composerEventPrefix;
     this.composerModel = composerModel;
     this.uploadMarkdownResolvers = uploadMarkdownResolvers;
@@ -708,6 +708,8 @@ export default class UppyComposerUpload {
   #cursorIsOnEmptyLine() {
     const textArea = this.#editorEl.querySelector(this.editorInputClass);
     const selectionStart = textArea.selectionStart;
-    return selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n";
+    return (
+      selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n"
+    );
   }
 }
