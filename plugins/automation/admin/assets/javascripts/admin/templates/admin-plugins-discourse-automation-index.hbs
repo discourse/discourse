@@ -44,7 +44,11 @@
               role="button"
               {{on "keypress" (fn this.editAutomation automation)}}
               {{on "click" (fn this.editAutomation automation)}}
-            >{{automation.name}}</td>
+            >{{if
+                automation.name
+                automation.name
+                (i18n "discourse_automation.unnamed_automation")
+              }}</td>
             <td
               role="button"
               {{on "click" (fn this.editAutomation automation)}}

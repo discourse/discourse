@@ -10,7 +10,7 @@ module DiscourseAutomation
         ActiveModel::ArraySerializer.new(
           automations,
           each_serializer: DiscourseAutomation::AutomationSerializer,
-          root: "automations",
+          root: "automations"
         ).as_json
       render_json_dump(serializer)
     end
@@ -21,15 +21,16 @@ module DiscourseAutomation
     end
 
     def create
-      automation_params = params.require(:automation).permit(:name, :script, :trigger)
+      automation_params = params.require(:automation).permit(:script, :trigger)
 
       automation =
         DiscourseAutomation::Automation.new(
-          automation_params.merge(last_updated_by_id: current_user.id),
+          automation_params.merge(last_updated_by_id: current_user.id)
         )
 
       if automation.scriptable&.forced_triggerable
-        automation.trigger = automation.scriptable.forced_triggerable[:triggerable].to_s
+        automation.trigger =
+          automation.scriptable.forced_triggerable[:triggerable].to_s
       end
 
       automation.save!
@@ -42,13 +43,19 @@ module DiscourseAutomation
 
       automation = DiscourseAutomation::Automation.find(params[:id])
       if automation.scriptable.forced_triggerable
-        params[:trigger] = automation.scriptable.forced_triggerable[:triggerable].to_s
+        params[:trigger] = automation.scriptable.forced_triggerable[
+          :triggerable
+        ].to_s
       end
 
       attributes =
-        request.parameters[:automation].slice(:name, :id, :script, :trigger, :enabled).merge(
-          last_updated_by_id: current_user.id,
-        )
+        request.parameters[:automation].slice(
+          :name,
+          :id,
+          :script,
+          :trigger,
+          :enabled
+        ).merge(last_updated_by_id: current_user.id)
 
       if automation.trigger != params[:automation][:trigger]
         params[:automation][:fields] = []
@@ -61,7 +68,9 @@ module DiscourseAutomation
         params[:automation][:fields] = []
         attributes[:enabled] = false
         automation.fields.destroy_all
-        automation.tap { |r| r.assign_attributes(attributes) }.save!(validate: false)
+        automation
+          .tap { |r| r.assign_attributes(attributes) }
+          .save!(validate: false)
       else
         Array(params[:automation][:fields])
           .reject(&:empty?)
@@ -70,7 +79,7 @@ module DiscourseAutomation
               field[:name],
               field[:component],
               field[:metadata],
-              target: field[:target],
+              target: field[:target]
             )
           end
 
@@ -90,7 +99,10 @@ module DiscourseAutomation
 
     def render_serialized_automation(automation)
       serializer =
-        DiscourseAutomation::AutomationSerializer.new(automation, root: "automation").as_json
+        DiscourseAutomation::AutomationSerializer.new(
+          automation,
+          root: "automation"
+        ).as_json
       render_json_dump(serializer)
     end
   end

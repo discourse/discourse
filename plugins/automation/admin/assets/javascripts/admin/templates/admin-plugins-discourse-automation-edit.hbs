@@ -10,11 +10,7 @@
 
         <div class="controls">
           <TextField
-            @value={{if
-              (eq automationForm.name this.unnamedAutomationPlaceholder)
-              ""
-              automationForm.name
-            }}
+            @value={{automationForm.name}}
             @type="text"
             @autofocus="autofocus"
             @name="automation-name"

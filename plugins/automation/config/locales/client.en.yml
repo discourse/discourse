@@ -385,6 +385,7 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+      unnamed_automation: "Unnamed automation"
 
       models:
         script:

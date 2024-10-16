@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { UNNAMED_AUTOMATION_PLACEHOLDER } from "../utils/automation-placeholder";
 
 export default class AutomationNew extends Controller {
   @service router;
@@ -32,13 +31,11 @@ export default class AutomationNew extends Controller {
 
   @action
   selectScriptToEdit(newScript) {
-    this.model.automation
-      .save({ name: UNNAMED_AUTOMATION_PLACEHOLDER, script: newScript.id })
-      .then(() => {
-        this.router.transitionTo(
-          "adminPlugins.discourse-automation.edit",
-          this.model.automation.id
-        );
-      });
+    this.model.automation.save({ script: newScript.id }).then(() => {
+      this.router.transitionTo(
+        "adminPlugins.discourse-automation.edit",
+        this.model.automation.id
+      );
+    });
   }
 }
