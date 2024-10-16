@@ -19,9 +19,9 @@ acceptance("Topic Notifications button", function (needs) {
 
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
+    assert.true(
       notificationOptions.exists(),
-      "it should display the notification options button in the topic's footer"
+      "displays the notification options button in the topic's footer"
     );
 
     await notificationOptions.expand();
@@ -30,7 +30,7 @@ acceptance("Topic Notifications button", function (needs) {
     assert.strictEqual(
       notificationOptions.header().label(),
       "Watching",
-      "it should display the right notification level"
+      "displays the right notification level"
     );
 
     const timelineNotificationOptions = selectKit(
@@ -40,7 +40,7 @@ acceptance("Topic Notifications button", function (needs) {
     assert.strictEqual(
       timelineNotificationOptions.header().value(),
       "3",
-      "it should display the right notification level"
+      "displays the right notification level"
     );
 
     await timelineNotificationOptions.expand();
@@ -49,13 +49,13 @@ acceptance("Topic Notifications button", function (needs) {
     assert.strictEqual(
       timelineNotificationOptions.header().value(),
       "0",
-      "it should display the right notification level"
+      "displays the right notification level"
     );
 
     assert.strictEqual(
       notificationOptions.header().label(),
       "Muted",
-      "it should display the right notification level"
+      "displays the right notification level"
     );
   });
 });
