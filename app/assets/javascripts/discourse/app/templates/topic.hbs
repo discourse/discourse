@@ -234,19 +234,18 @@
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
       {{#if this.site.mobileView}}
-        <div class="topic-footer">
-
-          {{#if (or this.model.pinned_globally this.model.pinned_at)}}
-            <PinnedButton
-              @pinned={{this.model.pinned}}
-              @topic={{this.model}}
-              @appendReason={{false}}
-            />
-          {{/if}}
+        <div id="topic-footer">
 
           {{#if this.showNotificationsButton}}
             <TopicNotificationsButton
               @notificationLevel={{this.model.details.notification_level}}
+              @topic={{this.model}}
+              @appendReason={{false}}
+            />
+          {{/if}}
+          {{#if (or this.model.pinned_globally this.model.pinned_at)}}
+            <PinnedButton
+              @pinned={{this.model.pinned}}
               @topic={{this.model}}
               @appendReason={{false}}
             />

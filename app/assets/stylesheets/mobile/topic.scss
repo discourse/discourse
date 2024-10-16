@@ -70,7 +70,7 @@
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
-  padding: 0.4em 1em; //.4em to match height of buttons
+  padding: 0.25em 1em;
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -182,10 +182,27 @@ sub sub {
   }
 }
 
-.topic-footer {
+#topic-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  .pinned-button,
+  .topic-notifications-button {
+    padding-top: 0.25em;
+    .select-kit-selected-name .name {
+      display: none;
+    }
+  }
+
+  .pinned-button {
+    margin-right: auto;
+  }
+
+  // docked progress bar on large screens using mobile view
+  grid-area: posts;
+  grid-row: 3; // after topic map
 }
 
 // make mobile timeline top and bottom dates easier to select
@@ -219,10 +236,8 @@ sub sub {
       margin-right: 0;
     }
   }
-}
 
-.container.posts .topic-navigation {
-  // docked progress bar on large screens using mobile view
-  grid-area: posts;
-  grid-row: 3; // after topic map
+  .create {
+    margin-left: auto;
+  }
 }
