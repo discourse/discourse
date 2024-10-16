@@ -152,6 +152,7 @@ export function _addTransformerName(name, transformerType) {
  * @param {string} transformerName the name of the transformer
  * @param {string} transformerType the type of the transformer being registered
  * @param {function} callback callback that will transform the value.
+ * @returns {boolean} True if the transformer exists, false otherwise.
  */
 export function _registerTransformer(
   transformerName,
@@ -183,6 +184,8 @@ export function _registerTransformer(
       `${prefix}: transformer "${transformerName}" is unknown and will be ignored. ` +
         "Is the name correct? Are you using the correct API for the transformer type?"
     );
+
+    return false;
   }
 
   if (typeof callback !== "function") {
@@ -197,6 +200,8 @@ export function _registerTransformer(
   existingTransformers.push(callback);
 
   transformersRegistry.set(normalizedTransformerName, existingTransformers);
+
+  return true;
 }
 
 export function applyBehaviorTransformer(

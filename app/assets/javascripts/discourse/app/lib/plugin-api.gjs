@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.2";
+export const PLUGIN_API_VERSION = "1.37.3";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -161,6 +161,8 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+
+const DEPRECATED_POST_MENU_WIDGETS = ["post-menu", "small-user-list"];
 
 const appliedModificationIds = new WeakMap();
 
@@ -416,9 +418,10 @@ class PluginApi {
    * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
    * the default behavior will be completely overridden
    * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.BEHAVIOR,
       behaviorCallback
@@ -483,9 +486,10 @@ class PluginApi {
    * mutating the input value, return the same output for the same input and not have any side effects.
    * @param {*} valueCallback.value the value to be transformed
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.VALUE,
       valueCallback
@@ -815,6 +819,14 @@ class PluginApi {
    *  }
    **/
   addPostMenuButton(name, callback) {
+    deprecated(
+      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
@@ -885,6 +897,14 @@ class PluginApi {
    * ```
    **/
   removePostMenuButton(name, callback) {
+    deprecated(
+      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     removeButton(name, callback);
   }
 
@@ -905,6 +925,14 @@ class PluginApi {
    * });
    **/
   replacePostMenuButton(name, widget) {
+    deprecated(
+      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      {
+        since: "v3.4.0.beta2-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     replaceButton(name, widget);
   }
 
@@ -3285,6 +3313,16 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.4.0.beta2-dev",
+          id: "discourse.post-menu-widget-overrides",
+        }
+      );
+    }
   }
 }
 

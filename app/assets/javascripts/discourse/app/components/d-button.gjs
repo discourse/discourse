@@ -80,6 +80,15 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
     }
   }
 
+  get computedAriaPressed() {
+    if (this.args.ariaPressed === true) {
+      return "true";
+    }
+    if (this.args.ariaPressed === false) {
+      return "false";
+    }
+  }
+
   @action
   keyDown(e) {
     if (this.args.onKeyDown) {
@@ -177,6 +186,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
       form={{@form}}
       aria-controls={{@ariaControls}}
       aria-expanded={{this.computedAriaExpanded}}
+      aria-pressed={{this.computedAriaPressed}}
       tabindex={{@tabindex}}
       disabled={{this.isDisabled}}
       title={{this.computedTitle}}

@@ -72,7 +72,8 @@ nav.post-controls {
         margin-right: 0;
         &.like {
           // Like button with 0 likes
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             background: var(--love-low);
             .d-icon {
               color: var(--love);
@@ -81,7 +82,8 @@ nav.post-controls {
         }
         &.has-like {
           // Like button after I've liked
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             background: var(--primary-low);
             .d-icon {
               color: var(--primary-medium);
@@ -90,12 +92,14 @@ nav.post-controls {
         }
         &.button-count {
           // Like count button
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             color: var(--primary);
           }
           + .toggle-like {
             // Like button when like count is present
-            &.d-hover {
+            &.d-hover,
+            &:hover {
               background: var(--primary-low);
             }
           }

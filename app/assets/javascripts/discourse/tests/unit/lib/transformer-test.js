@@ -121,7 +121,11 @@ module("Unit | Utility | transformers", function (hooks) {
 
     test("warns if transformer is unknown", function (assert) {
       withPluginApi("1.34.0", (api) => {
-        api.registerValueTransformer("whatever", () => "foo");
+        const result = api.registerValueTransformer("whatever", () => "foo");
+        assert.notOk(
+          result,
+          "registerValueTransformer returns false if the transformer name does not exist"
+        );
 
         // testing warning about core transformers
         assert.strictEqual(
@@ -137,7 +141,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () =>
           withPluginApi("1.34.0", (api) => {
-            api.registerValueTransformer("whatever", "foo");
+            api.registerValueTransformer("home-logo-href", "foo");
           }),
         /api.registerValueTransformer requires the callback argument to be a function/
       );
@@ -159,7 +163,14 @@ module("Unit | Utility | transformers", function (hooks) {
           "value did not change. transformer is not registered yet"
         );
 
-        api.registerValueTransformer("test-transformer", () => true);
+        const result = api.registerValueTransformer(
+          "test-transformer",
+          () => true
+        );
+        assert.ok(
+          result,
+          "registerValueTransformer returns true if the transformer was registered"
+        );
 
         assert.strictEqual(
           transformerWasRegistered("test-transformer"),
@@ -292,6 +303,7 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       class Testable {}
+
       assert.throws(
         () =>
           applyValueTransformer(
@@ -603,9 +615,13 @@ module("Unit | Utility | transformers", function (hooks) {
       );
     });
 
-    test("warns if transformer is unknown", function (assert) {
+    test("warns if transformer is unknown ans returns false", function (assert) {
       withPluginApi("1.35.0", (api) => {
-        api.registerBehaviorTransformer("whatever", () => "foo");
+        const result = api.registerBehaviorTransformer("whatever", () => "foo");
+        assert.notOk(
+          result,
+          "registerBehaviorTransformer returns false if the transformer name does not exist"
+        );
 
         // testing warning about core transformers
         assert.strictEqual(
@@ -621,7 +637,10 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () =>
           withPluginApi("1.35.0", (api) => {
-            api.registerBehaviorTransformer("whatever", "foo");
+            api.registerBehaviorTransformer(
+              "discovery-topic-list-load-more",
+              "foo"
+            );
           }),
         /api.registerBehaviorTransformer requires the callback argument to be a function/
       );
@@ -654,8 +673,13 @@ module("Unit | Utility | transformers", function (hooks) {
           "value was set by the default callback. transformer is not registered yet"
         );
 
-        api.registerBehaviorTransformer("test-transformer", ({ context }) =>
-          context.setValue("TRANSFORMED_CALLBACK")
+        const result = api.registerBehaviorTransformer(
+          "test-transformer",
+          ({ context }) => context.setValue("TRANSFORMED_CALLBACK")
+        );
+        assert.ok(
+          result,
+          "registerBehaviorTransformer returns true if the transformer was registered"
         );
 
         transformerWasRegistered("test-transformer");
@@ -816,6 +840,7 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       class Testable {}
+
       assert.throws(
         () =>
           applyBehaviorTransformer(
