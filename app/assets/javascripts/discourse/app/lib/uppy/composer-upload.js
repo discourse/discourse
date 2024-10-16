@@ -708,12 +708,6 @@ export default class UppyComposerUpload {
   #cursorIsOnEmptyLine() {
     const textArea = this.#editorEl.querySelector(this.editorInputClass);
     const selectionStart = textArea.selectionStart;
-    if (selectionStart === 0) {
-      return true;
-    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
-      return true;
-    } else {
-      return false;
-    }
+    return selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n";
   }
 }
