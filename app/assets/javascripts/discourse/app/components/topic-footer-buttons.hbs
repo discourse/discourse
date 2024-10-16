@@ -1,112 +1,139 @@
 <div class="topic-footer-main-buttons">
-  <TopicAdminMenu
-    @topic={{this.topic}}
-    @openUpwards="true"
-    @toggleMultiSelect={{this.toggleMultiSelect}}
-    @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
-    @deleteTopic={{this.deleteTopic}}
-    @recoverTopic={{this.recoverTopic}}
-    @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}}
-    @toggleClosed={{this.toggleClosed}}
-    @toggleArchived={{this.toggleArchived}}
-    @toggleVisibility={{this.toggleVisibility}}
-    @showTopicTimerModal={{this.showTopicTimerModal}}
-    @showFeatureTopic={{this.showFeatureTopic}}
-    @showChangeTimestamp={{this.showChangeTimestamp}}
-    @resetBumpDate={{this.resetBumpDate}}
-    @convertToPublicTopic={{this.convertToPublicTopic}}
-    @convertToPrivateMessage={{this.convertToPrivateMessage}}
-  />
+  <div class="topic-footer-main-buttons__actions">
+    <TopicAdminMenu
+      @topic={{this.topic}}
+      @openUpwards="true"
+      @toggleMultiSelect={{this.toggleMultiSelect}}
+      @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
+      @deleteTopic={{this.deleteTopic}}
+      @recoverTopic={{this.recoverTopic}}
+      @toggleFeaturedOnProfile={{this.toggleFeaturedOnProfile}}
+      @toggleClosed={{this.toggleClosed}}
+      @toggleArchived={{this.toggleArchived}}
+      @toggleVisibility={{this.toggleVisibility}}
+      @showTopicTimerModal={{this.showTopicTimerModal}}
+      @showFeatureTopic={{this.showFeatureTopic}}
+      @showChangeTimestamp={{this.showChangeTimestamp}}
+      @resetBumpDate={{this.resetBumpDate}}
+      @convertToPublicTopic={{this.convertToPublicTopic}}
+      @convertToPrivateMessage={{this.convertToPrivateMessage}}
+    />
 
-  {{#each this.inlineActionables as |actionable|}}
-    {{#if (eq actionable.type "inline-button")}}
-      {{#if (eq actionable.id "bookmark")}}
-        <BookmarkMenu
-          @bookmarkManager={{this.topicBookmarkManager}}
-          @buttonClasses="btn-default"
-        />
+    {{#each this.inlineActionables as |actionable|}}
+      {{#if (eq actionable.type "inline-button")}}
+        {{#if (eq actionable.id "bookmark")}}
+          <BookmarkMenu
+            @bookmarkManager={{this.topicBookmarkManager}}
+            @buttonClasses="btn-default"
+          />
+        {{else}}
+          <DButton
+            @action={{actionable.action}}
+            @icon={{actionable.icon}}
+            @translatedLabel={{actionable.label}}
+            @translatedTitle={{actionable.title}}
+            @translatedAriaLabel={{actionable.ariaLabel}}
+            @disabled={{actionable.disabled}}
+            id={{concat "topic-footer-button-" actionable.id}}
+            class={{concat-class
+              "btn-default"
+              "topic-footer-button"
+              actionable.classNames
+            }}
+          />
+        {{/if}}
       {{else}}
-        <DButton
-          @action={{actionable.action}}
-          @icon={{actionable.icon}}
-          @translatedLabel={{actionable.label}}
-          @translatedTitle={{actionable.title}}
-          @translatedAriaLabel={{actionable.ariaLabel}}
-          @disabled={{actionable.disabled}}
-          id={{concat "topic-footer-button-" actionable.id}}
-          class={{concat-class
-            "btn-default"
-            "topic-footer-button"
-            actionable.classNames
+        <DropdownSelectBox
+          @id={{concat "topic-footer-dropdown-" actionable.id}}
+          @value={{actionable.value}}
+          @content={{actionable.content}}
+          @onChange={{action actionable.action}}
+          @options={{hash
+            icon=actionable.icon
+            none=actionable.noneItem
+            disabled=actionable.disabled
           }}
+          class={{concat-class "topic-footer-dropdown" actionable.classNames}}
         />
       {{/if}}
-    {{else}}
-      <DropdownSelectBox
-        @id={{concat "topic-footer-dropdown-" actionable.id}}
-        @value={{actionable.value}}
-        @content={{actionable.content}}
-        @onChange={{action actionable.action}}
-        @options={{hash
-          icon=actionable.icon
-          none=actionable.noneItem
-          disabled=actionable.disabled
-        }}
-        class={{concat-class "topic-footer-dropdown" actionable.classNames}}
+    {{/each}}
+
+    {{#if this.site.mobileView}}
+      {{#if this.dropdownButtons}}
+        <DMenu
+          @modalForMobile={{true}}
+          @identifier="topic-footer-mobile-dropdown"
+        >
+          <:trigger>
+            {{d-icon "ellipsis-vertical"}}
+          </:trigger>
+          <:content>
+            <DropdownMenu as |dropdown|>
+              {{#each this.dropdownButtons as |button|}}
+                <dropdown.item>
+                  <DButton
+                    @action={{button.action}}
+                    @icon={{button.icon}}
+                    @translatedLabel={{button.label}}
+                    @translatedTitle={{button.title}}
+                    @translatedAriaLabel={{button.ariaLabel}}
+                    @disabled={{button.disabled}}
+                    id={{concat "topic-footer-button-" button.id}}
+                    class={{concat-class
+                      "btn-default"
+                      "topic-footer-button"
+                      button.classNames
+                    }}
+                  />
+                </dropdown.item>
+              {{/each}}
+            </DropdownMenu>
+          </:content>
+        </DMenu>
+      {{/if}}
+    {{/if}}
+
+  </div>
+  <div class="topic-footer-main-buttons__states">
+    <PinnedButton
+      @pinned={{this.topic.pinned}}
+      @topic={{this.topic}}
+      @appendReason={{false}}
+    />
+
+    {{#if this.showNotificationsButton}}
+      {{#if this.showNotificationUserTip}}
+        <UserTip
+          @id="topic_notification_levels"
+          @triggerSelector=".notifications-button"
+          @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+          @contentText={{i18n "user_tips.topic_notification_levels.content"}}
+        />
+      {{/if}}
+      <TopicNotificationsButton
+        @notificationLevel={{this.topic.details.notification_level}}
+        @topic={{this.topic}}
+        @appendReason={{false}}
       />
     {{/if}}
-  {{/each}}
+  </div>
+</div>
 
-  {{#if this.site.mobileView}}
-    {{#if this.dropdownButtons}}
-      <DMenu
-        @modalForMobile={{true}}
-        @identifier="topic-footer-mobile-dropdown"
-      >
-        <:trigger>
-          {{d-icon "ellipsis-vertical"}}
-        </:trigger>
-        <:content>
-          <DropdownMenu as |dropdown|>
-            {{#each this.dropdownButtons as |button|}}
-              <dropdown.item>
-                <DButton
-                  @action={{button.action}}
-                  @icon={{button.icon}}
-                  @translatedLabel={{button.label}}
-                  @translatedTitle={{button.title}}
-                  @translatedAriaLabel={{button.ariaLabel}}
-                  @disabled={{button.disabled}}
-                  id={{concat "topic-footer-button-" button.id}}
-                  class={{concat-class
-                    "btn-default"
-                    "topic-footer-button"
-                    button.classNames
-                  }}
-                />
-              </dropdown.item>
-            {{/each}}
-          </DropdownMenu>
-        </:content>
-      </DMenu>
-    {{/if}}
-  {{/if}}
+<PluginOutlet
+  @name="topic-footer-main-buttons-before-create"
+  @outletArgs={{hash topic=this.topic}}
+  @connectorTagName="span"
+/>
 
-  <PluginOutlet
-    @name="topic-footer-main-buttons-before-create"
-    @outletArgs={{hash topic=this.topic}}
-    @connectorTagName="span"
+{{#if this.topic.details.can_create_post}}
+  <DButton
+    @icon="reply"
+    @action={{this.replyToPost}}
+    @label={{if this.site.desktopView "topic.reply.title"}}
+    @title="topic.reply.help"
+    class="btn-primary create"
   />
-
-  {{#if this.topic.details.can_create_post}}
-    <DButton
-      @icon="reply"
-      @action={{this.replyToPost}}
-      @label="topic.reply.title"
-      @title="topic.reply.help"
-      class="btn-primary create"
-    />
-  {{/if}}
+{{/if}}
 
   <PluginOutlet
     @name="after-topic-footer-main-buttons"
@@ -115,22 +142,15 @@
   />
 </div>
 
-<PinnedButton
-  @pinned={{this.topic.pinned}}
-  @topic={{this.topic}}
-  @appendReason={{false}}
-/>
-
-{{#if this.showNotificationsButton}}
-  {{#if this.showNotificationUserTip}}
-    <UserTip
-      @id="topic_notification_levels"
-      @triggerSelector=".notifications-button"
-      @titleText={{i18n "user_tips.topic_notification_levels.title"}}
-      @contentText={{i18n "user_tips.topic_notification_levels.content"}}
-      @priority={{20}}
-    />
-  {{/if}}
+{{#if this.showNotificationUserTip}}
+  <UserTip
+    @id="topic_notification_levels"
+    @triggerSelector=".notifications-button"
+    @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+    @contentText={{i18n "user_tips.topic_notification_levels.content"}}
+    @priority={{20}}
+  />
+{{/if}}
 
 {{#unless this.site.mobileView}}
   <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
