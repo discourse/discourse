@@ -205,6 +205,12 @@ sq:
             ip_address:
               blocked: "New registrations are not allowed from your IP address."
               max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+        user_password:
+          attributes:
+            password:
+              common: "është një ndër 10000 fjalëkalimet më të përdorur. Ju ftojmë të përdorni një më të sigurtë."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
         color_scheme_color:
           attributes:
             hex:

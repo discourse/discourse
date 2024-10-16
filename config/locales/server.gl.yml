@@ -500,6 +500,15 @@ gl:
             ip_address:
               blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
               max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
+        user_password:
+          attributes:
+            password:
+              common: "é un dos 10000 contrasinais máis habituais. Utilice un máis seguro."
+              same_as_username: "é igual ca o seu nome de usuario. Utilice un contrasinal máis seguro."
+              same_as_email: "é igual ca o seu correo electrónico. Utilice un contrasinal máis seguro."
+              same_as_current: "é igual ca o seu contrasinal actual."
+              same_as_name: "é igual ca o seu nome."
+              unique_characters: "ten demasiados caracteres repetidos. Utilice un contrasinal máis seguro."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1615,7 +1624,6 @@ gl:
     reset_bounce_score_after_days: "Restabelece automaticamente a puntuación de devolución despois de X días."
     blocked_attachment_content_types: "Listaxe de palabras clave empregadas para bloquear anexos en función do tipo de contido."
     blocked_attachment_filenames: "Listaxe de palabras clave usadas para bloquear anexos en función do nome do ficheiro."
-    forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
     email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."

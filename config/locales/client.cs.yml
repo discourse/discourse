@@ -1204,7 +1204,7 @@ cs:
       powered_by: "používá <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "zkopírováno"
     user_fields:
-      none: "(zvolit možnost)"
+      none: "(vyberte možnost)"
       required: 'Zadejte hodnotu pro "%{name}"'
       same_as_password: "Vaše heslo by se v jiných polích nemělo opakovat."
       optional: (volitelné)

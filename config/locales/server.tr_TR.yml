@@ -679,7 +679,6 @@ tr_TR:
               same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir şifre kullanın."
               same_as_email: "e-postanızla aynı. Lütfen daha güvenli bir şifre kullanın."
               same_as_current: "mevcut şifrenizle aynı."
-              same_as_previous: "önceki şifrenizle aynı."
               same_as_name: "adınızla aynı."
               unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
             username:
@@ -689,6 +688,15 @@ tr_TR:
             ip_address:
               blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
               max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
+        user_password:
+          attributes:
+            password:
+              common: "en yaygın 10000 şifreden biri. Lütfen daha güvenli bir şifre kullanın."
+              same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir şifre kullanın."
+              same_as_email: "e-postanızla aynı. Lütfen daha güvenli bir şifre kullanın."
+              same_as_current: "mevcut şifrenizle aynı."
+              same_as_name: "adınızla aynı."
+              unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2092,7 +2100,6 @@ tr_TR:
     reset_bounce_score_after_days: "X gün sonra geri dönme puanını otomatik olarak sıfırlayın."
     blocked_attachment_content_types: "İçerik türüne göre ekleri engellemek için kullanılan anahtar kelimelerin listesi."
     blocked_attachment_filenames: "Dosya adına göre ekleri kara listeye almak için kullanılan anahtar kelimelerin listesi."
-    forwarded_emails_behaviour: "Discourse'a iletilen bir e-postayı ele alma şekli"
     always_show_trimmed_content: "Her zaman gelen e-postaların kırpılmış kısmını gösterin. UYARI: E-posta adreslerini gösterebilir."
     trim_incoming_emails: "Gelen e-postaların ilgili olmayan kısımlarını kesin."
     private_email: "E-posta başlığına veya e-posta gövdesine gönderilerden veya konulardan içerik dahil etmeyin. NOT: Özet e-postaları da devre dışı bırakır."

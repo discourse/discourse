@@ -510,13 +510,21 @@ cs:
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
               same_as_current: "je stejné jako vaše současné heslo."
-              same_as_previous: "je stejné jako vaše předchozí heslo."
               same_as_name: "je stejné jako vaše jméno."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             username:
               same_as_password: "je stejné jako vaše heslo."
             name:
               same_as_password: "je stejné jako vaše heslo."
+        user_password:
+          attributes:
+            password:
+              common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
+              same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
+              same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
+              same_as_current: "je stejné jako vaše současné heslo."
+              same_as_name: "je stejné jako vaše jméno."
+              unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
         user_email:
           attributes:
             user_id:

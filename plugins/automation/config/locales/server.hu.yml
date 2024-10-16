@@ -5,21 +5,142 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    discourse_automation_enabled: "discourse-automation plugin engedélyezése"
   discourse_automation:
+    models:
+      fields:
+        required_field: '"%{name}" mezőt a "%{target}:%{target_name}" oldalon kell kitölteni.'
+        invalid_field: '"%{component}" mező összetevője nem használható a "%{target}:%{target_name}" mezőn.'
+        invalid_metadata: '`%{field}` adatai érvénytelenek, vagy a `%{component}` komponens ismeretlen.'
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "„custom_fields” vagy „user_profile” közül legalább egyet meg kell adni."
+      user_badge_granted:
+        title: Felhasználói jelvény megadva
+        doc: Automatizálást indít el, amikor a felhasználó jelvényt kap.
+      user_first_logged_in:
+        title: A felhasználó először jelentkezett be
+        doc: Automatizálást indít el, amikor a felhasználó először jelentkezik be.
+      stalled_topic:
+        title: Elakadt téma
+        doc: Automatizálást indít el, ha a témakör meghatározott ideig nem kapott új választ a témakör tulajdonosától. Javasoljuk, hogy ezt az aktiválási szabályt egy címkére/kategóriára terjedjen ki, mivel az érintett témák száma nagyon magas lehet. Biztonsági intézkedésként az érintett témák számát 250-ben korlátozzák.
+      api_call:
+        title: API hívás
+        description: POST kérés végrehajtása automatizálás elindításához
+        doc: A POST kérést a `/automations/:id/trigger.json` címre kell küldeni globális API-kulccsal.
+      category_created_edited:
+        title: Kategória létrehozva/szerkesztve
+        description: Egy kategória létrehozásakor vagy szerkesztésekor az automatizálás aktiválódik
+      recurring:
+        title: Visszatérő
+      point_in_time:
+        title: Időpont
+        description: Ha eljön a megadott idő, az automatizálás elindul.
+      user_added_to_group:
+        title: Felhasználó hozzáadva a csoporthoz
+        description: Amikor egy felhasználót adnak a megadott csoporthoz, az automatizálás aktiválódik
       user_removed_from_group:
         title: Felhasználó eltávolítva a csoportból
         description: Amikor egy felhasználót eltávolítanak a megadott csoportból, az automatizálás aktiválódik
       user_promoted:
+        title: Felhasználó előléptetve
+        description: Amikor a felhasználót egyik bizalmi szintről a másikra léptetik
         transition_placeholder: "%{from_level_name} -től %{to_level_name}-ig"
+      stalled_wiki:
+        title: Elakadt wiki
+        description: Ha egy wikit a meghatározottnál hosszabb ideig nem szerkesztenek, akkor az automatizálás elindul
+      post_created_edited:
+        title: Bejegyzés létrehozva/szerkesztve
+        description: Amikor egy érvényes bejegyzést szerkesztenek vagy létrehoznak, az automatizálás aktiválódik
+      pm_created:
+        title: Személyes üzenet létrehozva
+        description: Amikor egy érvényes PÜ jön létre, az automatizálás aktiválódik
+      topic_tags_changed:
+        title: A téma címkéi megváltoztak
+        description: Amikor egy téma címkéit megváltoztatják, az automatizálás aktiválódik
       topic:
         title: Téma
+        description: A társított szkript csak a megadott témában lesz használva, ez például az érvényesítést végző szkripteknél hasznos
+      after_post_cook:
+        title: Bejegyzés elkészítése után
+        description: Amikor egy bejegyzés tartalma elkészül, az automatizálás aktiválódik
+      user_updated:
+        title: Felhasználói frissítés után
+        description: Amikor a felhasználó frissít bármilyen információt, az automatizálás aktiválódik
     scriptables:
+      post:
+        title: Bejegyzés létrehozása
+        description: Hozzon létre bejegyzést egy megadott témában
       topic:
         title: Téma létrehozása
+        description: Téma létrehozása egy adott felhasználóként
+      flag_post_on_words:
+        title: Bejegyzés megjelölése szavak alapján
+        description: Megjelöl egy bejegyzést, ha a megadott szavakat tartalmazza
+        flag_message: "A bejegyzés tiltott szavakat tartalmaz: %{words}"
+        doc: Az összes szót egyszerre tartalmazó bejegyzés meg lesz jelölve és elrejtve. Vegye figyelembe, hogy több, vesszővel elválasztott szó meghatározása összetettként lesz használva (minden szónak jelen kell lennie).
+      zapier_webhook:
+        title: Zapier webhook
+        description: Zap-et hív meg egy trigger kontextusával mint egy test
+      auto_responder:
+        title: Automatikus válaszadó
+        description: Választ küld egy bejegyzésre, amely meghatározott kulcsszavakat tartalmaz
+      auto_tag_topic:
+        title: Automatikus címke téma
+        description: Címkék automatikus hozzáadása egy témához
       pin_topic:
         title: Téma kitűzése
+        description: Meghatározott témát rögzít egy adott időpontban
+      banner_topic:
+        title: Kiemelt téma létrehozása
+        description: Téma bannerré alakítása
+      gift_exchange:
+        title: Ajándékcsere
+        description: Lehetővé teszi egy csoport felhasználóinak névtelen párosítását, hogy ajándékot küldjenek egymásnak.
+        doc: Ajándékcsere szükséges egy létező csoporthoz legalább 3 felhasználóval. A kiválasztott időpontban a csoport minden felhasználója egy ajándékozóval és egy ajándékozottal párosul.
+      send_pms:
+        title: PÜ-k küldése
+        description: Lehetővé teszi PÜ-ek küldését (esetleg késleltetve).
+        doc: Lehetővé teszi több pü küldését egy felhasználónak. Minden PÜ elfogad egy késleltetést.
+      suspend_user_by_email:
+        title: Felhasználó felfüggesztése e-mailben
+      user_global_notice:
+        title: Felhasználói globális értesítés
+        description: Lehetővé teszi globális értesítés megjelenítését a felhasználó számára
+      user_group_membership_through_badge:
+        title: Felhasználói csoport tagság jelvényen keresztül
+        description: A felhasználói csoport tagságának módosítása jelvény alapján
+      suspend_user_by_email_with_api_call:
+        doc: Amikor a suspend_user_by_email API hívással aktiválódik, a végpont elvárja, hogy egy érvényes email szerepeljen a küldött paraméterek között. A reasons és a suspend_until (ISO 8601 formátumban) is felhasználható az alapértelmezett mezőértékek felülírására.
+      user_global_notice_with_stalled_topic:
+        doc: Ha az elakadt témán keresztül aktiválódik, a téma tulajdonosa megkapja a globális értesítést.
+      user_global_notice_with_first_accepted_solution:
+        doc: Az első elfogadott megoldás hatására a megoldás szerzője megkapja a globális értesítést.
+      send_pms_with_api_call:
+        doc: Amikor a `send pms` scriptet használja az `api call` triggerrel, a kérés `usernames` paramétere fogja kitölteni a címzettek listáját.
+      topic_required_words:
+        title: A témához szükséges szavak
+        description: Lehetővé teszi egy témához szükséges szavak listájának meghatározását, minden bejegyzésben legalább egyet kell használni.
+        doc: A témához szükséges szavak igényelnek egy témát. Amikor egy bejegyzést szerkesztenek/létrehoznak, a bejegyzés érvényesítésre kerül a szavak listája alapján, legalább egynek jelen kell lennie.
+        errors:
+          must_include_word: "A bejegyzésnek tartalmaznia kell legalább egyet a következő szavak közül: %{words}"
       close_topic:
         title: Téma lezárása
+        description: Lezárja a témát egy opcionális záró üzenettel
+      append_last_edited_by:
+        title: Utoljára szerkesztette hozzáadása
+        description: Hozzáadja a bejegyzés „utoljára szerkesztette” részleteit a főzött tartalom aljához.
+        text: "Utoljára szerkesztette: @%{username} %{date_time}"
       append_last_checked_by:
+        title: Utoljára ellenőrizte hozzáadása
+        description: Hozzáadja a bejegyzés „utoljára ellenőrizte” részleteit a főzött tartalom aljához.
+        text: "Utoljára ellenőrizte: @%{username} %{date_time}"
+        summary: Dokumentum ellenőrzése
+        details: "Dokumentum ellenőrzése: "
         button_text: Kész
+      add_user_to_group_through_custom_field:
+        title: "Felhasználó hozzáadása csoporthoz a Felhasználó egyéni mezőn keresztül"
+      group_category_notification_default:
+        title: "Alapértelmezett csoportkategória értesítés"
+        description: "Állítsa be egy kategória alapértelmezett értesítési szintjét egy csoport tagjai számára"

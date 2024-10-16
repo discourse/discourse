@@ -282,6 +282,15 @@ sl:
               same_as_password: "je enako kot vaše geslo."
             ip_address:
               max_new_accounts_per_registration_ip: "Nove registracije uporabnika niso več dovoljene z vašega IP naslova (dosežena je omejitev regitracij). Kontaktirajte člana osebja foruma."
+        user_password:
+          attributes:
+            password:
+              common: "je eno od 10000 najbolj uporabljenih gesel. Uporabite bolj varno geslo."
+              same_as_username: "je enako kot vaše uporabniško ime. Uporabite bolj varno geslo."
+              same_as_email: "je enako kot vaš e-naslov. Uporabite bolj varno geslo."
+              same_as_current: "je enako kot vaše trenutno geslo."
+              same_as_name: "je enako kot vaše ime."
+              unique_characters: "vsebuje preveč enakih znakov. Uporabite bolj varno geslo."
         topic_timer:
           attributes:
             duration_minutes:
