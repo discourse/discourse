@@ -33,7 +33,7 @@ export default class TagsUploader extends Component {
 
   <template>
     <div id="tag-uploader">
-      <label class="btn btn-default {{if this.addDisabled 'disabled'}}">
+      <label class={{concatClass "btn btn-default" (if this.addDisabled "disabled")}}>
         {{icon "upload"}}
         {{i18n "admin.watched_words.form.upload"}}
         <input
