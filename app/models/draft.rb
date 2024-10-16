@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class Draft < ActiveRecord::Base
-  NEW_TOPIC ||= "new_topic"
-  NEW_PRIVATE_MESSAGE ||= "new_private_message"
-  EXISTING_TOPIC ||= "topic_"
+  NEW_TOPIC = "new_topic"
+  NEW_PRIVATE_MESSAGE = "new_private_message"
+  EXISTING_TOPIC = "topic_"
 
   belongs_to :user
 

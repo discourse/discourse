@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserSearch
-  MAX_SIZE_PRIORITY_MENTION ||= 500
+  MAX_SIZE_PRIORITY_MENTION = 500
 
   def initialize(term, opts = {})
     @term = term.downcase

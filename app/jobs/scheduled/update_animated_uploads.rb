@@ -4,7 +4,7 @@ module Jobs
   class UpdateAnimatedUploads < ::Jobs::Scheduled
     every 1.hour
 
-    MAX_PROCESSED_GIF_IMAGES ||= 200
+    MAX_PROCESSED_GIF_IMAGES = 200
 
     def execute(args)
       Upload

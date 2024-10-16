@@ -77,11 +77,11 @@ class Post < ActiveRecord::Base
                 :skip_unique_check,
                 :skip_validation
 
-  MISSING_UPLOADS ||= "missing uploads"
-  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
-  NOTICE ||= "notice"
+  MISSING_UPLOADS = "missing uploads"
+  MISSING_UPLOADS_IGNORED = "missing uploads ignored"
+  NOTICE = "notice"
 
-  SHORT_POST_CHARS ||= 1200
+  SHORT_POST_CHARS = 1200
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)

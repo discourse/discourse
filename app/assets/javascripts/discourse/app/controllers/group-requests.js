@@ -114,4 +114,12 @@ export default class GroupRequestsController extends Controller {
       request_denied: true,
     });
   }
+
+  @action
+  updateOrder(field, asc) {
+    this.setProperties({
+      order: field,
+      asc,
+    });
+  }
 }

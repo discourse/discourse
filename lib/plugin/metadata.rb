@@ -5,7 +5,7 @@ module Plugin
 end
 
 class Plugin::Metadata
-  OFFICIAL_PLUGINS ||=
+  OFFICIAL_PLUGINS =
     Set.new(
       %w[
         discourse-adplugin
@@ -97,10 +97,10 @@ class Plugin::Metadata
       ],
     )
 
-  FIELDS ||= %i[name about version authors contact_emails url required_version meta_topic_id label]
+  FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
   attr_accessor(*FIELDS)
 
-  MAX_FIELD_LENGTHS ||= {
+  MAX_FIELD_LENGTHS = {
     name: 75,
     about: 350,
     authors: 200,

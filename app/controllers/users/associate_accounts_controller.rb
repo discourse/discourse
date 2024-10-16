@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Users::AssociateAccountsController < ApplicationController
-  SECURE_SESSION_PREFIX ||= "omniauth_reconnect"
+  SECURE_SESSION_PREFIX = "omniauth_reconnect"
 
   before_action :ensure_logged_in
 

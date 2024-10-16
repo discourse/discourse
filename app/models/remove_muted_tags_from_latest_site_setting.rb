@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class RemoveMutedTagsFromLatestSiteSetting < EnumSiteSetting
-  ALWAYS ||= "always"
-  ONLY_MUTED ||= "only_muted"
-  NEVER ||= "never"
+  ALWAYS = "always"
+  ONLY_MUTED = "only_muted"
+  NEVER = "never"
 
   def self.valid_value?(val)
     values.any? { |v| v[:value] == val }

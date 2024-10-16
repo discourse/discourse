@@ -98,4 +98,12 @@ export default class AdminUsersListShowController extends Controller.extend(
     this.toggleProperty("showEmails");
     this.resetFilters();
   }
+
+  @action
+  updateOrder(field, asc) {
+    this.setProperties({
+      order: field,
+      asc,
+    });
+  }
 }

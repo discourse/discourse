@@ -8,7 +8,7 @@ require "file_helper"
 
 module FileStore
   class S3Store < BaseStore
-    TOMBSTONE_PREFIX ||= "tombstone/"
+    TOMBSTONE_PREFIX = "tombstone/"
 
     delegate :abort_multipart,
              :presign_multipart_part,

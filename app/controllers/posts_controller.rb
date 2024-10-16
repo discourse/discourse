@@ -27,7 +27,7 @@ class PostsController < ApplicationController
                      :check_xhr,
                      only: %i[markdown_id markdown_num short_link latest user_posts_feed]
 
-  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+  MARKDOWN_TOPIC_PAGE_SIZE = 100
 
   def markdown_id
     markdown Post.find_by(id: params[:id].to_i)
@@ -429,7 +429,7 @@ class PostsController < ApplicationController
     render_json_error(e.message)
   end
 
-  MAX_POST_REPLIES ||= 20
+  MAX_POST_REPLIES = 20
 
   def replies
     params.permit(:after)

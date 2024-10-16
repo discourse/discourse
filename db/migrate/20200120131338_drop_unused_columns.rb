@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropUnusedColumns < ActiveRecord::Migration[6.0]
-  DROPPED_COLUMNS ||= {
+  DROPPED_COLUMNS = {
     post_replies: %i[reply_id],
     user_profiles: %i[card_background profile_background],
   }
