@@ -353,8 +353,8 @@ ro:
           attributes:
             password:
               common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
-              same_as_username: "este identică cu nume utilizator. Te rugăm să folosești o parolă mai sigură."
-              same_as_email: "este identică cu emailul. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
               same_as_current: "este identică cu parola curentă."
               unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
