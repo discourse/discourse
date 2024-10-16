@@ -143,7 +143,7 @@ export default class ChatMessageInfo extends Component {
         {{/if}}
 
         <span class="chat-message-info__date">
-          {{formatChatDate @message (hash threadContext=@threadContext)}}
+          {{formatChatDate @message (hash threadContext=@threadContext) }}
         </span>
 
         {{#if @message.bookmark}}
