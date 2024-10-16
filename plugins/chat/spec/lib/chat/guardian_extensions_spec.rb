@@ -10,7 +10,7 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
-  before { SiteSetting.chat_allowed_groups = [chatters] }
+  before { SiteSetting.chat_allowed_groups = chatters }
 
   describe "#can_chat?" do
     context "when the user is not in allowed to chat" do

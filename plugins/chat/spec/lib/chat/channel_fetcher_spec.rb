@@ -20,7 +20,7 @@ describe Chat::ChannelFetcher do
     Chat::UserChatChannelMembership.where(user: user1)
   end
 
-  before { SiteSetting.chat_allowed_groups = [chatters] }
+  before { SiteSetting.chat_allowed_groups = chatters }
 
   describe ".structured" do
     it "returns open channel only" do

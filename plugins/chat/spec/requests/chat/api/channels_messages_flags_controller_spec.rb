@@ -9,7 +9,7 @@ RSpec.describe Chat::Api::ChannelsMessagesFlagsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    SiteSetting.chat_message_flag_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+    SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(current_user)
   end
 

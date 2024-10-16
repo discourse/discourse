@@ -143,7 +143,7 @@ RSpec.describe Chat::AutoRemove::HandleUserRemovedFromGroup do
         before do
           group_1.add(removed_user)
           group_2.add(removed_user)
-          SiteSetting.chat_allowed_groups = group_1.id.to_s + "|" + group_2.id.to_s
+          SiteSetting.chat_allowed_groups = [group_1.id, group_2.id].join("|")
           CategoryGroup.create(
             category: private_category,
             group: group_2,
