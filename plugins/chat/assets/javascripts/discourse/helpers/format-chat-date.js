@@ -12,7 +12,7 @@ export default function formatChatDate(message, options = {}) {
   const display =
     options.mode === "tiny"
       ? date.format(I18n.t("chat.dates.time_tiny"))
-      : date.format(I18n.t("dates.time"));
+      : date.format(I18n.t("chat.dates.time"));
 
   if (message.staged) {
     return htmlSafe(
