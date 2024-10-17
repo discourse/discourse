@@ -97,11 +97,12 @@
     .user-field.multiselect label.control-label {
       color: var(--primary-medium);
       font-size: 16px;
+      height: 16px;
       font-weight: normal;
       position: absolute;
       pointer-events: none;
       left: 1em;
-      top: 10px;
+      top: calc(calc(calc(2.5rem + 2px) / 2) - 8px);
       box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
       transition: 0.2s ease all;
     }
@@ -208,6 +209,7 @@
   }
 
   .tip {
+    min-height: 1.4em;
     &.bad {
       color: var(--danger);
       display: block;
@@ -217,8 +219,16 @@
   .more-info,
   .instructions {
     color: var(--primary-medium);
-    min-height: 1.4em;
     overflow-wrap: anywhere;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    & ~ .more-info,
+    & ~ .instructions {
+      opacity: 1;
+    }
   }
 
   .caps-lock-warning {

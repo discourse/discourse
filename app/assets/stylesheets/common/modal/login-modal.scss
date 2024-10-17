@@ -11,6 +11,7 @@
     &__container {
       position: relative;
       width: max-content;
+      width: 100%;
     }
     &__header {
       border-bottom: none;
@@ -63,7 +64,7 @@
   }
 
   #login-form {
-    margin: 3em 0 1.2em 0;
+    margin: 2em 0 1em 0;
     display: flex;
     flex-direction: column;
 
@@ -80,6 +81,7 @@
   }
 
   .tip {
+    min-height: 1.4em;
     &.bad {
       color: var(--danger);
       display: block;
@@ -89,8 +91,16 @@
   .more-info,
   .instructions {
     color: var(--primary-medium);
-    min-height: 1.4em;
     overflow-wrap: anywhere;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    & ~ .more-info,
+    & ~ .instructions {
+      opacity: 1;
+    }
   }
 
   .caps-lock-warning {
@@ -118,6 +128,46 @@
     }
   }
 
+  .login-page-cta,
+  .signup-page-cta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__disclaimer {
+      color: var(--primary-medium);
+      margin-bottom: 1rem;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      button {
+        font-size: var(--font-0) !important;
+        width: 100%;
+      }
+    }
+    &__existing-account,
+    &__no-account-yet {
+      color: var(--primary-medium);
+      font-size: var(--font-down);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      width: 100%;
+      &::before {
+        content: " ";
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: var(--primary-low);
+        margin-block: 1rem;
+      }
+    }
+  }
+
   .desktop-view & {
     @media screen and (max-width: 767px) {
       // important to maintain narrow desktop widths
@@ -129,7 +179,7 @@
       .has-alt-auth {
         flex-direction: column;
         overflow: auto;
-        gap: 1em;
+        gap: 0;
         .d-modal__footer {
           font-size: var(--font-down-1);
         }
@@ -232,11 +282,12 @@
       .user-field.multiselect label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
+        height: 16px;
         font-weight: normal;
         position: absolute;
         pointer-events: none;
         left: 1em;
-        top: 10px;
+        top: calc(calc(calc(2.5rem + 2px) / 2) - 8px);
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }

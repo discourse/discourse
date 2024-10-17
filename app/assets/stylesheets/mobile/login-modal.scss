@@ -18,14 +18,13 @@
     flex-direction: column;
     gap: 2em;
     width: 100%;
-
-    .btn {
-      margin: 0;
-      font-size: var(--font-up-1-rem);
-      height: 2.5em;
-    }
   }
 }
+
+.d-modal.login-modal .d-modal__body {
+  margin-top: 3.75rem;
+}
+
 .d-modal.login-modal,
 .d-modal.create-account {
   padding-bottom: var(--safe-area-inset-bottom);
@@ -33,12 +32,14 @@
     &__container {
       height: 100svh;
       max-height: unset;
+      width: 100%;
     }
     &__body {
       flex-direction: column;
       gap: unset;
       padding-inline: 0.5rem;
       padding-bottom: 1em;
+      outline: none;
     }
     &__footer {
       padding: 1em 1.5rem;
@@ -47,10 +48,6 @@
     &__footer-buttons {
       gap: 0.5em;
     }
-  }
-
-  .login__alt-cta {
-    font-size: var(--font-0);
   }
 
   .login-title {
@@ -96,6 +93,7 @@
     padding: 0 1rem;
     gap: 0.25em;
     margin-bottom: 1rem;
+    height: unset;
 
     .btn {
       margin: 0;
@@ -108,19 +106,66 @@
     }
   }
 
+  .login-page-cta {
+    &__buttons {
+      .login-page-cta__login {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+    &__signup {
+      background: none !important;
+      font-size: var(--font-down);
+      padding: 0;
+    }
+  }
+
+  .signup-page-cta {
+    &__buttons {
+      .signup-page-cta__signup {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+    &__login {
+      background: none !important;
+      font-size: var(--font-down);
+      padding: 0;
+    }
+  }
+
+  .login-page-cta,
+  .signup-page-cta {
+    &__existing-account,
+    &__no-account-yet {
+      width: unset;
+      margin-bottom: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    button {
+      width: fit-content;
+    }
+  }
+
   #login-form,
   .login-form {
-    display: grid;
-    grid-auto-rows: 1fr;
     margin: 0;
     padding: 1rem 1rem 0;
 
     .input-group {
-      input.ember-text-field {
-        //if not this class, checkboxes get the same treatment and there is no other identifier
-        height: 2.5em;
-        margin-bottom: 0;
-      }
       &:not(:last-child) {
         margin-bottom: 0.75em;
       }
@@ -142,8 +187,8 @@
       .instructions {
         font-size: var(--font-down-1-rem);
       }
-      .tip:last-child {
-        // margin-bottom: 1em;
+      .toggle-password-mask {
+        position: absolute;
       }
     }
 
@@ -170,11 +215,6 @@
   .activate-new-email {
     width: 100%;
     height: 2.5em;
-  }
-
-  .ac-message,
-  .success-info {
-    margin-bottom: auto;
   }
 
   .activation-controls {
