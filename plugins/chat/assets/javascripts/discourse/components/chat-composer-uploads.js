@@ -80,7 +80,7 @@ export default class ChatComposerUploads extends Component.extend(
     this._triggerUploadsChanged();
   }
 
-  uploadDropTargetOptions() {
+  _uploadDropTargetOptions() {
     return {
       target: this.uploadDropZone || document.body,
     };
