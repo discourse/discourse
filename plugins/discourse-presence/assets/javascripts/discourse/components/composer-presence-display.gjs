@@ -99,10 +99,10 @@ export default class ComposerPresenceDisplay extends Component {
   get users() {
     let users;
     if (this.isEdit) {
-      users = this.editChannel?.get("users") || [];
+      users = this.editChannel?.users || [];
     } else {
-      const replyUsers = this.replyChannel?.get("users") || [];
-      const whisperUsers = this.whisperChannel?.get("users") || [];
+      const replyUsers = this.replyChannel?.users || [];
+      const whisperUsers = this.whisperChannel?.users || [];
       users = [...replyUsers, ...whisperUsers];
     }
 

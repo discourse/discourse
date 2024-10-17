@@ -40,8 +40,8 @@ export default class TopicPresenceDisplay extends Component {
 
   @cached
   get users() {
-    const replyUsers = this.replyChannel?.get("users") || [];
-    const whisperUsers = this.whisperChannel?.get("users") || [];
+    const replyUsers = this.replyChannel?.users || [];
+    const whisperUsers = this.whisperChannel?.users || [];
 
     return [...replyUsers, ...whisperUsers].filter(
       (u) => u.id !== this.currentUser.id
