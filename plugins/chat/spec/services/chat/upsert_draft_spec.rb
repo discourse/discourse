@@ -2,13 +2,11 @@
 
 RSpec.describe Chat::UpsertDraft do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(data: nil, channel_id: nil, thread_id: nil) }
-
     it { is_expected.to validate_presence_of :channel_id }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -18,9 +16,8 @@ RSpec.describe Chat::UpsertDraft do
     let(:data) { nil }
     let(:channel_id) { channel_1.id }
     let(:thread_id) { nil }
-    let(:params) do
-      { guardian: guardian, channel_id: channel_id, thread_id: thread_id, data: data }
-    end
+    let(:params) { { channel_id:, thread_id:, data: } }
+    let(:dependencies) { { guardian: } }
 
     before do
       SiteSetting.chat_enabled = true
@@ -41,7 +38,7 @@ RSpec.describe Chat::UpsertDraft do
       it "updates draft if data provided and existing draft" do
         params[:data] = MultiJson.dump(message: "a")
 
-        described_class.call(**params)
+        described_class.call(params:, **dependencies)
 
         params[:data] = MultiJson.dump(message: "b")
 
@@ -52,7 +49,7 @@ RSpec.describe Chat::UpsertDraft do
       it "destroys draft if empty data provided and existing draft" do
         params[:data] = MultiJson.dump(message: "a")
 
-        described_class.call(**params)
+        described_class.call(params:, **dependencies)
 
         params[:data] = ""
 
@@ -62,7 +59,7 @@ RSpec.describe Chat::UpsertDraft do
       it "destroys draft if no data provided and existing draft" do
         params[:data] = MultiJson.dump(message: "a")
 
-        described_class.call(**params)
+        described_class.call(params:, **dependencies)
 
         params[:data] = nil
 

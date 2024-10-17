@@ -3,10 +3,8 @@
 class AdminNotices::Dismiss
   include Service::Base
 
-  model :admin_notice, optional: true
-
   policy :invalid_access
-
+  model :admin_notice, optional: true
   transaction do
     step :destroy
     step :reset_problem_check
@@ -14,12 +12,12 @@ class AdminNotices::Dismiss
 
   private
 
-  def fetch_admin_notice(id:)
-    AdminNotice.find_by(id: id)
-  end
-
   def invalid_access(guardian:)
     guardian.is_admin?
+  end
+
+  def fetch_admin_notice(params:)
+    AdminNotice.find_by(id: params[:id])
   end
 
   def destroy(admin_notice:)
