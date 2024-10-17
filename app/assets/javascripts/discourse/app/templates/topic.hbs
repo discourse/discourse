@@ -235,8 +235,6 @@
 
       {{#if this.site.mobileView}}
         <div id="topic-footer-info">
-
-          hey
           <TopicNavigation
             @topic={{this.model}}
             @jumpToDate={{action "jumpToDate"}}
@@ -307,7 +305,7 @@
             <PluginOutlet
               @name="topic-navigation-bottom"
               @connectorTagName="div"
-              @outletArgs={{hash model=this.model}}
+              @outletArgs={{hash model=this.model site=this.site}}
             />
           </TopicNavigation>
         </div>
@@ -523,7 +521,7 @@
             <PluginOutlet
               @name="topic-above-footer-buttons"
               @connectorTagName="div"
-              @outletArgs={{hash model=this.model}}
+              @outletArgs={{hash model=this.model site=this.site}}
             />
           </span>
 
