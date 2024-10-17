@@ -1,3 +1,4 @@
+{{! template-lint-disable no-duplicate-id }}
 <div class="topic-footer-main-buttons">
   <div class="topic-footer-main-buttons__actions">
     <TopicAdminMenu
@@ -135,12 +136,11 @@
   />
 {{/if}}
 
-  <PluginOutlet
-    @name="after-topic-footer-main-buttons"
-    @outletArgs={{hash topic=this.topic}}
-    @connectorTagName="span"
-  />
-</div>
+<PluginOutlet
+  @name="after-topic-footer-main-buttons"
+  @outletArgs={{hash topic=this.topic}}
+  @connectorTagName="span"
+/>
 
 {{#if this.showNotificationUserTip}}
   <UserTip
