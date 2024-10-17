@@ -71,41 +71,8 @@ export default class ThemeCard extends Component {
   <template>
     <AdminConfigAreaCard
       class={{concatClass "theme-card" (if @theme.default "-active")}}
+      @translatedHeading={{@theme.name}}
     >
-      <:header>
-        {{@theme.name}}
-        {{#if @theme.isPendingUpdates}}
-          <DButton
-            @route="adminCustomizeThemes.show"
-            @routeModels={{this.themeRouteModels}}
-            @icon="sync"
-            @class="btn btn-flat theme-card__button"
-            @title="admin.customize.theme.updates_available_tooltip"
-            @preventFocus={{true}}
-          />
-        {{else}}
-          {{#if @theme.isBroken}}
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="exclamation-circle"
-              @class="btn btn-flat theme-card__button broken-indicator"
-              @title="admin.customize.theme.broken_theme_tooltip"
-              @preventFocus={{true}}
-            />
-          {{/if}}
-          {{#unless @theme.enabled}}
-            <DButton
-              @route="adminCustomizeThemes.show"
-              @routeModels={{this.themeRouteModels}}
-              @icon="ban"
-              @class="btn btn-flat theme-card__button broken-indicator light-grey-icon"
-              @title="admin.customize.theme.disabled_component_tooltip"
-              @preventFocus={{true}}
-            />
-          {{/unless}}
-        {{/if}}
-      </:header>
       <:content>
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot}}
