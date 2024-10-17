@@ -14,13 +14,13 @@ module Chat
     class HandleCategoryUpdated
       include Service::Base
 
+      policy :chat_enabled
       contract do
         attribute :category_id, :integer
 
         validates :category_id, presence: true
       end
       step :assign_defaults
-      policy :chat_enabled
       model :category
       model :category_channel_ids
       model :users

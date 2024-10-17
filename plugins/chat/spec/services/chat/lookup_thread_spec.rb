@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::LookupThread do
-  describe Chat::LookupThread::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -16,7 +16,8 @@ RSpec.describe Chat::LookupThread do
     fab!(:other_thread) { Fabricate(:chat_thread) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id } }
+    let(:params) { { thread_id: thread.id, channel_id: thread.channel_id } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
       it { is_expected.to run_successfully }
