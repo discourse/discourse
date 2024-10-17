@@ -74,7 +74,7 @@ export default class ThemeCard extends Component {
 
   @action
   async updateTheme() {
-    //TODO (martin): implement update theme logic
+    // TODO (martin): implement update theme logic
     // while updating, set class on theme-card to updating
     // class will cause card to perform animation during update
     // once update is complete, remove class and trigger a toast, saying theme is updated
@@ -130,6 +130,21 @@ export default class ThemeCard extends Component {
             >
               <:content>
                 <DropdownMenu as |dropdown|>
+                  {{#if @theme.isPendingUpdates}}
+                    <dropdown.item>
+                      <DButton
+                        @action={{this.updateTheme}}
+                        @icon="download"
+                        @class="btn-primary theme-card__button --update"
+                        @preventFocus={{true}}
+                        @translatedLabel={{i18n
+                          "admin.customize.theme.update_to_latest"
+                        }}
+                      />
+                    </dropdown.item>
+                    {{! TODO: Jordan
+                    solutions for broken, disabled states }}
+                  {{/if}}
                   <dropdown.item>
                     <a
                       href={{this.themePreviewUrl}}
@@ -149,21 +164,6 @@ export default class ThemeCard extends Component {
                       @preventFocus={{true}}
                     />
                   </dropdown.item>
-                  {{#if @theme.isPendingUpdates}}
-                    <dropdown.item>
-                      <DButton
-                        @action={{this.updateTheme}}
-                        @icon="download"
-                        @class="btn-transparent theme-card__button"
-                        @preventFocus={{true}}
-                        @translatedLabel={{i18n
-                          "admin.customize.theme.update_to_latest"
-                        }}
-                      />
-                    </dropdown.item>
-                    {{! TODO: Jordan
-                    solutions for broken, disabled states }}
-                  {{/if}}
                 </DropdownMenu>
               </:content>
             </DMenu>
