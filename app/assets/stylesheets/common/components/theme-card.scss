@@ -5,7 +5,7 @@
 
 .themes-cards-container {
   display: grid;
-  grid-template-columns: calc(66.66% - 0.5em) calc(33.33% - 0.5em);
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 1em;
 
   @media screen and (max-width: 1300px) {
