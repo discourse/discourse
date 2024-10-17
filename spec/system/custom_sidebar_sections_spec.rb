@@ -251,7 +251,7 @@ describe "Custom sidebar sections", type: :system do
     )
   end
 
-  it "does not allow to drag on mobile" do
+  it "does not allow to drag on mobile", mobile: true do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
 
     Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
@@ -264,7 +264,7 @@ describe "Custom sidebar sections", type: :system do
 
     sign_in user
 
-    visit("/latest?mobile_view=1")
+    visit("/latest")
 
     sidebar.open_on_mobile
     sidebar.edit_custom_section("My section")

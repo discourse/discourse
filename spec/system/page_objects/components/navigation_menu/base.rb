@@ -190,11 +190,17 @@ module PageObjects
         def edit_custom_section(name)
           name = name.parameterize
 
-          find(".sidebar-section[data-section-name='#{name}']").hover
-
-          find(
-            ".sidebar-section[data-section-name='#{name}'] button.sidebar-section-header-button",
-          ).click
+          if page.has_css?("html.mobile-view", wait: 0)
+            find(
+              ".sidebar-section[data-section-name='#{name}'] button.sidebar-section-header-button",
+              visible: false,
+            ).click
+          else
+            find(".sidebar-section[data-section-name='#{name}']").hover
+            find(
+              ".sidebar-section[data-section-name='#{name}'] button.sidebar-section-header-button",
+            ).click
+          end
         end
 
         private
