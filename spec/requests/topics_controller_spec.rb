@@ -2457,8 +2457,13 @@ RSpec.describe TopicsController do
 
     context "with serialize_post_user_badges" do
       fab!(:badge)
+      before do
+        theme = Fabricate(:theme)
+        theme.theme_modifier_set.update!(serialize_post_user_badges: [badge.name])
+        SiteSetting.default_theme_id = theme.id
+      end
 
-      it "correcntly returns user badges that are registred" do
+      it "correctly returns user badges that are registered" do
         first_post = topic.posts.order(:post_number).first
         first_post.user.user_badges.create!(
           badge_id: badge.id,
@@ -2466,21 +2471,25 @@ RSpec.describe TopicsController do
           granted_by: Discourse.system_user,
         )
 
-        ThemeModifierSet.update_all(serialize_post_user_badges: [badge.name])
-        SiteSetting.default_theme_id = Theme.first.id
-
         expected_payload = {
-          "users" => [{ "id" => first_post.user.id, "badge_ids" => [badge.id] }],
-          "badges" => [
-            {
+          "users" => {
+            first_post.user_id.to_s => {
+              "id" => first_post.user.id,
+              "badge_ids" => [badge.id],
+            },
+          },
+          "badges" => {
+            badge.id.to_s => {
               "id" => badge.id,
               "name" => badge.name,
+              "slug" => badge.slug,
               "description" => badge.description,
               "icon" => badge.icon,
               "image_url" => badge.image_url,
               "badge_grouping_id" => badge.badge_grouping_id,
+              "badge_type_id" => badge.badge_type_id,
             },
-          ],
+          },
         }
 
         get "/t/#{topic.slug}/#{topic.id}.json"

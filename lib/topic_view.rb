@@ -163,7 +163,8 @@ class TopicView
 
     return if !user_ids.present?
 
-    badges = Badge.where(name: badge_names, enabled: true).to_a
+    badges =
+      Badge.where("LOWER(name) IN (?)", badge_names.map(&:downcase)).where(enabled: true).to_a
 
     sql = <<~SQL
      SELECT user_id, badge_id
@@ -175,28 +176,33 @@ class TopicView
 
     user_badges = DB.query(sql, user_ids: user_ids, badge_ids: badges.map(&:id))
 
-    mapped_badges = {}
+    user_badge_mapping = {}
     user_badges.each do |user_badge|
-      mapped_badges[user_badge.user_id] ||= []
-      mapped_badges[user_badge.user_id] << user_badge.badge_id
+      user_badge_mapping[user_badge.user_id] ||= []
+      user_badge_mapping[user_badge.user_id] << user_badge.badge_id
     end
 
-    badge_array =
-      badges.map do |badge|
-        {
-          id: badge.id,
-          name: badge.name,
-          description: badge.description,
-          icon: badge.icon,
-          image_url: badge.image_url,
-          badge_grouping_id: badge.badge_grouping_id,
-        }
-      end
+    indexed_badges = {}
 
-    mapped_badges =
-      mapped_badges.to_a.map { |user_id, badge_ids| { id: user_id, badge_ids: badge_ids } }
+    badges.each do |badge|
+      indexed_badges[badge.id] = {
+        id: badge.id,
+        name: badge.name,
+        slug: badge.slug,
+        description: badge.description,
+        icon: badge.icon,
+        image_url: badge.image_url,
+        badge_grouping_id: badge.badge_grouping_id,
+        badge_type_id: badge.badge_type_id,
+      }
+    end
 
-    { users: mapped_badges, badges: badge_array }
+    user_badge_mapping =
+      user_badge_mapping
+        .map { |user_id, badge_ids| [user_id, { id: user_id, badge_ids: badge_ids }] }
+        .to_h
+
+    { users: user_badge_mapping, badges: indexed_badges }
   end
 
   def show_read_indicator?

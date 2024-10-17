@@ -1152,6 +1152,10 @@ export default class PostStream extends RestModel {
       headers,
     }).then((result) => {
       this._setSuggestedTopics(result);
+      if (result.user_badges) {
+        this.topic.user_badges ??= {};
+        Object.assign(this.topic.user_badges, result.user_badges);
+      }
 
       const posts = get(result, "post_stream.posts");
 
