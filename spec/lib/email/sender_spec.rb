@@ -666,7 +666,7 @@ RSpec.describe Email::Sender do
 
           @secure_image_2 =
             UploadCreator.new(
-              file_from_fixtures("logo-dev.png", "images"),
+              file_from_fixtures("logo.png", "images"),
               "something-cool.png",
             ).create_for(Discourse.system_user.id)
           @secure_image_2.update_secure_status(override: true)

@@ -184,8 +184,7 @@ class CookedPostProcessor
     end
 
     generate_thumbnail =
-      original_width >= SiteSetting.max_image_width ||
-        original_height >= SiteSetting.max_image_height
+      original_width > SiteSetting.max_image_width || original_height > SiteSetting.max_image_height
 
     user_width, user_height = [original_width, original_height] if user_width.to_i <= 0 &&
       user_height.to_i <= 0
