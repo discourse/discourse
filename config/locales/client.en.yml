@@ -5909,6 +5909,7 @@ en:
             other: "%{count} selected"
           cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          broken_theme: "Disable broken theme"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
