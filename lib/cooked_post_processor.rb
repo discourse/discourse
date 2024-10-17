@@ -277,8 +277,9 @@ class CookedPostProcessor
     lightbox.add_child(img)
 
     # then, the link to our larger image
-    src_url = Upload.secure_uploads_url?(img["src"]) ? img["src"] : upload&.url
+    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url || img["src"] : img["src"]
     src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
+
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
