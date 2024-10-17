@@ -173,23 +173,6 @@
       </button>
     {{/if}}
 
-    {{#if this.currentUser}}
-      <TopicNotificationsButton
-        @notificationLevel={{@model.details.notification_level}}
-        @topic={{@model}}
-        @showFullTitle={{false}}
-        @appendReason={{false}}
-        @placement="bottom-end"
-        @showCaret={{false}}
-      />
-      {{#if @mobileView}}
-        <TopicAdminMenu
-          @topic={{@model}}
-          @addKeyboardTargetClass={{true}}
-          @openUpwards={{true}}
-        />
-      {{/if}}
-    {{/if}}
     <PluginOutlet
       @name="timeline-footer-controls-after"
       @outletArgs={{hash model=@model fullscreen=@fullscreen}}
