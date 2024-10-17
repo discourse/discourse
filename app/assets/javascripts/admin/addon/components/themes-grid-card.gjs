@@ -27,16 +27,6 @@ export default class ThemeCard extends Component {
     return ["themes", this.args.theme.id];
   }
 
-  get childrenString() {
-    return this.args.theme.childThemes.reduce((acc, theme, idx) => {
-      if (idx === this.args.theme.childThemes.length - 1) {
-        return acc + theme.name;
-      } else {
-        return acc + theme.name + ", ";
-      }
-    }, "");
-  }
-
   get themePreviewUrl() {
     return `/admin/themes/${this.args.theme.id}/preview`;
   }
@@ -131,12 +121,6 @@ export default class ThemeCard extends Component {
         <div class="theme-card__content">
           {{#if @theme.description}}
             <p class="theme-card__description">{{@theme.description}}</p>
-          {{/if}}
-          {{#if @theme.childThemes}}
-            <span class="theme-card__components">{{i18n
-                "admin.customize.theme.components"
-              }}:
-              {{htmlSafe this.childrenString}}</span>
           {{/if}}
         </div>
         <div class="theme-card__footer">
