@@ -1,0 +1,23 @@
+.sidebar-section-wrapper {
+  padding-block: 0.35rem;
+  border-bottom: 1px solid var(--secondary-very-high);
+  &:first-child {
+    padding-top: 0;
+  }
+  &[data-section-name="user-threads"] {
+    padding-bottom: 0;
+  }
+
+  &:hover {
+    .sidebar-section-header-wrapper {
+      .btn.dropdown-select-box-header,
+      .sidebar-section-header-button {
+        opacity: 1;
+      }
+    }
+  }
+
+  .sidebar-section-header-wrapper {
+    padding-right: calc(var(--d-sidebar-row-horizontal-padding) / 3);
+  }
+}
