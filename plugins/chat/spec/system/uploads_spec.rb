@@ -20,25 +20,19 @@ describe "Uploading files in chat messages", type: :system do
     it "allows to drag files to start upload" do
       chat.visit_channel(channel_1)
 
-      drop_zone = find(".chat-channel")
-
       # Define the JavaScript to simulate dragging an external image
       page.execute_script(<<-JS)
-        function simulateExternalImageDrop(target) {
-          const dataTransfer = new DataTransfer();
+        const target = document.querySelector('.chat-channel');
+        const dataTransfer = new DataTransfer();
+        const file = new File(['dummy content'], 'test-image.png', { type: 'image/png' });
 
-          const file = new File(['dummy content'], 'test-image.png', { type: 'image/png' });
-          dataTransfer.items.add(file);
+        dataTransfer.items.add(file);
 
-          const dragEnterEvent = new DragEvent('dragenter', { dataTransfer: dataTransfer });
-          target.dispatchEvent(dragEnterEvent);
+        const dragEnterEvent = new DragEvent('dragenter', { dataTransfer: dataTransfer });
+        target.dispatchEvent(dragEnterEvent);
 
-          const dragOverEvent = new DragEvent('dragover', { dataTransfer: dataTransfer });
-          target.dispatchEvent(dragOverEvent);
-        }
-
-        const dropZone = document.querySelector('.chat-channel');
-        simulateExternalImageDrop(dropZone);
+        const dragOverEvent = new DragEvent('dragover', { dataTransfer: dataTransfer });
+        target.dispatchEvent(dragOverEvent);
       JS
 
       expect(find(".chat-upload-drop-zone__text__title")).to have_content(
