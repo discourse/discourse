@@ -54,6 +54,7 @@ const DEFAULT_CONFIG = {
   useMultipartUploadsIfAvailable: false,
   uppyReady: null,
   onProgressUploadsChanged: null,
+  type: null,
 };
 
 // Merges incoming config with defaults, without actually evaluating
@@ -130,6 +131,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance?.close();
   }
 
+  @bind
   setup(fileInputEl) {
     this._fileInputEl = fileInputEl;
 
@@ -469,7 +471,7 @@ export default class UppyUpload {
   }
 
   @bind
-  _cancelSingleUpload(data) {
+  cancelSingleUpload(data) {
     this.uppyWrapper.uppyInstance.removeFile(data.fileId);
     this.#removeInProgressUpload(data.fileId);
   }

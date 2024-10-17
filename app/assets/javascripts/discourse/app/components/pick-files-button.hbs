@@ -7,6 +7,7 @@
 {{/if}}
 {{#if this.acceptsAllFormats}}
   <input
+    {{did-insert (or @registerFileInput (noop))}}
     type="file"
     id={{this.fileInputId}}
     class={{this.fileInputClass}}
@@ -15,6 +16,7 @@
   />
 {{else}}
   <input
+    {{did-insert (or @registerFileInput (noop))}}
     type="file"
     id={{this.fileInputId}}
     class={{this.fileInputClass}}
