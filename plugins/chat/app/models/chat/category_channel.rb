@@ -11,11 +11,13 @@ module Chat
       define_method(name) { true }
     end
 
+    # NOTE: keep in sync with `chat_allowed_groups`'s mandatory values
+    STAFF_GROUP_IDS = Group::AUTO_GROUPS.values_at(:admins, :moderators, :staff)
+
     def allowed_group_ids
       return if !read_restricted?
 
-      staff_groups = Group::AUTO_GROUPS.slice(:staff, :moderators, :admins).values
-      category.secure_group_ids.to_a.concat(staff_groups)
+      STAFF_GROUP_IDS | category.secure_group_ids
     end
 
     def title(_ = nil)

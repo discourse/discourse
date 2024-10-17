@@ -8,8 +8,8 @@ chat:
   chat_allowed_groups:
     type: group_list
     list_type: compact
-    default: "1|2|11" # @admins, @moderators, @trust_level_1
-    mandatory_values: "1|2" # @admins, @moderators
+    default: "1|2|3|11" # @admins, @moderators, @staff, @trust_level_1
+    mandatory_values: "1|2|3" # @admins, @moderators, @staff
     allow_any: false
     refresh: true
   chat_threads_enabled:
