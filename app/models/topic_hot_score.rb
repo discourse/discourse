@@ -145,6 +145,8 @@ class TopicHotScore < ActiveRecord::Base
     SQL
 
     DB.exec(sql, args)
+
+    DiscourseEvent.trigger(:topic_hot_scores_updated)
   end
 end
 
