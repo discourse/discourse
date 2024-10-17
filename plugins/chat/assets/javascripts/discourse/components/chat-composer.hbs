@@ -117,13 +117,16 @@
   </div>
 
   {{#if this.canAttachUploads}}
-    <ChatComposerUploads
-      @fileUploadElementId={{this.fileUploadElementId}}
-      @onUploadChanged={{this.onUploadChanged}}
-      @existingUploads={{this.draft.uploads}}
-      @uploadDropZone={{@uploadDropZone}}
-      @composerInputEl={{this.composer.textarea.element}}
-    />
+    {{#each (array this.draft)}}
+      {{! using #each to re-render component when draft changes}}
+      <ChatComposerUploads
+        @fileUploadElementId={{this.fileUploadElementId}}
+        @onUploadChanged={{this.onUploadChanged}}
+        @existingUploads={{this.draft.uploads}}
+        @uploadDropZone={{@uploadDropZone}}
+        @composerInputEl={{this.composer.textarea.element}}
+      />
+    {{/each}}
   {{/if}}
 
   <div class="chat-replying-indicator-container">
