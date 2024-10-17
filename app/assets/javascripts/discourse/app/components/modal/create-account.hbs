@@ -85,11 +85,6 @@
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            {{!-- {{#unless this.usernameValidation.reason}}
-              <span class="more-info" id="username-validation-more-info">
-                {{i18n "user.username.instructions"}}
-              </span>
-            {{/unless}} --}}
           </div>
 
           <PluginOutlet
@@ -125,11 +120,6 @@
                     @validation={{this.passwordValidation}}
                     id="password-validation"
                   />
-                  {{!-- {{#unless this.passwordValidation.reason}}
-                    <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordInstructions}}
-                    </span>
-                  {{/unless}} --}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -213,11 +203,6 @@
                 @validation={{this.nameValidation}}
                 id="fullname-validation"
               />
-              {{!-- {{#unless this.nameValidation.reason}}
-                <span class="more-info" id="fullname-validation-more-info">
-                  {{this.nameInstructions}}
-                </span>
-              {{/unless}} --}}
             {{/if}}
           </div>
 
