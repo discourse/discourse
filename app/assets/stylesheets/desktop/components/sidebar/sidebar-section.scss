@@ -17,13 +17,6 @@
     }
   }
 
-  .btn.dropdown-select-box-header,
-  .sidebar-section-header-button {
-    .discourse-touch & {
-      opacity: 1;
-    }
-  }
-
   .sidebar-section-header-wrapper {
     padding-right: calc(var(--d-sidebar-row-horizontal-padding) / 3);
   }
