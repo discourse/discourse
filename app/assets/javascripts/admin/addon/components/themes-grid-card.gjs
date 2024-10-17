@@ -86,6 +86,12 @@ export default class ThemeCard extends Component {
       @translatedHeading={{@theme.name}}
     >
       <:content>
+        {{#if @theme.isPendingUpdates}}
+          <span
+            title={{i18n "admin.customize.theme.updates_available_tooltip"}}
+            class="theme-card__update-available"
+          >{{icon "info-circle"}}</span>
+        {{/if}}
         <div class="theme-card__image-wrapper">
           {{#if @theme.screenshot}}
             <img

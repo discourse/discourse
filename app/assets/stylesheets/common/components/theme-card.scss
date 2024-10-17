@@ -35,6 +35,16 @@
     color: var(--danger);
   }
 
+  &__update-available {
+    position: absolute;
+    right: -9px;
+    top: -9px;
+    color: var(--success);
+    font-size: var(--font-up-1);
+    background: var(--secondary);
+    display: flex;
+  }
+
   &__icons {
     display: flex;
   }
