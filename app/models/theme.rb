@@ -756,9 +756,7 @@ class Theme < ActiveRecord::Base
   def update_setting(setting_name, new_value)
     target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
-
     target_setting.value = new_value
-
     self.theme_setting_requests_refresh = true if target_setting.requests_refresh?
   end
 

@@ -478,4 +478,14 @@ export default class Post extends RestModel {
   get topicNotificationLevel() {
     return this.topic.details.notification_level;
   }
+
+  get userBadges() {
+    if (!this.topic?.user_badges) {
+      return;
+    }
+    const badgeIds = this.topic.user_badges.users[this.user_id]?.badge_ids;
+    if (badgeIds) {
+      return badgeIds.map((badgeId) => this.topic.user_badges.badges[badgeId]);
+    }
+  }
 }
