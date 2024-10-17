@@ -25,6 +25,10 @@ module PageObjects
         within(modal) { has_css?(".copy-button") }
       end
 
+      def has_invite_link_input?
+        within(modal) { has_css?("input.invite-link") }
+      end
+
       def invite_link_input
         within(modal) { find("input.invite-link") }
       end

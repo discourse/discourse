@@ -57,6 +57,37 @@ describe "Creating Invites", type: :system do
     expect(invites[0].expiry_date).to be_within(2.minutes).of(Time.zone.now + 3.days)
   end
 
+  it "has the correct modal title when creating a new invite" do
+    expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.new_title"))
+  end
+
+  it "hides the modal footer after creating an invite via simple mode" do
+    expect(create_invite_modal).to have_footer
+    create_invite_modal.save_button.click
+    expect(create_invite_modal).to have_no_footer
+  end
+
+  context "when editing an invite" do
+    before do
+      create_invite_modal.save_button.click
+      create_invite_modal.close
+      invites = user_invited_pending_page.invites_list
+
+      expect(invites.size).to eq(1)
+
+      invites[0].edit_button.click
+    end
+
+    it "has the correct modal title" do
+      expect(create_invite_modal.header).to have_text(I18n.t("js.user.invited.invite.edit_title"))
+    end
+
+    it "displays the invite link and a copy button" do
+      expect(create_invite_modal).to have_copy_button
+      expect(create_invite_modal).to have_invite_link_input
+    end
+  end
+
   context "with the advanced options" do
     before { display_advanced_options }
 
@@ -145,6 +176,55 @@ describe "Creating Invites", type: :system do
       expect(invites[0]).to have_group(another_group)
       expect(invites[0]).to have_topic(topic)
       expect(invites[0].expiry_date).to be_within(2.minutes).of(Time.zone.now + 1.day)
+    end
+
+    it "adds the invite_expiry_days site setting to the list of options for the expiresAfterDays field" do
+      options =
+        create_invite_modal
+          .form
+          .field("expiresAfterDays")
+          .component
+          .all(".form-kit__control-option")
+          .map(&:text)
+      expect(options).to eq(["1 day", "3 days", "7 days", "30 days", "90 days", "Never"])
+
+      SiteSetting.invite_expiry_days = 90
+
+      options =
+        create_invite_modal
+          .form
+          .field("expiresAfterDays")
+          .component
+          .all(".form-kit__control-option")
+          .map(&:text)
+      expect(options).to eq(["1 day", "7 days", "30 days", "90 days", "Never"])
+    end
+
+    it "uses the invite_link_max_redemptions_limit_users setting as the default value for the maxRedemptions field if the setting is lower than 10" do
+      expect(create_invite_modal.form.field("maxRedemptions").value).to eq("7")
+
+      SiteSetting.invite_link_max_redemptions_limit_users = 11
+      page.refresh
+      open_invite_modal
+      display_advanced_options
+
+      expect(create_invite_modal.form.field("maxRedemptions").value).to eq("10")
+    end
+
+    it "uses the invite_link_max_redemptions_limit setting as the default value for the maxRedemptions field for staff users if the setting is lower than 100" do
+      user.update!(admin: true)
+      page.refresh
+      open_invite_modal
+      display_advanced_options
+
+      expect(create_invite_modal.form.field("maxRedemptions").value).to eq("63")
+
+      SiteSetting.invite_link_max_redemptions_limit = 108
+      page.refresh
+      open_invite_modal
+      display_advanced_options
+
+      expect(create_invite_modal.form.field("maxRedemptions").value).to eq("100")
     end
 
     it "shows the inviteToGroups field for a normal user if they're owner on at least 1 group" do

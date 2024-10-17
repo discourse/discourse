@@ -5,13 +5,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and } from "truth-helpers";
+import { and, notEq, or } from "truth-helpers";
+import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import FutureDateInput from "discourse/components/future-date-input";
-import ShareOrCopyInviteLink from "discourse/components/share-or-copy-invite-link";
 import { extractError } from "discourse/lib/ajax-error";
+import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
@@ -32,7 +33,7 @@ export default class CreateInvite extends Component {
   @tracked displayAdvancedOptions = false;
 
   @tracked flashText = null;
-  @tracked flashClass = null;
+  @tracked flashClass = "info";
 
   @tracked topics = this.invite.topics ?? this.model.topics ?? [];
   @tracked allGroups = null;
@@ -137,8 +138,11 @@ export default class CreateInvite extends Component {
       if (invites && !invites.any((i) => i.id === this.invite.id)) {
         invites.unshiftObject(this.invite);
       }
-      this.flashText = sanitize(I18n.t("user.invited.invite.invite_saved"));
-      this.flashClass = "success";
+
+      if (!this.simpleMode) {
+        this.flashText = sanitize(I18n.t("user.invited.invite.invite_saved"));
+        this.flashClass = "success";
+      }
     } catch (error) {
       this.flashText = sanitize(extractError(error));
       this.flashClass = "error";
@@ -252,30 +256,26 @@ export default class CreateInvite extends Component {
       @hideFooter={{and this.simpleMode this.inviteCreated}}
     >
       <:belowHeader>
-        {{#if @model.editing}}
-          <div id="modal-alert" role="alert" class="alert alert-info">
-            <div class="input-group invite-link">
-              <label for="invite-link">{{htmlSafe this.flashText}}
-                {{i18n "user.invited.invite.copy_link_and_share_it"}}</label>
-              <div class="link-share-container">
-                <ShareOrCopyInviteLink @invite={{this.invite}} />
-              </div>
-            </div>
-          </div>
-        {{else if (and this.flashText this.displayAdvancedOptions)}}
-          <div
-            id="modal-alert"
-            role="alert"
-            class="alert alert-{{this.flashClass}}"
+        {{#if (or this.flashText @model.editing)}}
+          <InviteModalAlert
+            @invite={{this.invite}}
+            @alertClass={{this.flashClass}}
+            @showInviteLink={{and
+              this.inviteCreated
+              (notEq this.flashClass "error")
+            }}
           >
-            <div class="input-group invite-link">
-              <label for="invite-link">{{htmlSafe this.flashText}}
-                {{i18n "user.invited.invite.instructions"}}</label>
-              <div class="link-share-container">
-                <ShareOrCopyInviteLink @invite={{this.invite}} />
-              </div>
-            </div>
-          </div>
+            {{#if this.flashText}}
+              {{htmlSafe this.flashText}}
+            {{/if}}
+            {{#if (and this.inviteCreated (notEq this.flashClass "error"))}}
+              {{#if @model.editing}}
+                {{i18n "user.invited.invite.copy_link_and_share_it"}}
+              {{else}}
+                {{i18n "user.invited.invite.instructions"}}
+              {{/if}}
+            {{/if}}
+          </InviteModalAlert>
         {{/if}}
       </:belowHeader>
       <:body>
@@ -451,5 +451,53 @@ export default class CreateInvite extends Component {
         />
       </:footer>
     </DModal>
+  </template>
+}
+
+const InviteModalAlert = <template>
+  <div id="modal-alert" role="alert" class="alert alert-{{@alertClass}}">
+    <div class="input-group invite-link">
+      <label for="invite-link">
+        {{yield}}
+      </label>
+      {{#if @showInviteLink}}
+        <div class="link-share-container">
+          <ShareOrCopyInviteLink @invite={{@invite}} />
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</template>;
+
+class ShareOrCopyInviteLink extends Component {
+  @service capabilities;
+
+  @action
+  async nativeShare() {
+    await nativeShare(this.capabilities, { url: this.args.invite.link });
+  }
+
+  <template>
+    <input
+      name="invite-link"
+      type="text"
+      class="invite-link"
+      value={{@invite.link}}
+      readonly={{true}}
+    />
+    {{#if (canNativeShare this.capabilities)}}
+      <DButton
+        class="btn-primary"
+        @icon="share"
+        @translatedLabel={{i18n "user.invited.invite.share_link"}}
+        @action={{this.nativeShare}}
+      />
+    {{else}}
+      <CopyButton
+        @selector="input.invite-link"
+        @translatedLabel={{i18n "user.invited.invite.copy_link"}}
+        @translatedLabelAfterCopy={{i18n "user.invited.invite.link_copied"}}
+      />
+    {{/if}}
   </template>
 }
