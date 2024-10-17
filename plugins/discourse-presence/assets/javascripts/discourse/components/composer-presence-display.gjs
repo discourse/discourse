@@ -18,7 +18,7 @@ export default class ComposerPresenceDisplay extends Component {
   @tracked editChannel;
 
   setupReplyChannel = modifier(() => {
-    const topic = this.args.model.get("topic");
+    const topic = this.args.model.topic;
     if (!topic || !this.isReply) {
       return;
     }
@@ -33,9 +33,8 @@ export default class ComposerPresenceDisplay extends Component {
   });
 
   setupWhisperChannel = modifier(() => {
-    const topic = this.args.model.get("topic");
     if (
-      !topic ||
+      !this.args.model.topic ||
       !this.isReply ||
       !this.currentUser.staff ||
       !this.currentUser.whisperer
@@ -44,7 +43,7 @@ export default class ComposerPresenceDisplay extends Component {
     }
 
     const whisperChannel = this.presence.getChannel(
-      `/discourse-presence/whisper/${topic.id}`
+      `/discourse-presence/whisper/${this.args.model.topic.id}`
     );
     whisperChannel.subscribe();
     this.whisperChannel = whisperChannel;
@@ -53,13 +52,12 @@ export default class ComposerPresenceDisplay extends Component {
   });
 
   setupEditChannel = modifier(() => {
-    const post = this.args.model.get("post");
-    if (!post || !this.isEdit) {
+    if (!this.args.model.post || !this.isEdit) {
       return;
     }
 
     const editChannel = this.presence.getChannel(
-      `/discourse-presence/edit/${post.id}`
+      `/discourse-presence/edit/${this.args.model.post.id}`
     );
     editChannel.subscribe();
     this.editChannel = editChannel;
@@ -68,9 +66,7 @@ export default class ComposerPresenceDisplay extends Component {
   });
 
   notifyState = modifier(() => {
-    const topic = this.args.model.get("topic");
-    const post = this.args.model.get("post");
-    const reply = this.args.model.get("reply");
+    const { topic, post, reply } = this.args.model;
     const raw = this.isEdit ? post?.raw || "" : "";
     const entity = this.isEdit ? post : topic;
 
@@ -90,11 +86,11 @@ export default class ComposerPresenceDisplay extends Component {
   }
 
   get state() {
-    if (this.args.model.get("editingPost")) {
+    if (this.args.model.editingPost) {
       return "edit";
-    } else if (this.args.model.get("whisper")) {
+    } else if (this.args.model.whisper) {
       return "whisper";
-    } else if (this.args.model.get("replyingToTopic")) {
+    } else if (this.args.model.replyingToTopic) {
       return "reply";
     }
   }
@@ -103,10 +99,10 @@ export default class ComposerPresenceDisplay extends Component {
   get users() {
     let users;
     if (this.isEdit) {
-      users = this.editChannel?.users || [];
+      users = this.editChannel?.get("users") || [];
     } else {
-      const replyUsers = this.replyChannel?.users || [];
-      const whisperUsers = this.whisperChannel?.users || [];
+      const replyUsers = this.replyChannel?.get("users") || [];
+      const whisperUsers = this.whisperChannel?.get("users") || [];
       users = [...replyUsers, ...whisperUsers];
     }
 

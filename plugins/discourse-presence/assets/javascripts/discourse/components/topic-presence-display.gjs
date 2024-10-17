@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { gt } from "truth-helpers";
@@ -19,9 +19,7 @@ export default class TopicPresenceDisplay extends Component {
     replyChannel.subscribe();
     this.replyChannel = replyChannel;
 
-    return () => {
-      replyChannel.unsubscribe();
-    };
+    return () => replyChannel.unsubscribe();
   });
 
   setupWhisperChannels = modifier(() => {
@@ -29,15 +27,11 @@ export default class TopicPresenceDisplay extends Component {
       return;
     }
 
-    const whisperChannel = (this.whisperChannel = this.presence.getChannel(
-      this.whisperChannelName
-    ));
+    const whisperChannel = this.presence.getChannel(this.whisperChannelName);
     whisperChannel.subscribe();
     this.whisperChannel = whisperChannel;
 
-    return () => {
-      whisperChannel.unsubscribe();
-    };
+    return () => whisperChannel.unsubscribe();
   });
 
   get replyChannelName() {
@@ -48,6 +42,7 @@ export default class TopicPresenceDisplay extends Component {
     return `/discourse-presence/whisper/${this.args.topic.id}`;
   }
 
+  @cached
   get users() {
     const replyUsers = this.replyChannel?.get("users") || [];
     const whisperUsers = this.whisperChannel?.get("users") || [];
