@@ -15,6 +15,7 @@
             @autofocus="autofocus"
             @name="automation-name"
             class="input-large"
+            @input={{action (mut automationForm.name) value="target.value"}}
           />
         </div>
       </div>
