@@ -83,9 +83,9 @@
   .tip {
     font-size: var(--font-down-1);
     min-height: 1.4em;
+    display: block;
     &.bad {
       color: var(--danger);
-      display: block;
     }
   }
 
@@ -182,7 +182,8 @@
         flex-direction: column;
         overflow: auto;
         gap: 0;
-        .d-modal__footer {
+        .d-modal__footer,
+        .btn-social {
           font-size: var(--font-down-1);
         }
         .login-left-side {

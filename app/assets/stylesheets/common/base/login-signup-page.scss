@@ -65,7 +65,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-bottom: 0.8em;
+    margin-bottom: 1em;
 
     input,
     .select-kit-header {
@@ -209,15 +209,17 @@
   }
 
   .tip {
+    font-size: var(--font-down-1);
     min-height: 1.4em;
+    display: block;
     &.bad {
       color: var(--danger);
-      display: block;
     }
   }
 
   .more-info,
   .instructions {
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
     overflow-wrap: anywhere;
     transition: opacity 0.2s ease;

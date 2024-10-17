@@ -50,15 +50,16 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            <InputTip
-              @validation={{this.emailValidation}}
-              id="account-email-validation"
-            />
-            {{#unless this.emailValidation.reason}}
+            {{#if this.emailValidation.reason}}
+              <InputTip
+                @validation={{this.emailValidation}}
+                id="account-email-validation"
+              />
+            {{else}}
               <span class="more-info" id="account-email-validation-more-info">
                 {{i18n "user.email.instructions"}}
               </span>
-            {{/unless}}
+            {{/if}}
           </div>
 
           <div class="input-group create-account__username">
@@ -192,7 +193,7 @@
                 class={{value-entered this.accountName}}
               />
               <label class="alt-placeholder" for="new-account-name">
-                {{i18n this.nameTitle}}
+                {{this.nameTitle}}
               </label>
 
               <InputTip
