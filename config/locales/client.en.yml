@@ -1775,6 +1775,7 @@ en:
 
       name:
         title: "Name"
+        title_optional: "Name (optional)"
         instructions: "Your full name (optional)"
         instructions_required: "Your full name"
         required: "Please enter a name"

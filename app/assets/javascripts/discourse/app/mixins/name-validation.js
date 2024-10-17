@@ -6,11 +6,11 @@ import I18n from "discourse-i18n";
 
 export default Mixin.create({
   @discourseComputed()
-  nameInstructions() {
+  nameTitle() {
     return I18n.t(
       this.siteSettings.full_name_required
-        ? "user.name.instructions_required"
-        : "user.name.instructions"
+        ? "user.name.title"
+        : "user.name.title_optional"
     );
   },
 
