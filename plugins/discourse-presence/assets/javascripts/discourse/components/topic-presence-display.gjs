@@ -15,7 +15,9 @@ export default class TopicPresenceDisplay extends Component {
   @tracked whisperChannel;
 
   setupReplyChannel = modifier(() => {
-    const replyChannel = this.presence.getChannel(this.replyChannelName);
+    const replyChannel = this.presence.getChannel(
+      `/discourse-presence/reply/${this.args.topic.id}`
+    );
     replyChannel.subscribe();
     this.replyChannel = replyChannel;
 
@@ -27,20 +29,14 @@ export default class TopicPresenceDisplay extends Component {
       return;
     }
 
-    const whisperChannel = this.presence.getChannel(this.whisperChannelName);
+    const whisperChannel = this.presence.getChannel(
+      `/discourse-presence/whisper/${this.args.topic.id}`
+    );
     whisperChannel.subscribe();
     this.whisperChannel = whisperChannel;
 
     return () => whisperChannel.unsubscribe();
   });
-
-  get replyChannelName() {
-    return `/discourse-presence/reply/${this.args.topic.id}`;
-  }
-
-  get whisperChannelName() {
-    return `/discourse-presence/whisper/${this.args.topic.id}`;
-  }
 
   @cached
   get users() {
