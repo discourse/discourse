@@ -34,10 +34,7 @@ export default function (helper) {
 }
 
 export function getChannelInfo(name) {
-  return (
-    channels[name] ||
-    (channels[name] = { count: 0, users: [], last_message_id: 0 })
-  );
+  return (channels[name] ||= { count: 0, users: [], last_message_id: 0 });
 }
 
 export async function joinChannel(name, user) {

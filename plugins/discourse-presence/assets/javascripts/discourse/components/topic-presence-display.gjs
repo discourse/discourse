@@ -14,23 +14,29 @@ export default class TopicPresenceDisplay extends Component {
   @tracked replyChannel;
   @tracked whisperChannel;
 
-  setupChannels = modifier(() => {
+  setupReplyChannel = modifier(() => {
     const replyChannel = this.presence.getChannel(this.replyChannelName);
     replyChannel.subscribe();
     this.replyChannel = replyChannel;
 
-    let whisperChannel;
-    if (this.currentUser.staff) {
-      whisperChannel = this.whisperChannel = this.presence.getChannel(
-        this.whisperChannelName
-      );
-      whisperChannel.subscribe();
-      this.whisperChannel = whisperChannel;
-    }
-
     return () => {
       replyChannel.unsubscribe();
-      whisperChannel?.unsubscribe();
+    };
+  });
+
+  setupWhisperChannels = modifier(() => {
+    if (!this.currentUser.staff) {
+      return;
+    }
+
+    const whisperChannel = (this.whisperChannel = this.presence.getChannel(
+      this.whisperChannelName
+    ));
+    whisperChannel.subscribe();
+    this.whisperChannel = whisperChannel;
+
+    return () => {
+      whisperChannel.unsubscribe();
     };
   });
 
@@ -52,7 +58,7 @@ export default class TopicPresenceDisplay extends Component {
   }
 
   <template>
-    <div {{this.setupChannels}}>
+    <div {{this.setupReplyChannel}} {{this.setupWhisperChannels}}>
       {{#if (gt this.users.length 0)}}
         <div class="presence-users">
           <div class="presence-avatars">

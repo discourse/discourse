@@ -17,38 +17,60 @@ export default class ComposerPresenceDisplay extends Component {
   @tracked whisperChannel;
   @tracked editChannel;
 
-  setupChannels = modifier(() => {
+  setupReplyChannel = modifier(() => {
+    const topic = this.args.model.get("topic");
+    if (!topic || !this.isReply) {
+      return;
+    }
+
+    const replyChannel = this.presence.getChannel(
+      `/discourse-presence/reply/${topic.id}`
+    );
+    replyChannel.subscribe();
+    this.replyChannel = replyChannel;
+
+    return () => replyChannel.unsubscribe();
+  });
+
+  setupWhisperChannel = modifier(() => {
+    const topic = this.args.model.get("topic");
+    if (
+      !topic ||
+      !this.isReply ||
+      !this.currentUser.staff ||
+      !this.currentUser.whisperer
+    ) {
+      return;
+    }
+
+    const whisperChannel = this.presence.getChannel(
+      `/discourse-presence/whisper/${topic.id}`
+    );
+    whisperChannel.subscribe();
+    this.whisperChannel = whisperChannel;
+
+    return () => whisperChannel.unsubscribe();
+  });
+
+  setupEditChannel = modifier(() => {
+    const post = this.args.model.get("post");
+    if (!post || !this.isEdit) {
+      return;
+    }
+
+    const editChannel = this.presence.getChannel(
+      `/discourse-presence/edit/${post.id}`
+    );
+    editChannel.subscribe();
+    this.editChannel = editChannel;
+
+    return () => editChannel?.unsubscribe();
+  });
+
+  notifyState = modifier(() => {
     const topic = this.args.model.get("topic");
     const post = this.args.model.get("post");
     const reply = this.args.model.get("reply");
-    let replyChannel;
-    let whisperChannel;
-    let editChannel;
-
-    if (topic && this.isReply) {
-      replyChannel = this.presence.getChannel(
-        `/discourse-presence/reply/${topic.id}`
-      );
-      replyChannel.subscribe();
-      this.replyChannel = replyChannel;
-
-      if (this.currentUser.staff && this.currentUser.get("whisperer")) {
-        whisperChannel = this.presence.getChannel(
-          `/discourse-presence/whisper/${topic.id}`
-        );
-        whisperChannel.subscribe();
-        this.whisperChannel = whisperChannel;
-      }
-    }
-
-    if (post && this.isEdit) {
-      editChannel = this.presence.getChannel(
-        `/discourse-presence/edit/${post.id}`
-      );
-      editChannel.subscribe();
-      this.editChannel = editChannel;
-    }
-
     const raw = this.isEdit ? post?.raw || "" : "";
     const entity = this.isEdit ? post : topic;
 
@@ -56,12 +78,7 @@ export default class ComposerPresenceDisplay extends Component {
       this.composerPresenceManager.notifyState(this.state, entity?.id);
     }
 
-    return () => {
-      replyChannel?.unsubscribe();
-      whisperChannel?.unsubscribe();
-      editChannel?.unsubscribe();
-      this.composerPresenceManager.leave();
-    };
+    return () => this.composerPresenceManager.leave();
   });
 
   get isReply() {
@@ -99,7 +116,12 @@ export default class ComposerPresenceDisplay extends Component {
   }
 
   <template>
-    <div {{this.setupChannels}}>
+    <div
+      {{this.setupReplyChannel}}
+      {{this.setupWhisperChannel}}
+      {{this.setupEditChannel}}
+      {{this.notifyState}}
+    >
       {{#if (gt this.users.length 0)}}
         <div class="presence-users">
           <div class="presence-avatars">
