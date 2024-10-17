@@ -55,6 +55,7 @@ export default class UppyComposerUpload {
   #inProgressUploads = [];
   #bufferedUploadErrors = [];
   #placeholders = {};
+  #consecutiveImages = [];
 
   #useUploadPlaceholders = true;
   #uploadTargetBound = false;
@@ -331,6 +332,13 @@ export default class UppyComposerUpload {
               extension: file.extension,
             })
           );
+
+          // Check for multiple images uploaded consecutively for adding [grid] later
+          const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+          if (imageExtensions.includes(file.extension.toLowerCase())) {
+            this.#consecutiveImages.push(file);
+          }
+
           const placeholder = this.#uploadPlaceholder(file);
           this.#placeholders[file.id] = {
             uploadPlaceholder: placeholder,
@@ -363,6 +371,8 @@ export default class UppyComposerUpload {
           getUploadMarkdown(upload)
         );
 
+        console.log(markdown, file, this, this.#consecutiveImages);
+
         cacheShortUploadUrl(upload.short_url, upload);
 
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
@@ -376,6 +386,18 @@ export default class UppyComposerUpload {
                 markdown
               );
             }
+
+            if (this.#consecutiveImages.length >= 3) {
+              console.log("composerEventPrefix", this.composerEventPrefix);
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:apply-surround`,
+                "[grid]",
+                "[/grid]",
+                "grid_surround",
+                { useBlockMode: true }
+              );
+            }
+
             this.#resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
