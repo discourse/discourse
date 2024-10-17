@@ -64,7 +64,7 @@ export default class UppyUploadDebugging {
   instrumentUploadTimings(uppy) {
     if (!this.#performanceApiSupport()) {
       warn(
-        "Some browsers do not return a PerformanceMeasure when calling this.#performanceMark, disabling instrumentation. See https://developer.mozilla.org/en-US/docs/Web/API/this.#performanceMeasure#return_value and https://bugzilla.mozilla.org/show_bug.cgi?id=1724645",
+        "Some browsers do not return a PerformanceMeasure when calling this.#performanceMark, disabling instrumentation. See https://developer.mozilla.org/en-US/docs/Web/API/Performance/measure#return_value and https://bugzilla.mozilla.org/show_bug.cgi?id=1724645",
         { id: "discourse.upload-debugging" }
       );
       return;
