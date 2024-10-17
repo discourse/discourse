@@ -471,7 +471,7 @@ export default class UppyUpload {
   }
 
   @bind
-  _cancelSingleUpload(data) {
+  cancelSingleUpload(data) {
     this.uppyWrapper.uppyInstance.removeFile(data.fileId);
     this.#removeInProgressUpload(data.fileId);
   }

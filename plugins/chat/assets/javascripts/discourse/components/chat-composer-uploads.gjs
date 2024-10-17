@@ -13,7 +13,6 @@ import ChatComposerUpload from "./chat-composer-upload";
 
 export default class ChatComposerUploads extends Component {
   @service siteSettings;
-  @service appEvents;
   @service site;
   @service mediaOptimizationWorker;
   @service chatStateManager;
@@ -85,7 +84,7 @@ export default class ChatComposerUploads extends Component {
 
   @action
   cancelUploading(upload) {
-    this.appEvents.trigger(`upload-mixin:${this.id}:cancel-upload`, {
+    this.uppyUpload.cancelSingleUpload({
       fileId: upload.id,
     });
     this.removeUpload(upload);
