@@ -9,7 +9,7 @@ module ActiveSupportTypeExtensions
     def cast_value(value)
       case value
       when String
-        value.split(",")
+        cast_value(value.split(/,(?!.*\|)|\|(?!.*,)/))
       when ::Array
         value.map { |item| Integer(item, exception: false) || item }
       else
