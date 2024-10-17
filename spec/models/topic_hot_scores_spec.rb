@@ -124,5 +124,20 @@ RSpec.describe TopicHotScore do
         TopicHotScore.where(topic_id: topic1.id).pluck(:recent_likes)
       }
     end
+
+    it "triggers an event after updating" do
+      triggered = false
+      blk = Proc.new { triggered = true }
+
+      begin
+        DiscourseEvent.on(:topic_hot_scores_updated, &blk)
+
+        TopicHotScore.update_scores
+
+        expect(triggered).to eq(true)
+      ensure
+        DiscourseEvent.off(:topic_hot_scores_updated, &blk)
+      end
+    end
   end
 end
