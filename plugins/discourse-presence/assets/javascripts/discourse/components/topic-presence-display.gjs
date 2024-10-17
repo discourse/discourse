@@ -7,7 +7,7 @@ import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import i18n from "discourse-common/helpers/i18n";
 
-export default class TopicPresenceDisplayComponent extends Component {
+export default class TopicPresenceDisplay extends Component {
   @service presence;
   @service currentUser;
 
@@ -15,22 +15,22 @@ export default class TopicPresenceDisplayComponent extends Component {
   @tracked whisperChannel;
 
   setupChannels = modifier(() => {
-    if (this.replyChannel?.name !== this.replyChannelName) {
-      this.replyChannel = this.presence.getChannel(this.replyChannelName);
-      this.replyChannel.subscribe();
-    }
+    const replyChannel = this.presence.getChannel(this.replyChannelName);
+    replyChannel.subscribe();
+    this.replyChannel = replyChannel;
 
-    if (
-      this.currentUser.staff &&
-      this.whisperChannel?.name !== this.whisperChannelName
-    ) {
-      this.whisperChannel = this.presence.getChannel(this.whisperChannelName);
-      this.whisperChannel.subscribe();
+    let whisperChannel;
+    if (this.currentUser.staff) {
+      whisperChannel = this.whisperChannel = this.presence.getChannel(
+        this.whisperChannelName
+      );
+      whisperChannel.subscribe();
+      this.whisperChannel = whisperChannel;
     }
 
     return () => {
-      this.replyChannel?.unsubscribe();
-      this.whisperChannel?.unsubscribe();
+      replyChannel.unsubscribe();
+      whisperChannel?.unsubscribe();
     };
   });
 
@@ -42,16 +42,11 @@ export default class TopicPresenceDisplayComponent extends Component {
     return `/discourse-presence/whisper/${this.args.topic.id}`;
   }
 
-  get replyUsers() {
-    return this.replyChannel?.users || [];
-  }
-
-  get whisperUsers() {
-    return this.whisperChannel?.users || [];
-  }
-
   get users() {
-    return [...this.replyUsers, ...this.whisperUsers].filter(
+    const replyUsers = this.replyChannel?.get("users") || [];
+    const whisperUsers = this.whisperChannel?.get("users") || [];
+
+    return [...replyUsers, ...whisperUsers].filter(
       (u) => u.id !== this.currentUser.id
     );
   }
