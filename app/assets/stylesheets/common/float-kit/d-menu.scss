@@ -89,3 +89,50 @@
     }
   }
 }
+
+//should probably be renamed fk-d-menu__list
+.dropdown-menu {
+  min-width: 200px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  &__item {
+    .btn {
+      padding: 0.5em 1rem;
+      width: 100%;
+      justify-content: flex-start;
+      background: rgba(0, 0, 0, 0);
+
+      &.btn-danger {
+        color: var(--danger);
+
+        .d-icon {
+          color: inherit;
+        }
+      }
+      &:hover,
+      &:focus {
+        background: var(--d-hover);
+        color: var(--primary);
+
+        .d-icon {
+          color: inherit;
+        }
+
+        &.btn-danger {
+          background: var(--danger-low);
+          color: var(--danger);
+
+          .d-icon {
+            color: var(--danger-hover);
+          }
+        }
+      }
+    }
+  }
+
+  &__divider {
+    margin: 0rem;
+  }
+}
