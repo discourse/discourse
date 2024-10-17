@@ -1751,7 +1751,7 @@ files:
     client: true
     hidden: true
   composer_ios_media_optimisation_image_enabled:
-    default: false
+    default: true
     client: true
     hidden: true
   video_thumbnails_enabled:
