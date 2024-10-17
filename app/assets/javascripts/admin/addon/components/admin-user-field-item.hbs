@@ -133,6 +133,11 @@
             </group.Field>
           </form.CheckboxGroup>
 
+          <PluginOutlet
+            @name="after-admin-user-fields"
+            @outletArgs={{hash userField=@userField form=form}}
+          />
+
           <form.Actions>
             <form.Submit
               class="save"
