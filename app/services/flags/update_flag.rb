@@ -4,12 +4,14 @@ class Flags::UpdateFlag
   include Service::Base
 
   contract do
+    attribute :id, :integer
     attribute :name, :string
     attribute :description, :string
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
 
+    validates :id, presence: true
     validates :name, presence: true
     validates :description, presence: true
     validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
@@ -28,12 +30,8 @@ class Flags::UpdateFlag
 
   private
 
-  def unique_name(id:, name:)
-    !Flag.custom.where(name: name).where.not(id: id).exists?
-  end
-
-  def fetch_flag(id:)
-    Flag.find(id)
+  def fetch_flag(contract:)
+    Flag.find_by(id: contract.id)
   end
 
   def not_system(flag:)
@@ -48,26 +46,18 @@ class Flags::UpdateFlag
     guardian.can_edit_flag?(flag)
   end
 
-  def update(flag:, name:, description:, applies_to:, require_message:, enabled:)
-    flag.update!(
-      name: name,
-      description: description,
-      applies_to: applies_to,
-      require_message: require_message,
-      enabled: enabled,
-    )
+  def unique_name(contract:)
+    !Flag.custom.where(name: contract.name).where.not(id: contract.id).exists?
+  end
+
+  def update(flag:, contract:)
+    flag.update!(contract.attributes)
   end
 
   def log(guardian:, flag:)
     StaffActionLogger.new(guardian.user).log_custom(
       "update_flag",
-      {
-        name: flag.name,
-        description: flag.description,
-        applies_to: flag.applies_to,
-        require_message: flag.require_message,
-        enabled: flag.enabled,
-      },
+      flag.slice(:name, :description, :applies_to, :require_message, :enabled),
     )
   end
 end
