@@ -5,19 +5,8 @@
 
 .themes-cards-container {
   display: grid;
-  grid-template-columns: calc(66.66% - 0.5em) calc(33.33% - 0.5em);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1em;
-
-  @media screen and (max-width: 1300px) {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-
-  &__main {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(calc(325px - 1em), 1fr));
-    gap: 1em;
-  }
 }
 
 .theme-card {
@@ -44,6 +33,16 @@
 
   .broken-indicator {
     color: var(--danger);
+  }
+
+  &__update-available {
+    position: absolute;
+    right: -9px;
+    top: -9px;
+    color: var(--success);
+    font-size: var(--font-up-1);
+    background: var(--secondary);
+    display: flex;
   }
 
   &__icons {
@@ -109,6 +108,10 @@
     margin-left: auto;
   }
 
+  &__button.--update {
+    border-radius: 0;
+  }
+
   .admin-config-area-card__header-action {
     display: flex;
     justify-content: center;
@@ -139,6 +142,5 @@
   &__title {
     display: flex;
     align-items: center;
-    gap: 0.5em;
   }
 }

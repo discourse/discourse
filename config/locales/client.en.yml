@@ -4719,6 +4719,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
+    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+
     image_removed: "(image removed)"
 
     pause_notifications:
@@ -5669,7 +5671,7 @@ en:
             move_down: "Move down"
         look_and_feel:
           title: "Look & feel"
-          description: "Themes, components, and color schemes can be used to customise and brand your Discourse site, giving it a distinctive style."
+          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -5909,6 +5911,7 @@ en:
             other: "%{count} selected"
           cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          broken_theme: "Disable broken theme"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
@@ -5972,8 +5975,8 @@ en:
             error: "This theme has been automatically disabled because it is not compatible with this version of Discourse."
             minimum: "Requires Discourse version %{version} or above."
             maximum: "Requires Discourse version %{version} or below."
-          update_to_latest: "Update to Latest"
-          check_for_updates: "Check for Updates"
+          update_to_latest: "Update to latest"
+          check_for_updates: "Check for updates"
           updating: "Updating…"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
