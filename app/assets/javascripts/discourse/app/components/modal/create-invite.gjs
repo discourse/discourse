@@ -32,15 +32,15 @@ export default class CreateInvite extends Component {
   @tracked saving = false;
   @tracked displayAdvancedOptions = false;
 
-  @tracked flashText = null;
+  @tracked flashText;
   @tracked flashClass = "info";
 
   @tracked topics = this.invite.topics ?? this.model.topics ?? [];
-  @tracked allGroups = null;
+  @tracked allGroups;
 
   model = this.args.model;
   invite = this.model.invite ?? Invite.create();
-  formApi = null;
+  formApi;
 
   constructor() {
     super(...arguments);
