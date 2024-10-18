@@ -141,6 +141,7 @@ module Chat
     def remove(user)
       Chat::ChannelMembershipManager.new(self).unfollow(user)
     end
+    alias leave remove
 
     def url
       "#{Discourse.base_url}/chat/c/#{self.slug || "-"}/#{self.id}"

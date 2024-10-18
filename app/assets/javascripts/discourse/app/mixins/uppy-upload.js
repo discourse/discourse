@@ -99,7 +99,7 @@ function configShim(component) {
     },
     get uploadDropTargetOptions() {
       return (
-        component.uploadDropTargetOptions?.() || { target: component.element }
+        component._uploadDropTargetOptions?.() || { target: component.element }
       );
     },
     get preventDirectS3Uploads() {
