@@ -161,8 +161,8 @@ export default class CreateInvite extends Component {
 
   get defaultRedemptionsAllowed() {
     const max = this.maxRedemptionsAllowedLimit;
-    const def = this.currentUser.staff ? 100 : 10;
-    return Math.min(max, def);
+    const val = this.currentUser.staff ? 100 : 10;
+    return Math.min(max, val);
   }
 
   get canInviteToGroup() {
