@@ -414,20 +414,3 @@ task "plugin:create", [:name] do |t, args|
   puts "Do not forget to update the README.md and plugin.rb file with the plugin description and the url of the plugin."
   puts "You are ready to start developing your plugin! 🚀"
 end
-
-desc "create a plugin migration"
-task "plugin:generate_migration", %i[plugin_name migration_name migration_args] do |t, args|
-  plugin_name = args[:plugin_name]
-  migration_name = args[:migration_name]
-
-  abort("Supply a name for the plugin") if plugin_name.blank?
-  abort("Supply a name for the migration") if migration_name.blank?
-
-  system "bin/rails g migration #{migration_name} #{args[:migration_args]}"
-
-  migration_file = Dir.glob("db/migrate/*_#{migration_name}.rb").first
-
-  puts "Moving migration file to plugin directory..."
-  plugin_migration_file = "plugins/#{plugin_name}/db/migrate/#{File.basename(migration_file)}"
-  FileUtils.mv(migration_file, plugin_migration_file)
-end
