@@ -303,6 +303,7 @@ class User < ActiveRecord::Base
   scope :not_suspended, -> { where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now) }
   scope :activated, -> { where(active: true) }
   scope :not_staged, -> { where(staged: false) }
+  scope :approved, -> { where(approved: true) }
 
   scope :filter_by_username,
         ->(filter) do

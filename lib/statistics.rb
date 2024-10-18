@@ -33,21 +33,20 @@ class Statistics
 
   def self.active_users
     {
-      last_day: User.where("last_seen_at > ?", 1.day.ago).count,
-      "7_days": User.where("last_seen_at > ?", 7.days.ago).count,
-      "30_days": User.where("last_seen_at > ?", 30.days.ago).count,
+      last_day: valid_users.where("last_seen_at > ?", 1.day.ago).count,
+      "7_days": valid_users.where("last_seen_at > ?", 7.days.ago).count,
+      "30_days": valid_users.where("last_seen_at > ?", 30.days.ago).count,
     }
   end
 
   def self.likes
+    likes = UserAction.where(action_type: UserAction::LIKE)
+
     {
-      last_day:
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 1.day.ago).count,
-      "7_days":
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
-      "30_days":
-        UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count,
-      count: UserAction.where(action_type: UserAction::LIKE).count,
+      last_day: likes.where("created_at > ?", 1.day.ago).count,
+      "7_days": likes.where("created_at > ?", 7.days.ago).count,
+      "30_days": likes.where("created_at > ?", 30.days.ago).count,
+      count: likes.count,
     }
   end
 
@@ -61,24 +60,22 @@ class Statistics
   end
 
   def self.topics
+    topics = Topic.listable_topics
+
     {
-      last_day: Topic.listable_topics.where("created_at > ?", 1.day.ago).count,
-      "7_days": Topic.listable_topics.where("created_at > ?", 7.days.ago).count,
-      "30_days": Topic.listable_topics.where("created_at > ?", 30.days.ago).count,
-      count: Topic.listable_topics.count,
+      last_day: topics.where("created_at > ?", 1.day.ago).count,
+      "7_days": topics.where("created_at > ?", 7.days.ago).count,
+      "30_days": topics.where("created_at > ?", 30.days.ago).count,
+      count: topics.count,
     }
   end
 
   def self.users
-    query = User.real.not_silenced.activated
-
-    query = query.where(approved: true) if SiteSetting.must_approve_users
-
     {
-      last_day: query.where("created_at > ?", 1.day.ago).count,
-      "7_days": query.where("created_at > ?", 7.days.ago).count,
-      "30_days": query.where("created_at > ?", 30.days.ago).count,
-      count: query.count,
+      last_day: valid_users.where("created_at > ?", 1.day.ago).count,
+      "7_days": valid_users.where("created_at > ?", 7.days.ago).count,
+      "30_days": valid_users.where("created_at > ?", 30.days.ago).count,
+      count: valid_users.count,
     }
   end
 
@@ -144,20 +141,31 @@ class Statistics
 
   private
 
+  def self.valid_users
+    users = User.real.activated.not_staged.not_suspended.not_silenced
+    users = users.approved if SiteSetting.must_approve_users
+    users
+  end
+
   def self.participating_users_count(date)
     subqueries = [
       "SELECT DISTINCT user_id FROM user_actions WHERE created_at > :date AND action_type IN (:action_types)",
     ]
 
     if ActiveRecord::Base.connection.data_source_exists?("chat_messages")
-      subqueries << "SELECT DISTINCT user_id FROM chat_messages WHERE created_at > :date"
+      subqueries << "SELECT DISTINCT user_id FROM chat_messages WHERE created_at > :date AND deleted_at IS NULL"
     end
 
     if ActiveRecord::Base.connection.data_source_exists?("chat_message_reactions")
       subqueries << "SELECT DISTINCT user_id FROM chat_message_reactions WHERE created_at > :date"
     end
 
-    sql = "SELECT COUNT(user_id) FROM (#{subqueries.join(" UNION ")}) u"
+    sql = <<~SQL
+      WITH valid_users AS (#{valid_users.select(:id).to_sql})
+      SELECT COUNT(DISTINCT user_id) 
+      FROM (#{subqueries.join(" UNION ")}) participating_users
+      JOIN valid_users ON valid_users.id = participating_users.user_id
+    SQL
 
     DB.query_single(sql, date: date, action_types: UserAction::USER_ACTED_TYPES).first
   end
