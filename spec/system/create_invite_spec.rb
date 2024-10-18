@@ -166,6 +166,9 @@ describe "Creating Invites", type: :system do
       expect(options).to eq(["1 day", "3 days", "7 days", "30 days", "90 days", "Never"])
 
       SiteSetting.invite_expiry_days = 90
+      page.refresh
+      open_invite_modal
+      display_advanced_options
 
       options =
         create_invite_modal
