@@ -272,12 +272,6 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
-  add_to_serializer(
-    :upload,
-    :thumbnail,
-    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
-  ) { object.thumbnail }
-
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin
