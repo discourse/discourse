@@ -9,6 +9,7 @@ import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import {
+  isImage,
   bindFileInputChangeListener,
   displayErrorForBulkUpload,
   displayErrorForUpload,
@@ -333,12 +334,6 @@ export default class UppyComposerUpload {
             })
           );
 
-          // Check for multiple images uploaded consecutively for adding [grid] later
-          const imageExtensions = ["jpg", "jpeg", "png", "gif"];
-          if (imageExtensions.includes(file.extension.toLowerCase())) {
-            this.#consecutiveImages.push(file);
-          }
-
           const placeholder = this.#uploadPlaceholder(file);
           this.#placeholders[file.id] = {
             uploadPlaceholder: placeholder,
@@ -371,7 +366,10 @@ export default class UppyComposerUpload {
           getUploadMarkdown(upload)
         );
 
-        console.log(markdown, file, this, this.#consecutiveImages);
+        // Track consecutive images for surrounding with [grid] later:
+        if (isImage(upload.url)) {
+          this.#consecutiveImages.push(markdown);
+        }
 
         cacheShortUploadUrl(upload.short_url, upload);
 
@@ -387,17 +385,6 @@ export default class UppyComposerUpload {
               );
             }
 
-            if (this.#consecutiveImages.length >= 3) {
-              console.log("composerEventPrefix", this.composerEventPrefix);
-              this.appEvents.trigger(
-                `${this.composerEventPrefix}:apply-surround`,
-                "[grid]",
-                "[/grid]",
-                "grid_surround",
-                { useBlockMode: true }
-              );
-            }
-
             this.#resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -409,6 +396,12 @@ export default class UppyComposerUpload {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
+
+              const MIN_IMAGES_TO_AUTO_GRID = 3;
+              console.log("consecutiveImages", this.#consecutiveImages);
+              if (this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID) {
+                this.#autoGridImages();
+              }
               this.#displayBufferedErrors();
               this.#reset();
             }
@@ -627,6 +620,7 @@ export default class UppyComposerUpload {
     });
     this.#inProgressUploads = [];
     this.#bufferedUploadErrors = [];
+    this.#consecutiveImages = [];
     this.uppyWrapper.resetPreProcessors();
     this.#fileInputEl.value = "";
   }
@@ -733,5 +727,31 @@ export default class UppyComposerUpload {
     return (
       selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n"
     );
+  }
+
+  #autoGridImages() {
+    const reply = this.composerModel.reply;
+    const firstImageMarkdown = this.#consecutiveImages[0];
+    const lastImageMarkdown =
+      this.#consecutiveImages[this.#consecutiveImages.length - 1];
+
+    const startIndex = reply.indexOf(firstImageMarkdown);
+    const endIndex =
+      reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+    console.log(startIndex, endIndex, firstImageMarkdown, lastImageMarkdown);
+    if (startIndex !== -1 && endIndex !== -1) {
+      const textArea = this.#editorEl.querySelector(this.editorInputClass);
+      if (textArea) {
+        textArea.focus();
+        textArea.setSelectionRange(startIndex, endIndex);
+        this.appEvents.trigger(
+          `${this.composerEventPrefix}:apply-surround`,
+          "[grid]",
+          "[/grid]",
+          "grid_surround",
+          { useBlockMode: true }
+        );
+      }
+    }
   }
 }
