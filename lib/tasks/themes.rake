@@ -60,7 +60,7 @@ task "themes:install:archive" => :environment do |task, args|
   RemoteTheme.update_zipped_theme(filename, File.basename(filename), update_components:)
 end
 
-def update_themes
+def update_themes(version_cache: Concurrent::Map.new)
   Theme
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
@@ -69,16 +69,26 @@ def update_themes
         theme.transaction do
           remote_theme = theme.remote_theme
           next if remote_theme.blank? || remote_theme.remote_url.blank?
+          prefix = "[db:#{RailsMultisite::ConnectionManagement.current_db}] '#{theme.name}' - "
+          puts "#{prefix} checking..."
 
-          print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
+          cache_key =
+            "#{remote_theme.remote_url}:#{remote_theme.branch}:#{Digest::SHA256.hexdigest(remote_theme.private_key.to_s)}"
+
+          if version_cache[cache_key] == remote_theme.remote_version && !remote_theme.out_of_date?
+            puts "#{prefix} up to date (cached from previous lookup)"
+            next
+          end
 
           remote_theme.update_remote_version
 
+          version_cache.put_if_absent(cache_key, remote_theme.remote_version)
+
           if remote_theme.out_of_date?
-            puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+            puts "#{prefix} updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
             remote_theme.update_from_remote(already_in_transaction: true)
           else
-            puts "up to date"
+            puts "#{prefix} up to date"
           end
 
           if remote_theme.last_error_text.present?
@@ -99,7 +109,14 @@ task "themes:update": %w[environment assets:precompile:theme_transpiler] do
   if ENV["RAILS_DB"].present?
     update_themes
   else
-    RailsMultisite::ConnectionManagement.each_connection { update_themes }
+    version_cache = Concurrent::Map.new
+
+    concurrency = ENV["THEME_UPDATE_CONCURRENCY"]&.to_i || 10
+    puts "Updating themes with concurrency: #{concurrency}" if concurrency > 1
+
+    Parallel.each(RailsMultisite::ConnectionManagement.all_dbs, in_threads: concurrency) do |db|
+      RailsMultisite::ConnectionManagement.with_connection(db) { update_themes(version_cache:) }
+    end
   end
 end
 

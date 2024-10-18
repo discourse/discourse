@@ -243,8 +243,6 @@ if ENV["IMPORT"] == "1"
   gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"
-
-  gem "parallel", require: false
 end
 
 group :generic_import, optional: true do
@@ -289,3 +287,5 @@ group :migrations, optional: true do
 end
 
 gem "dry-initializer", "~> 3.1"
+
+gem "parallel"
