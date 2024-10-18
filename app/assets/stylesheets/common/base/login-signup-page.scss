@@ -256,6 +256,28 @@
   .inline-spinner {
     display: inline-flex;
   }
+
+  .invitation-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    &__accept {
+      width: 100%;
+    }
+    &__info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 0.5rem;
+      line-height: 1rem;
+      color: var(--primary-medium);
+    }
+    &__sign-in {
+      padding: 0;
+      height: 100%;
+    }
+  }
 }
 
 // Login page

@@ -131,6 +131,15 @@
   }
 }
 
+.invites-show {
+  .login-welcome-header {
+    padding-inline: 0;
+  }
+  .signup-progress-bar {
+    margin-inline: 0;
+  }
+}
+
 // Login page
 
 .login-fullpage .login-body {
