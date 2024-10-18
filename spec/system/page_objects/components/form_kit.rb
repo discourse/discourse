@@ -114,7 +114,12 @@ module PageObjects
           picker.search(value)
           picker.select_row_by_value(value)
         when "select"
-          component.find(".form-kit__control-option[value='#{value}']").click
+          selector = component.find(".form-kit__control-select")
+          selector.find(".form-kit__control-option[value='#{value}']").select_option
+          selector.execute_script(<<~JS, selector)
+            var selector = arguments[0];
+            selector.dispatchEvent(new Event("input", { bubbles: true, cancelable: true }));
+          JS
         when "menu"
           trigger = component.find(".fk-d-menu__trigger.form-kit__control-menu")
           trigger.click
@@ -191,6 +196,14 @@ module PageObjects
         within component do
           FormKitField.new(find(".form-kit__field[data-name='#{name}']"))
         end
+      end
+
+      def has_field_with_name?(name)
+        has_css?(".form-kit__field[data-name='#{name}']")
+      end
+
+      def has_no_field_with_name?(name)
+        has_no_css?(".form-kit__field[data-name='#{name}']")
       end
 
       def container(name)

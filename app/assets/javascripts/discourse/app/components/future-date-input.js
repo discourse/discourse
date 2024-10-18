@@ -42,7 +42,7 @@ export default class FutureDateInput extends Component {
     if (this.input) {
       const dateTime = moment(this.input);
       const closestShortcut = this._findClosestShortcut(dateTime);
-      if (closestShortcut) {
+      if (!this.noRelativeOptions && closestShortcut) {
         this.set("selection", closestShortcut.id);
       } else {
         this.setProperties({
