@@ -84,7 +84,7 @@ export default RouteTemplate(
 
     <template>
       {{bodyClass "activate-account-page"}}
-      {{hideApplicationHeaderButtons "search" "login" "signup"}}
+      {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
       {{hideApplicationSidebar}}
       {{#if this.errorMessage}}
         <div class="alert alert-error">
