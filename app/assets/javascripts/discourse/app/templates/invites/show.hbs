@@ -77,13 +77,15 @@
                   <label class="alt-placeholder" for="new-account-email">
                     {{i18n "user.email.title"}}
                   </label>
-                  {{#if this.emailValidation.reason}}
-                    <InputTip id="account-email-validation" />
-                  {{else}}
-                    <div class="instructions">{{i18n
-                        "user.email.instructions"
-                      }}</div>
-                  {{/if}}
+                  <InputTip
+                    @validation={{this.emailValidation}}
+                    id="account-email-validation"
+                  />
+                  {{#unless this.emailValidation.reason}}
+                    <div class="instructions">
+                      {{i18n "user.email.instructions"}}
+                    </div>
+                  {{/unless}}
                 </div>
               {{/if}}
 

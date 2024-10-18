@@ -204,6 +204,13 @@
     }
   }
 }
+
+.invites-show {
+  #account-email-validation:not(:has(*)) {
+    display: none;
+  }
+}
+
 /* end shared styles */
 
 .d-modal.create-account {
