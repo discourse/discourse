@@ -97,15 +97,8 @@ describe "Creating Invites", type: :system do
       create_invite_modal.form.field("maxRedemptions").fill_in("53")
       create_invite_modal.form.field("expiresAfterDays").select(90)
 
-      topic_picker = PageObjects::Components::SelectKit.new(".topic-chooser")
-      topic_picker.expand
-      topic_picker.search(topic.id)
-      topic_picker.select_row_by_index(0)
-
-      group_picker = PageObjects::Components::SelectKit.new(".group-chooser")
-      group_picker.expand
-      group_picker.select_row_by_value(group.id)
-      group_picker.collapse
+      create_invite_modal.choose_topic(topic)
+      create_invite_modal.choose_groups([group])
 
       create_invite_modal.save_button.click
 
@@ -135,16 +128,8 @@ describe "Creating Invites", type: :system do
       create_invite_modal.form.field("restrictTo").fill_in("someone@discourse.org")
       create_invite_modal.form.field("expiresAfterDays").select(1)
 
-      topic_picker = PageObjects::Components::SelectKit.new(".topic-chooser")
-      topic_picker.expand
-      topic_picker.search(topic.id)
-      topic_picker.select_row_by_index(0)
-
-      group_picker = PageObjects::Components::SelectKit.new(".group-chooser")
-      group_picker.expand
-      group_picker.select_row_by_value(group.id)
-      group_picker.select_row_by_value(another_group.id)
-      group_picker.collapse
+      create_invite_modal.choose_topic(topic)
+      create_invite_modal.choose_groups([group, another_group])
 
       create_invite_modal
         .form

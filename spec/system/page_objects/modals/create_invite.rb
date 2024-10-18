@@ -38,6 +38,20 @@ module PageObjects
       def form
         PageObjects::Components::FormKit.new(".create-invite-modal .form-kit")
       end
+
+      def choose_topic(topic)
+        topic_picker = PageObjects::Components::SelectKit.new(".topic-chooser")
+        topic_picker.expand
+        topic_picker.search(topic.id)
+        topic_picker.select_row_by_index(0)
+      end
+
+      def choose_groups(groups)
+        group_picker = PageObjects::Components::SelectKit.new(".group-chooser")
+        group_picker.expand
+        groups.each { |group| group_picker.select_row_by_value(group.id) }
+        group_picker.collapse
+      end
     end
   end
 end
