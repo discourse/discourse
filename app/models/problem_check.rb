@@ -90,6 +90,10 @@ class ProblemCheck
     ProblemCheck::WatchedWords,
   ].freeze
 
+  # To enforce the unique constraint in Postgres <15 we need a dummy
+  # value, since the index considers NULLs to be distinct.
+  NO_TARGET = "__NULL__"
+
   def self.[](key)
     key = key.to_sym
 
@@ -176,12 +180,12 @@ class ProblemCheck
 
   private
 
-  def tracker(target = nil)
+  def tracker(target = NO_TARGET)
     ProblemCheckTracker[identifier, target]
   end
 
   def targets
-    [nil]
+    [NO_TARGET]
   end
 
   def problem(override_key: nil, override_data: {})
