@@ -27,7 +27,7 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
   end
 
   Listen
-    .to(*paths, only: /\.rb$/) do |modified, added, removed|
+    .to(*paths, only: /\.rb$/, ignore: [/node_modules/]) do |modified, added, removed|
       supervisor_pid = UNICORN_DEV_SUPERVISOR_PID
       auto_restart = supervisor_pid && ENV["AUTO_RESTART"] != "0"
 

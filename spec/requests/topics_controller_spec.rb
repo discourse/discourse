@@ -2344,6 +2344,12 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(400)
     end
 
+    it "does not raise an unhandled exception when receiving a nested ID parameter" do
+      get "/t/#{topic.id}/summary?id[foo]=a"
+
+      expect(response.status).to eq(400)
+    end
+
     it "keeps the post_number parameter around when redirecting" do
       get "/t/#{topic.slug}", params: { post_number: 42 }
       expect(response).to redirect_to(topic.relative_url + "/42")

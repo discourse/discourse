@@ -16,6 +16,12 @@ class UploadSerializer < ApplicationSerializer
              :human_filesize,
              :dominant_color
 
+  has_one :thumbnail,
+          serializer: UploadThumbnailSerializer,
+          root: false,
+          embed: :object,
+          if: -> { SiteSetting.create_thumbnails && object.has_thumbnail? }
+
   def url
     if object.for_site_setting
       object.url
