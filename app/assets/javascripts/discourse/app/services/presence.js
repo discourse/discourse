@@ -108,12 +108,10 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     this.trigger("change", this);
   }
 
-  @computed("_presenceState.users", "subscribed")
   get users() {
-    if (!this.subscribed) {
-      return;
+    if (this.get("subscribed")) {
+      return this.get("_presenceState.users");
     }
-    return this._presenceState?.users;
   }
 
   @computed("_presenceState.count", "subscribed")
