@@ -319,6 +319,10 @@ module CookedProcessorMixin
       element.add_class("inline-onebox")
     end
 
+    if author = inline_onebox&.dig(:author)
+      element.set_attribute("data-author", author)
+    end
+
     remove_inline_onebox_loading_class(element)
   end
 
