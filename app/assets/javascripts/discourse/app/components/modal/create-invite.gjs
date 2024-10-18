@@ -135,7 +135,7 @@ export default class CreateInvite extends Component {
     try {
       await this.invite.save(data);
       const invites = this.model?.invites;
-      if (invites && !invites.any((i) => i.id === this.invite.id)) {
+      if (invites && !invites.some((i) => i.id === this.invite.id)) {
         invites.unshiftObject(this.invite);
       }
 
@@ -168,7 +168,7 @@ export default class CreateInvite extends Component {
   get canInviteToGroup() {
     return (
       this.currentUser.staff ||
-      this.currentUser.groups.any((g) => g.group_user?.owner)
+      this.currentUser.groups.some((g) => g.group_user?.owner)
     );
   }
 
