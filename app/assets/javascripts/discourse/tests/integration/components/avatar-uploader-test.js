@@ -21,7 +21,6 @@ module("Integration | Component | avatar-uploader", function (hooks) {
 
     await render(hbs`
       <AvatarUploader
-        @id="avatar-uploader"
         @done={{this.done}}
       />
     `);
