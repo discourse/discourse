@@ -285,12 +285,11 @@
       .user-field.multiselect label.control-label {
         color: var(--primary-medium);
         font-size: 16px;
-        height: 16px;
         font-weight: normal;
         position: absolute;
         pointer-events: none;
         left: 1em;
-        top: calc(calc(calc(2.5rem + 2px) / 2) - 8px);
+        top: 13px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
@@ -303,6 +302,9 @@
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
+      }
+      .user-field.text label.control-label {
+        top: 13px;
       }
       .user-field.text:focus-within,
       .user-field.dropdown:focus-within,
@@ -319,6 +321,13 @@
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+      .user-field.dropdown,
+      .user-field.multiselect {
+        .more-info,
+        .instructions {
+          opacity: 1;
+        }
       }
 
       #email-login-link {
@@ -408,9 +417,12 @@
           box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
         }
         .controls .checkbox-label {
+          display: flex;
+          align-items: center;
           input[type="checkbox"].ember-checkbox {
             width: 1em !important;
             min-width: unset;
+            margin-block: 0;
           }
         }
       }

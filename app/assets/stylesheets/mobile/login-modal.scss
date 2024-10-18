@@ -169,9 +169,6 @@
       &:not(:last-child) {
         margin-bottom: 0.75em;
       }
-      .user-field:not(.dropdown) label.alt-placeholder {
-        top: 8px;
-      }
       input:focus + label,
       input.value-entered + label.alt-placeholder {
         top: -10px;
@@ -198,6 +195,29 @@
   }
   .caps-lock-warning {
     display: none;
+  }
+}
+
+.login-modal,
+.create-account,
+.invites-show {
+  #login-form,
+  .login-form,
+  .invite-form {
+    .input-group {
+      label.alt-placeholder,
+      .user-field.text label.control-label {
+        top: 11px;
+      }
+      .user-field:not(.dropdown) input:focus + label.alt-placeholder,
+      .user-field.value-entered:not(.dropdown) label.alt-placeholder {
+        top: -10px !important;
+      }
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
+        top: -10px;
+      }
+    }
   }
 }
 
