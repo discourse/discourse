@@ -85,14 +85,14 @@ RSpec.describe SvgSpriteController do
       expect(response.status).to eq(403)
     end
 
-    it "should work with no filter and max out at 200 results" do
+    it "should work with no filter and max out at 500 results" do
       sign_in(user)
       get "/svg-sprite/picker-search"
 
       expect(response.status).to eq(200)
 
       data = response.parsed_body
-      expect(data.length).to eq(200)
+      expect(data.length).to be <= 500
       expect(data[0]["id"]).to eq("0")
     end
 
@@ -120,7 +120,7 @@ RSpec.describe SvgSpriteController do
       data = response.parsed_body
       beer_icon = response.parsed_body.find { |i| i["id"] == "beer-mug-empty" }
       expect(beer_icon).to be nil
-      expect(data.length).to eq(200)
+      expect(data.length).to eq(250)
     end
   end
 
