@@ -10,6 +10,20 @@ function isGUID(value) {
   );
 }
 
+// original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
+// group 1 `image|foo=bar`
+// group 2 `690x220`
+// group 3 `, 50%`
+// group 4 '|bar=baz'
+// group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
+
+// Notes:
+// Group 3 is optional. group 4 can match images with or without a markdown title.
+// All matches are whitespace tolerant as long it's still valid markdown.
+// If the image is inside a code block, we'll ignore it `(?!(.*`))`.
+export const IMAGE_MARKDOWN_REGEX =
+  /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
+
 // This wrapper simplifies unit testing the dialog service
 export const dialog = {
   alert(msg) {
