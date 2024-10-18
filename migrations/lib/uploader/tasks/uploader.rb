@@ -35,13 +35,15 @@ module Migrations::Uploader
           surplus_upload_ids = nil
         end
 
-        max_count = (@source_existing_ids - @output_existing_ids).size
+        @max_count = (@source_existing_ids - @output_existing_ids).size
         @source_existing_ids = nil
-        puts "Found #{@output_existing_ids.size} existing uploads. #{max_count} are missing."
+        puts "Found #{@output_existing_ids.size} existing uploads. #{@max_count} are missing."
+
+        status_thread
+        create_consumer_threads
 
         producer_thread.join
         work_queue.close
-        create_consumer_threads
         consumer_threads.each(&:join)
         status_queue.close
         status_thread.join
@@ -96,7 +98,7 @@ module Migrations::Uploader
             end
 
             current_count += 1
-            log_status(error_count, current_count, missing_count)
+            log_status(error_count, current_count, skipped_count)
           end
         end
       end
@@ -175,7 +177,7 @@ module Migrations::Uploader
 
           if upload_okay
             status_queue << {
-              id: row["id"],
+              id: row[:id],
               upload: upload.attributes.to_json,
               markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
               skip_reason: nil,
@@ -322,10 +324,20 @@ module Migrations::Uploader
         filename
       end
 
-      def log_status(error_count, current_count, missing_count)
+      def copy_to_tempfile(source_path)
+        extension = File.extname(source_path)
+
+        Tempfile.open(["discourse-upload", extension]) do |tmpfile|
+          File.open(source_path, "rb") { |source_stream| IO.copy_stream(source_stream, tmpfile) }
+          tmpfile.rewind
+          yield(tmpfile)
+        end
+      end
+
+      def log_status(error_count, current_count, skipped_count)
         error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
-        print "\r%7d / %7d (%s, %s missing)" %
-                [current_count, max_count, error_count_text, missing_count]
+        print "\r%7d / %7d (%s, %s skipped)" %
+                [current_count, @max_count, error_count_text, skipped_count]
       end
     end
   end

@@ -4,11 +4,13 @@ module Migrations::Uploader
   module Tasks
     class Fixer < Base
       def run!
-        puts "Fixing missing uploads..."
+        puts "", "Fixing missing uploads..."
+
+        status_thread
+        create_consumer_threads
 
         producer_thread.join
         work_queue.close
-        create_consumer_threads
         consumer_threads.each(&:join)
         status_queue.close
         status_thread.join

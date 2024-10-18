@@ -15,14 +15,17 @@ module Migrations::Uploader
       end
 
       def run!
-        puts "Creating optimized images..."
+        puts "", "Creating optimized images..."
 
         disable_optimized_image_lock
 
         init_threads.each(&:join)
+
+        status_thread
+        create_consumer_threads
+
         producer_thread.join
         work_queue.close
-        create_consumer_threads
         consumer_threads.each(&:join)
         status_queue.close
         status_thread.join
@@ -184,14 +187,16 @@ module Migrations::Uploader
           upload = Upload.find_by(sha1: row[:upload_sha1])
           optimized_images = create_optimized_images(row[:type], row[:markdown], upload, post)
 
-          next if optimized_images.present?
+          optimized_images = process_optimized_images(optimized_images) if optimized_images.present?
 
-          result = process_optimized_images(optimized_images)
+          optimized_images_okay =
+            !optimized_images.nil? && optimized_images.all?(&:present?) &&
+              optimized_images.all?(&:persisted?) && optimized_images.all? { |o| o.errors.blank? }
 
-          if result[:successful]
+          if optimized_images_okay
             status_queue << {
               id: row[:upload_id],
-              optimized_images: result[:images].presence&.to_json,
+              optimized_images: optimized_images.presence&.to_json,
               status: :ok,
             }
 
@@ -242,11 +247,7 @@ module Migrations::Uploader
           images = nil
         end
 
-        optimized_images_okay =
-          !images.nil? && images.all?(&:present?) && images.all?(&:persisted?) &&
-            images.all? { |o| o.errors.blank? }
-
-        { images: images, successful: optimized_images_okay }
+        images
       end
     end
   end

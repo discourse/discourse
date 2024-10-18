@@ -23,6 +23,8 @@ module Migrations::CLI::UploadCommand
         merge_settings_from_cli_args!(settings)
 
         ::Migrations::Uploader::Uploads.perform!(settings)
+
+        puts ""
       end
 
       private
