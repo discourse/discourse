@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,6 +9,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
@@ -23,6 +25,16 @@ export default class ThemeCard extends Component {
   @service siteSettings;
   @service toasts;
 
+  @tracked isUpdating = false;
+
+  get themeCardClasses() {
+    return [
+      "theme-card",
+      this.args.theme.default ? "-active" : "",
+      this.isUpdating ? "--updating" : "",
+    ].join(" ");
+  }
+
   get themeRouteModels() {
     return ["themes", this.args.theme.id];
   }
@@ -33,6 +45,12 @@ export default class ThemeCard extends Component {
 
   get footerActionIcon() {
     return this.args.theme.isPendingUpdates ? "sync" : "ellipsis-h";
+  }
+
+  get footerActionLabel() {
+    return this.args.theme.isPendingUpdates
+      ? "admin.customize.theme.updating"
+      : "";
   }
 
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
@@ -73,16 +91,28 @@ export default class ThemeCard extends Component {
   }
 
   @action
-  async updateTheme() {
+  updateTheme() {
     // TODO (martin): implement update theme logic
     // while updating, set class on theme-card to updating
     // class will cause card to perform animation during update
     // once update is complete, remove class and trigger a toast, saying theme is updated
+    this.isUpdating = true;
+    discourseLater(() => {
+      this.isUpdating = false;
+      this.toasts.success({
+        data: {
+          message: I18n.t("admin.customize.theme.update_success", {
+            theme: this.args.theme.name,
+          }),
+        },
+        duration: 2000,
+      });
+    }, 5000);
   }
 
   <template>
     <AdminConfigAreaCard
-      class={{concatClass "theme-card" (if @theme.default "-active")}}
+      class={{this.themeCardClasses}}
       @translatedHeading={{@theme.name}}
     >
       <:content>
@@ -132,6 +162,8 @@ export default class ThemeCard extends Component {
               @triggerClass="theme-card__footer-menu btn-flat"
               @modalForMobile={{true}}
               @icon={{this.footerActionIcon}}
+              @label={{if this.isUpdating (i18n this.footerActionLabel) ""}}
+              {{!-- @label={{i18n this.footerActionLabel}} --}}
               @triggers={{array "click"}}
             >
               <:content>
