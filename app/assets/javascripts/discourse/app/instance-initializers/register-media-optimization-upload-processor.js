@@ -24,8 +24,8 @@ export default {
       }
 
       // prior to v18, Safari has WASM memory growth bugs
-      // using `document.startViewTransition` as a proxy for Safari 18+
       // eg https://github.com/emscripten-core/emscripten/issues/19144
+      // using `document.startViewTransition` as a proxy for Safari 18+
       if (capabilities.isSafari && document.startViewTransition === undefined) {
         return;
       }
