@@ -233,97 +233,83 @@
 
       <PluginOutlet @name="above-timeline" @connectorTagName="div" />
 
-      <TopicNavigation
-        @topic={{this.model}}
-        @jumpToDate={{action "jumpToDate"}}
-        @jumpToIndex={{action "jumpToIndex"}}
-        class="topic-navigation"
-        as |info|
-      >
-        <PluginOutlet
-          @name="topic-navigation"
-          @connectorTagName="div"
-          @outletArgs={{hash
-            topic=this.model
-            renderTimeline=info.renderTimeline
-            topicProgressExpanded=info.topicProgressExpanded
-          }}
-        />
-        {{#if info.renderTimeline}}
-          <TopicTimeline
-            @info={{info}}
-            @model={{this.model}}
-            @replyToPost={{action "replyToPost"}}
-            @showTopReplies={{action "showTopReplies"}}
-            @jumpToPostPrompt={{action "jumpToPostPrompt"}}
-            @enteredIndex={{this.enteredIndex}}
-            @prevEvent={{info.prevEvent}}
-            @jumpTop={{action "jumpTop"}}
-            @jumpBottom={{action "jumpBottom"}}
-            @jumpEnd={{action "jumpEnd"}}
-            @jumpToIndex={{action "jumpToIndex"}}
-            @toggleMultiSelect={{action "toggleMultiSelect"}}
-            @showTopicSlowModeUpdate={{route-action "showTopicSlowModeUpdate"}}
-            @deleteTopic={{action "deleteTopic"}}
-            @recoverTopic={{action "recoverTopic"}}
-            @toggleClosed={{action "toggleClosed"}}
-            @toggleArchived={{action "toggleArchived"}}
-            @toggleVisibility={{action "toggleVisibility"}}
-            @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-            @showFeatureTopic={{route-action "showFeatureTopic"}}
-            @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-            @resetBumpDate={{action "resetBumpDate"}}
-            @convertToPublicTopic={{action "convertToPublicTopic"}}
-            @convertToPrivateMessage={{action "convertToPrivateMessage"}}
-            @fullscreen={{info.topicProgressExpanded}}
-            @mobileView={{this.site.mobileView}}
-          />
-        {{else}}
-          <TopicProgress
-            @prevEvent={{info.prevEvent}}
+      {{#if this.site.mobileView}}
+        <div id="topic-footer-info">
+          <TopicNavigation
             @topic={{this.model}}
-            @expanded={{info.topicProgressExpanded}}
-            @jumpToPost={{action "jumpToPost"}}
+            @jumpToDate={{action "jumpToDate"}}
+            @jumpToIndex={{action "jumpToIndex"}}
+            class="topic-navigation"
+            as |info|
           >
-            <span>
-              <PluginOutlet
-                @name="before-topic-progress"
-                @connectorTagName="div"
-                @outletArgs={{hash
-                  model=this.model
-                  jumpToPost=(action "jumpToPost")
-                }}
-              />
-            </span>
-            <TopicAdminMenu
-              @topic={{this.model}}
-              @openUpwards="true"
-              @rightSide="true"
-              @toggleMultiSelect={{action "toggleMultiSelect"}}
-              @showTopicSlowModeUpdate={{route-action
-                "showTopicSlowModeUpdate"
+            <PluginOutlet
+              @name="topic-navigation"
+              @connectorTagName="div"
+              @outletArgs={{hash
+                topic=this.model
+                renderTimeline=info.renderTimeline
+                topicProgressExpanded=info.topicProgressExpanded
               }}
-              @deleteTopic={{action "deleteTopic"}}
-              @recoverTopic={{action "recoverTopic"}}
-              @toggleClosed={{action "toggleClosed"}}
-              @toggleArchived={{action "toggleArchived"}}
-              @toggleVisibility={{action "toggleVisibility"}}
-              @showTopicTimerModal={{route-action "showTopicTimerModal"}}
-              @showFeatureTopic={{route-action "showFeatureTopic"}}
-              @showChangeTimestamp={{route-action "showChangeTimestamp"}}
-              @resetBumpDate={{action "resetBumpDate"}}
-              @convertToPublicTopic={{action "convertToPublicTopic"}}
-              @convertToPrivateMessage={{action "convertToPrivateMessage"}}
             />
-          </TopicProgress>
-        {{/if}}
+            {{#if info.renderTimeline}}
+              <TopicTimeline
+                @info={{info}}
+                @model={{this.model}}
+                @replyToPost={{action "replyToPost"}}
+                @showTopReplies={{action "showTopReplies"}}
+                @jumpToPostPrompt={{action "jumpToPostPrompt"}}
+                @enteredIndex={{this.enteredIndex}}
+                @prevEvent={{info.prevEvent}}
+                @jumpTop={{action "jumpTop"}}
+                @jumpBottom={{action "jumpBottom"}}
+                @jumpEnd={{action "jumpEnd"}}
+                @jumpToIndex={{action "jumpToIndex"}}
+                @toggleMultiSelect={{action "toggleMultiSelect"}}
+                @showTopicSlowModeUpdate={{route-action
+                  "showTopicSlowModeUpdate"
+                }}
+                @deleteTopic={{action "deleteTopic"}}
+                @recoverTopic={{action "recoverTopic"}}
+                @toggleClosed={{action "toggleClosed"}}
+                @toggleArchived={{action "toggleArchived"}}
+                @toggleVisibility={{action "toggleVisibility"}}
+                @showTopicTimerModal={{route-action "showTopicTimerModal"}}
+                @showFeatureTopic={{route-action "showFeatureTopic"}}
+                @showChangeTimestamp={{route-action "showChangeTimestamp"}}
+                @resetBumpDate={{action "resetBumpDate"}}
+                @convertToPublicTopic={{action "convertToPublicTopic"}}
+                @convertToPrivateMessage={{action "convertToPrivateMessage"}}
+                @fullscreen={{info.topicProgressExpanded}}
+                @mobileView={{this.site.mobileView}}
+              />
+            {{else}}
+              <TopicProgress
+                @prevEvent={{info.prevEvent}}
+                @topic={{this.model}}
+                @expanded={{info.topicProgressExpanded}}
+                @jumpToPost={{action "jumpToPost"}}
+              >
+                <span>
+                  <PluginOutlet
+                    @name="before-topic-progress"
+                    @connectorTagName="div"
+                    @outletArgs={{hash
+                      model=this.model
+                      jumpToPost=(action "jumpToPost")
+                    }}
+                  />
+                </span>
+              </TopicProgress>
+            {{/if}}
 
-        <PluginOutlet
-          @name="topic-navigation-bottom"
-          @connectorTagName="div"
-          @outletArgs={{hash model=this.model}}
-        />
-      </TopicNavigation>
+            <PluginOutlet
+              @name="topic-navigation-bottom"
+              @connectorTagName="div"
+              @outletArgs={{hash model=this.model site=this.site}}
+            />
+          </TopicNavigation>
+        </div>
+      {{/if}}
 
       <div class="row">
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
@@ -535,7 +521,7 @@
             <PluginOutlet
               @name="topic-above-footer-buttons"
               @connectorTagName="div"
-              @outletArgs={{hash model=this.model}}
+              @outletArgs={{hash model=this.model site=this.site}}
             />
           </span>
 
