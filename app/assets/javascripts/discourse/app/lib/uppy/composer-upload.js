@@ -9,11 +9,12 @@ import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import {
-  isImage,
   bindFileInputChangeListener,
   displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
+  IMAGE_MARKDOWN_REGEX,
+  isImage,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -398,7 +399,6 @@ export default class UppyComposerUpload {
               );
 
               const MIN_IMAGES_TO_AUTO_GRID = 3;
-              console.log("consecutiveImages", this.#consecutiveImages);
               if (this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID) {
                 this.#autoGridImages();
               }
@@ -731,30 +731,49 @@ export default class UppyComposerUpload {
 
   #autoGridImages() {
     const reply = this.composerModel.reply;
-    const firstImageMarkdown = this.#consecutiveImages[0];
-    const lastImageMarkdown =
-      this.#consecutiveImages[this.#consecutiveImages.length - 1];
 
-    const startIndex = reply.indexOf(firstImageMarkdown);
-    const endIndex =
-      reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+    const imagesToWrapGrid = new Set(this.#consecutiveImages);
 
-    console.log(startIndex, endIndex, firstImageMarkdown, lastImageMarkdown);
+    const foundImages = [];
+    let match;
+    while ((match = IMAGE_MARKDOWN_REGEX.exec(reply)) !== null) {
+      const fullImageMarkdown = match[0].trim();
 
-    if (startIndex !== -1 && endIndex !== -1) {
-      const textArea = this.#editorEl.querySelector(this.editorInputClass);
-      if (textArea) {
-        textArea.focus();
-        // textArea.setSelectionRange(startIndex, endIndex);
-        textArea.selectionStart = startIndex;
-        textArea.selectionEnd = endIndex;
-        this.appEvents.trigger(
-          `${this.composerEventPrefix}:apply-surround`,
-          "[grid]",
-          "[/grid]",
-          "grid_surround",
-          { useBlockMode: true }
-        );
+      // Check if the matched image markdown is in the imagesToWrapGrid
+      if (imagesToWrapGrid.has(fullImageMarkdown)) {
+        foundImages.push(fullImageMarkdown);
+        imagesToWrapGrid.delete(fullImageMarkdown);
+
+        // Check if we've found all the images
+        if (imagesToWrapGrid.size === 0) {
+          break;
+        }
+      }
+    }
+
+    // Check if all consecutive images have been found
+    if (foundImages.length === this.#consecutiveImages.length) {
+      const firstImageMarkdown = foundImages[0];
+      const lastImageMarkdown = foundImages[foundImages.length - 1];
+
+      const startIndex = reply.indexOf(firstImageMarkdown);
+      const endIndex =
+        reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+
+      if (startIndex !== -1 && endIndex !== -1) {
+        const textArea = this.#editorEl.querySelector(this.editorInputClass);
+        if (textArea) {
+          textArea.focus();
+          textArea.selectionStart = startIndex;
+          textArea.selectionEnd = endIndex;
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:apply-surround`,
+            "[grid]",
+            "[/grid]",
+            "grid_surround",
+            { useBlockMode: true }
+          );
+        }
       }
     }
   }
