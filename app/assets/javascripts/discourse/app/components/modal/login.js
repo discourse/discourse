@@ -105,9 +105,7 @@ export default class Login extends Component {
   }
 
   get showSignupLink() {
-    return (
-      this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
-    );
+    return this.args.model.canSignUp && !this.showSecondFactor;
   }
 
   get adminLoginPath() {
