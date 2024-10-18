@@ -2841,6 +2841,23 @@ RSpec.describe SessionController do
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
     end
+
+    context "when in staff writes only mode" do
+      before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
+
+      it "allows staff to forget their password" do
+        post "/session/forgot_password.json", params: { login: admin.username }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).not_to be_present
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      end
+
+      it "doesn't allow non-staff to forget their password" do
+        post "/session/forgot_password.json", params: { login: user.username }
+        expect(response.status).to eq(503)
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+      end
+    end
   end
 
   describe "#current" do

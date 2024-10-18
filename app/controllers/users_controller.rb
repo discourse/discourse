@@ -107,8 +107,7 @@ class UsersController < ApplicationController
 
   before_action :add_noindex_header, only: %i[show my_redirect]
 
-  allow_in_staff_writes_only_mode :admin_login
-  allow_in_staff_writes_only_mode :email_login
+  allow_in_staff_writes_only_mode :admin_login, :email_login, :password_reset_update
 
   MAX_RECENT_SEARCHES = 5
 
@@ -866,6 +865,8 @@ class UsersController < ApplicationController
     # no point doing anything else if we can't even find
     # a user from the token
     if @user
+      raise Discourse::ReadOnly if staff_writes_only_mode? && !@user.staff?
+
       if !secure_session["second-factor-#{token}"]
         second_factor_authentication_result =
           @user.authenticate_second_factor(params, secure_session)

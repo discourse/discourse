@@ -600,6 +600,30 @@ RSpec.describe UsersController do
         expect(response.parsed_body["errors"]).to be_blank
         expect(session[:current_user_id]).to be_blank
       end
+
+      context "when in staff writes only mode" do
+        before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
+
+        it "allows staff to reset their password" do
+          admin = Fabricate(:admin)
+          email_token =
+            Fabricate(:email_token, user: admin, scope: EmailToken.scopes[:password_reset])
+
+          put "/u/password-reset/#{email_token.token}.json",
+              params: {
+                password: "hg9ow8yhg98oadminlonger",
+              }
+
+          expect(response.parsed_body["errors"]).to be_blank
+          expect(session[:current_user_id]).to eq(admin.id)
+        end
+
+        it "doesn't allow non-staff to reset their password" do
+          put "/u/password-reset/#{email_token.token}.json", params: { password: "ksjafh928r" }
+          expect(response.parsed_body["errors"]).to_not be_blank
+          expect(session[:current_user_id]).to be_blank
+        end
+      end
     end
   end
 

@@ -12,8 +12,7 @@ class SessionController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
-  allow_in_staff_writes_only_mode :create
-  allow_in_staff_writes_only_mode :email_login
+  allow_in_staff_writes_only_mode :create, :email_login, :forgot_password
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
@@ -634,6 +633,7 @@ class SessionController < ApplicationController
       end
 
     if user
+      raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
       enqueue_password_reset_for_user(user)
     else
       RateLimiter.new(
