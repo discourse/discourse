@@ -738,12 +738,16 @@ export default class UppyComposerUpload {
     const startIndex = reply.indexOf(firstImageMarkdown);
     const endIndex =
       reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+
     console.log(startIndex, endIndex, firstImageMarkdown, lastImageMarkdown);
+
     if (startIndex !== -1 && endIndex !== -1) {
       const textArea = this.#editorEl.querySelector(this.editorInputClass);
       if (textArea) {
         textArea.focus();
-        textArea.setSelectionRange(startIndex, endIndex);
+        // textArea.setSelectionRange(startIndex, endIndex);
+        textArea.selectionStart = startIndex;
+        textArea.selectionEnd = endIndex;
         this.appEvents.trigger(
           `${this.composerEventPrefix}:apply-surround`,
           "[grid]",
