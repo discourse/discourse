@@ -26,6 +26,7 @@
     }
 
     button {
+      padding-block: 0.65rem;
       width: fit-content;
     }
   }
@@ -182,10 +183,6 @@
   .login-welcome-header {
     padding-bottom: 0.25rem;
     padding-top: 0;
-  }
-
-  .signup-progress-bar {
-    padding-inline: 1em;
   }
 
   #login-form {
