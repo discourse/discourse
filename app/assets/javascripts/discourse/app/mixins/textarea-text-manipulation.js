@@ -1,5 +1,4 @@
 import { action } from "@ember/object";
-import Mixin from "@ember/object/mixin";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { generateLinkifyFunction } from "discourse/lib/text";
@@ -35,52 +34,56 @@ export function getHead(head, prev) {
   }
 }
 
-export default Mixin.create({
-  init() {
-    this._super(...arguments);
+export default class TextareaTextManipulation {
+  composerEventPrefix;
+  editor;
 
-    // fallback in the off chance someone has implemented a custom composer
-    // which does not define this
-    if (!this.composerEventPrefix) {
-      this.composerEventPrefix = "composer";
-    }
+  constructor(editor, composerEventPrefix = "composer") {
+    this.editor = editor;
+    this.composerEventPrefix = composerEventPrefix;
 
-    generateLinkifyFunction(this.markdownOptions || {}).then((linkify) => {
-      // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
-      this._cachedLinkify = linkify;
-    });
-  },
+    generateLinkifyFunction(this.editor.markdownOptions || {}).then(
+      (linkify) => {
+        // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
+        this._cachedLinkify = linkify;
+      }
+    );
+  }
 
   // ensures textarea scroll position is correct
   focusTextArea() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+    if (
+      !this.editor.element ||
+      this.editor.isDestroying ||
+      this.editor.isDestroyed
+    ) {
       return;
     }
 
-    if (!this._textarea) {
+    if (!this.editor._textarea) {
       return;
     }
 
-    this._textarea.blur();
-    this._textarea.focus();
-  },
+    this.editor._textarea.blur();
+    this.editor._textarea.focus();
+  }
 
   insertBlock(text) {
     this._addBlock(this.getSelected(), text);
-  },
+  }
 
   insertText(text, options) {
     this.addText(this.getSelected(), text, options);
-  },
+  }
 
   getSelected(trimLeading, opts) {
-    if (!this.ready || !this.element) {
+    if (!this.editor.ready || !this.editor.element) {
       return;
     }
 
-    const value = this._textarea.value;
-    let start = this._textarea.selectionStart;
-    let end = this._textarea.selectionEnd;
+    const value = this.editor._textarea.value;
+    let start = this.editor._textarea.selectionStart;
+    let end = this.editor._textarea.selectionEnd;
 
     // trim trailing spaces cause **test ** would be invalid
     while (end > start && /\s/.test(value.charAt(end - 1))) {
@@ -101,36 +104,37 @@ export default Mixin.create({
     if (opts && opts.lineVal) {
       const lineVal =
         value.split("\n")[
-          value.slice(0, this._textarea.selectionStart).split("\n").length - 1
+          value.slice(0, this.editor._textarea.selectionStart).split("\n")
+            .length - 1
         ];
       return { start, end, value: selVal, pre, post, lineVal };
     } else {
       return { start, end, value: selVal, pre, post };
     }
-  },
+  }
 
   selectText(from, length, opts = { scroll: true }) {
     next(() => {
-      if (!this.element) {
+      if (!this.editor.element) {
         return;
       }
-      this._textarea.selectionStart = from;
-      this._textarea.selectionEnd = from + length;
+      this.editor._textarea.selectionStart = from;
+      this.editor._textarea.selectionEnd = from + length;
       if (opts.scroll === true || typeof opts.scroll === "number") {
         const oldScrollPos =
           typeof opts.scroll === "number"
             ? opts.scroll
-            : this._textarea.scrollTop;
-        if (!this.capabilities.isIOS) {
-          this._textarea.focus();
+            : this.editor._textarea.scrollTop;
+        if (!this.editor.capabilities.isIOS) {
+          this.editor._textarea.focus();
         }
-        this._textarea.scrollTop = oldScrollPos;
+        this.editor._textarea.scrollTop = oldScrollPos;
       }
     });
-  },
+  }
 
   replaceText(oldVal, newVal, opts = {}) {
-    const val = this.value;
+    const val = this.editor.value;
     const needleStart = val.indexOf(oldVal);
 
     if (needleStart === -1) {
@@ -141,8 +145,8 @@ export default Mixin.create({
     // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
       selection: {
-        start: this._textarea.selectionStart,
-        end: this._textarea.selectionEnd,
+        start: this.editor._textarea.selectionStart,
+        end: this.editor._textarea.selectionEnd,
       },
       needle: { start: needleStart, end: needleStart + oldVal.length },
       replacement: { start: needleStart, end: needleStart + newVal.length },
@@ -167,7 +171,7 @@ export default Mixin.create({
     }
 
     if (
-      (opts.forceFocus || this._$textarea.is(":focus")) &&
+      (opts.forceFocus || this.editor._$textarea.is(":focus")) &&
       !opts.skipNewSelection
     ) {
       // Restore cursor.
@@ -176,7 +180,7 @@ export default Mixin.create({
         newSelection.end - newSelection.start
       );
     }
-  },
+  }
 
   applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
@@ -240,7 +244,7 @@ export default Mixin.create({
         }
       }
     }
-  },
+  }
 
   // perform the same operation over many lines of text
   _getMultilineContents(lines, head, hval, hlen, tail, tlen, opts) {
@@ -280,7 +284,7 @@ export default Mixin.create({
         return result;
       })
       .join("\n");
-  },
+  }
 
   _addBlock(sel, text) {
     text = (text || "").trim();
@@ -312,9 +316,12 @@ export default Mixin.create({
     }
 
     this._insertAt(start, end, text);
-    this._textarea.setSelectionRange(start + text.length, start + text.length);
+    this.editor._textarea.setSelectionRange(
+      start + text.length,
+      start + text.length
+    );
     schedule("afterRender", this, this.focusTextArea);
-  },
+  }
 
   addText(sel, text, options) {
     if (options && options.ensureSpace) {
@@ -332,17 +339,17 @@ export default Mixin.create({
 
     this._insertAt(sel.start, sel.end, text);
     this.focusTextArea();
-  },
+  }
 
   _insertAt(start, end, text) {
-    this._textarea.setSelectionRange(start, end);
-    this._textarea.focus();
+    this.editor._textarea.setSelectionRange(start, end);
+    this.editor._textarea.focus();
     if (start !== end && text === "") {
       document.execCommand("delete", false);
     } else {
       document.execCommand("insertText", false, text);
     }
-  },
+  }
 
   extractTable(text) {
     if (text.endsWith("\n")) {
@@ -379,24 +386,24 @@ export default Mixin.create({
       }
     }
     return null;
-  },
+  }
 
   isInside(text, regex) {
     const matches = text.match(regex);
     return matches && matches.length % 2;
-  },
+  }
 
   @bind
   paste(e) {
     const isComposer =
-      document.querySelector(this.composerFocusSelector) === e.target;
+      document.querySelector(this.editor.composerFocusSelector) === e.target;
 
     if (!isComposer && !isTesting()) {
       return;
     }
 
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
-      siteSettings: this.siteSettings,
+      siteSettings: this.editor.siteSettings,
       canUpload: isComposer,
     });
 
@@ -411,7 +418,7 @@ export default Mixin.create({
 
     if (
       plainText &&
-      this.siteSettings.enable_rich_text_paste &&
+      this.editor.siteSettings.enable_rich_text_paste &&
       !isInlinePasting &&
       !isCodeBlock
     ) {
@@ -419,7 +426,7 @@ export default Mixin.create({
       const table = this.extractTable(plainText);
       if (table) {
         this.composerEventPrefix
-          ? this.appEvents.trigger(
+          ? this.editor.appEvents.trigger(
               `${this.composerEventPrefix}:insert-text`,
               table
             )
@@ -476,7 +483,7 @@ export default Mixin.create({
 
         if (isComposer) {
           this.composerEventPrefix
-            ? this.appEvents.trigger(
+            ? this.editor.appEvents.trigger(
                 `${this.composerEventPrefix}:insert-text`,
                 markdown
               )
@@ -489,7 +496,7 @@ export default Mixin.create({
     if (handled || (canUpload && !plainText)) {
       e.preventDefault();
     }
-  },
+  }
 
   /**
    * Removes the provided char from the provided str up
@@ -506,7 +513,7 @@ export default Mixin.create({
       }
     }
     return str;
-  },
+  }
 
   _updateListNumbers(text, currentNumber) {
     return text
@@ -523,12 +530,12 @@ export default Mixin.create({
         return line;
       })
       .join("\n");
-  },
+  }
 
   @bind
   maybeContinueList() {
-    const offset = caretPosition(this._textarea);
-    const text = this._textarea.value;
+    const offset = caretPosition(this.editor._textarea);
+    const text = this.editor._textarea.value;
     const lines = text.substring(0, offset).split("\n");
 
     // Only continue if the previous line was a list item.
@@ -610,7 +617,7 @@ export default Mixin.create({
           numericBullet + 1
         );
         autocompletePrefix += autocompletePostfix;
-        scrollPosition = this._textarea.scrollTop;
+        scrollPosition = this.editor._textarea.scrollTop;
 
         this.replaceText(
           text.substring(offset, offset + autocompletePrefix.length),
@@ -636,7 +643,7 @@ export default Mixin.create({
       );
       this.selectText(offsetWithoutPrefix, 0);
     }
-  },
+  }
 
   @bind
   indentSelection(direction) {
@@ -709,9 +716,9 @@ export default Mixin.create({
 
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
-      this.selectText(this.value.indexOf(newValue), newValue.length);
+      this.selectText(this.editor.value.indexOf(newValue), newValue.length);
     }
-  },
+  }
 
   @action
   emojiSelected(code) {
@@ -732,9 +739,9 @@ export default Mixin.create({
         `${code}:`
       );
     }
-  },
+  }
 
   isInsideCodeFence(beforeText) {
     return this.isInside(beforeText, /(^|\n)```/g);
-  },
-});
+  }
+}

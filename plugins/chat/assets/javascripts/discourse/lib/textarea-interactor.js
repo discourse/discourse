@@ -8,12 +8,12 @@ import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulatio
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly
 // in the composer component. It will make future migration easier.
-export default class TextareaInteractor extends EmberObject.extend(
-  TextareaTextManipulation
-) {
+export default class TextareaInteractor extends EmberObject {
   @service capabilities;
   @service site;
   @service siteSettings;
+
+  textManipulation;
 
   constructor(owner, textarea) {
     super(...arguments);
@@ -24,16 +24,16 @@ export default class TextareaInteractor extends EmberObject.extend(
     this.ready = true;
     this.composerFocusSelector = `#${textarea.id}`;
 
-    this.init(); // mixin init wouldn't be called otherwise
-    this.composerEventPrefix = null; // we don't need app events
+    // we don't need app events, passing null to composerEventPrefix
+    this.textManipulation = new TextareaTextManipulation(this, null);
 
     // paste is using old native ember events defined on composer
-    this.textarea.addEventListener("paste", this.paste);
+    this.textarea.addEventListener("paste", this.textManipulation.paste);
     registerDestructor(this, (instance) => instance.teardown());
   }
 
   teardown() {
-    this.textarea.removeEventListener("paste", this.paste);
+    this.textarea.removeEventListener("paste", this.textManipulation.paste);
   }
 
   set value(value) {
@@ -69,10 +69,13 @@ export default class TextareaInteractor extends EmberObject.extend(
         }
 
         if (opts.addText) {
-          this.addText(this.getSelected(), opts.addText);
+          this.textManipulation.addText(
+            this.textManipulation.getSelected(),
+            opts.addText
+          );
         }
 
-        this.focusTextArea();
+        this.textManipulation.focusTextArea();
       });
     });
   }
@@ -96,5 +99,21 @@ export default class TextareaInteractor extends EmberObject.extend(
       // causing scrollbars to show when they shouldn’t
       this._textarea.style.height = this._textarea.scrollHeight + 1 + "px";
     });
+  }
+
+  getSelected() {
+    return this.textManipulation.getSelected(...arguments);
+  }
+
+  applySurround() {
+    return this.textManipulation.applySurround(...arguments);
+  }
+
+  addText() {
+    return this.textManipulation.addText(...arguments);
+  }
+
+  isInside() {
+    return this.textManipulation.isInside(...arguments);
   }
 }
