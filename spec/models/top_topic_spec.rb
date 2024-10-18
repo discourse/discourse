@@ -34,6 +34,36 @@ RSpec.describe TopTopic do
     end
   end
 
+  describe ".validate_period" do
+    context "when passing a valid period" do
+      it do
+        expect { described_class.validate_period(described_class.periods.first) }.not_to raise_error
+      end
+    end
+
+    context "when passing a blank value" do
+      it do
+        expect { described_class.validate_period(nil) }.to raise_error(Discourse::InvalidParameters)
+      end
+    end
+
+    context "when passing an invalid period" do
+      it do
+        expect { described_class.validate_period("bi-weekly") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+
+    context "when passing a non-string value" do
+      it do
+        expect { described_class.validate_period(ActionController::Parameters) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+  end
+
   describe "#compute_top_score_for" do
     fab!(:user)
     fab!(:coding_horror)
