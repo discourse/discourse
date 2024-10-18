@@ -38,14 +38,18 @@ class Admin::Config::AboutController < Admin::AdminController
     settings_map.each do |name, value|
       SiteSetting::Update.call(
         guardian:,
-        setting_name: name,
-        new_value: value,
-        allow_changing_hidden: %i[
-          extended_site_description
-          extended_site_description_cooked
-          about_banner_image
-          community_owner
-        ].include?(name),
+        params: {
+          setting_name: name,
+          new_value: value,
+        },
+        options: {
+          allow_changing_hidden: %i[
+            extended_site_description
+            extended_site_description_cooked
+            about_banner_image
+            community_owner
+          ].include?(name),
+        },
       )
     end
     render json: success_json

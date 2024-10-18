@@ -39,7 +39,6 @@ module Chat
                 },
                 allow_nil: true
     end
-
     model :channel
     policy :can_view_channel
     model :membership, optional: true

@@ -472,9 +472,11 @@ after_initialize do
 
       creator =
         ::Chat::CreateMessage.call(
-          chat_channel_id: channel.id,
           guardian: sender.guardian,
-          message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          params: {
+            chat_channel_id: channel.id,
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          },
         )
 
       if creator.failure?

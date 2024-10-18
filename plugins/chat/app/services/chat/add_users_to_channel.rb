@@ -47,6 +47,10 @@ module Chat
 
     private
 
+    def fetch_channel(contract:)
+      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+    end
+
     def can_add_users_to_channel(guardian:, channel:)
       (guardian.user.admin? || channel.joined_by?(guardian.user)) &&
         channel.direct_message_channel? && channel.chatable.group
@@ -58,10 +62,6 @@ module Chat
         groups: contract.groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
       )
-    end
-
-    def fetch_channel(contract:)
-      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
     def upsert_memberships(channel:, target_users:)
@@ -123,14 +123,16 @@ module Chat
 
       ::Chat::CreateMessage.call(
         guardian: Discourse.system_user.guardian,
-        chat_channel_id: channel.id,
-        message:
-          I18n.t(
-            "chat.channel.users_invited_to_channel",
-            invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
-            inviting_user: "@#{guardian.user.username}",
-            count: added_users.count,
-          ),
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "chat.channel.users_invited_to_channel",
+              invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
+              inviting_user: "@#{guardian.user.username}",
+              count: added_users.count,
+            ),
+        },
       ) { on_failure { fail!(failure: "Failed to notice the channel") } }
     end
   end

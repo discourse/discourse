@@ -17,7 +17,7 @@ module Chat
 
     model :channel, :fetch_channel
     contract do
-      attribute :status
+      attribute :status, :string
 
       validates :status, inclusion: { in: Chat::Channel.editable_statuses.keys }
     end
@@ -26,17 +26,17 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:)
-      Chat::Channel.find_by(id: channel_id)
+    def fetch_channel(params:)
+      Chat::Channel.find_by(id: params[:channel_id])
     end
 
-    def check_channel_permission(guardian:, channel:, status:)
+    def check_channel_permission(guardian:, channel:, contract:)
       guardian.can_preview_chat_channel?(channel) &&
-        guardian.can_change_channel_status?(channel, status.to_sym)
+        guardian.can_change_channel_status?(channel, contract.status.to_sym)
     end
 
-    def change_status(channel:, status:, guardian:)
-      channel.public_send("#{status}!", guardian.user)
+    def change_status(channel:, contract:, guardian:)
+      channel.public_send("#{contract.status}!", guardian.user)
     end
   end
 end

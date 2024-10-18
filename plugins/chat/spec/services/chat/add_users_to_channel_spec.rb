@@ -10,7 +10,7 @@ RSpec.describe Chat::AddUsersToChannel do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:users) { Fabricate.times(5, :user) }
@@ -21,9 +21,8 @@ RSpec.describe Chat::AddUsersToChannel do
     fab!(:group) { Fabricate(:public_group, users: [group_user_1, group_user_2]) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) do
-      { guardian: guardian, channel_id: channel.id, usernames: users.map(&:username) }
-    end
+    let(:params) { { channel_id: channel.id, usernames: users.map(&:username) } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
       before { channel.add(current_user) }

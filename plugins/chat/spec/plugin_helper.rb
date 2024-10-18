@@ -38,11 +38,13 @@ module ChatSystemHelpers
       last_user = ((users - [last_user]).presence || users).sample
       creator =
         Chat::CreateMessage.call(
-          chat_channel_id: channel.id,
-          in_reply_to_id: in_reply_to,
-          thread_id: thread_id,
           guardian: last_user.guardian,
-          message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          params: {
+            chat_channel_id: channel.id,
+            in_reply_to_id: in_reply_to,
+            thread_id: thread_id,
+            message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          },
         )
 
       raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
@@ -70,10 +72,14 @@ module ChatSpecHelpers
     result =
       Chat::UpdateMessage.call(
         guardian: user.guardian,
-        message_id: message.id,
-        upload_ids: upload_ids,
-        message: text,
-        process_inline: true,
+        params: {
+          message_id: message.id,
+          upload_ids: upload_ids,
+          message: text,
+        },
+        options: {
+          process_inline: true,
+        },
       )
     service_failed!(result) if result.failure?
     result.message_instance
@@ -82,8 +88,10 @@ module ChatSpecHelpers
   def trash_message!(message, user: Discourse.system_user)
     result =
       Chat::TrashMessage.call(
-        message_id: message.id,
-        channel_id: message.chat_channel_id,
+        params: {
+          message_id: message.id,
+          channel_id: message.chat_channel_id,
+        },
         guardian: user.guardian,
       )
     service_failed!(result) if result.failure?
@@ -93,8 +101,10 @@ module ChatSpecHelpers
   def restore_message!(message, user: Discourse.system_user)
     result =
       Chat::RestoreMessage.call(
-        message_id: message.id,
-        channel_id: message.chat_channel_id,
+        params: {
+          message_id: message.id,
+          channel_id: message.chat_channel_id,
+        },
         guardian: user.guardian,
       )
     service_failed!(result) if result.failure?
@@ -105,8 +115,10 @@ module ChatSpecHelpers
     result =
       ::Chat::AddUsersToChannel.call(
         guardian: user.guardian,
-        channel_id: channel.id,
-        usernames: Array(users).map(&:username),
+        params: {
+          channel_id: channel.id,
+          usernames: Array(users).map(&:username),
+        },
       )
     service_failed!(result) if result.failure?
     result
@@ -122,9 +134,11 @@ module ChatSpecHelpers
     result =
       ::Chat::UpsertDraft.call(
         guardian: user.guardian,
-        channel_id: channel.id,
-        thread_id: thread&.id,
-        data: data.to_json,
+        params: {
+          channel_id: channel.id,
+          thread_id: thread&.id,
+          data: data.to_json,
+        },
       )
     service_failed!(result) if result.failure?
     result
