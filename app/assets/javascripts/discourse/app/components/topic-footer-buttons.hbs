@@ -101,10 +101,7 @@
     />
   {{/if}}
 
-  <TopicNotificationsButton
-    @notificationLevel={{this.topic.details.notification_level}}
-    @topic={{this.topic}}
-  />
+  <TopicNotificationsButton @topic={{this.topic}} />
 {{/if}}
 
 <PluginOutlet
