@@ -22,15 +22,16 @@ module Chat
   # Only channels with threads enabled will return thread tracking state.
   #
   # @example
-  #  Chat::TrackingState.call(channel_ids: [2, 3], thread_ids: [6, 7], guardian: guardian)
+  #  Chat::TrackingState.call(params: { channel_ids: [2, 3], thread_ids: [6, 7] }, guardian: guardian)
   #
   class TrackingState
     include Service::Base
 
-    # @!method call(thread_ids:, channel_ids:, guardian:)
-    #   @param [Integer] thread_ids
-    #   @param [Integer] channel_ids
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_ids
+    #   @option params [Integer] :channel_ids
     #   @return [Service::Base::Context]
 
     contract do

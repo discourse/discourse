@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Chat::LookupUserThreads do
-  subject(:result) { described_class.call(params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -11,7 +11,8 @@ RSpec.describe ::Chat::LookupUserThreads do
   let(:channel_id) { channel_1.id }
   let(:limit) { 10 }
   let(:offset) { 0 }
-  let(:params) { { guardian: guardian, limit: limit, offset: offset } }
+  let(:params) { { limit:, offset: } }
+  let(:dependencies) { { guardian: } }
 
   before do
     channel_1.add(current_user)

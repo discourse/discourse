@@ -7,7 +7,7 @@ RSpec.describe Chat::UpdateThread do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -17,7 +17,8 @@ RSpec.describe Chat::UpdateThread do
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { "some new title :D" }
-    let(:params) { { guardian: guardian, thread_id: thread.id, title: title } }
+    let(:params) { { thread_id: thread.id, title: } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
       it { is_expected.to run_successfully }

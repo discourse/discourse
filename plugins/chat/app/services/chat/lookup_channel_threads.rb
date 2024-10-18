@@ -10,18 +10,19 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupChannelThreads.call(channel_id: 2, guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupChannelThreads.call(params: { channel_id: 2, limit: 5, offset: 2 }, guardian: guardian)
   #
   class LookupChannelThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(channel_id:, guardian:, limit: nil, offset: nil)
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
     contract do
