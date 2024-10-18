@@ -29,11 +29,16 @@ export default class AutomationEdit extends Controller {
   saveAutomation() {
     this.setProperties({ error: null, isUpdatingAutomation: true });
 
+    const updatedAutomationForm = {
+      ...this.automationForm,
+      name: this.automationForm.name,
+    };
+
     return ajax(
       `/admin/plugins/discourse-automation/automations/${this.model.automation.id}.json`,
       {
         type: "PUT",
-        data: JSON.stringify({ automation: this.automationForm }),
+        data: JSON.stringify({ automation: updatedAutomationForm }),
         dataType: "json",
         contentType: "application/json",
       }
