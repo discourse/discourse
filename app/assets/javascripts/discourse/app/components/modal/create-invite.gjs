@@ -46,7 +46,7 @@ export default class CreateInvite extends Component {
     super(...arguments);
 
     Group.findAll().then((groups) => {
-      this.allGroups = groups.filterBy("automatic", false);
+      this.allGroups = groups.filter((group) => !group.automatic);
     });
   }
 
