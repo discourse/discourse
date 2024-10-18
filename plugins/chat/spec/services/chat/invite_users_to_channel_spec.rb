@@ -7,7 +7,7 @@ RSpec.describe Chat::InviteUsersToChannel do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:admin) }
     fab!(:user_1) { Fabricate(:user) }

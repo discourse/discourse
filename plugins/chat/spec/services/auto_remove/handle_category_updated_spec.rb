@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     let(:params) { { category_id: updated_category.id } }
 

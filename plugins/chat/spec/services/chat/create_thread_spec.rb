@@ -8,7 +8,7 @@ RSpec.describe Chat::CreateThread do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -16,14 +16,8 @@ RSpec.describe Chat::CreateThread do
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { nil }
-    let(:params) do
-      {
-        guardian: guardian,
-        original_message_id: message_1.id,
-        channel_id: channel_1.id,
-        title: title,
-      }
-    end
+    let(:params) { { original_message_id: message_1.id, channel_id: channel_1.id, title: } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
       it { is_expected.to run_successfully }
@@ -101,8 +95,10 @@ RSpec.describe Chat::CreateThread do
       before do
         Chat::CreateThread.call(
           guardian: current_user.guardian,
-          original_message_id: message_1.id,
-          channel_id: channel_1.id,
+          params: {
+            original_message_id: message_1.id,
+            channel_id: channel_1.id,
+          },
         )
       end
 

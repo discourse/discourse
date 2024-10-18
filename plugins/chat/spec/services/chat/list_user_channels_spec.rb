@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ListUserChannels do
-  subject(:result) { described_class.call(params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
 
   let(:guardian) { Guardian.new(current_user) }
-  let(:params) { { guardian: guardian } }
+  let(:params) { {} }
+  let(:dependencies) { { guardian: } }
 
   before { channel_1.add(current_user) }
 
