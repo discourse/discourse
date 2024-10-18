@@ -3,9 +3,9 @@
 RSpec.describe(Flags::DestroyFlag) do
   subject(:result) { described_class.call(**params, **dependencies) }
 
-  fab!(:flag)
   fab!(:current_user) { Fabricate(:admin) }
 
+  let(:flag) { Fabricate(:flag) }
   let(:params) { { id: flag_id } }
   let(:dependencies) { { guardian: current_user.guardian } }
   let(:flag_id) { flag.id }

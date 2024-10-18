@@ -13,9 +13,9 @@ RSpec.describe(Flags::UpdateFlag) do
   describe ".call" do
     subject(:result) { described_class.call(**params, **dependencies) }
 
-    fab!(:flag)
     fab!(:current_user) { Fabricate(:admin) }
 
+    let(:flag) { Fabricate(:flag) }
     let(:params) { { id: flag_id, name:, description:, applies_to:, require_message:, enabled: } }
     let(:dependencies) { { guardian: current_user.guardian } }
     let(:flag_id) { flag.id }
