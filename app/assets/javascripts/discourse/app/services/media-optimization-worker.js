@@ -170,7 +170,7 @@ export default class MediaOptimizationWorkerService extends Service {
 
           this.workerDoneCount++;
           this.workerPendingCount--;
-          if (this.workerDoneCount > 2 && this.workerPendingCount === 0) {
+          if (this.workerDoneCount > 0 && this.workerPendingCount === 0) {
             this.logIfDebug("Terminating worker to release memory in WASM.");
             this.stopWorker();
           }
