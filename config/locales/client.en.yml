@@ -1965,16 +1965,16 @@ en:
 
         invite:
           new_title: "Invite members"
-          edit_title: "Edit Invite"
+          edit_title: "Edit invite"
 
           instructions: "Share this link to instantly grant access to this site:"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
           create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
           copy_link_and_share_it: "Copy the link below and share it to instantly grant access to this site."
-          copy_link: "Copy Link"
-          link_copied: "Link Copied!"
-          share_link: "Share Link"
+          copy_link: "Copy link"
+          link_copied: "Link copied!"
+          share_link: "Share link"
           link_validity_MF: |
             Link is valid for up to { user_count, plural,
                 one {# user}
@@ -2005,7 +2005,7 @@ en:
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
           save_invite: "Save"
           cancel: "Cancel"
-          create_link: "Create Link"
+          create_link: "Create link"
 
           invite_saved: "Invite saved."
 
