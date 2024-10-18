@@ -20,6 +20,9 @@ function drawableToImageData(drawable) {
   ctx.drawImage(drawable, sx, sy, sw, sh, 0, 0, width, height);
   const imageData = ctx.getImageData(0, 0, width, height);
 
+  // Safari shenanigans
+  canvas.width = canvas.height = 0;
+
   return imageData;
 }
 
