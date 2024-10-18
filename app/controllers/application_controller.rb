@@ -1164,6 +1164,6 @@ class ApplicationController < ActionController::Base
   end
 
   def service_params
-    params.to_unsafe_h.merge(guardian:)
+    { params: params.to_unsafe_h, guardian: }
   end
 end

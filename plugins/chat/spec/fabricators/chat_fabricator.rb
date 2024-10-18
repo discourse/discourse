@@ -93,16 +93,20 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
 
     result =
       resolved_class.call(
-        chat_channel_id: channel.id,
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            transients[:message] ||
+              Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          thread_id: transients[:thread]&.id,
+          in_reply_to_id: transients[:in_reply_to]&.id,
+          upload_ids: transients[:upload_ids],
+        },
+        options: {
+          process_inline: true,
+        },
         guardian: user.guardian,
-        message:
-          transients[:message] ||
-            Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
-        thread_id: transients[:thread]&.id,
-        in_reply_to_id: transients[:in_reply_to]&.id,
-        upload_ids: transients[:upload_ids],
         incoming_chat_webhook: transients[:incoming_chat_webhook],
-        process_inline: true,
       )
 
     if result.failure?

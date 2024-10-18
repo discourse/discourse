@@ -4,16 +4,17 @@ module Chat
   # Creates a thread.
   #
   # @example
-  #  Chat::CreateThread.call(channel_id: 2, original_message_id: 3, guardian: guardian, title: "Restaurant for Saturday")
+  #  Chat::CreateThread.call(guardian: guardian, params: { channel_id: 2, original_message_id: 3, title: "Restaurant for Saturday" })
   #
   class CreateThread
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, **params_to_create)
-    #   @param [Integer] original_message_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option params_to_create [String,nil] title
+    #   @param [Hash] params
+    #   @option params [Integer] :original_message_id
+    #   @option params [Integer] :channel_id
+    #   @option params [String,nil] :title
     #   @return [Service::Base::Context]
 
     contract do

@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::AutoRemove::HandleUserRemovedFromGroup do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     let(:params) { { user_id: removed_user.id } }
     fab!(:removed_user) { Fabricate(:user) }

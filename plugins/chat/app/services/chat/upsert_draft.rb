@@ -6,20 +6,24 @@ module Chat
   # @example
   #  ::Chat::UpsertDraft.call(
   #    guardian: guardian,
-  #    channel_id: 1,
-  #    thread_id: 1,
-  #    data: { message: "foo" }
+  #    params: {
+  #      channel_id: 1,
+  #      thread_id: 1,
+  #      data: { message: "foo" }
+  #    }
   #  )
   #
   class UpsertDraft
     include Service::Base
 
-    # @!method call(guardian:, channel_id:, thread_id:, data:)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] channel_id of the channel
-    #   @param [String] json object as string containing the data of the draft (message, uploads, replyToMsg and editing keys)
-    #   @option [Integer] thread_id of the channel
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id ID of the channel
+    #   @option params [String] :data JSON object as string containing the data of the draft (message, uploads, replyToMsg and editing keys)
+    #   @option params [Integer] :thread_id ID of the thread
     #   @return [Service::Base::Context]
+
     contract do
       attribute :channel_id, :integer
       validates :channel_id, presence: true

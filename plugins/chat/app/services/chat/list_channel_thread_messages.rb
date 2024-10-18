@@ -5,14 +5,15 @@ module Chat
   # or fetching paginated messages from last read.
   #
   # @example
-  #  Chat::ListThreadMessages.call(thread_id: 2, guardian: guardian, **optional_params)
+  #  Chat::ListThreadMessages.call(params: { thread_id: 2, **optional_params }, guardian: guardian)
   #
   class ListChannelThreadMessages
     include Service::Base
 
-    # @!method call(guardian:)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option optional_params [Integer] thread_id
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_id
     #   @return [Service::Base::Context]
 
     contract do

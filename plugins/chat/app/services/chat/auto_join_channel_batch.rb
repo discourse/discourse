@@ -6,9 +6,11 @@ module Chat
   #
   # @example
   #  Chat::AutoJoinChannelBatch.call(
-  #   channel_id: 1,
-  #   start_user_id: 27,
-  #   end_user_id: 58,
+  #    params: {
+  #      channel_id: 1,
+  #      start_user_id: 27,
+  #      end_user_id: 58,
+  #    }
   #  )
   #
   class AutoJoinChannelBatch

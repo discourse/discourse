@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe(AdminNotices::Dismiss) do
-  subject(:result) { described_class.call(**params, **dependencies) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:current_user) { Fabricate(:admin) }
   fab!(:admin_notice) { Fabricate(:admin_notice, identifier: "problem.test") }

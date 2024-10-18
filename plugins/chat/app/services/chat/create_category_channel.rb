@@ -6,25 +6,27 @@ module Chat
   # @example
   #  Service::Chat::CreateCategoryChannel.call(
   #   guardian: guardian,
-  #   name: "SuperChannel",
-  #   description: "This is the best channel",
-  #   slug: "super-channel",
-  #   category_id: category.id,
-  #   threading_enabled: true,
+  #   params: {
+  #     name: "SuperChannel",
+  #     description: "This is the best channel",
+  #     slug: "super-channel",
+  #     category_id: category.id,
+  #     threading_enabled: true,
+  #   }
   #  )
   #
   class CreateCategoryChannel
     include Service::Base
 
-    # @!method call(guardian:, **params_to_create)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_create
-    #   @option params_to_create [String] name
-    #   @option params_to_create [String] description
-    #   @option params_to_create [String] slug
-    #   @option params_to_create [Boolean] auto_join_users
-    #   @option params_to_create [Integer] category_id
-    #   @option params_to_create [Boolean] threading_enabled
+    #   @param [Hash] params
+    #   @option params [String] :name
+    #   @option params [String] :description
+    #   @option params [String] :slug
+    #   @option params [Boolean] :auto_join_users
+    #   @option params [Integer] :category_id
+    #   @option params [Boolean] :threading_enabled
     #   @return [Service::Base::Context]
 
     policy :public_channels_enabled

@@ -98,6 +98,10 @@ class Service::StepsInspector
       nil
     end
   end
+  #
+  # @!visibility private
+  class Options < Step
+  end
 
   attr_reader :steps, :result
 

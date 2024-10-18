@@ -6,15 +6,16 @@ module Chat
   # updated.
   #
   # @example
-  #  Chat::RestoreMessage.call(message_id: 2, channel_id: 1, guardian: guardian)
+  #  Chat::RestoreMessage.call(params: { message_id: 2, channel_id: 1 }, guardian: guardian)
   #
   class RestoreMessage
     include Service::Base
 
-    # @!method call(message_id:, channel_id:, guardian:)
-    #   @param [Integer] message_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :message_id
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
     contract do

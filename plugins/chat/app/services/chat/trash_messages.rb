@@ -6,15 +6,16 @@ module Chat
   # is updated.
   #
   # @example
-  #  Chat::TrashMessages.call(message_ids: [2, 3], channel_id: 1, guardian: guardian)
+  #  Chat::TrashMessages.call(params: { message_ids: [2, 3], channel_id: 1 }, guardian: guardian)
   #
   class TrashMessages
     include Service::Base
 
-    # @!method call(message_ids:, channel_id:, guardian:)
-    #   @param [Array<Integer>] message_ids
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Array<Integer>] :message_ids
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
     contract do
