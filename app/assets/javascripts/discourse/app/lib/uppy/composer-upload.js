@@ -776,5 +776,7 @@ export default class UppyComposerUpload {
         }
       }
     }
+    // Clear found images for the next consecutive images:
+    foundImages.length = 0;
   }
 }
