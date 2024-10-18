@@ -15,6 +15,7 @@ RSpec.describe Chat::ChatableUserSerializer do
         username: user.username,
         name: user.name,
         avatar_template: user.avatar_template,
+        avatar_dominant_color: user.avatar_dominant_color,
         custom_fields: {
         },
         can_chat: true,

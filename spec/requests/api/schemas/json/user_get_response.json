@@ -23,6 +23,9 @@
         "avatar_template": {
           "type": "string"
         },
+        "avatar_dominant_color": {
+          "type": "string"
+        },
         "last_posted_at": {
           "type": [
             "string",
@@ -850,6 +853,7 @@
         "username",
         "name",
         "avatar_template",
+        "avatar_dominant_color",
         "last_posted_at",
         "last_seen_at",
         "created_at",

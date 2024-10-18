@@ -12,6 +12,7 @@ class UserLookup
       admin
       moderator
       trust_level
+      dominant_color
     ]
   end
 
