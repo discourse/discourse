@@ -19,7 +19,7 @@ import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
+import { FORMAT as DATE_INPUT_FORMAT } from "select-kit/components/future-date-input-selector";
 import GroupChooser from "select-kit/components/group-chooser";
 import TopicChooser from "select-kit/components/topic-chooser";
 
@@ -191,7 +191,7 @@ export default class CreateInvite extends Component {
     } else if (data.expiresAfterDays) {
       submitData.expires_at = moment()
         .add(data.expiresAfterDays, "days")
-        .format(FORMAT);
+        .format(DATE_INPUT_FORMAT);
     }
 
     await this.save(submitData);
@@ -228,7 +228,7 @@ export default class CreateInvite extends Component {
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
         .add(this.siteSettings.invite_expiry_days, "days")
-        .format(FORMAT),
+        .format(DATE_INPUT_FORMAT),
     });
   }
 
