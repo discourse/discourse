@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::UpdateThreadNotificationSettings do
-  describe Chat::UpdateThreadNotificationSettings::Contract, type: :model do
+  describe described_class::Contract, type: :model do
+    let(:notification_levels) { Chat::UserChatThreadMembership.notification_levels.values }
+
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
     it { is_expected.to validate_presence_of :notification_level }
+    it { is_expected.to validate_inclusion_of(:notification_level).in_array(notification_levels) }
   end
 
   describe ".call" do

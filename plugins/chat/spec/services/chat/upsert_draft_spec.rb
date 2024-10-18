@@ -2,8 +2,6 @@
 
 RSpec.describe Chat::UpsertDraft do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(data: nil, channel_id: nil, thread_id: nil) }
-
     it { is_expected.to validate_presence_of :channel_id }
   end
 

@@ -65,13 +65,11 @@ module Chat
     end
 
     def update_channel(channel:, contract:)
-      channel.assign_attributes(contract.attributes)
-      context[:threading_enabled_changed] = channel.threading_enabled_changed?
-      channel.save!
+      channel.update!(contract.attributes)
     end
 
     def mark_all_threads_as_read_if_needed(channel:)
-      return if !(context.threading_enabled_changed && channel.threading_enabled)
+      return unless channel.threading_enabled_previously_changed?(to: true)
       Jobs.enqueue(Jobs::Chat::MarkAllChannelThreadsRead, channel_id: channel.id)
     end
 

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::UpdateThread do
-  describe Chat::UpdateThread::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :thread_id }
+    it { is_expected.to validate_length_of(:title).is_at_most(Chat::Thread::MAX_TITLE_LENGTH) }
   end
 
   describe ".call" do
@@ -38,12 +39,6 @@ RSpec.describe Chat::UpdateThread do
 
     context "when params are not valid" do
       before { params.delete(:thread_id) }
-
-      it { is_expected.to fail_a_contract }
-    end
-
-    context "when title is too long" do
-      let(:title) { "a" * Chat::Thread::MAX_TITLE_LENGTH + "a" }
 
       it { is_expected.to fail_a_contract }
     end
