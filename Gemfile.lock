@@ -677,6 +677,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
+  parallel
   parallel_tests
   pg
   pry-byebug
