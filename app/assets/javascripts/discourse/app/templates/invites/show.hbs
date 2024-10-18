@@ -159,6 +159,10 @@
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "invites.name_label"}}
                   </label>
+                  <InputTip
+                    @validation={{this.nameValidation}}
+                    id="fullname-validation"
+                  />
                 </div>
               {{/if}}
 
