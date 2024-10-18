@@ -240,11 +240,11 @@
   .activation-controls {
     flex-direction: column;
     gap: 1em;
+    margin-top: auto;
     margin-bottom: 0.75em;
 
     button {
       height: 2.5em;
-      font-size: var(--font-up-1);
     }
   }
 
@@ -252,7 +252,6 @@
     margin-top: auto;
     margin-bottom: 0.75em;
     width: 100%;
-    font-size: var(--font-up-1);
     height: 2.5em;
   }
 
@@ -270,7 +269,6 @@
       margin-bottom: 0.75em;
       width: 100%;
       height: 2.5em;
-      font-size: var(--font-up-1);
     }
   }
 }
