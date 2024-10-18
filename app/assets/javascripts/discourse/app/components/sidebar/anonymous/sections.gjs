@@ -9,7 +9,10 @@ export default class SidebarAnonymousSections extends Component {
 
   <template>
     <div class="sidebar-sections sidebar-sections-anonymous">
-      <CustomSections @collapsable={{@collapsableSections}} />
+      <CustomSections
+        @collapsable={{@collapsableSections}}
+        @toggleNavigationMenu={{@toggleNavigationMenu}}
+      />
       <CategoriesSection @collapsable={{@collapsableSections}} />
 
       {{#if this.siteSettings.tagging_enabled}}

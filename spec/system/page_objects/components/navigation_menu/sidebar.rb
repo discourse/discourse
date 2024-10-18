@@ -34,14 +34,14 @@ module PageObjects
             I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
           )
 
-          expect(community_section).to have_no_css(".sidebar-more-section-links-details")
+          expect(community_section).to have_no_css(".sidebar-more-section-content")
 
           PageObjects::Modals::SidebarSectionForm.new
         end
 
         def click_community_section_more_button
-          community_section.click_button(class: "sidebar-more-section-links-details-summary")
-          expect(community_section).to have_css(".sidebar-more-section-links-details")
+          community_section.click_button(class: "sidebar-more-section-trigger")
+          expect(community_section).to have_css(".sidebar-more-section-content")
           self
         end
 
