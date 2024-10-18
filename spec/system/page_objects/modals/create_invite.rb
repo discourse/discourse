@@ -3,8 +3,6 @@
 module PageObjects
   module Modals
     class CreateInvite < PageObjects::Modals::Base
-      GRANTABLE_BADGES_DROPDOWN = ".select-kit"
-
       def modal
         find(".create-invite-modal")
       end
