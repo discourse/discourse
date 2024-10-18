@@ -178,7 +178,7 @@ export default class CreateInvite extends Component {
 
   @action
   async onFormSubmit(data) {
-    const obj = {
+    const submitData = {
       emailOrDomain: data.restrictTo?.trim(),
       group_ids: data.inviteToGroups,
       topic_id: data.inviteToTopic,
@@ -187,14 +187,14 @@ export default class CreateInvite extends Component {
     };
 
     if (data.expiresAt) {
-      obj.expires_at = data.expiresAt;
+      submitData.expires_at = data.expiresAt;
     } else if (data.expiresAfterDays) {
-      obj.expires_at = moment()
+      submitData.expires_at = moment()
         .add(data.expiresAfterDays, "days")
         .format(FORMAT);
     }
 
-    await this.save(obj);
+    await this.save(submitData);
   }
 
   @action
