@@ -154,9 +154,9 @@ export default class CreateInvite extends Component {
   get maxRedemptionsAllowedLimit() {
     if (this.currentUser.staff) {
       return this.siteSettings.invite_link_max_redemptions_limit;
-    } else {
-      return this.siteSettings.invite_link_max_redemptions_limit_users;
     }
+
+    return this.siteSettings.invite_link_max_redemptions_limit_users;
   }
 
   get defaultRedemptionsAllowed() {
