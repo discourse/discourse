@@ -14,10 +14,6 @@ class Rails::PluginMigrationGenerator < ActiveRecord::Generators::MigrationGener
   private
 
   def db_migrate_path
-    if options["plugin_name"]
-      "plugins/#{options["plugin_name"]}/db/migrate"
-    else
-      "db/migrate"
-    end
+    "plugins/#{options["plugin_name"]}/db/migrate"
   end
 end
