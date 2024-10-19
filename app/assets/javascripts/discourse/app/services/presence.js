@@ -1,4 +1,5 @@
 import EmberObject, { computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import Evented from "@ember/object/evented";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
 import Service, { service } from "@ember/service";
@@ -108,6 +109,7 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     this.trigger("change", this);
   }
 
+  @dependentKeyCompat
   get users() {
     if (this.get("subscribed")) {
       return this.get("_presenceState.users");
