@@ -62,7 +62,7 @@ export default class ComposerPresenceDisplay extends Component {
     editChannel.subscribe();
     this.editChannel = editChannel;
 
-    return () => editChannel?.unsubscribe();
+    return () => editChannel.unsubscribe();
   });
 
   notifyState = modifier(() => {
