@@ -122,6 +122,7 @@ echo "pnpm install..."
 
 if [ "${initialize}" = "initialize" ]; then
     echo "Migrating database..."
+    "${SCRIPTPATH}/rake" db:create
     "${SCRIPTPATH}/rake" db:migrate
     RAILS_ENV=test "${SCRIPTPATH}/rake" db:migrate
 
