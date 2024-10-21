@@ -74,7 +74,7 @@ export default Mixin.create({
 function configShim(component) {
   return {
     get autoStartUploads() {
-      return component.autoStartUploads || true;
+      return component.autoStartUploads ?? true;
     },
     get id() {
       return component.id;
@@ -99,7 +99,7 @@ function configShim(component) {
     },
     get uploadDropTargetOptions() {
       return (
-        component.uploadDropTargetOptions?.() || { target: component.element }
+        component._uploadDropTargetOptions?.() || { target: component.element }
       );
     },
     get preventDirectS3Uploads() {

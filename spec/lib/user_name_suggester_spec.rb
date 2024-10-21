@@ -10,6 +10,8 @@ RSpec.describe UserNameSuggester do
       SiteSetting.reserved_usernames = ""
     end
 
+    let(:fallback_username) { I18n.t("fallback_username") + "1" }
+
     it "keeps adding numbers to the username" do
       Fabricate(:user, username: "sam")
       Fabricate(:user, username: "sAm1")
@@ -20,7 +22,7 @@ RSpec.describe UserNameSuggester do
     end
 
     it "doesn't raise an error on nil username and suggest the fallback username" do
-      expect(UserNameSuggester.suggest(nil)).to eq(I18n.t("fallback_username"))
+      expect(UserNameSuggester.suggest(nil)).to eq(fallback_username)
     end
 
     it "doesn't raise an error on integer username" do
@@ -86,7 +88,7 @@ RSpec.describe UserNameSuggester do
 
     it "suggest a fallback username if name contains only invalid characters" do
       suggestion = UserNameSuggester.suggest("---")
-      expect(suggestion).to eq(I18n.t("fallback_username"))
+      expect(suggestion).to eq(fallback_username)
     end
 
     it "allows dots in the middle" do
@@ -164,7 +166,6 @@ RSpec.describe UserNameSuggester do
       end
 
       it "uses fallback username if there are Unicode characters only" do
-        fallback_username = I18n.t("fallback_username")
         expect(UserNameSuggester.suggest("طائر")).to eq(fallback_username)
         expect(UserNameSuggester.suggest("πουλί")).to eq(fallback_username)
       end
@@ -218,7 +219,7 @@ RSpec.describe UserNameSuggester do
       it "uses allowlist" do
         SiteSetting.allowed_unicode_username_characters = "[äöüßÄÖÜẞ]"
 
-        expect(UserNameSuggester.suggest("πουλί")).to eq(I18n.t("fallback_username"))
+        expect(UserNameSuggester.suggest("πουλί")).to eq(fallback_username)
         expect(UserNameSuggester.suggest("a鳥b")).to eq("a_b")
         expect(UserNameSuggester.suggest("Löwe")).to eq("Löwe")
 

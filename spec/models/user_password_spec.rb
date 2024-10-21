@@ -1,6 +1,48 @@
 # frozen_string_literal: true
 
 RSpec.describe UserPassword do
+  describe "#ensure_password_is_hashed" do
+    let(:password) { SecureRandom.hex }
+    fab!(:user_password)
+
+    it "ensures password_hash, password_salt, password_algorithm are saved correctly" do
+      user_password.update!(password:)
+
+      expect(user_password.password_salt).not_to be_nil
+      expect(user_password.password_algorithm).to eq(UserPassword::TARGET_PASSWORD_ALGORITHM)
+      new_hash =
+        described_class.new.send(
+          :hash_password,
+          password,
+          user_password.password_salt,
+          user_password.password_algorithm,
+        )
+      expect(user_password.password_hash).to eq(new_hash)
+    end
+
+    it "does not hash the password if no password given" do
+      expect { user_password.update!(password: nil) }.not_to change(user_password, :password_hash)
+    end
+
+    context "when password was expired" do
+      fab!(:expired_user_password)
+
+      it "resets expired password to nil when saving new password" do
+        expect { expired_user_password.update!(password: SecureRandom.hex) }.to change(
+          expired_user_password,
+          :password_expired_at,
+        ).to(nil)
+      end
+
+      it "does not remove password_expired_at if no password given" do
+        expect { expired_user_password.update!(password: nil) }.not_to change(
+          user_password,
+          :password_expired_at,
+        )
+      end
+    end
+  end
+
   describe "#confirm_password?" do
     context "when input password is same as saved password" do
       let(:pw) { SecureRandom.hex }

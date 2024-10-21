@@ -425,6 +425,11 @@ RSpec.describe CategoriesController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
       end
+
+      it "does not error out if page is a nested parameter" do
+        get "/categories.json?page[foo]=2"
+        expect(response.status).to eq(200)
+      end
     end
   end
 
