@@ -62,6 +62,8 @@ class BulkImport::Generic < BulkImport::Base
     import_user_notes
     import_user_note_counts
     import_user_followers
+    import_user_custom_fields
+    update_user_signatures
 
     import_user_avatars
     update_uploaded_avatar_id
@@ -263,6 +265,57 @@ class BulkImport::Generic < BulkImport::Base
     categories.close
 
     puts "  Creating took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def update_user_signatures
+    puts "", "Cooking user signatures..."
+
+    users = User.includes(:user_custom_fields).where(user_custom_fields: { name: "signature_raw" })
+
+    users.each do |user|
+      if SiteSetting.signatures_advanced_mode && user.custom_fields["signature_raw"]
+        cooked_sig =
+          PrettyText.cook(
+            user.custom_fields["signature_raw"],
+            omit_nofollow: user.has_trust_level?(TrustLevel[3]) && !SiteSetting.tl3_links_no_follow,
+          )
+        # avoid infinite recursion
+        if cooked_sig != user.custom_fields["signature_cooked"]
+          user.custom_fields["signature_cooked"] = cooked_sig
+          user.save
+        end
+      end
+    end
+  end
+
+  def import_user_custom_fields
+    puts "", "Importing user custom fields..."
+
+    user_custom_fields = query(<<~SQL)
+      SELECT *
+      FROM user_custom_fields
+      ORDER BY user_id, name
+    SQL
+
+    field_names =
+      query("SELECT DISTINCT name FROM user_custom_fields") { _1.map { |row| row["name"] } }
+    existing_user_custom_fields =
+      UserCustomField.where(name: field_names).pluck(:user_id, :name).to_set
+
+    create_user_custom_fields(user_custom_fields) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if user_id.nil?
+
+      next if existing_user_custom_fields.include?([user_id, row["name"]])
+
+      {
+        user_id: user_id,
+        name: row["name"],
+        value: raw_with_placeholders_interpolated(row["value"]),
+      }
+    end
+
+    user_custom_fields.close
   end
 
   def import_category_custom_fields
