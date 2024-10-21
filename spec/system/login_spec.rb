@@ -115,14 +115,9 @@ shared_examples "login scenarios" do |login_page_object|
 
     it "cannot browse annonymously" do
       visit "/"
-
-      if SiteSetting.experimental_full_page_login
-        expect(page).to have_css(".login-fullpage")
-      else
-        expect(page).to have_css(".login-welcome")
-        expect(page).to have_css(".site-logo")
-        find(".login-welcome .login-button").click
-      end
+      expect(page).to have_css(".login-welcome")
+      expect(page).to have_css(".site-logo")
+      find(".login-welcome .login-button").click
 
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
       login_form.fill(username: "john", password: "supersecurepassword").click_login
