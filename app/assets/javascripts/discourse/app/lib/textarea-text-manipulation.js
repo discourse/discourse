@@ -1,5 +1,7 @@
 import { action } from "@ember/object";
+import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -35,37 +37,33 @@ export function getHead(head, prev) {
 }
 
 export default class TextareaTextManipulation {
-  composerEventPrefix;
-  editor;
+  @service appEvents;
+  @service siteSettings;
+  @service capabilities;
 
-  constructor(editor, composerEventPrefix = "composer") {
-    this.editor = editor;
-    this.composerEventPrefix = composerEventPrefix;
+  eventPrefix;
+  textarea;
 
-    generateLinkifyFunction(this.editor.markdownOptions || {}).then(
-      (linkify) => {
-        // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
-        this._cachedLinkify = linkify;
-      }
-    );
+  constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
+    setOwner(this, owner);
+
+    this.eventPrefix = eventPrefix;
+    this.textarea = textarea;
+
+    generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
+      // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
+      this._cachedLinkify = linkify;
+    });
+  }
+
+  get value() {
+    return this.textarea.value;
   }
 
   // ensures textarea scroll position is correct
-  focusTextArea() {
-    if (
-      !this.editor.element ||
-      this.editor.isDestroying ||
-      this.editor.isDestroyed
-    ) {
-      return;
-    }
-
-    if (!this.editor._textarea) {
-      return;
-    }
-
-    this.editor._textarea.blur();
-    this.editor._textarea.focus();
+  blurAndFocus() {
+    this.textarea?.blur();
+    this.textarea?.focus();
   }
 
   insertBlock(text) {
@@ -77,13 +75,9 @@ export default class TextareaTextManipulation {
   }
 
   getSelected(trimLeading, opts) {
-    if (!this.editor.ready || !this.editor.element) {
-      return;
-    }
-
-    const value = this.editor._textarea.value;
-    let start = this.editor._textarea.selectionStart;
-    let end = this.editor._textarea.selectionEnd;
+    const value = this.value;
+    let start = this.textarea.selectionStart;
+    let end = this.textarea.selectionEnd;
 
     // trim trailing spaces cause **test ** would be invalid
     while (end > start && /\s/.test(value.charAt(end - 1))) {
@@ -104,8 +98,7 @@ export default class TextareaTextManipulation {
     if (opts && opts.lineVal) {
       const lineVal =
         value.split("\n")[
-          value.slice(0, this.editor._textarea.selectionStart).split("\n")
-            .length - 1
+          value.slice(0, this.textarea.selectionStart).split("\n").length - 1
         ];
       return { start, end, value: selVal, pre, post, lineVal };
     } else {
@@ -115,26 +108,23 @@ export default class TextareaTextManipulation {
 
   selectText(from, length, opts = { scroll: true }) {
     next(() => {
-      if (!this.editor.element) {
-        return;
-      }
-      this.editor._textarea.selectionStart = from;
-      this.editor._textarea.selectionEnd = from + length;
+      this.textarea.selectionStart = from;
+      this.textarea.selectionEnd = from + length;
       if (opts.scroll === true || typeof opts.scroll === "number") {
         const oldScrollPos =
           typeof opts.scroll === "number"
             ? opts.scroll
-            : this.editor._textarea.scrollTop;
-        if (!this.editor.capabilities.isIOS) {
-          this.editor._textarea.focus();
+            : this.textarea.scrollTop;
+        if (!this.capabilities.isIOS) {
+          this.textarea.focus();
         }
-        this.editor._textarea.scrollTop = oldScrollPos;
+        this.textarea.scrollTop = oldScrollPos;
       }
     });
   }
 
   replaceText(oldVal, newVal, opts = {}) {
-    const val = this.editor.value;
+    const val = this.value;
     const needleStart = val.indexOf(oldVal);
 
     if (needleStart === -1) {
@@ -145,8 +135,8 @@ export default class TextareaTextManipulation {
     // Determine post-replace selection.
     const newSelection = determinePostReplaceSelection({
       selection: {
-        start: this.editor._textarea.selectionStart,
-        end: this.editor._textarea.selectionEnd,
+        start: this.textarea.selectionStart,
+        end: this.textarea.selectionEnd,
       },
       needle: { start: needleStart, end: needleStart + oldVal.length },
       replacement: { start: needleStart, end: needleStart + newVal.length },
@@ -171,7 +161,7 @@ export default class TextareaTextManipulation {
     }
 
     if (
-      (opts.forceFocus || this.editor._$textarea.is(":focus")) &&
+      (opts.forceFocus || this.textarea === document.activeElement) &&
       !opts.skipNewSelection
     ) {
       // Restore cursor.
@@ -316,11 +306,8 @@ export default class TextareaTextManipulation {
     }
 
     this._insertAt(start, end, text);
-    this.editor._textarea.setSelectionRange(
-      start + text.length,
-      start + text.length
-    );
-    schedule("afterRender", this, this.focusTextArea);
+    this.textarea.setSelectionRange(start + text.length, start + text.length);
+    schedule("afterRender", this, this.blurAndFocus);
   }
 
   addText(sel, text, options) {
@@ -338,12 +325,12 @@ export default class TextareaTextManipulation {
     }
 
     this._insertAt(sel.start, sel.end, text);
-    this.focusTextArea();
+    this.blurAndFocus();
   }
 
   _insertAt(start, end, text) {
-    this.editor._textarea.setSelectionRange(start, end);
-    this.editor._textarea.focus();
+    this.textarea.setSelectionRange(start, end);
+    this.textarea.focus();
     if (start !== end && text === "") {
       document.execCommand("delete", false);
     } else {
@@ -395,15 +382,14 @@ export default class TextareaTextManipulation {
 
   @bind
   paste(e) {
-    const isComposer =
-      document.querySelector(this.editor.composerFocusSelector) === e.target;
+    const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
       return;
     }
 
     let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
-      siteSettings: this.editor.siteSettings,
+      siteSettings: this.siteSettings,
       canUpload: isComposer,
     });
 
@@ -418,18 +404,15 @@ export default class TextareaTextManipulation {
 
     if (
       plainText &&
-      this.editor.siteSettings.enable_rich_text_paste &&
+      this.siteSettings.enable_rich_text_paste &&
       !isInlinePasting &&
       !isCodeBlock
     ) {
       plainText = plainText.replace(/\r/g, "");
       const table = this.extractTable(plainText);
       if (table) {
-        this.composerEventPrefix
-          ? this.editor.appEvents.trigger(
-              `${this.composerEventPrefix}:insert-text`,
-              table
-            )
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, table)
           : this.insertText(table);
         handled = true;
       }
@@ -482,9 +465,9 @@ export default class TextareaTextManipulation {
         }
 
         if (isComposer) {
-          this.composerEventPrefix
-            ? this.editor.appEvents.trigger(
-                `${this.composerEventPrefix}:insert-text`,
+          this.eventPrefix
+            ? this.appEvents.trigger(
+                `${this.eventPrefix}:insert-text`,
                 markdown
               )
             : this.insertText(markdown);
@@ -534,8 +517,8 @@ export default class TextareaTextManipulation {
 
   @bind
   maybeContinueList() {
-    const offset = caretPosition(this.editor._textarea);
-    const text = this.editor._textarea.value;
+    const offset = caretPosition(this.textarea);
+    const text = this.value;
     const lines = text.substring(0, offset).split("\n");
 
     // Only continue if the previous line was a list item.
@@ -617,7 +600,7 @@ export default class TextareaTextManipulation {
           numericBullet + 1
         );
         autocompletePrefix += autocompletePostfix;
-        scrollPosition = this.editor._textarea.scrollTop;
+        scrollPosition = this.textarea.scrollTop;
 
         this.replaceText(
           text.substring(offset, offset + autocompletePrefix.length),
@@ -716,7 +699,7 @@ export default class TextareaTextManipulation {
 
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
-      this.selectText(this.editor.value.indexOf(newValue), newValue.length);
+      this.selectText(this.value.indexOf(newValue), newValue.length);
     }
   }
 

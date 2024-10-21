@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
@@ -21,14 +22,14 @@ import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/lib/textarea-text-manipulation";
 import {
   caretPosition,
   inCodeBlock,
   translateModKey,
 } from "discourse/lib/utilities";
-import TextareaTextManipulation, {
-  getHead,
-} from "discourse/mixins/textarea-text-manipulation";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
@@ -237,7 +238,7 @@ export default class DEditor extends Component {
   @service("emoji-store") emojiStore;
   @service modal;
 
-  textManipulation = new TextareaTextManipulation(this);
+  textManipulation;
 
   ready = false;
   lastSel = null;
@@ -246,7 +247,6 @@ export default class DEditor extends Component {
   emojiFilter = "";
   isEditorFocused = false;
   processPreview = true;
-  composerFocusSelector = "#reply-control .d-editor-input";
   morphingOptions = {
     beforeAttributeUpdated: (element, attributeName) => {
       // Don't morph the open attribute of <details> elements
@@ -309,6 +309,15 @@ export default class DEditor extends Component {
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
+
+    this.set(
+      "textManipulation",
+      new TextareaTextManipulation(getOwner(this), {
+        markdownOptions: this.markdownOptions,
+        textarea: this._textarea,
+      })
+    );
+
     this._applyEmojiAutocomplete(this._$textarea);
     this._applyHashtagAutocomplete(this._$textarea);
 
@@ -621,7 +630,7 @@ export default class DEditor extends Component {
           schedule(
             "afterRender",
             this.textManipulation,
-            this.textManipulation.focusTextArea
+            this.textManipulation.blurAndFocus
           );
         },
       }
@@ -641,7 +650,7 @@ export default class DEditor extends Component {
         schedule(
           "afterRender",
           this.textManipulation,
-          this.textManipulation.focusTextArea
+          this.textManipulation.blurAndFocus
         );
       },
 
