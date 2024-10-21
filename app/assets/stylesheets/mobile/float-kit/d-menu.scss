@@ -1,6 +1,17 @@
 .fk-d-menu-modal {
+  &__grip {
+    position: absolute;
+    top: 2.5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-medium);
+    height: 5px;
+    width: 15vw;
+    max-width: 100px;
+    border-radius: 10px;
+  }
   .d-modal__body {
-    padding: 0.5em 0;
+    padding: 1em 0;
   }
 
   h3 {
