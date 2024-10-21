@@ -440,11 +440,9 @@ class User < ActiveRecord::Base
 
     return true if SiteSetting.here_mention == username
 
-    SiteSetting
-      .reserved_usernames
-      .unicode_normalize
-      .split("|")
-      .any? { |reserved| username.match?(/\A#{Regexp.escape(reserved).gsub('\*', ".*")}\z/) }
+    SiteSetting.reserved_usernames_map.any? do |reserved|
+      username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
+    end
   end
 
   def self.editable_user_custom_fields(by_staff: false)
