@@ -64,6 +64,10 @@ module PageObjects
       def invites_list
         all("#user-content .user-invite-list tbody tr").map { |row| Invite.new(row) }
       end
+
+      def latest_invite
+        Invite.new(find("#user-content .user-invite-list tbody tr:first-of-type"))
+      end
     end
   end
 end

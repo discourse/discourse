@@ -48,9 +48,14 @@ describe "Creating Invites", type: :system do
 
     expect(user_invited_pending_page.invites_list.size).to eq(1)
 
-    invite = user_invited_pending_page.invites_list[0]
-    expect(invite).to be_link_type(key: invite_key, redemption_count: 0, max_redemption_count: 7)
-    expect(invite.expiry_date).to be_within(2.minutes).of(Time.zone.now + 3.days)
+    expect(user_invited_pending_page.latest_invite).to be_link_type(
+      key: invite_key,
+      redemption_count: 0,
+      max_redemption_count: 7,
+    )
+    expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
+      Time.zone.now + 3.days,
+    )
   end
 
   it "has the correct modal title when creating a new invite" do
@@ -70,8 +75,7 @@ describe "Creating Invites", type: :system do
 
       expect(user_invited_pending_page.invites_list.size).to eq(1)
 
-      invite = user_invited_pending_page.invites_list[0]
-      invite.edit_button.click
+      user_invited_pending_page.latest_invite.edit_button.click
     end
 
     it "has the correct modal title" do
@@ -111,11 +115,16 @@ describe "Creating Invites", type: :system do
 
       expect(user_invited_pending_page.invites_list.size).to eq(1)
 
-      invite = user_invited_pending_page.invites_list[0]
-      expect(invite).to be_link_type(key: invite_key, redemption_count: 0, max_redemption_count: 53)
-      expect(invite).to have_group(group)
-      expect(invite).to have_topic(topic)
-      expect(invite.expiry_date).to be_within(2.minutes).of(Time.zone.now + 90.days)
+      expect(user_invited_pending_page.latest_invite).to be_link_type(
+        key: invite_key,
+        redemption_count: 0,
+        max_redemption_count: 53,
+      )
+      expect(user_invited_pending_page.latest_invite).to have_group(group)
+      expect(user_invited_pending_page.latest_invite).to have_topic(topic)
+      expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
+        Time.zone.now + 90.days,
+      )
     end
 
     it "is possible to create an email invite" do
@@ -147,12 +156,13 @@ describe "Creating Invites", type: :system do
 
       expect(user_invited_pending_page.invites_list.size).to eq(1)
 
-      invite = user_invited_pending_page.invites_list[0]
-      expect(invite).to be_email_type("someone@discourse.org")
-      expect(invite).to have_group(group)
-      expect(invite).to have_group(another_group)
-      expect(invite).to have_topic(topic)
-      expect(invite.expiry_date).to be_within(2.minutes).of(Time.zone.now + 1.day)
+      expect(user_invited_pending_page.latest_invite).to be_email_type("someone@discourse.org")
+      expect(user_invited_pending_page.latest_invite).to have_group(group)
+      expect(user_invited_pending_page.latest_invite).to have_group(another_group)
+      expect(user_invited_pending_page.latest_invite).to have_topic(topic)
+      expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
+        Time.zone.now + 1.day,
+      )
     end
 
     it "adds the invite_expiry_days site setting to the list of options for the expiresAfterDays field" do
