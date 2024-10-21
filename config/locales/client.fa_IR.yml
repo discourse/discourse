@@ -124,6 +124,7 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
+      twitter: "هم‌رسانی در X"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"

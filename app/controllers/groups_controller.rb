@@ -595,7 +595,7 @@ class GroupsController < ApplicationController
     end
   end
 
-  MAX_NOTIFIED_OWNERS ||= 20
+  MAX_NOTIFIED_OWNERS = 20
 
   def request_membership
     params.require(:reason)

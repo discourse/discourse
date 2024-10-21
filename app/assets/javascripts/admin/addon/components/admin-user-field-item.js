@@ -19,6 +19,8 @@ export default class AdminUserFieldItem extends Component {
   @tracked
   editableDisabled = this.args.userField.requirement === "for_all_users";
 
+  originalRequirement = this.args.userField.requirement;
+
   get fieldName() {
     return UserField.fieldTypeById(this.fieldType)?.name;
   }
@@ -85,7 +87,10 @@ export default class AdminUserFieldItem extends Component {
   async save(data) {
     let confirm = true;
 
-    if (data.requirement === "for_all_users") {
+    if (
+      data.requirement === "for_all_users" &&
+      this.originalRequirement !== "for_all_users"
+    ) {
       confirm = await this._confirmChanges();
     }
 
@@ -100,6 +105,7 @@ export default class AdminUserFieldItem extends Component {
           return;
         }
 
+        this.originalRequirement = data.requirement;
         this.isEditing = false;
       })
       .catch(popupAjaxError);

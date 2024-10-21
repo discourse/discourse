@@ -141,6 +141,7 @@ hu:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "%{postNumber}. bejegyzés, szerző: %{username}"
       close: "bezárás"
+      twitter: "Megosztás X-en"
       facebook: "Megosztás Facebookon"
       email: "Küldés e-mailben"
       url: "URL másolása és megosztása"
@@ -1145,8 +1146,8 @@ hu:
       edit: "Beállítások szerkesztése"
       download_archive:
         title: "Adatok exportálása"
-        description: "Töltse le a fiók tevékenységének és beállításainak archívumát."
-        button_text: "Archívum kérése"
+        description: "A fiókhoz tartozó tevékenységek és beállítások archívumának letöltése"
+        button_text: "Archívum letöltése"
         confirm: "Szeretné letölteni a fiók tevékenységének és beállításainak archívumát?"
         success: "Megkezdtük az archívum összegyűjtését, üzenetet fog kapni, ha a folyamat befejeződik."
         rate_limit_error: "A fiókarchívumokat naponta egyszer lehet letölteni, kérjük, próbálja meg holnap újra."
@@ -1558,7 +1559,7 @@ hu:
           default: "Fő passkey"
         save: "Mentés"
         title: "Passkey"
-        short_description: "A passkey olyan jelszavak pótlása, amelyek biometrikusan (pl. érintés, arcazonosító) vagy az eszköz PIN-kódjával/jelszavával igazolják személyazonosságod."
+        short_description: "A passkey olyan jelszóhelyettesítő, amely biometrikusan (pl. érintés, arcazonosító) vagy az eszköz PIN-kódjával/jelszavával igazolják a személyazonosságot."
         added_date: "Hozzáadva %{date}"
         last_used_date: "Utoljára használt %{date}"
         never_used: "Soha nem használt"
@@ -1696,7 +1697,7 @@ hu:
         instructions: "A fiókregisztrációhoz meghívási kód szükséges"
       auth_tokens:
         title: "Nemrég használt eszközök"
-        short_description: "Ez azoknak az eszközöknek a listája, amelyek nemrég jelentkeztek be fiókjába."
+        short_description: "Lista a fiókba nemrégiben bejelentkezett eszközökről."
         details: "Részletek"
         log_out_all: "Összes kiléptetése"
         not_you: "Nem Ön az?"
@@ -1987,7 +1988,7 @@ hu:
         content: "A téma idővonalával gyorsan lapozhat a hosszú témák között."
       post_menu:
         title: "Bejegyzés menü"
-        content: "Nézd meg, hogyan tudsz még interakcióba lépni a poszttal, ha a három pontra kattintasz!"
+        content: "Nézd meg, hogyan tudsz még interakcióba lépni a bejegyzéssel, ha a három pontra kattintasz!"
       topic_notification_levels:
         title: "Követed ezt a témát"
         content: "Keresd ezt a csengőt, hogy beállíthasd az értesítéseket bizonyos témákhoz vagy egész kategóriákhoz."
@@ -3468,7 +3469,9 @@ hu:
       show_hidden: "Letiltott tartalom megtekintése"
       deleted_by_author_simple: "(szerző által törölve)"
       collapse: "összecsukás"
+      load_more_replies: "további válaszok betöltése"
       sr_collapse_replies: "A beágyazott válaszok összecsukása"
+      sr_load_more_replies: "További beágyazott válaszok betöltése"
       sr_date: "Közlés dátuma"
       sr_expand_replies:
         one: "Ennek a bejegyzésnek %{count} válasza van"
@@ -5597,7 +5600,7 @@ hu:
             error: "Ez a téma automatikusan letiltásra került, mivel nem kompatibilis a Discourse ezen verziójával."
             minimum: "Discourse %{version} vagy újabb szükséges."
             maximum: "Discourse %{version} vagy korábbi szükséges."
-          update_to_latest: "Legutóbbi verzióra frissített"
+          update_to_latest: "Frissítés a legújabbra"
           check_for_updates: "Frissítések keresése"
           updating: "Frissítés"
           up_to_date: "A téma naprakész, utoljára ellenőrizve:"
@@ -5610,9 +5613,9 @@ hu:
           theme_translations: "Téma fordítások"
           empty: "Nincsenek elemek"
           commits_behind:
-            one: "Téma %{count} commit mögött!"
-            other: "Téma %{count} commit mögött!"
-          compare_commits: "(Lásd az új commitokat)"
+            one: "A téma %{count} verzióval le van maradva!"
+            other: "A téma %{count} verzióval le van maradva!"
+          compare_commits: "(Változások megtekintése)"
           remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"
           repo_unreachable: "Nem sikerült kapcsolatba lépni a téma Git tárolójával. Hiba üzenet:"
           imported_from_archive: "Ez a téma egy .zip fájlból lett importálva"

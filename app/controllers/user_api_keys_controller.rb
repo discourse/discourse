@@ -9,7 +9,7 @@ class UserApiKeysController < ApplicationController
                      only: %i[new otp]
   skip_before_action :check_xhr, :preload_json
 
-  AUTH_API_VERSION ||= 4
+  AUTH_API_VERSION = 4
 
   def new
     if request.head?

@@ -231,6 +231,9 @@ sk:
             watching_tags:
               label: Sledovanie značiek
               description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_with_pms:
+              label: Spúšťanie pomocou PM
+              description: Spustí sa, aj keď boli značky zmenené v PM
         after_post_cook:
           fields:
             valid_trust_levels:

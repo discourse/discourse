@@ -10,7 +10,7 @@ module Jobs
     attr_accessor :current_user
     attr_accessor :entity
 
-    HEADER_ATTRS_FOR ||=
+    HEADER_ATTRS_FOR =
       HashWithIndifferentAccess.new(
         user_list: %w[
           id

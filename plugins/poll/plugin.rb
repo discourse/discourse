@@ -18,10 +18,10 @@ hide_plugin
 
 after_initialize do
   module ::DiscoursePoll
-    PLUGIN_NAME ||= "poll"
-    DATA_PREFIX ||= "data-poll-"
-    HAS_POLLS ||= "has_polls"
-    DEFAULT_POLL_NAME ||= "poll"
+    PLUGIN_NAME = "poll"
+    DATA_PREFIX = "data-poll-"
+    HAS_POLLS = "has_polls"
+    DEFAULT_POLL_NAME = "poll"
 
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME

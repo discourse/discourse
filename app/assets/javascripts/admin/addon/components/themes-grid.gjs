@@ -31,12 +31,12 @@ export default class ThemesGrid extends Component {
     },
   ];
 
+  // Always show the default theme first in the list
   get sortedThemes() {
-    // Always show currently set default theme first
     return this.args.themes.sort((a, b) => {
-      if (a.default) {
+      if (a.get("default")) {
         return -1;
-      } else if (b.default) {
+      } else if (b.get("default")) {
         return 1;
       }
     });
@@ -78,39 +78,42 @@ export default class ThemesGrid extends Component {
 
   <template>
     <div class="themes-cards-container">
-      {{#each this.sortedThemes as |theme|}}
-        <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
-      {{/each}}
-
-      <AdminConfigAreaCard class="theme-card">
-        <:content>
-          <h2 class="theme-card__title">{{i18n
-              "admin.config_areas.look_and_feel.themes.new_theme"
-            }}</h2>
-          <p class="theme-card__description">{{i18n
-              "admin.customize.theme.themes_intro_new"
-            }}</p>
-          <div class="external-resources">
-            {{#each this.externalResources as |resource|}}
-              <a
-                href={{resource.link}}
-                class="external-link"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                {{i18n resource.key}}
-                {{icon "external-link-alt"}}
-              </a>
-            {{/each}}
-          </div>
-          <DButton
-            @action={{this.installModal}}
-            @icon="upload"
-            @label="admin.customize.install"
-            class="btn-primary theme-card__button"
-          />
-        </:content>
-      </AdminConfigAreaCard>
+      <div class="themes-cards-container__main">
+        {{#each this.sortedThemes as |theme|}}
+          <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
+        {{/each}}
+      </div>
+      <div class="themes-cards-container__helper">
+        <AdminConfigAreaCard
+          class="theme-card"
+          @heading="admin.config_areas.look_and_feel.themes.new_theme"
+        >
+          <:content>
+            <p class="theme-card__description">{{i18n
+                "admin.customize.theme.themes_intro_new"
+              }}</p>
+            <div class="external-resources">
+              {{#each this.externalResources as |resource|}}
+                <a
+                  href={{resource.link}}
+                  class="external-link"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {{i18n resource.key}}
+                  {{icon "external-link-alt"}}
+                </a>
+              {{/each}}
+            </div>
+            <DButton
+              @action={{this.installModal}}
+              @icon="upload"
+              @label="admin.customize.install"
+              class="btn-primary theme-card__install-button"
+            />
+          </:content>
+        </AdminConfigAreaCard>
+      </div>
     </div>
   </template>
 }

@@ -46,6 +46,7 @@
     >
       <:header>
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="username"
           @labelKey="username"
           @order={{this.order}}
@@ -54,6 +55,7 @@
           class="directory-table__column-header--username"
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="email"
           @labelKey="email"
           @order={{this.order}}
@@ -66,6 +68,7 @@
           }}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="last_emailed"
           @labelKey="admin.users.last_emailed"
           @order={{this.order}}
@@ -73,6 +76,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="seen"
           @labelKey="last_seen"
           @order={{this.order}}
@@ -80,6 +84,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="topics_viewed"
           @labelKey="admin.user.topics_entered"
           @order={{this.order}}
@@ -87,6 +92,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="posts_read"
           @labelKey="admin.user.posts_read_count"
           @order={{this.order}}
@@ -94,6 +100,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="read_time"
           @labelKey="admin.user.time_read"
           @order={{this.order}}
@@ -101,6 +108,7 @@
           @automatic={{true}}
         />
         <TableHeaderToggle
+          @onToggle={{this.updateOrder}}
           @field="created"
           @labelKey="created"
           @order={{this.order}}

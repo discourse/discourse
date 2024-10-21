@@ -1,7 +1,6 @@
 import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
-import Mixin from "@ember/object/mixin";
-import { getOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import Uppy from "@uppy/core";
@@ -16,130 +15,156 @@ import {
   getUploadMarkdown,
   validateUploadedFile,
 } from "discourse/lib/uploads";
+import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
+import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
 import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getURL from "discourse-common/lib/get-url";
-import { deepMerge } from "discourse-common/lib/object";
-import { bind, observes, on } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import I18n from "discourse-i18n";
 
-// Note: This mixin is used _in addition_ to the ComposerUpload mixin
-// on the composer-editor component. It overrides some, but not all,
-// functions created by ComposerUpload. Eventually this will supplant
-// ComposerUpload, but until then only the functions that need to be
-// overridden to use uppy will be overridden, so as to not go out of
-// sync with the main ComposerUpload functionality by copying unchanging
-// functions.
-//
-// Some examples are uploadPlaceholder, the main properties e.g. uploadProgress,
-// and the most important _bindUploadTarget which handles all the main upload
-// functionality and event binding.
-//
-export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
-  dialog: service(),
-  session: service(),
+export default class UppyComposerUpload {
+  @service dialog;
+  @service session;
+  @service siteSettings;
+  @service appEvents;
+  @service currentUser;
+  @service site;
+  @service capabilities;
+  @service messageBus;
+  @service composer;
 
-  uploadRootPath: "/uploads",
-  uploadTargetBound: false,
-  useUploadPlaceholders: true,
+  uppyWrapper;
+
+  uploadRootPath = "/uploads";
+  uppyId = "composer-editor-uppy";
+  uploadType = "composer";
+  editorInputClass = ".d-editor-input";
+  mobileFileUploaderId = "mobile-file-upload";
+  fileUploadElementId = "file-uploader";
+  editorClass = ".d-editor";
+
+  composerEventPrefix;
+  composerModel;
+  uploadMarkdownResolvers;
+  uploadPreProcessors;
+  uploadHandlers;
+
+  #inProgressUploads = [];
+  #bufferedUploadErrors = [];
+  #placeholders = {};
+
+  #useUploadPlaceholders = true;
+  #uploadTargetBound = false;
+  #userCancelled = false;
+
+  #fileInputEl;
+  #editorEl;
+
+  constructor(
+    owner,
+    {
+      composerEventPrefix,
+      composerModel,
+      uploadMarkdownResolvers,
+      uploadPreProcessors,
+      uploadHandlers,
+    }
+  ) {
+    setOwner(this, owner);
+    this.uppyWrapper = new UppyWrapper(owner);
+    this.composerEventPrefix = composerEventPrefix;
+    this.composerModel = composerModel;
+    this.uploadMarkdownResolvers = uploadMarkdownResolvers;
+    this.uploadPreProcessors = uploadPreProcessors;
+    this.uploadHandlers = uploadHandlers;
+  }
 
   @bind
-  _cancelSingleUpload(data) {
-    this._uppyInstance.removeFile(data.fileId);
-  },
-
-  @observes("composerModel.uploadCancelled")
-  _cancelUpload() {
-    if (!this.get("composerModel.uploadCancelled")) {
-      return;
+  _cancelUpload(data) {
+    if (data) {
+      // Single file
+      this.uppyWrapper.uppyInstance.removeFile(data.fileId);
+    } else {
+      // All files
+      this.#userCancelled = true;
+      this.uppyWrapper.uppyInstance.cancelAll();
     }
-    this.set("composerModel.uploadCancelled", false);
-    this.set("userCancelled", true);
+  }
 
-    this._uppyInstance.cancelAll();
-  },
-
-  @on("willDestroyElement")
-  _unbindUploadTarget() {
-    if (!this.uploadTargetBound) {
+  teardown() {
+    if (!this.#uploadTargetBound) {
       return;
     }
 
-    this.fileInputEl?.removeEventListener(
+    this.#fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
     );
 
-    this.editorEl?.removeEventListener("paste", this.pasteEventListener);
+    this.#editorEl?.removeEventListener("paste", this._pasteEventListener);
 
     this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.off(
       `${this.composerEventPrefix}:cancel-upload`,
-      this._cancelSingleUpload
+      this._cancelUpload
     );
 
-    this._reset();
+    this.#reset();
 
-    if (this._uppyInstance) {
-      this._uppyInstance.close();
-      this._uppyInstance = null;
+    if (this.uppyWrapper.uppyInstance) {
+      this.uppyWrapper.uppyInstance.close();
+      this.uppyWrapper.uppyInstance = null;
     }
 
-    this.uploadTargetBound = false;
-  },
+    this.#unbindMobileUploadButton();
+    this.#uploadTargetBound = false;
+  }
 
-  _abortAndReset() {
+  #abortAndReset() {
     this.appEvents.trigger(`${this.composerEventPrefix}:uploads-aborted`);
-    this._reset();
+    this.#reset();
     return false;
-  },
+  }
 
-  _bindUploadTarget() {
-    this.set("inProgressUploads", []);
-    this.set("bufferedUploadErrors", []);
-    this.placeholders = {};
-    this._preProcessorStatus = {};
-    this.editorEl = this.element.querySelector(this.editorClass);
-    this.fileInputEl = document.getElementById(this.fileUploadElementId);
-    const isPrivateMessage = this.get("composerModel.privateMessage");
+  setup(element) {
+    this.#editorEl = element.querySelector(this.editorClass);
+    this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
     this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
     this.appEvents.on(
       `${this.composerEventPrefix}:cancel-upload`,
-      this._cancelSingleUpload
+      this._cancelUpload
     );
 
-    this._unbindUploadTarget();
     this.fileInputEventListener = bindFileInputChangeListener(
-      this.fileInputEl,
+      this.#fileInputEl,
       this._addFiles
     );
-    this.editorEl.addEventListener("paste", this.pasteEventListener);
+    this.#editorEl.addEventListener("paste", this._pasteEventListener);
 
-    this._uppyInstance = new Uppy({
+    this.uppyWrapper.uppyInstance = new Uppy({
       id: this.uppyId,
       autoProceed: true,
 
       // need to use upload_type because uppy overrides type with the
       // actual file type
-      meta: deepMerge({ upload_type: this.uploadType }, this.data || {}),
+      meta: { upload_type: this.uploadType },
 
       onBeforeFileAdded: (currentFile) => {
         const validationOpts = {
           user: this.currentUser,
           siteSettings: this.siteSettings,
-          isPrivateMessage,
+          isPrivateMessage: this.composerModel.privateMessage,
           allowStaffToUploadAnyFileInPm:
             this.siteSettings.allow_staff_to_upload_any_file_in_pm,
         };
 
         const isUploading = validateUploadedFile(currentFile, validationOpts);
 
-        this.setProperties({
+        this.composer.setProperties({
           uploadProgress: 0,
           isUploading,
           isCancellable: isUploading,
@@ -162,7 +187,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         const handlerBuckets = {};
 
         for (const [fileId, file] of Object.entries(files)) {
-          const matchingHandler = this._findMatchingUploadHandler(file.name);
+          const matchingHandler = this.#findMatchingUploadHandler(file.name);
           if (matchingHandler) {
             // the function signature will be converted to a string for the
             // object key, so we can send multiple files at once to each handler
@@ -186,7 +211,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         // a single file at a time through to the handler.
         for (const bucket of Object.values(handlerBuckets)) {
           if (!bucket.fn(bucket.files, this)) {
-            return this._abortAndReset();
+            return this.#abortAndReset();
           }
         }
 
@@ -199,7 +224,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
               count: maxFiles,
             })
           );
-          return this._abortAndReset();
+          return this.#abortAndReset();
         }
 
         // uppy uses this new object to track progress of remaining files
@@ -208,34 +233,40 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     if (this.siteSettings.enable_upload_debug_mode) {
-      this._instrumentUploadTimings();
+      this.uppyWrapper.debug.instrumentUploadTimings(
+        this.uppyWrapper.uppyInstance
+      );
     }
 
     if (this.siteSettings.enable_direct_s3_uploads) {
-      this._useS3MultipartUploads();
+      new UppyS3Multipart(getOwner(this), {
+        uploadRootPath: this.uploadRootPath,
+        uppyWrapper: this.uppyWrapper,
+        errorHandler: this._handleUploadError,
+      }).apply(this.uppyWrapper.uppyInstance);
     } else {
-      this._useXHRUploads();
+      this.#useXHRUploads();
     }
 
-    this._uppyInstance.on("file-added", (file) => {
+    this.uppyWrapper.uppyInstance.on("file-added", (file) => {
       run(() => {
-        if (isPrivateMessage) {
+        if (this.composerModel.privateMessage) {
           file.meta.for_private_message = true;
         }
       });
     });
 
-    this._uppyInstance.on("progress", (progress) => {
+    this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       run(() => {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
 
-        this.set("uploadProgress", progress);
+        this.composer.set("uploadProgress", progress);
       });
     });
 
-    this._uppyInstance.on("file-removed", (file, reason) => {
+    this.uppyWrapper.uppyInstance.on("file-removed", (file, reason) => {
       run(() => {
         // we handle the cancel-all event specifically, so no need
         // to do anything here. this event is also fired when some files
@@ -248,22 +279,24 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           file.id
         );
         file.meta.cancelled = true;
-        this._removeInProgressUpload(file.id);
-        this._resetUpload(file, { removePlaceholder: true });
-        if (this.inProgressUploads.length === 0) {
-          this.set("userCancelled", true);
-          this._uppyInstance.cancelAll();
+        this.#removeInProgressUpload(file.id);
+        this.#resetUpload(file, { removePlaceholder: true });
+        if (this.#inProgressUploads.length === 0) {
+          this.#userCancelled = true;
+          this.uppyWrapper.uppyInstance.cancelAll();
         }
       });
     });
 
-    this._uppyInstance.on("upload-progress", (file, progress) => {
+    this.uppyWrapper.uppyInstance.on("upload-progress", (file, progress) => {
       run(() => {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
 
-        const upload = this.inProgressUploads.find((upl) => upl.id === file.id);
+        const upload = this.#inProgressUploads.find(
+          (upl) => upl.id === file.id
+        );
         if (upload) {
           const percentage = Math.round(
             (progress.bytesUploaded / progress.bytesTotal) * 100
@@ -273,15 +306,15 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
     });
 
-    this._uppyInstance.on("upload", (data) => {
+    this.uppyWrapper.uppyInstance.on("upload", (data) => {
       run(() => {
-        this._addNeedProcessing(data.fileIDs.length);
+        this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
 
         const files = data.fileIDs.map((fileId) =>
-          this._uppyInstance.getFile(fileId)
+          this.uppyWrapper.uppyInstance.getFile(fileId)
         );
 
-        this.setProperties({
+        this.composer.setProperties({
           isProcessingUpload: true,
           isCancellable: false,
         });
@@ -290,7 +323,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           // The inProgressUploads is meant to be used to display these uploads
           // in a UI, and Ember will only update the array in the UI if pushObject
           // is used to notify it.
-          this.inProgressUploads.pushObject(
+          this.#inProgressUploads.pushObject(
             EmberObject.create({
               fileName: file.name,
               id: file.id,
@@ -298,12 +331,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
               extension: file.extension,
             })
           );
-          const placeholder = this._uploadPlaceholder(file);
-          this.placeholders[file.id] = {
+          const placeholder = this.#uploadPlaceholder(file);
+          this.#placeholders[file.id] = {
             uploadPlaceholder: placeholder,
           };
 
-          if (this.useUploadPlaceholders) {
+          if (this.#useUploadPlaceholders) {
             this.appEvents.trigger(
               `${this.composerEventPrefix}:insert-text`,
               placeholder
@@ -318,12 +351,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       });
     });
 
-    this._uppyInstance.on("upload-success", (file, response) => {
+    this.uppyWrapper.uppyInstance.on("upload-success", (file, response) => {
       run(async () => {
-        if (!this._uppyInstance) {
+        if (!this.uppyWrapper.uppyInstance) {
           return;
         }
-        this._removeInProgressUpload(file.id);
+        this.#removeInProgressUpload(file.id);
         let upload = response.body;
         const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
@@ -336,40 +369,40 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           file,
           upload.url,
           () => {
-            if (this.useUploadPlaceholders) {
+            if (this.#useUploadPlaceholders) {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:replace-text`,
-                this.placeholders[file.id].uploadPlaceholder.trim(),
+                this.#placeholders[file.id].uploadPlaceholder.trim(),
                 markdown
               );
             }
-            this._resetUpload(file, { removePlaceholder: false });
+            this.#resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
               file.name,
               upload
             );
 
-            if (this.inProgressUploads.length === 0) {
+            if (this.#inProgressUploads.length === 0) {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
-              this._displayBufferedErrors();
-              this._reset();
+              this.#displayBufferedErrors();
+              this.#reset();
             }
           }
         );
       });
     });
 
-    this._uppyInstance.on("upload-error", this._handleUploadError);
+    this.uppyWrapper.uppyInstance.on("upload-error", this._handleUploadError);
 
-    this._uppyInstance.on("cancel-all", () => {
+    this.uppyWrapper.uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
-      if (this.userCancelled) {
-        Object.values(this.placeholders).forEach((data) => {
+      if (this.#userCancelled) {
+        Object.values(this.#placeholders).forEach((data) => {
           run(() => {
-            if (this.useUploadPlaceholders) {
+            if (this.#useUploadPlaceholders) {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:replace-text`,
                 data.uploadPlaceholder,
@@ -379,68 +412,63 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           });
         });
 
-        this.set("userCancelled", false);
-        this._reset();
+        this.#userCancelled = false;
+        this.#reset();
 
         this.appEvents.trigger(`${this.composerEventPrefix}:uploads-cancelled`);
       }
     });
 
-    this._setupPreProcessors();
-    this._setupUIPlugins();
+    this.#setupPreProcessors();
 
-    this.uploadTargetBound = true;
-    this._uppyReady();
-  },
+    this.uppyWrapper.uppyInstance.use(DropTarget, { target: element });
 
-  // This should be overridden in a child component if you need to
-  // hook into uppy events and be sure that everything is already
-  // set up for _uppyInstance.
-  _uppyReady() {},
+    this.#uploadTargetBound = true;
+    this.#bindMobileUploadButton();
+  }
 
   @bind
   _handleUploadError(file, error, response) {
-    this._removeInProgressUpload(file.id);
-    this._resetUpload(file, { removePlaceholder: true });
+    this.#removeInProgressUpload(file.id);
+    this.#resetUpload(file, { removePlaceholder: true });
 
     file.meta.error = error;
 
-    if (!this.userCancelled) {
-      this._bufferUploadError(response || error, file.name);
+    if (!this.#userCancelled) {
+      this.#bufferUploadError(response || error, file.name);
       this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
-    if (this.inProgressUploads.length === 0) {
-      this._displayBufferedErrors();
-      this._reset();
+    if (this.#inProgressUploads.length === 0) {
+      this.#displayBufferedErrors();
+      this.#reset();
     }
-  },
+  }
 
-  _removeInProgressUpload(fileId) {
-    this.set(
-      "inProgressUploads",
-      this.inProgressUploads.filter((upl) => upl.id !== fileId)
+  #removeInProgressUpload(fileId) {
+    this.#inProgressUploads = this.#inProgressUploads.filter(
+      (upl) => upl.id !== fileId
     );
-  },
+  }
 
-  _displayBufferedErrors() {
-    if (this.bufferedUploadErrors.length === 0) {
+  #displayBufferedErrors() {
+    if (this.#bufferedUploadErrors.length === 0) {
       return;
-    } else if (this.bufferedUploadErrors.length === 1) {
+    } else if (this.#bufferedUploadErrors.length === 1) {
       displayErrorForUpload(
-        this.bufferedUploadErrors[0].data,
+        this.#bufferedUploadErrors[0].data,
         this.siteSettings,
-        this.bufferedUploadErrors[0].fileName
+        this.#bufferedUploadErrors[0].fileName
       );
     } else {
-      displayErrorForBulkUpload(this.bufferedUploadErrors);
+      displayErrorForBulkUpload(this.#bufferedUploadErrors);
     }
-  },
+  }
 
-  _bufferUploadError(data, fileName) {
-    this.bufferedUploadErrors.push({ data, fileName });
-  },
+  #bufferUploadError(data, fileName) {
+    this.#bufferedUploadErrors.push({ data, fileName });
+  }
 
-  _setupPreProcessors() {
+  #setupPreProcessors() {
     const checksumPreProcessor = {
       pluginClass: UppyChecksum,
       optionsResolverFn: ({ capabilities }) => {
@@ -457,19 +485,18 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     [this.uploadPreProcessors, checksumPreProcessor]
       .flat()
       .forEach(({ pluginClass, optionsResolverFn }) => {
-        this._useUploadPlugin(
+        this.uppyWrapper.useUploadPlugin(
           pluginClass,
           optionsResolverFn({
             composerModel: this.composerModel,
-            composerElement: this.composerElement,
             capabilities: this.capabilities,
             isMobileDevice: this.site.isMobileDevice,
           })
         );
       });
 
-    this._onPreProcessProgress((file) => {
-      let placeholderData = this.placeholders[file.id];
+    this.uppyWrapper.onPreProcessProgress((file) => {
+      let placeholderData = this.#placeholders[file.id];
       placeholderData.processingPlaceholder = `[${I18n.t(
         "processing_filename",
         {
@@ -493,10 +520,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       );
     });
 
-    this._onPreProcessComplete(
+    this.uppyWrapper.onPreProcessComplete(
       (file) => {
         run(() => {
-          let placeholderData = this.placeholders[file.id];
+          let placeholderData = this.#placeholders[file.id];
           this.appEvents.trigger(
             `${this.composerEventPrefix}:replace-text`,
             placeholderData.processingPlaceholder,
@@ -506,7 +533,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       },
       () => {
         run(() => {
-          this.setProperties({
+          this.composer.setProperties({
             isProcessingUpload: false,
             isCancellable: true,
           });
@@ -516,14 +543,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         });
       }
     );
-  },
+  }
 
-  _setupUIPlugins() {
-    this._uppyInstance.use(DropTarget, this._uploadDropTargetOptions());
-  },
-
-  _uploadFilenamePlaceholder(file) {
-    const filename = this._filenamePlaceholder(file);
+  #uploadFilenamePlaceholder(file) {
+    const filename = this.#filenamePlaceholder(file);
 
     // when adding two separate files with the same filename search for matching
     // placeholder already existing in the editor ie [Uploading: test.png…]
@@ -533,9 +556,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
-    const matchingPlaceholder = this.get(
-      `composerModel.${this.composerModelContentKey}`
-    ).match(globalRegex);
+    const matchingPlaceholder = this.composerModel.reply.match(globalRegex);
     if (matchingPlaceholder) {
       // get last matching placeholder and its consecutive nr in regex
       // capturing group and apply +1 to the placeholder
@@ -548,58 +569,58 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     }
 
     return filename;
-  },
+  }
 
-  _uploadPlaceholder(file) {
+  #uploadPlaceholder(file) {
     const clipboard = I18n.t("clipboard");
-    const uploadFilenamePlaceholder = this._uploadFilenamePlaceholder(file);
+    const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(file);
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
 
     let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
-    if (!this._cursorIsOnEmptyLine()) {
+    if (!this.#cursorIsOnEmptyLine()) {
       placeholder = `\n${placeholder}`;
     }
 
     return placeholder;
-  },
+  }
 
-  _useXHRUploads() {
-    this._uppyInstance.use(XHRUpload, {
+  #useXHRUploads() {
+    this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
     });
-  },
+  }
 
-  _reset() {
-    this._uppyInstance?.cancelAll();
-    this.setProperties({
+  #reset() {
+    this.uppyWrapper.uppyInstance?.cancelAll();
+    this.composer.setProperties({
       uploadProgress: 0,
       isUploading: false,
       isProcessingUpload: false,
       isCancellable: false,
-      inProgressUploads: [],
-      bufferedUploadErrors: [],
     });
-    this._resetPreProcessors();
-    this.fileInputEl.value = "";
-  },
+    this.#inProgressUploads = [];
+    this.#bufferedUploadErrors = [];
+    this.uppyWrapper.resetPreProcessors();
+    this.#fileInputEl.value = "";
+  }
 
-  _resetUpload(file, opts) {
+  #resetUpload(file, opts) {
     if (opts.removePlaceholder) {
       this.appEvents.trigger(
         `${this.composerEventPrefix}:replace-text`,
-        this.placeholders[file.id].uploadPlaceholder,
+        this.#placeholders[file.id].uploadPlaceholder,
         ""
       );
     }
-  },
+  }
 
   @bind
-  pasteEventListener(event) {
+  _pasteEventListener(event) {
     if (
       document.activeElement !== document.querySelector(this.editorInputClass)
     ) {
@@ -618,7 +639,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     if (event && event.clipboardData && event.clipboardData.files) {
       this._addFiles([...event.clipboardData.files], { pasted: true });
     }
-  },
+  }
 
   @bind
   async _addFiles(files, opts = {}) {
@@ -629,7 +650,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     files = Array.isArray(files) ? files : [files];
 
     try {
-      this._uppyInstance.addFiles(
+      this.uppyWrapper.uppyInstance.addFiles(
         files.map((file) => {
           return {
             source: this.uppyId,
@@ -645,13 +666,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         id: "discourse.upload.uppy-add-files-error",
       });
     }
-  },
+  }
 
-  showUploadSelector(toolbarEvent) {
-    this.send("showUploadSelector", toolbarEvent);
-  },
-
-  _bindMobileUploadButton() {
+  #bindMobileUploadButton() {
     if (this.site.mobileView) {
       this.mobileUploadButton = document.getElementById(
         this.mobileFileUploaderId
@@ -662,35 +679,37 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         false
       );
     }
-  },
+  }
 
   @bind
   _mobileUploadButtonEventListener() {
-    document.getElementById(this.fileUploadElementId).click();
-  },
+    this.#fileInputEl.click();
+  }
 
-  _unbindMobileUploadButton() {
+  #unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
       this._mobileUploadButtonEventListener
     );
-  },
+  }
 
-  _filenamePlaceholder(data) {
+  #filenamePlaceholder(data) {
     return data.name.replace(/\u200B-\u200D\uFEFF]/g, "");
-  },
+  }
 
-  _resetUploadFilenamePlaceholder() {
-    this.set("uploadFilenamePlaceholder", null);
-  },
+  #findMatchingUploadHandler(fileName) {
+    return this.uploadHandlers.find((handler) => {
+      const ext = handler.extensions.join("|");
+      const regex = new RegExp(`\\.(${ext})$`, "i");
+      return regex.test(fileName);
+    });
+  }
 
-  // target must be provided as a DOM element, however the
-  // onDragOver and onDragLeave callbacks can also be provided.
-  // it is advisable to debounce/add a setTimeout timer when
-  // doing anything in these callbacks to avoid jumping. uppy
-  // also adds a .uppy-is-drag-over class to the target element by
-  // default onDragOver and removes it onDragLeave
-  _uploadDropTargetOptions() {
-    return { target: this.element };
-  },
-});
+  #cursorIsOnEmptyLine() {
+    const textArea = this.#editorEl.querySelector(this.editorInputClass);
+    const selectionStart = textArea.selectionStart;
+    return (
+      selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n"
+    );
+  }
+}

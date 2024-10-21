@@ -5,8 +5,19 @@
 
 .themes-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  grid-template-columns: calc(66.66% - 0.5em) calc(33.33% - 0.5em);
   gap: 1em;
+
+  @media screen and (max-width: 1300px) {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  &__main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(calc(325px - 1em), 1fr));
+    gap: 1em;
+  }
 }
 
 .theme-card {
@@ -19,20 +30,16 @@
     flex-grow: 1;
   }
 
-  &.--active {
+  &.-active {
     @include theme-card-border(tertiary);
   }
 
-  &.--disabled {
+  &.-disabled {
     @include theme-card-border(primary);
   }
 
-  &.--broken {
+  &.-broken {
     @include theme-card-border(danger);
-  }
-
-  &.--updates {
-    @include theme-card-border(success);
   }
 
   .broken-indicator {
@@ -41,10 +48,6 @@
 
   &__icons {
     display: flex;
-  }
-
-  &__icons .btn-flat {
-    padding: 0;
   }
 
   &__image-wrapper {
@@ -76,21 +79,34 @@
     font-weight: 400;
   }
 
-  &__components {
-    display: block;
-    font-size: var(--font-down-1);
-    margin-bottom: 10px;
-    color: var(--primary-high);
+  &__content {
+    padding: 10px 0;
   }
 
-  &__button {
+  &__description {
+    margin: 0 0 10px 0;
+  }
+
+  &__components {
+    display: -webkit-box;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+  }
+
+  &__install-button {
     margin-top: auto;
   }
 
   &__footer {
     margin-top: auto;
     display: flex;
-    justify-content: space-between;
+  }
+
+  &__footer-actions {
+    margin-left: auto;
   }
 
   .admin-config-area-card__header-action {
@@ -110,6 +126,7 @@
   justify-content: space-between;
   flex-direction: column;
   font-size: var(--font-down-1);
+  margin-bottom: 10px;
 
   .external-link {
     margin-bottom: 0.25em;

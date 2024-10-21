@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SwapFieldTypeWithFieldTypeEnumOnUserFields < ActiveRecord::Migration[7.0]
-  # DROPPED_COLUMNS ||= { user_fields: %i[field_type] }
+  # DROPPED_COLUMNS = { user_fields: %i[field_type] }
 
   # def up
   #   # WARNING: Swapping in a column of a different type in a post-migration will break the AR

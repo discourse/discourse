@@ -2344,6 +2344,12 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(400)
     end
 
+    it "does not raise an unhandled exception when receiving a nested ID parameter" do
+      get "/t/#{topic.id}/summary?id[foo]=a"
+
+      expect(response.status).to eq(400)
+    end
+
     it "keeps the post_number parameter around when redirecting" do
       get "/t/#{topic.slug}", params: { post_number: 42 }
       expect(response).to redirect_to(topic.relative_url + "/42")
@@ -2453,6 +2459,53 @@ RSpec.describe TopicsController do
 
       user_options_queries = queries.filter { |q| q =~ /FROM "?user_options"?/ }
       expect(user_options_queries.size).to eq(1) # for all mentioned users
+    end
+
+    context "with serialize_post_user_badges" do
+      fab!(:badge)
+      before do
+        theme = Fabricate(:theme)
+        theme.theme_modifier_set.update!(serialize_post_user_badges: [badge.name])
+        SiteSetting.default_theme_id = theme.id
+      end
+
+      it "correctly returns user badges that are registered" do
+        first_post = topic.posts.order(:post_number).first
+        first_post.user.user_badges.create!(
+          badge_id: badge.id,
+          granted_at: Time.zone.now,
+          granted_by: Discourse.system_user,
+        )
+
+        expected_payload = {
+          "users" => {
+            first_post.user_id.to_s => {
+              "id" => first_post.user.id,
+              "badge_ids" => [badge.id],
+            },
+          },
+          "badges" => {
+            badge.id.to_s => {
+              "id" => badge.id,
+              "name" => badge.name,
+              "slug" => badge.slug,
+              "description" => badge.description,
+              "icon" => badge.icon,
+              "image_url" => badge.image_url,
+              "badge_grouping_id" => badge.badge_grouping_id,
+              "badge_type_id" => badge.badge_type_id,
+            },
+          },
+        }
+
+        get "/t/#{topic.slug}/#{topic.id}.json"
+        user_badges = response.parsed_body["user_badges"]
+        expect(user_badges).to eq(expected_payload)
+
+        get "/t/#{topic.id}/posts.json?post_ids[]=#{first_post.id}"
+        user_badges = response.parsed_body["user_badges"]
+        expect(user_badges).to eq(expected_payload)
+      end
     end
 
     context "with registered redirect_to_correct_topic_additional_query_parameters" do
