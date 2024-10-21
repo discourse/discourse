@@ -733,7 +733,20 @@ export default class UppyComposerUpload {
   #autoGridImages() {
     const reply = this.composerModel.get("reply");
     const imagesToWrapGrid = new Set(this.#consecutiveImages);
-    const uploadingImagePattern = /\[Uploading: ([^\]]+?)\.\w+…\]\(\)/g;
+
+    const uploadingText = I18n.t("uploading_filename", {
+      filename: "%placeholder%",
+    });
+    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+
+    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
+      return;
+    }
+
+    const uploadingImagePattern = new RegExp(
+      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "g"
+    );
 
     const matches = reply.match(uploadingImagePattern) || [];
     const foundImages = [];
@@ -743,9 +756,12 @@ export default class UppyComposerUpload {
 
     matches.forEach((imagePlaceholder) => {
       imagePlaceholder = imagePlaceholder.trim();
-      const filenameMatch = imagePlaceholder.match(
-        /\[Uploading: ([^\]]+?)\…\]\(\)/
+
+      const filenamePattern = new RegExp(
+        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
       );
+
+      const filenameMatch = imagePlaceholder.match(filenamePattern);
 
       if (filenameMatch && filenameMatch[1]) {
         const filename = filenameMatch[1];
