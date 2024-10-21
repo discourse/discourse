@@ -21,7 +21,6 @@
       <WelcomeHeader
         id="create-account-title"
         @header={{i18n "create_account.header_title"}}
-        @subheader={{i18n "create_account.subheader_title"}}
       >
         <PluginOutlet
           @name="create-account-header-bottom"
@@ -51,15 +50,16 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            <InputTip
-              @validation={{this.emailValidation}}
-              id="account-email-validation"
-            />
-            {{#unless this.emailValidation.reason}}
+            {{#if this.emailValidation.reason}}
+              <InputTip
+                @validation={{this.emailValidation}}
+                id="account-email-validation"
+              />
+            {{else}}
               <span class="more-info" id="account-email-validation-more-info">
                 {{i18n "user.email.instructions"}}
               </span>
-            {{/unless}}
+            {{/if}}
           </div>
 
           <div class="input-group create-account__username">
@@ -82,11 +82,6 @@
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            {{#unless this.usernameValidation.reason}}
-              <span class="more-info" id="username-validation-more-info">
-                {{i18n "user.username.instructions"}}
-              </span>
-            {{/unless}}
           </div>
 
           <PluginOutlet
@@ -122,11 +117,6 @@
                     @validation={{this.passwordValidation}}
                     id="password-validation"
                   />
-                  {{#unless this.passwordValidation.reason}}
-                    <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordInstructions}}
-                    </span>
-                  {{/unless}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -203,18 +193,13 @@
                 class={{value-entered this.accountName}}
               />
               <label class="alt-placeholder" for="new-account-name">
-                {{i18n "user.name.title"}}
+                {{this.nameTitle}}
               </label>
 
               <InputTip
                 @validation={{this.nameValidation}}
                 id="fullname-validation"
               />
-              {{#unless this.nameValidation.reason}}
-                <span class="more-info" id="fullname-validation-more-info">
-                  {{this.nameInstructions}}
-                </span>
-              {{/unless}}
             {{/if}}
           </div>
 

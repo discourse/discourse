@@ -10,6 +10,7 @@ import I18n from "discourse-i18n";
 
 export default class SignupProgressBar extends Component {
   @service siteSettings;
+  @service site;
   @tracked steps = [];
 
   constructor() {
@@ -48,25 +49,22 @@ export default class SignupProgressBar extends Component {
     {{#if @step}}
       <div class="signup-progress-bar">
         {{#each this.steps as |step index|}}
-          <div class="signup-progress-bar__segment">
-            <div
-              class={{concatClass
-                "signup-progress-bar__step"
-                (concat "--" (this.getStepState index))
-              }}
-            >
+          <div
+            class={{concatClass
+              "signup-progress-bar__segment"
+              (concat "--" (this.getStepState index))
+            }}
+          >
+            <div class="signup-progress-bar__step">
               <div class="signup-progress-bar__circle">
-                {{#if (eq (this.getStepState index) "completed")}}
-                  {{dIcon "check"}}
+                {{#if this.site.desktopView}}
+                  {{#if (eq (this.getStepState index) "completed")}}
+                    {{dIcon "check"}}
+                  {{/if}}
                 {{/if}}
               </div>
               {{#unless (eq index this.lastStepIndex)}}
-                <span
-                  class={{concatClass
-                    "signup-progress-bar__line"
-                    (concat "--" (this.getStepState index))
-                  }}
-                ></span>
+                <span class="signup-progress-bar__line"></span>
               {{/unless}}
             </div>
             <span class="signup-progress-bar__step-text">
