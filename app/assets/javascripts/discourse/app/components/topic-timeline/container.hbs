@@ -175,12 +175,11 @@
 
     {{#if this.currentUser}}
       <TopicNotificationsButton
-        @notificationLevel={{@model.details.notification_level}}
         @topic={{@model}}
         @showFullTitle={{false}}
         @appendReason={{false}}
-        @placement="bottom-end"
         @showCaret={{false}}
+        @placement="bottom-end"
       />
       {{#if @mobileView}}
         <TopicAdminMenu
