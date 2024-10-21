@@ -142,7 +142,7 @@ class Statistics
   private
 
   def self.valid_users
-    users = User.real.activated.not_staged.not_suspended.not_silenced
+    users = User.real.activated.not_suspended.not_silenced
     users = users.approved if SiteSetting.must_approve_users
     users
   end

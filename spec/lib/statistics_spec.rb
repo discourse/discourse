@@ -56,7 +56,7 @@ RSpec.describe Statistics do
   describe ".users" do
     before { User.real.destroy_all }
 
-    it "doesn't count inactive, silenced, suspended, or staged users" do
+    it "doesn't count inactive, silenced, or suspended users" do
       res = described_class.users
       expect(res[:last_day]).to eq(0)
       expect(res[:"7_days"]).to eq(0)
@@ -66,15 +66,6 @@ RSpec.describe Statistics do
       user = Fabricate(:user, active: true)
       user2 = Fabricate(:user, active: true)
       user3 = Fabricate(:user, active: true)
-      user4 = Fabricate(:user, active: true)
-
-      res = described_class.users
-      expect(res[:last_day]).to eq(4)
-      expect(res[:"7_days"]).to eq(4)
-      expect(res[:"30_days"]).to eq(4)
-      expect(res[:count]).to eq(4)
-
-      user.update!(active: false)
 
       res = described_class.users
       expect(res[:last_day]).to eq(3)
@@ -82,7 +73,7 @@ RSpec.describe Statistics do
       expect(res[:"30_days"]).to eq(3)
       expect(res[:count]).to eq(3)
 
-      user2.update!(silenced_till: 1.month.from_now)
+      user.update!(active: false)
 
       res = described_class.users
       expect(res[:last_day]).to eq(2)
@@ -90,7 +81,7 @@ RSpec.describe Statistics do
       expect(res[:"30_days"]).to eq(2)
       expect(res[:count]).to eq(2)
 
-      user3.update!(suspended_till: 1.month.from_now)
+      user2.update!(silenced_till: 1.month.from_now)
 
       res = described_class.users
       expect(res[:last_day]).to eq(1)
@@ -98,7 +89,7 @@ RSpec.describe Statistics do
       expect(res[:"30_days"]).to eq(1)
       expect(res[:count]).to eq(1)
 
-      user4.update!(staged: true)
+      user3.update!(suspended_till: 1.month.from_now)
 
       res = described_class.users
       expect(res[:last_day]).to eq(0)
