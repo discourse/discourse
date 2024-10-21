@@ -399,7 +399,10 @@ export default class UppyComposerUpload {
               );
 
               const MIN_IMAGES_TO_AUTO_GRID = 3;
-              if (this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID) {
+              if (
+                this.siteSettings.experimental_auto_grid_images &&
+                this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
+              ) {
                 this.#autoGridImages();
               }
               this.#displayBufferedErrors();

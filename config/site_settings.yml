@@ -2470,6 +2470,9 @@ developer:
     default: 50
     hidden: true
     client: true
+  experimental_auto_grid_images:
+    default: false
+    client: true
 
 navigation:
   navigation_menu:
