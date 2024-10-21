@@ -45,11 +45,12 @@ class TopTopic < ActiveRecord::Base
   end
 
   def self.validate_period(period)
-    if period.blank? || !periods.include?(period.to_sym)
-      raise Discourse::InvalidParameters.new(
-              "Invalid period. Valid periods are #{periods.join(", ")}",
-            )
-    end
+    @invalid_period_error ||=
+      Discourse::InvalidParameters.new("Invalid period. Valid periods are #{periods.join(", ")}")
+
+    raise @invalid_period_error if period.blank? || !periods.include?(period.to_sym)
+  rescue NoMethodError
+    raise @invalid_period_error
   end
 
   private
