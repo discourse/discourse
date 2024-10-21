@@ -5104,6 +5104,13 @@ en:
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
+          experiment_enabled: "You have enabled the experimental feature."
+          experiment_disabled: "You have disabled the experimental feature."
+          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          experiment_tooltip:
+            title: "Try our experimental feature"
+            content: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like."
+
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
