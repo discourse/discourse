@@ -1,4 +1,5 @@
 import EmberObject, { computed } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
@@ -430,18 +431,18 @@ export default class Topic extends RestModel {
     return newTags;
   }
 
-  @discourseComputed("related_messages")
-  relatedMessages(relatedMessages) {
-    if (relatedMessages) {
-      return relatedMessages.map((st) => this.store.createRecord("topic", st));
-    }
+  @dependentKeyCompat
+  get relatedMessages() {
+    return this.get("related_messages")?.map((st) =>
+      this.store.createRecord("topic", st)
+    );
   }
 
-  @discourseComputed("suggested_topics")
-  suggestedTopics(suggestedTopics) {
-    if (suggestedTopics) {
-      return suggestedTopics.map((st) => this.store.createRecord("topic", st));
-    }
+  @dependentKeyCompat
+  get suggestedTopics() {
+    return this.get("suggested_topics")?.map((st) =>
+      this.store.createRecord("topic", st)
+    );
   }
 
   @discourseComputed("posts_count")
