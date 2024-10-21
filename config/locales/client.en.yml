@@ -2513,6 +2513,7 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
+      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
