@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelMessagesController < Chat::ApiController
   def index
-    ::Chat::ListChannelMessages.call(service_params) do
+    ::Chat::ListChannelMessages.call(service_params) do |result|
       on_success { render_serialized(result, ::Chat::MessagesSerializer, root: false) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
@@ -52,7 +52,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
 
   def update
     Chat::UpdateMessage.call(service_params) do
-      on_success { render json: success_json.merge(message_id: result[:message].id) }
+      on_success { |message:| render json: success_json.merge(message_id: message.id) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_model_errors(:message) do |model|
@@ -69,7 +69,9 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
 
     # users can't force a thread through JSON API
     Chat::CreateMessage.call(service_params.merge(force_thread: false)) do
-      on_success { render json: success_json.merge(message_id: result[:message_instance].id) }
+      on_success do |message_instance:|
+        render json: success_json.merge(message_id: message_instance.id)
+      end
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }

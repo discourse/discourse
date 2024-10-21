@@ -27,9 +27,9 @@ class Admin::Config::FlagsController < Admin::AdminController
 
   def create
     Flags::CreateFlag.call(service_params) do
-      on_success do
+      on_success do |flag:|
         Discourse.request_refresh!
-        render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
+        render json: flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
       end
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
@@ -42,9 +42,9 @@ class Admin::Config::FlagsController < Admin::AdminController
 
   def update
     Flags::UpdateFlag.call(service_params) do
-      on_success do
+      on_success do |flag:|
         Discourse.request_refresh!
-        render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
+        render json: flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
       end
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }

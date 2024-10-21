@@ -20,9 +20,7 @@ class Chat::Api::ChannelsReadController < Chat::ApiController
 
   def update_all
     Chat::MarkAllUserChannelsRead.call(service_params) do
-      on_success do
-        render(json: success_json.merge(updated_memberships: result.updated_memberships))
-      end
+      on_success { |updated_memberships:| render(json: success_json.merge(updated_memberships:)) }
       on_failure { render(json: failed_json, status: 422) }
     end
   end
