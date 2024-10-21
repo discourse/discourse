@@ -8,31 +8,29 @@ module Chat
     # this in staff actions so it's obvious why these users were
     # removed.
     class PublishAutoRemovedUser < Service::ActionBase
-      # @param [Symbol] event_type What caused the users to be removed,
+      # @param [Symbol] event What caused the users to be removed,
       #   each handler will define this, e.g. category_updated, user_removed_from_group
       # @param [Hash] users_removed_map A hash with channel_id as its keys and an
       #   array of user_ids who were removed from the channel.
-      option :event_type
+      option :event
       option :users_removed_map
 
       def call
         return if users_removed_map.empty?
 
-        users_removed_map.each do |channel_id, user_ids|
+        users_removed_map.each do |channel_id, all_user_ids|
+          next if all_user_ids.empty?
+
           job_spacer = JobTimeSpacer.new
-          user_ids.in_groups_of(1000, false) do |user_id_batch|
-            job_spacer.enqueue(
-              Jobs::Chat::KickUsersFromChannel,
-              { channel_id: channel_id, user_ids: user_id_batch },
-            )
+
+          all_user_ids.in_groups_of(1000, false) do |user_ids|
+            job_spacer.enqueue(Jobs::Chat::KickUsersFromChannel, { channel_id:, user_ids: })
           end
 
-          if user_ids.any?
-            StaffActionLogger.new(Discourse.system_user).log_custom(
-              "chat_auto_remove_membership",
-              { users_removed: user_ids.length, channel_id: channel_id, event: event_type },
-            )
-          end
+          StaffActionLogger.new(Discourse.system_user).log_custom(
+            "chat_auto_remove_membership",
+            { users_removed: all_user_ids.size, channel_id:, event: },
+          )
         end
       end
     end
