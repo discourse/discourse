@@ -97,8 +97,6 @@ class Service::Runner
   # @!visibility private
   attr_reader :service, :object, :dependencies
 
-  delegate :result, to: :object
-
   # @!visibility private
   def initialize(service, object, dependencies)
     @service = service
@@ -117,8 +115,7 @@ class Service::Runner
 
   # @!visibility private
   def call(&block)
-    instance_eval(&block)
-    setup_and_run_service
+    instance_exec(result, &block)
     # Always have `on_failure` as the last action
     (
       actions
@@ -132,12 +129,8 @@ class Service::Runner
 
   attr_reader :actions
 
-  def setup_and_run_service
-    runner = self
-    object.instance_eval do
-      def result = @_result
-      @_result = runner.service.call(runner.dependencies)
-    end
+  def result
+    @result ||= service.call(dependencies)
   end
 
   def failure_for?(key)
@@ -151,6 +144,7 @@ class Service::Runner
       -> do
         object.instance_exec(
           result[[*action[:key], args.first || action[:default_name]].join(".")],
+          **result.slice(*block.parameters.filter_map { _1.last if _1.first == :keyreq }),
           &block
         )
       end,

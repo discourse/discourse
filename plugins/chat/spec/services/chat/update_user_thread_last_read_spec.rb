@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::UpdateUserThreadLastRead do
-  describe Chat::UpdateUserThreadLastRead::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:chatters) { Fabricate(:group) }
     fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
@@ -15,14 +15,8 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     fab!(:reply_1) { Fabricate(:chat_message, thread: thread, chat_channel_id: thread.channel.id) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) do
-      {
-        message_id: reply_1.id,
-        guardian: guardian,
-        channel_id: thread.channel.id,
-        thread_id: thread.id,
-      }
-    end
+    let(:params) { { message_id: reply_1.id, channel_id: thread.channel.id, thread_id: thread.id } }
+    let(:dependencies) { { guardian: } }
 
     before do
       thread.add(current_user)
@@ -117,7 +111,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
       it "marks notifications as read" do
         params[:message_id] = reply_2.id
 
-        expect { described_class.call(params) }.to change {
+        expect { described_class.call(params:, **dependencies) }.to change {
           ::Notification
             .where(notification_type: Notification.types[:chat_mention])
             .where(user: current_user)
@@ -127,7 +121,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
         params[:message_id] = reply_3.id
 
-        expect { described_class.call(params) }.to change {
+        expect { described_class.call(params:, **dependencies) }.to change {
           ::Notification
             .where(notification_type: Notification.types[:chat_mention])
             .where(user: current_user)

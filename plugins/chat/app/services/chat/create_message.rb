@@ -21,6 +21,15 @@ module Chat
     #   @param staged_id [String] arbitrary string that will be sent back to the client
     #   @param incoming_chat_webhook [Chat::IncomingWebhook]
 
+    options do
+      attribute :streaming, :boolean, default: false
+      attribute :enforce_membership, :boolean, default: false
+      attribute :process_inline, :boolean, default: -> { Rails.env.test? }
+      attribute :force_thread, :boolean, default: false
+      attribute :strip_whitespaces, :boolean, default: true
+      attribute :created_by_sdk, :boolean, default: false
+    end
+
     policy :no_silenced_user
     contract do
       attribute :chat_channel_id, :string
@@ -31,13 +40,6 @@ module Chat
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
-      attribute :streaming, :boolean, default: false
-      attribute :enforce_membership, :boolean, default: false
-      attribute :incoming_chat_webhook
-      attribute :process_inline, :boolean, default: Rails.env.test?
-      attribute :force_thread, :boolean, default: false
-      attribute :strip_whitespaces, :boolean, default: true
-      attribute :created_by_sdk, :boolean, default: false
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -79,8 +81,8 @@ module Chat
       Chat::Channel.find_by_id_or_slug(contract.chat_channel_id)
     end
 
-    def enforce_membership(guardian:, channel:, contract:)
-      if guardian.user.bot? || contract.enforce_membership
+    def enforce_membership(guardian:, channel:, options:)
+      if guardian.user.bot? || options.enforce_membership
         channel.add(guardian.user)
 
         if channel.direct_message_channel?
@@ -102,7 +104,7 @@ module Chat
       reply&.chat_channel == channel
     end
 
-    def fetch_thread(contract:, reply:, channel:)
+    def fetch_thread(contract:, reply:, channel:, options:)
       return Chat::Thread.find_by(id: contract.thread_id) if contract.thread_id.present?
       return unless reply
       reply.thread ||
@@ -110,7 +112,7 @@ module Chat
           original_message: reply,
           original_message_user: reply.user,
           channel: channel,
-          force: contract.force_thread,
+          force: options.force_thread,
         )
     end
 
@@ -129,16 +131,16 @@ module Chat
       guardian.user.uploads.where(id: contract.upload_ids)
     end
 
-    def clean_message(contract:)
+    def clean_message(contract:, options:)
       contract.message =
         TextCleaner.clean(
           contract.message,
-          strip_whitespaces: contract.strip_whitespaces,
+          strip_whitespaces: options.strip_whitespaces,
           strip_zero_width_spaces: true,
         )
     end
 
-    def instantiate_message(channel:, guardian:, contract:, uploads:, thread:, reply:)
+    def instantiate_message(channel:, guardian:, contract:, uploads:, thread:, reply:, options:)
       channel.chat_messages.new(
         user: guardian.user,
         last_editor: guardian.user,
@@ -148,7 +150,7 @@ module Chat
         thread: thread,
         cooked: ::Chat::Message.cook(contract.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
-        streaming: contract.streaming,
+        streaming: options.streaming,
       )
     end
 
@@ -169,10 +171,10 @@ module Chat
       thread.add(thread.original_message_user)
     end
 
-    def create_webhook_event(contract:, message_instance:)
-      return if contract.incoming_chat_webhook.blank?
+    def create_webhook_event(message_instance:)
+      return if context[:incoming_chat_webhook].blank?
       message_instance.create_chat_webhook_event(
-        incoming_chat_webhook: contract.incoming_chat_webhook,
+        incoming_chat_webhook: context[:incoming_chat_webhook],
       )
     end
 
@@ -186,8 +188,8 @@ module Chat
       membership.update!(last_read_message: message_instance)
     end
 
-    def update_created_by_sdk(message_instance:, contract:)
-      message_instance.created_by_sdk = contract.created_by_sdk
+    def update_created_by_sdk(message_instance:, options:)
+      message_instance.created_by_sdk = options.created_by_sdk
     end
 
     def process_direct_message_channel(membership:)
@@ -200,7 +202,7 @@ module Chat
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
-    def process(channel:, message_instance:, contract:, thread:)
+    def process(channel:, message_instance:, contract:, thread:, options:)
       ::Chat::Publisher.publish_new!(channel, message_instance, contract.staged_id)
 
       DiscourseEvent.trigger(
@@ -218,7 +220,7 @@ module Chat
         },
       )
 
-      if contract.process_inline
+      if options.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
           { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )

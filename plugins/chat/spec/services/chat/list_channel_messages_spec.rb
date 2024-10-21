@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ListChannelMessages do
-  subject(:result) { described_class.call(params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:user)
   fab!(:channel) { Fabricate(:chat_channel) }
@@ -9,7 +9,8 @@ RSpec.describe Chat::ListChannelMessages do
   let(:guardian) { Guardian.new(user) }
   let(:channel_id) { channel.id }
   let(:optional_params) { {} }
-  let(:params) { { guardian: guardian, channel_id: channel_id }.merge(optional_params) }
+  let(:params) { { channel_id: }.merge(optional_params) }
+  let(:dependencies) { { guardian: } }
 
   before { channel.add(user) }
 

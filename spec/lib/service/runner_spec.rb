@@ -148,24 +148,18 @@ RSpec.describe Service::Runner do
   end
 
   describe ".call" do
-    subject(:runner) { described_class.call(service, &actions_block) }
+    subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
     let(:result) { object.result }
     let(:actions_block) { object.instance_eval(actions) }
     let(:service) { SuccessService }
     let(:actions) { "proc {}" }
+    let(:dependencies) { { guardian: stub, params: {} } }
     let(:object) do
       Class
         .new(ApplicationController) do
           def request
             OpenStruct.new
-          end
-
-          def params
-            ActionController::Parameters.new
-          end
-
-          def guardian
           end
         end
         .new

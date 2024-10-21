@@ -123,14 +123,16 @@ module Chat
 
       ::Chat::CreateMessage.call(
         guardian: Discourse.system_user.guardian,
-        chat_channel_id: channel.id,
-        message:
-          I18n.t(
-            "chat.channel.users_invited_to_channel",
-            invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
-            inviting_user: "@#{guardian.user.username}",
-            count: added_users.count,
-          ),
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "chat.channel.users_invited_to_channel",
+              invited_users: added_users.map { |u| "@#{u.username}" }.join(", "),
+              inviting_user: "@#{guardian.user.username}",
+              count: added_users.count,
+            ),
+        },
       ) { on_failure { fail!(failure: "Failed to notice the channel") } }
     end
   end

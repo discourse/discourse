@@ -21,7 +21,7 @@ RSpec.describe User::Suspend do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
     fab!(:user)

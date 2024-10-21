@@ -55,26 +55,21 @@ class Chat::Api::ChannelsController < Chat::ApiController
     # at the moment. This may change in future, at which point we will need to pass in
     # a chatable_type param as well and switch to the correct service here.
     Chat::CreateCategoryChannel.call(
-      service_params.merge(channel_params.merge(category_id: channel_params[:chatable_id])),
+      service_params.merge(params: channel_params.merge(category_id: channel_params[:chatable_id])),
     ) do
-      on_success do
-        render_serialized(
-          result.channel,
-          Chat::ChannelSerializer,
-          root: "channel",
-          membership: result.membership,
-        )
+      on_success do |channel:, membership:|
+        render_serialized(channel, Chat::ChannelSerializer, root: "channel", membership:)
       end
       on_model_not_found(:category) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:can_create_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:category_channel_does_not_exist) do
         raise Discourse::InvalidParameters.new(I18n.t("chat.errors.channel_exists_for_category"))
       end
-      on_model_errors(:channel) do
-        render_json_error(result.channel, type: :record_invalid, status: 422)
+      on_model_errors(:channel) do |model|
+        render_json_error(model, type: :record_invalid, status: 422)
       end
-      on_model_errors(:membership) do
-        render_json_error(result.membership, type: :record_invalid, status: 422)
+      on_model_errors(:membership) do |model|
+        render_json_error(model, type: :record_invalid, status: 422)
       end
       on_failure { render(json: failed_json, status: 422) }
       on_failed_contract do |contract|
@@ -100,13 +95,13 @@ class Chat::Api::ChannelsController < Chat::ApiController
       auto_join_limiter(channel_from_params).performed!
     end
 
-    Chat::UpdateChannel.call(service_params.merge(params_to_edit)) do
-      on_success do
+    Chat::UpdateChannel.call(service_params.deep_merge(params: params_to_edit.to_unsafe_h)) do
+      on_success do |channel:|
         render_serialized(
-          result.channel,
+          channel,
           Chat::ChannelSerializer,
           root: "channel",
-          membership: result.channel.membership_for(current_user),
+          membership: channel.membership_for(current_user),
         )
       end
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }

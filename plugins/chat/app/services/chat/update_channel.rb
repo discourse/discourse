@@ -56,8 +56,8 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:)
-      Chat::Channel.find_by(id: channel_id)
+    def fetch_channel(params:)
+      Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def check_channel_permission(guardian:, channel:)
