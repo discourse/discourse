@@ -281,10 +281,8 @@ RSpec.describe DiscourseUpdates do
       expect(result[2]["experiment_setting"]).to be_nil
     end
 
-    it "correctly shows features when related plugins is installed" do
-      Discourse.stubs(:visible_plugins).returns(
-        [stub(enabled?: false, name: "discourse-ai", humanized_name: "Discourse AI")],
-      )
+    it "correctly shows features when related plugins are installed" do
+      Discourse.stubs(:plugins_by_name).returns({ "discourse-ai" => true })
 
       features_with_versions = [
         {

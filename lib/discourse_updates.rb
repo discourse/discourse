@@ -154,7 +154,7 @@ module DiscourseUpdates
         next item if !item["experiment_setting"]
 
         item["experiment_setting"] = nil if !SiteSetting.respond_to?(item["experiment_setting"]) ||
-          ![false, true].include?(SiteSetting.send(item["experiment_setting"]))
+          SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
         item
       end
 
@@ -165,11 +165,7 @@ module DiscourseUpdates
               Discourse.has_needed_version?(current_version, item["discourse_version"])
 
           valid_plugin_name =
-            item["plugin_name"].nil? ||
-              Discourse
-                .plugins_sorted_by_name(enabled_only: false)
-                .map(&:name)
-                .include?(item["plugin_name"])
+            item["plugin_name"].nil? || Discourse.plugins_by_name[item["plugin_name"]].present?
 
           valid_version && valid_plugin_name
         rescue StandardError

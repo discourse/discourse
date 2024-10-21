@@ -10,12 +10,18 @@ class Experiments::Toggle
     validates :setting_name, presence: true
   end
 
+  policy :setting_is_available
+
   transaction { step :toggle }
 
   private
 
   def current_user_is_admin(guardian:)
     guardian.is_admin?
+  end
+
+  def setting_is_available(contract:)
+    SiteSetting.respond_to?(contract.setting_name)
   end
 
   def toggle(contract:, guardian:)

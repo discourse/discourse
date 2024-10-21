@@ -11,20 +11,40 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class DiscourseNewFeatureItem extends Component {
   @service siteSettings;
-  @tracked enabled;
+  @service toasts;
+  @tracked experimentEnabled;
+  @tracked toggleExperimentDisabled = false;
 
   @bind
   initEnabled() {
-    this.enabled = this.siteSettings[this.args.item.experiment_setting];
+    this.experimentEnabled =
+      this.siteSettings[this.args.item.experiment_setting];
   }
 
   @action
-  async toggle() {
-    this.enabled = !this.enabled;
+  async toggleExperiment() {
+    if (this.toggleExperimentDisabled) {
+      this.toasts.error({
+        duration: 3000,
+        data: {
+          message: I18n.t(
+            "admin.dashboard.new_features.experiment_toggled_too_fast"
+          ),
+        },
+      });
+      return;
+    }
+    this.experimentEnabled = !this.experimentEnabled;
+    this.toggleExperimentDisabled = true;
+
+    setTimeout(() => {
+      this.toggleExperimentDisabled = false;
+    }, 5000);
     try {
       await ajax("/admin/toggle-feature", {
         type: "POST",
@@ -32,8 +52,16 @@ export default class DiscourseNewFeatureItem extends Component {
           setting_name: this.args.item.experiment_setting,
         },
       });
+      this.toasts.success({
+        duration: 3000,
+        data: {
+          message: this.experimentEnabled
+            ? I18n.t("admin.dashboard.new_features.experiment_enabled")
+            : I18n.t("admin.dashboard.new_features.experiment_disabled"),
+        },
+      });
     } catch (error) {
-      this.enabled = !this.enabled;
+      this.experimentEnabled = !this.experimentEnabled;
       return popupAjaxError(error);
     }
   }
@@ -85,8 +113,8 @@ export default class DiscourseNewFeatureItem extends Component {
               <DTooltip>
                 <:trigger>
                   <DToggleSwitch
-                    @state={{this.enabled}}
-                    {{on "click" this.toggle}}
+                    @state={{this.experimentEnabled}}
+                    {{on "click" this.toggleExperiment}}
                   />
                 </:trigger>
                 <:content>
