@@ -1,4 +1,4 @@
-{{#if this.siteSettings.experimental_full_page_login}}
+{{#if (and this.siteSettings.experimental_full_page_login this.showLogin)}}
   {{hide-application-header-buttons "search" "login" "signup" "menu"}}
   {{hide-application-sidebar}}
 
@@ -163,7 +163,11 @@
           {{/if}}
 
           <DButton
-            @action={{route-action "showLogin"}}
+            @action={{if
+              this.siteSettings.experimental_full_page_login
+              this.showLoginPage
+              (route-action "showLogin")
+            }}
             @icon="user"
             @label="log_in"
             class="btn-primary login-button"
