@@ -124,7 +124,7 @@ class Admin::UsersController < Admin::StaffController
       on_success do
         render_json_dump(
           suspension: {
-            suspend_reason: result.reason,
+            suspend_reason: result.contract.reason,
             full_suspend_reason: result.full_reason,
             suspended_till: result.user.suspended_till,
             suspended_at: result.user.suspended_at,

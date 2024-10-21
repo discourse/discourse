@@ -155,6 +155,56 @@ class TopicView
     @personal_message = @topic.private_message?
   end
 
+  def user_badges(badge_names)
+    return if !badge_names.present?
+
+    user_ids = Set.new
+    posts.each { |post| user_ids << post.user_id if post.user_id }
+
+    return if !user_ids.present?
+
+    badges =
+      Badge.where("LOWER(name) IN (?)", badge_names.map(&:downcase)).where(enabled: true).to_a
+
+    sql = <<~SQL
+     SELECT user_id, badge_id
+     FROM user_badges
+     WHERE user_id IN (:user_ids) AND badge_id IN (:badge_ids)
+     GROUP BY user_id, badge_id
+     ORDER BY user_id, badge_id
+   SQL
+
+    user_badges = DB.query(sql, user_ids: user_ids, badge_ids: badges.map(&:id))
+
+    user_badge_mapping = {}
+    user_badges.each do |user_badge|
+      user_badge_mapping[user_badge.user_id] ||= []
+      user_badge_mapping[user_badge.user_id] << user_badge.badge_id
+    end
+
+    indexed_badges = {}
+
+    badges.each do |badge|
+      indexed_badges[badge.id] = {
+        id: badge.id,
+        name: badge.name,
+        slug: badge.slug,
+        description: badge.description,
+        icon: badge.icon,
+        image_url: badge.image_url,
+        badge_grouping_id: badge.badge_grouping_id,
+        badge_type_id: badge.badge_type_id,
+      }
+    end
+
+    user_badge_mapping =
+      user_badge_mapping
+        .map { |user_id, badge_ids| [user_id, { id: user_id, badge_ids: badge_ids }] }
+        .to_h
+
+    { users: user_badge_mapping, badges: indexed_badges }
+  end
+
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
