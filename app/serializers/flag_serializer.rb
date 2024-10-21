@@ -12,7 +12,8 @@ class FlagSerializer < ApplicationSerializer
              :enabled,
              :is_flag,
              :applies_to,
-             :is_used
+             :is_used,
+             :auto_action_type
 
   def i18n_prefix
     "#{@options[:target] || "post_action"}_types.#{object.name_key}"

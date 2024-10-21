@@ -10,6 +10,7 @@ class Flags::CreateFlag
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
+    attribute :auto_action_type, :boolean
 
     validates :name, presence: true
     validates :description, presence: true

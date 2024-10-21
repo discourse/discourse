@@ -30,11 +30,13 @@ export default class AdminFlagsForm extends Component {
         appliesTo: this.args.flag.applies_to,
         requireMessage: this.args.flag.require_message,
         enabled: this.args.flag.enabled,
+        autoActionType: this.args.flag.auto_action_type,
       };
     } else {
       return {
         enabled: true,
         requireMessage: false,
+        autoActionType: false,
       };
     }
   }
@@ -68,7 +70,14 @@ export default class AdminFlagsForm extends Component {
   }
 
   @action
-  save({ name, description, appliesTo, requireMessage, enabled }) {
+  save({
+    name,
+    description,
+    appliesTo,
+    requireMessage,
+    enabled,
+    autoActionType,
+  }) {
     const createOrUpdate = this.isUpdate ? this.update : this.create;
     const data = {
       name,
@@ -76,6 +85,7 @@ export default class AdminFlagsForm extends Component {
       enabled,
       applies_to: appliesTo,
       require_message: requireMessage,
+      auto_action_type: autoActionType,
     };
     createOrUpdate(data);
   }
@@ -107,6 +117,7 @@ export default class AdminFlagsForm extends Component {
       this.args.flag.applies_to = response.flag.applies_to;
       this.args.flag.require_message = response.flag.require_message;
       this.args.flag.enabled = response.flag.enabled;
+      this.args.flag.auto_action_type = response.flag.auto_action_type;
       this.router.transitionTo("adminConfig.flags");
     } catch (error) {
       popupAjaxError(error);
@@ -182,6 +193,20 @@ export default class AdminFlagsForm extends Component {
                   as |field|
                 >
                   <field.Checkbox />
+                </checkboxGroup.Field>
+
+                <checkboxGroup.Field
+                  @name="autoActionType"
+                  @title={{i18n
+                    "admin.config_areas.flags.form.auto_action_type"
+                  }}
+                  as |field|
+                >
+                  <field.Checkbox>
+                    {{i18n
+                      "admin.config_areas.flags.form.auto_action_type_description"
+                    }}
+                  </field.Checkbox>
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
 
