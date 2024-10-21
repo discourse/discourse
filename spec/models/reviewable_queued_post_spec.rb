@@ -126,6 +126,14 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with revise_and_reject_post" do
+        fab!(:contact_group) { Fabricate(:group) }
+        fab!(:contact_user) { Fabricate(:user) }
+
+        before do
+          SiteSetting.site_contact_group_name = contact_group.name
+          SiteSetting.site_contact_username = contact_user.username
+        end
+
         it "doesn't create the post the user intended" do
           post_count = Post.public_posts.count
           result = reviewable.perform(moderator, :revise_and_reject_post)
@@ -156,6 +164,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
             original_post: reviewable.payload["raw"],
             site_name: SiteSetting.title,
           }
+          expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
+          expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
           expect(topic.first_post.raw.chomp).to eq(
             I18n.t(
               "system_messages.reviewable_queued_post_revise_and_reject.text_body_template",
@@ -175,6 +185,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           }
           topic = Topic.where(archetype: Archetype.private_message).last
 
+          expect(topic.topic_allowed_users.pluck(:user_id)).to include(contact_user.id)
+          expect(topic.topic_allowed_groups.pluck(:group_id)).to include(contact_group.id)
           expect(topic.first_post.raw).not_to include("Other...")
           expect(topic.first_post.raw).to include("Boring")
         end
