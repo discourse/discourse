@@ -29,8 +29,7 @@
   --font-down-2-rem: 0.7579rem;
 
   // inputs/textareas in iOS need to be at least 16px to avoid triggering zoom on focus
-  // with base at 15px, the below gives 16.05px
-  --font-size-ios-input: 1.07em;
+  --font-size-ios-input: max(1em, 16px);
 
   // Common line-heights
   --line-height-small: 1;

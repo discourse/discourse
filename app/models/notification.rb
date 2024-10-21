@@ -2,7 +2,7 @@
 
 class Notification < ActiveRecord::Base
   self.ignored_columns = [
-    :old_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been writted.
+    :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
   attr_accessor :acting_user

@@ -294,7 +294,7 @@ hu:
         reply: |-
           A [stáb](%{base_uri}/groups/staff) privátban értesítve lesz a bejelentéséről. Ha elegendő közösségi tag jelent be egy bejegyzést, akkor az elővigyázatosságból automatikusan el is lesz rejtve. (Mivel valójában nem írtam csúnya bejegyzést :angel:, ezért egyelőre eltávolítottam a jelzőt.)
         not_found: |-
-          Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledja, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítése a további műveleteket a bejegyzéseknél.
+          Ó jaj, a csúnya bejegyzésem még nem lett ide nem illőként jelentve. :worried: Tudja jelenteni ide nem illőként a **jelentés** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> gombbal? Ne feledje, hogy használnia kell a továbbiak megjelenítése <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> gombot, hogy megjelenítése a további műveleteket a bejegyzéseknél.
       search:
         instructions: |-
           _psszt_… Elrejtettem egy meglepetést a témában. Ha készen áll a kihívásra, akkor **válassza a keresés ikont** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> jobbra fent &#8599;, majd válassza az 'ebben a témában'  és keressen rá.

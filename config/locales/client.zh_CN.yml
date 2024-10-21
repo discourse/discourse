@@ -3261,7 +3261,9 @@ zh_CN:
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
+      load_more_replies: "加载更多回复"
       sr_collapse_replies: "收起嵌入式回复"
+      sr_load_more_replies: "加载更多嵌入式回复"
       sr_date: "发布日期"
       sr_expand_replies:
         other: "此帖子有 %{count} 条回复"

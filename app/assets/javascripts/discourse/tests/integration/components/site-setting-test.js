@@ -18,7 +18,7 @@ module("Integration | Component | site-setting", function (hooks) {
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
 
-    assert.strictEqual(query(".formatted-selection").innerText, "a.com, b.com");
+    assert.dom(".formatted-selection").hasText("a.com, b.com");
   });
 
   test("Error response with html_message is rendered as HTML", async function (assert) {
@@ -58,7 +58,7 @@ module("Integration | Component | site-setting", function (hooks) {
     await fillIn(query(".setting input"), "value");
     await click(query(".setting .d-icon-check"));
 
-    assert.strictEqual(query(".validation-error h1"), null);
+    assert.dom(".validation-error h1").doesNotExist();
   });
 
   test("displays file types list setting", async function (assert) {
@@ -70,24 +70,19 @@ module("Integration | Component | site-setting", function (hooks) {
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
 
-    assert.strictEqual(
-      query(".formatted-selection").innerText,
-      "jpg, jpeg, png"
-    );
+    assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
 
     await click(query(".file-types-list__button.image"));
 
-    assert.strictEqual(
-      query(".formatted-selection").innerText,
-      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
-    );
+    assert
+      .dom(".formatted-selection")
+      .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
 
     await click(query(".file-types-list__button.image"));
 
-    assert.strictEqual(
-      query(".formatted-selection").innerText,
-      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
-    );
+    assert
+      .dom(".formatted-selection")
+      .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
   });
 
   // Skipping for now because ember-test-helpers doesn't check for defaultPrevented when firing that event chain

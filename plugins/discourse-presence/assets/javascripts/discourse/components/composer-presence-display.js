@@ -1,32 +1,30 @@
-import Component from "@ember/component";
-import { equal, gt, readOnly, union } from "@ember/object/computed";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
-import { observes, on } from "@ember-decorators/object";
-import discourseComputed from "discourse-common/utils/decorators";
 
-@tagName("")
-export default class ComposerPresenceDisplay extends Component {
+export default class ComposerPresenceDisplayComponent extends Component {
   @service presence;
   @service composerPresenceManager;
+  @service currentUser;
+  @service siteSettings;
 
-  @equal("state", "reply") isReply;
-  @equal("state", "edit") isEdit;
-  @equal("state", "whisper") isWhisper;
-  @union("replyChannel.users", "whisperChannel.users") replyingUsers;
-  @readOnly("editChannel.users") editingUsers;
-  @gt("presenceUsers.length", 0) shouldDisplay;
+  @tracked replyChannel;
+  @tracked whisperChannel;
+  @tracked editChannel;
 
-  @discourseComputed(
-    "model.replyingToTopic",
-    "model.editingPost",
-    "model.whisper",
-    "model.composerOpened"
-  )
-  state(replyingToTopic, editingPost, whisper, composerOpen) {
-    if (!composerOpen) {
-      return;
-    } else if (editingPost) {
+  get isReply() {
+    return this.state === "reply" || this.state === "whisper";
+  }
+
+  get isEdit() {
+    return this.state === "edit";
+  }
+
+  get state() {
+    const { editingPost, whisper, replyingToTopic } = this.args.model;
+
+    if (editingPost) {
       return "edit";
     } else if (whisper) {
       return "whisper";
@@ -35,77 +33,105 @@ export default class ComposerPresenceDisplay extends Component {
     }
   }
 
-  @discourseComputed("model.topic.id", "isReply", "isWhisper")
-  replyChannelName(topicId, isReply, isWhisper) {
-    if (topicId && (isReply || isWhisper)) {
+  get replyChannelName() {
+    const topicId = this.args.model?.topic?.id;
+    if (topicId && this.isReply) {
       return `/discourse-presence/reply/${topicId}`;
     }
   }
 
-  @discourseComputed("model.topic.id", "isReply", "isWhisper")
-  whisperChannelName(topicId, isReply, isWhisper) {
-    if (topicId && this.currentUser.whisperer && (isReply || isWhisper)) {
+  get whisperChannelName() {
+    const topicId = this.args.model?.topic?.id;
+    if (topicId && this.isReply && this.currentUser.whisperer) {
       return `/discourse-presence/whisper/${topicId}`;
     }
   }
 
-  @discourseComputed("isEdit", "model.post.id")
-  editChannelName(isEdit, postId) {
-    if (isEdit) {
+  get editChannelName() {
+    const postId = this.args.model?.post?.id;
+    if (postId && this.isEdit) {
       return `/discourse-presence/edit/${postId}`;
     }
   }
 
-  _setupChannel(channelKey, name) {
-    if (this[channelKey]?.name !== name) {
-      this[channelKey]?.unsubscribe();
+  get replyUsers() {
+    return this.replyChannel?.users || [];
+  }
+
+  get whisperUsers() {
+    return this.whisperChannel?.users || [];
+  }
+
+  get replyingUsers() {
+    return [...this.replyUsers, ...this.whisperUsers];
+  }
+
+  get editingUsers() {
+    return this.editChannel?.users || [];
+  }
+
+  get users() {
+    const users = this.isEdit ? this.editingUsers : this.replyingUsers;
+    return users
+      .filter((u) => u.id !== this.currentUser.id)
+      .slice(0, this.siteSettings.presence_max_users_shown);
+  }
+
+  get shouldDisplay() {
+    return this.users.length > 0;
+  }
+
+  @action
+  setupChannels() {
+    this.setupReplyChannel();
+    this.setupWhisperChannel();
+    this.setupEditChannel();
+    this.notifyState();
+  }
+
+  setupReplyChannel() {
+    this.setupChannel("replyChannel", this.replyChannelName);
+  }
+
+  setupWhisperChannel() {
+    if (this.currentUser.staff) {
+      this.setupChannel("whisperChannel", this.whisperChannelName);
+    }
+  }
+
+  setupEditChannel() {
+    this.setupChannel("editChannel", this.editChannelName);
+  }
+
+  setupChannel(key, name) {
+    if (this[key]?.name !== name) {
+      this[key]?.unsubscribe();
       if (name) {
-        this.set(channelKey, this.presence.getChannel(name));
-        this[channelKey].subscribe();
-      } else if (this[channelKey]) {
-        this.set(channelKey, null);
+        this[key] = this.presence.getChannel(name);
+        this[key].subscribe();
       }
     }
   }
 
-  @observes("replyChannelName", "whisperChannelName", "editChannelName")
-  _setupChannels() {
-    this._setupChannel("replyChannel", this.replyChannelName);
-    this._setupChannel("whisperChannel", this.whisperChannelName);
-    this._setupChannel("editChannel", this.editChannelName);
-  }
+  notifyState() {
+    const { reply, post, topic } = this.args.model;
+    const raw = this.isEdit ? post?.raw || "" : "";
+    const entity = this.isEdit ? post : topic;
 
-  _cleanupChannels() {
-    this._setupChannel("replyChannel", null);
-    this._setupChannel("whisperChannel", null);
-    this._setupChannel("editChannel", null);
-  }
-
-  @discourseComputed("isReply", "replyingUsers.[]", "editingUsers.[]")
-  presenceUsers(isReply, replyingUsers, editingUsers) {
-    const users = isReply ? replyingUsers : editingUsers;
-    return users
-      ?.filter((u) => u.id !== this.currentUser.id)
-      ?.slice(0, this.siteSettings.presence_max_users_shown);
-  }
-
-  @on("didInsertElement")
-  subscribe() {
-    this._setupChannels();
-  }
-
-  @observes("model.reply", "state", "model.post.id", "model.topic.id")
-  _contentChanged() {
-    if (this.model.reply === "") {
-      return;
+    if (reply !== raw) {
+      this.composerPresenceManager.notifyState(this.state, entity?.id);
     }
-    const entity = this.state === "edit" ? this.model?.post : this.model?.topic;
-    this.composerPresenceManager.notifyState(this.state, entity?.id);
   }
 
-  @on("willDestroyElement")
-  closeComposer() {
-    this._cleanupChannels();
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.unsubscribeFromChannels();
     this.composerPresenceManager.leave();
+  }
+
+  unsubscribeFromChannels() {
+    this.replyChannel?.unsubscribe();
+    this.whisperChannel?.unsubscribe();
+    this.editChannel?.unsubscribe();
   }
 }

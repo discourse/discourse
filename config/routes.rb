@@ -401,6 +401,13 @@ Discourse::Application.routes.draw do
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
           collection { put "/" => "about#update" }
         end
+
+        resources :look_and_feel,
+                  path: "look-and-feel",
+                  constraints: AdminConstraint.new,
+                  only: %i[index] do
+          collection { get "/themes" => "look_and_feel#themes" }
+        end
       end
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new

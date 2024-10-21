@@ -686,7 +686,6 @@ nl:
               same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
               same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
               same_as_current: "is hetzelfde als je huidige wachtwoord."
-              same_as_previous: "is hetzelfde als je vorige wachtwoord."
               same_as_name: "is hetzelfde als je naam."
               unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
             username:
@@ -696,6 +695,15 @@ nl:
             ip_address:
               blocked: "Nieuwe registraties zijn niet toegestaan vanaf jouw IP-adres."
               max_new_accounts_per_registration_ip: "Nieuwe registraties zijn niet toegestaan vanaf jouw IP-adres (maximumlimiet bereikt). Neem contact op met een medewerker."
+        user_password:
+          attributes:
+            password:
+              common: "is een van de 10.000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
+              same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
+              same_as_current: "is hetzelfde als je huidige wachtwoord."
+              same_as_name: "is hetzelfde als je naam."
+              unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2099,7 +2107,6 @@ nl:
     reset_bounce_score_after_days: "Bouncescore na X dagen automatisch resetten."
     blocked_attachment_content_types: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van het type inhoud."
     blocked_attachment_filenames: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van de bestandsnaam."
-    forwarded_emails_behaviour: "Hoe een doorgestuurde e-mail naar Discourse te behandelen"
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails weergeven. WAARSCHUWING: kan e-mailadressen onthullen."
     trim_incoming_emails: "Knip het deel van inkomende e-mails dat niet relevant is."
     private_email: "Geen inhoud van berichten of topics opnemen in titel of tekst van e-mail. OPMERKING: schakelt ook digest-e-mails uit."

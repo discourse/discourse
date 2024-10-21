@@ -9,6 +9,7 @@ hu:
     chat_separate_sidebar_mode: "Külön oldalsávos módok megjelenítése a fórum és a chat számára."
     chat_enabled: "Csevegés engedélyezése."
     enable_public_channels: "Nyilvános csatornák engedélyezése kategóriák alapján."
+    chat_allowed_groups: "A csoportok felhasználói cseveghetnek. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig hozzáférhetnek a csevegéshez."
     chat_channel_retention_days: "A normál csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_dm_retention_days: "A személyes csevegési csatornákon lévő csevegőüzenetek ennyi napig maradnak meg. Állítsa „0”-ra, hogy örökre megtartsa az üzeneteket."
     chat_auto_silence_duration: "A felhasználók ennyi percig lesznek némítva, ha túllépik a csevegőüzenet létrehozási korlátját. Állítsa „0”-ra, hogy letiltsa az automatikus némítást."
@@ -18,30 +19,65 @@ hu:
     chat_auto_silence_from_flags_duration: "Azon percek száma, ameddig a felhasználók el lesznek némítva, ha a megjelölt csevegési üzenetek miatt automatikusan némítva lesznek."
     chat_duplicate_message_sensitivity: "Annak a valószínűsége, hogy az azonos feladó által küldött ismételt üzenet rövid időn belül blokkolásra kerül. Tizedes szám 0 és 1.0 között, ahol az 1.0 a legmagasabb érték (az üzeneteket gyakrabban blokkolja rövidebb idő alatt). Az ismételt üzenetek engedélyezéséhez állítsa „0”-ra az értéket."
     chat_minimum_message_length: "A csevegőüzenetek minimális karakterszáma."
+    chat_allow_uploads: "Feltöltés engedélyezése nyilvános csevegőcsatornákon és közvetlen üzenetküldő csatornákon."
     chat_archive_destination_topic_status: "Az az állapot, amelyet a céltéma a csatornaarchiválás befejezése után fog kapni. Ez csak akkor érvényes, ha a céltéma egy új téma, nem pedig egy meglévő."
+    default_emoji_reactions: "Alapértelmezett hangulatjel-reakciók a csevegőüzenetekhez. Adjon hozzá akár 5 hangulatjelet a gyors reakció érdekében."
+    direct_message_enabled_groups: "A következő csoportokba tartozó felhasználók számára engedélyezi a felhasználók közötti Személyes Csevegések létrehozását. Megjegyzés: a stábtagok mindig létrehozhatnak Személyes Csevegéseket, és a felhasználók válaszolhatnak olyan Személyes Csevegésekre, amelyeket olyan felhasználók kezdeményeztek, akiknek jogosultságuk van azok létrehozására."
+    chat_message_flag_allowed_groups: "A következő csoportok felhasználói megjelölhetnek csevegőüzeneteket. Vegye figyelembe, hogy az adminisztrátorok és moderátorok mindig megjelölhetik a csevegési üzeneteket."
+    max_mentions_per_chat_message: "A chat üzenetben használható @név értesítések maximális száma felhasználónként."
+    chat_max_direct_message_users: "A felhasználók nem adhatnak hozzá ennél több felhasználót új közvetlen üzenet létrehozásakor. Állítsa 0-ra, hogy csak saját magának engedélyezze az üzeneteket. A stábtagok mentesülnek e beállítás alól."
+    chat_allow_archiving_channels: "A stábtagoknak lehetőségük van a témához tartozó üzenetek archiválására amikor a csatorna bezárásra kerül."
+    chat_editing_grace_period: "A csevegés elküldése után (n) másodpercig a szerkesztés nem jeleníti meg a (szerkesztett) címkét a csevegési üzenet mellett."
+    chat_editing_grace_period_max_diff_low_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (0-s és 1-es bizalmi szint esetén)."
+    chat_editing_grace_period_max_diff_high_trust: "A szerkesztési türelmi időszakban megengedett karakterváltoztatások maximális száma. Ha ennél több változik, megjelenik a (szerkesztve) címke a chat üzenet mellett (2-es és nagyobb bizalmi szint)."
+    chat_preferred_index: "Előnyben részesített lap a /chat betöltésekor."
     errors:
       chat_default_channel: "Az alapértelmezett csevegőcsatornának nyilvános csatornának kell lennie."
+      direct_message_enabled_groups_invalid: "Ehhez a beállításhoz legalább egy csoportot meg kell adni. Ha nem szeretné, hogy a stábtagokon kívül bárki közvetlen üzeneteket küldjön, válassza ki a stábtag csoportot."
+      chat_upload_not_allowed_secure_uploads: "A csevegési feltöltések nem engedélyezettek, ha a biztonságos feltöltési webhely beállítása engedélyezett."
   system_messages:
     private_channel_title: "Csatorna %{id}"
     chat_channel_archive_complete:
       title: "A csevegőcsatorna archiválása kész"
       subject_template: "A csevegőcsatorna archiválása sikeresen befejeződött"
+      text_body_template: |
+        %{channel_hashtag_or_name} csevegőcsatorna archiválása sikeresen befejeződött. Az üzeneteket a [%{topic_title}](%{topic_url}) témába másoltuk.
     chat_channel_archive_failed:
       title: "A csevegőcsatorna archiválása sikertelen"
       subject_template: "A csevegőcsatorna archiválása sikertelen"
+      text_body_template: |
+        %{channel_hashtag_or_name} csevegőcsatorna archiválása nem sikerült. %{messages_archived} üzenetek archiválva. A részben archivált üzeneteket a [%{topic_title}](%{topic_url}) témába másoltuk. Látogassa meg a csatornát a %{channel_url} címen az újrapróbálkozáshoz.
     chat_channel_archive_failed_no_topic:
       title: "A csevegőcsatorna archiválása sikertelen"
       subject_template: "A csevegőcsatorna archiválása sikertelen"
+      text_body_template: |
+        %{channel_hashtag_or_name} csevegőcsatorna archiválása nem sikerült. Egyetlen üzenet sem lett archiválva. A téma létrehozása a következő okok miatt nem sikerült:
+
+          %{topic_validation_errors}
+
+        Látogassa meg a csatornát a %{channel_url} címen az újrapróbálkozáshoz.
   chat:
     deleted_chat_username: törölt
     errors:
+      users_cant_be_added_to_channel: "Felhasználók nem adhatók hozzá ehhez a csatornához."
       channel_exists_for_category: "Már létezik csatorna ehhez a kategóriával, és ezzel a névvel"
+      channel_new_message_disallowed:
+        archived: "A csatorna archiválva van, új üzenet nem küldhető"
+        closed: "A csatorna bezárt, új üzenet nem küldhető"
+        read_only: "A csatorna csak olvasható, új üzenet nem küldhető"
+      channel_modify_message_disallowed:
+        archived: "A csatorna archiválva van, az üzeneteket nem lehet szerkeszteni vagy törölni"
+        closed: "A csatorna le van zárva, az üzeneteket nem lehet szerkeszteni vagy törölni"
+        read_only: "A csatorna csak olvasható, az üzenetek nem szerkeszthetők vagy törölhetők"
       user_cannot_send_message: "Jelenleg nem küldhet üzeneteket."
       rate_limit_exceeded: "Túllépte a 30 másodpercen belül elküldhető csevegőüzenetek korlátját"
       auto_silence_from_flags: "A csevegőüzenet elég magas pontszámmal lett megjelölve, hogy a felhasználó némítva legyen."
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
+      minimum_length_not_met:
+        one: "Az üzenet túl rövid, legalább %{count} karaktert kell tartalmaznia."
+        other: "Az üzenet túl rövid, legalább %{count} karaktert kell tartalmaznia."
       message_too_long:
         one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterből állhatnak."
         other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterből állhatnak."
@@ -49,9 +85,23 @@ hu:
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."
       message_move_no_messages_found: "A megadott üzenetazonosítókkal nem találhatók üzenetek."
+      cant_update_direct_message_channel: "A közvetlen üzenet csatorna tulajdonságai, például a név és a leírás nem frissíthetők."
       not_accepting_dms: "Sajnáljuk, %{username} jelenleg nem fogad üzeneteket."
+      actor_ignoring_target_user: "%{username} felhasználót figyelmen kívül hagyja, ezért nem küldhet neki üzeneteket."
+      actor_muting_target_user: "%{username} felhasználót némította, ezért nem küldhet neki üzeneteket."
+      actor_disallowed_dms: "Úgy döntött, hogy megakadályozza, hogy a felhasználók privát és közvetlen üzeneteket küldjenek Önnek, ezért nem hozhat létre új közvetlen üzeneteket."
+      actor_preventing_target_user_from_dm: "Úgy döntött, hogy megakadályozza, hogy %{username} privát és közvetlen üzeneteket küldjön Önnek, ezért nem hozhat létre új közvetlen üzeneteket."
       user_cannot_send_direct_messages: "Sajnos nem tud közvetlen üzeneteket küldeni."
+      over_chat_max_direct_message_users_allow_self: "Csak saját magadnak tudsz közvetlen üzenetet létrehozni."
+      over_chat_max_direct_message_users:
+        one: "Nem hozhat létre közvetlen üzenetet több mint %{count} másik felhasználóval."
+        other: "Nem hozhat létre közvetlen üzenetet több mint %{count} másik felhasználóval."
+      original_message_not_found: "Az üzenet előzménye, amelyre válaszolni próbál, nem található vagy törölték."
+      thread_invalid_for_channel: "A téma nem része a megadott csatornának."
+      thread_does_not_match_parent: "A téma nem egyezik a szülő üzenettel."
+      invalid_direct_message: "Ez a közvetlen üzenet nem hozható létre."
     reviewables:
+      message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
       actions:
         agree:
           title: "Egyetértek…"
@@ -73,6 +123,9 @@ hu:
         agree_and_delete:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
+        delete_and_agree:
+          title: "Megjelölés és Üzenet törlése figyelmen kívül hagyása"
+          description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból, és törli az üzenetet."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
@@ -80,7 +133,14 @@ hu:
           title: "Elutasítás"
         ignore:
           title: "Ne csináljon semmit"
+          description: "Hagyja figyelmen kívül a megjelölést úgy, hogy eltávolítja a sorból anélkül, hogy bármit is tenne."
+      direct_messages:
+        transcript_title: "A korábbi üzenetek átirata a(z) %{channel_name} csatornában"
+        transcript_body: "A pontosabb kontextus érdekében hozzáadtuk a beszélgetés korábbi üzeneteinek átiratát (legfeljebb tíz):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} meghívást kapott %{inviting_user} által."
+        other: "%{invited_users} meghívást kapott %{inviting_user} által."
       archive:
         first_post_raw: "Ez a téma a(z) [%{channel_name}](%{channel_url}) csevegőcsatorna archívuma."
       messages_moved:
@@ -88,23 +148,44 @@ hu:
         other: "@%{acting_username} áthelyezett %{count} üzenetet a(z) [%{channel_name}](%{first_moved_message_url}) csatornába."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} és még %{count} fő"
           other: "%{comma_separated_usernames} és még %{count} fő"
     mention_warning:
       dismiss: "elvetés"
+      cannot_see: "%{first_identifier} nem tud hozzáférni ehhez a csatornához, és nem kapott értesítést."
+      cannot_see_multiple:
+        one: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."
+        other: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."
+      invitations_sent:
+        one: "Meghívó elküldve"
+        other: "Meghívók elküldve"
       invite: "Meghívás a csatornára"
+      without_membership: "%{first_identifier} nem csatlakozott ehhez a csatornához."
+      without_membership_multiple:
+        one: "%{first_identifier} és %{count} további felhasználó nem csatlakozott ehhez a csatornához."
+        other: "%{first_identifier} és %{count} további felhasználó nem csatlakozott ehhez a csatornához."
       group_mentions_disabled: "%{first_identifier} nem engedélyezi a megemlítéseket."
       group_mentions_disabled_multiple:
         one: "%{first_identifier} és még %{count} csoport nem engedélyezi a megemlítést."
         other: "%{first_identifier} és még %{count} csoport nem engedélyezi a megemlítést."
       global_mentions_disallowed: "A @here és @all említések le vannak tiltva ezen a csatornán."
+      too_many_members: "%{first_identifier} túl sok tagja van. Senkit sem értesítettek."
+      too_many_members_multiple:
+        one: "%{first_identifier} és %{count} másik csoportnak túl sok tagja van. Senkit sem értesítettek."
+        other: "%{first_identifier} és %{count} másik csoportnak túl sok tagja van. Senkit sem értesítettek."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
+    bookmarkable:
+      notification_title: "Üzenet a(z) %{channel_name} csatornában."
     personal_chat: "személyes csevegés"
     onebox:
+      inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
+      inline_to_channel: "Csevegés #%{chat_channel}"
+      inline_to_topic_channel: "Csevegés a %{topic_title} témához"
       thread_title_connector: "ebben:"
       x_members:
         one: "%{count} tag"
@@ -114,6 +195,7 @@ hu:
         other: "és még %{count} fő"
     transcript:
       default_thread_title: "Szál"
+      split_thread_range: "%{total}/ %{start} %{end} üzenetek"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -132,9 +214,14 @@ hu:
     needs_review:
       title: "Felülvizsgálatra szorul"
     notify_user:
+      chat_pm_title: 'A csevegőüzenete itt: "%{channel_name}"'
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
+      chat_pm_title: 'Egy chat üzenet a "%{channel_name}" csatornában a stábtagok figyelmét igényli'
       chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Egy stábtag úgy gondolja, hogy ezt a csevegési üzenetet felül kell vizsgálni."
   user_notifications:
     chat_summary:
       deleted_user: "Törölt felhasználó"
@@ -142,6 +229,23 @@ hu:
         one: "Új csevegőüzenete érkezett"
         other: "Új csevegőüzenetei érkeztek"
       from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Új üzenet"
+          other: "[%{site_name}] Új üzenetek"
+        chat_dm_1:
+          one: "[%{site_name}] Új üzenet tőle: %{name}"
+          other: "[%{site_name}] Új üzenetek tőle: %{name}"
+        chat_dm_2: "[%{site_name}] Új üzenetek tőlük: %{name_1} és %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Új üzenetek: %{name} és %{count} másik felhasználótól"
+        chat_channel_1:
+          one: "[%{site_name}] Új üzenet itt: %{channel}"
+          other: "[%{site_name}] Új üzenetek itt: %{channel}"
+        chat_channel_2: "[%{site_name}] Új üzenetek itt: %{channel_1} és %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Új üzenet a %{channel} és %{count} további csoportban"
+        chat_channel_and_dm: "[%{site_name}] Új üzenetek itt: %{channel} tőle: %{name}"
+      unsubscribe: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. A leiratkozáshoz módosítsa a %{email_preferences_link} vagy a %{unsubscribe_link} értéket."
+      unsubscribe_no_link: "Ezt a csevegési összefoglalót %{site_link} küldi, amikor Ön távol van. Itt tudja módosítani: %{email_preferences_link}."
       view_messages:
         one: "Üzenet megtekintése"
         other: "%{count} üzenet megtekintése"

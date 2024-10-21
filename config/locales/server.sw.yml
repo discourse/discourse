@@ -300,6 +300,14 @@ sw:
             ip_address:
               blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
               max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
+        user_password:
+          attributes:
+            password:
+              common: "ni moja kati ya nywila 10000 zinazotumika sana. Tafadhali tumia nywila iliyo salama zaidi."
+              same_as_username: "ni sawa na jina la mtumiaji. Labda tumia nywila iliyo salama zaidi."
+              same_as_email: "ni sawa na barua pepe yako. Labda tumia nywila iliyo salama zaidi."
+              same_as_current: "ni sawa na nywila unayotumia sasa."
+              unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
         user_email:
           attributes:
             user_id:

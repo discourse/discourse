@@ -27,12 +27,25 @@
     font-size: var(--font-down-1);
     padding: 10px 10px;
   }
+
   &__control-group-horizontal {
     display: flex;
     margin-bottom: 18px;
     label {
       margin-right: 1em;
     }
+  }
+
+  &__title {
+    flex: 2;
+    margin-bottom: 0;
+  }
+
+  &__header-wrapper {
+    display: flex;
+    align-items: baseline;
+    flex: 1;
+    margin-bottom: 0.5rem;
   }
 }
 

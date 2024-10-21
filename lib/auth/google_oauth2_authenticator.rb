@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
-  GROUPS_SCOPE ||= "https://www.googleapis.com/auth/admin.directory.group.readonly"
-  GROUPS_DOMAIN ||= "admin.googleapis.com"
-  GROUPS_PATH ||= "/admin/directory/v1/groups"
-  OAUTH2_BASE_URL ||= "https://oauth2.googleapis.com"
+  GROUPS_SCOPE = "https://www.googleapis.com/auth/admin.directory.group.readonly"
+  GROUPS_DOMAIN = "admin.googleapis.com"
+  GROUPS_PATH = "/admin/directory/v1/groups"
+  OAUTH2_BASE_URL = "https://oauth2.googleapis.com"
 
   def name
     "google_oauth2"

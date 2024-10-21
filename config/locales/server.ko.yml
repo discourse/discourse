@@ -510,6 +510,15 @@ ko:
             ip_address:
               blocked: "이 IP주소에서는 가입이 안됩니다."
               max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
+        user_password:
+          attributes:
+            password:
+              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나입니다. 보다 안전한 비밀번호를 사용하세요."
+              same_as_username: "는 아이디랑 같음. 더 안전한 비밀번호를 사용해주세요."
+              same_as_email: "는 이메일 주소랑 같음. 더 안전한 비밀번호를 사용해주세요."
+              same_as_current: "은(는) 현재 비밀번호와 동일합니다."
+              same_as_name: "당신의 이름과 같습니다."
+              unique_characters: "반복된 글자가 너무 많습니다. 좀 더 안전한 비밀번호를 사용해주세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1660,7 +1669,6 @@ ko:
     reset_bounce_score_after_days: "X일 후 반송 스코어를 자동 리셋합니다."
     blocked_attachment_content_types: "콘텐츠 유형에 따라 첨부 파일을 차단하기 위한 키워드 목록입니다."
     blocked_attachment_filenames: "파일명을 기준으로 첨부 파일을 차단하기 위한 키워드 목록입니다."
-    forwarded_emails_behaviour: "Discourse로 전달된 이메일을 처리하는 방법"
     always_show_trimmed_content: "수신 이메일의 잘린 부분을 항상 표시합니다. 경고: 이메일 주소가 노출될 수 있습니다."
     trim_incoming_emails: "수신 이메일 중 관련이 없는 부분을 잘라냅니다."
     private_email: "이메일 제목이나 본문에 게시물이나 주제의 콘텐츠를 포함하지 마세요. 참고: 다이제스트 이메일도 비활성화합니다."

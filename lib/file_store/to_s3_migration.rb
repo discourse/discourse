@@ -6,8 +6,8 @@ module FileStore
   ToS3MigrationError = Class.new(RuntimeError)
 
   class ToS3Migration
-    MISSING_UPLOADS_RAKE_TASK_NAME ||= "posts:missing_uploads"
-    UPLOAD_CONCURRENCY ||= 20
+    MISSING_UPLOADS_RAKE_TASK_NAME = "posts:missing_uploads"
+    UPLOAD_CONCURRENCY = 20
 
     def initialize(s3_options:, dry_run: false, migrate_to_multisite: false)
       @s3_bucket = s3_options[:bucket]

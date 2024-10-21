@@ -686,7 +686,6 @@ it:
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
               same_as_current: "è la tua stessa password attuale."
-              same_as_previous: "è uguale alla tua password precedente."
               same_as_name: "è uguale al tuo nome."
               unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
             username:
@@ -696,6 +695,15 @@ it:
             ip_address:
               blocked: "Non sono consentite nuove registrazioni dal tuo indirizzo IP."
               max_new_accounts_per_registration_ip: "Non sono consentite nuove registrazioni dal tuo indirizzo IP (limite massimo raggiunto). Contatta un membro dello staff."
+        user_password:
+          attributes:
+            password:
+              common: "è una delle 10000 password più comuni. Usa una password più sicura."
+              same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
+              same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
+              same_as_current: "è la tua stessa password attuale."
+              same_as_name: "è uguale al tuo nome."
+              unique_characters: "ha troppi caratteri ripetuti. Per favore usa una password più sicura."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2099,7 +2107,6 @@ it:
     reset_bounce_score_after_days: "Azzera automaticamente il conteggio di messaggi rimbalzati dopo X giorni."
     blocked_attachment_content_types: "Elenco delle parole chiave utilizzate per bloccare gli allegati in base al tipo di contenuto."
     blocked_attachment_filenames: "Elenco delle parole chiave utilizzate per bloccare gli allegati in base al nome del file."
-    forwarded_emails_behaviour: "Come gestire una mail inoltrata a Discourse"
     always_show_trimmed_content: "Mostra sempre la parte tagliata delle email in arrivo. ATTENZIONE: potrebbe rivelare indirizzi email."
     trim_incoming_emails: "Taglia la parte delle email in arrivo che non è rilevante."
     private_email: "Non includere contenuti da messaggi o argomenti nel titolo o nel corpo dell'email. NOTA: disabilita anche le email riassuntive."

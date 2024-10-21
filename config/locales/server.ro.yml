@@ -364,13 +364,22 @@ ro:
           attributes:
             password:
               common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
-              same_as_username: "este identică cu nume utilizator. Te rugăm să folosești o parolă mai sigură."
-              same_as_email: "este identică cu emailul. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
               same_as_current: "este identică cu parola curentă."
               unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
               blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
               max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
+        user_password:
+          attributes:
+            password:
+              common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
+              same_as_current: "este identică cu parola ta curentă."
+              same_as_name: "este același cu numele tău."
+              unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
         color_scheme_color:
           attributes:
             hex:
@@ -1119,6 +1128,7 @@ ro:
     hard_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu permanent."
     bounce_score_threshold: "Rata maximă de ricoșeu înainte să nu îi mai trimitem emailuri utilizatorului."
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
+    forwarded_emails_behaviour: "Cum se tratează un email redirecționat către Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Află mai multe</a>"
     always_show_trimmed_content: "Arată întotdeauna partea trunchiată a emailurilor sosite. ATENȚIE: s-ar putea dezvălui adresele de email."
     email_total_attachment_size_limit_kb: "Dimensiunea totală maximă a fișierelor atașate la emailurile trimise. Setează la 0 pentru a dezactiva trimiterea de atașamente."
     manual_polling_enabled: "Trimite emailuri folosind API-ul pentru răspunsuri prin email."

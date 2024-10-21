@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
+import { isNone } from "@ember/utils";
 import { eq } from "truth-helpers";
 import { NO_VALUE_OPTION } from "discourse/form-kit/lib/constants";
 
 export default class FKControlSelectOption extends Component {
   get value() {
-    return typeof this.args.value === "undefined"
-      ? NO_VALUE_OPTION
-      : this.args.value;
+    return isNone(this.args.value) ? NO_VALUE_OPTION : this.args.value;
   }
 
   <template>

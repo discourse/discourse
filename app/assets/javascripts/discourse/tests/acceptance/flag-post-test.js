@@ -136,11 +136,11 @@ acceptance("flagging", function (needs) {
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.ok(exists(".d-modal__body"));
+    assert.dom(".d-modal__body").exists();
     await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
-    assert.ok(!exists(".d-modal__body"));
+    assert.dom(".d-modal__body").doesNotExist();
   });
 
   test("Message appears in penalty modal", async function (assert) {
@@ -163,7 +163,7 @@ acceptance("flagging", function (needs) {
     await openFlagModal();
     await click("#radio_spam");
 
-    assert.ok(exists(".delete-spammer"));
+    assert.dom(".delete-spammer").exists();
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
@@ -178,17 +178,17 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn("input.silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.ok(exists(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-default");
-    assert.ok(!exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.ok(exists(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("CTRL + ENTER accepts the modal", async function (assert) {

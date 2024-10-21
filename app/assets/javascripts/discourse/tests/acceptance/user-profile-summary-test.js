@@ -61,7 +61,7 @@ acceptance("User Profile - Summary - User Status", function (needs) {
 
   test("Shows User Status", async function (assert) {
     await visit("/u/eviltrout/summary");
-    assert.ok(exists(".user-status-message .emoji[alt='tooth']"));
+    assert.dom(".user-status-message .emoji[alt='tooth']").exists();
   });
 });
 

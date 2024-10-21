@@ -187,7 +187,6 @@ RSpec.describe ProblemCheckTracker do
       before { ProblemCheck::TwitterLogin.stubs(:max_blips).returns(1) }
 
       it "does not sound the alarm" do
-        puts ProblemCheck::TwitterLogin.max_blips
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
           AdminNotice.problem.count
         }
@@ -221,7 +220,7 @@ RSpec.describe ProblemCheckTracker do
     end
 
     context "when there's an alarm sounding" do
-      before { Fabricate(:admin_notice, subject: "problem", identifier: "twitter_login") }
+      before { problem_tracker.problem! }
 
       it "silences the alarm" do
         expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {

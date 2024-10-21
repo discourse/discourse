@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropDeprecatedColumns < ActiveRecord::Migration[7.0]
-  DROPPED_COLUMNS ||= {
+  DROPPED_COLUMNS = {
     categories: %i[suppress_from_latest required_tag_group_id min_tags_from_required_group],
     directory_columns: %i[automatic],
     email_tokens: %i[token],

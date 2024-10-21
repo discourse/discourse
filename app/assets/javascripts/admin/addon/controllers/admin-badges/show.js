@@ -2,6 +2,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { service } from "@ember/service";
+import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
@@ -83,15 +84,15 @@ export default class AdminBadgesShowController extends Controller {
     // this is needed because the model doesnt have default values
     // Using `set` here isn't ideal, but we don't know that tracking is set up on the model yet.
     if (this.model) {
-      if (!this.model.badge_type_id) {
+      if (isNone(this.model.badge_type_id)) {
         this.model.set("badge_type_id", this.badgeTypes?.[0]?.id);
       }
 
-      if (!this.model.badge_grouping_id) {
+      if (isNone(this.model.badge_grouping_id)) {
         this.model.set("badge_grouping_id", this.badgeGroupings?.[0]?.id);
       }
 
-      if (!this.model.trigger) {
+      if (isNone(this.model.trigger)) {
         this.model.set("trigger", this.badgeTriggers?.[0]?.id);
       }
     }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmailLog < ActiveRecord::Base
-  CRITICAL_EMAIL_TYPES ||=
+  CRITICAL_EMAIL_TYPES =
     Set.new %w[
               account_created
               admin_login

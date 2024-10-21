@@ -64,11 +64,11 @@ acceptance("Admin - Plugins", function (needs) {
       "table.admin-plugins-list tr .admin-plugins-list__enabled button";
     assert
       .dom(toggleSelector)
-      .hasAttribute("aria-checked", "true", "displays the plugin as enabled");
+      .hasAria("checked", "true", "displays the plugin as enabled");
 
     await click(toggleSelector);
     assert
       .dom(toggleSelector)
-      .hasAttribute("aria-checked", "false", "displays the plugin as enabled");
+      .hasAria("checked", "false", "displays the plugin as enabled");
   });
 });

@@ -135,7 +135,7 @@ module("Integration | Component | d-button", function (hooks) {
       translatedAriaLabel: "bar",
     });
 
-    assert.strictEqual(query("button").getAttribute("aria-label"), "bar");
+    assert.dom("button").hasAttribute("aria-label", "bar");
   });
 
   test("title", async function (assert) {
@@ -156,7 +156,7 @@ module("Integration | Component | d-button", function (hooks) {
       translatedTitle: "bar",
     });
 
-    assert.strictEqual(query("button").getAttribute("title"), "bar");
+    assert.dom("button").hasAttribute("title", "bar");
   });
 
   test("label", async function (assert) {
@@ -168,35 +168,32 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.strictEqual(
-      query("button .d-button-label").innerText,
-      I18n.t("test.fooLabel")
-    );
+    assert.dom("button .d-button-label").hasText(I18n.t("test.fooLabel"));
 
     this.setProperties({
       label: null,
       translatedLabel: "bar",
     });
 
-    assert.strictEqual(query("button .d-button-label").innerText, "bar");
+    assert.dom("button .d-button-label").hasText("bar");
   });
 
   test("aria-expanded", async function (assert) {
     await render(hbs`<DButton @ariaExpanded={{this.ariaExpanded}} />`);
 
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
 
     this.set("ariaExpanded", true);
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), "true");
+    assert.dom("button").hasAria("expanded", "true");
 
     this.set("ariaExpanded", false);
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), "false");
+    assert.dom("button").hasAria("expanded", "false");
 
     this.set("ariaExpanded", "false");
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
 
     this.set("ariaExpanded", "true");
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
   });
 
   test("aria-controls", async function (assert) {

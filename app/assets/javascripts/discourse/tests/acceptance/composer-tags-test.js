@@ -3,8 +3,6 @@ import { test } from "qunit";
 import Category from "discourse/models/category";
 import {
   acceptance,
-  exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -54,11 +52,12 @@ acceptance("Composer - Tags", function (needs) {
 
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
-    assert.strictEqual(
-      query(".popup-tip.bad").innerText.trim(),
-      I18n.t("composer.error.tags_missing", { count: 1 }),
-      "it should display the right alert"
-    );
+    assert
+      .dom(".popup-tip.bad")
+      .hasText(
+        I18n.t("composer.error.tags_missing", { count: 1 }),
+        "it should display the right alert"
+      );
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
@@ -87,11 +86,12 @@ acceptance("Composer - Tags", function (needs) {
 
     await click("#reply-control button.create");
     assert.strictEqual(currentURL(), "/");
-    assert.strictEqual(
-      query(".popup-tip.bad").innerText.trim(),
-      I18n.t("composer.error.tags_missing", { count: 1 }),
-      "it should display the right alert"
-    );
+    assert
+      .dom(".popup-tip.bad")
+      .hasText(
+        I18n.t("composer.error.tags_missing", { count: 1 }),
+        "it should display the right alert"
+      );
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
@@ -105,7 +105,7 @@ acceptance("Composer - Tags", function (needs) {
     await visit("/u/charlie");
     await click("button.compose-pm");
 
-    assert.notOk(exists(".composer-fields .mini-tag-chooser"));
+    assert.dom(".composer-fields .mini-tag-chooser").doesNotExist();
   });
 });
 
@@ -122,6 +122,6 @@ acceptance("Composer - Tags (PMs)", function (needs) {
     await visit("/u/charlie");
     await click("button.compose-pm");
 
-    assert.ok(exists(".composer-fields .mini-tag-chooser"));
+    assert.dom(".composer-fields .mini-tag-chooser").exists();
   });
 });

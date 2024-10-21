@@ -48,8 +48,9 @@ class SvgSpriteController < ApplicationController
     filter = params[:filter] || ""
     only_available = params[:only_available]
 
-    icons = SvgSprite.icon_picker_search(filter, only_available)
-    render json: icons.take(200), root: false
+    icons = SvgSprite.icon_picker_search(filter, only_available).take(500)
+
+    render json: icons, root: false
   end
 
   def svg_icon

@@ -333,7 +333,7 @@ export default class Login extends Component {
   }
 
   @action
-  async externalLoginAction(loginMethod) {
+  externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }

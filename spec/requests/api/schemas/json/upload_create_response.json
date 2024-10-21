@@ -42,6 +42,33 @@
     },
     "dominant_color": {
       "type": ["string", "null"]
+    },
+    "thumbnail": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "upload_id": {
+          "type": "integer"
+        },
+        "url": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "filesize": {
+          "type": "integer"
+        }
+      }
     }
   },
   "required": [

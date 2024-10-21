@@ -515,6 +515,7 @@ sk:
         auto_join_users_info: "Každú hodinu skontrolujte, ktorí používatelia boli aktívni za posledné 3 mesiace. Pridajte ich do tohto kanála, ak majú prístup do kategórie %{category} ."
         auto_join_users_info_no_category: "Každú hodinu skontrolujte, ktorí používatelia boli aktívni za posledné 3 mesiace. Pridajte ich do tohto kanála, ak majú prístup k vybranej kategórii."
         auto_join_users_warning: "Pripojí sa každý používateľ, ktorý nie je členom tohto kanála a má prístup do kategórie %{category} . Si si istý?"
+        notification_level: "Odosielanie oznámení push"
         follow: "Pridať sa"
         followed: "Vytvorený"
         mute: "Stlmiť kanál"

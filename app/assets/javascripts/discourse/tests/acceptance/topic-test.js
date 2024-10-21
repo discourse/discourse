@@ -128,16 +128,12 @@ acceptance("Topic", function (needs) {
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");
 
-    assert.strictEqual(
-      query("#topic-title .badge-category").innerText,
-      "faq",
-      "it displays the new category"
-    );
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "this is the new title",
-      "it displays the new title"
-    );
+    assert
+      .dom("#topic-title .badge-category")
+      .hasText("faq", "it displays the new category");
+    assert
+      .dom(".fancy-title")
+      .hasText("this is the new title", "it displays the new title");
   });
 
   test("Marking a topic as wiki", async function (assert) {
@@ -155,19 +151,18 @@ acceptance("Topic", function (needs) {
   test("Visit topic routes", async function (assert) {
     await visit("/t/12");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "PM for testing",
-      "it routes to the right topic"
-    );
+    assert
+      .dom(".fancy-title")
+      .hasText("PM for testing", "it routes to the right topic");
 
     await visit("/t/280/20");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "Internationalization / localization",
-      "it routes to the right topic"
-    );
+    assert
+      .dom(".fancy-title")
+      .hasText(
+        "Internationalization / localization",
+        "it routes to the right topic"
+      );
   });
 
   test("Updating the topic title with emojis", async function (assert) {
@@ -218,10 +213,9 @@ acceptance("Topic", function (needs) {
   test("Suggested topics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.strictEqual(
-      query("#suggested-topics-title").innerText.trim(),
-      I18n.t("suggested_topics.title")
-    );
+    assert
+      .dom("#suggested-topics-title")
+      .hasText(I18n.t("suggested_topics.title"));
   });
 
   test("Deleting a topic", async function (assert) {
@@ -313,7 +307,7 @@ acceptance("Topic featured links", function (needs) {
 
   test("Converting to a public topic", async function (assert) {
     await visit("/t/test-pm/34");
-    assert.ok(exists(".private_message"));
+    assert.dom(".private_message").exists();
     await click(".toggle-admin-menu");
     await click(".topic-admin-convert button");
 
@@ -324,7 +318,7 @@ acceptance("Topic featured links", function (needs) {
     await categoryChooser.selectRowByValue(21);
 
     await click(".convert-to-public-topic .btn-primary");
-    assert.ok(!exists(".private_message"));
+    assert.dom(".private_message").doesNotExist();
   });
 
   test("Unpinning unlisted topic", async function (assert) {

@@ -33,14 +33,7 @@ module Chat
     end
 
     def leave(channel:, guardian:)
-      ActiveRecord::Base.transaction do
-        if channel.direct_message_channel? && channel.chatable&.group
-          channel.membership_for(guardian.user)&.destroy!
-          channel.chatable.direct_message_users.where(user_id: guardian.user.id).destroy_all
-        else
-          channel.remove(guardian.user)
-        end
-      end
+      channel.leave(guardian.user)
     end
 
     def recompute_users_count(channel:)

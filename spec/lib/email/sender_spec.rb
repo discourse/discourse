@@ -636,7 +636,7 @@ RSpec.describe Email::Sender do
           @secure_image_2 =
             UploadCreator.new(
               file_from_fixtures("logo-dev.png", "images"),
-              "secuere_logo_2.png",
+              "secure_logo_2.png",
             ).create_for(Discourse.system_user.id)
           @secure_image_2.update_secure_status(override: true)
           @secure_image_2.update(access_control_post_id: reply.id)
@@ -666,7 +666,7 @@ RSpec.describe Email::Sender do
 
           @secure_image_2 =
             UploadCreator.new(
-              file_from_fixtures("logo-dev.png", "images"),
+              file_from_fixtures("logo.png", "images"),
               "something-cool.png",
             ).create_for(Discourse.system_user.id)
           @secure_image_2.update_secure_status(override: true)
@@ -701,6 +701,7 @@ RSpec.describe Email::Sender do
           expect(summary.attachments.map(&:filename)).to include(
             *[@secure_image, @secure_image_2, @secure_image_3].map(&:original_filename),
           )
+          expect(summary.attachments.size).to eq(3)
           expect(summary.to_s.scan("Content-Type: text/html;").length).to eq(1)
           expect(summary.to_s.scan("Content-Type: text/plain;").length).to eq(1)
           expect(summary.to_s.scan(/cid:[\w\-@.]+/).length).to eq(3)

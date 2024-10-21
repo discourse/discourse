@@ -6,7 +6,8 @@ require "plugin/metadata"
 require "auth"
 
 class Plugin::CustomEmoji
-  CACHE_KEY ||= "plugin-emoji"
+  CACHE_KEY = "plugin-emoji"
+
   def self.cache_key
     @@cache_key ||= CACHE_KEY
   end
@@ -115,6 +116,18 @@ class Plugin::Instance
       location: location,
       use_new_show_route: opts.fetch(:use_new_show_route, false),
     }
+  end
+
+  def full_admin_route
+    route = self.admin_route
+    return unless route
+
+    route
+      .slice(:location, :label, :use_new_show_route)
+      .tap do |admin_route|
+        path = admin_route[:use_new_show_route] ? "show" : admin_route[:location]
+        admin_route[:full_location] = "adminPlugins.#{path}"
+      end
   end
 
   def configurable?

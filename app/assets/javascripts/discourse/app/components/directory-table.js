@@ -29,4 +29,12 @@ export default class DirectoryTable extends Component {
       this._table.scrollLeft = scrollPixels;
     }
   }
+
+  @action
+  updateOrder(field, asc) {
+    this.setProperties({
+      order: field,
+      asc,
+    });
+  }
 }

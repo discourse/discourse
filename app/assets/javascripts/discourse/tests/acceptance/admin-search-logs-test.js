@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Search Logs", function (needs) {
   needs.user();
@@ -8,18 +8,14 @@ acceptance("Admin - Search Logs", function (needs) {
   test("show search logs", async function (assert) {
     await visit("/admin/logs/search_logs");
 
-    assert.ok(exists("table.search-logs-list.grid"), "has the div class");
+    assert.dom("table.search-logs-list.grid").exists("has the div class");
 
-    assert.ok(
-      exists(".search-logs-list .admin-list-item .col"),
-      "has a list of search logs"
-    );
+    assert
+      .dom(".search-logs-list .admin-list-item .col")
+      .exists("has a list of search logs");
 
     await click(".term a");
 
-    assert.ok(
-      exists(".search-logs-filter"),
-      "it should show the search log term page"
-    );
+    assert.dom(".search-logs-filter").exists("shows the search log term page");
   });
 });

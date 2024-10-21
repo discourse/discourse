@@ -25,7 +25,7 @@ RSpec.describe Chat::InviteUsersToChannel do
 
   before do
     group_1.add(user_1)
-    SiteSetting.chat_allowed_groups = [group_1].map(&:id).join("|")
+    SiteSetting.chat_allowed_groups = group_1.id
   end
 
   context "when all steps pass" do

@@ -92,6 +92,18 @@ describe "Admin Badges Page", type: :system do
       expect(badges_page.form.field("auto_revoke")).to be_unchecked
       expect(badges_page.form.field("target_posts")).to be_unchecked
     end
+
+    context "when trigger is 0" do
+      fab!(:badge) do
+        Fabricate(:badge, enabled: true, icon: "trick-medial", query: "a query", trigger: 0)
+      end
+
+      it "doesn't override the trigger value" do
+        badges_page.visit_page(badge.id)
+
+        expect(badges_page.form.field("trigger").value).to eq("0")
+      end
+    end
   end
 
   context "when deleting a badge" do

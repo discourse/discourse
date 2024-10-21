@@ -517,6 +517,8 @@ zh_CN:
       bulk_add:
         other: "%{count} 个用户已被添加到该群组。"
     errors:
+      default_notification_level_users_limit:
+        other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组： %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
       can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
@@ -548,6 +550,7 @@ zh_CN:
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
       trust_level_0: "正在学习社区规范和功能的受限新成员"
+      trust_level_1: "已经通过阅读记录展示了初步参与的成员，现在可以访问更多功能。该组的所有成员也属于 trust_level_0 组。"
     request_membership_pm:
       title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
@@ -646,7 +649,6 @@ zh_CN:
               same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
               same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
               same_as_current: "与您当前的密码相同"
-              same_as_previous: "与您之前的密码相同。"
               same_as_name: "与您的名字相同。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             username:
@@ -656,6 +658,15 @@ zh_CN:
             ip_address:
               blocked: "不允许从您的 IP 地址进行新注册。"
               max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
+        user_password:
+          attributes:
+            password:
+              common: "是 10000 个最常用的密码之一。请使用一个更安全的密码。"
+              same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
+              same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
+              same_as_current: "与您当前的密码相同"
+              same_as_name: "与您的名字相同。"
+              unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -2037,7 +2048,6 @@ zh_CN:
     reset_bounce_score_after_days: "X 天后自动重置退回分数。"
     blocked_attachment_content_types: "用于根据内容类型屏蔽附件的关键字列表。"
     blocked_attachment_filenames: "用于根据文件名屏蔽名单附件的关键字列表。"
-    forwarded_emails_behaviour: "如何处理转发到 Discourse 的电子邮件"
     always_show_trimmed_content: "始终显示传入电子邮件被修剪的部分。警告：可能会泄露电子邮件地址。"
     trim_incoming_emails: "修剪传入电子邮件的不相关部分。"
     private_email: "不在电子邮件标题或电子邮件正文中包含帖子或话题的内容。注意：还会禁用摘要电子邮件。"

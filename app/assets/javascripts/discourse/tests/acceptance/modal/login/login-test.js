@@ -8,7 +8,8 @@ acceptance("Modal - Login", function () {
   chromeTest("You can tab to the login button", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    // you have to press the tab key twice to get to the login button
+    // you have to press the tab key thrice to get to the login button
+    await tab({ unRestrainTabIndex: true });
     await tab({ unRestrainTabIndex: true });
     await tab({ unRestrainTabIndex: true });
     assert.dom(".d-modal__footer #login-button").isFocused();

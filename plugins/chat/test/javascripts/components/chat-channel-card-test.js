@@ -95,10 +95,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   test("Name", async function (assert) {
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.strictEqual(
-      query(".chat-channel-card__name").innerText.trim(),
-      this.channel.title
-    );
+    assert.dom(".chat-channel-card__name").hasText(this.channel.title);
   });
 
   test("Read restricted chatable", async function (assert) {

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RouteMatcher
-  PATH_PARAMETERS ||= "_DISCOURSE_REQUEST_PATH_PARAMETERS"
+  PATH_PARAMETERS = "_DISCOURSE_REQUEST_PATH_PARAMETERS"
 
   attr_reader :actions, :params, :methods, :aliases, :formats, :allowed_param_values
 

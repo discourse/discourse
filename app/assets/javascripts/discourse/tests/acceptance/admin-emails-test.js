@@ -31,11 +31,8 @@ acceptance("Admin - Emails", function (needs) {
     await fillIn("textarea.email-body", EMAIL.trim());
     await click(".email-advanced-test button");
 
-    assert.strictEqual(query(".text pre").innerText, "Hello, this is a test!");
-    assert.strictEqual(
-      query(".elided pre").innerText,
-      "---\n\nThis part should be elided."
-    );
+    assert.dom(".text pre").hasText("Hello, this is a test!");
+    assert.dom(".elided pre").hasText("---\n\nThis part should be elided.");
   });
 
   test("displays received errors when testing emails", async function (assert) {

@@ -52,9 +52,11 @@ export default class DashboardNewFeatures extends Component {
       {{#if this.groupedNewFeatures}}
         {{#each this.groupedNewFeatures as |groupedFeatures|}}
           <AdminConfigAreaCard @translatedHeading={{groupedFeatures.date}}>
-            {{#each groupedFeatures.features as |feature|}}
-              <DashboardNewFeatureItem @item={{feature}} />
-            {{/each}}
+            <:content>
+              {{#each groupedFeatures.features as |feature|}}
+                <DashboardNewFeatureItem @item={{feature}} />
+              {{/each}}
+            </:content>
           </AdminConfigAreaCard>
         {{/each}}
       {{else if this.isLoaded}}

@@ -185,7 +185,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     assert.strictEqual(count("button.like-count"), 1);
-    assert.ok(!exists(".who-liked"));
+    assert.dom(".who-liked").doesNotExist();
 
     // toggle it on
     await click("button.like-count");
@@ -194,8 +194,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     // toggle it off
     await click("button.like-count");
-    assert.ok(!exists(".who-liked"));
-    assert.ok(!exists(".who-liked a.trigger-user-card"));
+    assert.dom(".who-liked").doesNotExist();
+    assert.dom(".who-liked a.trigger-user-card").doesNotExist();
   });
 
   test("like count with no likes", async function (assert) {
@@ -205,7 +205,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
     );
 
-    assert.ok(!exists("button.like-count"));
+    assert.dom("button.like-count").doesNotExist();
   });
 
   test("share button", async function (assert) {
@@ -240,18 +240,18 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post-menu" @args={{this.args}} @toggleLike={{this.toggleLike}} />
     `);
 
-    assert.ok(exists(".actions button.like"));
-    assert.ok(!exists(".actions button.like-count"));
+    assert.dom(".actions button.like").exists();
+    assert.dom(".actions button.like-count").doesNotExist();
 
     await click(".actions button.like");
-    assert.ok(!exists(".actions button.like"));
-    assert.ok(exists(".actions button.has-like"));
+    assert.dom(".actions button.like").doesNotExist();
+    assert.dom(".actions button.has-like").exists();
     assert.strictEqual(count(".actions button.like-count"), 1);
 
     await click(".actions button.has-like");
-    assert.ok(exists(".actions button.like"));
-    assert.ok(!exists(".actions button.has-like"));
-    assert.ok(!exists(".actions button.like-count"));
+    assert.dom(".actions button.like").exists();
+    assert.dom(".actions button.has-like").doesNotExist();
+    assert.dom(".actions button.like-count").doesNotExist();
   });
 
   test("anon liking", async function (assert) {
@@ -264,8 +264,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post-menu" @args={{this.args}} @showLogin={{this.showLogin}} />
     `);
 
-    assert.ok(exists(".actions button.like"));
-    assert.ok(!exists(".actions button.like-count"));
+    assert.dom(".actions button.like").exists();
+    assert.dom(".actions button.like-count").doesNotExist();
 
     assert.strictEqual(
       query("button.like").getAttribute("title"),
@@ -442,7 +442,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.create-flag"));
+    assert.dom("button.create-flag").doesNotExist();
   });
 
   test(`flagging: can't flag when post is hidden`, async function (assert) {
@@ -450,7 +450,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.create-flag"));
+    assert.dom("button.create-flag").doesNotExist();
   });
 
   test(`read indicator`, async function (assert) {
@@ -458,7 +458,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".read-state.read"));
+    assert.dom(".read-state.read").exists();
   });
 
   test(`unread indicator`, async function (assert) {
@@ -466,7 +466,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".read-state"));
+    assert.dom(".read-state").exists();
   });
 
   test("reply directly above (suppressed)", async function (assert) {
@@ -552,8 +552,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.bookmark"));
-    assert.ok(!exists("button.bookmarked"));
+    assert.dom("button.bookmark").doesNotExist();
+    assert.dom("button.bookmarked").doesNotExist();
   });
 
   test("bookmark", async function (assert) {
@@ -567,7 +567,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     `);
 
     assert.strictEqual(count(".post-menu-area .bookmark"), 1);
-    assert.ok(!exists("button.bookmarked"));
+    assert.dom("button.bookmarked").doesNotExist();
   });
 
   test("can't show admin menu when you can't manage", async function (assert) {
@@ -575,7 +575,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".post-menu-area .show-post-admin-menu"));
+    assert.dom(".post-menu-area .show-post-admin-menu").doesNotExist();
   });
 
   test("show admin menu", async function (assert) {
@@ -737,7 +737,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists(".post-controls .create"));
+    assert.dom(".post-controls .create").doesNotExist();
   });
 
   test("replies - no replies", async function (assert) {
@@ -745,7 +745,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.show-replies"));
+    assert.dom("button.show-replies").doesNotExist();
   });
 
   test("replies - multiple replies", async function (assert) {
@@ -763,7 +763,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.show-replies"));
+    assert.dom("button.show-replies").doesNotExist();
   });
 
   test("replies - one below, not suppressed", async function (assert) {
@@ -952,8 +952,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(
-      query(".post-notice.returning-user:not(.old)").innerText.trim(),
+    assert.dom(".post-notice.returning-user:not(.old)").hasText(
       I18n.t("post.notice.returning_user", {
         user: "codinghorror",
         time: "2 days ago",
@@ -974,10 +973,11 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(
-      query(".post-notice.old.new-user").innerText.trim(),
-      I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
-    );
+    assert
+      .dom(".post-notice.old.new-user")
+      .hasText(
+        I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
+      );
   });
 
   test("show group request in post", async function (assert) {
@@ -1008,7 +1008,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".user-status-message"));
+    assert.dom(".user-status-message").exists();
   });
 
   test("doesn't show user status if disabled in site settings", async function (assert) {
@@ -1023,6 +1023,6 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.notOk(exists(".user-status-message"));
+    assert.dom(".user-status-message").doesNotExist();
   });
 });

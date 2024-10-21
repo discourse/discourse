@@ -35,7 +35,6 @@ export default class CreateInviteUploader extends Component.extend(
 
   @action
   setElement(element) {
-    this.set("fileInputEl", element);
-    this._initialize();
+    this.uppyUpload.setup(element);
   }
 }

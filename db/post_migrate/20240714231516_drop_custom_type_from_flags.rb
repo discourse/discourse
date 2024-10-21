@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropCustomTypeFromFlags < ActiveRecord::Migration[7.0]
-  DROPPED_COLUMNS ||= { flags: %i[custom_type] }
+  DROPPED_COLUMNS = { flags: %i[custom_type] }
 
   def up
     DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }

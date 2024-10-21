@@ -100,7 +100,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
     await this.comboBox.expand();
     await this.comboBox.selectRowByIndex(0);
 
-    assert.strictEqual(query("#test").innerText, "foo");
+    assert.dom("#test").hasText("foo");
   });
 
   test("modifySelectKit(identifier).replaceContent", async function (assert) {

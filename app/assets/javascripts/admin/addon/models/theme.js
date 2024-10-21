@@ -317,6 +317,7 @@ class Theme extends RestModel {
   saveChanges() {
     const hash = this.getProperties.apply(this, arguments);
     return this.save(hash)
+      .then(() => true)
       .finally(() => this.set("changed", false))
       .catch(popupAjaxError);
   }

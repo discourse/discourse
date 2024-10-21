@@ -145,7 +145,7 @@ class StaticController < ApplicationController
     redirect_to(destination, allow_other_host: false)
   end
 
-  FAVICON ||= -"favicon"
+  FAVICON = -"favicon"
 
   # We need to be able to draw our favicon on a canvas, this happens when you enable the feature
   # that draws the notification count on top of favicon (per user default off)

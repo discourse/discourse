@@ -251,7 +251,7 @@ acceptance("User - Notification level dropdown visibility", function (needs) {
 
   test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
     await visit("/u/charlie");
-    assert.notOk(exists(".user-notifications-dropdown"));
+    assert.dom(".user-notifications-dropdown").doesNotExist();
   });
 });
 
@@ -335,7 +335,7 @@ acceptance(
       );
 
       await notificationLevelDropdown.selectRowByValue("changeToIgnored");
-      assert.ok(exists(".ignore-duration-with-username-modal"));
+      assert.dom(".ignore-duration-with-username-modal").exists();
 
       const durationDropdown = selectKit(
         ".ignore-duration-with-username-modal .future-date-input-selector"
@@ -391,16 +391,14 @@ acceptance("User - Logout", function (needs) {
     await visit("/u/eviltrout");
     await publishToMessageBus("/logout/19");
 
-    assert.ok(exists(".dialog-body"));
+    assert.dom(".dialog-body").exists();
     assert.ok(
       !exists(".dialog-footer .btn-default"),
       "no cancel button present"
     );
-    assert.strictEqual(
-      query(".dialog-footer .btn-primary").innerText,
-      I18n.t("house"),
-      "primary dialog button is present"
-    );
+    assert
+      .dom(".dialog-footer .btn-primary")
+      .hasText(I18n.t("house"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });

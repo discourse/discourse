@@ -2,8 +2,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
   fakeTime,
   loggedInUser,
   query,
@@ -36,39 +34,39 @@ acceptance("Admin - Suspend User", function (needs) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
+    assert.dom(".suspend-user-modal").exists();
 
     await click(".d-modal-cancel");
 
-    assert.ok(!exists(".suspend-user-modal:visible"));
+    assert.dom(".suspend-user-modal").doesNotExist();
   });
 
   test("suspend a user - cancel with input", async function (assert) {
     await visit("/admin/users/1234/regular");
     await click(".suspend-user");
 
-    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
+    assert.dom(".suspend-user-modal").exists();
 
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
     await click(".d-modal-cancel");
 
-    assert.strictEqual(count(".dialog-body:visible"), 1);
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-default");
-    assert.strictEqual(count(".suspend-user-modal:visible"), 1);
+    assert.dom(".suspend-user-modal").exists();
     assert.strictEqual(
       query(".suspend-message").value,
       "this is an email reason why"
     );
 
     await click(".d-modal-cancel");
-    assert.strictEqual(count(".dialog-body:visible"), 1);
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!exists(".suspend-user-modal:visible"));
-    assert.ok(!exists(".dialog-body:visible"));
+    assert.dom(".suspend-user-modal").doesNotExist();
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("suspend, then unsuspend a user", async function (assert) {
@@ -78,15 +76,11 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await visit("/admin/users/1234/regular");
 
-    assert.ok(!exists(".suspension-info"));
+    assert.dom(".suspension-info").doesNotExist();
 
     await click(".suspend-user");
 
-    assert.strictEqual(
-      count(".perform-penalize[disabled]"),
-      1,
-      "disabled by default"
-    );
+    assert.dom(".perform-penalize").isDisabled("disabled by default");
 
     await suspendUntilCombobox.expand();
     await suspendUntilCombobox.selectRowByValue("tomorrow");
@@ -94,16 +88,16 @@ acceptance("Admin - Suspend User", function (needs) {
     await fillIn("input.suspend-reason", "for breaking the rules");
     await fillIn(".suspend-message", "this is an email reason why");
 
-    assert.ok(!exists(".perform-penalize[disabled]"), "no longer disabled");
+    assert.dom(".perform-penalize").isEnabled("no longer disabled");
 
     await click(".perform-penalize");
 
-    assert.ok(!exists(".suspend-user-modal:visible"));
-    assert.ok(exists(".suspension-info"));
+    assert.dom(".suspend-user-modal").doesNotExist();
+    assert.dom(".suspension-info").exists();
 
     await click(".unsuspend-user");
 
-    assert.ok(!exists(".suspension-info"));
+    assert.dom(".suspension-info").doesNotExist();
   });
 });
 

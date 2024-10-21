@@ -297,10 +297,12 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     ThemeModifierSet.modifiers.keys.each do |modifier_name|
-      theme.theme_modifier_set.public_send(
-        :"#{modifier_name}=",
-        theme_info.dig("modifiers", modifier_name.to_s),
-      )
+      value = theme_info.dig("modifiers", modifier_name.to_s)
+      if Hash === value && value["type"] == "setting"
+        theme.theme_modifier_set.add_theme_setting_modifier(modifier_name, value["value"])
+      else
+        theme.theme_modifier_set.public_send(:"#{modifier_name}=", value)
+      end
     end
 
     if !theme.theme_modifier_set.valid?
@@ -382,6 +384,8 @@ class RemoteTheme < ActiveRecord::Base
     else
       self.transaction(&transaction_block)
     end
+
+    theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers
 
     self
   ensure

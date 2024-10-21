@@ -139,9 +139,9 @@ module JsLocaleHelper
 
     message_formats =
       I18n.fallbacks[locale]
-        .each_with_object({}) do |l, hash|
+        .each_with_object(HashWithIndifferentAccess.new) do |l, hash|
           translations = translations_for(l, no_fallback: true)
-          hash[l.to_s.dasherize] = remove_message_formats!(translations, l).merge(
+          hash[l] = remove_message_formats!(translations, l).merge(
             TranslationOverride
               .mf_locales(l)
               .pluck(:translation_key, :value)
@@ -150,7 +150,8 @@ module JsLocaleHelper
           )
         end
         .compact_blank
-    compiled = MessageFormat.compile(message_formats.keys, message_formats, strict: false)
+    js_message_formats = message_formats.transform_keys(&:dasherize)
+    compiled = MessageFormat.compile(js_message_formats.keys, js_message_formats, strict: false)
     transpiled = DiscourseJsProcessor.transpile(<<~JS, "", "discourse-mf")
       import Messages from '@messageformat/runtime/messages';
       #{compiled.sub("export default", "const msgData =")};
@@ -163,9 +164,10 @@ module JsLocaleHelper
       require("discourse-mf");
     JS
   rescue => e
-    message_formats[locale.to_s]
+    js_locale = locale.to_s.dasherize
+    message_formats[locale]
       .filter_map do |key, value|
-        next if MessageFormat.compile(locale, value, strict: false)
+        next if MessageFormat.compile(js_locale, value, strict: false)
       rescue StandardError
         key
       end

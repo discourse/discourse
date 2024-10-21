@@ -1,134 +1,168 @@
-<div class="user-field">
-  {{#if (or this.isEditing (not this.userField.id))}}
-    <AdminFormRow @label="admin.user_fields.type">
-      <ComboBox
-        @content={{this.fieldTypes}}
-        @value={{this.buffered.field_type}}
-        @onChange={{fn (mut this.buffered.field_type)}}
-      />
-    </AdminFormRow>
+{{#if (or this.isEditing (not @userField.id))}}
+  <div class="admin-config-area user-field">
+    <div class="admin-config-area__primary-content">
+      <div class="admin-config-area-card">
+        <Form
+          @data={{this.formData}}
+          @onSubmit={{this.save}}
+          {{did-insert this._focusName}}
+          as |form transientData|
+        >
+          <form.Field
+            @name="field_type"
+            @title={{i18n "admin.user_fields.type"}}
+            @format="large"
+            @validation="required"
+            as |field|
+          >
+            <field.Select as |select|>
+              {{#each @fieldTypes as |fieldType|}}
+                <select.Option
+                  @value={{fieldType.id}}
+                >{{fieldType.name}}</select.Option>
+              {{/each}}
+            </field.Select>
+          </form.Field>
 
-    <AdminFormRow @label="admin.user_fields.name">
-      <Input
-        @value={{this.buffered.name}}
-        class="user-field-name"
-        maxlength="255"
-      />
-    </AdminFormRow>
+          <form.Field
+            @name="name"
+            @title={{i18n "admin.user_fields.name"}}
+            @format="large"
+            @validation="required"
+            as |field|
+          >
+            <field.Input class="user-field-name" maxlength="255" />
+          </form.Field>
 
-    <AdminFormRow @label="admin.user_fields.description">
-      <Input
-        @value={{this.buffered.description}}
-        class="user-field-desc"
-        maxlength="1000"
-      />
-    </AdminFormRow>
+          <form.Field
+            @name="description"
+            @title={{i18n "admin.user_fields.description"}}
+            @format="large"
+            @validation="required"
+            as |field|
+          >
+            <field.Input class="user-field-desc" maxlength="1000" />
+          </form.Field>
 
-    {{#if this.bufferedFieldType.hasOptions}}
-      <AdminFormRow @label="admin.user_fields.options">
-        <ValueList @values={{this.buffered.options}} @inputType="array" />
-      </AdminFormRow>
-    {{/if}}
+          {{#if
+            (or
+              (eq transientData.field_type "dropdown")
+              (eq transientData.field_type "multiselect")
+            )
+          }}
+            <form.Field
+              @name="options"
+              @title={{i18n "admin.user_fields.options"}}
+              @format="large"
+              @validation="required"
+              as |field|
+            >
+              <field.Custom>
+                <ValueList
+                  @values={{transientData.options}}
+                  @inputType="array"
+                  @onChange={{field.set}}
+                />
+              </field.Custom>
+            </form.Field>
+          {{/if}}
 
-    <AdminFormRow @label="admin.user_fields.requirement.title">
-      <label class="optional">
-        <RadioButton
-          @value="optional"
-          @name="requirement"
-          @selection={{this.buffered.requirement}}
-          @onChange={{action "changeRequirementType"}}
-        />
-        <span>{{i18n "admin.user_fields.requirement.optional.title"}}</span>
-      </label>
+          <form.Field
+            @name="requirement"
+            @title={{i18n "admin.user_fields.requirement.title"}}
+            @validation="required"
+            @onSet={{this.setRequirement}}
+            @format="full"
+            as |field|
+          >
+            <field.RadioGroup as |radioGroup|>
+              <radioGroup.Radio @value="optional">
+                {{i18n "admin.user_fields.requirement.optional.title"}}
+              </radioGroup.Radio>
+              <radioGroup.Radio @value="for_all_users" as |radio|>
+                {{i18n "admin.user_fields.requirement.for_all_users.title"}}
+                <radio.Description>{{i18n
+                    "admin.user_fields.requirement.for_all_users.description"
+                  }}</radio.Description>
+              </radioGroup.Radio>
+              <radioGroup.Radio @value="on_signup" as |radio|>
+                {{i18n "admin.user_fields.requirement.on_signup.title"}}
+                <radio.Description>{{i18n
+                    "admin.user_fields.requirement.on_signup.description"
+                  }}</radio.Description>
+              </radioGroup.Radio>
+            </field.RadioGroup>
+          </form.Field>
 
-      <label class="for_all_users">
-        <RadioButton
-          @value="for_all_users"
-          @name="requirement"
-          @selection={{this.buffered.requirement}}
-          @onChange={{action "changeRequirementType"}}
-        />
-        <div class="label-text">
-          <span>{{i18n
-              "admin.user_fields.requirement.for_all_users.title"
-            }}</span>
-          <div class="description">{{i18n
-              "admin.user_fields.requirement.for_all_users.description"
-            }}</div>
-        </div>
-      </label>
+          <form.CheckboxGroup
+            class="user-field-preferences"
+            @title={{i18n "admin.user_fields.preferences"}}
+            as |group|
+          >
+            <group.Field
+              @name="editable"
+              @showTitle={{false}}
+              @title={{i18n "admin.user_fields.editable.title"}}
+              as |field|
+            >
+              <field.Checkbox disabled={{this.editableDisabled}} />
+            </group.Field>
+            <group.Field
+              @name="show_on_profile"
+              @showTitle={{false}}
+              @title={{i18n "admin.user_fields.show_on_profile.title"}}
+              as |field|
+            >
+              <field.Checkbox />
+            </group.Field>
+            <group.Field
+              @name="show_on_user_card"
+              @showTitle={{false}}
+              @title={{i18n "admin.user_fields.show_on_user_card.title"}}
+              as |field|
+            >
+              <field.Checkbox />
+            </group.Field>
+            <group.Field
+              @name="searchable"
+              @showTitle={{false}}
+              @title={{i18n "admin.user_fields.searchable.title"}}
+              as |field|
+            >
+              <field.Checkbox />
+            </group.Field>
+          </form.CheckboxGroup>
 
-      <label class="on_signup">
-        <RadioButton
-          @value="on_signup"
-          @name="requirement"
-          @selection={{this.buffered.requirement}}
-          @onChange={{action "changeRequirementType"}}
-        />
-        <div class="label-text">
-          <span>{{i18n "admin.user_fields.requirement.on_signup.title"}}</span>
-          <div class="description">{{i18n
-              "admin.user_fields.requirement.on_signup.description"
-            }}</div>
-        </div>
-      </label>
-    </AdminFormRow>
+          <PluginOutlet
+            @name="after-admin-user-fields"
+            @outletArgs={{hash userField=@userField form=form}}
+          />
 
-    <AdminFormRow @label="admin.user_fields.preferences">
-      <label>
-        <Input
-          @type="checkbox"
-          @checked={{this.buffered.editable}}
-          disabled={{this.editableDisabled}}
-        />
-        <span>{{i18n "admin.user_fields.editable.title"}}</span>
-      </label>
-
-      <label>
-        <Input @type="checkbox" @checked={{this.buffered.show_on_profile}} />
-        <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
-      </label>
-
-      <label>
-        <Input @type="checkbox" @checked={{this.buffered.show_on_user_card}} />
-        <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
-      </label>
-
-      <label>
-        <Input @type="checkbox" @checked={{this.buffered.searchable}} />
-        <span>{{i18n "admin.user_fields.searchable.title"}}</span>
-      </label>
-    </AdminFormRow>
-
-    <PluginOutlet
-      @name="after-admin-user-fields"
-      @outletArgs={{hash buffered=this.buffered}}
-    />
-
-    <AdminFormRow>
-      <DButton
-        @action={{this.save}}
-        @icon="check"
-        @label="admin.user_fields.save"
-        class="btn-primary save"
-      />
-      <DButton
-        @action={{this.cancel}}
-        @icon="xmark"
-        @label="admin.user_fields.cancel"
-        class="btn-danger cancel"
-      />
-    </AdminFormRow>
-  {{else}}
+          <form.Actions>
+            <form.Submit
+              class="save"
+              @icon="check"
+              @label="admin.user_fields.save"
+            />
+            <form.Button
+              @action={{this.cancel}}
+              @label="admin.user_fields.cancel"
+              class="btn-default"
+            />
+          </form.Actions>
+        </Form>
+      </div>
+    </div>
+  </div>
+{{else}}
+  <div class="user-field">
     <div class="row">
       <div class="form-display">
-        <b class="name">{{this.userField.name}}</b>
+        <b class="name">{{@userField.name}}</b>
         <br />
-        <span class="description">{{html-safe
-            this.userField.description
-          }}</span>
+        <span class="description">{{html-safe @userField.description}}</span>
       </div>
-      <div class="form-display field-type">{{this.fieldName}}</div>
+      <div class="form-display field-type">{{@userField.fieldTypeName}}</div>
       <div class="form-element controls">
         <DButton
           @action={{this.edit}}
@@ -137,19 +171,19 @@
           class="btn-default edit"
         />
         <DButton
-          @action={{fn this.destroyAction this.userField}}
+          @action={{fn @destroyAction @userField}}
           @icon="trash-can"
           @label="admin.user_fields.delete"
           class="btn-danger cancel"
         />
         <DButton
-          @action={{fn this.moveUpAction this.userField}}
+          @action={{fn @moveUpAction @userField}}
           @icon="arrow-up"
           @disabled={{this.cantMoveUp}}
           class="btn-default"
         />
         <DButton
-          @action={{fn this.moveDownAction this.userField}}
+          @action={{fn @moveDownAction @userField}}
           @icon="arrow-down"
           @disabled={{this.cantMoveDown}}
           class="btn-default"
@@ -157,5 +191,5 @@
       </div>
     </div>
     <div class="row user-field-flags">{{this.flags}}</div>
-  {{/if}}
-</div>
+  </div>
+{{/if}}

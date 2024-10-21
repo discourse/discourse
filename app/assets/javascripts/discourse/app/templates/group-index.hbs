@@ -82,6 +82,7 @@
       >
         <:header>
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="username_lower"
@@ -103,6 +104,7 @@
           />
 
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="added_at"
@@ -111,6 +113,7 @@
             class="directory-table__column-header--added"
           />
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_posted_at"
@@ -119,6 +122,7 @@
             class="directory-table__column-header--last-posted"
           />
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="last_seen_at"

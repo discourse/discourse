@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Discourse
-  VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
-  VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
+  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:

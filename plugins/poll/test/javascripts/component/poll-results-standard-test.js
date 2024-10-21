@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const TWO_OPTIONS = [
@@ -64,7 +64,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
 
     assert.strictEqual(queryAll(".option .percentage")[0].innerText, "56%");
     assert.strictEqual(queryAll(".option .percentage")[1].innerText, "44%");
-    assert.ok(exists("ul.poll-voters-list"));
+    assert.dom("ul.poll-voters-list").exists();
   });
 
   test("Omits voters for private polls", async function (assert) {
@@ -92,7 +92,7 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       @fetchVoters={{this.fetchVoters}}
     />`);
 
-    assert.ok(!exists("ul.poll-voters-list"));
+    assert.dom("ul.poll-voters-list").doesNotExist();
   });
 
   test("options in ascending order", async function (assert) {

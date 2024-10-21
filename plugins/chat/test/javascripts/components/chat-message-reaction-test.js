@@ -24,8 +24,8 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   test("title/alt attributes", async function (assert) {
     await render(hbs`<ChatMessageReaction @reaction={{hash emoji="heart"}} />`);
 
-    assert.strictEqual(query(".chat-message-reaction").title, ":heart:");
-    assert.strictEqual(query(".chat-message-reaction img").alt, ":heart:");
+    assert.dom(".chat-message-reaction").hasAttribute("title", ":heart:");
+    assert.dom(".chat-message-reaction img").hasAttribute("alt", ":heart:");
   });
 
   test("count of reactions", async function (assert) {
@@ -38,7 +38,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
     assert.false(exists(".chat-message-reaction .count"));
 
     this.set("count", 2);
-    assert.strictEqual(query(".chat-message-reaction .count").innerText, "2");
+    assert.dom(".chat-message-reaction .count").hasText("2");
   });
 
   test("reaction’s image", async function (assert) {
@@ -61,6 +61,6 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
     assert.false(exists(".chat-message-reaction .count"));
 
     await click(".chat-message-reaction");
-    assert.strictEqual(query(".chat-message-reaction .count").innerText, "1");
+    assert.dom(".chat-message-reaction .count").hasText("1");
   });
 });

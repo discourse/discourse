@@ -3,7 +3,7 @@
 class TextSentinel
   attr_accessor :text
 
-  ENTROPY_SCALE ||= 0.7
+  ENTROPY_SCALE = 0.7
 
   def initialize(text, opts = nil)
     @opts = opts || {}

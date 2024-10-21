@@ -43,6 +43,7 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
   status { :open }
   name nil
+  threading_enabled true
   after_create do |channel, attrs|
     if attrs[:with_membership]
       channel.chatable.users.each do |user|

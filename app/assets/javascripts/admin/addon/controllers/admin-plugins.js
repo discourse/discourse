@@ -1,16 +1,21 @@
 import Controller from "@ember/controller";
 import { service } from "@ember/service";
+import { adminRouteValid } from "discourse/lib/admin-utilities";
 
 export default class AdminPluginsController extends Controller {
   @service adminPluginNavManager;
   @service router;
 
   get adminRoutes() {
-    return this.allAdminRoutes.filter((route) => this.routeExists(route));
+    return this.allAdminRoutes.filter((route) =>
+      adminRouteValid(this.router, route)
+    );
   }
 
   get brokenAdminRoutes() {
-    return this.allAdminRoutes.filter((route) => !this.routeExists(route));
+    return this.allAdminRoutes.filter(
+      (route) => !adminRouteValid(this.router, route)
+    );
   }
 
   // NOTE: See also AdminPluginsIndexController, there is some duplication here
@@ -29,18 +34,5 @@ export default class AdminPluginsController extends Controller {
       (!this.adminPluginNavManager.currentPlugin ||
         this.adminPluginNavManager.isSidebarMode)
     );
-  }
-
-  routeExists(route) {
-    try {
-      if (route.use_new_show_route) {
-        this.router.urlFor(route.full_location, route.location);
-      } else {
-        this.router.urlFor(route.full_location);
-      }
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 }

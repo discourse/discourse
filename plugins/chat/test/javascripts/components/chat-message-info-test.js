@@ -23,10 +23,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.strictEqual(
-      query(".chat-message-info__username").innerText.trim(),
-      this.message.chatWebhookEvent.username
-    );
+    assert
+      .dom(".chat-message-info__username")
+      .hasText(this.message.chatWebhookEvent.username);
     assert.strictEqual(
       query(".chat-message-info__bot-indicator").textContent.trim(),
       I18n.t("chat.bot")
@@ -40,10 +39,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.strictEqual(
-      query(".chat-message-info__username").innerText.trim(),
-      this.message.user.username
-    );
+    assert
+      .dom(".chat-message-info__username")
+      .hasText(this.message.user.username);
   });
 
   test("date", async function (assert) {

@@ -62,8 +62,8 @@ module(
       );
       this.item.notification.read = false;
       await render(template);
-      assert.notOk(exists("li.read"));
-      assert.ok(exists("li.unread"));
+      assert.dom("li.read").doesNotExist();
+      assert.dom("li.unread").exists();
 
       this.item.notification.read = true;
       await settled();
@@ -109,7 +109,7 @@ module(
         })
       );
       await render(template);
-      assert.ok(exists("li.is-warning"));
+      assert.dom("li.is-warning").exists();
     });
 
     test("doesn't push is-warning to the classList if the notification doesn't originate from a warning PM", async function (assert) {
@@ -118,8 +118,8 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      assert.ok(!exists("li.is-warning"));
-      assert.ok(exists("li"));
+      assert.dom("li.is-warning").doesNotExist();
+      assert.dom("li").exists();
     });
 
     test("the item's href links to the topic that the notification originates from", async function (assert) {
@@ -574,8 +574,8 @@ module(
         })
       );
       await render(template);
-      assert.ok(!exists("li.reviewed"));
-      assert.ok(exists("li"));
+      assert.dom("li.reviewed").doesNotExist();
+      assert.dom("li").exists();
     });
 
     test("pushes `reviewed` to the classList if the reviewable isn't pending", async function (assert) {
@@ -586,7 +586,7 @@ module(
         })
       );
       await render(template);
-      assert.ok(exists("li.reviewed"));
+      assert.dom("li.reviewed").exists();
     });
 
     test("has elements for label and description", async function (assert) {

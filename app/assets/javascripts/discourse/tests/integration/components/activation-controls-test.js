@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | activation-controls", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,6 +12,6 @@ module("Integration | Component | activation-controls", function (hooks) {
 
     await render(hbs`<ActivationControls />`);
 
-    assert.ok(!exists("button.edit-email"));
+    assert.dom("button.edit-email").doesNotExist();
   });
 });

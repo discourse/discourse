@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { i18n } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
@@ -18,6 +19,16 @@ export default class UserField extends RestModel {
 
   static fieldTypeById(id) {
     return this.fieldTypes().findBy("id", id);
+  }
+
+  @tracked field_type;
+  @tracked editable;
+  @tracked show_on_profile;
+  @tracked show_on_user_card;
+  @tracked searchable;
+
+  get fieldTypeName() {
+    return UserField.fieldTypes().find((ft) => ft.id === this.field_type).name;
   }
 }
 

@@ -4,6 +4,7 @@ module PostStreamSerializerMixin
   def self.included(klass)
     klass.attributes :post_stream
     klass.attributes :timeline_lookup
+    klass.attributes :user_badges
   end
 
   def include_stream?
@@ -12,6 +13,18 @@ module PostStreamSerializerMixin
 
   def include_gaps?
     true
+  end
+
+  def include_user_badges?
+    badges_to_include.present?
+  end
+
+  def user_badges
+    object.user_badges(badges_to_include)
+  end
+
+  def badges_to_include
+    @badges_to_include ||= theme_modifier_helper.serialize_post_user_badges
   end
 
   def post_stream
@@ -54,5 +67,9 @@ module PostStreamSerializerMixin
           serializer.as_json
         end
       end
+  end
+
+  def theme_modifier_helper
+    @theme_modifier_helper ||= ThemeModifierHelper.new(request: scope.request)
   end
 end

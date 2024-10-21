@@ -4,9 +4,9 @@ class Emoji
   # update this to clear the cache
   EMOJI_VERSION = "12"
 
-  FITZPATRICK_SCALE ||= %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
+  FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
-  DEFAULT_GROUP ||= "default"
+  DEFAULT_GROUP = "default"
 
   include ActiveModel::SerializerSupport
 

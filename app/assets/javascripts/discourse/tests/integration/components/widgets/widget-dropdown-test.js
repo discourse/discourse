@@ -70,7 +70,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown"));
+    assert.dom("#my-dropdown").exists();
   });
 
   test("label", async function (assert) {
@@ -123,11 +123,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await toggle();
     await clickRowById(2);
-    assert.strictEqual(
-      query("#test").innerText,
-      "2",
-      "it calls the onChange actions"
-    );
+    assert.dom("#test").hasText("2", "it calls the onChange actions");
   });
 
   test("can be opened and closed", async function (assert) {
@@ -135,15 +131,15 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.closed"));
-    assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown.closed").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
     await toggle();
     assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
-    assert.ok(exists("#my-dropdown.opened"));
-    assert.ok(exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown.opened").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").exists();
     await toggle();
-    assert.ok(exists("#my-dropdown.closed"));
-    assert.ok(!exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown.closed").exists();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
   });
 
   test("icon", async function (assert) {
@@ -161,7 +157,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.activated"));
+    assert.dom("#my-dropdown.activated").exists();
   });
 
   test("content with translatedLabel", async function (assert) {
@@ -219,8 +215,8 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.notOk(exists("#my-dropdown .widget-dropdown-header"));
-    assert.notOk(exists("#my-dropdown .widget-dropdown-body"));
+    assert.dom("#my-dropdown .widget-dropdown-header").doesNotExist();
+    assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
   });
 
   test("headerClass option", async function (assert) {
@@ -263,7 +259,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists("#my-dropdown.disabled"));
+    assert.dom("#my-dropdown.disabled").exists();
 
     await toggle();
     assert.strictEqual(rowById(1), null, "it does not display options");
@@ -275,6 +271,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.ok(exists(".widget-dropdown-item.item-5.disabled"));
+    assert.dom(".widget-dropdown-item.item-5.disabled").exists();
   });
 });

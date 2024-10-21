@@ -25,7 +25,15 @@ RSpec.describe RemoteTheme do
             }
           },
           "modifiers": {
-            "serialize_topic_excerpts": true
+            "serialize_topic_excerpts": true,
+            "custom_homepage": {
+              "type": "setting",
+              "value": "boolean_setting"
+            },
+            "serialize_post_user_badges": {
+              "type": "setting",
+              "value": "list_setting"
+            }
           }
         }
       JSON
@@ -42,6 +50,12 @@ RSpec.describe RemoteTheme do
       JS
 
     let :initial_repo do
+      settings = <<~YAML
+        boolean_setting: true
+        list_setting:
+          type: list
+          default: ""
+      YAML
       setup_git_repo(
         "about.json" => about_json,
         "desktop/desktop.scss" => scss_data,
@@ -55,7 +69,7 @@ RSpec.describe RemoteTheme do
         "common/embedded.scss" => "EMBED",
         "common/color_definitions.scss" => ":root{--color-var: red}",
         "assets/font.woff2" => "FAKE FONT",
-        "settings.yaml" => "boolean_setting: true",
+        "settings.yaml" => settings,
         "locales/en.yml" => "sometranslations",
         "migrations/settings/0001-some-migration.js" => migration_js,
       )
@@ -175,6 +189,7 @@ RSpec.describe RemoteTheme do
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
       expect(theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
+      expect(theme.theme_modifier_set.custom_homepage).to eq(true)
 
       expect(theme.theme_fields.length).to eq(12)
 
@@ -187,7 +202,9 @@ RSpec.describe RemoteTheme do
 
       expect(mapped["0-font"]).to eq("")
 
-      expect(mapped["3-yaml"]).to eq("boolean_setting: true")
+      expect(mapped["3-yaml"]).to eq(
+        "boolean_setting: true\nlist_setting:\n  type: list\n  default: \"\"\n",
+      )
 
       expect(mapped["4-en"]).to eq("sometranslations")
       expect(mapped["7-acceptance/theme-test.js"]).to eq("assert.ok(true);")
@@ -197,9 +214,18 @@ RSpec.describe RemoteTheme do
 
       expect(mapped.length).to eq(12)
 
-      expect(theme.settings.length).to eq(1)
+      expect(theme.settings.length).to eq(2)
       expect(theme.settings[:boolean_setting].value).to eq(true)
+      expect(theme.settings[:list_setting].value).to eq("")
 
+      # lets change the setting to see modifier reflects
+      theme.update_setting(:boolean_setting, false)
+      theme.update_setting(:list_setting, "badge1|badge2")
+      theme.save!
+      theme.reload
+
+      expect(theme.theme_modifier_set.custom_homepage).to eq(false)
+      expect(theme.theme_modifier_set.serialize_post_user_badges).to eq(%w[badge1 badge2])
       expect(remote.remote_updated_at).to eq_time(time)
 
       scheme = ColorScheme.find_by(theme_id: theme.id)

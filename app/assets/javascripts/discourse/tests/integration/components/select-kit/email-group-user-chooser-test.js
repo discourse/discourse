@@ -109,7 +109,7 @@ module(
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
-      assert.notOk(exists(".user-status-message"));
+      assert.dom(".user-status-message").doesNotExist();
     });
 
     test("shows user status if enabled", async function (assert) {

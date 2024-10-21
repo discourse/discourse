@@ -405,8 +405,8 @@ class SearchIndexer
       html_scrubber.scrubbed.squish
     end
 
-    MENTION_CLASSES ||= %w[mention mention-group]
-    ATTRIBUTES ||= %w[alt title href data-video-title]
+    MENTION_CLASSES = %w[mention mention-group]
+    ATTRIBUTES = %w[alt title href data-video-title]
 
     def start_element(_name, attributes = [])
       attributes = Hash[*attributes.flatten]

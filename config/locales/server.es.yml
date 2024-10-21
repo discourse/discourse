@@ -696,7 +696,6 @@ es:
               same_as_username: "es igual a tu nombre de usuario. Escoge una contraseña más segura."
               same_as_email: "es igual a tu correo electrónico. Escoge una contraseña más segura."
               same_as_current: "es igual a tu contraseña actual."
-              same_as_previous: "es igual a tu contraseña anterior"
               same_as_name: "es igual a tu nombre."
               unique_characters: "tiene demasiados caracteres repetidos. Escoge una contraseña más segura."
             username:
@@ -706,6 +705,15 @@ es:
             ip_address:
               blocked: "No se permiten nuevos registros desde tu dirección IP."
               max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
+        user_password:
+          attributes:
+            password:
+              common: "es una de las 10 000 contraseñas más comunes. Usa una contraseña más segura."
+              same_as_username: "es igual a tu nombre de usuario. Escoge una contraseña más segura."
+              same_as_email: "es igual a tu correo electrónico. Escoge una contraseña más segura."
+              same_as_current: "es igual a tu contraseña actual."
+              same_as_name: "es igual a tu nombre."
+              unique_characters: "tiene demasiados caracteres repetidos. Escoge una contraseña más segura."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2109,7 +2117,6 @@ es:
     reset_bounce_score_after_days: "Restablecer la puntuación de reobte automáticamente luego de X días."
     blocked_attachment_content_types: "Lista de palabras clave utilizadas para bloquear archivos adjuntos según el tipo de contenido."
     blocked_attachment_filenames: "Lista de palabras clave utilizadas para bloquear los archivos adjuntos según el nombre del archivo."
-    forwarded_emails_behaviour: "Cómo tratar un correo electrónico enviado a Discourse"
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo electrónico."
     trim_incoming_emails: "Recortar las partes irrelevantes de mensajes de correo entrantes."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."

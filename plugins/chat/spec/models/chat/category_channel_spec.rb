@@ -88,6 +88,16 @@ RSpec.describe Chat::CategoryChannel do
     end
   end
 
+  describe "#leave" do
+    let(:original_method) { channel.method(:remove) }
+    let(:aliased_method) { channel.method(:leave) }
+
+    it "is an alias to '#remove'" do
+      expect(original_method.original_name).to eq(aliased_method.original_name)
+      expect(original_method.source_location).to eq(aliased_method.source_location)
+    end
+  end
+
   describe "slug generation" do
     subject(:channel) { Fabricate(:category_channel) }
 

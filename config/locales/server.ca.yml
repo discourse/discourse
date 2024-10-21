@@ -406,6 +406,15 @@ ca:
             ip_address:
               blocked: "No es permeten nous registres des de la vostra adreça IP."
               max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
+        user_password:
+          attributes:
+            password:
+              common: "és una de les 10000 contrasenyes més freqüents. Feu servir una contrasenya més segura."
+              same_as_username: "és igual que la vostra identitat. Feu servir una contrasenya més segura."
+              same_as_email: "és igual que el vostre correu electrònic. Feu servir una contrasenya més segura."
+              same_as_current: "és igual que la vostra contrasenya actual."
+              same_as_name: "és igual que el vostre nom."
+              unique_characters: "té massa caràcters repetits. Trieu una contrasenya més segura."
         user_email:
           attributes:
             user_id:
@@ -1426,7 +1435,6 @@ ca:
     hard_bounce_score: "Puntuació de rebot afegida a l'usuari quan hi ha un rebot permanent."
     bounce_score_threshold: "Puntuació màxima de rebot a partir de la qual es deixaran d'enviar correus a un usuari."
     reset_bounce_score_after_days: "Restableix automàticament la puntuació de rebot després de X dies."
-    forwarded_emails_behaviour: "Com s'ha de tractar un correu electrònic reenviat a Discourse"
     always_show_trimmed_content: "Mostra sempre la part retallada dels correus entrants. AVÍS: Pot revelar adreces de correu."
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
     email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."

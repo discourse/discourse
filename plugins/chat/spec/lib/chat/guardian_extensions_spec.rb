@@ -10,7 +10,7 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
-  before { SiteSetting.chat_allowed_groups = [chatters] }
+  before { SiteSetting.chat_allowed_groups = chatters }
 
   describe "#can_chat?" do
     context "when the user is not in allowed to chat" do
@@ -87,9 +87,9 @@ RSpec.describe Chat::GuardianExtensions do
         end
 
         context "when not group" do
-          it "doesn’t allow  to edit the channel" do
+          it "allows to edit the channel" do
             Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(false)
+            expect(user.guardian.can_edit_chat_channel?(dm_channel)).to eq(true)
           end
         end
       end

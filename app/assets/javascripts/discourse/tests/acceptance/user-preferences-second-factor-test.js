@@ -109,10 +109,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".token-based-auth-dropdown .select-kit-header");
     await click("li[data-name='Disable']");
 
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Deleting an authenticator"
-    );
+    assert.dom("#dialog-title").hasText("Deleting an authenticator");
     await click(".dialog-close");
 
     assert.ok(
@@ -123,10 +120,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".security-key-dropdown .select-kit-header");
     await click("li[data-name='Disable']");
 
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Deleting an authenticator"
-    );
+    assert.dom("#dialog-title").hasText("Deleting an authenticator");
     await click(".dialog-footer .btn-danger");
     assert.notOk(
       exists(".security-key .second-factor-item"),
@@ -134,10 +128,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
     );
 
     await click(".pref-second-factor-disable-all .btn-danger");
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Are you sure you want to disable two-factor authentication?"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText("Are you sure you want to disable two-factor authentication?");
   });
 
   test("rename second factor security method", async function (assert) {

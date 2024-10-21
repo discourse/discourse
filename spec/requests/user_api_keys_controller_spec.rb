@@ -294,6 +294,26 @@ RSpec.describe UserApiKeysController do
       uri = URI.parse(response.redirect_url)
       expect(uri.to_s).to include(query_str)
     end
+
+    it "revokes API key when client_id used by another user" do
+      user1 = Fabricate(:trust_level_0)
+      user2 = Fabricate(:trust_level_0)
+      key = Fabricate(:user_api_key, user: user1)
+
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+      SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
+      args[:client_id] = key.client_id
+      args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
+      args[:push_url] = "https://push.it/here"
+
+      sign_in(user2)
+
+      post "/user-api-key.json", params: args
+
+      expect(response.status).to eq(302)
+      expect(UserApiKey.exists?(key.id)).to eq(false)
+    end
   end
 
   describe "#create-one-time-password" do

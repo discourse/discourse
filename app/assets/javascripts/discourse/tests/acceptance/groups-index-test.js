@@ -5,7 +5,6 @@ import {
   count,
   exists,
   invisible,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Groups", function () {
@@ -36,11 +35,9 @@ acceptance("Groups", function () {
     assert.ok(exists(".modal.login-modal"), "it shows the login modal");
 
     await click("a[href='/g/discourse/members']");
-    assert.strictEqual(
-      query(".group-info-name").innerText.trim(),
-      "Awesome Team",
-      "it displays the group page"
-    );
+    assert
+      .dom(".group-info-name")
+      .hasText("Awesome Team", "it displays the group page");
 
     await click(".group-index-join");
     assert.ok(exists(".modal.login-modal"), "it shows the login modal");

@@ -3,9 +3,9 @@
 require "fastimage"
 
 class UploadCreator
-  TYPES_TO_CROP ||= %w[avatar card_background custom_emoji profile_background].each(&:freeze)
+  TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
-  ALLOWED_SVG_ELEMENTS ||= %w[
+  ALLOWED_SVG_ELEMENTS = %w[
     circle
     clipPath
     defs
@@ -312,7 +312,7 @@ class UploadCreator
     end
   end
 
-  MIN_PIXELS_TO_CONVERT_TO_JPEG ||= 1280 * 720
+  MIN_PIXELS_TO_CONVERT_TO_JPEG = 1280 * 720
 
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png

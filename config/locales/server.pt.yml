@@ -426,6 +426,14 @@ pt:
             ip_address:
               blocked: "Novos registos não são permitidos a partir do seu endereço IP."
               max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+        user_password:
+          attributes:
+            password:
+              common: "é uma das 10000 palavras-passe mais comuns. Por favor use uma palavra-passe mais segura."
+              same_as_username: "é a mesma que o seu nome de utilizador. Por favor utilize uma palavra-passe mais segura."
+              same_as_email: "é a mesma que o seu email. Por favor utilize uma palavra-passe mais segura."
+              same_as_current: "é a mesma que a sua palavra-passe atual."
+              unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
         color_scheme_color:
           attributes:
             hex:

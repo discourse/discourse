@@ -438,7 +438,7 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
-  HOSTNAME_SETTINGS ||= %w[
+  HOSTNAME_SETTINGS = %w[
     disabled_image_download_domains
     blocked_onebox_domains
     exclude_rel_nofollow_domains

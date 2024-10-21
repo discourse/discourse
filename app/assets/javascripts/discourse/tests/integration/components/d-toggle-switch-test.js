@@ -36,7 +36,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     this.set("state", true);
 
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
-    assert.ok(exists(".d-toggle-switch__checkbox-slider .d-icon-check"));
+    assert.dom(".d-toggle-switch__checkbox-slider .d-icon-check").exists();
   });
 
   test("it renders a label for the button", async function (assert) {
@@ -48,19 +48,15 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox-label").innerText,
-      I18n.t("test.fooLabel")
-    );
+    assert
+      .dom(".d-toggle-switch__checkbox-label")
+      .hasText(I18n.t("test.fooLabel"));
 
     this.setProperties({
       label: null,
       translatedLabel: "bar",
     });
 
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox-label").innerText,
-      "bar"
-    );
+    assert.dom(".d-toggle-switch__checkbox-label").hasText("bar");
   });
 });

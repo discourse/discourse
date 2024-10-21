@@ -231,6 +231,9 @@ he:
             watching_tags:
               label: תגיות במעקב
               description: יוזנק רק אם לנושא יש את אחת מהתגיות האלה
+            trigger_with_pms:
+              label: הזנקה עם הודעות פרטיות
+              description: יוזנק אפילו אם התגיות השתנו בהודעה פרטית
         after_post_cook:
           fields:
             valid_trust_levels:

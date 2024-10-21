@@ -6,7 +6,7 @@ module Stylesheet
   class Importer
     include GlobalPath
 
-    THEME_TARGETS ||= %w[embedded_theme mobile_theme desktop_theme]
+    THEME_TARGETS = %w[embedded_theme mobile_theme desktop_theme]
 
     def self.plugin_assets
       @plugin_assets ||= {}

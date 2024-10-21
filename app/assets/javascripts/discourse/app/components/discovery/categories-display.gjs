@@ -36,6 +36,7 @@ const globalComponents = {
 };
 
 export default class CategoriesDisplay extends Component {
+  @service router;
   @service siteSettings;
   @service site;
 
@@ -69,7 +70,10 @@ export default class CategoriesDisplay extends Component {
   }
 
   get categoriesComponent() {
-    if (this.args.parentCategory) {
+    if (
+      this.args.parentCategory &&
+      this.router.currentRouteName === "discovery.category"
+    ) {
       return this.#componentForSubcategories;
     } else {
       return this.#globalComponent;

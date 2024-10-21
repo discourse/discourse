@@ -3,7 +3,7 @@
 require "migration/base_dropper"
 
 class DbHelper
-  REMAP_SQL ||= <<~SQL
+  REMAP_SQL = <<~SQL
     SELECT table_name::text, column_name::text, character_maximum_length
       FROM information_schema.columns
      WHERE table_schema = 'public'
@@ -12,13 +12,13 @@ class DbHelper
   ORDER BY table_name, column_name
   SQL
 
-  TRIGGERS_SQL ||= <<~SQL
+  TRIGGERS_SQL = <<~SQL
     SELECT trigger_name::text
       FROM information_schema.triggers
      WHERE trigger_name LIKE '%_readonly'
   SQL
 
-  TRUNCATABLE_COLUMNS ||= ["topic_links.url"]
+  TRUNCATABLE_COLUMNS = ["topic_links.url"]
 
   def self.remap(
     from,

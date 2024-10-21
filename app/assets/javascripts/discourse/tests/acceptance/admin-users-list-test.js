@@ -13,7 +13,7 @@ acceptance("Admin - Users List", function (needs) {
   test("lists users", async function (assert) {
     await visit("/admin/users/list/active");
 
-    assert.ok(exists(".users-list .user"));
+    assert.dom(".users-list .user").exists();
     assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
   });
 
@@ -31,7 +31,7 @@ acceptance("Admin - Users List", function (needs) {
   test("sorts users", async function (assert) {
     await visit("/admin/users/list/active");
 
-    assert.ok(exists(".users-list .user"));
+    assert.dom(".users-list .user").exists();
 
     await click(".users-list .sortable:nth-child(1)");
 
@@ -55,15 +55,13 @@ acceptance("Admin - Users List", function (needs) {
   test("toggles email visibility", async function (assert) {
     await visit("/admin/users/list/active");
 
-    assert.ok(exists(".users-list .user"));
+    assert.dom(".users-list .user").exists();
 
     await click(".show-emails");
 
-    assert.strictEqual(
-      query(".users-list .user:nth-child(1) .email").innerText,
-      "<small>eviltrout@example.com</small>",
-      "shows the emails"
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .email")
+      .hasText("<small>eviltrout@example.com</small>", "shows the emails");
 
     await click(".hide-emails");
 
@@ -83,7 +81,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.strictEqual(query(".admin-title h2").innerText, activeTitle);
+    assert.dom(".admin-title h2").hasText(activeTitle);
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
         activeUser
@@ -92,7 +90,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.strictEqual(query(".admin-title h2").innerText, suspectTitle);
+    assert.dom(".admin-title h2").hasText(suspectTitle);
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
         suspectUser
@@ -101,7 +99,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.strictEqual(query(".admin-title h2").innerText, suspectTitle);
+    assert.dom(".admin-title h2").hasText(suspectTitle);
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
         suspectUser
@@ -110,7 +108,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.strictEqual(query(".admin-title h2").innerText, activeTitle);
+    assert.dom(".admin-title h2").hasText(activeTitle);
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
         activeUser

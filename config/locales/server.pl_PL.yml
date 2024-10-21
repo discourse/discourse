@@ -712,7 +712,6 @@ pl_PL:
               same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_current: "Hasło jest takie samo jak aktualne."
-              same_as_previous: "jest takie samo jak Twoje poprzednie hasło."
               same_as_name: "jest takie samo, jak twoje imię."
               unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
             username:
@@ -722,6 +721,15 @@ pl_PL:
             ip_address:
               blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
               max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
+        user_password:
+          attributes:
+            password:
+              common: "jest jednym z 10000 najczęściej używanych haseł. Wybierz inne, bardziej bezpieczne hasło."
+              same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
+              same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
+              same_as_current: "Hasło jest takie samo jak aktualne."
+              same_as_name: "jest takie samo, jak twoje imię."
+              unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2177,7 +2185,6 @@ pl_PL:
     reset_bounce_score_after_days: "Automatycznie resetuj wskaźnik odrzuceń po X dniach."
     blocked_attachment_content_types: "Lista słów kluczowych używanych do blokowania załączników na podstawie typu zawartości."
     blocked_attachment_filenames: "Lista słów kluczowych używanych do blokowania załączników na podstawie nazwy pliku."
-    forwarded_emails_behaviour: "Jak traktować przesłaną wiadomość e-mail do Discourse"
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących e-maili. UWAGA: może ujawniać adresy e-mail."
     trim_incoming_emails: "Przytnij część przychodzących e-maili, które nie są istotne."
     private_email: "Nie umieszczaj treści z wpisów lub tematów w tytule lub treści e-maila. UWAGA: wyłącza także przetrawianie wiadomości e-mail."

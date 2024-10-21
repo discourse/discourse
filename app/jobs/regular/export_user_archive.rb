@@ -10,7 +10,7 @@ module Jobs
     # note: contents provided entirely by user
     attr_accessor :extra
 
-    COMPONENTS ||= %w[
+    COMPONENTS = %w[
       user_archive
       preferences
       auth_tokens
@@ -25,7 +25,7 @@ module Jobs
       visits
     ]
 
-    HEADER_ATTRS_FOR ||=
+    HEADER_ATTRS_FOR =
       HashWithIndifferentAccess.new(
         user_archive: %w[
           topic_title

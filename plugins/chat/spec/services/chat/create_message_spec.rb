@@ -244,7 +244,7 @@ RSpec.describe Chat::CreateMessage do
             fab!(:user) { Fabricate(:user) }
 
             before do
-              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+              SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
               params[:enforce_membership] = true
             end
 

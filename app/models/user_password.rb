@@ -59,6 +59,7 @@ class UserPassword < ActiveRecord::Base
     self.password_salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
     self.password_algorithm = TARGET_PASSWORD_ALGORITHM
     self.password_hash = hash_password(@raw_password, password_salt, password_algorithm)
+    self.password_expired_at = nil
   end
 
   def regen_password!(pw)

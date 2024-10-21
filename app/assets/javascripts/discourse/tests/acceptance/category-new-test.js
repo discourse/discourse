@@ -2,11 +2,7 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -43,11 +39,11 @@ acceptance("Category New", function (needs) {
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
 
-    assert.ok(exists(".badge-category"));
-    assert.notOk(exists(".category-breadcrumb"));
+    assert.dom(".badge-category").exists();
+    assert.dom(".category-breadcrumb").doesNotExist();
 
     await fillIn("input.category-name", "testing");
-    assert.strictEqual(query(".badge-category").innerText, "testing");
+    assert.dom(".badge-category").hasText("testing");
 
     await click(".edit-category-nav .edit-category-topic-template a");
     assert
@@ -80,8 +76,7 @@ acceptance("Category New", function (needs) {
       "it shows saved required tag group"
     );
 
-    assert.strictEqual(
-      query(".edit-category-title h2").innerText,
+    assert.dom(".edit-category-title h2").hasText(
       I18n.t("category.edit_dialog_title", {
         categoryName: "testing",
       })

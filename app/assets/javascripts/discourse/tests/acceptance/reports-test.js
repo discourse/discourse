@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -35,6 +34,6 @@ acceptance("Reports", function (needs) {
   test("Visit report page", async function (assert) {
     await visit("/admin/reports/staff_logins");
 
-    assert.ok(exists(".export-csv-btn"));
+    assert.dom(".export-csv-btn").exists();
   });
 });

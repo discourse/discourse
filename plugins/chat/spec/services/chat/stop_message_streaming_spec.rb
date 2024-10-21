@@ -13,7 +13,7 @@ RSpec.describe Chat::StopMessageStreaming do
 
     before do
       channel_1.add(current_user)
-      SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     end
 
     context "with valid params" do

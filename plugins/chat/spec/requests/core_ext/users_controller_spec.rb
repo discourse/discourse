@@ -31,7 +31,7 @@ describe UsersController do
 
     before do
       register_test_bookmarkable(Chat::MessageBookmarkable)
-      SiteSetting.chat_allowed_groups = [chatters]
+      SiteSetting.chat_allowed_groups = chatters
       sign_in(current_user)
     end
 

@@ -5,6 +5,10 @@
     width: var(--form-kit-medium-input);
   }
 
+  &.--full {
+    width: 100%;
+  }
+
   &-textarea,
   &-composer,
   &-code,

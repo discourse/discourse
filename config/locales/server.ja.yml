@@ -640,7 +640,6 @@ ja:
               same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください。"
               same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください。"
               same_as_current: "はあなたの現在のパスワードと同じです。"
-              same_as_previous: "はあなたの以前のパスワードと同じです。"
               same_as_name: "はあなたの名前と同じです。"
               unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを使用してください。"
             username:
@@ -650,6 +649,15 @@ ja:
             ip_address:
               blocked: "あなたの IP アドレスからの新規登録は許可されていません。"
               max_new_accounts_per_registration_ip: "あなたの IP アドレスからの新規登録は許可されていません (登録可能な数を超えています)。スタッフメンバーにお問い合わせください。"
+        user_password:
+          attributes:
+            password:
+              common: "は 10000 個の最も一般的なパスワードの 1 つです。より安全なパスワードを使用してください。"
+              same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください。"
+              same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください。"
+              same_as_current: "はあなたの現在のパスワードと同じです。"
+              same_as_name: "はあなたの名前と同じです。"
+              unique_characters: "パスワードに繰り返しが多すぎます。より安全なものを使用してください。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -2025,7 +2033,6 @@ ja:
     reset_bounce_score_after_days: "X 日後にバウンススコアを自動的にリセットする。"
     blocked_attachment_content_types: "コンテンツタイプに基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
     blocked_attachment_filenames: "ファイル名に基づいて添付ファイルをブロックするために使用されるキーワードのリスト。"
-    forwarded_emails_behaviour: "Discourse に転送されたメールの処理方法"
     always_show_trimmed_content: "受信メールのトリミングされた部分を常に表示する。警告: メールアドレスが表示される可能性があります。"
     trim_incoming_emails: "受信メールの関連性のない部分をトリミングする。"
     private_email: "投稿またはトピックのコンテンツをメールの件名または本文に含めない。注意: ダイジェストメールも無効にします。"

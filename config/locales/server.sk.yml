@@ -795,7 +795,6 @@ sk:
               same_as_username: "je také isté ako vaše používateľské meno. Prosím použite bezpečnejšie heslo"
               same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
               same_as_current: "je také isté ako Vaše súčasné heslo"
-              same_as_previous: "je rovnaké ako vaše predchádzajúce heslo."
               same_as_name: "je rovnaké ako vaše meno."
               unique_characters: "má príliš veľa opakujúcich sa znakov. Použite bezpečnejšie heslo."
             username:
@@ -805,6 +804,15 @@ sk:
             ip_address:
               blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
               max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
+        user_password:
+          attributes:
+            password:
+              common: "Toto je jedno z 10000 najbežnejších hesiel. Prosím použite bezpečnejšie heslo"
+              same_as_username: "je také isté ako vaše používateľské meno. Prosím použite bezpečnejšie heslo"
+              same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
+              same_as_current: "je také isté ako Vaše súčasné heslo"
+              same_as_name: "je rovnaké ako vaše meno."
+              unique_characters: "má príliš veľa opakujúcich sa znakov. Použite bezpečnejšie heslo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2276,7 +2284,7 @@ sk:
     reset_bounce_score_after_days: "Automatické vynulovanie skóre bounce po X dňoch."
     blocked_attachment_content_types: "Zoznam kľúčových slov používaných na blokovanie príloh na základe typu obsahu."
     blocked_attachment_filenames: "Zoznam kľúčových slov používaných na blokovanie príloh na základe názvu súboru."
-    forwarded_emails_behaviour: "Ako spracovať preposlaný e-mail do Discourse"
+    forwarded_emails_behaviour: "Ako spracovať e-mail preposlaný do Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Viac informácií</a>"
     always_show_trimmed_content: "Vždy zobrazte orezanú časť prichádzajúcich e-mailov. VAROVANIE: môže odhaliť e-mailové adresy."
     trim_incoming_emails: "Orezanie časti prichádzajúcich e-mailov, ktoré nie sú relevantné."
     private_email: "Nezahrňujte obsah príspevkov alebo tém do názvu e-mailu ani do tela e-mailu. POZNÁMKA: vypne aj e-maily so správou."

@@ -1,11 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const CONNECTOR_MODULE =
@@ -26,10 +22,8 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
       1,
       "it has class names"
     );
-    assert.strictEqual(
-      query(".hello-username").innerText,
-      "eviltrout",
-      "it renders into the outlet"
-    );
+    assert
+      .dom(".hello-username")
+      .hasText("eviltrout", "it renders into the outlet");
   });
 });

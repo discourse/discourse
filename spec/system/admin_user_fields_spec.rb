@@ -23,7 +23,7 @@ describe "Admin User Fields", type: :system, js: true do
 
     user_fields_page.add_field(name: "Occupation", description: "")
 
-    expect(user_fields_page).to have_text(/Description can't be blank/)
+    expect(user_fields_page.form.field(:description)).to have_errors("Required")
   end
 
   it "makes sure new required fields are editable after signup" do
@@ -40,7 +40,7 @@ describe "Admin User Fields", type: :system, js: true do
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(editable_label, checked: false, disabled: false)
+    expect(form).to have_field(editable_label, checked: true, disabled: false)
   end
 
   it "requires confirmation when applying required fields retroactively" do

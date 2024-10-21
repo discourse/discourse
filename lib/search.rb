@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Search
-  DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+  DIACRITICS = /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
   HIGHLIGHT_CSS_CLASS = "search-highlight"
 
   cattr_accessor :preloaded_topic_custom_fields
