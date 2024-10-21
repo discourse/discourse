@@ -735,19 +735,11 @@ export default class UppyComposerUpload {
   #autoGridImages() {
     const reply = this.composerModel.get("reply");
     const imagesToWrapGrid = new Set(this.#consecutiveImages);
-
-    // Back to back uploads don't successfully apply [grid] unless we
-    // update the state by force evaluating the new reply against regex
-    // Here we pre-compute with a dummy match to handle any synchorization issues:
-    const precomputedMatches = IMAGE_MARKDOWN_REGEX.exec(reply);
-    if (precomputedMatches) {
-      IMAGE_MARKDOWN_REGEX.lastIndex = 0;
-    }
+    const matches = reply.match(IMAGE_MARKDOWN_REGEX) || [];
 
     const foundImages = [];
-    let match;
-    while ((match = IMAGE_MARKDOWN_REGEX.exec(reply)) !== null) {
-      const fullImageMarkdown = match[0].trim();
+    matches.forEach((fullImageMarkdown) => {
+      fullImageMarkdown = fullImageMarkdown.trim();
 
       // Check if the matched image markdown is in the imagesToWrapGrid
       if (imagesToWrapGrid.has(fullImageMarkdown)) {
@@ -756,10 +748,10 @@ export default class UppyComposerUpload {
 
         // Check if we've found all the images
         if (imagesToWrapGrid.size === 0) {
-          break;
+          return;
         }
       }
-    }
+    });
 
     // Check if all consecutive images have been found
     if (foundImages.length === this.#consecutiveImages.length) {
