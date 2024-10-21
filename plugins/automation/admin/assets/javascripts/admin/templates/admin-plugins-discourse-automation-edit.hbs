@@ -159,7 +159,7 @@
           @isLoading={{isUpdatingAutomation}}
           @label="discourse_automation.update"
           @type="submit"
-          @action={{action "saveAutomation" automation}}
+          @action={{fn this.saveAutomation automation true}}
           class="btn-primary update-automation"
         />
       </div>

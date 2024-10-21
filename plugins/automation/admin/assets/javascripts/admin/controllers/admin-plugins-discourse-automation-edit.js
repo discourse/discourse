@@ -9,6 +9,7 @@ import I18n from "discourse-i18n";
 
 export default class AutomationEdit extends Controller {
   @service dialog;
+  @service router;
   error = null;
   isUpdatingAutomation = false;
   isTriggeringAutomation = false;
@@ -26,7 +27,7 @@ export default class AutomationEdit extends Controller {
   }
 
   @action
-  saveAutomation() {
+  saveAutomation(routeToIndex = false) {
     this.setProperties({ error: null, isUpdatingAutomation: true });
 
     const updatedAutomationForm = {
@@ -45,6 +46,9 @@ export default class AutomationEdit extends Controller {
     )
       .then(() => {
         this.send("refreshRoute");
+        if (routeToIndex) {
+          this.router.transitionTo("adminPlugins.discourse-automation.index");
+        }
       })
       .catch((e) => this._showError(e))
       .finally(() => {

@@ -21,9 +21,7 @@ module DiscourseAutomation
     validate :validate_trigger_fields
 
     after_destroy do |automation|
-      UserCustomField.where(
-        name: automation.new_user_custom_field_name
-      ).destroy_all
+      UserCustomField.where(name: automation.new_user_custom_field_name).destroy_all
     end
 
     attr_accessor :running_in_background
@@ -34,11 +32,7 @@ module DiscourseAutomation
 
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 100
-    validates :name,
-              length: {
-                in: MIN_NAME_LENGTH..MAX_NAME_LENGTH
-              },
-              on: :update
+    validates :name, length: { in: MIN_NAME_LENGTH..MAX_NAME_LENGTH }, on: :update
 
     def add_id_to_custom_field(target, custom_field_key)
       if ![Topic, Post, User].any? { |m| target.is_a?(m) }
@@ -89,12 +83,7 @@ module DiscourseAutomation
     end
 
     def upsert_field!(name, component, metadata, target: "script")
-      field =
-        fields.find_or_initialize_by(
-          name: name,
-          component: component,
-          target: target
-        )
+      field = fields.find_or_initialize_by(name: name, component: component, target: target)
       field.update!(metadata: metadata)
     end
 
@@ -122,15 +111,9 @@ module DiscourseAutomation
       new_context = {}
       context.each do |k, v|
         if v.is_a?(Symbol)
-          new_context["_serialized_#{k}"] = {
-            "class" => "Symbol",
-            "value" => v.to_s
-          }
+          new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
         elsif v.is_a?(ActiveRecord::Base)
-          new_context["_serialized_#{k}"] = {
-            "class" => v.class.name,
-            "id" => v.id
-          }
+          new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
         else
           new_context[k] = v
         end
@@ -142,7 +125,7 @@ module DiscourseAutomation
       Jobs.enqueue(
         Jobs::DiscourseAutomation::Trigger,
         automation_id: id,
-        context: self.class.serialize_context(context)
+        context: self.class.serialize_context(context),
       )
     end
 
@@ -170,13 +153,11 @@ module DiscourseAutomation
     end
 
     def triggerable
-      trigger &&
-        @triggerable ||= DiscourseAutomation::Triggerable.new(trigger, self)
+      trigger && @triggerable ||= DiscourseAutomation::Triggerable.new(trigger, self)
     end
 
     def scriptable
-      script &&
-        @scriptable ||= DiscourseAutomation::Scriptable.new(script, self)
+      script && @scriptable ||= DiscourseAutomation::Scriptable.new(script, self)
     end
 
     def serialized_fields
@@ -207,7 +188,7 @@ module DiscourseAutomation
     def change_automation_ids_custom_field_in_mutex(target, key)
       DistributedMutex.synchronize(
         "automation_custom_field_#{key}_#{target.class.table_name}_#{target.id}",
-        validity: 5.seconds
+        validity: 5.seconds,
       ) { yield }
     end
   end
