@@ -10,6 +10,9 @@ require "zeitwerk"
 require_relative "converters"
 
 module Migrations
+  class NoSettingsFound < StandardError
+  end
+
   def self.root_path
     @root_path ||= File.expand_path("..", __dir__)
   end
