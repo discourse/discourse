@@ -1,4 +1,9 @@
-{{#if (and this.siteSettings.experimental_full_page_login this.showLogin)}}
+{{#if
+  (and
+    this.siteSettings.experimental_full_page_login
+    (or this.showLogin (not this.siteSettings.login_required))
+  )
+}}
   {{hide-application-header-buttons "search" "login" "signup" "menu"}}
   {{hide-application-sidebar}}
 
