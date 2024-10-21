@@ -3,10 +3,9 @@
 class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
-  HIDDEN_PAGEVIEW_REPORTS = ["site_traffic"]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
-    consolidated_page_views
     consolidated_page_views_browser_detection
     page_view_anon_reqs
     page_view_logged_in_reqs
@@ -20,6 +19,10 @@ class Admin::ReportsController < Admin::StaffController
           .keys
           .select { |r| r =~ /\Apage_view_/ && r !~ /mobile/ }
           .map { |r| r + "_reqs" }
+
+    if !SiteSetting.use_legacy_pageviews
+      page_view_req_report_methods << "page_view_legacy_total_reqs"
+    end
 
     reports_methods =
       page_view_req_report_methods +
@@ -38,12 +41,26 @@ class Admin::ReportsController < Admin::StaffController
             next reports_acc if HIDDEN_LEGACY_PAGEVIEW_REPORTS.include?(type)
           end
 
-          reports_acc << {
+          report_data = {
             type: type,
             title: I18n.t("reports.#{type}.title"),
             description: description.presence ? description : nil,
             description_link: description_link.presence ? description_link : nil,
           }
+
+          # HACK: We need to show a different label and description for this
+          # old report while people are still relying on it, that lets us
+          # point toward the new 'Site traffic' report as well. Not ideal,
+          # but apart from duplicating the report there's not a nicer way to do this.
+          if SiteSetting.use_legacy_pageviews
+            if type == "consolidated_page_views" ||
+                 type === "consolidated_page_views_browser_detection"
+              report_data[:title] = I18n.t("reports.#{type}.title_legacy")
+              report_data[:description] = I18n.t("reports.#{type}.description_legacy")
+            end
+          end
+
+          reports_acc << report_data
 
           reports_acc
         end

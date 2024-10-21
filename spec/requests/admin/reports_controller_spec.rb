@@ -246,7 +246,7 @@ RSpec.describe Admin::ReportsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["reports"].count).to eq(5)
         expect(response.parsed_body["reports"][0]["type"]).to eq("site_traffic")
-        expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][1]["type"]).to eq("consolidated_page_views")
         expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
         expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
         expect(response.parsed_body["reports"][4]).to include("error" => "not_found", "data" => nil)
@@ -366,6 +366,11 @@ RSpec.describe Admin::ReportsController do
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         end
       end
+
+      it "does not allow running the page_view_legacy_total_reqs report" do
+        get "/admin/reports/page_view_legacy_total_reqs.json"
+        expect(response.status).to eq(404)
+      end
     end
 
     context "when use_legacy_pageviews is false" do
@@ -380,6 +385,11 @@ RSpec.describe Admin::ReportsController do
           expect(response.status).to eq(404)
           expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
         end
+      end
+
+      it "does allow running the page_view_legacy_total_reqs report" do
+        get "/admin/reports/page_view_legacy_total_reqs.json"
+        expect(response.status).to eq(200)
       end
     end
   end
