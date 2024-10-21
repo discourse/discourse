@@ -738,6 +738,9 @@ export default class UppyComposerUpload {
     const matches = reply.match(uploadingImagePattern) || [];
     const foundImages = [];
 
+    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
+    const gridMatches = reply.match(existingGridPattern);
+
     matches.forEach((imagePlaceholder) => {
       imagePlaceholder = imagePlaceholder.trim();
       const filenameMatch = imagePlaceholder.match(
@@ -747,8 +750,11 @@ export default class UppyComposerUpload {
       if (filenameMatch && filenameMatch[1]) {
         const filename = filenameMatch[1];
 
-        // Check if the extracted filename is in the imagesToWrapGrid
-        if (imagesToWrapGrid.has(filename)) {
+        const isWithinGrid = gridMatches?.some((gridContent) =>
+          gridContent.includes(imagePlaceholder)
+        );
+
+        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
           foundImages.push(imagePlaceholder);
           imagesToWrapGrid.delete(filename);
 
