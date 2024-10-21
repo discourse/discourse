@@ -4,14 +4,11 @@ class Experiments::Toggle
   include Service::Base
 
   policy :current_user_is_admin
-
   contract do
     attribute :setting_name, :string
     validates :setting_name, presence: true
   end
-
   policy :setting_is_available
-
   transaction { step :toggle }
 
   private

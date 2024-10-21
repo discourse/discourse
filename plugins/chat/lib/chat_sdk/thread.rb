@@ -75,7 +75,7 @@ module ChatSDK
 
     def messages(thread_id:, guardian:, direction: "future", **params)
       Chat::ListChannelThreadMessages.call(thread_id:, guardian:, direction:, **params) do
-        on_success { result.messages }
+        on_success { |messages:| messages }
         on_failed_policy(:can_view_thread) { raise "Guardian can't view thread" }
         on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
         on_failure { raise "Unexpected error" }
@@ -96,7 +96,7 @@ module ChatSDK
           raise "Threading is not enabled for this channel"
         end
         on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
-        on_success { result.thread_instance }
+        on_success { |thread:| thread }
         on_failure { raise "Unexpected error" }
       end
     end
