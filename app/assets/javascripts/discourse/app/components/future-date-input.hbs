@@ -1,19 +1,21 @@
 <div class="future-date-input">
-  <div class="control-group">
-    <label class={{this.labelClasses}}>
-      {{#if this.displayLabelIcon}}{{d-icon
-          this.displayLabelIcon
-        }}{{/if}}{{this.displayLabel}}
-    </label>
-    <FutureDateInputSelector
-      @value={{readonly this.selection}}
-      @content={{this.shortcuts}}
-      @clearable={{this.clearable}}
-      @onChangeInput={{this.onChangeInput}}
-      @onChange={{fn (mut this.selection)}}
-      @options={{hash none="time_shortcut.select_timeframe"}}
-    />
-  </div>
+  {{#unless this.noRelativeOptions}}
+    <div class="control-group">
+      <label class={{this.labelClasses}}>
+        {{#if this.displayLabelIcon}}{{d-icon
+            this.displayLabelIcon
+          }}{{/if}}{{this.displayLabel}}
+      </label>
+      <FutureDateInputSelector
+        @value={{readonly this.selection}}
+        @content={{this.shortcuts}}
+        @clearable={{this.clearable}}
+        @onChangeInput={{this.onChangeInput}}
+        @onChange={{fn (mut this.selection)}}
+        @options={{hash none="time_shortcut.select_timeframe"}}
+      />
+    </div>
+  {{/unless}}
 
   {{#if this.displayDateAndTimePicker}}
     <div class="control-group future-date-input-date-picker">

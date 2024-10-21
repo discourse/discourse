@@ -1964,14 +1964,26 @@ en:
           error: "There was an error generating Invite link"
 
         invite:
-          new_title: "Create Invite"
-          edit_title: "Edit Invite"
+          new_title: "Invite members"
+          edit_title: "Edit invite"
 
           instructions: "Share this link to instantly grant access to this site:"
-          copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
-
+          create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
+          copy_link_and_share_it: "Copy the link below and share it to instantly grant access to this site."
+          copy_link: "Copy link"
+          link_copied: "Link copied!"
+          share_link: "Share link"
+          link_validity_MF: |
+            Link is valid for up to { user_count, plural,
+                one {# user}
+              other {# users}
+            } and expires in { duration_days, plural,
+                one {# day}
+              other {# days}
+            }.
+          edit_link_options: "Edit link options."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -1984,12 +1996,16 @@ en:
 
           add_to_groups: "Add to groups"
           invite_to_topic: "Arrive at topic"
-          expires_at: "Expire after"
-          custom_message: "Optional personal message"
+          expires_at: "Expire at"
+          expires_after: "Expire after"
+          custom_message: "Custom message"
+          custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save Invite"
+          save_invite: "Save"
+          cancel: "Cancel"
+          create_link: "Create link"
 
           invite_saved: "Invite saved."
 
