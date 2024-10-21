@@ -86,8 +86,7 @@ module Chat
     end
 
     def auto_join_users_if_needed(channel:)
-      return unless channel.auto_join_users?
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
+      Chat::AutoJoinChannels.call(channel_id: channel.id) if channel.auto_join_users?
     end
   end
 end

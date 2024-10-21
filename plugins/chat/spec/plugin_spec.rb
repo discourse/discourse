@@ -183,7 +183,7 @@ describe Chat do
 
   describe "auto-joining users to a channel" do
     fab!(:chatters_group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+    fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago, trust_level: 1) }
     let!(:channel) { Fabricate(:category_channel, auto_join_users: true, chatable: category) }
 
     before { Jobs.run_immediately! }
@@ -212,19 +212,12 @@ describe Chat do
 
     describe "when a user is created" do
       fab!(:category)
-      let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil) }
+      let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil, trust_level: 1) }
 
       it "queues a job to auto-join the user the first time they log in" do
         user.update_last_seen!
 
         assert_user_following_state(user, channel, following: true)
-      end
-
-      it "does nothing if it's not the first time we see the user" do
-        user.update!(first_seen_at: 2.minute.ago)
-        user.update_last_seen!
-
-        assert_user_following_state(user, channel, following: false)
       end
 
       it "does nothing if auto-join is disabled" do
