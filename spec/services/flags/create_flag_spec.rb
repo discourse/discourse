@@ -14,13 +14,16 @@ RSpec.describe(Flags::CreateFlag) do
 
     fab!(:current_user) { Fabricate(:admin) }
 
-    let(:params) { { name:, description:, applies_to:, require_message:, enabled: } }
+    let(:params) do
+      { name:, description:, applies_to:, require_message:, enabled:, auto_action_type: }
+    end
     let(:dependencies) { { guardian: current_user.guardian } }
     let(:name) { "custom flag name" }
     let(:description) { "custom flag description" }
     let(:applies_to) { ["Topic"] }
     let(:enabled) { true }
     let(:require_message) { true }
+    let(:auto_action_type) { true }
 
     context "when user is not allowed to perform the action" do
       fab!(:current_user) { Fabricate(:user) }
@@ -62,6 +65,7 @@ RSpec.describe(Flags::CreateFlag) do
           require_message: true,
           enabled: true,
           notify_type: true,
+          auto_action_type: true,
         )
       end
 

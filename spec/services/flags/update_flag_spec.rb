@@ -16,7 +16,17 @@ RSpec.describe(Flags::UpdateFlag) do
     fab!(:current_user) { Fabricate(:admin) }
 
     let(:flag) { Fabricate(:flag) }
-    let(:params) { { id: flag_id, name:, description:, applies_to:, require_message:, enabled: } }
+    let(:params) do
+      {
+        id: flag_id,
+        name:,
+        description:,
+        applies_to:,
+        require_message:,
+        enabled:,
+        auto_action_type:,
+      }
+    end
     let(:dependencies) { { guardian: current_user.guardian } }
     let(:flag_id) { flag.id }
     let(:name) { "edited custom flag name" }
@@ -24,6 +34,7 @@ RSpec.describe(Flags::UpdateFlag) do
     let(:applies_to) { ["Topic"] }
     let(:require_message) { true }
     let(:enabled) { false }
+    let(:auto_action_type) { true }
 
     context "when contract is invalid" do
       let(:name) { nil }
@@ -72,6 +83,7 @@ RSpec.describe(Flags::UpdateFlag) do
           applies_to: ["Topic"],
           require_message: true,
           enabled: false,
+          auto_action_type: true,
         )
       end
 
