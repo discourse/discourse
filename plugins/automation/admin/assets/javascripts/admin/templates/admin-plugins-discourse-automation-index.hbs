@@ -44,7 +44,11 @@
               role="button"
               {{on "keypress" (fn this.editAutomation automation)}}
               {{on "click" (fn this.editAutomation automation)}}
-            >{{automation.name}}</td>
+            >{{if
+                automation.name
+                automation.name
+                (i18n "discourse_automation.unnamed_automation")
+              }}</td>
             <td
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
@@ -75,14 +79,4 @@
       {{/each}}
     </tbody>
   </table>
-{{else}}
-  <div class="alert alert-info">
-    <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
-    <DButton
-      @label="discourse_automation.create"
-      @icon="plus"
-      @action={{action "newAutomation"}}
-      class="btn-primary"
-    />
-  </div>
 {{/if}}
