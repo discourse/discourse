@@ -5,6 +5,8 @@
   &__container {
     max-width: var(--modal-max-width);
     min-width: var(--modal-min-width);
+    max-height: var(--modal-max-height);
+    min-height: var(--modal-min-height);
     .d-modal.-large & {
       max-width: 800px;
     }
