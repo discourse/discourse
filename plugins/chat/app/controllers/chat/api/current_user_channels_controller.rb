@@ -3,12 +3,12 @@
 class Chat::Api::CurrentUserChannelsController < Chat::ApiController
   def index
     Chat::ListUserChannels.call(service_params) do
-      on_success do
+      on_success do |structured:, post_allowed_category_ids:|
         render_serialized(
-          result.structured,
+          structured,
           Chat::ChannelIndexSerializer,
           root: false,
-          post_allowed_category_ids: result.post_allowed_category_ids,
+          post_allowed_category_ids: post_allowed_category_ids,
         )
       end
       on_failure { render(json: failed_json, status: 422) }
