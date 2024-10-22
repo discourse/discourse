@@ -620,7 +620,7 @@ class CategoriesController < ApplicationController
       include_topics: include_topics,
       include_subcategories: include_subcategories,
       tag: params[:tag],
-      page: params[:page].to_i,
+      page: params[:page].try(:to_i) || 1,
     }
 
     @category_list = CategoryList.new(guardian, category_options)

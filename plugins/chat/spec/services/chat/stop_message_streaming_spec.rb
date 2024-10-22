@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::StopMessageStreaming do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:message_id) }
+  end
+
   describe ".call" do
     subject(:result) { described_class.call(params) }
 

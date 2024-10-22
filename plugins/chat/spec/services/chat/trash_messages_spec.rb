@@ -1,26 +1,30 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::TrashMessages do
-  fab!(:current_user) { Fabricate(:user) }
-  let!(:guardian) { Guardian.new(current_user) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
-  fab!(:message1) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
-  fab!(:message2) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:channel_id) }
+    it { is_expected.to allow_values([1], (1..200).to_a).for(:message_ids) }
+    it { is_expected.not_to allow_values([], (1..201).to_a).for(:message_ids) }
+  end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(**params, **dependencies) }
+
+    fab!(:current_user) { Fabricate(:user) }
+    fab!(:chat_channel) { Fabricate(:chat_channel) }
+    fab!(:message1) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
+    fab!(:message2) { Fabricate(:chat_message, user: current_user, chat_channel: chat_channel) }
+    let(:guardian) { Guardian.new(current_user) }
+    let(:params) { { message_ids: [message1.id, message2.id], channel_id: chat_channel.id } }
+    let(:dependencies) { { guardian: } }
 
     context "when params are not valid" do
-      let(:params) { { guardian: guardian } }
+      let(:params) { {} }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when params are valid" do
-      let(:params) do
-        { guardian: guardian, message_ids: [message1.id, message2.id], channel_id: chat_channel.id }
-      end
-
       context "when the user does not have permission to delete" do
         before { message1.update!(user: Fabricate(:admin)) }
 
@@ -29,11 +33,7 @@ RSpec.describe Chat::TrashMessages do
 
       context "when the channel does not match the message" do
         let(:params) do
-          {
-            guardian: guardian,
-            message_ids: [message1.id, message2.id],
-            channel_id: Fabricate(:chat_channel).id,
-          }
+          { message_ids: [message1.id, message2.id], channel_id: Fabricate(:chat_channel).id }
         end
 
         it { is_expected.to fail_to_find_a_model(:messages) }

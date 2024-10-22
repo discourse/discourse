@@ -74,7 +74,7 @@ export default Mixin.create({
 function configShim(component) {
   return {
     get autoStartUploads() {
-      return component.autoStartUploads || true;
+      return component.autoStartUploads ?? true;
     },
     get id() {
       return component.id;
