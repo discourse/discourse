@@ -30,7 +30,7 @@ export default class ThemeCard extends Component {
   get themeCardClasses() {
     return [
       "theme-card",
-      this.args.theme.default ? "-active" : "",
+      this.args.theme.get("default") ? "-active" : "",
       this.isUpdating ? "--updating" : "",
     ].join(" ");
   }

@@ -10,6 +10,8 @@ export default class ThemesGrid extends Component {
   @service modal;
   @service router;
 
+  sortedThemes;
+
   externalResources = [
     {
       key: "admin.customize.theme.beginners_guide_title",
@@ -25,9 +27,12 @@ export default class ThemesGrid extends Component {
     },
   ];
 
-  // Always show the default theme first in the list
-  get sortedThemes() {
-    return this.args.themes.sort((a, b) => {
+  constructor() {
+    super(...arguments);
+
+    // Show default theme at the top of the list on page load,
+    // but don't move it around dynamically if the admin changes the default.
+    this.sortedThemes = this.args.themes.sort((a, b) => {
       if (a.get("default")) {
         return -1;
       } else if (b.get("default")) {
