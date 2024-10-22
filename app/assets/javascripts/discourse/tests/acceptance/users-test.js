@@ -59,6 +59,34 @@ acceptance("User Directory", function () {
     );
   });
 
+  test("Searchable user fields display as links", async function (assert) {
+    pretender.get("/directory_items", () => {
+      return response(cloneJSON(directoryFixtures["directory_items"]));
+    });
+
+    await visit("/u");
+
+    const firstRowUserField = query(
+      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
+    );
+
+    const userFieldLink = firstRowUserField.querySelector("a");
+
+    assert.ok(userFieldLink, "User field is displayed as a link");
+
+    assert.strictEqual(
+      userFieldLink.getAttribute("href"),
+      "/u?name=Blue",
+      "The link points to the correct URL"
+    );
+
+    assert.strictEqual(
+      userFieldLink.textContent.trim(),
+      "Blue",
+      "Link text is correct"
+    );
+  });
+
   test("Visit With Group Filter", async function (assert) {
     await visit("/u?group=trust_level_0");
     assert.ok(
