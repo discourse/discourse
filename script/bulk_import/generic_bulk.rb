@@ -311,7 +311,7 @@ class BulkImport::Generic < BulkImport::Base
       {
         user_id: user_id,
         name: row["name"],
-        value: raw_with_placeholders_interpolated(row["value"]),
+        value: raw_with_placeholders_interpolated(row["value"], row),
       }
     end
 
