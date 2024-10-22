@@ -113,20 +113,20 @@ class BulkImport::Generic < BulkImport::Base
     import_permalink_normalizations
     import_permalinks
 
-    import_chat_direct_messages
-    import_chat_channels
+    # import_chat_direct_messages
+    # import_chat_channels
 
-    import_chat_threads
-    import_chat_messages
+    # import_chat_threads
+    # import_chat_messages
 
-    import_user_chat_channel_memberships
-    import_chat_thread_users
+    # import_user_chat_channel_memberships
+    # import_chat_thread_users
 
-    import_chat_reactions
-    import_chat_mentions
+    # import_chat_reactions
+    # import_chat_mentions
 
-    update_chat_threads
-    update_chat_membership_metadata
+    # update_chat_threads
+    # update_chat_membership_metadata
 
     import_upload_references
   end
