@@ -948,13 +948,13 @@ gl:
       yaxis: "Día"
       description: "Número de usuarios que incrementaron o seu nivel de confianza durante este período."
     consolidated_page_views:
-      title: "Visualizacións de páxinas consolidadas"
+      title_legacy: "Visualizacións de páxinas consolidadas"
       xaxis:
         page_view_crawler: "Rastrexadores"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios con sesión iniciada"
       yaxis: "Día"
-      description: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
+      description_legacy: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
       labels:
         post: Publicación
         editor: Editor
@@ -1119,6 +1119,9 @@ gl:
       xaxis: "Día"
       yaxis: "Total de visualizacións de páxina"
       description: "Número de novas visualizacións de páxina de todos os visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Día"
+      yaxis: "Total de visualizacións de páxina"
     page_view_logged_in_mobile_reqs:
       title: "Visualizacións de páxina coa sesión iniciada"
       xaxis: "Día"

@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -282,10 +282,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     this.currentUser.set("grouped_unread_notifications", {});
     await settled();
 
-    assert.notOk(
-      exists(".panel-body-bottom .notifications-dismiss"),
-      "dismiss button is not shown if the user no unread private_message notifications"
-    );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .doesNotExist(
+        "dismiss button is not shown if the user no unread private_message notifications"
+      );
   });
 
   test("empty state (aka blank page syndrome)", async function (assert) {
@@ -302,10 +303,9 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       I18n.t("user.no_messages_title"),
       "empty state title is shown"
     );
-    assert.ok(
-      exists(".empty-state-body svg.d-icon-envelope"),
-      "icon is correctly rendered in the empty state body"
-    );
+    assert
+      .dom(".empty-state-body svg.d-icon-envelope")
+      .exists("icon is correctly rendered in the empty state body");
     const emptyStateBodyLink = query(".empty-state-body a");
     assert.ok(
       emptyStateBodyLink.href.endsWith("/about"),

@@ -11,6 +11,7 @@ en_GB:
         separator: "."
     dates:
       time: "HH:mm"
+      time_short: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"

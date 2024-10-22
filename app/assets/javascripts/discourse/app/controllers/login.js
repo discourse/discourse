@@ -35,6 +35,7 @@ export default class LoginPageController extends Controller {
   @tracked loggingIn = false;
   @tracked loggedIn = false;
   @tracked showLoginButtons = true;
+  @tracked showLogin = false;
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
@@ -113,6 +114,11 @@ export default class LoginPageController extends Controller {
 
   get adminLoginPath() {
     return getURL("/u/admin-login");
+  }
+
+  @action
+  showLoginPage() {
+    this.showLogin = true;
   }
 
   @action

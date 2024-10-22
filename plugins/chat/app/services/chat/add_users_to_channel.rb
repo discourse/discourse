@@ -47,6 +47,10 @@ module Chat
 
     private
 
+    def fetch_channel(contract:)
+      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+    end
+
     def can_add_users_to_channel(guardian:, channel:)
       (guardian.user.admin? || channel.joined_by?(guardian.user)) &&
         channel.direct_message_channel? && channel.chatable.group
@@ -58,10 +62,6 @@ module Chat
         groups: contract.groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
       )
-    end
-
-    def fetch_channel(contract:)
-      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
     def upsert_memberships(channel:, target_users:)

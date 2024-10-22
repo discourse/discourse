@@ -1339,20 +1339,17 @@ lv:
           success: "Ielūguma saite gatava!"
           error: "Ģenerējot uzaicinājuma saiti, radās kļūda"
         invite:
-          new_title: "Izveidot ielūgumu"
-          edit_title: "Rediģēt uzaicinājumu"
           instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei:"
-          copy_link: "kopēt saiti"
           expires_in_time: "Derīguma termiņš beidzas pēc %{time}"
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
-          expires_at: "Derīguma termiņš beidzas"
-          custom_message: "Neobligāts personiskais ziņojums"
+          expires_after: "Derīguma termiņš beidzas"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
-          save_invite: "Saglabāt uzaicinājumu"
+          save_invite: "Saglabāt"
+          cancel: "Atcelt"
           invite_saved: "Uzaicinājums saglabāts."
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
@@ -1560,7 +1557,7 @@ lv:
     login:
       header_title: "Laipni lūdzam"
       subheader_title: "Ielogojieties savā kontā"
-      title: "Pieslēgties"
+      title: "Ienākt"
       username: "Lietotājs"
       password: "Parole"
       show_password: "Parādīt"
@@ -3059,6 +3056,9 @@ lv:
             invalid_applies_to: "Nepieciešams"
             topic: "tēmas"
             post: "raksti"
+        look_and_feel:
+          themes:
+            title: "Dizaini"
       plugins:
         title: "Spraudņi"
         name: "Nosaukums"

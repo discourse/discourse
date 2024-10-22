@@ -874,11 +874,11 @@ hr:
     trust_level_growth:
       yaxis: "Dan"
     consolidated_page_views:
-      title: "Konsolidirani prikazi stranica"
+      title_legacy: "Konsolidirani prikazi stranica"
       xaxis:
         page_view_logged_in: "Prijavljeni korisnici"
       yaxis: "Dan"
-      description: "Prikazi stranica za prijavljene korisnike, anonimne korisnike i alate za indeksiranje."
+      description_legacy: "Prikazi stranica za prijavljene korisnike, anonimne korisnike i alate za indeksiranje."
       labels:
         post: Objava
         editor: Urednik
@@ -1020,6 +1020,9 @@ hr:
       xaxis: "Dan"
       yaxis: "Ukupni broj prikaza stranice"
       description: "Broj novih prikaza stranica od svih posjetitelja."
+    page_view_legacy_total_reqs:
+      xaxis: "Dan"
+      yaxis: "Ukupni broj prikaza stranice"
     page_view_logged_in_mobile_reqs:
       title: "Prijavljeni prikazi stranica"
       xaxis: "Dan"

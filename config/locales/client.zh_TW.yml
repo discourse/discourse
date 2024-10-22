@@ -26,6 +26,7 @@ zh_TW:
         millions: "%{number} 百萬"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "hh:mm a (z)"
       time_short_day: "ddd, h:mm a"
       timeline_date: "YYYY年 M月"
@@ -1311,10 +1312,11 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         invite:
-          new_title: "建立邀請"
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
+          save_invite: "保存"
+          cancel: "取消"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           error: "上傳的檔案必須是 csv 格式。"
@@ -3357,6 +3359,9 @@ zh_TW:
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"
+        look_and_feel:
+          themes:
+            title: "佈景主題"
       plugins:
         title: "外掛"
         name: "名稱"

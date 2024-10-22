@@ -51,7 +51,7 @@ class TopicsController < ApplicationController
   end
 
   def show
-    if params[:id].is_a?(Array)
+    if params[:id].is_a?(Array) || params[:id].is_a?(ActionController::Parameters)
       raise Discourse::InvalidParameters.new("Show only accepts a single ID")
     end
 

@@ -45,14 +45,12 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await selectText("#post_5 blockquote");
 
     assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
-    assert.ok(
-      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-      "it includes the twitter share button"
-    );
-    assert.ok(
-      exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
-      "it includes the email share button"
-    );
+    assert
+      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .exists("it includes the twitter share button");
+    assert
+      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
+      .exists("it includes the email share button");
   });
 
   test("Quoting a Onebox should not copy the formatting of the rendered Onebox", async function (assert) {
@@ -105,14 +103,12 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await selectText("#post_5 blockquote");
 
     assert.ok(queryAll(".quote-sharing"), "it shows the quote sharing options");
-    assert.ok(
-      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-      "it includes the twitter share button"
-    );
-    assert.ok(
-      exists(`.quote-sharing .btn[title='${I18n.t("share.email")}']`),
-      "it includes the email share button"
-    );
+    assert
+      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .exists("it includes the twitter share button");
+    assert
+      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
+      .exists("it includes the email share button");
     assert.ok(!exists(".insert-quote"), "it does not show the quote button");
   });
 
@@ -123,14 +119,12 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await selectText("#post_5 blockquote");
 
     assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
-    assert.ok(
-      exists(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`),
-      "it includes the twitter share button"
-    );
-    assert.ok(
-      !exists(".quote-share-label"),
-      "it does not show the Share label"
-    );
+    assert
+      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .exists("it includes the twitter share button");
+    assert
+      .dom(".quote-share-label")
+      .doesNotExist("it does not show the Share label");
   });
 
   test("Shows nothing when visibility is disabled", async function (assert) {

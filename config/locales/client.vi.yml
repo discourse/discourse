@@ -1474,10 +1474,7 @@ vi:
           success: "Link mời đã được tạo thành công !"
           error: "Đã xảy ra lỗi khi tạo liên kết Mời"
         invite:
-          new_title: "Tạo lời mời"
-          edit_title: "Chỉnh sửa lời mời"
           instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này:"
-          copy_link: "sao chép liên kết"
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
@@ -1489,11 +1486,11 @@ vi:
           max_redemptions_allowed: "Sử dụng tối đa"
           add_to_groups: "Thêm vào nhóm"
           invite_to_topic: "Đến chủ đề"
-          expires_at: "Hết hạn sau"
-          custom_message: "Tin nhắn cá nhân tùy chọn"
+          expires_after: "Hết hạn sau"
           send_invite_email: "Lưu và Gửi Email"
           send_invite_email_instructions: "Hạn chế lời mời vào email để gửi một email mời"
-          save_invite: "Lưu lời mời"
+          save_invite: "Lưu lại"
+          cancel: "Huỷ"
           invite_saved: "Đã lưu lời mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
@@ -4083,6 +4080,9 @@ vi:
             invalid_applies_to: "Bắt buộc"
             topic: "các chủ đề"
             post: "bài viết"
+        look_and_feel:
+          themes:
+            title: "Themes"
       plugins:
         title: "Plugin"
         name: "Tên"

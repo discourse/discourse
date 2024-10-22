@@ -33,8 +33,9 @@
   <div class="control-group">
     <div class="input">
       <input
+        {{did-insert this.uppyUpload.setup}}
         class="hidden-upload-field"
-        disabled={{this.uploading}}
+        disabled={{this.uppyUpload.uploading}}
         type="file"
         multiple="true"
         accept=".png,.gif"
@@ -43,7 +44,7 @@
         @translatedLabel={{this.buttonLabel}}
         @icon="plus"
         @action={{this.chooseFiles}}
-        @disabled={{this.uploading}}
+        @disabled={{this.uppyUpload.uploading}}
         class="btn-primary"
       />
     </div>

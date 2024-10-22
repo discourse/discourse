@@ -26,6 +26,7 @@ zh_CN:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY 年 MMM"
@@ -1736,12 +1737,23 @@ zh_CN:
           success: "邀请链接已成功生成！"
           error: "生成邀请链接时出错"
         invite:
-          new_title: "创建邀请"
+          new_title: "邀请成员"
           edit_title: "编辑邀请"
           instructions: "分享此链接以立即授予访问此网站的权限："
-          copy_link: "复制链接"
           expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
+          create_link_to_invite: "创建一个可共享的链接，以立即授予对该站点的访问权限。"
+          copy_link_and_share_it: "复制下面的链接并分享，即可立即授予访问该网站的权限。"
+          copy_link: "复制链接"
+          link_copied: "链接已复制！"
+          share_link: "分享链接"
+          link_validity_MF: |
+            链接可用于 { user_count, plural,
+                other {# 个用户}
+            }，有效期 { duration_days, plural,
+                other {# 天}
+            }.
+          edit_link_options: "编辑链接选项。"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           restrict: "限制为"
@@ -1751,11 +1763,15 @@ zh_CN:
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
           invite_to_topic: "直达话题"
-          expires_at: "过期时间"
-          custom_message: "可选个人信息"
+          expires_at: "有效期至"
+          expires_after: "过期时间"
+          custom_message: "自定义消息"
+          custom_message_placeholder: "在你的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
-          save_invite: "保存邀请"
+          save_invite: "保存"
+          cancel: "取消"
+          create_link: "创建链接"
           invite_saved: "邀请已保存。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
@@ -2024,6 +2040,7 @@ zh_CN:
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
       activation_title: "激活您的帐户"
       already_have_account: "已经有帐户？"
+      no_account_yet: "没有账户？"
       progress_bar:
         signup: "注册"
         activate: "激活"
@@ -5037,6 +5054,9 @@ zh_CN:
             title: "更多选项"
             move_up: "上移"
             move_down: "下移"
+        look_and_feel:
+          themes:
+            title: "主题"
       plugins:
         title: "插件"
         installed: "安装的插件"

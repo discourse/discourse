@@ -1798,12 +1798,10 @@ nb_NO:
           success: "Invitasjonslenke har blitt generert!"
           error: "Det oppstod en feil under generering av invitasjonslenke"
         invite:
-          new_title: "Opprett invitasjon"
-          edit_title: "Rediger invitasjon"
           instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart:"
-          copy_link: "kopier link"
           expires_in_time: "Utløper om %{time}"
           expired_at_time: "Utløpt kl. %{time}"
+          link_copied: "Lenk kopiert!"
           show_advanced: "Vis avanserte innstillinger"
           hide_advanced: "Skjul avanserte alternativer"
           restrict: "Begrens til"
@@ -1813,11 +1811,11 @@ nb_NO:
           max_redemptions_allowed: "Maks antall bruk"
           add_to_groups: "Legg til i grupper"
           invite_to_topic: "Ankomme til emnet"
-          expires_at: "Utløper etter"
-          custom_message: "Valgfri personlig melding"
+          expires_after: "Utløper etter"
           send_invite_email: "Lagre og send e-post"
           send_invite_email_instructions: "Begrens invitasjon til e-post for å sende en invitasjon via e-post"
-          save_invite: "Lagre invitasjon"
+          save_invite: "Lagre"
+          cancel: "Avbryt"
           invite_saved: "Invitasjon lagret."
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
@@ -4680,6 +4678,9 @@ nb_NO:
             post: "innlegg"
           more_options:
             title: "Flere valg"
+        look_and_feel:
+          themes:
+            title: "Drakter"
       plugins:
         title: "Utvidelser"
         name: "Navn"

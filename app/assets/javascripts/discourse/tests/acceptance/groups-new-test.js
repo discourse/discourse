@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -12,10 +11,9 @@ acceptance("New Group - Anonymous", function () {
   test("As an anon user", async function (assert) {
     await visit("/g");
 
-    assert.ok(
-      !exists(".groups-header-new"),
-      "it should not display the button to create a group"
-    );
+    assert
+      .dom(".groups-header-new")
+      .doesNotExist("it should not display the button to create a group");
   });
 });
 
@@ -79,10 +77,9 @@ acceptance("New Group - Authenticated", function (needs) {
 
     await click(".group-form-public-admission");
 
-    assert.ok(
-      !exists("groups-new-allow-membership-requests"),
-      "it should disable the membership requests checkbox"
-    );
+    assert
+      .dom("groups-new-allow-membership-requests")
+      .doesNotExist("it should disable the membership requests checkbox");
 
     assert.strictEqual(
       query(

@@ -231,6 +231,9 @@ uk:
             watching_tags:
               label: Перегляд тегів
               description: Запускатиметься лише в тому випадку, якщо тема містить будь-який з цих тегів
+            trigger_with_pms:
+              label: Запуск з ПП
+              description: Буде спрацьовувати, навіть якщо мітки були змінені в ПП
         after_post_cook:
           fields:
             valid_trust_levels:

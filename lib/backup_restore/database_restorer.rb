@@ -49,9 +49,11 @@ module BackupRestore
       ActiveRecord::Base.connection.drop_schema(BACKUP_SCHEMA) if backup_schema_dropable?
     end
 
-    def self.core_migration_files
+    def self.all_migration_files
       Dir[Rails.root.join(Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
-        Dir[Rails.root.join("db/migrate/*.rb")]
+        Dir[Rails.root.join("db/migrate/*.rb")] +
+        Dir[Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
+        Dir[Rails.root.join("plugins/**", "db/migrate/*.rb")]
     end
 
     protected
@@ -162,7 +164,10 @@ module BackupRestore
       @created_functions_for_table_columns = []
       all_readonly_table_columns = []
 
-      DatabaseRestorer.core_migration_files.each do |path|
+      DatabaseRestorer.all_migration_files.each do |path|
+        file_content = File.read(path)
+        next if file_content.exclude?("DROPPED_TABLES") && file_content.exclude?("DROPPED_COLUMNS")
+
         require path
         class_name = File.basename(path, ".rb").sub(/\A\d+_/, "").camelize
         migration_class = class_name.constantize

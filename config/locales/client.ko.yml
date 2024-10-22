@@ -26,6 +26,7 @@ ko:
         millions: "%{number}백만"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY MMM"
@@ -1480,12 +1481,10 @@ ko:
           success: "초대 링크가 성공적으로 생성되었습니다!"
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다"
         invite:
-          new_title: "초대 만들기"
-          edit_title: "초대 편집"
           instructions: "이 링크를 공유하여 이 사이트의 액세스 권한을 즉시 부여할 수 있습니다."
-          copy_link: "링크 복사"
           expires_in_time: "%{time} 후에 만료"
           expired_at_time: "%{time}에 만료됨"
+          copy_link: "링크 복사"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
           restrict: "다음으로 제한"
@@ -1494,10 +1493,10 @@ ko:
           email_or_domain_placeholder: "name@example.com 또는 example.com"
           max_redemptions_allowed: "최대 사용 한도"
           add_to_groups: "그룹에 추가"
-          expires_at: "다음 후 만료"
-          custom_message: "개인 메시지 옵션"
+          expires_after: "다음 후 만료"
           send_invite_email: "저장 및 이메일 전송"
-          save_invite: "초대 저장"
+          save_invite: "저장"
+          cancel: "취소"
           invite_saved: "초대가 저장되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
@@ -3977,6 +3976,9 @@ ko:
             invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
+        look_and_feel:
+          themes:
+            title: "테마"
       plugins:
         title: "플러그인"
         name: "이름"

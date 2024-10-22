@@ -148,10 +148,9 @@ acceptance("User menu", function (needs) {
       "/review/17",
       "clicking on an item results in navigation to the item's page"
     );
-    assert.notOk(
-      exists(".user-menu"),
-      "clicking on an item closes the menu after navigating"
-    );
+    assert
+      .dom(".user-menu")
+      .doesNotExist("clicking on an item closes the menu after navigating");
 
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-review-queue");
@@ -162,10 +161,9 @@ acceptance("User menu", function (needs) {
       "/review/17",
       "clicking on the same item again keeps on the same page"
     );
-    assert.notOk(
-      exists(".user-menu"),
-      "clicking on the same item again closes the menu"
-    );
+    assert
+      .dom(".user-menu")
+      .doesNotExist("clicking on the same item again closes the menu");
   });
 
   test("tabs have title attributes", async function (assert) {
@@ -294,14 +292,12 @@ acceptance("User menu", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    assert.ok(
-      exists("#user-menu-button-custom-tab-1"),
-      "first custom tab is rendered"
-    );
-    assert.ok(
-      exists("#user-menu-button-custom-tab-2"),
-      "second custom tab is rendered"
-    );
+    assert
+      .dom("#user-menu-button-custom-tab-1")
+      .exists("first custom tab is rendered");
+    assert
+      .dom("#user-menu-button-custom-tab-2")
+      .exists("second custom tab is rendered");
 
     const tabs = [...queryAll(".tabs-list.top-tabs .btn")];
 
@@ -355,15 +351,13 @@ acceptance("User menu", function (needs) {
 
     await click("#user-menu-button-custom-tab-1");
 
-    assert.ok(
-      exists("#user-menu-button-custom-tab-1.active"),
-      "custom tabs can be clicked on and become active"
-    );
+    assert
+      .dom("#user-menu-button-custom-tab-1.active")
+      .exists("custom tabs can be clicked on and become active");
 
-    assert.ok(
-      exists("#quick-access-custom-tab-1 button.btn"),
-      "the tab's content is now displayed in the panel"
-    );
+    assert
+      .dom("#quick-access-custom-tab-1 button.btn")
+      .exists("the tab's content is now displayed in the panel");
   });
 
   test("notifications tab applies model transformations registered by plugins", async function (assert) {
@@ -502,10 +496,9 @@ acceptance("User menu", function (needs) {
 
     await click("#user-menu-button-profile");
 
-    assert.notOk(
-      exists("#quick-access-profile ul li.invites"),
-      "invites link not shown when the user can't invite"
-    );
+    assert
+      .dom("#quick-access-profile ul li.invites")
+      .doesNotExist("invites link not shown when the user can't invite");
 
     const draftsLink = query("#quick-access-profile ul li.drafts a");
     assert.ok(
@@ -576,10 +569,9 @@ acceptance("User menu", function (needs) {
       "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
     );
 
-    assert.ok(
-      exists("#quick-access-profile ul li.enable-anonymous .btn"),
-      "toggle anon button is shown"
-    );
+    assert
+      .dom("#quick-access-profile ul li.enable-anonymous .btn")
+      .exists("toggle anon button is shown");
     let toggleAnonButton = query(
       "#quick-access-profile ul li.enable-anonymous .btn"
     );
@@ -631,14 +623,16 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    assert.notOk(
-      exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button isn't shown when the user can't use it"
-    );
-    assert.notOk(
-      exists("#quick-access-profile ul li.disable-anonymous"),
-      "toggle anon button isn't shown when the user can't use it"
-    );
+    assert
+      .dom("#quick-access-profile ul li.enable-anonymous")
+      .doesNotExist(
+        "toggle anon button isn't shown when the user can't use it"
+      );
+    assert
+      .dom("#quick-access-profile ul li.disable-anonymous")
+      .doesNotExist(
+        "toggle anon button isn't shown when the user can't use it"
+      );
 
     await clickOutside();
     updateCurrentUser({
@@ -654,10 +648,9 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    assert.ok(
-      exists("#quick-access-profile ul li.disable-anonymous"),
-      "toggle anon button is always shown if the user is anonymous"
-    );
+    assert
+      .dom("#quick-access-profile ul li.disable-anonymous")
+      .exists("toggle anon button is always shown if the user is anonymous");
 
     await clickOutside();
     updateCurrentUser({
@@ -675,10 +668,11 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    assert.notOk(
-      exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button is not shown if the allow_anonymous_posting setting is false"
-    );
+    assert
+      .dom("#quick-access-profile ul li.enable-anonymous")
+      .doesNotExist(
+        "toggle anon button is not shown if the allow_anonymous_posting setting is false"
+      );
 
     await clickOutside();
     updateCurrentUser({
@@ -694,10 +688,11 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    assert.notOk(
-      exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button is not shown if the user is not allowed to post anonymously"
-    );
+    assert
+      .dom("#quick-access-profile ul li.enable-anonymous")
+      .doesNotExist(
+        "toggle anon button is not shown if the user is not allowed to post anonymously"
+      );
 
     const logoutButton = query("#quick-access-profile ul li.logout .btn");
     assert.strictEqual(
@@ -878,10 +873,11 @@ acceptance("User menu", function (needs) {
       "Enter"
     );
 
-    assert.ok(
-      exists("#quick-access-other-notifications"),
-      "the other notifications panel can display using keyboard navigation"
-    );
+    assert
+      .dom("#quick-access-other-notifications")
+      .exists(
+        "the other notifications panel can display using keyboard navigation"
+      );
   });
 
   test("closes the menu when navigating away", async function (assert) {
@@ -982,14 +978,12 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
 
     await click("#user-menu-button-bookmarks");
-    assert.ok(
-      exists("#quick-access-bookmarks ul li.notification"),
-      "bookmark reminder notifications are visible"
-    );
-    assert.ok(
-      exists("#quick-access-bookmarks ul li.bookmark"),
-      "bookmarks are visible"
-    );
+    assert
+      .dom("#quick-access-bookmarks ul li.notification")
+      .exists("bookmark reminder notifications are visible");
+    assert
+      .dom("#quick-access-bookmarks ul li.bookmark")
+      .exists("bookmarks are visible");
 
     await click(".user-menu .notifications-dismiss");
 
@@ -1006,18 +1000,15 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
-    assert.notOk(
-      exists("#quick-access-bookmarks ul li.notification"),
-      "bookmark reminder notifications are gone"
-    );
-    assert.ok(
-      exists("#quick-access-bookmarks ul li.bookmark"),
-      "bookmarks are still visible"
-    );
-    assert.notOk(
-      exists("#user-menu-button-bookmarks .badge-notification"),
-      "bookmarks tab no longer has bubble"
-    );
+    assert
+      .dom("#quick-access-bookmarks ul li.notification")
+      .doesNotExist("bookmark reminder notifications are gone");
+    assert
+      .dom("#quick-access-bookmarks ul li.bookmark")
+      .exists("bookmarks are still visible");
+    assert
+      .dom("#user-menu-button-bookmarks .badge-notification")
+      .doesNotExist("bookmarks tab no longer has bubble");
     assert.ok(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,
@@ -1038,14 +1029,12 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
 
     await click("#user-menu-button-messages");
-    assert.ok(
-      exists("#quick-access-messages ul li.notification"),
-      "messages notifications are visible"
-    );
-    assert.ok(
-      exists("#quick-access-messages ul li.message"),
-      "messages are visible"
-    );
+    assert
+      .dom("#quick-access-messages ul li.notification")
+      .exists("messages notifications are visible");
+    assert
+      .dom("#quick-access-messages ul li.message")
+      .exists("messages are visible");
 
     await click(".user-menu .notifications-dismiss");
 
@@ -1062,18 +1051,15 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
-    assert.notOk(
-      exists("#quick-access-messages ul li.notification"),
-      "messages notifications are gone"
-    );
-    assert.ok(
-      exists("#quick-access-messages ul li.message"),
-      "messages are still visible"
-    );
-    assert.notOk(
-      exists("#user-menu-button-messages .badge-notification"),
-      "messages tab no longer has bubble"
-    );
+    assert
+      .dom("#quick-access-messages ul li.notification")
+      .doesNotExist("messages notifications are gone");
+    assert
+      .dom("#quick-access-messages ul li.message")
+      .exists("messages are still visible");
+    assert
+      .dom("#user-menu-button-messages .badge-notification")
+      .doesNotExist("messages tab no longer has bubble");
     assert.ok(markRead, "mark-read request is sent");
     assert.strictEqual(
       markReadRequestBody,

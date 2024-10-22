@@ -57,10 +57,9 @@ acceptance("Select-kit - Composer - Accessibility", function (needs) {
       "Escape"
     );
 
-    assert.notOk(
-      exists(".mini-tag-chooser .select-kit-body .select-kit-row"),
-      "Hitting Escape dismisses the tag chooser"
-    );
+    assert
+      .dom(".mini-tag-chooser .select-kit-body .select-kit-row")
+      .doesNotExist("Hitting Escape dismisses the tag chooser");
 
     assert.ok(exists(".composer-fields"), "Escape does not dismiss composer");
   });

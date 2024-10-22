@@ -1244,13 +1244,13 @@ hu:
       yaxis: "Nap"
       description: "Azon felhasználók száma, akik növelték bizalmi szintjüket ebben az időszakban."
     consolidated_page_views:
-      title: "Összevont oldalmegtekintések"
+      title_legacy: "Összevont oldalmegtekintések"
       xaxis:
         page_view_crawler: "Keresőrobotok"
         page_view_anon: "Névtelen felhasználók"
         page_view_logged_in: "Bejelentkezett felhasználók"
       yaxis: "Nap"
-      description: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók és feltérképező robotok számára."
+      description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók és feltérképező robotok számára."
       labels:
         post: Bejegyzés
         editor: Szerkesztő
@@ -1265,13 +1265,14 @@ hu:
       description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
     consolidated_page_views_browser_detection:
       title: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
+      title_legacy: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
       xaxis:
         page_view_anon_browser: "Névtelen böngésző"
         page_view_logged_in_browser: "Bejelentkezve a böngészőben"
         page_view_crawler: "Ismert keresőrobotok"
         page_view_other: "Egyéb oldalmegtekintések"
       yaxis: "Nap"
-      description: "Oldalmegtekintések bejelentkezett felhasználók, anonim felhasználók, ismert keresőrobotok és egyebek számára. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/anonim kérések valódi böngészőkből érkezzenek, mielőtt számításba vennék őket. A jelentéshez nincs elérhető történelmi adat, a korábbi adatokért lásd a „Konszolidált oldalmegtekintések” jelentést."
+      description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, anonim felhasználók, ismert keresőrobotok és egyebek számára. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/anonim kérések valódi böngészőkből érkezzenek, mielőtt számításba vennék őket. A jelentéshez nincs elérhető történelmi adat, a korábbi adatokért lásd a „Konszolidált oldalmegtekintések” jelentést."
     site_traffic:
       title: "Látogatottság"
       xaxis:
@@ -1431,6 +1432,9 @@ hu:
       xaxis: "Nap"
       yaxis: "Összes oldalmegtekintés"
       description: "Az összes látogatótól származó új oldalmegtekintések száma."
+    page_view_legacy_total_reqs:
+      xaxis: "Nap"
+      yaxis: "Összes oldalmegtekintés"
     page_view_logged_in_mobile_reqs:
       title: "Bejelentkezett oldalmegtekintések"
       xaxis: "Nap"
@@ -1748,6 +1752,7 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
+    experimental_full_page_login: "KÍSÉRLETI: Cserélje ki a bejelentkezési/regisztrációs módot egy teljes oldalas bejelentkezési/regisztrációs űrlapra."
     ga_version: "A használandó Google Universal Analytics verziója: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics követőkód azonosítója, pl.: UA-12345678-9; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

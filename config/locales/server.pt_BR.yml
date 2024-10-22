@@ -1238,13 +1238,13 @@ pt_BR:
       yaxis: "Dia"
       description: "Quantidade de usuários(as) que aumentaram seu nível de confiança neste período."
     consolidated_page_views:
-      title: "Visualizações de página consolidadas"
+      title_legacy: "Visualizações de página consolidadas"
       xaxis:
         page_view_crawler: "Rastreadores"
         page_view_anon: "Usuários(as) anônimos(as)"
         page_view_logged_in: "Usuários(as) que entraram com a conta"
       yaxis: "Dia"
-      description: "Visualizações de página para usuários(as) que entraram com a conta, usuários(as) anônimos(as) e rastreadores."
+      description_legacy: "Visualizações de página para usuários(as) que entraram com a conta, usuários(as) anônimos(as) e rastreadores."
       labels:
         post: Postar
         editor: Editor
@@ -1259,6 +1259,7 @@ pt_BR:
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
     consolidated_page_views_browser_detection:
       title: "Visualizações de página consolidadas com detecção no navegador (experimental)"
+      title_legacy: "Visualizações de página consolidadas com detecção no navegador (experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anônimo"
         page_view_logged_in_browser: "Navegador de acesso"
@@ -1417,6 +1418,9 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações de página totais"
       description: "Quantidade de novas visualizações de página de todos os visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Dia"
+      yaxis: "Visualizações de página totais"
     page_view_logged_in_mobile_reqs:
       title: "Visualizações de página com conta conectada"
       xaxis: "Dia"

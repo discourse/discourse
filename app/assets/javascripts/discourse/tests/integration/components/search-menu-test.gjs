@@ -32,19 +32,17 @@ module("Integration | Component | search-menu", function (hooks) {
 
     await render(<template><SearchMenu /></template>);
 
-    assert.ok(
-      exists(".show-advanced-search"),
-      "it shows full page search button"
-    );
+    assert
+      .dom(".show-advanced-search")
+      .exists("it shows full page search button");
 
     assert.notOk(exists(".menu-panel"), "Menu panel is not rendered yet");
 
     await click("#search-term");
 
-    assert.ok(
-      exists(".menu-panel .search-menu-initial-options"),
-      "Menu panel is rendered with initial options"
-    );
+    assert
+      .dom(".menu-panel .search-menu-initial-options")
+      .exists("Menu panel is rendered with initial options");
 
     await fillIn("#search-term", "test");
 
@@ -56,10 +54,9 @@ module("Integration | Component | search-menu", function (hooks) {
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.ok(
-      exists(".search-result-topic"),
-      "search result is a list of topics"
-    );
+    assert
+      .dom(".search-result-topic")
+      .exists("search result is a list of topics");
 
     await triggerKeyEvent("#search-term", "keydown", "Escape");
 
@@ -68,10 +65,9 @@ module("Integration | Component | search-menu", function (hooks) {
     await click("#search-term");
     await click("#search-term");
 
-    assert.ok(
-      exists(".search-result-topic"),
-      "Clicking the term brought back search results"
-    );
+    assert
+      .dom(".search-result-topic")
+      .exists("Clicking the term brought back search results");
   });
 
   test("clicking outside results hides and blurs input", async function (assert) {
@@ -91,9 +87,8 @@ module("Integration | Component | search-menu", function (hooks) {
       document.body,
       "Clicking outside blurs focus and closes panel"
     );
-    assert.notOk(
-      exists(".menu-panel .search-menu-initial-options"),
-      "Menu panel is hidden"
-    );
+    assert
+      .dom(".menu-panel .search-menu-initial-options")
+      .doesNotExist("Menu panel is hidden");
   });
 });

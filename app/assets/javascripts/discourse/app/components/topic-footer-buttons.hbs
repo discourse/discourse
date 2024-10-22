@@ -110,8 +110,8 @@
         />
       {{/if}}
     {{/if}}
-
   </div>
+
   {{#if this.site.mobileView}}
     <div class="topic-footer-main-buttons__states">
       <PinnedButton
@@ -121,14 +121,6 @@
       />
 
       {{#if this.showNotificationsButton}}
-        {{#if this.showNotificationUserTip}}
-          <UserTip
-            @id="topic_notification_levels"
-            @triggerSelector=".notifications-button"
-            @titleText={{i18n "user_tips.topic_notification_levels.title"}}
-            @contentText={{i18n "user_tips.topic_notification_levels.content"}}
-          />
-        {{/if}}
         <TopicNotificationsButton
           @notificationLevel={{this.topic.details.notification_level}}
           @topic={{this.topic}}
@@ -165,14 +157,14 @@
 {{#if this.showNotificationUserTip}}
   <UserTip
     @id="topic_notification_levels"
-    @triggerSelector=".notifications-button"
+    @triggerSelector=".topic-notifications-button details"
     @titleText={{i18n "user_tips.topic_notification_levels.title"}}
     @contentText={{i18n "user_tips.topic_notification_levels.content"}}
-    @priority={{20}}
+    @priority={{800}}
   />
 {{/if}}
 
-{{#unless this.site.mobileView}}
+{{#if this.site.desktopView}}
   <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
   {{#if this.showNotificationsButton}}
@@ -181,7 +173,7 @@
       @topic={{this.topic}}
     />
   {{/if}}
-{{/unless}}
+{{/if}}
 
 <PluginOutlet
   @name="after-topic-footer-buttons"

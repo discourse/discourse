@@ -29,19 +29,17 @@ acceptance("Share and Invite modal", function (needs) {
   test("Topic footer button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      exists("#topic-footer-button-share-and-invite"),
-      "the button exists"
-    );
+    assert
+      .dom("#topic-footer-button-share-and-invite")
+      .exists("the button exists");
 
     await click("#topic-footer-button-share-and-invite");
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
 
-    assert.notOk(
-      exists("#modal-alert.alert-warning"),
-      "it does not show the alert with restricted groups"
-    );
+    assert
+      .dom("#modal-alert.alert-warning")
+      .doesNotExist("it does not show the alert with restricted groups");
 
     assert.ok(
       query("input.invite-link").value.includes(
@@ -50,10 +48,9 @@ acceptance("Share and Invite modal", function (needs) {
       "it shows the topic sharing url"
     );
 
-    assert.ok(
-      exists(".link-share-actions .invite"),
-      "it shows the invite button"
-    );
+    assert
+      .dom(".link-share-actions .invite")
+      .exists("it shows the invite button");
 
     await click(".link-share-actions .invite");
 
@@ -80,18 +77,16 @@ acceptance("Share and Invite modal", function (needs) {
   test("Share topic in a restricted category", async function (assert) {
     await visit("/t/topic-in-restricted-group/2481");
 
-    assert.ok(
-      exists("#topic-footer-button-share-and-invite"),
-      "the button exists"
-    );
+    assert
+      .dom("#topic-footer-button-share-and-invite")
+      .exists("the button exists");
 
     await click("#topic-footer-button-share-and-invite");
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
-    assert.ok(
-      exists("#modal-alert.alert-warning"),
-      "it shows restricted warning"
-    );
+    assert
+      .dom("#modal-alert.alert-warning")
+      .exists("it shows restricted warning");
     assert.dom("#modal-alert.alert-warning").hasText(
       I18n.t("topic.share.restricted_groups", {
         count: 2,
@@ -109,10 +104,9 @@ acceptance("Share and Invite modal - mobile", function (needs) {
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      !exists("#topic-footer-button-share-and-invite"),
-      "the button doesn’t exist"
-    );
+    assert
+      .dom("#topic-footer-button-share-and-invite")
+      .doesNotExist("the button doesn’t exist");
 
     const subject = selectKit(".topic-footer-mobile-dropdown");
     await subject.expand();

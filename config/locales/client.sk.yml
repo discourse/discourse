@@ -29,6 +29,7 @@ sk:
         millions: "%{number}mil"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "hh:mm a (z)"
       time_short_day: "ddd, h:mm a"
       timeline_date: "MMM YYYY"
@@ -2035,12 +2036,29 @@ sk:
           success: "Pozývací link bol úspešne vygenerovaný!"
           error: "Vyskytla sa chyba pri generovaní odkazu na pozvanie"
         invite:
-          new_title: "Vytvoriť pozvánku"
+          new_title: "Pozvať členov"
           edit_title: "Upraviť pozvánku"
           instructions: "Zdieľaním tohto odkazu okamžite udelíte prístup k tejto lokalite:"
-          copy_link: "kopírovať odkaz"
           expires_in_time: "Platnosť vyprší o %{time}"
           expired_at_time: "Platnosť vypršala %{time}"
+          create_link_to_invite: "Vytvorte odkaz, ktorý možno zdieľať a okamžite tak udeliť prístup na túto lokalitu."
+          copy_link_and_share_it: "Skopírujte nižšie uvedený odkaz a zdieľajte ho, aby ste okamžite poskytli prístup na túto stránku."
+          copy_link: "Kopírovať odkaz"
+          link_copied: "Odkaz skopírovaný!"
+          share_link: "Zdieľať odkaz"
+          link_validity_MF: |
+            Odkaz platí až pre { user_count, plural,
+                one {# používateľa}
+                few {# používateľov}
+                many {# používateľov}
+              other {# používateľov}
+            } a vyprší { duration_days, plural,
+                one {# deň}
+                few {# dní}
+                many {# dní}
+              other {# dní}
+            }.
+          edit_link_options: "Možnosti úpravy odkazu."
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           restrict: "Obmedziť na"
@@ -2050,11 +2068,15 @@ sk:
           max_redemptions_allowed: "Maximálne využitie"
           add_to_groups: "Pridať do skupín"
           invite_to_topic: "Prísť k téme"
-          expires_at: "Platnosť vyprší po"
-          custom_message: "Voliteľná osobná správa"
+          expires_at: "Platnosť končí v"
+          expires_after: "Platnosť vyprší po"
+          custom_message: "Vlastná správa"
+          custom_message_placeholder: "Pridajte k pozvánke osobnú poznámku"
           send_invite_email: "Uložiť a odoslať e-mail"
           send_invite_email_instructions: "Ak chcete odoslať e-mail s pozvánkou, obmedzte pozvánku na e-mail"
-          save_invite: "Uložiť pozvánku"
+          save_invite: "Uložiť"
+          cancel: "Zrušiť"
+          create_link: "Vytvorte odkaz"
           invite_saved: "Pozvánka bola uložená."
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
@@ -2412,6 +2434,7 @@ sk:
       associate: "Máte už účet? <a href='%{associate_link}'>Prihláste sa</a> a prepojte svoj účet %{provider} ."
       activation_title: "Aktivujte si účet"
       already_have_account: "Už máte účet?"
+      no_account_yet: "Nemáte účet?"
       progress_bar:
         signup: "Registrovať sa"
         activate: "Aktivovať"
@@ -2449,7 +2472,7 @@ sk:
     login:
       header_title: "Vitajte späť"
       subheader_title: "Prihláste sa do svojho účtu"
-      title: "Prihlásiť sa"
+      title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
       show_password: "Zobraziť"
@@ -5258,6 +5281,12 @@ sk:
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
+          experiment_enabled: "Povolili ste experimentálnu funkciu."
+          experiment_disabled: "Experimentálnu funkciu ste zakázali."
+          experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
+          experiment_tooltip:
+            title: "Vyskúšajte našu experimentálnu funkciu"
+            content: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Zatiaľ je v experimentálnej fáze, takže ju môžeme kedykoľvek odstrániť. Odhlásiť sa môžete, kedykoľvek budete chcieť."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -5836,10 +5865,24 @@ sk:
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
             require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
+            auto_action_type: "Automatický typ akcie"
+            auto_action_type_description: "Keď je príspevok označený zamestnancom, je automaticky skrytý."
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
             move_down: "Posunúť sa nadol"
+        look_and_feel:
+          title: "Vzhľad & pocit"
+          description: "Témy, komponenty a farebné schémy môžete použiť na prispôsobenie a označenie svojej stránky Discourse, čím jej dodáte osobitý štýl."
+          themes:
+            title: "Témy"
+            themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
+            themes_intro_img_alt: "Nový zástupný symbol témy"
+            set_default_theme: "Nastavenie predvoleného nastavenia"
+            default_theme: "Predvolená téma"
+            themes_description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
+            new_theme: "Nová téma"
+            user_selectable: "Voliteľné používateľom"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované doplnky"
@@ -6005,6 +6048,8 @@ sk:
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           themes_intro: "Vyberte si existujúcu tému alebo si nainštalujte novú a začnite"
+          themes_intro_new: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
+          themes_intro_img_alt: "Nový zástupca témy"
           beginners_guide_title: "Príručka pre začiatočníkov na používanie tém Discourse"
           developers_guide_title: "Príručka pre vývojárov k témam Discourse"
           browse_themes: "Prehľadávanie tém komunity"
@@ -6052,6 +6097,9 @@ sk:
           convert_theme_alert_generic: "Ste si istí, že chcete túto tému previesť na komponent?"
           convert_theme_tooltip: "Previesť túto tému na komponent"
           inactive_themes: "Neaktívne témy:"
+          set_default_theme: "Nastavenie predvoleného nastavenia"
+          default_theme: "Predvolená téma"
+          set_default_success: "Predvolená téma nastavená na %{theme}"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybrané"

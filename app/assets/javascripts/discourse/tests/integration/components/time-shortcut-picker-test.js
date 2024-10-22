@@ -72,10 +72,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.notOk(
-      exists("#tap_tile_later_this_week"),
-      "it does not have later this week"
-    );
+    assert
+      .dom("#tap_tile_later_this_week")
+      .doesNotExist("it does not have later this week");
   });
 
   test("does not show 'Later Today' if 'Later Today' is tomorrow", async function (assert) {
@@ -87,10 +86,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.notOk(
-      exists("#tap_tile_later_today"),
-      "it does not have later today"
-    );
+    assert
+      .dom("#tap_tile_later_today")
+      .doesNotExist("it does not have later today");
   });
 
   test("shows 'Later Today' if it is before 5pm", async function (assert) {
@@ -114,10 +112,9 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.notOk(
-      exists("#tap_tile_later_today"),
-      "it does not have later today"
-    );
+    assert
+      .dom("#tap_tile_later_today")
+      .doesNotExist("it does not have later today");
   });
 
   test("default custom date time is in one hour from now", async function (assert) {

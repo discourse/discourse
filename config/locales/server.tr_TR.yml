@@ -1231,13 +1231,13 @@ tr_TR:
       yaxis: "Gün"
       description: "Bu dönemde Güven Seviyesini artıran kullanıcı sayısı."
     consolidated_page_views:
-      title: "Konsolide Sayfa Görüntülemeleri"
+      title_legacy: "Konsolide Sayfa Görüntülemeleri"
       xaxis:
         page_view_crawler: "Veri Gezginleri"
         page_view_anon: "Anonim kullanıcılar"
         page_view_logged_in: "Giriş yapmış kullanıcılar"
       yaxis: "Gün"
-      description: "Giriş yapmış kullanıcılar, anonim kullanıcılar ve veri gezginleri için sayfa görüntüleme sayısı."
+      description_legacy: "Giriş yapmış kullanıcılar, anonim kullanıcılar ve veri gezginleri için sayfa görüntüleme sayısı."
       labels:
         post: Gönderi
         editor: Düzenleyici
@@ -1252,6 +1252,7 @@ tr_TR:
       description: "Normal API anahtarları ve kullanıcı API anahtarları için API istekleri."
     consolidated_page_views_browser_detection:
       title: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
+      title_legacy: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
       xaxis:
         page_view_anon_browser: "Anonim Tarayıcı"
         page_view_logged_in_browser: "Giriş Yapılmış Tarayıcı"
@@ -1410,6 +1411,9 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Toplam Sayfa Görüntülemeleri"
       description: "Tüm ziyaretçilerden gelen yeni sayfa görüntüleme sayısı."
+    page_view_legacy_total_reqs:
+      xaxis: "Gün"
+      yaxis: "Toplam Sayfa Görüntülemeleri"
     page_view_logged_in_mobile_reqs:
       title: "Giriş Yapılan Sayfa Görüntülemeleri"
       xaxis: "Gün"

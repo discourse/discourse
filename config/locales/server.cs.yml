@@ -922,13 +922,13 @@ cs:
       yaxis: "Den"
       description: "Počet uživatelů, kteří během tohoto období zvýšili svou úroveň důvěry."
     consolidated_page_views:
-      title: "Konsolidovaná zobrazení stránek"
+      title_legacy: "Konsolidovaná zobrazení stránek"
       xaxis:
         page_view_crawler: "Vyhledávače"
         page_view_anon: "Anonymní uživatelé"
         page_view_logged_in: "Přihlášení uživatelé"
       yaxis: "Den"
-      description: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
+      description_legacy: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
       labels:
         post: Příspěvek
         editor: Uživatel
@@ -1073,6 +1073,9 @@ cs:
       title: "Zobrazení stránky "
       xaxis: "Den"
       yaxis: "Celkové pageviews"
+    page_view_legacy_total_reqs:
+      xaxis: "Den"
+      yaxis: "Celkové pageviews"
     page_view_logged_in_mobile_reqs:
       xaxis: "Den"
     page_view_anon_mobile_reqs:
@@ -1212,6 +1215,7 @@ cs:
     tos_url: "Pokud máte dokument 'Podmínky služby' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
