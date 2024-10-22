@@ -42,9 +42,9 @@ RSpec.describe(Flags::ReorderFlag) do
     end
 
     context "when everything's ok" do
-      after do
-        described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: "down")
-      end
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
+      after { described_class.call(**params.merge(direction: "down"), **dependencies) }
 
       it { is_expected.to run_successfully }
 
