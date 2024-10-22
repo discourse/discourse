@@ -31,7 +31,7 @@ module DiscourseAutomation
     end
 
     MAX_NAME_LENGTH = 100
-    validates :name, length: { maximum: MAX_NAME_LENGTH }, on: :update
+    validates :name, length: { maximum: MAX_NAME_LENGTH }
 
     def add_id_to_custom_field(target, custom_field_key)
       if ![Topic, Post, User].any? { |m| target.is_a?(m) }
