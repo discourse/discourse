@@ -52,10 +52,9 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
       sidebarCategories[4].name
     );
 
-    assert.ok(
-      exists("a.sidebar-section-link[data-link-name='all-categories']"),
-      "all categories link is visible"
-    );
+    assert
+      .dom("a.sidebar-section-link[data-link-name='all-categories']")
+      .exists("all categories link is visible");
   });
 
   test("category section links ordered by default category's position when default_navigation_menu_categories has not been configured and site setting to fix categories positions is enabled", async function (assert) {
@@ -96,10 +95,9 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
       siteCategories[5].name
     );
 
-    assert.ok(
-      exists("a.sidebar-section-link[data-link-name='all-categories']"),
-      "all categories link is visible"
-    );
+    assert
+      .dom("a.sidebar-section-link[data-link-name='all-categories']")
+      .exists("all categories link is visible");
   });
 
   test("category section links in sidebar when default_navigation_menu_categories site setting has been configured and site setting to fix category position is enabled", async function (assert) {
@@ -117,10 +115,9 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     assert.strictEqual(categories[1].textContent.trim(), "blog");
     assert.strictEqual(categories[2].textContent.trim(), "bug");
 
-    assert.ok(
-      exists("a.sidebar-section-link[data-link-name='all-categories']"),
-      "all categories link is visible"
-    );
+    assert
+      .dom("a.sidebar-section-link[data-link-name='all-categories']")
+      .exists("all categories link is visible");
   });
 
   test("default uncategorized category section links is not shown when allow_uncategorized_topics is disabled", async function (assert) {

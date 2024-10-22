@@ -107,18 +107,15 @@ acceptance("flagging", function (needs) {
     await openFlagModal();
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
-    assert.ok(
-      exists("[data-value='agree_and_silence']"),
-      "it shows the silence action option"
-    );
-    assert.ok(
-      exists("[data-value='agree_and_suspend']"),
-      "it shows the suspend action option"
-    );
-    assert.ok(
-      exists("[data-value='agree_and_hide']"),
-      "it shows the hide action option"
-    );
+    assert
+      .dom("[data-value='agree_and_silence']")
+      .exists("it shows the silence action option");
+    assert
+      .dom("[data-value='agree_and_suspend']")
+      .exists("it shows the suspend action option");
+    assert
+      .dom("[data-value='agree_and_hide']")
+      .exists("it shows the hide action option");
   });
 
   test("Can silence from take action", async function (assert) {
@@ -197,10 +194,9 @@ acceptance("flagging", function (needs) {
 
     const modal = query(".d-modal");
     await pressEnter(modal, "ctrlKey");
-    assert.ok(
-      exists(".d-modal:visible"),
-      "The modal wasn't closed because the accept button was disabled"
-    );
+    assert
+      .dom(".d-modal:visible")
+      .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
@@ -213,10 +209,9 @@ acceptance("flagging", function (needs) {
 
     const modal = query(".d-modal");
     await pressEnter(modal, "metaKey");
-    assert.ok(
-      exists(".d-modal:visible"),
-      "The modal wasn't closed because the accept button was disabled"
-    );
+    assert
+      .dom(".d-modal:visible")
+      .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");

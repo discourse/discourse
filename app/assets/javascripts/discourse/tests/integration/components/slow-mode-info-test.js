@@ -54,9 +54,8 @@ module("Integration | Component | slow-mode-info", function (hooks) {
       hbs`<SlowModeInfo @topic={{this.topic}} @user={{this.user}} />`
     );
 
-    assert.ok(
-      !exists(".slow-mode-remove"),
-      "it doesn't let you disable slow mode"
-    );
+    assert
+      .dom(".slow-mode-remove")
+      .doesNotExist("it doesn't let you disable slow mode");
   });
 });

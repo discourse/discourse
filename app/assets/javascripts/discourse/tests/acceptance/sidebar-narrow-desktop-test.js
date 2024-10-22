@@ -33,17 +33,15 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     });
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
-      exists(".sidebar-hamburger-dropdown"),
-      "cloak sidebar is displayed"
-    );
+    assert
+      .dom(".sidebar-hamburger-dropdown")
+      .exists("cloak sidebar is displayed");
 
     await triggerEvent(document.querySelector(".header-cloak"), "pointerdown");
 
-    assert.ok(
-      !exists(".sidebar-hamburger-dropdown"),
-      "cloak sidebar is collapsed"
-    );
+    assert
+      .dom(".sidebar-hamburger-dropdown")
+      .doesNotExist("cloak sidebar is collapsed");
 
     document.body.style.width = "1200px";
     await waitFor("#d-sidebar", {

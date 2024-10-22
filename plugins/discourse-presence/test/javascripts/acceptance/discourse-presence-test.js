@@ -155,10 +155,9 @@ acceptance("Discourse Presence Plugin", function (needs) {
 
     const avatarSelector =
       ".topic-above-footer-buttons-outlet.presence .presence-avatars .avatar";
-    assert.ok(
-      exists(".topic-above-footer-buttons-outlet.presence"),
-      "includes the presence component"
-    );
+    assert
+      .dom(".topic-above-footer-buttons-outlet.presence")
+      .exists("includes the presence component");
     assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {

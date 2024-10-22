@@ -8,7 +8,7 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { count, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,10 +18,9 @@ module("Integration | Component | simple-list", function (hooks) {
 
     await render(hbs`<SimpleList @values={{this.values}} />`);
 
-    assert.ok(
-      exists(".add-value-btn[disabled]"),
-      "while loading the + button is disabled"
-    );
+    assert
+      .dom(".add-value-btn[disabled]")
+      .exists("while loading the + button is disabled");
 
     await fillIn(".add-value-input", "penar");
     await click(".add-value-btn");

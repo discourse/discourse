@@ -33,10 +33,9 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     await click(".new-second-factor-backup");
 
-    assert.ok(
-      exists(".second-factor-backup-edit-modal"),
-      "shows the 2fa backup panel"
-    );
+    assert
+      .dom(".second-factor-backup-edit-modal")
+      .exists("shows the 2fa backup panel");
 
     await click(".second-factor-backup-edit-modal .btn-primary");
 
