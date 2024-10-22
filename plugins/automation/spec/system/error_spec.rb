@@ -11,13 +11,9 @@ describe "DiscourseAutomation | error", type: :system do
   context "when saving the form with an error" do
     it "shows the error correctly" do
       visit("/admin/plugins/discourse-automation")
-
-      find(".new-automation").click
+      find(".admin-section-landing__header-filter").set("create a post")
+      find(".admin-section-landing-item__content", match: :first).click
       fill_in("automation-name", with: "aaaaa")
-      select_kit = PageObjects::Components::SelectKit.new(".scriptables")
-      select_kit.expand
-      select_kit.select_row_by_value("post")
-      find(".create-automation").click
       select_kit = PageObjects::Components::SelectKit.new(".triggerables")
       select_kit.expand
       select_kit.select_row_by_value("recurring")

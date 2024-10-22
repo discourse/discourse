@@ -13,6 +13,11 @@ export default class AutomationNew extends Controller {
     this.filterText = event.target.value;
   }
 
+  @action
+  resetFilterText() {
+    this.filterText = "";
+  }
+
   get scriptableContent() {
     let scripts = this.model.scriptables.content;
     let filter = this.filterText.toLowerCase();
