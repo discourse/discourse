@@ -510,6 +510,7 @@ class BulkImport::Base
     created_at
     updated_at
     flair_group_id
+    title
   ]
 
   USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at]

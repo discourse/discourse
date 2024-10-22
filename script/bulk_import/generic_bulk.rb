@@ -519,6 +519,7 @@ class BulkImport::Generic < BulkImport::Base
         date_of_birth: to_date(row["date_of_birth"]),
         trust_level: row["trust_level"],
         flair_group_id: row["flair_group_id"],
+        title: row["title"],
       }
     end
 
