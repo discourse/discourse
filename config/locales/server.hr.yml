@@ -458,6 +458,15 @@ hr:
             ip_address:
               blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
               max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
+        user_password:
+          attributes:
+            password:
+              common: "je jedna od 10000 najčešćih zaporki. Molimo odaberite sigurniju zaporku."
+              same_as_username: "je ista kao vaše korisničko ime. Molimo upotrijebite sigurniju lozinku."
+              same_as_email: "je ista kao vaš email. Molimo upotrijebite sigurniju lozinku."
+              same_as_current: "je ista kao vaša trenutna lozinka."
+              same_as_name: "je ista kao vaše ime."
+              unique_characters: "ima previše ponovljenih znakova. Molimo upotrijebite sigurniju lozinku."
         color_scheme_color:
           attributes:
             hex:

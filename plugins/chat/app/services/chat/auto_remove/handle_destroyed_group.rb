@@ -21,13 +21,13 @@ module Chat
     class HandleDestroyedGroup
       include Service::Base
 
+      policy :chat_enabled
       contract do
-        attribute :destroyed_group_user_ids
+        attribute :destroyed_group_user_ids, :array
 
         validates :destroyed_group_user_ids, presence: true
       end
       step :assign_defaults
-      policy :chat_enabled
       policy :not_everyone_allowed
       model :scoped_users
       step :remove_users_outside_allowed_groups
@@ -48,7 +48,7 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_scoped_users(destroyed_group_user_ids:)
+      def fetch_scoped_users(contract:)
         User
           .real
           .activated
@@ -56,7 +56,7 @@ module Chat
           .not_staged
           .includes(:group_users)
           .where("NOT admin AND NOT moderator")
-          .where(id: destroyed_group_user_ids)
+          .where(id: contract.destroyed_group_user_ids)
           .joins(:user_chat_channel_memberships)
           .distinct
       end

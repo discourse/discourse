@@ -3,11 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
@@ -65,7 +61,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
     await visit("/");
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
 
-    assert.ok(exists(".shortcut-category-new_category"));
+    assert.dom(".shortcut-category-new_category").exists();
     assert.strictEqual(count(".shortcut-category-new_category li"), 1);
   });
 

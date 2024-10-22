@@ -18,7 +18,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.strictEqual(query(CHANNEL_NAME_LABEL).innerText, channel.title);
+    assert.dom(CHANNEL_NAME_LABEL).hasText(channel.title);
   });
 
   test("category channel - escapes label", async function (assert) {

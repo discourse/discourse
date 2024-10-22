@@ -1356,13 +1356,15 @@ en:
       yaxis: "Day"
       description: "Number of users who increased their Trust Level during this period."
     consolidated_page_views:
-      title: "Consolidated Pageviews"
+      title: "Legacy Consolidated Pageviews"
+      title_legacy: "Consolidated Pageviews"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Anonymous users"
         page_view_logged_in: "Logged in users"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users and crawlers."
+      description: "Legacy report showing pageviews for logged in users, anonymous users and crawlers. This has been superseded by the 'Site traffic' report."
+      description_legacy: "Pageviews for logged in users, anonymous users and crawlers."
       labels:
         post: Post
         editor: Editor
@@ -1377,13 +1379,15 @@ en:
       description: "API requests for regular API keys and user API keys."
     consolidated_page_views_browser_detection:
       title: "Consolidated Pageviews with Browser Detection (Experimental)"
+      title_legacy: "Consolidated Pageviews with Browser Detection (Experimental)"
       xaxis:
         page_view_anon_browser: "Anonymous Browser"
         page_view_logged_in_browser: "Logged In Browser"
         page_view_crawler: "Known Crawler"
         page_view_other: "Other pageviews"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the 'Legacy Consolidated Pageviews' report."
+      description_legacy: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
     site_traffic:
       title: "Site traffic"
       xaxis:
@@ -1544,6 +1548,11 @@ en:
       xaxis: "Day"
       yaxis: "Total Pageviews"
       description: "Number of new pageviews from all visitors."
+    page_view_legacy_total_reqs:
+      title: "Legacy Pageviews"
+      xaxis: "Day"
+      yaxis: "Total Pageviews"
+      description: "Legacy report showing the number of new pageviews from all visitors."
     page_view_logged_in_mobile_reqs:
       title: "Logged In Pageviews"
       xaxis: "Day"
@@ -1874,6 +1883,7 @@ en:
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
+    experimental_full_page_login: "EXPERIMENTAL: Replace the login/signup modal with a full page login/signup form."
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2718,6 +2728,7 @@ en:
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
+    experimental_auto_grid_images: "EXPERIMENTAL: Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"

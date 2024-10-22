@@ -1,0 +1,306 @@
+// Shared styles
+
+.login-fullpage,
+.signup-fullpage {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.login-fullpage,
+.signup-fullpage,
+.invites-show {
+  .signup-body,
+  .login-body {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .login-page-cta,
+  .signup-page-cta {
+    display: flex;
+    flex-direction: column;
+
+    &__existing-account,
+    &__no-account-yet {
+      color: var(--primary-medium);
+    }
+
+    &__disclaimer {
+      color: var(--primary-medium);
+      margin-bottom: 1rem;
+    }
+  }
+
+  .login-left-side {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 3rem;
+    overflow: auto;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .login-right-side {
+    padding: 3rem;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 1px;
+      height: 80%;
+      transform: translateY(-50%);
+      background-color: var(--primary-low);
+    }
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.8em;
+
+    input,
+    .select-kit-header {
+      padding: 0.75em 0.77em;
+      min-width: 250px;
+      margin-bottom: 0.25em;
+      width: 100%;
+    }
+
+    input:focus {
+      outline: none;
+      border: 1px solid var(--tertiary);
+      box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+    }
+
+    input:disabled {
+      background-color: var(--primary-low);
+    }
+
+    span.more-info {
+      color: var(--primary-medium);
+      min-height: 1.4em; // prevents height increase due to tips
+      overflow-wrap: anywhere;
+    }
+
+    label.alt-placeholder,
+    .user-field.text label.control-label,
+    .user-field.dropdown label.control-label,
+    .user-field.multiselect label.control-label {
+      color: var(--primary-medium);
+      font-size: 16px;
+      font-weight: normal;
+      position: absolute;
+      pointer-events: none;
+      left: 1em;
+      top: 10px;
+      box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
+      transition: 0.2s ease all;
+    }
+
+    .user-field.text label.control-label,
+    .user-field.dropdown label.control-label,
+    .user-field.multiselect label.control-label {
+      z-index: 999;
+      top: -8px;
+      left: calc(1em - 0.25em);
+      background-color: var(--secondary);
+      padding: 0 0.25em 0 0.25em;
+      font-size: $font-down-1;
+    }
+
+    .user-field.text:focus-within,
+    .user-field.dropdown:focus-within,
+    .user-field.multiselect:focus-within {
+      z-index: 1000; // ensures the active input is always on top of sibling input labels
+    }
+
+    input:focus + label.alt-placeholder,
+    input.value-entered + label.alt-placeholder {
+      top: -8px;
+      left: calc(1em - 0.25em);
+      background-color: var(--secondary);
+      padding: 0 0.25em 0 0.25em;
+      font-size: var(--font-down-1);
+    }
+
+    input.alt-placeholder:invalid {
+      color: var(--primary);
+    }
+
+    #email-login-link {
+      transition: opacity 0.5s;
+
+      &.no-login-filled {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    #email-login-link,
+    .login__password-links {
+      font-size: var(--font-down-1);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tip:not(:empty) + label.more-info {
+      display: none;
+    }
+  }
+
+  #login-form {
+    margin-block: 2em 1.2em;
+    display: flex;
+    flex-direction: column;
+
+    .input-group {
+      &.create-account-email,
+      &.create-account__username,
+      &.create-account__fullname.required {
+        order: -1;
+      }
+    }
+
+    .create-account-associate-link {
+      order: 1;
+    }
+  }
+
+  #login-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    white-space: nowrap;
+
+    .btn-social {
+      border: 1px solid var(--primary-low);
+    }
+  }
+
+  .login-welcome-header {
+    width: 100%;
+  }
+
+  .btn-social-title {
+    @include ellipsis;
+  }
+
+  .tip {
+    &.bad {
+      color: var(--danger);
+      display: block;
+    }
+  }
+
+  .more-info,
+  .instructions {
+    color: var(--primary-medium);
+    min-height: 1.4em;
+    overflow-wrap: anywhere;
+  }
+
+  .caps-lock-warning {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+    font-weight: bold;
+    margin-top: 0.5em;
+  }
+
+  .create-account__password-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .inline-spinner {
+    display: inline-flex;
+  }
+}
+
+// Login page
+
+.login-fullpage {
+  #second-factor {
+    input {
+      width: 100%;
+      padding: 0.75em 0.5em;
+      min-width: 250px;
+      box-shadow: none;
+    }
+
+    input:focus {
+      outline: none;
+      border: 1px solid var(--tertiary);
+      box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+    }
+  }
+}
+
+// Signup page
+
+.signup-fullpage {
+  .password-confirmation {
+    display: none;
+  }
+
+  .user-fields .input-group {
+    .user-field {
+      &.text {
+        &.value-entered label.alt-placeholder.control-label,
+        input:focus + label.alt-placeholder.control-label {
+          top: -8px;
+          left: calc(1em - 0.25em);
+          background-color: var(--secondary);
+          padding: 0 0.25em 0 0.25em;
+          font-size: 14px;
+          color: var(--primary-medium);
+        }
+
+        label.alt-placeholder.control-label {
+          color: var(--primary-medium);
+          font-size: 16px;
+          position: absolute;
+          pointer-events: none;
+          top: 12px;
+          transition: 0.2s ease all;
+          max-width: calc(100% - 2em);
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      details:not(.has-selection) span.name,
+      details:not(.has-selection) span.formatted-selection {
+        color: var(--primary-medium);
+      }
+
+      .select-kit-row span.name {
+        color: var(--primary);
+      }
+
+      .select-kit.combo-box.is-expanded summary {
+        outline: none;
+        border: 1px solid var(--tertiary);
+        box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
+      }
+
+      .controls .checkbox-label {
+        input[type="checkbox"].ember-checkbox {
+          width: 1em !important;
+          min-width: unset;
+        }
+      }
+    }
+  }
+}

@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -50,17 +46,15 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated");
     await click(".d-modal__footer .btn-primary");
-    assert.strictEqual(
-      query(".d-modal__body b").innerText,
-      "<small>eviltrout@example.com</small>"
-    );
+    assert
+      .dom(".d-modal__body b")
+      .hasText("<small>eviltrout@example.com</small>");
     assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
 
     await click(".d-modal__footer button.resend");
-    assert.strictEqual(
-      query(".d-modal__body b").innerText,
-      "<small>current@example.com</small>"
-    );
+    assert
+      .dom(".d-modal__body b")
+      .hasText("<small>current@example.com</small>");
     assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
   });
 

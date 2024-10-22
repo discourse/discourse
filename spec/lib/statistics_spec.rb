@@ -56,7 +56,7 @@ RSpec.describe Statistics do
   describe ".users" do
     before { User.real.destroy_all }
 
-    it "doesn't count silenced or inactive users" do
+    it "doesn't count inactive, silenced, or suspended users" do
       res = described_class.users
       expect(res[:last_day]).to eq(0)
       expect(res[:"7_days"]).to eq(0)
@@ -65,6 +65,15 @@ RSpec.describe Statistics do
 
       user = Fabricate(:user, active: true)
       user2 = Fabricate(:user, active: true)
+      user3 = Fabricate(:user, active: true)
+
+      res = described_class.users
+      expect(res[:last_day]).to eq(3)
+      expect(res[:"7_days"]).to eq(3)
+      expect(res[:"30_days"]).to eq(3)
+      expect(res[:count]).to eq(3)
+
+      user.update!(active: false)
 
       res = described_class.users
       expect(res[:last_day]).to eq(2)
@@ -72,7 +81,7 @@ RSpec.describe Statistics do
       expect(res[:"30_days"]).to eq(2)
       expect(res[:count]).to eq(2)
 
-      user.update!(active: false)
+      user2.update!(silenced_till: 1.month.from_now)
 
       res = described_class.users
       expect(res[:last_day]).to eq(1)
@@ -80,7 +89,7 @@ RSpec.describe Statistics do
       expect(res[:"30_days"]).to eq(1)
       expect(res[:count]).to eq(1)
 
-      user2.update!(silenced_till: 1.month.from_now)
+      user3.update!(suspended_till: 1.month.from_now)
 
       res = described_class.users
       expect(res[:last_day]).to eq(0)
@@ -187,6 +196,11 @@ RSpec.describe Statistics do
     it "returns users who have created a new PM" do
       Fabricate(:user_action, action_type: UserAction::NEW_PRIVATE_MESSAGE)
       expect(described_class.participating_users[:last_day]).to eq(1)
+    end
+
+    it "doesn't count bots" do
+      Fabricate(:user_action, action_type: UserAction::LIKE, user: Discourse.system_user)
+      expect(described_class.participating_users[:last_day]).to eq(0)
     end
   end
 

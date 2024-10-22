@@ -34,11 +34,12 @@ acceptance("New Group - Authenticated", function (needs) {
 
     await fillIn("input[name='name']", "1");
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.too_short"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.too_short"),
+        "it should show the right validation tooltip"
+      );
 
     assert.strictEqual(
       count(".group-form-save:disabled"),
@@ -51,27 +52,30 @@ acceptance("New Group - Authenticated", function (needs) {
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     );
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.too_long"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.too_long"),
+        "it should show the right validation tooltip"
+      );
 
     await fillIn("input[name='name']", "");
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.blank"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.blank"),
+        "it should show the right validation tooltip"
+      );
 
     await fillIn("input[name='name']", "good-username");
 
-    assert.strictEqual(
-      query(".tip.good").innerText.trim(),
-      I18n.t("admin.groups.new.name.available"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.good")
+      .hasText(
+        I18n.t("admin.groups.new.name.available"),
+        "it should show the right validation tooltip"
+      );
 
     await click(".group-form-public-admission");
 

@@ -92,8 +92,7 @@ acceptance("Share and Invite modal", function (needs) {
       exists("#modal-alert.alert-warning"),
       "it shows restricted warning"
     );
-    assert.strictEqual(
-      query("#modal-alert.alert-warning").innerText,
+    assert.dom("#modal-alert.alert-warning").hasText(
       I18n.t("topic.share.restricted_groups", {
         count: 2,
         groupNames: "group_name_1, group_name_2",

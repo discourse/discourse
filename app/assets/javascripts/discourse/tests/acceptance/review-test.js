@@ -234,7 +234,7 @@ acceptance("Review", function (needs) {
       count(`[data-reviewable-id="1234"] .status .pending`),
       1
     );
-    assert.ok(!exists(".stale-help"));
+    assert.dom(".stale-help").doesNotExist();
 
     await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       review_count: 1,

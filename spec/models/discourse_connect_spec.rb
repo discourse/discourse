@@ -12,6 +12,8 @@ RSpec.describe DiscourseConnect do
     Jobs.run_immediately!
   end
 
+  let(:fallback_username) { I18n.t("fallback_username") + "1" }
+
   def make_sso
     sso = DiscourseConnectBase.new
     sso.sso_url = "http://meta.discorse.org/topics/111"
@@ -576,7 +578,7 @@ RSpec.describe DiscourseConnect do
     sso.email = "mail@mail.com"
 
     user = sso.lookup_or_create_user(ip_address)
-    expect(user.username).to eq "user"
+    expect(user.username).to eq(fallback_username)
   end
 
   it "doesn't use email as a source for username suggestions by default" do
@@ -589,7 +591,7 @@ RSpec.describe DiscourseConnect do
     sso.email = "mail@mail.com"
 
     user = sso.lookup_or_create_user(ip_address)
-    expect(user.username).to eq I18n.t("fallback_username")
+    expect(user.username).to eq(fallback_username)
   end
 
   it "uses email as a source for username suggestions if enabled" do

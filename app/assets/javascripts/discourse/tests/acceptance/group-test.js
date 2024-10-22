@@ -190,10 +190,11 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g");
     await click(".group-index-request");
 
-    assert.strictEqual(
-      query(".d-modal__header .d-modal__title-text").innerText.trim(),
-      I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
-    );
+    assert
+      .dom(".d-modal__header .d-modal__title-text")
+      .hasText(
+        I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+      );
 
     assert.strictEqual(
       query(".request-group-membership-form textarea").value,
@@ -202,10 +203,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".d-modal__footer .btn-primary");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "Internationalization / localization"
-    );
+    assert.dom(".fancy-title").hasText("Internationalization / localization");
 
     await visit("/g/discourse");
 
@@ -226,22 +224,24 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/alternative-group");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.strictEqual(
-      query("span.empty-state-title").innerText.trim(),
-      I18n.t("no_group_messages_title"),
-      "it should display the right text"
-    );
+    assert
+      .dom("span.empty-state-title")
+      .hasText(
+        I18n.t("no_group_messages_title"),
+        "it should display the right text"
+      );
   });
 
   test("Admin viewing group messages", async function (assert) {
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.strictEqual(
-      query(".topic-list-item .link-top-line").innerText.trim(),
-      "This is a private message 1",
-      "it should display the list of group topics"
-    );
+    assert
+      .dom(".topic-list-item .link-top-line")
+      .hasText(
+        "This is a private message 1",
+        "it should display the list of group topics"
+      );
 
     await click("#search-button");
     await fillIn("#search-term", "something");
@@ -266,11 +266,9 @@ acceptance("Group - Authenticated", function (needs) {
       1,
       "it displays show group message button"
     );
-    assert.strictEqual(
-      query(".group-info-name").innerText,
-      "Awesome Team",
-      "it should display the group name"
-    );
+    assert
+      .dom(".group-info-name")
+      .hasText("Awesome Team", "it should display the group name");
 
     await click(".group-details-button button.btn-danger");
 

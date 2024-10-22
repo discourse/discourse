@@ -2,7 +2,7 @@
 
 class PostSerializer < BasicPostSerializer
   # To pass in additional information we might need
-  INSTANCE_VARS ||= %i[
+  INSTANCE_VARS = %i[
     parent_post
     add_raw
     add_title

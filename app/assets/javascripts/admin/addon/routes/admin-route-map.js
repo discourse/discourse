@@ -218,6 +218,9 @@ export default function () {
         });
 
         this.route("about");
+        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+          this.route("themes");
+        });
       }
     );
 

@@ -95,7 +95,7 @@ module Email
     attr_reader :mail
     attr_reader :message_id
 
-    COMMON_ENCODINGS ||= [-"utf-8", -"windows-1252", -"iso-8859-1"]
+    COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
 
     def self.formats
       @formats ||= Enum.new(plaintext: 1, markdown: 2)
@@ -527,7 +527,7 @@ module Email
       [EmailReplyTrimmer.trim(markdown), elided_markdown]
     end
 
-    HTML_EXTRACTERS ||= [
+    HTML_EXTRACTERS = [
       [:gmail, /class="gmail_(signature|extra)/],
       [:outlook, /id="(divRplyFwdMsg|Signature)"/],
       [:word, /class="WordSection1"/],

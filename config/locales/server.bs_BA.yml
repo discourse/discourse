@@ -215,6 +215,10 @@ bs_BA:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
+        user_password:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
         color_scheme_color:
           attributes:
             hex:

@@ -153,34 +153,25 @@ acceptance("Admin - User Index", function (needs) {
   test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Trying cancel.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Doing edit.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "new-sam"
-    );
+    assert.dom(".display-row.username .value").hasText("new-sam");
   });
 
   test("shows the number of post edits", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(query(".post-edits-count .value").innerText.trim(), "6");
+    assert.dom(".post-edits-count .value").hasText("6");
 
     assert.ok(
       exists(".post-edits-count .controls .btn.btn-icon"),
@@ -214,11 +205,9 @@ acceptance("Admin - User Index", function (needs) {
   test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("sam", "the name should be correct");
 
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
@@ -231,11 +220,9 @@ acceptance("Admin - User Index", function (needs) {
 
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "eviltrout",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("eviltrout", "the name should be correct");
 
     assert.ok(
       !exists('.group-chooser span[title="Macdonald"]'),
@@ -246,7 +233,7 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - shows the confirmation dialog", async function (assert) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
+    assert.dom(".dialog-content").exists();
     assert.strictEqual(
       I18n.t("admin.user.grant_admin_confirm"),
       query(".dialog-body").textContent.trim()
@@ -258,7 +245,7 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - optionally allows HTML to be shown in the confirmation dialog", async function (assert) {
     await visit("/admin/users/6/user6");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
+    assert.dom(".dialog-content").exists();
 
     assert.ok(
       exists(".dialog-content .dialog-body strong"),

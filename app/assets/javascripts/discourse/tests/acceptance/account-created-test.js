@@ -1,11 +1,7 @@
 import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Account Created", function () {
   test("account created - message", async function (assert) {
@@ -14,13 +10,11 @@ acceptance("Account Created", function () {
     });
     await visit("/u/account-created");
 
-    assert.ok(exists(".account-created"));
-    assert.strictEqual(
-      query(".account-created .success-info").innerText.trim(),
-      "Hello World",
-      "it displays the message"
-    );
-    assert.notOk(exists(".activation-controls"));
+    assert.dom(".account-created").exists();
+    assert
+      .dom(".account-created .success-info")
+      .hasText("Hello World", "it displays the message");
+    assert.dom(".activation-controls").doesNotExist();
   });
 
   test("account created - resend email", async function (assert) {
@@ -33,18 +27,15 @@ acceptance("Account Created", function () {
 
     await visit("/u/account-created");
 
-    assert.ok(exists(".account-created"));
-    assert.strictEqual(
-      query(".account-created .success-info").innerText.trim(),
-      "Hello World",
-      "it displays the message"
-    );
+    assert.dom(".account-created").exists();
+    assert
+      .dom(".account-created .success-info")
+      .hasText("Hello World", "it displays the message");
 
     await click(".activation-controls .resend");
 
     assert.strictEqual(currentRouteName(), "account-created.resent");
-    const email = query(".account-created b").innerText;
-    assert.strictEqual(email, "eviltrout@example.com");
+    assert.dom(".account-created b").hasText("eviltrout@example.com");
   });
 
   test("account created - update email - cancel", async function (assert) {
@@ -60,7 +51,7 @@ acceptance("Account Created", function () {
     await click(".activation-controls .edit-email");
 
     assert.strictEqual(currentRouteName(), "account-created.edit-email");
-    assert.ok(exists(".activation-controls .btn-primary:disabled"));
+    assert.dom(".activation-controls .btn-primary").isDisabled();
 
     await click(".activation-controls .edit-cancel");
 

@@ -1024,7 +1024,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       "dismiss_types=bookmark_reminder",
       "mark-read request specifies bookmark_reminder types"
     );
-    assert.notOk(exists(".user-menu .notifications-dismiss"));
+    assert.dom(".user-menu .notifications-dismiss").doesNotExist();
   });
 
   test("shows confirmation modal for the messages list", async function (assert) {
@@ -1080,7 +1080,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       "dismiss_types=private_message%2Cgroup_message_summary",
       "mark-read request specifies private_message types"
     );
-    assert.notOk(exists(".user-menu .notifications-dismiss"));
+    assert.dom(".user-menu .notifications-dismiss").doesNotExist();
   });
 
   test("doesn't show confirmation modal for the likes notifications list", async function (assert) {
@@ -1131,8 +1131,8 @@ acceptance("User menu - avatars", function (needs) {
   test("It shows user avatars for various notifications on all notifications pane", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
-    assert.ok(exists("li.notification.edited .icon-avatar"));
-    assert.ok(exists("li.notification.replied .icon-avatar"));
+    assert.dom("li.notification.edited .icon-avatar").exists();
+    assert.dom("li.notification.replied .icon-avatar").exists();
   });
 
   test("It shows user avatars for messages", async function (assert) {
@@ -1140,8 +1140,8 @@ acceptance("User menu - avatars", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-messages");
 
-    assert.ok(exists("li.notification.private-message .icon-avatar"));
-    assert.ok(exists("li.message .icon-avatar"));
+    assert.dom("li.notification.private-message .icon-avatar").exists();
+    assert.dom("li.message .icon-avatar").exists();
   });
 
   test("It shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {
@@ -1149,14 +1149,14 @@ acceptance("User menu - avatars", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-bookmarks");
 
-    assert.ok(exists("li.notification.bookmark-reminder .icon-avatar"));
-    assert.ok(exists("li.bookmark .icon-avatar"));
+    assert.dom("li.notification.bookmark-reminder .icon-avatar").exists();
+    assert.dom("li.bookmark .icon-avatar").exists();
   });
 
   test("Icon avatars have correct class names based on system avatar usage", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
-    assert.ok(exists("li.group-message-summary .icon-avatar.system-avatar"));
-    assert.ok(exists("li.notification.replied .icon-avatar.user-avatar"));
+    assert.dom("li.group-message-summary .icon-avatar.system-avatar").exists();
+    assert.dom("li.notification.replied .icon-avatar.user-avatar").exists();
   });
 });

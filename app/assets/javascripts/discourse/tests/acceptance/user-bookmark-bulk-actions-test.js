@@ -14,7 +14,7 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
 
   test("bulk select - modal", async function (assert) {
     await visit("/u/eviltrout/activity/bookmarks");
-    assert.ok(exists("button.bulk-select"));
+    assert.dom("button.bulk-select").exists();
 
     await click("button.bulk-select");
 

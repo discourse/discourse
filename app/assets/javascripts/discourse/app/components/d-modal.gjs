@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -10,6 +9,7 @@ import { modifier as modifierFn } from "ember-modifier";
 import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
+import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import {
@@ -26,8 +26,6 @@ export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
 export const CLOSE_INITIATED_BY_CLICK_OUTSIDE = "initiatedByClickOut";
 export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
-
-const FLASH_TYPES = ["success", "error", "warning", "info"];
 
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
@@ -210,13 +208,6 @@ export default class DModal extends Component {
     this.closeModal(CLOSE_INITIATED_BY_BUTTON);
   }
 
-  @action
-  validateFlashType(type) {
-    if (type && !FLASH_TYPES.includes(type)) {
-      throw `@flashType must be one of ${FLASH_TYPES.join(", ")}`;
-    }
-  }
-
   // Could be optimised to remove classic component once RFC389 is implemented
   // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
   @cached
@@ -361,19 +352,12 @@ export default class DModal extends Component {
 
           {{yield to="belowHeader"}}
 
-          {{this.validateFlashType @flashType}}
-          {{#if @flash}}
-            <div
-              id="modal-alert"
-              role="alert"
-              class={{concatClass
-                "alert"
-                (if @flashType (concat "alert-" @flashType))
-              }}
-            >
-              {{~@flash~}}
-            </div>
-          {{/if}}
+          <FlashMessage
+            id="modal-alert"
+            role="alert"
+            @flash={{@flash}}
+            @type={{@flashType}}
+          />
 
           <div
             class={{concatClass "d-modal__body" @bodyClass}}
@@ -387,7 +371,7 @@ export default class DModal extends Component {
             {{/if}}
           </div>
 
-          {{#if (has-block "footer")}}
+          {{#if (and (has-block "footer") (not @hideFooter))}}
             <div class="d-modal__footer">
               {{yield to="footer"}}
             </div>

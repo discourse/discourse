@@ -208,7 +208,9 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
     await click(".btn.delete-status");
 
-    assert.notOk(exists(".header-dropdown-toggle .user-status-background"));
+    assert
+      .dom(".header-dropdown-toggle .user-status-background")
+      .doesNotExist();
   });
 
   test("setting user status with auto removing timer", async function (assert) {
@@ -299,7 +301,7 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.ok(exists(".btn.delete-status"));
+    assert.dom(".btn.delete-status").exists();
   });
 
   test("doesn't show the trash button when status wasn't set before", async function (assert) {
@@ -309,7 +311,7 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.notOk(exists(".btn.delete-status"));
+    assert.dom(".btn.delete-status").doesNotExist();
   });
 
   test("shows empty modal after deleting the status", async function (assert) {
@@ -487,7 +489,7 @@ acceptance("User Status - user menu", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.notOk(exists("li.set-user-status"));
+    assert.dom("li.set-user-status").doesNotExist();
   });
 
   test("shows the user status button on the menu when enabled in settings", async function (assert) {
@@ -541,6 +543,6 @@ acceptance("User Status - user menu", function (needs) {
     await click("#user-menu-button-profile");
     await click(".set-user-status button");
 
-    assert.notOk(exists(".user-menu"));
+    assert.dom(".user-menu").doesNotExist();
   });
 });

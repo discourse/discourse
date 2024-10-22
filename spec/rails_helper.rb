@@ -325,6 +325,16 @@ RSpec.configure do |config|
             ["discoursetest"]
           end
         )
+
+      test_i = ENV["TEST_ENV_NUMBER"].to_i
+
+      data_dir = "#{Rails.root}/tmp/test_data_#{test_i}/minio"
+      FileUtils.rm_rf(data_dir)
+      FileUtils.mkdir_p(data_dir)
+      minio_runner_config.minio_data_directory = data_dir
+
+      minio_runner_config.minio_port = 9_000 + 2 * test_i
+      minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
     WebMock.disable_net_connect!(
@@ -488,9 +498,12 @@ RSpec.configure do |config|
       end
     end
 
+    # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
+    # type mistmatches for foreign keys that references a column of type BIGINT. We set the value to 10_000_000_000
+    # instead of 2**31-1 so that the values are easier to read.
     DB
       .query("SELECT sequence_name FROM information_schema.sequences WHERE data_type = 'bigint'")
-      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', #{2**32})" }
+      .each { |row| DB.exec "SELECT setval('#{row.sequence_name}', '10000000000')" }
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!

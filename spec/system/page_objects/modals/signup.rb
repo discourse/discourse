@@ -13,6 +13,7 @@ module PageObjects
 
       def open
         visit("/signup")
+        self
       end
 
       def open_from_header
@@ -51,26 +52,32 @@ module PageObjects
 
       def fill_email(email)
         fill_input("#new-account-email", email)
+        self
       end
 
       def fill_username(username)
         fill_input("#new-account-username", username)
+        self
       end
 
       def fill_name(name)
         fill_input("#new-account-name", name)
+        self
       end
 
       def fill_password(password)
         fill_input("#new-account-password", password)
+        self
       end
 
       def fill_code(code)
         fill_input("#inviteCode", code)
+        self
       end
 
       def fill_custom_field(name, value)
         find(".user-field-#{name.downcase} input").fill_in(with: value)
+        self
       end
 
       def has_valid_email?

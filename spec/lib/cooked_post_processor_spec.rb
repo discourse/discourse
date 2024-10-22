@@ -401,6 +401,40 @@ RSpec.describe CookedPostProcessor do
         end
       end
 
+      context "with small images" do
+        fab!(:upload) { Fabricate(:image_upload, width: 150, height: 150) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
+          <img src="#{upload.url}">
+          HTML
+        let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
+
+        before { SiteSetting.create_thumbnails = true }
+
+        it "shows the lightbox when both dimensions are above the minimum" do
+          cpp.post_process
+          expect(cpp.html).to match(/<div class="lightbox-wrapper">/)
+        end
+
+        it "does not show lightbox when both dimensions are below the minimum" do
+          upload.update!(width: 50, height: 50)
+          cpp.post_process
+
+          expect(cpp.html).not_to match(/<div class="lightbox-wrapper">/)
+        end
+
+        it "does not show lightbox when either dimension is below the minimum" do
+          upload.update!(width: 50, height: 150)
+          cpp.post_process
+
+          expect(cpp.html).not_to match(/<div class="lightbox-wrapper">/)
+        end
+
+        it "does not create thumbnails for small images" do
+          Upload.any_instance.expects(:create_thumbnail!).never
+          cpp.post_process
+        end
+      end
+
       context "with large images" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 

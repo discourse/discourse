@@ -1,9 +1,14 @@
 {{#if this.categories}}
   {{#if this.filteredCategories}}
     <div class="category-list {{if this.showTopics 'with-topics'}}">
-      {{#each this.filteredCategories as |c|}}
-        <ParentCategoryRow @category={{c}} @showTopics={{this.showTopics}} />
-      {{/each}}
+      <PluginOutlet
+        @name="mobile-categories"
+        @outletArgs={{hash categories=this.filteredCategories}}
+      >
+        {{#each this.filteredCategories as |c|}}
+          <ParentCategoryRow @category={{c}} @showTopics={{this.showTopics}} />
+        {{/each}}
+      </PluginOutlet>
     </div>
   {{/if}}
 

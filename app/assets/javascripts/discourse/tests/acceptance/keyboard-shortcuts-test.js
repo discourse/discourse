@@ -5,7 +5,6 @@ import {
   acceptance,
   chromeTest,
   exists,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
@@ -158,10 +157,9 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       exists("#dismiss-read-confirm"),
       "confirmation modal to dismiss unread is present"
     );
-    assert.strictEqual(
-      query(".d-modal__body").innerText,
-      I18n.t("topics.bulk.also_dismiss_topics")
-    );
+    assert
+      .dom(".d-modal__body")
+      .hasText(I18n.t("topics.bulk.also_dismiss_topics"));
     await click("#dismiss-read-confirm");
     assert.strictEqual(
       markReadCalled,
@@ -188,10 +186,11 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       exists("#dismiss-read-confirm"),
       "confirmation modal to dismiss unread is present"
     );
-    assert.strictEqual(
-      query(".d-modal__body").innerText,
-      "Stop tracking these topics so they never show up as unread for me again"
-    );
+    assert
+      .dom(".d-modal__body")
+      .hasText(
+        "Stop tracking these topics so they never show up as unread for me again"
+      );
 
     await click("#dismiss-read-confirm");
     assert.strictEqual(

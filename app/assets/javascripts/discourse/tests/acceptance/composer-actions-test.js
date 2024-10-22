@@ -66,10 +66,9 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert.strictEqual(
-      query(".action-title .topic-link").innerText.trim(),
-      "Internationalization / localization"
-    );
+    assert
+      .dom(".action-title .topic-link")
+      .hasText("Internationalization / localization");
     assert.strictEqual(
       query(".action-title .topic-link").getAttribute("href"),
       "/t/internationalization-localization/280"
@@ -137,10 +136,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
-    assert.strictEqual(
-      query(".action-title").innerText.trim(),
-      I18n.t("topic.create_long")
-    );
+    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
     assert.ok(query(".d-editor-input").value.includes(quote));
   });
 
@@ -150,7 +146,7 @@ acceptance("Composer Actions", function (needs) {
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
-    assert.ok(!exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("reply_as_new_topic without a permission to create topic", async function (assert) {
@@ -186,11 +182,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_to_topic");
 
-    assert.strictEqual(
-      query(".action-title").innerText.trim(),
-      "Short topic with two posts"
-    );
-    assert.strictEqual(query(".d-editor-input").value, quote);
+    assert.dom(".action-title").hasText("Short topic with two posts");
+    assert.dom(".d-editor-input").hasValue(quote);
 
     await composerActions.expand();
 
@@ -209,12 +202,9 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_to_post");
     await composerActions.expand();
 
-    assert.ok(exists(".action-title img.avatar"));
-    assert.strictEqual(
-      query(".action-title .user-link").innerText.trim(),
-      "tms"
-    );
-    assert.strictEqual(query(".d-editor-input").value, quote);
+    assert.dom(".action-title img.avatar").exists();
+    assert.dom(".action-title .user-link").hasText("tms");
+    assert.dom(".d-editor-input").hasValue(quote);
     assert.strictEqual(
       composerActions.rowByIndex(0).value(),
       "reply_as_new_topic"
@@ -230,10 +220,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
-    assert.strictEqual(
-      query(".action-title").innerText.trim(),
-      I18n.t("topic.create_long")
-    );
+    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
     assert.ok(query(".d-editor-input").value.includes(quote));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
@@ -249,10 +236,7 @@ acceptance("Composer Actions", function (needs) {
     await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
-    assert.strictEqual(
-      query(".action-title").innerText.trim(),
-      I18n.t("topic.private_message")
-    );
+    assert.dom(".action-title").hasText(I18n.t("topic.private_message"));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
     assert.strictEqual(composerActions.rows().length, 1);
   });
@@ -458,10 +442,9 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       "This is the new text for the title using 'quotes'"
     );
 
-    assert.strictEqual(
-      query("#reply-control .btn-primary.create .d-button-label").innerText,
-      I18n.t("composer.create_shared_draft")
-    );
+    assert
+      .dom("#reply-control .btn-primary.create .d-button-label")
+      .hasText(I18n.t("composer.create_shared_draft"));
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-clipboard"),
       1,
@@ -479,10 +462,9 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
 
-    assert.strictEqual(
-      query(".dialog-body").innerText.trim(),
-      I18n.t("composer.composer_actions.reply_as_new_topic.confirm")
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(I18n.t("composer.composer_actions.reply_as_new_topic.confirm"));
     await click(".dialog-footer .btn-primary");
 
     assert.ok(
@@ -504,10 +486,7 @@ acceptance("Prioritize Username", function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_2 button.reply");
 
-    assert.strictEqual(
-      query(".action-title .user-link").innerText.trim(),
-      "james_john"
-    );
+    assert.dom(".action-title .user-link").hasText("james_john");
   });
 
   test("Quotes use username", async function (assert) {

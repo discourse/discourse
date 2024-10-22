@@ -77,14 +77,11 @@ acceptance("User Preferences - Account", function (needs) {
 
     await visit("/u/eviltrout/preferences/account");
 
-    assert.strictEqual(
-      query(".username-preference__current-username").innerText,
-      "eviltrout"
-    );
+    assert.dom(".username-preference__current-username").hasText("eviltrout");
 
     await click(".username-preference__edit-username");
 
-    assert.strictEqual(query(".username-preference__input").value, "eviltrout");
+    assert.dom(".username-preference__input").hasValue("eviltrout");
     assert.true(query(".username-preference__submit").disabled);
 
     await fillIn(query(".username-preference__input"), "good_trout");

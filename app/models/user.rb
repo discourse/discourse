@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
     :salt, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
     :password_hash, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
     :password_algorithm, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
   include Searchable
@@ -302,6 +303,7 @@ class User < ActiveRecord::Base
   scope :not_suspended, -> { where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now) }
   scope :activated, -> { where(active: true) }
   scope :not_staged, -> { where(staged: false) }
+  scope :approved, -> { where(approved: true) }
 
   scope :filter_by_username,
         ->(filter) do
@@ -363,7 +365,7 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  MAX_STAFF_DELETE_POST_COUNT ||= 5
+  MAX_STAFF_DELETE_POST_COUNT = 5
 
   def self.user_tips
     @user_tips ||=
@@ -439,11 +441,9 @@ class User < ActiveRecord::Base
 
     return true if SiteSetting.here_mention == username
 
-    SiteSetting
-      .reserved_usernames
-      .unicode_normalize
-      .split("|")
-      .any? { |reserved| username.match?(/\A#{Regexp.escape(reserved).gsub('\*', ".*")}\z/) }
+    SiteSetting.reserved_usernames_map.any? do |reserved|
+      username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
+    end
   end
 
   def self.editable_user_custom_fields(by_staff: false)
@@ -1567,7 +1567,7 @@ class User < ActiveRecord::Base
     result
   end
 
-  USER_FIELD_PREFIX ||= "user_field_"
+  USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
@@ -1710,7 +1710,7 @@ class User < ActiveRecord::Base
       .pluck(:new_email)
   end
 
-  RECENT_TIME_READ_THRESHOLD ||= 60.days
+  RECENT_TIME_READ_THRESHOLD = 60.days
 
   def self.preload_recent_time_read(users)
     times =

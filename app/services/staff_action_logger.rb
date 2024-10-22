@@ -11,7 +11,7 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
 
-  USER_FIELDS ||= %i[id username name created_at trust_level last_seen_at last_emailed_at]
+  USER_FIELDS = %i[id username name created_at trust_level last_seen_at last_emailed_at]
 
   def log_user_deletion(deleted_user, opts = {})
     unless deleted_user && deleted_user.is_a?(User)
@@ -410,7 +410,7 @@ class StaffActionLogger
     )
   end
 
-  BADGE_FIELDS ||= %i[
+  BADGE_FIELDS = %i[
     id
     name
     description

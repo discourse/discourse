@@ -9,7 +9,7 @@ export default class RestrictedRouting extends Service {
   }
 
   isAllowedRoute(path) {
-    const alwaysAllowed = ["faq", "about", "tos", "privacy"];
+    const alwaysAllowed = ["faq", "about", "tos", "privacy", "safe-mode"];
 
     if (alwaysAllowed.includes(path)) {
       return true;

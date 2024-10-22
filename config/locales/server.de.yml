@@ -700,7 +700,6 @@ de:
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
               same_as_current: "ist mit deinem aktuellen Passwort identisch."
-              same_as_previous: "ist mit deinem vorherigen Passwort identisch."
               same_as_name: "ist mit deinem Namen identisch."
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             username:
@@ -710,6 +709,15 @@ de:
             ip_address:
               blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
               max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
+        user_password:
+          attributes:
+            password:
+              common: "ist eines der 10.000 am meisten verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
+              same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
+              same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
+              same_as_current: "ist mit deinem aktuellen Passwort identisch."
+              same_as_name: "ist mit deinem Namen identisch."
+              unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
         user_profile:
           attributes:
             featured_topic_id:
@@ -2125,7 +2133,6 @@ de:
     reset_bounce_score_after_days: "Bounce-Score automatisch nach X Tagen zurücksetzen."
     blocked_attachment_content_types: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf Inhaltstypen."
     blocked_attachment_filenames: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
-    forwarded_emails_behaviour: "Wie an Discourse weitergeleitete E-Mails behandelt werden"
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: Könnte E-Mail-Adressen preisgeben."
     trim_incoming_emails: "Schneide einen Teil der eingehenden E-Mails ab, der nicht relevant ist."
     private_email: "Füge keine Inhalte von Beiträgen oder Themen in den E-Mail-Titel oder den E-Mail-Text ein. HINWEIS: Deaktiviert auch die E-Mail-Zusammenfassungen."
