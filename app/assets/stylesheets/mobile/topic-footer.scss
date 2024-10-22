@@ -7,13 +7,17 @@
     margin-right: auto;
   }
 }
+
 #topic-footer-buttons {
   align-items: flex-start;
-  justify-content: space-between;
   flex-wrap: nowrap;
   gap: 0.5rem;
+  @include breakpoint(mobile-extra-large) {
+    justify-content: space-between;
+  }
 
   // docked progress bar on large screens using mobile view
+  //not sure if this still works TODO ask Kris to check
   grid-area: posts;
   grid-row: 3; // after topic map
 
@@ -22,7 +26,6 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 0.5em;
-    .create,
     .share-and-invite,
     .flag-topic,
     .defer-topic {
@@ -35,23 +38,28 @@
       }
     }
 
-    .create {
-      margin-left: auto;
-    }
-
     .pinned-button,
     .topic-notifications-button {
-      margin: 0;
       .select-kit-selected-name .name {
         display: none;
       }
     }
 
-    &__actions,
     &__states {
       display: flex;
       gap: 0.5rem;
     }
+  }
+
+  .create {
+    @include breakpoint(mobile-extra-large) {
+      margin-left: auto;
+    }
+  }
+
+  .bookmark.bookmarked .d-icon-discourse-bookmark-clock,
+  .bookmark.bookmarked .d-icon-bookmark {
+    color: var(--tertiary);
   }
 }
 
@@ -162,48 +170,3 @@
     margin-bottom: 0;
   }
 }
-
-// #topic-footer-buttons {
-//   .d-icon-bookmark.bookmarked,
-//   .d-icon-discourse-bookmark-clock.bookmarked {
-//     color: var(--tertiary);
-//   }
-
-//   .topic-footer-main-buttons {
-//     display: flex;
-//     align-items: stretch;
-//   }
-
-//   .topic-footer-mobile-dropdown {
-//     margin-right: 0.5em;
-//     display: flex;
-//   }
-
-//   .select-kit-header {
-//     height: 100%;
-//   }
-
-//   .topic-notifications-button,
-//   .pinned-button {
-//     display: flex;
-//     align-items: center;
-
-//     .reason {
-//       display: flex;
-//       flex-direction: column;
-//       align-items: flex-start;
-
-//       .text {
-//         margin-left: 0;
-//         margin-top: 0.25rem;
-//       }
-//     }
-//     @include breakpoint(mobile-medium) {
-//       display: inline-block;
-//       .reason {
-//         display: block;
-//         margin: 0.5em 0 0 0;
-//       }
-//     }
-//   }
-// }

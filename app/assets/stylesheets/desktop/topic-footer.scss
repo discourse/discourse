@@ -1,12 +1,37 @@
 #topic-footer-buttons {
   flex-direction: column;
   gap: var(--below-topic-margin);
-}
 
-.topic-footer-main-buttons {
-  &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
+  .topic-footer-main-buttons {
+    &__actions {
+      flex-wrap: wrap;
+    }
+  }
+
+  .pinned-button,
+  .topic-notifications-button {
+    // margin: 0.5em 0 1em;
+
+    .reason {
+      display: inline-flex;
+      gap: 0.5em;
+      color: var(--primary-high);
+      margin: 0;
+      align-items: center;
+
+      .dropdown-select-box {
+        .select-kit-selected-name {
+          width: 100%;
+          overflow: hidden;
+        }
+        .name {
+          @include ellipsis;
+        }
+      }
+
+      .text {
+        line-height: var(--line-height-medium);
+      }
+    }
   }
 }
