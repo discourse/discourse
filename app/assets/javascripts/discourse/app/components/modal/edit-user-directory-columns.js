@@ -22,7 +22,7 @@ export default class EditUserDirectoryColumns extends Component {
   @action
   async setupColumns() {
     try {
-      const response = await ajax("edit-directory-columns.json");
+      const response = await ajax("/edit-directory-columns.json");
       this.loading = false;
       this.columns = response.directory_columns
         .sort((a, b) => (a.position > b.position ? 1 : -1))
@@ -45,7 +45,7 @@ export default class EditUserDirectoryColumns extends Component {
     };
 
     try {
-      await ajax("edit-directory-columns.json", { type: "PUT", data });
+      await ajax("/edit-directory-columns.json", { type: "PUT", data });
       reload();
     } catch (e) {
       this.loading = false;
