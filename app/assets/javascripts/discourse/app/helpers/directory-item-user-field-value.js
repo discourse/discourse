@@ -6,7 +6,7 @@ export default function directoryItemUserFieldValue({ item, column }) {
   const fieldData = userFields ? userFields[column.user_field_id] : null;
 
   const value = fieldData?.searchable
-    ? fieldData.value.map(generateUsersLink)
+    ? fieldData.value.map(generateUsersLink).join(", ")
     : fieldData?.value;
 
   const content = value || "-";
