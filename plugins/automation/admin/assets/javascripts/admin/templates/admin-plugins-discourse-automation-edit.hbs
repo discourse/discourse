@@ -10,9 +10,9 @@
 
         <div class="controls">
           <TextField
-            @value={{automationForm.name}}
+            @value={{this.automationForm.name}}
             @type="text"
-            @autofocus="autofocus"
+            @autofocus={{true}}
             @name="automation-name"
             class="input-large"
             @input={{with-event-value (fn (mut this.automationForm.name))}}
@@ -27,9 +27,9 @@
 
         <div class="controls">
           <ComboBox
-            @value={{automationForm.script}}
-            @content={{model.scriptables}}
-            @onChange={{action "onChangeScript"}}
+            @value={{this.automationForm.script}}
+            @content={{this.model.scriptables}}
+            @onChange={{this.onChangeScript}}
             @options={{hash filterable=true}}
             class="scriptables"
           />
@@ -43,7 +43,7 @@
       </h2>
 
       <div class="control-group">
-        {{#if model.automation.script.forced_triggerable}}
+        {{#if this.model.automation.script.forced_triggerable}}
           <div class="alert alert-warning">
             {{i18n
               "discourse_automation.edit_automation.trigger_section.forced"
@@ -57,47 +57,50 @@
 
         <div class="controls">
           <ComboBox
-            @value={{automationForm.trigger}}
-            @content={{model.triggerables}}
-            @onChange={{action "onChangeTrigger"}}
+            @value={{this.automationForm.trigger}}
+            @content={{this.model.triggerables}}
+            @onChange={{this.onChangeTrigger}}
             @options={{hash
               filterable=true
               none="discourse_automation.select_trigger"
-              disabled=model.automation.script.forced_triggerable
+              disabled=this.model.automation.script.forced_triggerable
             }}
             class="triggerables"
           />
         </div>
       </div>
 
-      {{#if automationForm.trigger}}
-        {{#if model.automation.trigger.doc}}
+      {{#if this.automationForm.trigger}}
+        {{#if this.model.automation.trigger.doc}}
           <div class="alert alert-info">
-            <p>{{model.automation.trigger.doc}}</p>
+            <p>{{this.model.automation.trigger.doc}}</p>
           </div>
         {{/if}}
 
         {{#if
           (and
-            model.automation.enabled
-            model.automation.trigger.settings.manual_trigger
+            this.model.automation.enabled
+            this.model.automation.trigger.settings.manual_trigger
           )
         }}
           <div class="alert alert-info next-trigger">
 
-            {{#if nextPendingAutomationAtFormatted}}
+            {{#if this.nextPendingAutomationAtFormatted}}
               <p>
                 {{i18n
                   "discourse_automation.edit_automation.trigger_section.next_pending_automation"
-                  date=nextPendingAutomationAtFormatted
+                  date=this.nextPendingAutomationAtFormatted
                 }}
               </p>
             {{/if}}
 
             <DButton
               @label="discourse_automation.edit_automation.trigger_section.trigger_now"
-              @isLoading={{isTriggeringAutomation}}
-              @action={{action "onManualAutomationTrigger" model.automation.id}}
+              @isLoading={{this.isTriggeringAutomation}}
+              @action={{fn
+                this.onManualAutomationTrigger
+                this.model.automation.id
+              }}
               class="btn-primary trigger-now-btn"
             />
           </div>
@@ -105,50 +108,50 @@
 
         {{#each triggerFields as |field|}}
           <AutomationField
-            @automation={{automation}}
+            @automation={{this.automation}}
             @field={{field}}
-            @saveAutomation={{action "saveAutomation" automation}}
+            @saveAutomation={{fn this.saveAutomation this.automation}}
           />
         {{/each}}
       {{/if}}
     </section>
 
-    {{#if automationForm.trigger}}
-      {{#if scriptFields}}
+    {{#if this.automationForm.trigger}}
+      {{#if this.scriptFields}}
         <section class="fields-section form-section edit">
           <h2 class="title">
             {{i18n "discourse_automation.edit_automation.fields_section.title"}}
           </h2>
 
-          {{#if model.automation.script.with_trigger_doc}}
+          {{#if this.model.automation.script.with_trigger_doc}}
             <div class="alert alert-info">
-              <p>{{model.automation.script.with_trigger_doc}}</p>
+              <p>{{this.model.automation.script.with_trigger_doc}}</p>
             </div>
           {{/if}}
 
           <div class="control-group">
-            {{#each scriptFields as |field|}}
+            {{#each this.scriptFields as |field|}}
               <AutomationField
-                @automation={{automation}}
+                @automation={{this.automation}}
                 @field={{field}}
-                @saveAutomation={{action "saveAutomation" automation}}
+                @saveAutomation={{fn this.saveAutomation this.automation}}
               />
             {{/each}}
           </div>
         </section>
       {{/if}}
 
-      {{#if automationForm.trigger}}
+      {{#if this.automationForm.trigger}}
         <div class="control-group automation-enabled alert alert-warning">
           <span>{{i18n
               "discourse_automation.models.automation.enabled.label"
             }}</span>
           <Input
             @type="checkbox"
-            @checked={{automationForm.enabled}}
+            @checked={{this.automationForm.enabled}}
             {{on
               "click"
-              (action (mut automationForm.enabled) value="target.checked")
+              (action (mut this.automationForm.enabled) value="target.checked")
             }}
           />
         </div>
@@ -156,7 +159,7 @@
 
       <div class="control-group">
         <DButton
-          @isLoading={{isUpdatingAutomation}}
+          @isLoading={{this.isUpdatingAutomation}}
           @label="discourse_automation.update"
           @type="submit"
           @action={{fn this.saveAutomation this.automation true}}
