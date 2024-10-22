@@ -195,12 +195,12 @@ acceptance("flagging", function (needs) {
     const modal = query(".d-modal");
     await pressEnter(modal, "ctrlKey");
     assert
-      .dom(".d-modal:visible")
+      .dom(".d-modal")
       .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
+    assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 
   test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
@@ -210,11 +210,11 @@ acceptance("flagging", function (needs) {
     const modal = query(".d-modal");
     await pressEnter(modal, "metaKey");
     assert
-      .dom(".d-modal:visible")
+      .dom(".d-modal")
       .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
+    assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 });

@@ -84,11 +84,9 @@ acceptance("Signing In", function () {
     await click(".d-modal__footer .btn-primary");
 
     assert
-      .dom("#credentials:visible")
-      .doesNotExist("it hides the username and password prompt");
-    assert
-      .dom("#second-factor:visible")
-      .exists("it displays the second factor prompt");
+      .dom("#credentials")
+      .isNotVisible("hides the username and password prompt");
+    assert.dom("#second-factor").isVisible("displays the second factor prompt");
     assert
       .dom(".d-modal__footer .btn-primary:disabled")
       .doesNotExist("enables the login button");
@@ -112,15 +110,13 @@ acceptance("Signing In", function () {
     await click(".d-modal__footer .btn-primary");
 
     assert
-      .dom("#credentials:visible")
-      .doesNotExist("it hides the username and password prompt");
+      .dom("#credentials")
+      .isNotVisible("hides the username and password prompt");
     assert
-      .dom("#login-second-factor:visible")
-      .doesNotExist("it does not display the second factor prompt");
-    assert
-      .dom("#security-key:visible")
-      .exists("it shows the security key prompt");
-    assert.notOk(exists("#login-button:visible"), "hides the login button");
+      .dom("#login-second-factor")
+      .isNotVisible("does not display the second factor prompt");
+    assert.dom("#security-key").isVisible("shows the security key prompt");
+    assert.dom("#login-button").isNotVisible("hides the login button");
   });
 
   test("second factor backup - valid token", async function (assert) {
@@ -149,7 +145,7 @@ acceptance("Signing In", function () {
     await click(".d-modal__footer .btn-primary");
 
     assert
-      .dom("#modal-alert:visible")
-      .exists("it shows an error when the code is invalid");
+      .dom("#modal-alert")
+      .exists("shows an error when the code is invalid");
   });
 });

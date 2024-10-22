@@ -206,9 +206,7 @@ acceptance("Theme", function (needs) {
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
 
-    assert
-      .dom(".admin-install-theme-modal:visible")
-      .doesNotExist("modal is closed");
+    assert.dom(".admin-install-theme-modal").doesNotExist("modal is closed");
   });
 
   test("can continue installation", async function (assert) {

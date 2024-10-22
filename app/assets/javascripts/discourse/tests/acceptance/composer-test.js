@@ -168,13 +168,13 @@ acceptance("Composer", function (needs) {
 
     await click(".toggle-preview");
     assert
-      .dom(".d-editor-preview:visible")
-      .doesNotExist("clicking the toggle hides the preview");
+      .dom(".d-editor-preview")
+      .isNotVisible("clicking the toggle hides the preview");
 
     await click(".toggle-preview");
     assert
-      .dom(".d-editor-preview:visible")
-      .exists("clicking the toggle shows the preview again");
+      .dom(".d-editor-preview")
+      .isVisible("clicking the toggle shows the preview again");
 
     await click("#reply-control button.create");
     assert
