@@ -50,7 +50,6 @@ pt_BR:
       deleted_chat_username: excluído(a)
       dates:
         yesterday: "Ontem"
-        time_tiny: "h:mm"
       all_loaded: "Mostrando todas as mensagens"
       already_enabled: "O chat já foi ativado neste tópico. Atualize."
       disabled_for_topic: "O chat está desativado neste tópico."

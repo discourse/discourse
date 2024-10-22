@@ -1687,12 +1687,10 @@ sv:
           success: "Länk för inbjudan framgångsrikt skapad!"
           error: "Ett fel inträffade vid skapande av inbjudningslänk"
         invite:
-          new_title: "Skapa inbjudan"
-          edit_title: "Redigera inbjudan"
           instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
-          copy_link: "kopiera länk"
           expires_in_time: "Utgår om %{time}"
           expired_at_time: "Utgår kl. %{time}"
+          link_copied: "Länken kopierad!"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
           restrict: "Begränsa till"
@@ -1702,11 +1700,11 @@ sv:
           max_redemptions_allowed: "Max antal användningar"
           add_to_groups: "Lägg till i grupper"
           invite_to_topic: "Anländ till ämne"
-          expires_at: "Förfaller efter"
-          custom_message: "Valfritt personligt meddelande"
+          expires_after: "Förfaller efter"
           send_invite_email: "Spara och skicka e-post"
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
-          save_invite: "Spara inbjudan"
+          save_invite: "Spara"
+          cancel: "Avbryt"
           invite_saved: "Inbjudan har sparats."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
@@ -4888,6 +4886,9 @@ sv:
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"
+        look_and_feel:
+          themes:
+            title: "Teman"
       plugins:
         title: "Tillägg"
         name: "Namn"

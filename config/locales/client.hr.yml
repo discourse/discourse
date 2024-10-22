@@ -1744,10 +1744,7 @@ hr:
           success: "Pozivnica uspješno napravljena"
           error: "Došlo je do pogreške generiranja linka za pozivnicu"
         invite:
-          new_title: "Stvori pozivnicu"
-          edit_title: "Uredi pozivnicu"
           instructions: "Podijelite ovu vezu da biste odmah dodijelili pristup stranici:"
-          copy_link: "kopiraj link"
           expires_in_time: "Istječe za %{time}"
           expired_at_time: "Isteklo u %{time}"
           show_advanced: "Prikaži napredne mogućnosti"
@@ -1759,11 +1756,11 @@ hr:
           max_redemptions_allowed: "Max korisnika"
           add_to_groups: "Dodaj u grupe"
           invite_to_topic: "Dođite do teme"
-          expires_at: "Istječe nakon"
-          custom_message: "Izborna osobna poruka"
+          expires_after: "Istječe nakon"
           send_invite_email: "Spremi i pošalji e-mail"
           send_invite_email_instructions: "Ograničite pozivnicu na e-poštu za slanje e-pošte s pozivnicom"
-          save_invite: "Spremi pozivnicu"
+          save_invite: "Spremi"
+          cancel: "Odustani"
           invite_saved: "Pozivnica je spremljena."
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
@@ -2056,7 +2053,7 @@ hr:
     login:
       header_title: "Dobro došli natrag"
       subheader_title: "Prijavite se na svoj račun"
-      title: "Prijavite se"
+      title: "Prijava"
       username: "Korisnik"
       password: "Zaporka"
       show_password: "Pokaži"
@@ -4807,6 +4804,9 @@ hr:
             invalid_applies_to: "Potrebno"
             topic: "tema"
             post: "objave"
+        look_and_feel:
+          themes:
+            title: "Teme"
       plugins:
         title: "Dodaci"
         name: "Naziv"

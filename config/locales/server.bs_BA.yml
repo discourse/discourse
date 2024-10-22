@@ -543,6 +543,8 @@ bs_BA:
     page_view_total_reqs:
       title: "Pagevieovi"
       xaxis: "Day"
+    page_view_legacy_total_reqs:
+      xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"
     page_view_anon_mobile_reqs:

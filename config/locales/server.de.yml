@@ -1253,13 +1253,15 @@ de:
       yaxis: "Tag"
       description: "Anzahl der Benutzer, die in dieser Zeit eine höhere Vertrauensstufe erreicht haben."
     consolidated_page_views:
-      title: "Zusammengefasste Seitenaufrufe"
+      title: "Veraltete konsolidierte Seitenaufrufe"
+      title_legacy: "Zusammengefasste Seitenaufrufe"
       xaxis:
         page_view_crawler: "Crawler"
         page_view_anon: "Anonyme Benutzer"
         page_view_logged_in: "Angemeldete Benutzer"
       yaxis: "Tag"
-      description: "Seitenaufrufe von angemeldeten Benutzern, anonymen Benutzern und Crawlern."
+      description: "Der alte Bericht zeigt die Seitenaufrufe für eingeloggte Nutzer, anonyme Nutzer und Crawler. Dieser Bericht wurde durch den Bericht \"Website-Verkehr\" abgelöst."
+      description_legacy: "Seitenaufrufe von angemeldeten Benutzern, anonymen Benutzern und Crawlern."
       labels:
         post: Beitrag
         editor: Bearbeiter
@@ -1274,13 +1276,15 @@ de:
       description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
     consolidated_page_views_browser_detection:
       title: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
+      title_legacy: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
       xaxis:
         page_view_anon_browser: "Browser (anonym)"
         page_view_logged_in_browser: "Browser (angemeldet)"
         page_view_crawler: "Bekannter Crawler"
         page_view_other: "Andere Seitenaufrufe"
       yaxis: "Tag"
-      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern stammen, bevor sie gezählt werden. Historische Daten für diesen Bericht sind nicht verfügbar. Historische Daten findest du im Bericht \"Konsolidierte Seitenaufrufe\"."
+      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern kommen, bevor sie gezählt werden. Historische Daten für diesen Bericht sind nicht verfügbar. Historische Daten findest du im Bericht \"Veraltete konsolidierte Seitenaufrufe\"."
+      description_legacy: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern stammen, bevor sie gezählt werden. Historische Daten für diesen Bericht sind nicht verfügbar. Historische Daten findest du im Bericht \"Konsolidierte Seitenaufrufe\"."
     site_traffic:
       title: "Website-Verkehr"
       xaxis:
@@ -1440,6 +1444,11 @@ de:
       xaxis: "Tag"
       yaxis: "Seitenaufrufe insgesamt"
       description: "Anzahl neuer Seitenaufrufe aller Besucher."
+    page_view_legacy_total_reqs:
+      title: "Veraltete Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Seitenaufrufe insgesamt"
+      description: "Veralteter Bericht, der die Anzahl der neuen Seitenaufrufe von allen Besuchern anzeigt."
     page_view_logged_in_mobile_reqs:
       title: "Seitenaufrufe durch angemeldete Benutzer"
       xaxis: "Tag"
@@ -1757,6 +1766,7 @@ de:
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
+    experimental_full_page_login: "EXPERIMENTELL: Ersetze das Login/Signup-Modal durch ein ganzseitiges Login/Signup-Formular."
     ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2133,6 +2143,7 @@ de:
     reset_bounce_score_after_days: "Bounce-Score automatisch nach X Tagen zurücksetzen."
     blocked_attachment_content_types: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf Inhaltstypen."
     blocked_attachment_filenames: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
+    forwarded_emails_behaviour: "Wie du eine weitergeleitete E-Mail an Discourse behandelst. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Mehr erfahren</a>"
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: Könnte E-Mail-Adressen preisgeben."
     trim_incoming_emails: "Schneide einen Teil der eingehenden E-Mails ab, der nicht relevant ist."
     private_email: "Füge keine Inhalte von Beiträgen oder Themen in den E-Mail-Titel oder den E-Mail-Text ein. HINWEIS: Deaktiviert auch die E-Mail-Zusammenfassungen."
@@ -2437,6 +2448,7 @@ de:
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_auto_grid_images: "EXPERIMENTELL: Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Zeige die Mitglieder bestimmter Gruppen nicht auf der /about Seite an."

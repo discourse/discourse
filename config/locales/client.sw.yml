@@ -935,6 +935,9 @@ sw:
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
+        invite:
+          save_invite: "Hifadhi"
+          cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -1116,6 +1119,7 @@ sw:
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
     login:
+      title: "Ingia"
       username: "Mtumiaji"
       password: "Nywila"
       show_password: "Onyesha"
@@ -2577,6 +2581,9 @@ sw:
             invalid_applies_to: "Muhimu na Inahitajika"
             topic: "mada"
             post: "machapisho"
+        look_and_feel:
+          themes:
+            title: "Mandhari"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"

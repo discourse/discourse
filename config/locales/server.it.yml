@@ -1238,13 +1238,13 @@ it:
       yaxis: "Giorno"
       description: "Numero di utenti che hanno aumentato il loro livello di attendibilità durante questo periodo."
     consolidated_page_views:
-      title: "Visualizzazioni di pagina consolidate"
+      title_legacy: "Visualizzazioni di pagina consolidate"
       xaxis:
         page_view_crawler: "Crawler"
         page_view_anon: "Utenti anonimi"
         page_view_logged_in: "Utenti connessi"
       yaxis: "Giorno"
-      description: "Visualizzazioni di pagina per utenti che hanno effettuato l'accesso, utenti anonimi e crawler."
+      description_legacy: "Visualizzazioni di pagina per utenti che hanno effettuato l'accesso, utenti anonimi e crawler."
       labels:
         post: Messaggio
         editor: Redattore
@@ -1259,6 +1259,7 @@ it:
       description: "Richieste API per chiavi API normali e chiavi API utente."
     consolidated_page_views_browser_detection:
       title: "Visualizzazioni pagine consolidate con rilevamento del browser (sperimentale)"
+      title_legacy: "Visualizzazioni pagine consolidate con rilevamento del browser (sperimentale)"
       xaxis:
         page_view_anon_browser: "Browser anonimo"
         page_view_logged_in_browser: "Browser registrato"
@@ -1417,6 +1418,9 @@ it:
       xaxis: "Giorno"
       yaxis: "Totale Pagine Viste"
       description: "Numero di nuove pagine viste da tutti i visitatori."
+    page_view_legacy_total_reqs:
+      xaxis: "Giorno"
+      yaxis: "Totale Pagine Viste"
     page_view_logged_in_mobile_reqs:
       title: "Pagine viste da utenti connessi"
       xaxis: "Giorno"

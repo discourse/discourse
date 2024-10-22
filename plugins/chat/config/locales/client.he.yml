@@ -52,7 +52,6 @@ he:
       deleted_chat_username: נמחק
       dates:
         yesterday: "אתמול"
-        time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
       already_enabled: "כבר מופעל צ׳אט בנושא הזה. נא לרענן."
       disabled_for_topic: "הצ׳אט מושבת בנושא הזה."

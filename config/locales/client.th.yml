@@ -1075,6 +1075,9 @@ th:
           title: "ลิงก์คำเชิญ"
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
+        invite:
+          save_invite: "บันทึก"
+          cancel: "ยกเลิก"
       password:
         title: "รหัสผ่าน"
         common: "รหัสผ่านง่ายเกินไป"
@@ -1245,6 +1248,7 @@ th:
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{email}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
     login:
+      title: "เข้าสู่ระบบ"
       username: "ชื่อผู้ใช้"
       password: "รหัสผ่าน"
       show_password: "แสดง"
@@ -2715,6 +2719,9 @@ th:
             invalid_applies_to: "ต้องการ"
             topic: "หัวข้อ"
             post: "โพสต์"
+        look_and_feel:
+          themes:
+            title: "ธีม"
       plugins:
         title: "ปลั้กอิน"
         name: "ชื่อ"

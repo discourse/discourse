@@ -30,8 +30,6 @@ id:
       text_copied: Teks disalin ke papan klip
       link_copied: Tautan disalin ke papan klip
       deleted_chat_username: dihapus
-      dates:
-        time_tiny: "h:mm"
       all_loaded: "Menampilkan semua pesan"
       already_enabled: "Obrolan sudah diaktifkan pada topik ini. Segarkan."
       disabled_for_topic: "Obrolan dinonaktifkan pada topik ini."

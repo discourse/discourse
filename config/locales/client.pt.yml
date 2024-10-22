@@ -27,6 +27,7 @@ pt:
         millions: "%{number}M"
     dates:
       time: "hh:mm"
+      time_short: "hh:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1540,21 +1541,19 @@ pt:
           success: "Hiperligação do convite gerada com sucesso!"
           error: "Ocorreu um erro ao gerar o Link de Convite"
         invite:
-          new_title: "Criar Convite"
-          edit_title: "Editar Convite"
           instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
-          copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
+          copy_link: "Copiar link"
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
           restrict: "Restringir a"
           max_redemptions_allowed: "Máximo de utilizações"
           add_to_groups: "Adicionar aos grupos"
-          expires_at: "Expira após"
-          custom_message: "Mensagem pessoal opcional"
+          expires_after: "Expira após"
           send_invite_email: "Guardar e Enviar E-mail"
-          save_invite: "Salvar Convite"
+          save_invite: "Guardar"
+          cancel: "Cancelar"
           invite_saved: "Convite salvo."
         bulk_invite:
           none: "Sem convites para exibir nesta página."
@@ -1787,7 +1786,7 @@ pt:
     login:
       header_title: "Bem-vindo de volta"
       subheader_title: "Faça login na sua conta"
-      title: "Efetuar login"
+      title: "Iniciar Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
       show_password: "Mostrar"
@@ -3940,6 +3939,9 @@ pt:
             invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
+        look_and_feel:
+          themes:
+            title: "Temas"
       plugins:
         title: "Plugins"
         name: "Nome"
