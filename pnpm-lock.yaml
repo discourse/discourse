@@ -273,8 +273,8 @@ importers:
         specifier: ^11.10.0
         version: 11.10.0
       '@json-editor/json-editor':
-        specifier: 2.15.1
-        version: 2.15.1
+        specifier: 2.15.2
+        version: 2.15.2
       '@messageformat/core':
         specifier: ^3.4.0
         version: 3.4.0
@@ -2438,8 +2438,8 @@ packages:
     resolution: {integrity: sha512-TfRP53RqunNe2HBobVBJ0VLhK1HbfvBYeTC1ahnN64PWvyYyGebmMiPkuwvD9fpw2ZbkoPb8Q7mwy0aR8Z9rvw==}
     engines: {node: '>=v12.0.0'}
 
-  '@json-editor/json-editor@2.15.1':
-    resolution: {integrity: sha512-Z4KFXpL7I9wrKD94c1PcIwFfCvUzYhwM0jH2ihP2OSH8wut0FnqzCfKCL0gdNHG3A2UVsyVJBoU9Iwsc0xB6zQ==}
+  '@json-editor/json-editor@2.15.2':
+    resolution: {integrity: sha512-vUQ7Oy+7VfNIzu6irtPz5qfHbMNTlQWUbHJ7eunxFza+SBwUXfq2Uh5QYD2d6hLDhF22sYh8DPpLWFixQrt1+Q==}
     engines: {node: '>= 0.8.0'}
 
   '@jspreadsheet/formula@2.0.2':
@@ -11556,7 +11556,7 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  '@json-editor/json-editor@2.15.1':
+  '@json-editor/json-editor@2.15.2':
     dependencies:
       core-js: 3.33.0
 
