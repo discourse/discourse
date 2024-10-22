@@ -35,7 +35,7 @@
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.31",
-    "@types/qunit": "^2.19.10",
+    "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~5.12.0",
