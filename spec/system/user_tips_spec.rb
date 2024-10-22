@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Homepage", type: :system do
+describe "User tips", type: :system do
   fab!(:admin)
   fab!(:user)
   fab!(:topics) { Fabricate.times(2, :post).map(&:topic) }
