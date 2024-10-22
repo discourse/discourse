@@ -295,10 +295,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays first link with correct text"
     );
 
-    assert.ok(
-      exists(".sidebar-section-link.my-class-name"),
-      "sets the custom class name for the section link"
-    );
+    assert
+      .dom(".sidebar-section-link.my-class-name")
+      .exists("sets the custom class name for the section link");
 
     assert.strictEqual(
       links[0].title,
@@ -453,10 +452,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays header with correct text"
     );
 
-    assert.ok(
-      exists("button.sidebar-section-header-button"),
-      "displays single header action button"
-    );
+    assert
+      .dom("button.sidebar-section-header-button")
+      .exists("displays single header action button");
 
     assert.ok(
       !exists(
@@ -505,10 +503,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='test-chat-channels']"),
-      "does not display the section"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='test-chat-channels']")
+      .doesNotExist("does not display the section");
   });
 
   test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {

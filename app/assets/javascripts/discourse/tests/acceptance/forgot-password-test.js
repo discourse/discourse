@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 let userFound = false;
@@ -56,10 +52,9 @@ acceptance("Forgot password", function (needs) {
 
     await click(".forgot-password-reset");
 
-    assert.notOk(
-      exists(".alert-error"),
-      "it should remove the flash error when succeeding"
-    );
+    assert
+      .dom(".alert-error")
+      .doesNotExist("it should remove the flash error when succeeding");
 
     assert.strictEqual(
       query(".d-modal__body").innerHTML.trim(),

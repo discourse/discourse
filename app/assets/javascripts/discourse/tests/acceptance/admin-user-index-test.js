@@ -1,11 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -173,10 +169,9 @@ acceptance("Admin - User Index", function (needs) {
 
     assert.dom(".post-edits-count .value").hasText("6");
 
-    assert.ok(
-      exists(".post-edits-count .controls .btn.btn-icon"),
-      "View edits button exists"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .exists("View edits button exists");
   });
 
   test("a link to view post edits report exists", async function (assert) {
@@ -196,10 +191,9 @@ acceptance("Admin - User Index", function (needs) {
   test("hides the 'view Edits' button if the count is zero", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.ok(
-      !exists(".post-edits-count .controls .btn.btn-icon"),
-      "View Edits button not present"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .doesNotExist("View Edits button not present");
   });
 
   test("will clear unsaved groups when switching user", async function (assert) {
@@ -224,10 +218,9 @@ acceptance("Admin - User Index", function (needs) {
       .dom(".display-row.username .value")
       .hasText("eviltrout", "the name should be correct");
 
-    assert.ok(
-      !exists('.group-chooser span[title="Macdonald"]'),
-      "group should not be set"
-    );
+    assert
+      .dom('.group-chooser span[title="Macdonald"]')
+      .doesNotExist("group should not be set");
   });
 
   test("grant admin - shows the confirmation dialog", async function (assert) {
@@ -247,10 +240,9 @@ acceptance("Admin - User Index", function (needs) {
     await click(".grant-admin");
     assert.dom(".dialog-content").exists();
 
-    assert.ok(
-      exists(".dialog-content .dialog-body strong"),
-      "HTML is rendered in the dialog"
-    );
+    assert
+      .dom(".dialog-content .dialog-body strong")
+      .exists("HTML is rendered in the dialog");
   });
 
   test("grant admin - redirects to the 2fa page", async function (assert) {

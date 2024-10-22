@@ -222,10 +222,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(
-      exists(".actions button.post-action-menu__copy-link"),
-      "it renders a copy link button"
-    );
+    assert
+      .dom(".actions button.post-action-menu__copy-link")
+      .exists("it renders a copy link button");
   });
 
   test("liking", async function (assert) {
