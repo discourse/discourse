@@ -5,7 +5,7 @@ import AdminPageSubheader from "admin/components/admin-page-subheader";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
 
-export default class extends Component {
+export default class AdminConfigAreasLookAndFeelThemes extends Component {
   @service modal;
 
   @action
