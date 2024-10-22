@@ -36,7 +36,6 @@ describe "DiscourseAutomation | smoke test", type: :system, js: true do
   it "works" do
     visit("/admin/plugins/discourse-automation")
 
-    find(".new-automation").click
     find(".admin-section-landing__header-filter").set("user group membership through badge")
     find(".admin-section-landing-item__content", match: :first).click
     fill_in("automation-name", with: "aaaaa")
