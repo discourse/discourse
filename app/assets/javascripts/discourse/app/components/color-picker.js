@@ -18,6 +18,6 @@ export default class ColorPicker extends Component {
     const isUsed = this.usedColors?.includes(color.toUpperCase())
       ? I18n.t("category.color_used")
       : "";
-    return `#${color}, ${isUsed}`;
+    return `#${color} ${isUsed}`;
   }
 }
