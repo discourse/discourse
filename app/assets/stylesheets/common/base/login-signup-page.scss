@@ -164,18 +164,6 @@
     .tip:not(:empty) + label.more-info {
       display: none;
     }
-
-    #new-account-password,
-    #login-account-password {
-      padding-right: 3rem;
-    }
-    .toggle-password-mask {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      height: 2.5rem;
-      width: 3rem;
-    }
   }
 
   #login-form {

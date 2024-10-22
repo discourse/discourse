@@ -58,20 +58,6 @@ body.invite-page {
     .tip {
       display: block;
     }
-    .input {
-      position: relative;
-      max-width: 240px;
-      #new-account-password {
-        padding-right: 3rem;
-      }
-    }
-    .toggle-password-mask {
-      position: absolute;
-      top: 0;
-      right: 0;
-      height: 2.25rem;
-      width: 3rem;
-    }
   }
 }
 
