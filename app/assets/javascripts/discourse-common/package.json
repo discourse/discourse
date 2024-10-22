@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.25.9",
     "@ember/string": "^4.0.0",
     "@uppy/aws-s3": "3.0.6",
     "@uppy/aws-s3-multipart": "3.1.3",
