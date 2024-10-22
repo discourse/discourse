@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
@@ -27,26 +27,6 @@ export default class ThemeCard extends Component {
 
   @tracked isUpdating = false;
 
-  @computed("args.theme.default")
-  get setDefaultButtonIcon() {
-    return this.args.theme.default ? "far-check-square" : "far-square";
-  }
-
-  @computed("args.theme.default")
-  get setDefaultButtonTitle() {
-    return this.args.theme.default
-      ? "admin.customize.theme.default_theme"
-      : "admin.customize.theme.set_default_theme";
-  }
-
-  @computed("args.theme.default")
-  get setDefaultButtonClasses() {
-    return this.args.theme.default
-      ? "btn-primary theme-card__button"
-      : "btn-default theme-card__button";
-  }
-
-  @computed("args.theme.default")
   get themeCardClasses() {
     return [
       "theme-card",
@@ -162,9 +142,18 @@ export default class ThemeCard extends Component {
           <DButton
             @action={{this.setDefault}}
             @preventFocus={{true}}
-            @icon={{this.setDefaultButtonIcon}}
-            @class={{this.setDefaultButtonClasses}}
-            @translatedLabel={{i18n this.setDefaultButtonTitle}}
+            @icon={{if @theme.default "far-check-square" "far-square"}}
+            @class={{concatClass
+              "theme-card__button"
+              (if @theme.default "btn-primary" "btn-default")
+            }}
+            @translatedLabel={{i18n
+              (if
+                @theme.default
+                "admin.customize.theme.default_theme"
+                "admin.customize.theme.set_default_theme"
+              )
+            }}
             @disabled={{@theme.default}}
           />
           <div class="theme-card__footer-actions">
