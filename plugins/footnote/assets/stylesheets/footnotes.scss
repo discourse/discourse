@@ -48,6 +48,7 @@
   z-index: z("modal", "tooltip");
   max-width: 400px;
   overflow-wrap: break-word;
+  box-sizing: border-box;
 
   .mobile-view & {
     // tooltips are positioned 5px from the left
