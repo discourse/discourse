@@ -10,7 +10,6 @@ import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
@@ -181,7 +180,6 @@ export default class ThemeCard extends Component {
                         @translatedLabel={{i18n
                           "admin.customize.theme.update_to_latest"
                         }}
-                        @preventFocus={{true}}
                       />
                     </dropdown.item>
                   {{/if}}
