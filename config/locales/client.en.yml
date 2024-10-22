@@ -2381,6 +2381,8 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
+      show_password: "Show"
+      hide_password: "Hide"
       show_password_title: "Show password"
       hide_password_title: "Hide password"
       second_factor_title: "Two-Factor Authentication"
