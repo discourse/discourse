@@ -1615,6 +1615,8 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("custom"),
          as: "custom_index"
 
+    get "/custom" => "custom_homepage#index"
+
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
     post "/user-api-key/revoke" => "user_api_keys#revoke"
