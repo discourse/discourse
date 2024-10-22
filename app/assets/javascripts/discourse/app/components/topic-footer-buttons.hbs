@@ -94,46 +94,66 @@
       {{/if}}
     {{/if}}
 
-  </div>
-  <div class="topic-footer-main-buttons__states">
-    <PinnedButton
-      @pinned={{this.topic.pinned}}
-      @topic={{this.topic}}
-      @appendReason={{false}}
-    />
-
-    {{#if this.showNotificationsButton}}
-      {{#if this.showNotificationUserTip}}
-        <UserTip
-          @id="topic_notification_levels"
-          @triggerSelector=".notifications-button"
-          @titleText={{i18n "user_tips.topic_notification_levels.title"}}
-          @contentText={{i18n "user_tips.topic_notification_levels.content"}}
+    {{#if this.site.desktopView}}
+      <PluginOutlet
+        @name="topic-footer-main-buttons-before-create"
+        @outletArgs={{hash topic=this.topic}}
+        @connectorTagName="span"
+      />
+      {{#if this.topic.details.can_create_post}}
+        <DButton
+          @icon="reply"
+          @action={{this.replyToPost}}
+          @label={{if this.site.desktopView "topic.reply.title"}}
+          @title="topic.reply.help"
+          class="btn-primary create"
         />
       {{/if}}
-      <TopicNotificationsButton
-        @notificationLevel={{this.topic.details.notification_level}}
+    {{/if}}
+
+  </div>
+  {{#if this.site.mobileView}}
+    <div class="topic-footer-main-buttons__states">
+      <PinnedButton
+        @pinned={{this.topic.pinned}}
         @topic={{this.topic}}
         @appendReason={{false}}
       />
-    {{/if}}
-  </div>
+
+      {{#if this.showNotificationsButton}}
+        {{#if this.showNotificationUserTip}}
+          <UserTip
+            @id="topic_notification_levels"
+            @triggerSelector=".notifications-button"
+            @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+            @contentText={{i18n "user_tips.topic_notification_levels.content"}}
+          />
+        {{/if}}
+        <TopicNotificationsButton
+          @notificationLevel={{this.topic.details.notification_level}}
+          @topic={{this.topic}}
+          @appendReason={{false}}
+        />
+      {{/if}}
+    </div>
+  {{/if}}
 </div>
 
-<PluginOutlet
-  @name="topic-footer-main-buttons-before-create"
-  @outletArgs={{hash topic=this.topic}}
-  @connectorTagName="span"
-/>
-
-{{#if this.topic.details.can_create_post}}
-  <DButton
-    @icon="reply"
-    @action={{this.replyToPost}}
-    @label={{if this.site.desktopView "topic.reply.title"}}
-    @title="topic.reply.help"
-    class="btn-primary create"
+{{#if this.site.mobileView}}
+  <PluginOutlet
+    @name="topic-footer-main-buttons-before-create"
+    @outletArgs={{hash topic=this.topic}}
+    @connectorTagName="span"
   />
+  {{#if this.topic.details.can_create_post}}
+    <DButton
+      @icon="reply"
+      @action={{this.replyToPost}}
+      @label={{if this.site.desktopView "topic.reply.title"}}
+      @title="topic.reply.help"
+      class="btn-primary create"
+    />
+  {{/if}}
 {{/if}}
 
 <PluginOutlet
