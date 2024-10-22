@@ -17,11 +17,15 @@ function drawableToImageData(drawable) {
   if (!ctx) {
     throw "Could not create canvas context";
   }
+
+  if (width * height > 67108864) {
+    throw "Canvas area exceeds maximum limit on this device";
+  }
+
   ctx.drawImage(drawable, sx, sy, sw, sh, 0, 0, width, height);
   const imageData = ctx.getImageData(0, 0, width, height);
 
-  // Safari shenanigans
-  canvas.width = canvas.height = 0;
+  releaseCanvas(canvas);
 
   return imageData;
 }
@@ -46,6 +50,16 @@ function jpegDecodeFailure(type, imageData) {
   }
 
   return imageData.data[3] === 0;
+}
+
+function releaseCanvas(canvas) {
+  // Safari memory limit shenanigans
+  // See https://pqina.nl/blog/total-canvas-memory-use-exceeds-the-maximum-limit/
+
+  canvas.width = 1;
+  canvas.height = 1;
+  const ctx = canvas.getContext("2d");
+  ctx && ctx.clearRect(0, 0, 1, 1);
 }
 
 export async function fileToImageData(file) {
