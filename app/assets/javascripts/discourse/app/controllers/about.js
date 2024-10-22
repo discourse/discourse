@@ -54,4 +54,17 @@ export default class AboutController extends Controller {
     }
     return Array.from(set);
   }
+
+  @discourseComputed(
+    "model.stats.visitors_7_days",
+    "model.stats.eu_visitors_7_days",
+    "siteSettings.display_eu_visitor_stats"
+  )
+  displayVisitorStats(visitors, euVisitors, displayEuVisitorStats) {
+    return (
+      displayEuVisitorStats &&
+      typeof euVisitors === "number" &&
+      typeof visitors === "number"
+    );
+  }
 }
