@@ -17,9 +17,11 @@ export default class ImagesUploader extends Component {
     },
   });
 
+  get uploadingOrProcessing() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
+  }
+
   get uploadButtonText() {
-    return this.uppyUpload.uploading || this.uppyUpload.processing
-      ? I18n.t("uploading")
-      : I18n.t("upload");
+    return this.uploadingOrProcessing ? I18n.t("uploading") : I18n.t("upload");
   }
 }
