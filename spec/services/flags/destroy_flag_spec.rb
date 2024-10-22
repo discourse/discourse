@@ -10,6 +10,8 @@ RSpec.describe(Flags::DestroyFlag) do
   let(:dependencies) { { guardian: current_user.guardian } }
   let(:flag_id) { flag.id }
 
+  after { flag.destroy }
+
   context "when model is not found" do
     let(:flag_id) { 0 }
 

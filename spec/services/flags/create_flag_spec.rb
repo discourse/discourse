@@ -41,6 +41,8 @@ RSpec.describe(Flags::CreateFlag) do
       let!(:flag) { Fabricate(:flag, name:) }
 
       it { is_expected.to fail_a_policy(:unique_name) }
+
+      after { flag.destroy! }
     end
 
     context "when everything's ok" do
@@ -53,6 +55,8 @@ RSpec.describe(Flags::CreateFlag) do
           OpenStruct.new(enabled?: true),
         )
       end
+
+      after { Flag.destroy_by(name: "custom flag name") }
 
       it { is_expected.to run_successfully }
 
