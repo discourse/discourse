@@ -58,11 +58,13 @@
       @action={{this.update}}
       @icon="check"
       @disabled={{this.disableSaveButton}}
+      @ariaLabel="admin.settings.save"
       class="ok setting-controls__ok"
     />
     <DButton
       @action={{this.cancel}}
       @icon="xmark"
+      @ariaLabel="admin.settings.cancel"
       class="cancel setting-controls__cancel"
     />
   </div>
@@ -71,6 +73,7 @@
     <DButton
       @action={{this.toggleSecret}}
       @icon="far-eye-slash"
+      @ariaLabel="admin.settings.unmask"
       class="setting-toggle-secret"
     />
   {{/if}}
