@@ -4735,6 +4735,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
+    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+
     image_removed: "(image removed)"
 
     pause_notifications:
@@ -5694,7 +5696,7 @@ en:
             move_down: "Move down"
         look_and_feel:
           title: "Look & feel"
-          description: "Themes, components, and color schemes can be used to customise and brand your Discourse site, giving it a distinctive style."
+          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."

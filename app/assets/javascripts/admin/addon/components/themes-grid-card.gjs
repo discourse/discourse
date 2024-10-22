@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
@@ -92,22 +93,23 @@ export default class ThemeCard extends Component {
 
   @action
   updateTheme() {
-    // TODO (martin): implement update theme logic
-    // while updating, set class on theme-card to updating
-    // class will cause card to perform animation during update
-    // once update is complete, remove class and trigger a toast, saying theme is updated
     this.isUpdating = true;
-    discourseLater(() => {
-      this.isUpdating = false;
-      this.toasts.success({
-        data: {
-          message: I18n.t("admin.customize.theme.update_success", {
-            theme: this.args.theme.name,
-          }),
-        },
-        duration: 2000,
+    this.args.theme
+      .updateToLatest()
+      .then(() => {
+        this.toasts.success({
+          data: {
+            message: I18n.t("admin.customize.theme.update_success", {
+              theme: this.args.theme.name,
+            }),
+          },
+          duration: 2000,
+        });
+      })
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.isUpdating = false;
       });
-    }, 5000);
   }
 
   <template>
@@ -163,7 +165,6 @@ export default class ThemeCard extends Component {
               @modalForMobile={{true}}
               @icon={{this.footerActionIcon}}
               @label={{if this.isUpdating (i18n this.footerActionLabel) ""}}
-              {{!-- @label={{i18n this.footerActionLabel}} --}}
               @triggers={{array "click"}}
             >
               <:content>
@@ -173,25 +174,17 @@ export default class ThemeCard extends Component {
                       <DButton
                         @action={{this.updateTheme}}
                         @icon="download"
-                        @class="btn-primary theme-card__button --update"
+                        @class="theme-card__button -update"
                         @preventFocus={{true}}
                         @translatedLabel={{i18n
                           "admin.customize.theme.update_to_latest"
                         }}
+                        @preventFocus={{true}}
                       />
                     </dropdown.item>
                     {{! TODO: Jordan
                     solutions for broken, disabled states }}
                   {{/if}}
-                  <dropdown.item>
-                    <a
-                      href={{this.themePreviewUrl}}
-                      title={{i18n "admin.customize.explain_preview"}}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      class="btn btn-transparent theme-card__button"
-                    >{{icon "eye"}} {{i18n "admin.customize.theme.preview"}}</a>
-                  </dropdown.item>
                   <dropdown.item>
                     <DButton
                       @translatedLabel={{i18n "admin.customize.theme.edit"}}
@@ -201,6 +194,15 @@ export default class ThemeCard extends Component {
                       @class="btn-transparent theme-card__button"
                       @preventFocus={{true}}
                     />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <a
+                      href={{this.themePreviewUrl}}
+                      title={{i18n "admin.customize.explain_preview"}}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      class="btn btn-transparent theme-card__button"
+                    >{{icon "eye"}} {{i18n "admin.customize.theme.preview"}}</a>
                   </dropdown.item>
                 </DropdownMenu>
               </:content>
