@@ -62,7 +62,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   def sound_the_alarm
     admin_notice.create_with(
       priority: check.priority,
-      details: details.merge(target:),
+      details: details.merge(target: target || ProblemCheck::NO_TARGET),
     ).find_or_create_by(identifier:)
   end
 
