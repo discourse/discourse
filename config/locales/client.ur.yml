@@ -1492,10 +1492,7 @@ ur:
           success: "دعوت لنک کامیابی سے بن گیا!"
           error: "مدعو کرنے کا لنک بنانے میں ایک خرابی تھی"
         invite:
-          new_title: "دعوت نامہ بنائیں"
-          edit_title: "دعوت میں ترمیم کریں"
           instructions: "اس سائٹ تک فوری رسائی دینے کے لیے اس لنک کا اشتراک کریں:"
-          copy_link: "لنک کاپی کریں"
           expires_in_time: "%{time}میں ختم ہو گا"
           expired_at_time: "%{time}پر ختم ہو گا"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
@@ -1507,11 +1504,11 @@ ur:
           max_redemptions_allowed: "زیادہ سے زیادہ استعمال"
           add_to_groups: "گروپوں میں شامل"
           invite_to_topic: "موضوع پر پہنچیں"
-          expires_at: "کے بعدختم"
-          custom_message: "اختیاری ذاتی پیغام"
+          expires_after: "کے بعدختم"
           send_invite_email: "محفوظ کریں اور ای میل بھیجیں"
           send_invite_email_instructions: "ای میل پر مدعوکے لئے دعوت نامہ کی ای میل کو محدود کریں"
-          save_invite: "دعوت نامہ محفوظ کریں"
+          save_invite: "محفوظ کریں"
+          cancel: "منسوخ"
           invite_saved: "دعوت نامہ محفوظ ہے"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
@@ -1730,7 +1727,7 @@ ur:
     login:
       header_title: "خوش آمدید"
       subheader_title: "اپنے اکاؤنٹ میں لاگ ان کریں"
-      title: "لاگ ان"
+      title: "لاگ اِن"
       username: "صارف"
       password: "پاسورڈ"
       show_password: "دکھائیں"
@@ -4028,6 +4025,9 @@ ur:
             invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
+        look_and_feel:
+          themes:
+            title: "تِھیمز"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"

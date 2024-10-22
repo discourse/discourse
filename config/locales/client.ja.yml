@@ -26,6 +26,7 @@ ja:
         millions: "%{number}M"
     dates:
       time: "a h:mm"
+      time_short: "h:mm"
       time_with_zone: "a hh:mm (z)"
       time_short_day: "ddd a h:mm"
       timeline_date: "YYYY 年 MMM"
@@ -1733,12 +1734,11 @@ ja:
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
         invite:
-          new_title: "招待の作成"
-          edit_title: "招待の編集"
           instructions: "このサイトへのアクセスを即時に許可するにはこのリンクを共有します:"
-          copy_link: "リンクをコピー"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
+          copy_link: "リンクをコピーする"
+          link_copied: "リンクがコピーされました！"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
           restrict: "制限する:"
@@ -1748,11 +1748,11 @@ ja:
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
           invite_to_topic: "トピックに到着"
-          expires_at: "有効期限"
-          custom_message: "オプションの個人メッセージ"
+          expires_after: "有効期限"
           send_invite_email: "保存してメールを送信"
           send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
-          save_invite: "招待を保存"
+          save_invite: "保存"
+          cancel: "キャンセル"
           invite_saved: "招待は保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
@@ -5033,6 +5033,9 @@ ja:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
+        look_and_feel:
+          themes:
+            title: "テーマ"
       plugins:
         title: "プラグイン"
         name: "名前"

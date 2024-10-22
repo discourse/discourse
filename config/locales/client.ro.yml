@@ -27,6 +27,7 @@ ro:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -265,7 +266,7 @@ ro:
     no_value: "Nu"
     yes_value: "Da"
     ok_value: "Ok"
-    cancel_value: "Anulare"
+    cancel_value: "Anulează"
     submit: "Trimite"
     delete: "Șterge"
     generic_error: "Regret, a apărut o eroare."
@@ -331,7 +332,7 @@ ro:
       our_moderators: "Moderatorii noștri"
       moderators: "Moderatori"
       stat:
-        last_day: "24 ore"
+        last_day: "24 de ore"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Articole"
@@ -684,7 +685,7 @@ ro:
       now: "Acum"
       in_one_hour: "Într-o oră"
       in_two_hours: "In două ore"
-      later_today: "Mai târziu azi"
+      later_today: "Mai târziu astăzi"
       two_days: "Două zile"
       three_days: "În trei zile"
       next_business_day: "Următoarea zi lucrătoare"
@@ -1077,7 +1078,7 @@ ro:
         label: "Activează programul de notificări personalizat"
         none: "Nimeni"
         monday: "Luni"
-        tuesday: "Marţi"
+        tuesday: "Marți"
         wednesday: "Miercuri"
         thursday: "Joi"
         friday: "Vineri"
@@ -1289,7 +1290,7 @@ ro:
           save: "Salvează"
           name_required_error: "Trebuie să oferi un nume pentru cheia de securitate."
       passkeys:
-        save: "Salvare"
+        save: "Salvează"
         added_date: "Adăugată în %{date}"
         last_used_date: "Ultima utilizare %{date}"
         confirm_button: "sau folosește o cheie de acces"
@@ -1509,8 +1510,33 @@ ro:
         invite_link:
           success: "Link de invitare generat cu succes!"
         invite:
+          new_title: "Invită membri"
+          edit_title: "Editează invitație"
+          create_link_to_invite: "Creează o legătură care poate fi partajată pentru a acorda instantaneu acces la acest site."
+          copy_link_and_share_it: "Copiază legătura de mai jos și partajeaz-o pentru a acorda instantaneu acces la acest site."
+          copy_link: "Copiază legătură"
+          link_copied: "Legătură copiată!"
+          share_link: "Partajează legătură"
+          link_validity_MF: |
+            Legătura este valabil pentru până la { user_count, plural,
+                one {un utilizator}
+                few {# utilizatori}
+              other {# de utilizatori}
+            } și expiră { duration_days, plural,
+                one {într-o zi}
+                few {în # zile}
+              other {în # de zile}
+            }.
+          edit_link_options: "Editează opțiuni legătură."
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
+          expires_at: "Expiră la"
+          expires_after: "Expiră după"
+          custom_message: "Mesaj personalizat"
+          custom_message_placeholder: "Adaugă o notă personală invitației tale"
+          save_invite: "Salvează"
+          cancel: "Anulează"
+          create_link: "Creează legătură"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -1697,6 +1723,7 @@ ro:
       title: "Înregistrare"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
       associate: "Ai deja un cont? <a href='%{associate_link}'>Loghează-te</a> pentru a conecta contul tău %{provider}."
+      no_account_yet: "Nu ai un cont?"
       progress_bar:
         signup: "Înregistrare"
         activate: "Activează"
@@ -2812,9 +2839,9 @@ ro:
           few: "introdu cel puțin %{count} caractere"
           other: "introdu cel puțin %{count} de caractere"
         left:
-          one: "a mai rămas %{count}"
-          few: "au mai rămas %{count}"
-          other: "au mai rămas %{count}"
+          one: "%{count} rămas"
+          few: "%{count} rămase"
+          other: "%{count} rămase"
     flagging_topic:
       title: "Îți mulțumim că ne menții comunitatea civilă!"
       action: "Semnalează subiect"
@@ -3189,7 +3216,7 @@ ro:
       sections:
         custom:
           add: "Adaugă secțiune personalizată"
-          save: "Salvare"
+          save: "Salvează"
           delete: "Șterge"
           links:
             add: "Adaugă altă legătură"
@@ -3352,6 +3379,12 @@ ro:
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
           previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
+          experiment_enabled: "Ai activat funcționalitatea experimentală."
+          experiment_disabled: "Ai dezactivat funcționalitatea experimentală."
+          experiment_toggled_too_fast: "Ai comutat prea repede funcționalitatea experimentală. Te rugăm să aștepți câteva secunde înainte de a încerca din nou."
+          experiment_tooltip:
+            title: "Încearcă funcționalitatea noastră experimentală"
+            content: "Dă o tură celei mai noi funcționalități în curs de dezvoltare! Este încă în stadiu experimental, așa că am putea să o eliminăm oricând. Poți renunța oricând vrei."
         last_checked: "Ultima verificare"
         refresh_problems: "Reîmprospătează"
         no_problems: "Nu a apărut nicio problemă."
@@ -3604,14 +3637,27 @@ ro:
           flags_tab: "Semnalări"
           settings: "Setări semnalări"
           form:
-            save: "Salvare"
+            save: "Salvează"
             name: "Nume"
             description: "Descriere"
             invalid_applies_to: "Necesare"
             topic: "discuții"
             post: "Postări"
+            auto_action_type: "Tip de acțiune automată"
           more_options:
             title: "Mai multe opțiuni"
+        look_and_feel:
+          title: "Aspect și senzație"
+          description: "Temele, componentele și schemele de culori pot fi utilizate pentru a personaliza și marca site-ul Discourse, oferindu-i un stil distinctiv."
+          themes:
+            title: "Teme"
+            themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
+            themes_intro_img_alt: "Substituent nou pentru temă"
+            set_default_theme: "Setare implicită"
+            default_theme: "Temă implicită"
+            themes_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
+            new_theme: "Temă nouă"
+            user_selectable: "Selectabil de către utilizator"
       plugins:
         title: "Plugin-uri"
         installed: "Module instalate"
@@ -3672,7 +3718,7 @@ ro:
         operations:
           failed: "operația %{operation} nu s-a finalizat. Te rugăm verifică rapoartele."
           cancel:
-            label: "Anulare"
+            label: "Anulează"
             title: "Anulează operația curentă"
             confirm: "Ești sigur că dorești să anulezi operația curentă?"
           backup:
@@ -3713,7 +3759,7 @@ ro:
         title: "Personalizare"
         preview: "previzualizare"
         explain_preview: "Vizualizează site-ul cu această temă activată"
-        save: "Salvare"
+        save: "Salvează"
         new: "Nou"
         new_style: "Stil nou"
         delete: "Șterge"
@@ -3736,12 +3782,14 @@ ro:
           disabled_filter: "Dezactivat"
         theme:
           theme: "Temă"
+          themes_intro_new: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
+          themes_intro_img_alt: "Substituent nou pentru temă"
           customize_desc: "Personalizează:"
           title: "Teme"
           create: "Creează"
           create_type: "Tip"
           create_name: "Nume"
-          save: "Salvare"
+          save: "Salvează"
           long_title: "Modifică culori, CSS și conținutul HTML al site-ului"
           edit: "Modifică"
           common: "Comun"
@@ -3755,7 +3803,10 @@ ro:
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
-          cancel: "Anulare"
+          set_default_theme: "Setare implicită"
+          default_theme: "Temă implicită"
+          set_default_success: "Temă implicită setată la %{theme}"
+          cancel: "Anulează"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"
@@ -4091,8 +4142,8 @@ ro:
           edit: "Modifică"
           delete: "Șterge"
         new_template_form:
-          submit: "Salvare"
-          cancel: "Anulare"
+          submit: "Salvează"
+          cancel: "Anulează"
           preview: "Previzualizează"
         quick_insert_fields:
           add_new_field: "Adaugă"
@@ -4192,7 +4243,7 @@ ro:
         permissions: Permisiuni
         activity: Activitate
         like_count: Aprecieri acordate / primite
-        last_100_days: "în ultimele 100 zile"
+        last_100_days: "în ultimele 100 de zile"
         private_topics_count: Subiecte private
         posts_read_count: Postări citite
         post_count: Postări create
@@ -4282,7 +4333,7 @@ ro:
             other: "În ultimele %{count} de zile:"
           value_heading: "Valoare"
           requirement_heading: "Cerință"
-          days: "Zile"
+          days: "zile"
           topics_replied_to: "Subiecte la care s-a răspuns"
           topics_viewed: "Subiecte vizualizate"
           topics_viewed_all_time: "Subiecte vizualizate (dintotdeauna)"
@@ -4522,7 +4573,7 @@ ro:
         category_id: "ID categorie"
         category_title: "Categorie"
         username: "Nume utilizator"
-        copy_to_clipboard: "Copiază legătură permanentă în memoria temporară"
+        copy_to_clipboard: "Copiază legătură permanentă în clipboard"
         delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:
           label: "Nou:"

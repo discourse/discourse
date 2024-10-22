@@ -1118,13 +1118,13 @@ sv:
       yaxis: "Dag"
       description: "Antalet användare som ökade sin förtroendenivå under denna period."
     consolidated_page_views:
-      title: "Konsoliderade sidvisningar"
+      title_legacy: "Konsoliderade sidvisningar"
       xaxis:
         page_view_crawler: "Sökrobotar"
         page_view_anon: "Anonyma användare"
         page_view_logged_in: "Inloggade användare"
       yaxis: "Dag"
-      description: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
+      description_legacy: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
       labels:
         post: Inlägg
         editor: Redigerare
@@ -1291,6 +1291,9 @@ sv:
       xaxis: "Dag"
       yaxis: "Totalt antal sidvisningar"
       description: "Antal nya sidvisningar från alla besökare."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal sidvisningar"
     page_view_logged_in_mobile_reqs:
       title: "Inloggade sidvisningar"
       xaxis: "Dag"

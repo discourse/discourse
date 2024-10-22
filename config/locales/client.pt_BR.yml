@@ -27,6 +27,7 @@ pt_BR:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1834,12 +1835,11 @@ pt_BR:
           success: "Link do convite gerado com sucesso!"
           error: "Ocorreu um erro ao gerar o link de convite"
         invite:
-          new_title: "Criar convite"
-          edit_title: "Editar convite"
           instructions: "Compartilhar este link para conceder acesso imediato ao site:"
-          copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
+          copy_link: "Copiar link"
+          link_copied: "Link copiado!"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
           restrict: "Restringir a"
@@ -1849,11 +1849,11 @@ pt_BR:
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Adicionar a grupos"
           invite_to_topic: "Chegar ao tópico"
-          expires_at: "Expira após"
-          custom_message: "Mensagem pessoal opcional"
+          expires_after: "Expira após"
           send_invite_email: "Salvar e enviar e-mail"
           send_invite_email_instructions: "Restringir convite a e-mail para enviar um e-mail de convite"
-          save_invite: "Salvar convite"
+          save_invite: "Salvar"
+          cancel: "Cancelar"
           invite_saved: "Convite salvo"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
@@ -5296,6 +5296,9 @@ pt_BR:
             title: "Mais opções"
             move_up: "Mover para cima"
             move_down: "Mover para baixo"
+        look_and_feel:
+          themes:
+            title: "Temas"
       plugins:
         title: "Plugins"
         name: "Nome"

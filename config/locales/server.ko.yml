@@ -966,13 +966,13 @@ ko:
       yaxis: "일"
       description: "이 기간에 신뢰 레벨을 높인 사용자 수입니다."
     consolidated_page_views:
-      title: "통합 페이지 뷰"
+      title_legacy: "통합 페이지 뷰"
       xaxis:
         page_view_crawler: "겉옷"
         page_view_anon: "익명 사용자"
         page_view_logged_in: "로그인한 사용자"
       yaxis: "일"
-      description: "로그인한 사용자, 익명 사용자 및 크롤러에 대한 페이지 뷰입니다."
+      description_legacy: "로그인 한 사용자, 익명 사용자 및 크롤러에 대한 페이지 뷰"
       labels:
         post: 게시물
         editor: 에디터
@@ -1137,6 +1137,9 @@ ko:
       xaxis: "일"
       yaxis: "총 페이지뷰"
       description: "모든 방문자의 새 페이지뷰 수입니다."
+    page_view_legacy_total_reqs:
+      xaxis: "일"
+      yaxis: "총 페이지뷰"
     page_view_logged_in_mobile_reqs:
       title: "로그인한 페이지뷰"
       xaxis: "일"
