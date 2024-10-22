@@ -6989,6 +6989,9 @@ en:
         history: "View change history"
         reset: "reset"
         none: "none"
+        save: "save"
+        cancel: "cancel"
+        unmask: "unmask input"
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
