@@ -1,6 +1,6 @@
 #topic-footer-buttons {
-  display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   flex-wrap: nowrap;
   gap: 0.5rem;
 
@@ -12,7 +12,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-
+    gap: 0.5em;
     .create,
     .share-and-invite,
     .flag-topic,
@@ -153,3 +153,48 @@
     margin-bottom: 0;
   }
 }
+
+// #topic-footer-buttons {
+//   .d-icon-bookmark.bookmarked,
+//   .d-icon-discourse-bookmark-clock.bookmarked {
+//     color: var(--tertiary);
+//   }
+
+//   .topic-footer-main-buttons {
+//     display: flex;
+//     align-items: stretch;
+//   }
+
+//   .topic-footer-mobile-dropdown {
+//     margin-right: 0.5em;
+//     display: flex;
+//   }
+
+//   .select-kit-header {
+//     height: 100%;
+//   }
+
+//   .topic-notifications-button,
+//   .pinned-button {
+//     display: flex;
+//     align-items: center;
+
+//     .reason {
+//       display: flex;
+//       flex-direction: column;
+//       align-items: flex-start;
+
+//       .text {
+//         margin-left: 0;
+//         margin-top: 0.25rem;
+//       }
+//     }
+//     @include breakpoint(mobile-medium) {
+//       display: inline-block;
+//       .reason {
+//         display: block;
+//         margin: 0.5em 0 0 0;
+//       }
+//     }
+//   }
+// }

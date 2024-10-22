@@ -1,0 +1,12 @@
+#topic-footer-buttons {
+  flex-direction: column;
+  gap: var(--below-topic-margin);
+}
+
+.topic-footer-main-buttons {
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+}
