@@ -56,7 +56,7 @@ RSpec.describe(Flags::CreateFlag) do
         )
       end
 
-      after { Flag.destroy_by(name: "custom flag name") }
+      after { flag.destroy! }
 
       it { is_expected.to run_successfully }
 
