@@ -40,9 +40,11 @@ RSpec.describe(Flags::CreateFlag) do
     context "when name is not unique" do
       let!(:flag) { Fabricate(:flag, name:) }
 
-      it { is_expected.to fail_a_policy(:unique_name) }
-
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
       after { flag.destroy! }
+
+      it { is_expected.to fail_a_policy(:unique_name) }
     end
 
     context "when everything's ok" do
@@ -56,6 +58,8 @@ RSpec.describe(Flags::CreateFlag) do
         )
       end
 
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
       after { flag.destroy! }
 
       it { is_expected.to run_successfully }
