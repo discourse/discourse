@@ -48,12 +48,6 @@ export default class ThemeCard extends Component {
     return this.args.theme.isPendingUpdates ? "sync" : "ellipsis-h";
   }
 
-  get footerActionLabel() {
-    return this.args.theme.isPendingUpdates
-      ? "admin.customize.theme.updating"
-      : "";
-  }
-
   // NOTE: inspired by -> https://github.com/discourse/discourse/blob/24caa36eef826bcdaed88aebfa7df154413fb349/app/assets/javascripts/admin/addon/controllers/admin-customize-themes-show.js#L366
   //
   // Will also need some cleanup when refactoring other theme code.
@@ -93,6 +87,10 @@ export default class ThemeCard extends Component {
 
   @action
   updateTheme() {
+    if (this.isUpdating) {
+      return;
+    }
+
     this.isUpdating = true;
     this.args.theme
       .updateToLatest()
@@ -164,7 +162,11 @@ export default class ThemeCard extends Component {
               @triggerClass="theme-card__footer-menu btn-flat"
               @modalForMobile={{true}}
               @icon={{this.footerActionIcon}}
-              @label={{if this.isUpdating (i18n this.footerActionLabel) ""}}
+              @label={{if
+                this.isUpdating
+                (i18n "admin.customize.theme.updating")
+                ""
+              }}
               @triggers={{array "click"}}
             >
               <:content>
@@ -182,9 +184,9 @@ export default class ThemeCard extends Component {
                         @preventFocus={{true}}
                       />
                     </dropdown.item>
-                    {{! TODO: Jordan
-                    solutions for broken, disabled states }}
                   {{/if}}
+                  {{! TODO: Jordan
+                    solutions for broken, disabled states }}
                   <dropdown.item>
                     <DButton
                       @translatedLabel={{i18n "admin.customize.theme.edit"}}
