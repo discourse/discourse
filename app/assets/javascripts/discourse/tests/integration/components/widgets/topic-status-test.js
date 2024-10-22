@@ -55,10 +55,9 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
     );
 
     assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
-    assert.ok(
-      !exists(".topic-statuses .unpinned"),
-      "unpinned icon is not shown"
-    );
+    assert
+      .dom(".topic-statuses .unpinned")
+      .doesNotExist("unpinned icon is not shown");
 
     await click(".topic-statuses .pin-toggle-button");
 
@@ -68,9 +67,8 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
     await click(".topic-statuses .pin-toggle-button");
 
     assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
-    assert.ok(
-      !exists(".topic-statuses .unpinned"),
-      "unpinned icon is not shown"
-    );
+    assert
+      .dom(".topic-statuses .unpinned")
+      .doesNotExist("unpinned icon is not shown");
   });
 });

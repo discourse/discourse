@@ -1000,13 +1000,13 @@ ur:
       yaxis: "دن"
       description: "صارفین کی تعداد جنہوں نے اس مدت کے دوران اپنے اعتماد کی سطح کو بڑھایا۔"
     consolidated_page_views:
-      title: "مجموعی صفحہ ملاحظات"
+      title_legacy: "مجموعی صفحہ ملاحظات"
       xaxis:
         page_view_crawler: "کرالرز"
         page_view_anon: "گمنام صارفین"
         page_view_logged_in: "لاگڈ اِن صارفین"
       yaxis: "دن"
-      description: "لاگڈ اِن صارفین، گمنام صارفین اور کرالرز کے صفحہ ملاحظات۔"
+      description_legacy: "لاگڈ اِن صارفین، گمنام صارفین اور کرالرز کے صفحہ ملاحظات۔"
       labels:
         post: پوسٹ
         editor: ترمیم کنندہ
@@ -1170,6 +1170,9 @@ ur:
       xaxis: "دن"
       yaxis: "صفحہ کے کُل ملاحظات"
       description: "تمام زائرین کی طرف سے نئے صفحہ ملاحظات کی تعداد۔"
+    page_view_legacy_total_reqs:
+      xaxis: "دن"
+      yaxis: "صفحہ کے کُل ملاحظات"
     page_view_logged_in_mobile_reqs:
       title: "صفحہ کے لاگڈ اِن ملاحظات"
       xaxis: "دن"

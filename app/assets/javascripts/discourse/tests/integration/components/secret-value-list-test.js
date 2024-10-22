@@ -2,7 +2,7 @@ import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | secret-value-list", function (hooks) {
@@ -73,10 +73,9 @@ module("Integration | Component | secret-value-list", function (hooks) {
     await fillIn(".new-value-input.secret", "keyWithAPipe|Hidden");
     await click(".add-value-btn");
 
-    assert.ok(
-      !exists(".values .value"),
-      "it doesn't add the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .doesNotExist("it doesn't add the value to the list of values");
 
     assert.deepEqual(
       this.values,

@@ -121,7 +121,7 @@ GEM
     date (3.3.4)
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
-    diffy (3.4.2)
+    diffy (3.4.3)
     digest (3.1.1)
     discourse-fonts (0.0.9)
     discourse-seed-fu (2.3.12)
@@ -420,7 +420,7 @@ GEM
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
       rspec-mocks (~> 3.13.0)
-    rspec-core (3.13.1)
+    rspec-core (3.13.2)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.3)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -485,7 +485,7 @@ GEM
     rubocop-rspec_rails (2.30.0)
       rubocop (~> 1.61)
       rubocop-rspec (~> 3, >= 3.0.1)
-    ruby-prof (1.7.0)
+    ruby-prof (1.7.1)
     ruby-progressbar (1.13.0)
     ruby-readability (0.7.2)
       guess_html_encoding (>= 0.0.4)
@@ -578,7 +578,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.37)
-    zeitwerk (2.7.0)
+    zeitwerk (2.7.1)
 
 PLATFORMS
   aarch64-linux
@@ -677,6 +677,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-oauth2
   omniauth-twitter
+  parallel
   parallel_tests
   pg
   pry-byebug

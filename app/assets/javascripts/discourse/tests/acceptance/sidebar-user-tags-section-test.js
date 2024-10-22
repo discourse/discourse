@@ -120,10 +120,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
-      "the tag1 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
+      .exists("the tag1 section link is marked as active");
 
     await click(".sidebar-section-link-wrapper[data-tag-name=tag2] a");
 
@@ -141,10 +140,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag2] a.active`),
-      "the tag2 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag2] a.active`)
+      .exists("the tag2 section link is marked as active");
   });
 
   test("clicking tag section links - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {
@@ -171,10 +169,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
-      "the tag1 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
+      .exists("the tag1 section link is marked as active");
   });
 
   test("clicking tag section links - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
@@ -215,10 +212,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
-      "the tag1 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
+      .exists("the tag1 section link is marked as active");
   });
 
   test("clicking tag section links - sidebar_link_to_filtered_list set to true with unread topics", async function (assert) {
@@ -259,10 +255,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`),
-      "the tag1 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
+      .exists("the tag1 section link is marked as active");
   });
 
   test("private message tag section links for user", async function (assert) {
@@ -284,10 +279,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(`.sidebar-section-link-wrapper[data-tag-name=tag4] a.active`),
-      "the tag4 section link is marked as active"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-tag-name=tag4] a.active`)
+      .exists("the tag4 section link is marked as active");
   });
 
   test("visiting tag discovery top route", async function (assert) {
@@ -301,10 +295,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
-      "the tag1 section link is marked as active for the top route"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
+      .exists("the tag1 section link is marked as active for the top route");
   });
 
   test("visiting tag discovery new ", async function (assert) {
@@ -318,10 +311,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
-      "the tag1 section link is marked as active for the new route"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
+      .exists("the tag1 section link is marked as active for the new route");
   });
 
   test("visiting tag discovery unread route", async function (assert) {
@@ -335,10 +327,9 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "only one link is marked as active"
     );
 
-    assert.ok(
-      exists(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active"),
-      "the tag1 section link is marked as active for the unread route"
-    );
+    assert
+      .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
+      .exists("the tag1 section link is marked as active for the unread route");
   });
 
   test("show suffix indicator for new content on tag section links", async function (assert) {

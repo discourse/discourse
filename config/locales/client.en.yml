@@ -1964,14 +1964,26 @@ en:
           error: "There was an error generating Invite link"
 
         invite:
-          new_title: "Create Invite"
-          edit_title: "Edit Invite"
+          new_title: "Invite members"
+          edit_title: "Edit invite"
 
           instructions: "Share this link to instantly grant access to this site:"
-          copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
-
+          create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
+          copy_link_and_share_it: "Copy the link below and share it to instantly grant access to this site."
+          copy_link: "Copy link"
+          link_copied: "Link copied!"
+          share_link: "Share link"
+          link_validity_MF: |
+            Link is valid for up to { user_count, plural,
+                one {# user}
+              other {# users}
+            } and expires in { duration_days, plural,
+                one {# day}
+              other {# days}
+            }.
+          edit_link_options: "Edit link options."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -1984,12 +1996,16 @@ en:
 
           add_to_groups: "Add to groups"
           invite_to_topic: "Arrive at topic"
-          expires_at: "Expire after"
-          custom_message: "Optional personal message"
+          expires_at: "Expire at"
+          expires_after: "Expire after"
+          custom_message: "Custom message"
+          custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save Invite"
+          save_invite: "Save"
+          cancel: "Cancel"
+          create_link: "Create link"
 
           invite_saved: "Invite saved."
 
@@ -5088,6 +5104,13 @@ en:
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
+          experiment_enabled: "You have enabled the experimental feature."
+          experiment_disabled: "You have disabled the experimental feature."
+          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          experiment_tooltip:
+            title: "Try our experimental feature"
+            content: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like."
+
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5581,7 +5604,7 @@ en:
       config_areas:
         about:
           header: "About your site"
-          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue."
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5663,6 +5686,8 @@ en:
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             require_message: "Prompt users to provide additional reasons"
             require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
+            auto_action_type: "Auto action type"
+            auto_action_type_description: "When a post is flagged by a staff member it is automatically hidden"
           more_options:
             title: "More options"
             move_up: "Move up"

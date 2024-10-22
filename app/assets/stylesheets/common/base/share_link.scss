@@ -13,6 +13,16 @@
   }
 }
 
+.link-share-container {
+  .invite-link {
+    flex: 1 0;
+  }
+
+  .mobile-view & {
+    flex-direction: column;
+  }
+}
+
 .link-share-actions {
   display: flex;
   flex-wrap: wrap;
@@ -40,102 +50,5 @@
 .share-facebook {
   .d-icon {
     color: var(--facebook);
-  }
-}
-
-// topic invite modal
-
-.create-invite-modal {
-  form {
-    margin: 0;
-  }
-
-  input {
-    margin-bottom: 0;
-  }
-
-  label {
-    margin-right: 0.5em;
-    .d-icon {
-      color: var(--primary-medium);
-      margin-right: 0.75em;
-    }
-  }
-
-  textarea {
-    margin-bottom: 0;
-  }
-
-  .input-group:not(:last-of-type) {
-    margin-bottom: 1em;
-  }
-  .input-group.input-expires-at,
-  .input-group.input-email,
-  .input-group.invite-max-redemptions {
-    input[type="text"] {
-      width: unset;
-    }
-  }
-
-  .existing-topic,
-  p {
-    // p is for "no topics found"
-    margin-left: 1.75em;
-    margin-top: 0.25em;
-  }
-
-  .input-group.input-email {
-    display: flex;
-    align-items: baseline;
-    label {
-      display: inline;
-    }
-  }
-
-  .invite-email-container {
-    flex: 1 1 auto;
-    #invite-email {
-      width: 100%;
-    }
-  }
-
-  .invite-max-redemptions {
-    label {
-      display: inline;
-    }
-    input {
-      width: 80px;
-    }
-  }
-
-  .invite-custom-message {
-    label {
-      margin-left: 1.75em;
-    }
-  }
-
-  .input-group {
-    textarea#invite-message,
-    &.invite-to-topic input[type="text"],
-    .group-chooser,
-    .topic-chooser,
-    .user-chooser,
-    .future-date-input-selector,
-    .future-date-input-date-picker,
-    .future-date-input-time-picker {
-      margin-left: 1.75em;
-      width: calc(100% - 1.75em);
-    }
-
-    .future-date-input-date-picker,
-    .future-date-input-time-picker {
-      display: inline-block;
-      margin: 0em 0em 0em 1.75em;
-      width: calc(50% - 2em);
-
-      input {
-        height: 34px;
-      }
-    }
   }
 }

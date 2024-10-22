@@ -49,7 +49,6 @@ ja:
       deleted_chat_username: 削除
       dates:
         yesterday: "昨日"
-        time_tiny: "h:mm"
       all_loaded: "すべてのメッセージを表示中"
       already_enabled: "このトピックのチャットはすでに有効になっています。再読み込みしてください。"
       disabled_for_topic: "このトピックのチャットは無効になっています。"

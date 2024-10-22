@@ -939,12 +939,12 @@ lt:
       yaxis: "Diena"
       description: "Vartotojų, kurie per šį laikotarpį padidino savo patikimumo lygį, skaičius."
     consolidated_page_views:
-      title: "Konsoliduotos puslapio peržiūros"
+      title_legacy: "Konsoliduotos puslapio peržiūros"
       xaxis:
         page_view_anon: "Anoniminiai vartotojai"
         page_view_logged_in: "Prisijungę vartotojai"
       yaxis: "Diena"
-      description: "Puslapių peržiūros prisijungusiems vartotojams, anoniminiams vartotojams ir tikrinimo programoms."
+      description_legacy: "Puslapių peržiūros prisijungusiems vartotojams, anoniminiams vartotojams ir tikrinimo programoms."
       labels:
         post: Įrašai
         editor: Redaguotojas
@@ -1098,6 +1098,9 @@ lt:
       xaxis: "Diena"
     page_view_total_reqs:
       title: "Puslapio peržiūros"
+      xaxis: "Diena"
+      yaxis: "Iš viso puslapių peržiūrų"
+    page_view_legacy_total_reqs:
       xaxis: "Diena"
       yaxis: "Iš viso puslapių peržiūrų"
     page_view_logged_in_mobile_reqs:

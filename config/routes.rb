@@ -326,6 +326,7 @@ Discourse::Application.routes.draw do
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
+      post "/toggle-feature" => "dashboard#toggle_feature"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -1613,6 +1614,8 @@ Discourse::Application.routes.draw do
     root to: "custom_homepage#index",
          constraints: HomePageConstraint.new("custom"),
          as: "custom_index"
+
+    get "/custom" => "custom_homepage#index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

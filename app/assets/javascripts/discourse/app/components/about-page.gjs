@@ -120,7 +120,7 @@ export default class AboutPage extends Component {
       },
     ];
 
-    if (this.siteSettings.display_eu_visitor_stats) {
+    if (this.displayVisitorStats) {
       list.splice(2, 0, {
         icon: "user-secret",
         class: "visitors",
@@ -135,6 +135,14 @@ export default class AboutPage extends Component {
     }
 
     return list.concat(this.siteActivitiesFromPlugins());
+  }
+
+  get displayVisitorStats() {
+    return (
+      this.siteSettings.display_eu_visitor_stats &&
+      typeof this.args.model.stats.eu_visitors_7_days === "number" &&
+      typeof this.args.model.stats.visitors_7_days === "number"
+    );
   }
 
   get contactInfo() {
@@ -292,7 +300,7 @@ export default class AboutPage extends Component {
             </div>
           {{/each}}
         </div>
-        {{#if this.siteSettings.display_eu_visitor_stats}}
+        {{#if this.displayVisitorStats}}
           <p class="about traffic-info-footer"><small
             >{{this.trafficInfoFooter}}</small></p>
         {{/if}}

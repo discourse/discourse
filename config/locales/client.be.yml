@@ -686,6 +686,9 @@ be:
         time_read: "час чытання"
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
+        invite:
+          save_invite: "захаваць"
+          cancel: "адмяніць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта просты."
@@ -806,6 +809,7 @@ be:
     email_login:
       confirm_title: Працягнуць да %{site_name}
     login:
+      title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"

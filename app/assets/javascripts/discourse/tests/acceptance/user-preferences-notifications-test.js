@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   fakeTime,
   loggedInUser,
   queryAll,
@@ -17,15 +16,13 @@ acceptance("User notification schedule", function (needs) {
   test("the schedule interface is hidden until enabled", async function (assert) {
     await visit("/u/eviltrout/preferences/notifications");
 
-    assert.ok(
-      !exists(".notification-schedule-table"),
-      "notification schedule is hidden"
-    );
+    assert
+      .dom(".notification-schedule-table")
+      .doesNotExist("notification schedule is hidden");
     await click(".control-group.notification-schedule input");
-    assert.ok(
-      exists(".notification-schedule-table"),
-      "notification schedule is visible"
-    );
+    assert
+      .dom(".notification-schedule-table")
+      .exists("notification schedule is visible");
   });
 
   test("By default every day is selected 8:00am - 5:00pm", async function (assert) {

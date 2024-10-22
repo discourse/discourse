@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Composer - Draft saving", function (needs) {
@@ -24,10 +24,9 @@ acceptance("Composer - Draft saving", function (needs) {
 
     await fillIn(".d-editor-input", draftThatWillBeSaved);
 
-    assert.notOk(
-      exists("div#draft-status span"),
-      "the draft was saved, there's no warning"
-    );
+    assert
+      .dom("div#draft-status span")
+      .doesNotExist("the draft was saved, there's no warning");
 
     await fillIn(".d-editor-input", "This won't be saved because of error");
     assert
@@ -36,15 +35,13 @@ acceptance("Composer - Draft saving", function (needs) {
         I18n.t("composer.drafts_offline"),
         "the draft wasn't saved, a warning is rendered"
       );
-    assert.ok(
-      exists("div#draft-status svg.d-icon-triangle-exclamation"),
-      "an exclamation icon is rendered"
-    );
+    assert
+      .dom("div#draft-status svg.d-icon-triangle-exclamation")
+      .exists("an exclamation icon is rendered");
 
     await fillIn(".d-editor-input", draftThatWillBeSaved);
-    assert.notOk(
-      exists("div#draft-status span"),
-      "the draft was saved again, the warning has disappeared"
-    );
+    assert
+      .dom("div#draft-status span")
+      .doesNotExist("the draft was saved again, the warning has disappeared");
   });
 });

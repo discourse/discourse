@@ -50,7 +50,6 @@ nl:
       deleted_chat_username: verwijderd
       dates:
         yesterday: "Gisteren"
-        time_tiny: "h:mm"
       all_loaded: "Alle berichten worden weergeven"
       already_enabled: "Chat is al ingeschakeld voor dit topic. Vernieuw de pagina."
       disabled_for_topic: "Chat is uitgeschakeld voor dit topic."

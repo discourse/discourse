@@ -782,13 +782,13 @@ zh_TW:
         tl4_reached: "達到信任等級 4"
       yaxis: "天"
     consolidated_page_views:
-      title: "綜合瀏覽量"
+      title_legacy: "綜合瀏覽量"
       xaxis:
         page_view_crawler: "爬蟲"
         page_view_anon: "匿名的使用者"
         page_view_logged_in: "登入的使用者"
       yaxis: "天"
-      description: "已登錄的使用者、匿名使用者和爬蟲瀏覽量"
+      description_legacy: "已登錄的使用者、匿名使用者和爬蟲瀏覽量"
       labels:
         post: 貼文
         editor: 編輯者
@@ -951,6 +951,9 @@ zh_TW:
       xaxis: "天"
       yaxis: "總瀏覽量"
       description: "來自所有訪客新的頁面瀏覽次數。"
+    page_view_legacy_total_reqs:
+      xaxis: "天"
+      yaxis: "總瀏覽量"
     page_view_logged_in_mobile_reqs:
       title: "已登錄頁面訪問"
       xaxis: "天"

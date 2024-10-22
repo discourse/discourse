@@ -10,6 +10,7 @@ class Flags::UpdateFlag
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
+    attribute :auto_action_type, :boolean
 
     validates :id, presence: true
     validates :name, presence: true

@@ -1329,6 +1329,9 @@ bs_BA:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
+        invite:
+          save_invite: "Save"
+          cancel: "Odustani"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1529,6 +1532,7 @@ bs_BA:
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
     login:
+      title: "Prijava"
       username: "Korisnik"
       password: "Lozinka"
       show_password: "Show"
@@ -3437,6 +3441,9 @@ bs_BA:
             invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
+        look_and_feel:
+          themes:
+            title: "Teme"
       plugins:
         title: "Pluginovi"
         name: "Ime"

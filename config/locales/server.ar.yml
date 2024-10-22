@@ -1530,13 +1530,13 @@ ar:
       yaxis: "اليوم"
       description: "عدد المستخدمين الذين زاد مستوى الثقة لديهم خلال هذه الفترة."
     consolidated_page_views:
-      title: "مرات عرض الصفحة الموحَّدة"
+      title_legacy: "مرات عرض الصفحة الموحَّدة"
       xaxis:
         page_view_crawler: "زاحفات الويب"
         page_view_anon: "المستخدمون المجهولون"
         page_view_logged_in: "المستخدمون الذين سجَّلوا الدخول"
       yaxis: "اليوم"
-      description: "مرات عرض الصفحة للمستخدمين الذين سجَّلوا الدخول والمستخدمين المجهولين وزاحفات الويب."
+      description_legacy: "مرات عرض الصفحة للمستخدمين الذين سجَّلوا الدخول والمستخدمين المجهولين وزاحفات الويب."
       labels:
         post: المنشور
         editor: المحرِّر
@@ -1551,6 +1551,7 @@ ar:
       description: "طلبات API لمفاتيح API العادية ومفاتيح API للمستخدم."
     consolidated_page_views_browser_detection:
       title: "عدد مرات عرض الصفحة المجمَّعة مع اكتشاف المتصفح (تجريبي)"
+      title_legacy: "عدد مرات عرض الصفحة المجمَّعة مع اكتشاف المتصفح (تجريبي)"
       xaxis:
         page_view_anon_browser: "متصفح مجهول"
         page_view_logged_in_browser: "متصفح مسجِّل الدخول"
@@ -1709,6 +1710,9 @@ ar:
       xaxis: "اليوم"
       yaxis: "إجمالي مرات عرض الصفحة"
       description: "عدد مرات العرض الجديدة للصفحة من جميع الزوار"
+    page_view_legacy_total_reqs:
+      xaxis: "اليوم"
+      yaxis: "إجمالي مرات عرض الصفحة"
     page_view_logged_in_mobile_reqs:
       title: "مرات عرض مُسجلي الدخول للصفحة"
       xaxis: "اليوم"

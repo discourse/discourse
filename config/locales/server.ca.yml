@@ -831,13 +831,13 @@ ca:
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
-      title: "Pàgines vistes consolidades"
+      title_legacy: "Pàgines vistes consolidades"
       xaxis:
         page_view_crawler: "Rastrejadors"
         page_view_anon: "Usuaris anònims"
         page_view_logged_in: "Usuaris que han iniciat la sessió"
       yaxis: "Dia"
-      description: "Pàgines vistes d'usuaris amb sessió iniciada, usuaris anònims i rastrejadors."
+      description_legacy: "Pàgines vistes d'usuaris amb sessió iniciada, usuaris anònims i rastrejadors."
       labels:
         post: Publicació
         editor: Editor
@@ -1001,6 +1001,9 @@ ca:
       xaxis: "Dia"
       yaxis: "Total de pàgines vistes"
       description: "Nombre de pàgines vistes noves de tots els visitants."
+    page_view_legacy_total_reqs:
+      xaxis: "Dia"
+      yaxis: "Total de pàgines vistes"
     page_view_logged_in_mobile_reqs:
       title: "Pàgines vistes amb inici de sessió"
       xaxis: "Dia"

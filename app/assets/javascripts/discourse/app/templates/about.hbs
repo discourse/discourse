@@ -139,7 +139,7 @@
                   <td>{{number this.model.stats.active_users_30_days}}</td>
                   <td>&mdash;</td>
                 </tr>
-                {{#if this.siteSettings.display_eu_visitor_stats}}
+                {{#if this.displayVisitorStats}}
                   <tr class="about-visitor-count">
                     <td>{{i18n "about.visitor_count"}}</td>
                     <td>{{number this.model.stats.visitors_last_day}}</td>
@@ -183,7 +183,7 @@
                 {{/each}}
               </tbody>
             </table>
-            {{#if this.siteSettings.display_eu_visitor_stats}}
+            {{#if this.displayVisitorStats}}
               <p class="about stats-table-footer"><small
                 >{{this.statsTableFooter}}</small></p>
             {{/if}}

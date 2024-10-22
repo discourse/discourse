@@ -2,11 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const TOKEN = "sometoken";
@@ -42,15 +38,13 @@ acceptance("Login with email", function (needs) {
     await visit("/");
     await click("header .login-button");
 
-    assert.ok(
-      exists(".btn-social.facebook"),
-      "it displays the facebook login button"
-    );
+    assert
+      .dom(".btn-social.facebook")
+      .exists("it displays the facebook login button");
 
-    assert.ok(
-      exists("#email-login-link"),
-      "it displays the login with email button"
-    );
+    assert
+      .dom("#email-login-link")
+      .exists("it displays the login with email button");
 
     await fillIn("#login-account-name", "someuser");
     await click("#email-login-link");

@@ -26,7 +26,6 @@ fa_IR:
       deleted_chat_username: حذف شد
       dates:
         yesterday: "دیروز"
-        time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
       already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
       disabled_for_topic: "گفتگو در این موضوع غیرفعال است."

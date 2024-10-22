@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::CreateDirectMessageChannel do
-  describe Chat::CreateDirectMessageChannel::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     subject(:contract) { described_class.new(params) }
 
     let(:params) { { target_usernames: %w[lechuck elaine] } }
@@ -44,10 +44,6 @@ RSpec.describe Chat::CreateDirectMessageChannel do
 
     context "when all steps pass" do
       it { is_expected.to run_successfully }
-
-      it "sets the service result as successful" do
-        expect(result).to be_a_success
-      end
 
       it "updates user count" do
         expect(result.channel.user_count).to eq(3) # current user + user_1 + user_2

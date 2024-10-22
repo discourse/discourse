@@ -1238,13 +1238,13 @@ fi:
       yaxis: "Päivä"
       description: "Kuinka monen käyttäjän luottamustaso nousi tällä ajanjaksolla."
     consolidated_page_views:
-      title: "Kootut sivukatselut"
+      title_legacy: "Kootut sivukatselut"
       xaxis:
         page_view_crawler: "Hakurobotit"
         page_view_anon: "Anonyymit käyttäjät"
         page_view_logged_in: "Kirjautuneet käyttäjät"
       yaxis: "Päivä"
-      description: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
+      description_legacy: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
       labels:
         post: Viesti
         editor: Muokkaaja
@@ -1259,6 +1259,7 @@ fi:
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
     consolidated_page_views_browser_detection:
       title: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
+      title_legacy: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
       xaxis:
         page_view_anon_browser: "Anonyymi selain"
         page_view_logged_in_browser: "Kirjautunut selain"
@@ -1417,6 +1418,9 @@ fi:
       xaxis: "Päivä"
       yaxis: "Sivukatseluita yhteensä"
       description: "Kaikkien kävijöiden sivukatselut."
+    page_view_legacy_total_reqs:
+      xaxis: "Päivä"
+      yaxis: "Sivukatseluita yhteensä"
     page_view_logged_in_mobile_reqs:
       title: "Kirjautuneiden sivukatselut"
       xaxis: "Päivä"

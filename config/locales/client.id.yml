@@ -26,6 +26,7 @@ id:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
@@ -1362,6 +1363,8 @@ id:
         invite:
           show_advanced: "Tampilkan Opsi Lanjutan"
           hide_advanced: "Sembunyikan Opsi Lanjutan"
+          save_invite: "Simpan"
+          cancel: "Batal"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1530,6 +1533,7 @@ id:
       logging_in_as: Masuk sebagai %{email}
       confirm_button: Selesai Login
     login:
+      title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
       show_password: "Tunjukkan"
