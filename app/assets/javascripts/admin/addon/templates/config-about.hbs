@@ -1,6 +1,9 @@
 <AdminPageHeader
   @titleLabel="admin.config_areas.about.header"
-  @descriptionLabel="admin.config_areas.about.description"
+  @descriptionLabelTranslated={{i18n
+    "admin.config_areas.about.description"
+    (hash basePath=(base-path))
+  }}
   @hideTabs={{true}}
 >
   <:breadcrumbs>
