@@ -520,6 +520,7 @@ class BulkImport::Generic < BulkImport::Base
         trust_level: row["trust_level"],
         flair_group_id: row["flair_group_id"],
         title: row["title"],
+        primary_group_id: row["flair_group_id"],
       }
     end
 
