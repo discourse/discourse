@@ -1,13 +1,11 @@
 .d-admin-table {
-  box-shadow: none;
-
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     border-collapse: collapse;
     margin-bottom: var(--space-3);
   }
 
   thead {
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: none;
     }
   }
@@ -20,7 +18,7 @@
     position: relative;
     padding: var(--space-1) 0;
 
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: block;
       margin-bottom: var(--space-3);
       box-shadow: var(--shadow-card);
@@ -28,16 +26,14 @@
   }
 
   td {
-    border-top: none;
-
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: block;
       border-top: 1px solid var(--primary-very-low);
     }
 
     &:first-child,
     &:last-child {
-      @include breakpoint("mobile-extra-large") {
+      @include breakpoint("tablet") {
         border-top: 0;
       }
     }
@@ -64,7 +60,7 @@
 }
 
 td.d-admin-row__detail {
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     display: flex;
     justify-content: space-between;
     border-top: 1px solid var(--primary-low);
@@ -90,7 +86,7 @@ td.d-admin-row__detail {
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     position: absolute;
     top: 0;
     right: 0;
@@ -100,8 +96,8 @@ td.d-admin-row__detail {
 .d-admin-row__mobile-label {
   display: none;
 
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     display: inline-flex;
-    color: var(--secondary-medium);
+    color: var(--primary-high);
   }
 }
