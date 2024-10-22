@@ -3765,7 +3765,9 @@ uk:
       show_hidden: "Перегляд ігнорованого вмісту."
       deleted_by_author_simple: "(допис вилучений автором)"
       collapse: "згорнути"
+      load_more_replies: "завантажити більше відповідей"
       sr_collapse_replies: "Згорнути відповіді на допис"
+      sr_load_more_replies: "Завантажити більше вбудованих відповідей"
       sr_date: "Дата допису"
       sr_expand_replies:
         one: "Цей допис має %{count} відповідь"

@@ -7,6 +7,8 @@
 en_GB:
   js:
     chat:
+      dates:
+        time_tiny: "HH:mm"
       about_view:
         description: Description
       composer:

@@ -3643,7 +3643,9 @@ pl_PL:
       show_hidden: "Wyświetl ignorowaną treść."
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
+      load_more_replies: "załaduj więcej odpowiedzi"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
+      sr_load_more_replies: "Załaduj więcej osadzonych odpowiedzi"
       sr_date: "Data wysłania"
       sr_expand_replies:
         one: "Ten post ma %{count} odpowiedź"
