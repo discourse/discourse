@@ -15,7 +15,7 @@
             @autofocus="autofocus"
             @name="automation-name"
             class="input-large"
-            @input={{action (mut automationForm.name) value="target.value"}}
+            @input={{with-event-value (fn (mut this.automationForm.name))}}
           />
         </div>
       </div>
@@ -159,7 +159,7 @@
           @isLoading={{isUpdatingAutomation}}
           @label="discourse_automation.update"
           @type="submit"
-          @action={{fn this.saveAutomation automation true}}
+          @action={{fn this.saveAutomation this.automation true}}
           class="btn-primary update-automation"
         />
       </div>

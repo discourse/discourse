@@ -30,16 +30,11 @@ export default class AutomationEdit extends Controller {
   saveAutomation(routeToIndex = false) {
     this.setProperties({ error: null, isUpdatingAutomation: true });
 
-    const updatedAutomationForm = {
-      ...this.automationForm,
-      name: this.automationForm.name,
-    };
-
     return ajax(
       `/admin/plugins/discourse-automation/automations/${this.model.automation.id}.json`,
       {
         type: "PUT",
-        data: JSON.stringify({ automation: updatedAutomationForm }),
+        data: JSON.stringify({ automation: this.automationForm }),
         dataType: "json",
         contentType: "application/json",
       }
