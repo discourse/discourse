@@ -19,7 +19,10 @@ class Capabilities {
   isOpera = !!window.opera || ua.includes(" OPR/");
   isFirefox = ua.includes("Firefox");
   isChrome = !!window.chrome && !this.isOpera;
-  isSafari = ua.includes("Safari");
+  isSafari =
+    /Constructor/.test(window.HTMLElement) ||
+    window.safari?.pushNotification?.toString() ===
+      "[object SafariRemoteNotification]";
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
