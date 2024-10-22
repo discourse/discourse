@@ -36,6 +36,8 @@ RSpec.describe(Flags::UpdateFlag) do
     let(:enabled) { false }
     let(:auto_action_type) { true }
 
+    after { flag.destroy! }
+
     context "when contract is invalid" do
       let(:name) { nil }
 
@@ -70,6 +72,8 @@ RSpec.describe(Flags::UpdateFlag) do
       let!(:flag_2) { Fabricate(:flag, name:) }
 
       it { is_expected.to fail_a_policy(:unique_name) }
+
+      after { flag_2.destroy! }
     end
 
     context "when everything's ok" do

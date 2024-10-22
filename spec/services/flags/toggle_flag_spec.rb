@@ -34,6 +34,8 @@ RSpec.describe(Flags::ToggleFlag) do
     end
 
     context "when everything's ok" do
+      after { flag.reload.update!(enabled: true) }
+
       it { is_expected.to run_successfully }
 
       it "toggles the flag" do

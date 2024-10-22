@@ -11,24 +11,28 @@ RSpec.describe(Flags::DestroyFlag) do
   let(:flag_id) { flag.id }
 
   context "when model is not found" do
+    after { flag.destroy! }
     let(:flag_id) { 0 }
 
     it { is_expected.to fail_to_find_a_model(:flag) }
   end
 
   context "when the flag is a system one" do
+    after { flag.destroy! }
     let(:flag) { Flag.first }
 
     it { is_expected.to fail_a_policy(:not_system) }
   end
 
   context "when the flag has been used" do
+    after { flag.destroy! }
     let!(:post_action) { Fabricate(:post_action, post_action_type_id: flag.id) }
 
     it { is_expected.to fail_a_policy(:not_used) }
   end
 
   context "when user is not allowed to perform the action" do
+    after { flag.destroy! }
     fab!(:current_user) { Fabricate(:user) }
 
     it { is_expected.to fail_a_policy(:invalid_access) }
