@@ -18,7 +18,7 @@
     "@faker-js/faker": "^9.0.3",
     "@glimmer/syntax": "^0.92.3",
     "@highlightjs/cdn-assets": "^11.10.0",
-    "@json-editor/json-editor": "2.15.1",
+    "@json-editor/json-editor": "2.15.2",
     "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.36.3",
