@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@types/jquery": "^3.5.31",
-    "@types/qunit": "^2.19.10",
+    "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "webpack": "^5.95.0"
   },

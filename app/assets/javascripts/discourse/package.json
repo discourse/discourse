@@ -58,7 +58,7 @@
     "@popperjs/core": "^2.11.8",
     "@swc/core": "^1.7.36",
     "@types/jquery": "^3.5.31",
-    "@types/qunit": "^2.19.10",
+    "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "@uppy/aws-s3": "3.0.6",
     "@uppy/aws-s3-multipart": "3.1.3",
