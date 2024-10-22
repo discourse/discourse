@@ -1904,7 +1904,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
     import_content_upload_references("posts")
-    import_content_upload_references("chat_messages")
+    #import_content_upload_references("chat_messages")
   end
 
   def import_content_upload_references(type)
