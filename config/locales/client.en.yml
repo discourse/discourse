@@ -5695,7 +5695,7 @@ en:
             move_up: "Move up"
             move_down: "Move down"
         look_and_feel:
-          title: "Look & feel"
+          title: "Look and feel"
           description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
