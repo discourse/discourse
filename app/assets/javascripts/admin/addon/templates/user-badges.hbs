@@ -16,29 +16,30 @@
     {{#if this.noAvailableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
-      <form class="form-horizontal">
-        <div class="control-group">
-          <label>{{i18n "admin.badges.badge"}}</label>
-          <ComboBox
-            @value={{this.selectedBadgeId}}
-            @content={{this.availableBadges}}
-            @onChange={{fn (mut this.selectedBadgeId)}}
-            @options={{hash filterable=true}}
+      <PluginOutlet @name="badge-granter-form" @outletArgs={{hash availableBadges=this.availableBadges userBadges=this.userBadges}}>
+        <form class="form-horizontal">
+          <div class="control-group">
+            <label>{{i18n "admin.badges.badge"}}</label>
+            <ComboBox
+              @value={{this.selectedBadgeId}}
+              @content={{this.availableBadges}}
+              @onChange={{fn (mut this.selectedBadgeId)}}
+              @options={{hash filterable=true}}
+            />
+          </div>
+          <div class="control-group">
+            <label>{{i18n "admin.badges.reason"}}</label>
+            <Input @type="text" @value={{this.badgeReason}} /><br /><small
+            >{{i18n "admin.badges.reason_help"}}</small>
+          </div>
+          <DButton
+            @action={{this.performGrantBadge}}
+            @label="admin.badges.grant"
+            type="submit"
+            class="btn-primary"
           />
-        </div>
-        <div class="control-group">
-          <label>{{i18n "admin.badges.reason"}}</label>
-          <Input @type="text" @value={{this.badgeReason}} /><br /><small>{{i18n
-              "admin.badges.reason_help"
-            }}</small>
-        </div>
-        <DButton
-          @action={{this.performGrantBadge}}
-          @label="admin.badges.grant"
-          type="submit"
-          class="btn-primary"
-        />
-      </form>
+        </form>
+      </PluginOutlet>
     {{/if}}
 
     <table id="user-badges">
