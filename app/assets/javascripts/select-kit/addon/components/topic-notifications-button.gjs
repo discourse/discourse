@@ -113,7 +113,7 @@ export default class TopicNotificationsButton extends Component {
   }
 
   <template>
-    <div class="topic-notifications-button">
+    <div class="topic-notifications-button" ...attributes>
       {{#if this.appendReason}}
         <p class="reason">
           <TopicNotificationsOptions
