@@ -27,10 +27,11 @@ export default class AutomationNew extends Controller {
     }
 
     return scripts.filter((script) => {
-      return (
-        script.name.toLowerCase().includes(filter) ||
-        script.description.toLowerCase().includes(filter)
-      );
+      const name = script.name ? script.name.toLowerCase() : "";
+      const description = script.description
+        ? script.description.toLowerCase()
+        : "";
+      return name.includes(filter) || description.includes(filter);
     });
   }
 
