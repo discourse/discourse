@@ -321,6 +321,8 @@ cs:
             title: "Sledované"
       thread_title_modal:
         input_placeholder: "Řekněte ostatním, o čem je tato konverzace..."
+        discourse_ai:
+          description: "Podívejte se na %{url} , kde se dozvíte více o tomto a dalších vylepšeních vašeho zážitku z Discourse."
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

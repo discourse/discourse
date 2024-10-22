@@ -5400,7 +5400,7 @@ cs:
             title: "Zrušit aktuální úlohu"
             confirm: "Opravdu chcete zrušit aktuální úlohu?"
           backup:
-            label: "Záloha"
+            label: "Zálohohovat"
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
             include_uploads: "zahrnout všechny nahrané soubory"

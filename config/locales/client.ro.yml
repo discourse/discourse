@@ -265,7 +265,7 @@ ro:
     no_value: "Nu"
     yes_value: "Da"
     ok_value: "Ok"
-    cancel_value: "Anulare"
+    cancel_value: "Anulează"
     submit: "Trimite"
     delete: "Șterge"
     generic_error: "Regret, a apărut o eroare."
@@ -329,7 +329,7 @@ ro:
       our_moderators: "Moderatorii noștri"
       moderators: "Moderatori"
       stat:
-        last_day: "24 ore"
+        last_day: "24 de ore"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Articole"
@@ -677,7 +677,7 @@ ro:
       now: "Acum"
       in_one_hour: "Într-o oră"
       in_two_hours: "In două ore"
-      later_today: "Mai târziu azi"
+      later_today: "Mai târziu astăzi"
       two_days: "Două zile"
       three_days: "În trei zile"
       next_business_day: "Următoarea zi lucrătoare"
@@ -1070,7 +1070,7 @@ ro:
         label: "Activează programul de notificări personalizat"
         none: "Nimeni"
         monday: "Luni"
-        tuesday: "Marţi"
+        tuesday: "Marți"
         wednesday: "Miercuri"
         thursday: "Joi"
         friday: "Vineri"
@@ -1282,7 +1282,7 @@ ro:
           save: "Salvează"
           name_required_error: "Trebuie să oferi un nume pentru cheia de securitate."
       passkeys:
-        save: "Salvare"
+        save: "Salvează"
         added_date: "Adăugată în %{date}"
         last_used_date: "Ultima utilizare %{date}"
         confirm_button: "sau folosește o cheie de acces"
@@ -1495,8 +1495,10 @@ ro:
         invite_link:
           success: "Link de invitare generat cu succes!"
         invite:
+          copy_link: "copiază legătură"
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
+          expires_at: "Expiră după"
         bulk_invite:
           none: "Nu există invitații de afișat pe această pagină."
           text: "Invitație în masă"
@@ -2786,9 +2788,9 @@ ro:
           few: "introdu cel puțin %{count} caractere"
           other: "introdu cel puțin %{count} de caractere"
         left:
-          one: "a mai rămas %{count}"
-          few: "au mai rămas %{count}"
-          other: "au mai rămas %{count}"
+          one: "%{count} rămas"
+          few: "%{count} rămase"
+          other: "%{count} rămase"
     flagging_topic:
       title: "Îți mulțumim că ne ajuți să ne păstrăm comunitatea civilizată!"
       action: "Semnalează subiect"
@@ -3163,7 +3165,7 @@ ro:
       sections:
         custom:
           add: "Adaugă secțiune personalizată"
-          save: "Salvare"
+          save: "Salvează"
           delete: "Șterge"
           links:
             add: "Adaugă altă legătură"
@@ -3561,7 +3563,7 @@ ro:
           edit: "Editează"
           delete: "Șterge"
           form:
-            save: "Salvare"
+            save: "Salvează"
             name: "Nume"
             description: "Descriere"
             topic: "discuții"
@@ -3627,7 +3629,7 @@ ro:
         operations:
           failed: "operația %{operation} nu s-a finalizat. Te rugăm verifică rapoartele."
           cancel:
-            label: "Anulare"
+            label: "Anulează"
             title: "Anulează operația curentă"
             confirm: "Ești sigur că dorești să anulezi operația curentă?"
           backup:
@@ -3669,7 +3671,7 @@ ro:
         title: "Personalizare"
         preview: "previzualizare"
         explain_preview: "Vizualizează site-ul cu această temă activată"
-        save: "Salvare"
+        save: "Salvează"
         new: "Nou"
         new_style: "Stil nou"
         delete: "Șterge"
@@ -3697,7 +3699,7 @@ ro:
           create: "Creează"
           create_type: "Tip"
           create_name: "Nume"
-          save: "Salvare"
+          save: "Salvează"
           long_title: "Modifică culori, CSS și conținutul HTML al site-ului"
           edit: "Modifică"
           common: "Comun"
@@ -3711,7 +3713,7 @@ ro:
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
-          cancel: "Anulare"
+          cancel: "Anulează"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"
@@ -4043,8 +4045,8 @@ ro:
           edit: "Modifică"
           delete: "Șterge"
         new_template_form:
-          submit: "Salvare"
-          cancel: "Anulare"
+          submit: "Salvează"
+          cancel: "Anulează"
           preview: "Previzualizează"
         quick_insert_fields:
           add_new_field: "Adaugă"
@@ -4141,7 +4143,7 @@ ro:
         permissions: Permisiuni
         activity: Activitate
         like_count: Aprecieri acordate / primite
-        last_100_days: "în ultimele 100 zile"
+        last_100_days: "în ultimele 100 de zile"
         private_topics_count: Subiecte private
         posts_read_count: Postări citite
         post_count: Postări create
@@ -4230,7 +4232,7 @@ ro:
             other: "În ultimele %{count} de zile:"
           value_heading: "Valoare"
           requirement_heading: "Cerință"
-          days: "Zile"
+          days: "zile"
           topics_replied_to: "Subiecte la care s-a răspuns"
           topics_viewed: "Subiecte vizualizate"
           topics_viewed_all_time: "Subiecte vizualizate (dintotdeauna)"
@@ -4464,7 +4466,7 @@ ro:
         category_id: "ID categorie"
         category_title: "Categorie"
         username: "Nume utilizator"
-        copy_to_clipboard: "Copiază legătură permanentă în memoria temporară"
+        copy_to_clipboard: "Copiază legătură permanentă în clipboard"
         delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:
           label: "Nou:"
