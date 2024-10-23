@@ -27,6 +27,7 @@ bg:
         millions: "%{number}M "
     dates:
       time: "HH:mm"
+      time_short: "ч:мм"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1609,10 +1610,7 @@ bg:
           success: "Връзката за покана е генерирана успешно!"
           error: "Имаше грешка при генерирането на връзката за покана"
         invite:
-          new_title: "Създаване на покана"
-          edit_title: "Редактиране на покана"
           instructions: "Споделете тази връзка, за да предоставите незабавно достъп до този сайт:"
-          copy_link: "копиране на връзка"
           expires_in_time: "Изтича след %{time}"
           expired_at_time: "Изтекъл на %{time}"
           show_advanced: "Показване на разширени опции"
@@ -1624,11 +1622,11 @@ bg:
           max_redemptions_allowed: "Максимум използвания"
           add_to_groups: "Добавяне към групи"
           invite_to_topic: "Стигане до темата"
-          expires_at: "Изтича след"
-          custom_message: "Незадължително лично съобщение"
+          expires_after: "Изтича след"
           send_invite_email: "Запазване и изпращане на имейл"
           send_invite_email_instructions: "Ограничете поканата до имейл, за да изпратите имейл с покана"
-          save_invite: "Изпрати покана"
+          save_invite: "Запази "
+          cancel: "Прекрати"
           invite_saved: "Поканата е запазена."
         bulk_invite:
           none: "Няма покани за показване на тази страница."

@@ -2263,7 +2263,7 @@ en:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
-    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page."
+    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page. It may take a few minutes for the stats to appear after turning on this setting."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 

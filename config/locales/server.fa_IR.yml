@@ -819,6 +819,9 @@ fa_IR:
       title: "بازدید"
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
+    page_view_legacy_total_reqs:
+      xaxis: "روز"
+      yaxis: "مجموع بازدید صفحات"
     page_view_logged_in_mobile_reqs:
       title: "نمایش صفحات کاربران وارد شده"
       xaxis: "روز"

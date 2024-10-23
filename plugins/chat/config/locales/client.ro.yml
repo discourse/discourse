@@ -21,7 +21,7 @@ ro:
       dates:
         yesterday: "Ieri"
       create: "Creează"
-      cancel: "Anulare"
+      cancel: "Anulează"
       move_to_channel:
         instructions:
           one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
@@ -68,7 +68,7 @@ ro:
       rebake_message: "Reconstruieşte HTML"
       bookmark_message: "Semn de carte"
       bookmark_message_edit: "Editați marcajul"
-      save: "Salvare"
+      save: "Salvează"
       return_to_channel: "Revino la canal"
       return_to_threads_list: "Revino la lista de fire"
       sounds:
@@ -150,7 +150,7 @@ ro:
         threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
-        save: "Salvare"
+        save: "Salvează"
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
@@ -167,13 +167,13 @@ ro:
         delete: "Șterge"
         emoji: "Emoticon"
         name: "Nume"
-        save: "Salvare"
+        save: "Salvează"
         edit: "Modifică"
         system: "sistem"
         url: "URL"
         username: "Nume utilizator"
       selection:
-        cancel: "Anulare"
+        cancel: "Anulează"
         copy: "Copiază"
         delete: "Șterge (%{selectionCount}/%{totalCount})"
         new_topic:
@@ -209,7 +209,7 @@ ro:
         list: "Fire"
       draft_channel_screen:
         header: "Mesaj nou"
-        cancel: "Anulare"
+        cancel: "Anulează"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:

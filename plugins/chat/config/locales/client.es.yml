@@ -50,7 +50,6 @@ es:
       deleted_chat_username: eliminado
       dates:
         yesterday: "Ayer"
-        time_tiny: "h:mm"
       all_loaded: "Mostrando todos los mensajes"
       already_enabled: "El chat ya está activado en este tema. Actualiza."
       disabled_for_topic: "El chat está desactivado en este tema."

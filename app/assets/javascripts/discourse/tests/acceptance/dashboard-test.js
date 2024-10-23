@@ -36,10 +36,9 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
 
     assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
-    assert.ok(
-      exists(".dashboard .navigation-item.moderation"),
-      "moderation tab"
-    );
+    assert
+      .dom(".dashboard .navigation-item.moderation")
+      .exists("moderation tab");
     assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
     assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
   });
@@ -51,14 +50,12 @@ acceptance("Dashboard", function (needs) {
     assert.ok(exists(".admin-report.signups"), "signups report");
     assert.ok(exists(".admin-report.posts"), "posts report");
     assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
-    assert.ok(
-      exists(".admin-report.daily-engaged-users"),
-      "daily-engaged-users report"
-    );
-    assert.ok(
-      exists(".admin-report.new-contributors"),
-      "new-contributors report"
-    );
+    assert
+      .dom(".admin-report.daily-engaged-users")
+      .exists("daily-engaged-users report");
+    assert
+      .dom(".admin-report.new-contributors")
+      .exists("new-contributors report");
   });
 
   test("moderation tab", async function (assert) {
@@ -66,10 +63,9 @@ acceptance("Dashboard", function (needs) {
     await click(".dashboard .navigation-item.moderation .navigation-link");
 
     assert.ok(exists(".custom-date-range-button"), "custom date range button");
-    assert.ok(
-      exists(".admin-report.moderators-activity"),
-      "moderators activity report"
-    );
+    assert
+      .dom(".admin-report.moderators-activity")
+      .exists("moderators activity report");
   });
 
   test("activity metrics", async function (assert) {
@@ -134,10 +130,9 @@ acceptance("Dashboard: dashboard_visible_tabs", function (needs) {
     await visit("/admin");
 
     assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
-    assert.notOk(
-      exists(".dashboard .navigation-item.moderation"),
-      "moderation tab"
-    );
+    assert
+      .dom(".dashboard .navigation-item.moderation")
+      .doesNotExist("moderation tab");
     assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
     assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
   });
@@ -155,9 +150,8 @@ acceptance("Dashboard: dashboard_hidden_reports", function (needs) {
 
     assert.ok(exists(".admin-report.signups.is-visible"), "signups report");
     assert.notOk(exists(".admin-report.is-visible.posts"), "posts report");
-    assert.notOk(
-      exists(".admin-report.is-visible.dau-by-mau"),
-      "dau-by-mau report"
-    );
+    assert
+      .dom(".admin-report.is-visible.dau-by-mau")
+      .doesNotExist("dau-by-mau report");
   });
 });

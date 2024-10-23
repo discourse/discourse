@@ -26,7 +26,6 @@ ko:
       deleted_chat_username: 삭제되었습니다
       dates:
         yesterday: "어제"
-        time_tiny: "h:mm"
       all_loaded: "모든 메시지 보기"
       bot: "봇"
       create: "글"

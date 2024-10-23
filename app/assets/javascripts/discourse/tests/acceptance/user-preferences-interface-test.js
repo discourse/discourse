@@ -150,10 +150,9 @@ acceptance("User Preferences - Interface", function (needs) {
 
     await visit("/u/eviltrout/preferences/interface");
 
-    assert.ok(
-      exists(".pref-reset-seen-user-tips"),
-      "has reset seen user tips button"
-    );
+    assert
+      .dom(".pref-reset-seen-user-tips")
+      .exists("has reset seen user tips button");
 
     await click(".pref-reset-seen-user-tips");
 

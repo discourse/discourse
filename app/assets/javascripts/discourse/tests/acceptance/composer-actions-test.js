@@ -7,7 +7,6 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   count,
-  exists,
   query,
   selectText,
   updateCurrentUser,
@@ -90,10 +89,9 @@ acceptance("Composer Actions", function (needs) {
       "test replying as whisper to topic when initially not a whisper"
     );
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-far-eye-slash"),
-      "whisper icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .doesNotExist("whisper icon is not visible");
     assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
@@ -108,10 +106,9 @@ acceptance("Composer Actions", function (needs) {
       1,
       "whisper icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
-      "reply icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .doesNotExist("reply icon is not visible");
   });
 
   test("replying to post - reply_as_new_topic", async function (assert) {
@@ -155,10 +152,9 @@ acceptance("Composer Actions", function (needs) {
     await click(".create.reply");
     const composerActions = selectKit(".composer-actions");
     await composerActions.expand();
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-plus"),
-      "reply as new topic icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-plus")
+      .doesNotExist("reply as new topic icon is not visible");
   });
 
   test("reply_as_new_group_message", async function (assert) {
@@ -247,10 +243,9 @@ acceptance("Composer Actions", function (needs) {
     await visit("/t/short-topic-with-two-posts/54077");
     await click("article#post_2 button.reply");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-anchor"),
-      "no-bump icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
     assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
@@ -265,18 +260,16 @@ acceptance("Composer Actions", function (needs) {
       1,
       "no-bump icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
-      "reply icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .doesNotExist("reply icon is not visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-anchor"),
-      "no-bump icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
     assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
@@ -290,14 +283,12 @@ acceptance("Composer Actions", function (needs) {
     await visit("/t/short-topic-with-two-posts/54077");
     await click("article#post_2 button.reply");
 
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-far-eye-slash"),
-      "whisper icon is not visible"
-    );
-    assert.ok(
-      !exists(".reply-details .whisper .d-icon-anchor"),
-      "no-bump icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .doesNotExist("whisper icon is not visible");
+    assert
+      .dom(".reply-details .whisper .d-icon-anchor")
+      .doesNotExist("no-bump icon is not visible");
     assert.strictEqual(
       count(".composer-actions svg.d-icon-share"),
       1,
@@ -319,10 +310,9 @@ acceptance("Composer Actions", function (needs) {
       1,
       "no-bump icon is visible"
     );
-    assert.ok(
-      !exists(".composer-actions svg.d-icon-share"),
-      "reply icon is not visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .doesNotExist("reply icon is not visible");
   });
 
   test("replying to post as staff", async function (assert) {

@@ -27,6 +27,7 @@ tr_TR:
         millions: "%{number} Milyon"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1834,12 +1835,11 @@ tr_TR:
           success: "Davet bağlantısı başarıyla oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata oluştu"
         invite:
-          new_title: "Davet oluştur"
-          edit_title: "Daveti düzenle"
           instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın:"
-          copy_link: "bağlantıyı kopyala"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
+          copy_link: "Bağlantıyı kopyala"
+          link_copied: "Bağlantı kopyalandı!"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           restrict: "Şununla kısıtla"
@@ -1849,11 +1849,11 @@ tr_TR:
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
           invite_to_topic: "Konuya gidin"
-          expires_at: "Geçerliliğini yitireceği zaman"
-          custom_message: "İsteğe bağlı kişisel mesaj"
+          expires_after: "Geçerliliğini yitireceği zaman"
           send_invite_email: "Kaydet ve E-posta Gönder"
           send_invite_email_instructions: "Davet e-postası göndermek için e-postaya daveti kısıtla"
-          save_invite: "Daveti Kaydet"
+          save_invite: "Kaydet"
+          cancel: "İptal et"
           invite_saved: "Davet kaydedildi."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
@@ -5296,6 +5296,9 @@ tr_TR:
             title: "Daha fazla seçenek"
             move_up: "Yukarı taşı"
             move_down: "Aşağı taşı"
+        look_and_feel:
+          themes:
+            title: "Temalar"
       plugins:
         title: "Eklentiler"
         name: "Ad"

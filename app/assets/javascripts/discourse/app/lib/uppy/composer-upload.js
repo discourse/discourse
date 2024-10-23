@@ -13,7 +13,6 @@ import {
   displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
-  IMAGE_MARKDOWN_REGEX,
   isImage,
   validateUploadedFile,
 } from "discourse/lib/uploads";
@@ -256,6 +255,10 @@ export default class UppyComposerUpload {
         if (this.composerModel.privateMessage) {
           file.meta.for_private_message = true;
         }
+
+        if (isImage(file.name)) {
+          this.#consecutiveImages.push(file.name);
+        }
       });
     });
 
@@ -296,7 +299,6 @@ export default class UppyComposerUpload {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
-
         const upload = this.#inProgressUploads.find(
           (upl) => upl.id === file.id
         );
@@ -352,6 +354,14 @@ export default class UppyComposerUpload {
             file.name
           );
         });
+
+        const MIN_IMAGES_TO_AUTO_GRID = 3;
+        if (
+          this.siteSettings.experimental_auto_grid_images &&
+          this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
+        ) {
+          this.#autoGridImages();
+        }
       });
     });
 
@@ -366,11 +376,6 @@ export default class UppyComposerUpload {
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
-
-        // Track consecutive images for surrounding with [grid] later:
-        if (isImage(upload.url)) {
-          this.#consecutiveImages.push(markdown);
-        }
 
         cacheShortUploadUrl(upload.short_url, upload);
 
@@ -398,13 +403,6 @@ export default class UppyComposerUpload {
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
 
-              const MIN_IMAGES_TO_AUTO_GRID = 3;
-              if (
-                this.siteSettings.experimental_auto_grid_images &&
-                this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
-              ) {
-                this.#autoGridImages();
-              }
               this.#displayBufferedErrors();
               this.#reset();
             }
@@ -735,20 +733,51 @@ export default class UppyComposerUpload {
   #autoGridImages() {
     const reply = this.composerModel.get("reply");
     const imagesToWrapGrid = new Set(this.#consecutiveImages);
-    const matches = reply.match(IMAGE_MARKDOWN_REGEX) || [];
 
+    const uploadingText = I18n.t("uploading_filename", {
+      filename: "%placeholder%",
+    });
+    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+
+    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
+      return;
+    }
+
+    const uploadingImagePattern = new RegExp(
+      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "g"
+    );
+
+    const matches = reply.match(uploadingImagePattern) || [];
     const foundImages = [];
-    matches.forEach((fullImageMarkdown) => {
-      fullImageMarkdown = fullImageMarkdown.trim();
 
-      // Check if the matched image markdown is in the imagesToWrapGrid
-      if (imagesToWrapGrid.has(fullImageMarkdown)) {
-        foundImages.push(fullImageMarkdown);
-        imagesToWrapGrid.delete(fullImageMarkdown);
+    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
+    const gridMatches = reply.match(existingGridPattern);
 
-        // Check if we've found all the images
-        if (imagesToWrapGrid.size === 0) {
-          return;
+    matches.forEach((imagePlaceholder) => {
+      imagePlaceholder = imagePlaceholder.trim();
+
+      const filenamePattern = new RegExp(
+        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
+      );
+
+      const filenameMatch = imagePlaceholder.match(filenamePattern);
+
+      if (filenameMatch && filenameMatch[1]) {
+        const filename = filenameMatch[1];
+
+        const isWithinGrid = gridMatches?.some((gridContent) =>
+          gridContent.includes(imagePlaceholder)
+        );
+
+        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
+          foundImages.push(imagePlaceholder);
+          imagesToWrapGrid.delete(filename);
+
+          // Check if we've found all the images
+          if (imagesToWrapGrid.size === 0) {
+            return;
+          }
         }
       }
     });
@@ -778,6 +807,7 @@ export default class UppyComposerUpload {
         }
       }
     }
+
     // Clear found images for the next consecutive images:
     this.#consecutiveImages.length = 0;
     foundImages.length = 0;

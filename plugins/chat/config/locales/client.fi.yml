@@ -50,7 +50,6 @@ fi:
       deleted_chat_username: poistettu
       dates:
         yesterday: "Eilen"
-        time_tiny: "t:mm"
       all_loaded: "Näytetään kaikki viestit"
       already_enabled: "Chat on jo käytössä tässä ketjussa. Päivitä."
       disabled_for_topic: "Chat on poistettu käytöstä tässä ketjussa."

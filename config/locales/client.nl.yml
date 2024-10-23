@@ -27,6 +27,7 @@ nl:
         millions: "%{number}M"
     dates:
       time: "HH.mm"
+      time_short: "h:mm"
       time_with_zone: "HH.mm (z)"
       time_short_day: "ddd, HH.mm"
       timeline_date: "MMM YYYY"
@@ -1826,12 +1827,11 @@ nl:
           success: "Uitnodigingslink gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingslink"
         invite:
-          new_title: "Uitnodiging maken"
-          edit_title: "Uitnodiging bewerken"
           instructions: "Deel deze link om direct toegang te geven tot deze site:"
-          copy_link: "link kopiëren"
           expires_in_time: "Verloopt over %{time}"
           expired_at_time: "Verlopen om %{time}"
+          copy_link: "Link kopiëren"
+          link_copied: "Link gekopieerd!"
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
           restrict: "Beperken tot"
@@ -1841,11 +1841,11 @@ nl:
           max_redemptions_allowed: "Max. gebruiken"
           add_to_groups: "Toevoegen aan groepen"
           invite_to_topic: "Kom bij topic"
-          expires_at: "Verloopt na"
-          custom_message: "Optioneel persoonlijk bericht"
+          expires_after: "Verloopt na"
           send_invite_email: "E-mail opslaan en verzenden"
           send_invite_email_instructions: "Beperk uitnodiging tot e-mail om een uitnodigings-e-mail te sturen"
-          save_invite: "Uitnodiging opslaan"
+          save_invite: "Opslaan"
+          cancel: "Annuleren"
           invite_saved: "Uitnodiging opgeslagen."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
@@ -5288,6 +5288,9 @@ nl:
             title: "Meer opties"
             move_up: "Omhoog verplaatsen"
             move_down: "Omlaag verplaatsen"
+        look_and_feel:
+          themes:
+            title: "Thema's"
       plugins:
         title: "Plug-ins"
         name: "Naam"

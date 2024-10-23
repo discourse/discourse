@@ -4044,6 +4044,8 @@ en:
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
+      color_used: "Color in use"
+      predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
@@ -5606,7 +5608,7 @@ en:
       config_areas:
         about:
           header: "About your site"
-          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue."
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -6993,6 +6995,9 @@ en:
         history: "View change history"
         reset: "reset"
         none: "none"
+        save: "save"
+        cancel: "cancel"
+        unmask: "unmask input"
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"

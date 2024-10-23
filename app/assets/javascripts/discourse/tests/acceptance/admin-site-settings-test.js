@@ -45,10 +45,9 @@ acceptance("Admin - Site Settings", function (needs) {
   test("upload site setting", async function (assert) {
     await visit("/admin/site_settings");
 
-    assert.ok(
-      exists(".row.setting.upload .image-uploader"),
-      "image uploader is present"
-    );
+    assert
+      .dom(".row.setting.upload .image-uploader")
+      .exists("image uploader is present");
 
     assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
   });
@@ -75,43 +74,37 @@ acceptance("Admin - Site Settings", function (needs) {
 
     await fillIn(".input-setting-string", "Test");
     await click("button.cancel");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "canceling doesn't mark setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("canceling doesn't mark setting as overridden");
 
     await fillIn(".input-setting-string", "Test");
     await click("button.ok");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "saving marks setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("saving marks setting as overridden");
 
     await click("button.undo");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "setting isn't marked as overridden after undo"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't marked as overridden after undo");
 
     await click("button.cancel");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "setting is marked as overridden after cancel"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("setting is marked as overridden after cancel");
 
     await click("button.undo");
     await click("button.ok");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "setting isn't marked as overridden after undo"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't marked as overridden after undo");
 
     await fillIn(".input-setting-string", "Test");
     await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "saving via Enter key marks setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("saving via Enter key marks setting as overridden");
   });
 
   test("always shows filtered site settings if a filter is set", async function (assert) {

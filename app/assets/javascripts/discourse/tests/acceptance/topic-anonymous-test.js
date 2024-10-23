@@ -7,10 +7,9 @@ acceptance("Topic - Anonymous", function () {
     await visit("/t/internationalization-localization/280/1");
     assert.ok(exists("#topic"), "The topic was rendered");
     assert.ok(exists("#topic .cooked"), "The topic has cooked posts");
-    assert.ok(
-      !exists(".shared-draft-notice"),
-      "no shared draft unless there's a dest category id"
-    );
+    assert
+      .dom(".shared-draft-notice")
+      .doesNotExist("no shared draft unless there's a dest category id");
   });
 
   test("Enter without an id", async function (assert) {

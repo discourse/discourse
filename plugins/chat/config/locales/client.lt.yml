@@ -20,7 +20,6 @@ lt:
       deleted_chat_username: ištrintas
       dates:
         yesterday: "Vakar"
-        time_tiny: "h:mm"
       bot: "botas"
       create: "Sukurti"
       cancel: "Atšaukti"

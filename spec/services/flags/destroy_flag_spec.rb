@@ -4,11 +4,15 @@ RSpec.describe(Flags::DestroyFlag) do
   subject(:result) { described_class.call(**params, **dependencies) }
 
   fab!(:current_user) { Fabricate(:admin) }
+  fab!(:flag)
 
-  let(:flag) { Fabricate(:flag) }
   let(:params) { { id: flag_id } }
   let(:dependencies) { { guardian: current_user.guardian } }
   let(:flag_id) { flag.id }
+
+  # DO NOT REMOVE: flags have side effects and their state will leak to
+  # other examples otherwise.
+  after { flag.destroy! }
 
   context "when model is not found" do
     let(:flag_id) { 0 }

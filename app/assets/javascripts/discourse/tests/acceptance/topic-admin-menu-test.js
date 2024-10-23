@@ -12,10 +12,9 @@ acceptance("Topic - Admin Menu Anonymous Users", function () {
   test("Enter as a regular user", async function (assert) {
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
-    assert.ok(
-      !exists(".toggle-admin-menu"),
-      "The admin menu button was not rendered"
-    );
+    assert
+      .dom(".toggle-admin-menu")
+      .doesNotExist("The admin menu button was not rendered");
   });
 });
 
@@ -26,10 +25,9 @@ acceptance("Topic - Admin Menu", function (needs) {
 
     await visit("/t/topic-for-group-moderators/2480");
     assert.ok(exists("#topic"), "The topic was rendered");
-    assert.ok(
-      exists(".toggle-admin-menu"),
-      "The admin menu button was rendered"
-    );
+    assert
+      .dom(".toggle-admin-menu")
+      .exists("The admin menu button was rendered");
 
     await click(".toggle-admin-menu");
     assert.ok(exists(".topic-admin-delete"), "The delete item was rendered");
@@ -40,10 +38,9 @@ acceptance("Topic - Admin Menu", function (needs) {
 
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
-    assert.ok(
-      exists(".toggle-admin-menu"),
-      "The admin menu button was rendered"
-    );
+    assert
+      .dom(".toggle-admin-menu")
+      .exists("The admin menu button was rendered");
   });
 
   test("Button added using addTopicAdminMenuButton", async function (assert) {
@@ -66,10 +63,9 @@ acceptance("Topic - Admin Menu", function (needs) {
     await visit("/t/internationalization-localization/280");
     assert.ok(exists("#topic"), "The topic was rendered");
     await click(".toggle-admin-menu");
-    assert.ok(
-      exists(".extra-button svg.d-icon-heart"),
-      "The icon was rendered"
-    );
+    assert
+      .dom(".extra-button svg.d-icon-heart")
+      .exists("The icon was rendered");
     assert
       .dom(".extra-button .d-button-label")
       .hasText(I18n.t("yes_value"), "The label was rendered");

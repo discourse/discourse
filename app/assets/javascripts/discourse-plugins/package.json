@@ -8,7 +8,7 @@
     "ember-addon"
   ],
   "dependencies": {
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.25.9",
     "deprecation-silencer": "workspace:1.0.0",
     "discourse-hbr": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",

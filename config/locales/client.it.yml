@@ -27,6 +27,7 @@ it:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1833,12 +1834,11 @@ it:
           success: "Link di invito generato con successo!"
           error: "Si è verificato un errore durante la generazione del link di invito"
         invite:
-          new_title: "Crea invito"
-          edit_title: "Modifica invito"
           instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
-          copy_link: "copia link"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
+          copy_link: "Copia link"
+          link_copied: "Link copiato!"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
@@ -1848,11 +1848,11 @@ it:
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           invite_to_topic: "Arriva all'argomento"
-          expires_at: "Scadenza:"
-          custom_message: "Messaggio personale facoltativo"
+          expires_after: "Scadenza:"
           send_invite_email: "Salva e invia Email"
           send_invite_email_instructions: "Limita l'invito alle e-mail per inviare un'e-mail di invito"
-          save_invite: "Salva invito"
+          save_invite: "Salva"
+          cancel: "Annulla"
           invite_saved: "Invito salvato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
@@ -5295,6 +5295,9 @@ it:
             title: "Altre opzioni"
             move_up: "Sposta su"
             move_down: "Sposta giù"
+        look_and_feel:
+          themes:
+            title: "Temi"
       plugins:
         title: "Plugin"
         name: "Nome"

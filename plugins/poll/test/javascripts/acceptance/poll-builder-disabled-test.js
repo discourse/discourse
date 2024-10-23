@@ -2,7 +2,6 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
@@ -24,10 +23,9 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    assert.ok(
-      !exists(".select-kit-row[data-value='showPollBuilder']"),
-      "it hides the builder button"
-    );
+    assert
+      .dom(".select-kit-row[data-value='showPollBuilder']")
+      .doesNotExist("it hides the builder button");
   });
 
   test("regular user - insufficient permissions", async function (assert) {
@@ -40,10 +38,9 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    assert.ok(
-      !exists(".select-kit-row[data-value='showPollBuilder']"),
-      "it hides the builder button"
-    );
+    assert
+      .dom(".select-kit-row[data-value='showPollBuilder']")
+      .doesNotExist("it hides the builder button");
   });
 
   test("staff", async function (assert) {
@@ -51,9 +48,8 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    assert.ok(
-      !exists(".select-kit-row[data-value='showPollBuilder']"),
-      "it hides the builder button"
-    );
+    assert
+      .dom(".select-kit-row[data-value='showPollBuilder']")
+      .doesNotExist("it hides the builder button");
   });
 });

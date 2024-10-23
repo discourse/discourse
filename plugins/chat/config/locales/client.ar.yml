@@ -54,7 +54,6 @@ ar:
       deleted_chat_username: تم الحذف
       dates:
         yesterday: "أمس"
-        time_tiny: "h:mm"
       all_loaded: "يتم الآن عرض جميع الرسائل"
       already_enabled: "الدردشة مفعَّلة في هذا الموضوع. يُرجى تحديث الصفحة."
       disabled_for_topic: "الدردشة متوقفة في هذا الموضوع."

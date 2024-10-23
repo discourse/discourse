@@ -90,7 +90,7 @@ module ChatSDK
 
     def stop_stream(message_id:, guardian:)
       Chat::StopMessageStreaming.call(message_id:, guardian:) do
-        on_success { result.message }
+        on_success { |message:| message }
         on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
         on_model_not_found(:membership) do
           raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
@@ -145,7 +145,7 @@ module ChatSDK
             raise "User with id: `#{guardian.user.id}` can't join this channel"
           end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
-          on_success { result.message_instance }
+          on_success { |message_instance:| message_instance }
           on_failure { raise "Unexpected error" }
         end
 

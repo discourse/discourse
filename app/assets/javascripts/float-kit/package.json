@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.25.9",
     "ember-auto-import": "^2.8.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
@@ -26,7 +26,7 @@
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.31",
-    "@types/qunit": "^2.19.10",
+    "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~5.12.0",

@@ -2216,12 +2216,10 @@ ar:
           success: "تم إنشاء رابط الدعوة بنجاح!"
           error: "حدث خطأ في أثناء إنشاء رابط الدعوة"
         invite:
-          new_title: "إنشاء دعوة"
-          edit_title: "تعديل الدعوة"
           instructions: "شارك هذا الرابط لمنح إذن الوصول إلى هذا الموقع على الفور:"
-          copy_link: "نسخ الرابط"
           expires_in_time: "تنتهي صلاحيتها في %{time}"
           expired_at_time: "تنتهي صلاحيتها في %{time}"
+          link_copied: "تم نسخ الرابط!"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
           restrict: "التقييد إلى"
@@ -2231,11 +2229,11 @@ ar:
           max_redemptions_allowed: "الحد الأقصى لمرات الاستخدام"
           add_to_groups: "إضافة إلى المجموعات"
           invite_to_topic: "الوصول إلى هذا الموضوع"
-          expires_at: "تنتهي بعد"
-          custom_message: "رسالة خاصة اختيارية"
+          expires_after: "تنتهي بعد"
           send_invite_email: "حفظ الرسالة الإلكترونية وإرسالها"
           send_invite_email_instructions: "تقييد الدعوة إلى البريد الإلكتروني لإرسال دعوة بالبريد الإلكتروني"
-          save_invite: "حفظ الدعوة"
+          save_invite: "حفظ"
+          cancel: "إلغاء"
           invite_saved: "تم حفظ الدعوة."
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
@@ -6313,6 +6311,9 @@ ar:
             title: "خيارات إضافية"
             move_up: "التحريك لأعلى"
             move_down: "التحريك لأسفل"
+        look_and_feel:
+          themes:
+            title: "السمات"
       plugins:
         title: "الإضافات"
         name: "الاسم"

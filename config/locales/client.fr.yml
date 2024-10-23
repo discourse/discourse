@@ -27,6 +27,7 @@ fr:
         millions: "%{number} M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
@@ -1826,12 +1827,11 @@ fr:
           success: "Lien d'invitation généré avec succès !"
           error: "Une erreur est survenue lors de la génération du lien d'invitation"
         invite:
-          new_title: "Créer une invitation"
-          edit_title: "Modifier l'invitation"
           instructions: "Partagez ce lien pour accorder instantanément l'accès à ce site :"
-          copy_link: "copier le lien"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
+          copy_link: "Copier le lien"
+          link_copied: "Lien copié !"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
           restrict: "Restreindre à"
@@ -1841,11 +1841,11 @@ fr:
           max_redemptions_allowed: "Nombre max. d'utilisations"
           add_to_groups: "Ajouter la personne invitée à ces groupes"
           invite_to_topic: "Diriger vers ce sujet"
-          expires_at: "Ce lien expirera dans"
-          custom_message: "Message personnel (facultatif)"
+          expires_after: "Ce lien expirera dans"
           send_invite_email: "Enregistrer et envoyer l'e-mail"
           send_invite_email_instructions: "Restreindre l'invitation à l'adresse email pour envoyer un email d'invitation"
-          save_invite: "Enregistrer l'invitation"
+          save_invite: "Enregistrer"
+          cancel: "Annuler"
           invite_saved: "Invitation enregistrée."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
@@ -5288,6 +5288,9 @@ fr:
             title: "Plus d'options"
             move_up: "Déplacer vers le haut"
             move_down: "Déplacer vers le bas"
+        look_and_feel:
+          themes:
+            title: "Thèmes"
       plugins:
         title: "Extensions"
         name: "Nom"

@@ -14,8 +14,8 @@ RSpec.describe(Flags::UpdateFlag) do
     subject(:result) { described_class.call(**params, **dependencies) }
 
     fab!(:current_user) { Fabricate(:admin) }
+    fab!(:flag)
 
-    let(:flag) { Fabricate(:flag) }
     let(:params) do
       {
         id: flag_id,
@@ -35,6 +35,10 @@ RSpec.describe(Flags::UpdateFlag) do
     let(:require_message) { true }
     let(:enabled) { false }
     let(:auto_action_type) { true }
+
+    # DO NOT REMOVE: flags have side effects and their state will leak to
+    # other examples otherwise.
+    after { flag.destroy! }
 
     context "when contract is invalid" do
       let(:name) { nil }
@@ -68,6 +72,10 @@ RSpec.describe(Flags::UpdateFlag) do
 
     context "when title is not unique" do
       let!(:flag_2) { Fabricate(:flag, name:) }
+
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
+      after { flag_2.destroy! }
 
       it { is_expected.to fail_a_policy(:unique_name) }
     end

@@ -64,10 +64,9 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    assert.ok(
-      !exists(".select-kit-row[data-value='showPollBuilder]"),
-      "it hides the builder button"
-    );
+    assert
+      .dom(".select-kit-row[data-value='showPollBuilder']")
+      .doesNotExist("hides the builder button");
   });
 
   test("staff - with insufficient trust level", async function (assert) {
