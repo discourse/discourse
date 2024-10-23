@@ -126,7 +126,7 @@ class ThemeModifierSet < ActiveRecord::Base
         type = :boolean
       else
         if !%i[boolean string].include?(info.type)
-          raise ThemeModifierSetError "Invalid theme modifier column type"
+          raise ThemeModifierSetError, "Invalid theme modifier column type"
         end
       end
 
