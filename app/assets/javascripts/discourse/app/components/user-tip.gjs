@@ -4,6 +4,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
+import helperFn from "discourse/helpers/helper-fn";
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
@@ -14,7 +15,7 @@ export default class UserTip extends Component {
   @service userTips;
   @service tooltip;
 
-  registerTip = modifier(() => {
+  registerTip = helperFn((_, on) => {
     const tip = {
       id: this.args.id,
       priority: this.args.priority ?? 0,
@@ -22,9 +23,9 @@ export default class UserTip extends Component {
 
     this.userTips.addAvailableTip(tip);
 
-    return () => {
+    on.cleanup(() => {
       this.userTips.removeAvailableTip(tip);
-    };
+    });
   });
 
   tip = modifier((element) => {
@@ -82,10 +83,9 @@ export default class UserTip extends Component {
   }
 
   <template>
-    <div {{this.registerTip}}>
-      {{#if this.shouldRenderTip}}
-        <span {{this.tip}}></span>
-      {{/if}}
-    </div>
+    {{this.registerTip}}
+    {{#if this.shouldRenderTip}}
+      <span {{this.tip}}></span>
+    {{/if}}
   </template>
 }
