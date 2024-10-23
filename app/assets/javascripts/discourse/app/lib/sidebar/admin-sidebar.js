@@ -377,6 +377,17 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         });
     }
 
+    // TODO: update the route in ADMIN_NAV_MAP when removing the new /about
+    // feature flag
+    if (currentUser.render_experimental_about_page) {
+      const aboutYourSiteLink = navMap
+        .find((section) => section.name === "community")
+        .links.find((link) => link.name === "admin_about_your_site");
+      aboutYourSiteLink.route = "adminConfig.about";
+      delete aboutYourSiteLink.routeModels;
+      delete aboutYourSiteLink.query;
+    }
+
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {
