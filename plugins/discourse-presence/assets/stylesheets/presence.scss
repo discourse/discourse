@@ -3,6 +3,14 @@
   margin: var(--below-topic-margin) 0;
 }
 
+.desktop-view .topic-navigation-bottom-outlet.presence {
+  display: none;
+}
+
+.mobile-view .topic-above-footer-buttons-outlet.presence {
+  display: none;
+}
+
 .presence-users {
   background-color: var(--secondary);
   color: var(--primary-medium);
