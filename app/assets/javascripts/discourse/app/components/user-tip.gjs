@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import Helper from "@ember/component/helper";
+import { registerDestructor } from "@ember/destroyable";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -14,18 +16,20 @@ export default class UserTip extends Component {
   @service userTips;
   @service tooltip;
 
-  registerTip = modifier(() => {
-    const tip = {
-      id: this.args.id,
-      priority: this.args.priority ?? 0,
-    };
+  registerTip = class extends Helper {
+    @service userTips;
 
-    this.userTips.addAvailableTip(tip);
+    compute(args, { id, priority }) {
+      const tip = {
+        id,
+        priority: priority ?? 0,
+      };
 
-    return () => {
-      this.userTips.removeAvailableTip(tip);
-    };
-  });
+      this.userTips.addAvailableTip(tip);
+
+      registerDestructor(this, () => this.userTips.removeAvailableTip(tip));
+    }
+  };
 
   tip = modifier((element) => {
     let instance;
@@ -82,10 +86,9 @@ export default class UserTip extends Component {
   }
 
   <template>
-    <div {{this.registerTip}}>
-      {{#if this.shouldRenderTip}}
-        <span {{this.tip}}></span>
-      {{/if}}
-    </div>
+    {{this.registerTip id=this.args.id priority=this.args.priority}}
+    {{#if this.shouldRenderTip}}
+      <span {{this.tip}}></span>
+    {{/if}}
   </template>
 }
