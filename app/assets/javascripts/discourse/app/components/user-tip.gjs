@@ -15,7 +15,7 @@ export default class UserTip extends Component {
   @service userTips;
   @service tooltip;
 
-  registerTip = helperFn((args, on) => {
+  registerTip = helperFn((_, on) => {
     const tip = {
       id: this.args.id,
       priority: this.args.priority ?? 0,
