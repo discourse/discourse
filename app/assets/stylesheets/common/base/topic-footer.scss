@@ -1,13 +1,4 @@
-html.anon #topic-footer-buttons {
-  justify-content: end;
-}
-
 #topic-footer-buttons {
-  div:empty,
-  span:empty {
-    display: none;
-  }
-
   display: flex;
   margin: var(--below-topic-margin) 0;
   padding: 0;
