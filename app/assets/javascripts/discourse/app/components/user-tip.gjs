@@ -11,6 +11,21 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
+const registerTip = class extends Helper {
+  @service userTips;
+
+  compute(args, { id, priority }) {
+    const tip = {
+      id,
+      priority: priority ?? 0,
+    };
+
+    this.userTips.addAvailableTip(tip);
+
+    registerDestructor(this, () => this.userTips.removeAvailableTip(tip));
+  }
+};
+
 export default class UserTip extends Component {
   @service currentUser;
   @service userTips;
@@ -76,19 +91,4 @@ export default class UserTip extends Component {
       <span {{this.tip}}></span>
     {{/if}}
   </template>
-}
-
-class registerTip extends Helper {
-  @service userTips;
-
-  compute(args, { id, priority }) {
-    const tip = {
-      id,
-      priority: priority ?? 0,
-    };
-
-    this.userTips.addAvailableTip(tip);
-
-    registerDestructor(this, () => this.userTips.removeAvailableTip(tip));
-  }
 }
