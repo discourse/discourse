@@ -26,32 +26,56 @@
   }
 
   td {
+    vertical-align: top;
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
+
     @include breakpoint("tablet") {
       display: block;
-      border-top: 1px solid var(--primary-very-low);
+      border-top: 1px solid var(--primary-low);
     }
 
-    &:first-child,
-    &:last-child {
+    &:first-child {
       @include breakpoint("tablet") {
         border-top: 0;
+      }
+    }
+
+    &.d-admin-row__detail {
+      @include breakpoint("tablet") {
+        display: flex;
+        justify-content: space-between;
       }
     }
   }
 }
 
 .d-admin-row__overview {
+  width: 55%;
+
+  @include breakpoint("tablet") {
+    width: auto;
+    border-top: 0;
+  }
+
   &-name {
     font-weight: 700;
     max-width: 80%;
+    margin-bottom: var(--space-1);
   }
 
   &-author {
-    font-size: var(--font-down-2);
-    padding: 0 0 var(--space-1) 0;
+    font-size: var(--font-down-1);
+    margin-bottom: var(--space-1);
   }
 
   &-about {
+    padding-right: var(--space-4);
+
+    @include breakpoint("tablet") {
+      padding-top: var(--space-1);
+    }
+
     .d-icon {
       font-size: var(--font-down-3);
       margin-bottom: 0.1em;
@@ -59,21 +83,13 @@
   }
 }
 
-td.d-admin-row__detail {
+.d-admin-row__controls {
   @include breakpoint("tablet") {
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid var(--primary-low);
+    position: absolute;
+    top: 0;
+    right: 0;
   }
-}
 
-.d-admin-row__toggle {
-  .d-toggle-switch {
-    display: inline-block;
-  }
-}
-
-.d-admin-row__control {
   &-options {
     text-align: right;
     display: flex;
@@ -84,12 +100,6 @@ td.d-admin-row__detail {
     .fk-d-menu__trigger {
       font-size: var(--font-down-1);
     }
-  }
-
-  @include breakpoint("tablet") {
-    position: absolute;
-    top: 0;
-    right: 0;
   }
 }
 
