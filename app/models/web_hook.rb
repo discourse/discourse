@@ -40,8 +40,6 @@ class WebHook < ActiveRecord::Base
         WebHookEventType::TYPES[:post_edited],
         WebHookEventType::TYPES[:post_destroyed],
         WebHookEventType::TYPES[:post_recovered],
-        WebHookEventType::TYPES[:category_experts_approved],
-        WebHookEventType::TYPES[:category_experts_unapproved],
       ],
     )
   end
