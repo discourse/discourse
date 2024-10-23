@@ -16,21 +16,6 @@ export default class UserTip extends Component {
   @service userTips;
   @service tooltip;
 
-  registerTip = class extends Helper {
-    @service userTips;
-
-    compute(args, { id, priority }) {
-      const tip = {
-        id,
-        priority: priority ?? 0,
-      };
-
-      this.userTips.addAvailableTip(tip);
-
-      registerDestructor(this, () => this.userTips.removeAvailableTip(tip));
-    }
-  };
-
   tip = modifier((element) => {
     let instance;
     schedule("afterRender", () => {
@@ -86,9 +71,24 @@ export default class UserTip extends Component {
   }
 
   <template>
-    {{this.registerTip id=@id priority=@priority}}
+    {{registerTip id=@id priority=@priority}}
     {{#if this.shouldRenderTip}}
       <span {{this.tip}}></span>
     {{/if}}
   </template>
+}
+
+class registerTip extends Helper {
+  @service userTips;
+
+  compute(args, { id, priority }) {
+    const tip = {
+      id,
+      priority: priority ?? 0,
+    };
+
+    this.userTips.addAvailableTip(tip);
+
+    registerDestructor(this, () => this.userTips.removeAvailableTip(tip));
+  }
 }
