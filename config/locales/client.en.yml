@@ -3800,6 +3800,8 @@ en:
       in_reply_to: "Load parent post"
       view_all_posts: "View all posts"
 
+      badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."

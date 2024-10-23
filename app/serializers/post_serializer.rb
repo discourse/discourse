@@ -38,6 +38,7 @@ class PostSerializer < BasicPostSerializer
              :flair_bg_color,
              :flair_color,
              :flair_group_id,
+             :badges_granted,
              :version,
              :can_edit,
              :can_delete,
@@ -221,6 +222,15 @@ class PostSerializer < BasicPostSerializer
 
   def flair_group_id
     object.user&.flair_group_id
+  end
+
+  def badges_granted
+    object.badges_granted.map do |user_badge| 
+      result = {}
+      result[:icon] = user_badge.badge.icon
+      result[:name] = user_badge.badge.name
+      result
+    end
   end
 
   def link_counts

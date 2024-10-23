@@ -36,6 +36,8 @@ class Post < ActiveRecord::Base
 
   belongs_to :reply_to_user, class_name: "User"
 
+  has_many :badges_granted, class_name: "UserBadge"
+
   has_many :post_replies
   has_many :replies, through: :post_replies
   has_many :post_actions, dependent: :destroy
@@ -187,6 +189,10 @@ class Post < ActiveRecord::Base
 
   def self.find_by_number(topic_id, post_number)
     find_by(topic_id: topic_id, post_number: post_number)
+  end
+
+  def badges_granted?
+    UserBadge.find_by(user_id: user_id, post_id: id)
   end
 
   def whisper?
