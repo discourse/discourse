@@ -9,8 +9,13 @@ module PageObjects
         @context = context
       end
 
+      def component
+        find(@context, visible: :all).native
+      end
+
       def toggle
-        find(@context).click
+        actionbuilder = page.driver.browser.action # workaround zero height button
+        actionbuilder.click(component).perform
       end
 
       def checked?
