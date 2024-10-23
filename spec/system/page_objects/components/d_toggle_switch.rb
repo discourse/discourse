@@ -28,6 +28,10 @@ module PageObjects
           visible: false,
         )
       end
+
+      def enabled?
+        find(@context).has_css?(".d-toggle-switch__checkbox:enabled", visible: false)
+      end
     end
   end
 end
