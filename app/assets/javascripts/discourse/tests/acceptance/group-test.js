@@ -28,10 +28,9 @@ acceptance("Group - Anonymous", function (needs) {
   test("Anonymous Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Messages']"),
-      "it does not show group messages navigation link"
-    );
+    assert
+      .dom(".nav-pills li a[title='Messages']")
+      .doesNotExist("it does not show group messages navigation link");
 
     await click(".nav-pills li a[title='Activity']");
 
@@ -45,14 +44,12 @@ acceptance("Group - Anonymous", function (needs) {
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
     assert.ok(exists(".user-stream-item"), "it lists stream items");
-    assert.ok(
-      !exists(".nav-pills li a[title='Edit Group']"),
-      "it should not show messages tab if user is not admin"
-    );
-    assert.ok(
-      !exists(".nav-pills li a[title='Logs']"),
-      "it should not show Logs tab if user is not admin"
-    );
+    assert
+      .dom(".nav-pills li a[title='Edit Group']")
+      .doesNotExist("it should not show messages tab if user is not admin");
+    assert
+      .dom(".nav-pills li a[title='Logs']")
+      .doesNotExist("it should not show Logs tab if user is not admin");
     assert.ok(exists(".user-stream-item"), "it lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
@@ -72,19 +69,17 @@ acceptance("Group - Anonymous", function (needs) {
 
     await groupDropdown.expand();
 
-    assert.ok(
-      !exists(".group-dropdown-filter"),
-      "it should not display the default header"
-    );
+    assert
+      .dom(".group-dropdown-filter")
+      .doesNotExist("it should not display the default header");
   });
 
   test("Anonymous Viewing Automatic Group", async function (assert) {
     await visit("/g/moderators");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Manage']"),
-      "it does not show group messages navigation link"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .doesNotExist("it does not show group messages navigation link");
   });
 });
 
@@ -301,10 +296,9 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-members-add.btn");
 
-    assert.ok(
-      exists(".group-add-members-modal #set-owner"),
-      "it allows moderators to set group owners"
-    );
+    assert
+      .dom(".group-add-members-modal #set-owner")
+      .exists("it allows moderators to set group owners");
 
     await click(".group-add-members-modal .modal-close");
 

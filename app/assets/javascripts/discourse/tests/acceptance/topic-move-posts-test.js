@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Topic move posts", function (needs) {
@@ -127,10 +123,11 @@ acceptance("Topic move posts", function (needs) {
 
     await fillIn(".choose-topic-modal #choose-topic-title", "Topic");
 
-    assert.notOk(
-      exists(".choose-topic-modal .checkbox-label"),
-      "there is no chronological order checkbox when no topic is selected"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .doesNotExist(
+        "there is no chronological order checkbox when no topic is selected"
+      );
 
     await click(".choose-topic-list .existing-topic:first-child input");
 
@@ -221,10 +218,11 @@ acceptance("Topic move posts", function (needs) {
 
     await fillIn(".choose-topic-modal #choose-message-title", "Topic");
 
-    assert.notOk(
-      exists(".choose-topic-modal .checkbox-label"),
-      "there is no chronological order checkbox when no message is selected"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .doesNotExist(
+        "there is no chronological order checkbox when no message is selected"
+      );
 
     await click(".choose-topic-modal .existing-message:first-of-type input");
 

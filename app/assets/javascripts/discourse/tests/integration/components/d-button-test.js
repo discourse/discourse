@@ -54,38 +54,32 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
 
-    assert.ok(
-      exists("button.is-loading .loading-icon"),
-      "it has a spinner showing"
-    );
-    assert.ok(
-      exists("button[disabled]"),
-      "while loading the button is disabled"
-    );
+    assert
+      .dom("button.is-loading .loading-icon")
+      .exists("it has a spinner showing");
+    assert
+      .dom("button[disabled]")
+      .exists("while loading the button is disabled");
 
     this.set("isLoading", false);
 
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
-    assert.ok(
-      exists("button:not([disabled])"),
-      "while not loading the button is enabled"
-    );
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
+    assert
+      .dom("button:not([disabled])")
+      .exists("while not loading the button is enabled");
   });
 
   test("button without isLoading attribute", async function (assert) {
     await render(hbs`<DButton />`);
 
-    assert.notOk(
-      exists("button.is-loading"),
-      "it doesn't have class is-loading"
-    );
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
+    assert
+      .dom("button.is-loading")
+      .doesNotExist("it doesn't have class is-loading");
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
     assert.notOk(exists("button[disabled]"), "it isn't disabled");
   });
 
@@ -94,14 +88,12 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
 
-    assert.notOk(
-      exists("button.is-loading"),
-      "it doesn't have class is-loading"
-    );
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
+    assert
+      .dom("button.is-loading")
+      .doesNotExist("it doesn't have class is-loading");
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
     assert.notOk(exists("button[disabled]"), "it isn't disabled");
   });
 

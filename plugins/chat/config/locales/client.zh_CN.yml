@@ -49,7 +49,6 @@ zh_CN:
       deleted_chat_username: 已删除
       dates:
         yesterday: "昨天"
-        time_tiny: "h:mm"
       all_loaded: "显示所有消息"
       already_enabled: "此话题已启用聊天。请刷新。"
       disabled_for_topic: "此话题已禁用聊天。"

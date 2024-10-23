@@ -758,13 +758,13 @@ te:
         tl4_reached: "TL4కి చేరుకున్నారు"
       yaxis: "రోజు"
     consolidated_page_views:
-      title: "ఏకీకృత పేజీ వీక్షణలు"
+      title_legacy: "ఏకీకృత పేజీ వీక్షణలు"
       xaxis:
         page_view_crawler: "క్రాలర్లు"
         page_view_anon: "అనామక సభ్యులు"
         page_view_logged_in: "లాగిన్ చేసిన సభ్యులు"
       yaxis: "రోజు"
-      description: "లాగిన్ అయిన సభ్యులు, అనామక సభ్యులు మరియు క్రాలర్‌ల కోసం పేజీ వీక్షణలు."
+      description_legacy: "లాగిన్ అయిన సభ్యులు, అనామక సభ్యులు మరియు క్రాలర్‌ల కోసం పేజీ వీక్షణలు."
       labels:
         post: పోస్ట్
         editor: ఎడిటరు
@@ -908,6 +908,9 @@ te:
       xaxis: "రోజు"
       yaxis: "మొత్తం పేజీ వీక్షణలు"
       description: "సందర్శకులందరి నుండి కొత్త పేజీ వీక్షణల సంఖ్య."
+    page_view_legacy_total_reqs:
+      xaxis: "రోజు"
+      yaxis: "మొత్తం పేజీ వీక్షణలు"
     page_view_logged_in_mobile_reqs:
       title: "లాగిన్ చేసిన పేజీవీక్షణలు"
       xaxis: "రోజు"

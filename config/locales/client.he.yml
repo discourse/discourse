@@ -29,6 +29,7 @@ he:
         millions: "%{number} מיליון"
     dates:
       time: "h:mm a"
+      time_short: "hh:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1949,12 +1950,29 @@ he:
           success: "קישור הזמנה יוצר בהצלחה!"
           error: "אירעה שגיאה ביצירת קישור הזמנה."
         invite:
-          new_title: "יצירת הזמנה"
+          new_title: "הזמנת חברים"
           edit_title: "עריכת הזמנה"
           instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר:"
-          copy_link: "העתקת קישור"
           expires_in_time: "תפוג בעוד %{time}"
           expired_at_time: "פגה ב־%{time}"
+          create_link_to_invite: "יצירת קישור שאפשר לשתף כדי להעניק גישה מיידית לאתר הזה."
+          copy_link_and_share_it: "יש להעתיק את הקישור שלהלן ולשתף אותו כדי להעניק גישה מיידית לאתר הזה."
+          copy_link: "העתקת קישור"
+          link_copied: "הקישור הועתק!"
+          share_link: "שיתוף קישור"
+          link_validity_MF: |
+            הקישור תקף עד { user_count, plural,
+                one {משתמש}
+                two {# משתמשים}
+                many {# משתמשים}
+              other {# משתמשים}
+            } ותוקפו יפוג תוך { duration_days, plural,
+                one {יום}
+                two {יומיים}
+                many {# ימים}
+              other {# ימים}
+            }.
+          edit_link_options: "עריכת אפשרויות קישור."
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
           restrict: "הגבלה לכדי"
@@ -1964,11 +1982,15 @@ he:
           max_redemptions_allowed: "כמות שימושים מרבית"
           add_to_groups: "הוספה לקבוצות"
           invite_to_topic: "נחיתה בנושא"
-          expires_at: "תפוג לאחר"
-          custom_message: "הודעה אישית כרשות"
+          expires_at: "תפוגה עד"
+          expires_after: "תפוג לאחר"
+          custom_message: "הודעה משלך"
+          custom_message_placeholder: "הוספת מסר אישי להזמנה שלך"
           send_invite_email: "לשמור ולשלח דוא״ל"
           send_invite_email_instructions: "הגבלת ההזמנה לדוא״ל כדי לשלוח הודעת הזמנה"
-          save_invite: "שמירת הזמנה"
+          save_invite: "שמירה"
+          cancel: "ביטול"
+          create_link: "יצירת קישור"
           invite_saved: "ההזמנה נשמרה."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
@@ -2322,6 +2344,7 @@ he:
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
       activation_title: "הפעלת החשבון שלך"
       already_have_account: "כבר יש לך חשבון?"
+      no_account_yet: "אין לך חשבון?"
       progress_bar:
         signup: "הרשמה"
         activate: "הפעלה"
@@ -5166,6 +5189,11 @@ he:
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
           previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "מידע נוסף…"
+          experiment_enabled: "הפעלת את היכולת הניסיונית."
+          experiment_disabled: "השבתת את היכולת הניסיונית."
+          experiment_toggled_too_fast: "החלפת את המצב של היכולת הניסיונית מהר מדי. נא להמתין כמה שניות בטרם ניסיון חוזר."
+          experiment_tooltip:
+            title: "התנסות ביכולת הניסיונית שלנו"
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
@@ -5748,6 +5776,17 @@ he:
             title: "אפשרויות נוספות"
             move_up: "קידום למעלה"
             move_down: "העברה למטה"
+        look_and_feel:
+          title: "מראה ותחושה"
+          description: "אפשר להתאים ערכות עיצוב/צבע ורכיבים ולמתג את אתר ה־Discourse שלך, כדי להעניק לו סגנון ייחודי."
+          themes:
+            title: "תמות"
+            themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
+            themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
+            set_default_theme: "הגדרת ברירת מחדל"
+            default_theme: "ערכת עיצוב כברירת מחדל"
+            new_theme: "ערכת עיצוב חדשה"
+            user_selectable: "לבחירת המשתמש"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "תוספים מותקנים"
@@ -5913,6 +5952,8 @@ he:
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
+          themes_intro_new: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
+          themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
           beginners_guide_title: "המדריך למתחילים בערכות העיצוב של Discourse"
           developers_guide_title: "המדריך למפתחי ערכות עיצוב של Discourse"
           browse_themes: "עיון בערכות העיצוב של הקהילה"
@@ -5960,6 +6001,9 @@ he:
           convert_theme_alert_generic: "להמיר את ערכת העיצוב הזאת לרכיב?"
           convert_theme_tooltip: "המרת ערכת עיצוב זו לרכיב"
           inactive_themes: "ערכות עיצוב בלתי פעילות:"
+          set_default_theme: "הגדרת ברירת מחדל"
+          default_theme: "ערכת עיצוב כברירת מחדל"
+          set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
             one: "%{count} נבחרו"

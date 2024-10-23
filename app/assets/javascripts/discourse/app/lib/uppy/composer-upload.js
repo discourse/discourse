@@ -13,6 +13,7 @@ import {
   displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
+  isImage,
   validateUploadedFile,
 } from "discourse/lib/uploads";
 import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
@@ -55,6 +56,7 @@ export default class UppyComposerUpload {
   #inProgressUploads = [];
   #bufferedUploadErrors = [];
   #placeholders = {};
+  #consecutiveImages = [];
 
   #useUploadPlaceholders = true;
   #uploadTargetBound = false;
@@ -253,6 +255,10 @@ export default class UppyComposerUpload {
         if (this.composerModel.privateMessage) {
           file.meta.for_private_message = true;
         }
+
+        if (isImage(file.name)) {
+          this.#consecutiveImages.push(file.name);
+        }
       });
     });
 
@@ -293,7 +299,6 @@ export default class UppyComposerUpload {
         if (this.isDestroying || this.isDestroyed) {
           return;
         }
-
         const upload = this.#inProgressUploads.find(
           (upl) => upl.id === file.id
         );
@@ -331,6 +336,7 @@ export default class UppyComposerUpload {
               extension: file.extension,
             })
           );
+
           const placeholder = this.#uploadPlaceholder(file);
           this.#placeholders[file.id] = {
             uploadPlaceholder: placeholder,
@@ -348,6 +354,14 @@ export default class UppyComposerUpload {
             file.name
           );
         });
+
+        const MIN_IMAGES_TO_AUTO_GRID = 3;
+        if (
+          this.siteSettings.experimental_auto_grid_images &&
+          this.#consecutiveImages?.length >= MIN_IMAGES_TO_AUTO_GRID
+        ) {
+          this.#autoGridImages();
+        }
       });
     });
 
@@ -376,6 +390,7 @@ export default class UppyComposerUpload {
                 markdown
               );
             }
+
             this.#resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -387,6 +402,7 @@ export default class UppyComposerUpload {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
+
               this.#displayBufferedErrors();
               this.#reset();
             }
@@ -605,6 +621,7 @@ export default class UppyComposerUpload {
     });
     this.#inProgressUploads = [];
     this.#bufferedUploadErrors = [];
+    this.#consecutiveImages = [];
     this.uppyWrapper.resetPreProcessors();
     this.#fileInputEl.value = "";
   }
@@ -711,5 +728,88 @@ export default class UppyComposerUpload {
     return (
       selectionStart === 0 || textArea.value.charAt(selectionStart - 1) === "\n"
     );
+  }
+
+  #autoGridImages() {
+    const reply = this.composerModel.get("reply");
+    const imagesToWrapGrid = new Set(this.#consecutiveImages);
+
+    const uploadingText = I18n.t("uploading_filename", {
+      filename: "%placeholder%",
+    });
+    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+
+    if (!uploadingTextMatch || !uploadingTextMatch[0]) {
+      return;
+    }
+
+    const uploadingImagePattern = new RegExp(
+      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "g"
+    );
+
+    const matches = reply.match(uploadingImagePattern) || [];
+    const foundImages = [];
+
+    const existingGridPattern = /\[grid\]([\s\S]*?)\[\/grid\]/g;
+    const gridMatches = reply.match(existingGridPattern);
+
+    matches.forEach((imagePlaceholder) => {
+      imagePlaceholder = imagePlaceholder.trim();
+
+      const filenamePattern = new RegExp(
+        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
+      );
+
+      const filenameMatch = imagePlaceholder.match(filenamePattern);
+
+      if (filenameMatch && filenameMatch[1]) {
+        const filename = filenameMatch[1];
+
+        const isWithinGrid = gridMatches?.some((gridContent) =>
+          gridContent.includes(imagePlaceholder)
+        );
+
+        if (!isWithinGrid && imagesToWrapGrid.has(filename)) {
+          foundImages.push(imagePlaceholder);
+          imagesToWrapGrid.delete(filename);
+
+          // Check if we've found all the images
+          if (imagesToWrapGrid.size === 0) {
+            return;
+          }
+        }
+      }
+    });
+
+    // Check if all consecutive images have been found
+    if (foundImages.length === this.#consecutiveImages.length) {
+      const firstImageMarkdown = foundImages[0];
+      const lastImageMarkdown = foundImages[foundImages.length - 1];
+
+      const startIndex = reply.indexOf(firstImageMarkdown);
+      const endIndex =
+        reply.indexOf(lastImageMarkdown) + lastImageMarkdown.length;
+
+      if (startIndex !== -1 && endIndex !== -1) {
+        const textArea = this.#editorEl.querySelector(this.editorInputClass);
+        if (textArea) {
+          textArea.focus();
+          textArea.selectionStart = startIndex;
+          textArea.selectionEnd = endIndex;
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:apply-surround`,
+            "[grid]",
+            "[/grid]",
+            "grid_surround",
+            { useBlockMode: true }
+          );
+        }
+      }
+    }
+
+    // Clear found images for the next consecutive images:
+    this.#consecutiveImages.length = 0;
+    foundImages.length = 0;
   }
 }

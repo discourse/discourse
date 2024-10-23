@@ -1284,6 +1284,9 @@ ca:
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
+        invite:
+          save_invite: "Desa"
+          cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1472,6 +1475,7 @@ ca:
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
     login:
+      title: "Inicia la sessió"
       username: "Usuari"
       password: "Contrasenya"
       show_password: "Mostra"
@@ -3279,6 +3283,9 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        look_and_feel:
+          themes:
+            title: "Aparences"
       plugins:
         title: "Connectors"
         name: "Nom"

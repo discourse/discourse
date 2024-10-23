@@ -3,7 +3,6 @@ import { test } from "qunit";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
   queryAll,
@@ -121,10 +120,9 @@ acceptance("Topic - User Status - live updates", function (needs) {
 
     await publishToMessageBus(`/user-status`, { [userId]: null });
 
-    assert.notOk(
-      exists(".topic-post .user-status-message"),
-      "status on all posts has disappeared"
-    );
+    assert
+      .dom(".topic-post .user-status-message")
+      .doesNotExist("status on all posts has disappeared");
 
     const newStatus = { emoji: "surfing_man", description: "surfing" };
     await publishToMessageBus(`/user-status`, { [userId]: newStatus });

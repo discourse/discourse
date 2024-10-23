@@ -134,7 +134,6 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
   });
 
   skip("lightbox shows up before and after expand and collapse", async function (assert) {
-    const lightboxImage = ".mfp-img";
     const image = ".chat-message-container[data-id='2'] .chat-img-upload";
     const expandImage =
       ".chat-message-container[data-id='2'] .chat-message-collapser-closed";
@@ -145,20 +144,14 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
     await click(image);
 
-    assert.ok(
-      exists(document.querySelector(lightboxImage)),
-      "can see lightbox"
-    );
-    await click(document.querySelector(".mfp-container"));
+    assert.dom(".mfp-img").exists("can see lightbox");
+    await click(".mfp-container");
 
     await click(collapseImage);
     await click(expandImage);
 
     await click(image);
-    assert.ok(
-      exists(document.querySelector(lightboxImage)),
-      "can see lightbox after collapse expand"
-    );
-    await click(document.querySelector(".mfp-container"));
+    assert.dom(".mfp-img").exists("can see lightbox after collapse expand");
+    await click(".mfp-container");
   });
 });

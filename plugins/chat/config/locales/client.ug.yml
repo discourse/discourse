@@ -50,7 +50,6 @@ ug:
       deleted_chat_username: ئۆچۈرۈلدى
       dates:
         yesterday: "تۈنۈگۈن"
-        time_tiny: "h:mm"
       all_loaded: "بارلىق ئۇچۇر كۆرسىتىلىدۇ"
       already_enabled: "بۇ تېمىدا سۆھبەتلىشىش ئاللىقاچان قوزغىتىلغان. يېڭىلاڭ."
       disabled_for_topic: "بۇ تېمىدا سۆھبەتلىشىش چەكلەنگەن."

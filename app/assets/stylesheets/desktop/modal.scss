@@ -5,6 +5,7 @@
   &__container {
     max-width: var(--modal-max-width);
     min-width: var(--modal-min-width);
+    min-height: var(--modal-min-height); // unset, optional theme utility
     .d-modal.-large & {
       max-width: 800px;
     }

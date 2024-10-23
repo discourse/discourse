@@ -46,7 +46,6 @@ cs:
       deleted_chat_username: smazáno
       dates:
         yesterday: "Včera"
-        time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
       already_enabled: "Chat je v tomto tématu již povolen. Obnovte prosím stránku."
       disabled_for_topic: "Chat je v tomto tématu zakázán."
@@ -322,6 +321,8 @@ cs:
             title: "Hlídání"
       thread_title_modal:
         input_placeholder: "Řekněte ostatním, o čem je tato konverzace..."
+        discourse_ai:
+          description: "Podívejte se na %{url} , kde se dozvíte více o tomto a dalších vylepšeních vašeho zážitku z Discourse."
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

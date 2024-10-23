@@ -121,10 +121,9 @@ acceptance("User Preferences - Account", function (needs) {
   test("connected accounts", async function (assert) {
     await visit("/u/eviltrout/preferences/account");
 
-    assert.ok(
-      exists(".pref-associated-accounts"),
-      "it has the connected accounts section"
-    );
+    assert
+      .dom(".pref-associated-accounts")
+      .exists("it has the connected accounts section");
 
     assert.ok(
       query(
@@ -155,15 +154,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("avatars are not selectable for non-staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
@@ -177,15 +174,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars not selectable when `selectable_avatars_mode` site setting is set to `no_one`", async function (assert) {
@@ -198,15 +193,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars are selectable for user with required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -221,15 +214,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("avatars are not selectable for user without required trust level when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -244,15 +235,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.notOk(
-      exists("#uploaded-avatar"),
-      "avatar selection modal does not include option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .doesNotExist("avatar selection modal does not include option to upload");
   });
 
   test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `tl3`", async function (assert) {
@@ -267,15 +256,13 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(
-      exists(".selectable-avatars"),
-      "opens the avatar selection modal"
-    );
+    assert
+      .dom(".selectable-avatars")
+      .exists("opens the avatar selection modal");
 
-    assert.ok(
-      exists("#uploaded-avatar"),
-      "avatar selection modal includes option to upload"
-    );
+    assert
+      .dom("#uploaded-avatar")
+      .exists("avatar selection modal includes option to upload");
   });
 
   test("default avatar selector", async function (assert) {
@@ -286,10 +273,9 @@ acceptance("User Preferences - Account", function (needs) {
 
     await click(".avatar-selector-refresh-gravatar");
 
-    assert.ok(
-      exists(".avatar[src='/images/gravatar_is_not_avatar.png']"),
-      "displays the new gravatar image"
-    );
+    assert
+      .dom(".avatar[src='/images/gravatar_is_not_avatar.png']")
+      .exists("displays the new gravatar image");
 
     await click("#gravatar");
     await click(".d-modal__footer .btn");

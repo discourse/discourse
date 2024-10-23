@@ -83,16 +83,14 @@ acceptance("Category New", function (needs) {
     );
 
     await click(".edit-category-security a");
-    assert.ok(
-      exists(".permission-row button.reply-toggle"),
-      "it can switch to the security tab"
-    );
+    assert
+      .dom(".permission-row button.reply-toggle")
+      .exists("it can switch to the security tab");
 
     await click(".edit-category-settings a");
-    assert.ok(
-      exists("#category-search-priority"),
-      "it can switch to the settings tab"
-    );
+    assert
+      .dom("#category-search-priority")
+      .exists("it can switch to the settings tab");
 
     sinon.stub(DiscourseURL, "routeTo");
 

@@ -1305,13 +1305,13 @@ pl_PL:
       yaxis: "Dzień"
       description: "Liczba użytkowników, którzy podnieśli poziom zaufania w tym okresie."
     consolidated_page_views:
-      title: "Skonsolidowane odsłony"
+      title_legacy: "Skonsolidowane odsłony"
       xaxis:
         page_view_crawler: "Botów indeksujących"
         page_view_anon: "Anonimowych użytkowników"
         page_view_logged_in: "Zalogowanych użytkowników"
       yaxis: "Dzień"
-      description: "Odsłony zalogowanych użytkowników, anonimowych użytkowników i botów indeksujących."
+      description_legacy: "Odsłony zalogowanych użytkowników, anonimowych użytkowników i botów indeksujących."
       labels:
         post: Wpis
         editor: Edytor
@@ -1326,13 +1326,14 @@ pl_PL:
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
     consolidated_page_views_browser_detection:
       title: "Skonsolidowane odsłony z wykrywaniem przeglądarki (eksperymentalne)"
+      title_legacy: "Skonsolidowane odsłony z wykrywaniem przeglądarki (eksperymentalne)"
       xaxis:
         page_view_anon_browser: "Anonimowa przeglądarka"
         page_view_logged_in_browser: "Zalogowana przeglądarka"
         page_view_crawler: "Znany robot internetowy"
         page_view_other: "Inne wyświetlenia strony"
       yaxis: "Dzień"
-      description: "Odsłony dla zalogowanych użytkowników, anonimowych użytkowników, znanych robotów internetowych i innych. Ten eksperymentalny raport zapewnia, że żądania zalogowanych/anonimowych użytkowników pochodzą z prawdziwych przeglądarek przed ich zliczeniem. Dane historyczne dla tego raportu są niedostępne, aby uzyskać dane historyczne, zobacz raport \"Skonsolidowane odsłony\"."
+      description_legacy: "Odsłony dla zalogowanych użytkowników, anonimowych użytkowników, znanych robotów internetowych i innych. Ten eksperymentalny raport zapewnia, że żądania zalogowanych/anonimowych użytkowników pochodzą z prawdziwych przeglądarek przed ich zliczeniem. Dane historyczne dla tego raportu są niedostępne, aby uzyskać dane historyczne, zobacz raport \"Skonsolidowane odsłony\"."
     site_traffic:
       title: "Ruch w witrynie"
       xaxis:
@@ -1492,6 +1493,9 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Wszystkie odsłony"
       description: "Liczba nowych odsłon wszystkich użytkowników."
+    page_view_legacy_total_reqs:
+      xaxis: "Dzień"
+      yaxis: "Wszystkie odsłony"
     page_view_logged_in_mobile_reqs:
       title: "Zalogowane odsłony"
       xaxis: "Dzień"

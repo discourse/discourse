@@ -53,9 +53,15 @@ export default class TopicFooterButtons extends Component {
     return !isPM || this.canSendPms;
   }
 
-  @discourseComputed("topic.details.notification_level")
-  showNotificationUserTip(notificationLevel) {
-    return notificationLevel >= NotificationLevels.TRACKING;
+  @discourseComputed(
+    "showNotificationsButton",
+    "topic.details.notification_level"
+  )
+  showNotificationUserTip(showNotificationsButton, notificationLevel) {
+    return (
+      showNotificationsButton &&
+      notificationLevel >= NotificationLevels.TRACKING
+    );
   }
 
   @discourseComputed("topic.message_archived")

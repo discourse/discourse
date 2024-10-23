@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { paste, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -127,9 +127,8 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     `);
     await this.subject.expand();
 
-    assert.notOk(
-      exists(".selected-content"),
-      "it doesn’t render an empty content div"
-    );
+    assert
+      .dom(".selected-content")
+      .doesNotExist("it doesn’t render an empty content div");
   });
 });

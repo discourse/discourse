@@ -760,13 +760,13 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lần xem trang tổng hợp"
+      title_legacy: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
         page_view_logged_in: "Người dùng đã đăng nhập"
       yaxis: "Ngày"
-      description: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
+      description_legacy: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
       labels:
         post: Bài viết
         editor: Biên tập
@@ -901,6 +901,9 @@ vi:
       xaxis: "Ngày"
     page_view_total_reqs:
       title: "Số lượt xem"
+      xaxis: "Ngày"
+      yaxis: "Tổng lượt xem trang"
+    page_view_legacy_total_reqs:
       xaxis: "Ngày"
       yaxis: "Tổng lượt xem trang"
     page_view_logged_in_mobile_reqs:

@@ -52,7 +52,6 @@ pl_PL:
       deleted_chat_username: usunięte
       dates:
         yesterday: "Wczoraj"
-        time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
       already_enabled: "Czat jest już włączony w tym temacie. Spróbuj odświeżyć strone."
       disabled_for_topic: "Czat jest wyłączony w tym temacie."

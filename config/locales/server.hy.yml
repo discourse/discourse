@@ -624,21 +624,23 @@ hy:
   topic_flag_types:
     spam:
       title: "Սպամ"
-      description: "Այս թեման գովազդ է: Այն օգտակար կամ կապված չէ այս կայքի հետ, բայց բնույթով գովազդային է:"
+      description: "Այս թեման գովազդ է։ Այն օգտակար կամ տեղին չէ այս կայքի համար, այլ գովազդային բնույթ ունի:"
       long_form: "դրոշակավորել է սա որպես սպամ"
       short_description: "Սա գովազդ է:"
     inappropriate:
       title: "Անհամապատասխան"
+      description: 'Այս թեման պարունակում է նյութ, որը հիմնավոր կերպով կարելի է համարել վիրավորական, ատելություն սերմանող կամ խախտում է <a href="%{base_path}/guidelines">համայնքի կանոնները</a>։'
       long_form: "դրոշակավորել է սա որպես անհամապատասխան"
       short_description: '<a href="%{base_path}/guidelines">Մեր համայնքի ուղեցույցի</a> խախտում'
     notify_moderators:
       title: "Ինչ-որ Այլ Բան"
-      description: 'Այս թեման պահանջում է բարձր անձնակազմի ուշադրությունը՝ հիմված <a href="%{base_path}/guidelines">ուղեցույցի</a>, <a href="%{tos_url}">ՕՊ</a> -ի կամ վերը չնշված այլ պատճառի վրա:'
+      description: 'Այս թեման պահանջում է անձնակազմի ընդհանուր ուշադրությունը՝ ըստ <a href="%{base_path}/guidelines">ուղեցույցներ</a>-ի, <a href="%{tos_url}">TOS-ի</a>կամ վերը չնշված մեկ այլ պատճառով:'
       long_form: "դրոշակավորել է մոդերատորի ուշադրության համար"
       short_description: "Պահանջում է անձնակազմի ուշադրություն մեկ այլ պատճառով:"
       email_title: ' "%{title}" թեման պահանջում է մոդերատորի ուշադրություն:'
       email_body: "%{link}\n\n%{message}"
     illegal:
+      description: "Այս թեման պահանջում է անձնակազմի ուշադրությունը, քանի որ կարծում եմ, որ այն պարունակում է նյութ, որն անօրինական է:"
       email_title: '"%{title}"-ում գրառումը պահանջում է անձնակազմի ուշադրությունը'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -760,13 +762,13 @@ hy:
     trust_level_growth:
       yaxis: "Օր"
     consolidated_page_views:
-      title: "Ամրագրված Էջադիտումներ"
+      title_legacy: "Ամրագրված Էջադիտումներ"
       xaxis:
         page_view_crawler: "Տվյալների հավաքագրիչներ (Crawler)"
         page_view_anon: "Անանուն օգտատերեր"
         page_view_logged_in: "Մուտքագրված օգտատերեր"
       yaxis: "Օր"
-      description: "Մուտքագրված ու անանուն օգտատերերի և տվյալների հավաքագրիչների էջադիտումներ:"
+      description_legacy: "Մուտքագրված ու անանուն օգտատերերի և տվյալների հավաքագրիչների էջադիտումներ:"
       labels:
         post: Գրառում
         editor: Խմբագրիչ
@@ -929,6 +931,9 @@ hy:
       xaxis: "Օր"
       yaxis: "Ընդհանուր Էջի Դիտումներ"
       description: "Բոլոր այցելուների կողմից նոր էջադիտումների քանակը:"
+    page_view_legacy_total_reqs:
+      xaxis: "Օր"
+      yaxis: "Ընդհանուր Էջի Դիտումներ"
     page_view_logged_in_mobile_reqs:
       title: "Մուտքագրված Էջերի Դիտումներ"
       xaxis: "Օր"
@@ -1627,6 +1632,7 @@ hy:
     activated_by_staff: "Ակտիվացված անձնակազմի կողմից"
     new_user_typed_too_fast: "Նոր օգտատերը չափազանց արագ է տպել"
     username:
+      characters: "պետք է ներառի միայն թվեր, տառեր, գծիկներ, կետեր և ներքևի գծեր"
       unique: "պետք է լինի եզակի"
       blank: "պետք է լինի ներկա"
       must_begin_with_alphanumeric_or_underscore: "պետք է սկսվի տառով, թվով կամ ընդծումով"
@@ -2691,7 +2697,7 @@ hy:
     higher_love:
       name: Ավելի բարձր Սեր
     crazy_in_love:
-      name: Սիրուց Խելագար
+      name: Խենթի Պես Սիրահարված
     thank_you:
       name: Շնորհակալություն
       description: Ունի 20 հավանած գրառում է տվել է 10 հավանում

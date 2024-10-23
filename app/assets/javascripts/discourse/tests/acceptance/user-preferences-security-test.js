@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -94,15 +93,13 @@ acceptance("User Preferences - Security", function (needs) {
         "displays the scope for the API key"
       );
 
-    assert.ok(
-      exists(".pref-user-api-keys__created-at"),
-      "displays the created at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__created-at")
+      .exists("displays the created at date for the API key");
 
-    assert.ok(
-      exists(".pref-user-api-keys__last-used-at"),
-      "displays the last used at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__last-used-at")
+      .exists("displays the last used at date for the API key");
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {

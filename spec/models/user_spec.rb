@@ -1076,6 +1076,12 @@ RSpec.describe User do
       expect(User.reserved_username?("löwe")).to eq(true) # NFC
       expect(User.reserved_username?("käfer")).to eq(true) # NFC
     end
+
+    it "does not error out when there are no reserved usernames" do
+      SiteSetting.stubs(:reserved_usernames).returns(nil)
+
+      expect { User.username_available?("Foo") }.not_to raise_error
+    end
   end
 
   describe "email_validator" do

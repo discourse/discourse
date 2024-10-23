@@ -1686,12 +1686,10 @@ te:
           success: "ఆహ్వాన లింక్ విజయవంతంగా రూపొందించబడింది!"
           error: "ఆహ్వాన లింక్‌ని రూపొందించడంలో లోపం ఏర్పడింది"
         invite:
-          new_title: "ఆహ్వానాన్ని సృష్టించండి"
-          edit_title: "ఆహ్వానాన్ని సవరించండి"
           instructions: "ఈ సైట్‌కు తక్షణమే యాక్సెస్ మంజూరు చేయడానికి ఈ లింక్‌ను షేర్ చేయండి:"
-          copy_link: "లింక్ను కాపీ చేయండి"
           expires_in_time: "%{time} లో గడువు ముగుస్తుంది"
           expired_at_time: "%{time} కి గడువు ముగిసింది"
+          link_copied: "లింక్ కాపీ చేయబడింది!"
           show_advanced: "అధునాతన ఎంపికలను చూపించండి"
           hide_advanced: "అధునాతన ఎంపికలను దాచండి"
           restrict: "పరిమితం చేయండి"
@@ -1701,11 +1699,11 @@ te:
           max_redemptions_allowed: "గరిష్ట ఉపయోగాలు"
           add_to_groups: "సమూహాలకు జోడించండి"
           invite_to_topic: "విషయానికి చేరుకోండి"
-          expires_at: "ఆహ్వానం గడువు ఎప్పుడు ముగుస్తుంది"
-          custom_message: "ఐచ్ఛిక వ్యక్తిగత సందేశం"
+          expires_after: "ఆహ్వానం గడువు ఎప్పుడు ముగుస్తుంది"
           send_invite_email: "సేవ్ చేసి ఇమెయిల్‌ను పంపండి"
           send_invite_email_instructions: "ఆహ్వాన ఇమెయిల్‌ను పంపడానికి ఇమెయిల్‌కి ఆహ్వానాన్ని పరిమితం చేయండి"
-          save_invite: "ఆహ్వానాన్ని సేవ్ చేయండి"
+          save_invite: "సేవ్ చేయండి"
+          cancel: "రద్దుచేయండి"
           invite_saved: "ఆహ్వానం సేవ్ చేయబడింది."
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
@@ -1996,7 +1994,7 @@ te:
     login:
       header_title: "తిరిగి స్వాగతం"
       subheader_title: "మీ ఖాతాకు లాగిన్ చేయండి"
-      title: "లాగిన్ అవ్వండి"
+      title: "లాగిన్"
       username: "సభ్యుడు"
       password: "సంకేతపదం"
       show_password: "చూపండి"
@@ -4911,6 +4909,9 @@ te:
             invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
+        look_and_feel:
+          themes:
+            title: "థీమ్స్"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
