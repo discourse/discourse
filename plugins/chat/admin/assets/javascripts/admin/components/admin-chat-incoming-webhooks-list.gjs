@@ -43,39 +43,68 @@ export default class AdminChatIncomingWebhooksList extends Component {
   }
 
   <template>
-    <table>
+    <table class="d-admin-table">
       <thead>
         <th>{{i18n "chat.incoming_webhooks.name"}}</th>
         <th>{{i18n "chat.incoming_webhooks.emoji"}}</th>
         <th>{{i18n "chat.incoming_webhooks.username"}}</th>
-        <th>{{i18n "chat.incoming_webhooks.description"}}</th>
+        {{!-- <th>{{i18n "chat.incoming_webhooks.description"}}</th> --}}
         <th>{{i18n "chat.incoming_webhooks.channel"}}</th>
         <th></th>
       </thead>
 
       <tbody>
         {{#each this.sortedWebhooks as |webhook|}}
-          <tr class="incoming-chat-webhooks-row" data-webhook-id={{webhook.id}}>
-            <td>{{webhook.name}}</td>
-            <td>{{replaceEmoji webhook.emoji}}</td>
-            <td>{{webhook.username}}</td>
-            <td>{{webhook.description}}</td>
-            <td><ChannelTitle @channel={{webhook.chat_channel}} /></td>
+          <tr class="d-admin-row__content incoming-chat-webhooks-row" data-webhook-id={{webhook.id}}>
+            <td class="d-admin-row__overview">
+              <div class="d-admin-row__overview-name">
+                {{webhook.name}}
+              </div>
+              <div class="d-admin-row__overview-about">
+                {{webhook.description}}
+              </div>
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "chat.incoming_webhooks.emoji"}}
+              </div>
+              {{replaceEmoji webhook.emoji}}
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "chat.incoming_webhooks.username"}}
+              </div>
+              {{webhook.username}}
+            </td>
+            {{!-- <td class="d-admin-row__overview">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "chat.incoming_webhooks.description"}}
+              </div>
+              
+            </td> --}}
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "chat.incoming_webhooks.channel"}}
+              </div>
+              <ChannelTitle @channel={{webhook.chat_channel}} />
+            </td>
             <td
-              class="incoming-chat-webhooks-row__controls admin-table-row-controls"
+              class="d-admin-row__controls incoming-chat-webhooks-row__controls"
             >
-              <LinkTo
-                @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
-                @model={{webhook.id}}
-                class="btn btn-small admin-chat-incoming-webhooks-edit"
-              >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
+              <div class="d-admin-row__controls-options">
+                <LinkTo
+                  @route="adminPlugins.show.discourse-chat-incoming-webhooks.show"
+                  @model={{webhook.id}}
+                  class="btn btn-small admin-chat-incoming-webhooks-edit"
+                >{{i18n "chat.incoming_webhooks.edit"}}</LinkTo>
 
-              <DButton
-                @icon="trash-alt"
-                @title="chat.incoming_webhooks.delete"
-                @action={{fn this.destroyWebhook webhook}}
-                class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
-              />
+                <DButton
+                  @icon="trash-alt"
+                  @title="chat.incoming_webhooks.delete"
+                  @action={{fn this.destroyWebhook webhook}}
+                  class="btn-danger btn-small admin-chat-incoming-webhooks-delete"
+                />
+              </div>
             </td>
           </tr>
         {{/each}}
