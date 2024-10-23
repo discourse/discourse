@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
@@ -11,8 +12,11 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import { createColumns } from "discourse/components/topic-list/topic-list-item";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
@@ -50,8 +54,13 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
-  @service router;
+  @service currentUser;
   @service historyStore;
+  @service messageBus;
+  @service router;
+  @service site;
+  @service siteSettings;
+  @service topicTrackingState;
 
   @alias("topic.id") dataTopicId;
 
@@ -392,5 +401,62 @@ export default class TopicListItem extends Component {
 
   _titleElement() {
     return this.element.querySelector(".main-link .title");
+  }
+
+  @cached
+  get columns() {
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-item-columns",
+      createColumns(),
+      context
+    )
+      .resolve()
+      .map((entry) => {
+        if (entry.value) {
+          entry.value = htmlSafe(
+            rawRenderGlimmer(
+              this,
+              "th.hbr-ember-outlet",
+              <template>
+                <@data.component
+                  @topic={{@data.topic}}
+                  @tagsForUser={{@data.tagsForUser}}
+                  @hideCategory={{@data.hideCategory}}
+                  @onTitleFocus={{@data.onTitleFocus}}
+                  @onTitleBlur={{@data.onTitleBlur}}
+                  @includeUnreadIndicator={{@data.includeUnreadIndicator}}
+                  @unreadClass={{@data.unreadClass}}
+                  @newDotText={{@data.newDotText}}
+                  @expandPinned={{@data.expandPinned}}
+                />
+              </template>,
+              {
+                component: entry.value,
+                topic: this.topic,
+                tagsForUser: this.tagsForUser,
+                hideCategory: this.hideCategory,
+                onTitleFocus: this._onTitleFocus,
+                onTitleBlur: this._onTitleBlur,
+                includeUnreadIndicator: this.includeUnreadIndicator,
+                unreadClass: this.unreadClass,
+                newDotText: this.newDotText,
+                expandPinned: this.expandPinned,
+              }
+            )
+          );
+        }
+
+        return entry;
+      });
   }
 }

@@ -26,4 +26,5 @@ const ActivityColumn = <template>
     </a>
   </td>
 </template>;
+
 export default ActivityColumn;
