@@ -252,7 +252,7 @@ GEM
       ffi (~> 1.9)
     minio_runner (0.1.2)
     minitest (5.25.1)
-    mocha (2.4.5)
+    mocha (2.5.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.3)
     multi_json (1.15.0)
