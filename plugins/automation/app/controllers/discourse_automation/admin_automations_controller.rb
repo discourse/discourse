@@ -21,7 +21,7 @@ module DiscourseAutomation
     end
 
     def create
-      automation_params = params.require(:automation).permit(:name, :script, :trigger)
+      automation_params = params.require(:automation).permit(:script, :trigger)
 
       automation =
         DiscourseAutomation::Automation.new(

@@ -8,7 +8,8 @@ en:
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
-      no_automation_yet: You haven’t created any automation yet.
+      no_automation_yet: You haven’t created any automations yet. Choose an option below to get started.
+      filter_placeholder: Filter by name or description...
       edit_automation:
         trigger_section:
           forced: This trigger is forced by script.
@@ -384,6 +385,7 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+      unnamed_automation: "Unnamed automation"
 
       models:
         script:

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | error", type: :system do
+describe "DiscourseAutomation | error", type: :system, js: true do
   fab!(:admin)
 
   before do
@@ -10,14 +10,13 @@ describe "DiscourseAutomation | error", type: :system do
 
   context "when saving the form with an error" do
     it "shows the error correctly" do
-      visit("/admin/plugins/discourse-automation")
+      visit("/admin/plugins/discourse-automation/new")
+      find(".admin-section-landing__header-filter").set("create a post")
+      find(".admin-section-landing-item", match: :first).click
 
-      find(".new-automation").click
-      fill_in("automation-name", with: "aaaaa")
-      select_kit = PageObjects::Components::SelectKit.new(".scriptables")
-      select_kit.expand
-      select_kit.select_row_by_value("post")
-      find(".create-automation").click
+      expect(page).to have_selector("input[name='automation-name']")
+
+      find('input[name="automation-name"]').set("aaaaa")
       select_kit = PageObjects::Components::SelectKit.new(".triggerables")
       select_kit.expand
       select_kit.select_row_by_value("recurring")
@@ -29,6 +28,8 @@ describe "DiscourseAutomation | error", type: :system do
           { name: "topic", target: "script", target_name: "post" },
         ),
       )
+
+      expect(find('input[name="automation-name"]').value).to eq("aaaaa")
     end
   end
 end
