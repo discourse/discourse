@@ -7,6 +7,10 @@
     td[role="button"] {
       cursor: pointer;
     }
+
+    &__name {
+      word-break: break-all;
+    }
   }
 
   .admin-section-landing__header {
