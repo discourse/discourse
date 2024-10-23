@@ -6,7 +6,6 @@ import { inject as service } from "@ember/service";
 export default class AutomationNew extends Controller {
   @service router;
   @tracked filterText = "";
-  redirected = false;
 
   @action
   updateFilterText(event) {

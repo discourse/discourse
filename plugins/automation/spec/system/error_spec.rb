@@ -28,6 +28,8 @@ describe "DiscourseAutomation | error", type: :system, js: true do
           { name: "topic", target: "script", target_name: "post" },
         ),
       )
+
+      expect(find('input[name="automation-name"]').value).to eq("aaaaa")
     end
   end
 end

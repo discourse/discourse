@@ -7,18 +7,14 @@ export default class AutomationIndex extends DiscourseRoute {
 
   controllerName = "admin-plugins-discourse-automation-index";
 
-  afterModel(model) {
-    if (!model.length) {
-      const controller = this.controllerFor(
-        "adminPlugins.discourse-automation.new"
-      );
-      controller.set("redirected", true);
-      this.router.transitionTo("adminPlugins.discourse-automation.new");
-    }
-  }
-
   model() {
     return this.store.findAll("discourse-automation-automation");
+  }
+
+  afterModel(model) {
+    if (!model.length) {
+      this.router.transitionTo("adminPlugins.discourse-automation.new");
+    }
   }
 
   @action
