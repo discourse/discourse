@@ -136,7 +136,7 @@ GEM
     email_reply_trimmer (0.1.13)
     erubi (1.13.0)
     excon (0.112.0)
-    execjs (2.9.1)
+    execjs (2.10.0)
     exifr (1.4.0)
     extralite-bundle (2.8.2)
     fabrication (2.31.0)
