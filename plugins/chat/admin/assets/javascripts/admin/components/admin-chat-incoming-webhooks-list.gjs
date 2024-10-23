@@ -48,7 +48,6 @@ export default class AdminChatIncomingWebhooksList extends Component {
         <th>{{i18n "chat.incoming_webhooks.name"}}</th>
         <th>{{i18n "chat.incoming_webhooks.emoji"}}</th>
         <th>{{i18n "chat.incoming_webhooks.username"}}</th>
-        {{!-- <th>{{i18n "chat.incoming_webhooks.description"}}</th> --}}
         <th>{{i18n "chat.incoming_webhooks.channel"}}</th>
         <th></th>
       </thead>
@@ -79,12 +78,6 @@ export default class AdminChatIncomingWebhooksList extends Component {
               </div>
               {{webhook.username}}
             </td>
-            {{!-- <td class="d-admin-row__overview">
-              <div class="d-admin-row__mobile-label">
-                {{i18n "chat.incoming_webhooks.description"}}
-              </div>
-
-            </td> --}}
             <td class="d-admin-row__detail">
               <div class="d-admin-row__mobile-label">
                 {{i18n "chat.incoming_webhooks.channel"}}
