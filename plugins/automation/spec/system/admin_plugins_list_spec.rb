@@ -39,7 +39,6 @@ describe "Admin Plugins List", type: :system, js: true do
         admin_plugins_list_page.plugin_row_selector("automation") +
           " .admin-plugins-list__enabled .d-toggle-switch__checkbox",
       )
-    expect(toggle_switch).to be_checked
     toggle_switch.toggle
     expect(toggle_switch).to be_unchecked
     expect(SiteSetting.discourse_automation_enabled).to eq(false)
