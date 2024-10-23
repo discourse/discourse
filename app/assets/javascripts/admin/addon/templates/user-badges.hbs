@@ -50,7 +50,11 @@
 
     <PluginOutlet
       @name="badge-granter-table"
-      @outletArgs={{hash groupedBadges=this.groupedBadges}}
+      @outletArgs={{hash
+        groupedBadges=this.groupedBadges
+        revokeBadge=this.revokeBadge
+        expandGroup=this.expandGroup
+      }}
     >
       <table id="user-badges">
         <tbody>
