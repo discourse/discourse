@@ -16,13 +16,15 @@ export default class DismissRead extends Component {
       class="dismiss-read-modal"
     >
       <:body>
-        <p>
-          <PreferenceCheckbox
-            @labelKey="topics.bulk.also_dismiss_topics"
-            @checked={{this.dismissTopics}}
-            class="dismiss-read-modal__stop-tracking"
-          />
-        </p>
+        {{~#if @model.showStopTracking~}}
+          <p>
+            <PreferenceCheckbox
+              @labelKey="topics.bulk.also_dismiss_topics"
+              @checked={{this.dismissTopics}}
+              class="dismiss-read-modal__stop-tracking"
+            />
+          </p>
+        {{~/if~}}
       </:body>
       <:footer>
         <DButton

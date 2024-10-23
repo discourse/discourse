@@ -16,9 +16,11 @@ export default class BulkSelectHelper {
   @tracked autoAddTopicsToBulkSelect = false;
   @tracked autoAddBookmarksToBulkSelect = false;
 
+  list = null;
   selected = new TrackedArray();
 
   constructor(context) {
+    this.list = context;
     setOwner(this, getOwner(context));
   }
 
@@ -32,6 +34,10 @@ export default class BulkSelectHelper {
 
   get selectedCategoryIds() {
     return this.selected.mapBy("category_id").uniq();
+  }
+
+  get showStopTracking() {
+    return this.list.showDismissRead;
   }
 
   @bind
