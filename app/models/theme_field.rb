@@ -24,6 +24,23 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
+  after_save do
+    dependent_fields.each(&:invalidate_baked!)
+
+    if upload && svg_sprite_field?
+      upsert_svg_sprite!
+      SvgSprite.expire_cache
+    end
+  end
+
+  after_destroy do
+    if svg_sprite_field?
+      ThemeSvgSprite.where(theme_id: theme_id).delete_all
+
+      SvgSprite.expire_cache
+    end
+  end
+
   scope :find_by_theme_ids,
         ->(theme_ids) do
           return none if theme_ids.blank?
@@ -721,21 +738,8 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_save do
-    dependent_fields.each(&:invalidate_baked!)
-
-    if upload && svg_sprite_field?
-      upsert_svg_sprite!
-      SvgSprite.expire_cache
-    end
-  end
-
-  after_destroy do
-    if svg_sprite_field?
-      ThemeSvgSprite.where(theme_id: theme_id).delete_all
-
-      SvgSprite.expire_cache
-    end
+  def upload_url
+    self.upload&.url
   end
 
   private

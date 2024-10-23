@@ -272,7 +272,7 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    # NOTE (martin): Until we are ready to roll this out more
+    # TODO (martin): Until we are ready to roll this out more
     # widely, let's avoid doing this work for most sites.
     if SiteSetting.theme_download_screenshots
       theme_info["screenshots"] = Array.wrap(theme_info["screenshots"]).take(2)

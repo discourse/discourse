@@ -52,8 +52,7 @@ class ThemeSerializer < BasicThemeSerializer
     object
       .theme_fields
       .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
-      &.upload
-      &.url
+      &.upload_url
   end
 
   def child_themes
