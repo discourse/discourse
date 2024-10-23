@@ -139,7 +139,7 @@ export default class TopicListHeaderColumn extends Component {
       {{/if}}
       <PluginOutlet
         @name="topic-list-heading-bottom"
-        @outletArgs={{hash name=@name}}
+        @outletArgs={{hash name=@name bulkSelectEnabled=@bulkSelectEnabled}}
       />
     </th>
   </template>
