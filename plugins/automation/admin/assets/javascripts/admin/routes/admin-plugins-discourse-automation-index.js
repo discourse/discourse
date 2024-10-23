@@ -9,6 +9,10 @@ export default class AutomationIndex extends DiscourseRoute {
 
   afterModel(model) {
     if (!model.length) {
+      const controller = this.controllerFor(
+        "adminPlugins.discourse-automation.new"
+      );
+      controller.set("redirected", true);
       this.router.transitionTo("adminPlugins.discourse-automation.new");
     }
   }

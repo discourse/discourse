@@ -14,6 +14,12 @@
     />
   </div>
 
+  {{#if this.redirected}}
+    <div class="alert alert-info">
+      <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
+    </div>
+  {{/if}}
+
   <div class="admin-section-landing__wrapper">
     {{#each this.scriptableContent as |script|}}
       <AdminSectionLandingItem

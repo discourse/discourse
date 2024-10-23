@@ -9,7 +9,7 @@
     }
 
     &__name {
-      word-break: break-all;
+      word-break: break-word;
     }
   }
 
@@ -80,6 +80,10 @@
     .select-kit-body {
       max-height: 250px;
     }
+  }
+
+  .alert-info {
+    margin-top: 1em;
   }
 
   .alert {
