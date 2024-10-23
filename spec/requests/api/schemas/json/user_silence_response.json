@@ -32,9 +32,12 @@
             },
             "avatar_template": {
               "type": "string"
+            },
+            "avatar_dominant_color": {
+              "type": "string"
             }
           },
-          "required": ["id", "username", "name", "avatar_template"]
+          "required": ["id", "username", "name", "avatar_template", "avatar_dominant_color"]
         }
       },
       "required": [

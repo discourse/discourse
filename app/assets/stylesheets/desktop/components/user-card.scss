@@ -1,5 +1,3 @@
-// shared styles for user and group cards
-.user-card,
 .group-card {
   // avatar - names - controls
   .first-row {
@@ -43,20 +41,6 @@
           display: none;
         }
       }
-    }
-  }
-}
-
-// styles for user cards only
-.user-card {
-  // badges
-  .badge-section {
-    .user-badge {
-      display: block;
-      max-width: 185px;
-    }
-    .more-user-badges {
-      max-width: 125px;
     }
   }
 }
