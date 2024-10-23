@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Admin - Badges - Mass Award", function (needs) {
@@ -24,9 +20,8 @@ acceptance("Admin - Badges - Mass Award", function (needs) {
   test("when the badge can not be granted multiple times", async function (assert) {
     await visit("/admin/badges/award/new");
     await click('.admin-badge-list-item span[data-badge-name="Only icon"]');
-    assert.ok(
-      !exists(".grant-existing-holders"),
-      "checkbox for granting existing holders is not displayed"
-    );
+    assert
+      .dom(".grant-existing-holders")
+      .doesNotExist("checkbox for granting existing holders is not displayed");
   });
 });

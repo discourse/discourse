@@ -712,7 +712,6 @@ pl_PL:
               same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_current: "Hasło jest takie samo jak aktualne."
-              same_as_previous: "jest takie samo jak Twoje poprzednie hasło."
               same_as_name: "jest takie samo, jak twoje imię."
               unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
             username:
@@ -722,6 +721,15 @@ pl_PL:
             ip_address:
               blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
               max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
+        user_password:
+          attributes:
+            password:
+              common: "jest jednym z 10000 najczęściej używanych haseł. Wybierz inne, bardziej bezpieczne hasło."
+              same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
+              same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
+              same_as_current: "Hasło jest takie samo jak aktualne."
+              same_as_name: "jest takie samo, jak twoje imię."
+              unique_characters: "ma za dużo powtarzających się znaków. Prosimy o użycie bezpieczniejszego hasła."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1297,13 +1305,13 @@ pl_PL:
       yaxis: "Dzień"
       description: "Liczba użytkowników, którzy podnieśli poziom zaufania w tym okresie."
     consolidated_page_views:
-      title: "Skonsolidowane odsłony"
+      title_legacy: "Skonsolidowane odsłony"
       xaxis:
         page_view_crawler: "Botów indeksujących"
         page_view_anon: "Anonimowych użytkowników"
         page_view_logged_in: "Zalogowanych użytkowników"
       yaxis: "Dzień"
-      description: "Odsłony zalogowanych użytkowników, anonimowych użytkowników i botów indeksujących."
+      description_legacy: "Odsłony zalogowanych użytkowników, anonimowych użytkowników i botów indeksujących."
       labels:
         post: Wpis
         editor: Edytor
@@ -1318,13 +1326,14 @@ pl_PL:
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
     consolidated_page_views_browser_detection:
       title: "Skonsolidowane odsłony z wykrywaniem przeglądarki (eksperymentalne)"
+      title_legacy: "Skonsolidowane odsłony z wykrywaniem przeglądarki (eksperymentalne)"
       xaxis:
         page_view_anon_browser: "Anonimowa przeglądarka"
         page_view_logged_in_browser: "Zalogowana przeglądarka"
         page_view_crawler: "Znany robot internetowy"
         page_view_other: "Inne wyświetlenia strony"
       yaxis: "Dzień"
-      description: "Odsłony dla zalogowanych użytkowników, anonimowych użytkowników, znanych robotów internetowych i innych. Ten eksperymentalny raport zapewnia, że żądania zalogowanych/anonimowych użytkowników pochodzą z prawdziwych przeglądarek przed ich zliczeniem. Dane historyczne dla tego raportu są niedostępne, aby uzyskać dane historyczne, zobacz raport \"Skonsolidowane odsłony\"."
+      description_legacy: "Odsłony dla zalogowanych użytkowników, anonimowych użytkowników, znanych robotów internetowych i innych. Ten eksperymentalny raport zapewnia, że żądania zalogowanych/anonimowych użytkowników pochodzą z prawdziwych przeglądarek przed ich zliczeniem. Dane historyczne dla tego raportu są niedostępne, aby uzyskać dane historyczne, zobacz raport \"Skonsolidowane odsłony\"."
     site_traffic:
       title: "Ruch w witrynie"
       xaxis:
@@ -1484,6 +1493,9 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Wszystkie odsłony"
       description: "Liczba nowych odsłon wszystkich użytkowników."
+    page_view_legacy_total_reqs:
+      xaxis: "Dzień"
+      yaxis: "Wszystkie odsłony"
     page_view_logged_in_mobile_reqs:
       title: "Zalogowane odsłony"
       xaxis: "Dzień"
@@ -2177,7 +2189,6 @@ pl_PL:
     reset_bounce_score_after_days: "Automatycznie resetuj wskaźnik odrzuceń po X dniach."
     blocked_attachment_content_types: "Lista słów kluczowych używanych do blokowania załączników na podstawie typu zawartości."
     blocked_attachment_filenames: "Lista słów kluczowych używanych do blokowania załączników na podstawie nazwy pliku."
-    forwarded_emails_behaviour: "Jak traktować przesłaną wiadomość e-mail do Discourse"
     always_show_trimmed_content: "Zawsze pokazuj przyciętą część przychodzących e-maili. UWAGA: może ujawniać adresy e-mail."
     trim_incoming_emails: "Przytnij część przychodzących e-maili, które nie są istotne."
     private_email: "Nie umieszczaj treści z wpisów lub tematów w tytule lub treści e-maila. UWAGA: wyłącza także przetrawianie wiadomości e-mail."

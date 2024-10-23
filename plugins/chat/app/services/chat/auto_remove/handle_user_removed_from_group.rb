@@ -20,13 +20,13 @@ module Chat
     class HandleUserRemovedFromGroup
       include Service::Base
 
+      policy :chat_enabled
       contract do
         attribute :user_id, :integer
 
         validates :user_id, presence: true
       end
       step :assign_defaults
-      policy :chat_enabled
       policy :not_everyone_allowed
       model :user
       policy :user_not_staff

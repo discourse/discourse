@@ -1150,6 +1150,9 @@ et:
         valid_for: "Kutse link kehtib vaid meiliaadressile: %{email}"
         invite_link:
           success: "Kutse link edukalt genereeritud!"
+        invite:
+          save_invite: "Salvesta"
+          cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV vormingus."
       password:
@@ -1325,6 +1328,7 @@ et:
       complete_email_not_found: "Meiliaadressile <b>%{email}</b> ei vasta ükski konto"
       confirm_title: Edasi saidile %{site_name}
     login:
+      title: "Logi sisse"
       username: "Kasutaja"
       password: "Parool"
       show_password: "Näita"
@@ -2922,6 +2926,9 @@ et:
             invalid_applies_to: "Nõutud"
             topic: "teemasid"
             post: "postitused"
+        look_and_feel:
+          themes:
+            title: "Kujundused"
       plugins:
         title: "Plugin"
         name: "Nimi"

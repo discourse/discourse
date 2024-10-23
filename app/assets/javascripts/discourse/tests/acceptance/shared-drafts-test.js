@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Shared Drafts", function () {
@@ -17,7 +13,7 @@ acceptance("Shared Drafts", function () {
     await click(".publish-shared-draft");
     await click(".dialog-footer .btn-primary");
 
-    assert.ok(!exists(".shared-draft-controls"));
+    assert.dom(".shared-draft-controls").doesNotExist();
   });
 
   test("Updating category", async function (assert) {

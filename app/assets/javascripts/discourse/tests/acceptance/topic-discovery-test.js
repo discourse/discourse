@@ -78,42 +78,38 @@ acceptance("Topic Discovery", function (needs) {
 
     await visit("/c/feature");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(
-      exists(".category-boxes"),
-      "The list of subcategories were rendered with box style"
-    );
+    assert
+      .dom(".category-boxes")
+      .exists("The list of subcategories were rendered with box style");
 
     await visit("/c/dev");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(
-      exists(".category-boxes-with-topics"),
-      "The list of subcategories were rendered with box-with-featured-topics style"
-    );
-    assert.ok(
-      exists(".category-boxes-with-topics .featured-topics"),
-      "The featured topics are there too"
-    );
+    assert
+      .dom(".category-boxes-with-topics")
+      .exists(
+        "The list of subcategories were rendered with box-with-featured-topics style"
+      );
+    assert
+      .dom(".category-boxes-with-topics .featured-topics")
+      .exists("The featured topics are there too");
   });
 
   test("Clearing state after leaving a category", async function (assert) {
     await visit("/c/dev");
-    assert.ok(
-      exists('.topic-list-item[data-topic-id="11994"] .topic-excerpt'),
-      "it expands pinned topics in a subcategory"
-    );
+    assert
+      .dom('.topic-list-item[data-topic-id="11994"] .topic-excerpt')
+      .exists("it expands pinned topics in a subcategory");
     await visit("/");
-    assert.ok(
-      !exists('.topic-list-item[data-topic-id="11557"] .topic-excerpt'),
-      "it doesn't expand all pinned in the latest category"
-    );
+    assert
+      .dom('.topic-list-item[data-topic-id="11557"] .topic-excerpt')
+      .doesNotExist("it doesn't expand all pinned in the latest category");
   });
 
   test("Live update unread state", async function (assert) {
     await visit("/");
-    assert.ok(
-      exists(".topic-list-item:not(.visited) a[data-topic-id='11995']"),
-      "shows the topic unread"
-    );
+    assert
+      .dom(".topic-list-item:not(.visited) a[data-topic-id='11995']")
+      .exists("shows the topic unread");
 
     await publishToMessageBus("/latest", {
       message_type: "read",
@@ -126,10 +122,9 @@ acceptance("Topic Discovery", function (needs) {
       },
     });
 
-    assert.ok(
-      exists(".topic-list-item.visited a[data-topic-id='11995']"),
-      "shows the topic read"
-    );
+    assert
+      .dom(".topic-list-item.visited a[data-topic-id='11995']")
+      .exists("shows the topic read");
   });
 
   test("Using period chooser when query params are present", async function (assert) {
@@ -212,10 +207,10 @@ acceptance("Topic Discovery | Footer", function (needs) {
   // TODO: Needs scroll support in tests
   skip("No footer, then shows footer when all loaded", async function (assert) {
     await visit("/c/dev");
-    assert.ok(!exists(".custom-footer-content"));
+    assert.dom(".custom-footer-content").doesNotExist();
 
     document.querySelector("#ember-testing-container").scrollTop = 100000; // scroll to bottom
     await settled();
-    assert.ok(exists(".custom-footer-content"));
+    assert.dom(".custom-footer-content").exists();
   });
 });

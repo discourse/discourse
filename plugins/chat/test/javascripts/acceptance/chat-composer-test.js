@@ -2,7 +2,6 @@ import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -100,10 +99,9 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     await fillIn(".chat-composer__input", "network-error-message");
     await click(".chat-composer-button.-send");
 
-    assert.ok(
-      exists(".chat-message-container[data-id='1'] .retry-staged-message-btn"),
-      "it adds a retry button"
-    );
+    assert
+      .dom(".chat-message-container[data-id='1'] .retry-staged-message-btn")
+      .exists("it adds a retry button");
 
     await fillIn(".chat-composer__input", "network-error-message");
     await click(".chat-composer-button.-send");
@@ -117,14 +115,12 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
       },
     });
 
-    assert.notOk(
-      exists(".chat-message-container[data-id='1'] .retry-staged-message-btn"),
-      "it removes the staged message"
-    );
-    assert.ok(
-      exists(".chat-message-container[data-id='175']"),
-      "it sends the message"
-    );
+    assert
+      .dom(".chat-message-container[data-id='1'] .retry-staged-message-btn")
+      .doesNotExist("it removes the staged message");
+    assert
+      .dom(".chat-message-container[data-id='175']")
+      .exists("it sends the message");
     assert.strictEqual(
       query(".chat-composer__input").value,
       "",
@@ -137,9 +133,8 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     this.chatService.set("isNetworkUnreliable", true);
     await settled();
 
-    assert.ok(
-      exists(".chat-composer__unreliable-network"),
-      "it displays a network error icon"
-    );
+    assert
+      .dom(".chat-composer__unreliable-network")
+      .exists("it displays a network error icon");
   });
 });

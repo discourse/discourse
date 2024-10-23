@@ -25,8 +25,8 @@ module BulkImport
 end
 
 class BulkImport::Base
-  NOW ||= "now()"
-  PRIVATE_OFFSET ||= 2**30
+  NOW = "now()"
+  PRIVATE_OFFSET = 2**30
 
   CHARSET_MAP = {
     "armscii8" => nil,
@@ -475,7 +475,7 @@ class BulkImport::Base
     @chat_message_mapping[id.to_s]&.to_i
   end
 
-  GROUP_COLUMNS ||= %i[
+  GROUP_COLUMNS = %i[
     id
     name
     full_name
@@ -490,7 +490,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  USER_COLUMNS ||= %i[
+  USER_COLUMNS = %i[
     id
     username
     username_lower
@@ -511,9 +511,9 @@ class BulkImport::Base
     updated_at
   ]
 
-  USER_EMAIL_COLUMNS ||= %i[id user_id email primary created_at updated_at]
+  USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at]
 
-  USER_STAT_COLUMNS ||= %i[
+  USER_STAT_COLUMNS = %i[
     user_id
     topics_entered
     time_read
@@ -531,13 +531,13 @@ class BulkImport::Base
     digest_attempted_at
   ]
 
-  USER_HISTORY_COLUMNS ||= %i[action acting_user_id target_user_id details created_at updated_at]
+  USER_HISTORY_COLUMNS = %i[action acting_user_id target_user_id details created_at updated_at]
 
-  USER_AVATAR_COLUMNS ||= %i[id user_id custom_upload_id created_at updated_at]
+  USER_AVATAR_COLUMNS = %i[id user_id custom_upload_id created_at updated_at]
 
-  USER_PROFILE_COLUMNS ||= %i[user_id location website bio_raw bio_cooked views]
+  USER_PROFILE_COLUMNS = %i[user_id location website bio_raw bio_cooked views]
 
-  USER_SSO_RECORD_COLUMNS ||= %i[
+  USER_SSO_RECORD_COLUMNS = %i[
     id
     user_id
     external_id
@@ -552,7 +552,7 @@ class BulkImport::Base
     external_card_background_url
   ]
 
-  USER_ASSOCIATED_ACCOUNT_COLUMNS ||= %i[
+  USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
     provider_name
     provider_uid
     user_id
@@ -564,7 +564,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  USER_OPTION_COLUMNS ||= %i[
+  USER_OPTION_COLUMNS = %i[
     user_id
     mailing_list_mode
     mailing_list_mode_frequency
@@ -590,17 +590,17 @@ class BulkImport::Base
     timezone
   ]
 
-  USER_FOLLOWER_COLUMNS ||= %i[user_id follower_id level created_at updated_at]
+  USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
 
-  GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at]
 
-  USER_CUSTOM_FIELD_COLUMNS ||= %i[user_id name value created_at updated_at]
+  USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
 
-  POST_CUSTOM_FIELD_COLUMNS ||= %i[post_id name value created_at updated_at]
+  POST_CUSTOM_FIELD_COLUMNS = %i[post_id name value created_at updated_at]
 
-  TOPIC_CUSTOM_FIELD_COLUMNS ||= %i[topic_id name value created_at updated_at]
+  TOPIC_CUSTOM_FIELD_COLUMNS = %i[topic_id name value created_at updated_at]
 
-  USER_ACTION_COLUMNS ||= %i[
+  USER_ACTION_COLUMNS = %i[
     action_type
     user_id
     target_topic_id
@@ -611,9 +611,9 @@ class BulkImport::Base
     updated_at
   ]
 
-  MUTED_USER_COLUMNS ||= %i[user_id muted_user_id created_at updated_at]
+  MUTED_USER_COLUMNS = %i[user_id muted_user_id created_at updated_at]
 
-  CATEGORY_COLUMNS ||= %i[
+  CATEGORY_COLUMNS = %i[
     id
     name
     name_lower
@@ -628,15 +628,15 @@ class BulkImport::Base
     updated_at
   ]
 
-  CATEGORY_CUSTOM_FIELD_COLUMNS ||= %i[category_id name value created_at updated_at]
+  CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
 
-  CATEGORY_GROUP_COLUMNS ||= %i[id category_id group_id permission_type created_at updated_at]
+  CATEGORY_GROUP_COLUMNS = %i[id category_id group_id permission_type created_at updated_at]
 
-  CATEGORY_TAG_GROUP_COLUMNS ||= %i[category_id tag_group_id created_at updated_at]
+  CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
 
-  CATEGORY_USER_COLUMNS ||= %i[category_id user_id notification_level last_seen_at]
+  CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
 
-  TOPIC_COLUMNS ||= %i[
+  TOPIC_COLUMNS = %i[
     id
     archetype
     title
@@ -657,7 +657,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  POST_COLUMNS ||= %i[
+  POST_COLUMNS = %i[
     id
     user_id
     last_editor_id
@@ -675,7 +675,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  POST_ACTION_COLUMNS ||= %i[
+  POST_ACTION_COLUMNS = %i[
     id
     post_id
     user_id
@@ -695,13 +695,13 @@ class BulkImport::Base
     disagreed_by_id
   ]
 
-  TOPIC_ALLOWED_USER_COLUMNS ||= %i[topic_id user_id created_at updated_at]
+  TOPIC_ALLOWED_USER_COLUMNS = %i[topic_id user_id created_at updated_at]
 
-  TOPIC_ALLOWED_GROUP_COLUMNS ||= %i[topic_id group_id created_at updated_at]
+  TOPIC_ALLOWED_GROUP_COLUMNS = %i[topic_id group_id created_at updated_at]
 
-  TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
+  TOPIC_TAG_COLUMNS = %i[topic_id tag_id created_at updated_at]
 
-  TOPIC_USER_COLUMNS ||= %i[
+  TOPIC_USER_COLUMNS = %i[
     user_id
     topic_id
     last_read_post_number
@@ -713,9 +713,9 @@ class BulkImport::Base
     total_msecs_viewed
   ]
 
-  TAG_USER_COLUMNS ||= %i[tag_id user_id notification_level created_at updated_at]
+  TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at]
 
-  UPLOAD_COLUMNS ||= %i[
+  UPLOAD_COLUMNS = %i[
     id
     user_id
     original_filename
@@ -742,9 +742,9 @@ class BulkImport::Base
     dominant_color
   ]
 
-  UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
+  UPLOAD_REFERENCE_COLUMNS = %i[upload_id target_type target_id created_at updated_at]
 
-  OPTIMIZED_IMAGE_COLUMNS ||= %i[
+  OPTIMIZED_IMAGE_COLUMNS = %i[
     sha1
     extension
     width
@@ -758,9 +758,9 @@ class BulkImport::Base
     updated_at
   ]
 
-  POST_VOTING_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
+  POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
 
-  BADGE_COLUMNS ||= %i[
+  BADGE_COLUMNS = %i[
     id
     name
     description
@@ -774,11 +774,11 @@ class BulkImport::Base
     query
   ]
 
-  USER_BADGE_COLUMNS ||= %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
+  USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
 
-  GAMIFICATION_SCORE_EVENT_COLUMNS ||= %i[user_id date points description created_at updated_at]
+  GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
 
-  POST_EVENT_COLUMNS ||= %i[
+  POST_EVENT_COLUMNS = %i[
     id
     status
     original_starts_at
@@ -794,7 +794,7 @@ class BulkImport::Base
     minimal
   ]
 
-  POST_EVENT_DATES_COLUMNS ||= %i[
+  POST_EVENT_DATES_COLUMNS = %i[
     event_id
     starts_at
     ends_at
@@ -806,7 +806,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  POLL_COLUMNS ||= %i[
+  POLL_COLUMNS = %i[
     id
     post_id
     name
@@ -826,13 +826,13 @@ class BulkImport::Base
     title
   ]
 
-  POLL_OPTION_COLUMNS ||= %i[id poll_id digest html anonymous_votes created_at updated_at]
+  POLL_OPTION_COLUMNS = %i[id poll_id digest html anonymous_votes created_at updated_at]
 
-  POLL_VOTE_COLUMNS ||= %i[poll_id poll_option_id user_id created_at updated_at]
+  POLL_VOTE_COLUMNS = %i[poll_id poll_option_id user_id created_at updated_at]
 
-  PLUGIN_STORE_ROW_COLUMNS ||= %i[plugin_name key type_name value]
+  PLUGIN_STORE_ROW_COLUMNS = %i[plugin_name key type_name value]
 
-  PERMALINK_COLUMNS ||= %i[
+  PERMALINK_COLUMNS = %i[
     url
     topic_id
     post_id
@@ -844,7 +844,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS ||= %i[id group created_at updated_at]
+  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
 
   CHAT_CHANNEL_COLUMNS ||= %i[
     id

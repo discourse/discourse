@@ -1570,10 +1570,7 @@ el:
           success: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
           error: "Παρουσιάστηκε σφάλμα κατά τη δημιουργία συνδέσμου πρόσκλησης"
         invite:
-          new_title: "Δημιουργία Πρόσκλησης"
-          edit_title: "Επεξεργασία Πρόσκλησης"
           instructions: "Μοιραστείτε αυτόν τον σύνδεσμο για να παραχωρήσετε αμέσως πρόσβαση σε αυτόν τον ιστότοπο:"
-          copy_link: "αντιγραφή συνδέσμου"
           expires_in_time: "Λήγει σε %{time}"
           expired_at_time: "Έληξε στις %{time}"
           show_advanced: "Εμφάνιση Προχωρημένων Επιλογών"
@@ -1585,11 +1582,11 @@ el:
           max_redemptions_allowed: "Μέγιστες χρήσεις"
           add_to_groups: "Προσθήκη στις ομάδες"
           invite_to_topic: "Άφιξη στο θέμα"
-          expires_at: "Λήγει μετά από"
-          custom_message: "Προαιρετικό προσωπικό μήνυμα"
+          expires_after: "Λήγει μετά από"
           send_invite_email: "Αποθήκευση και Αποστολή email"
           send_invite_email_instructions: "Περιορισμός πρόσκλησης σε email για αποστολή email πρόσκλησης"
-          save_invite: "Αποθήκευση Πρόσκλησης"
+          save_invite: "Αποθήκευση"
+          cancel: "Ακύρωση"
           invite_saved: "Η πρόσκληση αποθηκεύτηκε."
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
@@ -4175,6 +4172,9 @@ el:
             invalid_applies_to: "Απαιτείται"
             topic: "θέματα"
             post: "αναρτήσεις"
+        look_and_feel:
+          themes:
+            title: "Θέματα"
       plugins:
         title: "Plugins"
         name: "Όνομα"

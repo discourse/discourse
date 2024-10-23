@@ -352,6 +352,14 @@ fa_IR:
             ip_address:
               blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
               max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
+        user_password:
+          attributes:
+            password:
+              common: "این یکی از 10000 رمز عبور مرسوم است. لطفا از رمز عبور امن تری استفاده کنید. "
+              same_as_username: "همانند نام‌کاربری شما است. لطفا از رمز‌عبور امن‌تری استفاده نمایید."
+              same_as_email: "همانند ایمیل شما است. لطفا از رمز عبور امن‌تری استفاده نمایید."
+              same_as_current: "رمز انتخابی مشابه رمز فعلی شما است."
+              unique_characters: "تعداد نویسه تکراری زیاد است. لطفا یک رمز قوی‌تر انتخاب کنید."
         color_scheme_color:
           attributes:
             hex:
@@ -809,6 +817,9 @@ fa_IR:
       yaxis: "نمایش صفحات به خزندگان وب"
     page_view_total_reqs:
       title: "بازدید"
+      xaxis: "روز"
+      yaxis: "مجموع بازدید صفحات"
+    page_view_legacy_total_reqs:
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
     page_view_logged_in_mobile_reqs:

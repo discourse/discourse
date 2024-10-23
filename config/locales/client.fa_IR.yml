@@ -124,6 +124,7 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
+      twitter: "هم‌رسانی در X"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
@@ -1502,10 +1503,7 @@ fa_IR:
           success: "لینک دعوت با موفقیت ایجاد شد!"
           error: "خطایی در هنگام ایجاد لینک رخ داد"
         invite:
-          new_title: "ایجاد دعوت‌نامه"
-          edit_title: "ویرایش دعوت‌نامه"
           instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
-          copy_link: "کپی پیوند"
           expires_in_time: "در %{time} منقضی می شود"
           expired_at_time: "منقضی شده در %{time}"
           show_advanced: "نمایش تنظیمات پیشرفته"
@@ -1517,11 +1515,11 @@ fa_IR:
           max_redemptions_allowed: "حداکثر استفاده"
           add_to_groups: "افزودن به گروه‌ها"
           invite_to_topic: "وارد شدن به موضوع"
-          expires_at: "انقضا بعد از"
-          custom_message: "پیام شخصی اختیاری"
+          expires_after: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
           send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
-          save_invite: "ذخیره دعوت‌نامه"
+          save_invite: "ذخیره"
+          cancel: "انصراف"
           invite_saved: "دعوتنامه ذخیره شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
@@ -3870,6 +3868,9 @@ fa_IR:
             invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
+        look_and_feel:
+          themes:
+            title: "قالب‌ها"
       plugins:
         title: "افزونه‌ها"
         name: "نام"

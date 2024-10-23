@@ -686,7 +686,6 @@ pt_BR:
               same_as_username: "é igual o seu nome do(a) usuário(a). Use uma senha mais segura."
               same_as_email: "é igual o seu e-mail. Use uma senha mais segura."
               same_as_current: "é igual à sua senha atual."
-              same_as_previous: "é igual à sua senha anterior."
               same_as_name: "é igual ao seu nome."
               unique_characters: "tem muitos caracteres repetidos. Use uma senha mais segura."
             username:
@@ -696,6 +695,15 @@ pt_BR:
             ip_address:
               blocked: "Novos registros não são permitidos a partir do seu endereço de IP."
               max_new_accounts_per_registration_ip: "Novos registros não são permitidos a partir do seu endereço de IP (quantidade máxima alcançada). Entre em contato com um membro da equipe."
+        user_password:
+          attributes:
+            password:
+              common: "é uma das 10.000 senhas mais comuns. Use uma senha mais segura."
+              same_as_username: "é igual o seu nome do(a) usuário(a). Use uma senha mais segura."
+              same_as_email: "é igual o seu e-mail. Use uma senha mais segura."
+              same_as_current: "é igual à sua senha atual."
+              same_as_name: "é igual ao seu nome."
+              unique_characters: "tem muitos caracteres repetidos. Use uma senha mais segura."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ pt_BR:
       yaxis: "Dia"
       description: "Quantidade de usuários(as) que aumentaram seu nível de confiança neste período."
     consolidated_page_views:
-      title: "Visualizações de página consolidadas"
+      title_legacy: "Visualizações de página consolidadas"
       xaxis:
         page_view_crawler: "Rastreadores"
         page_view_anon: "Usuários(as) anônimos(as)"
         page_view_logged_in: "Usuários(as) que entraram com a conta"
       yaxis: "Dia"
-      description: "Visualizações de página para usuários(as) que entraram com a conta, usuários(as) anônimos(as) e rastreadores."
+      description_legacy: "Visualizações de página para usuários(as) que entraram com a conta, usuários(as) anônimos(as) e rastreadores."
       labels:
         post: Postar
         editor: Editor
@@ -1251,6 +1259,7 @@ pt_BR:
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
     consolidated_page_views_browser_detection:
       title: "Visualizações de página consolidadas com detecção no navegador (experimental)"
+      title_legacy: "Visualizações de página consolidadas com detecção no navegador (experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anônimo"
         page_view_logged_in_browser: "Navegador de acesso"
@@ -1409,6 +1418,9 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações de página totais"
       description: "Quantidade de novas visualizações de página de todos os visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Dia"
+      yaxis: "Visualizações de página totais"
     page_view_logged_in_mobile_reqs:
       title: "Visualizações de página com conta conectada"
       xaxis: "Dia"
@@ -2099,7 +2111,6 @@ pt_BR:
     reset_bounce_score_after_days: "Redefinir automaticamente a pontuação de devolução após X dias."
     blocked_attachment_content_types: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no tipo de conteúdo."
     blocked_attachment_filenames: "Lista de palavras-chave usadas para adicionar anexos à lista de bloqueio com base no nome do arquivo."
-    forwarded_emails_behaviour: "Como tratar um e-mail encaminhado para o Discourse"
     always_show_trimmed_content: "Sempre exiba a parte cortada dos e-mails recebidos. AVISO: pode revelar endereços de e-mail."
     trim_incoming_emails: "Cortar parte dos e-mails recebidos que não são relevantes."
     private_email: "Não inclua o conteúdo de postagens ou tópicos no título ou corpo do e-mail. OBSERVAÇÃO: também desativa e-mails de compilação."

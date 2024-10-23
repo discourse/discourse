@@ -89,10 +89,9 @@ acceptance("Do not disturb", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists(".do-not-disturb-background"),
-      "The active dnd icon is shown"
-    );
+    assert
+      .dom(".do-not-disturb-background")
+      .exists("The active dnd icon is shown");
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
@@ -101,25 +100,23 @@ acceptance("Do not disturb", function (needs) {
       "1h",
       "the Do Not Disturb button shows how much time is left for DND mode"
     );
-    assert.ok(
-      exists(".do-not-disturb .d-icon-toggle-on"),
-      "the Do Not Disturb button has the toggle-on icon"
-    );
+    assert
+      .dom(".do-not-disturb .d-icon-toggle-on")
+      .exists("the Do Not Disturb button has the toggle-on icon");
 
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.notOk(
-      exists(".do-not-disturb-background"),
-      "The active dnd icon is removed"
-    );
-    assert.notOk(
-      exists(".do-not-disturb .relative-date"),
-      "the text showing how much time is left for DND mode is gone"
-    );
-    assert.ok(
-      exists(".do-not-disturb .d-icon-toggle-off"),
-      "the Do Not Disturb button has the toggle-off icon"
-    );
+    assert
+      .dom(".do-not-disturb-background")
+      .doesNotExist("The active dnd icon is removed");
+    assert
+      .dom(".do-not-disturb .relative-date")
+      .doesNotExist(
+        "the text showing how much time is left for DND mode is gone"
+      );
+    assert
+      .dom(".do-not-disturb .d-icon-toggle-off")
+      .exists("the Do Not Disturb button has the toggle-off icon");
   });
 
   test("user menu gets closed when the DnD modal is opened", async function (assert) {
@@ -130,7 +127,7 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.notOk(exists(".user-menu"));
+    assert.dom(".user-menu").doesNotExist();
   });
 
   test("doesn't show the end date for eternal DnD", async function (assert) {

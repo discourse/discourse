@@ -37,26 +37,22 @@ acceptance("Review", function (needs) {
 
     assert.ok(exists(".reviewable-item"), "has a list of items");
     assert.ok(exists(user));
-    assert.ok(
-      exists(`${user}.reviewable-user`),
-      "applies a class for the type"
-    );
-    assert.ok(
-      exists(`${user} .reviewable-action.approve`),
-      "creates a button for approve"
-    );
-    assert.ok(
-      exists(`${user} .reviewable-action.reject`),
-      "creates a button for reject"
-    );
+    assert
+      .dom(`${user}.reviewable-user`)
+      .exists("applies a class for the type");
+    assert
+      .dom(`${user} .reviewable-action.approve`)
+      .exists("creates a button for approve");
+    assert
+      .dom(`${user} .reviewable-action.reject`)
+      .exists("creates a button for reject");
   });
 
   test("Grouped by topic", async function (assert) {
     await visit("/review/topics");
-    assert.ok(
-      exists(".reviewable-topic"),
-      "it has a list of reviewable topics"
-    );
+    assert
+      .dom(".reviewable-topic")
+      .exists("it has a list of reviewable topics");
   });
 
   test("Reject user", async function (assert) {
@@ -107,10 +103,9 @@ acceptance("Review", function (needs) {
   test("Flag related", async function (assert) {
     await visit("/review");
 
-    assert.ok(
-      exists(".reviewable-flagged-post .post-contents .username a[href]"),
-      "it has a link to the user"
-    );
+    assert
+      .dom(".reviewable-flagged-post .post-contents .username a[href]")
+      .exists("it has a link to the user");
 
     assert.strictEqual(
       query(".reviewable-flagged-post .post-body").innerHTML.trim(),
@@ -158,17 +153,15 @@ acceptance("Review", function (needs) {
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
 
-    assert.ok(
-      exists(`${topic} .reviewable-action.approve`),
-      "saving without changes is a cancel"
-    );
+    assert
+      .dom(`${topic} .reviewable-action.approve`)
+      .exists("saving without changes is a cancel");
 
     await click(`${topic} .reviewable-action.edit`);
 
-    assert.ok(
-      !exists(`${topic} .reviewable-action.approve`),
-      "when editing actions are disabled"
-    );
+    assert
+      .dom(`${topic} .reviewable-action.approve`)
+      .doesNotExist("when editing actions are disabled");
 
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
@@ -234,7 +227,7 @@ acceptance("Review", function (needs) {
       count(`[data-reviewable-id="1234"] .status .pending`),
       1
     );
-    assert.ok(!exists(".stale-help"));
+    assert.dom(".stale-help").doesNotExist();
 
     await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       review_count: 1,

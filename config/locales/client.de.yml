@@ -27,6 +27,7 @@ de:
         millions: "%{number} M."
     dates:
       time: "HH:mm"
+      time_short: "HH:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "dd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1835,12 +1836,25 @@ de:
           success: "Der Einladungslink wurde erfolgreich generiert!"
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
         invite:
-          new_title: "Einladung erstellen"
+          new_title: "Mitglieder einladen"
           edit_title: "Einladung bearbeiten"
           instructions: "Teile diesen Link, um sofort Zugriff auf diese Website zu gewähren:"
-          copy_link: "Link kopieren"
           expires_in_time: "Läuft in %{time} ab"
           expired_at_time: "Abgelaufen um %{time}"
+          create_link_to_invite: "Erstelle einen Link, der geteilt werden kann, um sofortigen Zugang zu dieser Website zu erhalten."
+          copy_link_and_share_it: "Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Website zu erhalten."
+          copy_link: "Link kopieren"
+          link_copied: "Link kopiert!"
+          share_link: "Link teilen"
+          link_validity_MF: |
+            Der Link ist gültig für bis zu { user_count, plural,
+                one {# Benutzer}
+              other {# Benutzer}
+            } und läuft in { duration_days, plural,
+                one {# Tag}
+              other {# Tagen}
+            }ab.
+          edit_link_options: "Link-Optionen bearbeiten."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           restrict: "Beschränken auf"
@@ -1850,11 +1864,15 @@ de:
           max_redemptions_allowed: "Max. Verwendungen"
           add_to_groups: "Zu Gruppen hinzufügen"
           invite_to_topic: "Ankommen beim Thema"
-          expires_at: "Verfällt nach"
-          custom_message: "Optionale persönliche Nachricht"
+          expires_at: "Läuft ab am"
+          expires_after: "Verfällt nach"
+          custom_message: "Benutzerdefinierte Nachricht"
+          custom_message_placeholder: "Füge eine persönliche Notiz zu deiner Einladung hinzu"
           send_invite_email: "Speichern und E-Mail senden"
           send_invite_email_instructions: "Einladung auf E-Mail beschränken, um eine Einladungs-E-Mail zu senden"
-          save_invite: "Einladung speichern"
+          save_invite: "Speichern"
+          cancel: "Abbrechen"
+          create_link: "Link erstellen"
           invite_saved: "Einladung gespeichert."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
@@ -2160,6 +2178,7 @@ de:
       associate: "Hast du bereits ein Konto? <a href='%{associate_link}'>Logge dich ein</a>, um dein %{provider}-Konto zu verknüpfen."
       activation_title: "Aktiviere dein Konto"
       already_have_account: "Du hast bereits ein Konto?"
+      no_account_yet: "Du hast noch kein Konto?"
       progress_bar:
         signup: "Registrieren"
         activate: "Aktivieren"
@@ -4744,6 +4763,12 @@ de:
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
           previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
+          experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
+          experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
+          experiment_toggled_too_fast: "Du hast die experimentelle Funktion zu schnell umgeschaltet. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
+          experiment_tooltip:
+            title: "Probiere unsere experimentelle Funktion aus"
+            content: "Probiere unser neuestes Feature in der Entwicklung aus! Sie befindet sich noch in der Experimentierphase und kann daher jederzeit wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -5308,10 +5333,24 @@ de:
             non_deletable: "Du kannst diesen Meldungsgrund nicht löschen, weil er vom System erstellt oder bereits im Überprüfungssystem verwendet wurde. Du kannst ihn aber immer noch deaktivieren."
             require_message: "Benutzer auffordern, zusätzliche Gründe anzugeben"
             require_message_description: "Wenn dieser Meldungsgrund ausgewählt ist, wird ein Textfeld angezeigt, in dem der Benutzer zusätzliche Angaben zu den Gründen für die Meldung des Inhalts machen kann"
+            auto_action_type: "Typ der automatischen Aktion"
+            auto_action_type_description: "Wenn ein Beitrag von einem Mitarbeiter markiert wird, wird er automatisch ausgeblendet"
           more_options:
             title: "Mehr Optionen"
             move_up: "Nach oben"
             move_down: "Nach unten"
+        look_and_feel:
+          title: "Look & Feel"
+          description: "Mit Themes, Komponenten und Farbschemata kannst du deine Discourse-Website anpassen und ihr einen unverwechselbaren Stil verleihen."
+          themes:
+            title: "Themes"
+            themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
+            themes_intro_img_alt: "Neuer Theme-Platzhalter"
+            set_default_theme: "Standard setzen"
+            default_theme: "Standard-Theme"
+            themes_description: "Themes sind umfangreiche Anpassungen, die mehrere Elemente des Stils deines Forumsdesigns verändern und oft auch zusätzliche Frontend-Funktionen enthalten."
+            new_theme: "Neues Theme"
+            user_selectable: "Vom Benutzer wählbar"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plugins"
@@ -5477,6 +5516,8 @@ de:
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
+          themes_intro_new: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
+          themes_intro_img_alt: "Neuer Theme-Platzhalter"
           beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Entwickler-Leitfaden für Discourse-Themes"
           browse_themes: "Community-Themes durchsuchen"
@@ -5524,6 +5565,9 @@ de:
           convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
+          set_default_theme: "Standard setzen"
+          default_theme: "Standard-Theme"
+          set_default_success: "Standard-Theme auf %{theme} gesetzt"
           inactive_components: "Nicht verwendete Komponenten:"
           selected:
             one: "%{count} ausgewählt"

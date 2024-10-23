@@ -50,7 +50,6 @@ hu:
       deleted_chat_username: törölt
       dates:
         yesterday: "Tegnap"
-        time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
       disabled_for_topic: "A csevegés le van tiltva ebben a témában."
@@ -408,6 +407,7 @@ hu:
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
         auto_join_users_warning: "Minden olyan felhasználó, aki nem tagja ennek a csatornának, de hozzáféréssel rendelkezik a %{category} kategóriához, csatlakozni fog. Biztos benne?"
+        notification_level: "Push értesítések küldése"
         follow: "Belépés"
         followed: "Csatlakozott"
         mute: "Csatorna némítása"

@@ -21,9 +21,7 @@ export default class LoginRoute extends DiscourseRoute {
   }
 
   model() {
-    if (!this.siteSettings.experimental_full_page_login) {
-      return StaticPage.find("login");
-    }
+    return StaticPage.find("login");
   }
 
   setupController(controller) {

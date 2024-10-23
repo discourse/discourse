@@ -63,10 +63,9 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
 
     assert.ok(exists("#search-term"), "it shows the search input");
-    assert.ok(
-      exists(".show-advanced-search"),
-      "it shows full page search button"
-    );
+    assert
+      .dom(".show-advanced-search")
+      .exists("it shows full page search button");
   });
 
   test("random quick tips", async function (assert) {
@@ -74,10 +73,9 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "dev");
 
-    assert.ok(
-      !exists(".search-menu .results ul li.search-random-quick-tip"),
-      "quick tip is no longer shown"
-    );
+    assert
+      .dom(".search-menu .results ul li.search-random-quick-tip")
+      .doesNotExist("quick tip is no longer shown");
   });
 
   test("advanced search", async function (assert) {
@@ -98,26 +96,25 @@ acceptance("Search - Anonymous", function (needs) {
       .dom(".search-menu .search-menu-panel")
       .doesNotExist("closes search menu after clicking advanced search button");
 
-    assert.ok(
-      exists(".search-advanced-options"),
-      "advanced search is expanded"
-    );
+    assert
+      .dom(".search-advanced-options")
+      .exists("advanced search is expanded");
   });
 
   test("search button toggles search menu", async function (assert) {
     await visit("/");
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
 
     await clickOutside();
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
 
     await click("#search-button");
-    assert.ok(exists(".search-menu"));
+    assert.dom(".search-menu").exists();
 
     await click("#search-button"); // toggle same button
-    assert.ok(!exists(".search-menu"));
+    assert.dom(".search-menu").doesNotExist();
   });
 
   test("initial options", async function (assert) {
@@ -141,15 +138,13 @@ acceptance("Search - Anonymous", function (needs) {
       "first dropdown item includes correct suffix"
     );
 
-    assert.ok(
-      exists(".search-menu .search-result-category ul li"),
-      "shows matching category results"
-    );
+    assert
+      .dom(".search-menu .search-result-category ul li")
+      .exists("shows matching category results");
 
-    assert.ok(
-      exists(".search-menu .search-result-user ul li"),
-      "shows matching user results"
-    );
+    assert
+      .dom(".search-menu .search-result-user ul li")
+      .exists("shows matching user results");
   });
 
   test("initial options - tag search scope", async function (assert) {
@@ -216,10 +211,9 @@ acceptance("Search - Anonymous", function (needs) {
       "second option includes category slug"
     );
 
-    assert.ok(
-      exists(`${contextSelector} span.badge-category__wrapper`),
-      "category badge is a span (i.e. not a link)"
-    );
+    assert
+      .dom(`${contextSelector} span.badge-category__wrapper`)
+      .exists("category badge is a span (i.e. not a link)");
   });
 
   test("initial options - topic search scope", async function (assert) {
@@ -250,10 +244,9 @@ acceptance("Search - Anonymous", function (needs) {
     await click(
       ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:first-child"
     );
-    assert.ok(
-      exists(".search-result-topic"),
-      "search result is a list of topics"
-    );
+    assert
+      .dom(".search-result-topic")
+      .exists("search result is a list of topics");
   });
 
   test("initial options - topic search scope - 'in this topic' searches posts within topic", async function (assert) {
@@ -264,10 +257,9 @@ acceptance("Search - Anonymous", function (needs) {
     await click(
       ".search-menu .results .search-menu-initial-options .search-menu-assistant-item:nth-child(2)"
     );
-    assert.ok(
-      exists(".search-result-post"),
-      "search result is a list of posts"
-    );
+    assert
+      .dom(".search-result-post")
+      .exists("search result is a list of posts");
   });
 
   test("initial options - topic search scope - keep 'in this topic' filter in full page search", async function (assert) {
@@ -285,10 +277,9 @@ acceptance("Search - Anonymous", function (needs) {
       "it goes to full search page and preserves search term + context"
     );
 
-    assert.ok(
-      exists(".search-advanced-options"),
-      "advanced search is expanded"
-    );
+    assert
+      .dom(".search-advanced-options")
+      .exists("advanced search is expanded");
   });
 
   test("initial options - topic search scope - special case when matching a single user", async function (assert) {
@@ -341,15 +332,13 @@ acceptance("Search - Anonymous", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     await click(document.activeElement);
 
-    assert.ok(
-      exists(".search-menu .search-result-topic ul li"),
-      "shows topic results"
-    );
+    assert
+      .dom(".search-menu .search-result-topic ul li")
+      .exists("shows topic results");
 
-    assert.ok(
-      exists(".search-menu .results ul li .topic-title[data-topic-id]"),
-      "topic has data-topic-id"
-    );
+    assert
+      .dom(".search-menu .results ul li .topic-title[data-topic-id]")
+      .exists("topic has data-topic-id");
   });
 
   test("topic results - topic search scope", async function (assert) {
@@ -360,10 +349,9 @@ acceptance("Search - Anonymous", function (needs) {
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
-    assert.ok(
-      exists(".search-menu .search-result-post ul li"),
-      "clicking second option scopes search to current topic"
-    );
+    assert
+      .dom(".search-menu .search-result-post ul li")
+      .exists("clicking second option scopes search to current topic");
 
     assert.strictEqual(
       query("#post_7 span.highlighted").textContent.trim(),
@@ -371,10 +359,9 @@ acceptance("Search - Anonymous", function (needs) {
       "highlights the post correctly"
     );
 
-    assert.ok(
-      exists(".search-menu .search-context"),
-      "search context indicator is visible"
-    );
+    assert
+      .dom(".search-menu .search-context")
+      .exists("search context indicator is visible");
 
     await click(".clear-search");
     assert.strictEqual(
@@ -384,10 +371,9 @@ acceptance("Search - Anonymous", function (needs) {
     );
 
     await click(".search-context");
-    assert.ok(
-      !exists(".search-menu .search-context"),
-      "search context indicator is no longer visible"
-    );
+    assert
+      .dom(".search-menu .search-context")
+      .doesNotExist("search context indicator is no longer visible");
 
     await fillIn("#search-term", "dev");
     await query("#search-term").focus();
@@ -395,19 +381,17 @@ acceptance("Search - Anonymous", function (needs) {
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await click(document.activeElement);
 
-    assert.ok(
-      exists(".search-menu .search-context"),
-      "search context indicator is visible"
-    );
+    assert
+      .dom(".search-menu .search-context")
+      .exists("search context indicator is visible");
 
     await fillIn("#search-term", "");
     await query("#search-term").focus();
     await triggerKeyEvent("#search-term", "keyup", "Backspace");
 
-    assert.ok(
-      !exists(".search-menu .search-context"),
-      "backspace resets search context"
-    );
+    assert
+      .dom(".search-menu .search-context")
+      .doesNotExist("backspace resets search context");
   });
 
   test("topic results - search result escapes html in topic title", async function (assert) {
@@ -522,9 +506,9 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(inSelector.rowByValue("tracking").exists());
     assert.ok(inSelector.rowByValue("bookmarks").exists());
 
-    assert.ok(exists(".search-advanced-options .in-likes"));
-    assert.ok(exists(".search-advanced-options .in-private"));
-    assert.ok(exists(".search-advanced-options .in-seen"));
+    assert.dom(".search-advanced-options .in-likes").exists();
+    assert.dom(".search-advanced-options .in-private").exists();
+    assert.dom(".search-advanced-options .in-seen").exists();
   });
 
   test("topic results - topic search scope - works with empty result sets", async function (assert) {
@@ -541,10 +525,9 @@ acceptance("Search - Authenticated", function (needs) {
 
     assert.strictEqual(count(".search-menu .results .item"), 0);
     assert.strictEqual(count(".search-menu .results .no-results"), 1);
-    assert.strictEqual(
-      query(".search-menu .results .no-results").innerText,
-      I18n.t("search.no_results")
-    );
+    assert
+      .dom(".search-menu .results .no-results")
+      .hasText(I18n.t("search.no_results"));
   });
 
   test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
@@ -591,10 +574,9 @@ acceptance("Search - Authenticated", function (needs) {
     assert.ok(exists(query(`${container} ul li`)), "has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert.ok(
-      exists(query(`${container} .search-result-topic`)),
-      "has topic results"
-    );
+    assert
+      .dom(query(`${container} .search-result-topic`))
+      .exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     assert.strictEqual(
@@ -639,20 +621,17 @@ acceptance("Search - Authenticated", function (needs) {
     );
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert.ok(
-      exists(query(`${container} .search-result-topic`)),
-      "has topic results"
-    );
+    assert
+      .dom(query(`${container} .search-result-topic`))
+      .exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert.ok(
-      exists(query(`.search-container`)),
-      "second Enter hit goes to full page search"
-    );
-    assert.ok(
-      !exists(query(`.search-menu`)),
-      "search dropdown is collapsed after second Enter hit"
-    );
+    assert
+      .dom(query(`.search-container`))
+      .exists("second Enter hit goes to full page search");
+    assert
+      .dom(query(`.search-menu`))
+      .doesNotExist("search dropdown is collapsed after second Enter hit");
 
     //new search launched, Enter key should be reset
     await click("#search-button");
@@ -755,7 +734,7 @@ acceptance("Search - Authenticated", function (needs) {
       ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
     );
 
-    assert.strictEqual(query("#search-term").value, "hijacked!");
+    assert.dom("#search-term").hasValue("hijacked!");
   });
 
   test("initial options - search history - category context", async function (assert) {
@@ -1193,7 +1172,7 @@ acceptance("Search - assistant", function (needs) {
     );
 
     await fillIn("#search-term", "in:mess");
-    assert.strictEqual(query(firstTarget).innerText, "in:messages");
+    assert.dom(firstTarget).hasText("in:messages");
   });
 
   test("initial options - user search scope - shows users when typing @", async function (assert) {
@@ -1207,7 +1186,7 @@ acceptance("Search - assistant", function (needs) {
     assert.strictEqual(username, "TeaMoe");
 
     await click(firstUser);
-    assert.strictEqual(query("#search-term").value, `@${username}`);
+    assert.dom("#search-term").hasValue(`@${username}`);
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
@@ -1255,10 +1234,9 @@ acceptance("Search - assistant", function (needs) {
 
     await clickOutside();
     await click("#search-button");
-    assert.ok(
-      exists(".btn.search-context"),
-      "it shows the button when reinvoking search"
-    );
+    assert
+      .dom(".btn.search-context")
+      .exists("it shows the button when reinvoking search");
 
     await fillIn("#search-term", "emoji");
     await query("input#search-term").focus();

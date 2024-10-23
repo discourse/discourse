@@ -686,7 +686,6 @@ fi:
               same_as_username: "on sama kuin käyttäjätunnuksesi. Valitse turvallisempi salasana."
               same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
               same_as_current: "on sama kuin nykyinen salasanasi."
-              same_as_previous: "on sama kuin edellinen salasanasi."
               same_as_name: "on sama kuin nimesi."
               unique_characters: "sisältää liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
             username:
@@ -696,6 +695,15 @@ fi:
             ip_address:
               blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
               max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökunnan jäseneen."
+        user_password:
+          attributes:
+            password:
+              common: "on yksi 10 000 yleisimmästä salasanasta. Valitse turvallisempi salasana."
+              same_as_username: "on sama kuin käyttäjätunnuksesi. Valitse turvallisempi salasana."
+              same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
+              same_as_current: "on sama kuin nykyinen salasanasi."
+              same_as_name: "on sama kuin nimesi."
+              unique_characters: "sisältää liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ fi:
       yaxis: "Päivä"
       description: "Kuinka monen käyttäjän luottamustaso nousi tällä ajanjaksolla."
     consolidated_page_views:
-      title: "Kootut sivukatselut"
+      title_legacy: "Kootut sivukatselut"
       xaxis:
         page_view_crawler: "Hakurobotit"
         page_view_anon: "Anonyymit käyttäjät"
         page_view_logged_in: "Kirjautuneet käyttäjät"
       yaxis: "Päivä"
-      description: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
+      description_legacy: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
       labels:
         post: Viesti
         editor: Muokkaaja
@@ -1251,6 +1259,7 @@ fi:
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
     consolidated_page_views_browser_detection:
       title: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
+      title_legacy: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
       xaxis:
         page_view_anon_browser: "Anonyymi selain"
         page_view_logged_in_browser: "Kirjautunut selain"
@@ -1409,6 +1418,9 @@ fi:
       xaxis: "Päivä"
       yaxis: "Sivukatseluita yhteensä"
       description: "Kaikkien kävijöiden sivukatselut."
+    page_view_legacy_total_reqs:
+      xaxis: "Päivä"
+      yaxis: "Sivukatseluita yhteensä"
     page_view_logged_in_mobile_reqs:
       title: "Kirjautuneiden sivukatselut"
       xaxis: "Päivä"
@@ -2099,7 +2111,6 @@ fi:
     reset_bounce_score_after_days: "Nollaa palautuspisteet X päivä kuluttua."
     blocked_attachment_content_types: "Luettelo avainsanoja, jota käytetään liitteiden estämisessä niiden sisältötyypin perusteella."
     blocked_attachment_filenames: "Luettelo avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
-    forwarded_emails_behaviour: "Kuinka Discourseen välitettyjä sähköposteja käsitellään"
     always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
     trim_incoming_emails: "Leikkaa osa saapuvista sähköposteista, jolla ei ole merkitystä."
     private_email: "Älä sisällytä sähköpostien otsikoihin äläkä leipäteksteihin viestien tai ketjujen sisältöä. HUOM: tämä poistaa käytöstä myös tiivistelmäsähköpostit."

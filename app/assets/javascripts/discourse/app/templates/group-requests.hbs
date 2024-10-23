@@ -19,6 +19,7 @@
       <ResponsiveTable @className="group-members group-members__requests">
         <:header>
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="username_lower"
@@ -27,6 +28,7 @@
             class="username"
           />
           <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
             @order={{this.order}}
             @asc={{this.asc}}
             @field="requested_at"

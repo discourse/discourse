@@ -652,6 +652,7 @@ users:
     type: list
     list_type: compact
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
+    mandatory_values: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
   min_password_length:
     client: true
     default: 10
@@ -2469,6 +2470,9 @@ developer:
   custom_flags_limit:
     default: 50
     hidden: true
+    client: true
+  experimental_auto_grid_images:
+    default: false
     client: true
 
 navigation:

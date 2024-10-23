@@ -67,49 +67,49 @@ module ChatSpecHelpers
   end
 
   def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)
-    result =
-      Chat::UpdateMessage.call(
-        guardian: user.guardian,
-        message_id: message.id,
-        upload_ids: upload_ids,
-        message: text,
-        process_inline: true,
-      )
-    service_failed!(result) if result.failure?
-    result.message_instance
+    Chat::UpdateMessage.call(
+      guardian: user.guardian,
+      message_id: message.id,
+      upload_ids: upload_ids,
+      message: text,
+      process_inline: true,
+    ) do |result|
+      on_success { result.message_instance }
+      on_failure { service_failed!(result) }
+    end
   end
 
   def trash_message!(message, user: Discourse.system_user)
-    result =
-      Chat::TrashMessage.call(
-        message_id: message.id,
-        channel_id: message.chat_channel_id,
-        guardian: user.guardian,
-      )
-    service_failed!(result) if result.failure?
-    result
+    Chat::TrashMessage.call(
+      message_id: message.id,
+      channel_id: message.chat_channel_id,
+      guardian: user.guardian,
+    ) do |result|
+      on_success { result }
+      on_failure { service_failed!(result) }
+    end
   end
 
   def restore_message!(message, user: Discourse.system_user)
-    result =
-      Chat::RestoreMessage.call(
-        message_id: message.id,
-        channel_id: message.chat_channel_id,
-        guardian: user.guardian,
-      )
-    service_failed!(result) if result.failure?
-    result
+    Chat::RestoreMessage.call(
+      message_id: message.id,
+      channel_id: message.chat_channel_id,
+      guardian: user.guardian,
+    ) do |result|
+      on_success { result }
+      on_failure { service_failed!(result) }
+    end
   end
 
   def add_users_to_channel(users, channel, user: Discourse.system_user)
-    result =
-      ::Chat::AddUsersToChannel.call(
-        guardian: user.guardian,
-        channel_id: channel.id,
-        usernames: Array(users).map(&:username),
-      )
-    service_failed!(result) if result.failure?
-    result
+    ::Chat::AddUsersToChannel.call(
+      guardian: user.guardian,
+      channel_id: channel.id,
+      usernames: Array(users).map(&:username),
+    ) do |result|
+      on_success { result }
+      on_failure { service_failed!(result) }
+    end
   end
 
   def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
@@ -119,15 +119,15 @@ module ChatSpecHelpers
       end
     end
 
-    result =
-      ::Chat::UpsertDraft.call(
-        guardian: user.guardian,
-        channel_id: channel.id,
-        thread_id: thread&.id,
-        data: data.to_json,
-      )
-    service_failed!(result) if result.failure?
-    result
+    ::Chat::UpsertDraft.call(
+      guardian: user.guardian,
+      channel_id: channel.id,
+      thread_id: thread&.id,
+      data: data.to_json,
+    ) do |result|
+      on_success { result }
+      on_failure { service_failed!(result) }
+    end
   end
 end
 

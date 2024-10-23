@@ -70,10 +70,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
     assert.ok(exists(".qr-code img"), "shows qr code image");
 
     await click(".modal a.show-second-factor-key");
-    assert.ok(
-      exists(".modal .second-factor-key"),
-      "displays second factor key"
-    );
+    assert
+      .dom(".modal .second-factor-key")
+      .exists("displays second factor key");
 
     await click(".add-totp");
     assert.ok(
@@ -109,35 +108,26 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await click(".token-based-auth-dropdown .select-kit-header");
     await click("li[data-name='Disable']");
 
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Deleting an authenticator"
-    );
+    assert.dom("#dialog-title").hasText("Deleting an authenticator");
     await click(".dialog-close");
 
-    assert.ok(
-      exists(".security-key .second-factor-item"),
-      "User has a physical security key"
-    );
+    assert
+      .dom(".security-key .second-factor-item")
+      .exists("User has a physical security key");
 
     await click(".security-key-dropdown .select-kit-header");
     await click("li[data-name='Disable']");
 
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Deleting an authenticator"
-    );
+    assert.dom("#dialog-title").hasText("Deleting an authenticator");
     await click(".dialog-footer .btn-danger");
-    assert.notOk(
-      exists(".security-key .second-factor-item"),
-      "security key row is removed after a successful delete"
-    );
+    assert
+      .dom(".security-key .second-factor-item")
+      .doesNotExist("security key row is removed after a successful delete");
 
     await click(".pref-second-factor-disable-all .btn-danger");
-    assert.strictEqual(
-      query("#dialog-title").innerText.trim(),
-      "Are you sure you want to disable two-factor authentication?"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText("Are you sure you want to disable two-factor authentication?");
   });
 
   test("rename second factor security method", async function (assert) {

@@ -29,10 +29,9 @@ acceptance("User Drafts", function (needs) {
 
     await visit("/");
     assert.ok(visible("#create-topic"));
-    assert.ok(
-      !exists("#create-topic.open-draft"),
-      "Open Draft button is not present"
-    );
+    assert
+      .dom("#create-topic.open-draft")
+      .doesNotExist("Open Draft button is not present");
   });
 
   test("Stream - resume draft", async function (assert) {

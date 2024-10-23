@@ -360,6 +360,14 @@ nb_NO:
             ip_address:
               blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
               max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
+        user_password:
+          attributes:
+            password:
+              common: "er ett av de 10000 mest vanlige passordene. Benytt et sikrere passord."
+              same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
+              same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
+              same_as_current: "er det samme som nåværende passord."
+              unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
         user_email:
           attributes:
             user_id:
@@ -829,6 +837,9 @@ nb_NO:
       yaxis: "Sidevisninger fra Søkeroboter"
     page_view_total_reqs:
       title: "Sidevisninger"
+      xaxis: "Dag"
+      yaxis: "Totalt antall sidevisninger"
+    page_view_legacy_total_reqs:
       xaxis: "Dag"
       yaxis: "Totalt antall sidevisninger"
     page_view_logged_in_mobile_reqs:

@@ -29,6 +29,7 @@ cs:
         millions: "%{number}M"
     dates:
       time: "H:mm"
+      time_short: "h:mm"
       time_with_zone: "kk:mm (z)"
       time_short_day: "ddd, kk:mm"
       timeline_date: "MMM YYYY"
@@ -1204,7 +1205,7 @@ cs:
       powered_by: "používá <a href='https://maxmind.com'>MaxMindDB</a>"
       copied: "zkopírováno"
     user_fields:
-      none: "(zvolit možnost)"
+      none: "(vyberte možnost)"
       required: 'Zadejte hodnotu pro "%{name}"'
       same_as_password: "Vaše heslo by se v jiných polích nemělo opakovat."
       optional: (volitelné)
@@ -1837,12 +1838,11 @@ cs:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
           error: "Při generování odkazu s pozvánkou došlo k chybě"
         invite:
-          new_title: "Vytvořit pozvánku"
-          edit_title: "Upravit pozvánku"
           instructions: "Sdílejte tento odkaz pro okamžité udělení přístupu k tomuto webu:"
-          copy_link: "kopírovat odkaz"
           expires_in_time: "Vyprší za %{time}"
           expired_at_time: "Vypršelo %{time}"
+          copy_link: "Kopírovat odkaz"
+          link_copied: "Odkaz zkopírován!"
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           restrict: "Omezit na"
@@ -1852,11 +1852,11 @@ cs:
           max_redemptions_allowed: "Max. použití"
           add_to_groups: "Přidat do skupin"
           invite_to_topic: "Navigovat do tématu"
-          expires_at: "Nastavit vypršení po"
-          custom_message: "Volitelná osobní zpráva"
+          expires_after: "Nastavit vypršení po"
           send_invite_email: "Uložit a odeslat e-mail"
           send_invite_email_instructions: "Omezit pozvání na e-mail pro odeslání pozvánky"
-          save_invite: "Uložit pozvánku"
+          save_invite: "Uložit"
+          cancel: "Zrušit"
           invite_saved: "Pozvánka uložena."
         bulk_invite:
           none: "Na této stránce nejsou k zobrazení žádné pozvánky."
@@ -2061,6 +2061,7 @@ cs:
     staff_writes_only_mode:
       enabled: "Tato stránka je v režimu pouze pro redaktory. Pokračujte v prohlížení, ale odpovídání, hodnocení Líbí se a další akce jsou omezeny pouze pro členy redakce."
     learn_more: "Zjistit více…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Další informace…</a>"
     mute: Ignorovat
     unmute: Zrušit ignorování
     last_post: Poslední příspěvek
@@ -2192,7 +2193,7 @@ cs:
     login:
       header_title: "Vítejte zpět"
       subheader_title: "Přihlaste se ke svému účtu"
-      title: "Přihlásit se"
+      title: "Přihlášení"
       username: "Uživatel"
       password: "Heslo"
       show_password: "Zobrazit"
@@ -4946,6 +4947,7 @@ cs:
         dismiss_notice: "Označit jako přečtené"
         new_features:
           title: "Co je nového"
+          subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
@@ -5368,6 +5370,8 @@ cs:
           screened_ips: "Filtrované IP"
           screened_urls: "Filtrované URL"
           search_logs: "Hledání"
+          security: "Nastavení zabezpečení"
+          spam: "Nastavení nevyžádané pošty"
           staff_action_logs: "Protokoly akcí redaktorů"
       section_landing_pages:
         account:
@@ -5400,6 +5404,9 @@ cs:
             chat_message: "zprávy v konverzaci"
           more_options:
             title: "Další možnosti"
+        look_and_feel:
+          themes:
+            title: "Motivy"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -5438,8 +5445,11 @@ cs:
         legacy: "Zastaralé"
       backups:
         title: "Zálohy"
+        files_title: "Soubory záloh"
+        description: "Zálohy Discourse zahrnují celou databázi, která obsahuje vše, co je na webu: témata, příspěvky, uživatele, skupiny, nastavení, témata atd. V závislosti na tom, jak je soubor zálohy vytvořen, může, ale nemusí obsahovat nahrané soubory."
         menu:
           backups: "Zálohy"
+          backup_files: "Soubory záloh"
           logs: "Logy"
         none: "Žádné zálohy nejsou k dispozici"
         read_only:
@@ -5471,7 +5481,7 @@ cs:
             title: "Zrušit aktuální úlohu"
             confirm: "Opravdu chcete zrušit aktuální úlohu?"
           backup:
-            label: "Záloha"
+            label: "Zálohohovat"
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
             include_uploads: "zahrnout všechny nahrané soubory"
@@ -5484,6 +5494,7 @@ cs:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
+            is_disabled: "Obnovení je aktuálně zakázáno. Chcete-li jej povolit, navštivte <a href='%{url}'>nastavení webu</a>."
             label: "Obnovit"
             title: "Obnovit zálohu"
             confirm: "Opravdu chcete obnovit tuto zálohu?"

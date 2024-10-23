@@ -95,10 +95,9 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:first-child button.post-action-menu__copy-link");
 
-    assert.ok(
-      exists(".post-action-menu__copy-link-checkmark"),
-      "it shows the Link Copied! message"
-    );
+    assert
+      .dom(".post-action-menu__copy-link-checkmark")
+      .exists("it shows the Link Copied! message");
   });
 
   test("Showing and hiding the edit controls", async function (assert) {
@@ -107,10 +106,9 @@ acceptance("Topic", function (needs) {
     await click("#topic-title .d-icon-pencil");
 
     assert.ok(exists("#edit-title"), "it shows the editing controls");
-    assert.ok(
-      !exists(".title-wrapper .remove-featured-link"),
-      "link to remove featured link is not shown"
-    );
+    assert
+      .dom(".title-wrapper .remove-featured-link")
+      .doesNotExist("link to remove featured link is not shown");
 
     await fillIn("#edit-title", "this is the new title");
     await click("#topic-title .cancel-edit");
@@ -128,16 +126,12 @@ acceptance("Topic", function (needs) {
     await categoryChooser.selectRowByValue(4);
     await click("#topic-title .submit-edit");
 
-    assert.strictEqual(
-      query("#topic-title .badge-category").innerText,
-      "faq",
-      "it displays the new category"
-    );
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "this is the new title",
-      "it displays the new title"
-    );
+    assert
+      .dom("#topic-title .badge-category")
+      .hasText("faq", "it displays the new category");
+    assert
+      .dom(".fancy-title")
+      .hasText("this is the new title", "it displays the new title");
   });
 
   test("Marking a topic as wiki", async function (assert) {
@@ -155,19 +149,18 @@ acceptance("Topic", function (needs) {
   test("Visit topic routes", async function (assert) {
     await visit("/t/12");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "PM for testing",
-      "it routes to the right topic"
-    );
+    assert
+      .dom(".fancy-title")
+      .hasText("PM for testing", "it routes to the right topic");
 
     await visit("/t/280/20");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "Internationalization / localization",
-      "it routes to the right topic"
-    );
+    assert
+      .dom(".fancy-title")
+      .hasText(
+        "Internationalization / localization",
+        "it routes to the right topic"
+      );
   });
 
   test("Updating the topic title with emojis", async function (assert) {
@@ -218,10 +211,9 @@ acceptance("Topic", function (needs) {
   test("Suggested topics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.strictEqual(
-      query("#suggested-topics-title").innerText.trim(),
-      I18n.t("suggested_topics.title")
-    );
+    assert
+      .dom("#suggested-topics-title")
+      .hasText(I18n.t("suggested_topics.title"));
   });
 
   test("Deleting a topic", async function (assert) {
@@ -264,10 +256,9 @@ acceptance("Topic", function (needs) {
   test("Suspended user posts", async function (assert) {
     await visit("/t/topic-from-suspended-user/54077");
 
-    assert.ok(
-      exists(".topic-post.user-suspended > #post_1"),
-      "it has a class applied"
-    );
+    assert
+      .dom(".topic-post.user-suspended > #post_1")
+      .exists("it has a class applied");
   });
 });
 
@@ -291,16 +282,14 @@ acceptance("Topic featured links", function (needs) {
 
   test("remove featured link", async function (assert) {
     await visit("/t/-/299/1");
-    assert.ok(
-      exists(".title-wrapper .topic-featured-link"),
-      "link is shown with topic title"
-    );
+    assert
+      .dom(".title-wrapper .topic-featured-link")
+      .exists("link is shown with topic title");
 
     await click(".title-wrapper .edit-topic");
-    assert.ok(
-      exists(".title-wrapper .remove-featured-link"),
-      "link to remove featured link"
-    );
+    assert
+      .dom(".title-wrapper .remove-featured-link")
+      .exists("link to remove featured link");
 
     // TODO: decide if we want to test this, test is flaky so it
     // was commented out.
@@ -313,7 +302,7 @@ acceptance("Topic featured links", function (needs) {
 
   test("Converting to a public topic", async function (assert) {
     await visit("/t/test-pm/34");
-    assert.ok(exists(".private_message"));
+    assert.dom(".private_message").exists();
     await click(".toggle-admin-menu");
     await click(".topic-admin-convert button");
 
@@ -324,7 +313,7 @@ acceptance("Topic featured links", function (needs) {
     await categoryChooser.selectRowByValue(21);
 
     await click(".convert-to-public-topic .btn-primary");
-    assert.ok(!exists(".private_message"));
+    assert.dom(".private_message").doesNotExist();
   });
 
   test("Unpinning unlisted topic", async function (assert) {
@@ -338,10 +327,9 @@ acceptance("Topic featured links", function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert.ok(
-      exists(".topic-admin-pin"),
-      "it should show the multi select menu"
-    );
+    assert
+      .dom(".topic-admin-pin")
+      .exists("it should show the multi select menu");
   });
 
   test("selecting posts", async function (assert) {
@@ -349,15 +337,13 @@ acceptance("Topic featured links", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-multi-select .btn");
 
-    assert.ok(
-      exists(".selected-posts:not(.hidden)"),
-      "it should show the multi select menu"
-    );
+    assert
+      .dom(".selected-posts:not(.hidden)")
+      .exists("it should show the multi select menu");
 
-    assert.ok(
-      exists(".select-all"),
-      "it should allow users to select all the posts"
-    );
+    assert
+      .dom(".select-all")
+      .exists("it should allow users to select all the posts");
   });
 
   test("select below", async function (assert) {
@@ -465,16 +451,14 @@ acceptance("Topic featured links", function (needs) {
 
   test("remove featured link", async function (assert) {
     await visit("/t/-/299/1");
-    assert.ok(
-      exists(".title-wrapper .topic-featured-link"),
-      "link is shown with topic title"
-    );
+    assert
+      .dom(".title-wrapper .topic-featured-link")
+      .exists("link is shown with topic title");
 
     await click(".title-wrapper .edit-topic");
-    assert.ok(
-      exists(".title-wrapper .remove-featured-link"),
-      "link to remove featured link"
-    );
+    assert
+      .dom(".title-wrapper .remove-featured-link")
+      .exists("link to remove featured link");
   });
 });
 
@@ -516,15 +500,13 @@ acceptance("Topic pinning/unpinning as an admin", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-pin .btn");
 
-    assert.ok(
-      exists(".feature-topic .btn-primary"),
-      "it should show the 'Pin Topic' button"
-    );
+    assert
+      .dom(".feature-topic .btn-primary")
+      .exists("it should show the 'Pin Topic' button");
 
-    assert.ok(
-      exists(".make-banner"),
-      "it should show the 'Banner Topic' button"
-    );
+    assert
+      .dom(".make-banner")
+      .exists("it should show the 'Banner Topic' button");
   });
 });
 
@@ -537,15 +519,13 @@ acceptance("Topic pinning/unpinning as a staff member", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-pin .btn");
 
-    assert.ok(
-      exists(".feature-topic .btn-primary"),
-      "it should show the 'Pin Topic' button"
-    );
+    assert
+      .dom(".feature-topic .btn-primary")
+      .exists("it should show the 'Pin Topic' button");
 
-    assert.ok(
-      exists(".make-banner"),
-      "it should show the 'Banner Topic' button"
-    );
+    assert
+      .dom(".make-banner")
+      .exists("it should show the 'Banner Topic' button");
   });
 });
 
@@ -558,15 +538,13 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
     await click(".toggle-admin-menu");
     await click(".topic-admin-pin .btn");
 
-    assert.ok(
-      exists(".feature-topic .btn-primary"),
-      "it should show the 'Pin Topic' button"
-    );
+    assert
+      .dom(".feature-topic .btn-primary")
+      .exists("it should show the 'Pin Topic' button");
 
-    assert.ok(
-      !exists(".make-banner"),
-      "it should not show the 'Banner Topic' button"
-    );
+    assert
+      .dom(".make-banner")
+      .doesNotExist("it should not show the 'Banner Topic' button");
   });
 });
 
@@ -576,17 +554,15 @@ acceptance("Topic last visit line", function (needs) {
   test("visit topic", async function (assert) {
     await visit("/t/-/280");
 
-    assert.ok(
-      exists(".topic-post-visited-line.post-10"),
-      "shows the last visited line on the right post"
-    );
+    assert
+      .dom(".topic-post-visited-line.post-10")
+      .exists("shows the last visited line on the right post");
 
     await visit("/t/-/9");
 
-    assert.ok(
-      !exists(".topic-post-visited-line"),
-      "does not show last visited line if post is the last post"
-    );
+    assert
+      .dom(".topic-post-visited-line")
+      .doesNotExist("does not show last visited line if post is the last post");
   });
 });
 

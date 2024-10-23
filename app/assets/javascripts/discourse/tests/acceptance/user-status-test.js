@@ -129,10 +129,9 @@ acceptance("User Status", function (needs) {
 
     await fillIn(".emoji-picker-content .filter", userStatusEmoji);
     await click(".results .emoji");
-    assert.ok(
-      exists(`.btn-emoji img.emoji[title=${userStatusEmoji}]`),
-      "chosen status emoji is shown"
-    );
+    assert
+      .dom(`.btn-emoji img.emoji[title=${userStatusEmoji}]`)
+      .exists("chosen status emoji is shown");
   });
 
   test("setting user status", async function (assert) {
@@ -143,10 +142,9 @@ acceptance("User Status", function (needs) {
 
     await fillIn(".user-status-description", userStatus);
     await pickEmoji(userStatusEmoji);
-    assert.ok(
-      exists(`.btn-emoji img.emoji[title=${userStatusEmoji}]`),
-      "chosen status emoji is shown"
-    );
+    assert
+      .dom(`.btn-emoji img.emoji[title=${userStatusEmoji}]`)
+      .exists("chosen status emoji is shown");
     await click(".btn-primary"); // save
 
     assert.equal(
@@ -208,7 +206,9 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
     await click(".btn.delete-status");
 
-    assert.notOk(exists(".header-dropdown-toggle .user-status-background"));
+    assert
+      .dom(".header-dropdown-toggle .user-status-background")
+      .doesNotExist();
   });
 
   test("setting user status with auto removing timer", async function (assert) {
@@ -260,10 +260,9 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
     await fillIn(".user-status-description", "some status");
 
-    assert.ok(
-      exists(`.btn-emoji img.emoji[title=${defaultStatusEmoji}]`),
-      "default status emoji is shown"
-    );
+    assert
+      .dom(`.btn-emoji img.emoji[title=${defaultStatusEmoji}]`)
+      .exists("default status emoji is shown");
   });
 
   test("shows actual status on the modal after canceling the modal and opening it again", async function (assert) {
@@ -299,7 +298,7 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.ok(exists(".btn.delete-status"));
+    assert.dom(".btn.delete-status").exists();
   });
 
   test("doesn't show the trash button when status wasn't set before", async function (assert) {
@@ -309,7 +308,7 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.notOk(exists(".btn.delete-status"));
+    assert.dom(".btn.delete-status").doesNotExist();
   });
 
   test("shows empty modal after deleting the status", async function (assert) {
@@ -487,7 +486,7 @@ acceptance("User Status - user menu", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.notOk(exists("li.set-user-status"));
+    assert.dom("li.set-user-status").doesNotExist();
   });
 
   test("shows the user status button on the menu when enabled in settings", async function (assert) {
@@ -498,10 +497,9 @@ acceptance("User Status - user menu", function (needs) {
     await click("#user-menu-button-profile");
 
     assert.ok(exists("li.set-user-status .btn"), "shows the button");
-    assert.ok(
-      exists("li.set-user-status svg.d-icon-circle-plus"),
-      "shows the icon on the button"
-    );
+    assert
+      .dom("li.set-user-status svg.d-icon-circle-plus")
+      .exists("shows the icon on the button");
   });
 
   test("shows user status on the button", async function (assert) {
@@ -541,6 +539,6 @@ acceptance("User Status - user menu", function (needs) {
     await click("#user-menu-button-profile");
     await click(".set-user-status button");
 
-    assert.notOk(exists(".user-menu"));
+    assert.dom(".user-menu").doesNotExist();
   });
 });

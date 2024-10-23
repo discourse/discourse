@@ -18,7 +18,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
-    assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
+    assert.dom(urlInput).hasValue(themeUrl, "url input is filled");
     assert.strictEqual(
       query(branchInput).value,
       "tests-passed",
@@ -31,8 +31,8 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click(".create-actions .btn-primary");
     await click("#remote");
     await click(".install-theme-content .inputs .advanced-repo");
-    assert.strictEqual(query(urlInput).value, "", "url input is reset");
-    assert.strictEqual(query(branchInput).value, "", "branch input is reset");
+    assert.dom(urlInput).hasValue("", "url input is reset");
+    assert.dom(branchInput).hasValue("", "branch input is reset");
     assert.notOk(query(publicKey), "hide public key");
   });
 
@@ -49,7 +49,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click("#remote");
     await fillIn(urlInput, themeUrl);
     await click(".install-theme-content .inputs .advanced-repo");
-    assert.strictEqual(query(urlInput).value, themeUrl, "url input is filled");
+    assert.dom(urlInput).hasValue(themeUrl, "url input is filled");
     assert.ok(query(publicKey), "shows public key");
 
     // Supports AWS CodeCommit style repo URLs

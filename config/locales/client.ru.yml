@@ -29,6 +29,7 @@ ru:
         millions: "%{number} млн"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -2032,12 +2033,11 @@ ru:
           success: "Ссылка-приглашение создана!"
           error: "Произошла ошибка при создании ссылки-приглашения"
         invite:
-          new_title: "Создать приглашение"
-          edit_title: "Изменить приглашение"
           instructions: "Поделитесь указанной здесь ссылкой, чтобы предоставить доступ к этому сайту:"
-          copy_link: "скопировать ссылку"
           expires_in_time: "Срок действия ссылки истечёт через %{time}"
           expired_at_time: "Срок действия ссылки истёк %{time}"
+          copy_link: "Копировать ссылку"
+          link_copied: "Ссылка скопирована!"
           show_advanced: "Показать дополнительные параметры"
           hide_advanced: "Скрыть дополнительные параметры"
           restrict: "Ограничить"
@@ -2047,11 +2047,11 @@ ru:
           max_redemptions_allowed: "Максимальное количество использований ссылки"
           add_to_groups: "Добавить приглашённых в группы"
           invite_to_topic: "После перехода на сайт открыть тему"
-          expires_at: "Срок действия приглашения истечёт после"
-          custom_message: "Необязательное личное сообщение"
+          expires_after: "Срок действия приглашения истечёт после"
           send_invite_email: "Сохранить и отправить приглашение"
           send_invite_email_instructions: "Ограничиться адресом электронной почты для отправки приглашения"
-          save_invite: "Сохранить приглашение"
+          save_invite: "Сохранить"
+          cancel: "Нет"
           invite_saved: "Приглашение сохранено."
         bulk_invite:
           none: "Нет приглашений для отображения на этой странице."
@@ -5818,6 +5818,9 @@ ru:
             title: "Другие варианты"
             move_up: "Вверх"
             move_down: "Вниз"
+        look_and_feel:
+          themes:
+            title: "Темы"
       plugins:
         title: "Плагины"
         name: "Название"

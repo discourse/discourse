@@ -52,7 +52,6 @@ he:
       deleted_chat_username: נמחק
       dates:
         yesterday: "אתמול"
-        time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
       already_enabled: "כבר מופעל צ׳אט בנושא הזה. נא לרענן."
       disabled_for_topic: "הצ׳אט מושבת בנושא הזה."
@@ -495,6 +494,7 @@ he:
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה %{category}."
         auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
+        notification_level: "שליחת הודעות דחיפה"
         follow: "הצטרפות"
         followed: "הצטרפו"
         mute: "השתקת ערוץ"

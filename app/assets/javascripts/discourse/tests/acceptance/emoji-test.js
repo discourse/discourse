@@ -3,7 +3,6 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
   normalizeHtml,
   query,
   simulateKey,
@@ -70,10 +69,10 @@ acceptance("Emoji", function (needs) {
 
     await simulateKeys(editor, ":s");
 
-    assert.notOk(exists(".autocomplete.ac-emoji"));
+    assert.dom(".autocomplete.ac-emoji").doesNotExist();
 
     await simulateKey(editor, "w");
 
-    assert.ok(exists(".autocomplete.ac-emoji"));
+    assert.dom(".autocomplete.ac-emoji").exists();
   });
 });

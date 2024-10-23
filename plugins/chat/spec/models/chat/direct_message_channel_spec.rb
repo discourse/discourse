@@ -6,6 +6,7 @@ RSpec.describe Chat::DirectMessageChannel do
   it_behaves_like "a chat channel model"
 
   it { is_expected.to delegate_method(:allowed_user_ids).to(:direct_message).as(:user_ids) }
+  it { is_expected.to delegate_method(:group?).to(:direct_message).with_prefix.allow_nil }
   it { is_expected.to validate_length_of(:description).is_at_most(500) }
   it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
@@ -67,6 +68,36 @@ RSpec.describe Chat::DirectMessageChannel do
     it "delegates to direct_message" do
       direct_message.expects(:chat_channel_title_for_user).with(channel, user).returns("something")
       expect(title).to eq("something")
+    end
+  end
+
+  describe "#leave" do
+    subject(:leave) { channel.leave(user) }
+
+    let(:channel) { Fabricate(:direct_message_channel, group:) }
+    let(:user) { channel.chatable.users.first }
+    let(:membership) { channel.membership_for(user) }
+
+    context "when DM is not a group" do
+      let(:group) { false }
+
+      it "unfollows the channel for the provided user" do
+        expect { leave }.to change { membership.reload.following? }.to(false)
+      end
+    end
+
+    context "when DM is a group" do
+      let(:group) { true }
+
+      it "destroys the provided user’s membership" do
+        expect { leave }.to change { channel.user_chat_channel_memberships.where(user:).count }.by(
+          -1,
+        )
+      end
+
+      it "removes the provided user from the DM" do
+        expect { leave }.to change { channel.chatable.users.where(id: user).count }.by(-1)
+      end
     end
   end
 

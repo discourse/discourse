@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -38,11 +37,12 @@ acceptance("User Preferences - Security", function (needs) {
       "it should display active token first"
     );
 
-    assert.strictEqual(
-      query(".pref-auth-tokens > a:nth-of-type(1)").innerText.trim(),
-      I18n.t("user.auth_tokens.show_all", { count: 3 }),
-      "it should display two tokens"
-    );
+    assert
+      .dom(".pref-auth-tokens > a:nth-of-type(1)")
+      .hasText(
+        I18n.t("user.auth_tokens.show_all", { count: 3 }),
+        "it should display two tokens"
+      );
     assert.strictEqual(
       count(".pref-auth-tokens .auth-token"),
       2,
@@ -79,27 +79,27 @@ acceptance("User Preferences - Security", function (needs) {
 
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-user-api-keys__application-name").innerText.trim(),
-      "Discourse Hub",
-      "displays the application name for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__application-name")
+      .hasText(
+        "Discourse Hub",
+        "displays the application name for the API key"
+      );
 
-    assert.strictEqual(
-      query(".pref-user-api-keys__scopes-list-item").innerText.trim(),
-      "Read and clear notifications",
-      "displays the scope for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__scopes-list-item")
+      .hasText(
+        "Read and clear notifications",
+        "displays the scope for the API key"
+      );
 
-    assert.ok(
-      exists(".pref-user-api-keys__created-at"),
-      "displays the created at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__created-at")
+      .exists("displays the created at date for the API key");
 
-    assert.ok(
-      exists(".pref-user-api-keys__last-used-at"),
-      "displays the last used at date for the API key"
-    );
+    assert
+      .dom(".pref-user-api-keys__last-used-at")
+      .exists("displays the last used at date for the API key");
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {
@@ -118,11 +118,9 @@ acceptance("User Preferences - Security", function (needs) {
 
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
-      "Password Manager",
-      "displays the passkey name"
-    );
+    assert
+      .dom(".pref-passkeys__rows .row-passkey__name")
+      .hasText("Password Manager", "displays the passkey name");
 
     assert
       .dom(".row-passkey__created-date")
@@ -212,11 +210,9 @@ acceptance("User Preferences - Security", function (needs) {
     // user charlie has passkeys in fixtures
     await visit("/u/charlie/preferences/security");
 
-    assert.strictEqual(
-      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
-      "iCloud Keychain",
-      "displays the passkey name"
-    );
+    assert
+      .dom(".pref-passkeys__rows .row-passkey__name")
+      .hasText("iCloud Keychain", "displays the passkey name");
 
     assert
       .dom(".row-passkey__created-date")

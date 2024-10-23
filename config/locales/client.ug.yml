@@ -27,6 +27,7 @@ ug:
         millions: "%{number} مىليون"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY-يىلى M-ئاي"
@@ -1835,12 +1836,25 @@ ug:
           success: "تەكلىپ ئۇلانمىسى مۇۋەپپەقىيەتلىك ھاسىللاندى!"
           error: "تەكلىپ ئۇلانمىسىنى ھاسىللاۋاتقاندا خاتالىق كۆرۈلدى"
         invite:
-          new_title: "تەكلىپ قۇر"
+          new_title: "ئەزا تەكلىپ"
           edit_title: "تەكلىپ تەھرىر"
           instructions: "بۇ ئۇلانمىنى ھەمبەھىرلەپ مەزكۇر تور بېكەتنى زىيارەت قىلىش ئىجازىتى بېرىدۇ:"
-          copy_link: "ئۇلانما كۆچۈر"
           expires_in_time: "%{time} ۋاقتى توشىدۇ"
           expired_at_time: "%{time} ۋاقتى توشتى"
+          create_link_to_invite: "بۇ تور بېكەتنى دەرھال زىيارەت قىلالايدىغان ھەمبەھىرلىگىلى بولىدىغان ئۇلانمىدىن بىرنى قۇرىدۇ."
+          copy_link_and_share_it: "تۆۋەندىكى ئۇلانمىنى كۆچۈرۈپ، بۇ تور بېكەتنى دەرھال زىيارەت قىلىش ئۈچۈن ھەمبەھىرلىگىلى بولىدۇ."
+          copy_link: "ئۇلانما كۆچۈر"
+          link_copied: "ئۇلانما كۆچۈرۈلدى!"
+          share_link: "ئۇلانما ھەمبەھىر"
+          link_validity_MF: |
+            ئۇلانمىنى ئەڭ كۆپ بولغاندا { user_count, plural,
+                one {# ئىشلەتكۈچى}
+              other {# ئىشلەتكۈچى}
+            } ئىشلىتەلەيدۇ ھەمدە { duration_days, plural,
+                one {# كۈن}
+              other {# كۈن}
+            } دە ۋاقتى ئۆتىدۇ.
+          edit_link_options: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ."
           show_advanced: "ئالىي تاللانمىنى كۆرسەت"
           hide_advanced: "ئالىي تاللانمىنى يوشۇر"
           restrict: "چەكلىمە"
@@ -1851,10 +1865,14 @@ ug:
           add_to_groups: "گۇرۇپپىغا قوش"
           invite_to_topic: "تېمىغا كېلىدۇ"
           expires_at: "ۋاقتى توشىدۇ"
-          custom_message: "تاللاشچان شەخسىي ئۇچۇر"
+          expires_after: "ۋاقتى توشىدۇ"
+          custom_message: "ئىختىيارى ئۇچۇر"
+          custom_message_placeholder: "تەكلىپىڭىزگە شەخسىي ئىزاھات قوشىدۇ"
           send_invite_email: "ساقلاپ ئېلخەت يوللا"
           send_invite_email_instructions: "ئېلخەت بىلەنلا تەكلىپ قىلىشقا چەكلەپ تەكلىپ ئېلخەت يوللايدۇ"
-          save_invite: "تەكلىپ ساقلا"
+          save_invite: "ساقلا"
+          cancel: "ۋاز كەچ"
+          create_link: "ئۇلانما قۇر"
           invite_saved: "تەكلىپ ساقلاندى."
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
@@ -2166,6 +2184,7 @@ ug:
       associate: "ھېساباتىڭىز بارمۇ؟ <a href='%{associate_link}'>تىزىمغا كىر</a>ىپ %{provider} ھېساباتىڭىزغا باغلاڭ."
       activation_title: "ھېساباتىڭىزنى ئاكتىپلاڭ"
       already_have_account: "ھېساباتىڭىز بارمۇ؟"
+      no_account_yet: "ھېساباتىڭىز بارمۇ؟"
       progress_bar:
         signup: "تىزىملىتىڭ"
         activate: "ئاكتىپلا"
@@ -5324,6 +5343,16 @@ ug:
             title: "تېخىمۇ كۆپ تاللانما"
             move_up: "ئۈستىگە يۆتكەل"
             move_down: "ئاستىغا يۆتكەل"
+        look_and_feel:
+          title: "كۆرۈنۈش ۋە تۇيغۇ"
+          description: "ئۆرنەك، پارچە ۋە رەڭ لايىھەسىنى Discourse تور بېكىتىڭىزنى خاسلاشتۇرۇش ۋە ماركىسى ئۈچۈن ئىشلەتكىلى بولىدۇ، ئۇنىڭغا ئۆزگىچە ئۇسلۇب بېرەلەيدۇ."
+          themes:
+            title: "ئۆرنەك"
+            themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
+            set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
+            default_theme: "كۆڭۈلدىكى ئۆرنەك"
+            new_theme: "يېڭى ئۆرنەك"
+            user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"
@@ -5489,6 +5518,7 @@ ug:
           theme_name: "ئۆرنەك ئىسمى"
           component_name: "پارچە ئىسمى"
           themes_intro: "باشلاش ئۈچۈن مەۋجۇت ئۆرنەكتىن بىرى تاللىنىدۇ ياكى يېڭىسى ئورنىتىلىدۇ"
+          themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
           beginners_guide_title: "يېڭىياچىلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
           developers_guide_title: "ئىجادكارلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
           browse_themes: "جامائەت ئۆرنەككە كۆز يۈگۈرت"
@@ -5536,6 +5566,9 @@ ug:
           convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا پارچىغا ئايلاندۇرامسىز؟"
           convert_theme_tooltip: "بۇ ئۆرنەكنى پارچىغا ئايلاندۇرىدۇ"
           inactive_themes: "ئاكتىپسىز ئۆرنەك:"
+          set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
+          default_theme: "كۆڭۈلدىكى ئۆرنەك"
+          set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
           inactive_components: "ئىشلىتىلمىگەن پارچە:"
           selected:
             one: "%{count} تاللاندى"
@@ -6204,7 +6237,7 @@ ug:
           staff: "باشقۇرغۇچى"
           suspended: "توختىتىلغان"
           silenced: "ئۈنسىزلەندى"
-          staged: "ۋاقىتلىق ساقلاندى"
+          staged: "ۋاقىتلىق"
         approved: "تەستىقلاندىمۇ؟"
         titles:
           active: "ئاكتىپ ئىشلەتكۈچى"
@@ -6220,7 +6253,7 @@ ug:
           moderators: "رىياسەتچى"
           silenced: "ئۈنسىز ئىشلەتكۈچى"
           suspended: "توختىتىلغان ئىشلەتكۈچى"
-          staged: "ۋاقىتلىق ساقلانغان ئىشلەتكۈچى"
+          staged: "ۋاقىتلىق ئىشلەتكۈچى"
         not_verified: "دەلىللەنمىدى"
         check_email:
           title: "بۇ ئىشلەتكۈچىنىڭ ئېلخەت ئادرېسىنى كۆرسىتىدۇ"

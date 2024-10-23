@@ -517,6 +517,8 @@ zh_CN:
       bulk_add:
         other: "%{count} 个用户已被添加到该群组。"
     errors:
+      default_notification_level_users_limit:
+        other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组： %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
       can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
@@ -548,6 +550,7 @@ zh_CN:
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
       trust_level_0: "正在学习社区规范和功能的受限新成员"
+      trust_level_1: "已经通过阅读记录展示了初步参与的成员，现在可以访问更多功能。该组的所有成员也属于 trust_level_0 组。"
     request_membership_pm:
       title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
@@ -646,7 +649,6 @@ zh_CN:
               same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
               same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
               same_as_current: "与您当前的密码相同"
-              same_as_previous: "与您之前的密码相同。"
               same_as_name: "与您的名字相同。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             username:
@@ -656,6 +658,15 @@ zh_CN:
             ip_address:
               blocked: "不允许从您的 IP 地址进行新注册。"
               max_new_accounts_per_registration_ip: "不允许从您的 IP 地址进行新注册（已达到最大限制）。请联系管理人员。"
+        user_password:
+          attributes:
+            password:
+              common: "是 10000 个最常用的密码之一。请使用一个更安全的密码。"
+              same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
+              same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
+              same_as_current: "与您当前的密码相同"
+              same_as_name: "与您的名字相同。"
+              unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
         user_profile:
           attributes:
             featured_topic_id:
@@ -1163,13 +1174,13 @@ zh_CN:
       yaxis: "天"
       description: "在此期间提升其信任级别的用户量。"
     consolidated_page_views:
-      title: "合并页面浏览量"
+      title_legacy: "合并页面浏览量"
       xaxis:
         page_view_crawler: "抓取工具"
         page_view_anon: "匿名用户"
         page_view_logged_in: "登录用户"
       yaxis: "天"
-      description: "登录用户、匿名用户和抓取工具的页面浏览量。"
+      description_legacy: "登录用户、匿名用户和抓取工具的页面浏览量。"
       labels:
         post: 帖子
         editor: 编辑者
@@ -1184,6 +1195,7 @@ zh_CN:
       description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     consolidated_page_views_browser_detection:
       title: "使用浏览器检测综合页面浏览量（实验性）"
+      title_legacy: "使用浏览器检测综合页面浏览量（实验性）"
       xaxis:
         page_view_anon_browser: "匿名浏览器"
         page_view_logged_in_browser: "已登录浏览器"
@@ -1348,6 +1360,9 @@ zh_CN:
       xaxis: "天"
       yaxis: "总页面浏览量"
       description: "来自所有访客的新页面浏览量。"
+    page_view_legacy_total_reqs:
+      xaxis: "天"
+      yaxis: "总页面浏览量"
     page_view_logged_in_mobile_reqs:
       title: "登录用户页面浏览量"
       xaxis: "天"
@@ -1664,6 +1679,7 @@ zh_CN:
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
+    experimental_full_page_login: "实验性：将登录/注册模式替换为整页登录/注册表单。"
     ga_version: "要使用的 Google Universal Analytics 版本：v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2037,7 +2053,6 @@ zh_CN:
     reset_bounce_score_after_days: "X 天后自动重置退回分数。"
     blocked_attachment_content_types: "用于根据内容类型屏蔽附件的关键字列表。"
     blocked_attachment_filenames: "用于根据文件名屏蔽名单附件的关键字列表。"
-    forwarded_emails_behaviour: "如何处理转发到 Discourse 的电子邮件"
     always_show_trimmed_content: "始终显示传入电子邮件被修剪的部分。警告：可能会泄露电子邮件地址。"
     trim_incoming_emails: "修剪传入电子邮件的不相关部分。"
     private_email: "不在电子邮件标题或电子邮件正文中包含帖子或话题的内容。注意：还会禁用摘要电子邮件。"
@@ -2339,6 +2354,7 @@ zh_CN:
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "实验性：只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
+    experimental_auto_grid_images: "实验性：当在编辑器中上传了 3 张或更多图像时，自动将图像包裹在 [grid] 标签中。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"

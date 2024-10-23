@@ -215,6 +215,10 @@ bs_BA:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
+        user_password:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
         color_scheme_color:
           attributes:
             hex:
@@ -538,6 +542,8 @@ bs_BA:
       xaxis: "Day"
     page_view_total_reqs:
       title: "Pagevieovi"
+      xaxis: "Day"
+    page_view_legacy_total_reqs:
       xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"

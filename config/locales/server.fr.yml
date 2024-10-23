@@ -686,7 +686,6 @@ fr:
               same_as_username: "est identique à votre nom d'utilisateur. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_email: "est identique à votre adresse e-mail. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_current: "est identique à votre mot de passe actuel."
-              same_as_previous: "est identique à votre mot de passe précédent."
               same_as_name: "est identique à votre nom."
               unique_characters: "contient trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
             username:
@@ -696,6 +695,15 @@ fr:
             ip_address:
               blocked: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP."
               max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
+        user_password:
+          attributes:
+            password:
+              common: "fait partie des 10 000 mots de passe les plus utilisés. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_username: "est identique à votre nom d'utilisateur. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_email: "est identique à votre adresse e-mail. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_current: "est identique à votre mot de passe actuel."
+              same_as_name: "est identique à votre nom."
+              unique_characters: "contient trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ fr:
       yaxis: "Jour"
       description: "Nombre d'utilisateurs ayant augmenté leur niveau de confiance au cours de cette période."
     consolidated_page_views:
-      title: "Pages vues unifiées"
+      title_legacy: "Pages vues unifiées"
       xaxis:
         page_view_crawler: "Robots d'indexation"
         page_view_anon: "Utilisateurs anonymes"
         page_view_logged_in: "Utilisateurs connectés"
       yaxis: "Jour"
-      description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
+      description_legacy: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
       labels:
         post: Message
         editor: Éditeur
@@ -1251,6 +1259,7 @@ fr:
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
     consolidated_page_views_browser_detection:
       title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
+      title_legacy: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       xaxis:
         page_view_anon_browser: "Navigateur anonyme"
         page_view_logged_in_browser: "Navigateur connecté"
@@ -1409,6 +1418,9 @@ fr:
       xaxis: "Jour"
       yaxis: "Total de pages vues"
       description: "Nombre de vues par tous les visiteurs."
+    page_view_legacy_total_reqs:
+      xaxis: "Jour"
+      yaxis: "Total de pages vues"
     page_view_logged_in_mobile_reqs:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
@@ -2099,7 +2111,6 @@ fr:
     reset_bounce_score_after_days: "Réinitialiser automatiquement le taux d'e-mails non délivrés après X jours."
     blocked_attachment_content_types: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
     blocked_attachment_filenames: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
-    forwarded_emails_behaviour: "Comment traiter un e-mail transféré à Discourse"
     always_show_trimmed_content: "Toujours montrer la partie réduite des e-mails entrants. ATTENTION : cela peut révéler les adresses e-mail."
     trim_incoming_emails: "Débarrasser les e-mails entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps de l'e-mail. REMARQUE : désactive également les e-mails de résumé."

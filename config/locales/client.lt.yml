@@ -29,6 +29,7 @@ lt:
         millions: "%{number}M"
     dates:
       time: "H:mm"
+      time_short: "h:mm"
       time_with_zone: "HH: mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
@@ -1546,10 +1547,7 @@ lt:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
           error: "Generuojant kvietimo nuorodą įvyko klaida"
         invite:
-          new_title: "Sukurti kvietimą"
-          edit_title: "Redaguoti kvietimą"
           instructions: "Bendrinkite šią nuorodą, kad akimirksniu suteiktumėte prieigą prie šios svetainės:"
-          copy_link: "nukopijuoti nuorodą"
           expires_in_time: "Baigia galioti %{time}"
           expired_at_time: "Galiojimo laikas baigėsi %{time}"
           show_advanced: "Rodyti išplėstines parinktis"
@@ -1558,10 +1556,10 @@ lt:
           email_or_domain_placeholder: "vardas@example.com arba example.com"
           max_redemptions_allowed: "Maksimaliai naudoja"
           add_to_groups: "Pridėti prie grupių"
-          expires_at: "Baigia galioti"
-          custom_message: "Neprivaloma asmeninė žinutė"
+          expires_after: "Baigia galioti"
           send_invite_email: "Išsaugoti ir siųsti el. laišką"
-          save_invite: "Išsaugoti kvietimą"
+          save_invite: "Išsaugoti"
+          cancel: "Atšaukti"
           invite_saved: "Kvietimas išsaugotas."
         bulk_invite:
           text: "Masinis kvietimas"
@@ -3988,6 +3986,9 @@ lt:
             invalid_applies_to: "Privalomi"
             topic: "temos"
             post: "žinutės"
+        look_and_feel:
+          themes:
+            title: "Temos"
       plugins:
         title: "Plugins"
         name: "Vardas"

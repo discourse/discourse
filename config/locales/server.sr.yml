@@ -146,6 +146,11 @@ sr:
             password:
               common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
               same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
+        user_password:
+          attributes:
+            password:
+              common: "je jedna od 10000 najčešće korišćenih lozinki. Molimo Vas izaberite sigurniju lozinku."
+              same_as_username: "je ista kao vaše korisničko ime. Molimo Vas izaberite sigurniju šifru."
       <<: *errors
   general_category_name: "Opšti"
   staff_category_name: "Osoblje"

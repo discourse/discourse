@@ -1546,12 +1546,11 @@ da:
           success: "Invitiationslinket blev genereret!"
           error: "Der opstod en fejl under generering af Invitationslink"
         invite:
-          new_title: "Opret Invitation"
-          edit_title: "Rediger Invitation"
           instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
-          copy_link: "kopier link"
           expires_in_time: "Udløber om %{time}"
           expired_at_time: "Udløb kl. %{time}"
+          copy_link: "Kopiér link"
+          link_copied: "Link kopieret!"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
           restrict: "Begræns til"
@@ -1560,10 +1559,10 @@ da:
           email_or_domain_placeholder: "navn@eksempel.dk eller eksempel.dk"
           max_redemptions_allowed: "Maks. anvendelser"
           add_to_groups: "Tilføj til grupper"
-          expires_at: "Udløber efter"
-          custom_message: "Valgfri personlig meddelelse"
+          expires_after: "Udløber efter"
           send_invite_email: "Gem og send e-mail"
-          save_invite: "Gem Invitation"
+          save_invite: "Gem"
+          cancel: "Annuller"
           invite_saved: "Invitation gemt."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
@@ -4201,6 +4200,9 @@ da:
           more_options:
             move_up: "Flyt op"
             move_down: "Flyt ned"
+        look_and_feel:
+          themes:
+            title: "Temaer"
       plugins:
         title: "Udvidelser"
         name: "Navn"

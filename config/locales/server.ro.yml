@@ -280,7 +280,7 @@ ro:
   bookmarks:
     reminders:
       at_desktop: "Data viitoare sunt la PC"
-      later_today: "Mai târziu azi"
+      later_today: "Mai târziu astăzi"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
       next_week: "Săptămâna viitoare"
@@ -364,13 +364,22 @@ ro:
           attributes:
             password:
               common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
-              same_as_username: "este identică cu nume utilizator. Te rugăm să folosești o parolă mai sigură."
-              same_as_email: "este identică cu emailul. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
               same_as_current: "este identică cu parola curentă."
               unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
               blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
               max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
+        user_password:
+          attributes:
+            password:
+              common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
+              same_as_current: "este identică cu parola ta curentă."
+              same_as_name: "este același cu numele tău."
+              unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
         color_scheme_color:
           attributes:
             hex:
@@ -678,7 +687,11 @@ ro:
     trust_level_growth:
       yaxis: "Zi"
     consolidated_page_views:
+      title: "Afișări de pagină consolidate vechi"
+      title_legacy: "Afișări de pagină consolidate"
       yaxis: "Zi"
+      description: "Raport vechi care arată afișările de pagini pentru utilizatorii conectați, utilizatorii anonimi și roboții de indexare. Acesta a fost înlocuit de raportul „Trafic site”."
+      description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatorii anonimi și roboții de indexare."
       labels:
         post: Postare
         editor: Editor
@@ -689,7 +702,10 @@ ro:
         user_api: "API Utilizator"
       yaxis: "Zi"
     consolidated_page_views_browser_detection:
+      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
       yaxis: "Zi"
+      description: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate vechi”."
+      description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate”."
     site_traffic:
       title: "Trafic site"
       xaxis:
@@ -811,6 +827,11 @@ ro:
       title: "Vizualizări"
       xaxis: "Zi"
       yaxis: "Total vizualizări de pagină"
+    page_view_legacy_total_reqs:
+      title: "Afișări de pagină vechi"
+      xaxis: "Zi"
+      yaxis: "Total afișări de pagină"
+      description: "Raport vechi care arată numărul de afișări de pagină noi de la toți vizitatorii."
     page_view_logged_in_mobile_reqs:
       title: "Vizualizări de pagină înregistrate "
       xaxis: "Zi"
@@ -958,6 +979,7 @@ ro:
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
+    experimental_full_page_login: "EXPERIMENTAL: Înlocuiește modalul de conectare/înregistrare cu un formular de conectare/înregistrare pe întreaga pagină."
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
@@ -1119,6 +1141,7 @@ ro:
     hard_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu permanent."
     bounce_score_threshold: "Rata maximă de ricoșeu înainte să nu îi mai trimitem emailuri utilizatorului."
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
+    forwarded_emails_behaviour: "Cum se tratează un email redirecționat către Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Află mai multe</a>"
     always_show_trimmed_content: "Arată întotdeauna partea trunchiată a emailurilor sosite. ATENȚIE: s-ar putea dezvălui adresele de email."
     email_total_attachment_size_limit_kb: "Dimensiunea totală maximă a fișierelor atașate la emailurile trimise. Setează la 0 pentru a dezactiva trimiterea de atașamente."
     manual_polling_enabled: "Trimite emailuri folosind API-ul pentru răspunsuri prin email."
@@ -1782,10 +1805,10 @@ ro:
 
         Acesta este un memento prietenos să îți activezi contul.
 
-        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        Dă clic pe următoarea legătură pentru a-ți confirma și activa noul cont:
         %{base_url}/u/activate-account/%{email_token}
 
-        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
+        Dacă nu poți da clic pe legătura de mai sus, încearcă să o copiezi și să o inserezi în bara de adresă a navigatorului tău.
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
@@ -1924,7 +1947,7 @@ ro:
       description: Ai invitat 3 utilizatori simpli
     champion:
       name: Campion
-      description: Ai invitat 5 membri
+      description: 5 membri invitați
     first_share:
       name: Prima distribuire
       description: Ai distribuit o postare

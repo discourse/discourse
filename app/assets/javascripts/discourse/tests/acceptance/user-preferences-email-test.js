@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Email", function (needs) {
@@ -25,11 +21,12 @@ acceptance("User Preferences - Email", function (needs) {
 
     await fillIn("#change-email", "invalid-email");
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("user.email.invalid"),
-      "it should display invalid email tip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("user.email.invalid"),
+        "it should display invalid email tip"
+      );
   });
 
   test("email field always shows up", async function (assert) {

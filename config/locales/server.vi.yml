@@ -452,6 +452,15 @@ vi:
             ip_address:
               blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
               max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
+        user_password:
+          attributes:
+            password:
+              common: "là một trong 10000 mật khẩu được sử dụng nhiều nhất. Vui lòng sử dụng một mật khẩu an toàn hơn."
+              same_as_username: "giống với tên đăng nhập của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn."
+              same_as_email: "giống với email của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn"
+              same_as_current: "là giống như mật khẩu hiện tại của bạn."
+              same_as_name: "là giống với tên của bạn."
+              unique_characters: "có quá nhiều ký tự lặp lại. Vui lòng sử dụng mật khẩu an toàn hơn."
         user_profile:
           attributes:
             featured_topic_id:
@@ -751,13 +760,13 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lần xem trang tổng hợp"
+      title_legacy: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
         page_view_logged_in: "Người dùng đã đăng nhập"
       yaxis: "Ngày"
-      description: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
+      description_legacy: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
       labels:
         post: Bài viết
         editor: Biên tập
@@ -892,6 +901,9 @@ vi:
       xaxis: "Ngày"
     page_view_total_reqs:
       title: "Số lượt xem"
+      xaxis: "Ngày"
+      yaxis: "Tổng lượt xem trang"
+    page_view_legacy_total_reqs:
       xaxis: "Ngày"
       yaxis: "Tổng lượt xem trang"
     page_view_logged_in_mobile_reqs:

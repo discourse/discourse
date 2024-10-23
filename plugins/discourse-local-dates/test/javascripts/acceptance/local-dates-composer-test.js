@@ -136,8 +136,8 @@ acceptance("Local Dates - composer", function (needs) {
 
     await click(".advanced-mode-btn");
 
-    assert.strictEqual(query("input.format-input").value, "");
+    assert.dom("input.format-input").hasValue("");
     await click("ul.formats a.moment-format");
-    assert.strictEqual(query("input.format-input").value, "LLL");
+    assert.dom("input.format-input").hasValue("LLL");
   });
 });

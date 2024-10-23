@@ -275,6 +275,12 @@ bg:
             ip_address:
               blocked: "Не са разрешени нови регистрации от вашия IP адрес."
               max_new_accounts_per_registration_ip: "Не са разрешени нови регистрации от вашия IP адрес (достигнали сте лимита). Свържете се с член на персонала."
+        user_password:
+          attributes:
+            password:
+              common: "е една от 10000 най-често използвани пароли. Моля използвайте по-сигурна парола."
+              same_as_username: "е същата като вашето потребителско име. Моля използвайте по-сигурна парола."
+              same_as_email: "е същата като вашия email. Моля използвайте по-сигурна парола."
         color_scheme_color:
           attributes:
             hex:
@@ -632,6 +638,8 @@ bg:
     page_view_crawler_reqs:
       xaxis: "Ден"
     page_view_total_reqs:
+      xaxis: "Ден"
+    page_view_legacy_total_reqs:
       xaxis: "Ден"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ден"

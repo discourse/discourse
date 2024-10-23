@@ -4,5 +4,12 @@ import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 registerWidgetShim(
   "post-user-tip-shim",
   "div.post-user-tip-shim",
-  hbs`<UserTip @id="post_menu" @triggerSelector=".post-controls .actions .show-more-actions" @placement="top" @titleText={{i18n "user_tips.post_menu.title"}} @contentText={{i18n "user_tips.post_menu.content"}} />`
+  hbs`<UserTip
+    @id="post_menu"
+    @triggerSelector=".post-controls .actions .show-more-actions"
+    @placement="top"
+    @titleText={{i18n "user_tips.post_menu.title"}}
+    @contentText={{i18n "user_tips.post_menu.content"}}
+    @priority={{600}}
+  />`
 );

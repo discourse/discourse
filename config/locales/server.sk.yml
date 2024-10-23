@@ -795,7 +795,6 @@ sk:
               same_as_username: "je také isté ako vaše používateľské meno. Prosím použite bezpečnejšie heslo"
               same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
               same_as_current: "je také isté ako Vaše súčasné heslo"
-              same_as_previous: "je rovnaké ako vaše predchádzajúce heslo."
               same_as_name: "je rovnaké ako vaše meno."
               unique_characters: "má príliš veľa opakujúcich sa znakov. Použite bezpečnejšie heslo."
             username:
@@ -805,6 +804,15 @@ sk:
             ip_address:
               blocked: "Nové registrácie nie sú povolené z Vašej IP adresy."
               max_new_accounts_per_registration_ip: "Nové registrácie nie sú povolené z Vašej IP adresy (dosiahnutý limit). Kontaktujte člena obsluhy. "
+        user_password:
+          attributes:
+            password:
+              common: "Toto je jedno z 10000 najbežnejších hesiel. Prosím použite bezpečnejšie heslo"
+              same_as_username: "je také isté ako vaše používateľské meno. Prosím použite bezpečnejšie heslo"
+              same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
+              same_as_current: "je také isté ako Vaše súčasné heslo"
+              same_as_name: "je rovnaké ako vaše meno."
+              unique_characters: "má príliš veľa opakujúcich sa znakov. Použite bezpečnejšie heslo."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1394,13 +1402,15 @@ sk:
       yaxis: "Deň"
       description: "Počet používateľov, ktorí počas tohto obdobia zvýšili svoju úroveň dôvery."
     consolidated_page_views:
-      title: "Konsolidované zobrazenia stránok"
+      title: "Staršie konsolidované zobrazenia stránok"
+      title_legacy: "Konsolidované zobrazenia stránok"
       xaxis:
         page_view_crawler: "Crawlery"
         page_view_anon: "Anonymní používatelia"
         page_view_logged_in: "Prihlásení užívatelia"
       yaxis: "Deň"
-      description: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a prehľadávače."
+      description: "Staršia správa zobrazujúca zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a crawlerov. Táto správa bola nahradená správou \"Návštevnosť stránky\"."
+      description_legacy: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a prehľadávače."
       labels:
         post: Príspevok
         editor: Editor
@@ -1415,13 +1425,15 @@ sk:
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
       title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
+      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"
         page_view_crawler: "Známy Crawler"
         page_view_other: "Iné zobrazenia stránky"
       yaxis: "Deň"
-      description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Táto experimentálna správa zabezpečuje, že prihlásené/anonymné požiadavky pochádzajú zo skutočných prehliadačov, a to ešte pred ich započítaním. Historické údaje pre túto zostavu nie sú k dispozícii, historické údaje nájdete v zostave \"Konsolidované zobrazenia stránok\"."
+      description: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Tento experimentálny prehľad zaisťuje, že žiadosti o prihlásenie/neprihlásenie prichádzajú zo skutočných prehliadačov ešte pred ich započítaním. Historické údaje pre tento prehľad nie sú k dispozícii. Historické údaje nájdete v prehľade „Staršie konsolidované zobrazenia stránok“."
+      description_legacy: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Táto experimentálna správa zabezpečuje, že prihlásené/anonymné požiadavky pochádzajú zo skutočných prehliadačov, a to ešte pred ich započítaním. Historické údaje pre túto zostavu nie sú k dispozícii, historické údaje nájdete v zostave \"Konsolidované zobrazenia stránok\"."
     site_traffic:
       title: "Návštevnosť stránky"
       xaxis:
@@ -1581,6 +1593,11 @@ sk:
       xaxis: "Deň"
       yaxis: "Celkový počet zobrazení stránky"
       description: "Počet nových zobrazení stránok od všetkých návštevníkov."
+    page_view_legacy_total_reqs:
+      title: "Staršie zobrazenia stránky"
+      xaxis: "Deň"
+      yaxis: "Celkový počet zobrazení stránky"
+      description: "Staršia správa zobrazujúca počet nových zobrazení stránok od všetkých návštevníkov."
     page_view_logged_in_mobile_reqs:
       title: "Zobrazenia stránky pri prihlásení"
       xaxis: "Deň"
@@ -1900,6 +1917,7 @@ sk:
     pending_users_reminder_delay_minutes: "Upozorniť moderátorov, ak noví používatelia čakajú na schválenie dlhšie ako tento počet minút. Nastavte na -1, ak chcete vypnúť upozornenia."
     persistent_sessions: "Používatelia zostanú prihlásení aj po zatvorení webového prehliadača"
     maximum_session_age: "Používateľ zostane prihlásený n hodín od poslednej návštevy"
+    experimental_full_page_login: "EXPERIMENTÁLNE: Nahraďte prihlasovací/registračný modal prihlasovacím/registračným formulárom na celú stránku."
     ga_version: "Verzia služby Google Universal Analytics, ktorú chcete používať: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID kód sledovania Google Universal Analytics, napr: UA-12345678-9; pozri <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Názov domény Google Universal Analytics, napr.: mysite.com; pozrite si <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2276,7 +2294,7 @@ sk:
     reset_bounce_score_after_days: "Automatické vynulovanie skóre bounce po X dňoch."
     blocked_attachment_content_types: "Zoznam kľúčových slov používaných na blokovanie príloh na základe typu obsahu."
     blocked_attachment_filenames: "Zoznam kľúčových slov používaných na blokovanie príloh na základe názvu súboru."
-    forwarded_emails_behaviour: "Ako spracovať preposlaný e-mail do Discourse"
+    forwarded_emails_behaviour: "Ako spracovať e-mail preposlaný do Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Viac informácií</a>"
     always_show_trimmed_content: "Vždy zobrazte orezanú časť prichádzajúcich e-mailov. VAROVANIE: môže odhaliť e-mailové adresy."
     trim_incoming_emails: "Orezanie časti prichádzajúcich e-mailov, ktoré nie sú relevantné."
     private_email: "Nezahrňujte obsah príspevkov alebo tém do názvu e-mailu ani do tela e-mailu. POZNÁMKA: vypne aj e-maily so správou."
@@ -2581,6 +2599,7 @@ sk:
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "EXPERIMENTÁLNE: Informácie o kategórii pomalého načítania len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
+    experimental_auto_grid_images: "EXPERIMENTÁLNE: Automaticky zalomí obrázky do značiek [grid], keď sa do skladateľa nahrajú 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."

@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -12,10 +11,9 @@ acceptance("New Group - Anonymous", function () {
   test("As an anon user", async function (assert) {
     await visit("/g");
 
-    assert.ok(
-      !exists(".groups-header-new"),
-      "it should not display the button to create a group"
-    );
+    assert
+      .dom(".groups-header-new")
+      .doesNotExist("it should not display the button to create a group");
   });
 });
 
@@ -34,11 +32,12 @@ acceptance("New Group - Authenticated", function (needs) {
 
     await fillIn("input[name='name']", "1");
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.too_short"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.too_short"),
+        "it should show the right validation tooltip"
+      );
 
     assert.strictEqual(
       count(".group-form-save:disabled"),
@@ -51,34 +50,36 @@ acceptance("New Group - Authenticated", function (needs) {
       "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     );
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.too_long"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.too_long"),
+        "it should show the right validation tooltip"
+      );
 
     await fillIn("input[name='name']", "");
 
-    assert.strictEqual(
-      query(".tip.bad").innerText.trim(),
-      I18n.t("admin.groups.new.name.blank"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.bad")
+      .hasText(
+        I18n.t("admin.groups.new.name.blank"),
+        "it should show the right validation tooltip"
+      );
 
     await fillIn("input[name='name']", "good-username");
 
-    assert.strictEqual(
-      query(".tip.good").innerText.trim(),
-      I18n.t("admin.groups.new.name.available"),
-      "it should show the right validation tooltip"
-    );
+    assert
+      .dom(".tip.good")
+      .hasText(
+        I18n.t("admin.groups.new.name.available"),
+        "it should show the right validation tooltip"
+      );
 
     await click(".group-form-public-admission");
 
-    assert.ok(
-      !exists("groups-new-allow-membership-requests"),
-      "it should disable the membership requests checkbox"
-    );
+    assert
+      .dom("groups-new-allow-membership-requests")
+      .doesNotExist("it should disable the membership requests checkbox");
 
     assert.strictEqual(
       query(

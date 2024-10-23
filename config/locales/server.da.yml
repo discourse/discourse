@@ -511,6 +511,15 @@ da:
             ip_address:
               blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
               max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
+        user_password:
+          attributes:
+            password:
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              same_as_username: "er det samme som dit brugernavn. Brug venligst en mere sikker adgangskode."
+              same_as_email: "er det samme som din email. Brug venligst en mere sikker adgangskode."
+              same_as_current: "er det samme som din nuværende adgangskode."
+              same_as_name: "er det samme som dit navn."
+              unique_characters: "har for mange af de samme tegn. Brug venligst en mere sikker adgangskode."
         user_profile:
           attributes:
             featured_topic_id:
@@ -956,7 +965,7 @@ da:
         tl4_reached: "Nået TL4"
       yaxis: "Dag"
     consolidated_page_views:
-      title: "Konsoliderede Sidevisninger"
+      title_legacy: "Konsoliderede Sidevisninger"
       xaxis:
         page_view_crawler: "Crawlere"
         page_view_anon: "Anonyme brugere"
@@ -1119,6 +1128,9 @@ da:
       xaxis: "Dag"
       yaxis: "Totalt antal Sidevisninger"
       description: "Antal nye sidevisninger fra alle besøgende."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal Sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Logged in Sidevisninger"
       xaxis: "Dag"
@@ -1500,7 +1512,6 @@ da:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     reset_bounce_score_after_days: "Nulstil automatisk bounce score efter X dage."
     blocked_attachment_filenames: "Liste over nøgleord, der bruges til at blokere vedhæftede filer baseret på filavnet."
-    forwarded_emails_behaviour: "Sådan behandles en videresendt e-mail til Discourse"
     always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
     trim_incoming_emails: "Beskær en del af de indgående e-mails, der ikke er relevante."
     delete_rejected_email_after_days: "Slet afviste e-mails, der er ældre end (n) dage."

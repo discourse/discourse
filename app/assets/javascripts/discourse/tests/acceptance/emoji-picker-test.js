@@ -36,7 +36,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await fillIn(".emoji-picker input.filter", "guitar");
 
-    assert.strictEqual(query(`.emoji-picker .results img`).title, "guitar");
+    assert.dom(".emoji-picker .results img").hasAttribute("title", "guitar");
   });
 
   test("emoji picker triggers event when picking emoji", async function (assert) {
@@ -90,10 +90,9 @@ acceptance("EmojiPicker", function (needs) {
       "it shows recent selected emoji"
     );
 
-    assert.ok(
-      exists('.emoji-picker .category-button[data-section="recent"]'),
-      "it shows recent category icon"
-    );
+    assert
+      .dom('.emoji-picker .category-button[data-section="recent"]')
+      .exists("it shows recent category icon");
 
     await click(".emoji-picker .trash-recent");
 
@@ -104,15 +103,13 @@ acceptance("EmojiPicker", function (needs) {
       "it has cleared recent emojis"
     );
 
-    assert.notOk(
-      exists('.emoji-picker .section[data-section="recent"]'),
-      "it hides recent section"
-    );
+    assert
+      .dom('.emoji-picker .section[data-section="recent"]')
+      .doesNotExist("it hides recent section");
 
-    assert.notOk(
-      exists('.emoji-picker .category-button[data-section="recent"]'),
-      "it hides recent category icon"
-    );
+    assert
+      .dom('.emoji-picker .category-button[data-section="recent"]')
+      .doesNotExist("it hides recent category icon");
   });
 
   test("emoji picker correctly orders recently used emojis", async function (assert) {
@@ -174,10 +171,9 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click("button.emoji.btn");
 
-    assert.ok(
-      exists(".emoji-picker button.diversity-scale.medium-dark .d-icon"),
-      "it stores diversity scale"
-    );
+    assert
+      .dom(".emoji-picker button.diversity-scale.medium-dark .d-icon")
+      .exists("it stores diversity scale");
   });
 
   test("emoji can be selected with keyboard", async function (assert) {
@@ -267,7 +263,7 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
     await click("button.emoji.btn");
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
-    assert.notOk(exists(".emoji-picker"));
+    assert.dom(".emoji-picker").doesNotExist();
     assert.strictEqual(
       document.activeElement,
       document.querySelector("textarea"),

@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | button", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,10 +13,9 @@ module("Integration | Component | Widget | button", function (hooks) {
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
     assert.ok(exists("button.btn.btn-icon.no-text"), "it has all the classes");
-    assert.ok(
-      exists("button .d-icon.d-icon-far-face-smile"),
-      "it has the icon"
-    );
+    assert
+      .dom("button .d-icon.d-icon-far-face-smile")
+      .exists("it has the icon");
   });
 
   test("icon and text button", async function (assert) {
@@ -53,10 +52,7 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
-    assert.strictEqual(
-      query("button span.d-button-label").innerText,
-      "foo bar"
-    );
+    assert.dom("button span.d-button-label").hasText("foo bar");
   });
 
   test("translatedTitle", async function (assert) {
@@ -64,7 +60,7 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
-    assert.strictEqual(query("button").title, "foo bar");
+    assert.dom("button").hasAttribute("title", "foo bar");
   });
 
   test("translatedLabel skips no-text class in icon", async function (assert) {

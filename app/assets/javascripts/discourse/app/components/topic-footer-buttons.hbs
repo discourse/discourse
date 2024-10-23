@@ -91,20 +91,20 @@
 <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
 {{#if this.showNotificationsButton}}
+  <TopicNotificationsButton
+    @topic={{this.topic}}
+    class="notifications-button-footer"
+  />
+
   {{#if this.showNotificationUserTip}}
     <UserTip
       @id="topic_notification_levels"
-      @triggerSelector=".notifications-button"
+      @triggerSelector=".notifications-button-footer details"
       @titleText={{i18n "user_tips.topic_notification_levels.title"}}
       @contentText={{i18n "user_tips.topic_notification_levels.content"}}
-      @priority={{20}}
+      @priority={{800}}
     />
   {{/if}}
-
-  <TopicNotificationsButton
-    @notificationLevel={{this.topic.details.notification_level}}
-    @topic={{this.topic}}
-  />
 {{/if}}
 
 <PluginOutlet
