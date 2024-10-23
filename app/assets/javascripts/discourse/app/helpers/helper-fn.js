@@ -4,15 +4,16 @@ import { registerDestructor } from "@ember/destroyable";
 export default function helperFn(callback) {
   return class extends Helper {
     compute(positional, named) {
-      const cleanup = (fn) => registerDestructor(this, fn);
+      if (positional.length) {
+        throw new Error(
+          "Positional arguments are not permitted for helperFn-defined helpers. Use named arguments instead."
+        );
+      }
+      const on = {
+        cleanup: (fn) => registerDestructor(this, fn),
+      };
 
-      return callback({
-        positional,
-        named,
-        on: {
-          cleanup,
-        },
-      });
+      return callback(named, on);
     }
   };
 }
