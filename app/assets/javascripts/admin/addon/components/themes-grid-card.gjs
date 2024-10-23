@@ -139,22 +139,13 @@ export default class ThemeCard extends Component {
         </div>
         <div class="theme-card__footer">
           <DButton
-            @action={{this.setDefault}}
+            @translatedLabel={{i18n "admin.customize.theme.edit"}}
+            @route="adminCustomizeThemes.show"
+            @routeModels={{this.themeRouteModels}}
+            @class="btn-primary theme-card__button"
             @preventFocus={{true}}
-            @icon={{if @theme.default "far-check-square" "far-square"}}
-            @class={{concatClass
-              "theme-card__button"
-              (if @theme.default "btn-primary" "btn-default")
-            }}
-            @translatedLabel={{i18n
-              (if
-                @theme.default
-                "admin.customize.theme.default_theme"
-                "admin.customize.theme.set_default_theme"
-              )
-            }}
-            @disabled={{@theme.default}}
           />
+
           <div class="theme-card__footer-actions">
             <DMenu
               @identifier="theme-card__footer-menu"
@@ -187,12 +178,22 @@ export default class ThemeCard extends Component {
                     solutions for broken, disabled states }}
                   <dropdown.item>
                     <DButton
-                      @translatedLabel={{i18n "admin.customize.theme.edit"}}
-                      @route="adminCustomizeThemes.show"
-                      @routeModels={{this.themeRouteModels}}
-                      @icon="cog"
-                      @class="btn-transparent theme-card__button"
+                      @action={{this.setDefault}}
                       @preventFocus={{true}}
+                      @icon={{if
+                        @theme.default
+                        "far-check-square"
+                        "far-square"
+                      }}
+                      @class="theme-card__button"
+                      @translatedLabel={{i18n
+                        (if
+                          @theme.default
+                          "admin.customize.theme.default_theme"
+                          "admin.customize.theme.set_default_theme"
+                        )
+                      }}
+                      @disabled={{@theme.default}}
                     />
                   </dropdown.item>
                   <dropdown.item>
