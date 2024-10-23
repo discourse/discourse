@@ -86,7 +86,7 @@ export default class UserTip extends Component {
   }
 
   <template>
-    {{this.registerTip id=this.args.id priority=this.args.priority}}
+    {{this.registerTip id=@id priority=@priority}}
     {{#if this.shouldRenderTip}}
       <span {{this.tip}}></span>
     {{/if}}
