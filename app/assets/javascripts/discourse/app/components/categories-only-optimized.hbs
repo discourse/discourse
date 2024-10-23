@@ -4,7 +4,9 @@
 >
   {{#if this.categories}}
     {{#if this.filteredCategories}}
-      <table class="category-list {{if this.showTopics 'with-topics'}}">
+      <table
+        class="category-list optimized {{if this.showTopics 'with-topics'}}"
+      >
         <thead>
           <tr>
             <th class="category"><span
@@ -42,7 +44,7 @@
           {{/if}}
         </a>
         <table
-          class="category-list
+          class="category-list optimized
             {{if this.showTopics 'with-topics'}}
             {{unless this.showMutedCategories 'hidden'}}"
         >

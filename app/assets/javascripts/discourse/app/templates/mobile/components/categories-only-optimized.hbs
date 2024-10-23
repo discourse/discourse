@@ -1,6 +1,6 @@
 {{#if this.categories}}
   {{#if this.filteredCategories}}
-    <div class="category-list {{if this.showTopics 'with-topics'}}">
+    <div class="category-list optimized {{if this.showTopics 'with-topics'}}">
       {{#each this.filteredCategories as |c|}}
         <ParentCategoryRowOptimized
           @category={{c}}
@@ -19,7 +19,7 @@
         {{/if}}
       </a>
       <div
-        class="category-list
+        class="category-list optimized
           {{if this.showTopics 'with-topics'}}
           {{unless this.showMutedCategories 'hidden'}}"
       >

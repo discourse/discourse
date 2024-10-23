@@ -23,28 +23,7 @@
             </td>
           </tr>
         {{/if}}
-        {{#unless this.isMuted}}
-          {{#if this.showTopics}}
-            {{#each this.category.featuredTopics as |t|}}
-              <MobileCategoryTopic @topic={{t}} />
-            {{/each}}
-          {{/if}}
-        {{/unless}}
       </tbody>
     </table>
-    <footer class="clearfix category-topics-count">
-      <div class="category-stat">
-        <a href={{this.category.url}}>
-          {{html-safe this.category.statTotal}}
-        </a>
-      </div>
-      {{#unless this.category.pickAll}}
-        <div class="category-stat">
-          <a href={{this.category.url}}>
-            {{html-safe this.category.stat}}
-          </a>
-        </div>
-      {{/unless}}
-    </footer>
   </div>
 {{/unless}}
