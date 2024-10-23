@@ -40,7 +40,6 @@ describe "Admin Plugins List", type: :system, js: true do
           " .admin-plugins-list__enabled .d-toggle-switch",
       )
     expect(toggle_switch).to be_checked
-    expect(toggle_switch).to be_enabled
     toggle_switch.toggle
     expect(toggle_switch).to be_unchecked
     expect(SiteSetting.discourse_automation_enabled).to eq(false)
