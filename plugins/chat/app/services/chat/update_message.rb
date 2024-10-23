@@ -26,7 +26,7 @@ module Chat
       attribute :process_inline, :boolean, default: -> { Rails.env.test? }
     end
 
-    contract do
+    params do
       attribute :message_id, :string
       attribute :message, :string
       attribute :upload_ids, :array
@@ -55,7 +55,7 @@ module Chat
       message.chat_channel.add(guardian.user) if guardian.user.bot?
     end
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       ::Chat::Message.includes(
         :chat_mentions,
         :bookmarks,
@@ -70,16 +70,16 @@ module Chat
           chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
         ],
         user: :user_status,
-      ).find_by(id: contract.message_id)
+      ).find_by(id: params[:message_id])
     end
 
     def fetch_membership(guardian:, message:)
       message.chat_channel.membership_for(guardian.user)
     end
 
-    def fetch_uploads(contract:, guardian:)
+    def fetch_uploads(params:, guardian:)
       return if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: contract.upload_ids)
+      guardian.user.uploads.where(id: params[:upload_ids])
     end
 
     def can_modify_channel_message(guardian:, message:)
@@ -90,21 +90,20 @@ module Chat
       guardian.can_edit_chat?(message)
     end
 
-    def clean_message(contract:, options:)
-      contract.message =
-        TextCleaner.clean(
-          contract.message,
-          strip_zero_width_spaces: true,
-          strip_whitespaces: options.strip_whitespaces,
-        )
+    def clean_message(params:, options:)
+      params[:message] = TextCleaner.clean(
+        params[:message],
+        strip_zero_width_spaces: true,
+        strip_whitespaces: options.strip_whitespaces,
+      )
     end
 
-    def modify_message(contract:, message:, guardian:, uploads:)
-      message.message = contract.message
+    def modify_message(params:, message:, guardian:, uploads:)
+      message.message = params[:message]
       message.last_editor_id = guardian.user.id
       message.cook
 
-      return if uploads&.size != contract.upload_ids.to_a.size
+      return if uploads&.size != params[:upload_ids].to_a.size
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
@@ -157,7 +156,7 @@ module Chat
       chars_edited > max_edited_chars
     end
 
-    def publish(message:, guardian:, contract:, options:)
+    def publish(message:, guardian:, options:)
       edit_timestamp = context[:revision]&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)

@@ -11,7 +11,7 @@ RSpec.describe Service::StepsInspector do
 
     model :model
     policy :policy
-    contract do
+    params do
       attribute :parameter
 
       validates :parameter, presence: true
@@ -45,7 +45,7 @@ RSpec.describe Service::StepsInspector do
         [1/8] [options] 'default' ✅
         [2/8] [model] 'model' ✅
         [3/8] [policy] 'policy' ✅
-        [4/8] [contract] 'default' ✅
+        [4/8] [params] 'default' ✅
         [5/8] [transaction]
         [6/8]   [step] 'in_transaction_step_1' ✅
         [7/8]   [step] 'in_transaction_step_2' ✅
@@ -68,7 +68,7 @@ RSpec.describe Service::StepsInspector do
         [1/8] [options] 'default' ✅
         [2/8] [model] 'model' ❌
         [3/8] [policy] 'policy'
-        [4/8] [contract] 'default'
+        [4/8] [params] 'default'
         [5/8] [transaction]
         [6/8]   [step] 'in_transaction_step_1'
         [7/8]   [step] 'in_transaction_step_2'
@@ -91,7 +91,7 @@ RSpec.describe Service::StepsInspector do
         [1/8] [options] 'default' ✅
         [2/8] [model] 'model' ✅
         [3/8] [policy] 'policy' ❌
-        [4/8] [contract] 'default'
+        [4/8] [params] 'default'
         [5/8] [transaction]
         [6/8]   [step] 'in_transaction_step_1'
         [7/8]   [step] 'in_transaction_step_2'
@@ -100,7 +100,7 @@ RSpec.describe Service::StepsInspector do
       end
     end
 
-    context "when the contract step is failing" do
+    context "when the params step is failing" do
       let(:parameter) { nil }
 
       it "shows the failing step" do
@@ -108,7 +108,7 @@ RSpec.describe Service::StepsInspector do
         [1/8] [options] 'default' ✅
         [2/8] [model] 'model' ✅
         [3/8] [policy] 'policy' ✅
-        [4/8] [contract] 'default' ❌
+        [4/8] [params] 'default' ❌
         [5/8] [transaction]
         [6/8]   [step] 'in_transaction_step_1'
         [7/8]   [step] 'in_transaction_step_2'
@@ -131,7 +131,7 @@ RSpec.describe Service::StepsInspector do
         [1/8] [options] 'default' ✅
         [2/8] [model] 'model' ✅
         [3/8] [policy] 'policy' ✅
-        [4/8] [contract] 'default' ✅
+        [4/8] [params] 'default' ✅
         [5/8] [transaction]
         [6/8]   [step] 'in_transaction_step_1' ✅
         [7/8]   [step] 'in_transaction_step_2' ❌
@@ -149,7 +149,7 @@ RSpec.describe Service::StepsInspector do
           [1/8] [options] 'default' ✅
           [2/8] [model] 'model' ✅
           [3/8] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
-          [4/8] [contract] 'default' ✅
+          [4/8] [params] 'default' ✅
           [5/8] [transaction]
           [6/8]   [step] 'in_transaction_step_1' ✅
           [7/8]   [step] 'in_transaction_step_2' ✅
@@ -173,7 +173,7 @@ RSpec.describe Service::StepsInspector do
           [1/8] [options] 'default' ✅
           [2/8] [model] 'model' ✅
           [3/8] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
-          [4/8] [contract] 'default'
+          [4/8] [params] 'default'
           [5/8] [transaction]
           [6/8]   [step] 'in_transaction_step_1'
           [7/8]   [step] 'in_transaction_step_2'
@@ -223,7 +223,7 @@ RSpec.describe Service::StepsInspector do
       end
     end
 
-    context "when the contract step is failing" do
+    context "when the params step is failing" do
       let(:parameter) { nil }
 
       it "returns an error related to the contract" do

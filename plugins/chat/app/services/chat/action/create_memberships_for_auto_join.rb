@@ -4,7 +4,7 @@ module Chat
   module Action
     class CreateMembershipsForAutoJoin < Service::ActionBase
       option :channel
-      option :contract
+      option :params
 
       def call
         ::DB.query_single(<<~SQL, query_args)
@@ -42,8 +42,8 @@ module Chat
       def query_args
         {
           chat_channel_id: channel.id,
-          start: contract.start_user_id,
-          end: contract.end_user_id,
+          start: params.start_user_id,
+          end: params.end_user_id,
           suspended_until: Time.zone.now,
           last_seen_at: 3.months.ago,
           channel_category: channel.category.id,
