@@ -32,7 +32,7 @@ class RemoteTheme < ActiveRecord::Base
   MAX_THEME_FILE_COUNT = 1024
   MAX_THEME_SIZE = 256.megabytes
   MAX_THEME_SCREENSHOT_FILE_SIZE = 1.megabyte
-  MAX_THEME_SCREENSHOT_DIMENSIONS = [2048, 1080]
+  MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160] # 4K resolution
   THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpg .jpeg .gif .png].freeze
 
   has_one :theme, autosave: false
@@ -272,60 +272,64 @@ class RemoteTheme < ActiveRecord::Base
       end
     end
 
-    theme_info["screenshots"] = Array.wrap(theme_info["screenshots"]).take(2)
-    theme_info["screenshots"].each_with_index do |relative_path, idx|
-      if path = importer.real_path(relative_path)
-        if !THEME_SCREENSHOT_ALLOWED_FILE_TYPES.include?(File.extname(path))
-          raise ImportError,
-                I18n.t(
-                  "themes.import_error.screenshot_invalid_type",
-                  file_name: File.basename(path),
-                  accepted_formats: THEME_SCREENSHOT_ALLOWED_FILE_TYPES.join(","),
-                )
-        end
+    # NOTE (martin): Until we are ready to roll this out more
+    # widely, let's avoid doing this work for most sites.
+    if SiteSetting.theme_download_screenshots
+      theme_info["screenshots"] = Array.wrap(theme_info["screenshots"]).take(2)
+      theme_info["screenshots"].each_with_index do |relative_path, idx|
+        if path = importer.real_path(relative_path)
+          if !THEME_SCREENSHOT_ALLOWED_FILE_TYPES.include?(File.extname(path))
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_type",
+                    file_name: File.basename(path),
+                    accepted_formats: THEME_SCREENSHOT_ALLOWED_FILE_TYPES.join(","),
+                  )
+          end
 
-        if File.size(path) > MAX_THEME_SCREENSHOT_FILE_SIZE
-          raise ImportError,
-                I18n.t(
-                  "themes.import_error.screenshot_invalid_size",
-                  file_name: File.basename(path),
-                  max_size:
-                    ActiveSupport::NumberHelper.number_to_human_size(
-                      MAX_THEME_SCREENSHOT_FILE_SIZE,
-                    ),
-                )
-        end
+          if File.size(path) > MAX_THEME_SCREENSHOT_FILE_SIZE
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_size",
+                    file_name: File.basename(path),
+                    max_size:
+                      ActiveSupport::NumberHelper.number_to_human_size(
+                        MAX_THEME_SCREENSHOT_FILE_SIZE,
+                      ),
+                  )
+          end
 
-        screenshot_width, screenshot_height = FastImage.size(path)
-        if (screenshot_width.nil? || screenshot_height.nil?) ||
-             screenshot_width > MAX_THEME_SCREENSHOT_DIMENSIONS[0] ||
-             screenshot_height > MAX_THEME_SCREENSHOT_DIMENSIONS[1]
-          raise ImportError,
-                I18n.t(
-                  "themes.import_error.screenshot_invalid_dimensions",
-                  file_name: File.basename(path),
-                  width: screenshot_width.to_i,
-                  height: screenshot_height.to_i,
-                  max_width: MAX_THEME_SCREENSHOT_DIMENSIONS[0],
-                  max_height: MAX_THEME_SCREENSHOT_DIMENSIONS[1],
-                )
-        end
+          screenshot_width, screenshot_height = FastImage.size(path)
+          if (screenshot_width.nil? || screenshot_height.nil?) ||
+               screenshot_width > MAX_THEME_SCREENSHOT_DIMENSIONS[0] ||
+               screenshot_height > MAX_THEME_SCREENSHOT_DIMENSIONS[1]
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_dimensions",
+                    file_name: File.basename(path),
+                    width: screenshot_width.to_i,
+                    height: screenshot_height.to_i,
+                    max_width: MAX_THEME_SCREENSHOT_DIMENSIONS[0],
+                    max_height: MAX_THEME_SCREENSHOT_DIMENSIONS[1],
+                  )
+          end
 
-        upload = create_upload(path, relative_path)
-        if !upload.errors.empty?
-          raise ImportError,
-                I18n.t(
-                  "themes.import_error.screenshot",
-                  errors: upload.errors.full_messages.join(","),
-                )
-        end
+          upload = create_upload(path, relative_path)
+          if !upload.errors.empty?
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot",
+                    errors: upload.errors.full_messages.join(","),
+                  )
+          end
 
-        updated_fields << theme.set_field(
-          target: :common,
-          name: "screenshot_#{idx + 1}",
-          type: :theme_screenshot_upload_var,
-          upload_id: upload.id,
-        )
+          updated_fields << theme.set_field(
+            target: :common,
+            name: "screenshot_#{idx + 1}",
+            type: :theme_screenshot_upload_var,
+            upload_id: upload.id,
+          )
+        end
       end
     end
 

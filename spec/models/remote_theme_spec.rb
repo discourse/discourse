@@ -358,7 +358,7 @@ RSpec.describe RemoteTheme do
       stub_const(RemoteTheme, "MAX_THEME_FILE_COUNT", 1) do
         expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
           RemoteTheme::ImportError,
-          I18n.t("themes.import_error.too_many_files", count: 15, limit: 1),
+          I18n.t("themes.import_error.too_many_files", count: 17, limit: 1),
         )
       end
     end
@@ -389,6 +389,8 @@ RSpec.describe RemoteTheme do
     end
 
     describe "screenshots" do
+      before { SiteSetting.theme_download_screenshots = true }
+
       it "fails if any of the provided screenshots is not an accepted file type" do
         stub_const(RemoteTheme, "THEME_SCREENSHOT_ALLOWED_FILE_TYPES", [".bmp"]) do
           expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
@@ -436,6 +438,32 @@ RSpec.describe RemoteTheme do
       end
 
       it "creates uploads and associated theme fields for all theme screenshots" do
+        FastImage
+          .stubs(:size)
+          .with { |arg| arg.match(%r{/screenshots/1\.jpeg}) }
+          .returns([800, 600])
+        FastImage
+          .stubs(:size)
+          .with { |arg| arg.match(%r{/screenshots/2\.jpeg}) }
+          .returns([1024, 768])
+
+        theme = RemoteTheme.import_theme(initial_repo_url)
+
+        screenshot_1 = theme.theme_fields.find_by(name: "screenshot_1")
+        screenshot_2 = theme.theme_fields.find_by(name: "screenshot_2")
+
+        expect(screenshot_1).to be_present
+        expect(screenshot_1.type_id).to eq(ThemeField.types[:theme_screenshot_upload_var])
+        expect(screenshot_2).to be_present
+        expect(screenshot_2.type_id).to eq(ThemeField.types[:theme_screenshot_upload_var])
+        expect(screenshot_1.upload).to be_present
+        expect(screenshot_2.upload).to be_present
+
+        expect(UploadReference.exists?(target: screenshot_1)).to eq(true)
+        expect(UploadReference.exists?(target: screenshot_2)).to eq(true)
+
+        expect(screenshot_1.upload.original_filename).to eq("1.jpeg")
+        expect(screenshot_2.upload.original_filename).to eq("2.jpeg")
       end
     end
   end
