@@ -139,7 +139,9 @@ class UserApiKeysController < ApplicationController
   def create_otp
     require_params_otp
 
-    raise Discourse::InvalidAccess if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+    if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])
+      raise Discourse::InvalidAccess
+    end
     raise Discourse::InvalidAccess unless meets_tl?
 
     public_key = OpenSSL::PKey::RSA.new(params[:public_key])

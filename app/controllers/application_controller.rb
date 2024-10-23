@@ -868,7 +868,7 @@ class ApplicationController < ActionController::Base
         return render plain: I18n.t("user_api_key.invalid_public_key")
       end
 
-      if UserApiKey.invalid_auth_redirect?(params[:auth_redirect])
+      if UserApiKeyClient.invalid_auth_redirect?(params[:auth_redirect])
         return render plain: I18n.t("user_api_key.invalid_auth_redirect")
       end
 

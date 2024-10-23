@@ -71,13 +71,6 @@ class UserApiKey < ActiveRecord::Base
     scopes.any? { |s| s.permits?(env) } || is_revoke_self_request?(env)
   end
 
-  def self.invalid_auth_redirect?(auth_redirect)
-    SiteSetting
-      .allowed_user_api_auth_redirects
-      .split("|")
-      .none? { |u| WildcardUrlChecker.check_url(u, auth_redirect) }
-  end
-
   private
 
   def revoke_self_matcher
