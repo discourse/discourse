@@ -1,24 +1,22 @@
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
 
-export default class FormTemplateFieldUpload extends Component.extend(
-  UppyUploadMixin
-) {
+export default class FormTemplateFieldUpload extends Component {
   @tracked uploadValue;
   @tracked uploadedFiles = [];
-  @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
+  @tracked fileUploadElementId = `${dasherize(this.args.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
   uppyUpload = new UppyUpload(getOwner(this), {
+    id: this.args.id,
     type: "composer",
     uploadDone: this.uploadDone,
   });
@@ -44,7 +42,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
    */
   isUploadedFileAllowed(file) {
     // same logic from PickFilesButton._hasAcceptedExtensionOrType
-    const fileTypes = this.attributes.file_types;
+    const fileTypes = this.args.attributes.file_types;
     const extension = file.name.split(".").pop();
 
     return (
@@ -57,7 +55,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
   @bind
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
-    if (!this.attributes.allow_multiple && this.uploadValue) {
+    if (!this.args.attributes.allow_multiple && this.uploadValue) {
       this.uploadedFiles = [];
       this.uploadValue = "";
     }
