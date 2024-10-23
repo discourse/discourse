@@ -1,29 +1,36 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import icon from "discourse-common/helpers/d-icon";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin
 ) {
   @tracked uploadValue;
   @tracked uploadedFiles = [];
-  @tracked disabled = this.uploadingOrProcessing;
   @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
-  type = "composer";
+  uppyUpload = new UppyUpload(getOwner(this), {
+    type: "composer",
+    uploadDone: this.uploadDone,
+  });
 
-  @computed("uploadingOrProcessing")
   get uploadStatusLabel() {
-    return this.uploadingOrProcessing
+    return this.uppyUpload.uploading || this.uppyUpload.processing
       ? "form_templates.upload_field.uploading"
       : "form_templates.upload_field.upload";
+  }
+
+  get disabled() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   /**
@@ -47,6 +54,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
     );
   }
 
+  @bind
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
     if (!this.attributes.allow_multiple && this.uploadValue) {
@@ -102,6 +110,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
       <input type="hidden" name={{@id}} value={{this.uploadValue}} />
 
       <PickFilesButton
+        @registerFileInput={{this.uppyUpload.setup}}
         @fileInputClass="form-template-field__upload"
         @fileInputId={{this.fileUploadElementId}}
         @allowMultiple={{@attributes.allow_multiple}}
