@@ -1,48 +1,31 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
-import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import Uppy from "@uppy/core";
-import XHRUpload from "@uppy/xhr-upload";
 import { isVideo } from "discourse/lib/uploads";
-import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import getUrl from "discourse-common/helpers/get-url";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import I18n from "discourse-i18n";
 
-// It is not ideal that this is a class extending a mixin, but in the case
-// where this is needed (a second background uppy uploader on a class that
-// already has an uppyInstance) then it is acceptable for now.
-//
 // Ideally, this would be refactored into an uppy postprocessor and support
-// for that would be added to the ExtendableUploader. Generally, we want to
-// move away from these Mixins in future.
+// for that would be added to the ExtendableUploader.
 //
 // Video thumbnail is attached to the post/topic here:
 //
 // https://github.com/discourse/discourse/blob/110a3025dbf5c7205cec498c7d83dc258d994cfe/app/models/post.rb#L1013-L1035
-export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
-  UppyUploadMixin
-) {
+export default class ComposerVideoThumbnailUppy {
   @service dialog;
   @service siteSettings;
   @service session;
+  @service capabilities;
 
-  @tracked uploading;
-
-  uploadRootPath = "/uploads";
-  uploadTargetBound = false;
-  useUploadPlaceholders = true;
-  capabilities = null;
-  id = "composer-video";
-  uploadDone = () => {};
+  @tracked _uppyUpload;
 
   constructor(owner) {
-    super(...arguments);
-    this.capabilities = owner.lookup("service:capabilities");
     setOwner(this, owner);
-    this.init();
+  }
+
+  get uploading() {
+    this._uppyUpload.uploading;
   }
 
   generateVideoThumbnail(videoFile, uploadUrl, callback) {
@@ -109,67 +92,35 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
         if (!isEmpty) {
           // upload video thumbnail
           canvas.toBlob((blob) => {
-            this._uppyInstance = new Uppy({
+            this._uppyUpload = new UppyUpload(getOwner(this), {
               id: "video-thumbnail",
-              meta: {
+              type: "thumbnail",
+              additionalParams: {
                 videoSha1,
-                upload_type: "thumbnail",
               },
-              autoProceed: true,
+              uploadDone() {
+                callback();
+              },
             });
+            this._uppyUpload.setup();
 
-            if (this.siteSettings.enable_upload_debug_mode) {
-              this.uppyUpload.uppyWrapper.debug.instrumentUploadTimings(
-                this._uppyInstance
-              );
-            }
+            this._uppyUpload.uppyWrapper.uppyInstance.on(
+              "upload-error",
+              (file, error, response) => {
+                let message = I18n.t("wizard.upload_error");
+                if (response.body.errors) {
+                  message = response.body.errors.join("\n");
+                }
 
-            if (this.siteSettings.enable_direct_s3_uploads) {
-              new UppyS3Multipart(getOwner(this), {
-                uploadRootPath: this.uploadRootPath,
-                uppyWrapper: this.uppyUpload.uppyWrapper,
-                errorHandler: this._handleUploadError,
-              }).apply(this._uppyInstance);
-            } else {
-              this._uppyInstance.use(XHRUpload, {
-                endpoint:
-                  getUrl("/uploads") +
-                  ".json?client_id=" +
-                  this.messageBus?.clientId,
-                headers: () => ({
-                  "X-CSRF-Token": this.session.csrfToken,
-                }),
-              });
-            }
-
-            this._uppyInstance.on("upload", () => {
-              this.uploading = true;
-            });
-
-            this._uppyInstance.on("upload-success", () => {
-              this.uploading = false;
-              callback();
-            });
-
-            this._uppyInstance.on("upload-error", (file, error, response) => {
-              let message = I18n.t("wizard.upload_error");
-              if (response.body.errors) {
-                message = response.body.errors.join("\n");
+                // eslint-disable-next-line no-console
+                console.error(message);
+                callback();
               }
-
-              // eslint-disable-next-line no-console
-              console.error(message);
-              this.uploading = false;
-              callback();
-            });
+            );
 
             try {
-              this._uppyInstance.addFile({
-                source: `${this.id}-video-thumbnail`,
-                name: `${videoSha1}`,
-                type: blob.type,
-                data: blob,
-              });
+              blob.name = `${videoSha1}.png`;
+              this._uppyUpload.addFiles(blob);
             } catch (err) {
               warn(`error adding files to uppy: ${err}`, {
                 id: "discourse.upload.uppy-add-files-error",
@@ -177,7 +128,6 @@ export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
             }
           });
         } else {
-          this.uploading = false;
           callback();
         }
       }, 100);
