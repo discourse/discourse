@@ -215,7 +215,7 @@ class ChatSetupInit {
 
 export default {
   name: "chat-setup",
-  before: "hashtag-css-generator",
+
   initialize(owner) {
     this.instance = new ChatSetupInit(owner);
   },
