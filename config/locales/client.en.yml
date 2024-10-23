@@ -5472,6 +5472,8 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
+          category_experts_approved: "Post marked as category experts post"
+          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
