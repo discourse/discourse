@@ -13,19 +13,18 @@ export default class ChatChannelUnreadIndicator extends Component {
       this.args.channel.tracking.unreadCount > 0 ||
       // We want to do this so we don't show a blue dot if the user is inside
       // the channel and a new unread thread comes in.
-      (this.chat.activeChannel?.id !== this.args.channel.id &&
+      (this.args.channel.isCategoryChannel && this.chat.activeChannel?.id !== this.args.channel.id &&
         this.args.channel.unreadThreadsCountSinceLastViewed > 0)
     );
   }
 
   get unreadCount() {
-    if (this.#hasChannelMentions()) {
-      return this.args.channel.tracking.mentionCount;
+    let totalUnreads = this.args.channel.tracking.unreadCount;
+    if(this.isUrgent) {
+      return this.args.channel.tracking.mentionCount + this.args.channel.tracking.watchedThreadsUnreadCount + totalUnreads;
     }
-    if (this.#hasWatchedThreads()) {
-      return this.args.channel.tracking.watchedThreadsUnreadCount;
-    }
-    return this.args.channel.tracking.unreadCount;
+
+    return totalUnreads;
   }
 
   get isUrgent() {

@@ -74,7 +74,7 @@ export default {
             }
 
             get suffixValue() {
-              return chatChannelsManager.publicMessageChannels.some(
+              return chatChannelsManager.allChannels.some(
                 (channel) => channel.unreadThreadsCount > 0
               )
                 ? "circle"
