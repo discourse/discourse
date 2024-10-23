@@ -200,12 +200,10 @@ export default class UppyUpload {
       },
     });
 
-    if (this.config.uploadDropTargetOptions) {
+    const resolvedDropTargetOptions = this.#resolvedDropTargetOptions;
+    if (resolvedDropTargetOptions) {
       // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
-      this.uppyWrapper.uppyInstance.use(
-        DropTarget,
-        this.config.uploadDropTargetOptions
-      );
+      this.uppyWrapper.uppyInstance.use(DropTarget, resolvedDropTargetOptions);
     }
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
@@ -530,6 +528,14 @@ export default class UppyUpload {
       return this.config.additionalParams();
     } else {
       return this.config.additionalParams;
+    }
+  }
+
+  get #resolvedDropTargetOptions() {
+    if (typeof this.config.uploadDropTargetOptions === "function") {
+      return this.config.uploadDropTargetOptions();
+    } else {
+      return this.config.uploadDropTargetOptions;
     }
   }
 
