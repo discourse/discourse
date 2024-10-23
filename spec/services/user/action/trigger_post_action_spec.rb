@@ -2,13 +2,13 @@
 
 RSpec.describe User::Action::TriggerPostAction do
   describe ".call" do
-    subject(:action) { described_class.call(guardian:, post:, contract:) }
+    subject(:action) { described_class.call(guardian:, post:, params:) }
 
     fab!(:post)
     fab!(:admin)
 
     let(:guardian) { admin.guardian }
-    let(:contract) { User::Suspend::Contract.new(post_action:, post_edit:) }
+    let(:params) { User::Suspend::Contract.new(post_action:, post_edit:) }
     let(:post_action) { nil }
     let(:post_edit) { nil }
 

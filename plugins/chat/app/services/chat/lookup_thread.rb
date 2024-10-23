@@ -17,7 +17,7 @@ module Chat
     #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :thread_id, :integer
       attribute :channel_id, :integer
 
@@ -31,12 +31,12 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
+    def fetch_thread(params:)
       Chat::Thread.includes(
         :channel,
         original_message_user: :user_status,
         original_message: :chat_webhook_event,
-      ).find_by(id: contract.thread_id, channel_id: contract.channel_id)
+      ).find_by(id: params[:thread_id], channel_id: params[:channel_id])
     end
 
     def invalid_access(guardian:, thread:)

@@ -21,7 +21,7 @@ module Chat
     #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :limit, :integer
       attribute :offset, :integer
     end
@@ -35,12 +35,12 @@ module Chat
 
     private
 
-    def set_limit(contract:)
-      context[:limit] = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+    def set_limit(params:)
+      context[:limit] = (params[:limit] || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
-    def set_offset(contract:)
-      context[:offset] = [contract.offset || 0, 0].max
+    def set_offset(params:)
+      context[:offset] = [params[:offset] || 0, 0].max
     end
 
     def fetch_threads(guardian:)
@@ -131,7 +131,7 @@ module Chat
       context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url(contract:)
+    def build_load_more_url
       load_more_params = { limit: context.limit, offset: context.offset + context.limit }.to_query
 
       context[:load_more_url] = ::URI::HTTP.build(

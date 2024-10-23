@@ -31,7 +31,7 @@ module Chat
 
     policy :public_channels_enabled
     policy :can_create_channel
-    contract do
+    params do
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
@@ -65,22 +65,18 @@ module Chat
       guardian.can_create_chat_channel?
     end
 
-    def fetch_category(contract:)
-      Category.find_by(id: contract.category_id)
+    def fetch_category(params:)
+      Category.find_by(id: params[:category_id])
     end
 
-    def category_channel_does_not_exist(category:, contract:)
-      !Chat::Channel.exists?(chatable: category, name: contract.name)
+    def category_channel_does_not_exist(category:, params:)
+      !Chat::Channel.exists?(chatable: category, name: params[:name])
     end
 
-    def create_channel(category:, contract:)
+    def create_channel(category:, params:)
       category.create_chat_channel(
-        name: contract.name,
-        slug: contract.slug,
-        description: contract.description,
         user_count: 1,
-        auto_join_users: contract.auto_join_users,
-        threading_enabled: contract.threading_enabled,
+        **params.slice(:name, :slug, :description, :auto_join_users, :threading_enabled),
       )
     end
 

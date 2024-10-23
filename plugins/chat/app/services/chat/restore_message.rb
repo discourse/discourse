@@ -18,7 +18,7 @@ module Chat
     #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :message_id, :integer
       attribute :channel_id, :integer
 
@@ -36,11 +36,11 @@ module Chat
 
     private
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       Chat::Message
         .with_deleted
         .includes(chat_channel: :chatable)
-        .find_by(id: contract.message_id, chat_channel_id: contract.channel_id)
+        .find_by(id: params[:message_id], chat_channel_id: params[:channel_id])
     end
 
     def invalid_access(guardian:, message:)

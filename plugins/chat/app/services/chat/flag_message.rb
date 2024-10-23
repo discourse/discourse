@@ -27,7 +27,7 @@ module Chat
     #   @option params [Boolean] :queue_for_review (optional) Adds a special reason to the reviewable score and creates the reviewable using the force_review option.
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :message_id, :integer
       attribute :channel_id, :integer
       attribute :flag_type_id, :integer
@@ -46,36 +46,29 @@ module Chat
 
     private
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       Chat::Message.includes(:chat_channel, :revisions).find_by(
-        id: contract.message_id,
-        chat_channel_id: contract.channel_id,
+        id: params[:message_id],
+        chat_channel_id: params[:channel_id],
       )
     end
 
-    def can_flag_message_in_channel(guardian:, contract:, message:)
+    def can_flag_message_in_channel(guardian:, params:, message:)
       guardian.can_join_chat_channel?(message.chat_channel) &&
         guardian.can_flag_chat_message?(message) &&
         guardian.can_flag_message_as?(
           message,
-          contract.flag_type_id,
-          {
-            queue_for_review: contract.queue_for_review,
-            take_action: contract.take_action,
-            is_warning: contract.is_warning,
-          },
+          params[:flag_type_id],
+          params.slice(:queue_for_review, :take_action, :is_warning),
         )
     end
 
-    def flag_message(message:, contract:, guardian:)
+    def flag_message(message:, params:, guardian:)
       Chat::ReviewQueue.new.flag_message(
         message,
         guardian,
-        contract.flag_type_id,
-        message: contract.message,
-        is_warning: contract.is_warning,
-        take_action: contract.take_action,
-        queue_for_review: contract.queue_for_review,
+        params[:flag_type_id],
+        **params.slice(:message, :is_warning, :take_action, :queue_for_review),
       )
     end
   end

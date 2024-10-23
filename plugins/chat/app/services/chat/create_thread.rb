@@ -17,7 +17,7 @@ module Chat
     #   @option params [String,nil] :title
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :original_message_id, :integer
       attribute :channel_id, :integer
       attribute :title, :string
@@ -39,14 +39,14 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.find_by(id: params[:channel_id])
     end
 
-    def fetch_original_message(channel:, contract:)
+    def fetch_original_message(channel:, params:)
       ::Chat::Message.find_by(
-        id: contract.original_message_id,
-        chat_channel_id: contract.channel_id,
+        id: params[:original_message_id],
+        chat_channel_id: params[:channel_id],
       )
     end
 
@@ -58,33 +58,33 @@ module Chat
       channel.threading_enabled
     end
 
-    def find_or_create_thread(channel:, original_message:, contract:)
+    def find_or_create_thread(channel:, original_message:, params:)
       if original_message.thread_id.present?
         return context[:thread] = ::Chat::Thread.find_by(id: original_message.thread_id)
       end
 
       context[:thread] = channel.threads.create(
-        title: contract.title,
+        title: params[:title],
         original_message: original_message,
         original_message_user: original_message.user,
       )
       fail!(context.thread.errors.full_messages.join(", ")) if context.thread.invalid?
     end
 
-    def associate_thread_to_message(original_message:)
-      original_message.update(thread: context.thread)
+    def associate_thread_to_message(original_message:, thread:)
+      original_message.update(thread:)
     end
 
-    def fetch_membership(guardian:)
-      context[:membership] = context.thread.membership_for(guardian.user)
+    def fetch_membership(guardian:, thread:)
+      context[:membership] = thread.membership_for(guardian.user)
     end
 
-    def publish_new_thread(channel:, original_message:)
-      ::Chat::Publisher.publish_thread_created!(channel, original_message, context.thread.id)
+    def publish_new_thread(channel:, original_message:, thread:)
+      ::Chat::Publisher.publish_thread_created!(channel, original_message, thread.id)
     end
 
-    def trigger_chat_thread_created_event
-      ::DiscourseEvent.trigger(:chat_thread_created, context.thread)
+    def trigger_chat_thread_created_event(thread:)
+      ::DiscourseEvent.trigger(:chat_thread_created, thread)
     end
   end
 end

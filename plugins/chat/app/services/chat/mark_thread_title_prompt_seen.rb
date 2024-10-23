@@ -24,7 +24,7 @@ module Chat
     #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :thread_id, :integer
       attribute :channel_id, :integer
 
@@ -37,8 +37,8 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
-      Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
+    def fetch_thread(params:)
+      Chat::Thread.find_by(id: params[:thread_id], channel_id: params[:channel_id])
     end
 
     def can_view_channel(guardian:, thread:)
@@ -49,7 +49,7 @@ module Chat
       thread.channel.threading_enabled
     end
 
-    def create_or_update_membership(thread:, guardian:, contract:)
+    def create_or_update_membership(thread:, guardian:)
       membership = thread.membership_for(guardian.user)
       membership =
         thread.add(
