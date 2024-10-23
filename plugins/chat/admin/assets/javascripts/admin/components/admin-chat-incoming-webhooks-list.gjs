@@ -83,7 +83,7 @@ export default class AdminChatIncomingWebhooksList extends Component {
               <div class="d-admin-row__mobile-label">
                 {{i18n "chat.incoming_webhooks.description"}}
               </div>
-              
+
             </td> --}}
             <td class="d-admin-row__detail">
               <div class="d-admin-row__mobile-label">
