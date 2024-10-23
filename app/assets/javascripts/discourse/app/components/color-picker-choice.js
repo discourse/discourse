@@ -9,7 +9,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 @tagName("button")
-@attributeBindings("style", "title")
+@attributeBindings("style", "title", "ariaLabel:aria-label")
 @classNameBindings(":colorpicker", "isUsed:used-color:unused-color")
 export default class ColorPickerChoice extends Component {
   @discourseComputed("color", "usedColors")

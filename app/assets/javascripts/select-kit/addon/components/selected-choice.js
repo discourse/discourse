@@ -34,6 +34,9 @@ export default class SelectedChoice extends Component.extend(UtilsMixin) {
 
   @computed("item")
   get readOnly() {
+    if (typeof this.item === "string") {
+      return this.mandatoryValuesArray.includes(this.item);
+    }
     return this.mandatoryValuesArray.includes(this.item.id);
   }
 }

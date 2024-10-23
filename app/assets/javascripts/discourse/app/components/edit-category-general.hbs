@@ -67,28 +67,38 @@
       {{html-safe this.categoryBadgePreview}}
 
       <section class="field">
-        <span class="color-title">{{i18n "category.background_color"}}:</span>
+        <span id="background-color-label" class="color-title">{{i18n
+            "category.background_color"
+          }}:</span>
         <div class="colorpicker-wrapper">
           <ColorInput
             @hexValue={{this.category.color}}
             @valid={{this.category.colorValid}}
+            @ariaLabelledby="background-color-label"
           />
           <ColorPicker
             @colors={{this.backgroundColors}}
             @usedColors={{this.usedBackgroundColors}}
             @value={{this.category.color}}
+            @ariaLabel={{i18n "category.predefined_colors"}}
           />
         </div>
       </section>
 
       <section class="field">
-        <span class="color-title">{{i18n "category.foreground_color"}}:</span>
+        <span id="foreground-color-label" class="color-title">{{i18n
+            "category.foreground_color"
+          }}:</span>
         <div class="colorpicker-wrapper edit-text-color">
-          <ColorInput @hexValue={{this.category.text_color}} />
+          <ColorInput
+            @hexValue={{this.category.text_color}}
+            @ariaLabelledby="foreground-color-label"
+          />
           <ColorPicker
             @colors={{this.foregroundColors}}
             @value={{this.category.text_color}}
             @id="edit-text-color"
+            @ariaLabel={{i18n "category.predefined_colors"}}
           />
         </div>
       </section>

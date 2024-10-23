@@ -12,6 +12,7 @@
     >
       {{d-icon "far-image"}}
       <PickFilesButton
+        @registerFileInput={{this.uppyUpload.setup}}
         @fileInputDisabled={{this.disabled}}
         @fileInputClass="hidden-upload-field"
         @acceptedFormatsOverride="image/*"
@@ -34,11 +35,11 @@
       />
     {{/if}}
 
-    <span class="btn {{unless this.uploading 'hidden'}}">{{i18n
+    <span class="btn {{unless this.uppyUpload.uploading 'hidden'}}">{{i18n
         "upload_selector.uploading"
       }}
-      {{this.uploadProgress}}%</span>
-    <span class="btn {{unless this.processing 'hidden'}}">{{i18n
+      {{this.uppyUpload.uploadProgress}}%</span>
+    <span class="btn {{unless this.uppyUpload.processing 'hidden'}}">{{i18n
         "upload_selector.processing"
       }}</span>
   </div>

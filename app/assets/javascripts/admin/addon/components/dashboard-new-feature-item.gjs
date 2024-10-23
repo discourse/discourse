@@ -85,15 +85,15 @@ export default class DiscourseNewFeatureItem extends Component {
           {{/if}}
         </div>
 
-        <div class="admin-new-feature-item__body">
-          {{#if @item.screenshot_url}}
-            <img
-              src={{@item.screenshot_url}}
-              class="admin-new-feature-item__screenshot"
-              alt={{@item.title}}
-            />
-          {{/if}}
+        {{#if @item.screenshot_url}}
+          <img
+            src={{@item.screenshot_url}}
+            class="admin-new-feature-item__screenshot"
+            alt={{@item.title}}
+          />
+        {{/if}}
 
+        <div class="admin-new-feature-item__body">
           <div class="admin-new-feature-item__feature-description">
             <CookText @rawText={{@item.description}} />
 

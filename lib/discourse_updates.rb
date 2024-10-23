@@ -165,7 +165,7 @@ module DiscourseUpdates
               Discourse.has_needed_version?(current_version, item["discourse_version"])
 
           valid_plugin_name =
-            item["plugin_name"].nil? || Discourse.plugins_by_name[item["plugin_name"]].present?
+            item["plugin_name"].blank? || Discourse.plugins_by_name[item["plugin_name"]].present?
 
           valid_version && valid_plugin_name
         rescue StandardError
