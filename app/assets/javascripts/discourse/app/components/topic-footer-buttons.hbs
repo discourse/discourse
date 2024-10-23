@@ -59,6 +59,11 @@
     {{/each}}
 
     {{#if this.site.mobileView}}
+      <PluginOutlet
+        @name="after-topic-footer-main-buttons"
+        @outletArgs={{hash topic=this.topic}}
+        @connectorTagName="span"
+      />
       {{#if this.dropdownButtons}}
         <DMenu
           @modalForMobile={{true}}
@@ -147,11 +152,13 @@
   {{/if}}
 {{/if}}
 
-<PluginOutlet
-  @name="after-topic-footer-main-buttons"
-  @outletArgs={{hash topic=this.topic}}
-  @connectorTagName="span"
-/>
+{{#if this.site.desktopView}}
+  <PluginOutlet
+    @name="after-topic-footer-main-buttons"
+    @outletArgs={{hash topic=this.topic}}
+    @connectorTagName="span"
+  />
+{{/if}}
 
 {{#if this.showNotificationUserTip}}
   <UserTip
@@ -173,9 +180,3 @@
     />
   {{/if}}
 {{/if}}
-
-<PluginOutlet
-  @name="after-topic-footer-buttons"
-  @outletArgs={{hash topic=this.topic}}
-  @connectorTagName="span"
-/>
