@@ -291,6 +291,7 @@ RSpec.describe DiscourseUpdates do
           "created_at" => 2.days.ago,
           "plugin_name" => "discourse-ai",
         },
+        { "emoji" => "🙈", "title" => "Whistles", "created_at" => 3.days.ago, "plugin_name" => "" },
         {
           "emoji" => "🙈",
           "title" => "Confetti",
@@ -303,8 +304,9 @@ RSpec.describe DiscourseUpdates do
       DiscourseUpdates.last_installed_version = "2.7.0.beta2"
       result = DiscourseUpdates.new_features
 
-      expect(result.length).to eq(1)
+      expect(result.length).to eq(2)
       expect(result[0]["title"]).to eq("Bells")
+      expect(result[1]["title"]).to eq("Whistles")
     end
   end
 
