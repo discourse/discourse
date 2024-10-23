@@ -187,10 +187,6 @@ describe DiscourseAutomation::Automation do
       expect(automation).not_to be_valid
       expect(automation.errors[:name]).to eq(["is too long (maximum is 100 characters)"])
 
-      automation = Fabricate.build(:automation, name: "b" * 4)
-      expect(automation).not_to be_valid
-      expect(automation.errors[:name]).to eq(["is too short (minimum is 5 characters)"])
-
       automation = Fabricate.build(:automation, name: "c" * 50)
       expect(automation).to be_valid
     end

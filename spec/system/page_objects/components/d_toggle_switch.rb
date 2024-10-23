@@ -9,21 +9,23 @@ module PageObjects
         @context = context
       end
 
-      def component
-        find(context, visible: :all)
+      def label_component
+        find(context, visible: :all).ancestor("label.d-toggle-switch__label")
       end
 
       def toggle
-        # scroll_to(component)
-        component.find(".d-toggle-switch__label").click
+        label_component.click
       end
 
       def checked?
-        component.has_css?(".d-toggle-switch__checkbox[aria-checked=\"true\"]", visible: :all)
+        label_component.has_css?(".d-toggle-switch__checkbox[aria-checked=\"true\"]", visible: :all)
       end
 
       def unchecked?
-        component.has_css?(".d-toggle-switch__checkbox[aria-checked=\"false\"]", visible: :all)
+        label_component.has_css?(
+          ".d-toggle-switch__checkbox[aria-checked=\"false\"]",
+          visible: :all,
+        )
       end
     end
   end
