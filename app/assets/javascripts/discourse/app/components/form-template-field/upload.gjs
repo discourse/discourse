@@ -63,7 +63,7 @@ export default class FormTemplateFieldUpload extends Component {
     this.uploadedFiles.pushObject(upload);
 
     const uploadMarkdown = this.buildMarkdown(upload);
-    if (this.uploadValue && this.allowMultipleFiles) {
+    if (this.uploadValue && this.uppyUpload.allowMultipleFiles) {
       // multiple file upload
       this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;
     } else {
