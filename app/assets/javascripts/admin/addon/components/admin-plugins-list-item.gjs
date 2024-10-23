@@ -124,7 +124,6 @@ export default class AdminPluginsListItem extends Component {
           @name="admin-plugin-list-item-enabled"
           @outletArgs={{hash plugin=@plugin}}
         >
-          <div class="label">{{i18n "admin.plugins.enabled"}}</div>
           {{#if @plugin.enabledSetting}}
             <DToggleSwitch
               @state={{@plugin.enabled}}
