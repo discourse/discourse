@@ -142,7 +142,10 @@
       {{/if}}
 
       {{#if this.automationForm.trigger}}
-        <div class="control-group automation-enabled alert alert-warning">
+        <div
+          class="control-group automation-enabled alert
+            {{if this.automationForm.enabled 'alert-info' 'alert-warning'}}"
+        >
           <span>{{i18n
               "discourse_automation.models.automation.enabled.label"
             }}</span>
