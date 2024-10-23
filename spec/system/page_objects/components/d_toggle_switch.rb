@@ -14,6 +14,7 @@ module PageObjects
       end
 
       def toggle
+        scroll_to(component)
         actionbuilder = page.driver.browser.action # workaround zero height button
         actionbuilder.click(component).perform
       end
