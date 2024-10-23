@@ -55,7 +55,10 @@ export default class AdminChatIncomingWebhooksList extends Component {
 
       <tbody>
         {{#each this.sortedWebhooks as |webhook|}}
-          <tr class="d-admin-row__content incoming-chat-webhooks-row" data-webhook-id={{webhook.id}}>
+          <tr
+            class="d-admin-row__content incoming-chat-webhooks-row"
+            data-webhook-id={{webhook.id}}
+          >
             <td class="d-admin-row__overview">
               <div class="d-admin-row__overview-name">
                 {{webhook.name}}

@@ -37,7 +37,10 @@
   </thead>
   <tbody>
     {{#each this.model as |backup|}}
-      <tr class="d-admin-row__content backup-item-row" data-backup-filename={{backup.filename}}>
+      <tr
+        class="d-admin-row__content backup-item-row"
+        data-backup-filename={{backup.filename}}
+      >
         <td class="d-admin-row__detail">
           <div class="backup-filename">
             {{backup.filename}}
