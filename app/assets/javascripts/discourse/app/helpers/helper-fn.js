@@ -1,5 +1,6 @@
 import Helper from "@ember/component/helper";
 import { registerDestructor } from "@ember/destroyable";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Build an Ember helper with cleanup logic. The passed function will be called with the named argument,
@@ -40,6 +41,7 @@ export default function helperFn(callback) {
       return callback(named, on);
     }
 
+    @bind
     cleanup() {
       this.cleanupFn?.();
       this.cleanupFn = null;
