@@ -19,12 +19,9 @@ module Chat
       category = Category.find_by(id: category_id)
       return if category.nil?
 
-      chat_channel = category.create_chat_channel!(auto_join_users: true, name: category.name)
+      category.create_chat_channel!(auto_join_users: true, name: category.name)
       category.custom_fields[Chat::HAS_CHAT_ENABLED] = true
       category.save!
-
-      Chat::ChannelMembershipManager.new(chat_channel).enforce_automatic_channel_memberships
-      chat_channel
     end
   end
 end
