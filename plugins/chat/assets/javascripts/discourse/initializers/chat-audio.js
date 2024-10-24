@@ -15,6 +15,26 @@ export default {
       return;
     }
 
+    function canPlaySound() {
+      return new Promise((resolve) => {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.addEventListener("message", (event) => {
+            if ("canPlaySound" in event.data) {
+              resolve(event.data.canPlaySound);
+            } else {
+              resolve(false);
+            }
+          });
+
+          navigator.serviceWorker.ready.then((registration) => {
+            registration.active.postMessage({ chatSound: true });
+          });
+        } else {
+          resolve(false);
+        }
+      });
+    }
+
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
         const indicatorType = user.user_option.chat_header_indicator_preference;
@@ -24,10 +44,7 @@ export default {
           return;
         }
 
-        if (
-          !user.user_option.chat_sound ||
-          indicatorType === INDICATOR_PREFERENCES.never
-        ) {
+        if (!user.chat_sound || indicatorType === INDICATOR_PREFERENCES.never) {
           return;
         }
 
@@ -47,10 +64,16 @@ export default {
         }
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
-          const chatAudioManager = container.lookup(
-            "service:chat-audio-manager"
-          );
-          chatAudioManager.play(user.chat_sound);
+          canPlaySound().then((success) => {
+            if (!success) {
+              return;
+            }
+
+            const chatAudioManager = container.lookup(
+              "service:chat-audio-manager"
+            );
+            chatAudioManager.play(user.chat_sound);
+          });
         }
       });
     });
