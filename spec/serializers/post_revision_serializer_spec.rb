@@ -127,4 +127,20 @@ RSpec.describe PostRevisionSerializer do
       expect(json[:tags_changes]).to_not be_present
     end
   end
+
+  context "when some tracked topic fields are associations" do
+    let(:serializer) { described_class.new(post_revision, scope: guardian, root: false) }
+    let(:post_revision) { Fabricate(:post_revision, post:) }
+    let(:guardian) { Discourse.system_user.guardian }
+
+    before do
+      allow(PostRevisor).to receive(:tracked_topic_fields).and_wrap_original do |original_method|
+        original_method.call.merge(allowed_users: -> {}, allowed_groups: -> {})
+      end
+    end
+
+    it "skips them" do
+      expect { serializer.as_json }.not_to raise_error
+    end
+  end
 end
