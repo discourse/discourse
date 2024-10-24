@@ -1,15 +1,16 @@
-import { getOwner } from "@ember/owner";
-import DTextarea from "discourse/components/d-textarea";
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/owner";
 import { modifier } from "ember-modifier";
+import DTextarea from "discourse/components/d-textarea";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class TextareaEditor extends Component {
   textarea;
 
-  #handleSmartListAutocomplete = false;
-
   registerTextarea = modifier((textarea) => {
+    this.textarea = textarea;
+
     this.textManipulation = new TextareaTextManipulation(getOwner(this), {
       markdownOptions: this.args.markdownOptions,
       textarea,
@@ -24,6 +25,9 @@ export default class TextareaEditor extends Component {
     };
   });
 
+  #handleSmartListAutocomplete = false;
+
+  @bind
   onInputSmartList() {
     if (this.#handleSmartListAutocomplete) {
       this.textManipulation.maybeContinueList();
@@ -31,6 +35,7 @@ export default class TextareaEditor extends Component {
     this.#handleSmartListAutocomplete = false;
   }
 
+  @bind
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
