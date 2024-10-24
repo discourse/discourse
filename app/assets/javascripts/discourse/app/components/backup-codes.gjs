@@ -38,7 +38,7 @@ export default class BackupCodes extends Component {
       return null;
     }
 
-    return this.args.backupCodes.join("\n").trim();
+    return this.args.backupCodes.join("\r\n").trim();
   }
 
   @action
