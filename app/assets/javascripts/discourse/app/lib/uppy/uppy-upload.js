@@ -210,11 +210,8 @@ export default class UppyUpload {
       this.uploadProgress = progress;
     });
 
-    this.uppyWrapper.uppyInstance.on("upload", (data) => {
-      this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
-      const files = data.fileIDs.map((fileId) =>
-        this.uppyWrapper.uppyInstance.getFile(fileId)
-      );
+    this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
+      this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
       this.cancellable = false;
       files.forEach((file) => {
@@ -402,6 +399,7 @@ export default class UppyUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
+      shouldRetry: () => false,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),

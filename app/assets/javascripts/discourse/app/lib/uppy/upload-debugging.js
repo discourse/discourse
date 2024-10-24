@@ -70,10 +70,8 @@ export default class UppyUploadDebugging {
       return;
     }
 
-    uppy.on("upload", (data) => {
-      data.fileIDs.forEach((fileId) =>
-        this.#performanceMark(`upload-${fileId}-start`)
-      );
+    uppy.on("upload", (uploadID, files) => {
+      files.forEach(({ id }) => this.#performanceMark(`upload-${id}-start`));
     });
 
     uppy.on("create-multipart", (fileId) => {
