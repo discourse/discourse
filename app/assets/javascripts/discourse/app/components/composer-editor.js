@@ -26,11 +26,6 @@ import {
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
 import userSearch from "discourse/lib/user-search";
 import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
-import {
   caretPosition,
   formatUsername,
   inCodeBlock,
@@ -191,47 +186,10 @@ export default class ComposerEditor extends Component {
     };
   }
 
-  @bind
-  _afterMentionComplete(value) {
-    this.composer.set("reply", value);
-
-    // ensures textarea scroll position is correct
-    schedule("afterRender", () => {
-      const input = this.element.querySelector(".d-editor-input");
-      input?.blur();
-      input?.focus();
-    });
-  }
-
   @on("didInsertElement")
   _composerEditorInit() {
     const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (this.siteSettings.enable_mentions) {
-      $(input).autocomplete({
-        template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: (term) => {
-          destroyUserStatuses();
-          return userSearch({
-            term,
-            topicId: this.topic?.id,
-            categoryId: this.topic?.category_id || this.composer?.categoryId,
-            includeGroups: true,
-          }).then((result) => {
-            initUserStatusHtml(getOwner(this), result.users);
-            return result;
-          });
-        },
-        onRender: (options) => renderUserStatusHtml(options),
-        key: "@",
-        transformComplete: (v) => v.username || v.name,
-        afterComplete: this._afterMentionComplete,
-        triggerRule: async (textarea) =>
-          !(await inCodeBlock(textarea.value, caretPosition(textarea))),
-        onClose: destroyUserStatuses,
-      });
-    }
 
     input?.addEventListener(
       "scroll",
