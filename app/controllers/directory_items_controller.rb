@@ -123,6 +123,9 @@ class DirectoryItemsController < ApplicationController
     end
 
     serializer_opts[:attributes] = active_directory_column_names
+    serializer_opts[:searchable_fields] = UserField.where(searchable: true) if serializer_opts[
+      :user_custom_field_map
+    ].present?
 
     serialized = serialize_data(result, DirectoryItemSerializer, serializer_opts)
     render_json_dump(
