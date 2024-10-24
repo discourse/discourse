@@ -223,7 +223,7 @@ export default class DModal extends Component {
 
   @bind
   handleKeyboardVisibilityChange(visible) {
-    if (visible && this.capabilities.isIpadOS) {
+    if (visible && this.capabilities.isIOS && !this.capabilities.isIpadOS) {
       window.scrollTo(0, 0);
     }
   }
