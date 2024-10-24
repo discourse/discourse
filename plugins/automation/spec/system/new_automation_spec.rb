@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "DiscourseAutomation | New automation", type: :system, js: true do
+describe "DiscourseAutomation | New automation", type: :system do
   fab!(:admin)
 
   before do
@@ -10,11 +10,13 @@ describe "DiscourseAutomation | New automation", type: :system, js: true do
 
   let(:new_automation_page) { PageObjects::Pages::NewAutomation.new }
 
-  context "when the script is not selected" do
-    it "shows an error" do
-      new_automation_page.visit.fill_name("aaaaa").create
+  context "when a script is clicked" do
+    it "navigates to automation edit route" do
+      new_automation_page.visit
 
-      expect(new_automation_page).to have_error(I18n.t("errors.messages.blank"))
+      find(".admin-section-landing-item__content", match: :first).click
+
+      expect(page).to have_css(".scriptables")
     end
   end
 end

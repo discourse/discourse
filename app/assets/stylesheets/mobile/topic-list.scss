@@ -144,6 +144,16 @@
       border-left: 6px solid;
     }
   }
+
+  &.optimized {
+    tr {
+      border: none;
+    }
+
+    th {
+      padding: 10px 0 10px;
+    }
+  }
 }
 
 .category-list-item.category {

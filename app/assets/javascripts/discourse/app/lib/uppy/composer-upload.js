@@ -8,6 +8,7 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import ComposerVideoThumbnailUppy from "discourse/lib/composer-video-thumbnail-uppy";
 import {
   bindFileInputChangeListener,
   displayErrorForBulkUpload,
@@ -20,7 +21,6 @@ import UppyS3Multipart from "discourse/lib/uppy/s3-multipart";
 import UppyWrapper from "discourse/lib/uppy/wrapper";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { clipboardHelpers } from "discourse/lib/utilities";
-import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";

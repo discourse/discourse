@@ -31,8 +31,11 @@ module PageObjects
         click("#login-link")
       end
 
-      def click_create_account
-        click(".signup-fullpage .btn-primary")
+      def click_create_account(expect_success: true)
+        try_until_success(timeout: 5) do
+          click(".signup-fullpage .btn-primary")
+          expect(page).to have_css(".signup-fullpage .btn-primary.is-loading") if expect_success
+        end
       end
 
       def has_password_input?
