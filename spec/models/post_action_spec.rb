@@ -432,7 +432,7 @@ RSpec.describe PostAction do
     end
 
     it "shouldn't change given_likes unless likes are given or removed" do
-      freeze_time(Time.zone.now)
+      freeze_time
 
       PostActionCreator.like(codinghorror, post)
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
