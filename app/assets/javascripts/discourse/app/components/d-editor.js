@@ -254,7 +254,6 @@ export default class DEditor extends Component {
       );
     }
 
-    this.textManipulation.destroySmartList();
     this.textManipulation.destroy();
 
     this.element
@@ -790,7 +789,7 @@ export default class DEditor extends Component {
     this._applyMentionAutocomplete();
     this.bindShortcuts();
     // TODO clean-up of above events?
-    textManipulation.setupSmartList();
+
     this.element.addEventListener("paste", textManipulation.paste);
 
     scheduleOnce("afterRender", this, this._readyNow);

@@ -48,7 +48,6 @@ export default class TextareaTextManipulation {
   $textarea;
 
   #itsatrap;
-  #handleSmartListAutocomplete = false;
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
@@ -746,42 +745,6 @@ export default class TextareaTextManipulation {
       newDir = currentDir === "ltr" ? "rtl" : "ltr";
 
     this.$textarea.attr("dir", newDir).focus();
-  }
-
-  onInputSmartList() {
-    if (this.#handleSmartListAutocomplete) {
-      this.maybeContinueList();
-    }
-    this.#handleSmartListAutocomplete = false;
-  }
-
-  onBeforeInputSmartList(event) {
-    // This inputType is much more consistently fired in `beforeinput`
-    // rather than `input`.
-    this.#handleSmartListAutocomplete = event.inputType === "insertLineBreak";
-  }
-
-  setupSmartList() {
-    // These must be bound manually because itsatrap does not support
-    // beforeinput or input events.
-    //
-    // beforeinput is better used to detect line breaks because it is
-    // fired before the actual value of the textarea is changed,
-    // and sometimes in the input event no `insertLineBreak` event type
-    // is fired.
-    //
-    // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
-
-    this.textarea.addEventListener("beforeinput", this.onBeforeInputSmartList);
-    this.textarea.addEventListener("input", this.onInputSmartList);
-  }
-
-  destroySmartList() {
-    this.textarea.removeEventListener(
-      "beforeinput",
-      this.onBeforeInputSmartList
-    );
-    this.textarea.removeEventListener("input", this.onInputSmartList);
   }
 
   autocomplete() {
