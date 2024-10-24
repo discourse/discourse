@@ -392,7 +392,7 @@ export default class TextareaTextManipulation {
     return matches && matches.length % 2;
   }
 
-  paste(e) {
+  async paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -411,7 +411,7 @@ export default class TextareaTextManipulation {
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = this.inCodeBlock(pre);
+    const isCodeBlock = await this.inCodeBlock(pre);
 
     if (
       plainText &&
