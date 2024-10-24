@@ -7,7 +7,7 @@ RSpec.describe About do
 
   def register_stat(name, stats_block)
     DiscoursePluginRegistry.register_stat(
-      Stat.new(name, show_in_ui: true, expose_via_api: true, &stats_block),
+      Stat.new(name, expose_via_api: true, &stats_block),
       stub(enabled?: true),
     )
   end

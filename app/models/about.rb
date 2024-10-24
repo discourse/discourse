@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class About
-  def self.displayed_plugin_stat_groups
-    DiscoursePluginRegistry.stats.select { |stat| stat.show_in_ui }.map { |stat| stat.name }
-  end
-
   class CategoryMods
     include ActiveModel::Serialization
     attr_reader :category, :moderators

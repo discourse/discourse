@@ -40,9 +40,7 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_about_your_site",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["required"],
-        query: { filter: "" },
+        route: "adminConfig.about",
         label: "admin.community.sidebar_link.about_your_site",
         icon: "gear",
       },
