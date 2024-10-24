@@ -70,11 +70,16 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  updateHeaderOffset() {
+  updateOffsets() {
+    const headerWrapBottom = Math.max(
+      0,
+      Math.floor(this._headerWrap.getBoundingClientRect().bottom)
+    );
+
     let mainOutletOffsetTop = Math.max(
       0,
       Math.floor(this._mainOutletWrapper.getBoundingClientRect().top) -
-        this._headerWrap.offsetHeight
+        headerWrapBottom
     );
 
     if (DEBUG && isTesting()) {
@@ -85,18 +90,25 @@ export default class GlimmerSiteHeader extends Component {
       mainOutletOffsetTop -= 1; // For 1px border on testing container
     }
 
-    const documentStyle = document.documentElement.style;
-    const currentValue =
-      parseInt(documentStyle.getPropertyValue("--header-offset"), 10) || 0;
-    const newValue = this._headerWrap.offsetHeight + mainOutletOffsetTop;
-    if (currentValue !== newValue) {
-      documentStyle.setProperty("--header-offset", `${newValue}px`);
+    const docStyle = document.documentElement.style;
+    const currentHeaderOffset =
+      parseInt(docStyle.getPropertyValue("--header-offset"), 10) || 0;
+    const newHeaderOffset = headerWrapBottom;
+    if (currentHeaderOffset !== newHeaderOffset) {
+      docStyle.setProperty("--header-offset", `${newHeaderOffset}px`);
+    }
+
+    const currentMainOutletOffset =
+      parseInt(docStyle.getPropertyValue("--main-outlet-offset"), 10) || 0;
+    const newMainOutletOffset = headerWrapBottom + mainOutletOffsetTop;
+    if (currentMainOutletOffset !== newMainOutletOffset) {
+      docStyle.setProperty("--main-outlet-offset", `${newMainOutletOffset}px`);
     }
   }
 
   @bind
   _recalculateHeaderOffset() {
-    schedule("afterRender", this.updateHeaderOffset);
+    schedule("afterRender", this.updateOffsets);
   }
 
   @action
@@ -113,14 +125,7 @@ export default class GlimmerSiteHeader extends Component {
     this._headerWrap = document.querySelector(".d-header-wrap");
     this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
     if (this._headerWrap) {
-      schedule("afterRender", () => {
-        this.headerElement = this._headerWrap.querySelector("header.d-header");
-        this.updateHeaderOffset();
-        document.documentElement.style.setProperty(
-          "--header-top",
-          `${this.headerElement.offsetTop}px`
-        );
-      });
+      this._recalculateHeaderOffset();
 
       window.addEventListener("scroll", this._recalculateHeaderOffset, {
         passive: true,
@@ -135,12 +140,7 @@ export default class GlimmerSiteHeader extends Component {
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
-            const headerTop = this.headerElement?.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-top",
-              `${headerTop}px`
-            );
-            this.updateHeaderOffset();
+            this.updateOffsets();
           }
         }
       });
