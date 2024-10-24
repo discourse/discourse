@@ -126,7 +126,10 @@ export default class GlimmerSiteHeader extends Component {
     this._headerWrap = document.querySelector(".d-header-wrap");
     this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
     if (this._headerWrap) {
-      this._recalculateHeaderOffset();
+      schedule("afterRender", () => {
+        this.headerElement = this._headerWrap.querySelector("header.d-header");
+        this.updateOffsets();
+      });
 
       window.addEventListener("scroll", this._recalculateHeaderOffset, {
         passive: true,
