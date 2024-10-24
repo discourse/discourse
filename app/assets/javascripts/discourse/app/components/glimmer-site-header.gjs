@@ -71,6 +71,7 @@ export default class GlimmerSiteHeader extends Component {
 
   @bind
   updateOffsets() {
+    // clamping to 0 to prevent negative values (hello, Safari)
     const headerWrapBottom = Math.max(
       0,
       Math.floor(this._headerWrap.getBoundingClientRect().bottom)
