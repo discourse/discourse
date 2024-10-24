@@ -210,11 +210,8 @@ export default class UppyUpload {
       this.uploadProgress = progress;
     });
 
-    this.uppyWrapper.uppyInstance.on("upload", (data) => {
-      this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
-      const files = data.fileIDs.map((fileId) =>
-        this.uppyWrapper.uppyInstance.getFile(fileId)
-      );
+    this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
+      this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
       this.cancellable = false;
       files.forEach((file) => {
@@ -287,6 +284,9 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
+        if (response.aborted) {
+          return; // User cancelled the upload
+        }
         this.#removeInProgressUpload(file.id);
         displayErrorForUpload(response || error, this.siteSettings, file.name);
         this.#reset();
@@ -402,6 +402,7 @@ export default class UppyUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
+      shouldRetry: () => false,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -420,6 +421,7 @@ export default class UppyUpload {
   #useS3Uploads() {
     this.#usingS3Uploads = true;
     this.uppyWrapper.uppyInstance.use(AwsS3, {
+      shouldUseMultipart: false,
       getUploadParameters: (file) => {
         const data = {
           file_name: file.name,

@@ -342,10 +342,18 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
     if (didError) {
       return;
     }
-  } else if (data.body && data.status) {
+  } else if (data.responseText && data.status) {
+    let parsedBody = data.responseText;
+    if (typeof parsedBody === "string") {
+      try {
+        parsedBody = JSON.parse(parsedBody);
+      } catch (e) {
+        // ignore
+      }
+    }
     const didError = displayErrorByResponseStatus(
       data.status,
-      data.body,
+      parsedBody,
       fileName,
       siteSettings
     );

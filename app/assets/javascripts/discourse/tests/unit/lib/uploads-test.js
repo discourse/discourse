@@ -444,7 +444,7 @@ module("Unit | Utility | uploads", function (hooks) {
     displayErrorForUpload(
       {
         status: 422,
-        body: { message: "upload failed" },
+        responseText: JSON.stringify({ message: "upload failed" }),
       },
       "test.png",
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }
