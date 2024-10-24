@@ -36,6 +36,7 @@ export default class GlimmerSiteHeader extends Component {
   @tracked _dockedHeader = false;
   _animate = false;
   _headerWrap;
+  _mainOutletWrapper;
   _swipeMenuOrigin;
   _applicationElement;
   _resizeObserver;
@@ -69,42 +70,46 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  updateHeaderOffset() {
-    // Safari likes overscolling the page (on both iOS and macOS).
-    // This shows up as a negative value in window.scrollY.
-    // We can use this to offset the headerWrap's top offset to avoid
-    // jitteriness and bad positioning.
-    const windowOverscroll = Math.min(0, window.scrollY);
-
-    // The headerWrap's top offset can also be a negative value on Safari,
-    // because of the changing height of the viewport (due to the URL bar).
-    // For our use case, it's best to ensure this is clamped to 0.
-    const headerWrapTop = Math.max(
+  updateOffsets() {
+    // clamping to 0 to prevent negative values (hello, Safari)
+    const headerWrapBottom = Math.max(
       0,
-      Math.floor(this._headerWrap.getBoundingClientRect().top)
+      Math.floor(this._headerWrap.getBoundingClientRect().bottom)
     );
-    let offsetTop = headerWrapTop + windowOverscroll;
+
+    let mainOutletOffsetTop = Math.max(
+      0,
+      Math.floor(this._mainOutletWrapper.getBoundingClientRect().top) -
+        headerWrapBottom
+    );
 
     if (DEBUG && isTesting()) {
-      offsetTop -= document
+      mainOutletOffsetTop -= document
         .getElementById("ember-testing-container")
         .getBoundingClientRect().top;
 
-      offsetTop -= 1; // For 1px border on testing container
+      mainOutletOffsetTop -= 1; // For 1px border on testing container
     }
 
-    const documentStyle = document.documentElement.style;
-    const currentValue =
-      parseInt(documentStyle.getPropertyValue("--header-offset"), 10) || 0;
-    const newValue = this._headerWrap.offsetHeight + offsetTop;
-    if (currentValue !== newValue) {
-      documentStyle.setProperty("--header-offset", `${newValue}px`);
+    const docStyle = document.documentElement.style;
+    const currentHeaderOffset =
+      parseInt(docStyle.getPropertyValue("--header-offset"), 10) || 0;
+    const newHeaderOffset = headerWrapBottom;
+    if (currentHeaderOffset !== newHeaderOffset) {
+      docStyle.setProperty("--header-offset", `${newHeaderOffset}px`);
+    }
+
+    const currentMainOutletOffset =
+      parseInt(docStyle.getPropertyValue("--main-outlet-offset"), 10) || 0;
+    const newMainOutletOffset = headerWrapBottom + mainOutletOffsetTop;
+    if (currentMainOutletOffset !== newMainOutletOffset) {
+      docStyle.setProperty("--main-outlet-offset", `${newMainOutletOffset}px`);
     }
   }
 
   @bind
-  _onScroll() {
-    schedule("afterRender", this.updateHeaderOffset);
+  _recalculateHeaderOffset() {
+    schedule("afterRender", this.updateOffsets);
   }
 
   @action
@@ -119,19 +124,18 @@ export default class GlimmerSiteHeader extends Component {
     }
 
     this._headerWrap = document.querySelector(".d-header-wrap");
+    this._mainOutletWrapper = document.querySelector("#main-outlet-wrapper");
     if (this._headerWrap) {
       schedule("afterRender", () => {
         this.headerElement = this._headerWrap.querySelector("header.d-header");
-        this.updateHeaderOffset();
-        document.documentElement.style.setProperty(
-          "--header-top",
-          `${this.headerElement.offsetTop}px`
-        );
+        this.updateOffsets();
       });
 
-      window.addEventListener("scroll", this._onScroll, {
+      window.addEventListener("scroll", this._recalculateHeaderOffset, {
         passive: true,
       });
+
+      this.appEvents.on("page:changed", this, this._recalculateHeaderOffset);
 
       this._itsatrap = new ItsATrap(this.headerElement);
       const dirs = ["up", "down"];
@@ -140,12 +144,7 @@ export default class GlimmerSiteHeader extends Component {
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
-            const headerTop = this.headerElement?.offsetTop;
-            document.documentElement.style.setProperty(
-              "--header-top",
-              `${headerTop}px`
-            );
-            this.updateHeaderOffset();
+            this.updateOffsets();
           }
         }
       });
@@ -410,7 +409,8 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
 
-    window.removeEventListener("scroll", this._onScroll);
+    window.removeEventListener("scroll", this._recalculateHeaderOffset);
+    this.appEvents.off("page:changed", this, this._recalculateHeaderOffset);
     this._resizeObserver?.disconnect();
   }
 

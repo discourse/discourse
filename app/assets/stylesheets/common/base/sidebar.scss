@@ -45,7 +45,7 @@
   display: flex;
   grid-area: sidebar;
   position: sticky;
-  top: var(--header-offset);
+  top: var(--main-outlet-offset);
   background: var(--d-sidebar-background);
 
   @include unselectable;
@@ -57,7 +57,7 @@
   }
 
   height: calc(
-    var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
+    var(--composer-vh, var(--1dvh)) * 100 - var(--main-outlet-offset, 0px)
   );
 
   align-self: start;

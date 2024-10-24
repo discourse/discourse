@@ -16,7 +16,7 @@
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
-  max-height: 80vh;
+  max-height: calc(100vh - var(--header-offset) - 1em);
   border-radius: var(--d-border-radius-large);
 }
 
@@ -660,14 +660,14 @@
   width: 100%;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.3);
-  top: var(--header-top);
+  top: 0;
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
 }
 
 .menu-panel.slide-in {
-  top: var(--header-top);
+  top: 0;
   box-sizing: border-box;
   // ensure there's always space to click outside on tiny devices
   max-width: 90vw;
@@ -678,11 +678,5 @@
   }
   box-shadow: 0px 0 30px -2px rgba(0, 0, 0, 0.5);
 
-  --base-height: calc(var(--100dvh) - var(--header-top));
-
-  height: var(--base-height);
-
-  html.footer-nav-ipad & {
-    height: calc(var(--base-height) - var(--footer-nav-height));
-  }
+  height: var(--100dvh);
 }
