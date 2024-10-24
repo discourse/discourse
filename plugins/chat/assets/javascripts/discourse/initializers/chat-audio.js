@@ -15,7 +15,7 @@ export default {
       return;
     }
 
-    function canPlaySound() {
+    this.canPlaySound = function () {
       return new Promise((resolve) => {
         if (navigator.serviceWorker && navigator.serviceWorker.controller) {
           navigator.serviceWorker.addEventListener("message", (event) => {
@@ -33,7 +33,7 @@ export default {
           resolve(false);
         }
       });
-    }
+    };
 
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
@@ -64,7 +64,7 @@ export default {
         }
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
-          canPlaySound().then((success) => {
+          this.canPlaySound().then((success) => {
             if (!success) {
               return;
             }
