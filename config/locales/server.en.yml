@@ -85,6 +85,10 @@ en:
     import_error:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
+      screenshot: "Error importing theme screenshots. %{errors}"
+      screenshot_invalid_type: "The theme screenshots must be in one of the following formats: %{accepted_formats}. The screenshot %{file_name} has an invalid format."
+      screenshot_invalid_size: "The theme screenshots must be less than %{max_size}. The screenshot %{file_name} is too large."
+      screenshot_invalid_dimensions: "The theme screenshots must be maximum %{max_width}x%{max_height}. The screenshot %{file_name} exceeds this. Its dimensions are %{width}x%{height}."
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
