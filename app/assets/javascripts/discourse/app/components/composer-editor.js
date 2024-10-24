@@ -24,18 +24,12 @@ import {
   IMAGE_MARKDOWN_REGEX,
 } from "discourse/lib/uploads";
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
-import userSearch from "discourse/lib/user-search";
-import {
-  caretPosition,
-  formatUsername,
-  inCodeBlock,
-} from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { isTesting } from "discourse-common/config/environment";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   debounce,

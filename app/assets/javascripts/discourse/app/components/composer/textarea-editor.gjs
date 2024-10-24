@@ -1,4 +1,3 @@
-// naming is hard; please help
 import { getOwner } from "@ember/owner";
 import DTextarea from "discourse/components/d-textarea";
 import Component from "@glimmer/component";
@@ -9,7 +8,6 @@ export default class TextareaEditor extends Component {
   textarea;
 
   registerTextarea = modifier((textarea) => {
-    console.log(this.args.markdownOptions);
     this.textManipulation = new TextareaTextManipulation(getOwner(this), {
       markdownOptions: this.args.markdownOptions,
       textarea,

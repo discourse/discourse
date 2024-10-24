@@ -1,4 +1,3 @@
-import { action } from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -15,7 +14,6 @@ import {
   inCodeBlock,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
@@ -394,7 +392,6 @@ export default class TextareaTextManipulation {
     return matches && matches.length % 2;
   }
 
-  @bind
   paste(e) {
     const isComposer = this.textarea === e.target;
 
@@ -529,7 +526,6 @@ export default class TextareaTextManipulation {
       .join("\n");
   }
 
-  @bind
   async maybeContinueList() {
     const offset = caretPosition(this.textarea);
     const text = this.value;
@@ -642,7 +638,6 @@ export default class TextareaTextManipulation {
     }
   }
 
-  @bind
   indentSelection(direction) {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
       return;
@@ -717,7 +712,6 @@ export default class TextareaTextManipulation {
     }
   }
 
-  @action
   emojiSelected(code) {
     let selected = this.getSelected();
     const captures = selected.pre.match(/\B:(\w*)$/);
@@ -754,7 +748,6 @@ export default class TextareaTextManipulation {
     this.$textarea.attr("dir", newDir).focus();
   }
 
-  @bind
   onInputSmartList() {
     if (this.#handleSmartListAutocomplete) {
       this.maybeContinueList();
@@ -762,7 +755,6 @@ export default class TextareaTextManipulation {
     this.#handleSmartListAutocomplete = false;
   }
 
-  @bind
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
