@@ -44,7 +44,6 @@ export function setupHashtagAutocomplete(
   $textarea.autocomplete(
     hashtagAutocompleteOptions(
       contextualHashtagConfiguration,
-      $textarea,
       siteSettings,
       autocompleteOptions
     )
