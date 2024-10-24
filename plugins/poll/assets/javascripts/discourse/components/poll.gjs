@@ -468,19 +468,18 @@ export default class PollComponent extends Component {
 
   @action
   fetchVoters(optionId) {
-    let votersCount;
+    let voters;
     let preloadedVoters = this.preloadedVoters;
 
-    Object.keys(preloadedVoters).forEach((key) => {
-      if (key === optionId) {
-        preloadedVoters[key].loading = true;
-      }
-    });
+    if (optionId) {
+      preloadedVoters[optionId].loading = true;
+      voters = preloadedVoters[optionId]?.voters;
+    } else {
+      voters = preloadedVoters;
+    }
 
-    this.preloadedVoters = Object.assign(preloadedVoters);
-
-    votersCount = this.options.find((option) => option.id === optionId).voters
-      .length;
+    this.preloadedVoters = Object.assign({}, preloadedVoters);
+    const votersCount = voters?.length;
 
     return ajax("/polls/voters.json", {
       data: {
@@ -493,14 +492,19 @@ export default class PollComponent extends Component {
     })
       .then((result) => {
         this.voterListExpanded = true;
-        const voters = optionId
-          ? this.preloadedVoters[optionId].voters
-          : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
+        let votersSet = new Set([]);
+
         if (this.isRankedChoice) {
-          this.preloadedVoters[optionId].voters = [...new Set([...newVoters])];
+          votersSet = new Set(voters.map((voter) => voter.user.username));
+          newVoters.forEach((voter) => {
+            if (!votersSet.has(voter.user.username)) {
+              votersSet.add(voter.user.username);
+              voters.push(voter);
+            }
+          });
         } else {
-          const votersSet = new Set(voters.map((voter) => voter.username));
+          votersSet = new Set(voters.map((voter) => voter.username));
           newVoters.forEach((voter) => {
             if (!votersSet.has(voter.username)) {
               votersSet.add(voter.username);
@@ -509,12 +513,11 @@ export default class PollComponent extends Component {
           });
           // remove users who changed their vote
           if (this.poll.type === REGULAR) {
-            Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
+            Object.keys(preloadedVoters).forEach((otherOptionId) => {
               if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId].voters =
-                  this.preloadedVoters[otherOptionId].voters.filter(
-                    (voter) => !votersSet.has(voter.username)
-                  );
+                preloadedVoters[otherOptionId].voters = preloadedVoters[
+                  otherOptionId
+                ].voters.filter((voter) => !votersSet.has(voter.username));
               }
             });
           }
@@ -528,9 +531,10 @@ export default class PollComponent extends Component {
         }
       })
       .finally(() => {
-        preloadedVoters = this.preloadedVoters;
-        preloadedVoters[optionId].loading = false;
-        this.preloadedVoters = Object.assign(preloadedVoters);
+        if (optionId) {
+          preloadedVoters[optionId].loading = false;
+        }
+        this.preloadedVoters = Object.assign({}, preloadedVoters);
       });
   }
 
