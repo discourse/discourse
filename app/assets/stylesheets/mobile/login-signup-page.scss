@@ -67,9 +67,14 @@
       .user-field.text label.control-label {
         top: 11px;
       }
-      .user-field:not(.dropdown) input:focus + label.alt-placeholder,
-      .user-field.value-entered:not(.dropdown) label.alt-placeholder {
-        top: -10px !important;
+      div.user-field:not(.dropdown)
+        .controls
+        input:focus
+        + label.alt-placeholder.control-label,
+      div.user-field.value-entered:not(.dropdown)
+        .controls
+        label.alt-placeholder.control-label {
+        top: -10px;
       }
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
