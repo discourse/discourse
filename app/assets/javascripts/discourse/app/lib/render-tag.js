@@ -62,7 +62,7 @@ export function defaultRenderTag(tag, params) {
     ">";
 
   if (params.count) {
-    val += " <span class='discourse-tag-count'>x" + params.count + "</span>";
+    val += " <span class='discourse-tag-count'>" + params.count + "</span>";
   }
 
   return val;

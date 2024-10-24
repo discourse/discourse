@@ -7,6 +7,9 @@
       align-items: baseline;
 
       .discourse-tag-count {
+        &:before {
+          content: "x";
+        }
         margin-left: 5px;
       }
     }
