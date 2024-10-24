@@ -5637,8 +5637,6 @@ en:
           your_organization: "Organization name"
           company_name: "Company name"
           company_name_placeholder: "Sample Company Inc."
-          company_name_help: |
-            Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
