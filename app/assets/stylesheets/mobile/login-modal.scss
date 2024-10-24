@@ -1,19 +1,57 @@
+.static-login {
+  #main-outlet-wrapper,
+  #main-outlet {
+    padding: 0;
+  }
+  .contents.body-page {
+    margin: 0;
+  }
+}
+.login-welcome {
+  gap: 2em;
+  height: 100svh;
+  width: 100svw;
+  box-sizing: border-box;
+
+  .body-page-button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+  }
+}
+
+.d-modal.login-modal .d-modal__body {
+  margin-top: 3.75rem;
+}
+
 .d-modal.login-modal,
 .d-modal.create-account {
+  padding-bottom: var(--safe-area-inset-bottom);
   .d-modal {
     &__container {
+      height: 100svh;
+      max-height: unset;
       width: 100%;
     }
     &__body {
       flex-direction: column;
       gap: unset;
       padding-inline: 0.5rem;
+      padding-bottom: 1em;
+      outline: none;
     }
     &__footer {
+      padding: 1em 1.5rem;
       border-top: 1px solid var(--primary-low);
-      padding: 1rem;
-      font-size: var(--font-down-1);
     }
+    &__footer-buttons {
+      gap: 0.5em;
+    }
+  }
+
+  .login-title {
+    font-size: var(--font-up-4);
   }
 
   .close {
@@ -33,7 +71,7 @@
   .login-or-separator {
     border-top: 1px solid var(--primary-low);
     position: relative;
-    margin-block: 1rem;
+    margin-block: 0.75rem;
 
     span {
       transform: translate(-50%, -50%);
@@ -51,36 +89,85 @@
   #login-buttons {
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
     padding: 0 1rem;
     gap: 0.25em;
     margin-bottom: 1rem;
+    height: unset;
 
     .btn {
       margin: 0;
       padding-block: 0.65rem;
       border: 1px solid var(--primary-low);
-      flex: 1 1 calc(50% - 0.25em);
+      flex-grow: 1;
       font-size: var(--font-down-1);
       white-space: nowrap;
-      &:last-child {
-        margin-right: auto;
+      min-width: calc(50% - 0.25em);
+    }
+  }
+
+  .login-page-cta {
+    &__buttons {
+      .login-page-cta__login {
+        width: 100%;
+        margin-bottom: 0.5rem;
       }
+    }
+    &__signup {
+      background: none !important;
+      font-size: var(--font-down);
+      padding: 0;
+    }
+  }
+
+  .signup-page-cta {
+    &__buttons {
+      .signup-page-cta__signup {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+    &__login {
+      background: none !important;
+      font-size: var(--font-down);
+      padding: 0;
+    }
+  }
+
+  .login-page-cta,
+  .signup-page-cta {
+    &__existing-account,
+    &__no-account-yet {
+      width: unset;
+      margin-bottom: 0;
+
+      &::before {
+        display: none;
+      }
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    button {
+      width: fit-content;
     }
   }
 
   #login-form,
   .login-form {
     margin: 0;
-    padding: 1rem;
+    padding: 1rem 1rem 0;
 
     .input-group {
-      input {
-        height: 2.5em;
-        margin-bottom: 0.25em;
-      }
-      margin-bottom: 1em;
-      .user-field:not(.dropdown) label.alt-placeholder {
-        top: 8px;
+      &:not(:last-child) {
+        margin-bottom: 0.75em;
       }
       input:focus + label,
       input.value-entered + label.alt-placeholder {
@@ -92,6 +179,15 @@
       label.more-info {
         color: var(--primary-medium);
       }
+      .more-info,
+      .tip,
+      .instructions {
+        font-size: var(--font-down-1-rem);
+      }
+    }
+
+    .user-fields {
+      display: contents;
     }
   }
   .caps-lock-warning {
@@ -99,20 +195,82 @@
   }
 }
 
-.d-modal.create-account {
-  .d-modal__footer-buttons {
-    flex-direction: row;
-    gap: 8px;
+.login-modal,
+.create-account,
+.invites-show {
+  #login-form,
+  .login-form,
+  .invite-form {
+    .input-group {
+      label.alt-placeholder,
+      .user-field.text label.control-label {
+        top: 11px;
+      }
+      div.user-field:not(.dropdown)
+        .controls
+        input:focus
+        + label.alt-placeholder.control-label,
+      div.user-field.value-entered:not(.dropdown)
+        .controls
+        label.alt-placeholder.control-label {
+        top: -10px;
+      }
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
+        top: -10px;
+      }
+    }
+  }
+}
+
+.account-created,
+.activate-account {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-width: unset;
+  margin: 0;
+  padding: 0.75em 1rem;
+  box-shadow: none;
+
+  .activate-new-email {
+    width: 100%;
+    height: 2.5em;
+  }
+
+  .activation-controls {
+    flex-direction: column;
+    gap: 1em;
+    margin-top: auto;
+    margin-bottom: 0.75em;
+
     button {
-      width: auto;
+      height: 2.5em;
     }
   }
 
-  .login-welcome-header {
-    padding-bottom: 0.25rem;
+  .activate-account-button {
+    margin-top: auto;
+    margin-bottom: 0.75em;
+    width: 100%;
+    height: 2.5em;
   }
 
-  .signup-progress-bar {
-    display: none;
+  .account-activated {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    .tada-image {
+      margin: 0;
+    }
+
+    .continue-button {
+      margin-top: auto;
+      margin-bottom: 0.75em;
+      width: 100%;
+      height: 2.5em;
+    }
   }
 }
