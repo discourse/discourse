@@ -131,7 +131,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
           .fill_email("johndoe@example.com")
           .fill_username("john")
           .fill_password("supersecurepassword")
-          .click_create_account
+          .click_create_account(expect_success: false)
         expect(signup_form).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
         expect(signup_form).to have_no_css(".account-created")
       end
