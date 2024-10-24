@@ -15,4 +15,8 @@ class MigrateTosSetting < ActiveRecord::Migration[4.2]
       )
     end
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

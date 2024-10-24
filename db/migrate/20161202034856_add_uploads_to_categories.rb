@@ -21,4 +21,8 @@ class AddUploadsToCategories < ActiveRecord::Migration[4.2]
     WHERE c1.id = c2.id
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

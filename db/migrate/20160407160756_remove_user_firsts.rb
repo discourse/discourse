@@ -7,4 +7,8 @@ class RemoveUserFirsts < ActiveRecord::Migration[4.2]
     # continues with other migrations if we can't delete that table
     nil
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end
