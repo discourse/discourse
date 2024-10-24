@@ -602,32 +602,22 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     fab!(:user)
 
     let(:api_key) do
-      UserApiKey.create!(
-        application_name: "my app",
-        client_id: "1234",
+      Fabricate(
+        :user_api_key,
         scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) },
-        user_id: user.id,
+        user: user,
       )
     end
 
-    it "can clear old duplicate keys correctly" do
-      dupe =
-        UserApiKey.create!(
-          application_name: "my app",
-          client_id: "12345",
-          scopes: ["read"].map { |name| UserApiKeyScope.new(name: name) },
-          user_id: user.id,
-        )
-
+    it "creates a new client if the client id changes" do
       params = {
         "REQUEST_METHOD" => "GET",
         "HTTP_USER_API_KEY" => api_key.key,
-        "HTTP_USER_API_CLIENT_ID" => dupe.client_id,
+        "HTTP_USER_API_CLIENT_ID" => api_key.client.client_id + "1",
       }
-
       good_provider = provider("/", params)
       expect(good_provider.current_user.id).to eq(user.id)
-      expect(UserApiKey.find_by(id: dupe.id)).to eq(nil)
+      expect(UserApiKeyClient.exists?(client_id: api_key.client.client_id + "1")).to eq(true)
     end
 
     it "allows user API access correctly" do
