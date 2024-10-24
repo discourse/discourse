@@ -287,7 +287,7 @@ RSpec.shared_examples "remote backup store" do
       def upload_file
         # time has fidelity issues freeze a time that is not going to be prone
         # to that
-        freeze_time
+        freeze_time(Time.now.round)
 
         backup = BackupFile.new(filename: "foo.tar.gz", size: 33, last_modified: Time.zone.now)
 
