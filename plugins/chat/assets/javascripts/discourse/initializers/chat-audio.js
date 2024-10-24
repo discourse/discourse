@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { capabilities } from "discourse/services/capabilities";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
@@ -15,9 +16,25 @@ export default {
       return;
     }
 
-    this.canPlaySound = function () {
+    this.supportsServiceWorker = () => {
+      if (
+        !(
+          "serviceWorker" in navigator &&
+          typeof ServiceWorkerRegistration !== "undefined" &&
+          !capabilities.isAppWebview &&
+          navigator.serviceWorker.controller &&
+          navigator.serviceWorker.controller.state === "activated"
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    };
+
+    this.canPlaySound = () => {
       return new Promise((resolve) => {
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+        if (this.supportsServiceWorker()) {
           navigator.serviceWorker.addEventListener("message", (event) => {
             if ("canPlaySound" in event.data) {
               resolve(event.data.canPlaySound);
@@ -30,7 +47,7 @@ export default {
             registration.active.postMessage({ chatSound: true });
           });
         } else {
-          resolve(false);
+          resolve(true);
         }
       });
     };
@@ -68,7 +85,6 @@ export default {
             if (!success) {
               return;
             }
-
             const chatAudioManager = container.lookup(
               "service:chat-audio-manager"
             );
