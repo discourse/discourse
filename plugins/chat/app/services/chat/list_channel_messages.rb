@@ -16,7 +16,7 @@ module Chat
     #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :channel_id, :integer
       attribute :page_size, :integer
 
@@ -56,8 +56,8 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.includes(:chatable).find_by(id: params[:channel_id])
     end
 
     def fetch_membership(channel:, guardian:)
@@ -72,11 +72,11 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def determine_target_message_id(contract:, membership:)
-      if contract.fetch_from_last_read
+    def determine_target_message_id(params:, membership:)
+      if params[:fetch_from_last_read]
         context[:target_message_id] = membership&.last_read_message_id
       else
-        context[:target_message_id] = contract.target_message_id
+        context[:target_message_id] = params[:target_message_id]
       end
     end
 
@@ -96,16 +96,16 @@ module Chat
       true
     end
 
-    def fetch_messages(channel:, contract:, guardian:, enabled_threads:)
+    def fetch_messages(channel:, params:, guardian:, enabled_threads:, target_message_id:)
       messages_data =
         ::Chat::MessagesQuery.call(
-          channel: channel,
-          guardian: guardian,
-          target_message_id: context.target_message_id,
+          channel:,
+          guardian:,
+          target_message_id:,
           include_thread_messages: !enabled_threads,
-          page_size: contract.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
-          direction: contract.direction,
-          target_date: contract.target_date,
+          page_size: params[:page_size] || Chat::MessagesQuery::MAX_PAGE_SIZE,
+          direction: params[:direction],
+          target_date: params[:target_date],
         )
 
       context[:can_load_more_past] = messages_data[:can_load_more_past]

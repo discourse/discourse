@@ -36,7 +36,7 @@ module Chat
 
     model :channel
     policy :check_channel_permission
-    contract(default_values_from: :channel) do
+    params(default_values_from: :channel) do
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
@@ -66,8 +66,8 @@ module Chat
       guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?(channel)
     end
 
-    def update_channel(channel:, contract:)
-      channel.update!(contract.attributes)
+    def update_channel(channel:, params:)
+      channel.update!(**params)
     end
 
     def mark_all_threads_as_read_if_needed(channel:)

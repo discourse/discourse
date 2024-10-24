@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Action::CreateMembershipsForAutoJoin do
-  subject(:action) { described_class.call(channel: channel, contract: contract) }
+  subject(:action) { described_class.call(channel:, params:) }
 
   fab!(:channel) { Fabricate(:chat_channel, auto_join_users: true) }
   fab!(:user_1) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
 
   let(:start_user_id) { user_1.id }
   let(:end_user_id) { user_1.id }
-  let(:contract) { OpenStruct.new(start_user_id: start_user_id, end_user_id: end_user_id) }
+  let(:params) { OpenStruct.new(start_user_id: start_user_id, end_user_id: end_user_id) }
 
   it "adds correct members" do
     expect(action).to eq([user_1.id])

@@ -15,7 +15,7 @@ module Chat
       include Service::Base
 
       policy :chat_enabled
-      contract do
+      params do
         attribute :category_id, :integer
 
         validates :category_id, presence: true
@@ -37,8 +37,8 @@ module Chat
         SiteSetting.chat_enabled
       end
 
-      def fetch_category(contract:)
-        Category.find_by(id: contract.category_id)
+      def fetch_category(params:)
+        Category.find_by(id: params[:category_id])
       end
 
       def fetch_category_channel_ids(category:)

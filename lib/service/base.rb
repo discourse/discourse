@@ -94,7 +94,7 @@ module Service
         steps << ModelStep.new(name, step_name, optional: optional)
       end
 
-      def contract(name = :default, default_values_from: nil, &block)
+      def params(name = :default, default_values_from: nil, &block)
         contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(
@@ -137,7 +137,7 @@ module Service
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
         if method.parameters.any? { _1[0] != :keyreq }
-          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a contract?"
+          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
@@ -214,7 +214,7 @@ module Service
       private
 
       def contract_name
-        return :contract if default?
+        return :params if default?
         :"#{name}_contract"
       end
 
@@ -328,18 +328,18 @@ module Service
     #   end
 
     # @!scope class
-    # @!method contract(name = :default, default_values_from: nil, &block)
+    # @!method params(name = :default, default_values_from: nil, &block)
     # @param name [Symbol] name for this contract
     # @param default_values_from [Symbol] name of the model to get default values from
     # @param block [Proc] a block containing validations
     # Checks the validity of the input parameters.
     # Implements ActiveModel::Validations and ActiveModel::Attributes.
     #
-    # It stores the resulting contract in +context[:contract]+ by default
+    # It stores the resulting contract in +context[:params]+ by default
     # (can be customized by providing the +name+ argument).
     #
     # @example
-    #   contract do
+    #   params do
     #     attribute :name
     #     validates :name, presence: true
     #   end

@@ -25,7 +25,7 @@ module Chat
     #   @option params [Boolean] :upsert
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
@@ -62,10 +62,10 @@ module Chat
         )
     end
 
-    def fetch_target_users(guardian:, contract:)
+    def fetch_target_users(guardian:, params:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: [*contract.target_usernames, guardian.user.username],
-        groups: contract.target_groups,
+        usernames: [*params[:target_usernames], guardian.user.username],
+        groups: params[:target_groups],
       )
     end
 
@@ -77,11 +77,11 @@ module Chat
       !user_comm_screener.actor_disallowing_all_pms?
     end
 
-    def fetch_or_create_direct_message(target_users:, contract:)
+    def fetch_or_create_direct_message(target_users:, params:)
       ids = target_users.map(&:id)
-      is_group = ids.size > 2 || contract.name.present?
+      is_group = ids.size > 2 || params[:name].present?
 
-      if contract.upsert || !is_group
+      if params[:upsert] || !is_group
         ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
           ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       else
@@ -93,8 +93,8 @@ module Chat
       ::Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def set_optional_name(channel:, contract:)
-      channel.update!(name: contract.name) if contract.name&.length&.positive?
+    def set_optional_name(channel:, params:)
+      channel.update!(params.slice(:name)) if params[:name]&.size&.positive?
     end
 
     def update_memberships(channel:, target_users:)

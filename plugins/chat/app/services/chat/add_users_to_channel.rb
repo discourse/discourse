@@ -24,7 +24,7 @@ module Chat
     #   @option params [Array<String>] :usernames
     #   @option params [Array<String>] :groups
     #   @return [Service::Base::Context]
-    contract do
+    params do
       attribute :usernames, :array
       attribute :groups, :array
       attribute :channel_id, :integer
@@ -49,8 +49,8 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.includes(:chatable).find_by(id: params[:channel_id])
     end
 
     def can_add_users_to_channel(guardian:, channel:)
@@ -58,10 +58,10 @@ module Chat
         channel.direct_message_channel? && channel.chatable.group
     end
 
-    def fetch_target_users(contract:, channel:)
+    def fetch_target_users(params:, channel:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: contract.usernames,
-        groups: contract.groups,
+        usernames: params[:usernames],
+        groups: params[:groups],
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
       )
     end

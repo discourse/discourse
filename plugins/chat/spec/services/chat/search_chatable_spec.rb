@@ -47,10 +47,10 @@ RSpec.describe Chat::SearchChatable do
 
       it "cleans the term" do
         params[:term] = "#bob"
-        expect(result.contract.term).to eq("bob")
+        expect(result.params[:term]).to eq("bob")
 
         params[:term] = "@bob"
-        expect(result.contract.term).to eq("bob")
+        expect(result.params[:term]).to eq("bob")
       end
 
       it "fetches user memberships" do

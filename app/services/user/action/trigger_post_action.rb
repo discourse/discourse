@@ -3,9 +3,9 @@
 class User::Action::TriggerPostAction < Service::ActionBase
   option :guardian
   option :post
-  option :contract
+  option :params
 
-  delegate :post_action, to: :contract, private: true
+  delegate :post_action, to: :params, private: true
   delegate :user, to: :guardian, private: true
 
   def call
@@ -30,7 +30,7 @@ class User::Action::TriggerPostAction < Service::ActionBase
     # Take what the moderator edited in as gospel
     PostRevisor.new(post).revise!(
       user,
-      { raw: contract.post_edit },
+      { raw: params.post_edit },
       skip_validations: true,
       skip_revision: true,
     )

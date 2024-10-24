@@ -3,9 +3,9 @@
 class User::Action::SilenceAll < Service::ActionBase
   option :users, []
   option :actor
-  option :contract
+  option :params
 
-  delegate :message, :post_id, :silenced_till, :reason, to: :contract, private: true
+  delegate :message, :post_id, :silenced_till, :reason, to: :params, private: true
 
   def call
     silenced_users.first.try(:user_history).try(:details)

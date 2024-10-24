@@ -16,7 +16,7 @@ module Chat
     #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :message_id, :integer
       attribute :channel_id, :integer
 
@@ -35,8 +35,8 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def fetch_membership(guardian:, channel:)
@@ -47,8 +47,8 @@ module Chat
       guardian.can_join_chat_channel?(membership.chat_channel)
     end
 
-    def fetch_message(channel:, contract:)
-      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: contract.message_id)
+    def fetch_message(channel:, params:)
+      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: params[:message_id])
     end
 
     def ensure_message_id_recency(message:, membership:)

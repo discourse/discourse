@@ -3,7 +3,7 @@
 class User::Suspend
   include Service::Base
 
-  contract do
+  params do
     attribute :user_id, :integer
     attribute :reason, :string
     attribute :message, :string
@@ -29,27 +29,27 @@ class User::Suspend
 
   private
 
-  def fetch_user(contract:)
-    User.find_by(id: contract.user_id)
+  def fetch_user(params:)
+    User.find_by(id: params[:user_id])
   end
 
-  def fetch_users(user:, contract:)
-    [user, *User.where(id: contract.other_user_ids.to_a.uniq).to_a]
+  def fetch_users(user:, params:)
+    [user, *User.where(id: params[:other_user_ids].to_a.uniq).to_a]
   end
 
   def can_suspend_all_users(guardian:, users:)
     users.all? { guardian.can_suspend?(_1) }
   end
 
-  def suspend(guardian:, users:, contract:)
-    context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, contract:)
+  def suspend(guardian:, users:, params:)
+    context[:full_reason] = User::Action::SuspendAll.call(users:, actor: guardian.user, params:)
   end
 
-  def fetch_post(contract:)
-    Post.find_by(id: contract.post_id)
+  def fetch_post(params:)
+    Post.find_by(id: params[:post_id])
   end
 
-  def perform_post_action(guardian:, post:, contract:)
-    User::Action::TriggerPostAction.call(guardian:, post:, contract:)
+  def perform_post_action(guardian:, post:, params:)
+    User::Action::TriggerPostAction.call(guardian:, post:, params:)
   end
 end

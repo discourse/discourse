@@ -34,7 +34,7 @@ module Chat
     #   @option params [Integer] :channel_ids
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :channel_ids, :array, default: []
       attribute :thread_ids, :array, default: []
       attribute :include_missing_memberships, default: false
@@ -45,14 +45,16 @@ module Chat
 
     private
 
-    def fetch_report(contract:, guardian:)
+    def fetch_report(params:, guardian:)
       ::Chat::TrackingStateReportQuery.call(
-        guardian: guardian,
-        channel_ids: contract.channel_ids,
-        thread_ids: contract.thread_ids,
-        include_missing_memberships: contract.include_missing_memberships,
-        include_threads: contract.include_threads,
-        include_read: contract.include_read,
+        guardian:,
+        **params.slice(
+          :channel_ids,
+          :thread_ids,
+          :include_missing_memberships,
+          :include_threads,
+          :include_read,
+        ),
       )
     end
   end
