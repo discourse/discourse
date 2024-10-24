@@ -27,7 +27,7 @@
       </div>
     {{else}}
       <div class="card-row first-row">
-        <div class="user-card-avatar">
+        <div class="user-card-avatar" aria-hidden="true">
           {{#if this.contentHidden}}
             <span class="card-huge-avatar">{{bound-avatar
                 this.user
@@ -38,6 +38,7 @@
               {{on "click" this.handleShowUser}}
               href={{this.user.path}}
               class="card-huge-avatar"
+              tabindex="-1"
             >{{bound-avatar this.user "huge"}}</a>
           {{/if}}
 
@@ -59,10 +60,7 @@
               {{if this.nameFirst 'full-name' 'username'}}"
           >
             {{#if this.contentHidden}}
-              <span
-                id="discourse-user-card-title"
-                class="name-username-wrapper"
-              >
+              <span class="name-username-wrapper">
                 {{if
                   this.nameFirst
                   this.user.name
@@ -74,11 +72,12 @@
                 {{on "click" this.handleShowUser}}
                 href={{this.user.path}}
                 class="user-profile-link"
+                aria-label={{i18n
+                  "user.profile_link"
+                  username=this.user.username
+                }}
               >
-                <span
-                  id="discourse-user-card-title"
-                  class="name-username-wrapper"
-                >
+                <span class="name-username-wrapper">
                   {{if
                     this.nameFirst
                     this.user.name
@@ -185,13 +184,13 @@
       {{#if this.user.profile_hidden}}
         <div class="card-row second-row">
           <div class="profile-hidden">
-            <span>{{i18n "user.profile_hidden"}}</span>
+            <span role="alert">{{i18n "user.profile_hidden"}}</span>
           </div>
         </div>
       {{else if this.user.inactive}}
         <div class="card-row second-row">
           <div class="inactive-user">
-            <span>{{i18n "user.inactive_user"}}</span>
+            <span role="alert">{{i18n "user.inactive_user"}}</span>
           </div>
         </div>
       {{/if}}

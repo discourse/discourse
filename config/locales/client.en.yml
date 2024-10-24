@@ -2131,6 +2131,9 @@ en:
         private_message: "message"
         the_topic: "the topic"
 
+      card: "User card"
+      profile_link: "%{username}, visit profile"
+
     user_status:
       save: "Save"
       set_custom_status: "Set custom status"

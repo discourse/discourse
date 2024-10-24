@@ -3,7 +3,7 @@ import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 
 const FOCUSABLE_ELEMENTS =
-  'details:not(.is-disabled) summary, [autofocus], a, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])';
+  "details:not(.is-disabled) summary, [autofocus], a, input, select, textarea, summary";
 
 export default class TrapTabModifier extends Modifier {
   element = null;
@@ -50,10 +50,17 @@ export default class TrapTabModifier extends Modifier {
     }
 
     const focusableElements = FOCUSABLE_ELEMENTS + ", button:enabled";
-    const firstFocusableElement = this.element.querySelector(focusableElements);
-    const focusableContent = this.element.querySelectorAll(focusableElements);
 
-    const lastFocusableElement = focusableContent[focusableContent.length - 1];
+    const filteredFocusableElements = Array.from(
+      this.element.querySelectorAll(focusableElements)
+    ).filter((element) => {
+      const tabindex = element.getAttribute("tabindex");
+      return tabindex !== "-1";
+    });
+
+    const firstFocusableElement = filteredFocusableElements[0];
+    const lastFocusableElement =
+      filteredFocusableElements[filteredFocusableElements.length - 1];
 
     if (event.shiftKey) {
       if (document.activeElement === firstFocusableElement) {
@@ -63,7 +70,6 @@ export default class TrapTabModifier extends Modifier {
     } else {
       if (document.activeElement === lastFocusableElement) {
         event.preventDefault();
-
         (
           this.element.querySelector(".modal-close") || firstFocusableElement
         )?.focus({ preventScroll: this.preventScroll });
