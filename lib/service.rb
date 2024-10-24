@@ -40,9 +40,9 @@ module Service
   #
   # @example An example from the {TrashChannel} service
   #   class TrashChannel
-  #     include Base
+  #     include Service::Base
   #
-  #     model :channel, :fetch_channel
+  #     model :channel
   #     policy :invalid_access
   #     transaction do
   #       step :prevents_slug_collision
@@ -79,17 +79,15 @@ module Service
   #   end
   # @example An example from the {UpdateChannelStatus} service which uses a contract
   #   class UpdateChannelStatus
-  #     include Base
+  #     include Service::Base
   #
-  #     model :channel, :fetch_channel
-  #     contract
-  #     policy :check_channel_permission
-  #     step :change_status
-  #
-  #     class Contract
+  #     model :channel
+  #     contract do
   #       attribute :status
   #       validates :status, inclusion: { in: Chat::Channel.editable_statuses.keys }
   #     end
+  #     policy :check_channel_permission
+  #     step :change_status
   #
   #     …
   #   end

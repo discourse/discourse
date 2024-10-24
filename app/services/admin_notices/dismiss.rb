@@ -16,8 +16,8 @@ class AdminNotices::Dismiss
     guardian.is_admin?
   end
 
-  def fetch_admin_notice(id:)
-    AdminNotice.find_by(id: id)
+  def fetch_admin_notice(params:)
+    AdminNotice.find_by(id: params[:id])
   end
 
   def destroy(admin_notice:)

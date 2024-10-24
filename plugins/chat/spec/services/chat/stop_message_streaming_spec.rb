@@ -6,10 +6,11 @@ RSpec.describe Chat::StopMessageStreaming do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, message_id: message_1.id } }
+    let(:params) { { message_id: message_1.id } }
+    let(:dependencies) { { guardian: guardian } }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }

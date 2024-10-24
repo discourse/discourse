@@ -4,15 +4,16 @@ module Chat
   # Service responsible for updating a chat channel status.
   #
   # @example
-  #  Chat::UpdateChannelStatus.call(channel_id: 2, guardian: guardian, status: "open")
+  #  Chat::UpdateChannelStatus.call(guardian: guardian, params: { status: "open", channel_id: 2 })
   #
   class UpdateChannelStatus
     include Service::Base
 
-    # @!method call(channel_id:, guardian:, status:)
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [String] status
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [String] :status
     #   @return [Service::Base::Context]
 
     model :channel, :fetch_channel
@@ -26,8 +27,8 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:)
-      Chat::Channel.find_by(id: channel_id)
+    def fetch_channel(params:)
+      Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def check_channel_permission(guardian:, channel:, contract:)

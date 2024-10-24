@@ -11,12 +11,19 @@ module ChatSDK
     # @example Fetching messages from a channel with additional parameters
     #   ChatSDK::Channel.messages(channel_id: 1, guardian: Guardian.new)
     #
-    def self.messages(channel_id:, guardian:, **params)
-      new.messages(channel_id:, guardian:, **params)
+    def self.messages(...)
+      new.messages(...)
     end
 
     def messages(channel_id:, guardian:, **params)
-      Chat::ListChannelMessages.call(channel_id:, guardian:, **params, direction: "future") do
+      Chat::ListChannelMessages.call(
+        guardian:,
+        params: {
+          channel_id:,
+          direction: "future",
+          **params,
+        },
+      ) do
         on_success { |messages:| messages }
         on_failure { raise "Unexpected error" }
         on_failed_policy(:can_view_channel) { raise "Guardian can't view channel" }

@@ -5,16 +5,17 @@ module Chat
   # as read.
   #
   # @example
-  #  Chat::UpdateUserThreadLastRead.call(channel_id: 2, thread_id: 3, message_id: 4, guardian: guardian)
+  #  Chat::UpdateUserThreadLastRead.call(params: { channel_id: 2, thread_id: 3, message_id: 4 }, guardian: guardian)
   #
   class UpdateUserThreadLastRead
     include ::Service::Base
 
-    # @!method call(channel_id:, thread_id:, guardian:)
-    #   @param [Integer] channel_id
-    #   @param [Integer] thread_id
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
     contract do

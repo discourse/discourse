@@ -24,7 +24,7 @@ class Experiments::Toggle
   def toggle(contract:, guardian:)
     SiteSetting.set_and_log(
       contract.setting_name,
-      !SiteSetting.send(contract.setting_name),
+      !SiteSetting.public_send(contract.setting_name),
       guardian.user,
     )
   end

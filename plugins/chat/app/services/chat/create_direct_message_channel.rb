@@ -9,18 +9,20 @@ module Chat
   # @example
   #  ::Chat::CreateDirectMessageChannel.call(
   #    guardian: guardian,
-  #    target_usernames: ["bob", "alice"]
+  #    params: {
+  #      target_usernames: ["bob", "alice"],
+  #   },
   #  )
   #
   class CreateDirectMessageChannel
     include Service::Base
 
-    # @!method call(guardian:, **params_to_create)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_create
-    #   @option params_to_create [Array<String>] target_usernames
-    #   @option params_to_create [Array<String>] target_groups
-    #   @option params_to_create [Boolean] upsert
+    #   @param [Hash] params
+    #   @option params [Array<String>] :target_usernames
+    #   @option params [Array<String>] :target_groups
+    #   @option params [Boolean] :upsert
     #   @return [Service::Base::Context]
 
     contract do

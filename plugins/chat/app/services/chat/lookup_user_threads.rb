@@ -7,17 +7,18 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupUserThreads.call(guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupUserThreads.call(guardian: guardian, params: { limit: 5, offset: 2 })
   #
   class LookupUserThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(guardian:, limit: nil, offset: nil)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
     contract do

@@ -7,20 +7,23 @@ module Chat
   #
   # @example
   # Chat::UpdateThreadNotificationSettings.call(
-  #   thread_id: 88,
-  #   channel_id: 2,
+  #   params: {
+  #     thread_id: 88,
+  #     channel_id: 2,
+  #     notification_level: notification_level,
+  #   },
   #   guardian: guardian,
-  #   notification_level: notification_level,
   # )
   #
   class UpdateThreadNotificationSettings
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, notification_level:)
-    #   @param [Integer] thread_id
-    #   @param [Integer] channel_id
-    #   @param [Integer] notification_level
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :notification_level
     #   @return [Service::Base::Context]
 
     contract do

@@ -4,16 +4,17 @@ module Chat
   # Returns a list of chatables (users, groups ,category channels, direct message channels) that can be chatted with.
   #
   # @example
-  #  Chat::SearchChatable.call(term: "@bob", guardian: guardian)
+  #  Chat::SearchChatable.call(params: { term: "@bob" }, guardian: guardian)
   #
   class SearchChatable
     include Service::Base
 
     SEARCH_RESULT_LIMIT ||= 10
 
-    # @!method call(term:, guardian:)
-    #   @param [String] term
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [String] :term
     #   @return [Service::Base::Context]
 
     contract do

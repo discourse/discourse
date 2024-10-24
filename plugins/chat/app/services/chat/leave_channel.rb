@@ -6,17 +6,20 @@ module Chat
   # @example
   #  ::Chat::LeaveChannel.call(
   #    guardian: guardian,
-  #    channel_id: 1,
+  #    params: {
+  #      channel_id: 1,
+  #    }
   #  )
   #
   class LeaveChannel
     include Service::Base
 
-    # @!method call(guardian:, channel_id:,)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] channel_id of the channel
-
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id ID of the channel
     #   @return [Service::Base::Context]
+
     contract do
       attribute :channel_id, :integer
 

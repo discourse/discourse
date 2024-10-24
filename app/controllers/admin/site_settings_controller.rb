@@ -39,7 +39,7 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
-    SiteSetting::Update.call(service_params.merge(setting_name: id, new_value: value)) do
+    SiteSetting::Update.call(params: { setting_name: id, new_value: value }, guardian:) do
       on_success do |contract:|
         if update_existing_users
           SiteSettingUpdateExistingUsers.call(id, contract.new_value, previous_value)

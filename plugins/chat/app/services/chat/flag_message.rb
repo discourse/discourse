@@ -6,26 +6,27 @@ module Chat
   # @example
   #  ::Chat::FlagMessage.call(
   #    guardian: guardian,
-  #    channel_id: 1,
-  #    message_id: 43,
+  #    params: {
+  #      channel_id: 1,
+  #      message_id: 43,
+  #    }
   #  )
   #
   class FlagMessage
     include Service::Base
 
-    # @!method call(guardian:, channel_id:, data:)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] channel_id of the channel
-    #   @param [Integer] message_id of the message
-    #   @param [Integer] flag_type_id - Type of flag to create
-    #   @param [String] optional message - Used when the flag type is notify_user or notify_moderators and we have to create
-    #     a separate PM.
-    #   @param [Boolean] optional is_warning - Staff can send warnings when using the notify_user flag.
-    #   @param [Boolean] optional take_action - Automatically approves the created reviewable and deletes the chat message.
-    #   @param [Boolean] optional queue_for_review - Adds a special reason to the reviewable score and creates the reviewable using
-    #     the force_review option.
-
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id of the channel
+    #   @option params [Integer] :message_id of the message
+    #   @option params [Integer] :flag_type_id Type of flag to create
+    #   @option params [String] :message (optional) Used when the flag type is notify_user or notify_moderators and we have to create a separate PM.
+    #   @option params [Boolean] :is_warning (optional) Staff can send warnings when using the notify_user flag.
+    #   @option params [Boolean] :take_action (optional) Automatically approves the created reviewable and deletes the chat message.
+    #   @option params [Boolean] :queue_for_review (optional) Adds a special reason to the reviewable score and creates the reviewable using the force_review option.
     #   @return [Service::Base::Context]
+
     contract do
       attribute :message_id, :integer
       attribute :channel_id, :integer

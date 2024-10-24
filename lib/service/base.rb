@@ -18,7 +18,7 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context
-      delegate :slice, to: :store
+      delegate :slice, :dig, to: :store
 
       def initialize(context = {})
         @store = context.symbolize_keys
@@ -115,6 +115,12 @@ module Service
       def transaction(&block)
         steps << TransactionStep.new(&block)
       end
+
+      def options(&block)
+        klass = Class.new(Service::OptionsBase).tap { _1.class_eval(&block) }
+        const_set("Options", klass)
+        steps << OptionsStep.new(:default, class_name: klass)
+      end
     end
 
     # @!visibility private
@@ -196,7 +202,7 @@ module Service
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
-        contract = class_name.new(default_values.merge(context.slice(*attributes)))
+        contract = class_name.new(default_values.merge(context[:params].slice(*attributes)))
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
@@ -208,8 +214,12 @@ module Service
       private
 
       def contract_name
-        return :contract if name.to_sym == :default
+        return :contract if default?
         :"#{name}_contract"
+      end
+
+      def default?
+        name.to_sym == :default
       end
     end
 
@@ -226,6 +236,14 @@ module Service
 
       def call(instance, context)
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+      end
+    end
+
+    # @!visibility private
+    class OptionsStep < Step
+      def call(instance, context)
+        context[result_key] = Context.build
+        context[:options] = class_name.new(context[:options])
       end
     end
 
@@ -263,7 +281,7 @@ module Service
     # customized by providing the +name+ argument).
     #
     # @example
-    #   model :channel, :fetch_channel
+    #   model :channel
     #
     #   private
     #
@@ -359,6 +377,17 @@ module Service
     #     step :prevents_slug_collision
     #     step :soft_delete_channel
     #     step :log_channel_deletion
+    #   end
+
+    # @!scope class
+    # @!method options(&block)
+    # @param block [Proc] a block containing options definition
+    # This is used to define options allowing to parameterize the service
+    # behavior. The resulting options are available in `context[:options]`.
+    #
+    # @example
+    #   options do
+    #     attribute :my_option, :boolean, default: false
     #   end
 
     # @!visibility private

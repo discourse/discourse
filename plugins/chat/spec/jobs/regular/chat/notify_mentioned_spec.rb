@@ -15,7 +15,9 @@ describe Jobs::Chat::NotifyMentioned do
     result =
       Chat::CreateDirectMessageChannel.call(
         guardian: user_1.guardian,
-        target_usernames: [user_1.username, user_2.username],
+        params: {
+          target_usernames: [user_1.username, user_2.username],
+        },
       )
 
     service_failed!(result) if result.failure?

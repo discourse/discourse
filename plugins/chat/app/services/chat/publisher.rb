@@ -322,8 +322,10 @@ module Chat
       tracking_data =
         Chat::TrackingState.call(
           guardian: Guardian.new(user),
-          channel_ids: channel_last_read_map.keys,
-          include_missing_memberships: true,
+          params: {
+            channel_ids: channel_last_read_map.keys,
+            include_missing_memberships: true,
+          },
         )
       if tracking_data.failure?
         raise StandardError,
