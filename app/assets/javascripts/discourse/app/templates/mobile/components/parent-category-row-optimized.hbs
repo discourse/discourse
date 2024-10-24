@@ -1,0 +1,29 @@
+{{#unless this.isHidden}}
+  <PluginOutlet
+    @name="category-list-above-each-category"
+    @outletArgs={{hash category=this.category}}
+  />
+  <div
+    data-category-id={{this.category.id}}
+    data-notification-level={{this.category.notificationLevelString}}
+    style={{border-color this.category.color}}
+    class="category-list-item category {{if this.isMuted 'muted'}}"
+  >
+    <table class="topic-list">
+      <tbody>
+        <tr>
+          <th class="main-link">
+            <CategoryTitleLink @category={{this.category}} />
+          </th>
+        </tr>
+        {{#if this.category.description_excerpt}}
+          <tr class="category-description">
+            <td colspan="3">
+              {{html-safe this.category.description_excerpt}}
+            </td>
+          </tr>
+        {{/if}}
+      </tbody>
+    </table>
+  </div>
+{{/unless}}
