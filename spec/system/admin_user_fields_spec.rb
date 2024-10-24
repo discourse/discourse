@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Fields", type: :system, js: true do
+describe "Admin User Fields", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }

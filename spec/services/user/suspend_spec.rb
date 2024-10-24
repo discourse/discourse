@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe User::Suspend do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:user_id) }
