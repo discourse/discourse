@@ -33,6 +33,7 @@ ignored:
     - rdoc # Ruby (default gem)
     - reline # Ruby (default gem)
     - ruby2_keywords # Ruby (default gem)
+    - securerandom # Ruby (default gem)
     - stringio # Ruby (default gem)
     - strscan # Ruby (default gem)
     - timeout # Ruby (default gem)

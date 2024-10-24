@@ -70,7 +70,7 @@ end
 
 task "db:rollback" => %w[environment set_locale] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
-  ActiveRecord::Base.connection.migration_context.rollback(step)
+  ActiveRecord::Base.connection_pool.migration_context.rollback(step)
   Rake::Task["db:_dump"].invoke
 end
 
@@ -236,7 +236,7 @@ task "db:migrate" => %w[
     redis: Discourse.redis.without_namespace,
     validity: 300,
   ) do
-    migrations = ActiveRecord::Base.connection.migration_context.migrations
+    migrations = ActiveRecord::Base.connection_pool.migration_context.migrations
     now_timestamp = Time.now.utc.strftime("%Y%m%d%H%M%S").to_i
     epoch_timestamp = Time.at(0).utc.strftime("%Y%m%d%H%M%S").to_i
 
