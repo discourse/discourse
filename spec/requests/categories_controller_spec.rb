@@ -1504,6 +1504,23 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
     end
+
+    context "when not logged in" do
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "works and is not CSRF protected" do
+        post "/categories/search.json", params: { term: "" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+          SiteSetting.uncategorized_category_id,
+          category.id,
+          subcategory.id,
+          category2.id,
+        )
+      end
+    end
   end
 
   describe "#hierachical_search" do
