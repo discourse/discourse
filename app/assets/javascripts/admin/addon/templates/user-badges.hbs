@@ -16,84 +16,100 @@
     {{#if this.noAvailableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
-      <form class="form-horizontal">
-        <div class="control-group">
-          <label>{{i18n "admin.badges.badge"}}</label>
-          <ComboBox
-            @value={{this.selectedBadgeId}}
-            @content={{this.availableBadges}}
-            @onChange={{fn (mut this.selectedBadgeId)}}
-            @options={{hash filterable=true}}
+      <PluginOutlet
+        @name="badge-granter-form"
+        @outletArgs={{hash
+          availableBadges=this.availableBadges
+          userBadges=this.userBadges
+        }}
+      >
+        <form class="form-horizontal">
+          <div class="control-group">
+            <label>{{i18n "admin.badges.badge"}}</label>
+            <ComboBox
+              @value={{this.selectedBadgeId}}
+              @content={{this.availableBadges}}
+              @onChange={{fn (mut this.selectedBadgeId)}}
+              @options={{hash filterable=true}}
+            />
+          </div>
+          <div class="control-group">
+            <label>{{i18n "admin.badges.reason"}}</label>
+            <Input @type="text" @value={{this.badgeReason}} /><br /><small
+            >{{i18n "admin.badges.reason_help"}}</small>
+          </div>
+          <DButton
+            @action={{this.performGrantBadge}}
+            @label="admin.badges.grant"
+            type="submit"
+            class="btn-primary"
           />
-        </div>
-        <div class="control-group">
-          <label>{{i18n "admin.badges.reason"}}</label>
-          <Input @type="text" @value={{this.badgeReason}} /><br /><small>{{i18n
-              "admin.badges.reason_help"
-            }}</small>
-        </div>
-        <DButton
-          @action={{this.performGrantBadge}}
-          @label="admin.badges.grant"
-          type="submit"
-          class="btn-primary"
-        />
-      </form>
+        </form>
+      </PluginOutlet>
     {{/if}}
 
-    <table id="user-badges">
-      <tbody>
-        <tr>
-          <th>{{i18n "admin.badges.badge"}}</th>
-          <th>{{i18n "admin.badges.granted_by"}}</th>
-          <th class="reason">{{i18n "admin.badges.reason"}}</th>
-          <th>{{i18n "admin.badges.granted_at"}}</th>
-          <th></th>
-        </tr>
-        {{#each this.groupedBadges as |userBadge|}}
+    <PluginOutlet
+      @name="badge-granter-table"
+      @outletArgs={{hash
+        groupedBadges=this.groupedBadges
+        revokeBadge=this.revokeBadge
+        expandGroup=this.expandGroup
+      }}
+    >
+      <table id="user-badges">
+        <tbody>
           <tr>
-            <td><UserBadge
-                @badge={{userBadge.badge}}
-                @count={{userBadge.count}}
-              /></td>
-            <td>
-              <LinkTo @route="adminUser" @model={{userBadge.granted_by}}>
-                {{avatar userBadge.granted_by imageSize="tiny"}}
-                {{userBadge.granted_by.username}}
-              </LinkTo>
-            </td>
-            <td class="reason">
-              {{#if userBadge.postUrl}}
-                <a href={{userBadge.postUrl}}>{{userBadge.topic_title}}</a>
-              {{/if}}
-            </td>
-            <td>{{age-with-tooltip userBadge.granted_at}}</td>
-            <td>
-              {{#if userBadge.grouped}}
-                <DButton
-                  @action={{fn this.expandGroup userBadge}}
-                  @label="admin.badges.expand"
-                />
-              {{else}}
-                <DButton
-                  @action={{fn this.revokeBadge userBadge}}
-                  @label="admin.badges.revoke"
-                  class="btn-danger"
-                />
-              {{/if}}
-            </td>
+            <th>{{i18n "admin.badges.badge"}}</th>
+            <th>{{i18n "admin.badges.granted_by"}}</th>
+            <th class="reason">{{i18n "admin.badges.reason"}}</th>
+            <th>{{i18n "admin.badges.granted_at"}}</th>
+            <th></th>
           </tr>
-        {{else}}
-          <tr>
-            <td colspan="5">
-              <p>{{i18n
-                  "admin.badges.no_user_badges"
-                  name=this.user.username
-                }}</p>
-            </td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+          {{#each this.groupedBadges as |userBadge|}}
+            <tr>
+              <td><UserBadge
+                  @badge={{userBadge.badge}}
+                  @count={{userBadge.count}}
+                /></td>
+              <td>
+                <LinkTo @route="adminUser" @model={{userBadge.granted_by}}>
+                  {{avatar userBadge.granted_by imageSize="tiny"}}
+                  {{userBadge.granted_by.username}}
+                </LinkTo>
+              </td>
+              <td class="reason">
+                {{#if userBadge.postUrl}}
+                  <a href={{userBadge.postUrl}}>{{userBadge.topic_title}}</a>
+                {{/if}}
+              </td>
+              <td>{{age-with-tooltip userBadge.granted_at}}</td>
+              <td>
+                {{#if userBadge.grouped}}
+                  <DButton
+                    @action={{fn this.expandGroup userBadge}}
+                    @label="admin.badges.expand"
+                  />
+                {{else}}
+                  <DButton
+                    @action={{fn this.revokeBadge userBadge}}
+                    @label="admin.badges.revoke"
+                    class="btn-danger"
+                  />
+                {{/if}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="5">
+                <p>{{i18n
+                    "admin.badges.no_user_badges"
+                    name=this.user.username
+                  }}</p>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </PluginOutlet>
   </div>
 </ConditionalLoadingSpinner>
