@@ -735,6 +735,23 @@ RSpec.describe UsersController do
         end
       end
 
+      context "with discourse connect enabled" do
+        before do
+          SiteSetting.discourse_connect_url = "http://example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+        end
+
+        it "blocks registration for local logins" do
+          SiteSetting.enable_local_logins = true
+          post_user
+
+          response_body = response.parsed_body
+          expect(response_body["message"]).to eq(
+            "New account registrations are only allowed through Discourse Connect.",
+          )
+        end
+      end
+
       context "with local logins disabled" do
         before do
           SiteSetting.enable_local_logins = false

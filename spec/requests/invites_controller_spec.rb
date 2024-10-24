@@ -968,6 +968,14 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(404)
       end
 
+      it "fails when discourse connect is enabled" do
+        SiteSetting.discourse_connect_url = "https://example.com/sso"
+        SiteSetting.enable_discourse_connect = true
+
+        put "/invites/show/#{invite.invite_key}.json"
+        expect(response.status).to eq(404)
+      end
+
       context "with OmniAuth provider" do
         fab!(:authenticated_email) { "test@example.com" }
 

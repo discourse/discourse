@@ -3236,6 +3236,22 @@ RSpec.describe SessionController do
           expect(session[:current_user_id]).to eq(nil)
         end
 
+        it "fails when discourse connect is enabled" do
+          SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.enable_discourse_connect = true
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(403)
+        end
+
         it "logs the user in" do
           simulate_localhost_passkey_challenge
           user.activate
