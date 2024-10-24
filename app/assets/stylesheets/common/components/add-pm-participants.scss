@@ -1,3 +1,9 @@
+.d-modal.add-pm-participants {
+  .d-modal__body {
+    overflow-y: visible;
+  }
+}
+
 .add-pm-participants.modal .share.modal-panel {
   .header {
     display: flex;
