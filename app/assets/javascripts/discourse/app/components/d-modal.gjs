@@ -19,6 +19,7 @@ import {
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
+import { bind } from "discourse-common/utils/decorators";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
 export const CLOSE_INITIATED_BY_ESC = "initiatedByESC";
@@ -32,6 +33,7 @@ export default class DModal extends Component {
   @service modal;
   @service site;
   @service appEvents;
+  @service capabilities;
 
   @tracked wrapperElement;
   @tracked animating = false;
@@ -59,6 +61,11 @@ export default class DModal extends Component {
       this.handleDocumentKeydown
     );
 
+    this.appEvents.on(
+      "keyboard-visibility-change",
+      this.handleKeyboardVisibilityChange
+    );
+
     if (this.site.mobileView) {
       this.animating = true;
 
@@ -82,6 +89,11 @@ export default class DModal extends Component {
     document.documentElement.removeEventListener(
       "keydown",
       this.handleDocumentKeydown
+    );
+
+    this.appEvents.off(
+      "keyboard-visibility-change",
+      this.handleKeyboardVisibilityChange
     );
   }
 
@@ -207,6 +219,13 @@ export default class DModal extends Component {
     }
 
     return element(tagName);
+  }
+
+  @bind
+  handleKeyboardVisibilityChange(visible) {
+    if (visible && this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+      window.scrollTo(0, 0);
+    }
   }
 
   #animateBackdropOpacity(position) {
