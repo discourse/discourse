@@ -60,11 +60,6 @@ export default class DModal extends Component {
       this.handleDocumentKeydown
     );
 
-    this.appEvents.on(
-      "keyboard-visibility-change",
-      this.handleKeyboardVisibilityChange
-    );
-
     if (this.site.mobileView) {
       this.animating = true;
 
@@ -88,11 +83,6 @@ export default class DModal extends Component {
     document.documentElement.removeEventListener(
       "keydown",
       this.handleDocumentKeydown
-    );
-
-    this.appEvents.off(
-      "keyboard-visibility-change",
-      this.handleKeyboardVisibilityChange
     );
   }
 
@@ -218,13 +208,6 @@ export default class DModal extends Component {
     }
 
     return element(tagName);
-  }
-
-  @bind
-  handleKeyboardVisibilityChange(visible) {
-    if (visible) {
-      window.scrollTo(0, 0);
-    }
   }
 
   #animateBackdropOpacity(position) {
