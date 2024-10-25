@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
-  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+  subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago, created_at: 2.days.ago) }
 
   fab!(:group)
 
@@ -3240,7 +3240,7 @@ RSpec.describe User do
   describe "#invited_by" do
     it "returns even if invites was trashed" do
       invite = Fabricate(:invite, invited_by: Fabricate(:user))
-      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: Time.now)
+      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: user.created_at)
       invite.trash!
 
       expect(user.invited_by).to eq(invite.invited_by)
@@ -3583,6 +3583,21 @@ RSpec.describe User do
 
     context "when all required fields are populated" do
       before { user.set_user_field(required_field.id, "bald") }
+
+      it { expect(user.populated_required_custom_fields?).to eq(true) }
+    end
+
+    context "when field required for existing users predates user" do
+      before do
+        user.set_user_field(required_field.id, "bald")
+
+        Fabricate(
+          :user_field,
+          name: "Facial Hair",
+          requirement: "for_existing_users",
+          created_at: user.created_at - 1.day,
+        )
+      end
 
       it { expect(user.populated_required_custom_fields?).to eq(true) }
     end

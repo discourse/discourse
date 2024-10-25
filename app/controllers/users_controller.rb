@@ -221,7 +221,7 @@ class UsersController < ApplicationController
 
         if value.blank? &&
              (
-               field.for_all_users? ||
+               field.required_for_existing_users? ||
                  field.on_signup? &&
                    user.custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present?
              )
@@ -703,7 +703,7 @@ class UsersController < ApplicationController
     end
 
     # Handle custom fields
-    user_fields = UserField.all
+    user_fields = UserField.for_new_users
     if user_fields.present?
       field_params = params[:user_fields] || {}
       fields = user.custom_fields

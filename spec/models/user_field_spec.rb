@@ -2,7 +2,9 @@
 
 RSpec.describe UserField do
   it do
-    is_expected.to define_enum_for(:requirement).with_values(%w[optional for_all_users on_signup])
+    is_expected.to define_enum_for(:requirement).with_values(
+      %w[optional for_all_users on_signup for_existing_users],
+    )
   end
 
   describe "doesn't validate presence of name if field type is 'confirm'" do

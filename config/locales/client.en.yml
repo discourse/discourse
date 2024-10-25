@@ -6943,6 +6943,9 @@ en:
           for_all_users:
             title: "For all users"
             description: "When new users sign up, they must fill out this field. When existing users return to the site and this is a new required field for them, they will also be prompted to fill it out. To re-prompt all users, delete this custom field and re-create it."
+          for_existing_users:
+            title: "For existing users"
+            description: "When existing users return to the site and this is a new required field for them, they will also be prompted to fill it out. To re-prompt all existing users, delete this custom field and re-create it. New users will not be presented with this field."
           on_signup:
             title: "On signup"
             description: "When new users sign up, they must fill out this field. Existing users are unaffected."

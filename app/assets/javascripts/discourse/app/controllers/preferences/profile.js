@@ -90,10 +90,14 @@ export default class ProfileController extends Controller {
     return siteFields
       .filter(
         (siteField) =>
-          siteField.requirement === "for_all_users" &&
+          this._requiredForAllUsers(siteField) &&
           isEmpty(userFields[siteField.id])
       )
       .map((field) => EmberObject.create({ field, value: "" }));
+  }
+
+  _requiredForAllUsers(field) {
+    return ["for_all_users", "for_existing_users"].includes(field.requirement);
   }
 
   @action
