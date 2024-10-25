@@ -2,8 +2,7 @@
   z-index: z("max");
 }
 
-// shared styles for user and group cards
-.user-card,
+// styles for group cards only
 .group-card {
   max-width: 95vw;
   margin: 0;
@@ -55,46 +54,24 @@
 }
 
 // styles for user cards only
-.user-card {
-  // badges
-  .badge-section {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    .user-card-badge-link,
-    .more-user-badges {
-      display: flex;
-      flex: 0 1 50%;
-      max-width: 50%; // for text ellipsis
-      padding: 2px 0;
-      box-sizing: border-box;
-      &:nth-child(odd) {
-        padding-right: 4px;
-      }
-      a {
-        width: 100%;
-        display: flex;
-      }
+@media screen and (max-width: 580px) {
+  .d-user-card {
+    width: 95vw;
+    margin: 0 2.5vw;
+    &__controls {
+      flex-direction: column;
     }
-    .user-badge {
-      display: flex;
-      margin: 0;
-      width: 100%;
-      .badge-display-name {
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
+    &__main-content {
+      flex-direction: column;
     }
-  }
-
-  .public-user-fields {
-    @media screen and (max-height: 550px) {
-      max-height: 12vh;
+    &__meta-data {
+      gap: 0.5em;
     }
-    max-height: 40vh;
-    overflow-y: auto;
-    .public-user-field {
-      @include line-clamp(3);
+    &__website {
+      max-width: 70%;
+    }
+    &__relative-time .d-icon {
+      font-size: var(--font-down-1);
     }
   }
 }

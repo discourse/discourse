@@ -438,13 +438,17 @@
                     },
                     "avatar_template": {
                       "type": "string"
+                    },
+                    "avatar_dominant_color": {
+                      "type": "string"
                     }
                   },
                   "required": [
                     "id",
                     "username",
                     "name",
-                    "avatar_template"
+                    "avatar_template",
+                    "avatar_dominant_color"
                   ]
                 }
               },
@@ -779,6 +783,9 @@
               "avatar_template": {
                 "type": "string"
               },
+              "avatar_dominant_color": {
+                "type": "string"
+              },
               "post_count": {
                 "type": "integer"
               },
@@ -833,6 +840,7 @@
               "username",
               "name",
               "avatar_template",
+              "avatar_dominant_color",
               "post_count",
               "primary_group_name",
               "flair_name",
@@ -860,13 +868,17 @@
             },
             "avatar_template": {
               "type": "string"
+            },
+            "avatar_dominant_color": {
+              "type": "string"
             }
           },
           "required": [
             "id",
             "username",
             "name",
-            "avatar_template"
+            "avatar_template",
+            "avatar_dominant_color"
           ]
         },
         "last_poster": {
@@ -884,13 +896,17 @@
             },
             "avatar_template": {
               "type": "string"
+            },
+            "avatar_dominant_color": {
+              "type": "string"
             }
           },
           "required": [
             "id",
             "username",
             "name",
-            "avatar_template"
+            "avatar_template",
+            "avatar_dominant_color"
           ]
         }
       },
