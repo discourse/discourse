@@ -10,17 +10,9 @@ module Migrations::Uploader
     end
 
     def configure!
-      SiteSetting.clean_up_uploads = false
-      SiteSetting.authorized_extensions = @options[:authorized_extensions]
-      SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
-      SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
-
+      configure_basic_uploads
       configure_multisite if @options[:multisite]
-
-      if @options[:enable_s3_uploads]
-        configure_s3_uploads!
-        verify_s3_uploads_configuration!
-      end
+      configure_s3 if @options[:enable_s3_uploads]
     end
 
     def self.configure!(options)
@@ -28,6 +20,13 @@ module Migrations::Uploader
     end
 
     private
+
+    def configure_basic_uploads
+      SiteSetting.clean_up_uploads = false
+      SiteSetting.authorized_extensions = @options[:authorized_extensions]
+      SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
+      SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
+    end
 
     def configure_multisite
       # rubocop:disable Discourse/NoDirectMultisiteManipulation
@@ -46,7 +45,7 @@ module Migrations::Uploader
       RailsMultisite::ConnectionManagement.current_db_override = @options[:multisite_db_name]
     end
 
-    def configure_s3_uploads!
+    def configure_s3
       SiteSetting.s3_access_key_id = @options[:s3_access_key_id]
       SiteSetting.s3_secret_access_key = @options[:s3_secret_access_key]
       SiteSetting.s3_upload_bucket = @options[:s3_upload_bucket]
@@ -57,6 +56,8 @@ module Migrations::Uploader
       if SiteSetting.enable_s3_uploads != true
         raise S3UploadsConfigurationError, "Failed to enable S3 uploads"
       end
+
+      verify_s3_uploads_configuration!
     end
 
     def verify_s3_uploads_configuration!

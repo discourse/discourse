@@ -7,20 +7,16 @@ module Migrations::CLI::UploadCommand
       option :settings,
              type: :string,
              desc: "Uploads settings file path",
-             default: "./config/upload.yml",
+             default: "./migrations/config/upload.yml",
+             aliases: "-s",
              banner: "path"
       option :fix_missing, type: :boolean, desc: "Fix missing uploads"
       option :optimize, type: :boolean, desc: "Optimize uploads"
       def upload
-        validate_options!
-
-        ::Migrations.load_rails_environment
-        require "extralite"
-
         puts "Starting uploads..."
 
-        settings = ::Migrations::SettingsParser.parse!(options.settings)
-        merge_settings_from_cli_args!(settings)
+        validate_settings_file!
+        settings = load_settings
 
         ::Migrations::Uploader::Uploads.perform!(settings)
 
@@ -29,14 +25,23 @@ module Migrations::CLI::UploadCommand
 
       private
 
+      def load_settings
+        settings = ::Migrations::SettingsParser.parse!(options.settings)
+        merge_settings_from_cli_args!(settings)
+
+        settings
+      end
+
       def merge_settings_from_cli_args!(settings)
         settings[:fix_missing] = options.fix_missing if options.fix_missing.present?
         settings[:create_optimized_images] = options.optimize if options.optimize.present?
       end
 
-      def validate_options!
-        if !File.exist?(options.settings)
-          raise ::Migrations::NoSettingsFound, "No Settings file found at #{options.settings}"
+      def validate_settings_file!
+        path = options.settings
+
+        if !File.exist?(path)
+          raise ::Migrations::NoSettingsFound, "Settings file not found: #{path}"
         end
       end
     end

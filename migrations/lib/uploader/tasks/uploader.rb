@@ -8,39 +8,13 @@ module Migrations::Uploader
       UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
       def run!
-        puts "Uploading uploads..."
+        puts "", "Uploading uploads..."
 
-        delete_missing_uploads if settings[:delete_missing_uploads]
-        load_output_existing_ids
-        load_source_existing_ids
+        process_existing_uploads
 
-        if (surplus_upload_ids = @output_existing_ids - @source_existing_ids).any?
-          if settings[:delete_surplus_uploads]
-            puts "Deleting #{surplus_upload_ids.size} uploads from output database..."
-
-            surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
-              placeholders = (["?"] * ids.size).join(",")
-              uploads_db.db.execute(<<~SQL, ids)
-                DELETE FROM uploads
-                WHERE id IN (#{placeholders})
-              SQL
-            end
-
-            @output_existing_ids -= surplus_upload_ids
-          else
-            puts "Found #{surplus_upload_ids.size} surplus uploads in output database. " \
-                   "Run with `delete_surplus_uploads: true` to delete them."
-          end
-
-          surplus_upload_ids = nil
-        end
-
-        @max_count = (@source_existing_ids - @output_existing_ids).size
-        @source_existing_ids = nil
-        puts "Found #{@output_existing_ids.size} existing uploads. #{@max_count} are missing."
-
-        status_thread
-        create_consumer_threads
+        status_thread = start_status_thread
+        consumer_threads = start_consumer_threads
+        producer_thread = start_producer_thread
 
         producer_thread.join
         work_queue.close
@@ -49,61 +23,85 @@ module Migrations::Uploader
         status_thread.join
       end
 
-      def producer_thread
-        Thread.new do
-          intermediate_db
-            .db
-            .query("SELECT * FROM uploads ORDER BY id") do |row|
-              work_queue << row if @output_existing_ids.exclude?(row[:id])
-            end
-        end
+      private
+
+      def process_existing_uploads
+        delete_missing_uploads if settings[:delete_missing_uploads]
+        initialize_existing_ids_tracking_sets
+        handle_surplus_uploads if surplus_upload_ids.any?
+
+        @max_count = (@source_existing_ids - @output_existing_ids).size
+        @source_existing_ids = nil
+
+        puts "Found #{@output_existing_ids.size} existing uploads. #{@max_count} are missing."
       end
 
-      def create_consumer_threads
-        thread_count.times { |index| consumer_threads << consumer_thread(index) }
+      def initialize_existing_ids_tracking_sets
+        @output_existing_ids = load_existing_ids(uploads_db.db, Set.new)
+        @source_existing_ids = load_existing_ids(intermediate_db.db, Set.new)
       end
 
-      def consumer_thread(index)
-        Thread.new do
-          Thread.current.name = "worker-#{index}"
+      def load_existing_ids(db, set)
+        db.query("SELECT id FROM uploads") { |row| set << row[:id] }
 
-          while (row = work_queue.pop)
-            process_row(row)
+        set
+      end
+
+      def handle_surplus_uploads
+        if settings[:delete_surplus_uploads]
+          puts "Deleting #{surplus_upload_ids.size} uploads from output database..."
+
+          surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
+            placeholders = (["?"] * ids.size).join(",")
+            uploads_db.db.execute(<<~SQL, ids)
+              DELETE FROM uploads
+              WHERE id IN (#{placeholders})
+            SQL
           end
+
+          @output_existing_ids -= surplus_upload_ids
+        else
+          puts "Found #{surplus_upload_ids.size} surplus uploads in output database. " \
+                 "Run with `delete_surplus_uploads: true` to delete them."
         end
+
+        @surplus_upload_ids = nil
       end
 
-      def status_thread
-        Thread.new do
-          error_count = 0
-          skipped_count = 0
-          current_count = 0
+      def surplus_upload_ids
+        @surplus_upload_ids ||= @output_existing_ids - @source_existing_ids
+      end
 
-          while !(params = status_queue.pop).nil?
-            begin
-              if params.delete(:skipped) == true
-                skipped_count += 1
-              elsif (error_message = params.delete(:error)) || params[:upload].nil?
-                error_count += 1
-                puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
-              end
+      def handle_status_update(params)
+        @current_count += 1
 
-              uploads_db.insert(<<~SQL, params)
-                INSERT INTO uploads (id, upload, markdown, skip_reason)
-                VALUES (:id, :upload, :markdown, :skip_reason)
-              SQL
-            rescue StandardError => e
-              puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
-              error_count += 1
-            end
-
-            current_count += 1
-            log_status(error_count, current_count, skipped_count)
+        begin
+          if params.delete(:skipped) == true
+            @skipped_count += 1
+          elsif (error_message = params.delete(:error)) || params[:upload].nil?
+            @error_count += 1
+            puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
           end
+
+          uploads_db.insert(<<~SQL, params)
+            INSERT INTO uploads (id, upload, markdown, skip_reason)
+            VALUES (:id, :upload, :markdown, :skip_reason)
+          SQL
+        rescue StandardError => e
+          puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
+          @error_count += 1
         end
       end
 
-      def process_row(row)
+      def enqueue_jobs
+        intermediate_db
+          .db
+          .query("SELECT * FROM uploads ORDER BY id") do |row|
+            work_queue << row if @output_existing_ids.exclude?(row[:id])
+          end
+      end
+
+      def process_upload(row, _)
         data_file = nil
         path = nil
         metadata =
@@ -125,7 +123,7 @@ module Migrations::Uploader
           relative_path = row[:relative_path] || ""
           file_exists = false
 
-          root_paths.each do |root_path|
+          settings[:root_paths].each do |root_path|
             path = File.join(root_path, relative_path, row[:filename])
             break if (file_exists = File.exist?(path))
 
@@ -208,28 +206,6 @@ module Migrations::Uploader
         }
       ensure
         data_file&.close!
-      end
-
-      def file_exists?(path)
-        if discourse_store.external?
-          discourse_store.object_from_path(path).exists?
-        else
-          File.exist?(File.join(discourse_store.public_dir, path))
-        end
-      end
-
-      def load_output_existing_ids
-        @output_existing_ids = Set.new
-        load_existing_ids(uploads_db.db, @output_existing_ids)
-      end
-
-      def load_source_existing_ids
-        @source_existing_ids = Set.new
-        load_existing_ids(intermediate_db.db, @source_existing_ids)
-      end
-
-      def load_existing_ids(db, set)
-        db.query("SELECT id FROM uploads") { |row| set << row[:id] }
       end
 
       def delete_missing_uploads
@@ -334,7 +310,7 @@ module Migrations::Uploader
         end
       end
 
-      def log_status(error_count, current_count, skipped_count)
+      def log_status
         error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
         print "\r%7d / %7d (%s, %s skipped)" %
                 [current_count, @max_count, error_count_text, skipped_count]

@@ -12,6 +12,8 @@ module Migrations::Uploader
         @max_count = 0
 
         @avatar_sizes = Discourse.avatar_sizes
+        @system_user = Discourse.system_user
+        @category_id = Category.last.id
       end
 
       def run!
@@ -20,9 +22,9 @@ module Migrations::Uploader
         disable_optimized_image_lock
 
         init_threads.each(&:join)
-
-        status_thread
-        create_consumer_threads
+        status_thread = start_status_thread
+        consumer_threads = start_consumer_threads
+        producer_thread = start_producer_thread
 
         producer_thread.join
         work_queue.close
@@ -43,6 +45,22 @@ module Migrations::Uploader
           avatar_upload_ids_thread,
           max_count_thread,
         ]
+      end
+
+      def handle_status_update(params)
+        @current_count += 1
+
+        case params.delete(:status)
+        when :ok
+          uploads_db.insert(<<~SQL, params)
+            INSERT INTO optimized_images (id, optimized_images)
+            VALUES (:id, :optimized_images)
+          SQL
+        when :error
+          @error_count += 1
+        when :skipped
+          @skipped_count += 1
+        end
       end
 
       def optimized_upload_ids_thread
@@ -88,99 +106,62 @@ module Migrations::Uploader
         end
       end
 
-      def producer_thread
-        Thread.new do
-          sql = <<~SQL
+      def enqueue_jobs
+        sql = <<~SQL
             SELECT id AS upload_id, upload ->> 'sha1' AS upload_sha1, markdown
               FROM uploads
              WHERE upload IS NOT NULL
              ORDER BY rowid
           SQL
 
-          @uploads_db
-            .db
-            .query(sql) do |row|
-              upload_id = row[:upload_id]
+        @uploads_db
+          .db
+          .query(sql) do |row|
+            upload_id = row[:upload_id]
 
-              if @optimized_upload_ids.include?(upload_id) || !row[:markdown].start_with?("![")
-                status_queue << { id: row[:upload_id], status: :skipped }
-                next
-              end
-
-              if @post_upload_ids.include?(upload_id)
-                row[:type] = "post"
-                work_queue << row
-              elsif @avatar_upload_ids.include?(upload_id)
-                row[:type] = "avatar"
-                work_queue << row
-              else
-                status_queue << { id: row[:upload_id], status: :skipped }
-              end
+            if @optimized_upload_ids.include?(upload_id) || !row[:markdown].start_with?("![")
+              status_queue << { id: row[:upload_id], status: :skipped }
+              next
             end
-        end
+
+            if @post_upload_ids.include?(upload_id)
+              row[:type] = "post"
+              work_queue << row
+            elsif @avatar_upload_ids.include?(upload_id)
+              row[:type] = "avatar"
+              work_queue << row
+            else
+              status_queue << { id: row[:upload_id], status: :skipped }
+            end
+          end
       end
 
-      def create_consumer_threads
+      def start_consumer_threads
         Jobs.run_immediately!
 
-        thread_count.times { |index| consumer_threads << consumer_thread(index) }
+        super
       end
 
-      def status_thread
-        Thread.new do
-          error_count = 0
-          current_count = 0
-          skipped_count = 0
-
-          while !(params = status_queue.pop).nil?
-            current_count += 1
-
-            case params.delete(:status)
-            when :ok
-              uploads_db.insert(<<~SQL, params)
-                INSERT INTO optimized_images (id, optimized_images)
-                VALUES (:id, :optimized_images)
-              SQL
-            when :error
-              error_count += 1
-            when :skipped
-              skipped_count += 1
-            end
-
-            log_status(error_count, current_count, skipped_count)
-          end
-        end
-      end
-
-      def log_status(error_count, current_count, skipped_count)
+      def log_status
         error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
 
         print "\r%7d / %7d (%s, %d skipped)" %
                 [current_count, @max_count, error_count_text, skipped_count]
       end
 
-      def consumer_thread(index)
-        Thread.new do
-          Thread.current.name = "worker-#{index}"
-
-          post =
-            PostCreator.new(
-              Discourse.system_user,
-              raw: "Topic created by uploads_importer",
-              acting_user: Discourse.system_user,
-              skip_validations: true,
-              title: "Topic created by uploads_importer - #{SecureRandom.hex}",
-              archetype: Archetype.default,
-              category: Category.last.id,
-            ).create!
-
-          while (row = work_queue.pop)
-            process_row(row, post)
-          end
-        end
+      def instantiate_task_resource
+        PostCreator.new(
+          @system_user,
+          raw: "Topic created by uploads_importer",
+          acting_user: @system_user,
+          skip_validations: true,
+          title: "Topic created by uploads_importer - #{SecureRandom.hex}",
+          archetype: Archetype.default,
+          category: @category_id,
+        ).create!
       end
 
-      def process_row(row, post)
+      def process_upload(row, post)
         retry_count = 0
 
         loop do
@@ -196,7 +177,8 @@ module Migrations::Uploader
           if optimized_images_okay
             status_queue << {
               id: row[:upload_id],
-              optimized_images: optimized_images.presence&.to_json,
+              optimized_images:
+                optimized_images.presence&.to_json(only: OptimizedImage.column_names),
               status: :ok,
             }
 
@@ -220,7 +202,7 @@ module Migrations::Uploader
 
           OptimizedImage.where(upload_id: upload.id).to_a
         when "avatar"
-          avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
+          @avatar_sizes.map { |size| OptimizedImage.create_for(upload, size, size) }
         end
       rescue StandardError => e
         puts e.message

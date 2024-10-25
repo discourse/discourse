@@ -11,45 +11,89 @@ module Migrations::Uploader
 
       TRANSACTION_SIZE = 1000
       QUEUE_SIZE = 1000
+      DEFAULT_THREAD_FACTOR = 1.5
 
       attr_reader :uploads_db,
                   :intermediate_db,
                   :settings,
-                  :root_paths,
                   :work_queue,
                   :status_queue,
                   :discourse_store,
-                  :consumer_threads
+                  :error_count,
+                  :current_count,
+                  :missing_count,
+                  :skipped_count
 
       def initialize(databases, settings)
         @uploads_db = databases[:uploads_db]
         @intermediate_db = databases[:intermediate_db]
 
         @settings = settings
-        @root_paths = @settings[:root_paths]
 
         @work_queue = SizedQueue.new(QUEUE_SIZE)
         @status_queue = SizedQueue.new(QUEUE_SIZE)
         @discourse_store = Discourse.store
-        @consumer_threads = []
+
+        @error_count = 0
+        @current_count = 0
+        @missing_count = 0
+        @skipped_count = 0
       end
 
       def run!
         raise NotImplementedError
       end
 
+      def self.run!(databases, settings)
+        new(databases, settings).run!
+      end
+
+      protected
+
+      def handle_status_update
+        raise NotImplementedError
+      end
+
+      def instantiate_task_resource
+        {}
+      end
+
+      def start_status_thread
+        Thread.new do
+          while !(result = status_queue.pop).nil?
+            handle_status_update(result)
+            log_status
+          end
+        end
+      end
+
+      def start_consumer_threads
+        thread_count.times.map { |index| consumer_thread(index) }
+      end
+
+      def consumer_thread(index)
+        Thread.new do
+          Thread.current.name = "worker-#{index}"
+          resource = instantiate_task_resource
+
+          while (row = work_queue.pop)
+            process_upload(row, resource)
+          end
+        end
+      end
+
+      def start_producer_thread
+        Thread.new { enqueue_jobs }
+      end
+
+      def thread_count
+        @thread_count ||= calculate_thread_count
+      end
+
       def add_multisite_prefix(path)
         return path if !Rails.configuration.multisite
 
         File.join("uploads", RailsMultisite::ConnectionManagement.current_db, path)
-      end
-
-      def thread_count
-        @thread_count ||= (Etc.nprocessors * settings[:thread_count_factor] * remote_factor).to_i
-      end
-
-      def remote_factor
-        @remote_factor ||= discourse_store.external? ? 2 : 1
       end
 
       def file_exists?(path)
@@ -60,8 +104,14 @@ module Migrations::Uploader
         end
       end
 
-      def self.run!(databases, settings)
-        new(databases, settings).run!
+      private
+
+      def calculate_thread_count
+        base = Etc.nprocessors
+        thread_count_factor = settings.fetch(:thread_count_factor, DEFAULT_THREAD_FACTOR)
+        store_factor = discourse_store.external? ? 2 : 1
+
+        (base * thread_count_factor * store_factor).to_i
       end
     end
   end
