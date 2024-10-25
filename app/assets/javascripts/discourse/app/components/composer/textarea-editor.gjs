@@ -16,12 +16,14 @@ export default class TextareaEditor extends Component {
       textarea,
     });
 
-    this.args.onSetup(this.textManipulation);
+    const destructor = this.args.onSetup(this.textManipulation);
 
     this.setupSmartList();
 
     return () => {
       this.destroySmartList();
+      destructor?.();
+      this.textManipulation.destroy();
     };
   });
 

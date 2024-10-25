@@ -207,35 +207,6 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.textManipulation) {
-      this.textManipulation.destroy();
-      this.element.removeEventListener("paste", this.textManipulation.paste);
-
-      if (this.composerEvents) {
-        this.appEvents.off(
-          "composer:insert-block",
-          this.textManipulation,
-          "insertBlock"
-        );
-        this.appEvents.off(
-          "composer:insert-text",
-          this.textManipulation,
-          "insertText"
-        );
-        this.appEvents.off(
-          "composer:replace-text",
-          this.textManipulation,
-          "replaceText"
-        );
-        this.appEvents.off("composer:apply-surround", this, "_applySurround");
-        this.appEvents.off(
-          "composer:indent-selected-text",
-          this.textManipulation,
-          "indentSelection"
-        );
-      }
-    }
-
     this.element
       .querySelector(".d-editor-preview")
       ?.removeEventListener("click", this._handlePreviewLinkClick);
@@ -791,6 +762,34 @@ export default class DEditor extends Component {
     this.element.addEventListener("paste", textManipulation.paste);
 
     scheduleOnce("afterRender", this, this._readyNow);
+
+    return () => {
+      this.element?.removeEventListener("paste", textManipulation.paste);
+
+      if (this.composerEvents) {
+        this.appEvents.off(
+          "composer:insert-block",
+          textManipulation,
+          "insertBlock"
+        );
+        this.appEvents.off(
+          "composer:insert-text",
+          textManipulation,
+          "insertText"
+        );
+        this.appEvents.off(
+          "composer:replace-text",
+          textManipulation,
+          "replaceText"
+        );
+        this.appEvents.off("composer:apply-surround", this, "_applySurround");
+        this.appEvents.off(
+          "composer:indent-selected-text",
+          textManipulation,
+          "indentSelection"
+        );
+      }
+    };
   }
 
   _disablePreviewTabIndex() {

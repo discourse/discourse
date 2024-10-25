@@ -14,6 +14,7 @@ import {
   inCodeBlock,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
@@ -391,7 +392,8 @@ export default class TextareaTextManipulation {
     return matches && matches.length % 2;
   }
 
-  async paste(e) {
+  @bind
+  paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -410,7 +412,7 @@ export default class TextareaTextManipulation {
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = await this.inCodeBlock(pre);
+    const isCodeBlock = this.#isAfterStartedCodeFence(pre);
 
     if (
       plainText &&
@@ -525,7 +527,11 @@ export default class TextareaTextManipulation {
       .join("\n");
   }
 
-  async maybeContinueList() {
+  #isAfterStartedCodeFence(beforeText) {
+    return this.isInside(beforeText, /(^|\n)```/g);
+  }
+
+  maybeContinueList() {
     const offset = caretPosition(this.textarea);
     const text = this.value;
     const lines = text.substring(0, offset).split("\n");
@@ -537,7 +543,7 @@ export default class TextareaTextManipulation {
       return;
     }
 
-    if (await this.inCodeBlock()) {
+    if (this.#isAfterStartedCodeFence(text.substring(0, offset - 1))) {
       return;
     }
 
@@ -711,6 +717,7 @@ export default class TextareaTextManipulation {
     }
   }
 
+  @bind
   emojiSelected(code) {
     let selected = this.getSelected();
     const captures = selected.pre.match(/\B:(\w*)$/);
