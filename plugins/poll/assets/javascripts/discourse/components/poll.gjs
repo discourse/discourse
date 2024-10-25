@@ -272,7 +272,7 @@ export default class PollComponent extends Component {
   }
 
   get rankedChoiceOutcome() {
-    return this.poll.ranked_choice_outcome || [];
+    return this.poll.ranked_choice_outcome || null;
   }
 
   get min() {

@@ -60,7 +60,7 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
   });
 
   test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
-    this.rankedChoiceOutcome = {};
+    this.rankedChoiceOutcome = null;
 
     await render(
       hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
