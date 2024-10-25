@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS uploads
+CREATE TABLE uploads
 (
     id TEXT PRIMARY KEY NOT NULL,
     upload JSON_TEXT,
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS uploads
     skip_reason TEXT
 );
 
-CREATE TABLE IF NOT EXISTS optimized_images
+CREATE TABLE optimized_images
 (
     id TEXT PRIMARY KEY NOT NULL,
     optimized_images JSON_TEXT
