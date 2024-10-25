@@ -24,7 +24,7 @@ RSpec.describe UserAvatar do
       after { temp.unlink }
 
       it "can update gravatars" do
-        freeze_time Time.now
+        freeze_time
 
         expect { avatar.update_gravatar! }.to change { Upload.count }.by(1)
         expect(avatar.gravatar_upload).to eq(Upload.last)
@@ -76,7 +76,7 @@ RSpec.describe UserAvatar do
 
     describe "when failing" do
       it "always update 'last_gravatar_download_attempt'" do
-        freeze_time Time.now
+        freeze_time
 
         FileHelper.expects(:download).raises(SocketError)
 
@@ -91,7 +91,7 @@ RSpec.describe UserAvatar do
     describe "404 should be silent, nothing to do really" do
       it "does nothing when avatar is 404" do
         SecureRandom.stubs(:urlsafe_base64).returns("5555")
-        freeze_time Time.now
+        freeze_time
 
         stub_request(
           :get,

@@ -202,11 +202,7 @@ export default class AdminFlagsForm extends Component {
                   }}
                   as |field|
                 >
-                  <field.Checkbox>
-                    {{i18n
-                      "admin.config_areas.flags.form.auto_action_type_description"
-                    }}
-                  </field.Checkbox>
+                  <field.Checkbox />
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
 

@@ -3,6 +3,7 @@ import { readOnly } from "@ember/object/lib/computed/computed_macros";
 import Mixin from "@ember/object/mixin";
 import { getOwner } from "@ember/owner";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
+import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 
 export { HUGE_FILE_THRESHOLD_BYTES } from "discourse/lib/uppy/uppy-upload";
@@ -36,6 +37,12 @@ export default Mixin.create({
   processing: false,
 
   init() {
+    deprecated(
+      "The UppyUploadMixin is deprecated. See discourse/lib/uppy/uppy-upload.js for the new implementation.",
+      {
+        id: "discourse.uppy-upload-mixin",
+      }
+    );
     this.uppyUpload = new UppyUpload(getOwner(this), configShim(this));
 
     this.addObserver("uppyUpload.uploading", () =>

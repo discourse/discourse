@@ -57,7 +57,7 @@
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
     "@swc/core": "^1.7.39",
-    "@types/jquery": "^3.5.31",
+    "@types/jquery": "^3.5.32",
     "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "@uppy/aws-s3": "3.0.6",

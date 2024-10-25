@@ -133,11 +133,11 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
-    this._fileInputEl = fileInputEl;
-
-    this.allowMultipleFiles = this._fileInputEl.multiple;
-
-    this.#bindFileInputChange();
+    if (fileInputEl) {
+      this._fileInputEl = fileInputEl;
+      this.allowMultipleFiles = this._fileInputEl.multiple;
+      this.#bindFileInputChange();
+    }
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.config.id,
@@ -548,7 +548,9 @@ export default class UppyUpload {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
-    this._fileInputEl.value = "";
+    if (this._fileInputEl) {
+      this._fileInputEl.value = "";
+    }
   }
 
   #removeInProgressUpload(fileId) {

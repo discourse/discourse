@@ -2513,6 +2513,7 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
+      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
@@ -5441,8 +5442,6 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
-          category_experts_approved: "Post marked as category experts post"
-          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5686,8 +5685,7 @@ en:
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             require_message: "Prompt users to provide additional reasons"
             require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
-            auto_action_type: "Auto action type"
-            auto_action_type_description: "When a post is flagged by a staff member it is automatically hidden"
+            auto_action_type: "Auto hide flagged content"
           more_options:
             title: "More options"
             move_up: "Move up"
