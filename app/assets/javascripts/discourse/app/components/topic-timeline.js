@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import optionalService from "discourse/lib/optional-service";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class TopicTimeline extends Component {
@@ -12,8 +11,6 @@ export default class TopicTimeline extends Component {
   @tracked enteredIndex = this.args.enteredIndex;
   @tracked docked = false;
   @tracked dockedBottom = false;
-
-  adminTools = optionalService();
 
   constructor() {
     super(...arguments);

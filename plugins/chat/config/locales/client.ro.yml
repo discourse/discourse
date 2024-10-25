@@ -21,7 +21,7 @@ ro:
       dates:
         yesterday: "Ieri"
       create: "Creează"
-      cancel: "Anulare"
+      cancel: "Anulează"
       move_to_channel:
         instructions:
           one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
@@ -59,15 +59,16 @@ ro:
         groups:
           unreachable_1: "@%{group} nu permite mențiuni."
           unreachable_multiple:
-            one: "@%{group} și %{count} alt grup nu permit mențiuni."
+            one: "@%{group} și încă %{count} grup nu permit mențiuni."
             few: "@%{group} și %{count} alte grupuri nu permit mențiuni."
             other: "@%{group} și %{count} alte grupuri nu permit mențiuni."
+      placeholder_group: "Discuție în grup"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
       bookmark_message: "Semn de carte"
       bookmark_message_edit: "Editați marcajul"
-      save: "Salvare"
+      save: "Salvează"
       return_to_channel: "Revino la canal"
       return_to_threads_list: "Revino la lista de fire"
       sounds:
@@ -108,6 +109,7 @@ ro:
         add_to_channel: "Adaugă la canal"
         title: Mesaj nou
         prefix: "Către:"
+        no_results: Fără rezultate
         group_name: "Nume grup discuție (opțional)"
         members_counter:
           one: "%{count}/%{max} membru"
@@ -141,13 +143,14 @@ ro:
       notification_levels:
         never: "Niciodată"
       settings:
+        notification_level: "Trimite notificări instante"
         follow: "Alătură-te"
         followed: "Înscris"
         threading_enabled: "Activat"
         threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
-        save: "Salvare"
+        save: "Salvează"
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
@@ -159,17 +162,18 @@ ro:
         close: "Închide această conversație personală"
       incoming_webhooks:
         back: "Înapoi"
+        channel: "Canal"
         description: "Descriere"
         delete: "Șterge"
         emoji: "Emoticon"
         name: "Nume"
-        save: "Salvare"
+        save: "Salvează"
         edit: "Modifică"
         system: "sistem"
         url: "URL"
         username: "Nume utilizator"
       selection:
-        cancel: "Anulare"
+        cancel: "Anulează"
         copy: "Copiază"
         delete: "Șterge (%{selectionCount}/%{totalCount})"
         new_topic:
@@ -184,6 +188,7 @@ ro:
       emoji_picker:
         objects: "Obiecte"
         flags: "Semnalări"
+        no_results: "Fără rezultate"
       thread:
         title: "Titlu"
         replies:
@@ -204,7 +209,7 @@ ro:
         list: "Fire"
       draft_channel_screen:
         header: "Mesaj nou"
-        cancel: "Anulare"
+        cancel: "Anulează"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:

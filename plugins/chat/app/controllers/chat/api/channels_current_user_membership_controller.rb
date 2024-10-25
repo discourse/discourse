@@ -12,7 +12,7 @@ class Chat::Api::ChannelsCurrentUserMembershipController < Chat::Api::ChannelsCo
   end
 
   def destroy
-    Chat::LeaveChannel.call do
+    Chat::LeaveChannel.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:channel) { raise Discourse::NotFound }

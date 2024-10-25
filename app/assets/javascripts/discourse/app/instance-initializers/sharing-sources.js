@@ -7,10 +7,10 @@ export default {
 
     Sharing.addSource({
       id: "twitter",
-      icon: "fab-twitter",
+      icon: "fab-x-twitter",
       generateUrl(link, title, quote = "") {
         const text = quote ? `"${quote}" -- ` : title;
-        return `http://twitter.com/intent/tweet?url=${encodeURIComponent(
+        return `http://x.com/intent/tweet?url=${encodeURIComponent(
           link
         )}&text=${encodeURIComponent(text)}`;
       },

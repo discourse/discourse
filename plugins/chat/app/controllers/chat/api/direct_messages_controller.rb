@@ -2,15 +2,8 @@
 
 class Chat::Api::DirectMessagesController < Chat::ApiController
   def create
-    Chat::CreateDirectMessageChannel.call do
-      on_success do
-        render_serialized(
-          result.channel,
-          Chat::ChannelSerializer,
-          root: "channel",
-          membership: result.membership,
-        )
-      end
+    Chat::CreateDirectMessageChannel.call(service_params) do
+      on_success { |channel:| render_serialized(channel, Chat::ChannelSerializer, root: "channel") }
       on_model_not_found(:target_users) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:satisfies_dms_max_users_limit) do |policy|
         render_json_dump({ error: policy.reason }, status: 400)

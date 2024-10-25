@@ -19,4 +19,20 @@ RSpec.describe ::Jobs::NotifyCategoryChange do
       Notification.count
     }
   end
+
+  context "when mailing list mode is enabled" do
+    before { SiteSetting.disable_mailing_list_mode = false }
+    before do
+      regular_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+    end
+    before { Jobs.run_immediately! }
+
+    it "notifies mailing list subscribers" do
+      post.topic.update!(category: category)
+
+      expected_args = { "post_id" => post.id, "current_site_id" => "default" }
+      Jobs::NotifyMailingListSubscribers.any_instance.expects(:execute).with(expected_args).once
+      described_class.new.execute(post_id: post.id, notified_user_ids: [])
+    end
+  end
 end

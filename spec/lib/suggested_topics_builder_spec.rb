@@ -98,5 +98,30 @@ RSpec.describe SuggestedTopicsBuilder do
         expect(builder).not_to be_full
       end
     end
+
+    context "with suggested_topics_add_results modifier registered" do
+      fab!(:included_topic) { Fabricate(:topic) }
+      fab!(:excluded_topic) { Fabricate(:topic) }
+
+      let(:modifier_block) do
+        Proc.new { |results| results.filter { |topic| topic.id != excluded_topic.id } }
+      end
+
+      it "Allows modifications to added results" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:suggested_topics_add_results, &modifier_block)
+
+        builder.add_results(Topic.where(id: [included_topic.id, excluded_topic.id]))
+
+        expect(builder.results).to include(included_topic)
+        expect(builder.results).not_to include(excluded_topic)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :suggested_topics_add_results,
+          &modifier_block
+        )
+      end
+    end
   end
 end

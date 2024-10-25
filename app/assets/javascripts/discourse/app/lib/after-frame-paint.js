@@ -1,17 +1,13 @@
-import DEBUG from "@glimmer/env";
-import { registerWaiter } from "@ember/test";
-import { isTesting } from "discourse-common/config/environment";
+import { buildWaiter } from "@ember/test-waiters";
+
+const WAITER = buildWaiter("after-frame-paint");
 
 /**
  * Runs `callback` shortly after the next browser Frame is produced.
  * ref: https://webperf.tips/tip/measuring-paint-time
  */
 export default function runAfterFramePaint(callback) {
-  let done = false;
-
-  if (DEBUG && isTesting()) {
-    registerWaiter(() => done);
-  }
+  const token = WAITER.beginAsync();
 
   // Queue a "before Render Steps" callback via requestAnimationFrame.
   requestAnimationFrame(() => {
@@ -21,7 +17,7 @@ export default function runAfterFramePaint(callback) {
 
     // Setup the callback to run in a Task
     messageChannel.port1.onmessage = () => {
-      done = true;
+      WAITER.endAsync(token);
       callback();
     };
 

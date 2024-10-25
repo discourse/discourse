@@ -30,7 +30,7 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
   end
 
   def create
-    Chat::AddUsersToChannel.call do
+    Chat::AddUsersToChannel.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_add_users_to_channel) do

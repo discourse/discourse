@@ -1,7 +1,7 @@
 {{! template-lint-disable no-pointer-down-event-binding }}
 {{! template-lint-disable no-invalid-interactive }}
 <li
-  class="search-menu-assistant-item"
+  class={{concat-class @typeClass "search-menu-assistant-item"}}
   {{on "keydown" this.onKeydown}}
   {{on "click" this.onClick}}
   data-usage={{@usage}}

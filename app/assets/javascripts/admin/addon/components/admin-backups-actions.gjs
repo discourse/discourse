@@ -74,14 +74,13 @@ export default class AdminBackupsActions extends Component {
         @action={{routeAction "rollback"}}
         @label="admin.backups.operations.rollback.label"
         @title="admin.backups.operations.rollback.title"
-        @icon="truck-medical"
         @disabled={{this.rollbackDisabled}}
+        @icon="truck-medical"
         class="admin-backups__rollback"
       />
     {{/if}}
 
     <@actions.Default
-      @icon={{if this.site.isReadOnly "far-eye-slash" "far-eye"}}
       @action={{this.toggleReadOnlyMode}}
       @disabled={{@backups.isOperationRunning}}
       @title={{if
@@ -94,6 +93,7 @@ export default class AdminBackupsActions extends Component {
         "admin.backups.read_only.disable.label"
         "admin.backups.read_only.enable.label"
       }}
+      @icon={{if this.site.isReadOnly "far-eye-slash" "far-eye"}}
       class="admin-backups__toggle-read-only"
     />
   </template>

@@ -148,6 +148,7 @@ be:
     suggested_topics:
       pm_title: "прапанаваныя паведамленні"
     about:
+      edit: "Рэдагаваць гэтую старонку"
       simple_title: "Аб сайце"
       title: "Аб %{title}"
       stats: "статыстыка"
@@ -602,7 +603,7 @@ be:
         approval_required: "Мадэратар павінен ўручную зацвердзіць новы ўліковы запіс, перш чым гэты форум. Вы атрымаеце па электроннай пошце, калі ваш рахунак будзе ўхвалены!"
       name:
         title: "Імя"
-        instructions_required: "Ваша поўнае імя."
+        instructions_required: "Ваша поўнае імя"
         too_short: "Ваша імя занадта кароткае"
         ok: "Ваша імя выглядае добра"
       username:
@@ -685,6 +686,9 @@ be:
         time_read: "час чытання"
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
+        invite:
+          save_invite: "захаваць"
+          cancel: "адмяніць"
       password:
         title: "Пароль"
         common: "Гэты пароль занадта просты."
@@ -805,6 +809,7 @@ be:
     email_login:
       confirm_title: Працягнуць да %{site_name}
     login:
+      title: "Увайсці"
       username: "Карыстальнік"
       password: "Пароль"
       second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
@@ -1651,8 +1656,11 @@ be:
           screened_emails: "Схаваныя емейлы"
           screened_ips: "Screened IPs"
           screened_urls: "Screened URLs"
-          security: "Бяспека"
-          spam: "Спам"
+      section_landing_pages:
+        account:
+          title: "Аккаўнт"
+          backups:
+            title: "Бэкапы"
       config_areas:
         about:
           saved: "захавана!"

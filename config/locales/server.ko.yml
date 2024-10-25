@@ -510,6 +510,15 @@ ko:
             ip_address:
               blocked: "이 IP주소에서는 가입이 안됩니다."
               max_new_accounts_per_registration_ip: "이 IP에서는 가입이 더이상 되지 않습니다(최대 가입 제한 도달). 스태프에게 연락주세요."
+        user_password:
+          attributes:
+            password:
+              common: "가장 자주 사용되는 10000개의 비밀번호 중 하나입니다. 보다 안전한 비밀번호를 사용하세요."
+              same_as_username: "는 아이디랑 같음. 더 안전한 비밀번호를 사용해주세요."
+              same_as_email: "는 이메일 주소랑 같음. 더 안전한 비밀번호를 사용해주세요."
+              same_as_current: "은(는) 현재 비밀번호와 동일합니다."
+              same_as_name: "당신의 이름과 같습니다."
+              unique_characters: "반복된 글자가 너무 많습니다. 좀 더 안전한 비밀번호를 사용해주세요."
         user_profile:
           attributes:
             featured_topic_id:
@@ -957,13 +966,13 @@ ko:
       yaxis: "일"
       description: "이 기간에 신뢰 레벨을 높인 사용자 수입니다."
     consolidated_page_views:
-      title: "통합 페이지 뷰"
+      title_legacy: "통합 페이지 뷰"
       xaxis:
         page_view_crawler: "겉옷"
         page_view_anon: "익명 사용자"
         page_view_logged_in: "로그인한 사용자"
       yaxis: "일"
-      description: "로그인한 사용자, 익명 사용자 및 크롤러에 대한 페이지 뷰입니다."
+      description_legacy: "로그인 한 사용자, 익명 사용자 및 크롤러에 대한 페이지 뷰"
       labels:
         post: 게시물
         editor: 에디터
@@ -976,6 +985,9 @@ ko:
       yaxis: "일"
     consolidated_page_views_browser_detection:
       yaxis: "일"
+    site_traffic:
+      yaxis: "일"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "일"
@@ -1125,6 +1137,9 @@ ko:
       xaxis: "일"
       yaxis: "총 페이지뷰"
       description: "모든 방문자의 새 페이지뷰 수입니다."
+    page_view_legacy_total_reqs:
+      xaxis: "일"
+      yaxis: "총 페이지뷰"
     page_view_logged_in_mobile_reqs:
       title: "로그인한 페이지뷰"
       xaxis: "일"
@@ -1246,8 +1261,23 @@ ko:
       host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
       queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
       ram: "당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요."
+      google_oauth2_config: '서버가 Google OAuth2 (enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 클라이언트 ID 및 클라이언트 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      facebook_config: '서버는 페이스북(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 앱 ID 및 앱 비밀 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      twitter_config: '서버가 트위터(enable_twitter_logins)로 가입 및 로그인을 허용하도록 구성되었지만, 키 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 안내서를 참조하십시오</a>.'
+      github_config: '서버가 GitHub(enable_github_logins)으로 가입 및 로그인을 허용하도록 구성되어 있지만, 클라이언트 ID 및 시크릿 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하십시오</a>.'
+      s3_upload_config: '서버가 S3에 파일을 업로드하도록 구성되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하십시오. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"S3에 이미지 업로드를 설정하는 방법"을 참조하십시오. 자세히 알아보기</a>.'
+      s3_cdn: '서버가 S3에 파일을 업로드하도록 구성되어 있지만 S3 CDN이 구성되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 성능이 저하 될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 "Using Object Storage for Uploads"을 참조하십시오</a>.'
+      image_magick: '서버가 큰 이미지의 축소판을 만들도록 구성되었지만 ImageMagick이 설치되지 않았습니다. 자주 사용하는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 릴리스를 다운로드하십시오</a> .'
+      failing_emails: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하십시오. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하십시오</a> .'
       subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
+      email_polling_errored_recently:
+        other: "이메일 폴링에서 지난 24시간 동안%{count}개의 에러가 발생하였습니다. 세부 정보는 <a href='%{base_path}/logs' target='_blank'>로그</a>에서 확인하세요."
       missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
+      bad_favicon_url: "파비콘이로드되지 않습니다. <a href='%{base_path}/admin/site_settings'>사이트</a> 설정에서 즐겨 찾기 아이콘 설정을 확인하십시오."
+      poll_pop3_timeout: "타임아웃으로 POP3 연결이 실패했습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a> 과 서비스 제공자를 확인하세요."
+      poll_pop3_auth_error: "인증 실패로 POP3 연결이 실패했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
+      force_https: "귀하의 웹 사이트는 SSL을 사용하고 있습니다. 그러나 사이트 설정에서` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> 가 아직 활성화되어 있지 않습니다."
+      watched_words: "감시 단어 %{action}의 정규식이 잘못되었습니다. <a href='%{base_path}/admin/customize/watched_words'>감시 단어 설정</a>을 확인하거나 사이트 설정의 'watched words regular expressions'을 비활성화하십시오."
   site_settings:
     allow_bulk_invite: "CSV 파일 업로드를 통한 일괄 초대 허용"
     disabled: "비활성화됨"
@@ -1373,14 +1403,12 @@ ko:
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안 되는 개인 IP 차단 목록"
     allowed_internal_hosts: "onebox 및 기타 목적을 위해 Discourse에서 안전하게 크롤링할 수 있는 내부 호스트 목록"
     allowed_onebox_iframes: "Onebox 임베드를 통해 허용되는 iframe src 도메인 목록입니다. `*` 는 모든 디폴트 Onebox 엔진을 허용합니다."
-    allowed_iframes: "Discourse가 게시물에서 안전하게 허용할 수 있는 iframe src 도메인 접두사 목록"
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
     content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
-    post_menu_hidden_items: "펼치기 아이콘을 클릭하지 않을 경우 게시물 메뉴에서 기본적으로 숨길 메뉴 항목입니다."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
     site_contact_username: "모든 자동 메시지를 보낼 유효한 운영진 아이디입니다. 비워 두면 기본 시스템 계정이 사용됩니다."
     site_contact_group_name: "자동 전송한 모든 비공개 메시지에 초대할 유효한 그룹 이름입니다."
@@ -1644,7 +1672,6 @@ ko:
     reset_bounce_score_after_days: "X일 후 반송 스코어를 자동 리셋합니다."
     blocked_attachment_content_types: "콘텐츠 유형에 따라 첨부 파일을 차단하기 위한 키워드 목록입니다."
     blocked_attachment_filenames: "파일명을 기준으로 첨부 파일을 차단하기 위한 키워드 목록입니다."
-    forwarded_emails_behaviour: "Discourse로 전달된 이메일을 처리하는 방법"
     always_show_trimmed_content: "수신 이메일의 잘린 부분을 항상 표시합니다. 경고: 이메일 주소가 노출될 수 있습니다."
     trim_incoming_emails: "수신 이메일 중 관련이 없는 부분을 잘라냅니다."
     private_email: "이메일 제목이나 본문에 게시물이나 주제의 콘텐츠를 포함하지 마세요. 참고: 다이제스트 이메일도 비활성화합니다."
@@ -1737,7 +1764,6 @@ ko:
     app_association_android: "Google의 Digital Asset Links API에 사용되는 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 엔드포인트의 콘텐츠입니다."
     app_association_ios: "이 사이트와 iOS 앱 간의 범용 링크를 만드는 데 사용되는 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a> 엔드포인트의 콘텐츠입니다."
     auto_handle_queued_age: "이 정도 기간이 지나면 검토 대기 기록을 자동으로 처리합니다. 신고는 무시됩니다. 대기 중인 게시물 및 사용자는 거부됩니다. 이 기능을 비활성화하려면 0으로 설정하세요."
-    svg_icon_subset: "에셋에 포함할 FontAwesome 5 아이콘을 추가합니다. 솔리드 아이콘에는 접두사 'fa-', 일반 아이콘에는 'far-', 브랜드 아이콘에는 'fab-'를 사용하세요."
     full_name_required: "전체 이름은 사용자 프로필의 필수 필드입니다."
     enable_names: "사용자의 전체 이름을 프로필, 사용자 카드, 이메일에서 표시합니다. 모든 곳에서 전체 이름을 숨기려면 비활성화하세요."
     display_name_on_posts: "게시물에 @아이디뿐만 아니라 사용자의 전체 이름도 표시합니다."

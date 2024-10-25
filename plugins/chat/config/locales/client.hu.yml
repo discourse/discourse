@@ -9,7 +9,7 @@ hu:
     admin:
       site_settings:
         categories:
-          chat: Chat
+          chat: Csevegés
   js:
     admin:
       site_settings:
@@ -50,7 +50,6 @@ hu:
       deleted_chat_username: törölt
       dates:
         yesterday: "Tegnap"
-        time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
       disabled_for_topic: "A csevegés le van tiltva ebben a témában."
@@ -134,6 +133,7 @@ hu:
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
         all_new: "Minden új üzenet"
+        dm_and_mentions: "Közvetlen üzenetek, említések és figyelt témák"
         only_mentions: "Csak említések"
         never: "Soha"
       separate_sidebar_mode:
@@ -163,6 +163,7 @@ hu:
           unreachable_multiple:
             one: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
             other: "@%{group} és még %{count} csoport nem engedélyezi a megemlítést."
+          too_many_members_MF: "{ groupCount, plural,  \n     =1 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                  other {Az @{group1} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n     =2 {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Az @{group1} és @{group2} megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n  other {  \n          { isAdmin, select,  \n            true {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja a <a href=\"{siteSettingUrl}\" target=\"_blank\">értesítési limitet</a>, ami # felhasználót érint.}  \n              }  \n            }  \n            false {  \n              { notificationLimit, plural,  \n                  one {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n                other {Ezen {groupCount} csoport megemlítése meghaladja az értesítési limitet, ami # felhasználót érint.}  \n              }  \n            }  \n            other {}  \n          }  \n        }  \n}\n"
         too_many_mentions:
           one: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
           other: "Ez az üzenet túllépi a %{count} megemlítési korlátot."
@@ -195,6 +196,7 @@ hu:
       placeholder_channel: "Csevegés %{channelName}"
       placeholder_thread: "Csevegés a témában"
       placeholder_users: "Csevegés: %{commaSeparatedNames}"
+      placeholder_group: "Csevegés a csoportban"
       placeholder_new_message_disallowed:
         archived: "A csatorna archiválva van, nem küldhet új üzenetet."
         closed: "A csatorna zárva van, nem küldhet új üzenetet."
@@ -405,10 +407,9 @@ hu:
         auto_join_users_info: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Add hozzá őket ehhez a csatornához, ha hozzáférnek a %{category} kategóriához."
         auto_join_users_info_no_category: "Óránként ellenőrizze, hogy mely felhasználók voltak aktívak az elmúlt 3 hónapban. Adja hozzá őket ehhez a csatornához, ha hozzáfér a kiválasztott kategóriához."
         auto_join_users_warning: "Minden olyan felhasználó, aki nem tagja ennek a csatornának, de hozzáféréssel rendelkezik a %{category} kategóriához, csatlakozni fog. Biztos benne?"
-        desktop_notification_level: "Asztali értesítések"
+        notification_level: "Push értesítések küldése"
         follow: "Belépés"
         followed: "Csatlakozott"
-        mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
         threading_enabled: "Engedélyezed"
         threading_disabled: "Kikapcsolt"
@@ -431,6 +432,7 @@ hu:
           title: "Chat üzenetek exportálása"
           description: "Minden csatorna minden üzenetét exportálja."
           create_export: "Export létrehozása"
+          confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-et, ha elkészült."
       my_threads:
         title: Témáim
@@ -449,6 +451,7 @@ hu:
       incoming_webhooks:
         back: "Vissza"
         channel_placeholder: "Válasszon csatornát"
+        channel: "Csatorna"
         confirm_destroy: "Biztos, hogy törli ezt a bejövő webhookot? Ezt nem lehet visszavonni."
         current_emoji: "Jelenlegi emodzsi"
         description: "Leírás"
@@ -472,6 +475,8 @@ hu:
         username: "Felhasználónév"
         username_instructions: "A csatornán közzétevő bot felhasználóneve. Ha üresen marad, akkor alapértelmezés szerint „rendszer”."
         instructions: "A bejövő webhookokat külső rendszerek használhatják arra, hogy üzeneteket küldjenek el egy kijelölt csevegőcsatornára bot-felhasználóként a <code>/hooks/:key</code> végponton keresztül. A hasznos adat egyetlen <code>szöveges</code> paraméterből áll, amely 2000 karakterre korlátozódik.<br><br>Támogatjuk a korlátozott Slack formátumú <code>szöveg</code> paramétereit is, a hivatkozások és említések kinyerése a <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api formátuma alapján. slack.com/reference/surfaces/formatting</a>, de ehhez a <code>/hooks/:key/slack</code> végpontot kell használni."
+        saved: "Webhook módosítások mentése"
+        created: "Webhook létrehozva"
       selection:
         cancel: "Visszavon"
         quote_selection: "Idézet a témában"
@@ -549,10 +554,13 @@ hu:
         notifications:
           regular:
             title: "Normális"
+            description: "Kapjon értesítést, ha valaki megemlíti Önt ebben a témában."
           tracking:
             title: "Követés"
+            description: "Értesítést kap, ha valaki megemlíti Önt ebben a témában, és láthatja az új válaszok számát a téma listájában."
           watching:
             title: "Figyelés"
+            description: "Értesítést kaphat a téma összes válaszáról, és láthatja az új válaszok számát a téma listájában."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -578,6 +586,9 @@ hu:
       chat_invitation: "meghívta Önt, hogy csatlakozzon egy csevegőcsatornához"
       chat_invitation_html: "<span>%{username}</span> <span>meghvta Önt, hogy csatlakozzon egy csevegőcsatornához</span>"
       chat_quoted: "<span>%{username}</span>%{description}"
+      chat_watched_thread_label:
+        one: "%{username} és %{username2}"
+        other: "%{username} és még %{count} további"
       popup:
         chat_mention:
           direct: 'megemlítette Önt a következő csatornán: „%{channel}”'
@@ -595,6 +606,7 @@ hu:
         chat_mention: "Csevegési megemlítés"
         chat_invitation: "Csevegési meghívó"
         chat_quoted: "Csevegés idézve"
+        chat_watched_thread: "Figyelt csevegés téma"
     action_codes:
       chat:
         enabled: '%{who} engedélyezte a <button class="btn-link open-chat">csevegést</button> %{when}'

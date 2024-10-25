@@ -6,21 +6,17 @@ module Chat
   #
   # @example
   #  Chat::AutoJoinChannelBatch.call(
-  #   channel_id: 1,
-  #   start_user_id: 27,
-  #   end_user_id: 58,
+  #    params: {
+  #      channel_id: 1,
+  #      start_user_id: 27,
+  #      end_user_id: 58,
+  #    }
   #  )
   #
   class AutoJoinChannelBatch
     include Service::Base
 
-    contract
-    model :channel
-    step :create_memberships
-    step :recalculate_user_count
-    step :publish_new_channel
-
-    class Contract
+    contract do
       # Backward-compatible attributes
       attribute :chat_channel_id, :integer
       attribute :starts_at, :integer
@@ -41,6 +37,10 @@ module Chat
         self.end_user_id ||= ends_at
       end
     end
+    model :channel
+    step :create_memberships
+    step :recalculate_user_count
+    step :publish_new_channel
 
     private
 
@@ -49,8 +49,10 @@ module Chat
     end
 
     def create_memberships(channel:, contract:)
-      context.added_user_ids =
-        ::Chat::Action::CreateMembershipsForAutoJoin.call(channel: channel, contract: contract)
+      context[:added_user_ids] = ::Chat::Action::CreateMembershipsForAutoJoin.call(
+        channel: channel,
+        contract: contract,
+      )
     end
 
     def recalculate_user_count(channel:, added_user_ids:)

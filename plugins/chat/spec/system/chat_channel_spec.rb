@@ -286,6 +286,20 @@ RSpec.describe "Chat channel", type: :system do
       Fabricate(:chat_message, user: other_user, chat_channel: channel_1)
       Fabricate(:chat_message, in_reply_to: message_2, user: current_user, chat_channel: channel_1)
       channel_1.add(other_user)
+
+      stub_request(:get, "https://foo.com/").with(headers: { "Accept" => "*/*" }).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      stub_request(:head, "https://foo.com/").with(headers: { "Host" => "foo.com" }).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
     end
 
     it "renders text in the reply-to" do
@@ -294,6 +308,29 @@ RSpec.describe "Chat channel", type: :system do
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
         "&lt;abbr&gt;not abbr&lt;/abbr&gt;",
       )
+    end
+
+    it "renders escaped HTML when including a #" do
+      update_message!(message_2, user: other_user, text: "#general <abbr>not abbr</abbr>")
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "#general &lt;abbr&gt;not abbr&lt;/abbr&gt;",
+      )
+    end
+
+    it "limits excerpt length" do
+      update_message!(message_2, user: other_user, text: ("a" * 160))
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("a" * 150 + "…")
+    end
+
+    it "renders urls correclty in excerpts" do
+      update_message!(message_2, user: other_user, text: "https://foo.com")
+      chat_page.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("https://foo.com")
     end
 
     it "renders safe HTML like mentions (which are just links) in the reply-to" do

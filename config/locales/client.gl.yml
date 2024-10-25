@@ -116,7 +116,6 @@ gl:
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
-      twitter: "Compartir no Twitter"
       facebook: "Compartir no Facebook"
       email: "Enviar por correo"
       url: "Copiar e compartir o URL"
@@ -241,6 +240,7 @@ gl:
     suggested_topics:
       pm_title: "Mensaxes suxeridas"
     about:
+      edit: "Editar esta páxina"
       simple_title: "Verbo de"
       title: "Verbo de %{title}"
       stats: "Estatísticas do sitio"
@@ -1221,7 +1221,7 @@ gl:
         add_email: "Engadir correo electrónico alternativo"
         auth_override_instructions: "O enderezo decorreo pode actualizarse desde un fornecedor de autenticación."
         no_secondary: "Sen correos electrónicos secundarios"
-        instructions: "Non se verá nunca en público."
+        instructions: "Non se verá nunca en público"
         admin_note: "Nota: un usuario administrador que cambia o correo electrónico doutro usuario que non é administrador indica que o usuario perdeu o acceso á súa conta de correo orixinal, polo que se lle enviará un correo electrónico de restabelecemento do contrasinal ao seu novo enderezo. O correo electrónico do usuario non cambiará ata completar o proceso de restabelecemento do contrasinal."
         ok: "Enviarémoslle un correo electrónico para confirmar"
         required: "Escriba un enderezo de correo electrónico"
@@ -1250,8 +1250,8 @@ gl:
         approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
       name:
         title: "Nome"
-        instructions: "O seu nOme cOmpletO (OpciOnal)."
-        instructions_required: "Nome completo."
+        instructions: "O seu nOme cOmpletO (OpciOnal)"
+        instructions_required: "Nome completo"
         required: "Escriba un nome"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
@@ -1412,18 +1412,15 @@ gl:
           success: "A ligazón do convite xerouse correctamente!"
           error: "Produciuse un erro ao xerar esta ligazón de convite"
         invite:
-          new_title: "Crear convite"
-          edit_title: "Editar convite"
           instructions: "Compartir esta ligazón para conceder acceso a este sitio:"
-          copy_link: "copiar a ligazón"
           expired_at_time: "Caduca o %{time}"
           show_advanced: "Amosar opcións avanzadas"
           hide_advanced: "Agochar opcións avanzadas"
           add_to_groups: "Engadir aos grupos"
-          expires_at: "Caduca tras"
-          custom_message: "Mensaxe persoal opcional"
+          expires_after: "Caduca tras"
           send_invite_email: "Gardar e enviar mensaxe de correo"
-          save_invite: "Gardar convite"
+          save_invite: "Gardar"
+          cancel: "Cancelar"
         bulk_invite:
           none: "Non hai convites que amosar nesta páxina."
           text: "Convite en grupo"
@@ -1633,6 +1630,7 @@ gl:
       confirm_button: Finalizar inicio de sesión
     login:
       subheader_title: "Iniciar sesión na súa conta"
+      title: "Acceder"
       username: "Usuario"
       password: "Contrasinal"
       show_password: "Amosar"
@@ -3417,6 +3415,7 @@ gl:
         installed_version: "Instalado"
         latest_version: "Últimos"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
+        dismiss_notice: "Desbotar"
         new_features:
           learn_more: "Saber máis..."
         last_checked: "Última comprobación"
@@ -3715,8 +3714,11 @@ gl:
           screened_ips: "IP controlados"
           screened_urls: "URL controlados"
           search_logs: "Buscar rexistros"
-          security: "Seguranza"
-          spam: "Lixo"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Copias de seguranza"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3737,6 +3739,9 @@ gl:
             invalid_applies_to: "Obrigatorio"
             topic: "temas"
             post: "publicacións"
+        look_and_feel:
+          themes:
+            title: "Temas"
       plugins:
         title: "Complementos"
         name: "Nome"
@@ -4834,10 +4839,6 @@ gl:
             with_post: <span class="username">%{username}</span> por publicación en %{link}
             with_post_time: <span class="username">%{username}</span> por publicación en %{link} o <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
-        badge_intro:
-          title: "Seleccione unha insignia existente ou cree unha nova para comezar"
-          what_are_badges_title: "Que son as insignias?"
-          badge_query_examples_title: "Exemplos de consulta de insignias"
         mass_award:
           title: Recoñemento en lote
           description: Concede a mesma insignia a varios usuarios á vez.

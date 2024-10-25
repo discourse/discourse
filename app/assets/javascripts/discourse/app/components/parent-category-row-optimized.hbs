@@ -1,0 +1,46 @@
+{{#unless this.isHidden}}
+  <PluginOutlet
+    @name="category-list-above-each-category"
+    @outletArgs={{hash category=this.category}}
+  />
+  <tr
+    data-category-id={{this.category.id}}
+    data-notification-level={{this.category.notificationLevelString}}
+    class="{{if
+        this.category.description_excerpt
+        'has-description'
+        'no-description'
+      }}
+      {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
+  >
+    <td
+      class="category {{if this.isMuted 'muted'}}"
+      style={{category-color-variable this.category.color}}
+    >
+      <CategoryTitleLink @category={{this.category}} />
+      <PluginOutlet
+        @name="below-category-title-link"
+        @connectorTagName="div"
+        @outletArgs={{hash category=this.category}}
+      />
+      {{#if this.category.description_excerpt}}
+        <div class="category-description">
+          {{dir-span this.category.description_excerpt htmlSafe="true"}}
+        </div>
+      {{/if}}
+    </td>
+
+    <td class="topics">
+      <div title={{this.category.statTitle}}>{{html-safe
+          this.category.stat
+        }}</div>
+      <CategoryUnread
+        @category={{this.category}}
+        @tagName="div"
+        @unreadTopicsCount={{this.unreadTopicsCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+        class="unread-new"
+      />
+    </td>
+  </tr>
+{{/unless}}

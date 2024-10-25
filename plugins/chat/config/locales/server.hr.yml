@@ -27,6 +27,10 @@ hr:
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} i %{count} drugi"
+          few: "%{comma_separated_usernames} i %{count} drugih"
+          other: "%{comma_separated_usernames} i %{count} druga"
     mention_warning:
       dismiss: "skloni"
       cannot_see: "%{first_identifier} ne može pristupiti ovom kanalu i nije obaviješten."
@@ -69,6 +73,7 @@ hr:
   user_notifications:
     chat_summary:
       deleted_user: "Izbrisani korisnik"
+      from: "%{site_name}"
   unsubscribe:
     chat_summary:
       never: Nikad

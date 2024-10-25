@@ -26,6 +26,7 @@ ko:
         millions: "%{number}백만"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY MMM"
@@ -35,6 +36,7 @@ ko:
       long_with_year: "YYYY MMM D a h:mm"
       long_with_year_no_time: "YYYY MMM D"
       full_with_year_no_time: "YYYY MMMM Do"
+      long_date_with_year: "MMM D, YYYY LT"
       long_date_without_year: "MMM D, LT"
       long_date_with_year_without_time: "YYYY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
@@ -112,7 +114,6 @@ ko:
       topic_html: '주제: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"
       close: "닫기"
-      twitter: "트위터에 공유"
       facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
@@ -244,6 +245,7 @@ ko:
     suggested_topics:
       pm_title: "제안된 메시지"
     about:
+      edit: "이 페이지 수정"
       simple_title: "정보"
       title: "%{title}에 대해"
       stats: "사이트 통계"
@@ -1287,7 +1289,7 @@ ko:
         add_email: "보조 이메일 추가"
         auth_override_instructions: "인증 제공자를 통해 이메일을 업데이트할 수 있습니다."
         no_secondary: "보조 이메일이 없습니다"
-        instructions: "다른 사용자에게 공개되지 않습니다."
+        instructions: "다른 사용자에게 공개되지 않습니다"
         admin_note: "참고 : 관리자가 관리자가 아닌 다른 사용자의 이메일을 변경할 경우 해당 사용자는 원래 이메일 계정에 액세스할 수 없기 때문에 비밀번호 리셋 이메일이 새 주소로 전송됩니다. 사용자의 이메일은 비밀번호 리셋 프로세스를 완료할 때까지 변경되지 않습니다."
         ok: "확인을 위해 이메일을 보내드립니다"
         required: "이메일 주소를 입력하세요"
@@ -1317,8 +1319,8 @@ ko:
         approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
       name:
         title: "이름"
-        instructions: "전체 이름 (선택 사항)."
-        instructions_required: "전체 이름."
+        instructions: "전체 이름 (선택 사항)"
+        instructions_required: "전체 이름"
         required: "이름을 입력하세요"
         too_short: "이름이 너무 짧습니다."
         ok: "올바른 이름입니다"
@@ -1479,12 +1481,10 @@ ko:
           success: "초대 링크가 성공적으로 생성되었습니다!"
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다"
         invite:
-          new_title: "초대 만들기"
-          edit_title: "초대 편집"
           instructions: "이 링크를 공유하여 이 사이트의 액세스 권한을 즉시 부여할 수 있습니다."
-          copy_link: "링크 복사"
           expires_in_time: "%{time} 후에 만료"
           expired_at_time: "%{time}에 만료됨"
+          copy_link: "링크 복사"
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
           restrict: "다음으로 제한"
@@ -1493,10 +1493,10 @@ ko:
           email_or_domain_placeholder: "name@example.com 또는 example.com"
           max_redemptions_allowed: "최대 사용 한도"
           add_to_groups: "그룹에 추가"
-          expires_at: "다음 후 만료"
-          custom_message: "개인 메시지 옵션"
+          expires_after: "다음 후 만료"
           send_invite_email: "저장 및 이메일 전송"
-          save_invite: "초대 저장"
+          save_invite: "저장"
+          cancel: "취소"
           invite_saved: "초대가 저장되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
@@ -1514,7 +1514,7 @@ ko:
         same_as_email: "비밀번호가 이메일과 동일합니다."
         ok: "올바른 비밀번호입니다."
         instructions:
-          other: "%{count}자 이상."
+          other: "%{count}자 이상"
         required: "비밀번호를 입력하세요"
         confirm: "확인"
       summary:
@@ -3626,6 +3626,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
+        dismiss_notice: "무시"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
@@ -3947,8 +3948,11 @@ ko:
           screened_ips: "노출된 IP들"
           screened_urls: "노출된 URL들"
           search_logs: "검색 로그"
-          security: "보안"
-          spam: "스팸"
+      section_landing_pages:
+        account:
+          title: "계정"
+          backups:
+            title: "백업"
       config_areas:
         about:
           community_name: "커뮤니티 이름"
@@ -3972,6 +3976,9 @@ ko:
             invalid_applies_to: "필수"
             topic: "글"
             post: "포스트"
+        look_and_feel:
+          themes:
+            title: "테마"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -5114,10 +5121,6 @@ ko:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
-        badge_intro:
-          title: "시작하려면 기존 배지를 선택하거나 새 배지를 생성하세요"
-          what_are_badges_title: "배지가 무엇인가요?"
-          badge_query_examples_title: "배지 쿼리 예시"
         mass_award:
           title: 일괄 수여
           description: 한 번에 많은 사용자에게 동일한 배지를 수여하세요.

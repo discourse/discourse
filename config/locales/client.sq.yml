@@ -200,6 +200,7 @@ sq:
     suggested_topics:
       pm_title: "Mesazhet e sugjeruara"
     about:
+      edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"
       title: "Rreth %{title}"
       stats: "Statistikat e faqjes"
@@ -695,7 +696,7 @@ sq:
         primary_label: "parësor"
         resent_label: "emaili u dërgua"
         update_email: "Ndrysho email"
-        instructions: "Mos e shfaq në publik."
+        instructions: "Mos e shfaq në publik"
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
         authenticated: "Emaili juaj është verifikuar nga %{provider}"
@@ -714,8 +715,8 @@ sq:
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
         title: "Emri juaj"
-        instructions: "Emri i plotë (opsional)."
-        instructions_required: "Emri i plotë."
+        instructions: "Emri i plotë (opsional)"
+        instructions_required: "Emri i plotë"
         too_short: "Emri juaj është shumë i shkurtër"
         ok: "Emri duket në rregull"
       username:
@@ -816,6 +817,9 @@ sq:
         days_visited: "Ditë vizituar"
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
         create: "Fto"
+        invite:
+          save_invite: "Ruaj"
+          cancel: "Anulo"
         bulk_invite:
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
       password:
@@ -977,6 +981,7 @@ sq:
       complete_email_not_found: "Nuk ka llogari për <b>%{email}</b>"
       confirm_title: Vazhdo tek %{site_name}
     login:
+      title: "Identifikohu"
       username: "Anëtari"
       password: "Fjalëkalimi"
       show_password: "Shfaq"
@@ -2034,6 +2039,7 @@ sq:
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
         latest_version: "Të fundit"
+        dismiss_notice: "Hiqe"
         new_features:
           learn_more: "Mëso më shumë..."
         last_checked: "Verifikimi i fundit"
@@ -2171,8 +2177,11 @@ sq:
           screened_emails: "Kontroll Email-ash"
           screened_ips: "Kontroll IP-sh"
           screened_urls: "Kontroll URL-sh"
-          security: "Siguria"
-          spam: "Spam"
+      section_landing_pages:
+        account:
+          title: "Llogaria"
+          backups:
+            title: "Rezervat"
       config_areas:
         about:
           saved: "u ruajt!"

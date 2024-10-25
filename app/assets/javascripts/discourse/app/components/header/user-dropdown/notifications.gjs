@@ -64,6 +64,7 @@ export default class Notifications extends Component {
         @titleText={{i18n "user_tips.first_notification.title"}}
         @contentText={{i18n "user_tips.first_notification.content"}}
         @showSkipButton={{true}}
+        @priority={{1000}}
       />
     {{/if}}
 

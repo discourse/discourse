@@ -146,18 +146,27 @@ sk:
               label: ID témy
         post_created_edited:
           fields:
+            original_post_only:
+              label: Len pôvodný príspevok
+              description: Spustí sa len vtedy, ak je príspevok pôvodným príspevkom v téme
             action_type:
               label: Typ akcie
               description: "Voliteľné, obmedzte spúšťanie iba na vytvorené alebo upravené udalosti"
             valid_trust_levels:
               label: Platné úrovne dôvery
               description: Spustí sa iba vtedy, ak používateľ vytvorí príspevok na týchto úrovniach dôveryhodnosti, predvolene na ľubovoľnú úroveň dôveryhodnosti
+            restricted_tags:
+              label: Značky
+              description: Voliteľné, spustí sa iba vtedy, ak má príspevok niektorú z týchto značiek
             restricted_category:
               label: Kategória
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku v tejto kategórii
             restricted_group:
               label: Skupina
               description: Voliteľné, spustí sa iba vtedy, ak je téma príspevku súkromnou správou v doručenej pošte tejto skupiny
+            restricted_groups:
+              label: Skupiny
+              description: Nepovinné, aktivuje sa len vtedy, ak je témou príspevku súkromná správa v jednej zo schránok doručených do skupiny.
             ignore_group_members:
               label: Ignorovať členov skupiny
               description: Preskočte spúšťač, ak je odosielateľ členom vyššie uvedenej skupiny
@@ -222,6 +231,9 @@ sk:
             watching_tags:
               label: Sledovanie značiek
               description: Spustí sa iba vtedy, ak téma obsahuje niektorú z týchto značiek
+            trigger_with_pms:
+              label: Spúšťanie pomocou PM
+              description: Spustí sa, aj keď boli značky zmenené v PM
         after_post_cook:
           fields:
             valid_trust_levels:

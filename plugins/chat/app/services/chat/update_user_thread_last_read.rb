@@ -5,19 +5,26 @@ module Chat
   # as read.
   #
   # @example
-  #  Chat::UpdateUserThreadLastRead.call(channel_id: 2, thread_id: 3, message_id: 4, guardian: guardian)
+  #  Chat::UpdateUserThreadLastRead.call(params: { channel_id: 2, thread_id: 3, message_id: 4 }, guardian: guardian)
   #
   class UpdateUserThreadLastRead
     include ::Service::Base
 
-    # @!method call(channel_id:, thread_id:, guardian:)
-    #   @param [Integer] channel_id
-    #   @param [Integer] thread_id
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :channel_id, :integer
+      attribute :thread_id, :integer
+      attribute :message_id, :integer
+
+      validates :thread_id, :channel_id, presence: true
+    end
     model :thread
     policy :invalid_access
     model :membership
@@ -26,15 +33,6 @@ module Chat
     step :mark_associated_mentions_as_read
     step :mark_thread_read
     step :publish_new_last_read_to_clients
-
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      attribute :thread_id, :integer
-      attribute :message_id, :integer
-
-      validates :thread_id, :channel_id, presence: true
-    end
 
     private
 

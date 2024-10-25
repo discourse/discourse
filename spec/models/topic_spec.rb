@@ -816,8 +816,6 @@ RSpec.describe Topic do
     context "with rate limits" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       context "when per day" do
         before { SiteSetting.max_topic_invitations_per_day = 1 }
 
@@ -2698,8 +2696,6 @@ RSpec.describe Topic do
       RateLimiter.enable
     end
 
-    use_redis_snapshotting
-
     it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
 
@@ -2750,8 +2746,6 @@ RSpec.describe Topic do
       SiteSetting.max_topics_in_first_day = 0
       RateLimiter.enable
     end
-
-    use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
       create_post(

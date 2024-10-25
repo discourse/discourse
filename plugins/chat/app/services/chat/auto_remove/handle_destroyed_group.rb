@@ -21,20 +21,18 @@ module Chat
     class HandleDestroyedGroup
       include Service::Base
 
-      contract
-      step :assign_defaults
       policy :chat_enabled
+      contract do
+        attribute :destroyed_group_user_ids, :array
+
+        validates :destroyed_group_user_ids, presence: true
+      end
+      step :assign_defaults
       policy :not_everyone_allowed
       model :scoped_users
       step :remove_users_outside_allowed_groups
       step :remove_users_without_channel_permission
       step :publish
-
-      class Contract
-        attribute :destroyed_group_user_ids
-
-        validates :destroyed_group_user_ids, presence: true
-      end
 
       private
 
@@ -50,7 +48,7 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_scoped_users(destroyed_group_user_ids:)
+      def fetch_scoped_users(contract:)
         User
           .real
           .activated
@@ -58,7 +56,7 @@ module Chat
           .not_staged
           .includes(:group_users)
           .where("NOT admin AND NOT moderator")
-          .where(id: destroyed_group_user_ids)
+          .where(id: contract.destroyed_group_user_ids)
           .joins(:user_chat_channel_memberships)
           .distinct
       end
@@ -102,11 +100,8 @@ module Chat
 
         return if memberships_to_remove.empty?
 
-        context.merge(
-          users_removed_map:
-            Chat::Action::RemoveMemberships.call(
-              memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
-            ),
+        context[:users_removed_map] = Chat::Action::RemoveMemberships.call(
+          memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
         )
       end
 

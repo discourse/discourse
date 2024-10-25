@@ -45,7 +45,6 @@ en:
       deleted_chat_username: deleted
       dates:
         yesterday: "Yesterday"
-        time_tiny: "h:mm"
       all_loaded: "Showing all messages"
       already_enabled: "Chat is already enabled on this topic. Please refresh."
       disabled_for_topic: "Chat is disabled on this topic."
@@ -479,10 +478,9 @@ en:
         auto_join_users_info: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the %{category} category."
         auto_join_users_info_no_category: "Check hourly which users have been active in the last 3 months. Add them to this channel if they have access to the selected category."
         auto_join_users_warning: "Every user who isn't a member of this channel and has access to the %{category} category will join. Are you sure?"
-        desktop_notification_level: "Desktop notifications"
+        notification_level: "Send push notifications"
         follow: "Join"
         followed: "Joined"
-        mobile_notification_level: "Mobile push notifications"
         mute: "Mute channel"
         threading_enabled: "Enabled"
         threading_disabled: "Disabled"

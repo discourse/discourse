@@ -89,10 +89,14 @@ fa_IR:
           fields:
             action_type:
               label: نوع عمل
+            restricted_tags:
+              label: برچسب‌ها
             restricted_category:
               label: دسته‌بندی
             restricted_group:
               label: گروه
+            restricted_groups:
+              label: گروه‌ها
           created: ساخته شده
           edited: ویرایش شده
         category_created_edited:

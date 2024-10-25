@@ -27,6 +27,7 @@ pt:
         millions: "%{number}M"
     dates:
       time: "hh:mm"
+      time_short: "hh:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -137,7 +138,6 @@ pt:
       topic_html: 'Tópico: <span class="topic-title">%{topicTitle}</span>'
       post: "publicação #%{postNumber} de @%{username}"
       close: "fechar"
-      twitter: "Partilhar no Twitter"
       facebook: "Partilhar no Facebook"
       email: "Enviar por e-mail"
       url: "Copiar e partilhar URL"
@@ -278,6 +278,7 @@ pt:
       pill: "Sugerido"
       pm_title: "Mensagens Sugeridas"
     about:
+      edit: "Editar esta página"
       simple_title: "Acerca"
       title: "Acerca de %{title}"
       stats: "Estatísticas do sítio"
@@ -1348,7 +1349,7 @@ pt:
         add_email: "Adicionar E-mail Alternativo"
         auth_override_instructions: "O e-mail pode ser atualizado a partir do provedor de autenticação."
         no_secondary: "Não existem emails secundários"
-        instructions: "Nunca mostrado ao público."
+        instructions: "Nunca mostrado ao público"
         admin_note: "Nota: Um administrador que alterou um e-mail de outro usuário não-administrador indica que o usuário perdeu o acesso a sua conta de e-mail original. então um e-mail de redefinição de senha será enviado para o novo endereço deles. O e-mail do usuário não será alterado até que ele complete o processo de redefinição de senha."
         ok: "Enviar-lhe-emos um email para confirmar"
         required: "Por favor introduza um endereço de e-mail"
@@ -1378,8 +1379,8 @@ pt:
         approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
       name:
         title: "Nome"
-        instructions: "O seu nOme cOmpletO (OpciOnal)."
-        instructions_required: "O seu nome completo."
+        instructions: "O seu nOme cOmpletO (OpciOnal)"
+        instructions_required: "O seu nome completo"
         required: "Por favor introduza um nome"
         too_short: "O seu nome é demasiado curto"
         ok: "O seu nome parece adequado"
@@ -1540,21 +1541,19 @@ pt:
           success: "Hiperligação do convite gerada com sucesso!"
           error: "Ocorreu um erro ao gerar o Link de Convite"
         invite:
-          new_title: "Criar Convite"
-          edit_title: "Editar Convite"
           instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
-          copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
+          copy_link: "Copiar link"
           show_advanced: "Mostrar Opções Avançadas"
           hide_advanced: "Ocultar Opções Avançadas"
           restrict: "Restringir a"
           max_redemptions_allowed: "Máximo de utilizações"
           add_to_groups: "Adicionar aos grupos"
-          expires_at: "Expira após"
-          custom_message: "Mensagem pessoal opcional"
+          expires_after: "Expira após"
           send_invite_email: "Guardar e Enviar E-mail"
-          save_invite: "Salvar Convite"
+          save_invite: "Guardar"
+          cancel: "Cancelar"
           invite_saved: "Convite salvo."
         bulk_invite:
           none: "Sem convites para exibir nesta página."
@@ -1787,7 +1786,7 @@ pt:
     login:
       header_title: "Bem-vindo de volta"
       subheader_title: "Faça login na sua conta"
-      title: "Efetuar login"
+      title: "Iniciar Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
       show_password: "Mostrar"
@@ -3625,6 +3624,7 @@ pt:
         installed_version: "Instalado"
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
+        dismiss_notice: "Marcar Visto"
         new_features:
           learn_more: "Saiba mais..."
         last_checked: "Última verificação"
@@ -3914,8 +3914,11 @@ pt:
           screened_ips: "IPs Filtrados"
           screened_urls: "URLs Filtrados"
           search_logs: "Logs de Pesquisa"
-          security: "Segurança"
-          spam: "Spam"
+      section_landing_pages:
+        account:
+          title: "Conta"
+          backups:
+            title: "Fazer Cópias de Segurança"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3936,6 +3939,9 @@ pt:
             invalid_applies_to: "Necessário"
             topic: "tópicos"
             post: "mensagens"
+        look_and_feel:
+          themes:
+            title: "Temas"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -4832,10 +4838,6 @@ pt:
             with_post: <span class="username">%{username}</span> pela publicação em %{link}
             with_post_time: <span class="username">%{username}</span> pela publicação em %{link} às <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
-        badge_intro:
-          title: "Selecione um crachá existente ou crie um novo para começar"
-          what_are_badges_title: "O que são os crachás?"
-          badge_query_examples_title: "Exemplos de queries de crachás"
       emoji:
         title: "Emoji"
         add: "Adicionar Novo Emoji"

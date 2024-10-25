@@ -15,8 +15,6 @@ RSpec.describe About do
   after { DiscoursePluginRegistry.reset! }
 
   describe "#stats" do
-    use_redis_snapshotting
-
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       register_stat("some_group", Proc.new { stats })

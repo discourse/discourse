@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe(AdminNotices::Dismiss) do
-  subject(:result) { described_class.call(id: admin_notice.id, guardian: current_user.guardian) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
-  let!(:admin_notice) { Fabricate(:admin_notice, identifier: "problem.test") }
-  let!(:problem_check) { Fabricate(:problem_check_tracker, identifier: "problem.test", blips: 3) }
+  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:admin_notice) { Fabricate(:admin_notice, identifier: "problem.test") }
+  fab!(:problem_check) { Fabricate(:problem_check_tracker, identifier: "problem.test", blips: 3) }
+
+  let(:params) { { id: admin_notice.id } }
+  let(:dependencies) { { guardian: current_user.guardian } }
 
   context "when user is not allowed to perform the action" do
     fab!(:current_user) { Fabricate(:user) }
@@ -12,14 +16,14 @@ RSpec.describe(AdminNotices::Dismiss) do
     it { is_expected.to fail_a_policy(:invalid_access) }
   end
 
-  context "when user is allowed to perform the action" do
-    fab!(:current_user) { Fabricate(:admin) }
+  context "when the admin notice has already been dismissed" do
+    before { admin_notice.destroy! }
 
     it { is_expected.to run_successfully }
+  end
 
-    it "sets the service result as successful" do
-      expect(result).to be_a_success
-    end
+  context "when everything's ok" do
+    it { is_expected.to run_successfully }
 
     it "destroys the admin notice" do
       expect { result }.to change { AdminNotice.count }.from(1).to(0)

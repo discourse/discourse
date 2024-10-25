@@ -50,6 +50,8 @@ nb_NO:
   anonymous: "Anonym"
   remove_posts_deleted_by_author: "Slettet av forfatter"
   redirect_warning: "Vi kunne ikke verifisere at lenken du valgte faktisk var publisert på forumet. Hvis du likevel ønsker å fortsette, velg lenken under."
+  topic_tag_changed:
+    added: "Lagt til %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} av %{username}"
   components:
@@ -73,6 +75,7 @@ nb_NO:
       objects:
         required: "Må være til stede"
         not_valid_integer_value: "må være ett heltall"
+        string_value_not_valid_url: "må være en gyldig URL"
   emails:
     incoming:
       default_subject: "Emnet trenger en tittel"
@@ -357,6 +360,14 @@ nb_NO:
             ip_address:
               blocked: "Nye registreringer er ikke tillatt fra IP-adressen din."
               max_new_accounts_per_registration_ip: "Nye registreringer er ikke tillatt fra IP-adressen din (maksimalt antall nådd). Ta kontakt med et medlem av staben."
+        user_password:
+          attributes:
+            password:
+              common: "er ett av de 10000 mest vanlige passordene. Benytt et sikrere passord."
+              same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
+              same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
+              same_as_current: "er det samme som nåværende passord."
+              unique_characters: "har for mange gjentatte tegn. Benytt et sikrere passord."
         user_email:
           attributes:
             user_id:
@@ -508,10 +519,16 @@ nb_NO:
     success_unapproved: "Du har endret ditt passord."
   email_login:
     title: "E-post innlogging"
+  user_auth_tokens:
+    device:
+      iphone: "iPhone"
+    os:
+      android: "Android"
   change_email:
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     error_staged: "En feil oppstod ved endring av e-postadressen din. Den nye adressen er allerede i bruk av en arrangert bruker."
     already_done: "Beklager, denne godkjenningslenken er ikke lenger gyldig. Kanskje e-postadressen din allerede er byttet?"
+    confirm: "Bekreft"
   associated_accounts:
     revoke_failed: "Klarte ikke å oppheve kontotilknytningen til %{provider_name}."
   activation:
@@ -696,6 +713,8 @@ nb_NO:
       yaxis: "Dag"
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
@@ -820,6 +839,9 @@ nb_NO:
       title: "Sidevisninger"
       xaxis: "Dag"
       yaxis: "Totalt antall sidevisninger"
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antall sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Sidevisninger av innloggede"
       xaxis: "Dag"
@@ -910,7 +932,13 @@ nb_NO:
       queue_size: "Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere."
       ram: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
       subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
+      email_polling_errored_recently:
+        one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
+        other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
       missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
+      poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
+      poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>POP3 instillingene</a>. "
+      force_https: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
   site_settings:
     disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
@@ -1002,6 +1030,7 @@ nb_NO:
     default_categories_tracking: "Liste med kategorier som overvåkes som forvalg"
     default_categories_muted: "Liste med kategorier som er dempet som forvalg"
     default_categories_watching_first_post: "Liste over kategorier hvor det er forvalgt innstilling at det første innlegget i hvert nye emne følges."
+    watched_precedence_over_muted: "Varsle meg om emner i kategorier eller tagger jeg ser på, som også tilhører en jeg har dempet"
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_username: "Ingen bruker med det brukernavnet."
@@ -1116,6 +1145,9 @@ nb_NO:
   subject_pm: "[privat samtale]"
   user_notifications:
     previous_discussion: "Tidligere svar"
+    more_pm_participants:
+      one: "%{participants} og %{count} annen"
+      other: "%{participants} og %{count} andre"
     user_invited_to_private_message_pm_group:
       title: "Bruker inviterte gruppe til privat samtale"
     user_invited_to_private_message_pm:
@@ -1171,6 +1203,7 @@ nb_NO:
     edit_reason: "Last ned lokal kopi av bilder"
     unauthorized: "Beklager, filen du prøver å legge til er ikke autorisert\n(authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Limt inn bilde"
+    size_zero_failure: "Beklager, det ser ut til at noe har gått galt, filen du prøver å laste opp er 0 byte. Vennligst prøv igjen."
     images:
       size_not_found: "Beklager, vi kunne ikke fastslå størrelsen på bildet ditt. Kanskje bildet ditt er blitt ødelagt?"
   skipped_email_log:
@@ -1316,8 +1349,12 @@ nb_NO:
                 label: "Kategorier med fremhevede emner"
               categories_and_latest_topics:
                 label: "Kategorier og siste emner"
+              categories_and_latest_topics_created_date:
+                label: "Kategorier og nyeste emner (sorter etter emne opprettet dato)"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
+              subcategories_with_featured_topics:
+                label: "Underkategorier med utvalgte emner"
   onebox:
     github:
       closed: "lukket"

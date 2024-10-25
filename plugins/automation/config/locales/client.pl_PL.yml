@@ -44,19 +44,27 @@ pl_PL:
           confirm_remove_pm: "Czy na pewno chcesz usunąć tę wiadomość prywatną?"
           placeholder_title: Tytuł PW
           add_pm: Dodaj PW
+          no_pm_created: Nie utworzyłeś jeszcze żadnej PW. Prywatne wiadomości zostaną wysłane, gdy Twoja automatyzacja zostanie uruchomiona.
           title:
             label: Tytuł
           raw:
             label: Treść
+          delay:
+            label: Opóźnienie (minuty)
+          prefers_encrypt:
+            label: Szyfruje PW, jeśli jest to dostępne
         group:
           label: Grupa
         text:
           label: Tekst
       triggerables:
+        not_found: Nie można znaleźć wyzwalacza `%{trigger}` dla automatyzacji `%{automation}`, upewnij się, że powiązana wtyczka jest zainstalowana.
         user_badge_granted:
           fields:
             badge:
               label: Odznaka
+            only_first_grant:
+              label: Tylko przy pierwszym przyznaniu
         stalled_topic:
           durations:
             PT1H: "Jedna godzina"
@@ -67,6 +75,11 @@ pl_PL:
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
             P1Y: "Rok"
+          fields:
+            categories:
+              label: Ograniczony do kategorii
+            tags:
+              label: Ograniczony do tagów
         recurring:
           every: Co
           frequencies:
@@ -92,6 +105,13 @@ pl_PL:
             P3M: "Trzy miesiące"
             P6M: "Sześć miesięcy"
             P1Y: "Rok"
+          fields:
+            restricted_category:
+              label: Ograniczone do kategorii
+            stalled_after:
+              label: Opóźnienie wyzwalania
+            retriggered_after:
+              label: Opóźnienie ponownego wyzwalania
         user_added_to_group:
           fields:
             joined_group:
@@ -104,6 +124,8 @@ pl_PL:
           fields:
             restricted_group:
               label: Ogranicz do grupy
+            trust_level_transition:
+              label: Przejście na poziom zaufania
           trust_levels:
             ALL: "Wszystkie poziomy zaufania"
             TL01: "TL0 do TL1"
@@ -120,14 +142,38 @@ pl_PL:
               label: ID tematu
         post_created_edited:
           fields:
+            original_post_only:
+              label: Tylko oryginalny post
+              description: Uruchomi się tylko wtedy, gdy post jest oryginalnym postem w temacie.
             action_type:
               label: Typ akcji
+              description: "Opcjonalnie, ogranicz wyzwalanie tylko do utworzonych lub edytowanych zdarzeń."
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
+              description: Uruchomi się tylko wtedy, gdy post zostanie utworzony przez użytkownika na tych poziomach zaufania, domyślnie na dowolnym poziomie zaufania.
+            restricted_tags:
+              label: Tagi
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy post ma którykolwiek z tych tagów
             restricted_category:
               label: Kategoria
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat posta należy do tej kategorii.
             restricted_group:
               label: Grupa
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat postu jest prywatną wiadomością w skrzynce odbiorczej tej grupy.
+            restricted_groups:
+              label: Grupy
+              description: Opcjonalne, uruchomi się tylko wtedy, gdy temat postu jest prywatną wiadomością w jednej ze skrzynek odbiorczych grupy.
+            ignore_group_members:
+              label: Ignoruj członków grupy
+              description: Pomiń wyzwalacz, jeśli nadawca jest członkiem grupy określonej powyżej.
+            ignore_automated:
+              label: Ignoruj automatyczne
+            first_post_only:
+              label: Tylko pierwszy post
+            first_topic_only:
+              label: Tylko pierwszy temat
+            skip_via_email:
+              label: "Pomiń przez e-mail"
           created: Utworzono
           edited: Edytowany
         user_updated:
@@ -138,6 +184,7 @@ pl_PL:
               label: Pola niestandardowe użytkownika
             once_per_user:
               label: Raz na użytkownika
+              description: Wyzwoli się tylko raz na użytkownika
             new_users_only:
               label: Tylko nowi użytkownicy
         category_created_edited:
@@ -154,8 +201,17 @@ pl_PL:
               label: Ignoruj personel
             ignore_group_members:
               label: Ignoruj członków grupy
+            ignore_automated:
+              label: Ignoruj automatyczne
+              description: Pomiń wyzwalacz, jeśli nadawca ma adres e-mail bez odpowiedzi lub pochodzi z automatycznego źródła. Dotyczy tylko prywatnych wiadomości utworzonych za pośrednictwem poczty e-mail
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Obserwuje kategorie
+            watching_tags:
+              label: Obserwuje tagi
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -218,6 +274,8 @@ pl_PL:
           fields:
             level:
               label: Poziom
+            notice:
+              label: Ogłoszenie
           levels:
             warning: Ostrzeżenie
             info: Informacje
@@ -225,20 +283,27 @@ pl_PL:
             error: Błąd
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Nazwa odznaki
             group:
               label: Grupa
             update_user_title_and_flair:
               label: Zaktualizuj tytuł i znacznik użytkownika
               description: Opcjonalnie, zaktualizuj tytuł i znacznik użytkownika
+            remove_members_without_badge:
+              label: Usuń istniejących członków bez odznaki
             badge:
               label: Odznaka
               description: Wybierz odznakę
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: Zawieś do (domyślnie)
             reason:
               label: Powód (domyślny)
             actor:
               label: Użytkownik
+              description: "Użytkownik odpowiedzialny za zawieszenie (domyślnie: system)"
         pin_topic:
           fields:
             pinnable_topic:
@@ -253,6 +318,27 @@ pl_PL:
               label: ID tematu
             user:
               label: Użytkownik
+              description: "Użytkownik tworzący baner (domyślnie: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Sprawdzone słowa
+        topic_required_words:
+          fields:
+            words:
+              label: Lista wymaganych słów
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: Nazwa grupy uczestników
+            giftee_assignment_messages:
+              label: Wiadomości wysłane do obdarowującego
+        send_pms:
+          add_a_pm_btn:
+            label: Dodaj PW
+          fields:
+            receiver:
+              label: Odbiornik PW
         close_topic:
           fields:
             topic:
@@ -263,6 +349,10 @@ pl_PL:
             user:
               label: Użytkownik
               description: "Użytkownik zamykający temat (domyślnie: system)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Nazwa niestandardowego pola użytkownika"
       models:
         script:
           name:
@@ -283,6 +373,8 @@ pl_PL:
             label: Włączona
           disabled:
             label: Wyłączone
+          placeholders:
+            label: Symbole zastępcze
           last_updated_at:
             label: Ostatnia aktualizacja
           last_updated_by:

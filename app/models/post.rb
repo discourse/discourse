@@ -77,11 +77,11 @@ class Post < ActiveRecord::Base
                 :skip_unique_check,
                 :skip_validation
 
-  MISSING_UPLOADS ||= "missing uploads"
-  MISSING_UPLOADS_IGNORED ||= "missing uploads ignored"
-  NOTICE ||= "notice"
+  MISSING_UPLOADS = "missing uploads"
+  MISSING_UPLOADS_IGNORED = "missing uploads ignored"
+  NOTICE = "notice"
 
-  SHORT_POST_CHARS ||= 1200
+  SHORT_POST_CHARS = 1200
 
   register_custom_field_type(MISSING_UPLOADS, :json)
   register_custom_field_type(MISSING_UPLOADS_IGNORED, :boolean)
@@ -973,27 +973,6 @@ class Post < ActiveRecord::Base
       .group("date(posts.created_at)")
       .order("date(posts.created_at)")
       .count
-  end
-
-  def reply_history(max_replies = 100, guardian = nil)
-    post_ids = DB.query_single(<<~SQL, post_id: id, topic_id: topic_id)
-    WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-          SELECT p.id, p.reply_to_post_number FROM posts AS p
-            WHERE p.id = :post_id
-          UNION
-             SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-               WHERE breadcrumb.reply_to_post_number = p.post_number
-                 AND p.topic_id = :topic_id
-        )
-    SELECT id from breadcrumb
-    WHERE id <> :post_id
-    ORDER by id
-    SQL
-
-    # [1,2,3][-10,-1] => nil
-    post_ids = (post_ids[(0 - max_replies)..-1] || post_ids)
-
-    Post.secured(guardian).where(id: post_ids).includes(:user, :topic).order(:id).to_a
   end
 
   MAX_REPLY_LEVEL ||= 1000

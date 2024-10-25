@@ -696,7 +696,6 @@ es:
               same_as_username: "es igual a tu nombre de usuario. Escoge una contraseña más segura."
               same_as_email: "es igual a tu correo electrónico. Escoge una contraseña más segura."
               same_as_current: "es igual a tu contraseña actual."
-              same_as_previous: "es igual a tu contraseña anterior"
               same_as_name: "es igual a tu nombre."
               unique_characters: "tiene demasiados caracteres repetidos. Escoge una contraseña más segura."
             username:
@@ -706,6 +705,15 @@ es:
             ip_address:
               blocked: "No se permiten nuevos registros desde tu dirección IP."
               max_new_accounts_per_registration_ip: "No se permiten nuevos registros desde tu dirección IP (se alcanzó el límite máximo). Contacta con un miembro del equipo."
+        user_password:
+          attributes:
+            password:
+              common: "es una de las 10 000 contraseñas más comunes. Usa una contraseña más segura."
+              same_as_username: "es igual a tu nombre de usuario. Escoge una contraseña más segura."
+              same_as_email: "es igual a tu correo electrónico. Escoge una contraseña más segura."
+              same_as_current: "es igual a tu contraseña actual."
+              same_as_name: "es igual a tu nombre."
+              unique_characters: "tiene demasiados caracteres repetidos. Escoge una contraseña más segura."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1240,13 +1248,13 @@ es:
       yaxis: "Día"
       description: "Número de usuarios que aumentaron su nivel de confianza durante este período."
     consolidated_page_views:
-      title: "Vistas de página consolidadas"
+      title_legacy: "Vistas de página consolidadas"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios conectados"
       yaxis: "Día"
-      description: "Vistas de página de usuarios con una sesión iniciada, usuarios anónimos y crawlers."
+      description_legacy: "Vistas de página de usuarios con una sesión iniciada, usuarios anónimos y crawlers."
       labels:
         post: Publicación
         editor: Editor
@@ -1261,13 +1269,16 @@ es:
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     consolidated_page_views_browser_detection:
       title: "Páginas vistas consolidadas con detección de navegador (Experimental)"
+      title_legacy: "Páginas vistas consolidadas con detección de navegador (Experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anónimo"
         page_view_logged_in_browser: "Navegador conectado"
         page_view_crawler: "Rastreador conocido"
         page_view_other: "Otras páginas vistas"
       yaxis: "Día"
-      description: "Páginas vistas por usuarios registrados, usuarios anónimos, rastreadores conocidos y otros. Este informe experimental garantiza que las solicitudes de usuarios registrados/anónimos proceden de navegadores reales antes de contabilizarlas."
+    site_traffic:
+      yaxis: "Día"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1417,6 +1428,9 @@ es:
       xaxis: "Día"
       yaxis: "Total de vistas de página"
       description: "Número de nuevas vistas de página de todos los visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Día"
+      yaxis: "Total de vistas de página"
     page_view_logged_in_mobile_reqs:
       title: "Vistas de página de usuarios con una sesión iniciada"
       xaxis: "Día"
@@ -1747,7 +1761,6 @@ es:
     blocked_ip_blocks: "Lista de direcciones IP privadas en las que Discourse no debería hacer crawling"
     allowed_internal_hosts: "Lista de hosts internos sobre los que discourse puede hacer crawl de forma segura para oneboxes y otras finalidades."
     allowed_onebox_iframes: "Una lista de dominios iframe src que se permiten a través de incrustaciones de Onebox. «*» permitirá todos los motores Onebox por defecto."
-    allowed_iframes: "Una lista de prefijos de dominios para iframe src que discourse puede permitir de forma segura en publicaciones"
     allowed_crawler_user_agents: "Agentes de usuario de crawlers a los que se debe permitir el acceso al sitio. ¡ADVERTENCIA! ¡CONFIGURAR ESTO INHABILITARÁ A TODOS LOS CRAWLERS QUE NO SE ENCUENTRAN AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensible a mayúsculas y minúsculas en la cadena del agente de usuario que identifica a los que no se debe permitir el acceso al sitio. No se aplica si se define una lista de permitidos."
     slow_down_crawler_user_agents: 'Agentes de usuario de rastreadores web a los que se les debe limitar la velocidad según lo configurado en el ajuste «slow down crawler rate». Cada valor debe tener al menos 3 caracteres.'
@@ -1761,8 +1774,6 @@ es:
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
     top_menu: "Determina qué elementos aparecen en la navegación de la página de inicio y en qué orden."
-    post_menu: "Determina qué elementos aparecen en el menú de la publicación y en qué orden."
-    post_menu_hidden_items: "Los elementos del menú que se ocultan por defecto en el menú de publicación a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determinar los elementos que aparecen en el widget de compartir y su orden."
     allow_username_in_share_links: "Permitir que los nombres de usuario se incluyan en los enlaces compartidos. Esto es útil para premiar medallas basadas en visitantes únicos."
     site_contact_username: "Nombre de usuario de miembro del equipo desde donde se enviarán todos los mensajes automáticos. Si se deja en blanco, se utilizará la cuenta por defecto del sistema."
@@ -2110,7 +2121,6 @@ es:
     reset_bounce_score_after_days: "Restablecer la puntuación de reobte automáticamente luego de X días."
     blocked_attachment_content_types: "Lista de palabras clave utilizadas para bloquear archivos adjuntos según el tipo de contenido."
     blocked_attachment_filenames: "Lista de palabras clave utilizadas para bloquear los archivos adjuntos según el nombre del archivo."
-    forwarded_emails_behaviour: "Cómo tratar un correo electrónico enviado a Discourse"
     always_show_trimmed_content: "Mostrar siempre la parte recortada de los correos electrónicos entrantes. AVISO: podría revelar direcciones de correo electrónico."
     trim_incoming_emails: "Recortar las partes irrelevantes de mensajes de correo entrantes."
     private_email: "No incluir contenido de publicaciones o temas en el título o el cuerpo del correo electrónico. NOTA: también desactiva los boletines por correo electrónico."
@@ -2229,7 +2239,6 @@ es:
     auto_handle_queued_age: "Maneja automáticamente los registros que están esperando para ser revisados después de esta cantidad de días. Las denuncias serán ignoradas. Los mensajes y usuarios en cola serán rechazados. Establece el valor en 0 para desactivar esta función."
     penalty_step_hours: "Tiempo de sanción por defecto al silenciar o suspender usuarios (en horas). El primer valor se usará para la primera sanción, el segundo para la segunda, y así sucesivamente."
     penalty_include_post_message: "Incluir automáticamente el mensaje ofensivo en la plantilla del mensaje de correo electrónico al silenciar o suspender a un usuario"
-    svg_icon_subset: "Añade iconos adicionales de FontAwesome 5 que te gustaría incluir en tus activos. Usa el prefijo «fa-» para iconos sólidos, «far-» para los iconos normales y «fab-» para los iconos de marca."
     max_prints_per_hour_per_user: "Número máximo de impresiones de páginas /print (establecer en 0 para desactivar la impresión)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y correos electrónicos. Desactiva esta opción para ocultar el nombre completo en todas partes."
@@ -2255,7 +2264,6 @@ es:
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_drafts_older_than_n_days: "Elimina los borradores que no se hayan modificado en más de (n) días."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Establece -1 para no eliminar nunca. Establece 0 para eliminar inmediatamente."
-    bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque y eliminar el botón de inicio (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2411,7 +2419,6 @@ es:
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Habilita la página rediseñada /about para grupos específicos."
-    glimmer_header_mode: "Controlar si se utiliza la nueva implementación del encabezado 'glimmer'. auto' se activará automáticamente cuando todos tus temas y plugins estén listos. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     admin_sidebar_enabled_groups: "Activa la navegación por la barra lateral de la interfaz del administrador para los grupos especificados, que sustituye a los botones de navegación del administrador de nivel superior."

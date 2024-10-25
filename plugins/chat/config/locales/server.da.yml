@@ -52,6 +52,8 @@ da:
     personal_chat: "personlig chat"
     onebox:
       thread_title_connector: "i"
+    transcript:
+      default_thread_title: "Tråd"
   discourse_push_notifications:
     popup:
       chat_mention:

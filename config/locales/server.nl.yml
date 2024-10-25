@@ -686,7 +686,6 @@ nl:
               same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
               same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
               same_as_current: "is hetzelfde als je huidige wachtwoord."
-              same_as_previous: "is hetzelfde als je vorige wachtwoord."
               same_as_name: "is hetzelfde als je naam."
               unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
             username:
@@ -696,6 +695,15 @@ nl:
             ip_address:
               blocked: "Nieuwe registraties zijn niet toegestaan vanaf jouw IP-adres."
               max_new_accounts_per_registration_ip: "Nieuwe registraties zijn niet toegestaan vanaf jouw IP-adres (maximumlimiet bereikt). Neem contact op met een medewerker."
+        user_password:
+          attributes:
+            password:
+              common: "is een van de 10.000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
+              same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
+              same_as_current: "is hetzelfde als je huidige wachtwoord."
+              same_as_name: "is hetzelfde als je naam."
+              unique_characters: "heeft te veel herhaalde tekens. Gebruik een veiliger wachtwoord."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ nl:
       yaxis: "Dag"
       description: "Aantal gebruikers die tijdens deze periode hun vertrouwensniveau hebben doen toenemen."
     consolidated_page_views:
-      title: "Samengevoegde paginaweergaven"
+      title_legacy: "Samengevoegde paginaweergaven"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Anonieme gebruikers"
         page_view_logged_in: "Aangemelde gebruikers"
       yaxis: "Dag"
-      description: "Paginaweergaven voor aangemelde gebruikers, anonieme gebruikers en crawlers."
+      description_legacy: "Paginaweergaven voor aangemelde gebruikers, anonieme gebruikers en crawlers."
       labels:
         post: Bericht
         editor: Bewerker
@@ -1251,13 +1259,16 @@ nl:
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     consolidated_page_views_browser_detection:
       title: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
+      title_legacy: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
       xaxis:
         page_view_anon_browser: "Anonieme browser"
         page_view_logged_in_browser: "Aangemelde browser"
         page_view_crawler: "Bekende crawler"
         page_view_other: "Andere paginaweergaven"
       yaxis: "Dag"
-      description: "Paginaweergaven voor aangemelde gebruikers, anonieme gebruikers, bekende crawlers en meer. Dit experimentele rapport zorgt ervoor dat verzoeken van aangemelde/anonieme gebruikers afkomstig zijn van echte browsers voordat ze worden meegeteld."
+    site_traffic:
+      yaxis: "Day"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1407,6 +1418,9 @@ nl:
       xaxis: "Dag"
       yaxis: "Totale paginaweergaven"
       description: "Aantal nieuwe paginaweergaven van alle bezoekers."
+    page_view_legacy_total_reqs:
+      xaxis: "Day"
+      yaxis: "Totale paginaweergaven"
     page_view_logged_in_mobile_reqs:
       title: "Paginaweergaven door aangemelde gebruikers"
       xaxis: "Dag"
@@ -1737,7 +1751,6 @@ nl:
     blocked_ip_blocks: "Een lijst van private IP-blokken die nooit door Discourse mogen worden verkend"
     allowed_internal_hosts: "Een lijst van interne hosts die Discourse veilig kan verkennen voor oneboxing en andere doeleinden"
     allowed_onebox_iframes: "Een lijst van iframe-src-domeinen die zijn toegestaan via Onebox-insluitingen. `*` staat alle standaard Onebox-engines toe."
-    allowed_iframes: "Een lijst van 'iframe src'-domeinvoorvoegsels die Discourse veilig kan toestaan in berichten"
     allowed_crawler_user_agents: "Useragents van webcrawlers die toegang tot de website dienen te hebben. WAARSCHUWING! INSTELLEN HIERVAN BLOKKEERT ALLE CRAWLERS DIE HIER NIET WORDEN VERMELD!"
     blocked_crawler_user_agents: "Uniek hoofdletterongevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als toelatingslijst is opgegeven."
     slow_down_crawler_user_agents: 'Useragents van webcrawlers waarvan de snelheid moet worden beperkt, zoals geconfigureerd in de instelling ''crawlersnelheid vertragen''. Elke waarde moet minimaal 3 tekens lang zijn.'
@@ -1751,8 +1764,6 @@ nl:
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
     top_menu: "Bepaal welke items in de startpaginanavigatie worden weergegeven en in welke volgorde."
-    post_menu: "Bepaal welke items in het berichtmenu worden weergegeven en in welke volgorde."
-    post_menu_hidden_items: "De menu-items die standaard in het berichtmenu moeten worden verborgen, totdat er op een uitvouw-ellipsis wordt geklikt."
     share_links: "Bepaal welke items in de deeldialoog worden weergegeven en in welke volgorde."
     allow_username_in_share_links: "Sta toe dat gebruikersnamen worden opgenomen in gedeelde links. Dit is handig om badges toe te kennen op basis van unieke bezoekers."
     site_contact_username: "Een geldige gebruikersnaam van een medewerker waarvandaan alle automatische berichten worden verzonden. Wanneer leeg gelaten, wordt de standaardaccount van het systeem gebruikt."
@@ -2100,7 +2111,6 @@ nl:
     reset_bounce_score_after_days: "Bouncescore na X dagen automatisch resetten."
     blocked_attachment_content_types: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van het type inhoud."
     blocked_attachment_filenames: "Lijst van trefwoorden voor het blokkeren van bijlagen op basis van de bestandsnaam."
-    forwarded_emails_behaviour: "Hoe een doorgestuurde e-mail naar Discourse te behandelen"
     always_show_trimmed_content: "Altijd afgekapt deel van inkomende e-mails weergeven. WAARSCHUWING: kan e-mailadressen onthullen."
     trim_incoming_emails: "Knip het deel van inkomende e-mails dat niet relevant is."
     private_email: "Geen inhoud van berichten of topics opnemen in titel of tekst van e-mail. OPMERKING: schakelt ook digest-e-mails uit."
@@ -2219,7 +2229,6 @@ nl:
     auto_handle_queued_age: "Records die dit aantal dagen op beoordeling wachten automatisch verwijderen. Markeringen worden genegeerd. Berichten en gebruikers in de wachtrij worden geweigerd. Stel dit in op 0 om deze functie uit te schakelen."
     penalty_step_hours: "Standaardstraffen bij demping of schorsing van gebruikers in uren. Bij de eerste overtreding wordt standaard de eerste waarde gebruikt, bij de tweede overtreding de tweede waarde, enz."
     penalty_include_post_message: "Beledigend bericht automatisch opnemen in e-mailberichtsjabloon bij dempen of schorsen van een gebruiker"
-    svg_icon_subset: "Extra FontAwesome 5-pictogrammen toevoegen die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
     max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om afdrukken uit te schakelen)"
     full_name_required: "Volledige naam is een verplicht veld van een gebruikersprofiel."
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
@@ -2245,7 +2254,6 @@ nl:
     notify_about_reviewable_item_after: "Stuur een privébericht naar moderators als er na dit aantal uren beoordeelbare items zijn die nog niet zijn afgehandeld. Stel dit in op 0 om het uit te schakelen."
     delete_drafts_older_than_n_days: "Verwijder concepten die meer dan (n) dagen niet zijn gewijzigd."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op -1 om nooit te verwijderen of op 0 om direct te verwijderen."
-    bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen en de knop Aan de slag te verwijderen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
@@ -2400,7 +2408,6 @@ nl:
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTEEL: geef een snelmenu voor bladwijzers weer bij berichten en een herontworpen venster"
-    glimmer_header_mode: "Bepaal of de nieuwe 'glimmer'-headerimplementatie wordt gebruikt. 'auto' schakelt het automatisch in wanneer al je thema's en plug-ins gereed zijn. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTEEL: schakel de nieuwe 'glimmer'-implementatie voor topiclijsten in. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
     experimental_form_templates: "EXPERIMENTEEL: schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     admin_sidebar_enabled_groups: "Schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."

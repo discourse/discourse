@@ -23,7 +23,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
 
       expect(sidebar_page.channels_section).to have_css(
         ".sidebar-section-header-text",
-        text: I18n.t("js.chat.chat_channels"),
+        text: I18n.t("js.chat.chat_channels").upcase,
       )
     end
 

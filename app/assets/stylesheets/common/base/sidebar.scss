@@ -6,9 +6,9 @@
   --d-sidebar-animation-time: 0.25s;
   --d-sidebar-animation-ease: ease-in-out;
   // 1.25rem gets text left-aligned with the hamburger icon
-  --d-sidebar-row-horizontal-padding: 1.25rem;
+  --d-sidebar-row-horizontal-padding: 1rem;
   // ems so height is variable along with font size
-  --d-sidebar-row-height: 2.1em;
+  --d-sidebar-row-height: 2.2em;
 
   --d-sidebar-background: var(--secondary);
   --d-sidebar-admin-background: var(--primary-very-low);
@@ -81,9 +81,13 @@
     flex-direction: column;
     box-sizing: border-box;
     flex: 1;
-    padding: 1.35em 0 1em;
+    padding: 1.5rem 1rem 1rem;
     overflow-x: hidden;
     overflow-y: overlay;
+
+    > .sidebar-section-wrapper:last-child {
+      border-bottom: 0;
+    }
 
     // custom scrollbar styling
     --scrollbarBg: transparent;
@@ -300,11 +304,8 @@
 .sidebar-filter {
   margin-top: 1em;
   margin-bottom: 1em;
-  display: flex;
   border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
-  align-items: center;
-  justify-content: space-between;
   background: var(--secondary);
   width: calc(
     var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding)
@@ -367,8 +368,6 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin: 0 var(--d-sidebar-row-horizontal-padding) 0
-    var(--d-sidebar-row-horizontal-padding);
   color: var(--d-sidebar-link-color);
   width: calc(
     var(--d-sidebar-width) - 2 * var(--d-sidebar-row-horizontal-padding) + 2px

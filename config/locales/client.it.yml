@@ -27,6 +27,7 @@ it:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -141,7 +142,6 @@ it:
       topic_html: 'Argomento: <span class="topic-title">%{topicTitle}</span>'
       post: "messaggio n°%{postNumber} di @%{username}"
       close: "chiudi"
-      twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
       email: "Invia per email"
       url: "Copia e condividi l'URL"
@@ -297,6 +297,7 @@ it:
       pill: "Suggeriti"
       pm_title: "Messaggi Suggeriti"
     about:
+      edit: "Modifica questa pagina"
       simple_title: "Informazioni"
       title: "Informazioni su %{title}"
       stats: "Statistiche Sito"
@@ -1632,7 +1633,6 @@ it:
         add_email: "Aggiungi email alternativa"
         auth_override_instructions: "L'email può essere aggiornata dal provider di autenticazione."
         no_secondary: "Nessuna email secondaria"
-        instructions: "Mai mostrata pubblicamente"
         admin_note: "Nota: un utente amministratore che modifica l'email di un utente non amministratore implica che l'utente abbia perso l'accesso al proprio account email originale, e quindi l'email di reimpostazione della password verrà inviata al nuovo indirizzo. L'email dell'utente non cambierà finché non completerà il processo di reimpostazione della password."
         ok: "Ti invieremo una email di conferma"
         required: "Inserisci un indirizzo email"
@@ -1663,14 +1663,14 @@ it:
         approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'e-mail quando il tuo account sarà stato approvato!"
       name:
         title: "Nome"
-        instructions: "Il tuo nome e cognome (facoltativo)."
-        instructions_required: "Il tuo nome e cognome."
+        instructions: "Il tuo nome e cognome (facoltativo)"
+        instructions_required: "Il tuo nome completo"
         required: "Inserisci un nome"
         too_short: "Il nome è troppo breve"
         ok: "Il nome sembra adeguato"
       username:
         title: "Nome utente"
-        instructions: "Univoco, senza spazi, breve."
+        instructions: "Univoco, senza spazi, breve"
         short_instructions: "Gli utenti possono menzionarti scrivendo @%{username}"
         available: "Il nome utente è disponibile"
         not_available: "Non disponibile. Provare %{suggestion}?"
@@ -1834,12 +1834,11 @@ it:
           success: "Link di invito generato con successo!"
           error: "Si è verificato un errore durante la generazione del link di invito"
         invite:
-          new_title: "Crea invito"
-          edit_title: "Modifica invito"
           instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
-          copy_link: "copia link"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
+          copy_link: "Copia link"
+          link_copied: "Link copiato!"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           restrict: "Limita a"
@@ -1849,11 +1848,11 @@ it:
           max_redemptions_allowed: "Limite max di utilizzi"
           add_to_groups: "Aggiungi ai gruppi"
           invite_to_topic: "Arriva all'argomento"
-          expires_at: "Scadenza:"
-          custom_message: "Messaggio personale facoltativo"
+          expires_after: "Scadenza:"
           send_invite_email: "Salva e invia Email"
           send_invite_email_instructions: "Limita l'invito alle e-mail per inviare un'e-mail di invito"
-          save_invite: "Salva invito"
+          save_invite: "Salva"
+          cancel: "Annulla"
           invite_saved: "Invito salvato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
@@ -1885,8 +1884,8 @@ it:
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
         instructions:
-          one: "Almeno %{count} carattere."
-          other: "Almeno %{count} caratteri."
+          one: "Almeno %{count} carattere"
+          other: "Almeno %{count} caratteri"
         required: "Inserisci una password"
         confirm: "Conferma"
         incorrect_password: "La password inserita non è corretta."
@@ -4734,6 +4733,7 @@ it:
         installed_version: "Versione Installata"
         latest_version: "Ultima"
         problems_found: "Alcuni consigli basati sulle attuali impostazioni del sito"
+        dismiss_notice: "Ignora"
         new_features:
           title: "Cosa c'è di nuovo"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
@@ -5203,9 +5203,14 @@ it:
           screened_ips: "IP scansionati"
           screened_urls: "URL scansionati"
           search_logs: "Log di ricerca"
-          security: "Sicurezza"
-          spam: "Spam"
           staff_action_logs: "Log azioni staff"
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backup"
+          whats_new:
+            title: "Cosa c'è di nuovo"
       config_areas:
         about:
           header: "Informazioni sul tuo sito"
@@ -5215,8 +5220,6 @@ it:
           community_summary: "Riepilogo della comunità"
           community_description: "Descrizione della comunità"
           banner_image: "Immagine banner"
-          banner_image_help: |
-            Verrà mostrato sulla tua pagina Informazioni. Dimensioni consigliate: 800x300px. Formati supportati: JPG, PNG e SVG fino a 10 MB.
           contact_information: "Informazioni di contatto"
           community_owner: "Proprietario della comunità"
           community_owner_placeholder: "Mario Rossi"
@@ -5292,6 +5295,9 @@ it:
             title: "Altre opzioni"
             move_up: "Sposta su"
             move_down: "Sposta giù"
+        look_and_feel:
+          themes:
+            title: "Temi"
       plugins:
         title: "Plugin"
         name: "Nome"
@@ -6674,10 +6680,6 @@ it:
             with_post: <span class="username">%{username}</span> per il messaggio in %{link}
             with_post_time: <span class="username">%{username}</span> per messaggio in %{link} in data <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> in data <span class="time">%{time}</span>
-        badge_intro:
-          title: "Seleziona un Distintivo esistente o creane uno nuovo per iniziare"
-          what_are_badges_title: "Cosa sono i Distintivi?"
-          badge_query_examples_title: "Esempi di Query Distintivo"
         mass_award:
           title: Assegna in blocco
           description: Assegna lo stesso distintivo a più utenti contemporaneamente.

@@ -150,12 +150,17 @@ pt_BR:
             valid_trust_levels:
               label: Níveis de confiança válidos
               description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
+            restricted_tags:
+              label: Etiquetas
+              description: Opcional, ativação apenas se a postagem tiver alguma destas etiquetas
             restricted_category:
               label: Categoria
               description: Opcional, ativação apenas se o tópico da postagem estiver nesta categoria
             restricted_group:
               label: Grupo
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
+            restricted_groups:
+              label: Grupos
             ignore_group_members:
               label: Ignorar membros de grupo
               description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima

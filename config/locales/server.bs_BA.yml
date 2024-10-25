@@ -215,6 +215,10 @@ bs_BA:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
+        user_password:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
         color_scheme_color:
           attributes:
             hex:
@@ -428,6 +432,8 @@ bs_BA:
       yaxis: "Day"
     consolidated_page_views_browser_detection:
       yaxis: "Day"
+    site_traffic:
+      yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -537,6 +543,8 @@ bs_BA:
     page_view_total_reqs:
       title: "Pagevieovi"
       xaxis: "Day"
+    page_view_legacy_total_reqs:
+      xaxis: "Day"
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"
     page_view_anon_mobile_reqs:
@@ -638,7 +646,6 @@ bs_BA:
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."

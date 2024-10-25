@@ -49,7 +49,7 @@ export default class ReviewableItem extends Component {
   @service siteSettings;
   @service currentUser;
   @service composer;
-  @optionalService("admin-tools") adminTools;
+  @optionalService adminTools;
 
   updating = null;
   editing = false;

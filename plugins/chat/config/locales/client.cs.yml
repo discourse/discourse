@@ -46,7 +46,6 @@ cs:
       deleted_chat_username: smazáno
       dates:
         yesterday: "Včera"
-        time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
       already_enabled: "Chat je v tomto tématu již povolen. Obnovte prosím stránku."
       disabled_for_topic: "Chat je v tomto tématu zakázán."
@@ -73,7 +72,7 @@ cs:
         delete_channel: "Odstranit kanál"
         join_channel: "Připojit se k kanálu"
         leave_channel: "Opustit kanál"
-        leave_groupchat_info: "Opuštěním tohoto skupinového chatu k němu již nebudete mít přístup a nebudete dostávat s ním spojená upozornění. Chcete-li se do něj znovu připojit, musíte být znovu pozváni některým ze členů skupinového chatu."
+        leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
       channel_archive:
@@ -122,6 +121,9 @@ cs:
       last_visit: "poslední návštěva"
       aria_roles:
         channels_list: "Seznam kanálů chatu"
+      no_direct_message_channels: "Zatím jste se nepřipojili k žádným přímým zprávám!"
+      no_direct_message_channels_cta: "Zahajte konverzaci"
+      no_public_channels: "Zatím jste se nepřipojili k žádnému kanálu!"
       no_public_channels_cta: "Procházet kanály"
       open_full_page: "Otevřít chat na celou obrazovku"
       close_full_page: "Zavřít chat na celé obrazovce"
@@ -145,6 +147,7 @@ cs:
       upload: "Připojit soubor"
       exit: "zpět"
       channel_status:
+        archived: "Archivované"
         closed: "Uzavřeno"
         open: "Otevřít"
       browse:
@@ -174,12 +177,16 @@ cs:
           settings: Nastavení
       new_message_modal:
         user_search_placeholder: "...přidat další členy"
+        create_group_placeholder: "Název skupinové konverzace (volitelné)"
+        new_group_chat: "Nová skupinová konverzace"
         filter: "Filtr"
         cant_add_more_members: "Byl dosažen maximální počet členů"
+        create_new_group_chat: "Vytvoření skupinové konverzace"
         group_with_too_many_members: "má příliš mnoho členů (%{membersCount})"
       direct_message_creator:
         title: Nová zpráva
         prefix: "Komu:"
+        no_results: Žádné výsledky
         members_counter:
           one: "%{count}/%{max} člena"
           few: "%{count}/%{max} členů"
@@ -294,6 +301,7 @@ cs:
         flags: "Nahlášení"
         symbols: "Symboly"
         search_placeholder: "Vyhledávání podle názvu a přezdívky emoji..."
+        no_results: "Žádné výsledky"
       thread:
         title: "Nadpis"
         replies:
@@ -311,6 +319,10 @@ cs:
             title: "Sledované"
           watching:
             title: "Hlídání"
+      thread_title_modal:
+        input_placeholder: "Řekněte ostatním, o čem je tato konverzace..."
+        discourse_ai:
+          description: "Podívejte se na %{url} , kde se dozvíte více o tomto a dalších vylepšeních vašeho zážitku z Discourse."
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"

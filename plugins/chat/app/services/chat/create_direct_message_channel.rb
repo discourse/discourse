@@ -9,21 +9,34 @@ module Chat
   # @example
   #  ::Chat::CreateDirectMessageChannel.call(
   #    guardian: guardian,
-  #    target_usernames: ["bob", "alice"]
+  #    params: {
+  #      target_usernames: ["bob", "alice"],
+  #   },
   #  )
   #
   class CreateDirectMessageChannel
     include Service::Base
 
-    # @!method call(guardian:, **params_to_create)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_create
-    #   @option params_to_create [Array<String>] target_usernames
-    #   @option params_to_create [Array<String>] target_groups
-    #   @option params_to_create [Boolean] upsert
+    #   @param [Hash] params
+    #   @option params [Array<String>] :target_usernames
+    #   @option params [Array<String>] :target_groups
+    #   @option params [Boolean] :upsert
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :name, :string
+      attribute :target_usernames, :array
+      attribute :target_groups, :array
+      attribute :upsert, :boolean, default: false
+
+      validate :target_presence
+
+      def target_presence
+        target_usernames.present? || target_groups.present?
+      end
+    end
     model :target_users
     policy :can_create_direct_message
     policy :satisfies_dms_max_users_limit,
@@ -37,20 +50,6 @@ module Chat
     step :set_optional_name
     step :update_memberships
     step :recompute_users_count
-
-    # @!visibility private
-    class Contract
-      attribute :name, :string
-      attribute :target_usernames, :array
-      attribute :target_groups, :array
-      attribute :upsert, :boolean, default: false
-
-      validate :target_presence
-
-      def target_presence
-        target_usernames.present? || target_groups.present?
-      end
-    end
 
     private
 
@@ -108,8 +107,7 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: false,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }

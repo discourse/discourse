@@ -218,6 +218,9 @@ export default function () {
         });
 
         this.route("about");
+        this.route("lookAndFeel", { path: "/look-and-feel" }, function () {
+          this.route("themes");
+        });
       }
     );
 
@@ -236,5 +239,13 @@ export default function () {
       path: "/whats-new",
       resetNamespace: true,
     });
+
+    this.route(
+      "adminSection",
+      { path: "/section", resetNamespace: true },
+      function () {
+        this.route("account");
+      }
+    );
   });
 }

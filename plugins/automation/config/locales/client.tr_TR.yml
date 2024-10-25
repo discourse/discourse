@@ -150,12 +150,17 @@ tr_TR:
             valid_trust_levels:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
+            restricted_tags:
+              label: Etiketler
+              description: 'İsteğe bağlı, yalnızca gönderide şu etiketlerden herhangi biri varsa tetiklenir:'
             restricted_category:
               label: Kategori
               description: İsteğe bağlı, yalnızca gönderinin konusu bu kategorideyse tetiklenir
             restricted_group:
               label: Grup
               description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
+            restricted_groups:
+              label: Grup
             ignore_group_members:
               label: Grup üyelerini yok say
               description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla

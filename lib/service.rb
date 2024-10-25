@@ -11,12 +11,12 @@ module Service
   # Currently, there are 5 types of steps:
   #
   # * +contract(name = :default)+: used to validate the input parameters,
-  #   typically provided by a user calling an endpoint. A special embedded
-  #   +Contract+ class has to be defined to holds the validations. If the
-  #   validations fail, the step will fail. Otherwise, the resulting contract
-  #   will be available in +context[:contract]+. When calling +step(name)+ or
-  #   +model(name = :model)+ methods after validating a contract, the contract
-  #   should be used as an argument instead of context attributes.
+  #   typically provided by a user calling an endpoint. A block has to be
+  #   defined to hold the validations. If the validations fail, the step will
+  #   fail. Otherwise, the resulting contract will be available in
+  #   +context[:contract]+. When calling +step(name)+ or +model(name = :model)+
+  #   methods after validating a contract, the contract should be used as an
+  #   argument instead of context attributes.
   # * +model(name = :model)+: used to instantiate a model (either by building
   #   it or fetching it from the DB). If a falsy value is returned, then the
   #   step will fail. Otherwise the resulting object will be assigned in
@@ -40,9 +40,9 @@ module Service
   #
   # @example An example from the {TrashChannel} service
   #   class TrashChannel
-  #     include Base
+  #     include Service::Base
   #
-  #     model :channel, :fetch_channel
+  #     model :channel
   #     policy :invalid_access
   #     transaction do
   #       step :prevents_slug_collision
@@ -79,17 +79,15 @@ module Service
   #   end
   # @example An example from the {UpdateChannelStatus} service which uses a contract
   #   class UpdateChannelStatus
-  #     include Base
+  #     include Service::Base
   #
-  #     model :channel, :fetch_channel
-  #     contract
-  #     policy :check_channel_permission
-  #     step :change_status
-  #
-  #     class Contract
+  #     model :channel
+  #     contract do
   #       attribute :status
   #       validates :status, inclusion: { in: Chat::Channel.editable_statuses.keys }
   #     end
+  #     policy :check_channel_permission
+  #     step :change_status
   #
   #     …
   #   end

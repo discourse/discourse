@@ -1,0 +1,52 @@
+<div class="emoji-uploader form-horizontal">
+  <div class="control-group">
+    <span class="label">
+      {{i18n "admin.emoji.name"}}
+    </span>
+    <div class="input">
+      <Input
+        id="emoji-name"
+        name="name"
+        placeholder={{i18n "admin.emoji.name"}}
+        @value={{readonly this.name}}
+        {{on "input" (with-event-value (fn (mut this.name)))}}
+      />
+    </div>
+  </div>
+  <div class="control-group">
+    <span class="label">
+      {{i18n "admin.emoji.group"}}
+    </span>
+    <div class="input">
+      <ComboBox
+        @name="group"
+        @id="emoji-group-selector"
+        @value={{this.group}}
+        @content={{this.newEmojiGroups}}
+        @onChange={{action "createEmojiGroup"}}
+        @valueProperty={{null}}
+        @nameProperty={{null}}
+        @options={{hash allowAny=true}}
+      />
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="input">
+      <input
+        {{did-insert this.uppyUpload.setup}}
+        class="hidden-upload-field"
+        disabled={{this.uppyUpload.uploading}}
+        type="file"
+        multiple="true"
+        accept=".png,.gif"
+      />
+      <DButton
+        @translatedLabel={{this.buttonLabel}}
+        @icon="plus"
+        @action={{this.chooseFiles}}
+        @disabled={{this.uppyUpload.uploading}}
+        class="btn-primary"
+      />
+    </div>
+  </div>
+</div>

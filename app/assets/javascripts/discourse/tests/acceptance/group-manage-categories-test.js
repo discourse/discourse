@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -11,10 +10,9 @@ acceptance("Managing Group Category Notification Defaults", function () {
   test("As an anonymous user", async function (assert) {
     await visit("/g/discourse/manage/categories");
 
-    assert.ok(
-      exists(".group-members .group-member"),
-      "it should redirect to members page for an anonymous user"
-    );
+    assert
+      .dom(".group-members .group-member")
+      .exists("it should redirect to members page for an anonymous user");
   });
 });
 

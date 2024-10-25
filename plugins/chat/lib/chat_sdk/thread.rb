@@ -13,7 +13,7 @@ module ChatSDK
     #   ChatSDK::Thread.update_title(title: "New Thread Title", thread_id: 1, guardian: Guardian.new)
     #
     def self.update_title(thread_id:, guardian:, title:)
-      new.update(title: title, thread_id: thread_id, guardian: guardian)
+      new.update(thread_id:, guardian:, title:)
     end
 
     # Retrieves messages from a specified thread.
@@ -25,8 +25,8 @@ module ChatSDK
     # @example Fetching messages from a thread with additional parameters
     #   ChatSDK::Thread.messages(thread_id: 1, guardian: Guardian.new)
     #
-    def self.messages(thread_id:, guardian:, **params)
-      new.messages(thread_id: thread_id, guardian: guardian, **params)
+    def self.messages(...)
+      new.messages(...)
     end
 
     # Fetches the first messages from a specified chat thread, starting from the first available message.
@@ -41,9 +41,9 @@ module ChatSDK
     #
     def self.first_messages(thread_id:, guardian:, page_size: 10)
       new.messages(
-        thread_id: thread_id,
-        guardian: guardian,
-        page_size: page_size,
+        thread_id:,
+        guardian:,
+        page_size:,
         direction: "future",
         fetch_from_first_message: true,
       )
@@ -61,29 +61,36 @@ module ChatSDK
     #
     def self.last_messages(thread_id:, guardian:, page_size: 10)
       new.messages(
-        thread_id: thread_id,
-        guardian: guardian,
-        page_size: page_size,
+        thread_id:,
+        guardian:,
+        page_size:,
         direction: "past",
         fetch_from_last_message: true,
       )
     end
 
-    def self.update(**params)
-      new.update(**params)
+    def self.update(...)
+      new.update(...)
     end
 
     def messages(thread_id:, guardian:, direction: "future", **params)
-      Chat::ListChannelThreadMessages.call(thread_id:, guardian:, direction:, **params) do
-        on_success { result.messages }
+      Chat::ListChannelThreadMessages.call(
+        guardian:,
+        params: {
+          thread_id:,
+          direction:,
+          **params,
+        },
+      ) do
+        on_success { |messages:| messages }
         on_failed_policy(:can_view_thread) { raise "Guardian can't view thread" }
         on_failed_policy(:target_message_exists) { raise "Target message doesn't exist" }
         on_failure { raise "Unexpected error" }
       end
     end
 
-    def update(**params)
-      Chat::UpdateThread.call(params) do
+    def update(guardian:, **params)
+      Chat::UpdateThread.call(guardian:, params:) do
         on_model_not_found(:channel) do
           raise "Couldn’t find channel with id: `#{params[:channel_id]}`"
         end
@@ -96,7 +103,7 @@ module ChatSDK
           raise "Threading is not enabled for this channel"
         end
         on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
-        on_success { result.thread_instance }
+        on_success { |thread:| thread }
         on_failure { raise "Unexpected error" }
       end
     end

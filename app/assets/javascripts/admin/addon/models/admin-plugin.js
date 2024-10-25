@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { capitalize } from "@ember/string";
+import { capitalize, dasherize } from "@ember/string";
 import { snakeCaseToCamelCase } from "discourse-common/lib/case-converter";
 import I18n from "discourse-i18n";
 
@@ -24,8 +24,8 @@ export default class AdminPlugin {
     return this.name.replaceAll("-", "_");
   }
 
-  get kebabCaseName() {
-    return this.name.replaceAll(" ", "-").replaceAll("_", "-");
+  get dasherizedName() {
+    return dasherize(this.name);
   }
 
   get translatedCategoryName() {

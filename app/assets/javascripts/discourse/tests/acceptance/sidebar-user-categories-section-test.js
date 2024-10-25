@@ -152,10 +152,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists(".sidebar-section[data-section-name='categories']"),
-      "categories section is shown"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='categories']")
+      .exists("categories section is shown");
 
     const categorySectionLinks = queryAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
@@ -745,7 +744,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("visiting category discovery no subcategoriees route", async function (assert) {
+  test("visiting category discovery no subcategories route", async function (assert) {
     const { category1 } = setupUserSidebarCategories();
 
     await visit(`/c/${category1.slug}/${category1.id}/none`);

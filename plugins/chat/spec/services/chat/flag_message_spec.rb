@@ -2,8 +2,6 @@
 
 RSpec.describe Chat::FlagMessage do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new }
-
     it { is_expected.to validate_presence_of(:channel_id) }
     it { is_expected.to validate_presence_of(:message_id) }
 
@@ -13,7 +11,7 @@ RSpec.describe Chat::FlagMessage do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -26,12 +24,8 @@ RSpec.describe Chat::FlagMessage do
     let(:message) { nil }
     let(:is_warning) { nil }
     let(:take_action) { nil }
-
-    before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
-
     let(:params) do
       {
-        guardian: guardian,
         channel_id: channel_id,
         message_id:,
         flag_type_id: flag_type_id,
@@ -40,22 +34,34 @@ RSpec.describe Chat::FlagMessage do
         take_action: take_action,
       }
     end
+    let(:dependencies) { { guardian: } }
+
+    before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 
     context "when all steps pass" do
       fab!(:current_user) { Fabricate(:admin) }
+
+      let(:reviewable) { Reviewable.last }
 
       it { is_expected.to run_successfully }
 
       it "flags the message" do
         expect { result }.to change { Reviewable.count }.by(1)
-
-        reviewable = Reviewable.last
-        expect(reviewable.target_type).to eq("ChatMessage")
-        expect(reviewable.created_by_id).to eq(current_user.id)
-        expect(reviewable.target_created_by_id).to eq(message_1.user.id)
-        expect(reviewable.target_id).to eq(message_1.id)
-        expect(reviewable.payload).to eq("message_cooked" => message_1.cooked)
+        expect(reviewable).to have_attributes(
+          target: message_1,
+          created_by: current_user,
+          target_created_by: message_1.user,
+          payload: {
+            "message_cooked" => message_1.cooked,
+          },
+        )
       end
+    end
+
+    context "when contract is invalid" do
+      let(:channel_id) { nil }
+
+      it { is_expected.to fail_a_contract }
     end
 
     context "when channel is not found" do

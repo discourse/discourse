@@ -1,99 +1,108 @@
 # frozen_string_literal: true
 
 RSpec.describe(Flags::UpdateFlag) do
-  subject(:result) do
-    described_class.call(
-      id: flag.id,
-      guardian: current_user.guardian,
-      name: name,
-      description: description,
-      applies_to: applies_to,
-      require_message: require_message,
-      enabled: enabled,
-    )
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:id) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:description) }
+    it { is_expected.to validate_length_of(:name).is_at_most(Flag::MAX_NAME_LENGTH) }
+    it { is_expected.to validate_length_of(:description).is_at_most(Flag::MAX_DESCRIPTION_LENGTH) }
+    it { is_expected.to validate_inclusion_of(:applies_to).in_array(Flag.valid_applies_to_types) }
   end
 
-  fab!(:flag)
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-  after { flag.destroy }
-
-  let(:name) { "edited custom flag name" }
-  let(:description) { "edited custom flag description" }
-  let(:applies_to) { ["Topic"] }
-  let(:require_message) { true }
-  let(:enabled) { false }
-
-  context "when user is not allowed to perform the action" do
-    fab!(:current_user) { Fabricate(:user) }
-
-    it { is_expected.to fail_a_policy(:invalid_access) }
-  end
-
-  context "when applies to is invalid" do
     fab!(:current_user) { Fabricate(:admin) }
-    let(:applies_to) { ["User"] }
+    fab!(:flag)
 
-    it { is_expected.to fail_a_contract }
-  end
+    let(:params) do
+      {
+        id: flag_id,
+        name:,
+        description:,
+        applies_to:,
+        require_message:,
+        enabled:,
+        auto_action_type:,
+      }
+    end
+    let(:dependencies) { { guardian: current_user.guardian } }
+    let(:flag_id) { flag.id }
+    let(:name) { "edited custom flag name" }
+    let(:description) { "edited custom flag description" }
+    let(:applies_to) { ["Topic"] }
+    let(:require_message) { true }
+    let(:enabled) { false }
+    let(:auto_action_type) { true }
 
-  context "when title is empty" do
-    fab!(:current_user) { Fabricate(:admin) }
-    let(:name) { nil }
+    # DO NOT REMOVE: flags have side effects and their state will leak to
+    # other examples otherwise.
+    after { flag.destroy! }
 
-    it { is_expected.to fail_a_contract }
-  end
+    context "when contract is invalid" do
+      let(:name) { nil }
 
-  context "when title is not unique" do
-    fab!(:current_user) { Fabricate(:admin) }
-    fab!(:flag_2) { Fabricate(:flag, name: "edited custom flag name") }
-
-    it { is_expected.to fail_a_policy(:unique_name) }
-
-    after { Flag.destroy_by(name: "edited custom flag name") }
-  end
-
-  context "when title is too long" do
-    fab!(:current_user) { Fabricate(:admin) }
-    let(:name) { "a" * 201 }
-
-    it { is_expected.to fail_a_contract }
-  end
-
-  context "when description is empty" do
-    fab!(:current_user) { Fabricate(:admin) }
-    let(:description) { nil }
-
-    it { is_expected.to fail_a_contract }
-  end
-
-  context "when description is too long" do
-    fab!(:current_user) { Fabricate(:admin) }
-    let(:description) { "a" * 1001 }
-
-    it { is_expected.to fail_a_contract }
-  end
-
-  context "when user is allowed to perform the action" do
-    fab!(:current_user) { Fabricate(:admin) }
-
-    it { is_expected.to run_successfully }
-
-    it "updates the flag" do
-      result
-      expect(flag.reload.name).to eq("edited custom flag name")
-      expect(flag.description).to eq("edited custom flag description")
-      expect(flag.applies_to).to eq(["Topic"])
-      expect(flag.require_message).to be true
-      expect(flag.enabled).to be false
+      it { is_expected.to fail_a_contract }
     end
 
-    it "logs the action" do
-      expect { result }.to change { UserHistory.count }.by(1)
-      expect(UserHistory.last).to have_attributes(
-        custom_type: "update_flag",
-        details:
-          "name: edited custom flag name\ndescription: edited custom flag description\napplies_to: [\"Topic\"]\nrequire_message: true\nenabled: false",
-      )
+    context "when model is not found" do
+      let(:flag_id) { 0 }
+
+      it { is_expected.to fail_to_find_a_model(:flag) }
+    end
+
+    context "when the flag is a system one" do
+      let(:flag) { Flag.first }
+
+      it { is_expected.to fail_a_policy(:not_system) }
+    end
+
+    context "when the flag has been used" do
+      let!(:post_action) { Fabricate(:post_action, post_action_type_id: flag.id) }
+
+      it { is_expected.to fail_a_policy(:not_used) }
+    end
+
+    context "when user is not allowed to perform the action" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      it { is_expected.to fail_a_policy(:invalid_access) }
+    end
+
+    context "when title is not unique" do
+      let!(:flag_2) { Fabricate(:flag, name:) }
+
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
+      after { flag_2.destroy! }
+
+      it { is_expected.to fail_a_policy(:unique_name) }
+    end
+
+    context "when everything's ok" do
+      it { is_expected.to run_successfully }
+
+      it "updates the flag" do
+        result
+        expect(flag.reload).to have_attributes(
+          name: "edited custom flag name",
+          description: "edited custom flag description",
+          applies_to: ["Topic"],
+          require_message: true,
+          enabled: false,
+          auto_action_type: true,
+        )
+      end
+
+      it "logs the action" do
+        expect { result }.to change { UserHistory.count }.by(1)
+        expect(UserHistory.last).to have_attributes(
+          custom_type: "update_flag",
+          details:
+            "name: edited custom flag name\ndescription: edited custom flag description\napplies_to: [\"Topic\"]\nrequire_message: true\nenabled: false",
+        )
+      end
     end
   end
 end

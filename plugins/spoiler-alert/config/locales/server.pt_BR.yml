@@ -6,6 +6,6 @@
 
 pt_BR:
   site_settings:
-    spoiler_enabled: 'Ative o plugin dificuldador. Se mudar isso, você deve recompilar todas as postagens com: "rake posts:rebake"'
+    spoiler_enabled: 'Ative o plugin de spoiler. Se mudar isso, você deve recompilar todas as postagens com: "rake posts:rebake"'
   spoiler_alert:
-    excerpt_spoiler: "dificultador"
+    excerpt_spoiler: "spoiler"

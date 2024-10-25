@@ -2,6 +2,15 @@
 
 $mobile-breakpoint: 700px;
 
+:root {
+  --space-1: 0.25rem;
+  --space-2: calc(0.25rem * 2);
+  --space-3: calc(0.25rem * 3);
+  --space-4: calc(0.25rem * 4);
+  --space-5: calc(0.25rem * 5);
+  --space-6: calc(0.25rem * 6);
+}
+
 // Common admin styles
 
 .admin-main-nav {
@@ -74,13 +83,6 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-contents {
-  --space-1: 0.25rem;
-  --space-2: calc(0.25rem * 2);
-  --space-3: calc(0.25rem * 3);
-  --space-4: calc(0.25rem * 4);
-  --space-5: calc(0.25rem * 5);
-  --space-6: calc(0.25rem * 6);
-
   position: relative;
   .nav-stacked {
     @media screen and (max-width: 700px) {
@@ -459,7 +461,8 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-container {
-  margin-top: 10px;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-4);
 
   .admin-section {
     margin-bottom: 1em;
@@ -1085,6 +1088,7 @@ a.inline-editable-field {
 @import "common/admin/plugins";
 @import "common/admin/site-settings";
 @import "common/admin/admin_config_area";
+@import "common/admin/admin_table";
 @import "common/admin/admin_reports";
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
@@ -1094,6 +1098,7 @@ a.inline-editable-field {
 @import "common/admin/admin_report_stacked_line_chart";
 @import "common/admin/admin_report_table";
 @import "common/admin/admin_report_inline_table";
+@import "common/admin/admin_section_landing_page";
 @import "common/admin/admin_page_header";
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";

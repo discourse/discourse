@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsMessagesStreamingController < Chat::Api::ChannelsController
   def destroy
-    Chat::StopMessageStreaming.call do
+    Chat::StopMessageStreaming.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }

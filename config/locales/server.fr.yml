@@ -686,7 +686,6 @@ fr:
               same_as_username: "est identique à votre nom d'utilisateur. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_email: "est identique à votre adresse e-mail. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_current: "est identique à votre mot de passe actuel."
-              same_as_previous: "est identique à votre mot de passe précédent."
               same_as_name: "est identique à votre nom."
               unique_characters: "contient trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
             username:
@@ -696,6 +695,15 @@ fr:
             ip_address:
               blocked: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP."
               max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
+        user_password:
+          attributes:
+            password:
+              common: "fait partie des 10 000 mots de passe les plus utilisés. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_username: "est identique à votre nom d'utilisateur. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_email: "est identique à votre adresse e-mail. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_current: "est identique à votre mot de passe actuel."
+              same_as_name: "est identique à votre nom."
+              unique_characters: "contient trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ fr:
       yaxis: "Jour"
       description: "Nombre d'utilisateurs ayant augmenté leur niveau de confiance au cours de cette période."
     consolidated_page_views:
-      title: "Pages vues unifiées"
+      title_legacy: "Pages vues unifiées"
       xaxis:
         page_view_crawler: "Robots d'indexation"
         page_view_anon: "Utilisateurs anonymes"
         page_view_logged_in: "Utilisateurs connectés"
       yaxis: "Jour"
-      description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
+      description_legacy: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
       labels:
         post: Message
         editor: Éditeur
@@ -1251,13 +1259,16 @@ fr:
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
     consolidated_page_views_browser_detection:
       title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
+      title_legacy: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       xaxis:
         page_view_anon_browser: "Navigateur anonyme"
         page_view_logged_in_browser: "Navigateur connecté"
         page_view_crawler: "Robots d'indexation connus"
         page_view_other: "Autres vues de pages"
       yaxis: "Jour"
-      description: "Vues de pages par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et autres. Ce rapport expérimental garantit que les requêtes logged-in/anon proviennent de navigateurs authentique avant d'être comptabilisées."
+    site_traffic:
+      yaxis: "Jour"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
@@ -1407,6 +1418,9 @@ fr:
       xaxis: "Jour"
       yaxis: "Total de pages vues"
       description: "Nombre de vues par tous les visiteurs."
+    page_view_legacy_total_reqs:
+      xaxis: "Jour"
+      yaxis: "Total de pages vues"
     page_view_logged_in_mobile_reqs:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
@@ -1737,7 +1751,6 @@ fr:
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
-    allowed_iframes: "Une liste des préfixes du domaine src iframe que Discourse peut autoriser en toute sécurité dans les messages"
     allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION : CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: 'Agents utilisateurs des robots d''indexation Web dont le débit doit être limité, comme configuré dans le paramètre « slow down crawler rate ». Chaque valeur doit comporter au moins 3 caractères.'
@@ -1751,8 +1764,6 @@ fr:
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
     top_menu: "Déterminez quels éléments apparaissent dans la navigation de la page d'accueil et dans quel ordre."
-    post_menu: "Déterminez quels éléments apparaissent dans le menu de publication et dans quel ordre."
-    post_menu_hidden_items: "Les éléments du menu qui seront masqués par défaut jusqu'à extension du menu."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
@@ -2100,7 +2111,6 @@ fr:
     reset_bounce_score_after_days: "Réinitialiser automatiquement le taux d'e-mails non délivrés après X jours."
     blocked_attachment_content_types: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
     blocked_attachment_filenames: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
-    forwarded_emails_behaviour: "Comment traiter un e-mail transféré à Discourse"
     always_show_trimmed_content: "Toujours montrer la partie réduite des e-mails entrants. ATTENTION : cela peut révéler les adresses e-mail."
     trim_incoming_emails: "Débarrasser les e-mails entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps de l'e-mail. REMARQUE : désactive également les e-mails de résumé."
@@ -2219,7 +2229,6 @@ fr:
     auto_handle_queued_age: "Après tant de jours écoulés, traiter automatiquement les éléments en attente d'examen. Les signalements seront ignorés, les messages et les utilisateurs en attente d'examen seront rejetés. Réglez cette valeur à 0 pour désactiver cette fonction."
     penalty_step_hours: "Durées par défaut de mise en sourdine ou de suspension des utilisateurs, en heures. La première valeur correspond à la première infraction d'un compte, la deuxième valeur à sa deuxième infraction, etc."
     penalty_include_post_message: "Incluez automatiquement la publication incriminée dans le modèle de message électronique lors de la mise en sourdine ou de la suspension d'un utilisateur"
-    svg_icon_subset: "Ajouter des icônes supplémentaires FontAwesome 5 que vous souhaitez inclure dans vos médias. Utilisez le préfixe « fa- » pour les icônes solides, « far- » pour les icônes normales et « fab- » pour les icônes de marques."
     max_prints_per_hour_per_user: "Nombre maximal d'impressions de pages (défini sur 0 pour désactiver l'impression)"
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
@@ -2245,7 +2254,6 @@ fr:
     notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_drafts_older_than_n_days: "Supprimez les brouillons qui n'ont pas été modifiés depuis plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
-    bootstrap_mode_min_users: "Nombre minimal d'utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton Pour commencer (réglez sur 0 pour le désactiver, cela peut prendre jusqu'à 24 heures)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
@@ -2400,7 +2408,6 @@ fr:
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
     enable_experimental_bookmark_redesign_groups: "EXPÉRIMENTAL : affichez un menu d'accès rapide pour les signets sur les publications et une nouvelle fenêtre modale repensée"
-    glimmer_header_mode: "Contrôlez si la nouvelle implémentation d'en-tête « Glimmer » est utilisée. La valeur « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPÉRIMENTAL : activez la nouvelle implémentation de la liste de sujets « Glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions sur la base de celui-ci tant que l'implémentation n'est pas finalisée et annoncée."
     experimental_form_templates: "EXPÉRIMENTAL : activez la fonctionnalité des modèles de formulaires. <b>Une fois la fonctionnalité activée,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."

@@ -21,6 +21,7 @@ fa_IR:
             kb: کیلوبایت
             mb: مگابایت
             tb: ترابایت
+      percent: "%{count}%"
       short:
         thousands: "%{number} هزار"
         millions: "%{number} میلیون"
@@ -123,7 +124,7 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
-      twitter: "در توییتر به اشتراک بگذارید"
+      twitter: "هم‌رسانی در X"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
@@ -260,6 +261,7 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     about:
+      edit: "ویرایش این صفحه"
       simple_title: "درباره"
       title: "درباره %{title}"
       stats: "آمارهای سایت"
@@ -277,6 +279,8 @@ fa_IR:
       user_count: "ثبت‌نام‌ها"
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
+      view_more: "نمایش بیشتر"
+      view_less: "نمایش کمتر"
       activities:
         topics:
           one: "%{formatted_number} موضوع"
@@ -284,6 +288,9 @@ fa_IR:
         posts:
           one: "%{formatted_number} فرسته"
           other: "%{formatted_number} نوشته"
+        active_users:
+          one: "%{formatted_number} کاربر فعال"
+          other: "%{formatted_number} کاربر فعال"
         likes:
           one: "%{formatted_number} پسندیده"
           other: "%{formatted_number} پسندیده"
@@ -1305,7 +1312,6 @@ fa_IR:
         add_email: "افزودن ایمیل جایگزین"
         auth_override_instructions: "ایمیل را از طریق ارائه دهنده احراز هویت می‌توانید به‌روزرسانی کنید."
         no_secondary: "بدون ایمیل ثانویه"
-        instructions: "هرگز به عموم نمایش داده نخواهد شد"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
         required: "لطفا یک آدرس ایمیل وارد کنید"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
@@ -1333,8 +1339,8 @@ fa_IR:
         approval_required: "یکی از مدیران باید حساب کاربری را برای دسترسی به این انجمن به‌صورت دستی تایید کند. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
       name:
         title: "نام"
-        instructions: "نام و نام‌خانوادگی شما (اختیاری)."
-        instructions_required: "نام و نام خانوادگی شما."
+        instructions: "نام و نام‌خانوادگی شما (اختیاری)"
+        instructions_required: "نام و نام خانوادگی شما"
         required: "لطفاً یک نام وارد کنید"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
@@ -1497,10 +1503,7 @@ fa_IR:
           success: "لینک دعوت با موفقیت ایجاد شد!"
           error: "خطایی در هنگام ایجاد لینک رخ داد"
         invite:
-          new_title: "ایجاد دعوت‌نامه"
-          edit_title: "ویرایش دعوت‌نامه"
           instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
-          copy_link: "کپی پیوند"
           expires_in_time: "در %{time} منقضی می شود"
           expired_at_time: "منقضی شده در %{time}"
           show_advanced: "نمایش تنظیمات پیشرفته"
@@ -1512,11 +1515,11 @@ fa_IR:
           max_redemptions_allowed: "حداکثر استفاده"
           add_to_groups: "افزودن به گروه‌ها"
           invite_to_topic: "وارد شدن به موضوع"
-          expires_at: "انقضا بعد از"
-          custom_message: "پیام شخصی اختیاری"
+          expires_after: "انقضا بعد از"
           send_invite_email: "ذخیره و ارسال ایمیل"
           send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
-          save_invite: "ذخیره دعوت‌نامه"
+          save_invite: "ذخیره"
+          cancel: "انصراف"
           invite_saved: "دعوتنامه ذخیره شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
@@ -3565,6 +3568,7 @@ fa_IR:
         installed_version: "نصب"
         latest_version: "آخرین"
         problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
+        dismiss_notice: "رد کردن"
         new_features:
           learn_more: "بیشتر بدانید..."
         last_checked: " آخرین بررسی"
@@ -3833,8 +3837,13 @@ fa_IR:
           screened_ips: "نمایش IP ها"
           screened_urls: "URL های نمایش داده شده"
           search_logs: "جستجوی گزارش‌ها"
-          security: "امنیت"
-          spam: "هرز‌نامه"
+      section_landing_pages:
+        account:
+          title: "حساب کاربری"
+          backups:
+            title: "نسخه‌های پشتیبان"
+          whats_new:
+            title: "چه چیزی جدید شده"
       config_areas:
         about:
           header: "درباره سایت شما"
@@ -3859,6 +3868,9 @@ fa_IR:
             invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
+        look_and_feel:
+          themes:
+            title: "قالب‌ها"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -3870,6 +3882,7 @@ fa_IR:
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
         author: "توسط %{author}"
+        experimental_badge: "آزمایشی"
         learn_more: "بیشتر بدانید"
         sidebar_link:
           installed: "نصب"
@@ -4287,6 +4300,7 @@ fa_IR:
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"
             delete_group: "حذف گروه"
+            delete_associated_accounts: "حذف حساب‌های کاربری مرتبط"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
@@ -4314,6 +4328,7 @@ fa_IR:
             text: "جمع کردن"
             title: "ساخت مسدود سازی زیر شبکه جدید اگر آنها آخرین 'min_ban_entries_for_roll_up' ورودی ها بودند."
         search_logs:
+          title: "جستجوی گزارش‌ها"
           searches: "جستجوها"
           types:
             header: "سربرگ"
@@ -4321,6 +4336,7 @@ fa_IR:
         logster:
           title: "گزارش خطا"
       watched_words:
+        title: "کلمات تماشا شده"
         search: "جست‌وجو"
         clear_filter: "واضح"
         case_sensitive: "«حساس به حروف کوچک و بزرگ»"
@@ -4415,6 +4431,9 @@ fa_IR:
           text: "نشان دادن"
         check_sso:
           text: "نمایش"
+        delete_associated_accounts:
+          title: "حذف تمام حساب‌های کاربرای مرتبط برای این کاربر"
+          text: "حذف حساب‌های کاربری مرتبط"
       user:
         suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. %{error}"
         unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد %{error}"

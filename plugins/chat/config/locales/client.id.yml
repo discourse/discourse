@@ -30,8 +30,6 @@ id:
       text_copied: Teks disalin ke papan klip
       link_copied: Tautan disalin ke papan klip
       deleted_chat_username: dihapus
-      dates:
-        time_tiny: "h:mm"
       all_loaded: "Menampilkan semua pesan"
       already_enabled: "Obrolan sudah diaktifkan pada topik ini. Segarkan."
       disabled_for_topic: "Obrolan dinonaktifkan pada topik ini."
@@ -55,6 +53,8 @@ id:
         open_channel: "Buka kanal"
         join: "Gabung"
         leave: "Keluar"
+      channels_list_popup:
+        browse: "Jelajahi kanal"
       close: "Tutup"
       remove: "Hapus"
       delete: "Hapus"
@@ -66,6 +66,7 @@ id:
       header_indicator_preference:
         all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
+      enable: "Aktifkan obrolan"
       heading: "Obrolan"
       join: "Gabung"
       mention_warning:

@@ -130,10 +130,14 @@ da:
               label: Handlingstype
             valid_trust_levels:
               label: Gyldige tillidsniveauer
+            restricted_tags:
+              label: Mærker
             restricted_category:
               label: Kategori
             restricted_group:
               label: Gruppe
+            restricted_groups:
+              label: Grupper
           created: Oprettet
           edited: Redigeret
         category_created_edited:

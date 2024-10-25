@@ -2,7 +2,7 @@
 
 RSpec.describe ::Chat::TrackingState do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -17,12 +17,8 @@ RSpec.describe ::Chat::TrackingState do
     let(:include_threads) { true }
     let(:include_missing_memberships) { nil }
 
-    let(:params) do
-      id_params.merge(guardian: guardian).merge(
-        include_threads: include_threads,
-        include_missing_memberships: include_missing_memberships,
-      )
-    end
+    let(:params) { id_params.merge(include_threads:, include_missing_memberships:) }
+    let(:dependencies) { { guardian: } }
 
     fab!(:channel_1_membership) do
       Fabricate(:user_chat_channel_membership, chat_channel: channel_1, user: current_user)

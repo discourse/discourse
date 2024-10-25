@@ -17,9 +17,8 @@ acceptance("User Preferences Admin - Mobile", function (needs) {
 
   test("Mobile user admin button", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(
-      exists(".user-nav__admin"),
-      "mobile user admin nav button exists"
-    );
+    assert
+      .dom(".user-nav__admin")
+      .exists("mobile user admin nav button exists");
   });
 });

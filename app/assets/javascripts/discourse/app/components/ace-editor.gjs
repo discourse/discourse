@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
-import { registerWaiter } from "@ember/test";
+import { buildWaiter } from "@ember/test-waiters";
 import { modifier } from "ember-modifier";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadAce from "discourse/lib/load-ace-editor";
@@ -11,6 +11,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+const WAITER = buildWaiter("ace-editor");
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
 
@@ -72,11 +73,10 @@ export default class AceEditor extends Component {
     this.editor.getSession().setValue(this.args.content || "");
     this.skipChangePropagation = false;
 
-    if (isTesting()) {
-      let finished = false;
-      registerWaiter(() => finished);
-      this.editor.renderer.once("afterRender", () => (finished = true));
-    }
+    const token = WAITER.beginAsync();
+    this.editor.renderer.once("afterRender", () => WAITER.endAsync(token));
+
+    return () => WAITER.endAsync(token);
   });
 
   constructor() {

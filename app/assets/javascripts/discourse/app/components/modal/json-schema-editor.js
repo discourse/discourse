@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { waitForPromise } from "@ember/test-waiters";
 import { create } from "virtual-dom";
-import { isTesting } from "discourse-common/config/environment";
 import { iconNode } from "discourse-common/lib/icon-library";
 
 export default class JsonSchemaEditorModal extends Component {
@@ -38,9 +37,7 @@ export default class JsonSchemaEditorModal extends Component {
   @action
   async buildJsonEditor(element) {
     const promise = import("@json-editor/json-editor");
-    if (isTesting()) {
-      waitForPromise(promise);
-    }
+    waitForPromise(promise);
     const { JSONEditor } = await promise;
 
     JSONEditor.defaults.options.theme = "barebones";

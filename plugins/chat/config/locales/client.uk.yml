@@ -52,7 +52,6 @@ uk:
       deleted_chat_username: видалено
       dates:
         yesterday: "Вчора"
-        time_tiny: "h:mm"
       all_loaded: "Показати всі повідомлення"
       already_enabled: "У цій темі вже увімкнено чат. Будь ласка, оновіть її."
       disabled_for_topic: "Чат у цій темі вимкнено."
@@ -278,6 +277,7 @@ uk:
       placeholder_channel: "Чат в %{channelName}"
       placeholder_thread: "Чат в гілці"
       placeholder_users: "Чат з %{commaSeparatedNames}"
+      placeholder_group: "Чат в групі"
       placeholder_new_message_disallowed:
         archived: "Канал заархівований, зараз ви не можете надсилати нові повідомлення."
         closed: "Канал закритий, зараз ви не можете надсилати нові повідомлення."
@@ -526,10 +526,9 @@ uk:
         auto_join_users_info: "Перевіряйте погодинно, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до категорії %{category}."
         auto_join_users_info_no_category: "Погодинно перевіряйте, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до обраної категорії."
         auto_join_users_warning: "Кожен користувач, який не є учасником цього каналу і має доступ до категорії %{category} , приєднається до нього. Ви впевнені?"
-        desktop_notification_level: "Сповіщення на робочому столі"
+        notification_level: "Надсилати push-сповіщення"
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
-        mobile_notification_level: "Мобільні push-сповіщення"
         mute: "Вимкнути канал"
         threading_enabled: "Включено"
         threading_disabled: "Вимкнено"
@@ -552,6 +551,7 @@ uk:
           title: "Експорт повідомлень чату"
           description: "Це експортує всі повідомлення з усіх каналів."
           create_export: "Створити експорт"
+          confirm_export: "Це експортує всі повідомлення з усіх каналів і надсилає результат вам в особистому повідомленні. Ви впевнені, що хочете експортувати?"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       my_threads:
         title: Мої теми
@@ -570,6 +570,7 @@ uk:
       incoming_webhooks:
         back: "Назад"
         channel_placeholder: "Виберіть канал"
+        channel: "Канал"
         confirm_destroy: "Ви впевнені, що хочете видалити цей вхідний веб-хук? Це не можна скасувати."
         current_emoji: "Поточні смайли"
         description: "Опис"
@@ -593,6 +594,8 @@ uk:
         username: "Ім’я користувача"
         username_instructions: "Ім'я користувача бота, який публікує дописи на каналі. Якщо поле залишено порожнім, за умовчанням використовується \"система\"."
         instructions: "Вхідні вебхуки можуть використовуватися зовнішніми системами, щоб публікувати повідомлення в призначений чат як користувача бота за допомогою <code>/hooks/:key</code> в кінцевій точці. Контент складається з одного параметру <code>text</code> який обмежений до 2000 символів.<br><br>Ми також підтримуємо обмежені параметри Slack-formatted <code>text</code> параметрів, з видобутком посилань і згадувань на основі формату <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api. lack.com/reference/surfaces/formatting</a>, але для цього слід використовувати <code>/hooks/:key/slack</code> кінцеву точку."
+        saved: "Зміни Webhook збережені"
+        created: "Webhook створено"
       selection:
         cancel: "Скасувати"
         quote_selection: "Цитата в темі"

@@ -686,7 +686,6 @@ fi:
               same_as_username: "on sama kuin käyttäjätunnuksesi. Valitse turvallisempi salasana."
               same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
               same_as_current: "on sama kuin nykyinen salasanasi."
-              same_as_previous: "on sama kuin edellinen salasanasi."
               same_as_name: "on sama kuin nimesi."
               unique_characters: "sisältää liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
             username:
@@ -696,6 +695,15 @@ fi:
             ip_address:
               blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
               max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökunnan jäseneen."
+        user_password:
+          attributes:
+            password:
+              common: "on yksi 10 000 yleisimmästä salasanasta. Valitse turvallisempi salasana."
+              same_as_username: "on sama kuin käyttäjätunnuksesi. Valitse turvallisempi salasana."
+              same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
+              same_as_current: "on sama kuin nykyinen salasanasi."
+              same_as_name: "on sama kuin nimesi."
+              unique_characters: "sisältää liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1230,13 +1238,13 @@ fi:
       yaxis: "Päivä"
       description: "Kuinka monen käyttäjän luottamustaso nousi tällä ajanjaksolla."
     consolidated_page_views:
-      title: "Kootut sivukatselut"
+      title_legacy: "Kootut sivukatselut"
       xaxis:
         page_view_crawler: "Hakurobotit"
         page_view_anon: "Anonyymit käyttäjät"
         page_view_logged_in: "Kirjautuneet käyttäjät"
       yaxis: "Päivä"
-      description: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
+      description_legacy: "Kuinka monta sivukatselua kirjautuneilta ja anonyymeiltä käyttäjiltä sekä hakuroboteilta yhteensä."
       labels:
         post: Viesti
         editor: Muokkaaja
@@ -1251,13 +1259,16 @@ fi:
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
     consolidated_page_views_browser_detection:
       title: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
+      title_legacy: "Yhdistetyt sivun katselut selaimen tunnistuksella (kokeellinen)"
       xaxis:
         page_view_anon_browser: "Anonyymi selain"
         page_view_logged_in_browser: "Kirjautunut selain"
         page_view_crawler: "Tunnettu hakurobotti"
         page_view_other: "Muut sivun katselut"
       yaxis: "Päivä"
-      description: "Kirjautuneiden käyttäjien, anonyymien käyttäjien, tunnettujen hakurobottien ja muut sivun katselut. Tämä kokeellinen raportti varmistaa, että kirjautuneet/anonyymit pyynnöt tulevat oikeista selaimista ennen niiden laskemista."
+    site_traffic:
+      yaxis: "Päivä"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1407,6 +1418,9 @@ fi:
       xaxis: "Päivä"
       yaxis: "Sivukatseluita yhteensä"
       description: "Kaikkien kävijöiden sivukatselut."
+    page_view_legacy_total_reqs:
+      xaxis: "Päivä"
+      yaxis: "Sivukatseluita yhteensä"
     page_view_logged_in_mobile_reqs:
       title: "Kirjautuneiden sivukatselut"
       xaxis: "Päivä"
@@ -1737,7 +1751,6 @@ fi:
     blocked_ip_blocks: "Luettelo yksityisistä IP-lohkoista, joita Discourse ei tulisi koskaan indeksoida"
     allowed_internal_hosts: "Luettelo sisäisistä isännistä, joita Discourse voi turvallisesti indeksoida onebox-esikatselua ja muita tarkoituksia varten"
     allowed_onebox_iframes: "Luettelo iframe src -verkkotunnuksista, jotka sallitaan Onebox-upotusten kautta. `*` sallii kaikki Onebox-oletusmoduulit."
-    allowed_iframes: "Iframe src -verkkotunnusten etuliitteet, jotka Discourse voi turvallisesti sallia viesteissä"
     allowed_crawler_user_agents: "Hakurobottien käyttäjäagentit, jotka saavat tulla sivustolle. VAROITUS! TÄMÄ ASETUS ESTÄÄ KAIKKI HAKUROBOTIT, JOITA EI LISTATA TÄSSÄ!"
     blocked_crawler_user_agents: "Käyttäjäagentin nimessä oleva kirjainkoosta riippumaton yksilöllinen merkkijono, jolla tunnistetaan estettävät hakurobotit. Ei sovelleta, jos sallittujen hakurobottien luettelo on määriteltynä."
     slow_down_crawler_user_agents: 'Hakurobottien käyttäjäagentit, joiden nopeutta tulisi rajoittaa "slow down crawler rate" -asetuksessa määritetyn mukaisesti. Jokaisen arvon täytyy olla ainakin kolmen merkin pituinen.'
@@ -1751,8 +1764,6 @@ fi:
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."
     top_menu: "Määritä, mitkä kohteet näytetään aloitussivun navigoinnissa ja missä järjestyksessä."
-    post_menu: "Määritä, mitkä kohteet näytetään viestivalikossa ja missä järjestyksessä."
-    post_menu_hidden_items: "Viestivalikossa piilotettavat valikon vaihtoehdot, ellei laajentavaa kolmea pistettä klikata."
     share_links: "Mitkä kohteet näytetään jakamisvalintaikkunassa ja missä järjestyksessä."
     allow_username_in_share_links: "Salli käyttäjätunnusten sisällyttäminen jakolinkkeihin. Tämä on hyödyllistä kunniamerkkien antamiseksi yksilöllisten vierailijoiden perusteella."
     site_contact_username: "Henkilökuntaan kuuluvan käyttäjä, jonka nimissä kaikki automaattiset viestit lähetetään. Jos jätetty tyhjäksi, oletuksena on oletusjärjestelmätili."
@@ -2100,7 +2111,6 @@ fi:
     reset_bounce_score_after_days: "Nollaa palautuspisteet X päivä kuluttua."
     blocked_attachment_content_types: "Luettelo avainsanoja, jota käytetään liitteiden estämisessä niiden sisältötyypin perusteella."
     blocked_attachment_filenames: "Luettelo avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
-    forwarded_emails_behaviour: "Kuinka Discourseen välitettyjä sähköposteja käsitellään"
     always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
     trim_incoming_emails: "Leikkaa osa saapuvista sähköposteista, jolla ei ole merkitystä."
     private_email: "Älä sisällytä sähköpostien otsikoihin äläkä leipäteksteihin viestien tai ketjujen sisältöä. HUOM: tämä poistaa käytöstä myös tiivistelmäsähköpostit."
@@ -2219,7 +2229,6 @@ fi:
     auto_handle_queued_age: "Käsittele automaattisesti asiat, jotka ovat odottaneet käsittelyä näin monta päivää. Liput ohitetaan. Jonossa olevat viestit ja käyttäjät ohitetaan. Jos asetat 0:ksi, ominaisuus ei ole käytössä."
     penalty_step_hours: "Oletusrangaistukset käyttäjien hiljentämisestä tai hyllyttämisestä tunneissa. Ensimmäisen rikkeen oletusarvo on ensimmäinen arvo, toisen rikkeen toinen jne."
     penalty_include_post_message: "Sisällytä loukkaava viesti automaattisesti sähköpostiviestimalliin, kun käyttäjä hiljennetään tai hyllytetään"
-    svg_icon_subset: "Lisää ylimääräisiä FontAwesome 5 -kuvakkeita, jotka haluat sisällyttää käytettäviisi. Käytä etuliitettä \"fa-\", kun haluat täytetyn kuvakkeen, \"far-\", kun haluat tavallisen ja \"fab-\", kun haluat brändikuvakkeen."
     max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi tulostuksen käytöstä)"
     full_name_required: "Koko nimi on käyttäjäprofiilin pakollinen kenttä."
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
@@ -2245,7 +2254,6 @@ fi:
     notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     delete_drafts_older_than_n_days: "Poista luonnokset, joita ei ole muutettu yli (n) päivään."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 1, tynkäketjuja ei poisteta koskaan. Jos arvo on 0, ne poistetaan välittömästi."
-    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen käytöstä ja Aloittaminen-painikkeen poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
@@ -2399,7 +2407,6 @@ fi:
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     enable_experimental_bookmark_redesign_groups: "KOKEELLINEN: näytä kirjanmerkkien pikavalikko viesteissä ja uusi uudistettu modaali"
-    glimmer_header_mode: "Hallitse, käytetäänkö uutta glimmer-yläpalkkiuudistusta. Arvo \"auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."

@@ -7,6 +7,46 @@
     td[role="button"] {
       cursor: pointer;
     }
+
+    &__name {
+      word-break: break-word;
+    }
+  }
+
+  .admin-section-landing__header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    h2 {
+      margin: 0 auto 0 0;
+    }
+    &-filter {
+      margin: 0;
+      flex: 0 1 15em;
+    }
+  }
+
+  .admin-section-landing__wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+    gap: 1em 2em;
+    margin-top: 1em;
+    border-top: 3px solid var(--primary-low); // matches tbody border
+    padding-top: 1em;
+  }
+
+  .admin-section-landing-item {
+    cursor: pointer;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    gap: 0;
+    &__buttons {
+      display: none; // empty container
+    }
+    &__description {
+      max-width: 18.75em;
+    }
   }
 }
 
@@ -42,26 +82,12 @@
     }
   }
 
+  .alert-info {
+    margin-top: 1em;
+  }
+
   .alert {
     padding: 1em;
-    background: var(--primary-very-low);
-    border-left-style: solid;
-    border-left-width: 5px;
-
-    &.alert-info {
-      border-left-color: var(--tertiary-low);
-    }
-
-    &.alert-warning {
-      border-left-color: var(--highlight);
-      background: var(--highlight-low);
-    }
-
-    &.alert-error {
-      border-left-color: var(--danger);
-      background: var(--danger-low);
-    }
-
     p {
       margin: 0;
     }

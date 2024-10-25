@@ -27,12 +27,25 @@
     font-size: var(--font-down-1);
     padding: 10px 10px;
   }
+
   &__control-group-horizontal {
     display: flex;
     margin-bottom: 18px;
     label {
       margin-right: 1em;
     }
+  }
+
+  &__title {
+    flex: 2;
+    margin-bottom: 0;
+  }
+
+  &__header-wrapper {
+    display: flex;
+    align-items: baseline;
+    flex: 1;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -48,6 +61,33 @@
 }
 
 .admin-config-area {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+  align-items: flex-start;
+
+  @media (max-width: $mobile-breakpoint) {
+    flex-direction: column;
+  }
+
+  &__primary-content {
+    flex: 0 1 70%;
+
+    @media (max-width: $mobile-breakpoint) {
+      flex: 0 1 auto;
+    }
+  }
+
+  &__aside {
+    /* use for help inset */
+    flex: 0 1 30%;
+    padding: var(--space-2);
+
+    @media (max-width: $mobile-breakpoint) {
+      flex: 0 1 auto;
+    }
+  }
+
   &__settings {
     .admin-site-settings-filter-controls {
       margin-bottom: 1em;

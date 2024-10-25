@@ -500,6 +500,15 @@ gl:
             ip_address:
               blocked: "Non están permitidos novos rexistros desde o teu enderezo IP."
               max_new_accounts_per_registration_ip: "Non están permitidos novos rexistros desde o seu enderezo IP (alcanzouse o límite). Contacte cun membro do equipo."
+        user_password:
+          attributes:
+            password:
+              common: "é un dos 10000 contrasinais máis habituais. Utilice un máis seguro."
+              same_as_username: "é igual ca o seu nome de usuario. Utilice un contrasinal máis seguro."
+              same_as_email: "é igual ca o seu correo electrónico. Utilice un contrasinal máis seguro."
+              same_as_current: "é igual ca o seu contrasinal actual."
+              same_as_name: "é igual ca o seu nome."
+              unique_characters: "ten demasiados caracteres repetidos. Utilice un contrasinal máis seguro."
         user_profile:
           attributes:
             featured_topic_id:
@@ -939,13 +948,13 @@ gl:
       yaxis: "Día"
       description: "Número de usuarios que incrementaron o seu nivel de confianza durante este período."
     consolidated_page_views:
-      title: "Visualizacións de páxinas consolidadas"
+      title_legacy: "Visualizacións de páxinas consolidadas"
       xaxis:
         page_view_crawler: "Rastrexadores"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios con sesión iniciada"
       yaxis: "Día"
-      description: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
+      description_legacy: "Visualizacións de páxinas para usuarios con sesión iniciada, anónimos e rastrexadores."
       labels:
         post: Publicación
         editor: Editor
@@ -958,6 +967,9 @@ gl:
       yaxis: "Día"
     consolidated_page_views_browser_detection:
       yaxis: "Día"
+    site_traffic:
+      yaxis: "Día"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1107,6 +1119,9 @@ gl:
       xaxis: "Día"
       yaxis: "Total de visualizacións de páxina"
       description: "Número de novas visualizacións de páxina de todos os visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Día"
+      yaxis: "Total de visualizacións de páxina"
     page_view_logged_in_mobile_reqs:
       title: "Visualizacións de páxina coa sesión iniciada"
       xaxis: "Día"
@@ -1224,8 +1239,24 @@ gl:
       host_names: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
       queue_size: "O número de tarefas na cola é de %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou ten que engadir máis traballadores de Sidekiq."
       ram: "O seu servidor está a funcionar con menos de 1 GB de memoria total. Recoméndase polo menos unha memoria de 1 GB."
+      google_oauth2_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Google OAuth2 (enable_google_oauth2_logins) pero o id do cliente e os valores secretos de cliente non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte esta guía para saber máis</a>.'
+      facebook_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Facebook (enable_facebook_logins) pero o id da aplicación e os valores secretos da aplicación non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulte esta guía para saber máis</a>.'
+      twitter_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Twitter (enable_twitter_logins), pero a clave e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulte esta guía para saber máis</a>.'
+      github_config: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
+      s3_upload_config: 'O servidor está configurado para subir ficheiros a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
+      s3_backup_config: 'O servidor está configurado para subir copias de seguranza a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
+      s3_cdn: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
+      image_magick: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instáleo utilizando o administrador de paquetes que lle guste ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descargue a última versión</a>.'
+      failing_emails: 'Hai %{num_failed_jobs} procesos de correo electrónico que fallaron. Comprobe o seu app.yml e asegúrese de que a configuración do servidor de correo é correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Revise os procesos que fallaron en Sidekiq</a>.'
       subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
+      email_polling_errored_recently:
+        one: "A recollida do correo electrónico xerou un erro nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
+        other: "A recollida do correo electrónico xerou %{count} erros nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
       missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionou unha chave API que se utiliza para verificar as mensaxes de webhook."
+      bad_favicon_url: "Erro ao cargar favicon. Comprobe a configuración sobre favicon en <a href='%{base_path}/admin/site_settings'>Configuración do sitio</a>."
+      poll_pop3_timeout: "A conexión ao servidor POP3 está a superar o tempo de espera. Non se puido recuperar o correo electrónico entrante. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a> e o provedor do servizo."
+      poll_pop3_auth_error: "A conexión ao servidor POP3 está a fallar por un erro na autenticación. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a>."
+      force_https: "O seu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda activado nos seus axustes de sitio."
   site_settings:
     disabled: "desactivado"
     display_local_time_in_user_card: "Amosar a hora local con base no fuso horario do usuario cando se abre a súa tarxeta."
@@ -1338,14 +1369,12 @@ gl:
     blocked_ip_blocks: "Unha listaxe de bloques IP privados que Discourse nunca debería rastrexar"
     allowed_internal_hosts: "Unha listaxe de servidores internos que Discourse pode rastrexar de forma segura para as oneboxing e outros fins"
     allowed_onebox_iframes: "Unha listase de dominios iframe src que se permiten a través de incorporación Onebox. \"*\" permitirá todos os motores Onebox predeterminados."
-    allowed_iframes: "Unha listaxe de prefixos de dominios para iframe src que Discourse pode permitir de forma segura en publicacións"
     allowed_crawler_user_agents: "Axentes de usuario de rastreadores web aos que se lles debería permitir o acceso ao sitio. AVISO! AO CONFIGURAR ISTO, VETARÁ TODOS OS RASTREXADORES NON LISTADOS AQUÍ!"
     blocked_crawler_user_agents: "Palabra única insensíbel a maiúsculas e minúsculas na cadea de axente de usuario que identifica rastrexadores web que non deberían ter permitido o acceso ao sitio. Non se lle aplica se está definida a listaxe de permitidos."
     slow_down_crawler_rate: "Se slow_down_crawler_user_agents está especificado, este valor aplicarase a todos os rastrexadores (número de segundos de demora entre respostas)"
     content_security_policy_collect_reports: "Activar a recolección de informes de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restrinxir quen pode incorporar este sitio en iframes mediante CSP. O control de servidores permitidos en <a href='%{base_path}/admin/customize/embedding'>Incorporación</a>"
     invalidate_inactive_admin_email_after_days: "As contas administrativas que non visiten o sitio neste número de días terán que volver validar o seu enderezo electrónico antes de iniciar sesión. Estabelecer en 0 para desactivalo."
-    post_menu_hidden_items: "Os elementos do menú que se ocultan por defecto no menú de publicación salvo que se prema no botón para expandir as opcións."
     share_links: "Determinar que elementos aparecen no cadro de compartir e en que orde."
     site_contact_username: "Nome de usuario do membro do equipo desde onde se enviarán todas as mensaxes automáticas. Se se deixa en branco, utilizarase a conta predeterminada do sistema."
     site_contact_group_name: "Un nome de grupo válido para ser convidado a todas as mensaxes automatizadas."
@@ -1598,7 +1627,6 @@ gl:
     reset_bounce_score_after_days: "Restabelece automaticamente a puntuación de devolución despois de X días."
     blocked_attachment_content_types: "Listaxe de palabras clave empregadas para bloquear anexos en función do tipo de contido."
     blocked_attachment_filenames: "Listaxe de palabras clave usadas para bloquear anexos en función do nome do ficheiro."
-    forwarded_emails_behaviour: "Como tratar o correo electrónico reenviado en Discourse"
     always_show_trimmed_content: "Mostrar sempre a parte recortada dos correos electrónicos entrantes. AVISO: podería supor ofrecer enderezos de correo."
     private_email: "Non incluír contido de publicacións ou temas no título ou o corpo do correo electrónico. NOTA: tamén desactiva os boletíns por correo electrónico."
     email_total_attachment_size_limit_kb: "Tamaño máximo total dos ficheiros anexos a correos electrónicos saíntes. Estabelecer en 0 para desactivar o envío de ficheiros anexos."
@@ -1689,7 +1717,6 @@ gl:
     app_association_android: "Contido do <a href='%{base_path}/.well-known/assetlinks.json'>punto de chegada .well-known/assetlinks.json</a>, utilizado para a API Google's Digital Asset Links."
     app_association_ios: "Contido de <a href='%{base_path}/apple-app-site-association'>punto de chegada de apple-app-site-association</a> , utilizado para crear ligazóns universais entre este sitio e as aplicacións de iOS."
     auto_handle_queued_age: "Xestione automaticamente rexistros que levan moitos días en espera de seren revisados. As alertas ignoraranse. Rexeitaranse as publicacións e os usuarios en cola. Estabelecer en 0 para desactivar esta funcionalidade."
-    svg_icon_subset: "Engada 5 iconas FontAwesome adicionais que lle gustaría incluír nos seus recursos. Use o prefixo «fa-» para iconas sólidas, «far-» para iconas normais e «fab-» para iconas de marca."
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     enable_names: "Mostrar o nome completo do usuario no seu perfil, tarxeta de usuario e correos electrónicos. Desactivar para agochar o nome completo en todas as partes."
     display_name_on_posts: "Mostrar o nome completo de usuario nas súas publicacións, ademais do seu @nomedeusuario."

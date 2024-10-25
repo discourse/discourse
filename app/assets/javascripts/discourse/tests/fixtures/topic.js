@@ -6555,7 +6555,6 @@ export default {
           avatar_template: "/letter_avatar_proxy/v4/letter/t/3be4f8/{size}.png",
           uploaded_avatar_id: 40181,
           created_at: "2013-02-05T21:32:47.649Z",
-          cooked: "<p>Yeah it is a short one</p>",
           cooked:
             '<aside class="quote no-group" data-username="james_john" data-post="2" data-topic="54079"><div class="title" style="cursor: pointer;"><div class="quote-controls"><span class="svg-icon-title" title="expand/collapse"><svg class="fa d-icon d-icon-chevron-down svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#chevron-down"></use></svg></span><a href="/t/hello-world-i-am-posting-an-image/158/1" title="go to the quoted post" class="back"><svg class="fa d-icon d-icon-arrow-up svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#arrow-up"></use></svg></a></div> <img alt="" width="20" height="20" src="/letter_avatar_proxy/v4/letter/j/3be4f8/90.png" class="avatar"> james_john:</div><blockquote><p>This is a short topic.</p></blockquote></aside><p>there is a quote above</p>',
           post_number: 4,

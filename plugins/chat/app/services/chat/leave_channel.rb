@@ -6,27 +6,28 @@ module Chat
   # @example
   #  ::Chat::LeaveChannel.call(
   #    guardian: guardian,
-  #    channel_id: 1,
+  #    params: {
+  #      channel_id: 1,
+  #    }
   #  )
   #
   class LeaveChannel
     include Service::Base
 
-    # @!method call(guardian:, channel_id:,)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] channel_id of the channel
-
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id ID of the channel
     #   @return [Service::Base::Context]
-    contract
+
+    contract do
+      attribute :channel_id, :integer
+
+      validates :channel_id, presence: true
+    end
     model :channel
     step :leave
     step :recompute_users_count
-
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-    end
 
     private
 
@@ -35,14 +36,7 @@ module Chat
     end
 
     def leave(channel:, guardian:)
-      ActiveRecord::Base.transaction do
-        if channel.direct_message_channel? && channel.chatable&.group
-          channel.membership_for(guardian.user)&.destroy!
-          channel.chatable.direct_message_users.where(user_id: guardian.user.id).destroy_all
-        else
-          channel.remove(guardian.user)
-        end
-      end
+      channel.leave(guardian.user)
     end
 
     def recompute_users_count(channel:)

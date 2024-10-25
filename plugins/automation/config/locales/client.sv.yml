@@ -142,10 +142,14 @@ sv:
             valid_trust_levels:
               label: Giltiga förtroendenivåer
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
+            restricted_tags:
+              label: Taggar
             restricted_category:
               label: Kategori
             restricted_group:
               label: Grupp
+            restricted_groups:
+              label: Grupper
           created: Skapade
         category_created_edited:
           fields:

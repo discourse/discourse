@@ -4,12 +4,12 @@ module Chat
   # List of the channels a user is tracking
   #
   # @example
-  #  Chat::ListUserChannels.call(guardian: guardian, **optional_params)
+  #  Chat::ListUserChannels.call(guardian:)
   #
   class ListUserChannels
     include Service::Base
 
-    # @!method call(guardian:)
+    # @!method self.call(guardian:)
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 

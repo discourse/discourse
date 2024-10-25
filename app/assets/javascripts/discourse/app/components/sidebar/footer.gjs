@@ -53,6 +53,7 @@ export default class SidebarFooter extends Component {
               @icon="plus"
               @action={{this.manageSections}}
               @title="sidebar.sections.custom.add"
+              @ariaLabel="sidebar.sections.custom.add"
               class="btn-flat sidebar-footer-actions-button add-section"
             />
           {{/if}}
@@ -61,6 +62,11 @@ export default class SidebarFooter extends Component {
             <DButton
               @action={{this.toggleMobileView}}
               @title={{if this.site.mobileView "desktop_view" "mobile_view"}}
+              @ariaLabel={{if
+                this.site.mobileView
+                "desktop_view"
+                "mobile_view"
+              }}
               @icon={{if this.site.mobileView "desktop" "mobile-screen-button"}}
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-toggle-mobile-view"
             />
@@ -70,6 +76,7 @@ export default class SidebarFooter extends Component {
             <DButton
               @action={{this.showKeyboardShortcuts}}
               @title="keyboard_shortcuts_help.title"
+              @ariaLabel="keyboard_shortcuts_help.title"
               @icon="keyboard"
               class="btn-flat sidebar-footer-actions-button sidebar-footer-actions-keyboard-shortcuts"
             />

@@ -432,14 +432,13 @@ RSpec.describe PostAction do
     end
 
     it "shouldn't change given_likes unless likes are given or removed" do
-      freeze_time(Time.zone.now)
+      freeze_time
 
       PostActionCreator.like(codinghorror, post)
       expect(value_for(codinghorror.id, Date.today)).to eq(1)
 
       PostActionType.types.each do |type_name, type_id|
         post = Fabricate(:post)
-
         PostActionCreator.create(codinghorror, post, type_name)
         actual_count = value_for(codinghorror.id, Date.today)
         expected_count = type_name == :like ? 2 : 1
@@ -798,7 +797,7 @@ RSpec.describe PostAction do
       expect(result).to be_success
       expect(result.post_action.related_post_id).to be_nil
       expect(result.reviewable_score.meta_topic_id).to be_nil
-
+    ensure
       flag_without_message.destroy!
     end
 

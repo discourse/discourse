@@ -26,6 +26,7 @@ ja:
         millions: "%{number}M"
     dates:
       time: "a h:mm"
+      time_short: "h:mm"
       time_with_zone: "a hh:mm (z)"
       time_short_day: "ddd a h:mm"
       timeline_date: "YYYY 年 MMM"
@@ -113,7 +114,6 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "Twitter で共有"
       facebook: "Facebook で共有"
       email: "メールで送信"
       url: "URL をコピーして共有"
@@ -265,6 +265,7 @@ ja:
       pill: "提案"
       pm_title: "推奨メッセージ"
     about:
+      edit: "このページを編集"
       simple_title: "サイト情報"
       title: "%{title}について"
       stats: "サイトの統計"
@@ -1535,7 +1536,6 @@ ja:
         add_email: "代替メールアドレスを追加"
         auth_override_instructions: "メールアドレスは認証プロバイダーから更新できます。"
         no_secondary: "セカンダリメールアドレスはありません"
-        instructions: "絶対に公開されません。"
         admin_note: "注意: 管理者ユーザーが別の非管理者ユーザーのメールを変更すると、そのユーザーは元のメールアカウントにアクセスできなくなるため、パスワードのリセットメールが新しいアドレスに送信されます。ユーザーのメールアドレスは、パスワードのリセットプロセスが完了するまで変更されません。"
         ok: "確認のためにメールを送信します"
         required: "メールアドレスを入力してください"
@@ -1565,14 +1565,13 @@ ja:
         approval_required: "このフォーラムにアクセスするには、モデレーターがあなたの新規アカウントを手動で承認する必要があります。承認されるとメールで通知されます！"
       name:
         title: "名前"
-        instructions: "あなたの氏名 (オプション) です。"
-        instructions_required: "あなたの氏名です。"
+        instructions: "氏名 (オプション)"
+        instructions_required: "氏名"
         required: "名前を入力してください"
         too_short: "名前が短かすぎます"
         ok: "その名前で良さそうです"
       username:
         title: "ユーザー名"
-        instructions: "一意の短い名前、スペースの使用不可。"
         short_instructions: "@%{username} であなたをメンションできます"
         available: "ユーザー名を使用できます"
         not_available: "利用できません。%{suggestion}を試しますか？"
@@ -1735,12 +1734,11 @@ ja:
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
         invite:
-          new_title: "招待の作成"
-          edit_title: "招待の編集"
           instructions: "このサイトへのアクセスを即時に許可するにはこのリンクを共有します:"
-          copy_link: "リンクをコピー"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
+          copy_link: "リンクをコピーする"
+          link_copied: "リンクがコピーされました！"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
           restrict: "制限する:"
@@ -1750,11 +1748,11 @@ ja:
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
           invite_to_topic: "トピックに到着"
-          expires_at: "有効期限"
-          custom_message: "オプションの個人メッセージ"
+          expires_after: "有効期限"
           send_invite_email: "保存してメールを送信"
           send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
-          save_invite: "招待を保存"
+          save_invite: "保存"
+          cancel: "キャンセル"
           invite_saved: "招待は保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
@@ -1785,7 +1783,7 @@ ja:
         same_as_email: "パスワードとメールアドレスが同じです。"
         ok: "そのパスワードで良さそうです。"
         instructions:
-          other: "%{count} 文字以上です。"
+          other: "%{count} 文字以上"
         required: "パスワードを入力してください"
         confirm: "確認"
         incorrect_password: "入力したパスワードは誤っています。"
@@ -4480,6 +4478,7 @@ ja:
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
+        dismiss_notice: "閉じる"
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
@@ -4942,9 +4941,14 @@ ja:
           screened_ips: "スクリーン対象 IP"
           screened_urls: "スクリーン対象 URL"
           search_logs: "検索ログ"
-          security: "セキュリティ"
-          spam: "迷惑"
           staff_action_logs: "スタッフの操作ログ"
+      section_landing_pages:
+        account:
+          title: "アカウント"
+          backups:
+            title: "バックアップ"
+          whats_new:
+            title: "新着情報"
       config_areas:
         about:
           header: "サイトについて"
@@ -4954,8 +4958,6 @@ ja:
           community_summary: "コミュニティーの概要"
           community_description: "コミュニティーの説明"
           banner_image: "バナー画像"
-          banner_image_help: |
-            これは「情報」ページで使用されます。推奨サイズ: 800x300px。許容される形式: 10 MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
@@ -5031,6 +5033,9 @@ ja:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
+        look_and_feel:
+          themes:
+            title: "テーマ"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -6397,10 +6402,6 @@ ja:
             with_post: '%{link} で行われた投稿の <span class="username">%{username}</span>'
             with_post_time: '%{link} で <span class="time">%{time}</span> に行われた投稿の <span class="username">%{username}</span>'
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
-        badge_intro:
-          title: "既存のバッジを選択するか、新しいバッジを作成してください"
-          what_are_badges_title: "バッジとは何ですか？"
-          badge_query_examples_title: "バッジクエリの例"
         mass_award:
           title: 一括授与
           description: 一度に複数のユーザーに同じバッジを授与します。

@@ -1,49 +1,50 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 @tagName("span")
-export default class AvatarUploader extends Component.extend(UppyUploadMixin) {
-  type = "avatar";
+export default class AvatarUploader extends Component {
+  uppyUpload = new UppyUpload(getOwner(this), {
+    id: "avatar-uploader",
+    type: "avatar",
+    validateUploadedFilesOptions: {
+      imagesOnly: true,
+    },
+    uploadDone: (upload) => {
+      this.setProperties({
+        imageIsNotASquare: upload.width !== upload.height,
+        uploadedAvatarTemplate: upload.url,
+        uploadedAvatarId: upload.id,
+      });
+
+      this.done();
+    },
+    additionalParams: () => ({
+      user_id: this.user_id,
+    }),
+  });
+
   imageIsNotASquare = false;
 
-  @discourseComputed("uploading", "uploadedAvatarId")
+  @discourseComputed("uppyUpload.uploading", "uploadedAvatarId")
   customAvatarUploaded() {
-    return !this.uploading && !isBlank(this.uploadedAvatarId);
+    return !this.uppyUpload.uploading && !isBlank(this.uploadedAvatarId);
   }
 
-  validateUploadedFilesOptions() {
-    return { imagesOnly: true };
-  }
-
-  uploadDone(upload) {
-    this.setProperties({
-      imageIsNotASquare: upload.width !== upload.height,
-      uploadedAvatarTemplate: upload.url,
-      uploadedAvatarId: upload.id,
-    });
-
-    this.done();
-  }
-
-  @discourseComputed("user_id")
-  data(user_id) {
-    return { user_id };
-  }
-
-  @discourseComputed("uploading", "uploadProgress")
+  @discourseComputed("uppyUpload.uploading", "uppyUpload.uploadProgress")
   uploadLabel() {
-    return this.uploading
-      ? `${I18n.t("uploading")} ${this.uploadProgress}%`
+    return this.uppyUpload.uploading
+      ? `${I18n.t("uploading")} ${this.uppyUpload.uploadProgress}%`
       : I18n.t("upload");
   }
 
   @action
   chooseImage() {
-    this.fileInputEl.click();
+    this.uppyUpload.openPicker();
   }
 }

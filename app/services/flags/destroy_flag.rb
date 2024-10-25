@@ -7,7 +7,6 @@ class Flags::DestroyFlag
   policy :not_system
   policy :not_used
   policy :invalid_access
-
   transaction do
     step :destroy
     step :log
@@ -15,8 +14,8 @@ class Flags::DestroyFlag
 
   private
 
-  def fetch_flag(id:)
-    Flag.find(id)
+  def fetch_flag(params:)
+    Flag.find_by(id: params[:id])
   end
 
   def not_system(flag:)
@@ -38,12 +37,7 @@ class Flags::DestroyFlag
   def log(guardian:, flag:)
     StaffActionLogger.new(guardian.user).log_custom(
       "delete_flag",
-      {
-        name: flag.name,
-        description: flag.description,
-        applies_to: flag.applies_to,
-        enabled: flag.enabled,
-      },
+      flag.slice(:name, :description, :applies_to, :enabled),
     )
   end
 end

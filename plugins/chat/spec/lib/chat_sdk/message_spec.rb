@@ -60,7 +60,7 @@ describe ChatSDK::Message do
 
     context "when membership is enforced" do
       it "works" do
-        SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
         params[:enforce_membership] = true
         params[:guardian] = Fabricate(:user).guardian
 
@@ -115,7 +115,7 @@ describe ChatSDK::Message do
     fab!(:message_1) { Fabricate(:chat_message, message: "first") }
 
     before do
-      SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
       message_1.chat_channel.add(message_1.user)
       message_1.update!(streaming: true)
     end

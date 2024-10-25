@@ -34,6 +34,36 @@ RSpec.describe TopTopic do
     end
   end
 
+  describe ".validate_period" do
+    context "when passing a valid period" do
+      it do
+        expect { described_class.validate_period(described_class.periods.first) }.not_to raise_error
+      end
+    end
+
+    context "when passing a blank value" do
+      it do
+        expect { described_class.validate_period(nil) }.to raise_error(Discourse::InvalidParameters)
+      end
+    end
+
+    context "when passing an invalid period" do
+      it do
+        expect { described_class.validate_period("bi-weekly") }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+
+    context "when passing a non-string value" do
+      it do
+        expect { described_class.validate_period(ActionController::Parameters) }.to raise_error(
+          Discourse::InvalidParameters,
+        )
+      end
+    end
+  end
+
   describe "#compute_top_score_for" do
     fab!(:user)
     fab!(:coding_horror)
@@ -151,6 +181,13 @@ RSpec.describe TopTopic do
       expect(top_topics.where(topic_id: topic_3.id).pick(:yearly_score)).to be_within(
         0.0000000001,
       ).of(10.602059991328)
+    end
+
+    it "triggers a DiscourseEvent for each refreshed period" do
+      events = DiscourseEvent.track_events(:top_score_computed) { TopTopic.refresh! }
+      periods = events.map { |e| e[:params].first[:period] }
+
+      expect(periods).to match_array(%i[daily weekly monthly quarterly yearly all])
     end
   end
 end

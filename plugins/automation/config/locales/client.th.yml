@@ -42,9 +42,13 @@ th:
               label: หมายเลขกระทู้
         post_created_edited:
           fields:
+            restricted_tags:
+              label: ป้าย
             restricted_category:
               label: หมวดหมู่
             restricted_group:
+              label: กลุ่ม
+            restricted_groups:
               label: กลุ่ม
           created: สร้างเมื่อ
         pm_created:

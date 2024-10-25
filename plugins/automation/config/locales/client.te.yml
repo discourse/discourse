@@ -57,10 +57,14 @@ te:
               label: విషయపు ఐడీ
         post_created_edited:
           fields:
+            restricted_tags:
+              label: ట్యాగులు
             restricted_category:
               label: వర్గం
             restricted_group:
               label: సమూహం
+            restricted_groups:
+              label: సమూహాలు
           created: సృష్టించిన
         category_created_edited:
           fields:

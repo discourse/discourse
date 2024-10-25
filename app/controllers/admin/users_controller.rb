@@ -120,14 +120,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    User::Suspend.call do
-      on_success do
+    User::Suspend.call(service_params) do
+      on_success do |contract:, user:, full_reason:|
         render_json_dump(
           suspension: {
-            suspend_reason: result.reason,
-            full_suspend_reason: result.full_reason,
-            suspended_till: result.user.suspended_till,
-            suspended_at: result.user.suspended_at,
+            suspend_reason: contract.reason,
+            full_suspend_reason: full_reason,
+            suspended_till: user.suspended_till,
+            suspended_at: user.suspended_at,
             suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )
@@ -315,14 +315,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    User::Silence.call do
-      on_success do
+    User::Silence.call(service_params) do
+      on_success do |full_reason:, user:|
         render_json_dump(
           silence: {
             silenced: true,
-            silence_reason: result.full_reason,
-            silenced_till: result.user.silenced_till,
-            silenced_at: result.user.silenced_at,
+            silence_reason: full_reason,
+            silenced_till: user.silenced_till,
+            silenced_at: user.silenced_at,
             silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )

@@ -20,7 +20,7 @@ RSpec.describe Chat::CreateMessage do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
@@ -35,16 +35,15 @@ RSpec.describe Chat::CreateMessage do
     let(:context_post_ids) { nil }
     let(:params) do
       {
-        enforce_membership: false,
-        guardian: guardian,
         chat_channel_id: channel.id,
         message: content,
         upload_ids: [upload.id],
         context_topic_id: context_topic_id,
         context_post_ids: context_post_ids,
-        force_thread: false,
       }
     end
+    let(:options) { { enforce_membership: false, force_thread: false } }
+    let(:dependencies) { { guardian: } }
     let(:message) { result[:message_instance].reload }
 
     before { channel.add(guardian.user) }
@@ -74,9 +73,12 @@ RSpec.describe Chat::CreateMessage do
       end
 
       context "when strip_whitespace is disabled" do
-        it "doesn't strip newlines" do
-          params[:strip_whitespaces] = false
+        before do
+          options[:strip_whitespaces] = false
           params[:message] = "aaaaaaa\n"
+        end
+
+        it "doesn't strip newlines" do
           expect(message.message).to eq("aaaaaaa\n")
         end
       end
@@ -84,7 +86,7 @@ RSpec.describe Chat::CreateMessage do
       context "when coming from a webhook" do
         let(:incoming_webhook) { Fabricate(:incoming_chat_webhook, chat_channel: channel) }
 
-        before { params[:incoming_chat_webhook] = incoming_webhook }
+        before { dependencies[:incoming_chat_webhook] = incoming_webhook }
 
         it "creates a webhook event" do
           expect { result }.to change { Chat::WebhookEvent.count }.by(1)
@@ -104,15 +106,21 @@ RSpec.describe Chat::CreateMessage do
         result
       end
 
-      it "can enqueue a job to process message" do
-        params[:process_inline] = false
-        expect_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
+      context "when process_inline is false" do
+        before { options[:process_inline] = false }
+
+        it "enqueues a job to process message" do
+          expect_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
+        end
       end
 
-      it "can process a message inline" do
-        params[:process_inline] = true
-        Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
-        expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
+      context "when process_inline is true" do
+        before { options[:process_inline] = true }
+
+        it "processes a message inline" do
+          Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
+          expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
+        end
       end
 
       it "triggers a Discourse event" do
@@ -127,11 +135,11 @@ RSpec.describe Chat::CreateMessage do
         result
       end
 
-      context "when context given" do
+      context "when a context is given" do
         let(:context_post_ids) { [1, 2] }
         let(:context_topic_id) { 3 }
 
-        it "triggers a Discourse event with context if given" do
+        it "triggers a Discourse event with context" do
           DiscourseEvent.expects(:trigger).with(
             :chat_message_created,
             instance_of(Chat::Message),
@@ -244,8 +252,8 @@ RSpec.describe Chat::CreateMessage do
             fab!(:user) { Fabricate(:user) }
 
             before do
-              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
-              params[:enforce_membership] = true
+              SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+              options[:enforce_membership] = true
             end
 
             it { is_expected.to run_successfully }
@@ -345,7 +353,7 @@ RSpec.describe Chat::CreateMessage do
                         end
 
                         context "when thread is forced" do
-                          before { params[:force_thread] = true }
+                          before { options[:force_thread] = true }
 
                           it "publishes the new thread" do
                             Chat::Publisher.expects(:publish_thread_created!).with(

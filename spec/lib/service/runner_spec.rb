@@ -38,18 +38,17 @@ RSpec.describe Service::Runner do
   class FailedContractService
     include Service::Base
 
-    class Contract
+    contract do
       attribute :test
+
       validates :test, presence: true
     end
-
-    contract
   end
 
   class SuccessContractService
     include Service::Base
 
-    contract
+    contract {}
   end
 
   class FailureWithModelService
@@ -149,33 +148,32 @@ RSpec.describe Service::Runner do
   end
 
   describe ".call" do
-    subject(:runner) { described_class.call(service, &actions_block) }
+    subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
-    let(:result) { object.result }
     let(:actions_block) { object.instance_eval(actions) }
-    let(:service) { SuccessService }
-    let(:actions) { "proc {}" }
+    let(:service) { SuccessWithModelService }
+    let(:actions) { <<-BLOCK }
+        proc do |result|
+          on_success { |fake_model:| [result, fake_model] }
+        end
+      BLOCK
+    let(:dependencies) { { guardian: stub, params: {} } }
     let(:object) do
       Class
         .new(ApplicationController) do
           def request
             OpenStruct.new
           end
-
-          def params
-            ActionController::Parameters.new
-          end
-
-          def guardian
-          end
         end
         .new
     end
 
-    it "runs the provided service in the context of a controller" do
-      runner
-      expect(result).to be_a Service::Base::Context
-      expect(result).to be_a_success
+    it "allows access to the result object" do
+      expect(runner.first).to be_a Service::Base::Context
+    end
+
+    it "allows using keyword args in blocks" do
+      expect(runner.last).to eq :model_found
     end
 
     context "when using the on_success action" do
@@ -242,7 +240,7 @@ RSpec.describe Service::Runner do
 
         context "when using the block argument" do
           let(:actions) { <<-BLOCK }
-              proc do
+              proc do |result|
                 on_failed_policy(:test) { |policy| policy == result["result.policy.test"] }
               end
             BLOCK
@@ -280,7 +278,7 @@ RSpec.describe Service::Runner do
 
         context "when using the block argument" do
           let(:actions) { <<-BLOCK }
-              proc do
+              proc do |result|
                 on_failed_contract { |contract| contract == result["result.contract.default"] }
               end
             BLOCK
@@ -302,8 +300,9 @@ RSpec.describe Service::Runner do
 
     context "when using the on_model_not_found action" do
       let(:actions) { <<-BLOCK }
-          proc do
-            on_model_not_found(:fake_model) { :no_model }
+          proc do |result|
+            on_success { [result] }
+            on_model_not_found(:fake_model) { [:no_model, result] }
           end
         BLOCK
 
@@ -312,7 +311,7 @@ RSpec.describe Service::Runner do
           let(:service) { FailureWithOptionalModelService }
 
           it "does not run the provided block" do
-            expect(runner).not_to eq :no_model
+            expect(runner).not_to include :no_model
           end
         end
 
@@ -321,13 +320,13 @@ RSpec.describe Service::Runner do
 
           context "when not using the block argument" do
             it "runs the provided block" do
-              expect(runner).to eq :no_model
+              expect(runner).to include :no_model
             end
           end
 
           context "when using the block argument" do
             let(:actions) { <<-BLOCK }
-                proc do
+                proc do |result|
                   on_model_not_found(:fake_model) { |model| model == result["result.model.fake_model"] }
                 end
               BLOCK
@@ -342,7 +341,7 @@ RSpec.describe Service::Runner do
           let(:service) { SuccessWithModelService }
 
           it "does not run the provided block" do
-            expect(runner).not_to eq :no_model
+            expect(runner).not_to include :no_model
           end
         end
       end
@@ -352,7 +351,7 @@ RSpec.describe Service::Runner do
           let(:service) { FailureWithCollectionModelService }
 
           it "runs the provided block" do
-            expect(runner).to eq :no_model
+            expect(runner).to include :no_model
           end
         end
 
@@ -360,7 +359,7 @@ RSpec.describe Service::Runner do
           let(:service) { SuccessWithCollectionModelService }
 
           it "does not run the provided block" do
-            expect(runner).not_to eq :no_model
+            expect(runner).not_to include :no_model
           end
         end
       end
@@ -372,23 +371,21 @@ RSpec.describe Service::Runner do
           before { Fabricate(:user) }
 
           it "does not run the provided block" do
-            expect(runner).not_to eq :no_model
+            expect(runner).not_to include :no_model
           end
 
           it "does not fetch records from the relation" do
-            runner
-            expect(result[:fake_model]).not_to be_loaded
+            expect(runner.last[:fake_model]).not_to be_loaded
           end
         end
 
         context "when the service fails" do
           it "runs the provided block" do
-            expect(runner).to eq :no_model
+            expect(runner).to include :no_model
           end
 
           it "does not fetch records from the relation" do
-            runner
-            expect(result[:fake_model]).not_to be_loaded
+            expect(runner.last[:fake_model]).not_to be_loaded
           end
         end
       end

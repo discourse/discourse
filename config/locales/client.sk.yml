@@ -29,6 +29,7 @@ sk:
         millions: "%{number}mil"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "hh:mm a (z)"
       time_short_day: "ddd, h:mm a"
       timeline_date: "MMM YYYY"
@@ -197,7 +198,7 @@ sk:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
       close: "zatvoriť"
-      twitter: "Zdieľať na Twitteri"
+      twitter: "Zdieľať na X"
       facebook: "Zdieľať na Facebooku"
       email: "Odoslať e-mailom"
       url: "Skopírujte a zdieľajte URL"
@@ -361,6 +362,7 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     about:
+      edit: "Upraviť túto stránku"
       simple_title: "O fóre"
       title: "O %{title}"
       stats: "Štatistiky stránky"
@@ -1828,7 +1830,7 @@ sk:
         add_email: "Pridať alternatívny e-mail"
         auth_override_instructions: "E-mail môže byť aktualizovaný od poskytovateľa autentifikácie."
         no_secondary: "Žiadne sekundárne e-maily"
-        instructions: "Nikdy sa nezobrazuje verejnosti."
+        instructions: "Nikdy sa nezobrazuje verejnosti"
         admin_note: "Poznámka: Ak správca zmení e-mail iného používateľa, ktorý nie je správcom, znamená to, že používateľ stratil prístup k svojmu pôvodnému e-mailovému účtu, takže na jeho novú adresu bude odoslaný e-mail s obnovením hesla. E-mail používateľa sa nezmení, kým nedokončí proces obnovenia hesla."
         ok: "Pošleme vám email pre potvrdenie"
         required: "Zadajte prosím e-mailovú adresu"
@@ -1861,14 +1863,14 @@ sk:
         approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
       name:
         title: "Meno"
-        instructions: "Vaše celé meno (nepovinné)."
-        instructions_required: "Vaše celé meno."
+        instructions: "Vaše celé meno (nepovinné)"
+        instructions_required: "Vaše celé meno"
         required: "Prosím zadajte meno"
         too_short: "Vaše meno je prikrátke"
         ok: "Vaše meno je v poriadku"
       username:
         title: "Používateľské meno"
-        instructions: "Jedinečné, krátke, bez medzier."
+        instructions: "Jedinečné, krátke, bez medzier"
         short_instructions: "Ostatní vás môžu zmieniť ako @%{username}"
         available: "Vaše používateľské meno je voľné"
         not_available: "Nie je k dispozícii. Skúste %{suggestion}?"
@@ -2034,12 +2036,29 @@ sk:
           success: "Pozývací link bol úspešne vygenerovaný!"
           error: "Vyskytla sa chyba pri generovaní odkazu na pozvanie"
         invite:
-          new_title: "Vytvoriť pozvánku"
+          new_title: "Pozvať členov"
           edit_title: "Upraviť pozvánku"
           instructions: "Zdieľaním tohto odkazu okamžite udelíte prístup k tejto lokalite:"
-          copy_link: "kopírovať odkaz"
           expires_in_time: "Platnosť vyprší o %{time}"
           expired_at_time: "Platnosť vypršala %{time}"
+          create_link_to_invite: "Vytvorte odkaz, ktorý možno zdieľať a okamžite tak udeliť prístup na túto lokalitu."
+          copy_link_and_share_it: "Skopírujte nižšie uvedený odkaz a zdieľajte ho, aby ste okamžite poskytli prístup na túto stránku."
+          copy_link: "Kopírovať odkaz"
+          link_copied: "Odkaz skopírovaný!"
+          share_link: "Zdieľať odkaz"
+          link_validity_MF: |
+            Odkaz platí až pre { user_count, plural,
+                one {# používateľa}
+                few {# používateľov}
+                many {# používateľov}
+              other {# používateľov}
+            } a vyprší { duration_days, plural,
+                one {# deň}
+                few {# dní}
+                many {# dní}
+              other {# dní}
+            }.
+          edit_link_options: "Možnosti úpravy odkazu."
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           restrict: "Obmedziť na"
@@ -2049,11 +2068,15 @@ sk:
           max_redemptions_allowed: "Maximálne využitie"
           add_to_groups: "Pridať do skupín"
           invite_to_topic: "Prísť k téme"
-          expires_at: "Platnosť vyprší po"
-          custom_message: "Voliteľná osobná správa"
+          expires_at: "Platnosť končí v"
+          expires_after: "Platnosť vyprší po"
+          custom_message: "Vlastná správa"
+          custom_message_placeholder: "Pridajte k pozvánke osobnú poznámku"
           send_invite_email: "Uložiť a odoslať e-mail"
           send_invite_email_instructions: "Ak chcete odoslať e-mail s pozvánkou, obmedzte pozvánku na e-mail"
-          save_invite: "Uložiť pozvánku"
+          save_invite: "Uložiť"
+          cancel: "Zrušiť"
+          create_link: "Vytvorte odkaz"
           invite_saved: "Pozvánka bola uložená."
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
@@ -2087,10 +2110,10 @@ sk:
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
         instructions:
-          one: "Aspoň %{count} znak."
-          few: "Aspoň %{count} znakov."
-          many: "Aspoň %{count} znakov."
-          other: "Aspoň %{count} znakov."
+          one: "Aspoň %{count} znak"
+          few: "Aspoň %{count} znakov"
+          many: "Aspoň %{count} znakov"
+          other: "Aspoň %{count} znakov"
         required: "Prosím zadajte heslo"
         confirm: "Potvrďte"
         incorrect_password: "Zadané heslo je nesprávne."
@@ -2411,6 +2434,7 @@ sk:
       associate: "Máte už účet? <a href='%{associate_link}'>Prihláste sa</a> a prepojte svoj účet %{provider} ."
       activation_title: "Aktivujte si účet"
       already_have_account: "Už máte účet?"
+      no_account_yet: "Nemáte účet?"
       progress_bar:
         signup: "Registrovať sa"
         activate: "Aktivovať"
@@ -2448,7 +2472,7 @@ sk:
     login:
       header_title: "Vitajte späť"
       subheader_title: "Prihláste sa do svojho účtu"
-      title: "Prihlásiť sa"
+      title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
       show_password: "Zobraziť"
@@ -3853,7 +3877,9 @@ sk:
       show_hidden: "Zobraziť ignorovaný obsah."
       deleted_by_author_simple: "(príspevok vymazaný autorom)"
       collapse: "zbaliť"
+      load_more_replies: "načítať ďalšie odpovede"
       sr_collapse_replies: "Zbaliť vložené odpovede"
+      sr_load_more_replies: "Načítať viac vložených odpovedí"
       sr_date: "Dátum príspevku"
       sr_expand_replies:
         one: "Tento príspevok má %{count} odpoveď."
@@ -5249,11 +5275,18 @@ sk:
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
+        dismiss_notice: "Zahodiť"
         new_features:
           title: "Čo je nové"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
+          experiment_enabled: "Povolili ste experimentálnu funkciu."
+          experiment_disabled: "Experimentálnu funkciu ste zakázali."
+          experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
+          experiment_tooltip:
+            title: "Vyskúšajte našu experimentálnu funkciu"
+            content: "Vyskúšajte našu najnovšiu funkciu vo vývoji! Zatiaľ je v experimentálnej fáze, takže ju môžeme kedykoľvek odstrániť. Odhlásiť sa môžete, kedykoľvek budete chcieť."
         last_checked: "Naposledy overené"
         refresh_problems: "Obnoviť"
         no_problems: "Nenašli sa žiadne problémy."
@@ -5586,6 +5619,8 @@ sk:
           post_edited: "Príspevok je aktualizovaný"
           post_destroyed: "Príspevok je vymazaný"
           post_recovered: "Príspevok je obnovený"
+          category_experts_approved: "Príspevok označený ako príspevok odborníkov na kategóriu"
+          category_experts_unapproved: "Príspevok nie je označený ako príspevok odborníkov na kategóriu"
         group_event:
           group_name: "Skupinové udalosti"
           group_created: "Skupina je vytvorená"
@@ -5733,12 +5768,22 @@ sk:
           screened_ips: "Kontrolované IP adresy"
           screened_urls: "Kontrolované URL adresy"
           search_logs: "Vyhľadávacie protokoly"
-          security: "Bezpečnosť"
-          spam: "Spam"
+          security: "Nastavenia zabezpečenia"
+          spam: "Nastavenia spamu"
           staff_action_logs: "Záznamy o akciách personálu"
+      section_landing_pages:
+        account:
+          title: "Účet"
+          backups:
+            title: "Zálohy"
+            description: "Urobte si zálohu údajov svojej stránky"
+          whats_new:
+            title: "Čo je nové"
+            description: "Objavte nové verzie a vylepšenia Discourse"
       config_areas:
         about:
           header: "O vašej stránke"
+          description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému."
           general_settings: "Všeobecné nastavenia"
           community_name: "Názov komunity"
           community_name_placeholder: "Príklad Spoločenstva"
@@ -5746,7 +5791,7 @@ sk:
           community_description: "Popis komunity"
           banner_image: "Obrázok bannera"
           banner_image_help: |
-            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 800x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
+            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
           contact_information: "Kontaktné informácie"
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Johnny Smith"
@@ -5790,6 +5835,7 @@ sk:
           saved: "uložené!"
         flags:
           header: "Príznaky moderovania"
+          edit_header: "Upraviť príznak"
           subheader: "Systém označovania v službe Discourse pomáha vám a vášmu moderátorskému tímu spravovať obsah a správanie používateľov, aby vaša komunita bola rešpektovaná a zdravá. Predvolené nastavenia sú vhodné pre väčšinu komunít a nemusíte ich meniť. Ak má však vaša stránka špecifické požiadavky, môžete vypnúť príznaky, ktoré nepotrebujete, a pridať vlastné príznaky."
           description: "Popis"
           enabled: "Povolené?"
@@ -5819,10 +5865,24 @@ sk:
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
             require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
+            auto_action_type: "Automatický typ akcie"
+            auto_action_type_description: "Keď je príspevok označený zamestnancom, je automaticky skrytý."
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
             move_down: "Posunúť sa nadol"
+        look_and_feel:
+          title: "Vzhľad & pocit"
+          description: "Témy, komponenty a farebné schémy môžete použiť na prispôsobenie a označenie svojej stránky Discourse, čím jej dodáte osobitý štýl."
+          themes:
+            title: "Témy"
+            themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
+            themes_intro_img_alt: "Nový zástupný symbol témy"
+            set_default_theme: "Nastavenie predvoleného nastavenia"
+            default_theme: "Predvolená téma"
+            themes_description: "Témy sú rozsiahle úpravy, ktoré menia viaceré prvky štýlu dizajnu fóra a často obsahujú aj ďalšie funkcie predného konca."
+            new_theme: "Nová téma"
+            user_selectable: "Voliteľné používateľom"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované doplnky"
@@ -5988,6 +6048,8 @@ sk:
           theme_name: "Názov témy"
           component_name: "Názov komponentu"
           themes_intro: "Vyberte si existujúcu tému alebo si nainštalujte novú a začnite"
+          themes_intro_new: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
+          themes_intro_img_alt: "Nový zástupca témy"
           beginners_guide_title: "Príručka pre začiatočníkov na používanie tém Discourse"
           developers_guide_title: "Príručka pre vývojárov k témam Discourse"
           browse_themes: "Prehľadávanie tém komunity"
@@ -6035,6 +6097,9 @@ sk:
           convert_theme_alert_generic: "Ste si istí, že chcete túto tému previesť na komponent?"
           convert_theme_tooltip: "Previesť túto tému na komponent"
           inactive_themes: "Neaktívne témy:"
+          set_default_theme: "Nastavenie predvoleného nastavenia"
+          default_theme: "Predvolená téma"
+          set_default_success: "Predvolená téma nastavená na %{theme}"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybrané"
@@ -6512,6 +6577,10 @@ sk:
             custom_emoji_destroy: "odstrániť vlastné emotikony"
             delete_post_permanently: "natrvalo odstrániť príspevok"
             delete_topic_permanently: "natrvalo odstrániť tému"
+            tag_group_create: "vytvoriť skupinu značiek"
+            tag_group_destroy: "odstrániť skupinu značiek"
+            tag_group_change: "zmeniť skupinu značiek"
+            delete_associated_accounts: "odstrániť priradené účty"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6739,6 +6808,9 @@ sk:
         check_sso:
           title: "Odhaliť užitočné zaťaženie SSO"
           text: "Zobraziť"
+        delete_associated_accounts:
+          title: "Odstráňte všetky priradené účty pre tohto používateľa"
+          text: "Odstrániť priradené účty"
       user:
         suspend_failed: "Niečo sa pokazilo pri odoberaní práv tomuto používateľovi %{error}"
         unsuspend_failed: "Niečo sa pokazilo pri obnovovaní práv tomuto používateľovi %{error}"
@@ -6840,6 +6912,7 @@ sk:
         post_edits_count: "Úpravy príspevkov"
         anonymize: "Anonymizovať používateľa"
         anonymize_confirm: "Ste si istý že chcete zmeniť tento účet na anonymný? Zmeni to používateľské meno, email a zmažú sa všetky informácie z profilu. "
+        delete_associated_accounts_confirm: "Naozaj chcete odstrániť všetky priradené účty z tohto účtu? Používateľ sa možno nebude môcť prihlásiť, ak sa jeho e-mail zmenil."
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"
@@ -7172,6 +7245,7 @@ sk:
       badges:
         status: Stav
         title: Odznaky
+        page_description: Odznaky odmeňujú používateľov za ich aktivity, príspevky a úspechy s cieľom uznať, potvrdiť a podporiť pozitívne správanie a angažovanosť v rámci komunity.
         new_badge: Nový odznak
         new: Nový
         name: Meno
@@ -7180,6 +7254,7 @@ sk:
         description: Popis
         long_description: Dlhý popis
         badge_type: Typ odznaku
+        group_settings: Nastavenia skupiny
         badge_grouping: Skupina
         badge_groupings:
           modal_title: Zoskupovanie odznakov
@@ -7246,9 +7321,8 @@ sk:
             with_post_time: <span class="username">%{username}</span> za príspevok v %{link} v čase <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> v čase <span class="time">%{time}</span>
         badge_intro:
-          title: "Ak chcete začať, vyberte existujúci odznak alebo vytvorte nový"
-          what_are_badges_title: "Čo sú to odznaky?"
-          badge_query_examples_title: "Príklady dopytov odznaku"
+          title: "Vyberte si odznak alebo vytvorte nový"
+          description: "Začnite výberom existujúceho odznaku, ktorý chcete prispôsobiť, alebo vytvorte úplne nový odznak."
         mass_award:
           title: Hromadné ocenenie
           description: Udelenie rovnakého odznaku viacerým používateľom naraz.

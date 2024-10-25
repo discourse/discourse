@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Navigation menu states", type: :system, js: true do
+describe "Navigation menu states", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   let!(:sidebar_navigation) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let!(:header_dropdown) { PageObjects::Components::NavigationMenu::HeaderDropdown.new }

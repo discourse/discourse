@@ -7,7 +7,7 @@ import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
 import { SCROLLED_UP } from "./scroll-direction";
 
-const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup"];
+const VALID_HEADER_BUTTONS_TO_HIDE = ["search", "login", "signup", "menu"];
 
 @disableImplicitInjections
 export default class Header extends Service {

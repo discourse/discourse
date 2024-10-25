@@ -6,40 +6,32 @@ module Chat
   # @example
   #  Service::Chat::CreateCategoryChannel.call(
   #   guardian: guardian,
-  #   name: "SuperChannel",
-  #   description: "This is the best channel",
-  #   slug: "super-channel",
-  #   category_id: category.id,
-  #   threading_enabled: true,
+  #   params: {
+  #     name: "SuperChannel",
+  #     description: "This is the best channel",
+  #     slug: "super-channel",
+  #     category_id: category.id,
+  #     threading_enabled: true,
+  #   }
   #  )
   #
   class CreateCategoryChannel
     include Service::Base
 
-    # @!method call(guardian:, **params_to_create)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_create
-    #   @option params_to_create [String] name
-    #   @option params_to_create [String] description
-    #   @option params_to_create [String] slug
-    #   @option params_to_create [Boolean] auto_join_users
-    #   @option params_to_create [Integer] category_id
-    #   @option params_to_create [Boolean] threading_enabled
+    #   @param [Hash] params
+    #   @option params [String] :name
+    #   @option params [String] :description
+    #   @option params [String] :slug
+    #   @option params [Boolean] :auto_join_users
+    #   @option params [Integer] :category_id
+    #   @option params [Boolean] :threading_enabled
     #   @return [Service::Base::Context]
 
     policy :public_channels_enabled
     policy :can_create_channel
-    contract
-    model :category, :fetch_category
-    policy :category_channel_does_not_exist
-    transaction do
-      model :channel, :create_channel
-      model :membership, :create_membership
-    end
-    step :enforce_automatic_channel_memberships
-
-    # @!visibility private
-    class Contract
+    contract do
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
@@ -55,6 +47,13 @@ module Chat
       validates :category_id, presence: true
       validates :name, length: { maximum: SiteSetting.max_topic_title_length }
     end
+    model :category
+    policy :category_channel_does_not_exist
+    transaction do
+      model :channel, :create_channel
+      model :membership, :create_membership
+    end
+    step :enforce_automatic_channel_memberships
 
     private
 

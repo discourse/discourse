@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.25.2",
+    "@babel/core": "^7.25.9",
     "ember-auto-import": "^2.8.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
@@ -26,7 +26,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/syntax": "^0.92.3",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~5.11.0",
+    "ember-cli": "~5.12.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",

@@ -58,9 +58,13 @@ ko:
               label: 토픽 ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: 태그
             restricted_category:
               label: 카테고리
             restricted_group:
+              label: 그룹
+            restricted_groups:
               label: 그룹
           created: 생성됨
         category_created_edited:

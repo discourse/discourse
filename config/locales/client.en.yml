@@ -25,6 +25,8 @@ en:
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time: "h:mm a"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
+      time_short: "h:mm"
+      # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_with_zone: "hh:mm a (z)"
       # Use Moment.js format string: https://momentjs.com/docs/#/displaying/format/
       time_short_day: "ddd, h:mm a"
@@ -157,7 +159,7 @@ en:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} by @%{username}"
       close: "close"
-      twitter: "Share on Twitter"
+      twitter: "Share on X"
       facebook: "Share on Facebook"
       email: "Send via email"
       url: "Copy and share URL"
@@ -1962,14 +1964,26 @@ en:
           error: "There was an error generating Invite link"
 
         invite:
-          new_title: "Create Invite"
-          edit_title: "Edit Invite"
+          new_title: "Invite members"
+          edit_title: "Edit invite"
 
           instructions: "Share this link to instantly grant access to this site:"
-          copy_link: "copy link"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
-
+          create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
+          copy_link_and_share_it: "Copy the link below and share it to instantly grant access to this site."
+          copy_link: "Copy link"
+          link_copied: "Link copied!"
+          share_link: "Share link"
+          link_validity_MF: |
+            Link is valid for up to { user_count, plural,
+                one {# user}
+              other {# users}
+            } and expires in { duration_days, plural,
+                one {# day}
+              other {# days}
+            }.
+          edit_link_options: "Edit link options."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -1982,12 +1996,16 @@ en:
 
           add_to_groups: "Add to groups"
           invite_to_topic: "Arrive at topic"
-          expires_at: "Expire after"
-          custom_message: "Optional personal message"
+          expires_at: "Expire at"
+          expires_after: "Expire after"
+          custom_message: "Custom message"
+          custom_message_placeholder: "Add a personal note to your invitation"
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save Invite"
+          save_invite: "Save"
+          cancel: "Cancel"
+          create_link: "Create link"
 
           invite_saved: "Invite saved."
 
@@ -2337,6 +2355,7 @@ en:
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
       activation_title: "Activate your account"
       already_have_account: "Already have an account?"
+      no_account_yet: "Don't have an account?"
       progress_bar:
         signup: "Sign Up"
         activate: "Activate"
@@ -2378,7 +2397,7 @@ en:
     login:
       header_title: "Welcome back"
       subheader_title: "Log in to your account"
-      title: "Log in"
+      title: "Log In"
       username: "User"
       password: "Password"
       show_password: "Show"
@@ -2494,6 +2513,7 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
+      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
@@ -3728,7 +3748,9 @@ en:
       show_hidden: "View ignored content."
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
+      load_more_replies: "load more replies"
       sr_collapse_replies: "Collapse embedded replies"
+      sr_load_more_replies: "Load more embedded replies"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
@@ -4023,6 +4045,8 @@ en:
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
+      color_used: "Color in use"
+      predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
@@ -5083,6 +5107,13 @@ en:
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
+          experiment_enabled: "You have enabled the experimental feature."
+          experiment_disabled: "You have disabled the experimental feature."
+          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          experiment_tooltip:
+            title: "Try our experimental feature"
+            content: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like."
+
         last_checked: "Last checked"
         refresh_problems: "Refresh"
         no_problems: "No problems were found."
@@ -5411,8 +5442,6 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
-          category_experts_approved: "Post marked as category experts post"
-          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5563,10 +5592,20 @@ en:
           spam: "Spam settings"
           staff_action_logs: "Staff Action Logs"
 
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Backups"
+            description: "Take a backup of your site's data"
+          whats_new:
+            title: "What's New"
+            description: "Discover new releases and improvements to Discourse"
+
       config_areas:
         about:
           header: "About your site"
-          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue."
+          description: "Provide information here about this site and your team so that people can learn what your community is about, who is behind it, and how to reach you in case there is an issue. Displayed on your site's <a href='%{basePath}/about'>About page</a>."
           general_settings: "General settings"
           community_name: "Community name"
           community_name_placeholder: "Example Community"
@@ -5648,10 +5687,23 @@ en:
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             require_message: "Prompt users to provide additional reasons"
             require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
+            auto_action_type: "Auto hide flagged content"
           more_options:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
+        look_and_feel:
+          title: "Look & feel"
+          description: "Themes, components, and color schemes can be used to customise and brand your Discourse site, giving it a distinctive style."
+          themes:
+            title: "Themes"
+            themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
+            themes_intro_img_alt: "New theme placeholder"
+            set_default_theme: "Set default"
+            default_theme: "Default theme"
+            themes_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
+            new_theme: "New theme"
+            user_selectable: "User selectable"
       plugins:
         title: "Plugins"
         installed: "Installed plugins"
@@ -5824,6 +5876,8 @@ en:
           theme_name: "Theme name"
           component_name: "Component name"
           themes_intro: "Select an existing theme or install a new one to get started"
+          themes_intro_new: "Install a new theme to get started, or create your own from scratch using these resources."
+          themes_intro_img_alt: "New theme placeholder"
           beginners_guide_title: "Beginner’s guide to using Discourse Themes"
           developers_guide_title: "Developer’s guide to Discourse Themes"
           browse_themes: "Browse community themes"
@@ -5871,6 +5925,9 @@ en:
           convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
+          set_default_theme: "Set default"
+          default_theme: "Default theme"
+          set_default_success: "Default theme set to %{theme}"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
@@ -6696,7 +6753,7 @@ en:
         post_edits_count: "Post Edits"
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
-        delete_associated_accounts_confirm: "Are you SURE you want to delete associated accounts from this account? They may not be able to log in."
+        delete_associated_accounts_confirm: "Are you SURE you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
@@ -6932,6 +6989,9 @@ en:
         history: "View change history"
         reset: "reset"
         none: "none"
+        save: "save"
+        cancel: "cancel"
+        unmask: "unmask input"
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"

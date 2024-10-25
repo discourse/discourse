@@ -337,7 +337,6 @@
 
   .themes-list-container {
     overflow-y: auto;
-    box-sizing: border-box;
     max-height: 60vh;
     border-bottom-right-radius: var(--d-border-radius);
     border-bottom-left-radius: var(--d-border-radius);
@@ -956,63 +955,15 @@ table.permalinks {
 
 .user-fields {
   h2 {
-    margin-bottom: 10px;
+    margin-bottom: 1em;
   }
   .user-field {
-    padding: 10px;
-    margin-bottom: 10px;
+    padding-block: 0.5em;
+    margin-bottom: 1em;
     border-bottom: 1px solid var(--primary-low);
     .form-display {
       width: 25%;
       float: left;
-    }
-    .form-element,
-    .form-element-desc {
-      float: left;
-      min-height: 30px;
-      padding: 0.25em 0;
-      &.input-area {
-        width: 75%;
-        .value-list,
-        .select-kit,
-        input[type="text"] {
-          width: 50%;
-        }
-
-        .value-list {
-          .select-kit {
-            width: 100%;
-          }
-        }
-        label {
-          font-weight: normal;
-          padding: 0.5em 0;
-        }
-
-        .label-text {
-          display: inline-flex;
-          flex-direction: column;
-        }
-
-        .description {
-          margin-top: 0.25em;
-          color: var(--primary-medium);
-          font-size: var(--font-down-1);
-          line-height: var(--line-height-large);
-        }
-      }
-      &.label-area {
-        width: 25%;
-        label {
-          margin: 0.5em 1em 0 0;
-          text-align: right;
-          font-weight: bold;
-        }
-      }
-    }
-    .controls {
-      float: right;
-      text-align: right;
     }
     .clearfix {
       clear: both;

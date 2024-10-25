@@ -50,7 +50,6 @@ ug:
       deleted_chat_username: ئۆچۈرۈلدى
       dates:
         yesterday: "تۈنۈگۈن"
-        time_tiny: "h:mm"
       all_loaded: "بارلىق ئۇچۇر كۆرسىتىلىدۇ"
       already_enabled: "بۇ تېمىدا سۆھبەتلىشىش ئاللىقاچان قوزغىتىلغان. يېڭىلاڭ."
       disabled_for_topic: "بۇ تېمىدا سۆھبەتلىشىش چەكلەنگەن."
@@ -134,6 +133,7 @@ ug:
       header_indicator_preference:
         title: "ماۋزۇدا پائالىيەت كۆرسەتكۈچىنى كۆرسەت"
         all_new: "بارلىق يېڭى ئۇچۇر"
+        dm_and_mentions: "بىۋاسىتە ئۇچۇر، ئاتاش ۋە كۆزەتتىكى تېما"
         only_mentions: "ئاتاشلا"
         never: "ھەرگىز"
       separate_sidebar_mode:
@@ -195,6 +195,7 @@ ug:
       placeholder_channel: "%{channelName} دا سۆھبەت"
       placeholder_thread: "تېمىدا سۆھبەتلىشىڭ"
       placeholder_users: "%{commaSeparatedNames} بىلەن سۆھبەت"
+      placeholder_group: "گۇرۇپپا ئىچىدە پاراڭلىشىش"
       placeholder_new_message_disallowed:
         archived: "قانال ئارخىپلاشتۇرۇلغان، ھازىر يېڭى ئۇچۇر يوللىيالمايسىز."
         closed: "قانال تاقالغان، ھازىر يېڭى ئۇچۇر يوللىيالمايسىز."
@@ -405,10 +406,8 @@ ug:
         auto_join_users_info: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار %{category} سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_info_no_category: "ئاخىرقى 3 ئايدىكى ئاكتىپ ئىشلەتكۈچىنى ھەر سائەتتە بىر تەكشۈرىدۇ. ئەگەر ئۇلار تاللانغان سەھىپىنى زىيارەت قىلالىسا، ئۇنى مەزكۇر قانالغا قوشۇڭ."
         auto_join_users_warning: "بۇ قانالنىڭ ئەزاسى ئەمەس ھەمدە %{category} سەھىپىنى زىيارەت قىلالايدىغان ئىشلەتكۈچىنىڭ ھەممىسى قوشۇلىدۇ. جەزملەمسىز؟"
-        desktop_notification_level: "ئۈستەلئۈستى ئۇقتۇرۇشى"
         follow: "قوشۇل"
         followed: "قوشۇلدى"
-        mobile_notification_level: "كۆچمە ئىتتىرىش ئۇقتۇرۇشى"
         mute: "قانالنى ئۈنسىزلە"
         threading_enabled: "قوزغىتىلدى"
         threading_disabled: "چەكلەندى"
@@ -431,6 +430,7 @@ ug:
           title: "سۆھبەت ئۇچۇرىنى چىقار"
           description: "بۇ بارلىق قانالدىكى ھەممە ئۇچۇرنى چىقىرىدۇ."
           create_export: "چىقىرىش قۇر"
+          confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
           export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
       my_threads:
         title: تېمام
@@ -449,6 +449,7 @@ ug:
       incoming_webhooks:
         back: "كەينى"
         channel_placeholder: "قانال تاللىنىدۇ"
+        channel: "قانال"
         confirm_destroy: "كەلگەن تور ئىلمىكىنى راستتىنلا ئۆچۈرەمسىز؟ بۇنى ئارقىغا ياندۇرغىلى بولمايدۇ."
         current_emoji: "نۆۋەتتىكى چىراي ئىپادە"
         description: "چۈشەندۈرۈش"
@@ -472,6 +473,8 @@ ug:
         username: "ئىشلەتكۈچى ئاتى"
         username_instructions: "قانالغا يوللىنىدىغان ماشىنا ئادەمنىڭ ئىسمى. بوش قالدۇرۇلسا كۆڭۈلدىكى ئەھۋالدا «سىستېما»."
         instructions: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە <code>/hooks/:key</code> ئاخىرقى نۇقتا ئارقىلىق ئۇچۇرنى بەلگىلەنگەن سۆھبەت قانىلىغا تارقىتالايدۇ. ئۈنۈملۈك يۈكى يەككە <code>text</code> پارامېتىرىدىن تەشكىل تاپىدۇ، 2000 ھەرپتە چەكلىنىدۇ. \n<br><br>بىز يەنە چەكلىك بولغان Slack پىچىمىدىكى <code>text</code> پارامېتىرى ۋە <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> ئاساسىدىكى پىچىملىق ئۇلانما ۋە ئاتاشنى قوللايدۇ، ئەمما بۇنىڭغا چوقۇم <code>/hooks/:key/slack</code> ئاخىرقى نۇقتا ئىشلىتىش كېرەك."
+        saved: "تور ئىلمىكىنىڭ ئۆزگىرىشلىرى ساقلاندى"
+        created: "تور ئىلمىكى قۇرۇلدى"
       selection:
         cancel: "ۋاز كەچ"
         quote_selection: "تېمىدىكى نەقىل"
@@ -549,10 +552,13 @@ ug:
         notifications:
           regular:
             title: "ئادەتتىكى"
+            description: "باشقىلار بۇ تېمىدا سىزنى تىلغا ئالغاندا خەۋەر قىلىنىسىز."
           tracking:
             title: "ئىزلاش"
+            description: "باشقىلار سىزنى بۇ تېمىدا تىلغا ئالغاندا خەۋەر قىلىنىسىز ۋە تېما تىزىمىدىكى يېڭى جاۋابلارنىڭ سانى كۆرۈنىدۇ."
           watching:
             title: "كۆزىتىۋاتىدۇ"
+            description: "بۇ تېمىدىكى بارلىق جاۋابلاردىن خەۋەردار قىلىنىسىز ۋە تېما تىزىمىدىكى يېڭى جاۋابلارنىڭ سانى كۆرۈنىدۇ."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -598,6 +604,7 @@ ug:
         chat_mention: "سۆھبەتتە ئاتاش"
         chat_invitation: "سۆھبەت تەكلىپى"
         chat_quoted: "سۆھبەت نەقىل ئېلىندى"
+        chat_watched_thread: "كۆزەتتىكى تېما سۆھبىتى"
     action_codes:
       chat:
         enabled: '%{when} دە %{who} <button class="btn-link open-chat">سۆھبەت</button>نى قوزغاتتى'

@@ -300,6 +300,14 @@ sw:
             ip_address:
               blocked: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao."
               max_new_accounts_per_registration_ip: "Usajili mpya hauruhusiwi kutoka kwenye anwani hio ya mtandao (kiwango cha juu kimefika). Wasiliana na mfanyakazi."
+        user_password:
+          attributes:
+            password:
+              common: "ni moja kati ya nywila 10000 zinazotumika sana. Tafadhali tumia nywila iliyo salama zaidi."
+              same_as_username: "ni sawa na jina la mtumiaji. Labda tumia nywila iliyo salama zaidi."
+              same_as_email: "ni sawa na barua pepe yako. Labda tumia nywila iliyo salama zaidi."
+              same_as_current: "ni sawa na nywila unayotumia sasa."
+              unique_characters: "ina herufi zilizorudiwa sana. Tafadhali tumia nywila iliyo salama zaidi."
         user_email:
           attributes:
             user_id:
@@ -572,6 +580,8 @@ sw:
       yaxis: "Siku"
     consolidated_page_views_browser_detection:
       yaxis: "Siku"
+    site_traffic:
+      yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
     daily_engaged_users:
@@ -686,6 +696,9 @@ sw:
       title: "Ukurasa Umeonwa Mara"
       xaxis: "Siku"
       yaxis: "Karatasi imeonwa Mara"
+    page_view_legacy_total_reqs:
+      xaxis: "Siku"
+      yaxis: "Karatasi imeonwa Mara"
     page_view_logged_in_mobile_reqs:
       xaxis: "Siku"
       yaxis: "Karatasi imeonwa Kupitia Kifaa cha kiganjani"
@@ -771,6 +784,7 @@ sw:
       queue_size: "Namba za kazi zilizopangwa ni %{queue_size}, ambazo ni nyingi. Hii inaweza kusababishwa na tatizo na m(i)fumo wa Sidekiq, au inabidi uongeze wafanyakazi wa Sidekiq."
       ram: "Seva yako inatumia chini ya GB 1 ya kumbukumbu. Tunakushauri utumie kumbukumbu zaidi ya GB 1."
       missing_mailgun_api_key: "Seva imesanidiwa kutuma barua pepe kwa kutumia Mailgun lakini haujaweka ufunguo wa Mailgun unaotumika kuthibitisha ujumbe."
+      force_https: "Tovuti yako inatumia SSL. Lakini `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https` haijaruhusiwa kwenye mipangilio ya tovuti yako."
   site_settings:
     disabled: "imezuiwa"
     censored_words: "Maneno ambayo yatabadilishwa kuwa &#9632;&#9632;&#9632;&#9632;"

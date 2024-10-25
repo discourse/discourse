@@ -12,8 +12,8 @@ class CategoryList
   attr_accessor :categories, :uncategorized
 
   def self.register_included_association(association)
-    @included_assocations ||= []
-    @included_assocations << association if !@included_assocations.include?(association)
+    @included_associations ||= []
+    @included_associations << association if !@included_associations.include?(association)
   end
 
   def self.included_associations
@@ -24,7 +24,7 @@ class CategoryList
       :uploaded_logo_dark,
       :topic_only_relative_url,
       subcategories: [:topic_only_relative_url],
-    ].concat(@included_assocations || [])
+    ].concat(@included_associations || [])
   end
 
   def initialize(guardian = nil, options = {})
@@ -133,22 +133,16 @@ class CategoryList
 
   def find_categories
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
-
-    query =
-      query.where(
-        "categories.parent_category_id = ?",
-        @options[:parent_category_id].to_i,
-      ) if @options[:parent_category_id].present?
-
     query = self.class.order_categories(query)
 
+    if @options[:parent_category_id].present? || @guardian.can_lazy_load_categories?
+      query = query.where(parent_category_id: @options[:parent_category_id])
+    end
+
     page = [1, @options[:page].to_i].max
-    if @guardian.can_lazy_load_categories? && @options[:parent_category_id].blank?
-      query =
-        query
-          .where(parent_category_id: nil)
-          .limit(CATEGORIES_PER_PAGE)
-          .offset((page - 1) * CATEGORIES_PER_PAGE)
+    if SiteSetting.desktop_category_page_style == "categories_only_optimized" ||
+         @guardian.can_lazy_load_categories?
+      query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
     elsif page > 1
       # Pagination is supported only when lazy load is enabled. If it is not,
       # everything is returned on page 1.

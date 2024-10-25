@@ -7,20 +7,24 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupUserThreads.call(guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupUserThreads.call(guardian: guardian, params: { limit: 5, offset: 2 })
   #
   class LookupUserThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(guardian:, limit: nil, offset: nil)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :limit, :integer
+      attribute :offset, :integer
+    end
     step :set_limit
     step :set_offset
     model :threads
@@ -29,20 +33,14 @@ module Chat
     step :fetch_participants
     step :build_load_more_url
 
-    # @!visibility private
-    class Contract
-      attribute :limit, :integer
-      attribute :offset, :integer
-    end
-
     private
 
     def set_limit(contract:)
-      context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+      context[:limit] = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
     def set_offset(contract:)
-      context.offset = [contract.offset || 0, 0].max
+      context[:offset] = [contract.offset || 0, 0].max
     end
 
     def fetch_threads(guardian:)
@@ -115,31 +113,31 @@ module Chat
     end
 
     def fetch_tracking(guardian:, threads:)
-      context.tracking =
-        ::Chat::TrackingStateReportQuery.call(
-          guardian: guardian,
-          thread_ids: threads.map(&:id),
-          include_threads: true,
-        ).thread_tracking
+      context[:tracking] = ::Chat::TrackingStateReportQuery.call(
+        guardian: guardian,
+        thread_ids: threads.map(&:id),
+        include_threads: true,
+      ).thread_tracking
     end
 
     def fetch_memberships(guardian:, threads:)
-      context.memberships =
-        ::Chat::UserChatThreadMembership.where(
-          thread_id: threads.map(&:id),
-          user_id: guardian.user.id,
-        )
+      context[:memberships] = ::Chat::UserChatThreadMembership.where(
+        thread_id: threads.map(&:id),
+        user_id: guardian.user.id,
+      )
     end
 
     def fetch_participants(threads:)
-      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+      context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
     def build_load_more_url(contract:)
       load_more_params = { limit: context.limit, offset: context.offset + context.limit }.to_query
 
-      context.load_more_url =
-        ::URI::HTTP.build(path: "/chat/api/me/threads", query: load_more_params).request_uri
+      context[:load_more_url] = ::URI::HTTP.build(
+        path: "/chat/api/me/threads",
+        query: load_more_params,
+      ).request_uri
     end
   end
 end

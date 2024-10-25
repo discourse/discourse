@@ -1,32 +1,28 @@
 import { run } from "@ember/runloop";
-import { registerWaiter } from "@ember/test";
+import { buildWaiter } from "@ember/test-waiters";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
-import { isTesting } from "discourse-common/config/environment";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 
+const WAITER = buildWaiter("load-script");
 const _loaded = {};
 const _loading = {};
 
 function loadWithTag(path, cb) {
   const head = document.getElementsByTagName("head")[0];
 
-  let finished = false;
   let s = document.createElement("script");
   s.src = path;
 
-  if (isTesting()) {
-    registerWaiter(() => finished);
-  }
+  const token = WAITER.beginAsync();
 
   // Don't leave it hanging if something goes wrong
   s.onerror = function () {
-    finished = true;
+    WAITER.endAsync(token);
   };
 
   s.onload = s.onreadystatechange = function (_, abort) {
-    finished = true;
     if (
       abort ||
       !s.readyState ||
@@ -38,6 +34,8 @@ function loadWithTag(path, cb) {
         run(null, cb);
       }
     }
+
+    WAITER.endAsync(token);
   };
 
   head.appendChild(s);

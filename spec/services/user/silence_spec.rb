@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe User::Silence do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of(:user_id) }
@@ -21,13 +19,14 @@ RSpec.describe User::Silence do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
     fab!(:user)
     fab!(:other_user) { Fabricate(:user) }
 
-    let(:params) { { guardian:, user_id:, reason:, silenced_till:, other_user_ids:, message: } }
+    let(:params) { { user_id:, reason:, silenced_till:, other_user_ids:, message: } }
+    let(:dependencies) { { guardian: } }
     let(:guardian) { admin.guardian }
     let(:user_id) { user.id }
     let(:other_user_ids) { other_user.id }
@@ -41,53 +40,47 @@ RSpec.describe User::Silence do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when data is valid" do
-      context "when provided user does not exist" do
-        let(:user_id) { 0 }
+    context "when provided user does not exist" do
+      let(:user_id) { 0 }
 
-        it { is_expected.to fail_to_find_a_model(:user) }
+      it { is_expected.to fail_to_find_a_model(:user) }
+    end
+
+    context "when user is already silenced" do
+      before { UserSilencer.silence(user, admin) }
+
+      it { is_expected.to fail_a_policy(:not_silenced_already) }
+    end
+
+    context "when all users cannot be silenced" do
+      let(:other_user_ids) { [other_user.id, Fabricate(:admin).id].join(",") }
+
+      it { is_expected.to fail_a_policy(:can_silence_all_users) }
+    end
+
+    context "when everything's ok" do
+      before { allow(User::Action::TriggerPostAction).to receive(:call) }
+
+      it "silences all provided users" do
+        result
+        expect([user, other_user].map(&:reload)).to all be_silenced
       end
 
-      context "when provided user exists" do
-        context "when user is already silenced" do
-          before { UserSilencer.silence(user, admin) }
+      it "enqueues jobs to send an email" do
+        expect { result }.to change { Jobs::CriticalUserEmail.jobs.size }.by(2)
+      end
 
-          it { is_expected.to fail_a_policy(:not_silenced_already) }
-        end
+      it "exposes the full reason in the result object" do
+        expect(result[:full_reason]).to eq("spam\n\nit was spam")
+      end
 
-        context "when user is not already silenced" do
-          context "when all users cannot be silenced" do
-            let(:other_user_ids) { [other_user.id, Fabricate(:admin).id].join(",") }
-
-            it { is_expected.to fail_a_policy(:can_silence_all_users) }
-          end
-
-          context "when all users can be silenced" do
-            before { allow(User::Action::TriggerPostAction).to receive(:call) }
-
-            it "silences all provided users" do
-              result
-              expect([user, other_user].map(&:reload)).to all be_silenced
-            end
-
-            it "enqueues jobs to send an email" do
-              expect { result }.to change { Jobs::CriticalUserEmail.jobs.size }.by(2)
-            end
-
-            it "exposes the full reason in the result object" do
-              expect(result[:full_reason]).to eq("spam\n\nit was spam")
-            end
-
-            it "triggers a post action" do
-              result
-              expect(User::Action::TriggerPostAction).to have_received(:call).with(
-                guardian:,
-                post: nil,
-                contract: result[:contract],
-              )
-            end
-          end
-        end
+      it "triggers a post action" do
+        result
+        expect(User::Action::TriggerPostAction).to have_received(:call).with(
+          guardian:,
+          post: nil,
+          contract: result[:contract],
+        )
       end
     end
   end

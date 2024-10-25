@@ -241,22 +241,26 @@ export function rawConnectorsFor(outletName) {
 export function buildArgsWithDeprecations(args, deprecatedArgs, opts = {}) {
   const output = {};
 
-  Object.keys(args).forEach((key) => {
-    Object.defineProperty(output, key, { value: args[key] });
-  });
-
-  Object.keys(deprecatedArgs).forEach((argumentName) => {
-    Object.defineProperty(output, argumentName, {
-      get() {
-        const deprecatedArg = deprecatedArgs[argumentName];
-
-        return deprecatedArgumentValue(deprecatedArg, {
-          ...opts,
-          argumentName,
-        });
-      },
+  if (args) {
+    Object.keys(args).forEach((key) => {
+      Object.defineProperty(output, key, { value: args[key] });
     });
-  });
+  }
+
+  if (deprecatedArgs) {
+    Object.keys(deprecatedArgs).forEach((argumentName) => {
+      Object.defineProperty(output, argumentName, {
+        get() {
+          const deprecatedArg = deprecatedArgs[argumentName];
+
+          return deprecatedArgumentValue(deprecatedArg, {
+            ...opts,
+            argumentName,
+          });
+        },
+      });
+    });
+  }
 
   return output;
 }

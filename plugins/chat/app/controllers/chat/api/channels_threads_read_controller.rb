@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsThreadsReadController < Chat::ApiController
   def update
-    Chat::UpdateUserThreadLastRead.call do
+    Chat::UpdateUserThreadLastRead.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:thread) { raise Discourse::NotFound }

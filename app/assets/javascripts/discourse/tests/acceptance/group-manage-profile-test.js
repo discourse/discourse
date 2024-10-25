@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -11,10 +10,9 @@ acceptance("Managing Group Profile", function () {
   test("As an anonymous user", async function (assert) {
     await visit("/g/discourse/manage/profile");
 
-    assert.ok(
-      exists(".group-members .group-member"),
-      "it should redirect to members page for an anonymous user"
-    );
+    assert
+      .dom(".group-members .group-member")
+      .exists("it should redirect to members page for an anonymous user");
   });
 });
 
@@ -50,9 +48,8 @@ acceptance("Managing Group Profile", function (needs) {
 
     await visit("/g/discourse/manage/profile");
 
-    assert.ok(
-      !exists(".group-form-name"),
-      "it should not display group name input"
-    );
+    assert
+      .dom(".group-form-name")
+      .doesNotExist("it should not display group name input");
   });
 });

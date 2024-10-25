@@ -150,7 +150,7 @@ module Jobs
       end
 
       def enabled?
-        ENV["DISCOURSE_LOG_SIDEKIQ"] == "1"
+        Discourse.enable_sidekiq_logging?
       end
 
       def live_slots_limit

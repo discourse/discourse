@@ -426,6 +426,14 @@ pt:
             ip_address:
               blocked: "Novos registos não são permitidos a partir do seu endereço IP."
               max_new_accounts_per_registration_ip: "Novos registos não são permitidos a partir do seu endereço IP (limite máximo atingido).Contacte um membro do pessoal."
+        user_password:
+          attributes:
+            password:
+              common: "é uma das 10000 palavras-passe mais comuns. Por favor use uma palavra-passe mais segura."
+              same_as_username: "é a mesma que o seu nome de utilizador. Por favor utilize uma palavra-passe mais segura."
+              same_as_email: "é a mesma que o seu email. Por favor utilize uma palavra-passe mais segura."
+              same_as_current: "é a mesma que a sua palavra-passe atual."
+              unique_characters: "tem demasiados carateres repetidos. Por favor, utilize uma palavra-passe mais segura."
         color_scheme_color:
           attributes:
             hex:
@@ -753,6 +761,8 @@ pt:
       yaxis: "Dia"
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
+    site_traffic:
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -866,6 +876,9 @@ pt:
       title: "Exibições de Página"
       xaxis: "Dia"
       yaxis: "Total de Vistas de Página"
+    page_view_legacy_total_reqs:
+      xaxis: "Dia"
+      yaxis: "Total de Vistas de Página"
     page_view_logged_in_mobile_reqs:
       title: "Vistas de Página Ligadas"
       xaxis: "Dia"
@@ -954,6 +967,11 @@ pt:
       queue_size: "O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq."
       ram: "O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
       subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
+      email_polling_errored_recently:
+        one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
+        other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
+      poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
+      poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
   site_settings:
     disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1009,7 +1027,6 @@ pt:
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
-    post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     site_contact_username: "Um nome de utilizador válido de um membro do pessoal de onde enviar todas as mensagens automatizadas. Quando deixado em branco, a conta padrão do Sistema será usada."
     send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem de boas-vindas com um guia de início rápido."

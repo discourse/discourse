@@ -41,7 +41,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/heads/main' && '1' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       TESTEM_DEFAULT_BROWSER: Chrome
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
@@ -131,13 +131,8 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:install_all_official
 
-      # Remove discourse-ai from stable as it is not compatible with Ruby 3.3 which we are now using for the base image
-      - name: Remove discourse-ai from stable
-        if: matrix.target == 'plugins' && (github.ref_name == 'stable' || github.base_ref == 'stable')
-        run: rm -rf plugins/discourse-ai
-
       - name: Pull compatible versions of plugins
-        if: matrix.target == 'plugins'
+        if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
         run: bin/rake plugin:pull_compatible_all
 
       - name: Plugin gems cache

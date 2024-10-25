@@ -60,10 +60,14 @@ lt:
               label: Temos ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Žymos
             restricted_category:
               label: Kategorija
             restricted_group:
               label: Grupė
+            restricted_groups:
+              label: Grupės
           created: Sukurta
         category_created_edited:
           fields:

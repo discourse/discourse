@@ -10,21 +10,34 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupChannelThreads.call(channel_id: 2, guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupChannelThreads.call(params: { channel_id: 2, limit: 5, offset: 2 }, guardian: guardian)
   #
   class LookupChannelThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(channel_id:, guardian:, limit: nil, offset: nil)
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :channel_id, :integer
+      attribute :limit, :integer
+      attribute :offset, :integer
+
+      validates :channel_id, presence: true
+      validates :limit,
+                numericality: {
+                  less_than_or_equal_to: THREADS_LIMIT,
+                  only_integer: true,
+                },
+                allow_nil: true
+    end
     step :set_limit
     step :set_offset
     model :channel
@@ -36,30 +49,14 @@ module Chat
     step :fetch_participants
     step :build_load_more_url
 
-    # @!visibility private
-    class Contract
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
-      attribute :limit, :integer
-      validates :limit,
-                numericality: {
-                  less_than_or_equal_to: THREADS_LIMIT,
-                  only_integer: true,
-                },
-                allow_nil: true
-
-      attribute :offset, :integer
-    end
-
     private
 
     def set_limit(contract:)
-      context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+      context[:limit] = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
     def set_offset(contract:)
-      context.offset = [contract.offset || 0, 0].max
+      context[:offset] = [contract.offset || 0, 0].max
     end
 
     def fetch_channel(contract:)
@@ -122,33 +119,30 @@ module Chat
     end
 
     def fetch_tracking(guardian:, threads:)
-      context.tracking =
-        ::Chat::TrackingStateReportQuery.call(
-          guardian: guardian,
-          thread_ids: threads.map(&:id),
-          include_threads: true,
-        ).thread_tracking
+      context[:tracking] = ::Chat::TrackingStateReportQuery.call(
+        guardian: guardian,
+        thread_ids: threads.map(&:id),
+        include_threads: true,
+      ).thread_tracking
     end
 
     def fetch_memberships(guardian:, threads:)
-      context.memberships =
-        ::Chat::UserChatThreadMembership.where(
-          thread_id: threads.map(&:id),
-          user_id: guardian.user.id,
-        )
+      context[:memberships] = ::Chat::UserChatThreadMembership.where(
+        thread_id: threads.map(&:id),
+        user_id: guardian.user.id,
+      )
     end
 
     def fetch_participants(threads:)
-      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+      context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
     def build_load_more_url(contract:)
       load_more_params = { offset: context.offset + context.limit }.to_query
-      context.load_more_url =
-        ::URI::HTTP.build(
-          path: "/chat/api/channels/#{contract.channel_id}/threads",
-          query: load_more_params,
-        ).request_uri
+      context[:load_more_url] = ::URI::HTTP.build(
+        path: "/chat/api/channels/#{contract.channel_id}/threads",
+        query: load_more_params,
+      ).request_uri
     end
   end
 end

@@ -125,6 +125,11 @@ cs:
       number_value_not_valid_min: "Hodnota musí být větší nebo rovna %{min}."
       number_value_not_valid_max: "Hodnota musí být menší nebo rovna %{max}."
       string_value_not_valid_min_max: "Hodnota musí mít délku od %{min} do %{max} znaků."
+      string_value_not_valid_min:
+        one: "Hodnota musí mít alespoň %{count} znak."
+        few: "Hodnota musí mít alespoň %{count} znaky."
+        many: "Hodnota musí mít alespoň %{count} znaků."
+        other: "Hodnota musí mít alespoň %{count} znaků."
       objects:
         humanize_required: "Vlastnost na ukazateli JSON '%{property_json_pointer}' je povinná."
         required: "nesmí být prázdný"
@@ -415,11 +420,21 @@ cs:
       admins: "administrátoři"
       moderators: "moderátoři"
       staff: "redaktoři"
-      trust_level_0: "trust_level_0"
-      trust_level_1: "trust_level_1"
-      trust_level_2: "trust_level_2"
-      trust_level_3: "trust_level_3"
-      trust_level_4: "trust_level_4"
+      trust_level_0: "úřoveň_důvěry_0"
+      trust_level_1: "úřoveň_důvěry_1"
+      trust_level_2: "úřoveň_důvěry_2"
+      trust_level_3: "úřoveň_důvěry_3"
+      trust_level_4: "úřoveň_důvěry_4"
+    default_descriptions:
+      everyone: "Automatická skupina zahrnující všechny členy"
+      staff: "Automatická skupina včetně administrátorů a moderátorů"
+      admins: "Odpovědni za konfiguraci a údržbu této stránky s přístupem ke všem údajům o členech a aktivitách."
+      moderators: "Odpovědni za reakci na nahlášení, moderování diskusí a pomoc členům s jejich účty"
+      trust_level_0: "Noví členové s omezenými schopnostmi, kteří se učí komunitním normám a funkcím"
+      trust_level_1: "Členové s větší důvěrou, kteří prokázali počáteční zapojení čtením, mají nyní přístup k více funkcím. Všichni členové této skupiny jsou zároveň členy skupiny trust_level_0."
+      trust_level_2: "Aktivní členové, kteří dlouhodobě důsledně přispívali a získali plná občanská privilegia. Všichni členové této skupiny jsou také členy skupin trust_level_1 a trust_level_0."
+      trust_level_3: "Vysoce angažovaní, dlouhodobí přispěvatelé, kteří tvoří páteř komunity a získali omezená moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin trust_level_2, trust_level_1 a trust_level_0."
+      trust_level_4: "Ručně povýšení členové, kteří byli oceněni za své příkladné příspěvky a kterým byla svěřena další moderátorská práva. Všichni členové této skupiny jsou zároveň členy skupin trust_level_3, trust_level_2, trust_level_1 a trust_level_0."
     request_membership_pm:
       title: "Žádost o členství pro @%{group_name}"
   education:
@@ -495,13 +510,21 @@ cs:
               same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
               same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
               same_as_current: "je stejné jako vaše současné heslo."
-              same_as_previous: "je stejné jako vaše předchozí heslo."
               same_as_name: "je stejné jako vaše jméno."
               unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
             username:
               same_as_password: "je stejné jako vaše heslo."
             name:
               same_as_password: "je stejné jako vaše heslo."
+        user_password:
+          attributes:
+            password:
+              common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
+              same_as_username: "je stejné jako vaše uživatelské jméno. Zkuste vymyslet bezpečnější heslo."
+              same_as_email: "je stejné jako váš email. Zkuste vymyslet bezpečnější heslo."
+              same_as_current: "je stejné jako vaše současné heslo."
+              same_as_name: "je stejné jako vaše jméno."
+              unique_characters: "má příliš mnoho opakujících se znaků. Použijte prosím bezpečnější heslo."
         user_email:
           attributes:
             user_id:
@@ -739,18 +762,31 @@ cs:
       short_description: "Není relevantní k diskuzi"
     spam:
       title: "Spam"
+      description: "Tento příspěvek je reklama nebo vandalismus. Není to užitečné ani relevantní k aktuálnímu tématu."
+      short_description: "Jedná se o reklamu nebo vandalismus"
       email_title: '"%{title}" byl označen jako spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
+      description: 'Tento příspěvek obsahuje obsah, který by rozumná osoba považovala za urážlivý, zneužívající, za nenávistné chování nebo za porušení <a href="%{base_path}/guidelines">našich komunitních zásad</a>.'
+      short_description: 'Porušení <a href="%{base_path}/guidelines">našich pravidel komunity</a>'
     illegal:
+      title: "Nelegální"
+      description: "Tento příspěvek vyžaduje pozornost redakce, protože se domnívám, že obsahuje nezákonný obsah."
+      short_description: "Toto je nezákonné"
+      email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
       title: "Poslat @%{username} zprávu"
+      description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
+      short_description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_moderators:
       title: "Něco jiného"
+      description: "Tento příspěvek vyžaduje pozornost redakce z jiného důvodu, který není uveden výše."
+      short_description: "Vyžaduje pozornost redakce z jiného důvodu"
+      email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     bookmark:
       title: "Založit"
@@ -886,13 +922,13 @@ cs:
       yaxis: "Den"
       description: "Počet uživatelů, kteří během tohoto období zvýšili svou úroveň důvěry."
     consolidated_page_views:
-      title: "Konsolidovaná zobrazení stránek"
+      title_legacy: "Konsolidovaná zobrazení stránek"
       xaxis:
         page_view_crawler: "Vyhledávače"
         page_view_anon: "Anonymní uživatelé"
         page_view_logged_in: "Přihlášení uživatelé"
       yaxis: "Den"
-      description: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
+      description_legacy: "Počty zobrazení stránek pro přihlášené uživatele, anonymní uživatele a vyhledávače."
       labels:
         post: Příspěvek
         editor: Uživatel
@@ -906,6 +942,8 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
+      yaxis: "Den"
+    site_traffic:
       yaxis: "Den"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1035,6 +1073,9 @@ cs:
       title: "Zobrazení stránky "
       xaxis: "Den"
       yaxis: "Celkové pageviews"
+    page_view_legacy_total_reqs:
+      xaxis: "Den"
+      yaxis: "Celkové pageviews"
     page_view_logged_in_mobile_reqs:
       xaxis: "Den"
     page_view_anon_mobile_reqs:
@@ -1093,6 +1134,7 @@ cs:
     top_uploads:
       labels:
         filename: Název souboru
+        author: Autor
     top_ignored_users:
       title: "Nejvíce ignorovaní/ztišení uživatelé"
       labels:
@@ -1131,8 +1173,10 @@ cs:
       host_names: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
+      out_of_date_themes: "Pro následující motivy jsou k dispozici aktualizace:%{themes_list}"
   site_settings:
     disabled: "vypnuto"
+    default_locale: "Výchozí jazyk této instance Discourse. Text kategorií a témat generovaných systémem můžete nahradit v nabídce <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Přizpůsobit / Text</a>."
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
@@ -1171,6 +1215,7 @@ cs:
     tos_url: "Pokud máte dokument 'Podmínky služby' hostovaný samostatně, napište sem jeho plnou URL."
     privacy_policy_url: "Pokud máte dokument 'Ochrana Soukromí' hostovaný samostatně, napište sem jeho plnou URL."
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
+    forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
     delete_all_posts_max: "Maximální počet příspěvků, které mohou být smazány najednou tlačítkem 'Odstranit všechny příspěvky'. Pokud má uživatel více příspěvků než je zde nastaveno, nemohou být jeho příspěvky smazány najednou a uživatele nelze odstranit."
     email_editable: "Povolit uživatelům změnit si po registraci emailovou adresu."
@@ -1182,6 +1227,7 @@ cs:
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata nebudou uvedena, dokud uživatel neodpoví."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
+    disable_watched_word_checking_in_user_fields: "zakázat kontrolu sledovaných slov v uživatelských polích."
     enable_fast_edit: "Přidá do nabídky výběru příspěvku tlačítko pro úpravu malého výběru v řádku."
     enable_quote_copy: "Přidá do nabídky výběru příspěvku tlačítko pro zkopírování výběru do schránky jako markdown citaci."
     default_include_tl0_in_digests: "Ve výchozím nastavení zahrnout příspěvky od nových uživatelů do souhrnných e-mailů. Uživatelé si to mohou změnit ve svých osobních nastaveních."
@@ -1195,8 +1241,14 @@ cs:
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     errors:
       invalid_email: "Neplatná emailová adresa."
+      invalid_integer_min_max: "Hodnota musí být mezi %{min} a %{max}."
       invalid_integer: "Hodnota musí být celé číslo."
       invalid_string: "Neplatná hodnota."
+      invalid_string_min:
+        one: "Musí mít alespoň %{count} znak."
+        few: "Musí mít alespoň %{count} znaky."
+        many: "Musí mít alespoň %{count} znaků."
+        other: "Musí mít alespoň %{count} znaků."
       min_username_length_range: "Nemůžete nastavit minimum nad maximum."
       max_username_length_range: "Nemůžete nastavit maximum pod minimum."
     keywords:
@@ -1234,6 +1286,7 @@ cs:
     within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorie"
+      topic: "Výsledky"
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
@@ -1242,7 +1295,7 @@ cs:
   frequent_poster: "Častý přispěvatel"
   redirected_to_top_reasons:
     new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
-    not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
+    not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Toto jsou nejpopulárnější témata od vaší poslední návštěvy."
   change_owner:
     post_revision_text: "Převedeno vlastnictví"
   publish_page:
@@ -1293,6 +1346,7 @@ cs:
     email_too_long: "Vámi zadaný e-mail je příliš dlouhý. Názvy poštovních schránek nesmí mít více než 254 znaků a názvy domén nesmí mít více než 253 znaků."
     wrong_invite_code: "Zadaný kód pozvánky byl nesprávný."
     reserved_username: "Toto uživatelské jméno není povoleno."
+    missing_user_field: "Nevyplnili jste všechna požadovaná uživatelská pole"
     auth_complete: "Ověřování je dokončeno."
     click_to_continue: "Pro pokračování klikněte zde."
     already_logged_in: "Promiňte! Tato pozvánka je určena pro nové uživatele, kteří ještě nemají existující účet."
@@ -1324,6 +1378,12 @@ cs:
         updating_user_ids: "Aktualizace ID uživatele…"
   user:
     username:
+      short:
+        one: "musí mít alespoň %{count} znak"
+        few: "musí mít alespoň %{count} znaky"
+        many: "musí mít alespoň %{count} znaků"
+        other: "musí mít alespoň %{count} znaků"
+      characters: "musí obsahovat pouze čísla, písmena bez diakritiky, pomlčky, tečky a podtržítka"
       unique: "musí být unikátní"
       blank: "nesmí být prázdný"
     email:
@@ -1377,6 +1437,7 @@ cs:
 
       (Pokud platnost výše uvedeného odkazu vypršela, zvolte při přihlašování pomocí své e-mailové adresy možnost "Zapomněl/a jsem heslo".)
   new_version_mailer:
+    subject_template: "[%{email_prefix}] Nová verze Discourse, k dispozici jsou aktualizace"
     text_body_template: |
       Hurá, je k dispozici nová verze [Discourse](https://www.discourse.org)!
 
@@ -1389,6 +1450,7 @@ cs:
 
       - Navštivte [meta.discourse.org](https://meta.discourse.org) pro novinky, diskuze a podporu pro Discourse nebo [meta.discourse.cz](https://meta.discourse.cz) pro českou verzi.
   new_version_mailer_with_notes:
+    subject_template: "[%{email_prefix}] k dispozici je aktualizace"
     text_body_template: |
       Hurá, je k dispozici nová verze [Discourse](https://www.discourse.org)!
 
@@ -1574,7 +1636,7 @@ cs:
       popular_posts: "Populární příspěvky"
       more_new: "Novinky pro vás"
       subject_template: "[%{email_prefix}] Přehled"
-      unsubscribe: "Tento souhrn je odeslán z %{site_link}, když jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení."
+      unsubscribe: "Tento souhrn je odeslán z %{site_link} poté, co jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení odběru."
       your_email_settings: "vaše nastavení e-mailů"
       click_here: "klikněte zde"
     forgot_password:
@@ -1715,12 +1777,24 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
+    mass_award:
+      errors:
+        invalid_csv: Na řádku %{line_number} jsme narazili na chybu. Potvrďte prosím, že CSV obsahuje jeden e-mail na řádek.
+        too_many_csv_entries:
+          one: Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamem.
+          few: Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy.
+          many: Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy.
+          other: Příliš mnoho položek v souboru CSV. Poskytněte prosím soubor CSV s maximálně %{count} záznamy.
+        badge_disabled: Nejprve povolte odznak %{badge_name} .
+        cant_grant_multiple_times: Odznak %{badge_name} nelze jednomu uživateli udělit vícekrát.
     editor:
       name: Editor
       description: První úprava příspěvku.
       long_description: |
         Tento odznak je udělen, když poprvé upravíte jeden ze svých příspěvků. I když nebudete moci své příspěvky upravovat navždy, jsou úpravy doporučeny – můžete vylepšit formátování, opravit malé chyby nebo přidat cokoli, co jste při původním zveřejnění zmeškali. Upravujte, aby vaše příspěvky byly ještě lepší!
     wiki_editor:
+      name: Editor Wiki
+      description: První úprava wiki
       long_description: |
         Tento odznak je udělen při první úpravě wiki příspěvku.
     basic_user:
@@ -1730,14 +1804,17 @@ cs:
         Tento odznak je udělen, když dosáhnete 1. úrovně důvěry. Děkujeme, že jste se tu zdrželi a přečetli pár témat, abyste se dozvěděli, o čem naše komunita je. Byla vám odstraněna omezení pro nové uživatele; byly vám poskytnuty všechny základní komunitní nástroje, jako jsou osobní zprávy, nahlašování, úpravy wiki a možnost publikovat více obrázků a odkazů.
     member:
       name: Člen
+      description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleny</a> pozvánky, skupinové zprávy a více lajků
       long_description: |
         Tento odznak je udělen, když dosáhnete 2. úrovně důvěry. Děkujeme, že se účastníte po dobu několika týdnů a skutečně se připojujete k naší komunitě. Nyní můžete posílat pozvánky ze svého profilu nebo jednotlivých témat, vytvářet skupinové osobní zprávy a mít více lajků za den.
     regular:
       name: Běžný
+      description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> překategorizovat, přejmenovat, sledovat odkazy, wiki, více lajků
       long_description: |
         Tento odznak je udělen, když dosáhnete 3. úrovně důvěry. Díky za to, že jste byli po dobu několika měsíců součástí naší komunity. Nyní jste jedním z nejaktivnějších čtenářů a spolehlivým přispěvatelem, který dělá naši komunitu skvělou. Nyní můžete kategorizovat a přejmenovávat témata, využít výkonnějších indikátorů nevyžádané pošty, přistupovat do soukromé sekce, a také dostanete denně mnohem více lajků.
     leader:
       name: Vůdce
+      description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/">Uděleno</a> globální upravit, připnout, zavřít, archivovat, rozdělit a sloučit, více lajků
       long_description: |
         Tento odznak je udělen, když dosáhnete 4. úrovně důvěry. Redakce vás označila jako leadera této komunity. Zbytku komunity jdete pozitivním příkladem ve svých činech a slovech. Máte možnost upravovat všechny příspěvky, provádět běžné akce moderátorů témat, jako je připínání, zavírání, skrývání, archivace, rozdělování a slučování.
     welcome:
@@ -1747,63 +1824,209 @@ cs:
         Tento odznak se uděluje, když u příspěvku dostanete svoje první Líbí se. Gratulujeme, zveřejnili jste něco, co členové vaší komunity považovali za zajímavé, skvělé nebo užitečné!
     autobiographer:
       name: Autor vlastního životopisu
+      description: Vyplněné <a href="%{base_uri}/my/preferences/profile">informace v profilu</a>
+      long_description: |
+        Tento odznak se uděluje za vyplnění <a href="%{base_uri}/my/preferences/profile">vašeho uživatelského profilu</a> a výběr profilového obrázku. Když dáte komunitě vědět trochu víc o tom, kdo jste a co vás zajímá, vytvoříte lepší a propojenější komunitu. Přidejte se k nám!
     anniversary:
       name: Výročí
-      description: Aktivním členem přes rok, přispěl alespoň jednou
+      description: Aktivním členem přes rok, přispěl/a alespoň jednou
+      long_description: |
+        Tento odznak se uděluje, pokud jste členem po dobu jednoho roku a v tomto roce jste napsali alespoň jeden příspěvek. Děkujeme, že jste zůstali a přispíváte k naší komunitě. Bez vás bychom to nedokázali.
+    nice_post:
+      name: Pěkná odpověď
+      description: Obdrženo 10 lajků za odpověď
+      long_description: |
+        Tento odznak je udělen, když vaše odpověď získá 10 lajků. Vaše odpověď udělala na komunitu dojem a pomohla posunout konverzaci dál.
+    good_post:
+      name: Dobrá odpověď
+      description: Obdrženo 25 lajků za odpověď
+      long_description: |
+        Tento odznak je udělen, když vaše odpověď získá 25 lajků. Vaše odpověď byla výjimečná a učinila konverzaci mnohem zajímavější.
+    great_post:
+      name: Skvělá odpověď
+      description: Obdrženo 50 lajků za odpověď
+      long_description: |
+        Tento odznak se uděluje, když vaše odpověď získá 50 lajků. Wow! Vaše odpověď byla inspirativní, fascinující, vtipná nebo hluboká a komunitě se líbila!
     nice_topic:
       name: Zdařilé téma
+      description: Obdrženo 10 lajků za téma
+      long_description: |
+        Tento odznak se uděluje, když vaše téma získá 10 lajků. Zahájili jste zajímavou konverzaci, která se komunitě líbila.
     good_topic:
       name: Dobré téma
+      description: Obdrženo 25 lajků za téma
+      long_description: |
+        Tento odznak se uděluje, když vaše téma získá 25 lajků. Zahájili jste živou konverzaci, kolem které se komunita shromáždila.
     great_topic:
       name: Výborné téma
+      description: Obdrženo 50 lajků za téma
+      long_description: |
+        Tento odznak se uděluje, když vaše téma získá 50 lajků. Odstartovali jste fascinující konverzaci a komunita si zamilovala živou diskusi, která z toho vzešla!
     nice_share:
       name: Zdařilé sdílení
       description: Sdílení příspěvku s 25 unikátními návštěvníky
+      long_description: |
+        Tento odznak se uděluje za sdílení odkazu, na který kliklo 25 externích návštěvníků. Děkujeme za šíření informací o našich diskusích a o této komunitě.
     good_share:
       name: Dobré sdílení
       description: Sdílení příspěvku s 300 unikátními návštěvníky
+      long_description: |
+        Tento odznak se uděluje za sdílení odkazu, na který kliklo 300 externích návštěvníků. Dobrá práce! Ukázali jste skvělou diskusi spoustě nových lidí a pomohli jste této komunitě růst.
     great_share:
       name: Výborné sdílení
       description: Sdílení příspěvku s 1000 unikátními návštěvníky
+      long_description: |
+        Tento odznak se uděluje za sdílení odkazu, na který kliklo 1000 externích návštěvníků. Wow! Propagovali jste zajímavou diskusi mezi obrovským množstvím nových čtenářů a pomohli jste nám tak výrazně rozšířit naši komunitu!
     first_like:
       name: První Líbí se
       description: Líbil se příspěvek
+      long_description: |
+        Tento odznak je udělen při prvním lajknutí příspěvku pomocí tlačítka :heart: . Lajkování příspěvků je skvělý způsob, jak dát ostatním členům komunity najevo, že to, co zveřejnili, bylo zajímavé, užitečné, skvělé nebo zábavné. Sdílejte lásku!
     first_flag:
       name: První nahlášení
       description: Nahlášen příspěvek
+      long_description: |
+        Tento odznak je udělen při prvním nahlášení příspěvku. Nahlašování je způsob, jak všichni pomáháme udržovat toto místo příjemné pro všechny. Pokud si všimnete příspěvků, které z jakéhokoli důvodu vyžadují pozornost moderátora, neváhejte je označit. Pokud vidíte problém, :flag_black: nahlašte je!
     promoter:
       name: Promotér
       description: Pozval uživatele
+      long_description: |
+        Tento odznak se uděluje, když někoho pozvete do komunity pomocí tlačítka Pozvat na své uživatelské stránce nebo v dolní části tématu. Pozvání přátel, které by mohly zajímat konkrétní diskuse, je skvělý způsob, jak do naší komunity uvést nové lidi, takže děkujeme!
     campaigner:
       name: Vede kampaň
+      description: Pozval/a 3 základní uživatele
+      long_description: |
+        Tento odznak se uděluje, pokud jste pozvali 3 osoby, které následně strávily na webu dostatek času, aby se staly základními uživateli. Živá komunita potřebuje pravidelný příliv nováčků, kteří se pravidelně zapojují a přidávají nové hlasy do rozhovorů.
     champion:
       name: Šampión
+      description: Pozval/a 5 členů
+      long_description: |
+        Tento odznak se uděluje, pokud jste pozvali 5 lidí, kteří následně strávili na webu dostatek času, aby se stali plnohodnotnými členy. Wow! Děkujeme, že jste rozšířili rozmanitost naší komunity o nové členy!
     first_share:
       name: První sdílení
       description: Sdílený příspěvek
+      long_description: |
+        Tento odznak je udělen při prvním sdílení odkazu na odpověď nebo téma pomocí tlačítka pro sdílení. Sdílení odkazů je skvělý způsob, jak se pochlubit zajímavými diskusemi zbytku světa a rozšířit svou komunitu.
     first_link:
       name: První odkaz
+      description: Přidal/a odkaz na jiné téma
+      long_description: |
+        Tento odznak je udělen při prvním přidání odkazu na jiné téma. Propojování témat pomáhá ostatním čtenářům najít zajímavé související konverzace tím, že ukazuje propojení mezi tématy v obou směrech. Odkazujte bez hranic!
     first_quote:
       name: První citace
+      description: Citoval/a příspěvek
+      long_description: |
+        Tento odznak je udělen při první citaci příspěvku v odpovědi. Citování relevantních částí předchozích příspěvků ve vaší odpovědi pomáhá udržet diskuzi propojenou a držet se tématu. Nejjednodušší způsob, jak citovat, je zvýraznit část příspěvku a poté stisknout libovolné tlačítko Odpovědět. Citujte velkoryse!
     read_guidelines:
-      name: Přečíst pokyny
+      name: Přečetl/a pokyny
+      description: Přečetl/a si <a href="%{base_uri}/guidelines">pokyny pro komunitu</a>
+      long_description: |
+        Tento odznak se uděluje za <a href="%{base_uri}/guidelines">přečtení pokynů pro komunitu</a>. Dodržování a sdílení těchto jednoduchých pokynů pomáhá budovat bezpečnou, zábavnou a udržitelnou komunitu pro všechny. Vždy mějte na paměti, že na druhé straně obrazovky je další lidská bytost, která je vám velmi podobná. Buďte milí!
     reader:
       name: Čtenář
+      description: Přečetl/a každou odpověď v tématu s více než 100 odpověďmi
+      long_description: |
+        Tento odznak se uděluje při prvním přečtení dlouhého tématu s více než 100 odpověďmi. Pečlivé čtení konverzace vám pomůže sledovat diskusi, pochopit různé úhly pohledu a vede k zajímavějším rozhovorům. Čím více čtete, tím lepší je konverzace. Jak rádi říkáme: Čtení je základ! :slight_smile:
     popular_link:
       name: Populární odkaz
+      description: Zveřejnil/a externí odkaz s 50 kliknutími
+      long_description: |
+        Tento odznak je udělen, když vámi sdílený odkaz získá 50 kliknutí. Děkujeme za zveřejnění užitečného odkazu, který přidal zajímavý kontext do konverzace!
     hot_link:
       name: Žhavý odkaz
+      description: Zveřejnil/a externí odkaz s 300 kliknutími
+      long_description: |
+        Tento odznak se uděluje, když na vámi sdílený odkaz klikne 300 uživatelů. Děkujeme za zveřejnění fascinujícího odkazu, který posunul konverzaci kupředu a osvětlil diskusi!
     famous_link:
       name: Slavný odkaz
+      description: Zveřejnění externího odkazu s 1000 kliknutími
+      long_description: |
+        Tento odznak se uděluje, když na vámi sdílený odkaz klikne 1000 uživatelů. Wow! Zveřejnili jste odkaz, který významně zlepšil konverzaci přidáním podstatných podrobností, souvislostí a informací. Skvělá práce!
+    appreciated:
+      name: Oceněný/á
+      description: Obdržel/a 1 lajk u 20 příspěvků
+      long_description: |
+        Tento odznak se uděluje, když obdržíte alespoň jeden lajk u 20 různých příspěvků. Komunita má radost z vašich příspěvků do zdejších konverzací!
+    respected:
+      name: Respektován/a
+      description: Obdržel/a 2 lajky u 100 příspěvků
+      long_description: |
+        Tento odznak se uděluje, když získáte alespoň 2 lajky u 100 různých příspěvků. Komunita se rozrůstá a váží si vašich četných příspěvků do zdejších konverzací.
     admired:
       name: Obdivovaný
+      description: Obdržel/a 5 lajků u 300 příspěvků
+      long_description: |
+        Tento odznak se uděluje, když získáte alespoň 5 lajků u 300 různých příspěvků. Wow! Komunita obdivuje vaše časté a kvalitní příspěvky do zdejších diskusí.
+    out_of_love:
+      name: Došla láska
+      description: Použito %{max_likes_per_day} lajků za den
+      long_description: |
+        Tento odznak se uděluje, když použijete všech %{max_likes_per_day} svých denních lajků. Udělání si chvilky a lajkování příspěvků, které vás baví a oceňujete je, povzbuzuje vaše kolegy z komunity, aby v budoucnu vytvářeli ještě více skvělých diskusí.
+    higher_love:
+      name: Vyšší láska
+      description: Použito %{max_likes_per_day} lajků denně 5x
+      long_description: |
+        Tento odznak získáte, když využijete všech %{max_likes_per_day} svých denních lajků po dobu 5 dnů. Děkujeme, že každý den aktivně podporujete ty nejlepší konverzace!
+    crazy_in_love:
+      name: Bláznivě zamilovaný
+      description: Použito %{max_likes_per_day} lajků denně 20x
+      long_description: |
+        Tento odznak získáte, když po dobu 20 dní využijete všech %{max_likes_per_day} svých denních lajků. Wow! Jste vzorem pro povzbuzování svých kolegů z komunity!
+    thank_you:
+      name: Díky
+      description: Má 20 oblíbených příspěvků a dal/a 10 lajků
+      long_description: |
+        Tento odznak se uděluje, když máte 20 lajkovaných příspěvků a na oplátku dáte 10 nebo více lajků. Když se někomu líbí vaše příspěvky, najdete si čas, aby se vám líbily i příspěvky ostatních.
+    gives_back:
+      name: Vrací zpět
+      description: Má 100 oblíbených příspěvků a dal/a 100 lajků
+      long_description: |
+        Tento odznak se uděluje, když máte 100 lajků a na oplátku dáte 100 nebo více lajků. Děkujeme, že to posíláte dál!
+    empathetic:
+      name: Empatický
+      description: Má 500 oblíbených příspěvků a dal/a 1000 lajků
+      long_description: |
+        Tento odznak se uděluje, když máte 500 lajků a na oplátku dáte 1000 nebo více lajků. Wow! Jste vzorem štědrosti a vzájemného uznání :two_hearts:.
     first_emoji:
       name: První smajlík
+      description: Použití emoji v příspěvku
+      long_description: |
+        Tento odznak se uděluje při prvním přidání emoji do příspěvku :thumbsup:. Emoji vám umožní vyjádřit ve vašich příspěvcích emoce, od štěstí :smiley: přes smutek :anguished: až po hněv :angry: a vše mezi tím :sunglasses:. Stačí napsat : (dvojtečka) nebo stisknout tlačítko Emoji na panelu nástrojů v editoru a vybrat si ze stovek možností :ok_hand:.
+    first_mention:
+      name: První zmínka
+      description: Zmínil/a uživatele v příspěvku
+      long_description: |
+        Tento odznak je udělen, když ve svém příspěvku poprvé uvedete něčí @uživatelské_jméno. Každá zmínka vygeneruje oznámení dané osobě, takže se o vašem příspěvku dozví. Stačí začít psát symbol @ a zmínit jakéhokoli uživatele nebo, pokud je to povoleno, skupinu. Je to pohodlný způsob, jak na něco upozornit.
     first_onebox:
       name: První Onebox
       description: Zveřejnil/a odkaz, který byl transformován do Oneboxu
       long_description: |
         Tento odznak je udělen při prvním zveřejnění odkazu na samostatném řádku, který se automaticky rozbalí do rámečku se shrnutím, názvem a obrázkem (pokud je k dispozici).
+    first_reply_by_email:
+      name: První odpověď e-mailem
+      description: Reagoval/a na příspěvek prostřednictvím e-mailu
+      long_description: |
+        Tento odznak se uděluje při první odpovědi na příspěvek prostřednictvím e-mailu :e-mail:.
+    new_user_of_the_month:
+      name: "Nový uživatel měsíce"
+      description: Vynikající příspěvky v prvním měsíci
+      long_description: |
+        Tento odznak se uděluje každý měsíc dvěma novým uživatelům za jejich vynikající celkové příspěvky. Měřeno tím, jak často a kým byly jejich příspěvky lajkovány.
+    enthusiast:
+      name: Nadšenec
+      description: Navštívil/a 10 po sobě jdoucích dní
+      long_description: |
+        Tento odznak se uděluje za návštěvu po 10 po sobě jdoucích dnů. Děkujeme, že jste s námi vydrželi více než týden!
+    aficionado:
+      name: Fanoušek
+      description: Navštívil/a 100 po sobě jdoucích dní
+      long_description: |
+        Tento odznak se uděluje za návštěvy po 100 po sobě jdoucích dnů. To je více než tři měsíce!
+    devotee:
+      name: Oddaný/á
+      description: Navštívil/a 365 po sobě jdoucích dní
+      long_description: |
+        Tento odznak se uděluje za návštěvu po 365 po sobě jdoucích dnů. Páni, celý rok!
     badge_title_metadata: "%{display_name} odznak na %{site_title}"
   admin_login:
     success: "E-mail odeslán"
@@ -1839,6 +2062,8 @@ cs:
                 label: "Veřejné"
               private:
                 label: "Soukromé"
+          chat_enabled:
+            placeholder: "Povolit konverzace (chat)"
       ready:
         description: "A je to! Provedli jste základní nastavení komunity. Nyní se na to můžete vrhnout a porozhlédnout se, napsat uvítací téma a posílat pozvánky!<br><br>Bavte se!"
       styling:
@@ -1882,8 +2107,9 @@ cs:
       group_mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
       quoted: '%{username} vás citoval v "%{topic}" - %{site_title}'
       replied: '%{username} vám odpověděl v "%{topic}" - %{site_title}'
-      posted: '%{username} přispěl do "%{topic}" - %{site_title}'
+      posted: '%{username} přispěl/a do "%{topic}" - %{site_title}'
       linked: '%{username} odkázal na vás příspěvek v "%{topic}" - %{site_title}'
+      watching_first_post: '%{username} vytvořil nové téma "%{topic}" - %{site_title}'
       confirm_title: "Upozornění zapnuta - %{site_title}"
       confirm_body: "Upozornění úspěšně zapnuta."
       custom: "Upozornění od %{username} na %{site_title}"

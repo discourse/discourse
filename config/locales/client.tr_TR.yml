@@ -27,6 +27,7 @@ tr_TR:
         millions: "%{number} Milyon"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -141,7 +142,6 @@ tr_TR:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
-      twitter: "Twitter'da paylaş"
       facebook: "Facebook'ta paylaş"
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
@@ -297,6 +297,7 @@ tr_TR:
       pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     about:
+      edit: "Bu sayfayı düzenle"
       simple_title: "Hakkında"
       title: "%{title} Hakkında"
       stats: "Site İstatistikleri"
@@ -1632,7 +1633,7 @@ tr_TR:
         add_email: "Alternatif E-posta Ekle"
         auth_override_instructions: "E-posta, kimlik doğrulama sağlayıcısından güncellenebilir."
         no_secondary: "İkincil e-posta yok"
-        instructions: "Asla genele gösterilmez."
+        instructions: "Asla genele gösterilmez"
         admin_note: "Not: Yönetici olmayan başka bir kullanıcının e-postasını değiştiren bir yönetici kullanıcı, kullanıcının orijinal e-posta hesabına erişimini kaybettiğini gösterir, bu nedenle yeni adresine şifre sıfırlama e-postası gönderilir. Şifre sıfırlama işlemi tamamlanana kadar kullanıcının e-postası değişmez."
         ok: "Onaylamanız için size e-posta göndereceğiz"
         required: "Lütfen bir e-posta adresi girin"
@@ -1663,14 +1664,14 @@ tr_TR:
         approval_required: "Bu foruma erişebilmeniz için bir moderatörün yeni hesabınızı manuel olarak onaylaması gerekiyor. Hesabınız onaylandığında bir e-posta alacaksınız!"
       name:
         title: "Ad"
-        instructions: "Adınız soyadınız (isteğe bağlı)."
-        instructions_required: "Adınız soyadınız."
+        instructions: "Adınız soyadınız (isteğe bağlı)"
+        instructions_required: "Adınız Soyadınız"
         required: "Lütfen bir ad girin"
         too_short: "Adınız çok kısa"
         ok: "Adınız iyi görünüyor"
       username:
         title: "Kullanıcı adı"
-        instructions: "Benzersiz, boşluksuz, kısa."
+        instructions: "Benzersiz, boşluksuz, kısa"
         short_instructions: "Kullanıcılar sizden @%{username} olarak bahsedebilirler"
         available: "Kullanıcı adı kullanılabilir"
         not_available: "Kullanılamıyor. Şunu deneyin: %{suggestion}"
@@ -1834,12 +1835,11 @@ tr_TR:
           success: "Davet bağlantısı başarıyla oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata oluştu"
         invite:
-          new_title: "Davet oluştur"
-          edit_title: "Daveti düzenle"
           instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın:"
-          copy_link: "bağlantıyı kopyala"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
+          copy_link: "Bağlantıyı kopyala"
+          link_copied: "Bağlantı kopyalandı!"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           restrict: "Şununla kısıtla"
@@ -1849,11 +1849,11 @@ tr_TR:
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
           invite_to_topic: "Konuya gidin"
-          expires_at: "Geçerliliğini yitireceği zaman"
-          custom_message: "İsteğe bağlı kişisel mesaj"
+          expires_after: "Geçerliliğini yitireceği zaman"
           send_invite_email: "Kaydet ve E-posta Gönder"
           send_invite_email_instructions: "Davet e-postası göndermek için e-postaya daveti kısıtla"
-          save_invite: "Daveti Kaydet"
+          save_invite: "Kaydet"
+          cancel: "İptal et"
           invite_saved: "Davet kaydedildi."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
@@ -1885,8 +1885,8 @@ tr_TR:
         same_as_email: "Şifreniz e-posta adresinizle aynı."
         ok: "Şifreniz iyi görünüyor."
         instructions:
-          one: "En az %{count} karakter."
-          other: "En az %{count} karakter."
+          one: "En az %{count} karakter"
+          other: "En az %{count} karakter"
         required: "lütfen bir şifre girin"
         confirm: "Onayla"
         incorrect_password: "Girilen şifre yanlış."
@@ -4734,6 +4734,7 @@ tr_TR:
         installed_version: "Yüklendi"
         latest_version: "En son"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
+        dismiss_notice: "Kapat"
         new_features:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
@@ -5203,9 +5204,14 @@ tr_TR:
           screened_ips: "Taranan IP'ler"
           screened_urls: "Taranan URL'ler"
           search_logs: "Arama Günlükleri"
-          security: "Güvenlik"
-          spam: "Spam"
           staff_action_logs: "Personel Eylemi Günlükleri"
+      section_landing_pages:
+        account:
+          title: "Hesap"
+          backups:
+            title: "Yedeklemeler"
+          whats_new:
+            title: "Yenilikler"
       config_areas:
         about:
           header: "Siteniz hakkında"
@@ -5215,8 +5221,6 @@ tr_TR:
           community_summary: "Topluluk özeti"
           community_description: "Topluluk açıklaması"
           banner_image: "Banner görüntüsü"
-          banner_image_help: |
-            Bu, Hakkında sayfanızda kullanılır. Önerilen boyut: 800x300 px. Kabul edilen türler: 10 MB'ye kadar JPG, PNG ve SVG.
           contact_information: "İletişim bilgileri"
           community_owner: "Topluluk sahibi"
           community_owner_placeholder: "Johnny Smith"
@@ -5292,6 +5296,9 @@ tr_TR:
             title: "Daha fazla seçenek"
             move_up: "Yukarı taşı"
             move_down: "Aşağı taşı"
+        look_and_feel:
+          themes:
+            title: "Temalar"
       plugins:
         title: "Eklentiler"
         name: "Ad"
@@ -6674,10 +6681,6 @@ tr_TR:
             with_post: <span class="username">%{username}</span> %{link} bağlantısındaki gönderi için
             with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> saatinde %{link} bağlantısındaki gönderi için
             with_time: <span class="username">%{username}</span>, <span class="time">%{time}</span>
-        badge_intro:
-          title: "Başlamak için var olan bir rozeti seçin veya yeni bir tane oluşturun"
-          what_are_badges_title: "Rozet nedir?"
-          badge_query_examples_title: "Rozet sorgusu örnekleri"
         mass_award:
           title: Toplu Ödül
           description: Aynı rozeti tek seferde birçok kullanıcıya verin.

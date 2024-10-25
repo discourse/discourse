@@ -271,6 +271,7 @@
       height: 8px;
       background: var(--tertiary);
       border-radius: 100%;
+      flex-shrink: 0;
 
       &.-urgent {
         background: var(--success);

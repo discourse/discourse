@@ -1,34 +1,184 @@
-{{body-class "static-login"}}
+{{#if
+  (and
+    this.siteSettings.experimental_full_page_login
+    (or this.showLogin (not this.siteSettings.login_required))
+  )
+}}
+  {{hide-application-header-buttons "search" "login" "signup" "menu"}}
+  {{hide-application-sidebar}}
 
-<section class="container">
-  <div class="contents clearfix body-page">
-    <div class="login-welcome">
-      <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
-      <PluginOutlet @name="above-static" />
+  <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+  <div class="login-fullpage">
+    <div class={{concat-class "login-body" this.bodyClasses}}>
+      <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
 
-      <div class="login-content">
-        {{html-safe this.model.html}}
-      </div>
-
-      <PluginOutlet @name="below-static" />
-      <PluginOutlet @name="below-login" @outletArgs={{hash model=this.model}} />
-
-      <div class="body-page-button-container">
-        {{#if this.application.canSignUp}}
-          <DButton
-            @action={{route-action "showCreateAccount"}}
-            @label="sign_up"
-            class="btn-primary sign-up-button"
-          />
+      {{#if this.hasNoLoginOptions}}
+        <div class={{if this.site.desktopView "login-left-side"}}>
+          <div class="login-welcome-header no-login-methods-configured">
+            <h1 class="login-title">{{i18n "login.no_login_methods.title"}}</h1>
+            <img />
+            <p class="login-subheader">
+              {{html-safe
+                (i18n
+                  "login.no_login_methods.description"
+                  (hash adminLoginPath=this.adminLoginPath)
+                )
+              }}
+            </p>
+          </div>
+        </div>
+      {{else}}
+        {{#if this.site.mobileView}}
+          <WelcomeHeader
+            @header={{i18n "login.header_title"}}
+            @subheader={{i18n "login.subheader_title"}}
+          >
+            <PluginOutlet
+              @name="login-header-bottom"
+              @outletArgs={{hash createAccount=this.createAccount}}
+            />
+          </WelcomeHeader>
+          {{#if this.showLoginButtons}}
+            <LoginButtons
+              @externalLogin={{this.externalLoginAction}}
+              @passkeyLogin={{this.passkeyLogin}}
+              @context="login"
+            />
+          {{/if}}
         {{/if}}
 
-        <DButton
-          @action={{route-action "showLogin"}}
-          @icon="user"
-          @label="log_in"
-          class="btn-primary login-button"
-        />
-      </div>
+        {{#if this.canLoginLocal}}
+          <div class={{if this.site.desktopView "login-left-side"}}>
+            {{#if this.site.desktopView}}
+              <WelcomeHeader
+                @header={{i18n "login.header_title"}}
+                @subheader={{i18n "login.subheader_title"}}
+              >
+                <PluginOutlet
+                  @name="login-header-bottom"
+                  @outletArgs={{hash createAccount=this.createAccount}}
+                />
+              </WelcomeHeader>
+            {{/if}}
+            <LocalLoginForm
+              @loginName={{this.loginName}}
+              @loginNameChanged={{this.loginNameChanged}}
+              @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+              @canUsePasskeys={{this.canUsePasskeys}}
+              @passkeyLogin={{this.passkeyLogin}}
+              @loginPassword={{this.loginPassword}}
+              @secondFactorMethod={{this.secondFactorMethod}}
+              @secondFactorToken={{this.secondFactorToken}}
+              @backupEnabled={{this.backupEnabled}}
+              @totpEnabled={{this.totpEnabled}}
+              @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
+              @securityKeyChallenge={{this.securityKeyChallenge}}
+              @showSecurityKey={{this.showSecurityKey}}
+              @otherMethodAllowed={{this.otherMethodAllowed}}
+              @showSecondFactor={{this.showSecondFactor}}
+              @handleForgotPassword={{this.handleForgotPassword}}
+              @login={{this.triggerLogin}}
+              @flashChanged={{this.flashChanged}}
+              @flashTypeChanged={{this.flashTypeChanged}}
+              @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
+            />
+            {{#if this.site.desktopView}}
+              <LoginPageCta
+                @canLoginLocal={{this.canLoginLocal}}
+                @showSecurityKey={{this.showSecurityKey}}
+                @login={{this.triggerLogin}}
+                @loginButtonLabel={{this.loginButtonLabel}}
+                @loginDisabled={{this.loginDisabled}}
+                @showSignupLink={{this.showSignupLink}}
+                @createAccount={{this.createAccount}}
+                @loggingIn={{this.loggingIn}}
+                @showSecondFactor={{this.showSecondFactor}}
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if (and this.showLoginButtons this.site.desktopView)}}
+          {{#unless this.canLoginLocal}}
+            <div class="login-left-side">
+              <WelcomeHeader
+                @header={{i18n "login.header_title"}}
+                @subheader={{i18n "login.subheader_title"}}
+              />
+            </div>
+          {{/unless}}
+          {{#if this.hasAtLeastOneLoginButton}}
+            <div class="login-right-side">
+              <LoginButtons
+                @externalLogin={{this.externalLoginAction}}
+                @passkeyLogin={{this.passkeyLogin}}
+                @context="login"
+              />
+            </div>
+          {{/if}}
+        {{/if}}
+      {{/if}}
+
+      {{#if this.site.mobileView}}
+        {{#unless this.hasNoLoginOptions}}
+          <LoginPageCta
+            @canLoginLocal={{this.canLoginLocal}}
+            @showSecurityKey={{this.showSecurityKey}}
+            @login={{this.triggerLogin}}
+            @loginButtonLabel={{this.loginButtonLabel}}
+            @loginDisabled={{this.loginDisabled}}
+            @showSignupLink={{this.showSignupLink}}
+            @createAccount={{this.createAccount}}
+            @loggingIn={{this.loggingIn}}
+            @showSecondFactor={{this.showSecondFactor}}
+          />
+        {{/unless}}
+      {{/if}}
     </div>
   </div>
-</section>
+
+{{else}}
+  {{body-class "static-login"}}
+  <section class="container">
+    <div class="contents clearfix body-page">
+      <div class="login-welcome">
+        <PluginOutlet
+          @name="above-login"
+          @outletArgs={{hash model=this.model}}
+        />
+        <PluginOutlet @name="above-static" />
+
+        <div class="login-content">
+          {{html-safe this.model.html}}
+        </div>
+
+        <PluginOutlet @name="below-static" />
+        <PluginOutlet
+          @name="below-login"
+          @outletArgs={{hash model=this.model}}
+        />
+
+        <div class="body-page-button-container">
+          {{#if this.application.canSignUp}}
+            <DButton
+              @action={{route-action "showCreateAccount"}}
+              @label="sign_up"
+              class="btn-primary sign-up-button"
+            />
+          {{/if}}
+
+          <DButton
+            @action={{if
+              this.siteSettings.experimental_full_page_login
+              this.showLoginPage
+              (route-action "showLogin")
+            }}
+            @icon="user"
+            @label="log_in"
+            class="btn-primary login-button"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+{{/if}}

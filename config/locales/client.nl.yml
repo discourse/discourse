@@ -27,6 +27,7 @@ nl:
         millions: "%{number}M"
     dates:
       time: "HH.mm"
+      time_short: "h:mm"
       time_with_zone: "HH.mm (z)"
       time_short_day: "ddd, HH.mm"
       timeline_date: "MMM YYYY"
@@ -141,7 +142,6 @@ nl:
       topic_html: 'Topic: <span class="topic-title">%{topicTitle}</span>'
       post: "bericht %{postNumber} van @%{username}"
       close: "sluiten"
-      twitter: "Delen op Twitter"
       facebook: "Delen op Facebook"
       email: "Verzenden via e-mail"
       url: "URL kopiëren en delen"
@@ -297,6 +297,7 @@ nl:
       pill: "Voorgesteld"
       pm_title: "Voorgestelde berichten"
     about:
+      edit: "Deze pagina bewerken"
       simple_title: "Over"
       title: "Over %{title}"
       stats: "Websitestatistieken"
@@ -1624,7 +1625,7 @@ nl:
         add_email: "Alternatief e-mailadres toevoegen"
         auth_override_instructions: "E-mailadres kan worden bijgewerkt via de verificatieprovider."
         no_secondary: "Geen secundaire e-mailadressen"
-        instructions: "Nooit openbaar zichtbaar."
+        instructions: "Nooit openbaar zichtbaar"
         admin_note: "Opmerking: een beheerder die het e-mailadres van een andere niet-beheerder wijzigt, geeft aan dat de gebruiker geen toegang meer heeft tot diens e-mailaccount, dus wordt er een e-mail voor wachtwoordherstel naar diens nieuwe adres gestuurd. Het e-mailadres van de gebruiker wordt pas gewijzigd nadat deze het proces voor wachtwoordherstel heeft voltooid."
         ok: "We sturen een e-mail ter bevestiging"
         required: "Voer een e-mailadres in"
@@ -1655,14 +1656,14 @@ nl:
         approval_required: "Voordat je toegang hebt tot dit forum, moet een moderator je nieuwe account handmatig goedkeuren. Je ontvangt een e-mail zodra je account is goedgekeurd!"
       name:
         title: "Naam"
-        instructions: "Je volledige naam (optioneel)."
-        instructions_required: "Je volledige naam."
+        instructions: "Je volledige naam (optioneel)"
+        instructions_required: "Je volledige naam"
         required: "Voer een naam in"
         too_short: "Je naam is te kort"
         ok: "Je naam ziet er goed uit"
       username:
         title: "Gebruikersnaam"
-        instructions: "Uniek, geen spaties, kort."
+        instructions: "Uniek, geen spaties, kort"
         short_instructions: "Mensen kunnen je vermelden als @%{username}"
         available: "Je gebruikersnaam is beschikbaar"
         not_available: "Niet beschikbaar. %{suggestion} proberen?"
@@ -1826,12 +1827,11 @@ nl:
           success: "Uitnodigingslink gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingslink"
         invite:
-          new_title: "Uitnodiging maken"
-          edit_title: "Uitnodiging bewerken"
           instructions: "Deel deze link om direct toegang te geven tot deze site:"
-          copy_link: "link kopiëren"
           expires_in_time: "Verloopt over %{time}"
           expired_at_time: "Verlopen om %{time}"
+          copy_link: "Link kopiëren"
+          link_copied: "Link gekopieerd!"
           show_advanced: "Geavanceerde opties weergeven"
           hide_advanced: "Geavanceerde opties verbergen"
           restrict: "Beperken tot"
@@ -1841,11 +1841,11 @@ nl:
           max_redemptions_allowed: "Max. gebruiken"
           add_to_groups: "Toevoegen aan groepen"
           invite_to_topic: "Kom bij topic"
-          expires_at: "Verloopt na"
-          custom_message: "Optioneel persoonlijk bericht"
+          expires_after: "Verloopt na"
           send_invite_email: "E-mail opslaan en verzenden"
           send_invite_email_instructions: "Beperk uitnodiging tot e-mail om een uitnodigings-e-mail te sturen"
-          save_invite: "Uitnodiging opslaan"
+          save_invite: "Opslaan"
+          cancel: "Annuleren"
           invite_saved: "Uitnodiging opgeslagen."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
@@ -1877,8 +1877,8 @@ nl:
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
         ok: "Je wachtwoord ziet er goed uit."
         instructions:
-          one: "Minimaal %{count} teken."
-          other: "Minimaal %{count} tekens."
+          one: "Minimaal %{count} teken"
+          other: "Minimaal %{count} tekens"
         required: "Voer een wachtwoord in"
         confirm: "Bevestigen"
         incorrect_password: "Het ingevoerde wachtwoord is onjuist."
@@ -4726,6 +4726,7 @@ nl:
         installed_version: "Geïnstalleerd"
         latest_version: "Nieuwste"
         problems_found: "Advies op basis van je huidige website-instellingen"
+        dismiss_notice: "Sluiten"
         new_features:
           title: "Wat is er nieuw"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
@@ -5195,9 +5196,14 @@ nl:
           screened_ips: "Gecontroleerde IP-adressen"
           screened_urls: "Gecontroleerde URL's"
           search_logs: "Zoeken in logs"
-          security: "Beveiliging"
-          spam: "Spam"
           staff_action_logs: "Actielogs personeel"
+      section_landing_pages:
+        account:
+          title: "Account"
+          backups:
+            title: "Back-ups"
+          whats_new:
+            title: "Wat is er nieuw"
       config_areas:
         about:
           header: "Over je site"
@@ -5207,8 +5213,6 @@ nl:
           community_summary: "Samenvatting van de community"
           community_description: "Beschrijving van de community"
           banner_image: "Bannerafbeelding"
-          banner_image_help: |
-            Deze wordt gebruikt op je Over-pagina. Aanbevolen grootte: 800x300 pixels. Geaccepteerde bestandstypen: JPG, PNG en SVG tot 10 MB.
           contact_information: "Contactgegevens"
           community_owner: "Communityeigenaar"
           community_owner_placeholder: "Piet Jansen"
@@ -5284,6 +5288,9 @@ nl:
             title: "Meer opties"
             move_up: "Omhoog verplaatsen"
             move_down: "Omlaag verplaatsen"
+        look_and_feel:
+          themes:
+            title: "Thema's"
       plugins:
         title: "Plug-ins"
         name: "Naam"
@@ -6665,10 +6672,6 @@ nl:
             with_post: <span class="username">%{username}</span> voor bericht in %{link}
             with_post_time: <span class="username">%{username}</span> voor bericht in %{link} om <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> om <span class="time">%{time}</span>
-        badge_intro:
-          title: "Selecteer een bestaande badge of maak een nieuwe om te beginnen"
-          what_are_badges_title: "Wat zijn badges?"
-          badge_query_examples_title: "Voorbeelden van badgequery's"
         mass_award:
           title: Bulktoekenning
           description: Dezelfde badge aan meerdere gebruikers tegelijk toekennen.

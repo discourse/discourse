@@ -27,6 +27,7 @@ es:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -141,7 +142,6 @@ es:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicación n.º %{postNumber}, por @%{username}"
       close: "cerrar"
-      twitter: "Compartir en Twitter"
       facebook: "Compartir en Facebook"
       email: "Enviar por correo electrónico"
       url: "Copiar y compartir la URL"
@@ -297,6 +297,7 @@ es:
       pill: "Sugeridos"
       pm_title: "Mensajes sugeridos"
     about:
+      edit: "Edita esta página"
       simple_title: "Acerca de"
       title: "Acerca de %{title}"
       stats: "Estadísticas del sitio"
@@ -1632,7 +1633,7 @@ es:
         add_email: "Añadir correo electrónico alternativo"
         auth_override_instructions: "El correo electrónico se puede actualizar desde el proveedor de autenticación."
         no_secondary: "Sin correos electrónicos secundarios"
-        instructions: "Nunca se mostrará al público."
+        instructions: "Nunca se mostrará al público"
         admin_note: "Nota: Un usuario administrador que cambia el correo electrónico de otro usuario no administrador indica que el usuario ha perdido el acceso a su cuenta de correo electrónico original, por lo que se enviará un correo electrónico para restablecer la contraseña a su nueva dirección. El correo electrónico del usuario no cambiará hasta que complete el proceso de restablecimiento de contraseña."
         ok: "Te enviaremos un correo electrónico para confirmar"
         required: "Introduce un correo electrónico"
@@ -1663,14 +1664,14 @@ es:
         approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un correo electrónico cuando tu cuenta sea aprobada!"
       name:
         title: "Nombre"
-        instructions: "Tu nombre completo (opcional)."
-        instructions_required: "Tu nombre completo."
+        instructions: "Tu nombre completo (opcional)"
+        instructions_required: "Tu nombre completo"
         required: "Introduce un nombre"
         too_short: "Tu nombre es demasiado corto"
         ok: "Tu nombre parece adecuado"
       username:
         title: "Nombre de usuario"
-        instructions: "Único, sin espacios, corto."
+        instructions: "Único, sin espacios, corto"
         short_instructions: "Los demás usuarios pueden mencionarte como @%{username}"
         available: "Tu nombre de usuario está disponible"
         not_available: "No disponible. ¿Quieres probar con %{suggestion}?"
@@ -1834,12 +1835,11 @@ es:
           success: "¡Enlace de invitación generado correctamente!"
           error: "Ha ocurrido un error al generar el enlace de invitación"
         invite:
-          new_title: "Crear invitación"
-          edit_title: "Editar invitación"
           instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
-          copy_link: "copiar enlace"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
+          copy_link: "Copiar enlace"
+          link_copied: "¡Enlace copiado!"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
           restrict: "Restringir a"
@@ -1849,11 +1849,11 @@ es:
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Añadir a grupos"
           invite_to_topic: "Abrir tema al terminar el registro"
-          expires_at: "Caducar tras"
-          custom_message: "Mensaje personal opcional"
+          expires_after: "Caducar tras"
           send_invite_email: "Guardar y enviar correo electrónico"
           send_invite_email_instructions: "Restringir la invitación al correo electrónico para enviar un correo electrónico de invitación"
-          save_invite: "Guardar invitación"
+          save_invite: "Guardar"
+          cancel: "Cancelar"
           invite_saved: "Invitación guardada."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
@@ -1885,8 +1885,8 @@ es:
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
         ok: "Tu contraseña es válida."
         instructions:
-          one: "Al menos %{count} carácter."
-          other: "Al menos %{count} caracteres."
+          one: "Al menos %{count} carácter"
+          other: "Al menos %{count} caracteres"
         required: "Introduce una contraseña"
         confirm: "Confirmar"
         incorrect_password: "La contraseña introducida es incorrecta."
@@ -4735,6 +4735,7 @@ es:
         installed_version: "Instalada"
         latest_version: "Última"
         problems_found: "Algunos consejos con base en tus ajustes actuales"
+        dismiss_notice: "Descartar"
         new_features:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
@@ -5204,9 +5205,14 @@ es:
           screened_ips: "Direcciones IP bloqueadas"
           screened_urls: "URL bloqueadas"
           search_logs: "Registros de búsqueda"
-          security: "Seguridad"
-          spam: "Spam"
           staff_action_logs: "Registros de acciones del personal"
+      section_landing_pages:
+        account:
+          title: "Cuenta"
+          backups:
+            title: "Copias de seguridad"
+          whats_new:
+            title: "Novedades"
       config_areas:
         about:
           header: "Acerca de tu sitio"
@@ -5216,8 +5222,6 @@ es:
           community_summary: "Resumen comunitario"
           community_description: "Descripción de la comunidad"
           banner_image: "Imagen del banner"
-          banner_image_help: |
-            Se utilizará en tu página Acerca de. Tamaño recomendado: 800x300px. Tipos aceptados: JPG, PNG y SVG hasta 10 MB.
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
           community_owner_placeholder: "Pepe Luis"
@@ -5294,6 +5298,9 @@ es:
             title: "Más opciones"
             move_up: "Subir"
             move_down: "Bajar"
+        look_and_feel:
+          themes:
+            title: "Tema"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
@@ -6678,10 +6685,6 @@ es:
             with_post: <span class="username">%{username}</span> por la publicación en %{link}
             with_post_time: <span class="username">%{username}</span> por la publicación en %{link} a las <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> a las <span class="time">%{time}</span>
-        badge_intro:
-          title: "Selecciona una medalla existente o crea una para empezar"
-          what_are_badges_title: "¿Qué son las medallas?"
-          badge_query_examples_title: "Ejemplos de consultas de medallas"
         mass_award:
           title: Conceder en masa
           description: Concede la misma medalla a muchos usuarios a la vez.

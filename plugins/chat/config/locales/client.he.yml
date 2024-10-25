@@ -52,7 +52,6 @@ he:
       deleted_chat_username: נמחק
       dates:
         yesterday: "אתמול"
-        time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
       already_enabled: "כבר מופעל צ׳אט בנושא הזה. נא לרענן."
       disabled_for_topic: "הצ׳אט מושבת בנושא הזה."
@@ -142,6 +141,7 @@ he:
       header_indicator_preference:
         title: "הצגת מחוון פעילות בכותרת"
         all_new: "כל ההודעות החדשות"
+        dm_and_mentions: "הודעות ישירות, אזכורים ושרשורים במעקב"
         only_mentions: "רק אזכורים"
         never: "לעולם לא"
       separate_sidebar_mode:
@@ -265,6 +265,7 @@ he:
       placeholder_channel: "צ׳אט ב־%{channelName}"
       placeholder_thread: "צ'אט בשרשור"
       placeholder_users: "צ׳אט עם %{commaSeparatedNames}"
+      placeholder_group: "צ׳אט בקבוצה"
       placeholder_new_message_disallowed:
         archived: "הערוץ הועבר לארכיון, אי אפשר לשלוח אליו הודעות חדשות כעת."
         closed: "הערוץ סגור, אי אפשר לשלוח אליו הודעות חדשות כעת."
@@ -493,10 +494,9 @@ he:
         auto_join_users_info: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה %{category}."
         auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
-        desktop_notification_level: "התראות שולחן עבודה"
+        notification_level: "שליחת הודעות דחיפה"
         follow: "הצטרפות"
         followed: "הצטרפו"
-        mobile_notification_level: "התראות בדחיפה לנייד"
         mute: "השתקת ערוץ"
         threading_enabled: "פעיל"
         threading_disabled: "כבוי"
@@ -519,6 +519,7 @@ he:
           title: "ייצוא הודעות צ׳אט"
           description: "פעולה זו תייצא את כל ההודעות מכל הערוצים."
           create_export: "יצירת ייצוא"
+          confirm_export: "מייצא את כל ההודעות מכל הערוצים ושולח אליך את התוצאה בהודעה אישית. לייצא?"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       my_threads:
         title: השרשורים שלי
@@ -537,6 +538,7 @@ he:
       incoming_webhooks:
         back: "חזרה"
         channel_placeholder: "בחירת ערוץ"
+        channel: "ערוץ"
         confirm_destroy: "למחוק את ההתלייה הנכנסת? אי אפשר לבטל את זה."
         current_emoji: "ה־Emoji הנוכחי"
         description: "תיאור"
@@ -560,6 +562,8 @@ he:
         username: "שם משתמש"
         username_instructions: "שם משתמש הבוט שמפרסם לערוץ. ברירת המחדל היא ‚מערכת’ כשזה נשאר ריק."
         instructions: "מערכות חיצוניות יכולות להשתמש בהתליות כדי לפרסם הודעות לערוץ צ׳אט מסוים כמשתמש בוט דרך נקודת הגישה ‏<code>/hooks/:key</code>‎. המטען מורכב ממשתנה <code>text</code> (טקסט) יחיד שמוגבל ל־2000 תווים. <br><br>אנו תומכים גם במשתני <code>text</code> בעיצוב Slack, חילוץ קישורים ואזכורים לפי התקן <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, לשם כך יש להשתמש בנקודת הקצה ‎<code>/hooks/:key/slack</code>‎."
+        saved: "השינויים להתלייה נשמרו"
+        created: "נוצרה התלייה"
       selection:
         cancel: "ביטול"
         quote_selection: "ציטוט בנושא"
@@ -651,10 +655,13 @@ he:
         notifications:
           regular:
             title: "רגיל"
+            description: "קבלת התראה שמזכירים אותך בשרשור הזה."
           tracking:
             title: "מעקב"
+            description: "קבלת התראה כשמזכירים אותך בשרשור הזה ולראות את כמות התגובות החדשות ברשימת השרשורים."
           watching:
             title: "במעקב"
+            description: "קבלת התראה כל כל התגובות בשרשור הזה ולראות את כמות התגובות החדשות ברשימת השרשורים."
         participants_other_count:
           one: "+%{count}"
           two: "+%{count}"
@@ -682,6 +689,11 @@ he:
       chat_invitation: "נשלחה אליך הזמנה להצטרף לערוץ צ׳אט"
       chat_invitation_html: "<span>הוזמנת להצטרף לערוץ צ׳אט על ידי</span> <span>%{username}</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} וגם %{username2}"
+        two: "%{username} ועוד %{count}"
+        many: "%{username} ועוד %{count}"
+        other: "%{username} ועוד %{count}"
       popup:
         chat_mention:
           direct: 'אוזכרת בערוץ „%{channel}”'

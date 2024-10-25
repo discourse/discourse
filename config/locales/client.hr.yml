@@ -169,7 +169,6 @@ hr:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "objava #%{postNumber} od @%{username}"
       close: "zatvori"
-      twitter: "Podijeli na Twitteru"
       facebook: "Podijeli na Facebooku"
       email: "Pošalji putem e-maila"
       url: "Kopiraj i podijeli URL"
@@ -1541,7 +1540,7 @@ hr:
         add_email: "Dodaj zamjensku e-poštu"
         auth_override_instructions: "E-pošta se može ažurirati od davatelja autentičnosti."
         no_secondary: "Nema sekundarnih e-pošta"
-        instructions: "Nikada neće biti javno prikazano."
+        instructions: "Nikada neće biti javno prikazano"
         admin_note: "Napomena: Administratorski korisnik koji mijenja e-adresu drugog ne-administrativnog korisnika znači da je korisnik izgubio pristup svom izvornom računu e-pošte, pa će se e-pošta za resetiranje lozinke poslati na njegovu novu adresu. E-adresa korisnika neće se mijenjati dok ne dovrše postupak resetiranja lozinke."
         ok: "Poslati ćemo vam e-mail za potvrdu"
         required: "Unesite e-mail adresu"
@@ -1573,14 +1572,14 @@ hr:
         approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
       name:
         title: "Ime"
-        instructions: "Vaše ime i prezime (neobavezno)."
-        instructions_required: "Vaše ime i prezime."
+        instructions: "Vaše ime i prezime (neobavezno)"
+        instructions_required: "Vaše ime i prezime"
         required: "Unesite ime"
         too_short: "Ime vam je prekratko"
         ok: "Vaše ime dobro izgleda"
       username:
         title: "Korisničko ime"
-        instructions: "Jedinstveno, bez razmaka, kratko."
+        instructions: "Jedinstveno, bez razmaka, kratko"
         short_instructions: "Ljudi vas mogu spominjati kao @%{username}"
         available: "Vaše je korisničko ime slobodno"
         not_available: "Nije dostupno. Pokušajte %{suggestion}?"
@@ -1745,10 +1744,7 @@ hr:
           success: "Pozivnica uspješno napravljena"
           error: "Došlo je do pogreške generiranja linka za pozivnicu"
         invite:
-          new_title: "Stvori pozivnicu"
-          edit_title: "Uredi pozivnicu"
           instructions: "Podijelite ovu vezu da biste odmah dodijelili pristup stranici:"
-          copy_link: "kopiraj link"
           expires_in_time: "Istječe za %{time}"
           expired_at_time: "Isteklo u %{time}"
           show_advanced: "Prikaži napredne mogućnosti"
@@ -1760,11 +1756,11 @@ hr:
           max_redemptions_allowed: "Max korisnika"
           add_to_groups: "Dodaj u grupe"
           invite_to_topic: "Dođite do teme"
-          expires_at: "Istječe nakon"
-          custom_message: "Izborna osobna poruka"
+          expires_after: "Istječe nakon"
           send_invite_email: "Spremi i pošalji e-mail"
           send_invite_email_instructions: "Ograničite pozivnicu na e-poštu za slanje e-pošte s pozivnicom"
-          save_invite: "Spremi pozivnicu"
+          save_invite: "Spremi"
+          cancel: "Odustani"
           invite_saved: "Pozivnica je spremljena."
         bulk_invite:
           none: "Nema pozivnica za prikaz na ovoj stranici."
@@ -2057,7 +2053,7 @@ hr:
     login:
       header_title: "Dobro došli natrag"
       subheader_title: "Prijavite se na svoj račun"
-      title: "Prijavite se"
+      title: "Prijava"
       username: "Korisnik"
       password: "Zaporka"
       show_password: "Pokaži"
@@ -2464,6 +2460,10 @@ hr:
         few: "<span class='multi-user'>%{username} i %{count} druga</span> %{description}"
         other: "<span class='multi-user'>%{username} i %{count} drugih</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
+      liked_by_multiple_users:
+        one: "%{username} i %{count} drugi"
+        few: "%{username} i %{count} druga"
+        other: "%{username} i %{count} drugih"
       liked_consolidated_description:
         one: "se sviđa vaš %{count} post"
         few: "se sviđa vaših %{count} postova"
@@ -2890,6 +2890,8 @@ hr:
       move_to_inbox:
         title: "Premjesti u ulaznu poštu"
         help: "Premjestite poruku nazad u dolazni pretinac"
+      defer:
+        title: "Označi kao nepročitano"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitano"
@@ -4427,6 +4429,7 @@ hr:
         installed_version: "Instalirano"
         latest_version: "Posljednje"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
+        dismiss_notice: "Skloni"
         new_features:
           title: "Što je novo"
           learn_more: "Saznajte više..."
@@ -4755,6 +4758,7 @@ hr:
           components:
             title: "Komponente"
       email_settings:
+        title: "E-mail postavke"
         sidebar_link:
           appearance: "Izgled"
           preview_summary: "Sažetak pregleda"
@@ -4773,8 +4777,13 @@ hr:
           screened_ips: "Provjereni IP-pvi"
           screened_urls: "Provjereni URL-ovi"
           search_logs: "Pretraživanje dnevnika"
-          security: "Sigurnost"
-          spam: "Nepoželjno"
+      section_landing_pages:
+        account:
+          title: "Račun"
+          backups:
+            title: "Sigurnosne kopije"
+          whats_new:
+            title: "Što je novo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -4795,6 +4804,9 @@ hr:
             invalid_applies_to: "Potrebno"
             topic: "tema"
             post: "objave"
+        look_and_feel:
+          themes:
+            title: "Teme"
       plugins:
         title: "Dodaci"
         name: "Naziv"
@@ -4845,6 +4857,7 @@ hr:
         upload:
           label: "Učitaj"
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
+          uploading: "Prijenos…"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         settings: "Postavke"
@@ -4919,6 +4932,7 @@ hr:
           all_filter: "Sve"
           enabled_filter: "Omogućeno"
           disabled_filter: "Onemogućeno"
+          updates_available_filter: "Ažuriranja dostupna"
         theme:
           theme: "Tema"
           component: "Komponenta"
@@ -5097,6 +5111,7 @@ hr:
           all_filter: "Sve"
           active_filter: "Aktivno"
           inactive_filter: "Neaktivan"
+          updates_available_filter: "Ažuriranja dostupna"
           schema:
             fields:
               required: "*potrebno"
@@ -5980,10 +5995,6 @@ hr:
             with_post: <span class="username">%{username}</span> za objavu u %{link}
             with_post_time: <span class="username">%{username}</span> za objavu u %{link} u <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
-        badge_intro:
-          title: "Odaberite postojeću značku ili izradite novu da biste započeli"
-          what_are_badges_title: "Što su značke?"
-          badge_query_examples_title: "Primjeri upita za značke"
         mass_award:
           title: Skupna nagrada
           description: Dodijelite istu značku velikom broju korisnika odjednom.
@@ -5999,6 +6010,7 @@ hr:
         help: "Dodajte nove emojije koji će biti dostupni svima. Povucite i ispustite više datoteka odjednom bez unosa naziva da biste stvorili emojije koristeći njihove nazive datoteka. Odabrana grupa će se koristiti za sve datoteke koje se dodaju u isto vrijeme. Također možete kliknuti \"Dodaj novi emoji\" da otvorite alat za odabir datoteka."
         add: "Dodaj novi emoji"
         choose_files: "Odaberite Datoteke"
+        uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -6066,6 +6078,7 @@ hr:
       step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Učitaj datoteku"
+      uploading: "Prijenos…"
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:
         one: "Vaša zajednica ima %{count} djelatnika (vi)."

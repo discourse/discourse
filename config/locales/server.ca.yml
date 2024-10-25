@@ -406,6 +406,15 @@ ca:
             ip_address:
               blocked: "No es permeten nous registres des de la vostra adreça IP."
               max_new_accounts_per_registration_ip: "No es permeten registres nous des de la vostra adreça IP (s'ha arribat al límit màxim). Contacteu amb un membre de l'equip responsable."
+        user_password:
+          attributes:
+            password:
+              common: "és una de les 10000 contrasenyes més freqüents. Feu servir una contrasenya més segura."
+              same_as_username: "és igual que la vostra identitat. Feu servir una contrasenya més segura."
+              same_as_email: "és igual que el vostre correu electrònic. Feu servir una contrasenya més segura."
+              same_as_current: "és igual que la vostra contrasenya actual."
+              same_as_name: "és igual que el vostre nom."
+              unique_characters: "té massa caràcters repetits. Trieu una contrasenya més segura."
         user_email:
           attributes:
             user_id:
@@ -822,13 +831,13 @@ ca:
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
-      title: "Pàgines vistes consolidades"
+      title_legacy: "Pàgines vistes consolidades"
       xaxis:
         page_view_crawler: "Rastrejadors"
         page_view_anon: "Usuaris anònims"
         page_view_logged_in: "Usuaris que han iniciat la sessió"
       yaxis: "Dia"
-      description: "Pàgines vistes d'usuaris amb sessió iniciada, usuaris anònims i rastrejadors."
+      description_legacy: "Pàgines vistes d'usuaris amb sessió iniciada, usuaris anònims i rastrejadors."
       labels:
         post: Publicació
         editor: Editor
@@ -840,6 +849,8 @@ ca:
         user_api: "API d'usuari"
       yaxis: "Dia"
     consolidated_page_views_browser_detection:
+      yaxis: "Dia"
+    site_traffic:
       yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
@@ -990,6 +1001,9 @@ ca:
       xaxis: "Dia"
       yaxis: "Total de pàgines vistes"
       description: "Nombre de pàgines vistes noves de tots els visitants."
+    page_view_legacy_total_reqs:
+      xaxis: "Dia"
+      yaxis: "Total de pàgines vistes"
     page_view_logged_in_mobile_reqs:
       title: "Pàgines vistes amb inici de sessió"
       xaxis: "Dia"
@@ -1107,8 +1121,19 @@ ca:
       host_names: "El vostre fitxer config/database.yml empra el nom d'amfitrió local per defecte. Actualitzeu-lo per a fer servir el nom del vostre lloc web."
       queue_size: "El nombre de tasques en cua és de %{queue_size}, que és elevat. Això podria indicar un problema amb un o més processos, o potser us cal afegir més treballadors de <i>Sidekiq</i>."
       ram: "El vostre servidor s'està executant amb menys d'1 GB de memòria total. Es recomana com a mínim un 1 GB de memòria."
+      s3_upload_config: 'El servidor és configurat per a carregar fitxers a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu la configuració. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
+      s3_backup_config: 'El servidor és configurat per a carregar còpies de seguretat a S3, però almenys un dels paràmetres següents no és definit: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Aneu a <a href="%{base_path}/admin/site_settings">la configuració del lloc web</a> i actualitzeu-la. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vegeu "Com configurar la càrrega d''imatges a S3" per a saber-ne més</a>.'
+      image_magick: 'El servidor és configurat per a crear miniatures d''imatges grans, però ImageMagick no és instal·lat. Instal·leu ImageMagick amb el vostre gestor de paquets preferit o <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixeu la versió més recent</a>.'
+      failing_emails: 'Hi ha %{num_failed_jobs} tasques de correu electrònic que han fallat. Comproveu app.yml i assegureu-vos que la configuració del servidor de correu és correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Consulteu les tasques fallides en Sidekiq</a>.'
       subfolder_ends_in_slash: "La vostra configuració de subcarpeta no és correcta; DISCOURSE_RELATIVE_URL_ROOT acaba amb barra inclinada."
+      email_polling_errored_recently:
+        one: "La consulta del correu (email polling) ha generat un error durant les darreres 24 hores. Doneu una ullada als <a href='%{base_path}/logs' target='_blank'>registres (logs)</a> per a saber-ne més."
+        other: "La consulta del correu (email polling) ha generat %{count} errors durant les darreres 24 hores. Doneu una ullada als <a href='%{base_path}/logs' target='_blank'>registres (logs)</a> per a saber-ne més."
       missing_mailgun_api_key: "El servidor està configurat per a enviar correus electrònics mitjançant Mailgun, però no heu proporcionat cap clau d'API per a verificar els missatges del webhook."
+      bad_favicon_url: "El favicon no es pot carregar. Comproveu la vostra configuració de favicon en <a href='%{base_path}/admin/site_settings'>Configuració del lloc web</a> ."
+      poll_pop3_timeout: "S'ha esgotat el temps de connexió al servidor POP3. No s'ha pogut recuperar el correu entrant. Reviseu la vostra <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a> i el proveïdor de serveis."
+      poll_pop3_auth_error: "La connexió al servidor POP3 està fallant amb un error d'autenticació. Reviseu la vostra <a href='%{base_path}/admin/site_settings/category/email'>configuració de POP3</a>."
+      force_https: "El vostre lloc web utilitza SSL. Però ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> encara no és activat en la configuració del vostre lloc web."
   site_settings:
     disabled: "desactivat"
     censored_words: "Paraules que es reemplaçaran automàticament amb &#9632;&#9632;&#9632;&#9632;"
@@ -1201,12 +1226,10 @@ ca:
     use_admin_ip_allowlist: "Els administradors sols poden iniciar la sessió des d'una adreça IP definida en la llista d'IPs sota supervisió (Administració > Registres > IPs sota supervisió)."
     blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
-    allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
-    post_menu_hidden_items: "Elements del menú que s'oculten per defecte en el menú de publicacions llevat que es faci clic en els tres punts d'expansió."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
     site_contact_group_name: "Nom de grup vàlid per a ser convidat a tots els missatges automatitzats."
@@ -1415,7 +1438,6 @@ ca:
     hard_bounce_score: "Puntuació de rebot afegida a l'usuari quan hi ha un rebot permanent."
     bounce_score_threshold: "Puntuació màxima de rebot a partir de la qual es deixaran d'enviar correus a un usuari."
     reset_bounce_score_after_days: "Restableix automàticament la puntuació de rebot després de X dies."
-    forwarded_emails_behaviour: "Com s'ha de tractar un correu electrònic reenviat a Discourse"
     always_show_trimmed_content: "Mostra sempre la part retallada dels correus entrants. AVÍS: Pot revelar adreces de correu."
     private_email: "No incloguis contingut de publicacions o temes en el títol o el cos del correu electrònic. NOTA: també desactiva els correus electrònics de resum."
     email_total_attachment_size_limit_kb: "Mida total màxima dels fitxers adjuntats als correus sortints. 0 per a inhabilitar l’enviament d'adjunts."
@@ -1489,7 +1511,6 @@ ca:
     app_association_android: "Contingut del punt final (endpoint) <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>, utilitzat per a l’API de Digital Asset Links de Google."
     app_association_ios: "Contingut del punt final (endpoint) <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, utilitzat per a crear enllaços universals entre aquest lloc i les aplicacions iOS."
     auto_handle_queued_age: "Tracta automàticament els registres que esperen ser revisats després d'aquest nombre de dies. Les banderes s'ignoraran. Les publicacions en cua i els usuaris seran rebutjats. Poseu-ho a 0 per a desactivar la funció."
-    svg_icon_subset: "Afegiu 5 icones FontAwesome addicionals que voleu incloure en els vostres actius. Utilitzeu el prefix \"fa-\" per a icones sòlides, \"far-\" per a les icones habituals i \"fab-\" per a les icones de marca."
     full_name_required: "El nom complet és un camp obligatori del perfil d'usuari."
     enable_names: "Mostra el nom complet de l'usuari en el seu perfil, la seva targeta d'usuari i els seus correus. Desactiveu-ho per a amagar el nom complet a tot arreu."
     display_name_on_posts: "Mostra el nom complet de l'usuari en les seves publicacions a més del seu @nomdusuari."

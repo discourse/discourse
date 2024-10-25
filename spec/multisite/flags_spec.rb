@@ -2,8 +2,6 @@
 
 RSpec.describe "Custom flags in multisite", type: :multisite do
   describe "PostACtionType#all_flags" do
-    use_redis_snapshotting
-
     it "does not share flag definitions between sites" do
       flag_1 = Flag.create!(name: "test flag 1", position: 99, applies_to: ["Post"])
 

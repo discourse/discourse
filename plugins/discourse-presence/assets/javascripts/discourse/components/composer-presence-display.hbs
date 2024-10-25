@@ -1,23 +1,30 @@
-{{#if this.shouldDisplay}}
-  <div class="presence-users">
-    <div class="presence-avatars">
-      {{#each this.presenceUsers as |user|}}
-        {{avatar user imageSize="small"}}
-      {{/each}}
+<div
+  {{did-insert this.setupChannels}}
+  {{did-update this.setupChannels @model.reply @model.whisper this.state}}
+>
+  {{#if this.shouldDisplay}}
+    <div class="presence-users">
+      <div class="presence-avatars">
+        {{#each this.users as |user|}}
+          <UserLink @user={{user}}>
+            {{avatar user imageSize="small"}}
+          </UserLink>
+        {{/each}}
+      </div>
+      <span class="presence-text">
+        <span class="description">
+          {{~#if this.isReply~}}
+            {{i18n "presence.replying" count=this.users.length}}
+          {{~else~}}
+            {{i18n "presence.editing" count=this.users.length}}
+          {{~/if~}}
+        </span>
+        <span class="wave">
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+          <span class="dot">.</span>
+        </span>
+      </span>
     </div>
-    <span class="presence-text">
-      <span class="description">
-        {{~#if this.isReply~}}
-          {{i18n "presence.replying" count=this.presenceUsers.length}}
-        {{~else~}}
-          {{i18n "presence.editing" count=this.presenceUsers.length}}
-        {{~/if~}}
-      </span>
-      <span class="wave">
-        <span class="dot">.</span>
-        <span class="dot">.</span>
-        <span class="dot">.</span>
-      </span>
-    </span>
-  </div>
-{{/if}}
+  {{/if}}
+</div>

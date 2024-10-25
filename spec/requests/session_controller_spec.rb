@@ -136,8 +136,6 @@ RSpec.describe SessionController do
     before { SiteSetting.enable_local_logins_via_email = true }
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "allows admins to login" do
@@ -580,8 +578,6 @@ RSpec.describe SessionController do
     end
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
 
       it "allows staff to login" do
@@ -1366,8 +1362,6 @@ RSpec.describe SessionController do
     end
 
     context "when in readonly mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode }
 
       it "disallows requests" do
@@ -1840,8 +1834,6 @@ RSpec.describe SessionController do
 
   describe "#create" do
     context "when read only mode" do
-      use_redis_snapshotting
-
       before do
         Discourse.enable_readonly_mode
         EmailToken.confirm(email_token.token)
@@ -1860,8 +1852,6 @@ RSpec.describe SessionController do
     end
 
     context "when in staff writes only mode" do
-      use_redis_snapshotting
-
       before do
         Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
         EmailToken.confirm(email_token.token)
@@ -2033,21 +2023,10 @@ RSpec.describe SessionController do
       end
 
       describe "when user's password has been marked as expired" do
-        let!(:expired_user_password) do
-          Fabricate(
-            :expired_user_password,
-            user:,
-            password: "myawesomepassword",
-            password_salt: user.salt,
-            password_algorithm: user.password_algorithm,
-          )
-        end
-
         before { RateLimiter.enable }
 
-        use_redis_snapshotting
-
         it "should return an error response code with the right error message" do
+          UserPasswordExpirer.expire_user_password(user)
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
@@ -2445,8 +2424,6 @@ RSpec.describe SessionController do
     context "when rate limited" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "rate limits login" do
         SiteSetting.max_logins_per_ip_per_hour = 2
         EmailToken.confirm(email_token.token)
@@ -2737,8 +2714,6 @@ RSpec.describe SessionController do
     describe "rate limiting" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "should correctly rate limits" do
         user = Fabricate(:user)
 
@@ -2863,6 +2838,23 @@ RSpec.describe SessionController do
 
       it "enqueues no email" do
         post "/session/forgot_password.json", params: { login: staged.username }
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
+      end
+    end
+
+    context "when in staff writes only mode" do
+      before { Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY) }
+
+      it "allows staff to forget their password" do
+        post "/session/forgot_password.json", params: { login: admin.username }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["error"]).not_to be_present
+        expect(Jobs::CriticalUserEmail.jobs.size).to eq(1)
+      end
+
+      it "doesn't allow non-staff to forget their password" do
+        post "/session/forgot_password.json", params: { login: user.username }
+        expect(response.status).to eq(503)
         expect(Jobs::CriticalUserEmail.jobs.size).to eq(0)
       end
     end

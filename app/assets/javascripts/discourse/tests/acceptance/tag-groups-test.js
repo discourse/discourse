@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { setPrefix } from "discourse-common/lib/get-url";
 
@@ -82,10 +78,9 @@ acceptance("Tag Groups", function (needs) {
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");
 
-    assert.ok(
-      exists("#visible-permission:checked"),
-      "selected permission does not change after saving"
-    );
+    assert
+      .dom("#visible-permission:checked")
+      .exists("selected permission does not change after saving");
   });
 
   test("going back to tags supports subfolder", async function (assert) {

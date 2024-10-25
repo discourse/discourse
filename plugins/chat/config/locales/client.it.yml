@@ -50,7 +50,6 @@ it:
       deleted_chat_username: eliminato
       dates:
         yesterday: "Ieri"
-        time_tiny: "h:mm"
       all_loaded: "Mostra tutti i messaggi"
       already_enabled: "La chat è già abilitata su questo argomento. Prova ad aggiornare."
       disabled_for_topic: "La chat è disabilitata su questo argomento."
@@ -459,10 +458,8 @@ it:
         auto_join_users_info: "Controlla ogni ora quali utenti sono stati attivi negli ultimi 3 mesi. Aggiungili a questo canale se hanno accesso alla categoria %{category}."
         auto_join_users_info_no_category: "Controlla ogni ora quali utenti sono stati attivi negli ultimi tre mesi. Aggiungili a questo canale se hanno accesso alla categoria selezionata."
         auto_join_users_warning: "Tutti gli utenti che non sono membri di questo canale e hanno accesso alla categoria %{category} parteciperanno. Vuoi procedere?"
-        desktop_notification_level: "Notifiche sul desktop"
         follow: "Partecipa"
         followed: "Partecipante"
-        mobile_notification_level: "Notifiche push su dispositivi mobili"
         mute: "Silenzia canale"
         threading_enabled: "Abilitato"
         threading_disabled: "Disabilitato"

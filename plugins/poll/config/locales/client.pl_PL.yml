@@ -17,6 +17,11 @@ pl_PL:
         few: "oddanych głosów"
         many: "oddanych głosów"
         other: "oddanych głosów"
+      votes:
+        one: "%{count} głos"
+        few: "%{count} głosy"
+        many: "%{count} głosów"
+        other: "%{count} głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
       public:
         title: "Głosy są <strong>jawne</strong>."
@@ -55,6 +60,12 @@ pl_PL:
       show-results:
         title: "Wyświetl wyniki ankiety"
         label: "Wyniki"
+      show-tally:
+        title: "Pokaż wyniki głosowania według liczby głosów"
+        label: "Wyświetl licznik"
+      show-percentage:
+        title: "Pokaż wyniki głosowania w procentach"
+        label: "Wyświetl jako procent"
       remove-vote:
         title: "Usuń swój głos"
         label: "Cofnij głos"
@@ -86,10 +97,23 @@ pl_PL:
         count: "Liczba"
       ranked_choice:
         title:
+          rounds: "Rundy"
           outcome: "Wynik"
         none: "Brak"
+        majority: "Większość"
+        eliminated: "Wyeliminowane"
+        round: "Runda"
+        winner:
+          one: "Zwycięzcą został %{winner} po jednej rundzie."
+          few: "Zwycięzcą został %{winner} po %{count} rundach."
+          many: "Zwycięzcą został %{winner} po %{count} rundach."
+          other: "Zwycięzcą został %{winner} po %{count} rundach."
       options:
         label: "Opcje"
+        ranked_choice:
+          highest_priority: "(najwyższy priorytet)"
+          lowest_priority: "(najniższy priorytet)"
+          login: "Zaloguj się, aby zagłosować!"
       error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
       error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
       error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."

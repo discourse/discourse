@@ -141,7 +141,6 @@ sv:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
       close: "stäng"
-      twitter: "Dela på Twitter"
       facebook: "Dela på Facebook"
       email: "Skicka via e-post"
       url: "Kopiera och dela URL"
@@ -292,6 +291,7 @@ sv:
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     about:
+      edit: "Redigera denna sida"
       simple_title: "Om"
       title: "Om %{title}"
       stats: "Statistik för webbplats"
@@ -1486,7 +1486,7 @@ sv:
         add_email: "Lägg till alternativ e-postadress"
         auth_override_instructions: "E-postadressen kan uppdateras från autentiseringsleverantören."
         no_secondary: "Inga sekundära e-postadresser"
-        instructions: "Visas aldrig offentligt."
+        instructions: "Visas aldrig offentligt"
         admin_note: "Obs! En administratörsanvändare som ändrar annan icke-administratörsanvändares e-postadress anger att användaren har förlorat tillgången till sin ursprungliga adress, så ett återställnings-e-postmeddelande kommer att skickas till den nya adressen. Inget ändras förrän användaren har slutfört lösenordsåterställningsprocessen."
         ok: "Vi skickar e-post till dig för bekräftelse"
         required: "Vi ber dig ange en e-postadress"
@@ -1517,14 +1517,14 @@ sv:
         approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
       name:
         title: "Namn"
-        instructions: "Ditt fullständiga namn (valfritt)."
-        instructions_required: "Ditt fullständiga namn."
+        instructions: "Ditt fullständiga namn (valfritt)"
+        instructions_required: "Ditt fullständiga namn"
         required: "Ange ett namn"
         too_short: "Ditt namn är för kort"
         ok: "Ditt namn ser bra ut"
       username:
         title: "Användarnamn"
-        instructions: "Unikt, inga mellanrum, kort."
+        instructions: "Unikt, inga mellanrum, kort"
         short_instructions: "Du kan omnämnas som @%{username}"
         available: "Ditt användarnamn är tillgängligt"
         not_available: "Inte tillgängligt. Prova %{suggestion}?"
@@ -1687,12 +1687,10 @@ sv:
           success: "Länk för inbjudan framgångsrikt skapad!"
           error: "Ett fel inträffade vid skapande av inbjudningslänk"
         invite:
-          new_title: "Skapa inbjudan"
-          edit_title: "Redigera inbjudan"
           instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
-          copy_link: "kopiera länk"
           expires_in_time: "Utgår om %{time}"
           expired_at_time: "Utgår kl. %{time}"
+          link_copied: "Länken kopierad!"
           show_advanced: "Visa avancerade alternativ"
           hide_advanced: "Dölj avancerade alternativ"
           restrict: "Begränsa till"
@@ -1702,11 +1700,11 @@ sv:
           max_redemptions_allowed: "Max antal användningar"
           add_to_groups: "Lägg till i grupper"
           invite_to_topic: "Anländ till ämne"
-          expires_at: "Förfaller efter"
-          custom_message: "Valfritt personligt meddelande"
+          expires_after: "Förfaller efter"
           send_invite_email: "Spara och skicka e-post"
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
-          save_invite: "Spara inbjudan"
+          save_invite: "Spara"
+          cancel: "Avbryt"
           invite_saved: "Inbjudan har sparats."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
@@ -4420,6 +4418,7 @@ sv:
         installed_version: "Installerad"
         latest_version: "Senaste"
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
+        dismiss_notice: "Avfärda"
         new_features:
           title: "Vad är nytt?"
           previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
@@ -4855,8 +4854,11 @@ sv:
           screened_ips: "Granskade IP-adresser"
           screened_urls: "Granskade URL:er"
           search_logs: "Söklogg"
-          security: "Säkerhet"
-          spam: "Skräppost"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Säkerhetskopior"
       config_areas:
         about:
           header: "Om din webbplats"
@@ -4884,6 +4886,9 @@ sv:
             topic: "ämnen"
             post: "inlägg"
             chat_message: "chattmeddelanden"
+        look_and_feel:
+          themes:
+            title: "Teman"
       plugins:
         title: "Tillägg"
         name: "Namn"
@@ -6182,10 +6187,6 @@ sv:
             with_post: <span class="username">%{username}</span> för inlägg i %{link}
             with_post_time: <span class="username">%{username}</span> för inlägg i %{link} kl. <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> kl. <span class="time">%{time}</span>
-        badge_intro:
-          title: "Välj en befintlig utmärkelse eller skapa en ny för att komma igång"
-          what_are_badges_title: "Vad är utmärkelser?"
-          badge_query_examples_title: "Exempel på utmärkelsefråga"
         mass_award:
           title: Tilldela genom bulk
           description: Tilldela samma utmärkelse till flera användare samtidigt.

@@ -150,12 +150,17 @@ fi:
             valid_trust_levels:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
+            restricted_tags:
+              label: Tunnisteet
+              description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_category:
               label: Alue
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
               description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
+            restricted_groups:
+              label: Ryhmät
             ignore_group_members:
               label: Ohita ryhmän jäsenet
               description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen

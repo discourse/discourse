@@ -5,12 +5,12 @@ class GlobalSetting
     define_singleton_method(key) { provider.lookup(key, default) }
   end
 
-  VALID_SECRET_KEY ||= /\A[0-9a-f]{128}\z/
+  VALID_SECRET_KEY = /\A[0-9a-f]{128}\z/
   # this is named SECRET_TOKEN as opposed to SECRET_KEY_BASE
   # for legacy reasons
-  REDIS_SECRET_KEY ||= "SECRET_TOKEN"
+  REDIS_SECRET_KEY = "SECRET_TOKEN"
 
-  REDIS_VALIDATE_SECONDS ||= 30
+  REDIS_VALIDATE_SECONDS = 30
 
   # In Rails secret_key_base is used to encrypt the cookie store
   # the cookie store contains session data
@@ -18,6 +18,7 @@ class GlobalSetting
   # This method will
   # - use existing token if already set in ENV or discourse.conf
   # - generate a token on the fly if needed and cache in redis
+  # - skips caching generated token to redis if redis is skipped
   # - enforce rules about token format falling back to redis if needed
   def self.safe_secret_key_base
     if @safe_secret_key_base && @token_in_redis &&
@@ -31,13 +32,17 @@ class GlobalSetting
       begin
         token = secret_key_base
         if token.blank? || token !~ VALID_SECRET_KEY
-          @token_in_redis = true
-          @token_last_validated = Time.now
-
-          token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
-          unless token && token =~ VALID_SECRET_KEY
+          if GlobalSetting.skip_redis?
             token = SecureRandom.hex(64)
-            Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, token)
+          else
+            @token_in_redis = true
+            @token_last_validated = Time.now
+
+            token = Discourse.redis.without_namespace.get(REDIS_SECRET_KEY)
+            unless token && token =~ VALID_SECRET_KEY
+              token = SecureRandom.hex(64)
+              Discourse.redis.without_namespace.set(REDIS_SECRET_KEY, token)
+            end
           end
         end
         if !secret_key_base.blank? && token != secret_key_base

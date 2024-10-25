@@ -13,6 +13,7 @@ module PageObjects
 
       def open
         visit("/signup")
+        self
       end
 
       def open_from_header
@@ -30,8 +31,13 @@ module PageObjects
         click("#login-link")
       end
 
-      def click_create_account
-        click(".modal.create-account .btn-primary")
+      def click_create_account(expect_success: true)
+        try_until_success(timeout: 5) do
+          click(".modal.create-account .btn-primary")
+          if expect_success
+            expect(page).to have_css(".modal.create-account .btn-primary.is-loading")
+          end
+        end
       end
 
       def has_password_input?
@@ -51,26 +57,32 @@ module PageObjects
 
       def fill_email(email)
         fill_input("#new-account-email", email)
+        self
       end
 
       def fill_username(username)
         fill_input("#new-account-username", username)
+        self
       end
 
       def fill_name(name)
         fill_input("#new-account-name", name)
+        self
       end
 
       def fill_password(password)
         fill_input("#new-account-password", password)
+        self
       end
 
       def fill_code(code)
         fill_input("#inviteCode", code)
+        self
       end
 
       def fill_custom_field(name, value)
         find(".user-field-#{name.downcase} input").fill_in(with: value)
+        self
       end
 
       def has_valid_email?

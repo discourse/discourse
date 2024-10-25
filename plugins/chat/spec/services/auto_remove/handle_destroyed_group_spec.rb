@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:destroyed_group_user_ids) }
+  end
+
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     let(:params) { { destroyed_group_user_ids: [admin_1.id, admin_2.id, user_1.id, user_2.id] } }
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -45,9 +49,7 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
             channel_1.add(admin_2)
           end
 
-          it "sets the service result as successful" do
-            expect(result).to be_a_success
-          end
+          it { is_expected.to run_successfully }
 
           it "removes the destroyed_group_user_ids from all public channels" do
             expect { result }.to change {
@@ -132,9 +134,7 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
             channel_1.add(admin_2)
           end
 
-          it "sets the service result as successful" do
-            expect(result).to be_a_success
-          end
+          it { is_expected.to run_successfully }
 
           it "does not remove any memberships" do
             expect { result }.not_to change { Chat::UserChatChannelMembership.count }
@@ -196,9 +196,7 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
             )
           end
 
-          it "sets the service result as successful" do
-            expect(result).to be_a_success
-          end
+          it { is_expected.to run_successfully }
 
           it "removes the destroyed_group_user_ids from the channel" do
             expect { result }.to change {
@@ -237,9 +235,7 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
           context "when one of the users is not in any of the groups" do
             before { user_2.change_trust_level!(TrustLevel[3]) }
 
-            it "sets the service result as successful" do
-              expect(result).to be_a_success
-            end
+            it { is_expected.to run_successfully }
 
             it "removes the destroyed_group_user_ids from the channel" do
               expect { result }.to change {

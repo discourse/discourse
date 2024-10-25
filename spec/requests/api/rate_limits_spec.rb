@@ -39,8 +39,6 @@ RSpec.describe "rate limits" do
   let(:api_key) { @key }
   let!(:api_username) { "system" }
 
-  use_redis_snapshotting
-
   around(:each) { |example| stub_const(Object, :RateLimiter, MockRateLimiter) { example.run } }
 
   it "doesn't rate limit authenticated admin api requests" do

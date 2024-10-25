@@ -150,12 +150,17 @@ nl:
             valid_trust_levels:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
+            restricted_tags:
+              label: Tags
+              description: Optioneel, wordt alleen getriggerd als het bericht een van deze tags heeft
             restricted_category:
               label: Categorie
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht tot deze categorie behoort'
             restricted_group:
               label: Groep
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een privébericht is in de inbox van deze groep'
+            restricted_groups:
+              label: Groepen
             ignore_group_members:
               label: Groepsleden negeren
               description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep

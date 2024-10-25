@@ -93,7 +93,7 @@
   }
 
   .sidebar-filter {
-    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+    width: 100%;
   }
 }
 
@@ -349,7 +349,7 @@
   }
 
   .sidebar-panel-header__row {
-    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+    width: 100%;
   }
 
   .sidebar-sections {

@@ -26,6 +26,7 @@ zh_TW:
         millions: "%{number} 百萬"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "hh:mm a (z)"
       time_short_day: "ddd, h:mm a"
       timeline_date: "YYYY年 M月"
@@ -109,7 +110,6 @@ zh_TW:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
       close: "關閉"
-      twitter: "分享到 Twitter"
       facebook: "分享到 Facebook"
       email: "透過電子郵件傳送"
       url: "複製並分享網址"
@@ -241,6 +241,7 @@ zh_TW:
     suggested_topics:
       pm_title: "推薦訊息"
     about:
+      edit: "編輯此頁"
       simple_title: "關於"
       title: "關於 %{title}"
       stats: "網站統計數據"
@@ -1143,7 +1144,6 @@ zh_TW:
         destroy: "移除電子信箱"
         add_email: "新增備用電子郵件"
         no_secondary: "無次要電子郵件"
-        instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
         required: "請輸入電子郵件地址"
         invalid: "請輸入有效的電子郵件地址。"
@@ -1165,8 +1165,8 @@ zh_TW:
         approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
       name:
         title: "名稱"
-        instructions: "您的全名 (選填)."
-        instructions_required: "您的暱稱."
+        instructions: "您的全名 (選填)"
+        instructions_required: "您的暱稱"
         required: "請輸入名稱"
         too_short: "你的暱稱太短。"
         ok: "你的暱稱符合要求。"
@@ -1312,10 +1312,11 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         invite:
-          new_title: "建立邀請"
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
+          save_invite: "保存"
+          cancel: "取消"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
           error: "上傳的檔案必須是 csv 格式。"
@@ -1326,7 +1327,7 @@ zh_TW:
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
         instructions:
-          other: "至少 %{count} 個字元."
+          other: "至少 %{count} 個字元"
       summary:
         title: "摘要"
         stats: "統計"
@@ -1564,6 +1565,7 @@ zh_TW:
       discord:
         name: "Discord"
         title: "使用 Discord 登入"
+        sr_title: "使用 Discord 登入"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -2693,6 +2695,7 @@ zh_TW:
         lower_title: "未讀"
       hot:
         title: "熱門"
+        lower_title: "熱門"
       new:
         lower_title_with_count:
           other: "%{count} 近期"
@@ -3029,6 +3032,9 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
+      panels:
+        forum:
+          label: 論壇
       no_results:
         title: "沒有結果"
     welcome_topic_banner:
@@ -3082,6 +3088,7 @@ zh_TW:
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
+        dismiss_notice: "忽略"
         new_features:
           learn_more: "了解更多..."
         last_checked: "上次檢查的時間"
@@ -3326,8 +3333,11 @@ zh_TW:
           screened_ips: "過濾的 IP 位址"
           screened_urls: "過濾的網址"
           search_logs: "搜尋紀錄"
-          security: "安全性"
-          spam: "垃圾內容"
+      section_landing_pages:
+        account:
+          title: "帳號"
+          backups:
+            title: "備份"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -3349,6 +3359,9 @@ zh_TW:
             topic: "話題"
             post: "貼文"
             chat_message: "聊天訊息"
+        look_and_feel:
+          themes:
+            title: "佈景主題"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -4323,10 +4336,6 @@ zh_TW:
             with_post: <span class="username">%{username}</span> 的貼文 %{link}
             with_post_time: <span class="username">%{username}</span> 的貼文 %{link} 在 <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
-        badge_intro:
-          title: "選擇一個現存的徽章或建立全新的徽章以開始"
-          what_are_badges_title: "什麼是徽章？"
-          badge_query_examples_title: "查詢徽章範例"
       emoji:
         title: "Emoji"
         add: "新增emoji"

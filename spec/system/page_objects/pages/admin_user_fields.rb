@@ -8,6 +8,10 @@ module PageObjects
         self
       end
 
+      def form
+        PageObjects::Components::FormKit.new(".user-field .form-kit")
+      end
+
       def choose_requirement(requirement)
         form = page.find(".user-field")
 

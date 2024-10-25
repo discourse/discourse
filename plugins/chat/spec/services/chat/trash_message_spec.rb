@@ -1,24 +1,29 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::TrashMessage do
-  fab!(:current_user) { Fabricate(:user) }
-  let!(:guardian) { Guardian.new(current_user) }
-  fab!(:message) { Fabricate(:chat_message, user: current_user) }
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:message_id) }
+    it { is_expected.to validate_presence_of(:channel_id) }
+  end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
+
+    fab!(:current_user) { Fabricate(:user) }
+    fab!(:message) { Fabricate(:chat_message, user: current_user) }
+
+    let(:guardian) { Guardian.new(current_user) }
+    let(:params) { { message_id: message.id, channel_id: } }
+    let(:dependencies) { { guardian: } }
+    let(:channel_id) { message.chat_channel_id }
 
     context "when params are not valid" do
-      let(:params) { { guardian: guardian } }
+      let(:params) { {} }
 
       it { is_expected.to fail_a_contract }
     end
 
     context "when params are valid" do
-      let(:params) do
-        { guardian: guardian, message_id: message.id, channel_id: message.chat_channel_id }
-      end
-
       context "when the user does not have permission to delete" do
         before { message.update!(user: Fabricate(:admin)) }
 
@@ -26,9 +31,7 @@ RSpec.describe Chat::TrashMessage do
       end
 
       context "when the channel does not match the message" do
-        let(:params) do
-          { guardian: guardian, message_id: message.id, channel_id: Fabricate(:chat_channel).id }
-        end
+        let(:channel_id) { -1 }
 
         it { is_expected.to fail_to_find_a_model(:message) }
       end

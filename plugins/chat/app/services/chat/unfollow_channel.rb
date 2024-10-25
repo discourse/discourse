@@ -6,26 +6,27 @@ module Chat
   # @example
   #  ::Chat::UnfollowChannel.call(
   #    guardian: guardian,
-  #    channel_id: 1,
+  #    params: {
+  #      channel_id: 1,
+  #    }
   #  )
   #
   class UnfollowChannel
     include Service::Base
 
-    # @!method call(guardian:, channel_id:,)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] channel_id of the channel
-
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id ID of the channel
     #   @return [Service::Base::Context]
-    contract
-    model :channel
-    step :unfollow
 
-    # @!visibility private
-    class Contract
+    contract do
       attribute :channel_id, :integer
+
       validates :channel_id, presence: true
     end
+    model :channel
+    step :unfollow
 
     private
 
@@ -34,7 +35,7 @@ module Chat
     end
 
     def unfollow(channel:, guardian:)
-      context.membership = channel.remove(guardian.user)
+      context[:membership] = channel.remove(guardian.user)
     end
   end
 end

@@ -162,7 +162,7 @@ RSpec.describe DiscourseRedis do
     end
 
     describe "#eval" do
-      it "keys and arvg are passed correcty" do
+      it "keys and argv are passed correctly" do
         keys = %w[key1 key2]
         argv = %w[arg1 arg2]
 
@@ -177,7 +177,7 @@ RSpec.describe DiscourseRedis do
     end
 
     describe "#evalsha" do
-      it "keys and arvg are passed correcty" do
+      it "keys and argv are passed correctly" do
         keys = %w[key1 key2]
         argv = %w[arg1 arg2]
 

@@ -306,10 +306,6 @@ RSpec.describe PostRevisor do
   end
 
   describe "revise wiki" do
-    # There used to be a bug where wiki changes were considered posting "too similar"
-    # so this is enabled and checked
-    use_redis_snapshotting
-
     before { SiteSetting.unique_posts_mins = 10 }
 
     it "allows the user to change it to a wiki" do
@@ -802,8 +798,6 @@ RSpec.describe PostRevisor do
         RateLimiter.enable
         SiteSetting.editing_grace_period = 0
       end
-
-      use_redis_snapshotting
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)

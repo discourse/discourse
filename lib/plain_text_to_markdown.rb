@@ -153,9 +153,9 @@ class PlainTextToMarkdown
     converted_text
   end
 
-  URL_REGEX ||= URI.regexp(%w[http https ftp mailto])
-  BEFORE ||= Regexp.escape(%Q|([<«"“'‘|)
-  AFTER ||= Regexp.escape(%Q|)]>»"”'’|)
+  URL_REGEX = URI.regexp(%w[http https ftp mailto])
+  BEFORE = Regexp.escape(%Q|([<«"“'‘|)
+  AFTER = Regexp.escape(%Q|)]>»"”'’|)
 
   def replace_duplicate_links(text)
     urls = Set.new

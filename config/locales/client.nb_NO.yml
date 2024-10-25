@@ -36,6 +36,7 @@ nb_NO:
       long_with_year: "D MMM YYYY LT"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D. MMMM YYYY"
+      long_date_with_year: "D. MMM YYYY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D. MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
@@ -140,7 +141,6 @@ nb_NO:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "innlegg #%{postNumber} av @%{username}"
       close: "lukk"
-      twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-post"
       url: "Kopier og del URL"
@@ -296,6 +296,7 @@ nb_NO:
       pill: "Foreslåtte"
       pm_title: "Anbefalte meldinger"
     about:
+      edit: "Endre denne siden"
       simple_title: "Om"
       title: "Om %{title}"
       stats: "Nettstedsstatistikk"
@@ -1597,7 +1598,6 @@ nb_NO:
         add_email: "Legg til alternativ e-post"
         auth_override_instructions: "E-post kan oppdateres fra autentiseringsleverandør."
         no_secondary: "Ingen sekundære e-poster"
-        instructions: "Vises aldri offentlig"
         admin_note: "Merk: Hvis en admin-bruker endrer e-postadressen til en annen ikke-administratorbruker, betyr det at brukeren har mistet tilgangen til den opprinnelige e-postkontoen sin. Derfor, da vil en e-post med tilbakestilling av passord bli sendt til den nye adressen. Brukerens e-postadresse endres ikke før vedkommende har fullført prosessen med å tilbakestille passordet."
         ok: "Vi sender deg en e-post for å bekrefte"
         required: "Vennligst angi en e-postadresse"
@@ -1628,14 +1628,14 @@ nb_NO:
         approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
       name:
         title: "Navn"
-        instructions: "Ditt fulle navn (valgfritt)."
-        instructions_required: "Ditt fulle navn."
+        instructions: "Ditt fulle navn (valgfritt)"
+        instructions_required: "Ditt fulle navn"
         required: "Vennligst skriv inn et navn"
         too_short: "Navnet ditt er for kort."
         ok: "Navnet ditt ser bra ut."
       username:
         title: "Brukernavn"
-        instructions: "Unik, uten mellomrom, kort."
+        instructions: "Unik, uten mellomrom, kort"
         short_instructions: "Folk kan nevne deg som @%{username}."
         available: "Ditt brukernavn er tilgjengelig."
         not_available: "Ikke tilgjengelig. Prøv %{suggestion}?"
@@ -1798,12 +1798,10 @@ nb_NO:
           success: "Invitasjonslenke har blitt generert!"
           error: "Det oppstod en feil under generering av invitasjonslenke"
         invite:
-          new_title: "Opprett invitasjon"
-          edit_title: "Rediger invitasjon"
           instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart:"
-          copy_link: "kopier link"
           expires_in_time: "Utløper om %{time}"
           expired_at_time: "Utløpt kl. %{time}"
+          link_copied: "Lenk kopiert!"
           show_advanced: "Vis avanserte innstillinger"
           hide_advanced: "Skjul avanserte alternativer"
           restrict: "Begrens til"
@@ -1813,11 +1811,11 @@ nb_NO:
           max_redemptions_allowed: "Maks antall bruk"
           add_to_groups: "Legg til i grupper"
           invite_to_topic: "Ankomme til emnet"
-          expires_at: "Utløper etter"
-          custom_message: "Valgfri personlig melding"
+          expires_after: "Utløper etter"
           send_invite_email: "Lagre og send e-post"
           send_invite_email_instructions: "Begrens invitasjon til e-post for å sende en invitasjon via e-post"
-          save_invite: "Lagre invitasjon"
+          save_invite: "Lagre"
+          cancel: "Avbryt"
           invite_saved: "Invitasjon lagret."
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
@@ -1849,8 +1847,8 @@ nb_NO:
         same_as_email: "Ditt passord er det samme som din e-post."
         ok: "Passordet ditt ser bra ut"
         instructions:
-          one: "Minst %{count} tegn."
-          other: "Minst %{count} tegn."
+          one: "Minst %{count} tegn"
+          other: "Minst %{count} tegn"
         required: "Skriv inn et passord"
         confirm: "Bekreft"
         incorrect_password: "Det angitte passordet er feil."
@@ -3961,6 +3959,9 @@ nb_NO:
         lower_title_with_count:
           one: "%{count} ulest"
           other: "%{count} uleste"
+      unseen:
+        title: "Usette"
+        lower_title: "usette"
       new:
         lower_title_with_count:
           one: "%{count} ny"
@@ -4259,6 +4260,7 @@ nb_NO:
       enabled: "Sikkert modus er påskrudd, for å skru av sikkert modus, lukk dette nettleservinduet"
     image_removed: "(bilde fjernet)"
     pause_notifications:
+      label: "Sett varsel på pause"
       options:
         half_hour: "30 minutter"
         one_hour: "1 time"
@@ -4286,6 +4288,8 @@ nb_NO:
         other: "%{count} nye"
       more: "Mer"
       all_categories: "Alle kategorier"
+      categories_form_modal:
+        show_more: "Vis mer"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Alle"
@@ -4391,6 +4395,7 @@ nb_NO:
         installed_version: "Installert"
         latest_version: "Siste"
         problems_found: "Noen råd basert på gjeldende sideinnstillinger"
+        dismiss_notice: "Avslå"
         new_features:
           learn_more: "Finn ut mer..."
         last_checked: "Sist sjekket"
@@ -4470,6 +4475,8 @@ nb_NO:
       flags:
         description: "Beskrivelse"
         enabled: "Aktivert?"
+        more_options:
+          title: "Flere valg"
       groups:
         new:
           title: "Ny gruppe"
@@ -4485,6 +4492,7 @@ nb_NO:
             email: E-post
             incoming_email: "Brukerdefinert innkommende e-postadresse"
             incoming_email_placeholder: "velg e-postadresse"
+            incoming_email_tooltip: "Du kan skille flere e-postadresser fra hverandre med tegnet |."
             visibility: Synlighet
             visibility_levels:
               title: "Hvem kan se denne gruppen?"
@@ -4533,6 +4541,7 @@ nb_NO:
         show_details: Detaljer
         description: Beskrivelse
         save: Lagre
+        delete: Slett permanent
         continue: Fortsett
         scopes:
           action: Handling
@@ -4643,8 +4652,11 @@ nb_NO:
           screened_ips: "Kontrollerte IP-er"
           screened_urls: "Kontrollerte URL-er"
           search_logs: "Søkelogger"
-          security: "Sikkerhet"
-          spam: "Spam"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Sikkerhetskopier"
       config_areas:
         about:
           optional: "(valgfritt)"
@@ -4664,6 +4676,11 @@ nb_NO:
             invalid_applies_to: "Påkrevd"
             topic: "emner"
             post: "innlegg"
+          more_options:
+            title: "Flere valg"
+        look_and_feel:
+          themes:
+            title: "Drakter"
       plugins:
         title: "Utvidelser"
         name: "Navn"
@@ -4709,6 +4726,7 @@ nb_NO:
         upload:
           label: "Last opp"
           title: "Last opp en sikkerhetskopi til denne instansen"
+          uploading: "Laster opp…"
           success: "Opplastingen av '%{filename}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
           error: "Det oppstod en feil ved opplastingen av '%{filename}': %{message}"
         settings: "Instillinger"
@@ -4835,6 +4853,9 @@ nb_NO:
           convert_theme_tooltip: "Konverter dette temaet til komponenten"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrukte komponenter:"
+          selected:
+            one: "%{count} valgt"
+            other: "%{count} valgt"
           cancel: "Avbryt"
           broken_theme_tooltip: "Dette temaet har feil i CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponenten har blitt deaktivert"
@@ -5222,6 +5243,8 @@ nb_NO:
         new_template_form:
           submit: "Lagre"
           cancel: "Avbryt"
+          template:
+            label: "Mal"
           preview: "Forhåndsvis"
         quick_insert_fields:
           add_new_field: "Legg til"
@@ -5621,6 +5644,7 @@ nb_NO:
       emoji:
         title: "Emoji"
         add: "Legg til ny Emoji"
+        uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
         image: "Bilde"
@@ -5670,6 +5694,7 @@ nb_NO:
       next: "Neste"
       step-text: "Steg"
       step: "%{current} av %{total}"
+      uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."

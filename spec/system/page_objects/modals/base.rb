@@ -5,8 +5,13 @@ module PageObjects
     class Base
       include Capybara::DSL
       include RSpec::Matchers
+      include SystemHelpers
 
       BODY_SELECTOR = ""
+
+      def header
+        find(".d-modal__header")
+      end
 
       def body
         find(".d-modal__body#{BODY_SELECTOR}")
@@ -14,6 +19,14 @@ module PageObjects
 
       def footer
         find(".d-modal__footer")
+      end
+
+      def has_footer?
+        has_css?(".d-modal__footer")
+      end
+
+      def has_no_footer?
+        has_no_css?(".d-modal__footer")
       end
 
       def close

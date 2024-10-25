@@ -3,16 +3,7 @@
 class User::Silence
   include Service::Base
 
-  contract
-  model :user
-  policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
-  model :users
-  policy :can_silence_all_users
-  step :silence
-  model :post, optional: true
-  step :perform_post_action
-
-  class Contract
+  contract do
     attribute :user_id, :integer
     attribute :reason, :string
     attribute :message, :string
@@ -28,6 +19,13 @@ class User::Silence
     validates :other_user_ids, length: { maximum: User::MAX_SIMILAR_USERS }
     validates :post_action, inclusion: { in: %w[delete delete_replies edit] }, allow_blank: true
   end
+  model :user
+  policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
+  model :users
+  policy :can_silence_all_users
+  step :silence
+  model :post, optional: true
+  step :perform_post_action
 
   private
 

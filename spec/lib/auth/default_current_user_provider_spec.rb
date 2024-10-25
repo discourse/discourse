@@ -199,8 +199,6 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     context "with rate limiting" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "rate limits admin api requests" do
         global_setting :max_admin_api_reqs_per_minute, 3
 

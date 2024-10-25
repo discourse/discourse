@@ -13,7 +13,7 @@ RSpec.describe NotificationsController do
     before do
       Jobs.run_immediately!
       SiteSetting.chat_enabled = true
-      SiteSetting.chat_allowed_groups = [chatters.id]
+      SiteSetting.chat_allowed_groups = chatters.id
       sign_in(user)
     end
 

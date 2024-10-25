@@ -2,7 +2,7 @@
 
 class Admin::Config::FlagsController < Admin::AdminController
   def toggle
-    Flags::ToggleFlag.call do
+    Flags::ToggleFlag.call(service_params) do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)
@@ -26,10 +26,10 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def create
-    Flags::CreateFlag.call do
-      on_success do
+    Flags::CreateFlag.call(service_params) do
+      on_success do |flag:|
         Discourse.request_refresh!
-        render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
+        render json: flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
       end
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
@@ -41,10 +41,10 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def update
-    Flags::UpdateFlag.call do
-      on_success do
+    Flags::UpdateFlag.call(service_params) do
+      on_success do |flag:|
         Discourse.request_refresh!
-        render json: result.flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
+        render json: flag, serializer: FlagSerializer, used_flag_ids: Flag.used_flag_ids
       end
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
@@ -59,7 +59,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def reorder
-    Flags::ReorderFlag.call do
+    Flags::ReorderFlag.call(service_params) do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)
@@ -75,7 +75,7 @@ class Admin::Config::FlagsController < Admin::AdminController
   end
 
   def destroy
-    Flags::DestroyFlag.call do
+    Flags::DestroyFlag.call(service_params) do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)

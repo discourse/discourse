@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module DiscourseTagging
-  TAGS_FIELD_NAME ||= "tags"
-  TAGS_FILTER_REGEXP ||= /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
-  TAGS_STAFF_CACHE_KEY ||= "staff_tag_names"
+  TAGS_FIELD_NAME = "tags"
+  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
+  TAGS_STAFF_CACHE_KEY = "staff_tag_names"
 
-  TAG_GROUP_TAG_IDS_SQL ||= <<-SQL
+  TAG_GROUP_TAG_IDS_SQL = <<-SQL
       SELECT tag_id
         FROM tag_group_memberships tgm
   INNER JOIN tag_groups tg
@@ -370,7 +370,7 @@ module DiscourseTagging
     tags_by_group_map.select { |_, group_tags| group_tags.size > 1 }
   end
 
-  TAG_GROUP_RESTRICTIONS_SQL ||= <<~SQL
+  TAG_GROUP_RESTRICTIONS_SQL = <<~SQL
     tag_group_restrictions AS (
       SELECT t.id as tag_id, tgm.id as tgm_id, tg.id as tag_group_id, tg.parent_tag_id as parent_tag_id,
         tg.one_per_topic as one_per_topic
@@ -380,7 +380,7 @@ module DiscourseTagging
     )
   SQL
 
-  CATEGORY_RESTRICTIONS_SQL ||= <<~SQL
+  CATEGORY_RESTRICTIONS_SQL = <<~SQL
     category_restrictions AS (
       SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id, NULL AS category_tag_group_id
       FROM tags t
@@ -395,7 +395,7 @@ module DiscourseTagging
     )
   SQL
 
-  PERMITTED_TAGS_SQL ||= <<~SQL
+  PERMITTED_TAGS_SQL = <<~SQL
     permitted_tag_groups AS (
       SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
       FROM tags t

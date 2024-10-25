@@ -141,7 +141,6 @@ te:
       topic_html: 'విషయం: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}ద్వారా పోస్ట్ #%{postNumber}"
       close: "మూసివేయండి"
-      twitter: "ట్విట్టర్లో షేర్ చేయండి"
       facebook: "ఫేస్బుక్లో షేర్ చేయండి"
       email: "ఇమెయిల్ ద్వారా పంపండి"
       url: "లింక్ ని కాపీ చేసి షేర్ చేయండి"
@@ -295,6 +294,7 @@ te:
       pill: "సూచించినవి"
       pm_title: "సూచించిన సందేశాలు"
     about:
+      edit: "ఈ పేజీని సవరించండి"
       simple_title: "మా సంఘం గురించి"
       title: "%{title} గురించి"
       stats: "సైటు గణాంకాలు"
@@ -1487,7 +1487,6 @@ te:
         add_email: "ప్రత్యామ్నాయ ఇమెయిల్‌ను జోడించండి"
         auth_override_instructions: "ప్రామాణీకరణ ప్రొవైడర్ నుండి ఇమెయిల్ను నవీకరించవచ్చు."
         no_secondary: "ద్వితీయ ఇమెయిల్‌లు లేవు"
-        instructions: "బహిరంగ ఎప్పుడు చూపించబడదు"
         admin_note: "గమనిక: అడ్మిన్ సభ్యుడు మరొక నాన్-అడ్మిన్ సభ్యుడు యొక్క ఇమెయిల్‌ను మార్చడం వలన సభ్యుడు వారి అసలు ఇమెయిల్ ఖాతాకు ప్రాప్యతను కోల్పోయారని సూచిస్తుంది. కాబట్టి రీసెట్ పాస్‌వర్డ్ ఇమెయిల్ వారి కొత్త చిరునామాకు పంపబడుతుంది. పాస్‌వర్డ్ రీసెట్ ప్రక్రియను పూర్తి చేసే వరకు సభ్యుడు ఇమెయిల్ మారదు."
         ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
         required: "దయచేసి ఇమెయిల్ చిరునామాను నమోదు చేయండి"
@@ -1518,14 +1517,13 @@ te:
         approval_required: "ఈ ఫోరమ్ మీరు వాడేముందు ఒక నిర్వాహకుడు మీ ఖాతాను అంగీకరించాలి. మీ ఖాతా అంగీకరించగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       name:
         title: "పేరు"
-        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)."
-        instructions_required: "మీ పూర్తి పేరు."
+        instructions: "మీ పూర్తి పేరు (ఐచ్ఛికం)"
+        instructions_required: "మీ పూర్తి పేరు"
         required: "దయచేసి పేరును నమోదు చేయండి"
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
         title: "సభ్యనామం"
-        instructions: "ప్రత్యేకమైనది, ఖాళీలు ఉండకూడదు, చిన్నది."
         short_instructions: "జనాలు మిమ్మల్ని @%{username} అని ప్రస్తావించవచ్చు"
         available: "మీ సభ్యనామం అందుబాటులో ఉంది."
         not_available: "అందుబాటులో లేదు. %{suggestion} ప్రయత్నించండి?"
@@ -1688,12 +1686,10 @@ te:
           success: "ఆహ్వాన లింక్ విజయవంతంగా రూపొందించబడింది!"
           error: "ఆహ్వాన లింక్‌ని రూపొందించడంలో లోపం ఏర్పడింది"
         invite:
-          new_title: "ఆహ్వానాన్ని సృష్టించండి"
-          edit_title: "ఆహ్వానాన్ని సవరించండి"
           instructions: "ఈ సైట్‌కు తక్షణమే యాక్సెస్ మంజూరు చేయడానికి ఈ లింక్‌ను షేర్ చేయండి:"
-          copy_link: "లింక్ను కాపీ చేయండి"
           expires_in_time: "%{time} లో గడువు ముగుస్తుంది"
           expired_at_time: "%{time} కి గడువు ముగిసింది"
+          link_copied: "లింక్ కాపీ చేయబడింది!"
           show_advanced: "అధునాతన ఎంపికలను చూపించండి"
           hide_advanced: "అధునాతన ఎంపికలను దాచండి"
           restrict: "పరిమితం చేయండి"
@@ -1703,11 +1699,11 @@ te:
           max_redemptions_allowed: "గరిష్ట ఉపయోగాలు"
           add_to_groups: "సమూహాలకు జోడించండి"
           invite_to_topic: "విషయానికి చేరుకోండి"
-          expires_at: "ఆహ్వానం గడువు ఎప్పుడు ముగుస్తుంది"
-          custom_message: "ఐచ్ఛిక వ్యక్తిగత సందేశం"
+          expires_after: "ఆహ్వానం గడువు ఎప్పుడు ముగుస్తుంది"
           send_invite_email: "సేవ్ చేసి ఇమెయిల్‌ను పంపండి"
           send_invite_email_instructions: "ఆహ్వాన ఇమెయిల్‌ను పంపడానికి ఇమెయిల్‌కి ఆహ్వానాన్ని పరిమితం చేయండి"
-          save_invite: "ఆహ్వానాన్ని సేవ్ చేయండి"
+          save_invite: "సేవ్ చేయండి"
+          cancel: "రద్దుచేయండి"
           invite_saved: "ఆహ్వానం సేవ్ చేయబడింది."
         bulk_invite:
           none: "ఈ పేజీలో ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
@@ -1998,7 +1994,7 @@ te:
     login:
       header_title: "తిరిగి స్వాగతం"
       subheader_title: "మీ ఖాతాకు లాగిన్ చేయండి"
-      title: "లాగిన్ అవ్వండి"
+      title: "లాగిన్"
       username: "సభ్యుడు"
       password: "సంకేతపదం"
       show_password: "చూపండి"
@@ -4442,6 +4438,7 @@ te:
         installed_version: "ప్రతిష్టించబడింది"
         latest_version: "తాజా"
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
+        dismiss_notice: "రద్దుచేయండి"
         new_features:
           title: "కొత్తది ఏమిటి"
           previous_announcements: "మీరు మునుపటి కొత్త ఫీచర్ ప్రకటనలను <a href='%{url}' target='_blank'>డిస్కోర్స్ మెటా</a>లో చూడవచ్చు"
@@ -4879,8 +4876,11 @@ te:
           screened_ips: "స్క్రీన్ చేసిన ఐపీలు"
           screened_urls: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
           search_logs: "లాగ్‌లను శోధించండి"
-          security: "సెక్యూరిటీ"
-          spam: "స్పామ్"
+      section_landing_pages:
+        account:
+          title: "ఖాతా"
+          backups:
+            title: "బ్యాకప్పులు"
       config_areas:
         about:
           header: "మీ సైట్ గురించి"
@@ -4909,6 +4909,9 @@ te:
             invalid_applies_to: "అవసరం"
             topic: "విషయాలు"
             post: "టపాలు"
+        look_and_feel:
+          themes:
+            title: "థీమ్స్"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
@@ -6213,10 +6216,6 @@ te:
             with_post: <span class="username">%{username}</span> %{link} లో పోస్ట్ కోసం
             with_post_time: <span class="username">%{username}</span> %{link} లో <span class="time">%{time}</span> లో పోస్ట్ కోసం
             with_time: <span class="username">%{username}</span> వద్ద <span class="time">%{time}</span>
-        badge_intro:
-          title: "ప్రారంభించడానికి ఇప్పటికే ఉన్న బ్యాడ్జ్‌ని ఎంచుకోండి లేదా కొత్తదాన్ని సృష్టించండి"
-          what_are_badges_title: "బ్యాడ్జ్‌లు అంటే ఏమిటి?"
-          badge_query_examples_title: "బ్యాడ్జ్ క్వరీ ఉదాహరణలు"
         mass_award:
           title: బల్క్ అవార్డు
           description: ఒకేసారి చాలా మంది విషయాలకు ఒకే బ్యాడ్జ్‌ని అందించండి.

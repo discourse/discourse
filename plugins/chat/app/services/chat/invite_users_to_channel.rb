@@ -4,34 +4,31 @@ module Chat
   # Invites users to a channel.
   #
   # @example
-  #  Chat::InviteUsersToChannel.call(channel_id: 2, user_ids: [2, 43], guardian: guardian, **optional_params)
+  #  Chat::InviteUsersToChannel.call(params: { channel_id: 2, user_ids: [2, 43] }, guardian: guardian)
   #
   class InviteUsersToChannel
     include Service::Base
 
-    # @!method call(user_ids:, channel_id:, guardian:)
-    #   @param [Array<Integer>] user_ids
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option optional_params [Integer, nil] message_id
+    #   @param [Hash] params
+    #   @option params [Array<Integer>] :user_ids
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer, nil] :message_id
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :user_ids, :array
+      attribute :channel_id, :integer
+      attribute :message_id, :integer
+
+      validates :user_ids, presence: true
+      validates :channel_id, presence: true
+    end
     model :channel
     policy :can_view_channel
     model :users, optional: true
     step :send_invite_notifications
-
-    # @!visibility private
-    class Contract
-      attribute :user_ids, :array
-      validates :user_ids, presence: true
-
-      attribute :channel_id, :integer
-      validates :channel_id, presence: true
-
-      attribute :message_id, :integer
-    end
 
     private
 

@@ -1,10 +1,6 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({
@@ -338,34 +334,28 @@ acceptance("Glimmer Topic Timeline", function (needs) {
 
   test("it has a topic admin menu", async function (assert) {
     await visit("/t/internationalization-localization");
-    assert.ok(
-      exists(".timeline-controls .topic-admin-menu-button"),
-      "admin menu is present"
-    );
+    assert
+      .dom(".timeline-controls .topic-admin-menu-button")
+      .exists("admin menu is present");
   });
 
   test("it has a reply-to-post button", async function (assert) {
     await visit("/t/internationalization-localization");
-    assert.ok(
-      exists(".timeline-footer-controls .reply-to-post"),
-      "reply to post button is present"
-    );
+    assert
+      .dom(".timeline-footer-controls .reply-to-post")
+      .exists("reply to post button is present");
   });
 
   test("it has a topic notification button", async function (assert) {
     await visit("/t/internationalization-localization");
-    assert.ok(
-      exists(".timeline-footer-controls .topic-notifications-button"),
-      "topic notifications button is present"
-    );
+    assert
+      .dom(".timeline-footer-controls .topic-notifications-button")
+      .exists("topic notifications button is present");
   });
 
   test("Shows dates of first and last posts", async function (assert) {
     await visit("/t/deleted-topic-with-whisper-post/129");
-    assert.strictEqual(
-      query(".timeline-date-wrapper .now-date").innerText,
-      "Jul 2020"
-    );
+    assert.dom(".timeline-date-wrapper .now-date").hasText("Jul 2020");
   });
 
   test("selecting start-date navigates you to the first post", async function (assert) {

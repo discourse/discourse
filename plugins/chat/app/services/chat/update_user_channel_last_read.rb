@@ -4,18 +4,24 @@ module Chat
   # Service responsible for updating the last read message id of a membership.
   #
   # @example
-  #  Chat::UpdateUserChannelLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
+  #  Chat::UpdateUserChannelLastRead.call(params: { channel_id: 2, message_id: 3 }, guardian: guardian)
   #
   class UpdateUserChannelLastRead
     include ::Service::Base
 
-    # @!method call(channel_id:, message_id:, guardian:)
-    #   @param [Integer] channel_id
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
-    contract
+    contract do
+      attribute :message_id, :integer
+      attribute :channel_id, :integer
+
+      validates :message_id, :channel_id, presence: true
+    end
     model :channel
     model :membership
     policy :invalid_access
@@ -26,14 +32,6 @@ module Chat
       step :mark_associated_mentions_as_read
     end
     step :publish_new_last_read_to_clients
-
-    # @!visibility private
-    class Contract
-      attribute :message_id, :integer
-      attribute :channel_id, :integer
-
-      validates :message_id, :channel_id, presence: true
-    end
 
     private
 

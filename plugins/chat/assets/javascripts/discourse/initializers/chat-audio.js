@@ -40,7 +40,7 @@ export default {
 
         if (
           indicatorType === INDICATOR_PREFERENCES.dm_and_mentions &&
-          !data.isDirectMessageChannel &&
+          !data.is_direct_message_channel &&
           !isMention
         ) {
           return;

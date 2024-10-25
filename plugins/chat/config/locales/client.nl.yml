@@ -50,7 +50,6 @@ nl:
       deleted_chat_username: verwijderd
       dates:
         yesterday: "Gisteren"
-        time_tiny: "h:mm"
       all_loaded: "Alle berichten worden weergeven"
       already_enabled: "Chat is al ingeschakeld voor dit topic. Vernieuw de pagina."
       disabled_for_topic: "Chat is uitgeschakeld voor dit topic."
@@ -459,10 +458,8 @@ nl:
         auto_join_users_info: "Bekijk elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest. Voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
         auto_join_users_info_no_category: "Bekijk elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest. Voeg ze toe aan dit kanaal als ze toegang hebben tot de geselecteerde categorie ."
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
-        desktop_notification_level: "Bureaubladmeldingen"
         follow: "Deelnemen"
         followed: "Lid sinds"
-        mobile_notification_level: "Mobiele pushmeldingen"
         mute: "Kanaal dempen"
         threading_enabled: "Ingeschakeld"
         threading_disabled: "Uitgeschakeld"

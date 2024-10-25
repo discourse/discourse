@@ -10,9 +10,6 @@ RSpec.describe TopicViewSerializer do
     JSON.parse(MultiJson.dump(serializer)).deep_symbolize_keys!
   end
 
-  # Ensure no suggested ids are cached cause that can muck up suggested
-  use_redis_snapshotting
-
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }

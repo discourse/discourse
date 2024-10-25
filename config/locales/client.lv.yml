@@ -125,7 +125,6 @@ lv:
     share:
       topic_html: 'Temats: <span class="topic-title">%{topicTitle}</span>'
       close: "aizvērt"
-      twitter: "Kopīgojiet vietnē Twitter"
       facebook: "Dalīties Facebook"
       email: "Sūtīt pa e -pastu"
       url: "Kopējiet un kopīgojiet URL"
@@ -1184,7 +1183,7 @@ lv:
         add_email: "Pievienot alternatīvo e -pastu"
         auth_override_instructions: "E -pastu var atjaunināt no autentifikācijas pakalpojumu sniedzēja."
         no_secondary: "Nav sekundāru e -pasta ziņojumu"
-        instructions: "Nekad nav parādīts sabiedrībai."
+        instructions: "Nekad nav parādīts sabiedrībai"
         admin_note: "Piezīme. Administratora lietotājs, kas maina cita lietotāja e-pasta adresi, kas nav administrators, norāda, ka lietotājs ir zaudējis piekļuvi savam sākotnējam e-pasta kontam, tāpēc uz jauno adresi tiks nosūtīts paroles atiestatīšanas e-pasts. Lietotāja e -pasts nemainīsies, kamēr nebūs pabeidzis paroles atiestatīšanas procesu."
         ok: "Mēs jums nosūtīsim apstiprinājuma e-pastu"
         required: "Lūdzu ievadiet derīgu e-pasta adresi"
@@ -1204,8 +1203,8 @@ lv:
         welcome_to: "Laipni lūdzam %{site_name}!"
       name:
         title: "Vārds"
-        instructions: "Jūsu pilnais vārds (neobligāti)."
-        instructions_required: "Jūsu pilnais vārds."
+        instructions: "Jūsu pilnais vārds (neobligāti)"
+        instructions_required: "Jūsu pilnais vārds"
         required: "Lūdzu, ievadiet vārdu"
         too_short: "Jūsu vārds ir pārāk īss"
         ok: "Jūsu vārds izskatās labi"
@@ -1340,20 +1339,17 @@ lv:
           success: "Ielūguma saite gatava!"
           error: "Ģenerējot uzaicinājuma saiti, radās kļūda"
         invite:
-          new_title: "Izveidot ielūgumu"
-          edit_title: "Rediģēt uzaicinājumu"
           instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei:"
-          copy_link: "kopēt saiti"
           expires_in_time: "Derīguma termiņš beidzas pēc %{time}"
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
           hide_advanced: "Slēpt papildu opcijas"
           max_redemptions_allowed: "Maksimāli izmantojams"
           add_to_groups: "Pievienot grupām"
-          expires_at: "Derīguma termiņš beidzas"
-          custom_message: "Neobligāts personiskais ziņojums"
+          expires_after: "Derīguma termiņš beidzas"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
-          save_invite: "Saglabāt uzaicinājumu"
+          save_invite: "Saglabāt"
+          cancel: "Atcelt"
           invite_saved: "Uzaicinājums saglabāts."
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
@@ -1561,7 +1557,7 @@ lv:
     login:
       header_title: "Laipni lūdzam"
       subheader_title: "Ielogojieties savā kontā"
-      title: "Pieslēgties"
+      title: "Ienākt"
       username: "Lietotājs"
       password: "Parole"
       show_password: "Parādīt"
@@ -2862,6 +2858,7 @@ lv:
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         installed_version: "Uzinstalēts"
         latest_version: "Pēdējais"
+        dismiss_notice: "Nerādīt"
         new_features:
           learn_more: "Uzzināt vairāk..."
         last_checked: "Pēdējā pārbaude"
@@ -3037,8 +3034,11 @@ lv:
           screened_emails: "Pārbaudītie e-pasti"
           screened_ips: "Pārbaudītās IP"
           screened_urls: "Pārbaudītie URL"
-          security: "Drošība"
-          spam: "Spams"
+      section_landing_pages:
+        account:
+          title: "Konts"
+          backups:
+            title: "Dublējums (Backups)"
       config_areas:
         about:
           optional: "(pēc izvēles)"
@@ -3056,6 +3056,9 @@ lv:
             invalid_applies_to: "Nepieciešams"
             topic: "tēmas"
             post: "raksti"
+        look_and_feel:
+          themes:
+            title: "Dizaini"
       plugins:
         title: "Spraudņi"
         name: "Nosaukums"

@@ -34,10 +34,6 @@ RSpec.xdescribe SiteSettings::DeprecatedSettings do
   describe "when not overriding deprecated settings" do
     let(:override) { false }
 
-    # Necessary because Discourse.deprecate uses redis to see if the warning
-    # was already logged.
-    use_redis_snapshotting
-
     # NOTE: This fixture has some completely made up settings (e.g. min_trust_level_to_allow_invite_tl_and_staff)
     let(:deprecated_test) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_test.yml" }
 

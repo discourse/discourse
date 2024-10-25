@@ -932,8 +932,6 @@ RSpec.describe ApplicationController do
     context "with rate limits" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       it "serves a LimitExceeded error in the preferred locale" do
         SiteSetting.max_likes_per_day = 1
         post1 = Fabricate(:post)
@@ -1156,8 +1154,6 @@ RSpec.describe ApplicationController do
 
     before { RateLimiter.enable }
 
-    use_redis_snapshotting
-
     it "is included when API key is rate limited" do
       global_setting :max_admin_api_reqs_per_minute, 1
       api_key = ApiKey.create!(user_id: admin.id).key
@@ -1208,8 +1204,6 @@ RSpec.describe ApplicationController do
       SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
     end
 
-    use_redis_snapshotting
-
     it "are rate limited" do
       now = Time.zone.now
       freeze_time now
@@ -1255,6 +1249,41 @@ RSpec.describe ApplicationController do
 
         get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
         expect(response.status).to eq(429)
+      end
+
+      context "with XHR requests" do
+        before { global_setting :anon_cache_store_threshold, 1 }
+
+        def preloaded_data
+          response_html = Nokogiri::HTML5.fragment(response.body)
+          JSON.parse(response_html.css("#data-preloaded")[0]["data-preloaded"])
+        end
+
+        it "does not return the same preloaded data for XHR and non-XHR requests" do
+          # Request is stored in cache
+          get "/", headers: { "X-Requested-With" => "XMLHTTPrequest" }
+          expect(response.status).to eq(200)
+          expect(response.headers["X-Discourse-Cached"]).to eq("store")
+          expect(preloaded_data).not_to have_key("site")
+
+          # Request is served from cache
+          get "/", headers: { "X-Requested-With" => "xmlhttprequest" }
+          expect(response.status).to eq(200)
+          expect(response.headers["X-Discourse-Cached"]).to eq("true")
+          expect(preloaded_data).not_to have_key("site")
+
+          # Request is not served from cache because of different headers, but is stored
+          get "/"
+          expect(response.status).to eq(200)
+          expect(response.headers["X-Discourse-Cached"]).to eq("store")
+          expect(preloaded_data).to have_key("site")
+
+          # Request is served from cache
+          get "/", headers: { "X-Requested-With" => "xmlhttprequest" }
+          expect(response.status).to eq(200)
+          expect(response.headers["X-Discourse-Cached"]).to eq("true")
+          expect(preloaded_data).not_to have_key("site")
+        end
       end
     end
   end
