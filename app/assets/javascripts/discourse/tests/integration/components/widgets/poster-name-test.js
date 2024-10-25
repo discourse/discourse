@@ -70,4 +70,22 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
 
     assert.dom(".second").doesNotExist();
   });
+
+  test("renders badges that are passed in", async function (assert) {
+    this.set("args", {
+      username: "eviltrout",
+      usernameUrl: "/u/eviltrout",
+      badgesGranted: [
+        { icon: "heart", name: "badge1" },
+        { id: "target", name: "badge2" },
+      ],
+    });
+
+    await render(
+      hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
+    );
+
+    assert.dom("span[title*='badge1']").exists();
+    assert.dom("span[title*='badge2']").exists();
+  });
 });
