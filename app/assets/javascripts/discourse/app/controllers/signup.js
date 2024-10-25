@@ -39,6 +39,8 @@ export default class SignupPageController extends Controller.extend(
   userFields = null;
   isDeveloper = false;
   maskPassword = true;
+  passwordValidationVisible = false;
+  emailValidationVisible = false;
 
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -205,7 +207,22 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
+  showPasswordValidation() {
+    if (this.passwordValidation.reason) {
+      this.set("passwordValidationVisible", true);
+    } else {
+      this.set("passwordValidationVisible", false);
+    }
+  }
+
+  @action
   checkEmailAvailability() {
+    if (this.emailValidation.reason) {
+      this.set("emailValidationVisible", true);
+    } else {
+      this.set("emailValidationVisible", false);
+    }
+
     if (
       !this.emailValidation.ok ||
       this.serverAccountEmail === this.accountEmail
@@ -438,6 +455,8 @@ export default class SignupPageController extends Controller.extend(
   createAccount() {
     this.set("flash", "");
     this.set("forceValidationReason", true);
+    this.set("emailValidationVisible", true);
+    this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
