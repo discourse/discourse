@@ -56,17 +56,14 @@
         </div>
 
         <ConditionalLoadingSpinner @condition={{this.loading}} />
-        <DTextarea
-          @autocomplete="off"
-          @tabindex={{this.tabindex}}
+        <this.editorComponent
+          @onSetup={{this.setupEditor}}
           @value={{this.value}}
           @placeholder={{this.placeholderTranslated}}
-          @aria-label={{this.placeholderTranslated}}
           @disabled={{this.disabled}}
-          @input={{this.change}}
+          @change={{this.change}}
           @focusIn={{this.handleFocusIn}}
           @focusOut={{this.handleFocusOut}}
-          class="d-editor-input"
           @id={{this.textAreaId}}
         />
         <PopupInputTip @validation={{this.validation}} />

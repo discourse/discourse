@@ -1,14 +1,17 @@
-import { action } from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import ItsATrap from "@discourse/itsatrap";
+import $ from "jquery";
 import { generateLinkifyFunction } from "discourse/lib/text";
+import { siteDir } from "discourse/lib/text-direction";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
   caretPosition,
   clipboardHelpers,
   determinePostReplaceSelection,
+  inCodeBlock,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
@@ -43,12 +46,17 @@ export default class TextareaTextManipulation {
 
   eventPrefix;
   textarea;
+  $textarea;
+
+  #itsatrap;
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
+    this.$textarea = $(textarea);
+    this.#itsatrap = new ItsATrap(textarea);
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -64,6 +72,10 @@ export default class TextareaTextManipulation {
   blurAndFocus() {
     this.textarea?.blur();
     this.textarea?.focus();
+  }
+
+  focus() {
+    this.textarea.focus();
   }
 
   insertBlock(text) {
@@ -400,7 +412,7 @@ export default class TextareaTextManipulation {
     const selected = this.getSelected(null, { lineVal: true });
     const { pre, value: selectedValue, lineVal } = selected;
     const isInlinePasting = pre.match(/[^\n]$/);
-    const isCodeBlock = this.isInsideCodeFence(pre);
+    const isCodeBlock = this.#isAfterStartedCodeFence(pre);
 
     if (
       plainText &&
@@ -515,7 +527,10 @@ export default class TextareaTextManipulation {
       .join("\n");
   }
 
-  @bind
+  #isAfterStartedCodeFence(beforeText) {
+    return this.isInside(beforeText, /(^|\n)```/g);
+  }
+
   maybeContinueList() {
     const offset = caretPosition(this.textarea);
     const text = this.value;
@@ -528,7 +543,7 @@ export default class TextareaTextManipulation {
       return;
     }
 
-    if (this.isInsideCodeFence(text.substring(0, offset - 1))) {
+    if (this.#isAfterStartedCodeFence(text.substring(0, offset - 1))) {
       return;
     }
 
@@ -628,7 +643,6 @@ export default class TextareaTextManipulation {
     }
   }
 
-  @bind
   indentSelection(direction) {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
       return;
@@ -703,7 +717,7 @@ export default class TextareaTextManipulation {
     }
   }
 
-  @action
+  @bind
   emojiSelected(code) {
     let selected = this.getSelected();
     const captures = selected.pre.match(/\B:(\w*)$/);
@@ -724,7 +738,32 @@ export default class TextareaTextManipulation {
     }
   }
 
-  isInsideCodeFence(beforeText) {
-    return this.isInside(beforeText, /(^|\n)```/g);
+  async inCodeBlock() {
+    return inCodeBlock(
+      this.$textarea.value ?? this.$textarea.val(),
+      caretPosition(this.$textarea)
+    );
+  }
+
+  toggleDirection() {
+    let currentDir = this.$textarea.attr("dir")
+        ? this.$textarea.attr("dir")
+        : siteDir(),
+      newDir = currentDir === "ltr" ? "rtl" : "ltr";
+
+    this.$textarea.attr("dir", newDir).focus();
+  }
+
+  autocomplete() {
+    this.$textarea.autocomplete(...arguments);
+  }
+
+  bind() {
+    this.#itsatrap.bind(...arguments);
+  }
+
+  destroy() {
+    this.#itsatrap?.destroy();
+    this.#itsatrap = null;
   }
 }

@@ -24,23 +24,12 @@ import {
   IMAGE_MARKDOWN_REGEX,
 } from "discourse/lib/uploads";
 import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
-import userSearch from "discourse/lib/user-search";
-import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
-import {
-  caretPosition,
-  formatUsername,
-  inCodeBlock,
-} from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { isTesting } from "discourse-common/config/environment";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   debounce,
@@ -191,47 +180,10 @@ export default class ComposerEditor extends Component {
     };
   }
 
-  @bind
-  _afterMentionComplete(value) {
-    this.composer.set("reply", value);
-
-    // ensures textarea scroll position is correct
-    schedule("afterRender", () => {
-      const input = this.element.querySelector(".d-editor-input");
-      input?.blur();
-      input?.focus();
-    });
-  }
-
   @on("didInsertElement")
   _composerEditorInit() {
     const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (this.siteSettings.enable_mentions) {
-      $(input).autocomplete({
-        template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: (term) => {
-          destroyUserStatuses();
-          return userSearch({
-            term,
-            topicId: this.topic?.id,
-            categoryId: this.topic?.category_id || this.composer?.categoryId,
-            includeGroups: true,
-          }).then((result) => {
-            initUserStatusHtml(getOwner(this), result.users);
-            return result;
-          });
-        },
-        onRender: (options) => renderUserStatusHtml(options),
-        key: "@",
-        transformComplete: (v) => v.username || v.name,
-        afterComplete: this._afterMentionComplete,
-        triggerRule: async (textarea) =>
-          !(await inCodeBlock(textarea.value, caretPosition(textarea))),
-        onClose: destroyUserStatuses,
-      });
-    }
 
     input?.addEventListener(
       "scroll",

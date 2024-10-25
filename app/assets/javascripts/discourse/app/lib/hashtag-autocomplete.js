@@ -37,15 +37,16 @@ import { findRawTemplate } from "discourse-common/lib/raw-templates";
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
-  $textArea,
+  $textarea,
   siteSettings,
   autocompleteOptions = {}
 ) {
-  _setup(
-    contextualHashtagConfiguration,
-    $textArea,
-    siteSettings,
-    autocompleteOptions
+  $textarea.autocomplete(
+    hashtagAutocompleteOptions(
+      contextualHashtagConfiguration,
+      siteSettings,
+      autocompleteOptions
+    )
   );
 }
 
@@ -53,13 +54,12 @@ export async function hashtagTriggerRule(textarea) {
   return !(await inCodeBlock(textarea.value, caretPosition(textarea)));
 }
 
-function _setup(
+export function hashtagAutocompleteOptions(
   contextualHashtagConfiguration,
-  $textArea,
   siteSettings,
   autocompleteOptions
 ) {
-  $textArea.autocomplete({
+  return {
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
     afterComplete: autocompleteOptions.afterComplete,
@@ -75,7 +75,7 @@ function _setup(
     },
     triggerRule: async (textarea, opts) =>
       await hashtagTriggerRule(textarea, opts),
-  });
+  };
 }
 
 let searchCache = {};
