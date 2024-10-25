@@ -189,6 +189,14 @@ class Post < ActiveRecord::Base
     find_by(topic_id: topic_id, post_number: post_number)
   end
 
+  def badges_granted
+    if user
+      user.user_badges.where(post_id: id)
+    else
+      []
+    end
+  end
+
   def whisper?
     post_type == Post.types[:whisper]
   end

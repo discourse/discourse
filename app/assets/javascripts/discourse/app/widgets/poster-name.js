@@ -139,6 +139,18 @@ export default createWidget("poster-name", {
       }
     }
 
+    if (attrs.badgesGranted) {
+      attrs.badgesGranted.forEach((badge) => {
+        const badgeIcon = iconNode(badge.icon, {
+          title: I18n.t("post.badge_granted_tooltip", {
+            username: attrs.username,
+            badge_name: badge.name,
+          }),
+        });
+        nameContents.push(badgeIcon);
+      });
+    }
+
     const afterNameContents =
       applyDecorators(this, "after-name", attrs, this.state) || [];
 

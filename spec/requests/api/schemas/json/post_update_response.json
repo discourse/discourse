@@ -98,6 +98,10 @@
             "null"
           ]
         },
+        "badges_granted": {
+          "type": "array",
+          "items": {}
+        },
         "version": {
           "type": "integer"
         },
