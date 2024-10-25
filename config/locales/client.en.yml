@@ -1771,12 +1771,13 @@ en:
         action: "Click here to activate your account"
         already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
         please_continue: "Your new account is confirmed; you will be redirected to the home page."
-        continue_button: "Continue to %{site_name}"
+        continue_button: "Finish!"
         welcome_to: "Welcome to %{site_name}!"
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
       name:
         title: "Name"
+        title_optional: "Name (optional)"
         instructions: "Your full name (optional)"
         instructions_required: "Your full name"
         required: "Please enter a name"
@@ -2348,7 +2349,6 @@ en:
 
     create_account:
       header_title: "Welcome!"
-      subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -2396,7 +2396,6 @@ en:
 
     login:
       header_title: "Welcome back"
-      subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
       password: "Password"
@@ -2498,7 +2497,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      existing_user_can_redeem: "Redeem your invitation to a topic or group."
 
     password_reset:
       continue: "Continue to %{site_name}"
