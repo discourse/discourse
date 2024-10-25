@@ -13,11 +13,14 @@
 .signup-fullpage,
 .invites-show {
   .signup-body,
-  .login-body {
+  .login-body,
+  .alert {
     display: flex;
     justify-content: center;
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
+    margin: 0;
   }
 
   .login-page-cta,

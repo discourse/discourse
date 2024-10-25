@@ -2,9 +2,9 @@
 {{hide-application-header-buttons "search" "login" "signup" "menu"}}
 {{hide-application-sidebar}}
 
-<FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
-
 <div class="signup-fullpage">
+  <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+
   <div class={{concat-class "signup-body" this.bodyClasses}}>
     <PluginOutlet
       @name="create-account-before-modal-body"
