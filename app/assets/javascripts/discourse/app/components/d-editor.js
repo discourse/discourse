@@ -332,7 +332,7 @@ export default class DEditor extends Component {
   }
 
   _applyHashtagAutocomplete() {
-    this.textManipulation.autocomplete(
+    return this.textManipulation.autocomplete(
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["topic-composer"],
         this.siteSettings,
@@ -355,7 +355,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    this.textManipulation.autocomplete({
+    return this.textManipulation.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
       afterComplete: (text) => {
@@ -480,7 +480,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    this.textManipulation.autocomplete({
+    return this.textManipulation.autocomplete({
       template: findRawTemplate("user-selector-autocomplete"),
       dataSource: (term) => {
         destroyUserStatuses();
@@ -733,63 +733,77 @@ export default class DEditor extends Component {
   setupEditor(textManipulation) {
     this.set("textManipulation", textManipulation);
 
+    const destroyEvents = this.setupEvents();
+
+    this.element.addEventListener("paste", textManipulation.paste);
+
+    const emojiAutocomplete = this._applyEmojiAutocomplete();
+    const hashtagAutocomplete = this._applyHashtagAutocomplete();
+    const mentionAutocomplete = this._applyMentionAutocomplete();
+
+    this.bindShortcuts();
+
+    scheduleOnce("afterRender", this, this._readyNow);
+
+    return () => {
+      destroyEvents?.();
+
+      this.element?.removeEventListener("paste", textManipulation.paste);
+
+      emojiAutocomplete?.autocomplete("destroy");
+      hashtagAutocomplete?.autocomplete("destroy");
+      mentionAutocomplete?.autocomplete("destroy");
+    };
+  }
+
+  setupEvents() {
     if (this.composerEvents) {
       this.appEvents.on(
         "composer:insert-block",
-        textManipulation,
+        this.textManipulation,
         "insertBlock"
       );
-      this.appEvents.on("composer:insert-text", textManipulation, "insertText");
+      this.appEvents.on(
+        "composer:insert-text",
+        this.textManipulation,
+        "insertText"
+      );
       this.appEvents.on(
         "composer:replace-text",
-        textManipulation,
+        this.textManipulation,
         "replaceText"
       );
       this.appEvents.on("composer:apply-surround", this, "_applySurround");
       this.appEvents.on(
         "composer:indent-selected-text",
-        textManipulation,
+        this.textManipulation,
         "indentSelection"
       );
-    }
 
-    this._applyEmojiAutocomplete();
-    this._applyHashtagAutocomplete();
-    this._applyMentionAutocomplete();
-    this.bindShortcuts();
-    // TODO clean-up of above events?
-
-    this.element.addEventListener("paste", textManipulation.paste);
-
-    scheduleOnce("afterRender", this, this._readyNow);
-
-    return () => {
-      this.element?.removeEventListener("paste", textManipulation.paste);
-
-      if (this.composerEvents) {
+      return () => {
         this.appEvents.off(
           "composer:insert-block",
-          textManipulation,
+          this.textManipulation,
           "insertBlock"
         );
         this.appEvents.off(
           "composer:insert-text",
-          textManipulation,
+          this.textManipulation,
           "insertText"
         );
         this.appEvents.off(
           "composer:replace-text",
-          textManipulation,
+          this.textManipulation,
           "replaceText"
         );
         this.appEvents.off("composer:apply-surround", this, "_applySurround");
         this.appEvents.off(
           "composer:indent-selected-text",
-          textManipulation,
+          this.textManipulation,
           "indentSelection"
         );
-      }
-    };
+      };
+    }
   }
 
   _disablePreviewTabIndex() {

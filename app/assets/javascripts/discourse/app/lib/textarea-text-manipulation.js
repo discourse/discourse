@@ -755,7 +755,7 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete() {
-    this.$textarea.autocomplete(...arguments);
+    return this.$textarea.autocomplete(...arguments);
   }
 
   bind() {
