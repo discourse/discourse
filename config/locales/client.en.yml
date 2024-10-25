@@ -5616,26 +5616,24 @@ en:
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
-            Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Name used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
           contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
-            Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Email used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
+            When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
           site_contact_name_help: |
-            A valid staff username to send all automated messages from. If left blank, the default System account will be used.
+            A staff username to send all automated messages from. If left blank, the default System account will be used.
           site_contact_group: "Site contact group"
           site_contact_group_help: |
-            A valid name of a group that gets invited to all automatically sent private messages.
-          your_organization: "Your organization"
+            The group that gets invited to all automatically sent private messages.
+          your_organization: "Organization name"
           company_name: "Company name"
           company_name_placeholder: "Sample Company Inc."
-          company_name_help: |
-            Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
