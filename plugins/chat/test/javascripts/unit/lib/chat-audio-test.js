@@ -103,4 +103,11 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
 
     assert.ok(this.playStub.notCalled);
   });
+
+  test("it skips chat sound when service worker returns false", async function (assert) {
+    chatAudioInitializer.canPlaySound.returns(Promise.resolve(false));
+    await this.handleNotification();
+
+    assert.ok(this.playStub.notCalled);
+  });
 });
