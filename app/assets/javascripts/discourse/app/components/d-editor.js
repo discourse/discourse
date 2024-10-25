@@ -332,7 +332,7 @@ export default class DEditor extends Component {
   }
 
   _applyHashtagAutocomplete() {
-    return this.textManipulation.autocomplete(
+    this.textManipulation.autocomplete(
       hashtagAutocompleteOptions(
         this.site.hashtag_configurations["topic-composer"],
         this.siteSettings,
@@ -355,7 +355,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    return this.textManipulation.autocomplete({
+    this.textManipulation.autocomplete({
       template: findRawTemplate("emoji-selector-autocomplete"),
       key: ":",
       afterComplete: (text) => {
@@ -480,7 +480,7 @@ export default class DEditor extends Component {
       return;
     }
 
-    return this.textManipulation.autocomplete({
+    this.textManipulation.autocomplete({
       template: findRawTemplate("user-selector-autocomplete"),
       dataSource: (term) => {
         destroyUserStatuses();
@@ -737,9 +737,9 @@ export default class DEditor extends Component {
 
     this.element.addEventListener("paste", textManipulation.paste);
 
-    const emojiAutocomplete = this._applyEmojiAutocomplete();
-    const hashtagAutocomplete = this._applyHashtagAutocomplete();
-    const mentionAutocomplete = this._applyMentionAutocomplete();
+    this._applyEmojiAutocomplete();
+    this._applyHashtagAutocomplete();
+    this._applyMentionAutocomplete();
 
     this.bindShortcuts();
 
@@ -750,9 +750,7 @@ export default class DEditor extends Component {
 
       this.element?.removeEventListener("paste", textManipulation.paste);
 
-      emojiAutocomplete?.autocomplete("destroy");
-      hashtagAutocomplete?.autocomplete("destroy");
-      mentionAutocomplete?.autocomplete("destroy");
+      this.textManipulation.autocomplete("destroy");
     };
   }
 
