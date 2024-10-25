@@ -132,29 +132,6 @@ export default class DEditor extends Component {
       .querySelector(".d-editor-preview")
       .addEventListener("click", this._handlePreviewLinkClick);
     ``;
-    if (this.composerEvents) {
-      this.appEvents.on(
-        "composer:insert-block",
-        this.textManipulation,
-        "insertBlock"
-      );
-      this.appEvents.on(
-        "composer:insert-text",
-        this.textManipulation,
-        "insertText"
-      );
-      this.appEvents.on(
-        "composer:replace-text",
-        this.textManipulation,
-        "replaceText"
-      );
-      this.appEvents.on("composer:apply-surround", this, "_applySurround");
-      this.appEvents.on(
-        "composer:indent-selected-text",
-        this.textManipulation,
-        "indentSelection"
-      );
-    }
   }
 
   @bind
@@ -230,39 +207,40 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.composerEvents) {
-      this.appEvents.off(
-        "composer:insert-block",
-        this.textManipulation,
-        "insertBlock"
-      );
-      this.appEvents.off(
-        "composer:insert-text",
-        this.textManipulation,
-        "insertText"
-      );
-      this.appEvents.off(
-        "composer:replace-text",
-        this.textManipulation,
-        "replaceText"
-      );
-      this.appEvents.off("composer:apply-surround", this, "_applySurround");
-      this.appEvents.off(
-        "composer:indent-selected-text",
-        this.textManipulation,
-        "indentSelection"
-      );
-    }
+    if (this.textManipulation) {
+      this.textManipulation.destroy();
+      this.element.removeEventListener("paste", this.textManipulation.paste);
 
-    this.textManipulation.destroy();
+      if (this.composerEvents) {
+        this.appEvents.off(
+          "composer:insert-block",
+          this.textManipulation,
+          "insertBlock"
+        );
+        this.appEvents.off(
+          "composer:insert-text",
+          this.textManipulation,
+          "insertText"
+        );
+        this.appEvents.off(
+          "composer:replace-text",
+          this.textManipulation,
+          "replaceText"
+        );
+        this.appEvents.off("composer:apply-surround", this, "_applySurround");
+        this.appEvents.off(
+          "composer:indent-selected-text",
+          this.textManipulation,
+          "indentSelection"
+        );
+      }
+    }
 
     this.element
       .querySelector(".d-editor-preview")
       ?.removeEventListener("click", this._handlePreviewLinkClick);
 
     this._previewMutationObserver?.disconnect();
-
-    this.element.removeEventListener("paste", this.textManipulation.paste);
 
     this._cachedCookFunction = null;
   }
@@ -783,6 +761,26 @@ export default class DEditor extends Component {
   @action
   setupEditor(textManipulation) {
     this.set("textManipulation", textManipulation);
+
+    if (this.composerEvents) {
+      this.appEvents.on(
+        "composer:insert-block",
+        textManipulation,
+        "insertBlock"
+      );
+      this.appEvents.on("composer:insert-text", textManipulation, "insertText");
+      this.appEvents.on(
+        "composer:replace-text",
+        textManipulation,
+        "replaceText"
+      );
+      this.appEvents.on("composer:apply-surround", this, "_applySurround");
+      this.appEvents.on(
+        "composer:indent-selected-text",
+        textManipulation,
+        "indentSelection"
+      );
+    }
 
     this._applyEmojiAutocomplete();
     this._applyHashtagAutocomplete();
