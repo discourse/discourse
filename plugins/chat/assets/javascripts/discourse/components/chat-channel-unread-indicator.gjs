@@ -19,12 +19,13 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    let totalUnreads = this.args.channel.tracking.unreadCount;
-    if(this.isUrgent) {
-      return this.args.channel.tracking.mentionCount + this.args.channel.tracking.watchedThreadsUnreadCount + totalUnreads;
+    if (this.#hasChannelMentions()) {
+      return this.args.channel.tracking.mentionCount;
     }
-
-    return totalUnreads;
+    if (this.#hasWatchedThreads()) {
+      return this.args.channel.tracking.watchedThreadsUnreadCount;
+    }
+    return this.args.channel.tracking.unreadCount;
   }
 
   get isUrgent() {
