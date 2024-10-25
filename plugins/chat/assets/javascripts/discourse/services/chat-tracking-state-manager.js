@@ -53,12 +53,6 @@ export default class ChatTrackingStateManager extends Service {
     }, 0);
   }
 
-  get allChannelUnreadCount() {
-    return this.#allChannels.reduce((unreadCount, channel) => {
-      return unreadCount + channel.tracking.unreadCount;
-    }, 0);
-  }
-
   get publicChannelMentionCount() {
     return this.#publicChannels.reduce((mentionCount, channel) => {
       return mentionCount + channel.tracking.mentionCount;
