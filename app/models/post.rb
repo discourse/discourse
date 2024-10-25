@@ -190,7 +190,11 @@ class Post < ActiveRecord::Base
   end
 
   def badges_granted
-    user.user_badges.where(post_id: id)
+    if user
+      user.user_badges.where(post_id: id)
+    else
+      []
+    end
   end
 
   def whisper?
