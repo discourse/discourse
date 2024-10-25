@@ -58,6 +58,8 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
+  has_many :user_badges, ->(post_id) { where(post_id: post_id) }, through: :user
+
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
@@ -187,14 +189,6 @@ class Post < ActiveRecord::Base
 
   def self.find_by_number(topic_id, post_number)
     find_by(topic_id: topic_id, post_number: post_number)
-  end
-
-  def badges_granted
-    if user
-      user.user_badges.where(post_id: id)
-    else
-      []
-    end
   end
 
   def whisper?
