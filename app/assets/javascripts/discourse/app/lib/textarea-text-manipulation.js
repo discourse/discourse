@@ -620,6 +620,7 @@ export default class TextareaTextManipulation {
       // Clear the new autocompleted list item if there is no other text.
       const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;
       this._insertAt(offsetWithoutPrefix, offset, "");
+      this.selectText(offsetWithoutPrefix, 0);
     }
   }
 
