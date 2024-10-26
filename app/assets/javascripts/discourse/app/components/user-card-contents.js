@@ -31,7 +31,7 @@ import I18n from "discourse-i18n";
   "usernameClass",
   "primaryGroup"
 )
-@attributeBindings("labelledBy:aria-labelledby")
+@attributeBindings("ariaLabel:aria-label")
 export default class UserCardContents extends CardContentsBase.extend(
   CanCheckEmails,
   CleansUp
@@ -40,6 +40,7 @@ export default class UserCardContents extends CardContentsBase.extend(
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
   mentionSelector = "a.mention";
+  ariaLabel = I18n.t("user.card");
 
   @setting("allow_profile_backgrounds") allowBackgrounds;
   @setting("enable_badges") showBadges;
@@ -73,11 +74,6 @@ export default class UserCardContents extends CardContentsBase.extend(
   @computed("user.name", "user.username")
   get showName() {
     return this.user.name !== this.user.username;
-  }
-
-  @discourseComputed("user")
-  labelledBy(user) {
-    return user ? "discourse-user-card-title" : null;
   }
 
   @discourseComputed("user")

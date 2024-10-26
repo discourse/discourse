@@ -5,17 +5,18 @@ module Chat
   # or fetching paginated messages from last read.
   #
   # @example
-  #  Chat::ListThreadMessages.call(thread_id: 2, guardian: guardian, **optional_params)
+  #  Chat::ListThreadMessages.call(params: { thread_id: 2, **optional_params }, guardian: guardian)
   #
   class ListChannelThreadMessages
     include Service::Base
 
-    # @!method call(guardian:)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option optional_params [Integer] thread_id
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :thread_id, :integer
       # If this is not present, then we just fetch messages with page_size
       # and direction.
@@ -49,8 +50,8 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
-      ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: contract.thread_id)
+    def fetch_thread(params:)
+      ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: params[:thread_id])
     end
 
     def can_view_thread(guardian:, thread:)
@@ -61,42 +62,42 @@ module Chat
       thread.membership_for(guardian.user)
     end
 
-    def determine_target_message_id(contract:, membership:, guardian:, thread:)
-      if contract.fetch_from_last_message
+    def determine_target_message_id(params:, membership:, guardian:, thread:)
+      if params[:fetch_from_last_message]
         context[:target_message_id] = thread.last_message_id
-      elsif contract.fetch_from_first_message
+      elsif params[:fetch_from_first_message]
         context[:target_message_id] = thread.original_message_id
-      elsif contract.fetch_from_last_read || !contract.target_message_id
+      elsif params[:fetch_from_last_read] || !params[:target_message_id]
         context[:target_message_id] = membership&.last_read_message_id
-      elsif contract.target_message_id
-        context[:target_message_id] = contract.target_message_id
+      elsif params[:target_message_id]
+        context[:target_message_id] = params[:target_message_id]
       end
     end
 
-    def target_message_exists(contract:, guardian:)
+    def target_message_exists(params:, guardian:)
       return true if context.target_message_id.blank?
       target_message =
         ::Chat::Message.with_deleted.find_by(
           id: context.target_message_id,
-          thread_id: contract.thread_id,
+          thread_id: params[:thread_id],
         )
       return false if target_message.blank?
       return true if !target_message.trashed?
       target_message.user_id == guardian.user.id || guardian.is_staff?
     end
 
-    def fetch_messages(thread:, guardian:, contract:)
+    def fetch_messages(thread:, guardian:, params:)
       messages_data =
         ::Chat::MessagesQuery.call(
           channel: thread.channel,
           guardian: guardian,
           target_message_id: context.target_message_id,
           thread_id: thread.id,
-          page_size: contract.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
-          direction: contract.direction,
-          target_date: contract.target_date,
+          page_size: params[:page_size] || Chat::MessagesQuery::MAX_PAGE_SIZE,
+          direction: params[:direction],
+          target_date: params[:target_date],
           include_target_message_id:
-            contract.fetch_from_first_message || contract.fetch_from_last_message,
+            params[:fetch_from_first_message] || params[:fetch_from_last_message],
         )
 
       context[:can_load_more_past] = messages_data[:can_load_more_past]

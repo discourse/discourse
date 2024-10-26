@@ -38,7 +38,7 @@ RSpec.describe Service::Runner do
   class FailedContractService
     include Service::Base
 
-    contract do
+    params do
       attribute :test
 
       validates :test, presence: true
@@ -48,7 +48,7 @@ RSpec.describe Service::Runner do
   class SuccessContractService
     include Service::Base
 
-    contract {}
+    params {}
   end
 
   class FailureWithModelService
@@ -148,7 +148,7 @@ RSpec.describe Service::Runner do
   end
 
   describe ".call" do
-    subject(:runner) { described_class.call(service, &actions_block) }
+    subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
     let(:actions_block) { object.instance_eval(actions) }
     let(:service) { SuccessWithModelService }
@@ -157,18 +157,12 @@ RSpec.describe Service::Runner do
           on_success { |fake_model:| [result, fake_model] }
         end
       BLOCK
+    let(:dependencies) { { guardian: stub, params: {} } }
     let(:object) do
       Class
         .new(ApplicationController) do
           def request
             OpenStruct.new
-          end
-
-          def params
-            ActionController::Parameters.new
-          end
-
-          def guardian
           end
         end
         .new

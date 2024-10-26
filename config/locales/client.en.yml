@@ -1771,12 +1771,13 @@ en:
         action: "Click here to activate your account"
         already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
         please_continue: "Your new account is confirmed; you will be redirected to the home page."
-        continue_button: "Continue to %{site_name}"
+        continue_button: "Finish!"
         welcome_to: "Welcome to %{site_name}!"
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
       name:
         title: "Name"
+        title_optional: "Name (optional)"
         instructions: "Your full name (optional)"
         instructions_required: "Your full name"
         required: "Please enter a name"
@@ -2131,6 +2132,9 @@ en:
         private_message: "message"
         the_topic: "the topic"
 
+      card: "User card"
+      profile_link: "%{username}, visit profile"
+
     user_status:
       save: "Save"
       set_custom_status: "Set custom status"
@@ -2348,7 +2352,6 @@ en:
 
     create_account:
       header_title: "Welcome!"
-      subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -2396,7 +2399,6 @@ en:
 
     login:
       header_title: "Welcome back"
-      subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
       password: "Password"
@@ -2498,7 +2500,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      existing_user_can_redeem: "Redeem your invitation to a topic or group."
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -5620,26 +5621,24 @@ en:
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
-            Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Name used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
           contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
-            Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Email used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
+            When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
           site_contact_name_help: |
-            A valid staff username to send all automated messages from. If left blank, the default System account will be used.
+            A staff username to send all automated messages from. If left blank, the default System account will be used.
           site_contact_group: "Site contact group"
           site_contact_group_help: |
-            A valid name of a group that gets invited to all automatically sent private messages.
-          your_organization: "Your organization"
+            The group that gets invited to all automatically sent private messages.
+          your_organization: "Organization name"
           company_name: "Company name"
           company_name_placeholder: "Sample Company Inc."
-          company_name_help: |
-            Name of your company or organization.
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"

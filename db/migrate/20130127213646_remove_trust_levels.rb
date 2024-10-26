@@ -11,4 +11,8 @@ class RemoveTrustLevels < ActiveRecord::Migration[4.2]
     remove_column :users, :moderator
     add_column :users, :flag_level, :integer, null: false, default: 0
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

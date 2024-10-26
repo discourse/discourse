@@ -19,7 +19,7 @@ RSpec.describe User::Silence do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:admin)
     fab!(:user)
@@ -79,7 +79,7 @@ RSpec.describe User::Silence do
         expect(User::Action::TriggerPostAction).to have_received(:call).with(
           guardian:,
           post: nil,
-          contract: result[:contract],
+          params: result[:params],
         )
       end
     end

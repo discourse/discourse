@@ -10,21 +10,22 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupChannelThreads.call(channel_id: 2, guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupChannelThreads.call(params: { channel_id: 2, limit: 5, offset: 2 }, guardian: guardian)
   #
   class LookupChannelThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(channel_id:, guardian:, limit: nil, offset: nil)
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :channel_id, :integer
       attribute :limit, :integer
       attribute :offset, :integer
@@ -50,16 +51,16 @@ module Chat
 
     private
 
-    def set_limit(contract:)
-      context[:limit] = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+    def set_limit(params:)
+      context[:limit] = (params[:limit] || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
     end
 
-    def set_offset(contract:)
-      context[:offset] = [contract.offset || 0, 0].max
+    def set_offset(params:)
+      context[:offset] = [params[:offset] || 0, 0].max
     end
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.strict_loading.includes(:chatable).find_by(id: params[:channel_id])
     end
 
     def threading_enabled_for_channel(channel:)
@@ -136,10 +137,10 @@ module Chat
       context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url(contract:)
+    def build_load_more_url(channel:)
       load_more_params = { offset: context.offset + context.limit }.to_query
       context[:load_more_url] = ::URI::HTTP.build(
-        path: "/chat/api/channels/#{contract.channel_id}/threads",
+        path: "/chat/api/channels/#{channel.id}/threads",
         query: load_more_params,
       ).request_uri
     end

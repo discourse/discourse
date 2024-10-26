@@ -5,19 +5,20 @@ module Chat
   # as read.
   #
   # @example
-  #  Chat::UpdateUserThreadLastRead.call(channel_id: 2, thread_id: 3, message_id: 4, guardian: guardian)
+  #  Chat::UpdateUserThreadLastRead.call(params: { channel_id: 2, thread_id: 3, message_id: 4 }, guardian: guardian)
   #
   class UpdateUserThreadLastRead
     include ::Service::Base
 
-    # @!method call(channel_id:, thread_id:, guardian:)
-    #   @param [Integer] channel_id
-    #   @param [Integer] thread_id
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :channel_id, :integer
       attribute :thread_id, :integer
       attribute :message_id, :integer
@@ -35,24 +36,24 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
-      ::Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
+    def fetch_thread(params:)
+      ::Chat::Thread.find_by(id: params[:thread_id], channel_id: params[:channel_id])
     end
 
-    def fetch_message(contract:, thread:)
-      ::Chat::Message.with_deleted.find_by(
-        id: contract.message_id || thread.last_message_id,
-        thread_id: contract.thread_id,
-        chat_channel_id: contract.channel_id,
-      )
+    def invalid_access(guardian:, thread:)
+      guardian.can_join_chat_channel?(thread.channel)
     end
 
     def fetch_membership(guardian:, thread:)
       thread.membership_for(guardian.user)
     end
 
-    def invalid_access(guardian:, thread:)
-      guardian.can_join_chat_channel?(thread.channel)
+    def fetch_message(params:, thread:)
+      ::Chat::Message.with_deleted.find_by(
+        id: params[:message_id] || thread.last_message_id,
+        thread: thread,
+        chat_channel: thread.channel,
+      )
     end
 
     def ensure_valid_message(message:, membership:)

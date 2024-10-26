@@ -8,4 +8,7 @@ class ClearDuplicateAdminNotices < ActiveRecord::Migration[7.1]
       WHERE subject = #{problem_subject_id}
     SQL
   end
+
+  def down
+  end
 end
