@@ -115,4 +115,36 @@ describe "Filtering topics", type: :system do
       expect(topic_list).to have_topic(topic_with_tag_and_tag2)
     end
   end
+
+  describe "bulk topic selection" do
+    fab!(:user) { Fabricate(:moderator) }
+
+    it "shows the buttons and checkboxes" do
+      topics = Fabricate.times(2, :topic)
+      sign_in(user)
+      visit("/filter")
+
+      find("button.bulk-select").click
+      expect(topic_list).to have_topic_checkbox(topics.first)
+      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+      topic_list.click_topic_checkbox(topics.first)
+      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+    end
+
+    context "when on mobile", mobile: true do
+      it "shows the buttons and checkboxes" do
+        topics = Fabricate.times(2, :topic)
+        sign_in(user)
+        visit("/filter")
+
+        find("button.bulk-select").click
+        expect(topic_list).to have_topic_checkbox(topics.first)
+        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+        topic_list.click_topic_checkbox(topics.first)
+        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      end
+    end
+  end
 end
