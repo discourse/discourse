@@ -150,8 +150,8 @@ importers:
         version: 4.1.3
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -340,8 +340,8 @@ importers:
         specifier: ^0.5.0
         version: 0.5.0(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@ember/render-modifiers':
         specifier: ^2.1.0
         version: 2.1.0(@babel/core@7.26.0)(@glint/template@1.4.1-unstable.ff9ea6c)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.4.1-unstable.ff9ea6c)(rsvp@4.8.5)(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -647,8 +647,8 @@ importers:
         version: link:../truth-helpers
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -793,8 +793,8 @@ importers:
         version: 4.7.8
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -867,8 +867,8 @@ importers:
         version: link:../truth-helpers
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -946,8 +946,8 @@ importers:
         version: 1.0.15
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -1025,8 +1025,8 @@ importers:
         version: 4.1.3
     devDependencies:
       '@ember/optional-features':
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.2.0
+        version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
         version: 4.0.0(@embroider/compat@3.6.5(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(@embroider/webpack@4.0.8(@embroider/core@3.4.19(@glint/template@1.4.1-unstable.ff9ea6c))(webpack@5.95.0(@swc/core@1.7.39)(esbuild@0.24.0)))
@@ -1948,8 +1948,8 @@ packages:
     peerDependencies:
       ember-source: '>= 4.8'
 
-  '@ember/optional-features@2.1.0':
-    resolution: {integrity: sha512-IXjDpTFhsjPk9h3OXwXjlRfhM/Wjtw2E71Xos/81ZsTTwZMB9H+DWhsxePXOkzYy7Jvw4TIzKbMfcnT8mrtwWQ==}
+  '@ember/optional-features@2.2.0':
+    resolution: {integrity: sha512-a1OQ+w9vDvMXd9BNA9r779yr8MAPguGaMGbIeTMPWACeWBdD6bACBB5iKE3gNyrJAYKMq2wab6BKmRFS3Qw3hw==}
     engines: {node: 10.* || 12.* || >= 14}
 
   '@ember/render-modifiers@2.1.0':
@@ -10897,7 +10897,7 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  '@ember/optional-features@2.1.0':
+  '@ember/optional-features@2.2.0':
     dependencies:
       chalk: 4.1.2
       ember-cli-version-checker: 5.1.2
