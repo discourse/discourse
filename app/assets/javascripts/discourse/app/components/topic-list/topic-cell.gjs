@@ -40,12 +40,12 @@ export default class TopicCell extends Component {
 
   @action
   onTitleFocus(event) {
-    event.target.classList.add("selected");
+    event.target.closest(".topic-list-item").classList.add("selected");
   }
 
   @action
   onTitleBlur(event) {
-    event.target.classList.remove("selected");
+    event.target.closest(".topic-list-item").classList.remove("selected");
   }
 
   <template>
