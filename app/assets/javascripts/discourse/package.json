@@ -35,8 +35,8 @@
     "pretty-text": "workspace:1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.9",
-    "@babel/standalone": "^7.25.9",
+    "@babel/core": "^7.26.0",
+    "@babel/standalone": "^7.26.1",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
