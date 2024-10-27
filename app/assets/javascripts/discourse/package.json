@@ -108,7 +108,7 @@
     "imports-loader": "^5.0.0",
     "jquery": "^3.7.1",
     "js-yaml": "^4.1.0",
-    "jsuites": "^5.6.5",
+    "jsuites": "^5.6.6",
     "loader.js": "^4.7.0",
     "make-plural": "^7.4.0",
     "message-bus-client": "^4.3.8",
