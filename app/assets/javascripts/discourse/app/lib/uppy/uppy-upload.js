@@ -133,11 +133,11 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
-    this._fileInputEl = fileInputEl;
-
-    this.allowMultipleFiles = this._fileInputEl.multiple;
-
-    this.#bindFileInputChange();
+    if (fileInputEl) {
+      this._fileInputEl = fileInputEl;
+      this.allowMultipleFiles = this._fileInputEl.multiple;
+      this.#bindFileInputChange();
+    }
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.config.id,
@@ -200,12 +200,10 @@ export default class UppyUpload {
       },
     });
 
-    if (this.config.uploadDropTargetOptions) {
+    const resolvedDropTargetOptions = this.#resolvedDropTargetOptions;
+    if (resolvedDropTargetOptions) {
       // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
-      this.uppyWrapper.uppyInstance.use(
-        DropTarget,
-        this.config.uploadDropTargetOptions
-      );
+      this.uppyWrapper.uppyInstance.use(DropTarget, resolvedDropTargetOptions);
     }
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
@@ -533,6 +531,14 @@ export default class UppyUpload {
     }
   }
 
+  get #resolvedDropTargetOptions() {
+    if (typeof this.config.uploadDropTargetOptions === "function") {
+      return this.config.uploadDropTargetOptions();
+    } else {
+      return this.config.uploadDropTargetOptions;
+    }
+  }
+
   #reset() {
     this.uppyWrapper.uppyInstance?.cancelAll();
     Object.assign(this, {
@@ -542,7 +548,9 @@ export default class UppyUpload {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
-    this._fileInputEl.value = "";
+    if (this._fileInputEl) {
+      this._fileInputEl.value = "";
+    }
   }
 
   #removeInProgressUpload(fileId) {

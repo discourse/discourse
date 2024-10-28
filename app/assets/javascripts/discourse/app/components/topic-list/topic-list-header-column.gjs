@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
@@ -135,6 +137,10 @@ export default class TopicListHeaderColumn extends Component {
       {{#if this.isSorting}}
         {{icon (if @ascending "chevron-up" "chevron-down")}}
       {{/if}}
+      <PluginOutlet
+        @name="topic-list-heading-bottom"
+        @outletArgs={{hash name=@name bulkSelectEnabled=@bulkSelectEnabled}}
+      />
     </th>
   </template>
 }

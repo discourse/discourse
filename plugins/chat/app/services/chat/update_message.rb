@@ -4,24 +4,32 @@ module Chat
   # Service responsible for updating a message.
   #
   # @example
-  #  Chat::UpdateMessage.call(message_id: 2, guardian: guardian, message: "A new message")
+  #  Chat::UpdateMessage.call(guardian: guardian, params: { message: "A new message", message_id: 2 })
   #
+
   class UpdateMessage
     include Service::Base
 
-    # @!method call(message_id:, guardian:, message:, upload_ids:)
+    # @!method self.call(guardian:, params:, options:)
     #   @param guardian [Guardian]
-    #   @param message_id [Integer]
-    #   @param message [String]
-    #   @param upload_ids [Array<Integer>] IDs of uploaded documents
+    #   @param [Hash] params
+    #   @option params [Integer] :message_id
+    #   @option params [String] :message
+    #   @option params [Array<Integer>] :upload_ids IDs of uploaded documents
+    #   @param [Hash] options
+    #   @option options [Boolean] (true) :strip_whitespaces
+    #   @option options [Boolean] :process_inline
+    #   @return [Service::Base::Context]
 
-    contract do
+    options do
+      attribute :strip_whitespaces, :boolean, default: true
+      attribute :process_inline, :boolean, default: -> { Rails.env.test? }
+    end
+
+    params do
       attribute :message_id, :string
       attribute :message, :string
       attribute :upload_ids, :array
-      attribute :streaming, :boolean, default: false
-      attribute :strip_whitespaces, :boolean, default: true
-      attribute :process_inline, :boolean, default: Rails.env.test?
 
       validates :message_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -47,7 +55,7 @@ module Chat
       message.chat_channel.add(guardian.user) if guardian.user.bot?
     end
 
-    def fetch_message(contract:)
+    def fetch_message(params:)
       ::Chat::Message.includes(
         :chat_mentions,
         :bookmarks,
@@ -62,16 +70,16 @@ module Chat
           chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
         ],
         user: :user_status,
-      ).find_by(id: contract.message_id)
+      ).find_by(id: params[:message_id])
     end
 
     def fetch_membership(guardian:, message:)
       message.chat_channel.membership_for(guardian.user)
     end
 
-    def fetch_uploads(contract:, guardian:)
+    def fetch_uploads(params:, guardian:)
       return if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: contract.upload_ids)
+      guardian.user.uploads.where(id: params[:upload_ids])
     end
 
     def can_modify_channel_message(guardian:, message:)
@@ -82,21 +90,20 @@ module Chat
       guardian.can_edit_chat?(message)
     end
 
-    def clean_message(contract:)
-      contract.message =
-        TextCleaner.clean(
-          contract.message,
-          strip_whitespaces: contract.strip_whitespaces,
-          strip_zero_width_spaces: true,
-        )
+    def clean_message(params:, options:)
+      params[:message] = TextCleaner.clean(
+        params[:message],
+        strip_zero_width_spaces: true,
+        strip_whitespaces: options.strip_whitespaces,
+      )
     end
 
-    def modify_message(contract:, message:, guardian:, uploads:)
-      message.message = contract.message
+    def modify_message(params:, message:, guardian:, uploads:)
+      message.message = params[:message]
       message.last_editor_id = guardian.user.id
       message.cook
 
-      return if uploads&.size != contract.upload_ids.to_a.size
+      return if uploads&.size != params[:upload_ids].to_a.size
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
@@ -149,14 +156,14 @@ module Chat
       chars_edited > max_edited_chars
     end
 
-    def publish(message:, guardian:, contract:)
+    def publish(message:, guardian:, options:)
       edit_timestamp = context[:revision]&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
 
       DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, message.user)
 
-      if contract.process_inline
+      if options.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
           { chat_message_id: message.id, edit_timestamp: edit_timestamp },
         )

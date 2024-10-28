@@ -246,10 +246,12 @@ module Chat
 
     def self.tracking_state(channel_ids, guardian, include_threads: false)
       Chat::TrackingState.call(
-        channel_ids: channel_ids,
-        guardian: guardian,
-        include_missing_memberships: true,
-        include_threads: include_threads,
+        guardian:,
+        params: {
+          include_missing_memberships: true,
+          channel_ids:,
+          include_threads:,
+        },
       ).report
     end
 

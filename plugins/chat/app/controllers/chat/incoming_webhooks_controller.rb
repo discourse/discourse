@@ -56,12 +56,12 @@ module Chat
       webhook.chat_channel.add(Discourse.system_user)
 
       Chat::CreateMessage.call(
-        service_params.merge(
+        params: {
           chat_channel_id: webhook.chat_channel_id,
-          guardian: Discourse.system_user.guardian,
           message: text,
-          incoming_chat_webhook: webhook,
-        ),
+        },
+        guardian: Discourse.system_user.guardian,
+        incoming_chat_webhook: webhook,
       ) do
         on_success { render json: success_json }
         on_failure { render(json: failed_json, status: 422) }

@@ -99,6 +99,7 @@ en:
         doc: Allows to send multiple pms to a user. Each PM accepts a delay.
       suspend_user_by_email:
         title: Suspend user by email
+        description: Automatically suspend an account based on email address 
       user_global_notice:
         title: User global notice
         description: Allows to display a global notice for a user
@@ -135,6 +136,13 @@ en:
         button_text: Done
       add_user_to_group_through_custom_field:
         title: "Add user to group through User Custom Field"
+        description: "Automatically add users to groups when they log in or with a recurring check"
       group_category_notification_default:
         title: "Group Category Notification Default"
         description: "Set the default notification level of a category for members of a group"
+      send_chat_message:
+        title: "Send Chat Message"
+        description: "Send a custom chat message to a channel"
+      random_assign: 
+        title: "Random Assign"
+        description: "Randomly assign topics to a group"

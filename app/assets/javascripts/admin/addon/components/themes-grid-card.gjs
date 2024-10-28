@@ -122,10 +122,10 @@ export default class ThemeCard extends Component {
           >{{icon "info-circle"}}</span>
         {{/if}}
         <div class="theme-card__image-wrapper">
-          {{#if @theme.screenshot}}
+          {{#if @theme.screenshot_url}}
             <img
               class="theme-card__image"
-              src={{htmlSafe @theme.screenshot}}
+              src={{@theme.screenshot_url}}
               alt={{@theme.name}}
             />
           {{else}}

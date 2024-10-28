@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SwapFieldTypeWithFieldTypeEnumOnUserFields < ActiveRecord::Migration[7.0]
+  def change
+  end
   # DROPPED_COLUMNS = { user_fields: %i[field_type] }
 
   # def up

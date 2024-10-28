@@ -14,8 +14,8 @@ class Flags::DestroyFlag
 
   private
 
-  def fetch_flag(id:)
-    Flag.find_by(id: id)
+  def fetch_flag(params:)
+    Flag.find_by(id: params[:id])
   end
 
   def not_system(flag:)

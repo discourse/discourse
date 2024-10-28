@@ -16,8 +16,28 @@ class ThemeField < ActiveRecord::Base
   validate :migration_filename_is_valid, if: :migration_field?
 
   after_save do
-    if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
+    if (
+         self.type_id == ThemeField.types[:theme_screenshot_upload_var] ||
+           self.type_id == ThemeField.types[:theme_upload_var]
+       ) && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+    end
+  end
+
+  after_save do
+    dependent_fields.each(&:invalidate_baked!)
+
+    if upload && svg_sprite_field?
+      upsert_svg_sprite!
+      SvgSprite.expire_cache
+    end
+  end
+
+  after_destroy do
+    if svg_sprite_field?
+      ThemeSvgSprite.where(theme_id: theme_id).delete_all
+
+      SvgSprite.expire_cache
     end
   end
 
@@ -69,6 +89,7 @@ class ThemeField < ActiveRecord::Base
         theme_var: 4, # No longer used
         yaml: 5,
         js: 6,
+        theme_screenshot_upload_var: 7,
       )
   end
 
@@ -717,21 +738,8 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_save do
-    dependent_fields.each(&:invalidate_baked!)
-
-    if upload && svg_sprite_field?
-      upsert_svg_sprite!
-      SvgSprite.expire_cache
-    end
-  end
-
-  after_destroy do
-    if svg_sprite_field?
-      ThemeSvgSprite.where(theme_id: theme_id).delete_all
-
-      SvgSprite.expire_cache
-    end
+  def upload_url
+    self.upload&.url
   end
 
   private

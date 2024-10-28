@@ -16,7 +16,7 @@
     "truth-helpers": "workspace:1.0.0"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.31",
+    "@types/jquery": "^3.5.32",
     "@types/qunit": "^2.19.11",
     "@types/rsvp": "^4.0.9",
     "webpack": "^5.95.0"

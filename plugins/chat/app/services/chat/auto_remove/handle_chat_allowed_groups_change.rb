@@ -19,7 +19,7 @@ module Chat
       include Service::Base
 
       policy :chat_enabled
-      contract { attribute :new_allowed_groups, :array }
+      params { attribute :new_allowed_groups, :array }
       policy :not_everyone_allowed
       model :users
       model :memberships_to_remove
@@ -32,11 +32,11 @@ module Chat
         SiteSetting.chat_enabled
       end
 
-      def not_everyone_allowed(contract:)
-        contract.new_allowed_groups.exclude?(Group::AUTO_GROUPS[:everyone])
+      def not_everyone_allowed(params:)
+        params[:new_allowed_groups].exclude?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_users(contract:)
+      def fetch_users(params:)
         User
           .real
           .activated
@@ -46,8 +46,8 @@ module Chat
           .joins(:user_chat_channel_memberships)
           .distinct
           .then do |users|
-            break users if contract.new_allowed_groups.blank?
-            users.where(<<~SQL, contract.new_allowed_groups)
+            break users if params[:new_allowed_groups].blank?
+            users.where(<<~SQL, params[:new_allowed_groups])
                 users.id NOT IN (
                   SELECT DISTINCT group_users.user_id
                   FROM group_users

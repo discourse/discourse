@@ -140,7 +140,8 @@ class CategoryList
     end
 
     page = [1, @options[:page].to_i].max
-    if @guardian.can_lazy_load_categories?
+    if SiteSetting.desktop_category_page_style == "categories_only_optimized" ||
+         @guardian.can_lazy_load_categories?
       query = query.limit(CATEGORIES_PER_PAGE).offset((page - 1) * CATEGORIES_PER_PAGE)
     elsif page > 1
       # Pagination is supported only when lazy load is enabled. If it is not,

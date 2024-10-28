@@ -41,6 +41,7 @@ import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
+  clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/lib/keyboard-shortcuts";
@@ -208,6 +209,7 @@ export function testCleanup(container, app) {
   resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
+  clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
   _clearSnapshots();

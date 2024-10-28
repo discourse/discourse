@@ -14,6 +14,7 @@
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
+        @typeClass="tag-intersection"
       />
     {{/each}}
   {{else if (eq this.suggestionType "categoryOrTag")}}
@@ -29,6 +30,7 @@
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
+          @typeClass="category"
         />
       {{else}}
         {{! render tag }}
@@ -40,6 +42,7 @@
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
+          @typeClass="tag"
         />
       {{/if}}
     {{/each}}
@@ -55,6 +58,7 @@
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
+        @typeClass="user"
       />
 
       <SearchMenu::Results::AssistantItem
@@ -64,6 +68,7 @@
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
+        @typeClass="user"
       />
     {{else}}
       {{#each @results as |result|}}
@@ -74,6 +79,7 @@
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
+          @typeClass="user"
         />
       {{/each}}
     {{/if}}
@@ -90,6 +96,7 @@
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
+        @typeClass="shortcut"
       />
     {{/each}}
   {{/if}}

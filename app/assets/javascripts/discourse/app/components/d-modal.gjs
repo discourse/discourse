@@ -33,6 +33,7 @@ export default class DModal extends Component {
   @service modal;
   @service site;
   @service appEvents;
+  @service capabilities;
 
   @tracked wrapperElement;
   @tracked animating = false;
@@ -222,7 +223,7 @@ export default class DModal extends Component {
 
   @bind
   handleKeyboardVisibilityChange(visible) {
-    if (visible) {
+    if (visible && this.capabilities.isIOS && !this.capabilities.isIpadOS) {
       window.scrollTo(0, 0);
     }
   }

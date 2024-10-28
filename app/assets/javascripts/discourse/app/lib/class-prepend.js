@@ -42,7 +42,9 @@ export default function classPrepend(klass, callback) {
 
   // Make a fake class which is a copy of the klass at this point in time. This provides the 'super'
   // implementation.
-  const FakeSuperclass = class {};
+  const klassProto = Object.getPrototypeOf(klass);
+  const FakeSuperclass =
+    klassProto !== Function.prototype ? class extends klassProto {} : class {};
   Object.defineProperties(FakeSuperclass, originalKlassDescs);
   Object.defineProperties(FakeSuperclass.prototype, originalProtoDescs);
 

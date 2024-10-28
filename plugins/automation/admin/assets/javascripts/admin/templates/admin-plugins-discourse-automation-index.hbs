@@ -33,6 +33,7 @@
             </td>
           {{else}}
             <td
+              class="automations__status"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
             >{{format-enabled-automation
@@ -40,16 +41,23 @@
                 automation.trigger
               }}</td>
             <td
+              class="automations__name"
               tabindex="0"
               role="button"
               {{on "keypress" (fn this.editAutomation automation)}}
               {{on "click" (fn this.editAutomation automation)}}
-            >{{automation.name}}</td>
+            >{{if
+                automation.name
+                automation.name
+                (i18n "discourse_automation.unnamed_automation")
+              }}</td>
             <td
+              class="automations__script"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
             >{{if automation.trigger.id automation.trigger.name "-"}}</td>
             <td
+              class="automations__version"
               role="button"
               {{on "click" (fn this.editAutomation automation)}}
             >{{automation.script.name}} (v{{automation.script.version}})</td>
@@ -64,7 +72,7 @@
             </td>
           {{/if}}
 
-          <td>
+          <td class="automations__delete">
             <DButton
               @icon="trash-can"
               @action={{action "destroyAutomation" automation}}
@@ -75,14 +83,4 @@
       {{/each}}
     </tbody>
   </table>
-{{else}}
-  <div class="alert alert-info">
-    <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
-    <DButton
-      @label="discourse_automation.create"
-      @icon="plus"
-      @action={{action "newAutomation"}}
-      class="btn-primary"
-    />
-  </div>
 {{/if}}

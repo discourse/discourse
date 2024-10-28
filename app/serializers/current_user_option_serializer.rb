@@ -4,6 +4,7 @@ class CurrentUserOptionSerializer < ApplicationSerializer
   attributes :mailing_list_mode,
              :external_links_in_new_tab,
              :enable_quoting,
+             :enable_smart_lists,
              :dynamic_favicon,
              :automatically_unpin_topics,
              :likes_notifications_disabled,

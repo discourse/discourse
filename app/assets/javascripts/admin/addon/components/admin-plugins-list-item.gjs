@@ -61,13 +61,13 @@ export default class AdminPluginsListItem extends Component {
     <tr
       data-plugin-name={{@plugin.name}}
       class={{concat
-        "admin-plugins-list__row"
+        "d-admin-row__content admin-plugins-list__row"
         (if this.isAdminSearchFiltered "-admin-search-filtered")
       }}
     >
-      <td class="admin-plugins-list__name-details">
+      <td class="d-admin-row__overview admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
-          <div class="admin-plugins-list__name">
+          <div class="d-admin-row__overview-name admin-plugins-list__name">
             {{@plugin.nameTitleized}}
           </div>
 
@@ -85,10 +85,10 @@ export default class AdminPluginsListItem extends Component {
             @outletArgs={{hash plugin=@plugin}}
           />
         </div>
-        <div class="admin-plugins-list__author">
+        <div class="d-admin-row__overview-author admin-plugins-list__author">
           {{@plugin.author}}
         </div>
-        <div class="admin-plugins-list__about">
+        <div class="d-admin-row__overview-about admin-plugins-list__about">
           {{@plugin.about}}
           {{#if @plugin.linkUrl}}
             <a
@@ -102,22 +102,28 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </div>
       </td>
-      <td class="admin-plugins-list__version">
-        <PluginOutlet
-          @name="admin-plugin-list-item-version"
-          @outletArgs={{hash plugin=@plugin}}
-        >
-          <div class="label">{{i18n "admin.plugins.version"}}</div>
-          {{@plugin.version}}<br />
-          <PluginCommitHash @plugin={{@plugin}} />
-        </PluginOutlet>
+      <td class="d-admin-row__detail admin-plugins-list__version">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "admin.plugins.version"}}
+        </div>
+        <div class="plugin-version">
+          <PluginOutlet
+            @name="admin-plugin-list-item-version"
+            @outletArgs={{hash plugin=@plugin}}
+          >
+            {{@plugin.version}}<br />
+            <PluginCommitHash @plugin={{@plugin}} />
+          </PluginOutlet>
+        </div>
       </td>
-      <td class="admin-plugins-list__enabled">
+      <td class="d-admin-row__detail admin-plugins-list__enabled">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "admin.plugins.enabled"}}
+        </div>
         <PluginOutlet
           @name="admin-plugin-list-item-enabled"
           @outletArgs={{hash plugin=@plugin}}
         >
-          <div class="label">{{i18n "admin.plugins.enabled"}}</div>
           {{#if @plugin.enabledSetting}}
             <DToggleSwitch
               @state={{@plugin.enabled}}
@@ -128,7 +134,7 @@ export default class AdminPluginsListItem extends Component {
           {{/if}}
         </PluginOutlet>
       </td>
-      <td class="admin-plugins-list__settings">
+      <td class="d-admin-row__controls admin-plugins-list__settings">
         <PluginOutlet
           @name="admin-plugin-list-item-settings"
           @outletArgs={{hash plugin=@plugin}}

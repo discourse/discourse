@@ -8,4 +8,8 @@ class FixTosName < ActiveRecord::Migration[4.2]
       WHERE name = 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

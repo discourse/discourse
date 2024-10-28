@@ -19,12 +19,6 @@
   }
 }
 
-.d-modal.add-pm-participants {
-  .d-modal__body {
-    overflow: visible;
-  }
-}
-
 .d-modal.bookmark-reminder-modal {
   .d-modal__container {
     min-height: calc(var(--composer-vh, var(--1dvh)) * 85);

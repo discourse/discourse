@@ -4,18 +4,19 @@ module Chat
   # Service responsible for updating the last read message id of a membership.
   #
   # @example
-  #  Chat::UpdateUserChannelLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
+  #  Chat::UpdateUserChannelLastRead.call(params: { channel_id: 2, message_id: 3 }, guardian: guardian)
   #
   class UpdateUserChannelLastRead
     include ::Service::Base
 
-    # @!method call(channel_id:, message_id:, guardian:)
-    #   @param [Integer] channel_id
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :message_id, :integer
       attribute :channel_id, :integer
 
@@ -34,8 +35,8 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def fetch_membership(guardian:, channel:)
@@ -46,8 +47,8 @@ module Chat
       guardian.can_join_chat_channel?(membership.chat_channel)
     end
 
-    def fetch_message(channel:, contract:)
-      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: contract.message_id)
+    def fetch_message(channel:, params:)
+      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: params[:message_id])
     end
 
     def ensure_message_id_recency(message:, membership:)
