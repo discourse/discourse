@@ -849,6 +849,12 @@ class Plugin::Instance
     end
   end
 
+  # Register a new valid site setting area.
+  # Site setting area is a way to group site settings.
+  def register_site_setting_area(area)
+    DiscoursePluginRegistry.site_setting_areas << area
+  end
+
   def javascript_includes
     assets
       .map do |asset, opts|

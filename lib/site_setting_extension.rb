@@ -523,6 +523,10 @@ module SiteSettingExtension
     end
   end
 
+  def valid_areas
+    SiteSetting::VALID_AREAS.concat(DiscoursePluginRegistry.site_setting_areas.to_a).uniq
+  end
+
   protected
 
   def clear_cache!
@@ -695,9 +699,9 @@ module SiteSettingExtension
 
       if opts[:area]
         split_areas = opts[:area].split("|")
-        if split_areas.any? { |area| !SiteSetting::VALID_AREAS.include?(area) }
+        if split_areas.any? { |area| !SiteSetting.valid_areas.include?(area) }
           raise Discourse::InvalidParameters.new(
-                  "Area is incorrect. Valid areas: #{SiteSetting::VALID_AREAS.join(", ")}",
+                  "Area is incorrect. Valid areas: #{SiteSetting.valid_areas.join(", ")}",
                 )
         end
         areas[name] = split_areas
