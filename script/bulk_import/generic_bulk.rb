@@ -91,7 +91,8 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_groups
 
     import_likes
-    import_votes
+    import_post_voting_votes
+    import_topic_voting_votes
     import_answers
     import_gamification_scores
     import_post_events
@@ -1949,7 +1950,7 @@ class BulkImport::Generic < BulkImport::Base
     topic_tags.close
   end
 
-  def import_votes
+  def import_post_voting_votes
     puts "", "Importing votes for posts..."
 
     unless defined?(::PostVoting)
@@ -2001,6 +2002,66 @@ class BulkImport::Generic < BulkImport::Base
         FROM votes
        WHERE votes.post_id = posts.id
          AND votes.vote_count <> posts.qa_vote_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_topic_voting_votes
+    unless defined?(::DiscourseTopicVoting)
+      puts "", "Skipping topic voting votes, because the topic voting plugin is not installed."
+      return
+    end
+
+    puts "", "Importing votes for topics..."
+
+    topic_votes = query(<<~SQL)
+      SELECT *
+      FROM topic_voting_votes
+    SQL
+
+    existing_topic_votes = DiscourseTopicVoting::Vote.pluck(:topic_id, :user_id).to_set
+
+    create_topic_voting_votes(topic_votes) do |row|
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless topic_id && user_id
+      next unless existing_topic_votes.add?([topic_id, user_id])
+
+      {
+        topic_id: topic_id,
+        user_id: user_id,
+        archive: to_boolean(row["archive"]),
+        created_at: to_datetime(row["created_at"]),
+        updated_at: to_datetime(row["updated_at"]),
+      }
+    end
+
+    topic_votes.close
+
+    puts "", "Updating vote counts of topics..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      WITH missing_ids AS (
+        SELECT DISTINCT t.id FROM topics t
+        JOIN topic_voting_votes dvv ON t.id = dvv.topic_id
+        LEFT JOIN topic_voting_topic_vote_count dvtvc ON t.id = dvtvc.topic_id
+        WHERE dvtvc.topic_id IS NULL
+      )
+      INSERT INTO topic_voting_topic_vote_count (votes_count, topic_id, created_at, updated_at)
+      SELECT '0', id, now(), now() FROM missing_ids
+    SQL
+
+    DB.exec(<<~SQL)
+      UPDATE topic_voting_topic_vote_count dvtvc
+      SET votes_count = (
+        SELECT COUNT(*) FROM topic_voting_votes dvv
+        WHERE dvtvc.topic_id = dvv.topic_id
+        GROUP BY dvv.topic_id
+      )
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
