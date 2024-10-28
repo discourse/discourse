@@ -379,6 +379,10 @@ export default class DEditor extends Component {
           "beforeinput",
           this.onBeforeInputSmartList
         );
+        this._textarea.addEventListener(
+          "keydown",
+          this.onBeforeInputSmartListShiftDetect
+        );
         this._textarea.addEventListener("input", this.onInputSmartList);
       }
 
@@ -416,10 +420,17 @@ export default class DEditor extends Component {
   }
 
   @bind
+  onBeforeInputSmartListShiftDetect(event) {
+    this._shiftPressed = event.shiftKey;
+  }
+
+  @bind
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
-    this.handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    if (!this._shiftPressed) {
+      this.handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    }
   }
 
   @bind
@@ -489,6 +500,10 @@ export default class DEditor extends Component {
         this._textarea.removeEventListener(
           "beforeinput",
           this.onBeforeInputSmartList
+        );
+        this._textarea.removeEventListener(
+          "keydown",
+          this.onBeforeInputSmartListShiftDetect
         );
         this._textarea.removeEventListener("input", this.onInputSmartList);
       }
