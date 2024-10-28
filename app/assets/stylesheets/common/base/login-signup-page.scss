@@ -15,6 +15,10 @@
   display: none;
 }
 
+body:has(.login-fullpage, .signup-fullpage) {
+  background-color: var(--secondary);
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
