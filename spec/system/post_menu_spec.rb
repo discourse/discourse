@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Post menu", type: :system, js: true do
+describe "Post menu", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }

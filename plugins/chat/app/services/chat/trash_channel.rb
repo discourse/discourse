@@ -5,14 +5,15 @@ module Chat
   # Note the slug is modified to prevent collisions.
   #
   # @example
-  #  Chat::TrashChannel.call(channel_id: 2, guardian: guardian)
+  #  Chat::TrashChannel.call(params: { channel_id: 2 }, guardian: guardian)
   #
   class TrashChannel
     include Service::Base
 
-    # @!method call(channel_id:, guardian:)
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
     DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
@@ -28,8 +29,8 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:)
-      Chat::Channel.find_by(id: channel_id)
+    def fetch_channel(params:)
+      Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def invalid_access(guardian:, channel:)

@@ -3904,7 +3904,7 @@ RSpec.describe UsersController do
 
         context "when expiring_at param is set" do
           it "changes notification level to ignore" do
-            freeze_time(Time.now) do
+            freeze_time do
               expiring_at = 3.days.from_now
               put "/u/#{another_user.username}/notification_level.json",
                   params: {

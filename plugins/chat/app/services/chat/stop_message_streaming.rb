@@ -4,16 +4,17 @@ module Chat
   # Service responsible for stopping streaming of a message.
   #
   # @example
-  #  Chat::StopMessageStreaming.call(message_id: 3, guardian: guardian)
+  #  Chat::StopMessageStreaming.call(params: { message_id: 3 }, guardian: guardian)
   #
   class StopMessageStreaming
     include ::Service::Base
 
-    # @!method call(message_id:, guardian:)
-    #   @param [Integer] message_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :message_id
     #   @return [Service::Base::Context]
-    contract do
+    params do
       attribute :message_id, :integer
 
       validates :message_id, presence: true
@@ -27,8 +28,8 @@ module Chat
 
     private
 
-    def fetch_message(contract:)
-      ::Chat::Message.find_by(id: contract.message_id)
+    def fetch_message(params:)
+      ::Chat::Message.find_by(id: params[:message_id])
     end
 
     def enforce_membership(guardian:, message:)
@@ -48,7 +49,7 @@ module Chat
       message.update!(streaming: false)
     end
 
-    def publish_message_streaming_state(guardian:, message:, contract:)
+    def publish_message_streaming_state(guardian:, message:)
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
     end
   end

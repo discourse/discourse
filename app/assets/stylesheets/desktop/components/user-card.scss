@@ -12,6 +12,12 @@
         min-width: 150px;
       }
     }
+    .user-profile-link {
+      &:focus-visible {
+        border: 1px solid;
+        @include default-focus;
+      }
+    }
   }
   .names__primary {
     .d-icon {

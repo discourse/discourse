@@ -3,9 +3,9 @@
 class User::Action::SuspendAll < Service::ActionBase
   option :users, []
   option :actor
-  option :contract
+  option :params
 
-  delegate :message, :post_id, :suspend_until, :reason, to: :contract, private: true
+  delegate :message, :post_id, :suspend_until, :reason, to: :params, private: true
 
   def call
     suspended_users.first.try(:user_history).try(:details)

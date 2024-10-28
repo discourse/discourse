@@ -68,6 +68,7 @@ export default class InterfaceController extends Controller {
       "external_links_in_new_tab",
       "dynamic_favicon",
       "enable_quoting",
+      "enable_smart_lists",
       "enable_defer",
       "automatically_unpin_topics",
       "allow_private_messages",

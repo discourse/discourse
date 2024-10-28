@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.2";
+export const PLUGIN_API_VERSION = "1.37.3";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -73,7 +73,9 @@ import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import KeyboardShortcuts, {
+  disableDefaultKeyboardShortcuts,
+} from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -588,6 +590,21 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * This function is used to disable a "default" keyboard shortcut. You can pass
+   * an array of shortcut bindings as strings to disable them.
+   *
+   * Please note that this function must be called from a pre-initializer.
+   *
+   * Example:
+   * ```
+   * api.disableDefaultKeyboardShortcuts(['command+f', 'shift+c']);
+   * ```
+   **/
+  disableDefaultKeyboardShortcuts(bindings) {
+    disableDefaultKeyboardShortcuts(bindings);
   }
 
   /**

@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
   skip_before_action :check_xhr, only: %i[index categories_and_latest categories_and_top redirect]
+  skip_before_action :verify_authenticity_token, only: %i[search]
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5

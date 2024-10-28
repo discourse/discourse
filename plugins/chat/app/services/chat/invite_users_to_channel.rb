@@ -4,19 +4,20 @@ module Chat
   # Invites users to a channel.
   #
   # @example
-  #  Chat::InviteUsersToChannel.call(channel_id: 2, user_ids: [2, 43], guardian: guardian, **optional_params)
+  #  Chat::InviteUsersToChannel.call(params: { channel_id: 2, user_ids: [2, 43] }, guardian: guardian)
   #
   class InviteUsersToChannel
     include Service::Base
 
-    # @!method call(user_ids:, channel_id:, guardian:)
-    #   @param [Array<Integer>] user_ids
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option optional_params [Integer, nil] message_id
+    #   @param [Hash] params
+    #   @option params [Array<Integer>] :user_ids
+    #   @option params [Integer] :channel_id
+    #   @option params [Integer, nil] :message_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :user_ids, :array
       attribute :channel_id, :integer
       attribute :message_id, :integer
@@ -31,24 +32,24 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::Channel.find_by(id: contract.channel_id)
+    def fetch_channel(params:)
+      ::Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def fetch_users(contract:)
+    def fetch_users(params:)
       ::User
         .joins(:user_option)
         .where(user_options: { chat_enabled: true })
         .not_suspended
-        .where(id: contract.user_ids)
+        .where(id: params[:user_ids])
         .limit(50)
     end
 
-    def send_invite_notifications(channel:, guardian:, users:, contract:)
+    def send_invite_notifications(channel:, guardian:, users:, params:)
       users&.each do |invited_user|
         next if !invited_user.guardian.can_join_chat_channel?(channel)
 
@@ -58,8 +59,8 @@ module Chat
           chat_channel_title: channel.title(invited_user),
           chat_channel_slug: channel.slug,
           invited_by_username: guardian.user.username,
-        }
-        data[:chat_message_id] = contract.message_id if contract.message_id
+          chat_message_id: params[:message_id],
+        }.compact
 
         invited_user.notifications.create(
           notification_type: ::Notification.types[:chat_invitation],

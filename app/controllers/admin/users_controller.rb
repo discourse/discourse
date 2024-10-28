@@ -121,10 +121,10 @@ class Admin::UsersController < Admin::StaffController
 
   def suspend
     User::Suspend.call(service_params) do
-      on_success do |contract:, user:, full_reason:|
+      on_success do |params:, user:, full_reason:|
         render_json_dump(
           suspension: {
-            suspend_reason: contract.reason,
+            suspend_reason: params.reason,
             full_suspend_reason: full_reason,
             suspended_till: user.suspended_till,
             suspended_at: user.suspended_at,

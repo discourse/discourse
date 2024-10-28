@@ -1,4 +1,4 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -10,11 +10,11 @@ module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
 
   test("modifyClass works with classic Ember objects", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     const TestThingy = EmberObject.extend({
-      @discourseComputed
-      prop() {
+      prop: computed(function () {
         return "hello";
-      },
+      }),
     });
 
     getOwner(this).register("test-thingy:main", TestThingy);
@@ -23,10 +23,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       api.modifyClass("test-thingy:main", {
         pluginId: "plugin-api-test",
 
-        @discourseComputed
-        prop() {
+        prop: computed(function () {
           return `${this._super(...arguments)} there`;
-        },
+        }),
       });
     });
 
@@ -90,11 +89,11 @@ module("Unit | Utility | plugin-api", function (hooks) {
   });
 
   test("modifyClass works with getters", function (assert) {
-    let Base = EmberObject.extend({
+    let Base = class extends EmberObject {
       get foo() {
         throw new Error("base getter called");
-      },
-    });
+      }
+    };
 
     getOwner(this).register("test-class:main", Base, {
       instantiate: false,

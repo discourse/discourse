@@ -11,7 +11,7 @@ RSpec.describe Chat::FlagMessage do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -26,7 +26,6 @@ RSpec.describe Chat::FlagMessage do
     let(:take_action) { nil }
     let(:params) do
       {
-        guardian: guardian,
         channel_id: channel_id,
         message_id:,
         flag_type_id: flag_type_id,
@@ -35,6 +34,7 @@ RSpec.describe Chat::FlagMessage do
         take_action: take_action,
       }
     end
+    let(:dependencies) { { guardian: } }
 
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone] }
 

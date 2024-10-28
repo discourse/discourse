@@ -2163,6 +2163,7 @@ RSpec.describe User do
       SiteSetting.default_other_notification_level_when_replying = 3 # immediately
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_enable_quoting = false
+      SiteSetting.default_other_enable_smart_lists = false
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_skip_new_user_tips = true
 
@@ -2185,6 +2186,7 @@ RSpec.describe User do
       expect(options.email_messages_level).to eq(UserOption.email_level_types[:never])
       expect(options.external_links_in_new_tab).to eq(true)
       expect(options.enable_quoting).to eq(false)
+      expect(options.enable_smart_lists).to eq(false)
       expect(options.dynamic_favicon).to eq(true)
       expect(options.skip_new_user_tips).to eq(true)
       expect(options.hide_profile_and_presence).to eq(true)

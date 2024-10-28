@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateVestalVersions < ActiveRecord::Migration[4.2]
-  def self.up
+  def up
     create_table :versions do |t|
       t.belongs_to :versioned, polymorphic: true
       t.belongs_to :user, polymorphic: true
@@ -24,7 +24,7 @@ class CreateVestalVersions < ActiveRecord::Migration[4.2]
     end
   end
 
-  def self.down
+  def down
     drop_table :versions
   end
 end

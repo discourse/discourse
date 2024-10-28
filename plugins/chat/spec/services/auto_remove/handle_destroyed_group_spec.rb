@@ -6,7 +6,7 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     let(:params) { { destroyed_group_user_ids: [admin_1.id, admin_2.id, user_1.id, user_2.id] } }
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }

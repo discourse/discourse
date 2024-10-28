@@ -29,56 +29,70 @@
   </div>
 {{/if}}
 
-<table class="grid admin-backups-list">
+<table class="d-admin-table admin-backups-list">
   <thead>
-    <th width="55%">{{i18n "admin.backups.columns.filename"}}</th>
-    <th width="10%">{{i18n "admin.backups.columns.size"}}</th>
+    <th>{{i18n "admin.backups.columns.filename"}}</th>
+    <th>{{i18n "admin.backups.columns.size"}}</th>
     <th></th>
   </thead>
   <tbody>
     {{#each this.model as |backup|}}
-      <tr class="backup-item-row" data-backup-filename={{backup.filename}}>
-        <td class="backup-filename">{{backup.filename}}</td>
-        <td class="backup-size">{{human-size backup.size}}</td>
-        <td class="backup-controls admin-table-row-controls">
-          <DButton
-            @action={{fn this.download backup}}
-            @title="admin.backups.operations.download.title"
-            @label="admin.backups.operations.download.label"
-            class="btn-default btn-small backup-item-row__download"
-          />
+      <tr
+        class="d-admin-row__content backup-item-row"
+        data-backup-filename={{backup.filename}}
+      >
+        <td class="d-admin-row__detail">
+          <div class="backup-filename">
+            {{backup.filename}}
+          </div>
+        </td>
+        <td class="d-admin-row__detail backup-size">
+          <div class="d-admin-row__mobile-label">
+            {{i18n "admin.backups.columns.size"}}
+          </div>
+          {{human-size backup.size}}
+        </td>
+        <td class="d-admin-row__controls backup-controls">
+          <div class="d-admin-row__controls-options">
+            <DButton
+              @action={{fn this.download backup}}
+              @title="admin.backups.operations.download.title"
+              @label="admin.backups.operations.download.label"
+              class="btn-default btn-small backup-item-row__download"
+            />
 
-          <DMenu
-            @identifier="backup-item-menu"
-            @title={{i18n "more_options"}}
-            @icon="ellipsis-vertical"
-            class="btn-small"
-          >
-            <:content>
-              <DropdownMenu as |dropdown|>
-                <dropdown.item>
-                  <DButton
-                    @icon="trash-can"
-                    @action={{fn (route-action "destroyBackup") backup}}
-                    @disabled={{this.status.isOperationRunning}}
-                    @title={{this.deleteTitle}}
-                    @label="admin.backups.operations.destroy.title"
-                    class="btn-transparent btn-danger backup-item-row__delete"
-                  />
-                </dropdown.item>
-                <dropdown.item>
-                  <DButton
-                    @icon="play"
-                    @action={{fn (route-action "startRestore") backup}}
-                    @disabled={{this.status.restoreDisabled}}
-                    @title={{this.restoreTitle}}
-                    @label="admin.backups.operations.restore.label"
-                    class="btn-transparent backup-item-row__restore"
-                  />
-                </dropdown.item>
-              </DropdownMenu>
-            </:content>
-          </DMenu>
+            <DMenu
+              @identifier="backup-item-menu"
+              @title={{i18n "more_options"}}
+              @icon="ellipsis-vertical"
+              class="btn-small"
+            >
+              <:content>
+                <DropdownMenu as |dropdown|>
+                  <dropdown.item>
+                    <DButton
+                      @icon="trash-can"
+                      @action={{fn (route-action "destroyBackup") backup}}
+                      @disabled={{this.status.isOperationRunning}}
+                      @title={{this.deleteTitle}}
+                      @label="admin.backups.operations.destroy.title"
+                      class="btn-transparent btn-danger backup-item-row__delete"
+                    />
+                  </dropdown.item>
+                  <dropdown.item>
+                    <DButton
+                      @icon="play"
+                      @action={{fn (route-action "startRestore") backup}}
+                      @disabled={{this.status.restoreDisabled}}
+                      @title={{this.restoreTitle}}
+                      @label="admin.backups.operations.restore.label"
+                      class="btn-transparent backup-item-row__restore"
+                    />
+                  </dropdown.item>
+                </DropdownMenu>
+              </:content>
+            </DMenu>
+          </div>
         </td>
       </tr>
     {{else}}

@@ -6,18 +6,19 @@ module Chat
   # is updated.
   #
   # @example
-  #  Chat::TrashMessages.call(message_ids: [2, 3], channel_id: 1, guardian: guardian)
+  #  Chat::TrashMessages.call(params: { message_ids: [2, 3], channel_id: 1 }, guardian: guardian)
   #
   class TrashMessages
     include Service::Base
 
-    # @!method call(message_ids:, channel_id:, guardian:)
-    #   @param [Array<Integer>] message_ids
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Array<Integer>] :message_ids
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :channel_id, :integer
       attribute :message_ids, :array
 
@@ -37,10 +38,10 @@ module Chat
 
     private
 
-    def fetch_messages(contract:)
+    def fetch_messages(params:)
       Chat::Message.includes(chat_channel: :chatable).where(
-        id: contract.message_ids,
-        chat_channel_id: contract.channel_id,
+        id: params[:message_ids],
+        chat_channel_id: params[:channel_id],
       )
     end
 
@@ -85,11 +86,11 @@ module Chat
       messages.each { |message| message.thread&.decrement_replies_count_cache }
     end
 
-    def publish_events(contract:, guardian:, messages:)
+    def publish_events(params:, guardian:, messages:)
       messages.each do |message|
         DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       end
-      Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, contract.message_ids)
+      Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, params[:message_ids])
     end
   end
 end

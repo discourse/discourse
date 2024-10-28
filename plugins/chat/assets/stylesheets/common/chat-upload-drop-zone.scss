@@ -10,6 +10,7 @@
   justify-content: center;
   display: flex;
   background: rgba(var(--always-black-rgb), 0.85);
+  pointer-events: none;
 
   .uppy-is-drag-over & {
     visibility: visible;

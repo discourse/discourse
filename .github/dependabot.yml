@@ -78,3 +78,6 @@ updates:
       types:
         patterns:
           - "@types/*"
+      uppy:
+        patterns:
+          - "@uppy*"
