@@ -33,6 +33,16 @@ module Chat
 
       validates :message_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
+
+      after_validation do
+        next if message.blank?
+        self.message =
+          TextCleaner.clean(
+            message,
+            strip_whitespaces: options.strip_whitespaces,
+            strip_zero_width_spaces: true,
+          )
+      end
     end
     model :message
     model :uploads, optional: true
@@ -40,7 +50,6 @@ module Chat
     model :membership
     policy :can_modify_channel_message
     policy :can_modify_message
-    step :clean_message
     transaction do
       step :modify_message
       step :update_excerpt
@@ -88,14 +97,6 @@ module Chat
 
     def can_modify_message(guardian:, message:)
       guardian.can_edit_chat?(message)
-    end
-
-    def clean_message(params:, options:)
-      params[:message] = TextCleaner.clean(
-        params[:message],
-        strip_zero_width_spaces: true,
-        strip_whitespaces: options.strip_whitespaces,
-      )
     end
 
     def modify_message(params:, message:, guardian:, uploads:)

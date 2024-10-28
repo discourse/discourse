@@ -46,6 +46,16 @@ module Chat
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
+
+      after_validation do
+        next if message.blank?
+        self.message =
+          TextCleaner.clean(
+            message,
+            strip_whitespaces: options.strip_whitespaces,
+            strip_zero_width_spaces: true,
+          )
+      end
     end
     model :channel
     step :enforce_membership
@@ -57,7 +67,6 @@ module Chat
     policy :ensure_valid_thread_for_channel
     policy :ensure_thread_matches_parent
     model :uploads, optional: true
-    step :clean_message
     model :message_instance, :instantiate_message
     transaction do
       step :create_excerpt
@@ -132,14 +141,6 @@ module Chat
     def fetch_uploads(params:, guardian:)
       return [] if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: params[:upload_ids])
-    end
-
-    def clean_message(params:, options:)
-      params[:message] = TextCleaner.clean(
-        params[:message],
-        strip_whitespaces: options.strip_whitespaces,
-        strip_zero_width_spaces: true,
-      )
     end
 
     def instantiate_message(channel:, guardian:, params:, uploads:, thread:, reply:, options:)
