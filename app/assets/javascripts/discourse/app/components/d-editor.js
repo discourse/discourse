@@ -207,30 +207,6 @@ export default class DEditor extends Component {
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.composerEvents) {
-      this.appEvents.off(
-        "composer:insert-block",
-        this.textManipulation,
-        "insertBlock"
-      );
-      this.appEvents.off(
-        "composer:insert-text",
-        this.textManipulation,
-        "insertText"
-      );
-      this.appEvents.off(
-        "composer:replace-text",
-        this.textManipulation,
-        "replaceText"
-      );
-      this.appEvents.off("composer:apply-surround", this, "_applySurround");
-      this.appEvents.off(
-        "composer:indent-selected-text",
-        this.textManipulation,
-        "indentSelection"
-      );
-    }
-
     this.element
       .querySelector(".d-editor-preview")
       ?.removeEventListener("click", this._handlePreviewLinkClick);
