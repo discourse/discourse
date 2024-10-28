@@ -16,21 +16,13 @@ export default {
       return;
     }
 
-    this.supportsServiceWorker = () => {
-      if (
-        !(
-          "serviceWorker" in navigator &&
-          typeof ServiceWorkerRegistration !== "undefined" &&
-          !capabilities.isAppWebview &&
-          navigator.serviceWorker.controller &&
-          navigator.serviceWorker.controller.state === "activated"
-        )
-      ) {
-        return false;
-      }
-
-      return true;
-    };
+    this.supportsServiceWorker = () => (
+        "serviceWorker" in navigator &&
+        typeof ServiceWorkerRegistration !== "undefined" &&
+        !capabilities.isAppWebview &&
+        navigator.serviceWorker.controller &&
+        navigator.serviceWorker.controller.state === "activated"
+      );
 
     this.canPlaySound = () => {
       return new Promise((resolve) => {
