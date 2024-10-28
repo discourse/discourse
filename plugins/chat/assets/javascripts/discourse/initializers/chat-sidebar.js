@@ -82,9 +82,7 @@ export default {
 
             get suffixCSSClass() {
               return chatChannelsManager.allChannels.some(
-                (channel) =>
-                  channel.tracking.mentionCount > 0 ||
-                  channel.tracking.watchedThreadsUnreadCount > 0
+                (channel) => channel.tracking.watchedThreadsUnreadCount > 0
               )
                 ? "urgent"
                 : "unread";
