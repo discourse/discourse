@@ -2321,6 +2321,7 @@ RSpec.describe Post do
 
   describe "#user_badges" do
     fab!(:user)
+    fab!(:user2) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:post2) { Fabricate(:post, user: user) }
 
@@ -2357,16 +2358,31 @@ RSpec.describe Post do
       )
     end
 
+    # FirstLike badge has the show_posts flag set to true, but the user_id is different
+    fab!(:ub4) do
+      UserBadge.create!(
+        badge_id: Badge::FirstLike,
+        user: user2,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
     it "returns a user badge that was granted for this post" do
-      expect(post.user_badges.pluck(:id)).to include(ub1.id)
+      expect(post.badges_granted.pluck(:id)).to include(ub1.id)
     end
 
     it "does not return a user badge that has the show_posts flag set to false" do
-      expect(post.user_badges.pluck(:id)).not_to include(ub2.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub2.id)
     end
 
     it "does not return a user badge that was not granted for this post" do
-      expect(post.user_badges.pluck(:id)).not_to include(ub2.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub2.id)
+    end
+
+    it "does not return a user badge that was granted for a different user" do
+      expect(post.badges_granted.pluck(:id)).not_to include(ub4.id)
     end
   end
 end

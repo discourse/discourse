@@ -227,7 +227,7 @@ class PostSerializer < BasicPostSerializer
   def badges_granted
     return [] unless SiteSetting.enable_badges
 
-    object.user_badges.map do |user_badge|
+    object.badges_granted.map do |user_badge|
       BasicUserBadgeSerializer.new(user_badge, scope: scope).as_json
     end
   end

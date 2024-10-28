@@ -59,8 +59,9 @@ class Post < ActiveRecord::Base
   has_many :user_actions, foreign_key: :target_post_id
 
   has_many :user_badges,
-           ->(post_id) { for_post_header_badges.where(post_id: post_id) },
-           through: :user
+           -> { for_post_header_badges },
+           foreign_key: :post_id,
+           class_name: "UserBadge"
 
   belongs_to :image_upload, class_name: "Upload"
 
@@ -210,6 +211,10 @@ class Post < ActiveRecord::Base
         1.day.to_i,
       )
     end
+  end
+
+  def badges_granted
+    user_badges.select { |user_badge| user_badge.user_id == user_id }
   end
 
   def readers_count
@@ -421,7 +426,6 @@ class Post < ActiveRecord::Base
       return false
     end
     return false if topic&.private_message?
-
     total_hosts_usage.values.any? { |count| count >= SiteSetting.newuser_spam_host_threshold }
   end
 
