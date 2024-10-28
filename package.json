@@ -80,9 +80,6 @@
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*"
       },
-      "allowAny": [
-        "@uppy/*"
-      ],
       "ignoreMissing": [
         "webpack"
       ]
