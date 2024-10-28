@@ -310,10 +310,6 @@ export default class Post extends RestModel {
     return this.likeAction && (this.liked || this.canToggleLike);
   }
 
-  get topicNotificationLevel() {
-    return this.topic.details.notification_level;
-  }
-
   afterUpdate(res) {
     if (res.category) {
       this.site.updateCategory(res.category);
