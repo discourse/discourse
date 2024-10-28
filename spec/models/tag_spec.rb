@@ -25,12 +25,15 @@ RSpec.describe Tag do
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
       tag_sidebar_section_link_2 =
         Fabricate(:tag_sidebar_section_link, linkable: tag_sidebar_section_link.linkable)
-      category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
 
       expect { tag_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(13).to(10)
-      expect(SidebarSectionLink.last).to eq(category_sidebar_section_link)
+      }.from(12).to(10)
+      expect(
+        SidebarSectionLink.where(
+          id: [tag_sidebar_section_link.id, tag_sidebar_section_link_2.id],
+        ).count,
+      ).to eq(0)
     end
   end
 

@@ -23,7 +23,7 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     visit("/latest")
 
     expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench ellipsis-vertical],
+      %w[layer-group user flag wrench paper-plane ellipsis-vertical],
     )
 
     modal = sidebar.click_community_section_more_button.click_customize_community_section_button

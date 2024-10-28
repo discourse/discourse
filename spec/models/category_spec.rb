@@ -47,13 +47,17 @@ RSpec.describe Category do
 
     it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
-      Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
-      tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
+      category_sidebar_section_link_2 =
+        Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(13).to(10)
-      expect(SidebarSectionLink.last).to eq(tag_sidebar_section_link)
+      }.from(12).to(10)
+      expect(
+        SidebarSectionLink.where(
+          id: [category_sidebar_section_link.id, category_sidebar_section_link_2.id],
+        ).count,
+      ).to eq(0)
     end
   end
 
