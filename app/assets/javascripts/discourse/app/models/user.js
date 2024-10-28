@@ -108,6 +108,7 @@ let userOptionFields = [
   "dark_scheme_id",
   "dynamic_favicon",
   "enable_quoting",
+  "enable_smart_lists",
   "enable_defer",
   "automatically_unpin_topics",
   "digest_after_minutes",
@@ -182,6 +183,7 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
   @userOption("enable_quoting") enable_quoting;
+  @userOption("enable_smart_lists") enable_smart_lists;
   @userOption("dynamic_favicon") dynamic_favicon;
   @userOption("automatically_unpin_topics") automatically_unpin_topics;
   @userOption("likes_notifications_disabled") likes_notifications_disabled;

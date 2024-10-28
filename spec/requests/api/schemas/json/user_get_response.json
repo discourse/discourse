@@ -714,6 +714,9 @@
             "enable_quoting": {
               "type": "boolean"
             },
+            "enable_smart_lists": {
+              "type": "boolean"
+            },
             "enable_defer": {
               "type": "boolean"
             },
@@ -820,6 +823,7 @@
             "dark_scheme_id",
             "dynamic_favicon",
             "enable_quoting",
+            "enable_smart_lists",
             "enable_defer",
             "digest_after_minutes",
             "automatically_unpin_topics",

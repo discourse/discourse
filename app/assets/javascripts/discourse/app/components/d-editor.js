@@ -374,11 +374,13 @@ export default class DEditor extends Component {
     //
     // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
     if (this._textarea) {
-      this._textarea.addEventListener(
-        "beforeinput",
-        this.onBeforeInputSmartList
-      );
-      this._textarea.addEventListener("input", this.onInputSmartList);
+      if (this.currentUser.user_option.enable_smart_lists) {
+        this._textarea.addEventListener(
+          "beforeinput",
+          this.onBeforeInputSmartList
+        );
+        this._textarea.addEventListener("input", this.onInputSmartList);
+      }
 
       this.element.addEventListener("paste", this.textManipulation.paste);
     }
@@ -483,11 +485,13 @@ export default class DEditor extends Component {
     }
 
     if (this._textarea) {
-      this._textarea.removeEventListener(
-        "beforeinput",
-        this.onBeforeInputSmartList
-      );
-      this._textarea.removeEventListener("input", this.onInputSmartList);
+      if (this.currentUser.user_option.enable_smart_lists) {
+        this._textarea.removeEventListener(
+          "beforeinput",
+          this.onBeforeInputSmartList
+        );
+        this._textarea.removeEventListener("input", this.onInputSmartList);
+      }
     }
 
     this._itsatrap?.destroy();
