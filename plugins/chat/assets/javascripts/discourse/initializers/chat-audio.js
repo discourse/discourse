@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { capabilities } from "discourse/services/capabilities";
+import { isPrimaryTab } from "discourse/services/service-worker-message";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
@@ -16,32 +16,8 @@ export default {
       return;
     }
 
-    this.supportsServiceWorker = () => (
-        "serviceWorker" in navigator &&
-        typeof ServiceWorkerRegistration !== "undefined" &&
-        !capabilities.isAppWebview &&
-        navigator.serviceWorker.controller &&
-        navigator.serviceWorker.controller.state === "activated"
-      );
-
-    this.canPlaySound = () => {
-      return new Promise((resolve) => {
-        if (this.supportsServiceWorker()) {
-          navigator.serviceWorker.addEventListener("message", (event) => {
-            if ("canPlaySound" in event.data) {
-              resolve(event.data.canPlaySound);
-            } else {
-              resolve(false);
-            }
-          });
-
-          navigator.serviceWorker.ready.then((registration) => {
-            registration.active.postMessage({ chatSound: true });
-          });
-        } else {
-          resolve(true);
-        }
-      });
+    this.canPlaySound = async () => {
+      return await isPrimaryTab();
     };
 
     withPluginApi("0.12.1", (api) => {
@@ -74,13 +50,12 @@ export default {
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
           this.canPlaySound().then((success) => {
-            if (!success) {
-              return;
+            if (success) {
+              const chatAudioManager = container.lookup(
+                "service:chat-audio-manager"
+              );
+              chatAudioManager.play(user.chat_sound);
             }
-            const chatAudioManager = container.lookup(
-              "service:chat-audio-manager"
-            );
-            chatAudioManager.play(user.chat_sound);
           });
         }
       });

@@ -126,7 +126,7 @@ self.addEventListener('pushsubscriptionchange', function(event) {
 });
 
 self.addEventListener('message', function(event) {
-  if (!event.data.chatSound) {
+  if (event.data?.action !== "primaryTab") {
     return;
   }
 
@@ -134,7 +134,7 @@ self.addEventListener('message', function(event) {
     self.clients.matchAll().then(function(clients) {
       clients.forEach(function(client) {
         client.postMessage({
-          canPlaySound: client.visibilityState === "visible"
+          primaryTab: client.visibilityState === "visible"
         });
       });
     })
