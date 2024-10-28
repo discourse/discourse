@@ -63,7 +63,6 @@ export default {
             prefixType = "icon";
             prefixValue = "discourse-threads";
             suffixType = "icon";
-            suffixCSSClass = "unread";
 
             constructor() {
               super(...arguments);
@@ -79,6 +78,16 @@ export default {
               )
                 ? "circle"
                 : "";
+            }
+
+            get suffixCSSClass() {
+              return chatChannelsManager.allChannels.some(
+                (channel) =>
+                  channel.tracking.mentionCount > 0 ||
+                  channel.tracking.watchedThreadsUnreadCount > 0
+              )
+                ? "urgent"
+                : "unread";
             }
           };
 
@@ -196,7 +205,8 @@ export default {
               }
 
               get suffixCSSClass() {
-                return this.channel.tracking.mentionCount > 0
+                return this.channel.tracking.mentionCount > 0 ||
+                  this.channel.tracking.watchedThreadsUnreadCount > 0
                   ? "urgent"
                   : "unread";
               }
