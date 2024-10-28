@@ -6,14 +6,9 @@ module Migrations::Uploader
       def initialize(databases, settings)
         super(databases, settings)
 
-        @optimized_upload_ids = Set.new
-        @post_upload_ids = Set.new
-        @avatar_upload_ids = Set.new
+        initialize_existing_ids_tracking_sets
+        initialize_discourse_resources
         @max_count = 0
-
-        @avatar_sizes = Discourse.avatar_sizes
-        @system_user = Discourse.system_user
-        @category_id = Category.last.id
       end
 
       def run!
@@ -21,7 +16,7 @@ module Migrations::Uploader
 
         disable_optimized_image_lock
 
-        init_threads.each(&:join)
+        start_tracking_sets_loader_threads.each(&:join)
         status_thread = start_status_thread
         consumer_threads = start_consumer_threads
         producer_thread = start_producer_thread
@@ -33,17 +28,31 @@ module Migrations::Uploader
         status_thread.join
       end
 
+      private
+
+      def initialize_existing_ids_tracking_sets
+        @optimized_upload_ids = Set.new
+        @post_upload_ids = Set.new
+        @avatar_upload_ids = Set.new
+      end
+
+      def initialize_discourse_resources
+        @avatar_sizes = Discourse.avatar_sizes
+        @system_user = Discourse.system_user
+        @category_id = Category.last.id
+      end
+
       def disable_optimized_image_lock
         # allow more than 1 thread to optimized images at the same time
         OptimizedImage.lock_per_machine = false
       end
 
-      def init_threads
+      def start_tracking_sets_loader_threads
         [
-          optimized_upload_ids_thread,
-          post_upload_ids_thread,
-          avatar_upload_ids_thread,
-          max_count_thread,
+          start_optimized_upload_ids_loader_thread,
+          start_post_upload_ids_loader_thread,
+          start_avatar_upload_ids_loader_thread,
+          start_max_count_loader_thread,
         ]
       end
 
@@ -63,7 +72,7 @@ module Migrations::Uploader
         end
       end
 
-      def optimized_upload_ids_thread
+      def start_optimized_upload_ids_loader_thread
         Thread.new do
           @uploads_db
             .db
@@ -71,7 +80,7 @@ module Migrations::Uploader
         end
       end
 
-      def post_upload_ids_thread
+      def start_post_upload_ids_loader_thread
         Thread.new do
           sql = <<~SQL
           SELECT upload_ids
@@ -85,7 +94,7 @@ module Migrations::Uploader
         end
       end
 
-      def avatar_upload_ids_thread
+      def start_avatar_upload_ids_loader_thread
         Thread.new do
           sql = <<~SQL
           SELECT avatar_upload_id
@@ -97,7 +106,7 @@ module Migrations::Uploader
         end
       end
 
-      def max_count_thread
+      def start_max_count_loader_thread
         Thread.new do
           @max_count =
             @uploads_db.db.query_single_splat(
@@ -162,35 +171,34 @@ module Migrations::Uploader
       end
 
       def process_upload(row, post)
-        retry_count = 0
+        result = with_retries { attempt_optimization(row, post) }
+        status_queue << (result || { id: row[:upload_id], status: :error })
+      end
 
-        loop do
-          upload = Upload.find_by(sha1: row[:upload_sha1])
-          optimized_images = create_optimized_images(row[:type], row[:markdown], upload, post)
+      def attempt_optimization(row, post)
+        upload = Upload.find_by(sha1: row[:upload_sha1])
+        optimized_images = create_optimized_images(row[:type], row[:markdown], upload, post)
 
-          optimized_images = process_optimized_images(optimized_images) if optimized_images.present?
+        return if optimized_images.blank?
 
-          optimized_images_okay =
-            !optimized_images.nil? && optimized_images.all?(&:present?) &&
-              optimized_images.all?(&:persisted?) && optimized_images.all? { |o| o.errors.blank? }
+        processed_optimized_images = process_optimized_images(optimized_images)
 
-          if optimized_images_okay
-            status_queue << {
-              id: row[:upload_id],
-              optimized_images:
-                optimized_images.presence&.to_json(only: OptimizedImage.column_names),
-              status: :ok,
-            }
-
-            break
-          elsif retry_count >= 3
-            status_queue << { id: row[:upload_id], status: :error }
-            break
-          end
-
-          retry_count += 1
-          sleep 0.25 * retry_count
+        if images_valid?(processed_optimized_images)
+          {
+            id: row[:upload_id],
+            optimized_images: serialize_optimized_images(processed_optimized_images),
+            status: :ok,
+          }
         end
+      end
+
+      def images_valid?(images)
+        !images.nil? && images.all?(&:present?) && images.all?(&:persisted?) &&
+          images.all? { |o| o.errors.blank? }
+      end
+
+      def serialize_optimized_images(images)
+        images.presence&.to_json(only: OptimizedImage.column_names)
       end
 
       def create_optimized_images(type, markdown, upload, post)

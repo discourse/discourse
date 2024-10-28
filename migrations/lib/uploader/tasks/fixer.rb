@@ -19,6 +19,8 @@ module Migrations::Uploader
         status_thread.join
       end
 
+      private
+
       def max_count
         @max_count ||=
           uploads_db.db.query_single_splat("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")

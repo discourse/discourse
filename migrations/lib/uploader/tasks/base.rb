@@ -54,6 +54,10 @@ module Migrations::Uploader
         raise NotImplementedError
       end
 
+      def enqueue_jobs
+        raise NotImplementedError
+      end
+
       def instantiate_task_resource
         {}
       end
@@ -104,7 +108,25 @@ module Migrations::Uploader
         end
       end
 
+      def with_retries(max: 3)
+        count = 0
+
+        loop do
+          result = yield
+          break result if result
+
+          count += 1
+          break nil if count >= max
+
+          sleep(calculate_backoff(count))
+        end
+      end
+
       private
+
+      def calculate_backoff(retry_count)
+        0.25 * retry_count
+      end
 
       def calculate_thread_count
         base = Etc.nprocessors

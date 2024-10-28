@@ -11,9 +11,8 @@ module Migrations::Uploader
     end
 
     def perform!
-      Tasks::Fixer.run!(databases, settings) if settings[:fix_missing]
-      Tasks::Uploader.run!(databases, settings)
-      Tasks::Optimizer.run!(databases, settings) if settings[:create_optimized_images]
+      tasks = build_task_pipeline
+      tasks.each { |task| task.run!(databases, settings) }
     ensure
       cleanup_resources
     end
@@ -23,6 +22,14 @@ module Migrations::Uploader
     end
 
     private
+
+    def build_task_pipeline
+      [].tap do |tasks|
+        tasks << Tasks::Fixer if settings[:fix_missing]
+        tasks << Tasks::Uploader
+        tasks << Tasks::Optimizer if settings[:create_optimized_images]
+      end
+    end
 
     def setup_databases
       run_uploads_db_migrations
@@ -36,7 +43,7 @@ module Migrations::Uploader
     def create_database_connection(type)
       path = type == :uploads ? settings[:output_db_path] : settings[:source_db_path]
 
-      # TODO: Using "raw" db connection here
+      # TODO: Using "raw" db connection here for now
       #       Investigate using ::Migrations::Database::IntermediateDB.setup(db)
       #       Should we have a ::Migrations::Database::UploadsDB.setup(db)?
       ::Migrations::Database.connect(path)

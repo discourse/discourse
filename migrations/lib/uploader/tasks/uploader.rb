@@ -101,14 +101,32 @@ module Migrations::Uploader
           end
       end
 
+      def find_file_in_paths(row)
+        relative_path = row[:relative_path] || ""
+
+        settings[:root_paths].each do |root_path|
+          path = File.join(root_path, relative_path, row[:filename])
+
+          return path if File.exist?(path)
+
+          settings[:path_replacements].each do |from, to|
+            path = File.join(root_path, relative_path.sub(from, to), row[:filename])
+
+            return path if File.exist?(path)
+          end
+        end
+
+        nil
+      end
+
+      def handle_missing_file(row)
+        status_queue << { id: row[:id], upload: nil, skipped: true, skip_reason: "file not found" }
+      end
+
       def process_upload(row, _)
+        metadata = build_metadata(row)
         data_file = nil
         path = nil
-        metadata =
-          UploadMetadata.new(
-            original_filename: row[:display_filename] || row[:filename],
-            description: row[:description].presence,
-          )
 
         if row[:data].present?
           data_file = Tempfile.new("discourse-upload", binmode: true)
@@ -120,81 +138,63 @@ module Migrations::Uploader
           metadata.origin_url = row[:url]
           return if !path
         else
-          relative_path = row[:relative_path] || ""
-          file_exists = false
-
-          settings[:root_paths].each do |root_path|
-            path = File.join(root_path, relative_path, row[:filename])
-            break if (file_exists = File.exist?(path))
-
-            settings[:path_replacements].each do |from, to|
-              path = File.join(root_path, relative_path.sub(from, to), row[:filename])
-              break if (file_exists = File.exist?(path))
-            end
-          end
-
-          if !file_exists
-            status_queue << {
-              id: row[:id],
-              upload: nil,
-              skipped: true,
-              skip_reason: "file not found",
-            }
-
-            return
-          end
+          path = find_file_in_paths(row)
+          return handle_missing_file(row) if path.nil?
         end
 
-        retry_count = 0
-        loop do
-          error_message = nil
-          upload =
-            copy_to_tempfile(path) do |file|
-              begin
-                UploadCreator.new(
-                  file,
-                  metadata.original_filename,
-                  type: row[:type],
-                  origin: metadata.origin_url,
-                ).create_for(Discourse::SYSTEM_USER_ID)
-              rescue StandardError => e
-                error_message = e.message
-                nil
+        error_message = nil
+        result =
+          with_retries do
+            upload =
+              copy_to_tempfile(path) do |file|
+                begin
+                  UploadCreator.new(
+                    file,
+                    metadata.original_filename,
+                    type: row[:type],
+                    origin: metadata.origin_url,
+                  ).create_for(Discourse::SYSTEM_USER_ID)
+                rescue StandardError => e
+                  error_message = e.message
+                  nil
+                end
+              end
+
+            if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
+              upload_path = add_multisite_prefix(discourse_store.get_path_for_upload(upload))
+
+              unless file_exists?(upload_path)
+                upload.destroy
+                upload = nil
+                upload_okay = false
               end
             end
 
-          if (upload_okay = upload.present? && upload.persisted? && upload.errors.blank?)
-            upload_path = add_multisite_prefix(discourse_store.get_path_for_upload(upload))
-
-            unless file_exists?(upload_path)
-              upload.destroy
-              upload = nil
-              upload_okay = false
+            if upload_okay
+              {
+                id: row[:id],
+                upload: upload.attributes.to_json,
+                markdown:
+                  UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
+                skip_reason: nil,
+              }
+            else
+              error_message =
+                upload&.errors&.full_messages&.join(", ") || error_message || "unknown error"
+              nil
             end
           end
 
-          if upload_okay
-            status_queue << {
-              id: row[:id],
-              upload: upload.attributes.to_json,
-              markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
-              skip_reason: nil,
-            }
-            break
-          elsif retry_count >= 3
-            error_message ||= upload&.errors&.full_messages&.join(", ") || "unknown error"
-            status_queue << {
-              id: row[:id],
-              upload: nil,
-              markdown: nil,
-              error: "too many retries: #{error_message}",
-              skip_reason: "too many retries",
-            }
-            break
-          end
-
-          retry_count += 1
-          sleep 0.25 * retry_count
+        if result.nil?
+          status_queue << {
+            id: row[:id],
+            upload: nil,
+            markdown: nil,
+            error: "too many retries: #{error_message}",
+            skip_reason: "too many retries",
+          }
+        else
+          status_queue << result
         end
       rescue StandardError => e
         status_queue << {
@@ -206,6 +206,13 @@ module Migrations::Uploader
         }
       ensure
         data_file&.close!
+      end
+
+      def build_metadata(row)
+        UploadMetadata.new(
+          original_filename: row[:display_filename] || row[:filename],
+          description: row[:description].presence,
+        )
       end
 
       def delete_missing_uploads
@@ -247,7 +254,7 @@ module Migrations::Uploader
 
         if file
           file.close
-          insert(
+          uploads_db.insert(
             "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
             [id, original_filename],
           )
