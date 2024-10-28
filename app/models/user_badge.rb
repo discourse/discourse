@@ -36,7 +36,11 @@ class UserBadge < ActiveRecord::Base
         -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)") }
 
   scope :for_post_header_badges,
-        -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled)") }
+        -> do
+          where(
+            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable)",
+          )
+        end
 
   validates :badge_id, presence: true, uniqueness: { scope: :user_id }, if: :single_grant_badge?
 

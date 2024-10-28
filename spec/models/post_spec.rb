@@ -2369,6 +2369,25 @@ RSpec.describe Post do
       )
     end
 
+    # Create a badge that has the show_posts flag set to true, but the listable flag set to false
+    fab!(:ub5) do
+      badge =
+        Badge.create!(
+          name: "WeirdBadge",
+          badge_type_id: BadgeType::Bronze,
+          listable: false,
+          show_posts: true,
+        )
+
+      UserBadge.create!(
+        badge_id: badge.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
     it "returns a user badge that was granted for this post" do
       expect(post.badges_granted.pluck(:id)).to include(ub1.id)
     end
@@ -2383,6 +2402,10 @@ RSpec.describe Post do
 
     it "does not return a user badge that was granted for a different user" do
       expect(post.badges_granted.pluck(:id)).not_to include(ub4.id)
+    end
+
+    it "does not return a user badge that has the listable flag set to false" do
+      expect(post.badges_granted.pluck(:id)).not_to include(ub5.id)
     end
   end
 end
