@@ -226,10 +226,7 @@ class PostSerializer < BasicPostSerializer
 
   def badges_granted
     object.user_badges.map do |user_badge|
-      result = {}
-      result[:icon] = user_badge.badge.icon
-      result[:name] = user_badge.badge.name
-      result
+      UserBadgeSerializer.new(user_badge, scope: scope).as_json
     end
   end
 
