@@ -619,11 +619,7 @@ export default class TextareaTextManipulation {
     } else {
       // Clear the new autocompleted list item if there is no other text.
       const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;
-      this.replaceText(
-        text,
-        text.substring(0, offsetWithoutPrefix) + text.substring(offset),
-        { skipNewSelection: true }
-      );
+      this._insertAt(offsetWithoutPrefix, offset, "");
       this.selectText(offsetWithoutPrefix, 0);
     }
   }

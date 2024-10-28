@@ -72,8 +72,13 @@ module("Integration | Component | d-editor", function (hooks) {
     return textarea;
   }
 
-  function testCase(title, testFunc) {
+  function testCase(title, testFunc, userOptions = {}) {
     test(title, async function (assert) {
+      this.currentUser.user_option = Object.assign(
+        {},
+        this.currentUser.user_option,
+        userOptions
+      );
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);
@@ -1018,6 +1023,23 @@ third line`
   }
 
   testCase(
+    "smart lists - when enable_smart_lists is false pressing enter on a line with a list item starting with *",
+    async function (assert, textarea) {
+      const initialValue = "* first item in list\n";
+      this.set("value", initialValue);
+      setCaretPosition(textarea, initialValue.length);
+      await triggerEnter(textarea);
+
+      assert.strictEqual(
+        this.value,
+        initialValue,
+        "it does not create an empty list item on the next line"
+      );
+    },
+    { enable_smart_lists: false }
+  );
+
+  testCase(
     "smart lists - pressing enter on a line with a list item starting with *",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n";
@@ -1030,7 +1052,8 @@ third line`
         initialValue + "* ",
         "it creates a list item on the next line"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1046,7 +1069,8 @@ third line`
         initialValue + "",
         "it doesn’t continue the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1062,7 +1086,8 @@ third line`
         initialValue + "* ",
         "it continues the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1073,7 +1098,8 @@ third line`
       setCaretPosition(textarea, initialValue.length);
       await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "- ");
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1088,7 +1114,8 @@ third line`
         initialValue + "2. ",
         "it creates a list item on the next line with an auto-incremented number"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1103,7 +1130,8 @@ third line`
         "* first item in list\n* \n* second item in list",
         "it inserts a new list item on the next line"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1118,7 +1146,8 @@ third line`
         "1. first item in list\n2. \n3. second item in list",
         "it inserts a new list item on the next line and renumbers the rest of the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1133,7 +1162,8 @@ third line`
         "* first item in list with empty line\n",
         "it removes the list item"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   (() => {

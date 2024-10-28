@@ -29,10 +29,7 @@
         </div>
       {{else}}
         {{#if this.site.mobileView}}
-          <WelcomeHeader
-            @header={{i18n "login.header_title"}}
-            @subheader={{i18n "login.subheader_title"}}
-          >
+          <WelcomeHeader @header={{i18n "login.header_title"}}>
             <PluginOutlet
               @name="login-header-bottom"
               @outletArgs={{hash createAccount=this.createAccount}}
@@ -50,10 +47,7 @@
         {{#if this.canLoginLocal}}
           <div class={{if this.site.desktopView "login-left-side"}}>
             {{#if this.site.desktopView}}
-              <WelcomeHeader
-                @header={{i18n "login.header_title"}}
-                @subheader={{i18n "login.subheader_title"}}
-              >
+              <WelcomeHeader @header={{i18n "login.header_title"}}>
                 <PluginOutlet
                   @name="login-header-bottom"
                   @outletArgs={{hash createAccount=this.createAccount}}
@@ -101,10 +95,7 @@
         {{#if (and this.showLoginButtons this.site.desktopView)}}
           {{#unless this.canLoginLocal}}
             <div class="login-left-side">
-              <WelcomeHeader
-                @header={{i18n "login.header_title"}}
-                @subheader={{i18n "login.subheader_title"}}
-              />
+              <WelcomeHeader @header={{i18n "login.header_title"}} />
             </div>
           {{/unless}}
           {{#if this.hasAtLeastOneLoginButton}}

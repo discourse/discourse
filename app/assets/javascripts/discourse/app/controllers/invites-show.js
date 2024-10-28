@@ -70,15 +70,6 @@ export default class InvitesShowController extends Controller.extend(
     });
   }
 
-  @discourseComputed("existingUserId")
-  subheaderMessage(existingUserId) {
-    if (existingUserId) {
-      return I18n.t("invites.existing_user_can_redeem");
-    } else {
-      return I18n.t("create_account.subheader_title");
-    }
-  }
-
   @discourseComputed("email")
   yourEmailMessage(email) {
     return I18n.t("invites.your_email", { email });

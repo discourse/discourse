@@ -79,7 +79,7 @@ RSpec.describe User::Silence do
         expect(User::Action::TriggerPostAction).to have_received(:call).with(
           guardian:,
           post: nil,
-          contract: result[:contract],
+          params: result[:params],
         )
       end
     end

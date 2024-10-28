@@ -9,8 +9,8 @@ module Jobs
           on_failed_contract do |contract|
             Rails.logger.error(contract.errors.full_messages.join(", "))
           end
-          on_model_not_found(:channel) do |contract:|
-            Rails.logger.error("Channel not found (id=#{contract.channel_id})")
+          on_model_not_found(:channel) do |params:|
+            Rails.logger.error("Channel not found (id=#{params.channel_id})")
           end
         end
       end

@@ -622,7 +622,6 @@ login:
   experimental_full_page_login:
     default: false
     client: true
-    hidden: true
 
 users:
   min_username_length:
@@ -1526,6 +1525,9 @@ files:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
     list_type: file_types
+  theme_download_screenshots:
+    default: false
+    hidden: true
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
@@ -3057,6 +3059,7 @@ user_preferences:
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_enable_defer: false
+  default_other_enable_smart_lists: true
   default_other_dynamic_favicon: false
   default_other_skip_new_user_tips: false
   default_other_like_notification_frequency:

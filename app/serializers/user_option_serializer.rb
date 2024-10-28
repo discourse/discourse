@@ -12,6 +12,7 @@ class UserOptionSerializer < ApplicationSerializer
              :dark_scheme_id,
              :dynamic_favicon,
              :enable_quoting,
+             :enable_smart_lists,
              :enable_defer,
              :digest_after_minutes,
              :automatically_unpin_topics,

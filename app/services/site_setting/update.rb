@@ -6,7 +6,7 @@ class SiteSetting::Update
   options { attribute :allow_changing_hidden, :boolean, default: false }
 
   policy :current_user_is_admin
-  contract do
+  params do
     attribute :setting_name
     attribute :new_value
 
@@ -44,17 +44,17 @@ class SiteSetting::Update
     guardian.is_admin?
   end
 
-  def setting_is_visible(contract:, options:)
-    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(contract.setting_name)
+  def setting_is_visible(params:, options:)
+    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(params[:setting_name])
   end
 
-  def setting_is_configurable(contract:)
-    return true if !SiteSetting.plugins[contract.setting_name]
+  def setting_is_configurable(params:)
+    return true if !SiteSetting.plugins[params[:setting_name]]
 
-    Discourse.plugins_by_name[SiteSetting.plugins[contract.setting_name]].configurable?
+    Discourse.plugins_by_name[SiteSetting.plugins[params[:setting_name]]].configurable?
   end
 
-  def save(contract:, guardian:)
-    SiteSetting.set_and_log(contract.setting_name, contract.new_value, guardian.user)
+  def save(params:, guardian:)
+    SiteSetting.set_and_log(params[:setting_name], params[:new_value], guardian.user)
   end
 end
