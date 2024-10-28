@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import { createPopper } from "@popperjs/core";
 import {
   emojiSearch,
@@ -14,10 +15,7 @@ import {
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 function customEmojis() {
   const groups = [];
