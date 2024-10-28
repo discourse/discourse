@@ -14,6 +14,7 @@ class BarService extends Service {
   name = "bar";
 }
 
+// eslint-disable-next-line ember/no-classic-classes
 const EmberObjectComponent = Component.extend({
   name: "",
   layout: hbs`<span class="ember-object-component">{{this.foo.name}} {{this.baz.name}}</span>`,

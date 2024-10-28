@@ -1,12 +1,10 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Mixin.create({
-  @discourseComputed()
-  nameTitle() {
+  get nameTitle() {
     return I18n.t(
       this.siteSettings.full_name_required
         ? "user.name.title"
@@ -15,8 +13,8 @@ export default Mixin.create({
   },
 
   // Validate the name.
-  @discourseComputed("accountName", "forceValidationReason")
-  nameValidation(accountName, forceValidationReason) {
+  nameValidation: computed("accountName", "forceValidationReason", function () {
+    const { accountName, forceValidationReason } = this;
     if (this.siteSettings.full_name_required && isEmpty(accountName)) {
       return EmberObject.create({
         failed: true,
@@ -28,5 +26,5 @@ export default Mixin.create({
     }
 
     return EmberObject.create({ ok: true });
-  },
+  }),
 });

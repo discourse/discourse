@@ -250,6 +250,7 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
+    // eslint-disable-next-line ember/no-classic-classes
     this.classicComponent = ClassicComponent.extend({
       actions: {
         myLegacyAction() {
@@ -277,8 +278,9 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
-    this.simpleWrapperComponent = ClassicComponent.extend();
+    this.simpleWrapperComponent = class extends ClassicComponent {};
 
+    // eslint-disable-next-line ember/no-classic-classes
     this.classicComponent = ClassicComponent.extend({
       actions: {
         myLegacyAction() {
