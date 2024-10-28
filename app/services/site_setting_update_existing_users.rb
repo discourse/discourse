@@ -113,6 +113,7 @@ class SiteSettingUpdateExistingUsers
       default_email_previous_replies: "email_previous_replies",
       default_email_in_reply_to: "email_in_reply_to",
       default_other_enable_quoting: "enable_quoting",
+      default_other_enable_smart_lists: "enable_smart_lists",
       default_other_enable_defer: "enable_defer",
       default_other_external_links_in_new_tab: "external_links_in_new_tab",
       default_other_dynamic_favicon: "dynamic_favicon",
