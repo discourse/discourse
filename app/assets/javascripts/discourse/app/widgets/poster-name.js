@@ -143,6 +143,12 @@ export default createWidget("poster-name", {
 
     if (attrs.badgesGranted) {
       attrs.badgesGranted.forEach((badge) => {
+        // Alter the badge description show that the badge was granted for this post.
+        badge.description = I18n.t("post.badge_granted_tooltip", {
+          username: attrs.username,
+          badge_name: badge.name,
+        });
+
         const badgeIcon = new RenderGlimmer(
           this,
           `span.user-badge-button.user-badge-button-${badge.slug}`,

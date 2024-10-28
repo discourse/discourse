@@ -1,6 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import Badge from "discourse/models/badge";
+import User from "discourse/models/user";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | Widget | poster-name", function (hooks) {
@@ -75,17 +77,33 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
     this.set("args", {
       username: "eviltrout",
       usernameUrl: "/u/eviltrout",
+      user: User.create({
+        username: "eviltrout",
+      }),
       badgesGranted: [
-        { icon: "heart", name: "badge1" },
-        { id: "target", name: "badge2" },
-      ],
+        { id: 1, icon: "heart", slug: "badge1", name: "Badge One" },
+        { id: 2, icon: "target", slug: "badge2", name: "Badge Two" },
+      ].map((badge) => Badge.createFromJson({ badges: [badge] })[0]),
     });
 
     await render(
       hbs`<MountWidget @widget="poster-name" @args={{this.args}} />`
     );
 
-    assert.dom("span[title*='badge1']").exists();
-    assert.dom("span[title*='badge2']").exists();
+    // Check that the custom CSS classes are set
+    assert.dom("span.user-badge-button-badge1").exists();
+    assert.dom("span.user-badge-button-badge2").exists();
+
+    // Check that the custom titles are set
+    assert.dom("span.user-badge[title*='Badge One']").exists();
+    assert.dom("span.user-badge[title*='Badge Two']").exists();
+
+    // Check that the badges link to the correct badge page
+    assert
+      .dom("a.user-card-badge-link[href='/badges/1/badge1?username=eviltrout']")
+      .exists();
+    assert
+      .dom("a.user-card-badge-link[href='/badges/2/badge2?username=eviltrout']")
+      .exists();
   });
 });
