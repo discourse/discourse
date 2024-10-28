@@ -5635,19 +5635,20 @@ en:
           site_contact_group: "Site contact group"
           site_contact_group_help: |
             The group that gets invited to all automatically sent private messages.
-          your_organization: "Organization name"
-          company_name: "Company name"
-          company_name_placeholder: "Sample Company Inc."
+          your_organization: "Your organization"
+          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          company_name: "Name"
+          company_name_placeholder: "Acme Organization"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
-          governing_law_placeholder: "State of New York"
+          governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |
-            Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
+            Specify the jurisdiction for the site's legal terms, typically where the company is registered or operates.
           city_for_disputes: "City for disputes"
-          city_for_disputes_placeholder: "New York City"
+          city_for_disputes_placeholder: "City"
           city_for_disputes_help: |
-            Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
+            Specify the city for resolving legal disputes related to this forum.
           optional: "(optional)"
           update: "Update"
           toasts:
