@@ -70,7 +70,7 @@ export default RouteTemplate(
         } else if (response.needs_approval) {
           this.needsApproval = true;
         } else {
-          setTimeout(this.loadHomepage, 2000);
+          setTimeout(this.loadHomepage, 3000);
         }
       } catch (error) {
         this.errorMessage = i18n("user.activate_account.already_done");
