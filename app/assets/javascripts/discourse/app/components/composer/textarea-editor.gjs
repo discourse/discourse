@@ -4,8 +4,11 @@ import { modifier } from "ember-modifier";
 import DTextarea from "discourse/components/d-textarea";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
 import { bind } from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
 
 export default class TextareaEditor extends Component {
+  @service currentUser;
+
   textarea;
 
   registerTextarea = modifier((textarea) => {
