@@ -438,6 +438,48 @@ RSpec.describe PostSerializer do
     end
   end
 
+  describe "#badges_granted" do
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:ub1) do
+      UserBadge.create!(
+        badge_id: Badge::FirstOnebox,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+    fab!(:ub2) do
+      UserBadge.create!(
+        badge_id: Badge::FirstQuote,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "doesn't include badges when disabled" do
+      SiteSetting.enable_badges = false
+      expect(serializer.as_json[:badges_granted]).to eq([])
+    end
+
+    it "includes badges when enabled" do
+      SiteSetting.enable_badges = true
+
+      json = serializer.as_json
+
+      expect(json[:badges_granted].length).to eq(2)
+      expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to eq(
+        [ub1.badge_id, ub2.badge_id],
+      )
+      expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to eq([ub1.id, ub2.id])
+    end
+  end
+
   def serialized_post(u)
     s = PostSerializer.new(post, scope: Guardian.new(u), root: false)
     s.add_raw = true

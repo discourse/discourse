@@ -2318,4 +2318,55 @@ RSpec.describe Post do
       ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
     end
   end
+
+  describe "#user_badges" do
+    fab!(:user)
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:post2) { Fabricate(:post, user: user) }
+
+    # FirstOnebox badge has the show_posts flag set to true
+    fab!(:ub1) do
+      UserBadge.create!(
+        badge_id: Badge::FirstOnebox,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # FirstFlag badge has the show_posts flag set to false
+    fab!(:ub2) do
+      UserBadge.create!(
+        badge_id: Badge::FirstFlag,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # FirstQuote badge has the show_posts flag set to true, but the post_id is different
+    fab!(:ub3) do
+      UserBadge.create!(
+        badge_id: Badge::FirstQuote,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post2.id,
+      )
+    end
+
+    it "returns a user badge that was granted for this post" do
+      expect(post.user_badges.pluck(:id)).to include(ub1.id)
+    end
+
+    it "does not return a user badge that has the show_posts flag set to false" do
+      expect(post.user_badges.pluck(:id)).not_to include(ub2.id)
+    end
+
+    it "does not return a user badge that was not granted for this post" do
+      expect(post.user_badges.pluck(:id)).not_to include(ub2.id)
+    end
+  end
 end
