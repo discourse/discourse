@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { isPrimaryTab } from "discourse/services/service-worker-message";
+import { isPrimaryTab } from "discourse/lib/utilities";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
