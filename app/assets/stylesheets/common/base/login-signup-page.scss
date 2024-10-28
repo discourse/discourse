@@ -9,6 +9,12 @@
   flex-direction: column;
 }
 
+#main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show)
+  .above-main-container-outlet,
+.powered-by-discourse {
+  display: none;
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
