@@ -58,7 +58,9 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  has_many :user_badges, ->(post_id) { where(post_id: post_id) }, through: :user
+  has_many :user_badges,
+           ->(post_id) { for_post_header_badges.where(post_id: post_id) },
+           through: :user
 
   belongs_to :image_upload, class_name: "Upload"
 

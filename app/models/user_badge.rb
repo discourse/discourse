@@ -35,6 +35,9 @@ class UserBadge < ActiveRecord::Base
   scope :for_enabled_badges,
         -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)") }
 
+  scope :for_post_header_badges,
+        -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled)") }
+
   validates :badge_id, presence: true, uniqueness: { scope: :user_id }, if: :single_grant_badge?
 
   validates :user_id, presence: true
