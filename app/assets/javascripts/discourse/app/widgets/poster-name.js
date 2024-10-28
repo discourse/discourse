@@ -142,8 +142,7 @@ export default createWidget("poster-name", {
     }
 
     if (attrs.badgesGranted) {
-      attrs.badgesGranted.forEach((data) => {
-        const badge = data[0];
+      attrs.badgesGranted.forEach((badge) => {
         const badgeIcon = new RenderGlimmer(
           this,
           `span.user-badge-button.user-badge-button-${badge.slug}`,
