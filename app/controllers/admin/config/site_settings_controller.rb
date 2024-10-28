@@ -12,7 +12,7 @@ class Admin::Config::SiteSettingsController < Admin::AdminController
   # UI itself uses the Admin::SiteSettingsController#index endpoint,
   # which also supports a `category` and `plugin` filter.
   def index
-    if params[:filter_names].blank? && SiteSetting::VALID_AREAS.exclude?(params[:filter_area])
+    if params[:filter_names].blank? && SiteSetting.valid_areas.exclude?(params[:filter_area])
       raise Discourse::InvalidParameters
     end
 

@@ -849,6 +849,14 @@ class Plugin::Instance
     end
   end
 
+  # Site setting areas are a way to group site settings below
+  # the setting category level. This is useful for creating focused
+  # config areas that update a small selection of settings, and otherwise
+  # grouping related settings in the UI.
+  def register_site_setting_area(area)
+    DiscoursePluginRegistry.site_setting_areas << area
+  end
+
   def javascript_includes
     assets
       .map do |asset, opts|
