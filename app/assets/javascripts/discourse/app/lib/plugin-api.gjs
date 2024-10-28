@@ -837,9 +837,9 @@ class PluginApi {
    **/
   addPostMenuButton(name, callback) {
     deprecated(
-      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
       {
-        since: "v3.4.0.beta2-dev",
+        since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
       }
     );
@@ -915,9 +915,9 @@ class PluginApi {
    **/
   removePostMenuButton(name, callback) {
     deprecated(
-      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
       {
-        since: "v3.4.0.beta2-dev",
+        since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
       }
     );
@@ -943,9 +943,9 @@ class PluginApi {
    **/
   replacePostMenuButton(name, widget) {
     deprecated(
-      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-registered-buttons` instead.",
+      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
       {
-        since: "v3.4.0.beta2-dev",
+        since: "v3.4.0.beta3-dev",
         id: "discourse.post-menu-widget-overrides",
       }
     );
@@ -3378,7 +3378,7 @@ class PluginApi {
       deprecated(
         `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
         {
-          since: "v3.4.0.beta2-dev",
+          since: "v3.4.0.beta3-dev",
           id: "discourse.post-menu-widget-overrides",
         }
       );

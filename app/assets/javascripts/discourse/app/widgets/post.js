@@ -610,7 +610,8 @@ createWidget("post-contents", {
       );
     } else {
       if (
-        this.siteSettings.glimmer_post_menu_mode !== "disabled" &&
+        (this.siteSettings.glimmer_post_menu_mode !== "disabled" ||
+          this.currentUser?.use_auto_glimmer_post_menu) &&
         postMenuWidgetExtensionsAdded &&
         !postMenuWidgetExtensionsAdded.logged
       ) {
