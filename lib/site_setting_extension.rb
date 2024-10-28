@@ -524,7 +524,7 @@ module SiteSettingExtension
   end
 
   def valid_areas
-    SiteSetting::VALID_AREAS.concat(DiscoursePluginRegistry.site_setting_areas.to_a).uniq
+    Set.new(SiteSetting::VALID_AREAS | DiscoursePluginRegistry.site_setting_areas.to_a)
   end
 
   protected
