@@ -240,8 +240,15 @@
     margin-right: auto;
   }
 
-  .user-badge-button .user-badge {
-    border: none;
+  .user-badge-button {
+    a {
+      background: none;
+    }
+
+    .user-badge {
+      background: none;
+      border: none;
+    }
   }
 
   .post-infos {
