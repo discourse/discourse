@@ -22,7 +22,7 @@ class Flags::ToggleFlag
   end
 
   def fetch_flag(params:)
-    Flag.find_by(id: params[:flag_id])
+    Flag.find_by(id: params.flag_id)
   end
 
   def toggle(flag:)

@@ -2,6 +2,7 @@
 
 RSpec.describe(Chat::UpdateChannelStatus) do
   describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:channel_id) }
     it do
       is_expected.to validate_inclusion_of(:status).in_array(Chat::Channel.editable_statuses.keys)
     end
@@ -19,8 +20,8 @@ RSpec.describe(Chat::UpdateChannelStatus) do
     let(:status) { "open" }
     let(:channel_id) { channel.id }
 
-    context "when no channel_id is given" do
-      let(:channel_id) { nil }
+    context "when model is not found" do
+      let(:channel_id) { 0 }
 
       it { is_expected.to fail_to_find_a_model(:channel) }
     end

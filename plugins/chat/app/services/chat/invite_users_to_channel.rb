@@ -33,7 +33,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.find_by(id: params[:channel_id])
+      ::Chat::Channel.find_by(id: params.channel_id)
     end
 
     def can_view_channel(guardian:, channel:)
@@ -45,7 +45,7 @@ module Chat
         .joins(:user_option)
         .where(user_options: { chat_enabled: true })
         .not_suspended
-        .where(id: params[:user_ids])
+        .where(id: params.user_ids)
         .limit(50)
     end
 
@@ -59,7 +59,7 @@ module Chat
           chat_channel_title: channel.title(invited_user),
           chat_channel_slug: channel.slug,
           invited_by_username: guardian.user.username,
-          chat_message_id: params[:message_id],
+          chat_message_id: params.message_id,
         }.compact
 
         invited_user.notifications.create(

@@ -30,11 +30,11 @@ class User::Silence
   private
 
   def fetch_user(params:)
-    User.find_by(id: params[:user_id])
+    User.find_by(id: params.user_id)
   end
 
   def fetch_users(user:, params:)
-    [user, *User.where(id: params[:other_user_ids].to_a.uniq).to_a]
+    [user, *User.where(id: params.other_user_ids.to_a.uniq).to_a]
   end
 
   def can_silence_all_users(guardian:, users:)
@@ -46,7 +46,7 @@ class User::Silence
   end
 
   def fetch_post(params:)
-    Post.find_by(id: params[:post_id])
+    Post.find_by(id: params.post_id)
   end
 
   def perform_post_action(guardian:, post:, params:)

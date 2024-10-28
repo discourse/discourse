@@ -40,14 +40,11 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.find_by(id: params[:channel_id])
+      ::Chat::Channel.find_by(id: params.channel_id)
     end
 
     def fetch_original_message(channel:, params:)
-      ::Chat::Message.find_by(
-        id: params[:original_message_id],
-        chat_channel_id: params[:channel_id],
-      )
+      ::Chat::Message.find_by(id: params.original_message_id, chat_channel_id: params.channel_id)
     end
 
     def can_view_channel(guardian:, channel:)
@@ -64,7 +61,7 @@ module Chat
       end
 
       context[:thread] = channel.threads.create(
-        title: params[:title],
+        title: params.title,
         original_message: original_message,
         original_message_user: original_message.user,
       )

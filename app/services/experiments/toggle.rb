@@ -18,13 +18,13 @@ class Experiments::Toggle
   end
 
   def setting_is_available(params:)
-    SiteSetting.respond_to?(params[:setting_name])
+    SiteSetting.respond_to?(params.setting_name)
   end
 
   def toggle(params:, guardian:)
     SiteSetting.set_and_log(
-      params[:setting_name],
-      !SiteSetting.public_send(params[:setting_name]),
+      params.setting_name,
+      !SiteSetting.public_send(params.setting_name),
       guardian.user,
     )
   end

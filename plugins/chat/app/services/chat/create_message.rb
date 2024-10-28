@@ -90,7 +90,7 @@ module Chat
     end
 
     def fetch_channel(params:)
-      Chat::Channel.find_by_id_or_slug(params[:chat_channel_id])
+      Chat::Channel.find_by_id_or_slug(params.chat_channel_id)
     end
 
     def enforce_membership(guardian:, channel:, options:)
@@ -108,16 +108,16 @@ module Chat
     end
 
     def fetch_reply(params:)
-      Chat::Message.find_by(id: params[:in_reply_to_id])
+      Chat::Message.find_by(id: params.in_reply_to_id)
     end
 
     def ensure_reply_consistency(channel:, params:, reply:)
-      return true if params[:in_reply_to_id].blank?
+      return true if params.in_reply_to_id.blank?
       reply&.chat_channel == channel
     end
 
     def fetch_thread(params:, reply:, channel:, options:)
-      return Chat::Thread.find_by(id: params[:thread_id]) if params[:thread_id].present?
+      return Chat::Thread.find_by(id: params.thread_id) if params.thread_id.present?
       return unless reply
       reply.thread ||
         reply.build_thread(
@@ -129,7 +129,7 @@ module Chat
     end
 
     def ensure_valid_thread_for_channel(thread:, params:, channel:)
-      return true if params[:thread_id].blank?
+      return true if params.thread_id.blank?
       thread&.channel == channel
     end
 
@@ -140,7 +140,7 @@ module Chat
 
     def fetch_uploads(params:, guardian:)
       return [] if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: params[:upload_ids])
+      guardian.user.uploads.where(id: params.upload_ids)
     end
 
     def instantiate_message(channel:, guardian:, params:, uploads:, thread:, reply:, options:)
@@ -148,10 +148,10 @@ module Chat
         user: guardian.user,
         last_editor: guardian.user,
         in_reply_to: reply,
-        message: params[:message],
+        message: params.message,
         uploads: uploads,
         thread: thread,
-        cooked: ::Chat::Message.cook(params[:message], user_id: guardian.user.id),
+        cooked: ::Chat::Message.cook(params.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
       )
@@ -206,7 +206,7 @@ module Chat
     end
 
     def process(channel:, message_instance:, params:, thread:, options:)
-      ::Chat::Publisher.publish_new!(channel, message_instance, params[:staged_id])
+      ::Chat::Publisher.publish_new!(channel, message_instance, params.staged_id)
 
       DiscourseEvent.trigger(
         :chat_message_created,
@@ -217,20 +217,20 @@ module Chat
           thread: thread,
           thread_replies_count: thread&.replies_count_cache || 0,
           context: {
-            post_ids: params[:context_post_ids],
-            topic_id: params[:context_topic_id],
+            post_ids: params.context_post_ids,
+            topic_id: params.context_topic_id,
           },
         },
       )
 
       if options.process_inline
         Jobs::Chat::ProcessMessage.new.execute(
-          { chat_message_id: message_instance.id, staged_id: params[:staged_id] },
+          { chat_message_id: message_instance.id, staged_id: params.staged_id },
         )
       else
         Jobs.enqueue(
           Jobs::Chat::ProcessMessage,
-          { chat_message_id: message_instance.id, staged_id: params[:staged_id] },
+          { chat_message_id: message_instance.id, staged_id: params.staged_id },
         )
       end
     end

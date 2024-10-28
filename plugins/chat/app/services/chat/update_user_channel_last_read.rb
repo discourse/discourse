@@ -36,7 +36,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.find_by(id: params[:channel_id])
+      ::Chat::Channel.find_by(id: params.channel_id)
     end
 
     def fetch_membership(guardian:, channel:)
@@ -48,7 +48,7 @@ module Chat
     end
 
     def fetch_message(channel:, params:)
-      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: params[:message_id])
+      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: params.message_id)
     end
 
     def ensure_message_id_recency(message:, membership:)

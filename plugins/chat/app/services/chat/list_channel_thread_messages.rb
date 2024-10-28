@@ -51,7 +51,7 @@ module Chat
     private
 
     def fetch_thread(params:)
-      ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: params[:thread_id])
+      ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: params.thread_id)
     end
 
     def can_view_thread(guardian:, thread:)
@@ -63,14 +63,14 @@ module Chat
     end
 
     def determine_target_message_id(params:, membership:, guardian:, thread:)
-      if params[:fetch_from_last_message]
+      if params.fetch_from_last_message
         context[:target_message_id] = thread.last_message_id
-      elsif params[:fetch_from_first_message]
+      elsif params.fetch_from_first_message
         context[:target_message_id] = thread.original_message_id
-      elsif params[:fetch_from_last_read] || !params[:target_message_id]
+      elsif params.fetch_from_last_read || !params.target_message_id
         context[:target_message_id] = membership&.last_read_message_id
-      elsif params[:target_message_id]
-        context[:target_message_id] = params[:target_message_id]
+      elsif params.target_message_id
+        context[:target_message_id] = params.target_message_id
       end
     end
 
@@ -79,7 +79,7 @@ module Chat
       target_message =
         ::Chat::Message.with_deleted.find_by(
           id: context.target_message_id,
-          thread_id: params[:thread_id],
+          thread_id: params.thread_id,
         )
       return false if target_message.blank?
       return true if !target_message.trashed?
@@ -93,11 +93,11 @@ module Chat
           guardian: guardian,
           target_message_id: context.target_message_id,
           thread_id: thread.id,
-          page_size: params[:page_size] || Chat::MessagesQuery::MAX_PAGE_SIZE,
-          direction: params[:direction],
-          target_date: params[:target_date],
+          page_size: params.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
+          direction: params.direction,
+          target_date: params.target_date,
           include_target_message_id:
-            params[:fetch_from_first_message] || params[:fetch_from_last_message],
+            params.fetch_from_first_message || params.fetch_from_last_message,
         )
 
       context[:can_load_more_past] = messages_data[:can_load_more_past]

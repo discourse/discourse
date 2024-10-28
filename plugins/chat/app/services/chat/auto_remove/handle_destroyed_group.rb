@@ -56,7 +56,7 @@ module Chat
           .not_staged
           .includes(:group_users)
           .where("NOT admin AND NOT moderator")
-          .where(id: params[:destroyed_group_user_ids])
+          .where(id: params.destroyed_group_user_ids)
           .joins(:user_chat_channel_memberships)
           .distinct
       end

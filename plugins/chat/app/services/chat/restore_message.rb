@@ -40,7 +40,7 @@ module Chat
       Chat::Message
         .with_deleted
         .includes(chat_channel: :chatable)
-        .find_by(id: params[:message_id], chat_channel_id: params[:channel_id])
+        .find_by(id: params.message_id, chat_channel_id: params.channel_id)
     end
 
     def invalid_access(guardian:, message:)

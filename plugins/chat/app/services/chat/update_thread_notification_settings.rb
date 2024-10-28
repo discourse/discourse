@@ -45,7 +45,7 @@ module Chat
     private
 
     def fetch_thread(params:)
-      Chat::Thread.find_by(id: params[:thread_id], channel_id: params[:channel_id])
+      Chat::Thread.find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
     def can_view_channel(guardian:, thread:)
@@ -62,7 +62,7 @@ module Chat
         membership = thread.add(guardian.user)
         membership.update!(last_read_message_id: thread.last_message_id)
       end
-      membership.update!(notification_level: params[:notification_level])
+      membership.update!(notification_level: params.notification_level)
       context[:membership] = membership
     end
   end

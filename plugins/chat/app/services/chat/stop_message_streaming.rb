@@ -29,7 +29,7 @@ module Chat
     private
 
     def fetch_message(params:)
-      ::Chat::Message.find_by(id: params[:message_id])
+      ::Chat::Message.find_by(id: params.message_id)
     end
 
     def enforce_membership(guardian:, message:)

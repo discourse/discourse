@@ -37,7 +37,7 @@ module Chat
     private
 
     def fetch_thread(params:)
-      ::Chat::Thread.find_by(id: params[:thread_id], channel_id: params[:channel_id])
+      ::Chat::Thread.find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
     def invalid_access(guardian:, thread:)
@@ -50,7 +50,7 @@ module Chat
 
     def fetch_message(params:, thread:)
       ::Chat::Message.with_deleted.find_by(
-        id: params[:message_id] || thread.last_message_id,
+        id: params.message_id || thread.last_message_id,
         thread: thread,
         chat_channel: thread.channel,
       )

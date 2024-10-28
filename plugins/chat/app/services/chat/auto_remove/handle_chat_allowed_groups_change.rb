@@ -33,7 +33,7 @@ module Chat
       end
 
       def not_everyone_allowed(params:)
-        params[:new_allowed_groups].exclude?(Group::AUTO_GROUPS[:everyone])
+        params.new_allowed_groups.exclude?(Group::AUTO_GROUPS[:everyone])
       end
 
       def fetch_users(params:)
@@ -46,8 +46,8 @@ module Chat
           .joins(:user_chat_channel_memberships)
           .distinct
           .then do |users|
-            break users if params[:new_allowed_groups].blank?
-            users.where(<<~SQL, params[:new_allowed_groups])
+            break users if params.new_allowed_groups.blank?
+            users.where(<<~SQL, params.new_allowed_groups)
                 users.id NOT IN (
                   SELECT DISTINCT group_users.user_id
                   FROM group_users

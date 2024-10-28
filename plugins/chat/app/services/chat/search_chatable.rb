@@ -40,33 +40,33 @@ module Chat
     end
 
     def fetch_users(guardian:, params:)
-      return unless params[:include_users]
+      return unless params.include_users
       return unless guardian.can_create_direct_message?
       search_users(params, guardian)
     end
 
     def fetch_groups(guardian:, params:)
-      return unless params[:include_groups]
+      return unless params.include_groups
       return unless guardian.can_create_direct_message?
       search_groups(params, guardian)
     end
 
     def fetch_category_channels(guardian:, params:)
-      return unless params[:include_category_channels]
+      return unless params.include_category_channels
       return unless SiteSetting.enable_public_channels
       search_category_channels(params, guardian)
     end
 
     def fetch_direct_message_channels(guardian:, params:, users:)
-      return unless params[:include_direct_message_channels]
+      return unless params.include_direct_message_channels
       return unless guardian.can_create_direct_message?
       search_direct_message_channels(guardian, params, users)
     end
 
     def search_users(params, guardian)
-      user_search = ::UserSearch.new(params[:term], limit: SEARCH_RESULT_LIMIT)
+      user_search = ::UserSearch.new(params.term, limit: SEARCH_RESULT_LIMIT)
 
-      if params[:term].blank?
+      if params.term.blank?
         user_search = user_search.scoped_users
       else
         user_search = user_search.search
@@ -78,11 +78,11 @@ module Chat
       user_search = user_search.real(allowed_bot_user_ids: allowed_bot_user_ids)
       user_search = user_search.includes(:user_option)
 
-      if params[:excluded_memberships_channel_id]
+      if params.excluded_memberships_channel_id
         user_search =
           user_search.where(
             "NOT EXISTS (SELECT 1 FROM user_chat_channel_memberships WHERE user_id = users.id AND chat_channel_id = ?)",
-            params[:excluded_memberships_channel_id],
+            params.excluded_memberships_channel_id,
           )
       end
 
@@ -95,7 +95,7 @@ module Chat
         .includes(users: :user_option)
         .where(
           "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
-          term_like: "%#{params[:term]}%",
+          term_like: "%#{params.term}%",
         )
         .limit(SEARCH_RESULT_LIMIT)
     end
@@ -104,7 +104,7 @@ module Chat
       ::Chat::ChannelFetcher.secured_public_channel_search(
         guardian,
         status: :open,
-        filter: params[:term],
+        filter: params.term,
         filter_on_category_name: false,
         match_filter_on_starts_with: false,
         limit: SEARCH_RESULT_LIMIT,
@@ -116,13 +116,13 @@ module Chat
         ::Chat::ChannelFetcher.secured_direct_message_channels_search(
           guardian.user.id,
           guardian,
-          filter: params[:term],
+          filter: params.term,
           match_filter_on_starts_with: false,
           limit: SEARCH_RESULT_LIMIT,
         ) || []
 
       # skip 1:1s when search returns users
-      if params[:include_users] && users.present?
+      if params.include_users && users.present?
         channels.reject! do |channel|
           other_user_ids = channel.allowed_user_ids - [guardian.user.id]
           other_user_ids.size <= 1

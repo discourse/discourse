@@ -32,7 +32,7 @@ class Flags::UpdateFlag
   private
 
   def fetch_flag(params:)
-    Flag.find_by(id: params[:id])
+    Flag.find_by(id: params.id)
   end
 
   def not_system(flag:)
@@ -48,7 +48,7 @@ class Flags::UpdateFlag
   end
 
   def unique_name(params:)
-    !Flag.custom.where(name: params[:name]).where.not(id: params[:id]).exists?
+    !Flag.custom.where(name: params.name).where.not(id: params.id).exists?
   end
 
   def update(flag:, params:)
