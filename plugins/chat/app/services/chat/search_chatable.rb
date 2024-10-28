@@ -24,8 +24,9 @@ module Chat
       attribute :include_category_channels, :boolean, default: true
       attribute :include_direct_message_channels, :boolean, default: true
       attribute :excluded_memberships_channel_id, :integer
+
+      after_validation { self.term = term&.downcase&.strip&.gsub(/^[@#]+/, "") }
     end
-    step :clean_term
     model :memberships, optional: true
     model :users, optional: true
     model :groups, optional: true
@@ -33,10 +34,6 @@ module Chat
     model :direct_message_channels, optional: true
 
     private
-
-    def clean_term(params:)
-      params[:term] = params[:term]&.downcase&.strip&.gsub(/^[@#]+/, "")
-    end
 
     def fetch_memberships(guardian:)
       ::Chat::ChannelMembershipManager.all_for_user(guardian.user)
