@@ -50,6 +50,9 @@ export default class DiscourseNewFeatureItem extends Component {
         type: "POST",
         data: {
           setting_name: this.args.item.experiment_setting,
+          plugin_name: this.args.item.plugin_name
+            ? this.args.item.plugin_name
+            : null,
         },
       });
       this.toasts.success({
