@@ -1964,6 +1964,7 @@ en:
           title: "Invite Link"
           success: "Invite link generated successfully!"
           error: "There was an error generating Invite link"
+        cannot_invite_to_forum: "Sorry, you don't have permission to create invites. Please contact an admin to grant you invite permission."
 
         invite:
           new_title: "Invite members"
@@ -4945,6 +4946,9 @@ en:
               pending_count:
                 one: "%{count} pending"
                 other: "%{count} pending"
+            invite:
+              content: "Invite members"
+              title: "Invite new members"
         global_section: "Global section, visible to everyone"
       panels:
         forum:
