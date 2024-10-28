@@ -54,17 +54,23 @@ export default class TextareaEditor extends Component {
     // is fired.
     //
     // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
-
-    this.textarea.addEventListener("beforeinput", this.onBeforeInputSmartList);
-    this.textarea.addEventListener("input", this.onInputSmartList);
+    if (this.currentUser.user_option.enable_smart_lists) {
+      this.textarea.addEventListener(
+        "beforeinput",
+        this.onBeforeInputSmartList
+      );
+      this.textarea.addEventListener("input", this.onInputSmartList);
+    }
   }
 
   destroySmartList() {
-    this.textarea.removeEventListener(
-      "beforeinput",
-      this.onBeforeInputSmartList
-    );
-    this.textarea.removeEventListener("input", this.onInputSmartList);
+    if (this.currentUser.user_option.enable_smart_lists) {
+      this.textarea.removeEventListener(
+        "beforeinput",
+        this.onBeforeInputSmartList
+      );
+      this.textarea.removeEventListener("input", this.onInputSmartList);
+    }
   }
 
   <template>
