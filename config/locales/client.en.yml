@@ -1358,6 +1358,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
+      enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
@@ -1427,7 +1428,7 @@ en:
       ignored_users: "Ignored"
       ignored_users_instructions: "Suppress all posts, notifications, and PMs from these users."
       tracked_topics_link: "Show"
-      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom"
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"

@@ -24,6 +24,7 @@ class UserUpdater
     email_messages_level
     external_links_in_new_tab
     enable_quoting
+    enable_smart_lists
     enable_defer
     color_scheme_id
     dark_scheme_id
