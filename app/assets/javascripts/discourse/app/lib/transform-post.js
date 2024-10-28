@@ -1,5 +1,6 @@
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
+import Badge from "discourse/models/badge";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
@@ -37,7 +38,9 @@ export function transformBasicPost(post) {
     user_id: post.user_id,
     usernameUrl: userPath(post.username),
     username: post.username,
-    badgesGranted: post.badges_granted,
+    badgesGranted: post.badges_granted.map((badge) =>
+      Badge.createFromJson(badge)
+    ),
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
     bookmarkReminderAt: post.bookmark_reminder_at,

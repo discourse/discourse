@@ -1,6 +1,8 @@
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -140,13 +142,17 @@ export default createWidget("poster-name", {
     }
 
     if (attrs.badgesGranted) {
-      attrs.badgesGranted.forEach((badge) => {
-        const badgeIcon = iconNode(badge.icon, {
-          title: I18n.t("post.badge_granted_tooltip", {
-            username: attrs.username,
-            badge_name: badge.name,
-          }),
-        });
+      attrs.badgesGranted.forEach((data) => {
+        const badge = data[0];
+        const badgeIcon = new RenderGlimmer(
+          this,
+          `span.user-badge-button.user-badge-button-${badge.slug}`,
+          hbs`<UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
+          {
+            badge,
+            user: attrs.user,
+          }
+        );
         nameContents.push(badgeIcon);
       });
     }
