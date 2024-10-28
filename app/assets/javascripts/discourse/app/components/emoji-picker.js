@@ -28,7 +28,7 @@ function customEmojis() {
 
 @tagName("")
 export default class EmojiPicker extends Component {
-  @service("emoji-store") emojiStore;
+  @service emojiStore;
 
   customEmojis = customEmojis();
   recentEmojis = null;
@@ -43,13 +43,9 @@ export default class EmojiPicker extends Component {
     picker: ".emoji-picker-emoji-area",
   };
 
-  init() {
-    super.init(...arguments);
-    this._sectionObserver = this._setupSectionObserver();
-  }
-
   didInsertElement() {
     super.didInsertElement(...arguments);
+    this._sectionObserver = this._setupSectionObserver();
     this.appEvents.on("emoji-picker:close", this, "onClose");
   }
 
