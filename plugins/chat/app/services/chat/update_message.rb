@@ -79,7 +79,7 @@ module Chat
           chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
         ],
         user: :user_status,
-      ).find_by(id: params[:message_id])
+      ).find_by(id: params.message_id)
     end
 
     def fetch_membership(guardian:, message:)
@@ -88,7 +88,7 @@ module Chat
 
     def fetch_uploads(params:, guardian:)
       return if !SiteSetting.chat_allow_uploads
-      guardian.user.uploads.where(id: params[:upload_ids])
+      guardian.user.uploads.where(id: params.upload_ids)
     end
 
     def can_modify_channel_message(guardian:, message:)
@@ -100,11 +100,11 @@ module Chat
     end
 
     def modify_message(params:, message:, guardian:, uploads:)
-      message.message = params[:message]
+      message.message = params.message
       message.last_editor_id = guardian.user.id
       message.cook
 
-      return if uploads&.size != params[:upload_ids].to_a.size
+      return if uploads&.size != params.upload_ids.to_a.size
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids

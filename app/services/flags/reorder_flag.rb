@@ -22,7 +22,7 @@ class Flags::ReorderFlag
   private
 
   def fetch_flag(params:)
-    Flag.find_by(id: params[:flag_id])
+    Flag.find_by(id: params.flag_id)
   end
 
   def invalid_access(guardian:, flag:)
@@ -34,15 +34,15 @@ class Flags::ReorderFlag
   end
 
   def invalid_move(flag:, params:, all_flags:)
-    return false if all_flags.first == flag && params[:direction] == "up"
-    return false if all_flags.last == flag && params[:direction] == "down"
+    return false if all_flags.first == flag && params.direction == "up"
+    return false if all_flags.last == flag && params.direction == "down"
     true
   end
 
   def move(flag:, params:, all_flags:)
     old_position = flag.position
     index = all_flags.index(flag)
-    target_flag = all_flags[params[:direction] == "up" ? index - 1 : index + 1]
+    target_flag = all_flags[params.direction == "up" ? index - 1 : index + 1]
 
     flag.update!(position: target_flag.position)
     target_flag.update!(position: old_position)
@@ -51,7 +51,7 @@ class Flags::ReorderFlag
   def log(guardian:, flag:, params:)
     StaffActionLogger.new(guardian.user).log_custom(
       "move_flag",
-      { flag: flag.name, direction: params[:direction] },
+      { flag: flag.name, direction: params.direction },
     )
   end
 end

@@ -48,8 +48,8 @@ module Chat
 
     def fetch_message(params:)
       Chat::Message.includes(:chat_channel, :revisions).find_by(
-        id: params[:message_id],
-        chat_channel_id: params[:channel_id],
+        id: params.message_id,
+        chat_channel_id: params.channel_id,
       )
     end
 
@@ -58,7 +58,7 @@ module Chat
         guardian.can_flag_chat_message?(message) &&
         guardian.can_flag_message_as?(
           message,
-          params[:flag_type_id],
+          params.flag_type_id,
           params.slice(:queue_for_review, :take_action, :is_warning),
         )
     end
@@ -67,7 +67,7 @@ module Chat
       Chat::ReviewQueue.new.flag_message(
         message,
         guardian,
-        params[:flag_type_id],
+        params.flag_type_id,
         **params.slice(:message, :is_warning, :take_action, :queue_for_review),
       )
     end

@@ -17,10 +17,6 @@ class Service::ContractBase
     @__options__
   end
 
-  def [](key)
-    public_send(key)
-  end
-
   def to_hash
     attributes.symbolize_keys
   end

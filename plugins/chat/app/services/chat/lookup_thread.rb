@@ -36,7 +36,7 @@ module Chat
         :channel,
         original_message_user: :user_status,
         original_message: :chat_webhook_event,
-      ).find_by(id: params[:thread_id], channel_id: params[:channel_id])
+      ).find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
     def invalid_access(guardian:, thread:)

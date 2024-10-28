@@ -66,11 +66,11 @@ module Chat
     end
 
     def fetch_category(params:)
-      Category.find_by(id: params[:category_id])
+      Category.find_by(id: params.category_id)
     end
 
     def category_channel_does_not_exist(category:, params:)
-      !Chat::Channel.exists?(chatable: category, name: params[:name])
+      !Chat::Channel.exists?(chatable: category, name: params.name)
     end
 
     def create_channel(category:, params:)

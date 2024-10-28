@@ -40,8 +40,8 @@ module Chat
 
     def fetch_messages(params:)
       Chat::Message.includes(chat_channel: :chatable).where(
-        id: params[:message_ids],
-        chat_channel_id: params[:channel_id],
+        id: params.message_ids,
+        chat_channel_id: params.channel_id,
       )
     end
 
@@ -90,7 +90,7 @@ module Chat
       messages.each do |message|
         DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       end
-      Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, params[:message_ids])
+      Chat::Publisher.publish_bulk_delete!(messages.first.chat_channel, params.message_ids)
     end
   end
 end

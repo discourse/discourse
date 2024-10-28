@@ -24,9 +24,12 @@ module Chat
     params do
       attribute :limit, :integer
       attribute :offset, :integer
+
+      after_validation do
+        self.limit = (limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+        self.offset = [offset || 0, 0].max
+      end
     end
-    step :set_limit
-    step :set_offset
     model :threads
     step :fetch_tracking
     step :fetch_memberships
@@ -35,15 +38,7 @@ module Chat
 
     private
 
-    def set_limit(params:)
-      context[:limit] = (params[:limit] || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
-    end
-
-    def set_offset(params:)
-      context[:offset] = [params[:offset] || 0, 0].max
-    end
-
-    def fetch_threads(guardian:)
+    def fetch_threads(guardian:, params:)
       ::Chat::Thread
         .includes(
           :channel,
@@ -108,8 +103,8 @@ module Chat
         .order(
           "CASE WHEN user_chat_thread_memberships.last_read_message_id IS NULL OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id THEN true ELSE false END DESC, last_message.created_at DESC",
         )
-        .limit(context.limit)
-        .offset(context.offset)
+        .limit(params.limit)
+        .offset(params.offset)
     end
 
     def fetch_tracking(guardian:, threads:)
@@ -131,8 +126,8 @@ module Chat
       context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url
-      load_more_params = { limit: context.limit, offset: context.offset + context.limit }.to_query
+    def build_load_more_url(params:)
+      load_more_params = { limit: params.limit, offset: params.offset + params.limit }.to_query
 
       context[:load_more_url] = ::URI::HTTP.build(
         path: "/chat/api/me/threads",

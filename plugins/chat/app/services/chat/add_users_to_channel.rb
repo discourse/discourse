@@ -50,7 +50,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.includes(:chatable).find_by(id: params[:channel_id])
+      ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
     end
 
     def can_add_users_to_channel(guardian:, channel:)
@@ -60,8 +60,8 @@ module Chat
 
     def fetch_target_users(params:, channel:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: params[:usernames],
-        groups: params[:groups],
+        usernames: params.usernames,
+        groups: params.groups,
         excluded_user_ids: channel.chatable.direct_message_users.pluck(:user_id),
       )
     end

@@ -39,7 +39,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      Chat::Channel.find_by(id: params[:channel_id])
+      Chat::Channel.find_by(id: params.channel_id)
     end
 
     def can_upsert_draft(guardian:, channel:)
@@ -47,26 +47,26 @@ module Chat
     end
 
     def check_thread_exists(params:, channel:)
-      return if params[:thread_id].blank?
-      fail!("Thread not found") if !channel.threads.exists?(id: params[:thread_id])
+      return if params.thread_id.blank?
+      fail!("Thread not found") if !channel.threads.exists?(id: params.thread_id)
     end
 
     def upsert_draft(params:, guardian:)
-      if params[:data].present?
+      if params.data.present?
         draft =
           Chat::Draft.find_or_initialize_by(
             user_id: guardian.user.id,
-            chat_channel_id: params[:channel_id],
-            thread_id: params[:thread_id],
+            chat_channel_id: params.channel_id,
+            thread_id: params.thread_id,
           )
-        draft.data = params[:data]
+        draft.data = params.data
         draft.save!
       else
         # when data is empty, we destroy the draft
         Chat::Draft.where(
           user: guardian.user,
-          chat_channel_id: params[:channel_id],
-          thread_id: params[:thread_id],
+          chat_channel_id: params.channel_id,
+          thread_id: params.thread_id,
         ).destroy_all
       end
     end

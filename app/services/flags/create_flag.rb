@@ -32,7 +32,7 @@ class Flags::CreateFlag
   end
 
   def unique_name(params:)
-    !Flag.custom.where(name: params[:name]).exists?
+    !Flag.custom.where(name: params.name).exists?
   end
 
   def instantiate_flag(params:)
