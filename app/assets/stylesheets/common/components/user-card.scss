@@ -85,11 +85,7 @@
       .user-profile-link {
         display: flex;
         align-items: center;
-
-        &:focus-visible {
-          border: 1px solid;
-          @include default-focus;
-        }
+        outline: none;
       }
 
       .d-icon {
