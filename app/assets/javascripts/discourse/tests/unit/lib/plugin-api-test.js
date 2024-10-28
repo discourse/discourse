@@ -47,10 +47,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       api.modifyClass("native-test-thingy:main", {
         pluginId: "plugin-api-test",
 
-        @discourseComputed
-        prop() {
+        prop: computed(function () {
           return `${this._super(...arguments)} partner`;
-        },
+        }),
       });
     });
 
