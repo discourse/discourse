@@ -117,7 +117,7 @@ export default class UppyComposerUpload {
     this.#reset();
 
     if (this.uppyWrapper.uppyInstance) {
-      this.uppyWrapper.uppyInstance.close();
+      this.uppyWrapper.uppyInstance.destroy();
       this.uppyWrapper.uppyInstance = null;
     }
 
@@ -311,13 +311,9 @@ export default class UppyComposerUpload {
       });
     });
 
-    this.uppyWrapper.uppyInstance.on("upload", (data) => {
+    this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
       run(() => {
-        this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
-
-        const files = data.fileIDs.map((fileId) =>
-          this.uppyWrapper.uppyInstance.getFile(fileId)
-        );
+        this.uppyWrapper.addNeedProcessing(files.length);
 
         this.composer.setProperties({
           isProcessingUpload: true,
@@ -605,6 +601,7 @@ export default class UppyComposerUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
+      shouldRetry: () => false,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -627,7 +624,7 @@ export default class UppyComposerUpload {
   }
 
   #resetUpload(file, opts) {
-    if (opts.removePlaceholder) {
+    if (opts.removePlaceholder && this.#placeholders[file.id]) {
       this.appEvents.trigger(
         `${this.composerEventPrefix}:replace-text`,
         this.#placeholders[file.id].uploadPlaceholder,

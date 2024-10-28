@@ -11,6 +11,7 @@
   }
   .uppy-is-drag-over {
     box-shadow: 0 0px 52px 0 #ffffff, 0px 7px 33px 0 var(--tertiary-low);
+    pointer-events: none;
   }
   #custom_emoji.highlighted {
     background: var(--tertiary-very-low);

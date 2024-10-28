@@ -1,11 +1,14 @@
 import { setOwner } from "@ember/owner";
+import { debounce } from "@ember/runloop";
 import { service } from "@ember/service";
-import AwsS3Multipart from "@uppy/aws-s3-multipart";
+import AwsS3 from "@uppy/aws-s3";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
 const MB = 1024 * 1024;
+
+const s3MultipartMeta = new WeakMap(); // file -> { attempts: { partNumber -> attempts }, signingErrorRaised: boolean, batchSigner: BatchSigner }
 
 export default class UppyS3Multipart {
   @service siteSettings;
@@ -20,15 +23,17 @@ export default class UppyS3Multipart {
   apply(uppyInstance) {
     this.uppyInstance = uppyInstance;
 
-    this.uppyInstance.use(AwsS3Multipart, {
-      // controls how many simultaneous _chunks_ are uploaded, not files,
-      // which in turn controls the minimum number of chunks presigned
-      // in each batch (limit / 2)
-      //
-      // the default, and minimum, chunk size is 5mb. we can control the
-      // chunk size via getChunkSize(file), so we may want to increase
-      // the chunk size for larger files
-      limit: 10,
+    this.uppyInstance.use(AwsS3, {
+      // TODO: using multipart even for tiny files is not ideal. Now that uppy
+      // made multipart a simple boolean, rather than a separate plugin, we can
+      // consider combining our two S3 implementations and choose the strategy
+      // based on file size.
+      shouldUseMultipart: true,
+
+      // Number of concurrent part uploads. AWS uses http/1.1,
+      // which browsers limit to 6 concurrent connections per host.
+      limit: 6,
+
       retryDelays: RETRY_DELAYS,
 
       // When we get to really big files, it's better to not have thousands
@@ -46,9 +51,9 @@ export default class UppyS3Multipart {
       },
 
       createMultipartUpload: this.#createMultipartUpload.bind(this),
-      prepareUploadParts: this.#prepareUploadParts.bind(this),
       completeMultipartUpload: this.#completeMultipartUpload.bind(this),
       abortMultipartUpload: this.#abortMultipartUpload.bind(this),
+      signPart: this.#signPart.bind(this),
 
       // we will need a listParts function at some point when we want to
       // resume multipart uploads; this is used by uppy to figure out
@@ -89,54 +94,56 @@ export default class UppyS3Multipart {
     });
   }
 
-  #prepareUploadParts(file, partData) {
-    if (file.preparePartsRetryAttempts === undefined) {
-      file.preparePartsRetryAttempts = 0;
+  #getFileMeta(file) {
+    if (s3MultipartMeta.has(file)) {
+      return s3MultipartMeta.get(file);
     }
-    return ajax(`${this.uploadRootPath}/batch-presign-multipart-parts.json`, {
-      type: "POST",
-      data: {
-        part_numbers: partData.parts.map((part) => part.number),
-        unique_identifier: file.meta.unique_identifier,
-      },
-    })
-      .then((data) => {
-        if (file.preparePartsRetryAttempts) {
-          delete file.preparePartsRetryAttempts;
-          this.uppyWrapper.debug.log(
-            `[uppy] Retrying batch fetch for ${file.id} was successful, continuing.`
-          );
-        }
-        return { presignedUrls: data.presigned_urls };
-      })
-      .catch((err) => {
-        const status = err.jqXHR.status;
 
-        // it is kind of ugly to have to track the retry attempts for
-        // the file based on the retry delays, but uppy's `retryable`
-        // function expects the rejected Promise data to be structured
-        // _just so_, and provides no interface for us to tell how many
-        // times the upload has been retried (which it tracks internally)
-        //
-        // if we exceed the attempts then there is no way that uppy will
-        // retry the upload once again, so in that case the alert can
-        // be safely shown to the user that their upload has failed.
-        if (file.preparePartsRetryAttempts < RETRY_DELAYS.length) {
-          file.preparePartsRetryAttempts += 1;
-          const attemptsLeft =
-            RETRY_DELAYS.length - file.preparePartsRetryAttempts + 1;
-          this.uppyWrapper.debug.log(
-            `[uppy] Fetching a batch of upload part URLs for ${file.id} failed with status ${status}, retrying ${attemptsLeft} more times...`
-          );
-          return Promise.reject({ source: { status } });
-        } else {
-          this.uppyWrapper.debug.log(
-            `[uppy] Fetching a batch of upload part URLs for ${file.id} failed too many times, throwing error.`
-          );
-          // uppy is inconsistent, an error here does not fire the upload-error event
-          this.handleUploadError(file, err);
-        }
-      });
+    const fileMeta = {
+      attempts: {},
+      signingErrorRaised: false,
+      batchSigner: new BatchSigner({
+        file,
+        uploadRootPath: this.uploadRootPath,
+      }),
+    };
+
+    s3MultipartMeta.set(file, fileMeta);
+    return fileMeta;
+  }
+
+  async #signPart(file, partData) {
+    const fileMeta = this.#getFileMeta(file);
+
+    fileMeta.attempts[partData.partNumber] ??= 0;
+    const thisPartAttempts = (fileMeta.attempts[partData.partNumber] += 1);
+
+    this.uppyWrapper.debug.log(
+      `[uppy] requesting signature for part ${partData.partNumber} (attempt ${thisPartAttempts})`
+    );
+
+    try {
+      const url = await fileMeta.batchSigner.signedUrlFor(partData);
+      this.uppyWrapper.debug.log(
+        `[uppy] signature for part ${partData.partNumber} obtained, continuing.`
+      );
+      return { url };
+    } catch (err) {
+      // Uppy doesn't properly bubble errors from failed #signPart, so we call
+      // the error handler ourselves after the last failed attempt
+      if (
+        !fileMeta.signingErrorRaised &&
+        thisPartAttempts >= RETRY_DELAYS.length
+      ) {
+        this.uppyWrapper.debug.log(
+          `[uppy] Fetching a signed part URL for ${file.id} failed too many times, raising error.`
+        );
+        // uppy is inconsistent, an error here does not fire the upload-error event
+        this.handleUploadError(file, err);
+        fileMeta.signingErrorRaised = true;
+      }
+      throw err;
+    }
   }
 
   #completeMultipartUpload(file, data) {
@@ -191,5 +198,80 @@ export default class UppyS3Multipart {
     }).catch((err) => {
       this.errorHandler(file, err);
     });
+  }
+}
+
+const BATCH_SIGNER_INITIAL_DEBOUNCE = 50;
+const BATCH_SIGNER_REGULAR_DEBOUNCE = 500;
+
+/**
+ * This class is responsible for batching requests to the server to sign
+ * parts of a multipart upload. It is used to avoid making a request for
+ * every single part, which would likely hit our rate limits.
+ */
+class BatchSigner {
+  pendingRequests = [];
+  #madeFirstRequest = false;
+
+  constructor({ file, uploadRootPath }) {
+    this.file = file;
+    this.uploadRootPath = uploadRootPath;
+  }
+
+  signedUrlFor(partData) {
+    const promise = new Promise((resolve, reject) => {
+      this.pendingRequests.push({
+        partData,
+        resolve,
+        reject,
+      });
+    });
+
+    this.#scheduleSigning();
+    return promise;
+  }
+
+  #scheduleSigning() {
+    debounce(
+      this,
+      this.#signParts,
+      this.#madeFirstRequest
+        ? BATCH_SIGNER_REGULAR_DEBOUNCE
+        : BATCH_SIGNER_INITIAL_DEBOUNCE
+    );
+  }
+
+  async #signParts() {
+    if (this.pendingRequests.length === 0) {
+      return;
+    }
+
+    this.#madeFirstRequest = true;
+
+    const requests = this.pendingRequests;
+    this.pendingRequests = [];
+
+    try {
+      const result = await ajax(
+        `${this.uploadRootPath}/batch-presign-multipart-parts.json`,
+        {
+          type: "POST",
+          data: {
+            part_numbers: requests.map(
+              (request) => request.partData.partNumber
+            ),
+            unique_identifier: this.file.meta.unique_identifier,
+          },
+        }
+      );
+      requests.forEach(({ partData, resolve }) => {
+        resolve(result.presigned_urls[partData.partNumber.toString()]);
+      });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("[uppy] failed to get part signatures", err);
+      requests.forEach(({ reject }) => reject(err));
+      return;
+    }
   }
 }

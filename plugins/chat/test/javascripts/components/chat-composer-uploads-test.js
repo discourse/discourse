@@ -120,9 +120,8 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     this.appEvents.on(
       `upload-mixin:chat-composer-uploader:upload-cancelled`,
       (fileId) => {
-        assert.strictEqual(
-          fileId.includes("uppy-avatar/"),
-          true,
+        assert.true(
+          fileId.includes("chat-composer-uploader-avatar/"),
           "upload was cancelled"
         );
         done();
