@@ -231,7 +231,6 @@
     }
   }
 }
-
 .topic-meta-data {
   display: flex;
   align-items: flex-start;
@@ -240,7 +239,9 @@
     margin-right: auto;
   }
 
-  .user-badge-button {
+  .user-badge-buttons {
+    margin-left: 15px;
+
     a {
       background: none;
     }

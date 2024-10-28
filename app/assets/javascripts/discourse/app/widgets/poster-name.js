@@ -142,8 +142,9 @@ export default createWidget("poster-name", {
     }
 
     if (attrs.badgesGranted) {
+      const badges = [];
       attrs.badgesGranted.forEach((badge) => {
-        // Alter the badge description show that the badge was granted for this post.
+        // Alter the badge description to show that the badge was granted for this post.
         badge.description = I18n.t("post.badge_granted_tooltip", {
           username: attrs.username,
           badge_name: badge.name,
@@ -151,15 +152,16 @@ export default createWidget("poster-name", {
 
         const badgeIcon = new RenderGlimmer(
           this,
-          `span.user-badge-button.user-badge-button-${badge.slug}`,
+          `span.user-badge-button-${badge.slug}`,
           hbs`<UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
           {
             badge,
             user: attrs.user,
           }
         );
-        nameContents.push(badgeIcon);
+        badges.push(badgeIcon);
       });
+      nameContents.push(h("span.user-badge-buttons", badges));
     }
 
     const afterNameContents =
