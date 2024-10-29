@@ -28,7 +28,6 @@ def ensure_cache_clean!
   super_sha =
     Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha + client_locale_paths_digest)
   hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
-  hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
 
   old_hash = File.exist?(hash_file) ? File.read(hash_file) : nil
 
