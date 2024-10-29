@@ -96,7 +96,7 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
           .fill_code("pudding")
         expect(signup_form).to have_valid_fields
 
-        signup_form.click_create_account(expect_success: false)
+        signup_form.click_create_account
         expect(signup_form).to have_content(I18n.t("login.wrong_invite_code"))
         expect(signup_form).to have_no_css(".account-created")
       end
