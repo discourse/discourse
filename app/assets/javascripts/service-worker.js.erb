@@ -134,7 +134,7 @@ self.addEventListener('message', function(event) {
     self.clients.matchAll().then(function(clients) {
       clients.forEach(function(client) {
         client.postMessage({
-          primaryTab: client.visibilityState === "visible"
+          primaryTab: client.focused
         });
       });
     })
