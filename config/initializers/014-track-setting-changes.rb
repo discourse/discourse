@@ -85,4 +85,9 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
       end
     end
   end
+
+  # Force an optimized category style for sites with many categories
+  if name == :desktop_category_page_style && Category.count > 1000
+    SiteSetting.desktop_category_page_style = :categories_only_optimized
+  end
 end
