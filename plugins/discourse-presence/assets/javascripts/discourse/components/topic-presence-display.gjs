@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import { gt } from "truth-helpers";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
+import helperFn from "discourse/helpers/helper-fn";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class TopicPresenceDisplay extends Component {
@@ -14,17 +14,17 @@ export default class TopicPresenceDisplay extends Component {
   @tracked replyChannel;
   @tracked whisperChannel;
 
-  setupReplyChannel = modifier(() => {
+  setupReplyChannel = helperFn((_, on) => {
     const replyChannel = this.presence.getChannel(
       `/discourse-presence/reply/${this.args.topic.id}`
     );
     replyChannel.subscribe();
     this.replyChannel = replyChannel;
 
-    return () => replyChannel.unsubscribe();
+    on.cleanup(() => replyChannel.unsubscribe());
   });
 
-  setupWhisperChannels = modifier(() => {
+  setupWhisperChannels = helperFn((_, on) => {
     if (!this.currentUser.staff) {
       return;
     }
@@ -35,7 +35,7 @@ export default class TopicPresenceDisplay extends Component {
     whisperChannel.subscribe();
     this.whisperChannel = whisperChannel;
 
-    return () => whisperChannel.unsubscribe();
+    on.cleanup(() => whisperChannel.unsubscribe());
   });
 
   @cached
@@ -49,29 +49,30 @@ export default class TopicPresenceDisplay extends Component {
   }
 
   <template>
-    <div {{this.setupReplyChannel}} {{this.setupWhisperChannels}}>
-      {{#if (gt this.users.length 0)}}
-        <div class="presence-users">
-          <div class="presence-avatars">
-            {{#each this.users as |user|}}
-              <UserLink @user={{user}}>
-                {{avatar user imageSize="small"}}
-              </UserLink>
-            {{/each}}
-          </div>
+    {{this.setupReplyChannel}}
+    {{this.setupWhisperChannels}}
 
-          <span class="presence-text">
-            <span class="description">
-              {{i18n "presence.replying_to_topic" count=this.users.length}}
-            </span>
-            <span class="wave">
-              <span class="dot">.</span>
-              <span class="dot">.</span>
-              <span class="dot">.</span>
-            </span>
-          </span>
+    {{#if (gt this.users.length 0)}}
+      <div class="presence-users">
+        <div class="presence-avatars">
+          {{#each this.users as |user|}}
+            <UserLink @user={{user}}>
+              {{avatar user imageSize="small"}}
+            </UserLink>
+          {{/each}}
         </div>
-      {{/if}}
-    </div>
+
+        <span class="presence-text">
+          <span class="description">
+            {{i18n "presence.replying_to_topic" count=this.users.length}}
+          </span>
+          <span class="wave">
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+            <span class="dot">.</span>
+          </span>
+        </span>
+      </div>
+    {{/if}}
   </template>
 }
