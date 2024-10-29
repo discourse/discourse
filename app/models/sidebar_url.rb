@@ -22,7 +22,7 @@ class SidebarUrl < ActiveRecord::Base
     { name: "Review", path: "/review", icon: "flag", segment: SidebarUrl.segments["primary"] },
     { name: "Admin", path: "/admin", icon: "wrench", segment: SidebarUrl.segments["primary"] },
     {
-      name: "Invite members",
+      name: "Invite",
       path: "/new-invite",
       icon: "paper-plane",
       segment: SidebarUrl.segments["primary"],

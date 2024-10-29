@@ -4947,7 +4947,7 @@ en:
                 one: "%{count} pending"
                 other: "%{count} pending"
             invite:
-              content: "Invite members"
+              content: "Invite"
               title: "Invite new members"
         global_section: "Global section, visible to everyone"
       panels:

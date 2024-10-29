@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require Rails.root.join("db/post_migrate/20241025045928_add_invites_link_to_sidebar.rb")
+require Rails.root.join("db/migrate/20241025045928_add_invites_link_to_sidebar.rb")
 
 RSpec.describe AddInvitesLinkToSidebar do
   let(:migrate) { described_class.new.up }
@@ -43,7 +43,7 @@ RSpec.describe AddInvitesLinkToSidebar do
     expect(after_migration[3]).to eq(before_migration[3])
     expect(after_migration[3][:name]).to eq("Admin")
 
-    expect(after_migration[4]).to eq({ name: "Invite members", segment: "primary" })
+    expect(after_migration[4]).to eq({ name: "Invite", segment: "primary" })
 
     expect(after_migration[5]).to eq(before_migration[4])
     expect(after_migration[5][:name]).to eq("Users")

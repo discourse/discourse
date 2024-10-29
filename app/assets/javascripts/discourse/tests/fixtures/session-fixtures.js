@@ -131,7 +131,7 @@ export default {
             },
             {
               id: 338,
-              name: "Invite members",
+              name: "Invite",
               value: "/new-invite",
               icon: "paper-plane",
               external: false,
