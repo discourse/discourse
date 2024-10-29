@@ -89,7 +89,9 @@ export default class TopicNotificationsButton extends Component {
     if (this.args.expanded) {
       return <template><p class="reason">{{yield}}</p></template>;
     } else {
-      return <template>{{yield}}</template>;
+      return <template>
+        {{! template-lint-disable no-yield-only}}{{yield}}
+      </template>;
     }
   }
 
