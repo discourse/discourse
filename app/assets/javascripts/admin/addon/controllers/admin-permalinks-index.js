@@ -9,8 +9,10 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "discourse-i18n";
 import Permalink from "admin/models/permalink";
 
-export default class AdminPermalinksController extends Controller {
+export default class AdminPermalinksIndexController extends Controller {
   @service dialog;
+  @service router;
+  @service toasts;
 
   loading = false;
   filter = null;
@@ -30,34 +32,34 @@ export default class AdminPermalinksController extends Controller {
   }
 
   @action
-  recordAdded(arg) {
-    this.model.unshiftObject(arg);
-  }
-
-  @action
   copyUrl(pl) {
     let linkElement = document.querySelector(`#admin-permalink-${pl.id}`);
     clipboardCopy(linkElement.textContent);
+    this.toasts.success({
+      duration: 3000,
+      data: {
+        message: I18n.t("admin.permalink.copy_success"),
+      },
+    });
   }
 
   @action
-  destroyRecord(record) {
-    return this.dialog.yesNoConfirm({
+  destroyRecord(permalink) {
+    this.dialog.yesNoConfirm({
       message: I18n.t("admin.permalink.delete_confirm"),
-      didConfirm: () => {
-        return record.destroy().then(
-          (deleted) => {
-            if (deleted) {
-              this.model.removeObject(record);
-            } else {
-              this.dialog.alert(I18n.t("generic_error"));
-            }
-          },
-          function () {
-            this.dialog.alert(I18n.t("generic_error"));
-          }
-        );
+      didConfirm: async () => {
+        try {
+          await this.store.destroyRecord("permalink", permalink);
+          this.model.removeObject(permalink);
+        } catch {
+          this.dialog.alert(I18n.t("generic_error"));
+        }
       },
     });
+  }
+
+  @action
+  edit(record) {
+    this.router.transitionTo("adminPermalinks.edit", record);
   }
 }

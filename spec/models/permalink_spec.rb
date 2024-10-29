@@ -33,6 +33,61 @@ RSpec.describe Permalink do
       expect(permalink.errors[:url]).to be_present
     end
 
+    it "validates association" do
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "topic")
+      expect(permalink.errors[:topic_id]).to be_present
+
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "post")
+      expect(permalink.errors[:post_id]).to be_present
+
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "category")
+      expect(permalink.errors[:category_id]).to be_present
+
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "user")
+      expect(permalink.errors[:user_id]).to be_present
+
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "external_url")
+      expect(permalink.errors[:external_url]).to be_present
+
+      permalink = described_class.create(url: "/my/old/url", permalink_type: "tag")
+      expect(permalink.errors[:tag_id]).to be_present
+    end
+
+    it "clears associations when permalink_type changes" do
+      permalink = described_class.create!(url: " my/old/url  ")
+
+      permalink.update!(permalink_type_value: 1, permalink_type: "topic")
+      expect(permalink.topic_id).to eq(1)
+
+      permalink.update!(permalink_type_value: 1, permalink_type: "post")
+      expect(permalink.topic_id).to be_nil
+      expect(permalink.post_id).to eq(1)
+
+      permalink.update!(permalink_type_value: 1, permalink_type: "category")
+      expect(permalink.post_id).to be_nil
+      expect(permalink.category_id).to eq(1)
+
+      permalink.update!(permalink_type_value: 1, permalink_type: "user")
+      expect(permalink.category_id).to be_nil
+      expect(permalink.user_id).to eq(1)
+
+      permalink.update!(
+        permalink_type_value: "https://discourse.org",
+        permalink_type: "external_url",
+      )
+      expect(permalink.user_id).to be_nil
+      expect(permalink.external_url).to eq("https://discourse.org")
+
+      tag = Fabricate(:tag, name: "art")
+      permalink.update!(permalink_type_value: "art", permalink_type: "tag")
+      expect(permalink.external_url).to be_nil
+      expect(permalink.tag_id).to eq(tag.id)
+
+      permalink.update!(permalink_type_value: 1, permalink_type: "topic")
+      expect(permalink.tag_id).to be_nil
+      expect(permalink.topic_id).to eq(1)
+    end
+
     context "with special characters in URL" do
       it "percent encodes any special character" do
         permalink = described_class.create!(url: "/2022/10/03/привет-sam")

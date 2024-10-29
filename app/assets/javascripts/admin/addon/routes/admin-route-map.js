@@ -81,10 +81,14 @@ export default function () {
             this.route("settings");
           }
         );
-        this.route("adminPermalinks", {
-          path: "/permalinks",
-          resetNamespace: true,
-        });
+        this.route(
+          "adminPermalinks",
+          { path: "/permalinks", resetNamespace: true },
+          function () {
+            this.route("new");
+            this.route("edit", { path: "/:permalink_id" });
+          }
+        );
         this.route("adminEmbedding", {
           path: "/embedding",
           resetNamespace: true,

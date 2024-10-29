@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Permalink < ActiveRecord::Base
+  attr_accessor :permalink_type, :permalink_type_value
+
   belongs_to :topic
   belongs_to :post
   belongs_to :category
@@ -8,8 +10,21 @@ class Permalink < ActiveRecord::Base
   belongs_to :user
 
   before_validation :normalize_url, :encode_url
+  before_validation :set_association_value
+  before_update :clear_associations
 
   validates :url, uniqueness: true
+
+  validates :topic_id, presence: true, if: Proc.new { |permalink| permalink.topic_type? }
+  validates :post_id, presence: true, if: Proc.new { |permalink| permalink.post_type? }
+  validates :category_id, presence: true, if: Proc.new { |permalink| permalink.category_type? }
+  validates :tag_id, presence: true, if: Proc.new { |permalink| permalink.tag_type? }
+  validates :user_id, presence: true, if: Proc.new { |permalink| permalink.user_type? }
+  validates :external_url, presence: true, if: Proc.new { |permalink| permalink.external_url_type? }
+
+  %i[topic post category tag user external_url].each do |association|
+    define_method("#{association}_type?") { self.permalink_type == association.to_s }
+  end
 
   class Normalizer
     attr_reader :source
@@ -97,6 +112,24 @@ class Permalink < ActiveRecord::Base
 
   def relative_external_url
     external_url.match?(%r{\A/[^/]}) ? "#{Discourse.base_path}#{external_url}" : external_url
+  end
+
+  def clear_associations
+    self.topic_id = nil if !self.topic_type?
+    self.post_id = nil if !self.post_type?
+    self.category_id = nil if !self.category_type?
+    self.user_id = nil if !self.user_type?
+    self.tag_id = nil if !self.tag_type?
+    self.external_url = nil if !self.external_url_type?
+  end
+
+  def set_association_value
+    self.topic_id = self.permalink_type_value if self.topic_type?
+    self.post_id = self.permalink_type_value if self.post_type?
+    self.user_id = self.permalink_type_value if self.user_type?
+    self.category_id = self.permalink_type_value if self.category_type?
+    self.external_url = self.permalink_type_value if self.external_url_type?
+    self.tag_id = Tag.where(name: self.permalink_type_value).first&.id if self.tag_type?
   end
 end
 
