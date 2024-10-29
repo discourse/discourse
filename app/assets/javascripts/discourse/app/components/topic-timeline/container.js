@@ -29,6 +29,7 @@ export function setDesktopScrollAreaHeight(
 
 export default class TopicTimelineScrollArea extends Component {
   @service appEvents;
+  @service site;
   @service siteSettings;
   @service currentUser;
 
@@ -57,7 +58,7 @@ export default class TopicTimelineScrollArea extends Component {
   constructor() {
     super(...arguments);
 
-    if (!this.args.mobileView) {
+    if (this.site.desktopView) {
       // listen for scrolling event to update timeline
       this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
       // listen for composer sizing changes to update timeline
@@ -102,7 +103,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get displayTimeLineScrollArea() {
-    if (this.args.mobileView) {
+    if (this.site.mobileView) {
       return true;
     }
 
@@ -121,7 +122,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get topicTitle() {
-    return htmlSafe(this.args.mobileView ? this.args.model.fancyTitle : "");
+    return htmlSafe(this.site.mobileView ? this.args.model.fancyTitle : "");
   }
 
   get showTags() {
@@ -143,7 +144,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showDockedButton() {
-    return !this.args.mobileView && this.hasBackPosition && !this.showButton;
+    return this.site.desktopView && this.hasBackPosition && !this.showButton;
   }
 
   get hasBackPosition() {
@@ -177,10 +178,10 @@ export default class TopicTimelineScrollArea extends Component {
     const availableHeight =
       (window.innerHeight - composerHeight - headerHeight) / 2;
 
-    const minHeight = this.args.mobileView
+    const minHeight = this.site.mobileView
       ? DEFAULT_MIN_SCROLLAREA_HEIGHT
       : desktopMinScrollAreaHeight;
-    const maxHeight = this.args.mobileView
+    const maxHeight = this.site.mobileView
       ? DEFAULT_MAX_SCROLLAREA_HEIGHT
       : desktopMaxScrollAreaHeight;
 
@@ -426,7 +427,7 @@ export default class TopicTimelineScrollArea extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    if (!this.args.mobileView) {
+    if (this.site.desktopView) {
       this.intersectionObserver?.disconnect();
       this.intersectionObserver = null;
 

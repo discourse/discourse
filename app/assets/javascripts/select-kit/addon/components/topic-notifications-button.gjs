@@ -20,18 +20,6 @@ export default class TopicNotificationsButton extends Component {
     return this.args.topic.get("details.notification_level");
   }
 
-  get appendReason() {
-    return this.args.appendReason ?? true;
-  }
-
-  get showFullTitle() {
-    return this.args.showFullTitle ?? true;
-  }
-
-  get showCaret() {
-    return this.args.showCaret ?? true;
-  }
-
   get reasonText() {
     const topic = this.args.topic;
     const level = topic.get("details.notification_level") ?? 1;
@@ -97,6 +85,16 @@ export default class TopicNotificationsButton extends Component {
     return false;
   }
 
+  get conditionalWrapper() {
+    if (this.args.expanded) {
+      return <template><p class="reason">{{yield}}</p></template>;
+    } else {
+      return <template>
+        {{! template-lint-disable no-yield-only}}{{yield}}
+      </template>;
+    }
+  }
+
   @action
   async changeTopicNotificationLevel(levelId) {
     if (levelId === this.notificationLevel) {
@@ -114,34 +112,22 @@ export default class TopicNotificationsButton extends Component {
 
   <template>
     <div class="topic-notifications-button" ...attributes>
-      {{#if this.appendReason}}
-        <p class="reason">
-          <TopicNotificationsOptions
-            @value={{this.notificationLevel}}
-            @topic={{@topic}}
-            @onChange={{this.changeTopicNotificationLevel}}
-            @options={{hash
-              icon=(if this.isLoading "spinner")
-              showFullTitle=this.showFullTitle
-              showCaret=this.showCaret
-              headerAriaLabel=(i18n "topic.notifications.title")
-            }}
-          />
-          <span class="text">{{htmlSafe this.reasonText}}</span>
-        </p>
-      {{else}}
+      <this.conditionalWrapper>
         <TopicNotificationsOptions
           @value={{this.notificationLevel}}
           @topic={{@topic}}
           @onChange={{this.changeTopicNotificationLevel}}
           @options={{hash
             icon=(if this.isLoading "spinner")
-            showFullTitle=this.showFullTitle
-            showCaret=this.showCaret
+            showFullTitle=@expanded
+            showCaret=@expanded
             headerAriaLabel=(i18n "topic.notifications.title")
           }}
         />
-      {{/if}}
+        {{#if @expanded}}
+          <span class="text">{{htmlSafe this.reasonText}}</span>
+        {{/if}}
+      </this.conditionalWrapper>
     </div>
   </template>
 }
