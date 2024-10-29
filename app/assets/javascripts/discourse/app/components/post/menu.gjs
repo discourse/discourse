@@ -90,6 +90,7 @@ export default class PostMenu extends Component {
   @tracked readers = [];
   @tracked totalReaders;
 
+  @cached
   get buttonActions() {
     return {
       copyLink: this.args.copyLink,
@@ -131,6 +132,7 @@ export default class PostMenu extends Component {
     });
   }
 
+  @cached
   get staticMethodsArgs() {
     return Object.freeze({
       context: this.staticMethodsContext,
@@ -138,6 +140,7 @@ export default class PostMenu extends Component {
     });
   }
 
+  @cached
   get context() {
     return Object.freeze({
       ...this.staticMethodsContext,
