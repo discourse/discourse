@@ -5,7 +5,6 @@ module PageObjects
     class Base
       include Capybara::DSL
       include RSpec::Matchers
-      include SystemHelpers
 
       BODY_SELECTOR = ""
 
