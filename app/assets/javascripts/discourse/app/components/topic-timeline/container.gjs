@@ -1,13 +1,29 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { and, not, or } from "truth-helpers";
+import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicAdminMenu from "discourse/components/topic-admin-menu";
+import UserTip from "discourse/components/user-tip";
+import ageWithTooltip from "discourse/helpers/age-with-tooltip";
+import categoryLink from "discourse/helpers/category-link";
+import discourseTags from "discourse/helpers/discourse-tags";
+import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
+import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
-import I18n from "discourse-i18n";
+import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
+import BackButton from "./back-button";
+import Scroller from "./scroller";
 
 export const SCROLLER_HEIGHT = 50;
 const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
@@ -25,6 +41,14 @@ export function setDesktopScrollAreaHeight(
 ) {
   desktopMinScrollAreaHeight = height.min;
   desktopMaxScrollAreaHeight = height.max;
+}
+
+export function timelineDate(date) {
+  const fmt =
+    date.getFullYear() === new Date().getFullYear()
+      ? "long_no_year_no_time"
+      : "timeline_date";
+  return moment(date).format(i18n(`dates.${fmt}`));
 }
 
 export default class TopicTimelineScrollArea extends Component {
@@ -194,7 +218,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   get nowDateOptions() {
     return {
-      customTitle: I18n.t("topic_entrance.jump_bottom_button_title"),
+      customTitle: i18n("topic_entrance.jump_bottom_button_title"),
       addAgo: true,
       defaultFormat: timelineDate,
     };
@@ -463,12 +487,188 @@ export default class TopicTimelineScrollArea extends Component {
   registerScroller(element) {
     this.scrollerElement = element;
   }
-}
 
-export function timelineDate(date) {
-  const fmt =
-    date.getFullYear() === new Date().getFullYear()
-      ? "long_no_year_no_time"
-      : "timeline_date";
-  return moment(date).format(I18n.t(`dates.${fmt}`));
+  <template>
+    {{#if @fullscreen}}
+      <div class="title">
+        <h2>
+          <a
+            {{on "click" @jumpTop}}
+            href={{@model.firstPostUrl}}
+            class="fancy-title"
+          >{{this.topicTitle}}</a>
+        </h2>
+
+        {{#if (or this.siteSettings.topic_featured_link_enabled this.showTags)}}
+          <div class="topic-header-extra">
+            {{#if this.showTags}}
+              <div class="list-tags">
+                {{discourseTags @model mode="list" tags=@model.tags}}
+              </div>
+            {{/if}}
+            {{#if this.siteSettings.topic_featured_link_enabled}}
+              {{topicFeaturedLink @model}}
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if (and (not @model.isPrivateMessage) @model.category)}}
+          <div class="topic-category">
+            {{#if @model.category.parentCategory}}
+              {{categoryLink @model.category.parentCategory}}
+            {{/if}}
+            {{categoryLink @model.category}}
+          </div>
+        {{/if}}
+
+        {{#if this.excerpt}}
+          <div class="post-excerpt">{{htmlSafe this.excerpt}}</div>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if (and (not @fullscreen) this.currentUser)}}
+      <div class="timeline-controls">
+        <PluginOutlet
+          @name="timeline-controls-before"
+          @outletArgs={{hash model=@model}}
+        />
+        <TopicAdminMenu
+          @topic={{@model}}
+          @toggleMultiSelect={{@toggleMultiSelect}}
+          @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
+          @deleteTopic={{@deleteTopic}}
+          @recoverTopic={{@recoverTopic}}
+          @toggleClosed={{@toggleClosed}}
+          @toggleArchived={{@toggleArchived}}
+          @toggleVisibility={{@toggleVisibility}}
+          @showTopicTimerModal={{@showTopicTimerModal}}
+          @showFeatureTopic={{@showFeatureTopic}}
+          @showChangeTimestamp={{@showChangeTimestamp}}
+          @resetBumpDate={{@resetBumpDate}}
+          @convertToPublicTopic={{@convertToPublicTopic}}
+          @convertToPrivateMessage={{@convertToPrivateMessage}}
+        />
+      </div>
+    {{/if}}
+
+    {{#if this.displayTimeLineScrollArea}}
+      <UserTip
+        @id="topic_timeline"
+        @titleText={{i18n "user_tips.topic_timeline.title"}}
+        @contentText={{i18n "user_tips.topic_timeline.content"}}
+        @placement="left"
+        @triggerSelector=".timeline-scrollarea-wrapper"
+        @priority={{900}}
+      />
+
+      <div class="timeline-scrollarea-wrapper">
+        <div class="timeline-date-wrapper">
+          <a
+            {{on "click" this.updatePercentage}}
+            href={{@model.firstPostUrl}}
+            title={{i18n "topic_entrance.jump_top_button_title"}}
+            class="start-date"
+          >
+            <span>
+              {{this.startDate}}
+            </span>
+          </a>
+        </div>
+
+        <div
+          class="timeline-scrollarea"
+          style={{this.timelineScrollareaStyle}}
+          {{didInsert this.registerScrollarea}}
+        >
+          <div
+            {{! template-lint-disable no-invalid-interactive }}
+            {{on "click" this.updatePercentage}}
+            style={{this.beforePadding}}
+            class="timeline-padding"
+          ></div>
+
+          <Scroller
+            @current={{this.current}}
+            @total={{this.total}}
+            @onGoBack={{this.onGoBack}}
+            @fullscreen={{@fullscreen}}
+            @showDockedButton={{this.showDockedButton}}
+            @date={{this.date}}
+            @didStartDrag={{this.didStartDrag}}
+            @dragMove={{this.dragMove}}
+            @didEndDrag={{this.didEndDrag}}
+            {{didInsert this.registerScroller}}
+          />
+
+          <div
+            {{! template-lint-disable no-invalid-interactive }}
+            {{on "click" this.updatePercentage}}
+            style={{this.afterPadding}}
+            class="timeline-padding"
+          ></div>
+
+          {{#if (and this.hasBackPosition this.showButton)}}
+            <div class="timeline-last-read" style={{this.lastReadStyle}}>
+              {{icon "minus" class="progress"}}
+              <BackButton @onGoBack={{this.goBack}} />
+            </div>
+          {{/if}}
+        </div>
+
+        <div class="timeline-date-wrapper">
+          <a
+            {{on "click" this.updatePercentage}}
+            href={{@model.lastPostUrl}}
+            class="now-date"
+          >
+            <span>
+              {{ageWithTooltip this.nowDate this.nowDateOptions}}
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <div class="timeline-footer-controls">
+        {{#if this.displaySummary}}
+          <DButton
+            @action={{@showTopReplies}}
+            @icon="layer-group"
+            @label="summary.short_label"
+            title={{i18n "summary.short_title"}}
+            class="show-summary btn-small"
+          />
+        {{/if}}
+
+        {{#if (and this.currentUser (not @fullscreen))}}
+          {{#if this.canCreatePost}}
+            <DButton
+              @action={{fn @replyToPost null}}
+              @icon="reply"
+              title={{i18n "topic.reply.help"}}
+              class="btn-default create reply-to-post"
+            />
+          {{/if}}
+        {{/if}}
+
+        {{#if @fullscreen}}
+          <DButton
+            @action={{@jumpToPostPrompt}}
+            @label="topic.progress.jump_prompt"
+            title={{i18n "topic.progress.jump_prompt_long"}}
+            class="timeline-open-jump-to-post-prompt-btn jump-to-post"
+          />
+        {{/if}}
+
+        {{#if this.currentUser}}
+          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
+        {{/if}}
+
+        <PluginOutlet
+          @name="timeline-footer-controls-after"
+          @outletArgs={{hash model=@model fullscreen=@fullscreen}}
+        />
+      </div>
+    {{/if}}
+  </template>
 }
