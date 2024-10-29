@@ -4,6 +4,8 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
 import { createPopper } from "@popperjs/core";
 import {
   emojiSearch,
@@ -13,10 +15,7 @@ import {
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 function customEmojis() {
   const groups = [];
@@ -27,40 +26,35 @@ function customEmojis() {
   return groups;
 }
 
-export default Component.extend({
-  emojiStore: service("emoji-store"),
-  tagName: "",
-  customEmojis: null,
-  recentEmojis: null,
-  hoveredEmoji: null,
-  isActive: false,
-  usePopper: true,
-  placement: "auto", // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
-  initialFilter: "",
-  elements: {
+@tagName("")
+export default class EmojiPicker extends Component {
+  @service emojiStore;
+
+  customEmojis = customEmojis();
+  recentEmojis = null;
+  hoveredEmoji = null;
+  isActive = false;
+  usePopper = true;
+  placement = "auto"; // one of popper.js' placements, see https://popper.js.org/docs/v2/constructors/#options
+  initialFilter = "";
+
+  elements = {
     searchInput: ".emoji-picker-search-container input",
     picker: ".emoji-picker-emoji-area",
-  },
-
-  init() {
-    this._super(...arguments);
-    this.set("customEmojis", customEmojis());
-    if ("IntersectionObserver" in window) {
-      this._sectionObserver = this._setupSectionObserver();
-    }
-  },
+  };
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
+    this._sectionObserver = this._setupSectionObserver();
     this.appEvents.on("emoji-picker:close", this, "onClose");
-  },
+  }
 
   // `readOnly` may seem like a better choice here, but the computed property
   // provides caching (emojiStore.diversity is a simple getter)
   @discourseComputed("emojiStore.diversity")
   selectedDiversity(diversity) {
     return diversity;
-  },
+  }
 
   // didReceiveAttrs would be a better choice here, but this is sadly causing
   // too many unexpected reloads as it's triggered for other reasons than a mutation
@@ -72,13 +66,13 @@ export default Component.extend({
     } else {
       this.onClose();
     }
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
     this._sectionObserver?.disconnect();
     this.appEvents.off("emoji-picker:close", this, "onClose");
-  },
+  }
 
   @action
   onShow() {
@@ -155,16 +149,17 @@ export default Component.extend({
         });
       }, 50);
     });
-  },
+  }
 
   @action
   onClose(event) {
     event?.stopPropagation();
     document.removeEventListener("click", this.handleOutsideClick);
     this.onEmojiPickerClose?.(event);
-  },
+  }
 
-  diversityScales: computed("selectedDiversity", function () {
+  @computed("selectedDiversity")
+  get diversityScales() {
     return [
       "default",
       "light",
@@ -179,13 +174,13 @@ export default Component.extend({
         icon: index + 1 === this.selectedDiversity ? "check" : "",
       };
     });
-  }),
+  }
 
   @action
   onClearRecent() {
     this.emojiStore.favorites = [];
     this.set("recentEmojis", []);
-  },
+  }
 
   @action
   onDiversitySelection(index) {
@@ -193,7 +188,7 @@ export default Component.extend({
     this.emojiStore.diversity = scale;
 
     this._applyDiversity(scale);
-  },
+  }
 
   @action
   onEmojiHover(event) {
@@ -203,7 +198,7 @@ export default Component.extend({
     }
 
     this._updateEmojiPreview(event.target.title);
-  },
+  }
 
   @action
   onEmojiSelection(event) {
@@ -225,7 +220,7 @@ export default Component.extend({
     if (this.site.isMobileDevice) {
       this.onClose(event);
     }
-  },
+  }
 
   @action
   onCategorySelection(sectionName, event) {
@@ -235,7 +230,7 @@ export default Component.extend({
         `.emoji-picker-emoji-area .section[data-section="${sectionName}"]`
       )
       ?.scrollIntoView();
-  },
+  }
 
   @action
   keydown(event) {
@@ -354,17 +349,17 @@ export default Component.extend({
       event.preventDefault();
       return false;
     }
-  },
+  }
 
   @action
   onFilterChange(event) {
     this._applyFilter(event.target.value);
-  },
+  }
 
   _focusedOn(item) {
     // returns the item currently being focused on
     return document.activeElement.closest(item) ? document.activeElement : null;
-  },
+  }
 
   _applyFilter(filter) {
     const emojiPicker = document.querySelector(".emoji-picker");
@@ -384,7 +379,7 @@ export default Component.extend({
     } else {
       emojiPicker.classList.remove("has-filter");
     }
-  },
+  }
 
   _trackEmojiUsage(code, options = {}) {
     this.emojiStore.track(code);
@@ -392,7 +387,7 @@ export default Component.extend({
     if (options.refresh) {
       this.set("recentEmojis", [...this.emojiStore.favorites]);
     }
-  },
+  }
 
   _replaceEmoji(code) {
     const escaped = emojiUnescape(`:${escapeExpression(code)}:`, {
@@ -400,7 +395,7 @@ export default Component.extend({
       tabIndex: "0",
     });
     return htmlSafe(escaped);
-  },
+  }
 
   _codeWithDiversity(code, selectedDiversity) {
     if (/:t\d/.test(code)) {
@@ -410,14 +405,14 @@ export default Component.extend({
     } else {
       return code;
     }
-  },
+  }
 
   _applyDiversity(diversity) {
     const emojiPickerArea = document.querySelector(".emoji-picker-emoji-area");
     emojiPickerArea?.querySelectorAll(".emoji.diversity").forEach((img) => {
       img.src = emojiUrlFor(this._codeWithDiversity(img.title, diversity));
     });
-  },
+  }
 
   _setupSectionObserver() {
     return new IntersectionObserver(
@@ -445,7 +440,7 @@ export default Component.extend({
       },
       { threshold: 1 }
     );
-  },
+  }
 
   _getPopperAnchor() {
     // .d-editor-textarea-wrapper is only for backward compatibility here
@@ -454,19 +449,19 @@ export default Component.extend({
       document.querySelector(".emoji-picker-anchor") ??
       document.querySelector(".d-editor-textarea-wrapper")
     );
-  },
+  }
 
   _updateEmojiPreview(title) {
     return this.set(
       "hoveredEmoji",
       this._codeWithDiversity(title, this.selectedDiversity)
     );
-  },
+  }
 
   @bind
   handleOutsideClick(event) {
     if (!event.target.closest(".emoji-picker")) {
       this.onClose(event);
     }
-  },
-});
+  }
+}

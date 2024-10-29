@@ -76,15 +76,16 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
   });
 
   module("used on a classic component", function (innerHooks) {
-    const ExampleClassicButton = ClassicComponent.extend({
-      tagName: "",
-      onDoSomething: null,
+    class ExampleClassicButton extends ClassicComponent {
+      tagName = "";
+      onDoSomething = null;
 
       doSomething() {
         this.onDoSomething?.("doSomething");
-      },
-    });
+      }
+    }
 
+    // eslint-disable-next-line ember/no-classic-classes
     const ExampleClassicButtonWithActions = ClassicComponent.extend({
       tagName: "",
       onDoSomething: null,

@@ -1,3 +1,5 @@
+// eslint-disable ember/no-classic-classes
+
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { clearRender, render, settled } from "@ember/test-helpers";

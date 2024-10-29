@@ -1,19 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (7.1.4.1)
-      actionpack (= 7.1.4.1)
-      actionview (= 7.1.4.1)
-      activejob (= 7.1.4.1)
-      activesupport (= 7.1.4.1)
+    actionmailer (7.1.4.2)
+      actionpack (= 7.1.4.2)
+      actionview (= 7.1.4.2)
+      activejob (= 7.1.4.2)
+      activesupport (= 7.1.4.2)
       mail (~> 2.5, >= 2.5.4)
       net-imap
       net-pop
       net-smtp
       rails-dom-testing (~> 2.2)
-    actionpack (7.1.4.1)
-      actionview (= 7.1.4.1)
-      activesupport (= 7.1.4.1)
+    actionpack (7.1.4.2)
+      actionview (= 7.1.4.2)
+      activesupport (= 7.1.4.2)
       nokogiri (>= 1.8.5)
       racc
       rack (>= 2.2.4)
@@ -21,8 +21,8 @@ GEM
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
-    actionview (7.1.4.1)
-      activesupport (= 7.1.4.1)
+    actionview (7.1.4.2)
+      activesupport (= 7.1.4.2)
       builder (~> 3.1)
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
@@ -31,16 +31,16 @@ GEM
       actionview (>= 6.0.a)
     active_model_serializers (0.8.4)
       activemodel (>= 3.0)
-    activejob (7.1.4.1)
-      activesupport (= 7.1.4.1)
+    activejob (7.1.4.2)
+      activesupport (= 7.1.4.2)
       globalid (>= 0.3.6)
-    activemodel (7.1.4.1)
-      activesupport (= 7.1.4.1)
-    activerecord (7.1.4.1)
-      activemodel (= 7.1.4.1)
-      activesupport (= 7.1.4.1)
+    activemodel (7.1.4.2)
+      activesupport (= 7.1.4.2)
+    activerecord (7.1.4.2)
+      activemodel (= 7.1.4.2)
+      activesupport (= 7.1.4.2)
       timeout (>= 0.4.0)
-    activesupport (7.1.4.1)
+    activesupport (7.1.4.2)
       base64
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
@@ -271,7 +271,7 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.3)
+    nio4r (2.7.4)
     nokogiri (1.16.7-aarch64-linux)
       racc (~> 1.4)
     nokogiri (1.16.7-arm64-darwin)
@@ -376,9 +376,9 @@ GEM
     rails_multisite (6.1.0)
       activerecord (>= 6.0)
       railties (>= 6.0)
-    railties (7.1.4.1)
-      actionpack (= 7.1.4.1)
-      activesupport (= 7.1.4.1)
+    railties (7.1.4.2)
+      actionpack (= 7.1.4.2)
+      activesupport (= 7.1.4.2)
       irb
       rackup (>= 1.0.0)
       rake (>= 12.2)
@@ -591,6 +591,8 @@ PLATFORMS
   x86_64-darwin-19
   x86_64-darwin-20
   x86_64-darwin-22
+  x86_64-darwin-23
+  x86_64-darwin-24
   x86_64-linux
 
 DEPENDENCIES
