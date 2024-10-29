@@ -38,8 +38,8 @@ ro:
       without_membership: "%{first_identifier} nu s-a alăturat acestui canal."
       without_membership_multiple:
         one: "%{first_identifier} și încă %{count} utilizator nu s-au alăturat acestui canal."
-        few: "%{first_identifier} și alți %{count} utilizatori nu s-au alăturat acestui canal."
-        other: "%{first_identifier} și alți %{count} utilizatori nu s-au alăturat acestui canal."
+        few: "%{first_identifier} și încă %{count} utilizatori nu s-au alăturat acestui canal."
+        other: "%{first_identifier} și încă %{count} de utilizatori nu s-au alăturat acestui canal."
       group_mentions_disabled: "%{first_identifier} nu permite mențiuni."
       group_mentions_disabled_multiple:
         one: "%{first_identifier} și %{count} alt grup nu permit mențiuni."
@@ -52,7 +52,7 @@ ro:
   discourse_push_notifications:
     popup:
       chat_mention:
-        direct: '%{username} te-a menționat în discuția "%{channel}"'
+        direct: '%{username} te-a menționat în discuția „%{channel}”'
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

@@ -50,7 +50,7 @@ ro:
   remove_posts_deleted_by_author: "Șters de către autor"
   topic_tag_changed:
     added: "Adăugată în %{added}"
-    removed: "A eliminat pe %{removed}"
+    removed: "Eliminată %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   components:
@@ -524,7 +524,7 @@ ro:
   activation:
     action: "Clic aici pentru a-ți activa contul"
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul tău este deja activ?"
-    please_continue: "Contul este confirmat. Vei fi redirecționat spre pagina principală."
+    please_continue: "Noul tău cont este confirmat. Te vom redirecționa spre pagina principală."
     continue_button: "Continuă pe %{site_name}"
     welcome_to: "Bine ai venit pe %{site_name}!"
     approval_required: "Un moderator trebuie să aprobe manual contul înainte să poți accesa forumul. Vei primi un email imediat ce contul ți-a fost aprobat!"

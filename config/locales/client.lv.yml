@@ -43,11 +43,11 @@ lv:
       tiny:
         half_a_minute: "< 1 m"
         less_than_x_seconds:
-          zero: "< 0 s"
+          zero: "< %{count} s"
           one: "< %{count} s"
           other: "< %{count} s"
         x_seconds:
-          zero: "0 s"
+          zero: "%{count} s"
           one: "%{count} s"
           other: "%{count} s"
         less_than_x_minutes:
@@ -55,68 +55,68 @@ lv:
           one: "< %{count} m"
           other: "< %{count} m"
         x_minutes:
-          zero: "0 m"
+          zero: "%{count} m"
           one: "%{count} m"
           other: "%{count} m"
         about_x_hours:
-          zero: "0 h"
+          zero: "%{count} h"
           one: "%{count} h"
           other: "%{count} h"
         x_days:
-          zero: "0 d"
+          zero: "%{count} d"
           one: "%{count} d"
           other: "%{count} d"
         about_x_years:
-          zero: "0 g"
+          zero: "%{count} g"
           one: "%{count} g"
           other: "%{count} g"
         over_x_years:
-          zero: "> 0 g"
+          zero: "> %{count} g"
           one: "> %{count} g"
           other: "> %{count} g"
         almost_x_years:
-          zero: "0 g"
+          zero: "%{count} g"
           one: "%{count} g"
           other: "%{count} g"
         date_month: "MMM D"
         date_year: "MMM YYYY"
       medium:
         x_minutes:
-          zero: "0 minūtes"
+          zero: "%{count} minūtes"
           one: "%{count} minūtes"
           other: "%{count} minūtes"
         x_hours:
-          zero: "0 stundas"
+          zero: "%{count} stundas"
           one: "%{count} stunda"
           other: "%{count} stundas"
         x_days:
-          zero: "0 dienas"
+          zero: "%{count} dienas"
           one: "%{count} diena"
           other: "%{count} dienas"
       medium_with_ago:
         x_minutes:
-          zero: "pirms 0 minūtēm"
+          zero: "pirms %{count} minūtēm"
           one: "pirms %{count} minūtes"
           other: "pirms %{count} minūtēm"
         x_hours:
-          zero: "pirms 0 stundām"
+          zero: "pirms %{count} stundām"
           one: "pirms %{count} stundas"
           other: "pirms %{count} stundām"
         x_days:
-          zero: "pirms 0 dienām"
+          zero: "pirms %{count} dienām"
           one: "pirms %{count} dienas"
           other: "pirms %{count} dienām"
       later:
         x_days:
-          zero: "pēc 0 dienām"
+          zero: "pēc %{count} dienām"
           one: "pēc %{count} dienas"
           other: "pēc %{count} dienām"
         x_months:
-          zero: "pēc 0 mēnešiem"
+          zero: "pēc %{count} mēnešiem"
           one: "pēc %{count} mēneša"
           other: "pēc %{count} mēnešiem"
         x_years:
-          zero: "pēc 0 gadiem"
+          zero: "pēc %{count} gadiem"
           one: "pēc %{count} gada"
           other: "pēc %{count} gadiem"
       previous_month: "Iepriekšējais mēnesis"
