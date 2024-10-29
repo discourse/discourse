@@ -150,14 +150,34 @@ export default class PostMenu extends Component {
 
   @cached
   get registeredButtons() {
+    let addedKeys;
     const replacementMap = new WeakMap();
 
-    // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
-    // in the value transformer, and extract the data to be used later to resolve the DAG order
-    const buttonsRegistry = applyValueTransformer(
-      "post-menu-buttons",
-      // TODO auto-generate the position coordinates based on the order of the elements
-      DAG.from(coreButtonComponents.entries(), {
+    const configuredItems = this.configuredItems;
+
+    const dag = DAG.from(
+      coreButtonComponents.entries().map(([key, ButtonComponent]) => {
+        const configuredIndex = configuredItems.indexOf(key);
+
+        const position =
+          configuredIndex !== -1
+            ? {
+                before: configuredItems.slice(configuredIndex + 1),
+                after: configuredItems.slice(0, configuredIndex),
+              }
+            : {};
+
+        return [key, ButtonComponent, position];
+      }),
+      {
+        // we need to keep track of the buttons that were added by plugins because they won't respect the values in
+        // the post_menu setting
+        onAddItem(key) {
+          addedKeys?.add(key);
+        },
+        onDeleteItem(key) {
+          addedKeys?.delete(key);
+        },
         // when an item is replaced, we want the new button to inherit the properties defined by static methods in the
         // original button if they're not defined. To achieve this we keep track of the replacements in a map
         onReplaceItem: (key, newComponent, oldComponent) => {
@@ -165,7 +185,17 @@ export default class PostMenu extends Component {
             replacementMap.set(newComponent, oldComponent);
           }
         },
-      }),
+      }
+    );
+
+    // the map is initialized here, to ensure only the buttons manipulated by plugins using the API are tracked
+    addedKeys = new Set();
+
+    // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
+    // in the value transformer, and extract the data to be used later to resolve the DAG order
+    const buttonsRegistry = applyValueTransformer(
+      "post-menu-buttons",
+      dag,
       this.staticMethodsArgs
     );
 
@@ -176,6 +206,7 @@ export default class PostMenu extends Component {
           Component: ButtonComponent,
           position,
           replacementMap,
+          apiAdded: addedKeys.has(key), // flag indicating if the button was added using the API
         });
         setOwner(config, getOwner(this)); // to allow using getOwner in the static functions
 
@@ -184,20 +215,24 @@ export default class PostMenu extends Component {
     );
   }
 
-  get items() {
-    const list = this.#configuredItems.map((i) => {
-      // if the post is a wiki, make Edit more prominent
-      if (this.isWikiMode) {
-        switch (i) {
-          case POST_MENU_EDIT_BUTTON_KEY:
-            return POST_MENU_REPLY_BUTTON_KEY;
-          case POST_MENU_REPLY_BUTTON_KEY:
-            return POST_MENU_EDIT_BUTTON_KEY;
+  @cached
+  get configuredItems() {
+    const list = this.siteSettings.post_menu
+      .split("|")
+      .filter(Boolean)
+      .map((key) => {
+        // if the post is a wiki, make Edit more prominent
+        if (this.isWikiMode) {
+          switch (key) {
+            case POST_MENU_EDIT_BUTTON_KEY:
+              return POST_MENU_REPLY_BUTTON_KEY;
+            case POST_MENU_REPLY_BUTTON_KEY:
+              return POST_MENU_EDIT_BUTTON_KEY;
+          }
         }
-      }
 
-      return i;
-    });
+        return key;
+      });
 
     if (list.length > 0 && !list.includes(POST_MENU_SHOW_MORE_BUTTON_KEY)) {
       list.splice(list.length - 1, 0, POST_MENU_SHOW_MORE_BUTTON_KEY);
@@ -229,12 +264,16 @@ export default class PostMenu extends Component {
 
   @cached
   get availableButtons() {
-    return this.items
-      .map((itemKey) => this.registeredButtons.get(itemKey))
+    const items = this.configuredItems;
+    const values = this.registeredButtons
+      .values()
       .filter(
         (button) =>
-          isPresent(button) && !button.extraControls(this.staticMethodsArgs)
+          (button.apiAdded || items.includes(button.key)) &&
+          !button.extraControls(this.staticMethodsArgs)
       );
+
+    return Array.from(values);
   }
 
   @cached
@@ -417,10 +456,6 @@ export default class PostMenu extends Component {
     }
 
     this.#fetchWhoRead();
-  }
-
-  get #configuredItems() {
-    return this.siteSettings.post_menu.split("|").filter(Boolean);
   }
 
   get #hiddenItems() {

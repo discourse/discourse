@@ -3,12 +3,14 @@ import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuButtonConfig {
   #Component;
+  #apiAdded;
   #key;
   #position;
   #replacementMap;
 
-  constructor({ key, Component, position, replacementMap }) {
+  constructor({ key, Component, apiAdded, position, replacementMap }) {
     this.#Component = Component;
+    this.#apiAdded = apiAdded;
     this.#key = key;
     this.#position = position;
     this.#replacementMap = replacementMap;
@@ -16,6 +18,10 @@ export default class PostMenuButtonConfig {
 
   get Component() {
     return this.#Component;
+  }
+
+  get apiAdded() {
+    return this.#apiAdded;
   }
 
   @bind
