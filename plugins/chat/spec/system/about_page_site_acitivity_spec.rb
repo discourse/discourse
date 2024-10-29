@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
 describe "Chat messages site activity in the about page", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group, users: [current_user]) }
-
   let(:about_page) { PageObjects::Pages::About.new }
 
   before do
     chat_system_bootstrap
-    SiteSetting.experimental_redesigned_about_page_groups = group.id.to_s
-    sign_in(current_user)
 
     Fabricate(:chat_message, created_at: 5.hours.ago)
     Fabricate(:chat_message, created_at: 2.days.ago)
