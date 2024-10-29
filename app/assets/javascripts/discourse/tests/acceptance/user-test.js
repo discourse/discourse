@@ -393,7 +393,7 @@ acceptance("User - Logout", function (needs) {
       .doesNotExist("no cancel button present");
     assert
       .dom(".dialog-footer .btn-primary")
-      .hasText(I18n.t("house"), "primary dialog button is present");
+      .hasText(I18n.t("home"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });
