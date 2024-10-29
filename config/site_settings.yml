@@ -494,6 +494,8 @@ login:
   google_oauth2_hd_groups_service_account_json:
     default: ""
     textarea: true
+  google_oauth2_verbose_logging:
+    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
