@@ -147,6 +147,8 @@ export default class PostMenu extends Component {
 
   @cached
   get registeredButtons() {
+    const replacementMap = new WeakMap();
+
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
     // in the value transformer, and extract the data to be used later to resolve the DAG order
     const buttonsRegistry = applyValueTransformer(
@@ -154,22 +156,11 @@ export default class PostMenu extends Component {
       // TODO auto-generate the position coordinates based on the order of the elements
       DAG.from(coreButtonComponents.entries(), {
         // when an item is replaced, we want the new button to inherit the properties defined by static methods in the
-        // button if they're not defined
+        // original button if they're not defined. To achieve this we keep track of the replacements in a map
         onReplaceItem: (key, newComponent, oldComponent) => {
-          [
-            "alwaysShow",
-            "delegateShouldRenderToTemplate",
-            "extraControls",
-            "shouldRender",
-            "showLabel",
-          ].forEach((method) => {
-            if (
-              typeof newComponent[method] === "undefined" &&
-              typeof oldComponent[method] !== "undefined"
-            ) {
-              newComponent[method] = oldComponent[method];
-            }
-          });
+          if (newComponent !== oldComponent) {
+            replacementMap.set(newComponent, oldComponent);
+          }
         },
       }),
       this.staticMethodsArgs
@@ -181,6 +172,7 @@ export default class PostMenu extends Component {
           key,
           Component: ButtonComponent,
           position,
+          replacementMap,
         });
         setOwner(config, getOwner(this)); // to allow using getOwner in the static functions
 
@@ -220,7 +212,8 @@ export default class PostMenu extends Component {
     const items = [
       repliesButton,
       ...Array.from(this.registeredButtons.values()).filter(
-        (button) => isPresent(button) && button.extraControls
+        (button) =>
+          isPresent(button) && button.extraControls(this.staticMethodsArgs)
       ),
     ].filter(isPresent);
 
@@ -231,10 +224,14 @@ export default class PostMenu extends Component {
       .map(({ value }) => value);
   }
 
+  @cached
   get availableButtons() {
     return this.items
       .map((itemKey) => this.registeredButtons.get(itemKey))
-      .filter((button) => isPresent(button) && !button.extraControls);
+      .filter(
+        (button) =>
+          isPresent(button) && !button.extraControls(this.staticMethodsArgs)
+      );
   }
 
   @cached

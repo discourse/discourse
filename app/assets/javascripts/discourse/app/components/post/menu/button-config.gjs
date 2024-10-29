@@ -1,25 +1,17 @@
+import { getOwner, setOwner } from "@ember/owner";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuButtonConfig {
   #Component;
-  #delegateShouldRenderToTemplate;
-  #alwaysShow;
-  #extraControls;
   #key;
   #position;
-  #shouldRender;
-  #showLabel;
+  #replacementMap;
 
-  constructor({ key, Component, position }) {
+  constructor({ key, Component, position, replacementMap }) {
     this.#Component = Component;
-    this.#alwaysShow = Component.alwaysShow;
-    this.#delegateShouldRenderToTemplate =
-      Component.delegateShouldRenderToTemplate;
-    this.#extraControls = Component.extraControls;
     this.#key = key;
     this.#position = position;
-    this.#shouldRender = Component.shouldRender;
-    this.#showLabel = Component.showLabel;
+    this.#replacementMap = replacementMap;
   }
 
   get Component() {
@@ -28,19 +20,29 @@ export default class PostMenuButtonConfig {
 
   @bind
   alwaysShow(args) {
-    if (typeof this.#alwaysShow === "function") {
-      return this.#alwaysShow(args);
-    }
-
-    return this.#alwaysShow ?? false;
+    return this.#staticPropertyWithReplacementFallback({
+      property: "alwaysShow",
+      args,
+      defaultValue: false,
+    });
   }
 
-  get delegateShouldRenderToTemplate() {
-    return this.#delegateShouldRenderToTemplate ?? false;
+  @bind
+  delegateShouldRenderToTemplate(args) {
+    return this.#staticPropertyWithReplacementFallback({
+      property: "delegateShouldRenderToTemplate",
+      args,
+      defaultValue: false,
+    });
   }
 
-  get extraControls() {
-    return this.#extraControls;
+  @bind
+  extraControls(args) {
+    return this.#staticPropertyWithReplacementFallback({
+      property: "extraControls",
+      args,
+      defaultValue: false,
+    });
   }
 
   get key() {
@@ -53,19 +55,51 @@ export default class PostMenuButtonConfig {
 
   @bind
   shouldRender(args) {
-    if (typeof this.#shouldRender === "function") {
-      return this.#shouldRender(args);
-    }
-
-    return this.#shouldRender ?? true;
+    return this.#staticPropertyWithReplacementFallback({
+      property: "shouldRender",
+      args,
+      defaultValue: true,
+    });
   }
 
   @bind
   showLabel(args) {
-    if (typeof this.#showLabel === "function") {
-      return this.#showLabel(args);
+    return this.#staticPropertyWithReplacementFallback({
+      property: "showLabel",
+      args,
+      defaultValue: false,
+    });
+  }
+
+  #staticPropertyWithReplacementFallback(
+    { klass = this.#Component, property, args, defaultValue },
+    _usedKlasses = new WeakSet()
+  ) {
+    // fallback to the default value if the klass is not defined, i.e., the button was not replaced
+    // or if the klass was already used to avoid an infinite recursion in case of a circular reference
+    if (!klass || _usedKlasses.has(klass)) {
+      return defaultValue;
     }
 
-    return this.#showLabel ?? false;
+    let value;
+    if (typeof klass[property] === "function") {
+      setOwner(klass, getOwner(this));
+      value = klass[property](args);
+    } else {
+      value = klass[property];
+    }
+
+    return (
+      value ??
+      this.#staticPropertyWithReplacementFallback(
+        {
+          klass: this.#replacementMap.get(klass) || null, // passing null explicitly to avoid using the default value
+          property,
+          args,
+          defaultValue,
+        },
+        _usedKlasses.add(klass)
+      )
+    );
   }
 }

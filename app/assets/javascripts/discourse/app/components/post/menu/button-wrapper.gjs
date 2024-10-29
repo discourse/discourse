@@ -4,8 +4,12 @@ import { action } from "@ember/object";
 import { or } from "truth-helpers";
 
 export default class PostMenuButtonWrapper extends Component {
+  get delegateShouldRenderToTemplate() {
+    return this.args.buttonConfig.delegateShouldRenderToTemplate(this.args);
+  }
+
   get shouldRender() {
-    if (this.args.buttonConfig.delegateShouldRenderToTemplate) {
+    if (this.delegateShouldRenderToTemplate) {
       return;
     }
 
@@ -18,7 +22,7 @@ export default class PostMenuButtonWrapper extends Component {
   }
 
   <template>
-    {{#if (or this.shouldRender @buttonConfig.delegateShouldRenderToTemplate)}}
+    {{#if (or this.shouldRender this.delegateShouldRenderToTemplate)}}
       <@buttonConfig.Component
         class="btn-flat"
         @alwaysShow={{@buttonConfig.alwaysShow this.args}}
