@@ -10,7 +10,7 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 
 const MIN_NAME_LENGTH = 4;
 
-export default class InstallTheme extends Component {
+export default class InstallThemeModal extends Component {
   @service store;
 
   @tracked selection = this.args.model.selection || "popular";
@@ -184,9 +184,11 @@ export default class InstallTheme extends Component {
     }
 
     if (this.remote || this.popular || this.directRepoInstall) {
-      const duplicate = this.args.model.content.find((theme) =>
-        this.themeHasSameUrl(theme, this.uploadUrl)
-      );
+      const duplicate =
+        this.args.model.content &&
+        this.args.model.content.find((theme) =>
+          this.themeHasSameUrl(theme, this.uploadUrl)
+        );
       if (duplicate && !this.duplicateRemoteThemeWarning) {
         const warning = I18n.t("admin.customize.theme.duplicate_remote_theme", {
           name: duplicate.name,
