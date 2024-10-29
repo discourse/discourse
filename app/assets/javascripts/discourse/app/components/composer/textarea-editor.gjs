@@ -31,6 +31,7 @@ export default class TextareaEditor extends Component {
   });
 
   #handleSmartListAutocomplete = false;
+  #shiftPressed = false;
 
   @bind
   onInputSmartList() {
@@ -41,10 +42,17 @@ export default class TextareaEditor extends Component {
   }
 
   @bind
+  onBeforeInputSmartListShiftDetect(event) {
+    this.#shiftPressed = event.shiftKey;
+  }
+
+  @bind
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
-    this.#handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    if (!this.#shiftPressed) {
+      this.#handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    }
   }
 
   setupSmartList() {
@@ -62,6 +70,10 @@ export default class TextareaEditor extends Component {
         "beforeinput",
         this.onBeforeInputSmartList
       );
+      this.textarea.addEventListener(
+        "keydown",
+        this.onBeforeInputSmartListShiftDetect
+      );
       this.textarea.addEventListener("input", this.onInputSmartList);
     }
   }
@@ -71,6 +83,10 @@ export default class TextareaEditor extends Component {
       this.textarea.removeEventListener(
         "beforeinput",
         this.onBeforeInputSmartList
+      );
+      this.textarea.removeEventListener(
+        "keydown",
+        this.onBeforeInputSmartListShiftDetect
       );
       this.textarea.removeEventListener("input", this.onInputSmartList);
     }
