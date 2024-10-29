@@ -58,6 +58,7 @@
         <ConditionalLoadingSpinner @condition={{this.loading}} />
         <this.editorComponent
           @onSetup={{this.setupEditor}}
+          @markdownOptions={{this.markdownOptions}}
           @value={{this.value}}
           @placeholder={{this.placeholderTranslated}}
           @disabled={{this.disabled}}
