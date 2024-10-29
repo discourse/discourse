@@ -1100,7 +1100,7 @@ ko:
       ignored_users: "무시됨"
       ignored_users_instructions: "이 사용자의 모든 게시물, 알림 및 개인 메시지를 거부합니다."
       tracked_topics_link: "표시"
-      automatically_unpin_topics: "주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
+      automatically_unpin_topics: "글 끝에 도달하면 글을 자동으로 고정 해제합니다"
       apps: "앱"
       revoke_access: "액세스 취소"
       undo_revoke_access: "액세스 취소 실행 취소"
@@ -1314,7 +1314,7 @@ ko:
         action: "여기를 눌러 계정을 활성화하세요."
         already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
         please_continue: "계정이 활성화 되었습니다; 홈페이지로 이동합니다."
-        continue_button: "%{site_name}으로 가기"
+        continue_button: "마침!"
         welcome_to: "%{site_name}에 오신 것을 환영합니다!"
         approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
       name:
@@ -1674,7 +1674,6 @@ ko:
     search_hint: "아이디, 이메일 또는 IP 주소"
     create_account:
       header_title: "환영합니다!"
-      subheader_title: "계정을 만드세요"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
       title: "회원가입"
       failed: "문제가 발생했습니다. 이 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
@@ -1713,7 +1712,6 @@ ko:
       confirm_button: 로그인 완료
     login:
       header_title: "환영합니다"
-      subheader_title: "계정에 로그인하세요"
       title: "로그인"
       username: "사용자"
       password: "비밀번호"
@@ -3957,8 +3955,7 @@ ko:
         about:
           community_name: "커뮤니티 이름"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          site_contact_group_help: |
-            모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
+          company_name: "그룹명"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
@@ -4990,6 +4987,8 @@ ko:
         history: "변경 히스토리 보기"
         reset: "리셋"
         none: "없음"
+        save: "저장"
+        cancel: "취소"
       site_settings:
         emoji_list:
           invalid_input: "이모티콘 목록에는 유효한 이모티콘 이름만 포함되어야 합니다(예: 포옹)."

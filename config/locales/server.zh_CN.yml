@@ -75,6 +75,10 @@ zh_CN:
     import_error:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
+      screenshot: "导入主题截图时出错。 %{errors}"
+      screenshot_invalid_type: "主题截图必须采用以下格式之一： %{accepted_formats}。截图 %{file_name} 格式无效。"
+      screenshot_invalid_size: "主题截图必须小于 %{max_size}。截图 %{file_name} 太大。"
+      screenshot_invalid_dimensions: "主题截图的最大尺寸必须是 %{max_width}x%{max_height}。截图 %{file_name} 超出了此限制。其尺寸为 %{width}x%{height}。"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_too_big: "导入错误：about.json 超过上限 %{limit}。"
       about_json_values: "about.json 包含无效值：%{errors}"
@@ -1996,7 +2000,7 @@ zh_CN:
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
     log_anonymizer_details: "在匿名化后，是否在日志中保留用户的详细信息。"
-    display_eu_visitor_stats: "在 /about 页面上显示全球和欧盟访客人数。"
+    display_eu_visitor_stats: "在 /about 页面上显示全球和欧盟访客数量。启用此设置后，可能需要几分钟才能显示统计数据。"
     newuser_spam_host_threshold: "在被视为垃圾信息之前，新用户可以在他们的 `newuser_spam_host_threshold` 帖子中发布指向同一主机的链接的次数。"
     allowed_spam_host_domains: "从垃圾信息主机测试中排除的网域列表。新用户永远不会被限制创建带有这些网域链接的帖子。"
     staff_like_weight: "管理人员赞的权重（非管理人员赞的权重为 1）。"

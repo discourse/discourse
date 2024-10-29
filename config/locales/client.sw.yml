@@ -707,7 +707,7 @@ sw:
       users: "Watumiaji"
       muted_users: "Kunyamazisha"
       tracked_topics_link: "Onesha"
-      automatically_unpin_topics: "Otomatikali ondoa mada zilizobandikwa nikifika mwisho wa ukurasa."
+      automatically_unpin_topics: "Otomatikali ondoa mada zilizobandikwa nikifika mwisho wa ukurasa"
       apps: "Programu-tumizi"
       revoke_access: "Tengua ufikivu"
       undo_revoke_access: "Ondoa Utenguaji Fikivu"
@@ -822,7 +822,6 @@ sw:
         action: "Bonyeza hapa kuanzisha akkaunti yako"
         already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
         please_continue: "Akaunti yako imethibitishwa; utapelekwa kwenye ukurasa wa nyumbani."
-        continue_button: "Endelea kwenye %{site_name}"
         welcome_to: "Karibu kwenye %{site_name}!"
         approval_required: "Msimamizi lazima aipe kibali akaunti yako mpya kabla haujaanza kutumia jukwaa. Utatumiwa barua pepe akaunti yako ikipata kibali!"
       name:
@@ -2566,6 +2565,7 @@ sw:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Jina"
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
         flags:
@@ -3290,6 +3290,8 @@ sw:
         show_overriden: "Onyesha vilivyobatilishwa pekee"
         reset: "weka au anza upya"
         none: "bila"
+        save: "hifadhi"
+        cancel: "ghairi"
       site_settings:
         title: "Mpangilio"
         no_results: "Hakuna Majibu Yaliyopatikana"

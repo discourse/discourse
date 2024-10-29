@@ -75,6 +75,10 @@ de:
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
       upload: "Fehler beim Erstellen des Upload-Assets: %{name}. %{errors}"
+      screenshot: "Fehler beim Importieren von Theme-Screenshots. %{errors}"
+      screenshot_invalid_type: "Die Theme-Screenshots müssen in einem der folgenden Formate vorliegen: %{accepted_formats}. Der Screenshot %{file_name} hat ein ungültiges Format."
+      screenshot_invalid_size: "Die Screenshots des Themes müssen kleiner als %{max_size}sein. Der Screenshot %{file_name} ist zu groß."
+      screenshot_invalid_dimensions: "Die Screenshots des Themes dürfen maximal %{max_width}x%{max_height}sein. Der Screenshot %{file_name} übertrifft das. Seine Abmessungen sind %{width}x%{height}."
       about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
       about_json_too_big: "Importfehler: about.json ist größer als das Limit von %{limit} ."
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
@@ -2086,7 +2090,7 @@ de:
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deiner extern gehosteten Datenschutzerklärung, sofern vorhanden."
     log_anonymizer_details: "Legt fest, ob die Daten eines Benutzers nach Anonymisierung im Log gespeichert werden sollen."
-    display_eu_visitor_stats: "Zeige die Anzahl der globalen und EU-Besucher auf der /about-Seite."
+    display_eu_visitor_stats: "Zeige die Anzahl der globalen und EU-Besucher auf der /about Seite. Es kann ein paar Minuten dauern, bis die Statistiken erscheinen, nachdem du diese Einstellung aktiviert hast."
     newuser_spam_host_threshold: "Wie oft ein neuer Benutzer einen Link zum selben Host innerhalb seiner `newuser_spam_host_threshold` Beiträge veröffentlichen kann, bevor dies als Spam angesehen wird."
     allowed_spam_host_domains: "Liste von Domains, die keinem Spam-Host-Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Wie viel Gewicht „Gefällt mir“-Angaben des Teams haben sollen („Gefällt mir“-Angaben von Nicht-Team-Mitgliedern haben ein Gewicht von 1.)"
@@ -2343,6 +2347,7 @@ de:
     default_other_notification_level_when_replying: "Globale Standard-Benachrichtigungsstufe, wenn ein Benutzer auf ein Thema antwortet."
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einer neuen Registerkarte."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
+    default_other_enable_smart_lists: "Aktiviere bei der Eingabe im Composer standardmäßig intelligente Listen."
     default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Aufschieben von Themen."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
     default_other_skip_new_user_tips: "Überspringe Tipps und Abzeichen für das Onboarding neuer Benutzer."

@@ -50,7 +50,7 @@ ro:
   remove_posts_deleted_by_author: "Șters de către autor"
   topic_tag_changed:
     added: "Adăugată în %{added}"
-    removed: "A eliminat pe %{removed}"
+    removed: "Eliminată %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   components:
@@ -1112,6 +1112,7 @@ ro:
     faq_url: "Dacă ai un FAQ găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     tos_url: "Dacă ai un document Condițiile generale de utilizare găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     privacy_policy_url: "Dacă ai un document cu Politica de Confidențialitate găzduit în altă parte, pe care dorești să-l folosești, postează-i întregul URL aici."
+    display_eu_visitor_stats: "Afișează numărul de vizitatori din întreaga lume și din UE pe pagina /despre. Este posibil să dureze câteva minute până când statisticile apar după activarea acestei setări."
     newuser_spam_host_threshold: "De câte ori poate un utilizator nou să posteze un link către aceeași gazdă în limita de `newuser_spam_host_threshold` postări înainte ca să fie considerat spam."
     allowed_spam_host_domains: "O listă de domenii excluse de la testarea gazdelor spam. Noii utilizatori nu vor fi niciodată restricționați să creeze postări cu linkuri către aceste domenii."
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."

@@ -170,16 +170,16 @@ ro:
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
       twitter: "Partajează pe X"
-      facebook: "Distribuie pe Facebook"
-      email: "Trimite prin e-mail"
-      url: "Copiază și distribuie URL"
+      facebook: "Partajează pe Facebook"
+      email: "Trimite prin email"
+      url: "Copiază și partajează URL"
     word_connector:
       comma: ", "
       last_item: "și"
     action_codes:
       public_topic: "A făcut acest subiect public %{when}"
       open_topic: "A convertit aceasta într-un subiect %{when}"
-      private_topic: "Fă acest subiect un mesaj personal %{when}"
+      private_topic: "A transformat acest subiect într-un mesaj personal %{when}"
       split_topic: "A împărțit acest subiect %{when}"
       invited_user: "A invitat pe %{who} %{when}"
       invited_group: "A invitat pe %{who} %{when}"
@@ -337,7 +337,7 @@ ro:
       topic_count: "Subiecte"
       post_count: "Articole"
       view_more: "Vezi mai multe"
-      view_less: "Vedeți mai puține"
+      view_less: "Vezi mai puține"
       activities:
         periods:
           last_7_days: "în ultimele 7 zile"
@@ -1205,7 +1205,7 @@ ro:
       ignored_users: "Ignorat"
       ignored_users_instructions: "Suprimă toate mesajele, notificările și mesajele directe de la acești utilizatori."
       tracked_topics_link: "Arată"
-      automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii."
+      automatically_unpin_topics: "Detașare automată a subiectelor când ajung la sfârșitul paginii"
       apps: "Aplicații"
       revoke_access: "Revocă accesul"
       undo_revoke_access: "Anulează revocarea accesului"
@@ -1370,11 +1370,12 @@ ro:
         action: "Clic aici pentru a-ți activa contul"
         already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul tău este deja activ?"
         please_continue: "Contul este confirmat. Vei fi redirecționat spre pagina principală."
-        continue_button: "Continuă la %{site_name}"
+        continue_button: "Termină!"
         welcome_to: "Bine ai venit pe %{site_name}!"
         approval_required: "Un moderator trebuie să aprobe manual contul înainte să poți accesa forumul. Vei primi un email imediat ce contul ți-a fost aprobat!"
       name:
         title: "Nume"
+        title_optional: "Nume (opțional)"
         instructions: "Numele tău complet (opțional)"
         instructions_required: "Numele tău complet"
         required: "Te rugăm să introduci un nume"
@@ -1718,7 +1719,6 @@ ro:
     search_hint: "Numele de utilizator, email sau adresă IP"
     create_account:
       header_title: "Bun venit!"
-      subheader_title: "Să-ți creăm contul"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
       title: "Înregistrare"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
@@ -1758,7 +1758,6 @@ ro:
       confirm_button: Finalizează autentificarea
     login:
       header_title: "Bine ai revenit"
-      subheader_title: "Conectează-te la contul tau"
       title: "Autentificare"
       username: "Utilizator"
       password: "Parolă"
@@ -1833,6 +1832,7 @@ ro:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Numai categorii"
+      categories_only_optimized: "Doar categorii (optimizat)"
       categories_with_featured_topics: "Categorii cu subiecte promovate"
       categories_and_latest_topics: "Categorii și subiecte recente"
       categories_and_top_topics: "Categorii și discuții în top"
@@ -2860,8 +2860,8 @@ ro:
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
-        one: "mai e %{count}"
-        few: "mai sunt %{count}"
+        one: "încă %{count}"
+        few: "încă %{count}"
         other: "încă %{count}"
     topic_statuses:
       warning:
@@ -3627,6 +3627,7 @@ ro:
           banner_image_help: |
             Acesta va fi folosit pe pagina ta Despre. Dimensiune recomandată: 1100x300px. Tipuri acceptate: JPG, PNG și SVG până la 10 MO.
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nume"
           optional: "(opțional)"
           saved: "salvat!"
         flags:
@@ -3643,12 +3644,10 @@ ro:
             invalid_applies_to: "Necesare"
             topic: "discuții"
             post: "Postări"
-            auto_action_type: "Tip de acțiune automată"
+            auto_action_type: "Ascunde automat conținutul semnalat"
           more_options:
             title: "Mai multe opțiuni"
         look_and_feel:
-          title: "Aspect și senzație"
-          description: "Temele, componentele și schemele de culori pot fi utilizate pentru a personaliza și marca site-ul Discourse, oferindu-i un stil distinctiv."
           themes:
             title: "Teme"
             themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
@@ -4413,6 +4412,8 @@ ro:
         show_overriden: "Arată doar ignorate"
         reset: "Resetează"
         none: "Niciuna"
+        save: "salvare"
+        cancel: "Anulează"
       site_settings:
         title: "Setări"
         no_results: "Nu s-au găsit rezultate."

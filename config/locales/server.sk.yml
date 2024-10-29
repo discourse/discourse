@@ -75,6 +75,10 @@ sk:
     import_error:
       generic: Pri importovaní tohto motívu sa vyskytla chyba
       upload: "Chyba pri vytváraní nahraného prostriedku: %{name}. %{errors}"
+      screenshot: "Chyba pri importovaní snímok obrazovky témy. %{errors}"
+      screenshot_invalid_type: "Snímky obrazovky témy musia byť v jednom z nasledujúcich formátov: %{accepted_formats}. Snímka obrazovky %{file_name} má neplatný formát."
+      screenshot_invalid_size: "Snímky motívu musia byť menšie ako %{max_size}. Snímka obrazovky %{file_name} je príliš veľká."
+      screenshot_invalid_dimensions: "Snímky motívu musia mať maximálnu veľkosť %{max_width}x%{max_height}. Snímka obrazovky %{file_name} túto hodnotu prekračuje. Jej rozmery sú %{width}x%{height}."
       about_json: "Chyba importu: súbor about.json neexistuje alebo je neplatný. Ste si istí, že ide o tému Discourse?"
       about_json_too_big: "Chyba importu: about.json je väčší ako limit %{limit} ."
       about_json_values: "about.json obsahuje neplatné hodnoty: %{errors}"
@@ -2237,7 +2241,7 @@ sk:
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
     log_anonymizer_details: "Či sa majú údaje používateľa po anonymizácii ponechať v protokole."
-    display_eu_visitor_stats: "Zobrazenie počtu globálnych návštevníkov a návštevníkov z EÚ na stránke /o stránke."
+    display_eu_visitor_stats: "Zobrazenie počtu globálnych návštevníkov a návštevníkov z EÚ na stránke /o stránke. Po zapnutí tohto nastavenia môže trvať niekoľko minút, kým sa štatistiky zobrazia."
     newuser_spam_host_threshold: "Koľkokrát môže nový používateľ uverejniť odkaz na rovnakého hostiteľa v rámci svojich príspevkov `newuser_spam_host_threshold` predtým, ako sa bude považovať za spam."
     allowed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     staff_like_weight: "Akú váhu majú mať lajky personálu (lajky, ktoré sa netýkajú personálu, majú váhu 1.)"
@@ -2494,6 +2498,7 @@ sk:
     default_other_notification_level_when_replying: "Globálna predvolená úroveň upozornenia, keď používateľ odpovie na tému."
     default_other_external_links_in_new_tab: "Štandardne otvárať externé odkazy v novej záložke."
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
+    default_other_enable_smart_lists: "Predvolene povoľte inteligentné zoznamy pri zadávaní v kompozitore."
     default_other_enable_defer: "Povolenie funkcie odloženia témy v predvolenom nastavení."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
     default_other_skip_new_user_tips: "Preskočiť tipy a odznaky na registráciu nového používateľa."

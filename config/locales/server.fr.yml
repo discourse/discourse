@@ -2054,7 +2054,6 @@ fr:
     tos_url: "Si vous disposez déjà de conditions générales d'utilisation hébergées ailleurs que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Indique s'il faut conserver les informations d'un utilisateur dans le journal après son anonymisation."
-    display_eu_visitor_stats: "Affichez le nombre de visiteurs internationaux et européens sur la page /about."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
     staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."

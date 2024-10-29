@@ -14,7 +14,6 @@ es:
       select_trigger: Selecciona un activador
       confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
       confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
-      no_automation_yet: Todavía no has creado ninguna automatización.
       edit_automation:
         trigger_section:
           forced: Este activador está forzado por script.
