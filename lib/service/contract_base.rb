@@ -7,10 +7,15 @@ class Service::ContractBase
   include ActiveModel::Validations::Callbacks
 
   delegate :slice, :merge, to: :to_hash
+  delegate :model_attributes, to: "self.class"
 
   def initialize(*args, options: nil, **kwargs)
     @__options__ = options
     super(*args, **kwargs)
+  end
+
+  def self.model_attributes
+    attribute_types.filter_map { |k, v| k if v.is_a?(ActiveSupportTypeExtensions::Model) }
   end
 
   def options

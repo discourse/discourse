@@ -214,6 +214,7 @@ module Service
           context.fail!
         end
         contract.freeze
+        contract.model_attributes.each { context[_1] = contract.public_send(_1) }
       end
 
       private

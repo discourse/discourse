@@ -16,5 +16,9 @@ module ActiveSupportTypeExtensions
         ::Array.wrap(value)
       end
     end
+
+    def type
+      :array
+    end
   end
 end
