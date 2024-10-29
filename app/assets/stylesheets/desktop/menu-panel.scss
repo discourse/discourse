@@ -11,6 +11,12 @@
   }
 }
 
+.hamburger-panel {
+  .panel-body {
+    overflow-y: auto;
+  }
+}
+
 // Sidebar-hamburger hybrid
 
 .hamburger-panel .revamped {
