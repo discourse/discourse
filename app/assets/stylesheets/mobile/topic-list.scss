@@ -265,6 +265,14 @@ tr.category-topic-link {
     padding-bottom: 15px;
   }
 
+  .category-subcategories td {
+    padding-top: 0;
+  }
+
+  .category-description + .category-subcategories td {
+    padding-top: 0;
+  }
+
   .subcategories-list {
     border-bottom: none;
     td {
