@@ -820,7 +820,6 @@ th:
       ignored_users: "ละเว้นแล้ว"
       ignored_users_instructions: "ระงับโพสต์ การแจ้งเตือน และข้อความส่วนตัวทั้งหมดจากผู้ใช้เหล่านี้"
       tracked_topics_link: "แสดง"
-      automatically_unpin_topics: "ยกเลิกปักหมุดกระทู้อัตโนมัติเมื่อถึงท้ายหน้า"
       apps: "แอป"
       api_approved: "อนุมัติแล้ว:"
       api_last_used_at: "ใช้ครั้งสุดท้ายเมื่อ:"
@@ -935,7 +934,7 @@ th:
         not_connected: "(ไม่เชื่อมต่อ)"
         confirm_modal_title: "เชื่อมต่อ%{provider}บัญชี"
       activate_account:
-        continue_button: "ดำเนินการต่อไปยัง %{site_name}"
+        continue_button: "เสร็จสิ้น!"
         welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
       name:
         title: "ชื่อ"
@@ -2702,6 +2701,7 @@ th:
             title: "สำรอง"
       config_areas:
         about:
+          company_name: "ชื่อ"
           optional: "(ทางเลือก)"
           update: "อัปเดต"
           saved: "บันทึกแล้ว!"
@@ -3201,6 +3201,8 @@ th:
       settings:
         reset: "ล้าง"
         none: "ไม่มี"
+        save: "บันทึก"
+        cancel: "ยกเลิก"
       site_settings:
         title: "การตั้งค่า"
         no_results: "ไม่มีผลการค้นหา"

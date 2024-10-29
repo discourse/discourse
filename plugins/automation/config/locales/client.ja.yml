@@ -14,7 +14,6 @@ ja:
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
-      no_automation_yet: 自動化はまだ作成されていません。
       edit_automation:
         trigger_section:
           forced: このトリガーはスクリプトで強制されています。

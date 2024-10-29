@@ -14,7 +14,6 @@ ru:
       select_trigger: Выберите триггер
       confirm_automation_reset: Параметры скрипта и триггера будут сброшены. Новое состояние будет сохранено. Продолжить?
       confirm_automation_trigger: Будет запущена автоматизация. Продолжить?
-      no_automation_yet: Вы еще не создали автоматизаций.
       edit_automation:
         trigger_section:
           forced: Этот триггер вызван скриптом.

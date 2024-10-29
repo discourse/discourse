@@ -893,7 +893,7 @@ et:
       ignored_users: "Ignoreeritud"
       ignored_users_instructions: "Blokeeri kõik postitused, teavitused ja PM-id nendelt kasutajatelt."
       tracked_topics_link: "Näita"
-      automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus."
+      automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus"
       apps: "Äpid"
       revoke_access: "Tühista ligipääs"
       undo_revoke_access: "Tühista ligipääsu tühistamine"
@@ -1027,7 +1027,6 @@ et:
         action: "Oma konto aktiveerimiseks kliki siia"
         already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
         please_continue: "Teie uus konto on kinnitatud; Teid suunatakse nüüd avalehele."
-        continue_button: "Edasi saidile %{site_name}"
         welcome_to: "Tere tulemast lehele %{site_name}!"
         approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
       name:
@@ -2911,6 +2910,7 @@ et:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nimi"
           optional: "(valikuline)"
           saved: "salvestatud!"
         flags:
@@ -3603,6 +3603,8 @@ et:
         show_overriden: "Näita vaid käsitsi muudetuid"
         reset: "lähtesta"
         none: "mitte ükski"
+        save: "salvesta"
+        cancel: "tühista"
       site_settings:
         title: "Sätted"
         no_results: "Ei leidnud midagi."

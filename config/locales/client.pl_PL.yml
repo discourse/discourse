@@ -1487,7 +1487,7 @@ pl_PL:
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
-      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony."
+      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony"
       apps: "Aplikacje"
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
@@ -1770,7 +1770,7 @@ pl_PL:
         action: "Kliknij, by aktywować swoje konto."
         already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
         please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
-        continue_button: "Przejdź do %{site_name}"
+        continue_button: "Zakończ!"
         welcome_to: "Witaj na %{site_name}!"
         approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
@@ -2270,7 +2270,6 @@ pl_PL:
     search_hint: "nazwa użytkownika, email lub IP"
     create_account:
       header_title: "Witamy!"
-      subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
       title: "Rejestracja"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
@@ -2314,7 +2313,6 @@ pl_PL:
       confirm_button: Dokończ logowanie
     login:
       header_title: "Witamy ponownie"
-      subheader_title: "Zaloguj się na swoje konto"
       title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
@@ -2414,7 +2412,6 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
-      existing_user_can_redeem: "Zrealizuj zaproszenie do tematu lub grupy."
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -5445,8 +5442,6 @@ pl_PL:
           post_edited: "Post został zaktualizowany"
           post_destroyed: "Post został usunięty"
           post_recovered: "Post został odzyskany"
-          category_experts_approved: "Post oznaczony jako post eksperta kategorii"
-          category_experts_unapproved: "Post nieoznaczony jako post eksperta kategorii"
         group_event:
           group_name: "Zdarzenia grupy"
           group_created: "Grupa została utworzona"
@@ -5608,7 +5603,6 @@ pl_PL:
       config_areas:
         about:
           header: "O Twojej witrynie"
-          description: "Podaj tutaj informacje o tej stronie i swoim zespole, aby ludzie mogli dowiedzieć się, czym jest twoja społeczność, kto za nią stoi i jak się z tobą skontaktować w razie problemów."
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
           community_name_placeholder: "Przykładowa społeczność"
@@ -5620,35 +5614,19 @@ pl_PL:
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
           community_owner_placeholder: "Jan Kowalski"
-          community_owner_help: |
-            Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
           contact_email: "E-mail kontaktowy"
           contact_email_placeholder: "kontakt@jan-kowalski.pl"
-          contact_email_help: |
-            Adres e-mail kluczowej osoby kontaktowej odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na /about. Widoczny dla anonimowych użytkowników na stronach publicznych.
           contact_url: "URL kontaktowy"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            Adres URL kontaktu dla tej witryny. Jeśli jest obecny, zastępuje kontaktowy adres e-mail na podstronie /about i jest widoczny dla anonimowych użytkowników na stronach publicznych.
           site_contact_name: "Nazwa kontaktu witryny"
-          site_contact_name_help: |
-            Prawidłowa nazwa użytkownika, z której będą wysyłane wszystkie automatyczne wiadomości. Jeśli pozostanie puste, zostanie użyte domyślne konto systemowe.
           site_contact_group: "Grupa kontaktowa witryny"
-          site_contact_group_help: |
-            Prawidłowa nazwa grupy, która jest zapraszana do wszystkich automatycznie wysyłanych wiadomości prywatnych.
           your_organization: "Twoja organizacja"
-          company_name: "Nazwa firmy"
-          company_name_placeholder: "Przykładowa firma Inc."
-          company_name_help: |
-            Nazwa Twojej firmy lub organizacji.
+          company_name: "Nazwa"
+          company_name_placeholder: "Organizacja Acme"
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           governing_law: "Obowiązujące prawo"
-          governing_law_placeholder: "Stan Nowy Jork"
           city_for_disputes: "Miasto do sporów"
-          city_for_disputes_placeholder: "Nowy Jork"
-          city_for_disputes_help: |
-            Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -6957,6 +6935,8 @@ pl_PL:
         history: "Wyświetl historię zmian"
         reset: "przywróć domyślne"
         none: "żadne"
+        save: "zapisz"
+        cancel: "anuluj"
       site_settings:
         emoji_list:
           invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"

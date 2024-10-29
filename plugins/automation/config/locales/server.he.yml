@@ -105,6 +105,7 @@ he:
         doc: מאפשר לשלוח מספר הודעות פרטיות למשתמש. כל הודעה מקבלת שליחה דחויה.
       suspend_user_by_email:
         title: השהיית משתמש לפי דוא״ל
+        description: השעיית חשבון אוטומטית לפי כתובת דוא״ל
       user_global_notice:
         title: הודעה גלובלית למשתמש
         description: מאפשר להציג הודעה גלובלית למשתמש
@@ -141,6 +142,13 @@ he:
         button_text: סיום
       add_user_to_group_through_custom_field:
         title: "הוספת משתמש לקבוצה באמצעות שדה מותאם אישית של משתמש"
+        description: "הוספת משתמשים לקבוצות אוטומטית עם הכניסה למערכת או בעת ביקור מחזורי"
       group_category_notification_default:
         title: "ברירת מחדל של התראה על קטגוריית קבוצה"
         description: "הגדרת רמת ברירת המחדל של התראה בקטגוריה עבור חברים בקבוצה"
+      send_chat_message:
+        title: "שליחת הודעת צ׳אט"
+        description: "שליחת הודעת צ׳אט משלך לערוץ"
+      random_assign:
+        title: "הקצאה אקראית"
+        description: "הקצאת נושאים לקבוצה באופן אקראי"

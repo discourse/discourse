@@ -1173,7 +1173,7 @@ da:
       ignored_users: "Ignorerede"
       ignored_users_instructions: "Undertryk alle indlæg, meddelelser og PM'er fra disse brugere."
       tracked_topics_link: "Vis"
-      automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden."
+      automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden"
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Fortryd Tilbagekald adgang"
@@ -1379,7 +1379,7 @@ da:
         action: "Klik her for at aktivere din konto"
         already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
         please_continue: "Din nye konto er bekræftet; du bliver nu omdirigeret til forsiden."
-        continue_button: "Fortsæt til %{site_name}"
+        continue_button: "Afslut!"
         welcome_to: "Velkommen til %{site_name}!"
         approval_required: "En moderator skal manuelt godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
       name:
@@ -1770,7 +1770,6 @@ da:
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
       header_title: "Velkommen!"
-      subheader_title: "Lad os oprette din konto"
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
       title: "Tilmeld dig"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
@@ -1810,7 +1809,6 @@ da:
       confirm_button: Gennemfør login
     login:
       header_title: "Velkommen tilbage"
-      subheader_title: "Log ind med din konto"
       title: "Log ind"
       username: "Bruger"
       password: "Adgangskode"
@@ -4180,6 +4178,7 @@ da:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Navn"
           optional: "(valgfri)"
           update: "Opdater"
           saved: "gemt!"
@@ -5254,6 +5253,8 @@ da:
         history: "Vis ændringshistorik"
         reset: "nulstil"
         none: "ingen"
+        save: "gem"
+        cancel: "annuller"
       site_settings:
         emoji_list:
           invalid_input: "Humørikon liste bør kun indeholde gyldige humørikon navne, for eksempel: knus"

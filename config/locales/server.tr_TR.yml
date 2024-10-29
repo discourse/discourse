@@ -2047,7 +2047,6 @@ tr_TR:
     tos_url: "Başka bir yerde sunucusu olan ve kullanmak istediğiniz bir Hizmet Şartları belgeniz varsa tam URL'yi burada belirtin."
     privacy_policy_url: "Başka bir yerde barındırılan ve kullanmak istediğiniz bir Gizlilik Politikası belgeniz varsa tam URL'yi burada belirtin."
     log_anonymizer_details: "Anonimleştirildikten sonra bir kullanıcının bilgilerinin günlükte tutulup tutulmayacağı."
-    display_eu_visitor_stats: "Global ve AB ziyaretçi sayılarını /about sayfasında göster."
     newuser_spam_host_threshold: "Yeni bir kullanıcının spam olarak değerlendirilmeden önce \"newuser_spam_host_threshold\" gönderileri içinde aynı sunucuya kaç kez bağlantı gönderebileceği."
     allowed_spam_host_domains: "Spam sunucusu testinden hariç tutulan alan adlarının bir listesi. Yeni kullanıcıların bu alan adlarına bağlantı içeren gönderiler oluşturması hiçbir zaman kısıtlanmaz."
     staff_like_weight: "Personel beğenilerine ne kadar ağırlık verileceği (personel dışı beğenilerin ağırlığı 1'dir.)"

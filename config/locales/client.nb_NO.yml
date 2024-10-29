@@ -1308,7 +1308,7 @@ nb_NO:
       ignored_users: "Ignorert"
       ignored_users_instructions: "Undertrykk alle innlegg, varslinger, og meldinger fra disse brukerne."
       tracked_topics_link: "Vis"
-      automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen."
+      automatically_unpin_topics: "Fjern feste for et emne automatisk når jeg når bunnen"
       apps: "Programmer"
       revoke_access: "Trekk tilbake tilgang"
       undo_revoke_access: "Angre tilbaketrekking av tilgang"
@@ -1623,7 +1623,6 @@ nb_NO:
         action: "Klikk her for å aktivere din konto"
         already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
         please_continue: "Din nye konto er registrert; du vil bli videresendt til hjemmesiden. "
-        continue_button: "Fortsett til %{site_name}"
         welcome_to: "Velkommen til %{site_name}!"
         approval_required: "En moderator må manuelt godkjenne kontoen din før du får tilgang til forumet. Du vil motta en e-post når kontoen din er godkjent!"
       name:
@@ -2113,7 +2112,6 @@ nb_NO:
     search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
       header_title: "Velkommen!"
-      subheader_title: "La oss opprette kontoen din"
       disclaimer: "Ved å registrere deg, godtar du <a href='%{privacy_link}' target='blank'>retningslinjer for personvern</a> og <a href='%{tos_link}' target='blank'>vilkår for bruk</a>."
       title: "Registrer deg"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
@@ -2155,7 +2153,6 @@ nb_NO:
       confirm_button: Fullfør innlogging
     login:
       header_title: "Velkommen tilbake"
-      subheader_title: "Logg inn på din konto"
       title: "Logg inn"
       username: "Bruker"
       password: "Passord"
@@ -2255,7 +2252,6 @@ nb_NO:
       success: "Kontoen din har blitt opprettet og du er nå logget inn."
       name_label: "Navn"
       password_label: "Passord"
-      existing_user_can_redeem: "Løs inn invitasjonen din til et emne eller en gruppe."
     password_reset:
       continue: "Fortsett til %{site_name}"
     emoji_set:
@@ -4659,6 +4655,7 @@ nb_NO:
             title: "Sikkerhetskopier"
       config_areas:
         about:
+          company_name: "Navn"
           optional: "(valgfritt)"
           update: "Oppdater"
           saved: "lagret!"
@@ -5526,6 +5523,8 @@ nb_NO:
         show_overriden: "Vis kun overstyrte"
         reset: "tilbakestill"
         none: "ingen"
+        save: "lagre"
+        cancel: "avbryt"
       site_settings:
         title: "Innstillinger"
         no_results: "Ingen treff funnet."

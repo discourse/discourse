@@ -14,7 +14,6 @@ fr:
       select_trigger: Sélectionner un déclencheur
       confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré. Voulez-vous continuer ?
       confirm_automation_trigger: Cette action déclenchera l'automatisation. Voulez-vous continuer ?
-      no_automation_yet: Vous n'avez pas encore créé d'automatisation.
       edit_automation:
         trigger_section:
           forced: Ce déclencheur est forcé par le script.

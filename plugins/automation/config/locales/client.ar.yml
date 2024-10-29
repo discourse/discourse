@@ -14,7 +14,6 @@ ar:
       select_trigger: حدِّد مشغلًا
       confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟
       confirm_automation_trigger: سيؤدي هذا الإجراء إلى تشغيل الأتمتة، هل تريد المتابعة؟
-      no_automation_yet: لم تُنشئ أي أتمتة حتى الآن.
       edit_automation:
         trigger_section:
           forced: يتم فرض هذا المشغِّل بواسطة برنامج نصي.

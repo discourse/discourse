@@ -1414,7 +1414,7 @@ cs:
       ignored_users: "Ignorováno"
       ignored_users_instructions: "Potlačit všechny příspěvky, upozornění a soukromé zprávy od těchto uživatelů."
       tracked_topics_link: "Zobrazit"
-      automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec."
+      automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec"
       apps: "Aplikace"
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
@@ -1661,7 +1661,7 @@ cs:
         action: "Klikni sem pro aktivaci svého účtu"
         already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
         please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
-        continue_button: "Pokračovat na %{site_name}"
+        continue_button: "Dokončit!"
         welcome_to: "Vítejte v %{site_name}!"
         approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
       name:
@@ -2149,7 +2149,6 @@ cs:
     search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
       header_title: "Vítejte!"
-      subheader_title: "Pojďme vytvořit váš účet"
       disclaimer: "Registrací souhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobních údajů</a> a <a href='%{tos_link}' target='blank'>podmínkami služby</a>."
       title: "Registrovat se"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
@@ -2192,7 +2191,6 @@ cs:
       confirm_button: Dokončit přihlášení
     login:
       header_title: "Vítejte zpět"
-      subheader_title: "Přihlaste se ke svému účtu"
       title: "Přihlášení"
       username: "Uživatel"
       password: "Heslo"
@@ -2292,7 +2290,6 @@ cs:
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
       password_label: "Heslo"
-      existing_user_can_redeem: "Uplatněte svou pozvánku do tématu nebo skupiny."
     password_reset:
       continue: "Pokračovat na %{site_name}"
     emoji_set:
@@ -5384,6 +5381,7 @@ cs:
         about:
           header: "O vašem webu"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Jméno"
           optional: "(volitelné)"
           update: "Aktualizovat"
           saved: "uloženo!"
@@ -6291,6 +6289,8 @@ cs:
         show_overriden: "Zobrazit pouze přepsané"
         reset: "resetovat"
         none: "žádný"
+        save: "uložit"
+        cancel: "zrušit"
       site_settings:
         title: "Nastavení"
         no_results: "Nenalezeny žádné výsledky."

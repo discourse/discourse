@@ -14,7 +14,6 @@ fi:
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
-      no_automation_yet: Et ole vielä luonut automaatioita.
       edit_automation:
         trigger_section:
           forced: Tämä triggeri on skriptin pakottama.

@@ -1183,7 +1183,7 @@ pt:
       ignored_users: "Ignorados"
       ignored_users_instructions: "Suprimir todos os posts, notificações e mensagens pessoais destes utilizadores."
       tracked_topics_link: "Exibir"
-      automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final."
+      automatically_unpin_topics: "Desafixar tópicos automaticamente quando eu chegar ao final"
       apps: "Aplicações"
       revoke_access: "Rescindir Acesso"
       undo_revoke_access: "Cancelar Rescissão de Acesso"
@@ -1374,7 +1374,6 @@ pt:
         action: "Clique aqui para ativar a sua conta"
         already_done: "Pedimos desculpa, esta hiperligação de confirmação já não está válida. Talvez a sua conta já esteja ativa?"
         please_continue: "A sua nova conta foi confirmada; será redirecionado para a página principal."
-        continue_button: "Continuar para %{site_name}"
         welcome_to: "Bem-vindo a %{site_name}!"
         approval_required: "Um moderador tem que aprovar a sua conta antes de poder aceder a este fórum. Irá receber um email quando a sua conta for aprovada!"
       name:
@@ -1748,7 +1747,6 @@ pt:
     search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
       header_title: "Bem-vindo!"
-      subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
       title: "Inscrever-se"
       failed: "Ocorreu algo de errado, este e-mail já pode estar registado. Tente utilizar a hiperligação \"Esqueci-me da Palavra-passe\"."
@@ -1785,7 +1783,6 @@ pt:
       confirm_button: Concluir o Login
     login:
       header_title: "Bem-vindo de volta"
-      subheader_title: "Faça login na sua conta"
       title: "Iniciar Sessão"
       username: "Utilizador"
       password: "Palavra-passe"
@@ -3922,6 +3919,7 @@ pt:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nome"
           optional: "(opcional)"
           update: "Atualização"
           saved: "guardado!"
@@ -4726,6 +4724,8 @@ pt:
         history: "Ver histórico de alterações"
         reset: "repor"
         none: "nenhuma"
+        save: "guardar"
+        cancel: "cancelar"
       site_settings:
         title: "Configurações"
         no_results: "Não foi encontrado nenhum resultado."

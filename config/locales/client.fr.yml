@@ -1334,7 +1334,7 @@ fr:
       ignored_users: "Ignorés"
       ignored_users_instructions: "Ignorer tous les messages, notifications et messages directs provenant de ces utilisateurs."
       tracked_topics_link: "Afficher"
-      automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste."
+      automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste"
       apps: "Applications"
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
@@ -1651,7 +1651,7 @@ fr:
         action: "Cliquez ici pour activer votre compte"
         already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
         please_continue: "Votre nouveau compte est confirmé. Vous allez être redirigé(e) vers la page d'accueil."
-        continue_button: "Continuer vers %{site_name}"
+        continue_button: "Terminer!"
         welcome_to: "Bienvenue sur %{site_name} !"
         approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous puissiez accéder au forum. Vous recevrez un e-mail lorsque que votre compte sera approuvé !"
       name:
@@ -2144,7 +2144,6 @@ fr:
     search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
-      subheader_title: "Créons votre compte"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
       title: "S'inscrire"
       failed: "Un problème est survenu. Cette adresse e-mail est peut-être déjà enregistrée. Essayez le lien d'oubli du mot de passe."
@@ -2186,7 +2185,6 @@ fr:
       confirm_button: Complétez la connexion
     login:
       header_title: "Ravi de vous revoir"
-      subheader_title: "Connectez-vous à votre compte"
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
@@ -2286,7 +2284,6 @@ fr:
       success: "Votre compte a été créé et vous êtes maintenant connecté(e)."
       name_label: "Nom"
       password_label: "Mot de passe"
-      existing_user_can_redeem: "Valider votre invitation à participer à un sujet ou à un groupe."
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:
@@ -5216,37 +5213,19 @@ fr:
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            Nom du contact principal responsable de ce site. Utilisé pour les notifications critiques et également affiché sur /about. Visible pour les utilisateurs anonymes sur les sites publics.
           contact_email: "Adresse e-mail du contact"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            Adresse e-mail de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page /about pour les questions urgentes. Visible par les utilisateurs anonymes sur les sites publics.
           contact_url: "URL de contact"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            Adresse URL de contact pour ce site. Lorsqu'elle est présente, elle remplace l'adresse e-mail du contact sur la page /about et est visible par les utilisateurs anonymes sur les sites publics.
           site_contact_name: "Nom du contact du site"
-          site_contact_name_help: |
-            Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé.
           site_contact_group: "Groupe de contact du site"
-          site_contact_group_help: |
-            Nom valide d'un groupe qui est invité à participer à tous les messages privés envoyés automatiquement.
           your_organization: "Votre organisation"
-          company_name: "Nom de l'entreprise"
-          company_name_placeholder: "Entreprise d'exemple Inc."
-          company_name_help: |
-            Nom de votre entreprise ou organisation.
+          company_name: "Nom"
+          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
           governing_law: "Droit applicable"
-          governing_law_placeholder: "État de New York"
-          governing_law_help: |
-            Précisez la juridiction qui régit les aspects juridiques du site, y compris les conditions d'utilisation et l'avis de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités.
           city_for_disputes: "Ville pour les litiges"
-          city_for_disputes_placeholder: "Ville de New York"
-          city_for_disputes_help: |
-            Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum.
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -5289,6 +5268,7 @@ fr:
             move_up: "Déplacer vers le haut"
             move_down: "Déplacer vers le bas"
         look_and_feel:
+          title: "Apparence"
           themes:
             title: "Thèmes"
       plugins:
@@ -6509,6 +6489,8 @@ fr:
         history: "Afficher l'historique des modifications"
         reset: "rétablir"
         none: "aucun"
+        save: "enregistrer"
+        cancel: "annuler"
       site_settings:
         emoji_list:
           invalid_input: "La liste des émojis ne doit contenir que des noms d'émojis valides (p. ex., câlins)"

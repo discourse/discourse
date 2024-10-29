@@ -2040,6 +2040,7 @@ sr:
             title: "Sigurnosne kopije"
       config_areas:
         about:
+          company_name: "Ime foruma"
           saved: "sačuvano!"
         flags:
           description: "Opis"
@@ -2538,6 +2539,8 @@ sr:
         show_overriden: "Pokazuj samo promenjeno"
         reset: "resetuj"
         none: "ništa"
+        save: "sačuvaj"
+        cancel: "otkaži"
       site_settings:
         title: "Podešavanja"
         no_results: "Nema pronađenih rezultata."
