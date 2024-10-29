@@ -117,6 +117,21 @@ export default class TopicTimelineScrollArea extends Component {
     this.dockCheck();
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.site.desktopView) {
+      this.intersectionObserver?.disconnect();
+      this.intersectionObserver = null;
+
+      this.appEvents.off("composer:opened", this.calculatePosition);
+      this.appEvents.off("composer:resized", this.calculatePosition);
+      this.appEvents.off("composer:closed", this.calculatePosition);
+      this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
+      this.appEvents.off("post-stream:posted", this.calculatePosition);
+    }
+  }
+
   get displaySummary() {
     return (
       this.siteSettings.summary_timeline_button &&
@@ -446,21 +461,6 @@ export default class TopicTimelineScrollArea extends Component {
 
   scrollareaRemaining() {
     return this.scrollareaHeight - SCROLLER_HEIGHT;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this.site.desktopView) {
-      this.intersectionObserver?.disconnect();
-      this.intersectionObserver = null;
-
-      this.appEvents.off("composer:opened", this.calculatePosition);
-      this.appEvents.off("composer:resized", this.calculatePosition);
-      this.appEvents.off("composer:closed", this.calculatePosition);
-      this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
-      this.appEvents.off("post-stream:posted", this.calculatePosition);
-    }
   }
 
   _percentFor(topic, postIndex) {
