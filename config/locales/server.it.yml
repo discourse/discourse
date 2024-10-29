@@ -2054,7 +2054,6 @@ it:
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento di Informativa sulla Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     log_anonymizer_details: "Indica se mantenere i dati di un utente nel registro dopo l'anonimizzazione."
-    display_eu_visitor_stats: "Mostra il numero di visitatori globali e dell'UE nella pagina /about."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può pubblicare un collegamento allo stesso host all'interno dei messaggi `newuser_spam_host_threshold` prima di essere considerato spam."
     allowed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso attribuito ai Mi piace dello staff (i \"Mi piace\" non dati dallo staff hanno un peso 1.)"

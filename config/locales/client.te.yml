@@ -1255,7 +1255,6 @@ te:
       ignored_users: "విస్మరించబడిన"
       ignored_users_instructions: "ఈ సభ్యుల నుండి అన్ని పోస్ట్‌లు, నోటిఫికేషన్‌లు మరియు సందేశాలను అణచివేయండి."
       tracked_topics_link: "చూపించండి"
-      automatically_unpin_topics: "నేను దిగువకు చేరుకున్నప్పుడు విషయాలను స్వయంచాలకంగా అన్‌పిన్ చేయండి."
       apps: "యాప్‌లు"
       revoke_access: "యాక్సెస్‌ని రద్దు చేయండి"
       undo_revoke_access: "యాక్సెస్‌ ఉపసంహరణ ని రద్దు చేయండి"
@@ -1512,7 +1511,6 @@ te:
         action: "మీ ఖాతాను సక్రియం చేయడానికి ఇక్కడ క్లిక్ చేయండి"
         already_done: "క్షమించాలి. ఖాతా ధృవపరుచు లంకె కాలాతీతమైంది. బహుశా మీ ఖాతా ఇప్పటికే చేతనమై ఉందేమో?"
         please_continue: "మీ ఖాతా ధృవపర్చబడింది. మీరిప్పుడు తొలిపుటకు మళ్లించబడతారు."
-        continue_button: "%{site_name} కు కొనసాగండి"
         welcome_to: "%{site_name} కు సుస్వాగతం!"
         approval_required: "ఈ ఫోరమ్ మీరు వాడేముందు ఒక నిర్వాహకుడు మీ ఖాతాను అంగీకరించాలి. మీ ఖాతా అంగీకరించగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
       name:
@@ -1951,7 +1949,6 @@ te:
     search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
       header_title: "స్వాగతం!"
-      subheader_title: "మీ ఖాతాను సృష్టిద్దాం"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
       title: "సైన్ అప్"
       failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
@@ -1993,7 +1990,6 @@ te:
       confirm_button: లాగిన్ ముగించండి
     login:
       header_title: "తిరిగి స్వాగతం"
-      subheader_title: "మీ ఖాతాకు లాగిన్ చేయండి"
       title: "లాగిన్"
       username: "సభ్యుడు"
       password: "సంకేతపదం"
@@ -2088,7 +2084,6 @@ te:
       success: "మీ ఖాతా సృష్టించబడింది మరియు మీరు ఇప్పుడు లాగిన్ అయ్యారు."
       name_label: "పేరు"
       password_label: "సంకేతపదం"
-      existing_user_can_redeem: "ఒక విషయం లేదా సమూహానికి మీ ఆహ్వానాన్ని రీడీమ్ చేయండి."
     password_reset:
       continue: "%{site_name} కు కొనసాగండి"
     emoji_set:
@@ -4886,10 +4881,9 @@ te:
           header: "మీ సైట్ గురించి"
           community_name: "సంఘం పేరు"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          site_contact_group_help: |
-            స్వయంచాలకంగా పంపబడిన అన్ని ప్రైవేట్ సందేశాలకు ఆహ్వానించబడిన సమూహం యొక్క చెల్లుబాటు అయ్యే పేరు.
           your_organization: "మీ సంస్థ"
-          company_name: "కంపెనీ పేరు"
+          company_name: "పేరు"
+          company_name_placeholder: "ఆక్మే సంస్థ"
           governing_law: "పాలక చట్టం"
           city_for_disputes: "వివాదాలకు నగరం"
           optional: "(ఐచ్ఛికం)"
@@ -4910,6 +4904,7 @@ te:
             topic: "విషయాలు"
             post: "టపాలు"
         look_and_feel:
+          title: "రూపం మరియు అనుభూతి"
           themes:
             title: "థీమ్స్"
       plugins:
@@ -6077,6 +6072,8 @@ te:
         history: "మార్పు చరిత్రను వీక్షించండి"
         reset: "రీసెట్"
         none: "ఏదీకాదు"
+        save: "సేవ్ చేయండి"
+        cancel: "రద్దు చేయండి"
       site_settings:
         emoji_list:
           invalid_input: "ఎమోజి జాబితాలో చెల్లుబాటు అయ్యే ఎమోజి పేర్లు మాత్రమే ఉండాలి, ఉదా: hugs"

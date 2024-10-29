@@ -42,7 +42,6 @@
     />
     <TopicAdminMenu
       @topic={{@model}}
-      @addKeyboardTargetClass={{true}}
       @toggleMultiSelect={{@toggleMultiSelect}}
       @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
       @deleteTopic={{@deleteTopic}}
@@ -179,16 +178,9 @@
         @showFullTitle={{false}}
         @appendReason={{false}}
         @showCaret={{false}}
-        @placement="bottom-end"
       />
-      {{#if @mobileView}}
-        <TopicAdminMenu
-          @topic={{@model}}
-          @addKeyboardTargetClass={{true}}
-          @openUpwards={{true}}
-        />
-      {{/if}}
     {{/if}}
+
     <PluginOutlet
       @name="timeline-footer-controls-after"
       @outletArgs={{hash model=@model fullscreen=@fullscreen}}

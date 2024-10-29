@@ -14,7 +14,8 @@ sk:
       select_trigger: Vyberte spúšťač
       confirm_automation_reset: Táto akcia resetuje možnosti skriptu a spúšťača, nový stav sa uloží, chcete pokračovať?
       confirm_automation_trigger: Táto akcia spustí automatizáciu, chcete pokračovať?
-      no_automation_yet: Zatiaľ ste nevytvorili žiadnu automatizáciu.
+      no_automation_yet: Zatiaľ ste nevytvorili žiadne automatizácie. Vyberte si niektorú z možností nižšie a začnite.
+      filter_placeholder: Filtrovanie podľa názvu alebo popisu...
       edit_automation:
         trigger_section:
           forced: Tento spúšťač je vynútený skriptom.
@@ -392,6 +393,7 @@ sk:
           fields:
             custom_field_name:
               label: "Názov vlastného poľa používateľa"
+      unnamed_automation: "Nemenovaná automatizácia"
       models:
         script:
           name:

@@ -43,11 +43,11 @@ lv:
       tiny:
         half_a_minute: "< 1 m"
         less_than_x_seconds:
-          zero: "< 0 s"
+          zero: "< %{count} s"
           one: "< %{count} s"
           other: "< %{count} s"
         x_seconds:
-          zero: "0 s"
+          zero: "%{count} s"
           one: "%{count} s"
           other: "%{count} s"
         less_than_x_minutes:
@@ -55,68 +55,68 @@ lv:
           one: "< %{count} m"
           other: "< %{count} m"
         x_minutes:
-          zero: "0 m"
+          zero: "%{count} m"
           one: "%{count} m"
           other: "%{count} m"
         about_x_hours:
-          zero: "0 h"
+          zero: "%{count} h"
           one: "%{count} h"
           other: "%{count} h"
         x_days:
-          zero: "0 d"
+          zero: "%{count} d"
           one: "%{count} d"
           other: "%{count} d"
         about_x_years:
-          zero: "0 g"
+          zero: "%{count} g"
           one: "%{count} g"
           other: "%{count} g"
         over_x_years:
-          zero: "> 0 g"
+          zero: "> %{count} g"
           one: "> %{count} g"
           other: "> %{count} g"
         almost_x_years:
-          zero: "0 g"
+          zero: "%{count} g"
           one: "%{count} g"
           other: "%{count} g"
         date_month: "MMM D"
         date_year: "MMM YYYY"
       medium:
         x_minutes:
-          zero: "0 minūtes"
+          zero: "%{count} minūtes"
           one: "%{count} minūtes"
           other: "%{count} minūtes"
         x_hours:
-          zero: "0 stundas"
+          zero: "%{count} stundas"
           one: "%{count} stunda"
           other: "%{count} stundas"
         x_days:
-          zero: "0 dienas"
+          zero: "%{count} dienas"
           one: "%{count} diena"
           other: "%{count} dienas"
       medium_with_ago:
         x_minutes:
-          zero: "pirms 0 minūtēm"
+          zero: "pirms %{count} minūtēm"
           one: "pirms %{count} minūtes"
           other: "pirms %{count} minūtēm"
         x_hours:
-          zero: "pirms 0 stundām"
+          zero: "pirms %{count} stundām"
           one: "pirms %{count} stundas"
           other: "pirms %{count} stundām"
         x_days:
-          zero: "pirms 0 dienām"
+          zero: "pirms %{count} dienām"
           one: "pirms %{count} dienas"
           other: "pirms %{count} dienām"
       later:
         x_days:
-          zero: "pēc 0 dienām"
+          zero: "pēc %{count} dienām"
           one: "pēc %{count} dienas"
           other: "pēc %{count} dienām"
         x_months:
-          zero: "pēc 0 mēnešiem"
+          zero: "pēc %{count} mēnešiem"
           one: "pēc %{count} mēneša"
           other: "pēc %{count} mēnešiem"
         x_years:
-          zero: "pēc 0 gadiem"
+          zero: "pēc %{count} gadiem"
           one: "pēc %{count} gada"
           other: "pēc %{count} gadiem"
       previous_month: "Iepriekšējais mēnesis"
@@ -1026,7 +1026,7 @@ lv:
       ignored_users: "Ignorēts"
       ignored_users_instructions: "Apspiest visas šo lietotāju ziņas, paziņojumus un PM."
       tracked_topics_link: "Parādīt"
-      automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas."
+      automatically_unpin_topics: "Automātiski atspraust tēmas, kad sasniedzu beigas"
       apps: "Lietotnes"
       revoke_access: "Liegt piekļuvi"
       undo_revoke_access: "Atcelt piekļuves liegšanu"
@@ -1199,7 +1199,6 @@ lv:
         revoke: "Atsaukt"
         cancel: "Atcelt"
       activate_account:
-        continue_button: "Turpināt %{site_name}"
         welcome_to: "Laipni lūdzam %{site_name}!"
       name:
         title: "Vārds"
@@ -1518,7 +1517,6 @@ lv:
     search_hint: "lietotājvārds, e-pasts vai IP adrese"
     create_account:
       header_title: "Sveicināti!"
-      subheader_title: "Izveidosim jūsu kontu"
       disclaimer: "Reģistrējoties jūs piekrītat <a href='%{privacy_link}' target='blank'>privātuma politikas</a> un <a href='%{tos_link}' target='blank'>pakalpojumu sniegšanas noteikumiem</a>."
       title: "Reģistrēties"
       failed: "Notika neparedzēta kļūda; varbūt šis e-pasts ir jau reģistrēts, pamēģiniet izmantot \"aizmirsu paroli\""
@@ -1556,7 +1554,6 @@ lv:
       confirm_button: Pabeigt pieteikšanos
     login:
       header_title: "Laipni lūdzam"
-      subheader_title: "Ielogojieties savā kontā"
       title: "Ienākt"
       username: "Lietotājs"
       password: "Parole"
@@ -3041,6 +3038,7 @@ lv:
             title: "Dublējums (Backups)"
       config_areas:
         about:
+          company_name: "Vārds"
           optional: "(pēc izvēles)"
           saved: "saglabāts!"
         flags:
@@ -3665,6 +3663,8 @@ lv:
         show_overriden: "Rādīt tikai aizstātos"
         reset: "atiestatīt"
         none: "nekas"
+        save: "saglabāt"
+        cancel: "atcelt"
       site_settings:
         title: "Iestatījumi"
         no_results: "Nekas nav atrasts."

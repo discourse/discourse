@@ -510,6 +510,17 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       }.to raise_error(Discourse::InvalidParameters)
     end
+
+    it "allows plugin to register valid areas" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_site_setting_area("plugin_area")
+      settings.setting(:test_plugin_setting, 88, area: "plugin_area")
+      expect(
+        settings
+          .all_settings(filter_area: "plugin_area", include_locale_setting: false)
+          .map { |s| s[:setting].to_sym },
+      ).to eq(%i[test_plugin_setting])
+    end
   end
 
   describe "setting with a validator" do

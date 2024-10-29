@@ -14,7 +14,6 @@ nl:
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
-      no_automation_yet: Je hebt nog geen automatiseringen gemaakt.
       edit_automation:
         trigger_section:
           forced: Deze trigger wordt geforceerd door een script.

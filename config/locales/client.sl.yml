@@ -1185,7 +1185,7 @@ sl:
       ignored_users: "Prezrti"
       ignored_users_instructions: "Skrij vse objave, obvestila in ZS od teh uporabnikov."
       tracked_topics_link: "Prikaži"
-      automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek."
+      automatically_unpin_topics: "Samodejno odpni temo, ko preberem zadnji prispevek"
       apps: "Aplikacije"
       revoke_access: "Prekliči dostop"
       undo_revoke_access: "Razveljavi preklic dostopa"
@@ -1373,7 +1373,7 @@ sl:
           generic: "Vaš %{provider} račun bo uporabljen za preverjanje pristnosti."
       activate_account:
         please_continue: "Vaš nov uporabniški račun je potrjen - preusmerjeni boste na začetno stran."
-        continue_button: "Nadaljujte na %{site_name}"
+        continue_button: "Končaj!"
         welcome_to: "Dobrodošli na %{site_name}!"
         approval_required: "Moderator mora ročno potrditi vaš nov uporabniški račun da boste lahko dostopali do foruma. Ko bo račun potrjen boste prejeli e-sporočilo."
       name:
@@ -1768,7 +1768,6 @@ sl:
     search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
       header_title: "Dobrodošli!"
-      subheader_title: "Ustvarimo vaš račun"
       disclaimer: "Z registracijo sprejemate <a href='%{privacy_link}' target='blank'>Pravilnik o zasebnosti</a> in <a href='%{tos_link}' target='blank'>Pogoje uporabe</a>."
       title: "Registracija"
       failed: "Nekaj je šlo narobe, morda je ta e-naslov že registriran, poskusite povezavo za pozabljeno geslo."
@@ -1808,7 +1807,6 @@ sl:
       logging_in_as: Prijava kot %{email}
       confirm_button: Zaključi prijavo
     login:
-      subheader_title: "Prijavite se v svoj račun"
       title: "Vpis"
       username: "Uporabnik"
       password: "Geslo"
@@ -3963,6 +3961,7 @@ sl:
             title: "Varnostne kopije"
       config_areas:
         about:
+          company_name: "Ime"
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:
@@ -4594,6 +4593,8 @@ sl:
         history: "Ogled zgodovine sprememb"
         reset: "ponastavi"
         none: "brez"
+        save: "shrani"
+        cancel: "prekliči"
       site_settings:
         title: "Nastavitve"
         no_results: "Iskanje nima zadetkov."

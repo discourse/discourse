@@ -14,7 +14,6 @@ hu:
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
-      no_automation_yet: Még nem hozott létre automatizálást.
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
