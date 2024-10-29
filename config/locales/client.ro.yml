@@ -169,16 +169,16 @@ ro:
       post: "articol #%{postNumber} de @%{username}"
       close: "închide"
       twitter: "Distribuie pe Twitter"
-      facebook: "Distribuie pe Facebook"
-      email: "Trimite prin e-mail"
-      url: "Copiază și distribuie URL"
+      facebook: "Partajează pe Facebook"
+      email: "Trimite prin email"
+      url: "Copiază și partajează URL"
     word_connector:
       comma: ", "
       last_item: "și"
     action_codes:
       public_topic: "A făcut acest subiect public %{when}"
       open_topic: "A convertit aceasta într-un subiect %{when}"
-      private_topic: "Fă acest subiect un mesaj personal %{when}"
+      private_topic: "A transformat acest subiect într-un mesaj personal %{when}"
       split_topic: "A împărțit acest subiect %{when}"
       invited_user: "A invitat pe %{who} %{when}"
       invited_group: "A invitat pe %{who} %{when}"
@@ -2809,8 +2809,8 @@ ro:
     post_links:
       about: "afișează mai multe link-uri din această postare"
       title:
-        one: "mai e %{count}"
-        few: "mai sunt %{count}"
+        one: "încă %{count}"
+        few: "încă %{count}"
         other: "încă %{count}"
     topic_statuses:
       warning:
@@ -3609,7 +3609,7 @@ ro:
         menu:
           backups: "Copii de siguranță"
           logs: "Rapoarte"
-        none: "Niciun backup disponibil."
+        none: "Nicio copie de siguranță disponibilă."
         read_only:
           enable:
             title: "Activează modul exclusiv-citire"
@@ -3639,12 +3639,12 @@ ro:
           download:
             label: "Descărcare"
             title: "Trimite email cu link de descărcare"
-            alert: "Un link pentru descărcarea acestei copii de rezervă ți-a fost trimis pe email."
+            alert: "O legătură pentru descărcarea acestei copii de siguranță ți-a fost trimis pe email."
           destroy:
             title: "Șterge backup-ul"
             confirm: "Ești sigur că vrei să ștergi acest backup?"
           restore:
-            is_disabled: "Restabilirea este dezactivată din setările site-ului."
+            is_disabled: "Restaurarea este dezactivată din setările site-ului."
             label: "Restabilire"
             title: "Restabilire din backup"
             confirm: "Ești sigur că vrei să restaurezi acest backup?"

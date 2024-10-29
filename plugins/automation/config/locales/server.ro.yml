@@ -14,7 +14,7 @@ ro:
         title: Creează un subiect
         description: Creează un subiect în numele unui anumit utilizator
       pin_topic:
-        title: Fixează subiectul
+        title: Fixează subiect
       close_topic:
         title: Închide subiect
       append_last_checked_by:

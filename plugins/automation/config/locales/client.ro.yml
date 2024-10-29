@@ -10,7 +10,7 @@ ro:
       create: Creează
       fields:
         user:
-          label: Utilizatori
+          label: Utilizator
         pm:
           title:
             label: Titlu
@@ -41,7 +41,7 @@ ro:
             minute: minut
             hour: oră
             day: zi
-            week: săptămană
+            week: săptămână
             month: lună
             year: an
           fields:
@@ -56,7 +56,7 @@ ro:
         topic:
           fields:
             restricted_topic:
-              label: ID discuție
+              label: ID subiect
         post_created_edited:
           fields:
             restricted_category:
@@ -96,7 +96,7 @@ ro:
               label: Creator
               updated_user_context: Utilizatorul actualizat
             topic:
-              label: ID discuție
+              label: ID subiect
         topic:
           fields:
             creator:
@@ -127,23 +127,23 @@ ro:
         suspend_user_by_email:
           fields:
             actor:
-              label: Utilizatori
+              label: Utilizator
         pin_topic:
           fields:
             pinnable_topic:
-              label: ID discuție
+              label: ID subiect
         banner_topic:
           fields:
             topic_id:
-              label: ID discuție
+              label: ID subiect
             user:
-              label: Utilizatori
+              label: Utilizator
         close_topic:
           fields:
             topic:
-              label: ID discuție
+              label: ID subiect
             user:
-              label: Utilizatori
+              label: Utilizator
       models:
         trigger:
           name:
