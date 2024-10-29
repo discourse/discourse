@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { or } from "truth-helpers";
 
 export default class PostMenuButtonWrapper extends Component {
@@ -8,6 +10,11 @@ export default class PostMenuButtonWrapper extends Component {
     }
 
     return this.args.buttonConfig.shouldRender(this.args);
+  }
+
+  @action
+  sharedBehaviorOnClick(event) {
+    event.currentTarget?.blur();
   }
 
   <template>
@@ -20,6 +27,7 @@ export default class PostMenuButtonWrapper extends Component {
         @post={{@post}}
         @shouldRender={{this.shouldRender}}
         @showLabel={{@showLabel.showLabel this.args}}
+        {{on "click" this.sharedBehaviorOnClick}}
       />
     {{/if}}
   </template>
