@@ -16,22 +16,14 @@ export default class extends DiscourseRoute {
       if (transition.from) {
         // when navigating from another ember route
         transition.abort();
-        if (this.currentUser.can_invite_to_forum) {
-          this.openInviteModal();
-        } else {
-          this.dialog.alert(I18n.t("user.invited.cannot_invite_to_forum"));
-        }
+        this.#openInviteModalIfAllowed();
       } else {
         // when landing on this route from a full page load
         this.router
           .replaceWith("discovery.latest")
           .followRedirects()
           .then(() => {
-            if (this.currentUser.can_invite_to_forum) {
-              this.openInviteModal();
-            } else {
-              this.dialog.alert(I18n.t("user.invited.cannot_invite_to_forum"));
-            }
+            this.#openInviteModalIfAllowed();
           });
       }
     } else {
@@ -40,9 +32,13 @@ export default class extends DiscourseRoute {
     }
   }
 
-  openInviteModal() {
+  #openInviteModalIfAllowed() {
     next(() => {
-      this.modal.show(CreateInvite, { model: { invites: [] } });
+      if (this.currentUser.can_invite_to_forum) {
+        this.modal.show(CreateInvite, { model: { invites: [] } });
+      } else {
+        this.dialog.alert(I18n.t("user.invited.cannot_invite_to_forum"));
+      }
     });
   }
 }
