@@ -59,12 +59,12 @@
         (component
           this.reviewableComponent reviewable=this.reviewable tagName=""
         )
-        as |reviewableComponent|
+        as |ReviewableComponent|
       }}
         {{! template-lint-disable no-shadowed-elements }}{{! (seems to be a false positive) }}
-        <reviewableComponent>
+        <ReviewableComponent>
           <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
-        </reviewableComponent>
+        </ReviewableComponent>
       {{/let}}
     {{/if}}
   </div>
