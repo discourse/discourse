@@ -116,7 +116,7 @@ export default class GlobalNotice extends Component {
       );
     }
 
-    if (this.router.currentRoute.queryParams.preview_theme_id) {
+    if (this.router.currentRoute.queryParams?.preview_theme_id) {
       notices.push(
         Notice.create({
           text: I18n.t("theme_preview_notice"),
