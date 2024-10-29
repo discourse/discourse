@@ -119,7 +119,6 @@
     "./plugins/styleguide/test/javascripts"
   ],
   "exclude": [
-    "**/*.hbs",
     "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
     "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs",
   ],
@@ -128,5 +127,6 @@
       "ember-loose",
       "ember-template-imports"
     ]
+    "checkStandaloneTemplates": false
   }
 }
