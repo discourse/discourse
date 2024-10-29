@@ -32,6 +32,11 @@ export default class ThemesGrid extends Component {
 
     // Show default theme at the top of the list on page load,
     // but don't move it around dynamically if the admin changes the default.
+    //
+    // TODO (martin) Figure out how to make it so we can sort default to the
+    // top but also allow the list of themes to change if an additional theme is
+    // installed. Basically don't want .get("default") to affect the sort after
+    // the first time, but if the whole array changes this needs to be recalculated.
     this.sortedThemes = this.args.themes.sort((a, b) => {
       if (a.get("default")) {
         return -1;
@@ -43,7 +48,7 @@ export default class ThemesGrid extends Component {
 
   <template>
     <div class="themes-cards-container">
-      {{#each this.sortedThemes as |theme|}}
+      {{#each @themes as |theme|}}
         <ThemesGridCard @theme={{theme}} @allThemes={{@themes}} />
       {{/each}}
     </div>

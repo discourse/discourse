@@ -5931,6 +5931,7 @@ en:
           set_default_theme: "Set default"
           default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
+          install_success: "%{theme} installed successfully!"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
