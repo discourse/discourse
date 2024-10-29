@@ -42,7 +42,6 @@
     />
     <TopicAdminMenu
       @topic={{@model}}
-      @addKeyboardTargetClass={{true}}
       @toggleMultiSelect={{@toggleMultiSelect}}
       @showTopicSlowModeUpdate={{@showTopicSlowModeUpdate}}
       @deleteTopic={{@deleteTopic}}
@@ -179,14 +178,9 @@
         @showFullTitle={{false}}
         @appendReason={{false}}
         @showCaret={{false}}
-        @placement="bottom-end"
       />
       {{#if @mobileView}}
-        <TopicAdminMenu
-          @topic={{@model}}
-          @addKeyboardTargetClass={{true}}
-          @openUpwards={{true}}
-        />
+        <TopicAdminMenu @topic={{@model}} />
       {{/if}}
     {{/if}}
     <PluginOutlet
