@@ -179,10 +179,8 @@
         @appendReason={{false}}
         @showCaret={{false}}
       />
-      {{#if @mobileView}}
-        <TopicAdminMenu @topic={{@model}} />
-      {{/if}}
     {{/if}}
+
     <PluginOutlet
       @name="timeline-footer-controls-after"
       @outletArgs={{hash model=@model fullscreen=@fullscreen}}
