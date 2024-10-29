@@ -47,7 +47,7 @@ module(
       state.topic = buildTopic.call(this, { level: 1 });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{state.topic}} />
+        <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
       </template>);
 
       assert.strictEqual(
@@ -74,7 +74,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert.strictEqual(
@@ -89,7 +89,7 @@ module(
       const topic = buildTopic.call(this, { level: 2 });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -105,7 +105,7 @@ module(
       state.topic = buildTopic.call(this, { level: 2 });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{state.topic}} />
+        <TopicNotificationsButton @topic={{state.topic}} @expanded={{true}} />
       </template>);
 
       state.topic = buildTopic.call(this, { level: 3, reason: 999 });
@@ -128,7 +128,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -148,7 +148,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -168,7 +168,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -188,7 +188,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -208,7 +208,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
@@ -228,7 +228,7 @@ module(
       });
 
       await render(<template>
-        <TopicNotificationsButton @topic={{topic}} />
+        <TopicNotificationsButton @topic={{topic}} @expanded={{true}} />
       </template>);
 
       assert
