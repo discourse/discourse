@@ -84,12 +84,31 @@ class UserBadgesController < ApplicationController
     return render json: failed_json, status: 403 unless can_assign_badge_to_user?(user)
 
     badge = fetch_badge_from_params
-    if params[:reason].present? && !is_badge_reason_valid?(params[:reason])
-      return(
-        render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")),
-               status: 400
-      )
+    post_id = nil
+
+    if params[:reason].present?
+      unless is_badge_reason_valid? params[:reason]
+        return(
+          render json: failed_json.merge(message: I18n.t("invalid_grant_badge_reason_link")),
+                 status: 400
+        )
+      end
+
+      if route = Discourse.route_for(params[:reason])
+        if route[:controller] == "topics" && route[:action] == "show"
+          topic_id = (route[:id] || route[:topic_id]).to_i
+          post_number = route[:post_number] || 1
+          post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
+        end
+      end
     end
+
+    grant_opts_from_params =
+      DiscoursePluginRegistry.apply_modifier(
+        :badge_grant_opts,
+        { granted_by: current_user, post_id: post_id },
+      )
+
     user_badge = BadgeGranter.grant(badge, user, grant_opts_from_params)
 
     render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
@@ -125,24 +144,6 @@ class UserBadgesController < ApplicationController
       is_favorite: !user_badge.is_favorite,
     )
     UserBadge.update_featured_ranks!(user_badge.user_id)
-  end
-
-  protected
-
-  def grant_opts_from_params
-    post_id = nil
-
-    if params[:reason].present?
-      if route = Discourse.route_for(params[:reason])
-        if route[:controller] == "topics" && route[:action] == "show"
-          topic_id = (route[:id] || route[:topic_id]).to_i
-          post_number = route[:post_number] || 1
-          post_id = Post.find_by(topic_id: topic_id, post_number: post_number)&.id if topic_id > 0
-        end
-      end
-    end
-
-    { granted_by: current_user, post_id: post_id }
   end
 
   private
