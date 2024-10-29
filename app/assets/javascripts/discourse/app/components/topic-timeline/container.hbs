@@ -173,12 +173,7 @@
     {{/if}}
 
     {{#if this.currentUser}}
-      <TopicNotificationsButton
-        @topic={{@model}}
-        @showFullTitle={{false}}
-        @appendReason={{false}}
-        @showCaret={{false}}
-      />
+      <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
     {{/if}}
 
     <PluginOutlet
