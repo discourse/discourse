@@ -219,16 +219,15 @@ export default class CreateAccount extends Component.extend(
 
   @action
   showPasswordValidation() {
-    this.set("passwordValidationVisible", Boolean(this.passwordValidation.reason));
+    this.set(
+      "passwordValidationVisible",
+      Boolean(this.passwordValidation.reason)
+    );
   }
 
   @action
   checkEmailAvailability() {
-    if (this.emailValidation.reason) {
-      this.set("emailValidationVisible", true);
-    } else {
-      this.set("emailValidationVisible", false);
-    }
+    this.set("emailValidationVisible", Boolean(this.emailValidation.reason));
 
     if (
       !this.emailValidation.ok ||
