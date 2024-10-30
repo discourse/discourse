@@ -968,7 +968,7 @@ id:
       yaxis: "Hari"
       description: "Jumlah pengguna yang meningkatkan Trust Level mereka selama periode ini."
     consolidated_page_views:
-      title: "Tampilan Halaman Terkonsolidasi"
+      title_legacy: "Tampilan Halaman Terkonsolidasi"
       xaxis:
         page_view_crawler: "Perayap"
         page_view_anon: "Pengguna anonim"
@@ -1102,6 +1102,9 @@ id:
       xaxis: "Hari"
     page_view_total_reqs:
       title: "Tampilan halaman"
+      xaxis: "Hari"
+      yaxis: "Total Penampilan-halaman"
+    page_view_legacy_total_reqs:
       xaxis: "Hari"
       yaxis: "Total Penampilan-halaman"
     page_view_logged_in_mobile_reqs:

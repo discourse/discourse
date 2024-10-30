@@ -1248,13 +1248,13 @@ es:
       yaxis: "Día"
       description: "Número de usuarios que aumentaron su nivel de confianza durante este período."
     consolidated_page_views:
-      title: "Vistas de página consolidadas"
+      title_legacy: "Vistas de página consolidadas"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Usuarios anónimos"
         page_view_logged_in: "Usuarios conectados"
       yaxis: "Día"
-      description: "Vistas de página de usuarios con una sesión iniciada, usuarios anónimos y crawlers."
+      description_legacy: "Vistas de página de usuarios con una sesión iniciada, usuarios anónimos y crawlers."
       labels:
         post: Publicación
         editor: Editor
@@ -1269,6 +1269,7 @@ es:
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     consolidated_page_views_browser_detection:
       title: "Páginas vistas consolidadas con detección de navegador (Experimental)"
+      title_legacy: "Páginas vistas consolidadas con detección de navegador (Experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anónimo"
         page_view_logged_in_browser: "Navegador conectado"
@@ -1427,6 +1428,9 @@ es:
       xaxis: "Día"
       yaxis: "Total de vistas de página"
       description: "Número de nuevas vistas de página de todos los visitantes."
+    page_view_legacy_total_reqs:
+      xaxis: "Día"
+      yaxis: "Total de vistas de página"
     page_view_logged_in_mobile_reqs:
       title: "Vistas de página de usuarios con una sesión iniciada"
       xaxis: "Día"
@@ -2060,7 +2064,6 @@ es:
     tos_url: "Si tienes un documento de condiciones de servicio alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     privacy_policy_url: "Si tienes un documento de política de privacidad alojado en algún otro sitio y que quieras utilizar, introduce la URL completa aquí."
     log_anonymizer_details: "Ya sea para mantener los detalles de un usuario en el registro después de ser anonimizados."
-    display_eu_visitor_stats: "Mostrar el número de visitantes globales y de la UE en la página /about."
     newuser_spam_host_threshold: "Cantidad de veces que un usuario nuevo puede publicar un enlace al mismo host dentro del «newuser_spam_host_threshold» de sus publicaciones antes de ser considerado spam."
     allowed_spam_host_domains: "Una lista de dominios que se excluyen de las pruebas de spam. A los usuarios nuevos no se les restringirá nunca la posibilidad de crear publicaciones con enlaces a estos dominios."
     staff_like_weight: "Peso que dar a los me gusta del personal (los «Me gusta» de los demás pesan 1)."

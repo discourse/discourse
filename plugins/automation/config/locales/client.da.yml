@@ -12,7 +12,6 @@ da:
       update: Opdater
       select_script: Vælg et script
       select_trigger: Vælg en udløser
-      no_automation_yet: Du har ikke oprettet nogen automatisering endnu.
       edit_automation:
         trigger_section:
           trigger_now: "Udløs nu"

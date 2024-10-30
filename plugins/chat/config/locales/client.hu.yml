@@ -50,7 +50,6 @@ hu:
       deleted_chat_username: törölt
       dates:
         yesterday: "Tegnap"
-        time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
       disabled_for_topic: "A csevegés le van tiltva ebben a témában."

@@ -985,7 +985,7 @@ ca:
       muted_users: "Silenciat"
       ignored_users: "Ignorat"
       tracked_topics_link: "Mostra"
-      automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final."
+      automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final"
       apps: "Aplicacions"
       revoke_access: "Revoca l'accés"
       undo_revoke_access: "Desfés revocar l'accés"
@@ -1145,7 +1145,7 @@ ca:
         action: "Feu clic aquí per a activar el vostre compte"
         already_done: "Aquest enllaç ja no és vàlid per a confirmar el compte. Potser el vostre compte ja és actiu?"
         please_continue: "El vostre nou compte està confirmat; us redirigirem a la pàgina principal."
-        continue_button: "Continua a %{site_name}"
+        continue_button: "Acaba!"
         welcome_to: "Benvingut a %{site_name}!"
         approval_required: "Cal que un moderador aprovi manualment el vostre nou compte abans no pugueu accedir al fòrum. Rebreu un correu quan el compte hagi estat aprovat!"
       name:
@@ -1284,6 +1284,9 @@ ca:
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
+        invite:
+          save_invite: "Desa"
+          cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1472,6 +1475,7 @@ ca:
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
     login:
+      title: "Inicia la sessió"
       username: "Usuari"
       password: "Contrasenya"
       show_password: "Mostra"
@@ -3263,6 +3267,7 @@ ca:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nom"
           optional: "(opcional)"
           saved: "desat!"
         flags:
@@ -3279,6 +3284,9 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        look_and_feel:
+          themes:
+            title: "Aparences"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -4138,6 +4146,8 @@ ca:
         show_overriden: "Mostra només els sobreescrits"
         reset: "restableix"
         none: "cap"
+        save: "desa"
+        cancel: "cancel·la"
       site_settings:
         title: "Configuració"
         no_results: "Sense resultats"

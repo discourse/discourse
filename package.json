@@ -5,16 +5,16 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.25.7",
+    "@babel/plugin-proposal-decorators": "^7.25.9",
     "@discourse/lint-configs": "^1.4.2",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.6.0",
-    "@glint/core": "^1.5.0",
-    "@glint/environment-ember-loose": "^1.4.1-unstable.01b8deb",
-    "@glint/environment-ember-template-imports": "^1.4.1-unstable.01b8deb",
-    "@glint/template": "^1.4.1-unstable.01b8deb",
+    "@glint/core": "^1.4.1-unstable.e45fffc",
+    "@glint/environment-ember-loose": "^1.4.1-unstable.e45fffc",
+    "@glint/environment-ember-template-imports": "^1.4.1-unstable.e45fffc",
+    "@glint/template": "^1.4.1-unstable.e45fffc",
     "@mixer/parallel-prettier": "^2.0.3",
-    "@swc/core": "^1.7.36",
+    "@swc/core": "^1.7.40",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.1.2",
@@ -24,7 +24,7 @@
     "esbuild": "^0.24.0",
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.7.22",
+    "lefthook": "^1.8.2",
     "licensee": "^11.1.0",
     "lint-to-the-future": "^2.2.0",
     "lint-to-the-future-ember-template": "^1.1.1",
@@ -34,7 +34,7 @@
     "moment-timezone": "0.5.45",
     "pikaday": "1.8.2",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^23.6.0",
+    "puppeteer-core": "^23.6.1",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "terser": "^5.36.0",
     "typescript": "^5.6.3"
@@ -80,9 +80,6 @@
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*"
       },
-      "allowAny": [
-        "@uppy/*"
-      ],
       "ignoreMissing": [
         "webpack"
       ]

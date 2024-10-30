@@ -1238,13 +1238,13 @@ fr:
       yaxis: "Jour"
       description: "Nombre d'utilisateurs ayant augmenté leur niveau de confiance au cours de cette période."
     consolidated_page_views:
-      title: "Pages vues unifiées"
+      title_legacy: "Pages vues unifiées"
       xaxis:
         page_view_crawler: "Robots d'indexation"
         page_view_anon: "Utilisateurs anonymes"
         page_view_logged_in: "Utilisateurs connectés"
       yaxis: "Jour"
-      description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
+      description_legacy: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
       labels:
         post: Message
         editor: Éditeur
@@ -1259,6 +1259,7 @@ fr:
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
     consolidated_page_views_browser_detection:
       title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
+      title_legacy: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       xaxis:
         page_view_anon_browser: "Navigateur anonyme"
         page_view_logged_in_browser: "Navigateur connecté"
@@ -1417,6 +1418,9 @@ fr:
       xaxis: "Jour"
       yaxis: "Total de pages vues"
       description: "Nombre de vues par tous les visiteurs."
+    page_view_legacy_total_reqs:
+      xaxis: "Jour"
+      yaxis: "Total de pages vues"
     page_view_logged_in_mobile_reqs:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
@@ -2050,7 +2054,6 @@ fr:
     tos_url: "Si vous disposez déjà de conditions générales d'utilisation hébergées ailleurs que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Indique s'il faut conserver les informations d'un utilisateur dans le journal après son anonymisation."
-    display_eu_visitor_stats: "Affichez le nombre de visiteurs internationaux et européens sur la page /about."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
     staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."

@@ -21,7 +21,7 @@ module Chat
       include Service::Base
 
       policy :chat_enabled
-      contract do
+      params do
         attribute :user_id, :integer
 
         validates :user_id, presence: true
@@ -48,8 +48,8 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_user(contract:)
-        User.find_by(id: contract.user_id)
+      def fetch_user(params:)
+        User.find_by(id: params.user_id)
       end
 
       def user_not_staff(user:)

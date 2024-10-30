@@ -7,19 +7,19 @@ module Chat
   # Only the thread title can be updated.
   #
   # @example
-  #  Chat::UpdateThread.call(thread_id: 88, guardian: guardian, title: "Restaurant for Saturday")
+  #  Chat::UpdateThread.call(guardian: guardian, params: { thread_id: 88, title: "Restaurant for Saturday" })
   #
   class UpdateThread
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, **params_to_edit)
-    #   @param [Integer] thread_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @option params_to_edit [String,nil] title
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :thread_id, :integer
       attribute :title, :string
 
@@ -35,8 +35,8 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
-      Chat::Thread.find_by(id: contract.thread_id)
+    def fetch_thread(params:)
+      Chat::Thread.find_by(id: params.thread_id)
     end
 
     def can_view_channel(guardian:, thread:)
@@ -51,8 +51,8 @@ module Chat
       thread.channel.threading_enabled
     end
 
-    def update(thread:, contract:)
-      thread.update(title: contract.title)
+    def update(thread:, params:)
+      thread.update(params.slice(:title))
       fail!(thread.errors.full_messages.join(", ")) if thread.invalid?
     end
 

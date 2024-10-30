@@ -9,23 +9,22 @@ module PageObjects
         @context = context
       end
 
-      def component
-        find(@context, visible: :all).native
+      def label_component
+        find(context, visible: :all).ancestor("label.d-toggle-switch__label")
       end
 
       def toggle
-        actionbuilder = page.driver.browser.action # workaround zero height button
-        actionbuilder.click(component).perform
+        label_component.click
       end
 
       def checked?
-        find(@context).has_css?(".d-toggle-switch__checkbox[aria-checked=\"true\"]", visible: false)
+        label_component.has_css?(".d-toggle-switch__checkbox[aria-checked=\"true\"]", visible: :all)
       end
 
       def unchecked?
-        find(@context).has_css?(
+        label_component.has_css?(
           ".d-toggle-switch__checkbox[aria-checked=\"false\"]",
-          visible: false,
+          visible: :all,
         )
       end
     end

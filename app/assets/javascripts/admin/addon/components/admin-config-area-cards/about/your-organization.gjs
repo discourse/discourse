@@ -58,7 +58,6 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       <form.Field
         @name="companyName"
         @title={{i18n "admin.config_areas.about.company_name"}}
-        @description={{i18n "admin.config_areas.about.company_name_help"}}
         @format="large"
         as |field|
       >

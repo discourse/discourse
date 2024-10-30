@@ -8,33 +8,35 @@ module Chat
   #
   # @example
   #  ::Chat::UpdateChannel.call(
-  #   channel_id: 2,
   #   guardian: guardian,
-  #   name: "SuperChannel",
-  #   description: "This is the best channel",
-  #   slug: "super-channel",
-  #   threading_enabled: true,
+  #   params:{
+  #     channel_id: 2,
+  #     name: "SuperChannel",
+  #     description: "This is the best channel",
+  #     slug: "super-channel",
+  #     threading_enabled: true
+  #   },
   #  )
   #
+
   class UpdateChannel
     include Service::Base
 
-    # @!method call(channel_id:, guardian:, **params_to_edit)
-    #   @param [Integer] channel_id
+    # @!method self.call(params:, guardian:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_edit
-    #   @option params_to_edit [String,nil] name
-    #   @option params_to_edit [String,nil] description
-    #   @option params_to_edit [String,nil] slug
-    #   @option params_to_edit [Boolean] threading_enabled
-    #   @option params_to_edit [Boolean] auto_join_users Only valid for {CategoryChannel}. Whether active users
-    #    with permission to see the category should automatically join the channel.
-    #   @option params_to_edit [Boolean] allow_channel_wide_mentions Allow the use of @here and @all in the channel.
+    #   @param [Hash] params
+    #   @option params [Integer] :channel_id The channel ID
+    #   @option params [String,nil] :name
+    #   @option params [String,nil] :description
+    #   @option params [String,nil] :slug
+    #   @option params [Boolean] :threading_enabled
+    #   @option params [Boolean] :auto_join_users Only valid for {CategoryChannel}. Whether active users with permission to see the category should automatically join the channel.
+    #   @option params [Boolean] :allow_channel_wide_mentions Allow the use of @here and @all in the channel.
     #   @return [Service::Base::Context]
 
     model :channel
     policy :check_channel_permission
-    contract(default_values_from: :channel) do
+    params(default_values_from: :channel) do
       attribute :name, :string
       attribute :description, :string
       attribute :slug, :string
@@ -56,16 +58,16 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:)
-      Chat::Channel.find_by(id: channel_id)
+    def fetch_channel(params:)
+      Chat::Channel.find_by(id: params[:channel_id])
     end
 
     def check_channel_permission(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel) && guardian.can_edit_chat_channel?(channel)
     end
 
-    def update_channel(channel:, contract:)
-      channel.update!(contract.attributes)
+    def update_channel(channel:, params:)
+      channel.update!(**params)
     end
 
     def mark_all_threads_as_read_if_needed(channel:)

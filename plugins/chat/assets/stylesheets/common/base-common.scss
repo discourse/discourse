@@ -26,6 +26,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   left: 0;
   background-color: rgba(0, 0, 0, 0.75);
   z-index: z("header");
+  pointer-events: none;
   &-content {
     width: max-content;
     display: flex;

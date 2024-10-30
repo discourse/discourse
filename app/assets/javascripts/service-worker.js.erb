@@ -99,7 +99,6 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-
 self.addEventListener('pushsubscriptionchange', function(event) {
   event.waitUntil(
     Promise.all(
@@ -125,6 +124,22 @@ self.addEventListener('pushsubscriptionchange', function(event) {
     )
   );
 });
+
+self.addEventListener('message', function(event) {
+  if (event.data?.action !== "primaryTab") {
+    return;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll().then(function(clients) {
+      clients.forEach(function(client) {
+        client.postMessage({
+          primaryTab: client.focused
+        });
+      });
+    })
+  );
+ });
 
 <% DiscoursePluginRegistry.service_workers.each do |js| %>
 <%=raw "#{File.read(js)}" %>

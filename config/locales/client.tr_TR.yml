@@ -27,6 +27,7 @@ tr_TR:
         millions: "%{number} Milyon"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1341,7 +1342,7 @@ tr_TR:
       ignored_users: "Yok Sayıldı"
       ignored_users_instructions: "Bu kullanıcılardan gelen tüm gönderileri, bildirimleri ve kişisel mesajları engelle."
       tracked_topics_link: "Göster"
-      automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır."
+      automatically_unpin_topics: "En alta geldiğimde tüm konuların sabitlemesini kaldır"
       apps: "Uygulamalar"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
@@ -1658,7 +1659,7 @@ tr_TR:
         action: "Hesabınızı etkinleştirmek için buraya tıklayın"
         already_done: "Üzgünüz, bu hesap onay bağlantısı artık geçerli değil. Belki de hesabınız zaten aktiftir?"
         please_continue: "Yeni hesabınız onaylandı; ana sayfaya yönlendirileceksiniz."
-        continue_button: "%{site_name} adresine devam et"
+        continue_button: "Bitir!"
         welcome_to: "%{site_name}'a hoş geldiniz!"
         approval_required: "Bu foruma erişebilmeniz için bir moderatörün yeni hesabınızı manuel olarak onaylaması gerekiyor. Hesabınız onaylandığında bir e-posta alacaksınız!"
       name:
@@ -1834,12 +1835,11 @@ tr_TR:
           success: "Davet bağlantısı başarıyla oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata oluştu"
         invite:
-          new_title: "Davet oluştur"
-          edit_title: "Daveti düzenle"
           instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın:"
-          copy_link: "bağlantıyı kopyala"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
+          copy_link: "Bağlantıyı kopyala"
+          link_copied: "Bağlantı kopyalandı!"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           restrict: "Şununla kısıtla"
@@ -1849,11 +1849,11 @@ tr_TR:
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
           invite_to_topic: "Konuya gidin"
-          expires_at: "Geçerliliğini yitireceği zaman"
-          custom_message: "İsteğe bağlı kişisel mesaj"
+          expires_after: "Geçerliliğini yitireceği zaman"
           send_invite_email: "Kaydet ve E-posta Gönder"
           send_invite_email_instructions: "Davet e-postası göndermek için e-postaya daveti kısıtla"
-          save_invite: "Daveti Kaydet"
+          save_invite: "Kaydet"
+          cancel: "İptal et"
           invite_saved: "Davet kaydedildi."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
@@ -2152,7 +2152,6 @@ tr_TR:
     search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
       header_title: "Hoş geldiniz!"
-      subheader_title: "Hesabınızı oluşturalım"
       disclaimer: "Kaydolarak, <a href='%{privacy_link}' target='blank'>gizlilik politikası</a> ve <a href='%{tos_link}' target='blank'>hizmet şartlarını</a>kabul etmiş olursunuz."
       title: "Kaydol"
       failed: "Bir şeyler ters gitti, belki de bu e-posta zaten kayıtlıdır, şifremi unuttum bağlantısını deneyin"
@@ -2194,7 +2193,6 @@ tr_TR:
       confirm_button: Giriş yapmayı bitir
     login:
       header_title: "Tekrar hoş geldiniz"
-      subheader_title: "Hesabınıza giriş yapın"
       title: "Giriş Yap"
       username: "Kullanıcı"
       password: "Şifre"
@@ -2294,7 +2292,6 @@ tr_TR:
       success: "Hesabınız oluşturuldu ve şimdi giriş yaptınız."
       name_label: "Ad"
       password_label: "Şifre"
-      existing_user_can_redeem: "Bir konuya veya gruba davetinizi kullanın."
     password_reset:
       continue: "%{site_name} adresine devam edin"
     emoji_set:
@@ -5224,37 +5221,19 @@ tr_TR:
           contact_information: "İletişim bilgileri"
           community_owner: "Topluluk sahibi"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            Bu siteden sorumlu kilit kişinin adı. Kritik bildirimler için kullanılır ve ayrıca acil konular için /about adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür.
           contact_email: "İletişim e-postası"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            Bu siteden sorumlu kilit kişinin e-posta adresi. Kritik bildirimler için kullanılır ve ayrıca acil konular için /about adresinde gösterilir. Herkese açık sitelerdeki anonim kullanıcılara görünür.
           contact_url: "İletişim URL'si"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            Bu site için iletişim URL'si. Mevcut olduğunda, iletişim e-posta adresini /about olarak değiştirir ve genel sitelerdeki anonim kullanıcılar tarafından görünür olur.
           site_contact_name: "Site iletişim adı"
-          site_contact_name_help: |
-            Tüm otomatik mesajların gönderileceği geçerli bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır.
           site_contact_group: "Site iletişim grubu"
-          site_contact_group_help: |
-            Otomatik olarak gönderilen tüm özel mesajlara davet edilen bir grubun geçerli adı.
           your_organization: "Organizasyonunuz"
-          company_name: "Şirket adı"
-          company_name_placeholder: "Örnek Şirket A.Ş."
-          company_name_help: |
-            Şirketinizin veya kuruluşunuzun adı.
+          company_name: "Ad"
+          company_name_placeholder: "Acme Organizasyonu"
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
           governing_law: "Geçerli kanun"
-          governing_law_placeholder: "New York Eyaleti"
-          governing_law_help: |
-            Hizmet Şartları ve Gizlilik Bildirisi de dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya iş yaptığı ülke veya eyalettir.
           city_for_disputes: "Anlaşmazlıklar için şehir"
-          city_for_disputes_placeholder: "New York City"
-          city_for_disputes_help: |
-            Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Koşulları gibi yasal belgelerde yer alır.
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -5296,6 +5275,10 @@ tr_TR:
             title: "Daha fazla seçenek"
             move_up: "Yukarı taşı"
             move_down: "Aşağı taşı"
+        look_and_feel:
+          title: "Görünüm ve his"
+          themes:
+            title: "Temalar"
       plugins:
         title: "Eklentiler"
         name: "Ad"
@@ -6515,6 +6498,8 @@ tr_TR:
         history: "Değişiklik geçmişini görüntüle"
         reset: "sıfırla"
         none: "hiçbiri"
+        save: "kaydet"
+        cancel: "iptal et"
       site_settings:
         emoji_list:
           invalid_input: "Emoji listesi yalnızca geçerli emoji adlarını içermelidir, örneğin: sarılmalar"

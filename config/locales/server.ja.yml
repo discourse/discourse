@@ -1165,13 +1165,13 @@ ja:
       yaxis: "日"
       description: "この期間に信頼レベルが上がったユーザーの数。"
     consolidated_page_views:
-      title: "統合ページビュー"
+      title_legacy: "統合ページビュー"
       xaxis:
         page_view_crawler: "クローラー"
         page_view_anon: "匿名ユーザー"
         page_view_logged_in: "ログインユーザー"
       yaxis: "日"
-      description: "ログインユーザー、匿名ユーザー、およびクローラーのページビュー。"
+      description_legacy: "ログインユーザー、匿名ユーザー、およびクローラーのページビュー。"
       labels:
         post: 投稿
         editor: 編集者
@@ -1186,6 +1186,7 @@ ja:
       description: "通常の API キーとユーザー API キーの API リクエスト。"
     consolidated_page_views_browser_detection:
       title: "ブラウザ検出による統合ページビュー (実験的)"
+      title_legacy: "ブラウザ検出による統合ページビュー (実験的)"
       xaxis:
         page_view_anon_browser: "匿名ブラウザ"
         page_view_logged_in_browser: "ログイン中のブラウザ"
@@ -1344,6 +1345,9 @@ ja:
       xaxis: "日"
       yaxis: "合計ページビュー"
       description: "全訪問者による新しいページビュー数。"
+    page_view_legacy_total_reqs:
+      xaxis: "日"
+      yaxis: "合計ページビュー"
     page_view_logged_in_mobile_reqs:
       title: "ログインユーザーのページビュー"
       xaxis: "日"
@@ -1976,7 +1980,6 @@ ja:
     tos_url: "使用する利用規約が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     privacy_policy_url: "使用するプライバシーポリシーが他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     log_anonymizer_details: "匿名化された後に、ユーザーの詳細をログに保持するかどうか。"
-    display_eu_visitor_stats: "/about ページにグローバル訪問者数と EU の訪問者数を表示します。"
     newuser_spam_host_threshold: "`newuser_spam_host_threshold` 投稿内で新規ユーザーが迷惑とみなされる前に、同じホストにリンクを投稿できる回数。"
     allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザーはこれらのドメインへのリンクを使って投稿を作成することができます。"
     staff_like_weight: "スタッフの「いいね！」に与えられる重み (スタッフ以外の「いいね！」には 1 の重みがあります。)"

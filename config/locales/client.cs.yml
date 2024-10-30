@@ -29,6 +29,7 @@ cs:
         millions: "%{number}M"
     dates:
       time: "H:mm"
+      time_short: "h:mm"
       time_with_zone: "kk:mm (z)"
       time_short_day: "ddd, kk:mm"
       timeline_date: "MMM YYYY"
@@ -1413,7 +1414,7 @@ cs:
       ignored_users: "Ignorováno"
       ignored_users_instructions: "Potlačit všechny příspěvky, upozornění a soukromé zprávy od těchto uživatelů."
       tracked_topics_link: "Zobrazit"
-      automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec."
+      automatically_unpin_topics: "Atomaticky odepni téma jakmile se dostanu na konec"
       apps: "Aplikace"
       revoke_access: "Odebrat přístup"
       undo_revoke_access: "Zrušit odebrání přístupu"
@@ -1660,7 +1661,7 @@ cs:
         action: "Klikni sem pro aktivaci svého účtu"
         already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
         please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
-        continue_button: "Pokračovat na %{site_name}"
+        continue_button: "Dokončit!"
         welcome_to: "Vítejte v %{site_name}!"
         approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
       name:
@@ -1837,12 +1838,11 @@ cs:
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
           error: "Při generování odkazu s pozvánkou došlo k chybě"
         invite:
-          new_title: "Vytvořit pozvánku"
-          edit_title: "Upravit pozvánku"
           instructions: "Sdílejte tento odkaz pro okamžité udělení přístupu k tomuto webu:"
-          copy_link: "kopírovat odkaz"
           expires_in_time: "Vyprší za %{time}"
           expired_at_time: "Vypršelo %{time}"
+          copy_link: "Kopírovat odkaz"
+          link_copied: "Odkaz zkopírován!"
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           restrict: "Omezit na"
@@ -1852,11 +1852,11 @@ cs:
           max_redemptions_allowed: "Max. použití"
           add_to_groups: "Přidat do skupin"
           invite_to_topic: "Navigovat do tématu"
-          expires_at: "Nastavit vypršení po"
-          custom_message: "Volitelná osobní zpráva"
+          expires_after: "Nastavit vypršení po"
           send_invite_email: "Uložit a odeslat e-mail"
           send_invite_email_instructions: "Omezit pozvání na e-mail pro odeslání pozvánky"
-          save_invite: "Uložit pozvánku"
+          save_invite: "Uložit"
+          cancel: "Zrušit"
           invite_saved: "Pozvánka uložena."
         bulk_invite:
           none: "Na této stránce nejsou k zobrazení žádné pozvánky."
@@ -2061,6 +2061,7 @@ cs:
     staff_writes_only_mode:
       enabled: "Tato stránka je v režimu pouze pro redaktory. Pokračujte v prohlížení, ale odpovídání, hodnocení Líbí se a další akce jsou omezeny pouze pro členy redakce."
     learn_more: "Zjistit více…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Další informace…</a>"
     mute: Ignorovat
     unmute: Zrušit ignorování
     last_post: Poslední příspěvek
@@ -2148,7 +2149,6 @@ cs:
     search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
       header_title: "Vítejte!"
-      subheader_title: "Pojďme vytvořit váš účet"
       disclaimer: "Registrací souhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobních údajů</a> a <a href='%{tos_link}' target='blank'>podmínkami služby</a>."
       title: "Registrovat se"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
@@ -2191,8 +2191,7 @@ cs:
       confirm_button: Dokončit přihlášení
     login:
       header_title: "Vítejte zpět"
-      subheader_title: "Přihlaste se ke svému účtu"
-      title: "Přihlásit se"
+      title: "Přihlášení"
       username: "Uživatel"
       password: "Heslo"
       show_password: "Zobrazit"
@@ -2291,7 +2290,6 @@ cs:
       success: "Váš účet byl vytvořen a nyní jste přihlášeni."
       name_label: "Jméno"
       password_label: "Heslo"
-      existing_user_can_redeem: "Uplatněte svou pozvánku do tématu nebo skupiny."
     password_reset:
       continue: "Pokračovat na %{site_name}"
     emoji_set:
@@ -4946,6 +4944,7 @@ cs:
         dismiss_notice: "Označit jako přečtené"
         new_features:
           title: "Co je nového"
+          subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
         last_checked: "Naposledy zkontrolováno"
@@ -5368,6 +5367,8 @@ cs:
           screened_ips: "Filtrované IP"
           screened_urls: "Filtrované URL"
           search_logs: "Hledání"
+          security: "Nastavení zabezpečení"
+          spam: "Nastavení nevyžádané pošty"
           staff_action_logs: "Protokoly akcí redaktorů"
       section_landing_pages:
         account:
@@ -5380,6 +5381,7 @@ cs:
         about:
           header: "O vašem webu"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Jméno"
           optional: "(volitelné)"
           update: "Aktualizovat"
           saved: "uloženo!"
@@ -5400,6 +5402,9 @@ cs:
             chat_message: "zprávy v konverzaci"
           more_options:
             title: "Další možnosti"
+        look_and_feel:
+          themes:
+            title: "Motivy"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -5438,8 +5443,11 @@ cs:
         legacy: "Zastaralé"
       backups:
         title: "Zálohy"
+        files_title: "Soubory záloh"
+        description: "Zálohy Discourse zahrnují celou databázi, která obsahuje vše, co je na webu: témata, příspěvky, uživatele, skupiny, nastavení, témata atd. V závislosti na tom, jak je soubor zálohy vytvořen, může, ale nemusí obsahovat nahrané soubory."
         menu:
           backups: "Zálohy"
+          backup_files: "Soubory záloh"
           logs: "Logy"
         none: "Žádné zálohy nejsou k dispozici"
         read_only:
@@ -5471,7 +5479,7 @@ cs:
             title: "Zrušit aktuální úlohu"
             confirm: "Opravdu chcete zrušit aktuální úlohu?"
           backup:
-            label: "Záloha"
+            label: "Zálohohovat"
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
             include_uploads: "zahrnout všechny nahrané soubory"
@@ -5484,6 +5492,7 @@ cs:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
+            is_disabled: "Obnovení je aktuálně zakázáno. Chcete-li jej povolit, navštivte <a href='%{url}'>nastavení webu</a>."
             label: "Obnovit"
             title: "Obnovit zálohu"
             confirm: "Opravdu chcete obnovit tuto zálohu?"
@@ -6280,6 +6289,8 @@ cs:
         show_overriden: "Zobrazit pouze přepsané"
         reset: "resetovat"
         none: "žádný"
+        save: "uložit"
+        cancel: "zrušit"
       site_settings:
         title: "Nastavení"
         no_results: "Nenalezeny žádné výsledky."

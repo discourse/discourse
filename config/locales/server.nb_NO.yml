@@ -839,6 +839,9 @@ nb_NO:
       title: "Sidevisninger"
       xaxis: "Dag"
       yaxis: "Totalt antall sidevisninger"
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antall sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Sidevisninger av innloggede"
       xaxis: "Dag"

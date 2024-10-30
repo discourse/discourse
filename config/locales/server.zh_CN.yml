@@ -75,6 +75,10 @@ zh_CN:
     import_error:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
+      screenshot: "导入主题截图时出错。 %{errors}"
+      screenshot_invalid_type: "主题截图必须采用以下格式之一： %{accepted_formats}。截图 %{file_name} 格式无效。"
+      screenshot_invalid_size: "主题截图必须小于 %{max_size}。截图 %{file_name} 太大。"
+      screenshot_invalid_dimensions: "主题截图的最大尺寸必须是 %{max_width}x%{max_height}。截图 %{file_name} 超出了此限制。其尺寸为 %{width}x%{height}。"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_too_big: "导入错误：about.json 超过上限 %{limit}。"
       about_json_values: "about.json 包含无效值：%{errors}"
@@ -1174,13 +1178,13 @@ zh_CN:
       yaxis: "天"
       description: "在此期间提升其信任级别的用户量。"
     consolidated_page_views:
-      title: "合并页面浏览量"
+      title_legacy: "合并页面浏览量"
       xaxis:
         page_view_crawler: "抓取工具"
         page_view_anon: "匿名用户"
         page_view_logged_in: "登录用户"
       yaxis: "天"
-      description: "登录用户、匿名用户和抓取工具的页面浏览量。"
+      description_legacy: "登录用户、匿名用户和抓取工具的页面浏览量。"
       labels:
         post: 帖子
         editor: 编辑者
@@ -1195,6 +1199,7 @@ zh_CN:
       description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     consolidated_page_views_browser_detection:
       title: "使用浏览器检测综合页面浏览量（实验性）"
+      title_legacy: "使用浏览器检测综合页面浏览量（实验性）"
       xaxis:
         page_view_anon_browser: "匿名浏览器"
         page_view_logged_in_browser: "已登录浏览器"
@@ -1359,6 +1364,9 @@ zh_CN:
       xaxis: "天"
       yaxis: "总页面浏览量"
       description: "来自所有访客的新页面浏览量。"
+    page_view_legacy_total_reqs:
+      xaxis: "天"
+      yaxis: "总页面浏览量"
     page_view_logged_in_mobile_reqs:
       title: "登录用户页面浏览量"
       xaxis: "天"
@@ -1675,6 +1683,7 @@ zh_CN:
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
+    experimental_full_page_login: "实验性：将登录/注册模式替换为整页登录/注册表单。"
     ga_version: "要使用的 Google Universal Analytics 版本：v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1991,7 +2000,7 @@ zh_CN:
     tos_url: "如果您想使用在别处托管的《服务条款》文档，请在此处提供完整 URL。"
     privacy_policy_url: "如果您想使用在别处托管的《隐私政策》文档，请在此处提供完整 URL。"
     log_anonymizer_details: "在匿名化后，是否在日志中保留用户的详细信息。"
-    display_eu_visitor_stats: "在 /about 页面上显示全球和欧盟访客人数。"
+    display_eu_visitor_stats: "在 /about 页面上显示全球和欧盟访客数量。启用此设置后，可能需要几分钟才能显示统计数据。"
     newuser_spam_host_threshold: "在被视为垃圾信息之前，新用户可以在他们的 `newuser_spam_host_threshold` 帖子中发布指向同一主机的链接的次数。"
     allowed_spam_host_domains: "从垃圾信息主机测试中排除的网域列表。新用户永远不会被限制创建带有这些网域链接的帖子。"
     staff_like_weight: "管理人员赞的权重（非管理人员赞的权重为 1）。"
@@ -2349,6 +2358,7 @@ zh_CN:
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "实验性：只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
+    experimental_auto_grid_images: "实验性：当在编辑器中上传了 3 张或更多图像时，自动将图像包裹在 [grid] 标签中。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"

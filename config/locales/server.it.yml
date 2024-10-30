@@ -1238,13 +1238,13 @@ it:
       yaxis: "Giorno"
       description: "Numero di utenti che hanno aumentato il loro livello di attendibilità durante questo periodo."
     consolidated_page_views:
-      title: "Visualizzazioni di pagina consolidate"
+      title_legacy: "Visualizzazioni di pagina consolidate"
       xaxis:
         page_view_crawler: "Crawler"
         page_view_anon: "Utenti anonimi"
         page_view_logged_in: "Utenti connessi"
       yaxis: "Giorno"
-      description: "Visualizzazioni di pagina per utenti che hanno effettuato l'accesso, utenti anonimi e crawler."
+      description_legacy: "Visualizzazioni di pagina per utenti che hanno effettuato l'accesso, utenti anonimi e crawler."
       labels:
         post: Messaggio
         editor: Redattore
@@ -1259,6 +1259,7 @@ it:
       description: "Richieste API per chiavi API normali e chiavi API utente."
     consolidated_page_views_browser_detection:
       title: "Visualizzazioni pagine consolidate con rilevamento del browser (sperimentale)"
+      title_legacy: "Visualizzazioni pagine consolidate con rilevamento del browser (sperimentale)"
       xaxis:
         page_view_anon_browser: "Browser anonimo"
         page_view_logged_in_browser: "Browser registrato"
@@ -1417,6 +1418,9 @@ it:
       xaxis: "Giorno"
       yaxis: "Totale Pagine Viste"
       description: "Numero di nuove pagine viste da tutti i visitatori."
+    page_view_legacy_total_reqs:
+      xaxis: "Giorno"
+      yaxis: "Totale Pagine Viste"
     page_view_logged_in_mobile_reqs:
       title: "Pagine viste da utenti connessi"
       xaxis: "Giorno"
@@ -2050,7 +2054,6 @@ it:
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento di Informativa sulla Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     log_anonymizer_details: "Indica se mantenere i dati di un utente nel registro dopo l'anonimizzazione."
-    display_eu_visitor_stats: "Mostra il numero di visitatori globali e dell'UE nella pagina /about."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può pubblicare un collegamento allo stesso host all'interno dei messaggi `newuser_spam_host_threshold` prima di essere considerato spam."
     allowed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso attribuito ai Mi piace dello staff (i \"Mi piace\" non dati dallo staff hanno un peso 1.)"

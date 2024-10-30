@@ -3,13 +3,14 @@
 class Flags::UpdateFlag
   include Service::Base
 
-  contract do
+  params do
     attribute :id, :integer
     attribute :name, :string
     attribute :description, :string
     attribute :require_message, :boolean
     attribute :enabled, :boolean
     attribute :applies_to
+    attribute :auto_action_type, :boolean
 
     validates :id, presence: true
     validates :name, presence: true
@@ -30,8 +31,8 @@ class Flags::UpdateFlag
 
   private
 
-  def fetch_flag(contract:)
-    Flag.find_by(id: contract.id)
+  def fetch_flag(params:)
+    Flag.find_by(id: params.id)
   end
 
   def not_system(flag:)
@@ -46,12 +47,12 @@ class Flags::UpdateFlag
     guardian.can_edit_flag?(flag)
   end
 
-  def unique_name(contract:)
-    !Flag.custom.where(name: contract.name).where.not(id: contract.id).exists?
+  def unique_name(params:)
+    !Flag.custom.where(name: params.name).where.not(id: params.id).exists?
   end
 
-  def update(flag:, contract:)
-    flag.update!(contract.attributes)
+  def update(flag:, params:)
+    flag.update!(**params)
   end
 
   def log(guardian:, flag:)

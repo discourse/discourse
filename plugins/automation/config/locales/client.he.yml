@@ -14,7 +14,8 @@ he:
       select_trigger: בחירת גורם מפעיל
       confirm_automation_reset: הפעולה הזאת תאפס את אפשרויות הסקריפט וההזנקה, מצב חדש יישמר, להמשיך?
       confirm_automation_trigger: פעולה זו תקפיץ את האוטומציה, להמשיך?
-      no_automation_yet: לא יצרת אף אוטומציה עדיין.
+      no_automation_yet: עדיין לא יצרת אוטומציות. נא לבחור באפשרות למטה כדי להתחיל.
+      filter_placeholder: סינון לפי שם או תיאור…
       edit_automation:
         trigger_section:
           forced: הקפצה זו נאכפת על ידי סקריפט.
@@ -392,6 +393,7 @@ he:
           fields:
             custom_field_name:
               label: "שם שדה מותאם אישית של משתמש"
+      unnamed_automation: "אוטומציה ללא שם"
       models:
         script:
           name:

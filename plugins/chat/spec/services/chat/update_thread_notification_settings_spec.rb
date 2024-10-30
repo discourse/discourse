@@ -11,7 +11,7 @@ RSpec.describe Chat::UpdateThreadNotificationSettings do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -22,12 +22,12 @@ RSpec.describe Chat::UpdateThreadNotificationSettings do
     let(:guardian) { Guardian.new(current_user) }
     let(:params) do
       {
-        guardian: guardian,
         thread_id: thread.id,
         channel_id: thread.channel_id,
         notification_level: Chat::UserChatThreadMembership.notification_levels[:normal],
       }
     end
+    let(:dependencies) { { guardian: } }
 
     before { thread.update!(last_message: last_reply) }
 

@@ -44,7 +44,6 @@ import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
-import { addLegacyStat as addLegacyAboutPageStat } from "discourse/controllers/about";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
@@ -74,7 +73,9 @@ import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import KeyboardShortcuts, {
+  disableDefaultKeyboardShortcuts,
+} from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -589,6 +590,21 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * This function is used to disable a "default" keyboard shortcut. You can pass
+   * an array of shortcut bindings as strings to disable them.
+   *
+   * Please note that this function must be called from a pre-initializer.
+   *
+   * Example:
+   * ```
+   * api.disableDefaultKeyboardShortcuts(['command+f', 'shift+c']);
+   * ```
+   **/
+  disableDefaultKeyboardShortcuts(bindings) {
+    disableDefaultKeyboardShortcuts(bindings);
   }
 
   /**
@@ -3251,7 +3267,6 @@ class PluginApi {
    */
   addAboutPageActivity(name, func) {
     addAboutPageActivity(name, func);
-    addLegacyAboutPageStat(name);
   }
 
   /**

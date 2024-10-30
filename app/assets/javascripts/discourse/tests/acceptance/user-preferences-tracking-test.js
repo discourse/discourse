@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("User Preferences - Tracking", function (needs) {
@@ -24,10 +24,9 @@ acceptance("User Preferences - Tracking", function (needs) {
 
     await visit("/u/eviltrout/preferences/tracking");
 
-    assert.notOk(
-      exists(".tag-notifications"),
-      "tag notification levels section is not displayed"
-    );
+    assert
+      .dom(".tag-notifications")
+      .doesNotExist("tag notification levels section is not displayed");
   });
 
   test("updating notification levels of tags when tagging is enabled", async function (assert) {

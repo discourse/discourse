@@ -4,9 +4,14 @@ RSpec.describe Service::StepsInspector do
   class DummyService
     include Service::Base
 
+    options do
+      attribute :my_option, :boolean, default: true
+      attribute :my_other_option, :integer, default: 1
+    end
+
     model :model
     policy :policy
-    contract do
+    params do
       attribute :parameter
 
       validates :parameter, presence: true
@@ -21,7 +26,7 @@ RSpec.describe Service::StepsInspector do
   subject(:inspector) { described_class.new(result) }
 
   let(:parameter) { "present" }
-  let(:result) { DummyService.call(parameter: parameter) }
+  let(:result) { DummyService.call(params: { parameter: parameter }) }
 
   before do
     class DummyService
@@ -37,13 +42,14 @@ RSpec.describe Service::StepsInspector do
     context "when service runs without error" do
       it "outputs all the steps of the service" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/7] [model] 'model' ✅
-        [2/7] [policy] 'policy' ✅
-        [3/7] [contract] 'default' ✅
-        [4/7] [transaction]
-        [5/7]   [step] 'in_transaction_step_1' ✅
-        [6/7]   [step] 'in_transaction_step_2' ✅
-        [7/7] [step] 'final_step' ✅
+        [1/8] [options] 'default' ✅
+        [2/8] [model] 'model' ✅
+        [3/8] [policy] 'policy' ✅
+        [4/8] [params] 'default' ✅
+        [5/8] [transaction]
+        [6/8]   [step] 'in_transaction_step_1' ✅
+        [7/8]   [step] 'in_transaction_step_2' ✅
+        [8/8] [step] 'final_step' ✅
         OUTPUT
       end
     end
@@ -59,13 +65,14 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/7] [model] 'model' ❌
-        [2/7] [policy] 'policy'
-        [3/7] [contract] 'default'
-        [4/7] [transaction]
-        [5/7]   [step] 'in_transaction_step_1'
-        [6/7]   [step] 'in_transaction_step_2'
-        [7/7] [step] 'final_step'
+        [1/8] [options] 'default' ✅
+        [2/8] [model] 'model' ❌
+        [3/8] [policy] 'policy'
+        [4/8] [params] 'default'
+        [5/8] [transaction]
+        [6/8]   [step] 'in_transaction_step_1'
+        [7/8]   [step] 'in_transaction_step_2'
+        [8/8] [step] 'final_step'
         OUTPUT
       end
     end
@@ -81,29 +88,31 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/7] [model] 'model' ✅
-        [2/7] [policy] 'policy' ❌
-        [3/7] [contract] 'default'
-        [4/7] [transaction]
-        [5/7]   [step] 'in_transaction_step_1'
-        [6/7]   [step] 'in_transaction_step_2'
-        [7/7] [step] 'final_step'
+        [1/8] [options] 'default' ✅
+        [2/8] [model] 'model' ✅
+        [3/8] [policy] 'policy' ❌
+        [4/8] [params] 'default'
+        [5/8] [transaction]
+        [6/8]   [step] 'in_transaction_step_1'
+        [7/8]   [step] 'in_transaction_step_2'
+        [8/8] [step] 'final_step'
         OUTPUT
       end
     end
 
-    context "when the contract step is failing" do
+    context "when the params step is failing" do
       let(:parameter) { nil }
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/7] [model] 'model' ✅
-        [2/7] [policy] 'policy' ✅
-        [3/7] [contract] 'default' ❌
-        [4/7] [transaction]
-        [5/7]   [step] 'in_transaction_step_1'
-        [6/7]   [step] 'in_transaction_step_2'
-        [7/7] [step] 'final_step'
+        [1/8] [options] 'default' ✅
+        [2/8] [model] 'model' ✅
+        [3/8] [policy] 'policy' ✅
+        [4/8] [params] 'default' ❌
+        [5/8] [transaction]
+        [6/8]   [step] 'in_transaction_step_1'
+        [7/8]   [step] 'in_transaction_step_2'
+        [8/8] [step] 'final_step'
         OUTPUT
       end
     end
@@ -119,13 +128,14 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/7] [model] 'model' ✅
-        [2/7] [policy] 'policy' ✅
-        [3/7] [contract] 'default' ✅
-        [4/7] [transaction]
-        [5/7]   [step] 'in_transaction_step_1' ✅
-        [6/7]   [step] 'in_transaction_step_2' ❌
-        [7/7] [step] 'final_step'
+        [1/8] [options] 'default' ✅
+        [2/8] [model] 'model' ✅
+        [3/8] [policy] 'policy' ✅
+        [4/8] [params] 'default' ✅
+        [5/8] [transaction]
+        [6/8]   [step] 'in_transaction_step_1' ✅
+        [7/8]   [step] 'in_transaction_step_2' ❌
+        [8/8] [step] 'final_step'
         OUTPUT
       end
     end
@@ -136,13 +146,14 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [1/7] [model] 'model' ✅
-          [2/7] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
-          [3/7] [contract] 'default' ✅
-          [4/7] [transaction]
-          [5/7]   [step] 'in_transaction_step_1' ✅
-          [6/7]   [step] 'in_transaction_step_2' ✅
-          [7/7] [step] 'final_step' ✅
+          [1/8] [options] 'default' ✅
+          [2/8] [model] 'model' ✅
+          [3/8] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
+          [4/8] [params] 'default' ✅
+          [5/8] [transaction]
+          [6/8]   [step] 'in_transaction_step_1' ✅
+          [7/8]   [step] 'in_transaction_step_2' ✅
+          [8/8] [step] 'final_step' ✅
           OUTPUT
         end
       end
@@ -159,13 +170,14 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [1/7] [model] 'model' ✅
-          [2/7] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
-          [3/7] [contract] 'default'
-          [4/7] [transaction]
-          [5/7]   [step] 'in_transaction_step_1'
-          [6/7]   [step] 'in_transaction_step_2'
-          [7/7] [step] 'final_step'
+          [1/8] [options] 'default' ✅
+          [2/8] [model] 'model' ✅
+          [3/8] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
+          [4/8] [params] 'default'
+          [5/8] [transaction]
+          [6/8]   [step] 'in_transaction_step_1'
+          [7/8]   [step] 'in_transaction_step_2'
+          [8/8] [step] 'final_step'
           OUTPUT
         end
       end
@@ -211,7 +223,7 @@ RSpec.describe Service::StepsInspector do
       end
     end
 
-    context "when the contract step is failing" do
+    context "when the params step is failing" do
       let(:parameter) { nil }
 
       it "returns an error related to the contract" do

@@ -4,7 +4,7 @@ class Flags::ToggleFlag
   include Service::Base
 
   policy :invalid_access
-  contract do
+  params do
     attribute :flag_id, :integer
 
     validates :flag_id, presence: true
@@ -21,8 +21,8 @@ class Flags::ToggleFlag
     guardian.can_toggle_flag?
   end
 
-  def fetch_flag(contract:)
-    Flag.find_by(id: contract.flag_id)
+  def fetch_flag(params:)
+    Flag.find_by(id: params.flag_id)
   end
 
   def toggle(flag:)

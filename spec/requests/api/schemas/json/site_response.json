@@ -368,6 +368,9 @@
             },
             "position": {
               "type": "integer"
+            },
+            "auto_action_type": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -380,7 +383,8 @@
             "require_message",
             "enabled",
             "applies_to",
-            "is_used"
+            "is_used",
+            "auto_action_type"
           ]
         }
     },
@@ -423,6 +427,9 @@
             },
             "position": {
               "type": "integer"
+            },
+            "auto_action_type": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -435,7 +442,8 @@
             "require_message",
             "enabled",
             "applies_to",
-            "is_used"
+            "is_used",
+            "auto_action_type"
           ]
         }
     },

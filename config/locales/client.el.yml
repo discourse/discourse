@@ -1198,7 +1198,7 @@ el:
       ignored_users: "Αγνοήθηκε "
       ignored_users_instructions: "Απόκρυψη όλων των αναρτήσεωμ, ειδοποιήσεων και ΠΜ από αυτούς τους χρήστες."
       tracked_topics_link: "Δείξε"
-      automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
+      automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος"
       apps: "Εφαρμογές"
       revoke_access: "Ανάκληση Πρόσβασης"
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
@@ -1397,7 +1397,7 @@ el:
         action: "Πατήστε εδώ για να ενεργοποιήσετε το λογαριασμό σας."
         already_done: "Συγνώμη, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως ο λογαριασμός σας είναι ήδη ενεργός;"
         please_continue: "Ο νέος λογαριασμός σας έχει επιβεβαιωθεί. Θα μεταφερθείτε στην αρχική σελίδα."
-        continue_button: "Συνεχίστε στην %{site_name}"
+        continue_button: "Τέλος!"
         welcome_to: "Καλώς ήλθατε στην %{site_name}!"
         approval_required: "Ένας συντονιστής θα πρέπει να εγκρίνει το νέο σας λογαριασμό πριν αποκτήσετε πρόσβαση στην ιστοσελίδα. Θα λάβετε ένα email όταν ο λογαριασμός σας εγκριθεί!"
       name:
@@ -1570,10 +1570,7 @@ el:
           success: "Η δημιουργία του συνδέσμου πρόσκλησης έγινε επιτυχώς!"
           error: "Παρουσιάστηκε σφάλμα κατά τη δημιουργία συνδέσμου πρόσκλησης"
         invite:
-          new_title: "Δημιουργία Πρόσκλησης"
-          edit_title: "Επεξεργασία Πρόσκλησης"
           instructions: "Μοιραστείτε αυτόν τον σύνδεσμο για να παραχωρήσετε αμέσως πρόσβαση σε αυτόν τον ιστότοπο:"
-          copy_link: "αντιγραφή συνδέσμου"
           expires_in_time: "Λήγει σε %{time}"
           expired_at_time: "Έληξε στις %{time}"
           show_advanced: "Εμφάνιση Προχωρημένων Επιλογών"
@@ -1585,11 +1582,11 @@ el:
           max_redemptions_allowed: "Μέγιστες χρήσεις"
           add_to_groups: "Προσθήκη στις ομάδες"
           invite_to_topic: "Άφιξη στο θέμα"
-          expires_at: "Λήγει μετά από"
-          custom_message: "Προαιρετικό προσωπικό μήνυμα"
+          expires_after: "Λήγει μετά από"
           send_invite_email: "Αποθήκευση και Αποστολή email"
           send_invite_email_instructions: "Περιορισμός πρόσκλησης σε email για αποστολή email πρόσκλησης"
-          save_invite: "Αποθήκευση Πρόσκλησης"
+          save_invite: "Αποθήκευση"
+          cancel: "Ακύρωση"
           invite_saved: "Η πρόσκληση αποθηκεύτηκε."
         bulk_invite:
           none: "Δεν υπάρχουν προσκλήσεις για εμφάνιση σε αυτή τη σελίδα."
@@ -1811,7 +1808,6 @@ el:
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
       header_title: "Καλωσόρισες!"
-      subheader_title: "Ας δημιουργήσουμε τον λογαριασμό σας"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
       title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
@@ -1851,7 +1847,6 @@ el:
       confirm_button: Ολοκληρώστε τη σύνδεση
     login:
       header_title: "Καλώς ήρθατε και πάλι"
-      subheader_title: "Συνδέσου στον λογαριασμό σου"
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"
@@ -4158,6 +4153,7 @@ el:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Όνομα"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"
@@ -4175,6 +4171,9 @@ el:
             invalid_applies_to: "Απαιτείται"
             topic: "θέματα"
             post: "αναρτήσεις"
+        look_and_feel:
+          themes:
+            title: "Θέματα"
       plugins:
         title: "Plugins"
         name: "Όνομα"
@@ -5116,6 +5115,8 @@ el:
         show_overriden: "Δείξε μόνο αυτά που άλλαξαν"
         reset: "επαναφορά"
         none: "κανένα"
+        save: "αποθήκευση"
+        cancel: "ακύρωση"
       site_settings:
         title: "Ρυθμίσεις"
         no_results: "Δεν βρέθηκαν αποτελέσματα."

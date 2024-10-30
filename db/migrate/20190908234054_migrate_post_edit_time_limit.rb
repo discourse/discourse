@@ -23,4 +23,8 @@ class MigratePostEditTimeLimit < ActiveRecord::Migration[5.2]
     DO NOTHING
     SQL
   end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
+  end
 end

@@ -1015,7 +1015,6 @@ bs_BA:
       ignored_users: "Ignorisano"
       ignored_users_instructions: "Suzbijte sve objave, obavijesti i PM-ove od tih korisnika."
       tracked_topics_link: "Show"
-      automatically_unpin_topics: "Automatski otkvači temu kada dođem do dna"
       apps: "Aplikacije"
       revoke_access: "Oduzmi pristup"
       undo_revoke_access: "Poništi oduzeti pristup"
@@ -1179,7 +1178,7 @@ bs_BA:
         action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
         already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
         please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
-        continue_button: "Nastavi ka %{site_name}"
+        continue_button: "Završi!"
         welcome_to: "Dobrodošli na %{site_name}!"
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
@@ -1329,6 +1328,9 @@ bs_BA:
           title: "Link pozivnice"
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
+        invite:
+          save_invite: "Save"
+          cancel: "Odustani"
         bulk_invite:
           text: "Skupna pozivnica"
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
@@ -1529,6 +1531,7 @@ bs_BA:
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
     login:
+      title: "Prijava"
       username: "Korisnik"
       password: "Lozinka"
       show_password: "Show"
@@ -3421,6 +3424,7 @@ bs_BA:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Ime"
           optional: "(opciono)"
           saved: "sačuvano!"
         flags:
@@ -3437,6 +3441,9 @@ bs_BA:
             invalid_applies_to: "Required"
             topic: "topics"
             post: "objave"
+        look_and_feel:
+          themes:
+            title: "Teme"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -4282,6 +4289,8 @@ bs_BA:
         show_overriden: "Only show overridden"
         reset: "reset"
         none: "nijedna"
+        save: "save"
+        cancel: "otkaži"
       site_settings:
         title: "Postavke"
         no_results: "No results found."

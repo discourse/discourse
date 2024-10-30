@@ -18,7 +18,7 @@ module Service
 
     # Simple structure to hold the context of the service during its whole lifecycle.
     class Context
-      delegate :slice, to: :store
+      delegate :slice, :dig, to: :store
 
       def initialize(context = {})
         @store = context.symbolize_keys
@@ -94,7 +94,7 @@ module Service
         steps << ModelStep.new(name, step_name, optional: optional)
       end
 
-      def contract(name = :default, default_values_from: nil, &block)
+      def params(name = :default, default_values_from: nil, &block)
         contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(
@@ -115,6 +115,12 @@ module Service
       def transaction(&block)
         steps << TransactionStep.new(&block)
       end
+
+      def options(&block)
+        klass = Class.new(Service::OptionsBase).tap { _1.class_eval(&block) }
+        const_set("Options", klass)
+        steps << OptionsStep.new(:default, class_name: klass)
+      end
     end
 
     # @!visibility private
@@ -131,7 +137,7 @@ module Service
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
         if method.parameters.any? { _1[0] != :keyreq }
-          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a contract?"
+          raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build(object: object)
@@ -196,20 +202,29 @@ module Service
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
-        contract = class_name.new(default_values.merge(context.slice(*attributes)))
+        contract =
+          class_name.new(
+            **default_values.merge(context[:params].slice(*attributes)),
+            options: context[:options],
+          )
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
           context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
           context.fail!
         end
+        contract.freeze
       end
 
       private
 
       def contract_name
-        return :contract if name.to_sym == :default
+        return :params if default?
         :"#{name}_contract"
+      end
+
+      def default?
+        name.to_sym == :default
       end
     end
 
@@ -226,6 +241,14 @@ module Service
 
       def call(instance, context)
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+      end
+    end
+
+    # @!visibility private
+    class OptionsStep < Step
+      def call(instance, context)
+        context[result_key] = Context.build
+        context[:options] = class_name.new(context[:options])
       end
     end
 
@@ -263,7 +286,7 @@ module Service
     # customized by providing the +name+ argument).
     #
     # @example
-    #   model :channel, :fetch_channel
+    #   model :channel
     #
     #   private
     #
@@ -310,18 +333,18 @@ module Service
     #   end
 
     # @!scope class
-    # @!method contract(name = :default, default_values_from: nil, &block)
+    # @!method params(name = :default, default_values_from: nil, &block)
     # @param name [Symbol] name for this contract
     # @param default_values_from [Symbol] name of the model to get default values from
     # @param block [Proc] a block containing validations
     # Checks the validity of the input parameters.
     # Implements ActiveModel::Validations and ActiveModel::Attributes.
     #
-    # It stores the resulting contract in +context[:contract]+ by default
+    # It stores the resulting contract in +context[:params]+ by default
     # (can be customized by providing the +name+ argument).
     #
     # @example
-    #   contract do
+    #   params do
     #     attribute :name
     #     validates :name, presence: true
     #   end
@@ -359,6 +382,17 @@ module Service
     #     step :prevents_slug_collision
     #     step :soft_delete_channel
     #     step :log_channel_deletion
+    #   end
+
+    # @!scope class
+    # @!method options(&block)
+    # @param block [Proc] a block containing options definition
+    # This is used to define options allowing to parameterize the service
+    # behavior. The resulting options are available in `context[:options]`.
+    #
+    # @example
+    #   options do
+    #     attribute :my_option, :boolean, default: false
     #   end
 
     # @!visibility private

@@ -1244,13 +1244,15 @@ hu:
       yaxis: "Nap"
       description: "Azon felhasználók száma, akik növelték bizalmi szintjüket ebben az időszakban."
     consolidated_page_views:
-      title: "Összevont oldalmegtekintések"
+      title: "Korábbi összevont oldalmegtekintések"
+      title_legacy: "Összevont oldalmegtekintések"
       xaxis:
         page_view_crawler: "Keresőrobotok"
         page_view_anon: "Névtelen felhasználók"
         page_view_logged_in: "Bejelentkezett felhasználók"
       yaxis: "Nap"
-      description: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók és feltérképező robotok számára."
+      description: "Korábbi jelentés, amely a bejelentkezett felhasználók, névtelen felhasználók és keresőrobotok oldalmegtekintéseit mutatja. Ezt felváltotta a „Webhelyforgalom” jelentés."
+      description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók és feltérképező robotok számára."
       labels:
         post: Bejegyzés
         editor: Szerkesztő
@@ -1265,13 +1267,15 @@ hu:
       description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
     consolidated_page_views_browser_detection:
       title: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
+      title_legacy: "Összevont oldalmegtekintések böngészőészleléssel (kísérleti)"
       xaxis:
         page_view_anon_browser: "Névtelen böngésző"
         page_view_logged_in_browser: "Bejelentkezve a böngészőben"
         page_view_crawler: "Ismert keresőrobotok"
         page_view_other: "Egyéb oldalmegtekintések"
       yaxis: "Nap"
-      description: "Oldalmegtekintések bejelentkezett felhasználók, anonim felhasználók, ismert keresőrobotok és egyebek számára. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/anonim kérések valódi böngészőkből érkezzenek, mielőtt számításba vennék őket. A jelentéshez nincs elérhető történelmi adat, a korábbi adatokért lásd a „Konszolidált oldalmegtekintések” jelentést."
+      description: "A bejelentkezett felhasználók, névtelen felhasználók, ismert keresőrobotok és egyéb oldalmegtekintések. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/névtelen kérések valódi böngészőkből érkezzenek, mielőtt megszámolnák őket. Régebbi adatok ehhez a jelentéshez nem érhetők el, azokért az adatokért lásd a „Régi összesített oldalletöltések” jelentést."
+      description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, anonim felhasználók, ismert keresőrobotok és egyebek számára. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/anonim kérések valódi böngészőkből érkezzenek, mielőtt számításba vennék őket. A jelentéshez nincs elérhető történelmi adat, a korábbi adatokért lásd a „Konszolidált oldalmegtekintések” jelentést."
     site_traffic:
       title: "Látogatottság"
       xaxis:
@@ -1431,6 +1435,11 @@ hu:
       xaxis: "Nap"
       yaxis: "Összes oldalmegtekintés"
       description: "Az összes látogatótól származó új oldalmegtekintések száma."
+    page_view_legacy_total_reqs:
+      title: "Régi oldalmegtekintések"
+      xaxis: "Nap"
+      yaxis: "Összes oldalmegtekintés"
+      description: "Régi jelentés, amely az összes látogatótól származó új oldalmegtekintések számát mutatja."
     page_view_logged_in_mobile_reqs:
       title: "Bejelentkezett oldalmegtekintések"
       xaxis: "Nap"
@@ -1748,6 +1757,7 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
+    experimental_full_page_login: "KÍSÉRLETI: Cserélje ki a bejelentkezési/regisztrációs módot egy teljes oldalas bejelentkezési/regisztrációs űrlapra."
     ga_version: "A használandó Google Universal Analytics verziója: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics követőkód azonosítója, pl.: UA-12345678-9; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2067,7 +2077,7 @@ hu:
     tos_url: "Ha van máshol elhelyezett, használni kívánt Általános Szerződési Feltételek dokumentuma, adja meg itt a teljes URL-címet."
     privacy_policy_url: "Ha van máshol elhelyezett adatvédelmi irányelv dokumentum, amelyet használni szeretne, adja meg itt a teljes URL-címet."
     log_anonymizer_details: "Anonimizálás után meg kell-e őrizni a felhasználó adatait a naplóban."
-    display_eu_visitor_stats: "A globális és uniós látogatók számának megjelenítése a /about oldalon."
+    display_eu_visitor_stats: "A globális és uniós látogatók számának megjelenítése a /about oldalon. A beállítás bekapcsolása után eltarthat néhány percig, amíg a statisztikák megjelennek."
     newuser_spam_host_threshold: "Hányszor tehet közzé egy új felhasználó ugyanarra a weboldalra mutató linket az első `newuser_spam_host_threshold` bejegyzésében, mielőtt spamnek minősülne."
     allowed_spam_host_domains: "Spamhosztok teszteléséből kizárt domainek listája. Az új felhasználóknak soha nem lesz korlátozva olyan bejegyzések létrehozása, amelyek ezekre a domainekre mutató linkeket tartalmaznak."
     staff_like_weight: "A stábtagok által adott kedvelések súlyozása (a nem stabtagok kedvelések súlya 1)."
@@ -2426,6 +2436,7 @@ hu:
     experimental_form_templates: "KÍSÉRLETI: Az űrlapsablonok szolgáltatás engedélyezése. <b>Az engedélyezés után</b> a sablonokat a <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a> menüpont alatt kezelheti."
     admin_sidebar_enabled_groups: "A megadott csoportok számára az oldalsáv navigáció engedélyezése az admin felhasználói felületen, amely helyettesíti a felső szintű admin navigációs gombokat."
     lazy_load_categories_groups: "KÍSÉRLETI: Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
+    experimental_auto_grid_images: "KÍSÉRLETI: Automatikusan csomagolja a képeket [rács] címkékbe, ha 3 vagy több kép van feltöltve a szerkesztőbe."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."

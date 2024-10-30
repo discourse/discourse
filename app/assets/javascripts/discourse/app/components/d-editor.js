@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
@@ -21,14 +22,14 @@ import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
+import TextareaTextManipulation, {
+  getHead,
+} from "discourse/lib/textarea-text-manipulation";
 import {
   caretPosition,
   inCodeBlock,
   translateModKey,
 } from "discourse/lib/utilities";
-import TextareaTextManipulation, {
-  getHead,
-} from "discourse/mixins/textarea-text-manipulation";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
@@ -233,11 +234,11 @@ export function onToolbarCreate(func) {
 }
 
 @classNames("d-editor")
-export default class DEditor extends Component.extend(
-  TextareaTextManipulation
-) {
+export default class DEditor extends Component {
   @service("emoji-store") emojiStore;
   @service modal;
+
+  textManipulation;
 
   ready = false;
   lastSel = null;
@@ -246,7 +247,6 @@ export default class DEditor extends Component.extend(
   emojiFilter = "";
   isEditorFocused = false;
   processPreview = true;
-  composerFocusSelector = "#reply-control .d-editor-input";
   morphingOptions = {
     beforeAttributeUpdated: (element, attributeName) => {
       // Don't morph the open attribute of <details> elements
@@ -309,6 +309,15 @@ export default class DEditor extends Component.extend(
 
     this._textarea = this.element.querySelector("textarea.d-editor-input");
     this._$textarea = $(this._textarea);
+
+    this.set(
+      "textManipulation",
+      new TextareaTextManipulation(getOwner(this), {
+        markdownOptions: this.markdownOptions,
+        textarea: this._textarea,
+      })
+    );
+
     this._applyEmojiAutocomplete(this._$textarea);
     this._applyHashtagAutocomplete(this._$textarea);
 
@@ -345,8 +354,12 @@ export default class DEditor extends Component.extend(
       });
     }
 
-    this._itsatrap.bind("tab", () => this.indentSelection("right"));
-    this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
+    this._itsatrap.bind("tab", () =>
+      this.textManipulation.indentSelection("right")
+    );
+    this._itsatrap.bind("shift+tab", () =>
+      this.textManipulation.indentSelection("left")
+    );
     this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
       this.send("insertCurrentTime")
     );
@@ -361,11 +374,19 @@ export default class DEditor extends Component.extend(
     //
     // c.f. https://developer.mozilla.org/en-US/docs/Web/API/Element/beforeinput_event
     if (this._textarea) {
-      this._textarea.addEventListener(
-        "beforeinput",
-        this.onBeforeInputSmartList
-      );
-      this._textarea.addEventListener("input", this.onInputSmartList);
+      if (this.currentUser.user_option.enable_smart_lists) {
+        this._textarea.addEventListener(
+          "beforeinput",
+          this.onBeforeInputSmartList
+        );
+        this._textarea.addEventListener(
+          "keydown",
+          this.onBeforeInputSmartListShiftDetect
+        );
+        this._textarea.addEventListener("input", this.onInputSmartList);
+      }
+
+      this.element.addEventListener("paste", this.textManipulation.paste);
     }
 
     // disable clicking on links in the preview
@@ -374,29 +395,48 @@ export default class DEditor extends Component.extend(
       .addEventListener("click", this._handlePreviewLinkClick);
 
     if (this.composerEvents) {
-      this.appEvents.on("composer:insert-block", this, "insertBlock");
-      this.appEvents.on("composer:insert-text", this, "insertText");
-      this.appEvents.on("composer:replace-text", this, "replaceText");
+      this.appEvents.on(
+        "composer:insert-block",
+        this.textManipulation,
+        "insertBlock"
+      );
+      this.appEvents.on(
+        "composer:insert-text",
+        this.textManipulation,
+        "insertText"
+      );
+      this.appEvents.on(
+        "composer:replace-text",
+        this.textManipulation,
+        "replaceText"
+      );
       this.appEvents.on("composer:apply-surround", this, "_applySurround");
       this.appEvents.on(
         "composer:indent-selected-text",
-        this,
+        this.textManipulation,
         "indentSelection"
       );
     }
   }
 
   @bind
+  onBeforeInputSmartListShiftDetect(event) {
+    this._shiftPressed = event.shiftKey;
+  }
+
+  @bind
   onBeforeInputSmartList(event) {
     // This inputType is much more consistently fired in `beforeinput`
     // rather than `input`.
-    this.handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    if (!this._shiftPressed) {
+      this.handleSmartListAutocomplete = event.inputType === "insertLineBreak";
+    }
   }
 
   @bind
   onInputSmartList() {
     if (this.handleSmartListAutocomplete) {
-      this.maybeContinueList();
+      this.textManipulation.maybeContinueList();
     }
     this.handleSmartListAutocomplete = false;
   }
@@ -432,23 +472,41 @@ export default class DEditor extends Component.extend(
   @on("willDestroyElement")
   _shutDown() {
     if (this.composerEvents) {
-      this.appEvents.off("composer:insert-block", this, "insertBlock");
-      this.appEvents.off("composer:insert-text", this, "insertText");
-      this.appEvents.off("composer:replace-text", this, "replaceText");
+      this.appEvents.off(
+        "composer:insert-block",
+        this.textManipulation,
+        "insertBlock"
+      );
+      this.appEvents.off(
+        "composer:insert-text",
+        this.textManipulation,
+        "insertText"
+      );
+      this.appEvents.off(
+        "composer:replace-text",
+        this.textManipulation,
+        "replaceText"
+      );
       this.appEvents.off("composer:apply-surround", this, "_applySurround");
       this.appEvents.off(
         "composer:indent-selected-text",
-        this,
+        this.textManipulation,
         "indentSelection"
       );
     }
 
     if (this._textarea) {
-      this._textarea.removeEventListener(
-        "beforeinput",
-        this.onBeforeInputSmartList
-      );
-      this._textarea.removeEventListener("input", this.onInputSmartList);
+      if (this.currentUser.user_option.enable_smart_lists) {
+        this._textarea.removeEventListener(
+          "beforeinput",
+          this.onBeforeInputSmartList
+        );
+        this._textarea.removeEventListener(
+          "keydown",
+          this.onBeforeInputSmartListShiftDetect
+        );
+        this._textarea.removeEventListener("input", this.onInputSmartList);
+      }
     }
 
     this._itsatrap?.destroy();
@@ -460,9 +518,7 @@ export default class DEditor extends Component.extend(
 
     this._previewMutationObserver?.disconnect();
 
-    if (isTesting()) {
-      this.element.removeEventListener("paste", this.paste);
-    }
+    this.element.removeEventListener("paste", this.textManipulation.paste);
 
     this._cachedCookFunction = null;
   }
@@ -590,7 +646,11 @@ export default class DEditor extends Component.extend(
       {
         afterComplete: (value) => {
           this.set("value", value);
-          schedule("afterRender", this, this.focusTextArea);
+          schedule(
+            "afterRender",
+            this.textManipulation,
+            this.textManipulation.blurAndFocus
+          );
         },
       }
     );
@@ -606,7 +666,11 @@ export default class DEditor extends Component.extend(
       key: ":",
       afterComplete: (text) => {
         this.set("value", text);
-        schedule("afterRender", this, this.focusTextArea);
+        schedule(
+          "afterRender",
+          this.textManipulation,
+          this.textManipulation.blurAndFocus
+        );
       },
 
       onKeyUp: (text, cp) => {
@@ -720,7 +784,7 @@ export default class DEditor extends Component.extend(
 
   _applyList(sel, head, exampleKey, opts) {
     if (sel.value.includes("\n")) {
-      this.applySurround(sel, head, "", exampleKey, opts);
+      this.textManipulation.applySurround(sel, head, "", exampleKey, opts);
     } else {
       const [hval, hlen] = getHead(head);
       if (sel.start === sel.end) {
@@ -737,13 +801,13 @@ export default class DEditor extends Component.extend(
       const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
 
       this.set("value", `${preLines}${number}${post}`);
-      this.selectText(preLines.length, number.length);
+      this.textManipulation.selectText(preLines.length, number.length);
     }
   }
 
   _applySurround(head, tail, exampleKey, opts) {
-    const selected = this.getSelected();
-    this.applySurround(selected, head, tail, exampleKey, opts);
+    const selected = this.textManipulation.getSelected();
+    this.textManipulation.applySurround(selected, head, tail, exampleKey, opts);
   }
 
   _toggleDirection() {
@@ -802,21 +866,27 @@ export default class DEditor extends Component.extend(
   }
 
   newToolbarEvent(trimLeading) {
-    const selected = this.getSelected(trimLeading);
+    const selected = this.textManipulation.getSelected(trimLeading);
     return {
       selected,
       selectText: (from, length) =>
-        this.selectText(from, length, { scroll: false }),
+        this.textManipulation.selectText(from, length, { scroll: false }),
       applySurround: (head, tail, exampleKey, opts) =>
-        this.applySurround(selected, head, tail, exampleKey, opts),
+        this.textManipulation.applySurround(
+          selected,
+          head,
+          tail,
+          exampleKey,
+          opts
+        ),
       applyList: (head, exampleKey, opts) =>
         this._applyList(selected, head, exampleKey, opts),
       formatCode: (...args) => this.send("formatCode", args),
-      addText: (text) => this.addText(selected, text),
+      addText: (text) => this.textManipulation.addText(selected, text),
       getText: () => this.value,
       toggleDirection: () => this._toggleDirection(),
       replaceText: (oldVal, newVal, opts) =>
-        this.replaceText(oldVal, newVal, opts),
+        this.textManipulation.replaceText(oldVal, newVal, opts),
     };
   }
 
@@ -870,7 +940,7 @@ export default class DEditor extends Component.extend(
       return;
     }
 
-    const sel = this.getSelected("", { lineVal: true });
+    const sel = this.textManipulation.getSelected("", { lineVal: true });
     const selValue = sel.value;
     const hasNewLine = selValue.includes("\n");
     const isBlankLine = sel.lineVal.trim().length === 0;
@@ -882,20 +952,33 @@ export default class DEditor extends Component.extend(
         if (isFourSpacesIndent) {
           const example = I18n.t(`composer.code_text`);
           this.set("value", `${sel.pre}    ${example}${sel.post}`);
-          return this.selectText(sel.pre.length + 4, example.length);
+          return this.textManipulation.selectText(
+            sel.pre.length + 4,
+            example.length
+          );
         } else {
-          return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
+          return this.textManipulation.applySurround(
+            sel,
+            "```\n",
+            "\n```",
+            "paste_code_text"
+          );
         }
       } else {
-        return this.applySurround(sel, "`", "`", "code_title");
+        return this.textManipulation.applySurround(sel, "`", "`", "code_title");
       }
     } else {
       if (isFourSpacesIndent) {
-        return this.applySurround(sel, "    ", "", "code_text");
+        return this.textManipulation.applySurround(
+          sel,
+          "    ",
+          "",
+          "code_text"
+        );
       } else {
         const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
         const postNewline = sel.post[0] !== "\n" ? "\n" : "";
-        return this.addText(
+        return this.textManipulation.addText(
           sel,
           `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
         );
@@ -905,12 +988,15 @@ export default class DEditor extends Component.extend(
 
   @action
   insertCurrentTime() {
-    const sel = this.getSelected("", { lineVal: true });
+    const sel = this.textManipulation.getSelected("", { lineVal: true });
     const timezone = this.currentUser.user_option.timezone;
     const time = moment().format("HH:mm:ss");
     const date = moment().format("YYYY-MM-DD");
 
-    this.addText(sel, `[date=${date} time=${time} timezone="${timezone}"]`);
+    this.textManipulation.addText(
+      sel,
+      `[date=${date} time=${time} timezone="${timezone}"]`
+    );
   }
 
   @action

@@ -26,9 +26,9 @@
     pointer-events: auto;
     box-sizing: border-box;
     margin: 0 auto;
-    max-height: 80vh;
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);
+    max-height: var(--modal-max-height, 80vh); // unset, optional theme utility
   }
 
   &__header {

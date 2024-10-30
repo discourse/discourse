@@ -24,8 +24,8 @@ module ChatSDK
     #   ChatSDK::Message.create_with_stream(raw: "Streaming message", channel_id: 1, guardian: Guardian.new) do |helper, message|
     #     helper.stream(raw: "Continuation of the message")
     #   end
-    def self.create(**params, &block)
-      new.create(**params, &block)
+    def self.create(...)
+      new.create(...)
     end
 
     # Creates a new message with streaming enabled by default.
@@ -46,8 +46,8 @@ module ChatSDK
     # @return [Chat::Message] The message object.
     # @example Streaming a message
     #   ChatSDK::Message.stream(message_id: 42, guardian: guardian, raw: "text")
-    def self.stream(raw:, message_id:, guardian:, &block)
-      new.stream(raw: raw, message_id: message_id, guardian: guardian, &block)
+    def self.stream(...)
+      new.stream(...)
     end
 
     # Starts streaming for a specific chat message.
@@ -57,8 +57,8 @@ module ChatSDK
     # @return [Chat::Message] The message object.
     # @example Starting the streaming of a message
     #   ChatSDK::Message.start_stream(message_id: 42, guardian: guardian)
-    def self.start_stream(message_id:, guardian:)
-      new.start_stream(message_id: message_id, guardian: guardian)
+    def self.start_stream(...)
+      new.start_stream(...)
     end
 
     # Stops streaming for a specific chat message.
@@ -68,8 +68,8 @@ module ChatSDK
     # @return [Chat::Message] The message object.
     # @example Stopping the streaming of a message
     #   ChatSDK::Message.stop_stream(message_id: 42, guardian: guardian)
-    def self.stop_stream(message_id:, guardian:)
-      new.stop_stream(message_id: message_id, guardian: guardian)
+    def self.stop_stream(...)
+      new.stop_stream(...)
     end
 
     def start_stream(message_id:, guardian:)
@@ -89,8 +89,8 @@ module ChatSDK
     end
 
     def stop_stream(message_id:, guardian:)
-      Chat::StopMessageStreaming.call(message_id:, guardian:) do
-        on_success { result.message }
+      Chat::StopMessageStreaming.call(params: { message_id: }, guardian:) do
+        on_success { |message:| message }
         on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
         on_model_not_found(:membership) do
           raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
@@ -121,18 +121,22 @@ module ChatSDK
     )
       message =
         Chat::CreateMessage.call(
-          message: raw,
-          guardian: guardian,
-          chat_channel_id: channel_id,
-          in_reply_to_id: in_reply_to_id,
-          thread_id: thread_id,
-          upload_ids: upload_ids,
-          streaming: streaming,
-          enforce_membership: enforce_membership,
-          force_thread: force_thread,
-          strip_whitespaces: strip_whitespaces,
-          created_by_sdk: true,
-          **params,
+          params: {
+            message: raw,
+            chat_channel_id: channel_id,
+            in_reply_to_id:,
+            thread_id:,
+            upload_ids:,
+            **params,
+          },
+          options: {
+            created_by_sdk: true,
+            streaming:,
+            enforce_membership:,
+            force_thread:,
+            strip_whitespaces:,
+          },
+          guardian:,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
           on_model_not_found(:membership) do
@@ -145,7 +149,7 @@ module ChatSDK
             raise "User with id: `#{guardian.user.id}` can't join this channel"
           end
           on_failed_contract { |contract| raise contract.errors.full_messages.join(", ") }
-          on_success { result.message_instance }
+          on_success { |message_instance:| message_instance }
           on_failure { raise "Unexpected error" }
         end
 
@@ -176,11 +180,14 @@ module ChatSDK
       return false if !message.streaming || !raw
 
       Chat::UpdateMessage.call(
-        message_id: message.id,
-        message: message.message + raw,
         guardian: guardian,
-        streaming: true,
-        strip_whitespaces: false,
+        params: {
+          message_id: message.id,
+          message: message.message + raw,
+        },
+        options: {
+          strip_whitespaces: false,
+        },
       ) { on_failure { raise "Unexpected error" } }
 
       message

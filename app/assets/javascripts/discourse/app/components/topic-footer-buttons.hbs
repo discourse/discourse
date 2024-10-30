@@ -1,7 +1,6 @@
 <div class="topic-footer-main-buttons">
   <TopicAdminMenu
     @topic={{this.topic}}
-    @openUpwards="true"
     @toggleMultiSelect={{this.toggleMultiSelect}}
     @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
     @deleteTopic={{this.deleteTopic}}
@@ -91,17 +90,21 @@
 <PinnedButton @pinned={{this.topic.pinned}} @topic={{this.topic}} />
 
 {{#if this.showNotificationsButton}}
+  <TopicNotificationsButton
+    @topic={{this.topic}}
+    @expanded={{true}}
+    class="notifications-button-footer"
+  />
+
   {{#if this.showNotificationUserTip}}
     <UserTip
       @id="topic_notification_levels"
-      @triggerSelector=".notifications-button"
+      @triggerSelector=".notifications-button-footer details"
       @titleText={{i18n "user_tips.topic_notification_levels.title"}}
       @contentText={{i18n "user_tips.topic_notification_levels.content"}}
-      @priority={{20}}
+      @priority={{800}}
     />
   {{/if}}
-
-  <TopicNotificationsButton @topic={{this.topic}} />
 {{/if}}
 
 <PluginOutlet

@@ -57,6 +57,7 @@ const DEFAULT_USER_PREFERENCES = [
   "default_other_notification_level_when_replying",
   "default_other_external_links_in_new_tab",
   "default_other_enable_quoting",
+  "default_other_enable_smart_lists",
   "default_other_enable_defer",
   "default_other_dynamic_favicon",
   "default_other_like_notification_frequency",

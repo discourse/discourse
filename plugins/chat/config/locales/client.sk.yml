@@ -52,7 +52,6 @@ sk:
       deleted_chat_username: vymazané
       dates:
         yesterday: "Včera"
-        time_tiny: "h:mm"
       all_loaded: "Zobrazenie všetkých správ"
       already_enabled: "Chat na túto tému je už povolený. Prosím, obnovte ho."
       disabled_for_topic: "Chat je pre túto tému zakázaný."

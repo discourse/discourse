@@ -1,52 +1,33 @@
 <section class="discourse-automation-form new">
-  <form class="form-horizontal">
-    <FormError @error={{error}} />
 
-    <div class="control-group">
-      <label class="control-label">
-        {{i18n "discourse_automation.models.automation.name.label"}}
-      </label>
+  <div
+    class="admin-section-landing__header"
+    {{did-insert this.resetFilterText}}
+  >
+    <h2>{{i18n "discourse_automation.select_script"}}</h2>
 
-      <div class="controls">
-        <TextField
-          @value={{form.name}}
-          @type="text"
-          @autofocus="autofocus"
-          @name="automation-name"
-          class="input-large"
-        />
-      </div>
+    <input
+      type="text"
+      placeholder={{i18n "discourse_automation.filter_placeholder"}}
+      {{on "input" this.updateFilterText}}
+      class="admin-section-landing__header-filter"
+    />
+  </div>
+
+  {{#unless this.model.scripts.length}}
+    <div class="alert alert-info">
+      <p>{{i18n "discourse_automation.no_automation_yet"}}</p>
     </div>
+  {{/unless}}
 
-    <div class="control-group">
-      <label class="control-label">
-        {{i18n "discourse_automation.models.automation.script.label"}}
-      </label>
+  <div class="admin-section-landing__wrapper">
+    {{#each this.scriptableContent as |script|}}
+      <AdminSectionLandingItem
+        {{on "click" (fn this.selectScriptToEdit script)}}
+        @titleLabelTranslated={{script.name}}
+        @descriptionLabelTranslated={{script.description}}
+      />
+    {{/each}}
+  </div>
 
-      <div class="controls">
-        <DropdownSelectBox
-          @value={{form.script}}
-          @content={{model.scriptables.content}}
-          @onChange={{fn (mut form.script)}}
-          @options={{hash
-            showCaret=true
-            filterable=true
-            none="discourse_automation.select_script"
-          }}
-          class="scriptables"
-        />
-      </div>
-    </div>
-
-    <div class="control-group">
-      <div class="controls">
-        <DButton
-          @icon="plus"
-          @label="discourse_automation.create"
-          @action={{this.saveAutomation}}
-          class="btn-primary create-automation"
-        />
-      </div>
-    </div>
-  </form>
 </section>

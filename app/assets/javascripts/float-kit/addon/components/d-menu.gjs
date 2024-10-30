@@ -91,6 +91,7 @@ export default class DMenu extends Component {
           data-identifier={{@instance.options.identifier}}
           data-content
         >
+          <div class="fk-d-menu-modal__grip" aria-hidden="true"></div>
           {{#if (has-block)}}
             {{yield this.componentArgs}}
           {{else if (has-block "content")}}

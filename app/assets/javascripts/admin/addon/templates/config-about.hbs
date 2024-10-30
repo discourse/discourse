@@ -1,7 +1,11 @@
 <AdminPageHeader
   @titleLabel="admin.config_areas.about.header"
-  @descriptionLabel="admin.config_areas.about.description"
+  @descriptionLabelTranslated={{i18n
+    "admin.config_areas.about.description"
+    (hash basePath=(base-path))
+  }}
   @hideTabs={{true}}
+  @learnMoreUrl="https://meta.discourse.org/t/understanding-and-customizing-the-about-page/332161"
 >
   <:breadcrumbs>
     <DBreadcrumbsItem

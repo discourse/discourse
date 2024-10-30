@@ -178,6 +178,12 @@
     class="pref-enable-quoting"
   />
   <PreferenceCheckbox
+    @labelKey="user.enable_smart_lists"
+    @checked={{this.model.user_option.enable_smart_lists}}
+    data-setting-name="user-enable-smart-lists"
+    class="pref-enable-smart-lists"
+  />
+  <PreferenceCheckbox
     @labelKey="user.enable_defer"
     @checked={{this.model.user_option.enable_defer}}
     data-setting-name="user-enable-defer"

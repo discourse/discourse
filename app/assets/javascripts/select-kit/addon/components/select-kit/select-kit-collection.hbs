@@ -1,11 +1,5 @@
 {{#if this.collection.content.length}}
-  <ul
-    class="select-kit-collection"
-    aria-live="polite"
-    role="menu"
-    {{did-insert this.lock}}
-    {{will-destroy this.unlock}}
-  >
+  <ul class="select-kit-collection" aria-live="polite" role="menu">
     {{#each this.collection.content as |item index|}}
       {{component
         (component-for-row this.collection.identifier item this.selectKit)

@@ -21,7 +21,7 @@ ro:
       dates:
         yesterday: "Ieri"
       create: "Creează"
-      cancel: "Anulare"
+      cancel: "Anulează"
       move_to_channel:
         instructions:
           one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
@@ -60,15 +60,15 @@ ro:
           unreachable_1: "@%{group} nu permite mențiuni."
           unreachable_multiple:
             one: "@%{group} și încă %{count} grup nu permit mențiuni."
-            few: "@%{group} și %{count} alte grupuri nu permit mențiuni."
-            other: "@%{group} și %{count} alte grupuri nu permit mențiuni."
+            few: "@%{group} și încă %{count} grupuri nu permit mențiuni."
+            other: "@%{group} și încă %{count} de grupuri nu permit mențiuni."
       placeholder_group: "Discuție în grup"
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
       bookmark_message: "Semn de carte"
       bookmark_message_edit: "Editați marcajul"
-      save: "Salvare"
+      save: "Salvează"
       return_to_channel: "Revino la canal"
       return_to_threads_list: "Revino la lista de fire"
       sounds:
@@ -150,7 +150,7 @@ ro:
         threading_disabled: "Dezactivat"
         notifications: "Notificări"
         preview: "Previzualizează"
-        save: "Salvare"
+        save: "Salvează"
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
@@ -167,19 +167,19 @@ ro:
         delete: "Șterge"
         emoji: "Emoticon"
         name: "Nume"
-        save: "Salvare"
-        edit: "Modifică"
+        save: "Salvează"
+        edit: "Editează"
         system: "sistem"
         url: "URL"
-        username: "Nume utilizator"
+        username: "Nume de utilizator"
       selection:
-        cancel: "Anulare"
+        cancel: "Anulează"
         copy: "Copiază"
         delete: "Șterge (%{selectionCount}/%{totalCount})"
         new_topic:
-          title: "Mutare în subiect nou."
+          title: "Mută în subiect nou"
         existing_topic:
-          title: "Mută în subiect deja existent"
+          title: "Mută în subiect existent"
       retention_reminders:
         short:
           one: "%{count} zi"
@@ -194,10 +194,10 @@ ro:
         replies:
           one: "%{count} răspuns"
           few: "%{count} răspunsuri"
-          other: "%{count} răspunsuri"
+          other: "%{count} de răspunsuri"
         label: Fir
         settings: "Setări"
-        last_reply: "Ultimul răspuns"
+        last_reply: "ultimul răspuns"
         notifications:
           regular:
             title: "Normal"
@@ -209,7 +209,7 @@ ro:
         list: "Fire"
       draft_channel_screen:
         header: "Mesaj nou"
-        cancel: "Anulare"
+        cancel: "Anulează"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:

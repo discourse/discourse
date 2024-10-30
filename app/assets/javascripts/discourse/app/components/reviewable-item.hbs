@@ -55,11 +55,17 @@
         {{/each}}
       </div>
     {{else}}
-      {{#component
-        this.reviewableComponent reviewable=this.reviewable tagName=""
+      {{#let
+        (component
+          this.reviewableComponent reviewable=this.reviewable tagName=""
+        )
+        as |ReviewableComponent|
       }}
-        <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
-      {{/component}}
+        {{! template-lint-disable no-shadowed-elements }}{{! (seems to be a false positive) }}
+        <ReviewableComponent>
+          <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+        </ReviewableComponent>
+      {{/let}}
     {{/if}}
   </div>
 

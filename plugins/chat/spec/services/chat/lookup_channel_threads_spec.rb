@@ -11,7 +11,7 @@ RSpec.describe ::Chat::LookupChannelThreads::Contract, type: :model do
 end
 
 RSpec.describe ::Chat::LookupChannelThreads do
-  subject(:result) { described_class.call(params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:current_user) { Fabricate(:user) }
 
@@ -19,7 +19,8 @@ RSpec.describe ::Chat::LookupChannelThreads do
   let(:channel_id) { nil }
   let(:limit) { 10 }
   let(:offset) { 0 }
-  let(:params) { { guardian: guardian, channel_id: channel_id, limit: limit, offset: offset } }
+  let(:params) { { channel_id:, limit:, offset: } }
+  let(:dependencies) { { guardian: } }
 
   describe "step - set_limit" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -29,7 +30,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:limit) { nil }
 
       it "defaults to a max value" do
-        expect(result.limit).to eq(described_class::THREADS_LIMIT)
+        expect(result.params.limit).to eq(described_class::THREADS_LIMIT)
       end
     end
 
@@ -43,7 +44,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:limit) { 0 }
 
       it "defaults to a max value" do
-        expect(result.limit).to eq(1)
+        expect(result.params.limit).to eq(1)
       end
     end
   end
@@ -56,7 +57,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:offset) { nil }
 
       it "defaults to zero" do
-        expect(result.offset).to eq(0)
+        expect(result.params.offset).to eq(0)
       end
     end
 
@@ -64,7 +65,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:offset) { -99 }
 
       it "defaults to a min value" do
-        expect(result.offset).to eq(0)
+        expect(result.params.offset).to eq(0)
       end
     end
   end

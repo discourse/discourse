@@ -1238,13 +1238,13 @@ nl:
       yaxis: "Dag"
       description: "Aantal gebruikers die tijdens deze periode hun vertrouwensniveau hebben doen toenemen."
     consolidated_page_views:
-      title: "Samengevoegde paginaweergaven"
+      title_legacy: "Samengevoegde paginaweergaven"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Anonieme gebruikers"
         page_view_logged_in: "Aangemelde gebruikers"
       yaxis: "Dag"
-      description: "Paginaweergaven voor aangemelde gebruikers, anonieme gebruikers en crawlers."
+      description_legacy: "Paginaweergaven voor aangemelde gebruikers, anonieme gebruikers en crawlers."
       labels:
         post: Bericht
         editor: Bewerker
@@ -1259,6 +1259,7 @@ nl:
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     consolidated_page_views_browser_detection:
       title: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
+      title_legacy: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
       xaxis:
         page_view_anon_browser: "Anonieme browser"
         page_view_logged_in_browser: "Aangemelde browser"
@@ -1417,6 +1418,9 @@ nl:
       xaxis: "Dag"
       yaxis: "Totale paginaweergaven"
       description: "Aantal nieuwe paginaweergaven van alle bezoekers."
+    page_view_legacy_total_reqs:
+      xaxis: "Day"
+      yaxis: "Totale paginaweergaven"
     page_view_logged_in_mobile_reqs:
       title: "Paginaweergaven door aangemelde gebruikers"
       xaxis: "Dag"
@@ -2050,7 +2054,6 @@ nl:
     tos_url: "Als je ergens anders een document met Algemene voorwaarden hebt gehost, geef hier dan de volledige URL op."
     privacy_policy_url: "Als je ergens anders een document met een Privacybeleid hebt gehost, geef hier dan de volledige URL op."
     log_anonymizer_details: "Of de gegevens van een gebruiker in de log moeten worden bewaard nadat ze zijn geanonimiseerd."
-    display_eu_visitor_stats: "Geef het aantal bezoekers wereldwijd en in de EU weer op de /about-pagina."
     newuser_spam_host_threshold: "Hoe vaak een nieuwe gebruiker een link naar dezelfde host kan plaatsen binnen de 'newuser_spam_host_threshold' berichten ervan voordat deze als spam wordt beschouwd."
     allowed_spam_host_domains: "Een lijst met domeinen die niet op spam worden gecontroleerd. Nieuwe gebruikers kunnen onbeperkt links naar deze domeinen plaatsen."
     staff_like_weight: "Hoeveel gewicht om aan likes van medewerkers te geven (likes die niet van medewerkers zijn, hebben een gewicht van 1)."

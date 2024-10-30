@@ -659,6 +659,29 @@
   }
 }
 
+.admin-new-feature-item__body {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+  .d-toggle-switch {
+    margin-left: 1em;
+    align-items: flex-start;
+  }
+  p {
+    margin-top: 0;
+  }
+}
+
+.admin-new-feature-item__screenshot {
+  margin-bottom: 1em;
+}
+.admin-new-feature-item__tooltip-header {
+  font-weight: bold;
+}
+.admin-new-feature-item__tooltip-content {
+  margin-top: 0.5em;
+}
+
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;

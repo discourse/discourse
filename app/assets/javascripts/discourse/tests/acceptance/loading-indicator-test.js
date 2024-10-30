@@ -66,7 +66,7 @@ acceptance("Page Loading Indicator", function (needs) {
 
     assert.strictEqual(currentRouteName(), "about");
     assert.dom(SPINNER_SELECTOR).doesNotExist();
-    assert.dom("#main-outlet section.about").exists();
+    assert.dom("#main-outlet .about__main-content").exists();
   });
 
   test("it works in 'slider' mode", async function (assert) {
@@ -98,7 +98,7 @@ acceptance("Page Loading Indicator", function (needs) {
     await settled();
 
     assert.strictEqual(currentRouteName(), "about");
-    assert.dom("#main-outlet section.about").exists();
+    assert.dom("#main-outlet .about__main-content").exists();
   });
 
   test("it only performs one slide during nested loading events", async function (assert) {

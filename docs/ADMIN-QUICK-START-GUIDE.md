@@ -76,7 +76,7 @@ To customize the look and feel of your community beyond what you configured in t
 
 [details="Advanced options"]
 
-Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have and to give and get advice.
+Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have done and to give and get advice.
 
 - Add one or more social login options: [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), [Discord](https://meta.discourse.org/t/configure-discord-login-for-discourse/127129?u=tobiaseigen), [Apple](https://www.discourse.org/plugins/apple-login), [Amazon, LinkedIn, and Microsoft](https://www.discourse.org/plugins/amazon-linkedin-microsoft-login)
 - [Embed Discourse in your WordPress website](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)

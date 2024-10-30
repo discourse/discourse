@@ -1,30 +1,40 @@
 # frozen_string_literal: true
 
-RSpec.describe(Chat::TrashChannel) do
-  subject(:result) { described_class.call(guardian: guardian) }
-
-  let(:guardian) { Guardian.new(current_user) }
-
-  context "when channel_id is not provided" do
-    fab!(:current_user) { Fabricate(:admin) }
-
-    it { is_expected.to fail_to_find_a_model(:channel) }
+RSpec.describe Chat::TrashChannel do
+  describe described_class::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:channel_id) }
   end
 
-  context "when channel_id is provided" do
-    subject(:result) { described_class.call(channel_id: channel.id, guardian: guardian) }
+  describe ".call" do
+    subject(:result) { described_class.call(params:, **dependencies) }
 
+    fab!(:current_user) { Fabricate(:admin) }
     fab!(:channel) { Fabricate(:chat_channel) }
 
+    let(:params) { { channel_id: } }
+    let(:dependencies) { { guardian: } }
+    let(:guardian) { Guardian.new(current_user) }
+    let(:channel_id) { channel.id }
+
+    context "when data is invalid" do
+      let(:channel_id) { nil }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when model is not found" do
+      let(:channel_id) { 0 }
+
+      it { is_expected.to fail_to_find_a_model(:channel) }
+    end
+
     context "when user is not allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:user) }
+      let!(:current_user) { Fabricate(:user) }
 
       it { is_expected.to fail_a_policy(:invalid_access) }
     end
 
-    context "when user is allowed to perform the action" do
-      fab!(:current_user) { Fabricate(:admin) }
-
+    context "when everything’s ok" do
       it { is_expected.to run_successfully }
 
       it "trashes the channel" do

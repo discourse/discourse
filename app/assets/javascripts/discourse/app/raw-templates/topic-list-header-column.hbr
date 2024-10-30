@@ -23,4 +23,5 @@
   {{~#if view.isSorting}}
     {{d-icon view.sortIcon}}
   {{/if ~}}
+  {{~plugin-outlet name="topic-list-heading-bottom"  outletArgs=(raw-hash name=view.name bulkSelectEnabled=bulkSelectEnabled)~}}
 </th>

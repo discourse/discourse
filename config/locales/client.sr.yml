@@ -902,6 +902,8 @@ sr:
         invite:
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Сакриј напредне опције"
+          save_invite: "Sačuvaj"
+          cancel: "Odustani"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1064,6 +1066,7 @@ sr:
       complete_username_not_found: "Nema naloga koji odgovara korisničkom imenu <b>%{username}</b>"
       complete_email_not_found: "Nema naloga koji odgovara <b>%{email}</b>"
     login:
+      title: "Prijava"
       username: "Korisnik"
       password: "Šifra"
       show_password: "Pokaži"
@@ -2037,6 +2040,7 @@ sr:
             title: "Sigurnosne kopije"
       config_areas:
         about:
+          company_name: "Ime foruma"
           saved: "sačuvano!"
         flags:
           description: "Opis"
@@ -2535,6 +2539,8 @@ sr:
         show_overriden: "Pokazuj samo promenjeno"
         reset: "resetuj"
         none: "ništa"
+        save: "sačuvaj"
+        cancel: "otkaži"
       site_settings:
         title: "Podešavanja"
         no_results: "Nema pronađenih rezultata."

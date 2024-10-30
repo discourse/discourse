@@ -150,10 +150,24 @@ module DiscourseUpdates
         end
       return nil if entries.nil?
 
+      entries.map! do |item|
+        next item if !item["experiment_setting"]
+
+        item["experiment_setting"] = nil if !SiteSetting.respond_to?(item["experiment_setting"]) ||
+          SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
+        item
+      end
+
       entries.select! do |item|
         begin
-          item["discourse_version"].nil? ||
-            Discourse.has_needed_version?(current_version, item["discourse_version"])
+          valid_version =
+            item["discourse_version"].nil? ||
+              Discourse.has_needed_version?(current_version, item["discourse_version"])
+
+          valid_plugin_name =
+            item["plugin_name"].blank? || Discourse.plugins_by_name[item["plugin_name"]].present?
+
+          valid_version && valid_plugin_name
         rescue StandardError
           nil
         end

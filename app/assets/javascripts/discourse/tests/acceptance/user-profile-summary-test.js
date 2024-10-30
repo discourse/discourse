@@ -24,10 +24,9 @@ acceptance("User Profile - Summary", function (needs) {
     assert.ok(exists(".liked-by-section .user-info"), "liked by");
     assert.ok(exists(".liked-section .user-info"), "liked");
     assert.ok(exists(".badges-section .badge-card"), "badges");
-    assert.ok(
-      exists(".top-categories-section .category-link"),
-      "top categories"
-    );
+    assert
+      .dom(".top-categories-section .category-link")
+      .exists("top categories");
   });
 
   test("Top Categories Search", async function (assert) {

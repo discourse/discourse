@@ -26,6 +26,7 @@ id:
         millions: "%{number}M"
     dates:
       time: "h:mm a"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH: mm"
       timeline_date: "MMM YYYY"
@@ -1253,7 +1254,6 @@ id:
         action: "Klik disini untuk mengaktifkan akun anda"
         already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
         please_continue: "Akun baru Anda telah dikonfirmasi. Anda akan diarahkan ke halaman utama."
-        continue_button: "Lanjut ke %{site_name}"
         welcome_to: "Selamat datang ke %{site_name}!"
         approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
       name:
@@ -1362,6 +1362,8 @@ id:
         invite:
           show_advanced: "Tampilkan Opsi Lanjutan"
           hide_advanced: "Sembunyikan Opsi Lanjutan"
+          save_invite: "Simpan"
+          cancel: "Batal"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
       password:
@@ -1530,6 +1532,7 @@ id:
       logging_in_as: Masuk sebagai %{email}
       confirm_button: Selesai Login
     login:
+      title: "Log In"
       username: "Pengguna"
       password: "Kata Sandi"
       show_password: "Tunjukkan"
@@ -2421,6 +2424,7 @@ id:
         about:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nama"
           optional: "(opsional)"
           toasts:
             general_settings_saved: "Pengaturan umum disimpan"
@@ -2750,6 +2754,8 @@ id:
       settings:
         reset: "reset"
         none: "Tak ada"
+        save: "simpan"
+        cancel: "batal"
       site_settings:
         title: "Pengaturan"
         more_site_setting_results:

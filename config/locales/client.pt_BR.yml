@@ -27,6 +27,7 @@ pt_BR:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -1341,7 +1342,7 @@ pt_BR:
       ignored_users: "Ignorados(as)"
       ignored_users_instructions: "Bloquear todas as postagens, notificações e mensagens privadas destes(as) usuários(as)."
       tracked_topics_link: "Exibir"
-      automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler."
+      automatically_unpin_topics: "Desafixar automaticamente os tópicos ao terminar de ler"
       apps: "Aplicativos"
       revoke_access: "Revogar acesso"
       undo_revoke_access: "Desfazer revogação de acesso"
@@ -1658,7 +1659,7 @@ pt_BR:
         action: "Clique aqui para ativar sua conta"
         already_done: "Desculpe, este link de confirmação não é mais válido. Talvez a sua conta já esteja ativa?"
         please_continue: "Sua conta já foi confirmada. Você vai ser redirecionado(a) para a página inicial."
-        continue_button: "Continuar para %{site_name}"
+        continue_button: "Finalizar!"
         welcome_to: "Boas-vindas ao %{site_name}!"
         approval_required: "Um(a) moderador(a) precisa aprovar a sua conta para que você possa acessar este fórum. Você receberá um e-mail quando for aprovada!"
       name:
@@ -1834,12 +1835,11 @@ pt_BR:
           success: "Link do convite gerado com sucesso!"
           error: "Ocorreu um erro ao gerar o link de convite"
         invite:
-          new_title: "Criar convite"
-          edit_title: "Editar convite"
           instructions: "Compartilhar este link para conceder acesso imediato ao site:"
-          copy_link: "copiar link"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
+          copy_link: "Copiar link"
+          link_copied: "Link copiado!"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
           restrict: "Restringir a"
@@ -1849,11 +1849,11 @@ pt_BR:
           max_redemptions_allowed: "Máximo de usos"
           add_to_groups: "Adicionar a grupos"
           invite_to_topic: "Chegar ao tópico"
-          expires_at: "Expira após"
-          custom_message: "Mensagem pessoal opcional"
+          expires_after: "Expira após"
           send_invite_email: "Salvar e enviar e-mail"
           send_invite_email_instructions: "Restringir convite a e-mail para enviar um e-mail de convite"
-          save_invite: "Salvar convite"
+          save_invite: "Salvar"
+          cancel: "Cancelar"
           invite_saved: "Convite salvo"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
@@ -2152,7 +2152,6 @@ pt_BR:
     search_hint: "nome do(a) usuário(a), e-mail ou endereço IP"
     create_account:
       header_title: "Boas-vindas!"
-      subheader_title: "Vamos criar a sua conta"
       disclaimer: "Ao se cadastrar, você concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de serviço</a>."
       title: "Cadastrar-se"
       failed: "Algo deu errado, talvez este e-mail já esteja cadastrado, tente usar o link de senha esquecida."
@@ -2194,7 +2193,6 @@ pt_BR:
       confirm_button: Terminar de entrar
     login:
       header_title: "Boas-vindas outra vez"
-      subheader_title: "Entrar com a sua conta"
       title: "Entrar"
       username: "Usuário(a)"
       password: "Senha"
@@ -2294,7 +2292,6 @@ pt_BR:
       success: "Sua conta foi criada e você já entrou."
       name_label: "Nome"
       password_label: "Senha"
-      existing_user_can_redeem: "Resgate seu convite para um tópico ou grupo."
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -5224,37 +5221,19 @@ pt_BR:
           contact_information: "Informações de contato"
           community_owner: "Proprietário(a) da Comunidade"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            Nome do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários(as) anônimos(as) em sites públicos.
           contact_email: "E-mail de contato"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            Endereço de e-mail do contato principal responsável por este site. É usado para notificações críticas e também na página /about para assuntos urgentes. Visível para usuários(as) anônimos(as) em sites públicos.
           contact_url: "URL de contato"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            URL de contato para este site. Quando presente, substitui o endereço de e-mail de contato em /about e fica visível para usuários(as) anônimos(as) em sites públicos.
           site_contact_name: "Nome do contato do site"
-          site_contact_name_help: |
-            Um nome de usuário(a) válido da equipe para ser usado ao enviar mensagens automáticas. Se for deixado em branco, a conta padrão do sistema será utilizada.
           site_contact_group: "Grupo de contato do site"
-          site_contact_group_help: |
-            Um nome válido de um grupo convidado para todas as mensagens privadas enviadas automaticamente.
           your_organization: "Sua organização"
-          company_name: "Nome da empresa"
-          company_name_placeholder: "Empresa de exemplo LTDA."
-          company_name_help: |
-            Nome da sua empresa ou organização.
+          company_name: "Nome"
+          company_name_placeholder: "Acme Organization"
           company_name_warning: |
             Se deixado em branco, os Termos de Serviço ou Aviso de Privacidade padrão não serão fornecidos.
           governing_law: "Lei aplicável"
-          governing_law_placeholder: "Estado de Nova Iorque"
-          governing_law_help: |
-            Especifique a jurisdição que rege os aspectos legais do site, inclusive os Termos de Serviço e Aviso de Privacidade. Geralmente é o país onde a empresa que opera o site está registrada ou faz negócios
           city_for_disputes: "Cidade para disputas"
-          city_for_disputes_placeholder: "Cidade de Nova Iorque"
-          city_for_disputes_help: |
-            Especifique a cidade que será usada como jurisdição para a resolução de disputas relacionadas ao uso deste fórum. Geralmente essa informação está inclusa nos documentos legais, como os Termos de Serviço do fórum.
           optional: "(opcional)"
           update: "Atualizar"
           toasts:
@@ -5296,6 +5275,10 @@ pt_BR:
             title: "Mais opções"
             move_up: "Mover para cima"
             move_down: "Mover para baixo"
+        look_and_feel:
+          title: "Aspecto e estilo"
+          themes:
+            title: "Temas"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -6515,6 +6498,8 @@ pt_BR:
         history: "Visualizar histórico de alterações"
         reset: "redefinir"
         none: "nenhum(a)"
+        save: "salvar"
+        cancel: "cancelar"
       site_settings:
         emoji_list:
           invalid_input: "A lista de emojis deve conter apenas nomes de emoji válidos, por exemplo: abraços"

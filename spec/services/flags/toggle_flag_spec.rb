@@ -6,14 +6,18 @@ RSpec.describe(Flags::ToggleFlag) do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:admin) }
+    fab!(:flag)
 
-    let(:flag) { Fabricate(:flag) }
     let(:flag_id) { flag.id }
     let(:params) { { flag_id: flag_id } }
     let(:dependencies) { { guardian: current_user.guardian } }
+
+    # DO NOT REMOVE: flags have side effects and their state will leak to
+    # other examples otherwise.
+    after { flag.destroy! }
 
     context "when user is not allowed to perform the action" do
       fab!(:current_user) { Fabricate(:user) }

@@ -116,6 +116,15 @@ export default class GlobalNotice extends Component {
       );
     }
 
+    if (this.router.currentRoute?.queryParams?.preview_theme_id) {
+      notices.push(
+        Notice.create({
+          text: I18n.t("theme_preview_notice"),
+          id: "theme-preview",
+        })
+      );
+    }
+
     if (this.siteSettings.disable_emails === "yes") {
       notices.push(
         Notice.create({

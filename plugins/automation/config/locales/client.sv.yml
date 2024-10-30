@@ -14,7 +14,6 @@ sv:
       select_trigger: Välj en utlösare
       confirm_automation_reset: Den här åtgärden återställer skriptet och utlösningsalternativen, det nya tillståndet sparas, vill du fortsätta?
       confirm_automation_trigger: Denna åtgärd kommer att utlösa automatisering, vill du fortsätta?
-      no_automation_yet: Du har inte skapat någon automatisering ännu.
       edit_automation:
         trigger_section:
           forced: Denna utlösare tvingas av skript.

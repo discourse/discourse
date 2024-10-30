@@ -173,7 +173,7 @@ class ReviewableQueuedPost < Reviewable
       original_post: self.payload["raw"],
       site_name: SiteSetting.title,
     }
-    SystemMessage.create_from_system_user(
+    SystemMessage.create(
       self.target_created_by,
       (
         if self.topic.blank?

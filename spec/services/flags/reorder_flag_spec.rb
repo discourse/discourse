@@ -7,7 +7,7 @@ RSpec.describe(Flags::ReorderFlag) do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:admin) }
 
@@ -42,6 +42,10 @@ RSpec.describe(Flags::ReorderFlag) do
     end
 
     context "when everything's ok" do
+      # DO NOT REMOVE: flags have side effects and their state will leak to
+      # other examples otherwise.
+      after { described_class.call(params: params.merge(direction: "down"), **dependencies) }
+
       it { is_expected.to run_successfully }
 
       it "moves the flag" do

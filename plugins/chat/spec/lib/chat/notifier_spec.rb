@@ -145,8 +145,10 @@ describe Chat::Notifier do
 
           Chat::UpdateMessage.call(
             guardian: user_1.guardian,
-            message_id: msg.id,
-            message: "hello @all",
+            params: {
+              message_id: msg.id,
+              message: "hello @all",
+            },
           )
 
           described_class.new(msg, msg.created_at).notify_edit
@@ -425,7 +427,9 @@ describe Chat::Notifier do
           result =
             Chat::CreateDirectMessageChannel.call(
               guardian: user_1.guardian,
-              target_usernames: [user_1.username, user_2.username],
+              params: {
+                target_usernames: [user_1.username, user_2.username],
+              },
             )
           service_failed!(result) if result.failure?
           result.channel

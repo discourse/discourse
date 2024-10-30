@@ -75,6 +75,10 @@ sk:
     import_error:
       generic: Pri importovaní tohto motívu sa vyskytla chyba
       upload: "Chyba pri vytváraní nahraného prostriedku: %{name}. %{errors}"
+      screenshot: "Chyba pri importovaní snímok obrazovky témy. %{errors}"
+      screenshot_invalid_type: "Snímky obrazovky témy musia byť v jednom z nasledujúcich formátov: %{accepted_formats}. Snímka obrazovky %{file_name} má neplatný formát."
+      screenshot_invalid_size: "Snímky motívu musia byť menšie ako %{max_size}. Snímka obrazovky %{file_name} je príliš veľká."
+      screenshot_invalid_dimensions: "Snímky motívu musia mať maximálnu veľkosť %{max_width}x%{max_height}. Snímka obrazovky %{file_name} túto hodnotu prekračuje. Jej rozmery sú %{width}x%{height}."
       about_json: "Chyba importu: súbor about.json neexistuje alebo je neplatný. Ste si istí, že ide o tému Discourse?"
       about_json_too_big: "Chyba importu: about.json je väčší ako limit %{limit} ."
       about_json_values: "about.json obsahuje neplatné hodnoty: %{errors}"
@@ -1402,13 +1406,15 @@ sk:
       yaxis: "Deň"
       description: "Počet používateľov, ktorí počas tohto obdobia zvýšili svoju úroveň dôvery."
     consolidated_page_views:
-      title: "Konsolidované zobrazenia stránok"
+      title: "Staršie konsolidované zobrazenia stránok"
+      title_legacy: "Konsolidované zobrazenia stránok"
       xaxis:
         page_view_crawler: "Crawlery"
         page_view_anon: "Anonymní používatelia"
         page_view_logged_in: "Prihlásení užívatelia"
       yaxis: "Deň"
-      description: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a prehľadávače."
+      description: "Staršia správa zobrazujúca zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a crawlerov. Táto správa bola nahradená správou \"Návštevnosť stránky\"."
+      description_legacy: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov a prehľadávače."
       labels:
         post: Príspevok
         editor: Editor
@@ -1423,13 +1429,15 @@ sk:
       description: "Požiadavky API na bežné kľúče API a používateľské kľúče API."
     consolidated_page_views_browser_detection:
       title: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
+      title_legacy: "Konsolidované zobrazenia stránok s detekciou prehliadača (experimentálne)"
       xaxis:
         page_view_anon_browser: "Anonymný prehliadač"
         page_view_logged_in_browser: "Prihlásený prehliadač"
         page_view_crawler: "Známy Crawler"
         page_view_other: "Iné zobrazenia stránky"
       yaxis: "Deň"
-      description: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Táto experimentálna správa zabezpečuje, že prihlásené/anonymné požiadavky pochádzajú zo skutočných prehliadačov, a to ešte pred ich započítaním. Historické údaje pre túto zostavu nie sú k dispozícii, historické údaje nájdete v zostave \"Konsolidované zobrazenia stránok\"."
+      description: "Zobrazenia stránok pre prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Tento experimentálny prehľad zaisťuje, že žiadosti o prihlásenie/neprihlásenie prichádzajú zo skutočných prehliadačov ešte pred ich započítaním. Historické údaje pre tento prehľad nie sú k dispozícii. Historické údaje nájdete v prehľade „Staršie konsolidované zobrazenia stránok“."
+      description_legacy: "Zobrazenia stránok prihlásených používateľov, anonymných používateľov, známych prehľadávačov a iných. Táto experimentálna správa zabezpečuje, že prihlásené/anonymné požiadavky pochádzajú zo skutočných prehliadačov, a to ešte pred ich započítaním. Historické údaje pre túto zostavu nie sú k dispozícii, historické údaje nájdete v zostave \"Konsolidované zobrazenia stránok\"."
     site_traffic:
       title: "Návštevnosť stránky"
       xaxis:
@@ -1589,6 +1597,11 @@ sk:
       xaxis: "Deň"
       yaxis: "Celkový počet zobrazení stránky"
       description: "Počet nových zobrazení stránok od všetkých návštevníkov."
+    page_view_legacy_total_reqs:
+      title: "Staršie zobrazenia stránky"
+      xaxis: "Deň"
+      yaxis: "Celkový počet zobrazení stránky"
+      description: "Staršia správa zobrazujúca počet nových zobrazení stránok od všetkých návštevníkov."
     page_view_logged_in_mobile_reqs:
       title: "Zobrazenia stránky pri prihlásení"
       xaxis: "Deň"
@@ -1908,6 +1921,7 @@ sk:
     pending_users_reminder_delay_minutes: "Upozorniť moderátorov, ak noví používatelia čakajú na schválenie dlhšie ako tento počet minút. Nastavte na -1, ak chcete vypnúť upozornenia."
     persistent_sessions: "Používatelia zostanú prihlásení aj po zatvorení webového prehliadača"
     maximum_session_age: "Používateľ zostane prihlásený n hodín od poslednej návštevy"
+    experimental_full_page_login: "EXPERIMENTÁLNE: Nahraďte prihlasovací/registračný modal prihlasovacím/registračným formulárom na celú stránku."
     ga_version: "Verzia služby Google Universal Analytics, ktorú chcete používať: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID kód sledovania Google Universal Analytics, napr: UA-12345678-9; pozri <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Názov domény Google Universal Analytics, napr.: mysite.com; pozrite si <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2227,7 +2241,7 @@ sk:
     tos_url: "Ak máte stránku s Podmienkami uloženú na iných stránkach, napište sem plný odkaz na ne."
     privacy_policy_url: "Ak máte stránku s Podmienkami súkromia uloženú na iných stránkach, napište sem plný odkaz na ne."
     log_anonymizer_details: "Či sa majú údaje používateľa po anonymizácii ponechať v protokole."
-    display_eu_visitor_stats: "Zobrazenie počtu globálnych návštevníkov a návštevníkov z EÚ na stránke /o stránke."
+    display_eu_visitor_stats: "Zobrazenie počtu globálnych návštevníkov a návštevníkov z EÚ na stránke /o stránke. Po zapnutí tohto nastavenia môže trvať niekoľko minút, kým sa štatistiky zobrazia."
     newuser_spam_host_threshold: "Koľkokrát môže nový používateľ uverejniť odkaz na rovnakého hostiteľa v rámci svojich príspevkov `newuser_spam_host_threshold` predtým, ako sa bude považovať za spam."
     allowed_spam_host_domains: "Zoznam domén vylúčených z testovania spamových zdrojov. Novým používateľom nebude nikdy zabránené vytvárať príspevky s odkazmi na tieto domény."
     staff_like_weight: "Akú váhu majú mať lajky personálu (lajky, ktoré sa netýkajú personálu, majú váhu 1.)"
@@ -2484,6 +2498,7 @@ sk:
     default_other_notification_level_when_replying: "Globálna predvolená úroveň upozornenia, keď používateľ odpovie na tému."
     default_other_external_links_in_new_tab: "Štandardne otvárať externé odkazy v novej záložke."
     default_other_enable_quoting: "Štandardne na vybraný text zapnúť citované odpovede."
+    default_other_enable_smart_lists: "Predvolene povoľte inteligentné zoznamy pri zadávaní v kompozitore."
     default_other_enable_defer: "Povolenie funkcie odloženia témy v predvolenom nastavení."
     default_other_dynamic_favicon: "Štandardne zobraziť počet nových/aktualizovaných tém v ikone prehliadača."
     default_other_skip_new_user_tips: "Preskočiť tipy a odznaky na registráciu nového používateľa."
@@ -2589,6 +2604,7 @@ sk:
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "EXPERIMENTÁLNE: Informácie o kategórii pomalého načítania len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
+    experimental_auto_grid_images: "EXPERIMENTÁLNE: Automaticky zalomí obrázky do značiek [grid], keď sa do skladateľa nahrajú 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
