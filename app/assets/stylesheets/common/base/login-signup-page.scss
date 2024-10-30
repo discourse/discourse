@@ -9,10 +9,11 @@
   flex-direction: column;
 }
 
-#main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show)
-  .above-main-container-outlet,
-.powered-by-discourse {
-  display: none;
+#main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show) {
+  & ~ .powered-by-discourse,
+  .above-main-container-outlet {
+    display: none;
+  }
 }
 
 body:has(.login-fullpage, .signup-fullpage) {
@@ -23,10 +24,15 @@ body:has(.login-fullpage, .signup-fullpage) {
 .signup-fullpage,
 .invites-show {
   .signup-body,
-  .login-body,
-  .alert {
+  .login-body {
     display: flex;
     justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+  }
+
+  .alert {
     width: 100%;
     max-width: 800px;
     box-sizing: border-box;
