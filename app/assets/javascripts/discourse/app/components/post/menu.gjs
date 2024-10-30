@@ -8,6 +8,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
@@ -498,6 +499,10 @@ export default class PostMenu extends Component {
   <template>
     {{! The section tag can't be include while we're still using the widget shim }}
     {{! <section class="post-menu-area clearfix"> }}
+    <PluginOutlet
+      @name="post-menu__before"
+      @outletArgs={{hash context=this.context post=@post}}
+    />
     <nav
       class={{concatClass
         "post-controls"
@@ -587,6 +592,10 @@ export default class PostMenu extends Component {
         @contentText={{i18n "user_tips.post_menu.content"}}
       />
     {{/if}}
+    <PluginOutlet
+      @name="post-menu__after"
+      @outletArgs={{hash context=this.context post=@post}}
+    />
     {{! </section> }}
   </template>
 }
