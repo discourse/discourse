@@ -270,6 +270,7 @@
         @showTitle={{false}}
         @name="listable"
         @disabled={{this.readOnly}}
+        @onSet={{this.onSetListable}}
         as |field|
       >
         <field.Checkbox />
@@ -280,6 +281,7 @@
         @showTitle={{false}}
         @name="show_posts"
         @disabled={{this.readOnly}}
+        @onSet={{this.onSetShowPosts}}
         as |field|
       >
         <field.Checkbox />
@@ -289,9 +291,20 @@
         @title={{i18n "admin.badges.post_header"}}
         @showTitle={{false}}
         @name="post_header"
+        @disabled={{this.disableBadgeOnPosts}}
         as |field|
       >
-        <field.Checkbox />
+        {{#if this.showPostHeaderTooltip}}
+          <DTooltip>
+            <:trigger>
+              <field.Checkbox />
+            </:trigger>
+            <:content>{{i18n "admin.badges.post_header_disabled"}}</:content>
+          </DTooltip>
+        {{/if}}
+        {{#unless this.showPostHeaderTooltip}}
+          <field.Checkbox />
+        {{/unless}}
       </group.Field>
     </form.CheckboxGroup>
   </form.Section>

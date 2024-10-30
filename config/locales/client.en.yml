@@ -7127,6 +7127,7 @@ en:
         multiple_grant: Can be granted multiple times
         listable: Show badge on the public badges page
         post_header: Show badge on the post it was granted for
+        post_header_disabled: This setting can only be enabled if the previous two settings are enabled
         enabled: enabled
         disabled: disabled
         icon: Icon

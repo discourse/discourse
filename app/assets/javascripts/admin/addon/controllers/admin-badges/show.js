@@ -1,11 +1,13 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, getProperties } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 
@@ -44,6 +46,9 @@ export default class AdminBadgesShowController extends Controller {
   @tracked userBadges;
   @tracked userBadgesAll;
 
+  @alias("model.listable") listable;
+  @alias("model.show_posts") showPosts;
+
   @cached
   get formData() {
     const data = getProperties(this.model, ...FORM_FIELDS);
@@ -79,6 +84,27 @@ export default class AdminBadgesShowController extends Controller {
 
   get readOnly() {
     return this.model.system;
+  }
+
+  @discourseComputed("listable", "showPosts")
+  showPostHeaderTooltip(listable, showPosts) {
+    // We don't need to show the tooltip on system badges, since the other options are disabled
+    return (!listable || !showPosts) && !this.model.system;
+  }
+
+  @discourseComputed("listable", "showPosts")
+  disableBadgeOnPosts(listable, showPosts) {
+    return !listable || !showPosts;
+  }
+
+  @action
+  onSetListable(value) {
+    this.listable = value;
+  }
+
+  @action
+  onSetShowPosts(value) {
+    this.showPosts = value;
   }
 
   setup() {
