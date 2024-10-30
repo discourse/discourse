@@ -226,8 +226,10 @@ export function connectorsFor(outletName) {
 
 export function renderedConnectorsFor(outletName, args, context) {
   return connectorsFor(outletName).filter((con) => {
-    const shouldRender = con.connectorClass?.shouldRender;
-    return !shouldRender || shouldRender(args, context);
+    return (
+      !con.connectorClass?.shouldRender ||
+      con.connectorClass?.shouldRender(args, context)
+    );
   });
 }
 

@@ -1,6 +1,8 @@
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { get } from "@ember/object";
+import { setOwner } from "@ember/owner";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import {
@@ -79,6 +81,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
         id: "discourse.plugin-outlet-args",
       });
     }
+
+    setOwner(this.context, getOwner(this));
 
     return result;
   }
