@@ -27,8 +27,13 @@ html.rtl {
 .chat-drawer-outlet-container {
   // higher than timeline, lower than composer, dropdown, and user card
   z-index: z("chat-drawer");
+
+  &:focus-within,
+  &.--active {
+    z-index: calc(z("composer", "dropdown") + 1);
+  }
   position: fixed;
-  right: var(--composer-right, 20px);
+  right: 0.75rem;
   left: 0;
   max-height: calc(100% - var(--header-offset) - 15px);
   margin: 0;
@@ -38,12 +43,12 @@ html.rtl {
   pointer-events: none !important;
   bottom: 0;
   box-sizing: border-box;
-  padding-bottom: var(--composer-height, 0);
+  padding-bottom: 0; // var(--composer-height, 0);
   transition: all 100ms ease-in;
   transition-property: bottom, padding-bottom;
 
   .rtl & {
-    left: var(--composer-right, 20px);
+    left: 0.75rem;
     right: 0;
   }
 }
