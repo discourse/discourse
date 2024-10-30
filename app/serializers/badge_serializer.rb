@@ -16,7 +16,8 @@ class BadgeSerializer < ApplicationSerializer
              :long_description,
              :slug,
              :has_badge,
-             :manually_grantable?
+             :manually_grantable?,
+             :post_header
 
   has_one :badge_type
 

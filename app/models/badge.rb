@@ -363,6 +363,7 @@ end
 #  trigger           :integer
 #  show_posts        :boolean          default(FALSE), not null
 #  system            :boolean          default(FALSE), not null
+#  post_header       :boolean          default(FALSE), not null
 #  long_description  :text
 #  image_upload_id   :integer
 #

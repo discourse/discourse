@@ -38,7 +38,7 @@ class UserBadge < ActiveRecord::Base
   scope :for_post_header_badges,
         -> do
           where(
-            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable)",
+            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable AND post_header)",
           )
         end
 
