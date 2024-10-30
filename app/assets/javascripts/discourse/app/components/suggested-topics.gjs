@@ -28,7 +28,7 @@ export default class SuggestedTopics extends Component {
         @titleText={{i18n "user_tips.suggested_topics.title"}}
         @contentText={{i18n "user_tips.suggested_topics.content"}}
         @placement="top-start"
-        @priority={{10}}
+        @priority={{700}}
       />
 
       <h3 id="suggested-topics-title" class="more-topics__list-title">
