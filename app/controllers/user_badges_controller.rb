@@ -103,7 +103,14 @@ class UserBadgesController < ApplicationController
       end
     end
 
-    user_badge = BadgeGranter.grant(badge, user, granted_by: current_user, post_id: post_id)
+    grant_opts_from_params =
+      DiscoursePluginRegistry.apply_modifier(
+        :user_badges_badge_grant_opts,
+        { granted_by: current_user, post_id: post_id },
+        { param: params },
+      )
+
+    user_badge = BadgeGranter.grant(badge, user, grant_opts_from_params)
 
     render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
   end
