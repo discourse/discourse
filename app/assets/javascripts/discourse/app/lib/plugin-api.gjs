@@ -3288,7 +3288,46 @@ class PluginApi {
   }
 
   /**
-   * Registers stuff
+   * Registers a new tab to be displayed in "more topics" area at the bottom of a topic page.
+   *
+   * ```gjs
+   *  api.registerMoreTopicsTab({
+   *    id: "other-topics",
+   *    name: i18n("other_topics.tab"),
+   *    component: <template>tbd</template>,
+   *    condition: ({ topic }) => topic.otherTopics?.length > 0,
+   *  });
+   * ```
+   *
+   * You can additionally use more-topics-tabs value transformer to conditionally show/hide
+   * specific tabs.
+   *
+   * ```js
+   * api.registerValueTransformer(, ({ value, context }) => {
+   *   if (context.user?.aFeatureFlag) {
+   *     // Remove "suggested" from the topics page
+   *     return value.filter(
+   *       (tab) =>
+   *         context.currentContext !== "topic" ||
+   *         tab.id !== "suggested-topics"
+   *     );
+   *   }
+   * });
+   * ```
+   *
+   * @callback tabCondition
+   * @param {Object} opts
+   * @param {Topic} opts.topic - ?
+   * @param {"topic"|"pm"} opts.context - ?
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - the identifier used in more-topics-tabs value transformer
+   * @param {string} tab.name - the name displayed on the tab itself
+   * @param {"*"|"pm"|"topic"} tab.context - on which pages should the tab be visible ("pm", "topic", or both - "*")
+   * @param {Class} tab.component - the contents of the tab
+   * @param {tabCondition} tab.condition - ?
+
+
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);
