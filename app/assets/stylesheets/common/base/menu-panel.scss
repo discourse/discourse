@@ -16,7 +16,7 @@
   // positions are relative to the .d-header .panel div
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
-  max-height: calc(100vh - var(--header-offset) - 1em);
+  max-height: calc(100dvh - var(--header-offset) - 1em);
   border-radius: var(--d-border-radius-large);
 }
 
