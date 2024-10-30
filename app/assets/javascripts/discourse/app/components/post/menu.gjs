@@ -500,102 +500,99 @@ export default class PostMenu extends Component {
     {{! The section tag can't be include while we're still using the widget shim }}
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
-      @name="post-menu__before"
+      @name="post-menu"
       @outletArgs={{hash context=this.context post=@post}}
-    />
-    <nav
-      class={{concatClass
-        "post-controls"
-        "glimmer-post-menu"
-        (if
-          (and
-            (this.showMoreButton.shouldRender
-              (hash context=this.context post=this.post)
-            )
-            this.collapsed
-          )
-          "collapsed"
-          "expanded"
-        )
-        (if
-          this.siteSettings.enable_filtered_replies_view
-          "replies-button-visible"
-        )
-      }}
     >
-      {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
-      {{#each this.extraControls key="key" as |extraControl|}}
-        <PostMenuButtonWrapper
-          @buttonActions={{this.buttonActions}}
-          @buttonConfig={{extraControl}}
-          @context={{this.context}}
-          @post={{@post}}
-        />
-      {{/each}}
-      <div class="actions">
-        {{#each this.visibleButtons key="key" as |button|}}
+      <nav
+        class={{concatClass
+          "post-controls"
+          "glimmer-post-menu"
+          (if
+            (and
+              (this.showMoreButton.shouldRender
+                (hash context=this.context post=this.post)
+              )
+              this.collapsed
+            )
+            "collapsed"
+            "expanded"
+          )
+          (if
+            this.siteSettings.enable_filtered_replies_view
+            "replies-button-visible"
+          )
+        }}
+      >
+        {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
+        {{#each this.extraControls key="key" as |extraControl|}}
           <PostMenuButtonWrapper
             @buttonActions={{this.buttonActions}}
-            @buttonConfig={{button}}
+            @buttonConfig={{extraControl}}
             @context={{this.context}}
             @post={{@post}}
           />
         {{/each}}
-      </div>
-    </nav>
-    {{#if this.isWhoReadVisible}}
-      <SmallUserList
-        class="who-read"
-        @addSelf={{false}}
-        @ariaLabel={{i18n
-          "post.actions.people.sr_post_readers_list_description"
-        }}
-        @count={{if
-          this.remainingReaders
-          this.remainingReaders
-          this.totalReaders
-        }}
-        @description={{if
-          this.remainingReaders
-          "post.actions.people.read_capped"
-          "post.actions.people.read"
-        }}
-        @users={{this.readers}}
-      />
-    {{/if}}
-    {{#if this.isWhoLikedVisible}}
-      <SmallUserList
-        class="who-liked"
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-        @ariaLabel={{i18n
-          "post.actions.people.sr_post_likers_list_description"
-        }}
-        @count={{if
-          this.remainingLikedUsers
-          this.remainingLikedUsers
-          this.totalLikedUsers
-        }}
-        @description={{if
-          this.remainingLikedUsers
-          "post.actions.people.like_capped"
-          "post.actions.people.like"
-        }}
-        @users={{this.likedUsers}}
-      />
-    {{/if}}
-    {{#if this.collapsedButtons}}
-      <UserTip
-        @id="post_menu"
-        @triggerSelector=".post-controls .actions .show-more-actions"
-        @placement="top"
-        @titleText={{i18n "user_tips.post_menu.title"}}
-        @contentText={{i18n "user_tips.post_menu.content"}}
-      />
-    {{/if}}
-    <PluginOutlet
-      @name="post-menu__after"
-      @outletArgs={{hash context=this.context post=@post}}
-    />
+        <div class="actions">
+          {{#each this.visibleButtons key="key" as |button|}}
+            <PostMenuButtonWrapper
+              @buttonActions={{this.buttonActions}}
+              @buttonConfig={{button}}
+              @context={{this.context}}
+              @post={{@post}}
+            />
+          {{/each}}
+        </div>
+      </nav>
+      {{#if this.isWhoReadVisible}}
+        <SmallUserList
+          class="who-read"
+          @addSelf={{false}}
+          @ariaLabel={{i18n
+            "post.actions.people.sr_post_readers_list_description"
+          }}
+          @count={{if
+            this.remainingReaders
+            this.remainingReaders
+            this.totalReaders
+          }}
+          @description={{if
+            this.remainingReaders
+            "post.actions.people.read_capped"
+            "post.actions.people.read"
+          }}
+          @users={{this.readers}}
+        />
+      {{/if}}
+      {{#if this.isWhoLikedVisible}}
+        <SmallUserList
+          class="who-liked"
+          @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
+          @ariaLabel={{i18n
+            "post.actions.people.sr_post_likers_list_description"
+          }}
+          @count={{if
+            this.remainingLikedUsers
+            this.remainingLikedUsers
+            this.totalLikedUsers
+          }}
+          @description={{if
+            this.remainingLikedUsers
+            "post.actions.people.like_capped"
+            "post.actions.people.like"
+          }}
+          @users={{this.likedUsers}}
+        />
+      {{/if}}
+      {{#if this.collapsedButtons}}
+        <UserTip
+          @id="post_menu"
+          @triggerSelector=".post-controls .actions .show-more-actions"
+          @placement="top"
+          @titleText={{i18n "user_tips.post_menu.title"}}
+          @contentText={{i18n "user_tips.post_menu.content"}}
+        />
+      {{/if}}
+    </PluginOutlet>
     {{! </section> }}
   </template>
 }
