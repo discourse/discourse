@@ -87,10 +87,7 @@ export default class MoreTopics extends Component {
           NEW: newCount,
           username: this.currentUser.username,
           groupName: suggestedGroupName,
-          groupLink: this.groupLink(
-            this.currentUser.username,
-            suggestedGroupName
-          ),
+          groupLink: this.groupLink(suggestedGroupName),
           basePath: getURL(""),
         });
       } else {
@@ -104,10 +101,7 @@ export default class MoreTopics extends Component {
       }
     } else if (suggestedGroupName) {
       return I18n.t("user.messages.read_more_in_group", {
-        groupLink: this.groupLink(
-          this.currentUser.username,
-          suggestedGroupName
-        ),
+        groupLink: this.groupLink(suggestedGroupName),
       });
     } else {
       return I18n.t("user.messages.read_more", {
@@ -155,9 +149,9 @@ export default class MoreTopics extends Component {
     }
   }
 
-  groupLink(username, groupName) {
+  groupLink(groupName) {
     return `<a class="group-link" href="${getURL(
-      `/u/${username}/messages/group/${groupName}`
+      `/u/${this.currentUser.username}/messages/group/${groupName}`
     )}">${iconHTML("users")} ${groupName}</a>`;
   }
 
