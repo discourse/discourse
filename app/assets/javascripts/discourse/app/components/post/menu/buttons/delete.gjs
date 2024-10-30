@@ -50,10 +50,10 @@ export default class PostMenuDeleteButton extends Component {
       case BUTTON_ACTION_MODE_RECOVER_TOPIC:
       case BUTTON_ACTION_MODE_RECOVERING:
       case BUTTON_ACTION_MODE_RECOVERING_TOPIC:
-        return "undo";
+        return "arrow-rotate-left";
 
       default:
-        return "far-trash-alt";
+        return "trash-can";
     }
   }
 
