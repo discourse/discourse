@@ -441,9 +441,25 @@ RSpec.describe PostSerializer do
   describe "#badges_granted" do
     fab!(:user)
     fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:badge1) do
+      Badge.create!(
+        name: "SomeBadge",
+        badge_type_id: BadgeType::Bronze,
+        show_posts: true,
+        post_header: true,
+      )
+    end
+    fab!(:badge2) do
+      Badge.create!(
+        name: "AnotherBadge",
+        badge_type_id: BadgeType::Bronze,
+        show_posts: true,
+        post_header: true,
+      )
+    end
     fab!(:ub1) do
       UserBadge.create!(
-        badge_id: Badge::FirstOnebox,
+        badge_id: badge1.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -452,7 +468,7 @@ RSpec.describe PostSerializer do
     end
     fab!(:ub2) do
       UserBadge.create!(
-        badge_id: Badge::FirstQuote,
+        badge_id: badge2.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,

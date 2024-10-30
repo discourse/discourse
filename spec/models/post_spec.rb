@@ -2325,10 +2325,20 @@ RSpec.describe Post do
     fab!(:post) { Fabricate(:post, user: user) }
     fab!(:post2) { Fabricate(:post, user: user) }
 
-    # FirstOnebox badge has the show_posts flag set to true
+    # Create a badge that has all required flags set to true
+    fab!(:badge1) do
+      Badge.create!(
+        name: "SomeBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        post_header: true,
+        multiple_grant: true,
+      )
+    end
     fab!(:ub1) do
       UserBadge.create!(
-        badge_id: Badge::FirstOnebox,
+        badge_id: badge1.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -2336,10 +2346,19 @@ RSpec.describe Post do
       )
     end
 
-    # FirstFlag badge has the show_posts flag set to false
+    # Create a badge that has the show_posts flag set to false
+    fab!(:badge2) do
+      Badge.create!(
+        name: "SomeOtherBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: false,
+        post_header: true,
+      )
+    end
     fab!(:ub2) do
       UserBadge.create!(
-        badge_id: Badge::FirstFlag,
+        badge_id: badge2.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -2347,10 +2366,10 @@ RSpec.describe Post do
       )
     end
 
-    # FirstQuote badge has the show_posts flag set to true, but the post_id is different
+    # Re-use our first badge, but on a different post
     fab!(:ub3) do
       UserBadge.create!(
-        badge_id: Badge::FirstQuote,
+        badge_id: badge1.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -2358,10 +2377,10 @@ RSpec.describe Post do
       )
     end
 
-    # FirstLike badge has the show_posts flag set to true, but the user_id is different
+    # Now re-use our first badge, but on a different user
     fab!(:ub4) do
       UserBadge.create!(
-        badge_id: Badge::FirstLike,
+        badge_id: badge1.id,
         user: user2,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -2369,18 +2388,39 @@ RSpec.describe Post do
       )
     end
 
-    # Create a badge that has the show_posts flag set to true, but the listable flag set to false
+    # Create a badge that has the listable flag set to false
+    fab!(:badge3) do
+      Badge.create!(
+        name: "WeirdBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: false,
+        show_posts: true,
+        post_header: true,
+      )
+    end
     fab!(:ub5) do
-      badge =
-        Badge.create!(
-          name: "WeirdBadge",
-          badge_type_id: BadgeType::Bronze,
-          listable: false,
-          show_posts: true,
-        )
-
       UserBadge.create!(
-        badge_id: badge.id,
+        badge_id: badge3.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the post_header flag set to false
+    fab!(:badge4) do
+      Badge.create!(
+        name: "StrangeBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        post_header: false,
+      )
+    end
+    fab!(:ub6) do
+      UserBadge.create!(
+        badge_id: badge4.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -2406,6 +2446,10 @@ RSpec.describe Post do
 
     it "does not return a user badge that has the listable flag set to false" do
       expect(post.badges_granted.pluck(:id)).not_to include(ub5.id)
+    end
+
+    it "does not return a user badge that has the post_header flag set to false" do
+      expect(post.badges_granted.pluck(:id)).not_to include(ub6.id)
     end
   end
 end

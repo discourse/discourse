@@ -91,6 +91,9 @@
             },
             "badge_type_id": {
               "type": "integer"
+            },
+            "post_header": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -115,7 +118,8 @@
             "auto_revoke",
             "show_posts",
             "badge_type_id",
-            "image_upload_id"
+            "image_upload_id",
+            "post_header"
           ]
         }
     },
