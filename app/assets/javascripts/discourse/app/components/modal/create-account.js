@@ -219,11 +219,7 @@ export default class CreateAccount extends Component.extend(
 
   @action
   showPasswordValidation() {
-    if (this.passwordValidation.reason) {
-      this.set("passwordValidationVisible", true);
-    } else {
-      this.set("passwordValidationVisible", false);
-    }
+    this.set("passwordValidationVisible", Boolean(this.passwordValidation.reason));
   }
 
   @action
