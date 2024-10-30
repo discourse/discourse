@@ -196,7 +196,7 @@ GEM
       reline (>= 0.4.2)
     iso8601 (0.13.0)
     jmespath (1.6.2)
-    json (2.7.4)
+    json (2.7.5)
     json-schema (5.0.1)
       addressable (~> 2.8)
     json_schemer (2.3.0)
