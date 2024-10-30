@@ -44,6 +44,7 @@ function transformWithCallbacks(post, topicUrl, store) {
 }
 
 let postMenuWidgetExtensionsAdded = null;
+let postMenuConsoleWarningLogged = false;
 
 registerDeprecationHandler((_, opts) => {
   if (opts?.id === "discourse.post-menu-widget-overrides") {
@@ -553,20 +554,26 @@ createWidget("post-contents", {
         this.currentUser?.use_auto_glimmer_post_menu) &&
         !postMenuWidgetExtensionsAdded)
     ) {
-      if (
-        postMenuWidgetExtensionsAdded &&
-        !postMenuWidgetExtensionsAdded.logged
-      ) {
-        postMenuWidgetExtensionsAdded.logged = true;
-        // eslint-disable-next-line no-console
-        console.warn(
-          [
-            "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
-              "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
-            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-            // TODO add link to meta topic here when the roadmap for the update is announced
-          ].join("\n- ")
-        );
+      if (!postMenuConsoleWarningLogged) {
+        if (postMenuWidgetExtensionsAdded) {
+          postMenuConsoleWarningLogged = true;
+
+          // eslint-disable-next-line no-console
+          console.warn(
+            [
+              "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
+                "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
+              ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+              // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
+            ].join("\n- ")
+          );
+        } else if (this.currentUser?.use_auto_glimmer_post_menu) {
+          // TODO (glimmer-post-menu): remove this else if block when removing the site setting experimental_glimmer_post_menu_groups_map
+          postMenuConsoleWarningLogged = true;
+
+          // eslint-disable-next-line no-console
+          console.log("✅  Using the new 'glimmer' post menu!");
+        }
       }
 
       const filteredRepliesView =
@@ -613,15 +620,15 @@ createWidget("post-contents", {
         (this.siteSettings.glimmer_post_menu_mode !== "disabled" ||
           this.currentUser?.use_auto_glimmer_post_menu) &&
         postMenuWidgetExtensionsAdded &&
-        !postMenuWidgetExtensionsAdded.logged
+        !postMenuConsoleWarningLogged
       ) {
-        postMenuWidgetExtensionsAdded.logged = true;
+        postMenuConsoleWarningLogged = true;
         // eslint-disable-next-line no-console
         console.warn(
           [
             "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
             ...Array.from(postMenuWidgetExtensionsAdded).sort(),
-            // TODO add link to meta topic here when the roadmap for the update is announced
+            // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
           ].join("\n- ")
         );
       }
