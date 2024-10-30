@@ -157,19 +157,21 @@ export default class PostMenu extends Component {
     const configuredItems = this.configuredItems;
 
     const dag = DAG.from(
-      coreButtonComponents.entries().map(([key, ButtonComponent]) => {
-        const configuredIndex = configuredItems.indexOf(key);
+      Array.from(coreButtonComponents.entries()).map(
+        ([key, ButtonComponent]) => {
+          const configuredIndex = configuredItems.indexOf(key);
 
-        const position =
-          configuredIndex !== -1
-            ? {
-                before: configuredItems.slice(configuredIndex + 1),
-                after: configuredItems.slice(0, configuredIndex),
-              }
-            : {};
+          const position =
+            configuredIndex !== -1
+              ? {
+                  before: configuredItems.slice(configuredIndex + 1),
+                  after: configuredItems.slice(0, configuredIndex),
+                }
+              : {};
 
-        return [key, ButtonComponent, position];
-      }),
+          return [key, ButtonComponent, position];
+        }
+      ),
       {
         // we need to keep track of the buttons that were added by plugins because they won't respect the values in
         // the post_menu setting
