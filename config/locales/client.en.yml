@@ -5619,6 +5619,8 @@ en:
           community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
+          community_title: "Community title"
+          community_title_help: "Short description, shown in the browser tab, for key pages such as categories and topic lists."
           banner_image: "Banner image"
           banner_image_help: |
             This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.

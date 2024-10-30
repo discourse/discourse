@@ -16,6 +16,7 @@ export default class AdminConfigAreasAbout extends Component {
       extendedSiteDescription: this.#lookupSettingFromData(
         "extended_site_description"
       ),
+      communityTitle: this.#lookupSettingFromData("short_site_description"),
       aboutBannerImage: this.#lookupSettingFromData("about_banner_image"),
     };
   }
