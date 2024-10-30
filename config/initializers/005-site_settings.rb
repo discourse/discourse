@@ -23,8 +23,6 @@ Rails.application.config.to_prepare do
                SiteSetting.push_api_secret_key.length == 32
         SiteSetting.push_api_secret_key = SecureRandom.hex
       end
-
-      SiteSetting.desktop_category_page_style = :categories_only_optimized if Category.count > 1000
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
     end
