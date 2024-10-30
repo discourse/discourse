@@ -268,15 +268,12 @@ export default class PostMenu extends Component {
   @cached
   get availableButtons() {
     const items = this.configuredItems;
-    const values = this.registeredButtons
-      .values()
-      .filter(
-        (button) =>
-          (button.apiAdded || items.includes(button.key)) &&
-          !button.extraControls(this.staticMethodsArgs)
-      );
 
-    return Array.from(values);
+    return Array.from(this.registeredButtons.values()).filter(
+      (button) =>
+        (button.apiAdded || items.includes(button.key)) &&
+        !button.extraControls(this.staticMethodsArgs)
+    );
   }
 
   @cached
