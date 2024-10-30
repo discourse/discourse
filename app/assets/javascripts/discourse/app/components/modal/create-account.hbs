@@ -41,6 +41,7 @@
           <div class="input-group create-account-email">
             <Input
               {{on "focusout" this.checkEmailAvailability}}
+              {{on "focusin" this.scrollInputIntoView}}
               @type="email"
               @value={{this.model.accountEmail}}
               disabled={{this.emailDisabled}}
@@ -73,6 +74,7 @@
 
           <div class="input-group create-account__username">
             <Input
+              {{on "focusin" this.scrollInputIntoView}}
               @value={{this.model.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
@@ -108,6 +110,7 @@
             {{#if this.passwordRequired}}
               <PasswordField
                 {{on "focusout" this.showPasswordValidation}}
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
                 type={{if this.maskPassword "password" "text"}}
@@ -173,6 +176,7 @@
           {{#if this.requireInviteCode}}
             <div class="input-group create-account__invite-code">
               <Input
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.inviteCode}}
                 id="inviteCode"
                 class={{value-entered this.inviteCode}}
@@ -205,6 +209,7 @@
           >
             {{#if this.fullnameRequired}}
               <TextField
+                {{on "focusin" this.scrollInputIntoView}}
                 @disabled={{this.nameDisabled}}
                 @value={{this.model.accountName}}
                 @id="new-account-name"
@@ -228,6 +233,7 @@
               {{#each this.userFields as |f|}}
                 <div class="input-group">
                   <UserField
+                    {{on "focusin" this.scrollInputIntoView}}
                     @field={{f.field}}
                     @value={{f.value}}
                     @validation={{f.validation}}

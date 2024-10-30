@@ -456,6 +456,14 @@ export default class CreateAccount extends Component.extend(
   }
 
   @action
+  scrollInputIntoView(event) {
+    event.target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+
+  @action
   togglePasswordMask() {
     this.toggleProperty("maskPassword");
   }

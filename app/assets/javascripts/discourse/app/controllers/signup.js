@@ -441,6 +441,14 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
+  scrollInputIntoView(event) {
+    event.target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+
+  @action
   togglePasswordMask() {
     this.toggleProperty("maskPassword");
   }
