@@ -25,6 +25,9 @@
         <tr>
           <th>{{i18n "admin.emoji.image"}}</th>
           <th>{{i18n "admin.emoji.name"}}</th>
+          <th>{{i18n "admin.emoji.group"}}</th>
+          <th>{{i18n "admin.emoji.created_by"}}</th>
+
           <th colspan="2">
             <ComboBox
               @value={{this.filter}}
@@ -47,6 +50,8 @@
               /></td>
             <td>:{{e.name}}:</td>
             <td>{{e.group}}</td>
+            <td>{{e.created_by}}</td>
+
             <td class="action">
               <DButton
                 @action={{fn this.destroyEmoji e}}

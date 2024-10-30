@@ -7192,6 +7192,7 @@ en:
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
+        created_by: "Created By"
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"

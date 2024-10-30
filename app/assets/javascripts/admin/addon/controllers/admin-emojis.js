@@ -9,6 +9,7 @@ const ALL_FILTER = "all";
 
 export default class AdminEmojisController extends Controller {
   @service dialog;
+  @service currentUser;
 
   filter = null;
   sorting = null;
@@ -19,7 +20,7 @@ export default class AdminEmojisController extends Controller {
 
     this.setProperties({
       filter: ALL_FILTER,
-      sorting: ["group", "name"],
+      sorting: ["group", "name", "created_by"],
     });
   }
 
@@ -64,6 +65,7 @@ export default class AdminEmojisController extends Controller {
   emojiUploaded(emoji, group) {
     emoji.url += "?t=" + new Date().getTime();
     emoji.group = group;
+    emoji.created_by = this.currentUser.username;
     this.model.pushObject(EmberObject.create(emoji));
     this._highlightEmojiList();
   }

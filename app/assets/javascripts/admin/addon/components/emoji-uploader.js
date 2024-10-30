@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,6 +10,8 @@ import I18n from "discourse-i18n";
 const DEFAULT_GROUP = "default";
 
 export default class EmojiUploader extends Component {
+  @service currentUser;
+
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "emoji-uploader",
     type: "emoji",
@@ -46,6 +49,7 @@ export default class EmojiUploader extends Component {
 
   group = "default";
   emojiGroups = null;
+  createdBy = null;
   newEmojiGroups = null;
   tagName = null;
 
