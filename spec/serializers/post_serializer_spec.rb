@@ -467,8 +467,15 @@ RSpec.describe PostSerializer do
       expect(serializer.as_json[:badges_granted]).to eq([])
     end
 
+    it "doesn't include badges when display is disabled" do
+      SiteSetting.enable_badges = true
+      SiteSetting.show_badges_in_post_header = false
+      expect(serializer.as_json[:badges_granted]).to eq([])
+    end
+
     it "includes badges when enabled" do
       SiteSetting.enable_badges = true
+      SiteSetting.show_badges_in_post_header = true
 
       json = serializer.as_json
 

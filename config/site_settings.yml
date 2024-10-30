@@ -332,6 +332,9 @@ basic:
   enable_badges:
     client: true
     default: true
+  show_badges_in_post_header:
+    client: true
+    default: true
   enable_badge_sql:
     client: true
     default: false
