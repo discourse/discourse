@@ -1,7 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import ClassicComponent from "@ember/component";
 import { get } from "@ember/object";
-import { setOwner } from "@ember/owner";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
@@ -82,8 +81,6 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       });
     }
 
-    setOwner(this.context, getOwner(this));
-
     return result;
   }
 
@@ -92,7 +89,8 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     const connectors = renderedConnectorsFor(
       this.args.name,
       this.outletArgsWithDeprecations,
-      this.context
+      this.context,
+      getOwner(this)
     );
     if (connectors.length > 1 && hasBlock) {
       const message = `Multiple connectors were registered for the ${this.args.name} outlet. Using the first.`;

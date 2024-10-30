@@ -224,11 +224,11 @@ export function connectorsFor(outletName) {
   return _connectorCache[outletName] || [];
 }
 
-export function renderedConnectorsFor(outletName, args, context) {
+export function renderedConnectorsFor(outletName, args, context, owner) {
   return connectorsFor(outletName).filter((con) => {
     return (
       !con.connectorClass?.shouldRender ||
-      con.connectorClass?.shouldRender(args, context)
+      con.connectorClass?.shouldRender(args, context, owner)
     );
   });
 }
