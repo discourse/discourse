@@ -17,7 +17,7 @@
     "@babel/core": "^7.26.0",
     "@ember/string": "^4.0.0",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.8.1",
+    "ember-auto-import": "^2.9.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.1.3"
