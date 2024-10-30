@@ -45,7 +45,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::CategoryChannel.find_by(id: params[:channel_id], auto_join_users: true)
+      ::Chat::CategoryChannel.find_by(id: params.channel_id, auto_join_users: true)
     end
 
     def create_memberships(channel:, params:)

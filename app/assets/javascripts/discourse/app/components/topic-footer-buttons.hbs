@@ -1,7 +1,6 @@
 <div class="topic-footer-main-buttons">
   <TopicAdminMenu
     @topic={{this.topic}}
-    @openUpwards="true"
     @toggleMultiSelect={{this.toggleMultiSelect}}
     @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
     @deleteTopic={{this.deleteTopic}}
@@ -93,6 +92,7 @@
 {{#if this.showNotificationsButton}}
   <TopicNotificationsButton
     @topic={{this.topic}}
+    @expanded={{true}}
     class="notifications-button-footer"
   />
 

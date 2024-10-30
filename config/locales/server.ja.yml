@@ -1980,7 +1980,6 @@ ja:
     tos_url: "使用する利用規約が他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     privacy_policy_url: "使用するプライバシーポリシーが他の場所でホスティングされている場合、その完全な URL をここに指定します。"
     log_anonymizer_details: "匿名化された後に、ユーザーの詳細をログに保持するかどうか。"
-    display_eu_visitor_stats: "/about ページにグローバル訪問者数と EU の訪問者数を表示します。"
     newuser_spam_host_threshold: "`newuser_spam_host_threshold` 投稿内で新規ユーザーが迷惑とみなされる前に、同じホストにリンクを投稿できる回数。"
     allowed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザーはこれらのドメインへのリンクを使って投稿を作成することができます。"
     staff_like_weight: "スタッフの「いいね！」に与えられる重み (スタッフ以外の「いいね！」には 1 の重みがあります。)"

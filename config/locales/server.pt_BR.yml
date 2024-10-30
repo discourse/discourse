@@ -2054,7 +2054,6 @@ pt_BR:
     tos_url: "Se tiver um documento dos Termos de Serviço hospedado em algum outro local que você queira usar, informe a URL completa aqui."
     privacy_policy_url: "Se tiver um documento de Política de Privacidade hospedado em algum outro local que você queira usar, informe a URL completa aqui."
     log_anonymizer_details: "Se os dados de um(a) usuário(a) devem ser mantidos no log após serem anonimizados."
-    display_eu_visitor_stats: "Mostrar quantidade de visitantes da UE e do mundo todo na página /about."
     newuser_spam_host_threshold: "Quantidade de vezes que um(a) novo(a) usuário(a) pode postar um link para o mesmo host em suas postagens \"newuser_spam_host_threshold\" antes de ser considerado spam."
     allowed_spam_host_domains: "Uma lista de domínios excluídos do teste de spam. Usuários(as) novos(as) nunca serão restringidos(as) de criar postagens com links para esses domínios."
     staff_like_weight: "Peso dado às curtidas da equipe (curtidas de membros fora da equipe têm o peso de 1)."

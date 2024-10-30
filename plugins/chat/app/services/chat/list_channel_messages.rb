@@ -57,7 +57,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      ::Chat::Channel.includes(:chatable).find_by(id: params[:channel_id])
+      ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
     end
 
     def fetch_membership(channel:, guardian:)
@@ -73,10 +73,10 @@ module Chat
     end
 
     def determine_target_message_id(params:, membership:)
-      if params[:fetch_from_last_read]
+      if params.fetch_from_last_read
         context[:target_message_id] = membership&.last_read_message_id
       else
-        context[:target_message_id] = params[:target_message_id]
+        context[:target_message_id] = params.target_message_id
       end
     end
 
@@ -103,9 +103,9 @@ module Chat
           guardian:,
           target_message_id:,
           include_thread_messages: !enabled_threads,
-          page_size: params[:page_size] || Chat::MessagesQuery::MAX_PAGE_SIZE,
-          direction: params[:direction],
-          target_date: params[:target_date],
+          page_size: params.page_size || Chat::MessagesQuery::MAX_PAGE_SIZE,
+          direction: params.direction,
+          target_date: params.target_date,
         )
 
       context[:can_load_more_past] = messages_data[:can_load_more_past]

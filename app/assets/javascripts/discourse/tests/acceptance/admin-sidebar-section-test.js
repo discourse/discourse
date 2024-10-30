@@ -108,7 +108,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     assert.strictEqual(count(".admin-reports-list__report"), 0);
 
     await click(
-      ".sidebar-section-link[data-link-name='admin_about_your_site']"
+      ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
     );
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 

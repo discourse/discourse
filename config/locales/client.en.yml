@@ -4742,6 +4742,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
+    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+
     image_removed: "(image removed)"
 
     pause_notifications:
@@ -5696,8 +5698,8 @@ en:
             move_up: "Move up"
             move_down: "Move down"
         look_and_feel:
-          title: "Look & feel"
-          description: "Themes, components, and color schemes can be used to customise and brand your Discourse site, giving it a distinctive style."
+          title: "Look and feel"
+          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -5931,12 +5933,14 @@ en:
           set_default_theme: "Set default"
           default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
+          install_success: "%{theme} installed successfully!"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
             other: "%{count} selected"
           cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          broken_theme: "Disable broken theme"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
@@ -6003,6 +6007,7 @@ en:
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
           updating: "Updating…"
+          update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"

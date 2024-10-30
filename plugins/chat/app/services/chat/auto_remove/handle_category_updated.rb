@@ -38,7 +38,7 @@ module Chat
       end
 
       def fetch_category(params:)
-        Category.find_by(id: params[:category_id])
+        Category.find_by(id: params.category_id)
       end
 
       def fetch_category_channel_ids(category:)

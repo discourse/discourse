@@ -14,7 +14,6 @@ pl_PL:
       select_trigger: Wybierz wyzwalacz
       confirm_automation_reset: Ta czynność spowoduje zresetowanie opcji skryptu i wyzwalacza, nowy stan zostanie zapisany, czy chcesz kontynuować?
       confirm_automation_trigger: Ta czynność uruchomi automatyzację, czy chcesz kontynuować?
-      no_automation_yet: Nie utworzyłeś jeszcze żadnej automatyzacji.
       edit_automation:
         trigger_section:
           forced: Ten wyzwalacz jest wymuszany przez skrypt.

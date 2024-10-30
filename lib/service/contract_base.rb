@@ -8,12 +8,13 @@ class Service::ContractBase
 
   delegate :slice, :merge, to: :to_hash
 
-  def [](key)
-    public_send(key)
+  def initialize(*args, options: nil, **kwargs)
+    @__options__ = options
+    super(*args, **kwargs)
   end
 
-  def []=(key, value)
-    public_send("#{key}=", value)
+  def options
+    @__options__
   end
 
   def to_hash

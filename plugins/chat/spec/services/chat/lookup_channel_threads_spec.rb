@@ -30,7 +30,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:limit) { nil }
 
       it "defaults to a max value" do
-        expect(result.limit).to eq(described_class::THREADS_LIMIT)
+        expect(result.params.limit).to eq(described_class::THREADS_LIMIT)
       end
     end
 
@@ -44,7 +44,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:limit) { 0 }
 
       it "defaults to a max value" do
-        expect(result.limit).to eq(1)
+        expect(result.params.limit).to eq(1)
       end
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:offset) { nil }
 
       it "defaults to zero" do
-        expect(result.offset).to eq(0)
+        expect(result.params.offset).to eq(0)
       end
     end
 
@@ -65,7 +65,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       let(:offset) { -99 }
 
       it "defaults to a min value" do
-        expect(result.offset).to eq(0)
+        expect(result.params.offset).to eq(0)
       end
     end
   end

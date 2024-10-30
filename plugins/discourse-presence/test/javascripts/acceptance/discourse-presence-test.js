@@ -6,12 +6,7 @@ import {
   leaveChannel,
   presentUserIds,
 } from "discourse/tests/helpers/presence-pretender";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Discourse Presence Plugin", function (needs) {
@@ -33,7 +28,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/t/internationalization-localization/280",
-      "it transitions to the newly created topic URL"
+      "transitions to the newly created topic URL"
     );
   });
 
@@ -41,7 +36,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/reply/280"),
@@ -70,7 +65,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
 
     await fillIn(".d-editor-input", "this is the content of my reply");
 
@@ -84,11 +79,9 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await menu.expand();
     await menu.selectRowByName("toggle-whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "it sets the post type to whisper"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("sets the post type to whisper");
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/reply/280"),
@@ -117,11 +110,13 @@ acceptance("Discourse Presence Plugin", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      query(".topic-post:nth-of-type(1) .cooked > p").innerText,
-      "composer has contents of post to be edited"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        document.querySelector(".topic-post:nth-of-type(1) .cooked > p")
+          .innerText,
+        "composer has contents of post to be edited"
+      );
 
     assert.deepEqual(
       presentUserIds("/discourse-presence/edit/398"),
@@ -158,7 +153,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
     assert
       .dom(".topic-above-footer-buttons-outlet.presence")
       .exists("includes the presence component");
-    assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
+    assert.dom(avatarSelector).doesNotExist("no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
@@ -166,7 +161,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "my-username",
     });
 
-    assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
+    assert.dom(avatarSelector).exists({ count: 1 }, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
@@ -174,28 +169,28 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "my-username2",
     });
 
-    assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
+    assert.dom(avatarSelector).exists({ count: 2 }, "whisper avatar displayed");
 
     await leaveChannel("/discourse-presence/reply/280", {
       id: 123,
     });
 
-    assert.strictEqual(count(avatarSelector), 1, "reply avatar removed");
+    assert.dom(avatarSelector).exists({ count: 1 }, "reply avatar removed");
 
     await leaveChannel("/discourse-presence/whisper/280", {
       id: 124,
     });
 
-    assert.strictEqual(count(avatarSelector), 0, "whisper avatar removed");
+    assert.dom(avatarSelector).doesNotExist("whisper avatar removed");
   });
 
   test("Displays replying and whispering presence in composer", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
 
     const avatarSelector = ".reply-to .presence-avatars .avatar";
-    assert.strictEqual(count(avatarSelector), 0, "no avatars displayed");
+    assert.dom(avatarSelector).doesNotExist("no avatars displayed");
 
     await joinChannel("/discourse-presence/reply/280", {
       id: 123,
@@ -203,7 +198,7 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "my-username",
     });
 
-    assert.strictEqual(count(avatarSelector), 1, "avatar displayed");
+    assert.dom(avatarSelector).exists({ count: 1 }, "avatar displayed");
 
     await joinChannel("/discourse-presence/whisper/280", {
       id: 124,
@@ -211,18 +206,18 @@ acceptance("Discourse Presence Plugin", function (needs) {
       username: "my-username2",
     });
 
-    assert.strictEqual(count(avatarSelector), 2, "whisper avatar displayed");
+    assert.dom(avatarSelector).exists({ count: 2 }, "whisper avatar displayed");
 
     await leaveChannel("/discourse-presence/reply/280", {
       id: 123,
     });
 
-    assert.strictEqual(count(avatarSelector), 1, "reply avatar removed");
+    assert.dom(avatarSelector).exists({ count: 1 }, "reply avatar removed");
 
     await leaveChannel("/discourse-presence/whisper/280", {
       id: 124,
     });
 
-    assert.strictEqual(count(avatarSelector), 0, "whisper avatar removed");
+    assert.dom(avatarSelector).doesNotExist("whisper avatar removed");
   });
 });

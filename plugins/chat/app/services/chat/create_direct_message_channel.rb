@@ -64,8 +64,8 @@ module Chat
 
     def fetch_target_users(guardian:, params:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: [*params[:target_usernames], guardian.user.username],
-        groups: params[:target_groups],
+        usernames: [*params.target_usernames, guardian.user.username],
+        groups: params.target_groups,
       )
     end
 
@@ -79,9 +79,9 @@ module Chat
 
     def fetch_or_create_direct_message(target_users:, params:)
       ids = target_users.map(&:id)
-      is_group = ids.size > 2 || params[:name].present?
+      is_group = ids.size > 2 || params.name.present?
 
-      if params[:upsert] || !is_group
+      if params.upsert || !is_group
         ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
           ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       else
@@ -94,7 +94,7 @@ module Chat
     end
 
     def set_optional_name(channel:, params:)
-      channel.update!(params.slice(:name)) if params[:name]&.size&.positive?
+      channel.update!(params.slice(:name)) if params.name&.size&.positive?
     end
 
     def update_memberships(channel:, target_users:)

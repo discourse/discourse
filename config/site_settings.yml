@@ -2468,10 +2468,6 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_redesigned_about_page_groups:
-    default: ""
-    type: group_list
-    allow_any: false
   custom_flags_limit:
     default: 50
     hidden: true

@@ -14,7 +14,6 @@ it:
       select_trigger: Seleziona evento di attivazione
       confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione e il nuovo stato verrà salvato. Vuoi procedere?
       confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
-      no_automation_yet: Non hai ancora creato alcuna automazione.
       edit_automation:
         trigger_section:
           forced: Questa azione di attivazione è forzata dallo script.

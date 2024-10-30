@@ -49,7 +49,7 @@ module Chat
       end
 
       def fetch_user(params:)
-        User.find_by(id: params[:user_id])
+        User.find_by(id: params.user_id)
       end
 
       def user_not_staff(user:)

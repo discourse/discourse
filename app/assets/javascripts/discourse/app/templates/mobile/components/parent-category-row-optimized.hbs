@@ -23,6 +23,18 @@
             </td>
           </tr>
         {{/if}}
+        {{#if (gt this.category.subcategories.length 0)}}
+          <tr class="category-subcategories">
+            <td colspan="3">
+              <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+                {{i18n
+                  "category_row.subcategory_count"
+                  count=this.category.subcategories.length
+                }}
+              </LinkTo>
+            </td>
+          </tr>
+        {{/if}}
       </tbody>
     </table>
   </div>
