@@ -6,7 +6,7 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class PostMenuReplyButton extends Component {
   static shouldRender(args) {
-    return args.context.canCreatePost;
+    return args.state.canCreatePost;
   }
 
   @service site;
@@ -14,7 +14,7 @@ export default class PostMenuReplyButton extends Component {
   get showLabel() {
     return (
       this.args.showLabel ??
-      (this.site.desktopView && !this.args.context.isWikiMode)
+      (this.site.desktopView && !this.args.state.isWikiMode)
     );
   }
 

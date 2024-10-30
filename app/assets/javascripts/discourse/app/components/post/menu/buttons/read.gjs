@@ -4,7 +4,7 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class PostMenuReadButton extends Component {
   static shouldRender(args) {
-    return args.context.showReadIndicator && args.post.readers_count > 0;
+    return args.state.showReadIndicator && args.post.readers_count > 0;
   }
 
   <template>
@@ -12,7 +12,7 @@ export default class PostMenuReadButton extends Component {
       <DButton
         class="post-action-menu__read read-indicator button-count"
         ...attributes
-        @ariaPressed={{@context.isWhoReadVisible}}
+        @ariaPressed={{@state.isWhoReadVisible}}
         @action={{@buttonActions.toggleWhoRead}}
         @translatedAriaLabel={{i18n
           "post.sr_post_read_count_button"

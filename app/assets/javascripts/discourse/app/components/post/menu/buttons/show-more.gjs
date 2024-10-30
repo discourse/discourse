@@ -3,7 +3,7 @@ import DButton from "discourse/components/d-button";
 
 export default class PostMenuShowMoreButton extends Component {
   static shouldRender(args) {
-    return args.context.collapsedButtons.length && args.context.collapsed;
+    return args.state.collapsedButtons.length && args.state.collapsed;
   }
 
   <template>

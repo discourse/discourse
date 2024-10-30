@@ -1,17 +1,19 @@
-import { getOwner, setOwner } from "@ember/owner";
+import { helperContext } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class PostMenuButtonConfig {
   #Component;
   #apiAdded;
   #key;
+  #owner;
   #position;
   #replacementMap;
 
-  constructor({ key, Component, apiAdded, position, replacementMap }) {
+  constructor({ key, Component, apiAdded, owner, position, replacementMap }) {
     this.#Component = Component;
     this.#apiAdded = apiAdded;
     this.#key = key;
+    this.#owner = owner;
     this.#position = position;
     this.#replacementMap = replacementMap;
   }
@@ -89,8 +91,7 @@ export default class PostMenuButtonConfig {
 
     let value;
     if (typeof klass[property] === "function") {
-      setOwner(klass, getOwner(this));
-      value = klass[property](args);
+      value = klass[property](args, helperContext(), this.#owner);
     } else {
       value = klass[property];
     }

@@ -27,10 +27,10 @@ export default class PostMenuButtonWrapper extends Component {
         class="btn-flat"
         @alwaysShow={{@buttonConfig.alwaysShow this.args}}
         @buttonActions={{@buttonActions}}
-        @context={{@context}}
         @post={{@post}}
         @shouldRender={{this.shouldRender}}
         @showLabel={{@showLabel.showLabel this.args}}
+        @state={{@state}}
         {{on "click" this.sharedBehaviorOnClick}}
       />
     {{/if}}

@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner, setOwner } from "@ember/owner";
+import { getOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
 import { and, eq } from "truth-helpers";
@@ -113,7 +113,7 @@ export default class PostMenu extends Component {
   }
 
   @cached
-  get staticMethodsContext() {
+  get staticMethodsState() {
     return Object.freeze({
       canCreatePost: this.args.canCreatePost,
       collapsed: this.collapsed,
@@ -135,16 +135,16 @@ export default class PostMenu extends Component {
 
   @cached
   get staticMethodsArgs() {
-    return Object.freeze({
-      context: this.staticMethodsContext,
+    return {
       post: this.args.post,
-    });
+      state: this.staticMethodsState,
+    };
   }
 
   @cached
-  get context() {
+  get state() {
     return Object.freeze({
-      ...this.staticMethodsContext,
+      ...this.staticMethodsState,
       collapsedButtons: this.renderableCollapsedButtons,
     });
   }
@@ -207,11 +207,11 @@ export default class PostMenu extends Component {
         const config = new PostMenuButtonConfig({
           key,
           Component: ButtonComponent,
+          apiAdded: addedKeys.has(key), // flag indicating if the button was added using the API
+          owner: getOwner(this), // to be passed as argument to the static methods
           position,
           replacementMap,
-          apiAdded: addedKeys.has(key), // flag indicating if the button was added using the API
         });
-        setOwner(config, getOwner(this)); // to allow using getOwner in the static functions
 
         return [key, config];
       })
@@ -500,7 +500,7 @@ export default class PostMenu extends Component {
     {{! <section class="post-menu-area clearfix"> }}
     <PluginOutlet
       @name="post-menu"
-      @outletArgs={{hash context=this.context post=@post}}
+      @outletArgs={{hash post=@post state=this.state}}
     >
       <nav
         class={{concatClass
@@ -509,7 +509,7 @@ export default class PostMenu extends Component {
           (if
             (and
               (this.showMoreButton.shouldRender
-                (hash context=this.context post=this.post)
+                (hash post=this.post state=this.state)
               )
               this.collapsed
             )
@@ -527,8 +527,8 @@ export default class PostMenu extends Component {
           <PostMenuButtonWrapper
             @buttonActions={{this.buttonActions}}
             @buttonConfig={{extraControl}}
-            @context={{this.context}}
             @post={{@post}}
+            @state={{this.state}}
           />
         {{/each}}
         <div class="actions">
@@ -536,8 +536,8 @@ export default class PostMenu extends Component {
             <PostMenuButtonWrapper
               @buttonActions={{this.buttonActions}}
               @buttonConfig={{button}}
-              @context={{this.context}}
               @post={{@post}}
+              @state={{this.state}}
             />
           {{/each}}
         </div>

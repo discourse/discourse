@@ -56,7 +56,7 @@ export default class PostMenuLikeButton extends Component {
         <LikeCount
           ...attributes
           @action={{@buttonActions.toggleWhoLiked}}
-          @context={{@context}}
+          @state={{@state}}
           @post={{@post}}
         />
         <DButton
@@ -81,7 +81,7 @@ export default class PostMenuLikeButton extends Component {
         <LikeCount
           ...attributes
           @action={{@buttonActions.toggleWhoLiked}}
-          @context={{@context}}
+          @state={{@state}}
           @post={{@post}}
         />
       </div>
@@ -130,7 +130,7 @@ class LikeCount extends Component {
           (if @post.yours "my-likes" "regular-likes")
         }}
         ...attributes
-        @ariaPressed={{@context.isWhoReadVisible}}
+        @ariaPressed={{@state.isWhoReadVisible}}
         @translatedAriaLabel={{i18n
           "post.sr_post_like_count_button"
           count=@post.likeCount

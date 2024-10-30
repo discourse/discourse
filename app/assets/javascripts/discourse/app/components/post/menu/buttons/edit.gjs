@@ -5,7 +5,7 @@ import concatClass from "discourse/helpers/concat-class";
 
 export default class PostMenuEditButton extends Component {
   static alwaysShow(args) {
-    return args.context.isWikiMode || (args.post.can_edit && args.post.yours);
+    return args.state.isWikiMode || (args.post.can_edit && args.post.yours);
   }
 
   static shouldRender(args) {
@@ -17,7 +17,7 @@ export default class PostMenuEditButton extends Component {
   get showLabel() {
     return (
       this.args.showLabel ??
-      (this.site.desktopView && this.args.context.isWikiMode)
+      (this.site.desktopView && this.args.state.isWikiMode)
     );
   }
 

@@ -16,8 +16,8 @@ export default class PostMenuRepliesButton extends Component {
 
     return !(
       replyCount === 1 &&
-      args.context.replyDirectlyBelow &&
-      args.context.suppressReplyDirectlyBelow
+      args.state.replyDirectlyBelow &&
+      args.state.suppressReplyDirectlyBelow
     );
   }
 
@@ -28,11 +28,11 @@ export default class PostMenuRepliesButton extends Component {
   }
 
   get translatedTitle() {
-    if (!this.args.context.filteredRepliesView) {
+    if (!this.args.state.filteredRepliesView) {
       return;
     }
 
-    return this.args.context.repliesShown
+    return this.args.state.repliesShown
       ? i18n("post.view_all_posts")
       : i18n("post.filtered_replies_hint", {
           count: this.args.post.reply_count,
@@ -46,11 +46,8 @@ export default class PostMenuRepliesButton extends Component {
       disabled={{this.disabled}}
       @action={{@buttonActions.toggleReplies}}
       @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
-      @ariaExpanded={{and
-        @context.repliesShown
-        (not @context.filteredRepliesView)
-      }}
-      @ariaPressed={{unless @context.filteredRepliesView @context.repliesShown}}
+      @ariaExpanded={{and @state.repliesShown (not @state.filteredRepliesView)}}
+      @ariaPressed={{unless @state.filteredRepliesView @state.repliesShown}}
       @translatedAriaLabel={{i18n
         "post.sr_expand_replies"
         count=@post.reply_count
@@ -66,7 +63,7 @@ export default class PostMenuRepliesButton extends Component {
              To get the desired effect will use the {{yield}} in the DButton component to our advantage
              introducing manually the icon after the label
             --}}
-      {{~icon (if @context.repliesShown "chevron-up" "chevron-down")~}}
+      {{~icon (if @state.repliesShown "chevron-up" "chevron-down")~}}
     </DButton>
   </template>
 }
