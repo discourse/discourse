@@ -164,7 +164,11 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
-const DEPRECATED_POST_MENU_WIDGETS = ["post-menu", "small-user-list"];
+const DEPRECATED_POST_MENU_WIDGETS = [
+  "post-menu",
+  "post-user-tip-shim",
+  "small-user-list",
+];
 
 const appliedModificationIds = new WeakMap();
 
