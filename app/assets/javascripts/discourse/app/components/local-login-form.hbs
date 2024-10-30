@@ -2,6 +2,7 @@
   <div id="credentials" class={{this.credentialsClass}}>
     <div class="input-group" {{did-insert this.passkeyConditionalLogin}}>
       <Input
+        {{on "focusin" this.scrollInputIntoView}}
         @value={{@loginName}}
         @type="email"
         id="login-account-name"
@@ -32,6 +33,7 @@
     </div>
     <div class="input-group">
       <PasswordField
+        {{on "focusin" this.scrollInputIntoView}}
         {{on "keydown" this.loginOnEnter}}
         @value={{@loginPassword}}
         @capsLockOn={{this.capsLockOn}}
@@ -90,6 +92,7 @@
         <SecondFactorInput
           {{on "keydown" this.loginOnEnter}}
           {{on "input" (with-event-value (fn (mut @secondFactorToken)))}}
+          {{on "focusin" this.scrollInputIntoView}}
           @secondFactorMethod={{@secondFactorMethod}}
           value={{@secondFactorToken}}
           id="login-second-factor"

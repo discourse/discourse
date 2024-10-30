@@ -39,6 +39,8 @@ export default class CreateAccount extends Component.extend(
   userFields = null;
   isDeveloper = false;
   maskPassword = true;
+  passwordValidationVisible = false;
+  emailValidationVisible = false;
 
   @notEmpty("model.authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
@@ -216,7 +218,17 @@ export default class CreateAccount extends Component.extend(
   }
 
   @action
+  showPasswordValidation() {
+    this.set(
+      "passwordValidationVisible",
+      Boolean(this.passwordValidation.reason)
+    );
+  }
+
+  @action
   checkEmailAvailability() {
+    this.set("emailValidationVisible", Boolean(this.emailValidation.reason));
+
     if (
       !this.emailValidation.ok ||
       this.serverAccountEmail === this.model.accountEmail
@@ -439,6 +451,14 @@ export default class CreateAccount extends Component.extend(
   }
 
   @action
+  scrollInputIntoView(event) {
+    event.target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+
+  @action
   togglePasswordMask() {
     this.toggleProperty("maskPassword");
   }
@@ -453,6 +473,8 @@ export default class CreateAccount extends Component.extend(
   createAccount() {
     this.set("flash", "");
     this.set("forceValidationReason", true);
+    this.set("emailValidationVisible", true);
+    this.set("passwordValidationVisible", true);
 
     const validation = [
       this.emailValidation,
