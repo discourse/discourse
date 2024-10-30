@@ -120,13 +120,13 @@
   ],
   "exclude": [
     "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
-    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs",
+    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs"
   ],
   "glint": {
     "environment": [
       "ember-loose",
       "ember-template-imports"
-    ]
+    ],
     "checkStandaloneTemplates": false
   }
 }
