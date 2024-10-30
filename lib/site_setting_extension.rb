@@ -143,6 +143,12 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
+  def deprecated_setting_alias(setting_name)
+    SiteSettings::DeprecatedSettings::SETTINGS
+      .find { |setting| setting.second.to_s == setting_name.to_s }
+      &.first
+  end
+
   def settings_hash
     result = {}
 
@@ -301,8 +307,16 @@ module SiteSettingExtension
     I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
   end
 
+  # TODO (martin) We can remove this workaround of checking if
+  # we get an array back once keyword translations in languages other
+  # than english have been updated not to use YAML arrays.
   def keywords(setting)
-    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
+    translated_keywords = I18n.t("site_settings.keywords.#{setting}", default: "")
+    if translated_keywords.is_a?(Array)
+      return (translated_keywords + [deprecated_setting_alias(setting)]).compact
+    end
+
+    translated_keywords.split("|").concat([deprecated_setting_alias(setting)]).compact
   end
 
   def placeholder(setting)
