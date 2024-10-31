@@ -32,27 +32,60 @@ class DbHelper
     text_columns = find_text_columns(excluded_tables)
 
     text_columns.each do |table, columns|
-      set =
-        columns
-          .map do |column|
-            replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
-            replace = truncate(replace, table, column)
-            "\"#{column[:name]}\" = #{replace}"
+      query_parts =
+        columns.each_with_object(
+          { updates: [], conditions: [], skipped_counts: [] },
+        ) do |column, parts|
+          replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
+          replace = truncate(replace, table, column)
+
+          parts[:updates] << %("#{column[:name]}" = #{replace})
+
+          basic_condition = %("#{column[:name]}" IS NOT NULL AND "#{column[:name]}" LIKE :like)
+
+          if column[:max_length].present?
+            parts[
+              :conditions
+            ] << "(#{basic_condition} AND LENGTH(#{replace}) <= #{column[:max_length]})"
+
+            parts[:skipped_counts] << <<~SQL
+              SUM(
+                CASE
+                  WHEN #{basic_condition} AND LENGTH(#{replace}) > #{column[:max_length]} THEN 1 ELSE 0
+                END) AS #{column[:name]}_skipped
+            SQL
+          else
+            parts[:conditions] << "(#{basic_condition})"
           end
-          .join(", ")
+        end
 
-      where =
-        columns
-          .map { |column| "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" LIKE :like" }
-          .join(" OR ")
-
-      rows = DB.exec(<<~SQL, from: from, to: to, like: like)
+      rows_updated = DB.exec(<<~SQL, from: from, to: to, like: like)
         UPDATE \"#{table}\"
-           SET #{set}
-         WHERE #{where}
+          SET #{query_parts[:updates].join(", ")}
+        WHERE #{query_parts[:conditions].join(" OR ")}
       SQL
 
-      puts "#{table}=#{rows}" if verbose && rows > 0
+      skipped_rows =
+        if query_parts[:skipped_counts].any?
+          skipped = DB.query_hash(<<~SQL, from: from, to: to, like: like).first
+          SELECT #{query_parts[:skipped_counts].join(", ")}
+          FROM \"#{table}\"
+        SQL
+
+          skipped.select { |_, count| count.to_i > 0 }
+        end
+
+      if verbose && (rows_updated > 0 || skipped_rows&.any?)
+        message = +"#{table}=#{rows_updated}"
+        if skipped_rows&.any?
+          message << " SKIPPED: "
+          message << skipped_rows
+            .map { |column, count| "#{column.delete_suffix("_skipped")}: #{count} updates" }
+            .join(", ")
+        end
+
+        puts message
+      end
     end
 
     finish!

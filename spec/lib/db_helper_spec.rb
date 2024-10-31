@@ -44,6 +44,25 @@ RSpec.describe DbHelper do
 
       DB.exec "DROP FUNCTION #{Migration::BaseDropper.readonly_function_name("posts", "cooked")} CASCADE"
     end
+
+    it "skips remap when new value exceeds column length constraint" do
+      bookmark1 = Fabricate(:bookmark, name: "short-bookmark")
+      bookmark2 = Fabricate(:bookmark, name: "another-bookmark")
+
+      DbHelper.remap("bookmark", "a" * 100)
+
+      bookmark1.reload
+      bookmark2.reload
+
+      expect(bookmark1.name).to eq("short-bookmark")
+      expect(bookmark2.name).to eq("another-bookmark")
+    end
+
+    it "logs skipped updates due to length constraint when verbose is enabled" do
+      Fabricate(:bookmark, name: "another-bookmark")
+
+      expect { DbHelper.remap("bookmark", "a" * 98, verbose: true) }.to output(/SKIPPED:/).to_stdout
+    end
   end
 
   describe ".regexp_replace" do
