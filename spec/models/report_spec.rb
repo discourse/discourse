@@ -312,6 +312,49 @@ RSpec.describe Report do
     end
   end
 
+  describe "page_view_legacy_total_reqs" do
+    before do
+      freeze_time(Time.now.at_midnight)
+      Theme.clear_default!
+    end
+
+    let(:report) { Report.find("page_view_legacy_total_reqs") }
+
+    context "with no data" do
+      it "works" do
+        expect(report.data).to be_empty
+      end
+    end
+
+    context "with data" do
+      before do
+        CachedCounting.reset
+        CachedCounting.enable
+        ApplicationRequest.enable
+      end
+
+      after do
+        CachedCounting.reset
+        ApplicationRequest.disable
+        CachedCounting.disable
+      end
+
+      it "works and does not count browser or mobile pageviews" do
+        3.times { ApplicationRequest.increment!(:page_view_crawler) }
+        8.times { ApplicationRequest.increment!(:page_view_logged_in) }
+        6.times { ApplicationRequest.increment!(:page_view_logged_in_browser) }
+        2.times { ApplicationRequest.increment!(:page_view_logged_in_mobile) }
+        2.times { ApplicationRequest.increment!(:page_view_anon) }
+        1.times { ApplicationRequest.increment!(:page_view_anon_browser) }
+        4.times { ApplicationRequest.increment!(:page_view_anon_mobile) }
+
+        CachedCounting.flush
+
+        expect(report.data.sum { |r| r[:y] }).to eq(13)
+      end
+    end
+  end
+
   describe "page_view_total_reqs" do
     before do
       freeze_time(Time.now.at_midnight)
