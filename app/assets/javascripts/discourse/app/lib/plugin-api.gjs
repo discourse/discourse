@@ -3322,7 +3322,8 @@ class PluginApi {
    *
    * @param {Object} tab
    * @param {string} tab.id - an identifier used in more-topics-tabs value transformer
-   * @param {string} tab.name - a name displayed on the tab itself
+   * @param {string} tab.name - a name displayed on the tab
+   * @param {string} tab.icon - an optional icon displayed on the tab
    * @param {Class} tab.component - contents of the tab
    * @param {tabCondition} tab.condition - an optional callback to conditionally show the tab
    */
