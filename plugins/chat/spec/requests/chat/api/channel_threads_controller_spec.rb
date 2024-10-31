@@ -260,7 +260,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     context "when channel does not exist" do
       it "returns 404" do
         channel_1.destroy!
-        post "/chat/api/channels/#{channel_id}", params: params
+        post "/chat/api/channels/#{channel_id}/threads", params: params
 
         expect(response.status).to eq(404)
       end
