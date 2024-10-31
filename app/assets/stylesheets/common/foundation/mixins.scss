@@ -292,3 +292,21 @@ $hpad: 0.65em;
     background: var(--d-nav-color--active);
   }
 }
+
+@mixin click-counter-badge {
+  content: attr(data-clicks);
+  font-weight: normal;
+  background-color: var(--primary-low);
+  color: var(--primary-medium);
+  position: relative;
+  top: -1px;
+  padding: 0.21em 0.42em;
+  min-width: 0.5em;
+  line-height: var(--line-height-small);
+  font-size: var(--font-down-2);
+  text-align: center;
+  border-radius: 10px;
+  white-space: nowrap;
+  display: inline-block;
+  margin: 0.15em;
+}

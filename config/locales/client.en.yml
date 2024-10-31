@@ -3766,6 +3766,9 @@ en:
         one: "view %{count} hidden reply"
         other: "view %{count} hidden replies"
       sr_reply_to: "Reply to post #%{post_number} by @%{username}"
+      link_clicked:
+        one: "link clicked %{count} time"
+        other: "link clicked %{count} times"
 
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"

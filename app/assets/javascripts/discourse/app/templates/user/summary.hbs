@@ -194,18 +194,12 @@
                   'nofollow ugc'
                 }}"
                 target="_blank"
+                data-clicks={{link.clicks}}
+                aria-label={{i18n "topic_map.clicks" count=link.clicks}}
               >
                 {{shorten-url link.url}}
               </a>
               {{! template-lint-enable link-rel-noopener }}
-
-              <span
-                class="badge badge-notification clicks"
-                title={{i18n "topic_map.clicks" count=link.clicks}}
-              >
-                {{number link.clicks}}
-              </span>
-
               <br />
 
               <a href={{link.post_url}}>

@@ -13,10 +13,12 @@ export default createWidget("post-links", {
 
   linkHtml(link) {
     const linkBody = replaceEmoji(link.title);
+    const attributes = {
+      href: link.url,
+    };
+
     if (link.clicks) {
-      linkBody.push(
-        h("span.badge.badge-notification.clicks", link.clicks.toString())
-      );
+      attributes["data-clicks"] = link.clicks.toString();
     }
 
     return h(
@@ -25,7 +27,7 @@ export default createWidget("post-links", {
         "a.track-link",
         {
           className: "inbound",
-          attributes: { href: link.url },
+          attributes,
         },
         [iconNode("link"), linkBody]
       )
