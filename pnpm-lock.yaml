@@ -162,8 +162,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -252,8 +252,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -388,8 +388,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -638,8 +638,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -858,8 +858,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -937,8 +937,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -1016,8 +1016,8 @@ importers:
         specifier: ^3.5.32
         version: 3.5.32
       '@types/qunit':
-        specifier: ^2.19.11
-        version: 2.19.11
+        specifier: ^2.19.12
+        version: 2.19.12
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
@@ -2711,8 +2711,8 @@ packages:
   '@types/qs@6.9.15':
     resolution: {integrity: sha512-uXHQKES6DQKKCLh441Xv/dwxOq1TVS3JPUMlEqoEglvlhR6Mxnlew/Xq/LRVHpLyk7iK3zODe1qYHIMltO7XGg==}
 
-  '@types/qunit@2.19.11':
-    resolution: {integrity: sha512-JYIrHO/FFMJ8t6zcw5O8Id6ctKyBaYFZOQI9D6pXOI9TwSF+tkvPZAouo6RtvjvZCBBVNBcxf1lqKWMmUH1yaA==}
+  '@types/qunit@2.19.12':
+    resolution: {integrity: sha512-II+C1wgzUia0g+tGAH+PBb4XiTm8/C/i6sN23r21NNskBYOYrv+qnW0tFQ/IxZzKVwrK4CTglf8YO3poJUclQA==}
 
   '@types/range-parser@1.2.7':
     resolution: {integrity: sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==}
@@ -11159,7 +11159,7 @@ snapshots:
 
   '@types/qs@6.9.15': {}
 
-  '@types/qunit@2.19.11': {}
+  '@types/qunit@2.19.12': {}
 
   '@types/range-parser@1.2.7': {}
 
