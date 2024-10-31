@@ -9,17 +9,23 @@ RSpec.describe Chat::Thread do
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_3) { Fabricate(:chat_thread, channel: channel) }
 
-    before do
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+    fab!(:thread_1_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:thread_1_message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:thread_1_message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
 
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
+    fab!(:thread_2_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_4) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
 
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_3)
+    fab!(:thread_3_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_3) }
+
+    it "supports custom fields" do
+      thread_1.custom_fields["test"] = "test"
+      thread_1.save_custom_fields
+      thread = Chat::Thread.find(thread_1.id)
+      expect(thread.custom_fields["test"]).to eq("test")
+      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread_1.id)
     end
 
     describe "updating replies_count for all threads" do
