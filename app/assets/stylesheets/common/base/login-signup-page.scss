@@ -9,6 +9,17 @@
   flex-direction: column;
 }
 
+#main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show) {
+  & ~ .powered-by-discourse,
+  .above-main-container-outlet {
+    display: none;
+  }
+}
+
+body:has(.login-fullpage, .signup-fullpage) {
+  background-color: var(--secondary);
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
@@ -18,6 +29,14 @@
     justify-content: center;
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
+  }
+
+  .alert {
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    margin: 0;
   }
 
   .login-page-cta,

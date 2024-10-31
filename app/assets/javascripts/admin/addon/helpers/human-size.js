@@ -1,4 +1,6 @@
-import { htmlHelper } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 import I18n from "discourse-i18n";
 
-export default htmlHelper((size) => I18n.toHumanSize(size));
+export default function (size) {
+  return htmlSafe(I18n.toHumanSize(size));
+}

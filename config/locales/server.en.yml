@@ -1877,7 +1877,7 @@ en:
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    must_approve_users: "All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the \"arrive at topic\" invite option)"
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."

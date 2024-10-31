@@ -655,6 +655,30 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("the invite section link is not visible to people who cannot invite to the forum", async function (assert) {
+    updateCurrentUser({ can_invite_to_forum: false });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='invite']"
+      )
+      .doesNotExist("invite section link is not visible");
+  });
+
+  test("clicking the invite section link opens the invite modal and doesn't change the route", async function (assert) {
+    updateCurrentUser({ can_invite_to_forum: true });
+
+    await visit("/");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='invite']"
+    );
+
+    assert.dom(".create-invite-modal").exists("invite modal is open");
+    assert.strictEqual(currentURL(), "/", "route doesn't change");
+  });
+
   test("visiting top route", async function (assert) {
     await visit("/top");
 

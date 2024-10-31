@@ -225,6 +225,7 @@ export default function () {
 
   this.route("new-topic");
   this.route("new-message");
+  this.route("new-invite");
 
   this.route("badges", { resetNamespace: true }, function () {
     this.route("show", { path: "/:id/:slug" });

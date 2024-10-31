@@ -22,7 +22,18 @@ RSpec.describe SidebarSection do
     expect(community_section.reload.title).to eq("Community")
 
     expect(community_section.sidebar_section_links.all.map { |link| link.linkable.name }).to eq(
-      ["Topics", "My Posts", "Review", "Admin", "Users", "About", "FAQ", "Groups", "Badges"],
+      [
+        "Topics",
+        "My Posts",
+        "Review",
+        "Admin",
+        "Invite",
+        "Users",
+        "About",
+        "FAQ",
+        "Groups",
+        "Badges",
+      ],
     )
   end
 end

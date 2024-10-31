@@ -13,6 +13,11 @@ export function makeArray(obj) {
 }
 
 export function htmlHelper(fn) {
+  deprecated(
+    `htmlHelper is deprecated. Use a plain function and \`htmlSafe()\` from "@ember/template" instead.`,
+    { id: "discourse.html-helper" }
+  );
+
   return Helper.helper(function (...args) {
     args =
       args.length > 1 ? args[0].concat({ hash: args[args.length - 1] }) : args;
