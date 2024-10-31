@@ -27,11 +27,11 @@ export default class PostMenuButtonConfig {
   }
 
   @bind
-  alwaysShow(args) {
+  collapsedByDefault(args) {
     return this.#staticPropertyWithReplacementFallback({
-      property: "alwaysShow",
+      property: "collapsedByDefault",
       args,
-      defaultValue: false,
+      defaultValue: null,
     });
   }
 

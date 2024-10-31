@@ -289,8 +289,14 @@ export default class PostMenu extends Component {
     }
 
     const items = this.availableButtons.filter((button) => {
+      const collapsedByDefault = button.collapsedByDefault(
+        this.staticMethodsArgs
+      );
+
+      // when the value returned by collapsedByDefault is explicitly false we ignore the hidden items specified in the
+      // site setting
       if (
-        button.alwaysShow(this.staticMethodsArgs) ||
+        collapsedByDefault === false ||
         button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
       ) {
         return false;
@@ -303,7 +309,7 @@ export default class PostMenu extends Component {
         return false;
       }
 
-      return hiddenItems.includes(button.key);
+      return collapsedByDefault || hiddenItems.includes(button.key);
     });
 
     if (items.length <= 1) {
