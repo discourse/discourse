@@ -11,8 +11,11 @@ RSpec.describe Chat::CreateThread do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, another_user]) }
+    fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { nil }
@@ -39,8 +42,17 @@ RSpec.describe Chat::CreateThread do
         expect(result.membership).to eq(result.thread.membership_for(current_user))
       end
 
-      it "publishes a `thread_created` MessageBus event" do
+      it "publishes a `thread_created` MessageBus event for public channels" do
         message = MessageBus.track_publish("/chat/#{channel_1.id}") { result }.first
+        expect(message.data["type"]).to eq("thread_created")
+      end
+
+      it "publishes a `thread_created` MessageBus event for DM channels" do
+        params[:channel_id] = dm_channel.id
+        params[:original_message_id] = dm_message.id
+        params[:guardian] = Guardian.new(another_user)
+        message = MessageBus.track_publish("/chat/#{dm_channel.id}") { result }.first
+
         expect(message.data["type"]).to eq("thread_created")
       end
 

@@ -45,16 +45,16 @@ class SiteSetting::Update
   end
 
   def setting_is_visible(params:, options:)
-    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(params[:setting_name])
+    options.allow_changing_hidden || !SiteSetting.hidden_settings.include?(params.setting_name)
   end
 
   def setting_is_configurable(params:)
-    return true if !SiteSetting.plugins[params[:setting_name]]
+    return true if !SiteSetting.plugins[params.setting_name]
 
-    Discourse.plugins_by_name[SiteSetting.plugins[params[:setting_name]]].configurable?
+    Discourse.plugins_by_name[SiteSetting.plugins[params.setting_name]].configurable?
   end
 
   def save(params:, guardian:)
-    SiteSetting.set_and_log(params[:setting_name], params[:new_value], guardian.user)
+    SiteSetting.set_and_log(params.setting_name, params.new_value, guardian.user)
   end
 end

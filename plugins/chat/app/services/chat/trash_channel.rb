@@ -18,7 +18,12 @@ module Chat
 
     DELETE_CHANNEL_LOG_KEY = "chat_channel_delete"
 
-    model :channel, :fetch_channel
+    params do
+      attribute :channel_id, :integer
+
+      validates :channel_id, presence: true
+    end
+    model :channel
     policy :invalid_access
     transaction do
       step :prevents_slug_collision
@@ -30,7 +35,7 @@ module Chat
     private
 
     def fetch_channel(params:)
-      Chat::Channel.find_by(id: params[:channel_id])
+      Chat::Channel.find_by(id: params.channel_id)
     end
 
     def invalid_access(guardian:, channel:)

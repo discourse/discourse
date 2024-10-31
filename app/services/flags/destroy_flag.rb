@@ -3,6 +3,11 @@
 class Flags::DestroyFlag
   include Service::Base
 
+  params do
+    attribute :id, :integer
+
+    validates :id, presence: true
+  end
   model :flag
   policy :not_system
   policy :not_used
@@ -15,7 +20,7 @@ class Flags::DestroyFlag
   private
 
   def fetch_flag(params:)
-    Flag.find_by(id: params[:id])
+    Flag.find_by(id: params.id)
   end
 
   def not_system(flag:)

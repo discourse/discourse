@@ -4,6 +4,11 @@ class AdminNotices::Dismiss
   include Service::Base
 
   policy :invalid_access
+  params do
+    attribute :id, :integer
+
+    validates :id, presence: true
+  end
   model :admin_notice, optional: true
   transaction do
     step :destroy
@@ -17,7 +22,7 @@ class AdminNotices::Dismiss
   end
 
   def fetch_admin_notice(params:)
-    AdminNotice.find_by(id: params[:id])
+    AdminNotice.find_by(id: params.id)
   end
 
   def destroy(admin_notice:)

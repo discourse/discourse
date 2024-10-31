@@ -36,7 +36,7 @@ module Chat
     private
 
     def fetch_thread(params:)
-      Chat::Thread.find_by(id: params[:thread_id])
+      Chat::Thread.find_by(id: params.thread_id)
     end
 
     def can_view_channel(guardian:, thread:)

@@ -143,6 +143,12 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
+  def deprecated_setting_alias(setting_name)
+    SiteSettings::DeprecatedSettings::SETTINGS
+      .find { |setting| setting.second.to_s == setting_name.to_s }
+      &.first
+  end
+
   def settings_hash
     result = {}
 
@@ -302,7 +308,29 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
+    translated_keywords = I18n.t("site_settings.keywords.#{setting}", default: "")
+    english_translated_keywords = []
+
+    if I18n.locale != :en
+      english_translated_keywords =
+        I18n.t("site_settings.keywords.#{setting}", default: "", locale: :en).split("|")
+    end
+
+    # TODO (martin) We can remove this workaround of checking if
+    # we get an array back once keyword translations in languages other
+    # than English have been updated not to use YAML arrays.
+    if translated_keywords.is_a?(Array)
+      return(
+        (
+          translated_keywords + [deprecated_setting_alias(setting)] + english_translated_keywords
+        ).compact
+      )
+    end
+
+    translated_keywords
+      .split("|")
+      .concat([deprecated_setting_alias(setting)] + english_translated_keywords)
+      .compact
   end
 
   def placeholder(setting)

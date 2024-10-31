@@ -9,6 +9,7 @@ export default class AdminConfigAboutRoute extends Route {
           "title",
           "site_description",
           "extended_site_description",
+          "short_site_description",
           "about_banner_image",
           "community_owner",
           "contact_email",

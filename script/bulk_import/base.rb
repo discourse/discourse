@@ -761,6 +761,8 @@ class BulkImport::Base
 
   POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
 
+  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at]
+
   BADGE_COLUMNS = %i[
     id
     name
@@ -1049,6 +1051,10 @@ class BulkImport::Base
 
   def create_post_voting_votes(rows, &block)
     create_records(rows, "post_voting_vote", POST_VOTING_VOTE_COLUMNS, &block)
+  end
+
+  def create_topic_voting_votes(rows, &block)
+    create_records(rows, "topic_voting_vote", TOPIC_VOTING_COLUMNS, &block)
   end
 
   def create_post_custom_fields(rows, &block)
@@ -1556,6 +1562,12 @@ class BulkImport::Base
   def process_post_voting_vote(vote)
     vote[:created_at] ||= NOW
     vote
+  end
+
+  def process_topic_voting_vote(topic_vote)
+    topic_vote[:created_at] ||= NOW
+    topic_vote[:updated_at] ||= NOW
+    topic_vote
   end
 
   def process_user_avatar(avatar)

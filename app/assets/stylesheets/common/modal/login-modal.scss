@@ -217,11 +217,14 @@
 
 /* end shared styles */
 
-.d-modal.create-account {
+.d-modal.create-account,
+.d-modal.login-modal {
   &:not(:has(.login-right-side)) .d-modal__container {
     max-width: 500px;
   }
+}
 
+.d-modal.create-account {
   .d-modal {
     &__container {
       width: 100%;

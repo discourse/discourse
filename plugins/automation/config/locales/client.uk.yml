@@ -14,7 +14,8 @@ uk:
       select_trigger: Виберіть тригер
       confirm_automation_reset: Ця дія скине скрипт і налаштування тригера, новий стан буде збережений, ви хочете продовжити?
       confirm_automation_trigger: Ця дія запустить автоматизацію, ви хочете продовжити?
-      no_automation_yet: Ви ще не створили автоматизації.
+      no_automation_yet: Ви ще не створили жодної автоматизації. Виберіть варіант нижче, аби розпочати.
+      filter_placeholder: Фільтрувати за назвою або описом...
       edit_automation:
         trigger_section:
           forced: Цей тригер запускається примусово за допомогою скрипта.
@@ -392,6 +393,7 @@ uk:
           fields:
             custom_field_name:
               label: "Назва користувальницького поля"
+      unnamed_automation: "Неназвана автоматизація"
       models:
         script:
           name:

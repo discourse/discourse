@@ -28,6 +28,16 @@
           {{dir-span this.category.description_excerpt htmlSafe="true"}}
         </div>
       {{/if}}
+      {{#if (gt this.category.subcategories.length 0)}}
+        <div class="category-subcategories">
+          <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+            {{i18n
+              "category_row.subcategory_count"
+              count=this.category.subcategories.length
+            }}
+          </LinkTo>
+        </div>
+      {{/if}}
     </td>
 
     <td class="topics">

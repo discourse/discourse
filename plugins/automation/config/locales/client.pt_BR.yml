@@ -14,7 +14,6 @@ pt_BR:
       select_trigger: Selecione um acionador
       confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo. Deseja continuar?
       confirm_automation_trigger: Esta ação acionará a automação. Deseja continuar?
-      no_automation_yet: Você ainda não criou nenhuma automação.
       edit_automation:
         trigger_section:
           forced: Este acionador é forçado por script.

@@ -111,7 +111,7 @@ export default class ChatChannel {
   }
 
   get unreadThreadsCount() {
-    return Array.from(this.threadsManager.unreadThreadOverview.values()).length;
+    return this.threadsManager.unreadThreadCount;
   }
 
   get watchedThreadsUnreadCount() {

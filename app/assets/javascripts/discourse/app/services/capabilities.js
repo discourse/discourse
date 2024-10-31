@@ -43,6 +43,16 @@ class Capabilities {
       !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
     );
   }
+
+  get supportsServiceWorker() {
+    return (
+      "serviceWorker" in navigator &&
+      typeof ServiceWorkerRegistration !== "undefined" &&
+      !this.isAppWebview &&
+      navigator.serviceWorker.controller &&
+      navigator.serviceWorker.controller.state === "activated"
+    );
+  }
 }
 
 export const capabilities = new Capabilities();

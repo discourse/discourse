@@ -31,13 +31,8 @@ module PageObjects
         click("#login-link")
       end
 
-      def click_create_account(expect_success: true)
-        try_until_success(timeout: 5) do
-          click(".modal.create-account .btn-primary")
-          if expect_success
-            expect(page).to have_css(".modal.create-account .btn-primary.is-loading")
-          end
-        end
+      def click_create_account
+        click(".modal.create-account .btn-primary")
       end
 
       def has_password_input?

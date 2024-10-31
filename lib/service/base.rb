@@ -202,13 +202,18 @@ module Service
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
-        contract = class_name.new(default_values.merge(context[:params].slice(*attributes)))
+        contract =
+          class_name.new(
+            **default_values.merge(context[:params].slice(*attributes)),
+            options: context[:options],
+          )
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
           context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
           context.fail!
         end
+        contract.freeze
       end
 
       private

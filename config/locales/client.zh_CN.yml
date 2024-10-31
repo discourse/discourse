@@ -1264,7 +1264,6 @@ zh_CN:
       ignored_users: "已忽略"
       ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
-      automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消访问权限撤消操作"
@@ -1562,7 +1561,7 @@ zh_CN:
         action: "点击此处激活您的帐户"
         already_done: "抱歉，此帐户确认链接不再有效。也许您的帐户已经处于有效状态？"
         please_continue: "您的新帐户已确认；您将被重定向到首页。"
-        continue_button: "继续访问 %{site_name}"
+        continue_button: "结束!"
         welcome_to: "欢迎来到 %{site_name}！"
         approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
       name:
@@ -2033,7 +2032,6 @@ zh_CN:
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
       header_title: "欢迎！"
-      subheader_title: "让我们创建您的帐户"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
       title: "注册"
       failed: "出了点问题，可能此电子邮件已被注册，试试点击忘记密码链接"
@@ -2077,7 +2075,6 @@ zh_CN:
       confirm_button: 完成登录
     login:
       header_title: "欢迎回来"
-      subheader_title: "登录您的帐户"
       title: "登录"
       username: "用户"
       password: "密码"
@@ -2177,7 +2174,6 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
-      existing_user_can_redeem: "兑换您的话题或群组邀请。"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -2189,6 +2185,7 @@ zh_CN:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "仅类别"
+      categories_only_optimized: "仅限类别(已优化)"
       categories_with_featured_topics: "包含精选话题的类别"
       categories_and_latest_topics: "类别和最新话题"
       categories_and_latest_topics_created_date: "类别和最新话题（按话题创建日期排序）"
@@ -4813,8 +4810,6 @@ zh_CN:
           post_edited: "帖子被更新"
           post_destroyed: "帖子被删除"
           post_recovered: "帖子被恢复"
-          category_experts_approved: "帖子被标记为类别专家的帖子"
-          category_experts_unapproved: "帖子被取消标记为类别专家的帖子"
         group_event:
           group_name: "群组事件"
           group_created: "群组被创建"
@@ -4968,7 +4963,6 @@ zh_CN:
       config_areas:
         about:
           header: "关于您的网站"
-          description: "在此提供有关此站点和您的团队的信息，以便人们可以了解您的社区、幕后有谁、以及在出现问题时如何联系您。"
           general_settings: "常规设置"
           community_name: "社区名称"
           community_name_placeholder: "示例社区"
@@ -4980,37 +4974,19 @@ zh_CN:
           contact_information: "联系信息"
           community_owner: "社区所有者"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            负责此网站的主要联系人的名称。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_email: "联系电子邮件地址"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            负责此网站的主要联系人的电子邮件地址。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_url: "联系 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            本网站的联系 URL。如果存在，则取代 /about 上的联系电子邮件地址，对公开网站上的匿名用户可见。
           site_contact_name: "网站联系人名称"
-          site_contact_name_help: |
-            用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认的系统帐户。
           site_contact_group: "网站联系群组"
-          site_contact_group_help: |
-            被邀请至所有自动发送的私信的群组的有效名称。
           your_organization: "您的组织"
-          company_name: "公司名称"
-          company_name_placeholder: "示例公司"
-          company_name_help: |
-            您的公司或组织的名称。
+          company_name: "名称"
+          company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
           governing_law: "适用法律"
-          governing_law_placeholder: "纽约州"
-          governing_law_help: |
-            指定管辖网站法律方面（包括《服务条款》和《隐私声明》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。
           city_for_disputes: "争议城市"
-          city_for_disputes_placeholder: "纽约市"
-          city_for_disputes_help: |
-            指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -5055,6 +5031,7 @@ zh_CN:
             move_up: "上移"
             move_down: "下移"
         look_and_feel:
+          title: "外观"
           themes:
             title: "主题"
       plugins:
@@ -6273,6 +6250,8 @@ zh_CN:
         history: "查看变更历史记录"
         reset: "重置"
         none: "无"
+        save: "保存"
+        cancel: "取消"
       site_settings:
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"

@@ -1190,7 +1190,7 @@ lt:
       ignored_users: "Nepaisoma"
       ignored_users_instructions: "Slėpti visus pranešimus, įrašus ir asmenines žinutes iš šių vartotojų."
       tracked_topics_link: "Rodyti"
-      automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią."
+      automatically_unpin_topics: "Automatiškai atsegti temas pasiekus apačią"
       apps: "Programėlės"
       revoke_access: "Panaiktinti teises"
       undo_revoke_access: "Atstatyti atgal panaikintas teises"
@@ -1383,7 +1383,7 @@ lt:
         action: "Spustelėkite čia, kad suaktyvintumėte savo paskyrą"
         already_done: "Deja, ši paskyros patvirtinimo nuoroda nebegalioja. Galbūt jūsų paskyra jau aktyvi?"
         please_continue: "Jūsų nauja paskyra patvirtinta; būsite nukreipti į pagrindinį puslapį."
-        continue_button: "Tęsti į %{site_name}"
+        continue_button: "Baigti!"
         welcome_to: "Sveiki atvykę į %{site_name}!"
         approval_required: "Moderatorius turi rankiniu būdu patvirtinti jūsų naują paskyrą, kad galėtumėte prisijungti prie šio forumo. Gausite el. laišką, kai jūsų paskyra bus patvirtinta!"
       name:
@@ -1738,7 +1738,6 @@ lt:
     search_hint: "vartotojo vardas, el. paštas arba IP adresas"
     create_account:
       header_title: "Sveiki!"
-      subheader_title: "Sukurti naują paskyrą"
       disclaimer: "Registruodamiesi sutinkate su <a href='%{privacy_link}' target='blank'>privatumo politika</a> ir <a href='%{tos_link}' target='blank'>paslaugų teikimo sąlygomis</a>."
       title: "Registruotis"
       failed: "Įvyko kažkas blogai, gali būti, kad šis el. paštas jau yra užregistruotas, pameginkite pasinaudoti slaptažodžio priminimo nuoroda"
@@ -1773,7 +1772,6 @@ lt:
       confirm_button: Baigti prisijungimą
     login:
       header_title: "Sveiki sugrįžę"
-      subheader_title: "Prisijunkite prie savo paskyros"
       title: "Prisijungti"
       username: "Vartotojas"
       password: "Slaptažodis"
@@ -3967,8 +3965,7 @@ lt:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          site_contact_group_help: |
-            Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
+          company_name: "Vardas"
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
           saved: "išsaugota!"
@@ -4907,6 +4904,8 @@ lt:
         history: "Peržiūrėti pakeitimų istoriją"
         reset: "iš naujo"
         none: "nieko"
+        save: "išsaugoti"
+        cancel: "atšaukti"
       site_settings:
         emoji_list:
           invalid_input: "Jaustukų sąraše turi būti tik tinkami jaustukų pavadinimai, pvz.: apkabinimai"

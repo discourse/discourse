@@ -1126,34 +1126,11 @@ class Plugin::Instance
   #   "chat_messages_30_days": 100,
   #   "chat_messages_count": 1000,
   # }
-  #
-  # The show_in_ui option (default false) is used to determine whether the
-  # group of stats is shown on the site About page in the Site Statistics
-  # table. Some stats may be needed purely for reporting purposes and thus
-  # do not need to be shown in the UI to admins/users.
-  #
-  # TODO(osama): remove show_in_ui when experimental_redesigned_about_page_groups is removed
-  def register_stat(
-    name,
-    show_in_ui: (
-      not_using_deprecated_arg = true
-      false
-    ),
-    expose_via_api: false,
-    &block
-  )
-    if !not_using_deprecated_arg
-      Discourse.deprecate(
-        "`show_in_ui` argument of the `register_stat` API is deprecated. Please use the `addAboutPageActivity` JS API instead if you want your custom stat to be shown on the about page.",
-        since: "3.4.0.beta2",
-        drop_from: "3.5.0.beta1",
-      )
-    end
-
+  def register_stat(name, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
     return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    stat = Stat.new(name, expose_via_api: expose_via_api, &block)
     DiscoursePluginRegistry.register_stat(stat, self)
   end
 

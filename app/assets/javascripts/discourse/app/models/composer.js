@@ -187,6 +187,11 @@ export default class Composer extends RestModel {
 
   @service dialog;
 
+  @tracked topic;
+  @tracked post;
+  @tracked reply;
+  @tracked whisper;
+
   unlistTopic = false;
   noBump = false;
   draftSaving = false;
@@ -200,7 +205,6 @@ export default class Composer extends RestModel {
   @not("creatingPrivateMessage") notCreatingPrivateMessage;
   @not("privateMessage") notPrivateMessage;
   @or("creatingTopic", "editingFirstPost") topicFirstPost;
-  @equal("action", REPLY) replyingToTopic;
   @equal("composeState", OPEN) viewOpen;
   @equal("composeState", DRAFT) viewDraft;
   @equal("composeState", FULLSCREEN) viewFullscreen;
@@ -263,6 +267,16 @@ export default class Composer extends RestModel {
     return categoryId ? Category.findById(categoryId) : null;
   }
 
+  @dependentKeyCompat
+  get replyingToTopic() {
+    return this.get("action") === REPLY;
+  }
+
+  @dependentKeyCompat
+  get editingPost() {
+    return isEdit(this.get("action"));
+  }
+
   @discourseComputed("category.minimumRequiredTags")
   minimumRequiredTags(minimumRequiredTags) {
     return minimumRequiredTags || 0;
@@ -284,11 +298,6 @@ export default class Composer extends RestModel {
     return (
       creatingPrivateMessage || (topic && topic.archetype === "private_message")
     );
-  }
-
-  @discourseComputed("action")
-  editingPost(action) {
-    return isEdit(action);
   }
 
   @observes("composeState")

@@ -276,7 +276,6 @@
             @convertToPublicTopic={{action "convertToPublicTopic"}}
             @convertToPrivateMessage={{action "convertToPrivateMessage"}}
             @fullscreen={{info.topicProgressExpanded}}
-            @mobileView={{this.site.mobileView}}
           />
         {{else}}
           <TopicProgress
@@ -297,8 +296,6 @@
             </span>
             <TopicAdminMenu
               @topic={{this.model}}
-              @openUpwards="true"
-              @rightSide="true"
               @toggleMultiSelect={{action "toggleMultiSelect"}}
               @showTopicSlowModeUpdate={{route-action
                 "showTopicSlowModeUpdate"

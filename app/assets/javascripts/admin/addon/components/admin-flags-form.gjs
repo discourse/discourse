@@ -125,11 +125,11 @@ export default class AdminFlagsForm extends Component {
   }
 
   <template>
+    <BackButton
+      @route="adminConfig.flags"
+      @label="admin.config_areas.flags.back"
+    />
     <div class="admin-config-area">
-      <BackButton
-        @route="adminConfig.flags"
-        @label="admin.config_areas.flags.back"
-      />
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
           <:content>

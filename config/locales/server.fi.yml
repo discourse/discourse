@@ -2054,7 +2054,6 @@ fi:
     tos_url: "Jos haluat ylläpitää käyttöehtoja sivuston ulkopuolella, syötä URL tähän."
     privacy_policy_url: "Jos haluat ylläpitää tietosuojaselostetta sivuston ulkopuolella, syötä URL tähän."
     log_anonymizer_details: "Säilytetäänkö käyttäjän tiedot lokissa anonymisoinnin jälkeen."
-    display_eu_visitor_stats: "Näytä maailmanlaajuisten ja EU-vierailijoiden määrä /about-sivulla."
     newuser_spam_host_threshold: "Kuinka monta kertaa uusi käyttäjä voi linkittää samalle sivustolle `newuser_spam_host_posts` viestissään, ennen kuin se tulkitaan roskapostin lähettämiseksi."
     allowed_spam_host_domains: "Lista verkkotunnuksista, joita ei oteta huomioon roskapostin tunnistamisessa. Uusilla käyttäjillä ei ole rajoituksia linkkaamisessa näihin tunnuksiin."
     staff_like_weight: "Kuinka paljon painoa annetaan henkilökunnan tykkäyksille (muiden kuin henkilökunnan tykkäysten paino on 1)"

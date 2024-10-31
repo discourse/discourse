@@ -1653,7 +1653,7 @@ ar:
       ignored_users: "التجاهل"
       ignored_users_instructions: "منع جميع المنشورات والإشعارات والرسائل الخاصة من هؤلاء المستخدمين"
       tracked_topics_link: "إظهار"
-      automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عند وصولي إلى نهايتها."
+      automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عند وصولي إلى نهايتها"
       apps: "التطبيقات"
       revoke_access: "إلغاء الوصول"
       undo_revoke_access: "التراجع عن إلغاء الوصول"
@@ -2036,7 +2036,7 @@ ar:
         action: "انقر هنا لتفعيل حسابك."
         already_done: "عذرًا، لم يعُد رابط تأكيد الحساب صالحًا. ربما يكون الحساب نشطًا بالفعل."
         please_continue: "تم تأكيد حسابك الجديد؛ ستتم إعادة توجيهك إلى الصفحة الرئيسية."
-        continue_button: "المتابعة إلى %{site_name}"
+        continue_button: "إنهاء!"
         welcome_to: "مرحبًا بك في %{site_name}!"
         approval_required: "يجب على المشرف الموافقة على حسابك الجديد يدويًا للوصول إلى هذا المنتدى. ستتلقى رسالة إلكترونية عندما يتم قبول حسابك."
       name:
@@ -2616,13 +2616,13 @@ ar:
     search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان IP"
     create_account:
       header_title: "مرحبًا!"
-      subheader_title: "لننشئ حسابك"
       disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
       title: "الاشتراك"
       failed: "حدث خطأ ما. قد يكون هذا البريد الإلكتروني مسجلًا بالفعل. جرِّب رابط نسيان كلمة المرور"
       associate: "لديك حساب بالفعل؟ <a href='%{associate_link}'>سجِّل الدخول</a> لربط حسابك من %{provider}."
       activation_title: "تفعيل حسابك"
       already_have_account: "هل لديك حساب بالفعل؟"
+      no_account_yet: "ليس لديك حساب؟"
       progress_bar:
         signup: "الاشتراك"
         approve: "الموافقة"
@@ -2658,7 +2658,6 @@ ar:
       confirm_button: إنهاء تسجيل الدخول
     login:
       header_title: "مرحبًا بعودتك"
-      subheader_title: "تسجيل الدخول إلى حسابك"
       title: "تسجيل الدخول"
       username: "المستخدم"
       password: "كلمة المرور"
@@ -2758,7 +2757,6 @@ ar:
       success: "تم إنشاء حسابك وتسجيل دخولك."
       name_label: "الاسم"
       password_label: "كلمة المرور"
-      existing_user_can_redeem: "استخدم دعوتك إلى موضوع أو مجموعة."
     password_reset:
       continue: "المتابعة إلى %{site_name}"
     emoji_set:
@@ -6239,37 +6237,19 @@ ar:
           contact_information: "معلومات التواصل"
           community_owner: "مالك المجتمع"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            اسم جهة الاتصال الرئيسية المسؤولة عن هذا الموقع. يستخدم للإشعارات الهامة، ويعرض أيضًا على /about. مرئي للمستخدمين المجهولين على المواقع العامة.
           contact_email: "البريد الإلكتروني لجهة الاتصال"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            عنوان البريد الإلكتروني لجهة الاتصال الرئيسية المسؤولة عن هذا الموقع. يستخدم للإشعارات الهامة، ويعرض أيضًا على /about. مرئي للمستخدمين المجهولين على المواقع العامة.
           contact_url: "عنوان URL لجهة الاتصال"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            عنوان URL الخاص بجهة الاتصال لهذا الموقع. عند وجوده، يحل محل عنوان البريد الإلكتروني الخاص بجهة الاتصال على /about ومرئي للمستخدمين المجهولين على المواقع العامة.
           site_contact_name: "اسم جهة الاتصال للموقع"
-          site_contact_name_help: |
-            اسم مستخدم صالح للموظفين لإرسال جميع الرسائل الآلية منه. إذا تُرك فارغًا، فسيتم استخدام حساب النظام الافتراضي.
           site_contact_group: "مجموعة جهات الاتصال للموقع"
-          site_contact_group_help: |
-            اسم صالح لمجموعة تتم دعوتها إلى جميع الرسائل الآلية
           your_organization: "مؤسستك"
-          company_name: "اسم الشركة"
-          company_name_placeholder: "Sample Company Inc."
-          company_name_help: |
-            اسم شركتك أو مؤسستك.
+          company_name: "الاسم"
+          company_name_placeholder: "مؤسسة أكمي"
           company_name_warning: |
             إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
           governing_law: "القانون الحاكم"
-          governing_law_placeholder: "ولاية نيويورك"
-          governing_law_help: |
-            حدِّد الولاية القضائية التي تحكم الجوانب القانونية للموقع، بما في ذلك شروط الخدمة وإشعار الخصوصية. عادةً ما تكون هذه هي الدولة أو الولاية التي تم تسجيل الشركة التي تدير الموقع فيها أو التي تدير أعمالها منها.
           city_for_disputes: "مدينة النزاعات"
-          city_for_disputes_placeholder: "مدينة نيويورك"
-          city_for_disputes_help: |
-            حدِّد المدينة التي سيتم استخدامها كولاية قضائية لحل أي نزاعات تتعلق باستخدام هذا المنتدى. عادةً ما يتم تضمين هذه المعلومات في المستندات القانونية مثل شروط خدمة المنتدى.
           optional: "(اختياري)"
           update: "تحديث"
           toasts:
@@ -6312,6 +6292,7 @@ ar:
             move_up: "التحريك لأعلى"
             move_down: "التحريك لأسفل"
         look_and_feel:
+          title: "الشكل والمظهر"
           themes:
             title: "السمات"
       plugins:
@@ -7585,6 +7566,8 @@ ar:
         history: "عرض سجل التغييرات"
         reset: "إعادة التعيين"
         none: "لا يوجد"
+        save: "حفظ"
+        cancel: "إلغاء"
       site_settings:
         emoji_list:
           invalid_input: "يجب أن تحتوي قائمة الرموز التعبيرية على أسماء صالحة للرموز التعبيرية فقط، مثل: العناق"

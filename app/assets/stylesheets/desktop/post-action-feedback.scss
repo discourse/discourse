@@ -9,7 +9,7 @@
   font-size: var(--font-down-2);
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
-  z-index: z("modal", "popover");
+  z-index: calc(z("timeline") + 1);
   &.-success {
     color: var(--success);
   }

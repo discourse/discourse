@@ -14,7 +14,8 @@ de:
       select_trigger: Auslöser auswählen
       confirm_automation_reset: Diese Aktion setzt die Skript- und Auslöseroptionen zurück. Der neue Zustand wird gespeichert. Willst du fortfahren?
       confirm_automation_trigger: Diese Aktion löst die Automatisierung aus. Willst du fortfahren?
-      no_automation_yet: Du hast noch keine Automatisierung erstellt.
+      no_automation_yet: Du hast noch keine Automatisierungen erstellt. Wähle unten eine Option, um loszulegen.
+      filter_placeholder: Filter nach Name oder Beschreibung...
       edit_automation:
         trigger_section:
           forced: Dieser Auslöser wird vom Skript erzwungen.
@@ -390,6 +391,7 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
+      unnamed_automation: "Unbenannte Automatisierung"
       models:
         script:
           name:

@@ -1119,7 +1119,7 @@ vi:
       ignored_users: "Đã bỏ qua"
       ignored_users_instructions: "Chặn tất cả các bài đăng, thông báo và tin nhắn từ những người dùng này."
       tracked_topics_link: "Hiển thị"
-      automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang."
+      automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi tôi xuống cuối trang"
       apps: "Ứng dụng"
       revoke_access: "Lấy lại quyền"
       undo_revoke_access: "Cấp lại quyền"
@@ -1306,7 +1306,7 @@ vi:
         action: "Nhấn vào đây để kích hoạt tài khoản của bạn"
         already_done: "Xin lỗi, liên kết để xác nhận tài khoản này không còn hợp lệ. Có thể tài khoản của bạn được kích hoạt?"
         please_continue: "Tài khoản của bạn đã được xác nhận; bạn sẽ được chuyển đến trang chủ."
-        continue_button: "Tiếp tục đến %{site_name}"
+        continue_button: "Kết thúc!"
         welcome_to: "Chào mừng đến với %{site_name}!"
         approval_required: "Một điều hành viên phải duyệt tài khoản của bạn trước khi bạn có thể đăng nhập diễn đàn này. Bạn sẽ nhận được email khi tài khoản của bạn được duyệt!"
       name:
@@ -1673,7 +1673,6 @@ vi:
     search_hint: "username, email or IP address"
     create_account:
       header_title: "Chào mừng!"
-      subheader_title: "Hãy tạo tài khoản của bạn"
       disclaimer: "Bằng cách đăng ký, bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
       title: "Đăng ký"
       failed: "Có gì đó không đúng, có thể email này đã được đăng ký, thử liên kết quên mật khẩu"
@@ -1713,7 +1712,6 @@ vi:
       confirm_button: Kết thúc đăng nhập
     login:
       header_title: "Chào mừng trở lại"
-      subheader_title: "Đăng nhập vào tài khoản của bạn"
       title: "Đăng nhập"
       username: "Thành viên"
       password: "Mật khẩu"
@@ -4063,6 +4061,7 @@ vi:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Tên"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           saved: "đã lưu"
@@ -5057,6 +5056,8 @@ vi:
         history: "Xem lịch sử thay đổi"
         reset: "trạng thái đầu"
         none: "không có gì"
+        save: "lưu lại"
+        cancel: "hủy"
       site_settings:
         emoji_list:
           invalid_input: "Danh sách biểu tượng cảm xúc chỉ nên chứa các tên biểu tượng cảm xúc hợp lệ, ví dụ: ôm"

@@ -14,8 +14,15 @@ ro:
         title: Creează un subiect
         description: Creează un subiect în numele unui anumit utilizator
       pin_topic:
-        title: Fixează subiectul
+        title: Fixează subiect
+      suspend_user_by_email:
+        description: Suspendă automat un cont bazat pe adresa de email
       close_topic:
         title: Închide subiect
       append_last_checked_by:
         button_text: Terminat
+      add_user_to_group_through_custom_field:
+        description: "Adaugă automat utilizatori la grupuri atunci când se autentifică sau cu o verificare recurentă"
+      random_assign:
+        title: "Atribuire aleatorie"
+        description: "Atribuie aleatoriu subiecte unui grup"

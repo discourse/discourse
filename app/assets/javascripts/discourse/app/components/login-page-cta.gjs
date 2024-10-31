@@ -20,7 +20,7 @@ const LoginPageCta = <template>
         {{/unless}}
 
         {{#if @showSignupLink}}
-          <span class="signup-page-cta__no-account-yet">
+          <span class="login-page-cta__no-account-yet">
             {{i18n "create_account.no_account_yet"}}
           </span>
           <DButton
