@@ -380,7 +380,7 @@ nav.post-controls {
         position: relative;
       }
 
-      // TODO go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
+      // TODO (glimmer-post-menu): Go over the the d-hover style and remove the unnecessary ones when glimmer-post-menu replaces the widget version
       &.delete.d-hover,
       &.delete:hover,
       &.delete:active,

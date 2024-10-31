@@ -947,7 +947,7 @@ export default createWidget("post-menu", {
   },
 });
 
-// TODO once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+// TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
 registerWidgetShim(
   "glimmer-post-menu",
   "section.post-menu-area.clearfix",

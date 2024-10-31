@@ -315,7 +315,7 @@ module PageObjects
       end
 
       def selector_for_post_action_button(button)
-        # TODO (saquetim) replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
+        # TODO (glimmer-post-menu): Replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
         case button
         when :admin
           ".post-controls .show-post-admin-menu"

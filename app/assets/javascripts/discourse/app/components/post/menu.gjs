@@ -83,7 +83,7 @@ export default class PostMenu extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked collapsed = true; // TODO some plugins will need a value transformer
+  @tracked collapsed = true; // TODO (glimmer-post-menu): Some plugins will need a value transformer
   @tracked isWhoLikedVisible = false;
   @tracked likedUsers = [];
   @tracked totalLikedUsers;
