@@ -739,8 +739,6 @@ export default class DEditor extends Component {
     this._applyHashtagAutocomplete();
     this._applyMentionAutocomplete();
 
-    this.bindShortcuts();
-
     scheduleOnce("afterRender", this, this._readyNow);
 
     return () => {
