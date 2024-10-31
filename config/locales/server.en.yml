@@ -2805,41 +2805,9 @@ en:
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     keywords:
-      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
-      here_mention_allowed_groups: "min_trust_level_for_here_mention"
-      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
-      approve_unless_allowed_groups: "approve_unless_trust_level"
-      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
-      email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
-      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
-      create_topic_allowed_groups: "min_trust_to_create_topic"
-      edit_post_allowed_groups: "min_trust_to_edit_post"
-      flag_post_allowed_groups: "min_trust_to_flag_posts"
-      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
-      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
-      create_tag_allowed_groups: "min_trust_to_create_tag"
-      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
-      skip_review_media_groups: "review_media_unless_trust_level"
-      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
-      post_links_allowed_groups: "min_trust_to_post_links"
-      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
-      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
-      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
-      clean_up_inactive_users_after_days:
-        - "deactivated"
-        - "inactive"
-        - "unactivated"
-      purge_unactivated_users_grace_period_days:
-        - "deactivated"
-        - "inactive"
-        - "unactivated"
-      navigation_menu:
-        - "sidebar"
-        - "header dropdown"
+      clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
+      purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
+      navigation_menu: "sidebar|header dropdown"
 
     placeholder:
       discourse_connect_provider_secrets:
