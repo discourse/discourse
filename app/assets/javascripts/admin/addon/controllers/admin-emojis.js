@@ -9,7 +9,6 @@ const ALL_FILTER = "all";
 
 export default class AdminEmojisController extends Controller {
   @service dialog;
-  @service currentUser;
 
   filter = null;
   sorting = null;
