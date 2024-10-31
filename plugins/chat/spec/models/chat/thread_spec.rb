@@ -20,14 +20,6 @@ RSpec.describe Chat::Thread do
 
     fab!(:thread_3_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_3) }
 
-    it "supports custom fields" do
-      thread_1.custom_fields["test"] = "test"
-      thread_1.save_custom_fields
-      thread = Chat::Thread.find(thread_1.id)
-      expect(thread.custom_fields["test"]).to eq("test")
-      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread_1.id)
-    end
-
     describe "updating replies_count for all threads" do
       it "counts correctly and does not include the original message" do
         described_class.ensure_consistency!
@@ -237,6 +229,16 @@ RSpec.describe Chat::Thread do
     it "does not get deleted messages" do
       message_1.trash!
       expect(thread.latest_not_deleted_message_id).to eq(old_message.id)
+    end
+  end
+
+  describe "custom fields" do
+    it "allows create and save" do
+      thread_1.custom_fields["test"] = "test"
+      thread_1.save_custom_fields
+      thread = Chat::Thread.find(thread_1.id)
+      expect(thread.custom_fields["test"]).to eq("test")
+      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread_1.id)
     end
   end
 end
