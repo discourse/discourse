@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { and, equal, not, or } from "@ember/object/computed";
+import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -108,6 +108,15 @@ export default class Post extends RestModel {
   @service site;
 
   @tracked bookmarked;
+  @tracked can_delete;
+  @tracked can_permanently_delete;
+  @tracked can_recover;
+  @tracked deleted_at;
+  @tracked likeAction;
+  @tracked post_type;
+  @tracked user_deleted;
+  @tracked user_id;
+  @tracked yours;
 
   customShare = null;
 
@@ -116,6 +125,7 @@ export default class Post extends RestModel {
   @or("deleted_at", "deletedViaTopic") deleted;
   @not("deleted") notDeleted;
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
+  @alias("topic.details.created_by.id") topicCreatedById;
 
   // Posts can show up as deleted if the topic is deleted
   @and("firstPost", "topic.deleted_at") deletedViaTopic;
@@ -226,7 +236,7 @@ export default class Post extends RestModel {
   }
 
   get canFlag() {
-    return !this.get("topic.deleted") && !isEmpty(this.get("flagsAvailable"));
+    return !this.topic.deleted && !isEmpty(this.flagsAvailable);
   }
 
   get canManage() {
@@ -279,11 +289,11 @@ export default class Post extends RestModel {
   }
 
   get liked() {
-    return !!this.likeAction?.acted;
+    return !!this.likeAction?.get("acted");
   }
 
   get likeCount() {
-    return this.likeAction?.count;
+    return this.likeAction?.get("count");
   }
 
   /**
@@ -302,7 +312,7 @@ export default class Post extends RestModel {
   get showLike() {
     if (
       !this.currentUser ||
-      (this.topic?.archived && this.user_id !== this.currentUser.id)
+      (this.topic?.get("archived") && this.user_id !== this.currentUser.id)
     ) {
       return true;
     }
