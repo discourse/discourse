@@ -19,5 +19,5 @@ end
 #
 # Indexes
 #
-#  index_chat_thread_custom_fields_on_thread_id  (thread_id)
+#  index_chat_thread_custom_fields_on_thread_id_and_name  (thread_id,name) UNIQUE
 #

@@ -233,12 +233,15 @@ RSpec.describe Chat::Thread do
   end
 
   describe "custom fields" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
     it "allows create and save" do
-      thread_1.custom_fields["test"] = "test"
-      thread_1.save_custom_fields
-      thread = Chat::Thread.find(thread_1.id)
-      expect(thread.custom_fields["test"]).to eq("test")
-      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread_1.id)
+      thread.custom_fields["test"] = "test"
+      thread.save_custom_fields
+      loaded_thread = Chat::Thread.find(thread.id)
+      expect(loaded_thread.custom_fields["test"]).to eq("test")
+      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread.id)
     end
   end
 end

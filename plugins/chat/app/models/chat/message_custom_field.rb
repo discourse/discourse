@@ -19,5 +19,5 @@ end
 #
 # Indexes
 #
-#  index_chat_message_custom_fields_on_message_id  (message_id)
+#  index_chat_message_custom_fields_on_message_id_and_name  (message_id,name) UNIQUE
 #
