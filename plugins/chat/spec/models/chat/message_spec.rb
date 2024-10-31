@@ -5,6 +5,14 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  it "supports custom fields" do
+    message.custom_fields["test"] = "test"
+    message.save_custom_fields
+    loaded_message = Chat::Message.find(message.id)
+    expect(loaded_message.custom_fields["test"]).to eq("test")
+    expect(Chat::MessageCustomField.first.message.id).to eq(message.id)
+  end
+
   describe "validations" do
     subject(:message) { described_class.new(message: "") }
 
@@ -509,7 +517,7 @@ describe Chat::Message do
     it "destroys upload_references" do
       message_1 = Fabricate(:chat_message)
       upload_reference_1 = Fabricate(:upload_reference, target: message_1)
-      upload_1 = Fabricate(:upload)
+      _upload_1 = Fabricate(:upload)
 
       message_1.destroy!
 

@@ -4,6 +4,7 @@ module Chat
   class Message < ActiveRecord::Base
     include Trashable
     include TypeMappable
+    include HasCustomFields
 
     self.table_name = "chat_messages"
 

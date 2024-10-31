@@ -9,18 +9,16 @@ RSpec.describe Chat::Thread do
     fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
     fab!(:thread_3) { Fabricate(:chat_thread, channel: channel) }
 
-    before do
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+    fab!(:thread_1_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:thread_1_message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
+    fab!(:thread_1_message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_1) }
 
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_2)
+    fab!(:thread_2_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_3) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
+    fab!(:thread_2_message_4) { Fabricate(:chat_message, chat_channel: channel, thread: thread_2) }
 
-      Fabricate(:chat_message, chat_channel: channel, thread: thread_3)
-    end
+    fab!(:thread_3_message_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread_3) }
 
     describe "updating replies_count for all threads" do
       it "counts correctly and does not include the original message" do
@@ -231,6 +229,19 @@ RSpec.describe Chat::Thread do
     it "does not get deleted messages" do
       message_1.trash!
       expect(thread.latest_not_deleted_message_id).to eq(old_message.id)
+    end
+  end
+
+  describe "custom fields" do
+    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
+    it "allows create and save" do
+      thread.custom_fields["test"] = "test"
+      thread.save_custom_fields
+      loaded_thread = Chat::Thread.find(thread.id)
+      expect(loaded_thread.custom_fields["test"]).to eq("test")
+      expect(Chat::ThreadCustomField.first.thread.id).to eq(thread.id)
     end
   end
 end
