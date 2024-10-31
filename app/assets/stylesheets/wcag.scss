@@ -195,6 +195,11 @@ html {
     color: var(--primary-medium);
   }
 
+  a[data-clicks]::before,
+  a[data-clicks]::after {
+    color: var(--primary-high);
+  }
+
   // Post controls
 
   .topic-admin-menu-button-container,
