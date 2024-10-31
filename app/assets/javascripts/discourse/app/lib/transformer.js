@@ -279,15 +279,22 @@ export function applyBehaviorTransformer(
 }
 
 /**
- * Apply a transformer to a value
+ * Apply a transformer to a value.
  *
- * @param {string} transformerName the name of the transformer applied
- * @param {*} defaultValue the default value
- * @param {*} [context] the optional context to pass to the transformer callbacks.
- *
- * @returns {*} the transformed value
+ * @param {string} transformerName - The name of the transformer applied
+ * @param {*} defaultValue - The default value
+ * @param {*} [context] - The optional context to pass to the transformer callbacks
+ * @param {Object} [opts] - Options for the transformer
+ * @param {boolean} [opts.mutable] - Flag indicating if the value should be mutated instead of returned
+ * @returns {*} The transformed value
+ * @throws {Error} If the transformer name does not exist or the context is invalid
  */
-export function applyValueTransformer(transformerName, defaultValue, context) {
+export function applyValueTransformer(
+  transformerName,
+  defaultValue,
+  context,
+  opts = { mutable: false }
+) {
   const normalizedTransformerName = _normalizeTransformerName(
     transformerName,
     transformerTypes.VALUE
@@ -321,6 +328,7 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
     return defaultValue;
   }
 
+  const mutable = opts?.mutable; // flag indicating if the value should be mutated instead of returned
   let newValue = defaultValue;
 
   const transformerPoolSize = transformers.length;
@@ -328,7 +336,17 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
     const valueCallback = transformers[i];
 
     try {
-      newValue = valueCallback({ value: newValue, context });
+      const value = valueCallback({ value: newValue, context });
+      if (DEBUG && mutable && typeof value !== "undefined") {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `${prefix}: transformer "${transformerName}" expects the value to be mutated instead of returned.`
+        );
+      }
+
+      if (!mutable) {
+        newValue = value;
+      }
     } catch (error) {
       document.dispatchEvent(
         new CustomEvent("discourse-error", {
@@ -343,6 +361,26 @@ export function applyValueTransformer(transformerName, defaultValue, context) {
   }
 
   return newValue;
+}
+
+/**
+ * Apply a transformer to a mutable value.
+ * The registered transformers should mutate the value instead of returning it.
+ *
+ * @param {string} transformerName - The name of the transformer applied
+ * @param {*} defaultValue - The default value
+ * @param {*} [context] - The optional context to pass to the transformer callbacks
+ * @returns {*} The transformed value
+ * @throws {Error} If the transformer name does not exist or the context is invalid
+ */
+export function applyMutableValueTransformer(
+  transformerName,
+  defaultValue,
+  context
+) {
+  return applyValueTransformer(transformerName, defaultValue, context, {
+    mutable: true,
+  });
 }
 
 /**

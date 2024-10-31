@@ -7,6 +7,7 @@ import {
   acceptNewTransformerNames,
   acceptTransformerRegistrations,
   applyBehaviorTransformer,
+  applyMutableValueTransformer,
   applyValueTransformer,
   disableThrowingApplyExceptionOnTests,
   transformerTypes,
@@ -292,6 +293,7 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       class Testable {}
+
       assert.throws(
         () =>
           applyValueTransformer(
@@ -496,6 +498,60 @@ module("Unit | Utility | transformers", function (hooks) {
         testObject.sequence.join(""),
         "correct",
         `the transformers applied in the expected sequence will produce the word "correct"`
+      );
+    });
+  });
+
+  module("applyMutableValueTransformer", function (innerHooks) {
+    innerHooks.beforeEach(function () {
+      this.consoleWarnStub = sinon.stub(console, "warn");
+      acceptNewTransformerNames();
+      withPluginApi("1.34.0", (api) => {
+        api.addValueTransformerName("test-mutable-transformer");
+      });
+      acceptTransformerRegistrations();
+    });
+
+    innerHooks.afterEach(function () {
+      this.consoleWarnStub.restore();
+    });
+
+    test("mutates the value as expected", function (assert) {
+      withPluginApi("1.34.0", (api) => {
+        api.registerValueTransformer(
+          "test-mutable-transformer",
+          ({ value }) => {
+            value.mutate();
+          }
+        );
+      });
+
+      let mutated = false;
+      const value = {
+        mutate() {
+          mutated = true;
+        },
+      };
+
+      applyMutableValueTransformer("test-mutable-transformer", value);
+      assert.strictEqual(mutated, true, "the value was mutated");
+    });
+
+    test("logs a warning if the transformer returns a value different from undefined", function (assert) {
+      withPluginApi("1.34.0", (api) => {
+        api.registerValueTransformer(
+          "test-mutable-transformer",
+          () => "unexpected value"
+        );
+      });
+
+      applyMutableValueTransformer("test-mutable-transformer", "default value");
+
+      assert.ok(
+        this.consoleWarnStub.calledWith(
+          sinon.match(/expects the value to be mutated instead of returned/)
+        ),
+        "logs warning to the console when the transformer returns a value different from undefined"
       );
     });
   });
@@ -816,6 +872,7 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       class Testable {}
+
       assert.throws(
         () =>
           applyBehaviorTransformer(
