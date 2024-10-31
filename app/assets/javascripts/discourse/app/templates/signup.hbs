@@ -2,9 +2,9 @@
 {{hide-application-header-buttons "search" "login" "signup" "menu"}}
 {{hide-application-sidebar}}
 
-<FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
-
 <div class="signup-fullpage">
+  <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+
   <div class={{concat-class "signup-body" this.bodyClasses}}>
     <PluginOutlet
       @name="create-account-before-modal-body"
@@ -37,6 +37,7 @@
           <div class="input-group create-account-email">
             <Input
               {{on "focusout" this.checkEmailAvailability}}
+              {{on "focusin" this.scrollInputIntoView}}
               @type="email"
               @value={{this.accountEmail}}
               disabled={{this.emailDisabled}}
@@ -50,7 +51,12 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            {{#if this.emailValidation.reason}}
+            {{#if
+              (or
+                this.emailValidation.ok
+                (and this.emailValidationVisible this.emailValidation.reason)
+              )
+            }}
               <InputTip
                 @validation={{this.emailValidation}}
                 id="account-email-validation"
@@ -64,6 +70,7 @@
 
           <div class="input-group create-account__username">
             <Input
+              {{on "focusin" this.scrollInputIntoView}}
               @value={{this.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
@@ -98,6 +105,8 @@
           <div class="input-group create-account__password">
             {{#if this.passwordRequired}}
               <PasswordField
+                {{on "focusout" this.showPasswordValidation}}
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
                 type={{if this.maskPassword "password" "text"}}
@@ -113,10 +122,20 @@
 
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
-                  <InputTip
-                    @validation={{this.passwordValidation}}
-                    id="password-validation"
-                  />
+                  {{#if
+                    (or
+                      this.passwordValidation.ok
+                      (and
+                        this.passwordValidationVisible
+                        this.passwordValidation.reason
+                      )
+                    )
+                  }}
+                    <InputTip
+                      @validation={{this.passwordValidation}}
+                      id="password-validation"
+                    />
+                  {{/if}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -153,6 +172,7 @@
           {{#if this.requireInviteCode}}
             <div class="input-group create-account__invite-code">
               <Input
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.inviteCode}}
                 id="inviteCode"
                 class={{value-entered this.inviteCode}}
@@ -185,6 +205,7 @@
           >
             {{#if this.fullnameRequired}}
               <TextField
+                {{on "focusin" this.scrollInputIntoView}}
                 @disabled={{this.nameDisabled}}
                 @value={{this.accountName}}
                 @id="new-account-name"
@@ -208,6 +229,7 @@
               {{#each this.userFields as |f|}}
                 <div class="input-group">
                   <UserField
+                    {{on "focusin" this.scrollInputIntoView}}
                     @field={{f.field}}
                     @value={{f.value}}
                     @validation={{f.validation}}

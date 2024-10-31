@@ -224,10 +224,12 @@ export function connectorsFor(outletName) {
   return _connectorCache[outletName] || [];
 }
 
-export function renderedConnectorsFor(outletName, args, context) {
+export function renderedConnectorsFor(outletName, args, context, owner) {
   return connectorsFor(outletName).filter((con) => {
-    const shouldRender = con.connectorClass?.shouldRender;
-    return !shouldRender || shouldRender(args, context);
+    return (
+      !con.connectorClass?.shouldRender ||
+      con.connectorClass?.shouldRender(args, context, owner)
+    );
   });
 }
 
