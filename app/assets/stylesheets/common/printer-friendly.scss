@@ -32,7 +32,7 @@
   #footer,
   .alert-info,
   .badge-category,
-  .badge-notification.clicks,
+  .cooked a[data-clicks]::after,
   .crawler-nav,
   .powered-by-link,
   .timeline-container,

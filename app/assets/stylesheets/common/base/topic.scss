@@ -388,10 +388,6 @@
       a[href] {
         color: var(--primary-med-or-secondary-med);
       }
-      .clicks {
-        margin-left: 0.5em;
-        flex: 0 0 auto;
-      }
       .d-icon {
         font-size: var(--font-down-2);
         margin: 0 0.5em 0 0;
@@ -459,20 +455,6 @@ a.topic-featured-link {
   }
 }
 
-.cooked a[data-clicks]::after {
-  content: attr(data-clicks);
-  font-weight: normal;
-  background-color: var(--primary-low);
-  color: var(--primary-medium);
-  position: relative;
-  top: -1px;
-  padding: 0.21em 0.42em;
-  min-width: 0.5em;
-  line-height: var(--line-height-small);
-  font-size: var(--font-down-2);
-  text-align: center;
-  border-radius: 10px;
-  white-space: nowrap;
-  display: inline-block;
-  margin: 0.15em;
+a[data-clicks]::after {
+  @include click-counter-badge;
 }
