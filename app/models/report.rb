@@ -311,7 +311,7 @@ class Report
         # This is a separate report because if people have switched over
         # to _not_ use legacy pageviews, we want to show both a Pageviews
         # and Legacy Pageviews report.
-      elsif filter == :page_view_legacy_total_reqs
+      elsif filter == :page_view_legacy_total
         legacy_page_view_requests
       else
         ApplicationRequest.where(req_type: ApplicationRequest.req_types[filter])
