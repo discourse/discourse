@@ -109,6 +109,16 @@ RSpec.describe "tasks/uploads" do
           end
         end
 
+        context "when secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "sets a non-PM post upload to not secure" do
+            upload_2.update!(secure: true)
+            invoke_task
+            expect(upload_2.reload.secure).to eq(false)
+          end
+        end
+
         it "sets the uploads that are media and attachments in the read restricted topic category to secure" do
           post_3.topic.update(category: Fabricate(:private_category, group: Fabricate(:group)))
           invoke_task
