@@ -22,6 +22,7 @@ import Header from "./header";
 
 let _menuPanelClassesToForceDropdown = [];
 const PANEL_WIDTH = 340;
+const DEBOUNCE_HEADER_DELAY = 10;
 
 export default class GlimmerSiteHeader extends Component {
   @service appEvents;
@@ -107,8 +108,13 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  @bind
+  @debounce(DEBOUNCE_HEADER_DELAY)
   _recalculateHeaderOffset() {
+    this._scheduleUpdateOffsets();
+  }
+
+  @bind
+  _scheduleUpdateOffsets() {
     schedule("afterRender", this.updateOffsets);
   }
 
@@ -128,28 +134,21 @@ export default class GlimmerSiteHeader extends Component {
     if (this._headerWrap) {
       schedule("afterRender", () => {
         this.headerElement = this._headerWrap.querySelector("header.d-header");
-        this.updateOffsets();
       });
 
       window.addEventListener("scroll", this._recalculateHeaderOffset, {
         passive: true,
       });
 
-      this.appEvents.on("page:changed", this, this._recalculateHeaderOffset);
-
       this._itsatrap = new ItsATrap(this.headerElement);
       const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
 
-      this._resizeObserver = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          if (entry.contentRect) {
-            this.updateOffsets();
-          }
-        }
+      this._resizeObserver = new ResizeObserver(() => {
+        this._recalculateHeaderOffset();
       });
 
-      this._resizeObserver.observe(this._headerWrap);
+      this._resizeObserver.observe(document.querySelector(".discourse-root"));
     }
   }
 
@@ -410,7 +409,6 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap = null;
 
     window.removeEventListener("scroll", this._recalculateHeaderOffset);
-    this.appEvents.off("page:changed", this, this._recalculateHeaderOffset);
     this._resizeObserver?.disconnect();
   }
 
