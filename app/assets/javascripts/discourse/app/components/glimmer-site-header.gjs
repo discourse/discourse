@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { cancel, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
@@ -30,22 +29,18 @@ export default class GlimmerSiteHeader extends Component {
   @service site;
   @service header;
 
-  docking;
   pxClosed;
   headerElement;
 
-  @tracked _dockedHeader = false;
   _animate = false;
   _headerWrap;
   _mainOutletWrapper;
   _swipeMenuOrigin;
   _applicationElement;
   _resizeObserver;
-  _docAt;
 
   constructor() {
     super(...arguments);
-    this.docking = new Docking(this.dockCheck);
 
     if (this.currentUser?.staff) {
       document.body.classList.add("staff");
@@ -239,32 +234,6 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  dockCheck() {
-    if (this._docAt === undefined || this._docAt === null) {
-      if (!this.headerElement) {
-        return;
-      }
-      this._docAt = this.headerElement.offsetTop;
-    }
-
-    const main = (this._applicationElement ??=
-      document.querySelector(".ember-application"));
-    const offsetTop = main?.offsetTop ?? 0;
-    const offset = window.pageYOffset - offsetTop;
-    if (offset >= this._docAt) {
-      if (!this._dockedHeader) {
-        document.body.classList.add("docked");
-        this._dockedHeader = true;
-      }
-    } else {
-      if (this._dockedHeader) {
-        document.body.classList.remove("docked");
-        this._dockedHeader = false;
-      }
-    }
-  }
-
-  @bind
   _animateOpening(panel, event = null) {
     const cloakElement = document.querySelector(".header-cloak");
     let durationMs = getMaxAnimationTimeMs();
@@ -394,7 +363,6 @@ export default class GlimmerSiteHeader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.docking.destroy();
     this.appEvents.off("user-menu:rendered", this, this.animateMenu);
 
     if (this.dropDownHeaderEnabled) {
@@ -440,37 +408,6 @@ export default class GlimmerSiteHeader extends Component {
       />
     </div>
   </template>
-}
-
-const INITIAL_DELAY_MS = 50;
-const DEBOUNCE_MS = 5;
-class Docking {
-  dockCheck = null;
-  _initialTimer = null;
-  _queuedTimer = null;
-
-  constructor(dockCheck) {
-    this.dockCheck = dockCheck;
-    window.addEventListener("scroll", this.queueDockCheck, { passive: true });
-
-    // dockCheck might happen too early on full page refresh
-    this._initialTimer = discourseLater(this, this.dockCheck, INITIAL_DELAY_MS);
-  }
-
-  @debounce(DEBOUNCE_MS)
-  queueDockCheck() {
-    this._queuedTimer = this.dockCheck;
-  }
-
-  @action
-  destroy() {
-    if (this._queuedTimer) {
-      cancel(this._queuedTimer);
-    }
-
-    cancel(this._initialTimer);
-    window.removeEventListener("scroll", this.queueDockCheck);
-  }
 }
 
 function menuPanelContainsClass(menuPanel) {
