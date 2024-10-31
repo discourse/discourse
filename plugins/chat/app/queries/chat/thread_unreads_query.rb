@@ -46,7 +46,7 @@ module Chat
           INNER JOIN user_chat_thread_memberships ON user_chat_thread_memberships.thread_id = chat_threads.id
           INNER JOIN user_chat_channel_memberships ON user_chat_channel_memberships.chat_channel_id = chat_messages.chat_channel_id
           INNER JOIN chat_messages AS original_message ON original_message.id = chat_threads.original_message_id
-          AND chat_messages.thread_id = memberships.thread_id
+          WHERE chat_messages.thread_id = memberships.thread_id
           AND chat_messages.user_id != :user_id
           AND user_chat_thread_memberships.user_id = :user_id
           AND chat_messages.id > COALESCE(user_chat_thread_memberships.last_read_message_id, 0)

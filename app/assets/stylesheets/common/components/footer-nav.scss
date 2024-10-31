@@ -91,7 +91,7 @@ html.footer-nav-ipad {
     z-index: z("ipad-header-nav") + 1;
   }
 
-  &.docked .d-header-wrap {
+  .d-header-wrap {
     top: var(--footer-nav-height);
   }
 }

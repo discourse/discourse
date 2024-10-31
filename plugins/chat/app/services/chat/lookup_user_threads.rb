@@ -77,13 +77,7 @@ module Chat
             ::Chat::Channel
               .joins(:user_chat_channel_memberships)
               .where(user_chat_channel_memberships: { user_id: guardian.user.id, following: true })
-              .where(
-                {
-                  chatable_type: "Category",
-                  threading_enabled: true,
-                  status: ::Chat::Channel.statuses[:open],
-                },
-              )
+              .where({ threading_enabled: true, status: ::Chat::Channel.statuses[:open] })
               .select(:id),
         )
         .where("original_message.chat_channel_id = chat_threads.channel_id")
