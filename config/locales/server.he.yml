@@ -2597,7 +2597,6 @@ he:
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
-    enable_experimental_bookmark_redesign_groups: "ניסיוני: הצגת תפריט גישה מהירה לסימניות על פוסטים וחלונית בורחת חדשה"
     experimental_redesigned_about_page_groups: "ניסיוני: הפעלת עמוד ה־‎/about שעוצב מחדש לקבוצות מסוימות."
     experimental_glimmer_topic_list_groups: "ניסיוני: אפשר את התכונה החדשה של רשימת הנושאים 'glimmer'. תכונה זו נמצאת בפיתוח פעיל ואינה מיועדת לשימוש בproduction. אין לפתח ערכות נושא/תוספים איתה עד שהשחרור יוכרז סופית."
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
@@ -2608,7 +2607,6 @@ he:
     show_user_menu_avatars: "הצגת תמונות ייצוגיות של משתמשים בתפריט המשתמש"
     about_page_hidden_groups: "לא להציג חברים מקבוצות מסוימות בדף ‎/about."
     view_raw_email_allowed_groups: "קבוצות שיכולות לצפות בתוכן הגולמי של הודעות הדוא״ל של פוסט אם הוא נוצר מהודעת דוא״ל נכנסת. כולל כותרות דוא״ל ופירוט טכני נוסף."
-    experimental_flags_admin_page_enabled_groups: "ניסיוני: הסרת הקישור לניהול סימונים מסרגל הצד של ההנהלה."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
       invalid_email: "כתובת דוא״ל שגויה."

@@ -1240,7 +1240,6 @@ ro:
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Activează pagina reproiectată/despre pentru grupuri specifice."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:

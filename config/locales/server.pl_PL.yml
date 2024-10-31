@@ -2483,7 +2483,6 @@ pl_PL:
     enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
     experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
     enable_experimental_lightbox: "EKSPERYMENTALNIE: Zastąp domyślny lightbox obrazu odświeżonym projektem."
-    enable_experimental_bookmark_redesign_groups: "EKSPERYMENTALNIE: Pokaż menu szybkiego dostępu do zakładek w postach i nowy, przeprojektowany modal."
     experimental_redesigned_about_page_groups: "EKSPERYMENTALNIE: Włącz przeprojektowaną stronę /about dla określonych grup."
     experimental_glimmer_topic_list_groups: "EKSPERYMENTALNE: Włącz nową implementację listy tematów „glimmer”. Ta implementacja jest w fazie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie twórz motywów ani wtyczek opartych na niej, dopóki implementacja nie zostanie ukończona i oficjalnie ogłoszona."
     experimental_form_templates: "EKSPERYMENTALNIE: Włącz funkcję szablonów formularzy. <b>Po włączeniu</b> zarządzaj szablonami w <a href='%{base_path}/admin/customize/form-templates'>Dostosuj / Szablony</a>."
@@ -2493,7 +2492,6 @@ pl_PL:
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
-    experimental_flags_admin_page_enabled_groups: "EKSPERYMENTALNIE: Usuń link flag moderacji z paska bocznego administratora."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
