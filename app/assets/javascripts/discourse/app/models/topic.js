@@ -1,3 +1,4 @@
+import { cached } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
@@ -432,6 +433,7 @@ export default class Topic extends RestModel {
   }
 
   @dependentKeyCompat
+  @cached
   get relatedMessages() {
     return this.get("related_messages")?.map((st) =>
       this.store.createRecord("topic", st)
@@ -439,6 +441,7 @@ export default class Topic extends RestModel {
   }
 
   @dependentKeyCompat
+  @cached
   get suggestedTopics() {
     return this.get("suggested_topics")?.map((st) =>
       this.store.createRecord("topic", st)
