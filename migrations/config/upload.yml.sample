@@ -1,0 +1,50 @@
+source_db_path: "/path/to/your/db.sqlite3"
+output_db_path: "/path/to/your/uploads.sqlite3"
+
+root_paths:
+  - "/path/to/your/files"
+  - "/path/to/more/files"
+
+# Files that are downloaded from URLs are cached in this directory.
+download_cache_path: "/path/to/downloaded/files"
+
+# The number of threads to use for processing uploads is calculated as:
+#   thread_count = [number of cores] * [thread_count_factor]
+# The thread count will be doubled if uploads are stored on S3 because there's a higher latency.
+thread_count_factor: 1.5
+
+# Delete uploads from the output database that are not found in the source database.
+delete_surplus_uploads: false
+
+# Delete uploads from the output database that do not have a Discourse upload record.
+delete_missing_uploads: false
+
+# Check if files are missing in the upload store and update the database accordingly.
+# Set to false and re-run the script afterwards if you want to create new uploads for missing files.
+fix_missing: false
+
+# Create optimized images for post uploads and avatars.
+create_optimized_images: false
+
+site_settings:
+  authorized_extensions: "*"
+  max_attachment_size_kb: 102_400
+  max_image_size_kb: 102_400
+
+  enable_s3_uploads: true
+  s3_upload_bucket: "your-bucket-name"
+  s3_region: "your-region"
+  s3_access_key_id: "your-access-key-id"
+  s3_secret_access_key: "your-secret-access-key"
+  s3_cdn_url: "https://your-cdn-url.com"
+
+  # Set this to true if the site is a multisite and configure the `multisite_db_name` accordingly
+  multisite: false
+  multisite_db_name: "default"
+
+# Sometimes a file can be found at one of many locations. Here's a list of transformations that can
+# be applied to the path to try and find the file. The first transformation that results in a file
+# being found will be used.
+path_replacements:
+#  - ["/foo/", "/bar"]
+#  - ["/foo/", "/bar/baz/"]

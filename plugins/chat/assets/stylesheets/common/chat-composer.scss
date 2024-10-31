@@ -87,7 +87,7 @@
     resize: none;
     max-height: calc(
       (
-          var(--100dvh) - var(--header-offset, 0px) -
+          var(--100dvh) - var(--main-outlet-offset, 0px) -
             var(--chat-header-offset, 0px)
         ) / 100 * 25
     );
