@@ -28,13 +28,16 @@ class DbHelper
     excluded_tables: [],
     verbose: false
   )
-    like = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
     text_columns = find_text_columns(excluded_tables)
+
+    return if text_columns.empty?
+
+    like = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
 
     text_columns.each do |table, columns|
       query_parts =
         columns.each_with_object(
-          { updates: [], conditions: [], skipped_counts: [] },
+          { updates: [], conditions: [], skipped_sums: [] },
         ) do |column, parts|
           replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
           replace = truncate(replace, table, column)
@@ -48,7 +51,7 @@ class DbHelper
               :conditions
             ] << "(#{basic_condition} AND LENGTH(#{replace}) <= #{column[:max_length]})"
 
-            parts[:skipped_counts] << <<~SQL
+            parts[:skipped_sums] << <<~SQL
               SUM(
                 CASE
                   WHEN #{basic_condition} AND LENGTH(#{replace}) > #{column[:max_length]} THEN 1 ELSE 0
@@ -65,26 +68,31 @@ class DbHelper
         WHERE #{query_parts[:conditions].join(" OR ")}
       SQL
 
-      skipped_rows =
-        if query_parts[:skipped_counts].any?
-          skipped = DB.query_hash(<<~SQL, from: from, to: to, like: like).first
-          SELECT #{query_parts[:skipped_counts].join(", ")}
-          FROM \"#{table}\"
-        SQL
+      if verbose
+        skipped_counts =
+          if query_parts[:skipped_sums].any?
+            skipped = DB.query_hash(<<~SQL, from: from, to: to, like: like).first
+              SELECT #{query_parts[:skipped_sums].join(", ")}
+              FROM \"#{table}\"
+            SQL
 
-          skipped.select { |_, count| count.to_i > 0 }
+            skipped.select { |_, count| count.to_i > 0 }
+          end
+
+        if (rows_updated > 0) || skipped_counts&.any?
+          message = +"#{table}=#{rows_updated}"
+
+          if skipped_counts&.any?
+            message << " SKIPPED: "
+            message << skipped_counts
+              .map do |column, count|
+                "#{column.delete_suffix("_skipped")}: #{count} #{"update".pluralize(count)}"
+              end
+              .join(", ")
+          end
+
+          puts message
         end
-
-      if verbose && (rows_updated > 0 || skipped_rows&.any?)
-        message = +"#{table}=#{rows_updated}"
-        if skipped_rows&.any?
-          message << " SKIPPED: "
-          message << skipped_rows
-            .map { |column, count| "#{column.delete_suffix("_skipped")}: #{count} updates" }
-            .join(", ")
-        end
-
-        puts message
       end
     end
 

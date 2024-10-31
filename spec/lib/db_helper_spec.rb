@@ -58,7 +58,7 @@ RSpec.describe DbHelper do
       expect(bookmark2.name).to eq("another-bookmark")
     end
 
-    it "logs skipped updates due to length constraint when verbose is enabled" do
+    it "logs skipped remaps due to max length constraints when verbose is true" do
       Fabricate(:bookmark, name: "another-bookmark")
 
       expect { DbHelper.remap("bookmark", "a" * 98, verbose: true) }.to output(/SKIPPED:/).to_stdout
