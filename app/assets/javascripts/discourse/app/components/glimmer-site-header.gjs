@@ -16,7 +16,7 @@ import { isDocumentRTL } from "discourse/lib/text-direction";
 import swipe from "discourse/modifiers/swipe";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
-import { bind } from "discourse-common/utils/decorators";
+import { bind, debounce } from "discourse-common/utils/decorators";
 import Header from "./header";
 
 let _menuPanelClassesToForceDropdown = [];
