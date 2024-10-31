@@ -11,7 +11,7 @@ RSpec.describe Admin::EmojisController do
       before { sign_in(admin) }
 
       it "returns a list of custom emojis" do
-        CustomEmoji.create!(name: "osama-test-emoji", upload: upload)
+        CustomEmoji.create!(name: "osama-test-emoji", upload: upload, user: admin)
         Emoji.clear_cache
 
         get "/admin/customize/emojis.json"
@@ -20,6 +20,7 @@ RSpec.describe Admin::EmojisController do
         json = response.parsed_body
         expect(json[0]["name"]).to eq("osama-test-emoji")
         expect(json[0]["url"]).to eq(upload.url)
+        expect(json[0]["created_by"]).to eq(admin.username)
       end
     end
 

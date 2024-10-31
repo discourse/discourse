@@ -20,7 +20,7 @@ export default class AdminEmojisController extends Controller {
 
     this.setProperties({
       filter: ALL_FILTER,
-      sorting: ["group", "name", "created_by"],
+      sorting: ["group", "name"],
     });
   }
 
@@ -65,7 +65,6 @@ export default class AdminEmojisController extends Controller {
   emojiUploaded(emoji, group) {
     emoji.url += "?t=" + new Date().getTime();
     emoji.group = group;
-    emoji.created_by = this.currentUser.username;
     this.model.pushObject(EmberObject.create(emoji));
     this._highlightEmojiList();
   }
