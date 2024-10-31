@@ -27,9 +27,9 @@ export default class PostMenuButtonConfig {
   }
 
   @bind
-  collapsedByDefault(args) {
+  hidden(args) {
     return this.#staticPropertyWithReplacementFallback({
-      property: "collapsedByDefault",
+      property: "hidden",
       args,
       defaultValue: null,
     });

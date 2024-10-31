@@ -25,8 +25,8 @@ export default class PostMenuButtonWrapper extends Component {
     {{#if (or this.shouldRender this.delegateShouldRenderToTemplate)}}
       <@buttonConfig.Component
         class="btn-flat"
-        @collapsedByDefault={{@buttonConfig.collapsedByDefault this.args}}
         @buttonActions={{@buttonActions}}
+        @hidden={{@buttonConfig.hidden this.args}}
         @post={{@post}}
         @shouldRender={{this.shouldRender}}
         @showLabel={{@showLabel.showLabel this.args}}

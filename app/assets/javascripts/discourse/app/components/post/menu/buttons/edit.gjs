@@ -4,7 +4,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class PostMenuEditButton extends Component {
-  static collapsedByDefault(args) {
+  static hidden(args) {
     if (args.state.isWikiMode || (args.post.can_edit && args.post.yours)) {
       return false;
     }
