@@ -3303,7 +3303,7 @@ class PluginApi {
    * specific tabs.
    *
    * ```js
-   * api.registerValueTransformer(, ({ value, context }) => {
+   * api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
    *   if (context.user?.aFeatureFlag) {
    *     // Remove "suggested" from the topics page
    *     return value.filter(
@@ -3317,17 +3317,14 @@ class PluginApi {
    *
    * @callback tabCondition
    * @param {Object} opts
-   * @param {Topic} opts.topic - ?
-   * @param {"topic"|"pm"} opts.context - ?
+   * @param {Topic} opts.topic - the current topic
+   * @param {"topic"|"pm"} opts.context - the type of the current page
    *
    * @param {Object} tab
-   * @param {string} tab.id - the identifier used in more-topics-tabs value transformer
-   * @param {string} tab.name - the name displayed on the tab itself
-   * @param {"*"|"pm"|"topic"} tab.context - on which pages should the tab be visible ("pm", "topic", or both - "*")
-   * @param {Class} tab.component - the contents of the tab
-   * @param {tabCondition} tab.condition - ?
-
-
+   * @param {string} tab.id - an identifier used in more-topics-tabs value transformer
+   * @param {string} tab.name - a name displayed on the tab itself
+   * @param {Class} tab.component - contents of the tab
+   * @param {tabCondition} tab.condition - an optional callback to conditionally show the tab
    */
   registerMoreTopicsTab(tab) {
     registeredTabs.push(tab);

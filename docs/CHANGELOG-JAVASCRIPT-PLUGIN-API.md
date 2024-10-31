@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.38.0] - 2024-10-30
 
-- Added `registerMoreTopicsTab` and `more-topics-tabs` value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.
+- Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.
 
 ## [1.37.3] - 2024-10-24
 
