@@ -5668,7 +5668,7 @@ en:
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
-          add: "Add Flag"
+          add: "Add flag"
           edit: "Edit"
           back: "Back to flags"
           delete: "Delete"
