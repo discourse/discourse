@@ -3,6 +3,10 @@
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
+  &:not(:has(.has-alt-auth)) .alert {
+    max-width: 500px;
+  }
+
   .login-page-cta,
   .signup-page-cta {
     &__buttons {
@@ -70,4 +74,10 @@
       font-size: var(--font-down-1);
     }
   }
+}
+
+.invites-show.container {
+  box-sizing: border-box;
+  box-shadow: none;
+  max-width: 550px;
 }

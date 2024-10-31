@@ -40,6 +40,14 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
+  scrollInputIntoView(event) {
+    event.target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+
+  @action
   togglePasswordMask() {
     this.maskPassword = !this.maskPassword;
   }

@@ -21,7 +21,7 @@
     "@embroider/addon-shim": "^1.8.9",
     "discourse-common": "workspace:1.0.0",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.8.1",
+    "ember-auto-import": "^2.9.0",
     "markdown-it": "14.0.0",
     "pretty-text": "workspace:1.0.0",
     "truth-helpers": "workspace:1.0.0",

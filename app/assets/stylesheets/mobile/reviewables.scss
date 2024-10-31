@@ -82,11 +82,15 @@
 
 .reviewable-actions {
   margin-right: -0.5em;
+  margin-bottom: 0.5em;
 
   > div,
   > button {
     margin-right: 0.25em;
-    margin-bottom: 0.5em;
+  }
+
+  .btn.reviewable-action {
+    margin-bottom: 0;
   }
 
   .reviewable-action,
