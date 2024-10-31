@@ -298,8 +298,18 @@ export function buildResolver(baseName) {
     }
 
     findMobileTemplate(parsedName) {
+      const result = this.findTemplate(parsedName, "mobile/");
+      if (result) {
+        deprecated(
+          `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${parsedName}]`,
+          {
+            id: "discourse.mobile-templates",
+          }
+        );
+        return result;
+      }
       if (_options.mobileView) {
-        return this.findTemplate(parsedName, "mobile/");
+        return result;
       }
     }
 
