@@ -307,16 +307,30 @@ module SiteSettingExtension
     I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
   end
 
-  # TODO (martin) We can remove this workaround of checking if
-  # we get an array back once keyword translations in languages other
-  # than english have been updated not to use YAML arrays.
   def keywords(setting)
     translated_keywords = I18n.t("site_settings.keywords.#{setting}", default: "")
-    if translated_keywords.is_a?(Array)
-      return (translated_keywords + [deprecated_setting_alias(setting)]).compact
+    english_translated_keywords = []
+
+    if I18n.locale != :en
+      english_translated_keywords =
+        I18n.t("site_settings.keywords.#{setting}", default: "", locale: :en).split("|")
     end
 
-    translated_keywords.split("|").concat([deprecated_setting_alias(setting)]).compact
+    # TODO (martin) We can remove this workaround of checking if
+    # we get an array back once keyword translations in languages other
+    # than English have been updated not to use YAML arrays.
+    if translated_keywords.is_a?(Array)
+      return(
+        (
+          translated_keywords + [deprecated_setting_alias(setting)] + english_translated_keywords
+        ).compact
+      )
+    end
+
+    translated_keywords
+      .split("|")
+      .concat([deprecated_setting_alias(setting)] + english_translated_keywords)
+      .compact
   end
 
   def placeholder(setting)
