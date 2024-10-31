@@ -2045,23 +2045,35 @@ class BulkImport::Generic < BulkImport::Base
     start_time = Time.now
 
     DB.exec(<<~SQL)
-      WITH missing_ids AS (
-        SELECT DISTINCT t.id FROM topics t
-        JOIN topic_voting_votes dvv ON t.id = dvv.topic_id
-        LEFT JOIN topic_voting_topic_vote_count dvtvc ON t.id = dvtvc.topic_id
-        WHERE dvtvc.topic_id IS NULL
-      )
-      INSERT INTO topic_voting_topic_vote_count (votes_count, topic_id, created_at, updated_at)
-      SELECT '0', id, now(), now() FROM missing_ids
+        WITH
+          votes AS (
+                     SELECT topic_id, COUNT(*) AS votes_count
+                     FROM topic_voting_votes
+                     GROUP BY topic_id
+                   )
+      UPDATE topic_voting_topic_vote_count
+         SET votes_count = votes.votes_count
+        FROM votes
+       WHERE votes.topic_id = topic_voting_topic_vote_count.topic_id
+         AND votes.votes_count <> topic_voting_topic_vote_count.votes_count
     SQL
 
     DB.exec(<<~SQL)
-      UPDATE topic_voting_topic_vote_count dvtvc
-      SET votes_count = (
-        SELECT COUNT(*) FROM topic_voting_votes dvv
-        WHERE dvtvc.topic_id = dvv.topic_id
-        GROUP BY dvv.topic_id
-      )
+        WITH
+          missing_votes AS (
+                             SELECT v.topic_id, COUNT(*) AS votes_count
+                               FROM topic_voting_votes v
+                              WHERE NOT EXISTS (
+                                                 SELECT 1
+                                                 FROM topic_voting_topic_vote_count c
+                                                 WHERE v.topic_id = c.topic_id
+                                               )
+                              GROUP BY topic_id
+                           )
+      INSERT
+        INTO topic_voting_topic_vote_count (votes_count, topic_id, created_at, updated_at)
+      SELECT votes_count, topic_id, NOW(), NOW()
+        FROM missing_votes
     SQL
 
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
