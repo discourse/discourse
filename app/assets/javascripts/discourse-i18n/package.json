@@ -17,7 +17,7 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.8.9",
+    "@embroider/addon-shim": "^1.9.0",
     "make-plural": "^7.4.0"
   },
   "engines": {
