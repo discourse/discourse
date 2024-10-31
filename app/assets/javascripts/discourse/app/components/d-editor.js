@@ -134,13 +134,14 @@ export default class DEditor extends Component {
     ``;
   }
 
-  @bind
-  bindShortcuts() {
+  get keymap() {
+    const keymap = {};
+
     const shortcuts = this.get("toolbar.shortcuts");
 
     Object.keys(shortcuts).forEach((sc) => {
       const button = shortcuts[sc];
-      this.textManipulation.bind(sc, () => {
+      keymap[sc] = () => {
         const customAction = shortcuts[sc].shortcutAction;
 
         if (customAction) {
@@ -150,7 +151,7 @@ export default class DEditor extends Component {
           button.action(button);
         }
         return false;
-      });
+      };
     });
 
     if (this.popupMenuOptions && this.onPopupMenuAction) {
@@ -158,23 +159,20 @@ export default class DEditor extends Component {
         if (popupButton.shortcut && popupButton.condition) {
           const shortcut =
             `${PLATFORM_KEY_MODIFIER}+${popupButton.shortcut}`.toLowerCase();
-          this.textManipulation.bind(shortcut, () => {
+          keymap[shortcut] = () => {
             this.onPopupMenuAction(popupButton, this.newToolbarEvent());
             return false;
-          });
+          };
         }
       });
     }
 
-    this.textManipulation.bind("tab", () =>
-      this.textManipulation.indentSelection("right")
-    );
-    this.textManipulation.bind("shift+tab", () =>
-      this.textManipulation.indentSelection("left")
-    );
-    this.textManipulation.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
-      this.send("insertCurrentTime")
-    );
+    keymap["tab"] = () => this.textManipulation.indentSelection("right");
+    keymap["shift+tab"] = () => this.textManipulation.indentSelection("left");
+    keymap[`${PLATFORM_KEY_MODIFIER}+shift+.`] = () =>
+      this.send("insertCurrentTime");
+
+    return keymap;
   }
 
   @bind

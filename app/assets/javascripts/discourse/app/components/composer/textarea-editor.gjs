@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import ItsATrap from "@discourse/itsatrap";
 import { modifier } from "ember-modifier";
 import DTextarea from "discourse/components/d-textarea";
 import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
@@ -13,11 +14,16 @@ export default class TextareaEditor extends Component {
 
   registerTextarea = modifier((textarea) => {
     this.textarea = textarea;
+    this.#itsatrap = new ItsATrap(textarea);
 
     this.textManipulation = new TextareaTextManipulation(getOwner(this), {
       markdownOptions: this.args.markdownOptions,
       textarea,
     });
+
+    for (const [key, callback] of Object.entries(this.args.keymap)) {
+      this.#itsatrap.bind(key, callback);
+    }
 
     const destructor = this.args.onSetup(this.textManipulation);
 
@@ -26,10 +32,12 @@ export default class TextareaEditor extends Component {
     return () => {
       this.destroySmartList();
       destructor?.();
-      this.textManipulation.destroy();
+      this.#itsatrap?.destroy();
+      this.#itsatrap = null;
     };
   });
 
+  #itsatrap;
   #handleSmartListAutocomplete = false;
   #shiftPressed = false;
 

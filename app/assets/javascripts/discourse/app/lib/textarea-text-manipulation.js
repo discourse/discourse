@@ -2,7 +2,6 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import ItsATrap from "@discourse/itsatrap";
 import $ from "jquery";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
@@ -48,15 +47,12 @@ export default class TextareaTextManipulation {
   textarea;
   $textarea;
 
-  #itsatrap;
-
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
     this.$textarea = $(textarea);
-    this.#itsatrap = new ItsATrap(textarea);
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -752,14 +748,5 @@ export default class TextareaTextManipulation {
 
   autocomplete() {
     return this.$textarea.autocomplete(...arguments);
-  }
-
-  bind() {
-    this.#itsatrap.bind(...arguments);
-  }
-
-  destroy() {
-    this.#itsatrap?.destroy();
-    this.#itsatrap = null;
   }
 }
