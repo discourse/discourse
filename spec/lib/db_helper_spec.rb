@@ -2,6 +2,11 @@
 
 RSpec.describe DbHelper do
   describe ".remap" do
+    fab!(:bookmark1) { Fabricate(:bookmark, name: "short-bookmark") }
+    fab!(:bookmark2) { Fabricate(:bookmark, name: "another-bookmark") }
+    let(:bookmark_name_limit) { Bookmark.columns_hash["name"].limit }
+    let(:long_bookmark_name) { "a" * (bookmark_name_limit + 1) }
+
     it "should remap columns properly" do
       post = Fabricate(:post, cooked: "this is a specialcode that I included")
       post_attributes = post.reload.attributes
@@ -46,10 +51,7 @@ RSpec.describe DbHelper do
     end
 
     it "skips remap when new value exceeds column length constraint" do
-      bookmark1 = Fabricate(:bookmark, name: "short-bookmark")
-      bookmark2 = Fabricate(:bookmark, name: "another-bookmark")
-
-      DbHelper.remap("bookmark", "a" * 100)
+      DbHelper.remap("bookmark", long_bookmark_name)
 
       bookmark1.reload
       bookmark2.reload
@@ -59,9 +61,9 @@ RSpec.describe DbHelper do
     end
 
     it "logs skipped remaps due to max length constraints when verbose is true" do
-      Fabricate(:bookmark, name: "another-bookmark")
-
-      expect { DbHelper.remap("bookmark", "a" * 98, verbose: true) }.to output(/SKIPPED:/).to_stdout
+      expect { DbHelper.remap("bookmark", long_bookmark_name, verbose: true) }.to output(
+        /SKIPPED:/,
+      ).to_stdout
     end
   end
 
