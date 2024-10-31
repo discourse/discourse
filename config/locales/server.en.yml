@@ -2721,7 +2721,6 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
