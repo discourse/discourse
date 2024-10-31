@@ -306,7 +306,6 @@ export function buildResolver(baseName) {
             id: "discourse.mobile-templates",
           }
         );
-        return result;
       }
       if (_options.mobileView) {
         return result;

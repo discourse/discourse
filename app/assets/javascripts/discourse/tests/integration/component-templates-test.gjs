@@ -7,7 +7,20 @@ import sinon from "sinon";
 import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
+
+function silenceMobileDeprecations(hooks) {
+  let unsilenceCallback;
+  hooks.beforeEach(() => {
+    const promise = new Promise((resolve) => (unsilenceCallback = resolve));
+    withSilencedDeprecationsAsync(
+      ["discourse.mobile-templates"],
+      () => promise
+    );
+  });
+  hooks.afterEach(() => unsilenceCallback());
+}
 
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes
 class MockColocatedComponent extends Component {}
@@ -98,7 +111,9 @@ function registerTemplateOnlyComponents() {
   );
 }
 
-module("Integration | Initializers | plugin-component-templates", function () {
+module("Integration | Initializers | plugin-component-templates", function (h) {
+  silenceMobileDeprecations(h);
+
   module("template-only component definition behaviour", function (hooks) {
     hooks.beforeEach(() => registerTemplateOnlyComponents());
     setupRenderingTest(hooks);
