@@ -3317,8 +3317,8 @@ class PluginApi {
    *
    * @callback tabCondition
    * @param {Object} opts
-   * @param {Topic} opts.topic - the current topic
    * @param {"topic"|"pm"} opts.context - the type of the current page
+   * @param {Topic} opts.topic - the current topic
    *
    * @param {Object} tab
    * @param {string} tab.id - an identifier used in more-topics-tabs value transformer

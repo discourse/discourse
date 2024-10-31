@@ -12,7 +12,7 @@ acceptance("More topics - Plugin API", function (needs) {
         id: "my-tab",
         name: "News",
         component: <template>hello there!</template>,
-        condition: ({ topic, context }) =>
+        condition: ({ context, topic }) =>
           context === "topic" && topic.id === 280,
       });
 
