@@ -195,7 +195,8 @@ html {
     color: var(--primary-medium);
   }
 
-  .badge-notification.clicks {
+  a[data-clicks]::before,
+  a[data-clicks]::after {
     color: var(--primary-high);
   }
 

@@ -3766,6 +3766,9 @@ en:
         one: "view %{count} hidden reply"
         other: "view %{count} hidden replies"
       sr_reply_to: "Reply to post #%{post_number} by @%{username}"
+      link_clicked:
+        one: "link clicked %{count} time"
+        other: "link clicked %{count} times"
 
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
@@ -5619,6 +5622,8 @@ en:
           community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
+          community_title: "Community title"
+          community_title_help: "Short description, shown in the browser tab, for key pages such as categories and topic lists."
           banner_image: "Banner image"
           banner_image_help: |
             This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
@@ -5668,7 +5673,7 @@ en:
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
-          add: "Add Flag"
+          add: "Add flag"
           edit: "Edit"
           back: "Back to flags"
           delete: "Delete"

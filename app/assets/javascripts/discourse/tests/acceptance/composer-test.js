@@ -408,7 +408,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".topic-post:last-of-type .cooked p")
       .hasText(
-        "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+        "If you use gettext format you could leverage Launchpad translations and the community behind it."
       );
   });
 

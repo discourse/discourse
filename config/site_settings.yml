@@ -2438,6 +2438,7 @@ developer:
   enable_experimental_lightbox:
     default: false
     client: true
+    hidden: true
   experimental_topics_filter:
     client: true
     default: false

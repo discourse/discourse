@@ -393,14 +393,19 @@ body:not(.archetype-private_message) {
         }
       }
     }
-    .badge {
-      grid-area: counter;
-      align-self: start;
-      top: 0.2em;
-    }
+
     .topic-link {
       grid-area: link;
     }
+
+    .topic-link[data-clicks]::before {
+      @include click-counter-badge;
+    }
+
+    .topic-link[data-clicks]::after {
+      display: none;
+    }
+
     .domain {
       grid-area: domain;
       font-size: var(--font-down-2);

@@ -4,6 +4,7 @@ module Chat
   class Channel < ActiveRecord::Base
     include Trashable
     include TypeMappable
+    include HasCustomFields
 
     # TODO (martin) Remove once we are using last_message instead,
     # should be around August 2023.

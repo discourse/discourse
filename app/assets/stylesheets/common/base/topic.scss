@@ -388,10 +388,6 @@
       a[href] {
         color: var(--primary-med-or-secondary-med);
       }
-      .clicks {
-        margin-left: 0.5em;
-        flex: 0 0 auto;
-      }
       .d-icon {
         font-size: var(--font-down-2);
         margin: 0 0.5em 0 0;
@@ -457,4 +453,8 @@ a.topic-featured-link {
     border-radius: 3px;
     text-transform: lowercase;
   }
+}
+
+a[data-clicks]::after {
+  @include click-counter-badge;
 }

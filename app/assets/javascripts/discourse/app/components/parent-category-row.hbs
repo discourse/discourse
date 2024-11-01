@@ -4,97 +4,169 @@
     @outletArgs={{hash category=this.category}}
   />
 
-  <tr
-    data-category-id={{this.category.id}}
-    data-notification-level={{this.category.notificationLevelString}}
-    class="{{if
-        this.category.description_excerpt
-        'has-description'
-        'no-description'
-      }}
-      {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
-  >
-    <td
-      class="category {{if this.isMuted 'muted'}}"
-      style={{category-color-variable this.category.color}}
+  {{#if this.site.mobileView}}
+    <div
+      data-category-id={{this.category.id}}
+      data-notification-level={{this.category.notificationLevelString}}
+      style={{border-color this.category.color}}
+      class="category-list-item category {{if this.isMuted 'muted'}}"
     >
-      <CategoryTitleLink @category={{this.category}} />
-      <PluginOutlet
-        @name="below-category-title-link"
-        @connectorTagName="div"
-        @outletArgs={{hash category=this.category}}
-      />
-
-      {{#if this.category.description_excerpt}}
-        <div class="category-description">
-          {{dir-span this.category.description_excerpt htmlSafe="true"}}
-        </div>
-      {{/if}}
-
-      {{#if this.category.isGrandParent}}
-        <table class="category-list subcategories-with-subcategories">
-          <tbody>
+      <table class="topic-list">
+        <tbody>
+          <tr>
+            <th class="main-link">
+              <CategoryTitleLink @category={{this.category}} />
+            </th>
+          </tr>
+          {{#if this.category.description_excerpt}}
+            <tr class="category-description">
+              <td colspan="3">
+                {{html-safe this.category.description_excerpt}}
+              </td>
+            </tr>
+          {{/if}}
+          {{#unless this.isMuted}}
+            {{#if this.showTopics}}
+              {{#each this.category.featuredTopics as |t|}}
+                <MobileCategoryTopic @topic={{t}} />
+              {{/each}}
+            {{/if}}
+          {{/unless}}
+          {{#if this.category.isGrandParent}}
             {{#each this.category.subcategories as |subcategory|}}
               <SubCategoryRow
                 @category={{subcategory}}
                 @listType={{this.listType}}
               />
             {{/each}}
-            {{#if (gt this.category.unloadedSubcategoryCount 0)}}
-              {{i18n
-                "category_row.subcategory_count"
-                count=this.category.unloadedSubcategoryCount
-              }}
-            {{/if}}
-          </tbody>
-        </table>
-      {{else if this.category.subcategories}}
-        <div class="subcategories">
-          {{#each this.category.subcategories as |subcategory|}}
-            <SubCategoryItem
-              @category={{subcategory}}
-              @listType={{this.listType}}
-            />
-          {{/each}}
-          {{#if (gt this.category.unloadedSubcategoryCount 0)}}
-            <div class="subcategories__more-subcategories">
-              <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+          {{else if this.category.subcategories}}
+            <tr class="subcategories-list">
+              <td>
+                <div class="subcategories">
+                  {{#each this.category.subcategories as |subcategory|}}
+                    <SubCategoryItem
+                      @category={{subcategory}}
+                      @listType={{this.listType}}
+                    />
+                  {{/each}}
+                </div>
+              </td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+      <footer class="clearfix category-topics-count">
+        <div class="category-stat">
+          <a href={{this.category.url}}>
+            {{html-safe this.category.statTotal}}
+          </a>
+        </div>
+        {{#unless this.category.pickAll}}
+          <div class="category-stat">
+            <a href={{this.category.url}}>
+              {{html-safe this.category.stat}}
+            </a>
+          </div>
+        {{/unless}}
+      </footer>
+    </div>
+  {{else}}
+
+    <tr
+      data-category-id={{this.category.id}}
+      data-notification-level={{this.category.notificationLevelString}}
+      class="{{if
+          this.category.description_excerpt
+          'has-description'
+          'no-description'
+        }}
+        {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
+    >
+      <td
+        class="category {{if this.isMuted 'muted'}}"
+        style={{category-color-variable this.category.color}}
+      >
+        <CategoryTitleLink @category={{this.category}} />
+        <PluginOutlet
+          @name="below-category-title-link"
+          @connectorTagName="div"
+          @outletArgs={{hash category=this.category}}
+        />
+
+        {{#if this.category.description_excerpt}}
+          <div class="category-description">
+            {{dir-span this.category.description_excerpt htmlSafe="true"}}
+          </div>
+        {{/if}}
+
+        {{#if this.category.isGrandParent}}
+          <table class="category-list subcategories-with-subcategories">
+            <tbody>
+              {{#each this.category.subcategories as |subcategory|}}
+                <SubCategoryRow
+                  @category={{subcategory}}
+                  @listType={{this.listType}}
+                />
+              {{/each}}
+              {{#if (gt this.category.unloadedSubcategoryCount 0)}}
                 {{i18n
                   "category_row.subcategory_count"
                   count=this.category.unloadedSubcategoryCount
                 }}
-              </LinkTo>
-            </div>
-          {{/if}}
-        </div>
-      {{/if}}
-    </td>
-
-    <td class="topics">
-      <div title={{this.category.statTitle}}>{{html-safe
-          this.category.stat
-        }}</div>
-      <CategoryUnread
-        @category={{this.category}}
-        @tagName="div"
-        @unreadTopicsCount={{this.unreadTopicsCount}}
-        @newTopicsCount={{this.newTopicsCount}}
-        class="unread-new"
-      />
-    </td>
-
-    {{#unless this.isMuted}}
-      {{#if this.showTopics}}
-        <td class="latest">
-          {{#each this.category.featuredTopics as |t|}}
-            {{#if this.currentUser.use_glimmer_topic_list}}
-              <TopicList::FeaturedTopic @topic={{t}} />
-            {{else}}
-              <FeaturedTopic @topic={{t}} />
+              {{/if}}
+            </tbody>
+          </table>
+        {{else if this.category.subcategories}}
+          <div class="subcategories">
+            {{#each this.category.subcategories as |subcategory|}}
+              <SubCategoryItem
+                @category={{subcategory}}
+                @listType={{this.listType}}
+              />
+            {{/each}}
+            {{#if (gt this.category.unloadedSubcategoryCount 0)}}
+              <div class="subcategories__more-subcategories">
+                <LinkTo
+                  @route="discovery.subcategories"
+                  @model={{this.slugPath}}
+                >
+                  {{i18n
+                    "category_row.subcategory_count"
+                    count=this.category.unloadedSubcategoryCount
+                  }}
+                </LinkTo>
+              </div>
             {{/if}}
-          {{/each}}
-        </td>
-      {{/if}}
-    {{/unless}}
-  </tr>
+          </div>
+        {{/if}}
+      </td>
+
+      <td class="topics">
+        <div title={{this.category.statTitle}}>{{html-safe
+            this.category.stat
+          }}</div>
+        <CategoryUnread
+          @category={{this.category}}
+          @tagName="div"
+          @unreadTopicsCount={{this.unreadTopicsCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+          class="unread-new"
+        />
+      </td>
+
+      {{#unless this.isMuted}}
+        {{#if this.showTopics}}
+          <td class="latest">
+            {{#each this.category.featuredTopics as |t|}}
+              {{#if this.currentUser.use_glimmer_topic_list}}
+                <TopicList::FeaturedTopic @topic={{t}} />
+              {{else}}
+                <FeaturedTopic @topic={{t}} />
+              {{/if}}
+            {{/each}}
+          </td>
+        {{/if}}
+      {{/unless}}
+    </tr>
+  {{/if}}
 {{/unless}}
