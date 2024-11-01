@@ -1185,6 +1185,7 @@ posting:
     client: true
     default: false
   enable_diffhtml_preview:
+    hidden: true
     default: false
     client: true
   enable_fast_edit:
