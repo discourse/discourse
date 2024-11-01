@@ -5,6 +5,7 @@ html.keyboard-visible.mobile-view
   height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
   max-height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
   overflow-y: scroll;
+  overflow-x: hidden;
   padding-top: 0;
 }
 
