@@ -13,7 +13,7 @@ import SmallUserList from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
 import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
-import { applyValueTransformer } from "discourse/lib/transformer";
+import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import i18n from "discourse-common/helpers/i18n";
 import PostMenuButtonConfig from "./menu/button-config";
@@ -196,7 +196,7 @@ export default class PostMenu extends Component {
 
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
     // in the value transformer, and extract the data to be used later to resolve the DAG order
-    const buttonsRegistry = applyValueTransformer(
+    const buttonsRegistry = applyMutableValueTransformer(
       "post-menu-buttons",
       dag,
       this.staticMethodsArgs
