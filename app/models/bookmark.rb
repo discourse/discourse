@@ -206,7 +206,7 @@ end
 #  reminder_set_at        :datetime
 #  auto_delete_preference :integer          default(0), not null
 #  pinned                 :boolean          default(FALSE)
-#  bookmarkable_id        :integer
+#  bookmarkable_id        :bigint
 #  bookmarkable_type      :string
 #
 # Indexes

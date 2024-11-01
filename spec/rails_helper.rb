@@ -476,9 +476,6 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    migrate_column_to_bigint(AllowedPmUser, :allowed_pm_user_id)
-    migrate_column_to_bigint(Bookmark, :bookmarkable_id)
-    migrate_column_to_bigint(IgnoredUser, :ignored_user_id)
     migrate_column_to_bigint(PostAction, :post_action_type_id)
     migrate_column_to_bigint(Reviewable, :target_id)
     migrate_column_to_bigint(ReviewableHistory, :reviewable_id)
