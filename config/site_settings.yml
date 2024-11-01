@@ -628,6 +628,9 @@ login:
     default: 1440
     min: 1
     max: 175200
+  full_page_login:
+    default: false
+    client: true
 
 users:
   min_username_length:
@@ -3295,9 +3298,6 @@ dashboard:
     client: true
 
 experimental:
-  experimental_full_page_login:
-    default: false
-    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
