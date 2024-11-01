@@ -22,6 +22,10 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 import ComboBox from "select-kit/components/combo-box";
 
 const MIN_NAME_LENGTH = 4;
+const CREATE_TYPES = [
+  { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
+  { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
+];
 
 export default class InstallThemeModal extends Component {
   @service store;
@@ -42,13 +46,6 @@ export default class InstallThemeModal extends Component {
   recordType = this.args.model.recordType || "theme";
   keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
   importUrl = this.args.model.importUrl || "/admin/themes/import";
-
-  get createTypes() {
-    return [
-      { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
-    ];
-  }
 
   get showPublicKey() {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
@@ -108,20 +105,20 @@ export default class InstallThemeModal extends Component {
   }
 
   get themes() {
-    return POPULAR_THEMES.map((t) => {
+    return POPULAR_THEMES.map((popularTheme) => {
       if (
-        this.args.model.installedThemes.some((theme) =>
-          this.themeHasSameUrl(theme, t.value)
+        this.args.model.installedThemes.some((installedTheme) =>
+          this.themeHasSameUrl(installedTheme, popularTheme.value)
         )
       ) {
-        t.installed = true;
+        popularTheme.installed = true;
       }
-      return t;
+      return popularTheme;
     });
   }
 
   themeHasSameUrl(theme, url) {
-    const themeUrl = theme.remote_theme && theme.remote_theme.remote_url;
+    const themeUrl = theme.remote_theme?.remote_url;
     return (
       themeUrl &&
       url &&
@@ -141,8 +138,8 @@ export default class InstallThemeModal extends Component {
         type: "POST",
       });
       this.publicKey = pair.public_key;
-    } catch (e) {
-      popupAjaxError(e);
+    } catch (err) {
+      popupAjaxError(err);
     }
   }
 
@@ -177,8 +174,8 @@ export default class InstallThemeModal extends Component {
         await theme.save({ name: this.name, component: this.component });
         this.args.model.addTheme(theme);
         this.args.closeModal();
-      } catch (e) {
-        popupAjaxError(e);
+      } catch (err) {
+        popupAjaxError(err);
       } finally {
         this.loading = false;
       }
@@ -233,9 +230,9 @@ export default class InstallThemeModal extends Component {
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
       this.args.closeModal();
-    } catch (e) {
+    } catch (err) {
       if (!this.publicKey || this.themeCannotBeInstalled) {
-        return popupAjaxError(e);
+        return popupAjaxError(err);
       }
       this.themeCannotBeInstalled = I18n.t(
         "admin.customize.theme.force_install"
@@ -387,7 +384,7 @@ export default class InstallThemeModal extends Component {
                     <div class="public-key-text-wrapper">
                       <textarea
                         class="public-key-value"
-                        readonly={{true}}
+                        readonly="true"
                         {{on
                           "input"
                           (withEventValue (fn (mut this.publicKey)))
@@ -417,7 +414,7 @@ export default class InstallThemeModal extends Component {
                   }}</div>
                 <ComboBox
                   @valueProperty="value"
-                  @content={{this.createTypes}}
+                  @content={{CREATE_TYPES}}
                   @value={{this.selectedType}}
                   @onChange={{this.updateSelectedType}}
                 />
@@ -456,8 +453,7 @@ export default class InstallThemeModal extends Component {
           <DButton
             @action={{this.installTheme}}
             @disabled={{this.installDisabled}}
-            class="btn
-              {{if this.themeCannotBeInstalled 'btn-danger' 'btn-primary'}}"
+            class={{if this.themeCannotBeInstalled "btn-danger" "btn-primary"}}
             @label={{this.submitLabel}}
           />
           <DButton
