@@ -1,6 +1,7 @@
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { isTesting } from "discourse-common/config/environment";
+import deprecated from "discourse-common/lib/deprecated";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 const COLOCATED_TEMPLATE_OVERRIDES = new Map();
@@ -37,8 +38,17 @@ export default {
 
       let componentName = templateKey;
       if (mobile) {
-        componentName = componentName.slice("mobile/".length);
+        deprecated(
+          `Mobile-specific hbs templates are deprecated. Use responsive CSS or {{#if this.site.mobileView}} instead. [${templateKey}]`,
+          {
+            id: "discourse.mobile-templates",
+          }
+        );
+        if (this.site.mobileView) {
+          componentName = componentName.slice("mobile/".length);
+        }
       }
+
       componentName = componentName.slice("components/".length);
 
       const component = owner.resolveRegistration(`component:${componentName}`);
@@ -79,15 +89,10 @@ export default {
     const orderedOverrides = [
       [pluginTemplates, "components/", false],
       [themeTemplates, "components/", false],
+      [coreTemplates, "mobile/components/", true],
+      [pluginTemplates, "mobile/components/", true],
+      [themeTemplates, "mobile/components/", true],
     ];
-
-    if (this.site.mobileView) {
-      orderedOverrides.push(
-        [coreTemplates, "mobile/components/", true],
-        [pluginTemplates, "mobile/components/", true],
-        [themeTemplates, "mobile/components/", true]
-      );
-    }
 
     for (const [map, prefix, mobile] of orderedOverrides) {
       for (const [key, value] of map) {
