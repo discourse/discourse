@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -31,6 +32,8 @@ const CHART_OPTIONS = {};
 )
 @classNames("admin-report")
 export default class AdminReport extends Component {
+  @service site;
+
   isEnabled = true;
   disabledLabel = I18n.t("admin.dashboard.disabled");
   isLoading = false;

@@ -26,6 +26,11 @@
                   {{#if this.model.description}}
                     <DTooltip
                       @interactive={{this.model.description_link.length}}
+                      @triggers={{if
+                        this.site.mobileView
+                        (array "click")
+                        (array "hover" "click")
+                      }}
                     >
                       <:trigger>
                         {{d-icon "circle-question"}}
