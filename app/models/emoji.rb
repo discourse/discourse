@@ -190,7 +190,7 @@ class Emoji
             e.name = emoji.name
             e.url = emoji.upload&.url
             e.group = emoji.group || DEFAULT_GROUP
-            e.created_by = User.find(emoji.user_id).username # not sure if we want to do this same thing below when the skip_db global setting is on?
+            e.created_by = User.where(id: emoji.user_id).pick(:username)
           end
         end
     end
