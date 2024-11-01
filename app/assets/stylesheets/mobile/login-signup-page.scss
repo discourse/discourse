@@ -7,6 +7,11 @@ html.keyboard-visible.mobile-view
   overflow-y: scroll;
   overflow-x: hidden;
   padding-top: 0;
+  .login-fullpage,
+  .signup-fullpage,
+  .invites-show {
+    padding-top: var(--header-offset);
+  }
 }
 
 .login-fullpage,
