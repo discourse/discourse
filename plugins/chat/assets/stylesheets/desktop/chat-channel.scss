@@ -1,0 +1,16 @@
+@media screen and (max-width: 1000px) {
+  .main-chat-outlet.has-side-panel-expanded {
+    .c-routes.--channel {
+      display: none;
+    }
+
+    .chat-side-panel {
+      width: 100% !important; // overrides the inline auto width
+      border: none;
+
+      .chat-side-panel-resizer {
+        display: none;
+      }
+    }
+  }
+}
