@@ -81,7 +81,8 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
             :in_reply_to,
             :thread,
             :upload_ids,
-            :incoming_chat_webhook
+            :incoming_chat_webhook,
+            :streaming
 
   initialize_with do |transients|
     channel =
@@ -104,6 +105,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
         },
         options: {
           process_inline: true,
+          streaming: transients[:streaming],
         },
         guardian: user.guardian,
         incoming_chat_webhook: transients[:incoming_chat_webhook],

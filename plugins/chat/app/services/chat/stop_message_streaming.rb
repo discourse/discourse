@@ -25,6 +25,7 @@ module Chat
     policy :can_stop_streaming
     step :stop_message_streaming
     step :publish_message_streaming_state
+    step :leave_chat_reply_presence_channel
 
     private
 
@@ -51,6 +52,11 @@ module Chat
 
     def publish_message_streaming_state(guardian:, message:)
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
+    end
+
+    def leave_chat_reply_presence_channel(message:)
+      presence_channel = PresenceChannel.new(message.presence_channel_name)
+      presence_channel.leave(user_id: message.user_id, client_id: message.id)
     end
   end
 end

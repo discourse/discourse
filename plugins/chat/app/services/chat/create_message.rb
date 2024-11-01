@@ -72,6 +72,7 @@ module Chat
       step :create_excerpt
       step :update_created_by_sdk
       step :save_message
+      step :join_chat_reply_presence_channel
       step :delete_drafts
       step :post_process_thread
       step :create_webhook_event
@@ -159,6 +160,12 @@ module Chat
 
     def save_message(message_instance:)
       message_instance.save!
+    end
+
+    def join_chat_reply_presence_channel(message_instance:, thread:, channel:, options:)
+      return if !options.streaming
+      presence_channel = PresenceChannel.new(message_instance.presence_channel_name)
+      presence_channel.present(user_id: message_instance.user_id, client_id: message_instance.id)
     end
 
     def delete_drafts(channel:, guardian:)
