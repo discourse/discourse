@@ -50,20 +50,42 @@ RSpec.describe DbHelper do
       DB.exec "DROP FUNCTION #{Migration::BaseDropper.readonly_function_name("posts", "cooked")} CASCADE"
     end
 
-    it "skips remap when new value exceeds column length constraint" do
-      DbHelper.remap("bookmark", long_bookmark_name)
-
-      bookmark1.reload
-      bookmark2.reload
-
-      expect(bookmark1.name).to eq("short-bookmark")
-      expect(bookmark2.name).to eq("another-bookmark")
+    context "when skip_max_length_violations is false" do
+      it "raises an exception if remap exceeds column length constraint by default" do
+        expect { DbHelper.remap("bookmark", long_bookmark_name) }.to raise_error(
+          PG::StringDataRightTruncation,
+          /value too long.*table: bookmarks,.*name/,
+        )
+      end
     end
 
-    it "logs skipped remaps due to max length constraints when verbose is true" do
-      expect { DbHelper.remap("bookmark", long_bookmark_name, verbose: true) }.to output(
-        /SKIPPED:/,
-      ).to_stdout
+    context "when skip_max_length_violations is true" do
+      it "skips a remap eligible row if new value exceeds column length constraint" do
+        DbHelper.remap("bookmark", long_bookmark_name, skip_max_length_violations: true)
+
+        bookmark1.reload
+        bookmark2.reload
+
+        expect(bookmark1.name).to eq("short-bookmark")
+        expect(bookmark2.name).to eq("another-bookmark")
+      end
+
+      it "logs skipped remaps due to max length constraints when verbose is true" do
+        expect {
+          DbHelper.remap(
+            "bookmark",
+            long_bookmark_name,
+            verbose: true,
+            skip_max_length_violations: true,
+          )
+        }.to output(/SKIPPED:/).to_stdout
+
+        bookmark1.reload
+        bookmark2.reload
+
+        expect(bookmark1.name).to eq("short-bookmark")
+        expect(bookmark2.name).to eq("another-bookmark")
+      end
     end
   end
 

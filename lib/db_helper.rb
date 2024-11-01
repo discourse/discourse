@@ -26,73 +26,34 @@ class DbHelper
     anchor_left: false,
     anchor_right: false,
     excluded_tables: [],
-    verbose: false
+    verbose: false,
+    skip_max_length_violations: false
   )
     text_columns = find_text_columns(excluded_tables)
 
     return if text_columns.empty?
 
-    like = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
+    pattern = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
 
     text_columns.each do |table, columns|
-      query_parts =
-        columns.each_with_object(
-          { updates: [], conditions: [], skipped_sums: [] },
-        ) do |column, parts|
-          replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
-          replace = truncate(replace, table, column)
+      query_parts = build_remap_query_parts(table, columns, skip_max_length_violations)
 
-          parts[:updates] << %("#{column[:name]}" = #{replace})
-
-          basic_condition = %("#{column[:name]}" IS NOT NULL AND "#{column[:name]}" LIKE :like)
-
-          if column[:max_length].present?
-            parts[
-              :conditions
-            ] << "(#{basic_condition} AND LENGTH(#{replace}) <= #{column[:max_length]})"
-
-            parts[:skipped_sums] << <<~SQL
-              SUM(
-                CASE
-                  WHEN #{basic_condition} AND LENGTH(#{replace}) > #{column[:max_length]} THEN 1 ELSE 0
-                END) AS #{column[:name]}_skipped
-            SQL
-          else
-            parts[:conditions] << "(#{basic_condition})"
-          end
-        end
-
-      rows_updated = DB.exec(<<~SQL, from: from, to: to, like: like)
-        UPDATE \"#{table}\"
-          SET #{query_parts[:updates].join(", ")}
-        WHERE #{query_parts[:conditions].join(" OR ")}
-      SQL
+      begin
+        rows_updated = DB.exec(<<~SQL, from: from, to: to, pattern: pattern)
+          UPDATE \"#{table}\"
+            SET #{query_parts[:updates].join(", ")}
+          WHERE #{query_parts[:conditions].join(" OR ")}
+        SQL
+      rescue PG::StringDataRightTruncation => e
+        # Provide more context in the exeption message
+        raise_contextualized_remap_exception(e, table, query_parts[:length_constrained_columns])
+      end
 
       if verbose
         skipped_counts =
-          if query_parts[:skipped_sums].any?
-            skipped = DB.query_hash(<<~SQL, from: from, to: to, like: like).first
-              SELECT #{query_parts[:skipped_sums].join(", ")}
-              FROM \"#{table}\"
-            SQL
+          skipped_remap_counts(table, from, to, pattern, query_parts, skip_max_length_violations)
 
-            skipped.select { |_, count| count.to_i > 0 }
-          end
-
-        if (rows_updated > 0) || skipped_counts&.any?
-          message = +"#{table}=#{rows_updated}"
-
-          if skipped_counts&.any?
-            message << " SKIPPED: "
-            message << skipped_counts
-              .map do |column, count|
-                "#{column.delete_suffix("_skipped")}: #{count} #{"update".pluralize(count)}"
-              end
-              .join(", ")
-          end
-
-          puts message
-        end
+        log_remap_message(table, rows_updated, skipped_counts)
       end
     end
 
@@ -201,5 +162,79 @@ class DbHelper
     else
       sql
     end
+  end
+
+  def self.build_remap_query_parts(table, columns, skip_max_length_violations)
+    columns.each_with_object(
+      { updates: [], conditions: [], skipped_sums: [], length_constrained_columns: [] },
+    ) do |column, parts|
+      replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
+      replace = truncate(replace, table, column)
+
+      if column[:max_length].present?
+        # Keep track of columns with length constraints for error messages
+        parts[:length_constrained_columns] << "#{column[:name]}(#{column[:max_length]})"
+      end
+
+      # Build SQL update statements for each column
+      parts[:updates] << %("#{column[:name]}" = #{replace})
+
+      # Build the base SQL condition clausse for each column
+      basic_condition = %("#{column[:name]}" IS NOT NULL AND "#{column[:name]}" LIKE :pattern)
+
+      if skip_max_length_violations && column[:max_length].present?
+        # Extend base condition to skip updates that would violate the column length constraint
+        parts[
+          :conditions
+        ] << "(#{basic_condition} AND LENGTH(#{replace}) <= #{column[:max_length]})"
+
+        # Build SQL sum statements for each column to count skipped updates.
+        # This will helps us know the number of updates skipped due to length constraints
+        # violations on this column
+        parts[:skipped_sums] << <<~SQL
+          SUM (
+            CASE
+              WHEN #{basic_condition} AND LENGTH(#{replace}) > #{column[:max_length]} THEN 1 ELSE 0
+            END
+          ) AS #{column[:name]}_skipped
+        SQL
+      else
+        parts[:conditions] << "(#{basic_condition})"
+      end
+    end
+  end
+
+  def self.log_remap_message(table, rows_updated, skipped_counts)
+    if (rows_updated > 0) || skipped_counts&.any?
+      message = +"#{table}=#{rows_updated}"
+
+      if skipped_counts&.any?
+        message << " SKIPPED: "
+        message << skipped_counts
+          .map do |column, count|
+            "#{column.delete_suffix("_skipped")}: #{count} #{"update".pluralize(count)}"
+          end
+          .join(", ")
+      end
+
+      puts message
+    end
+  end
+
+  def self.skipped_remap_counts(table, from, to, pattern, query_parts, skip_max_length_violations)
+    return unless skip_max_length_violations && query_parts[:skipped_sums].any?
+
+    skipped = DB.query_hash(<<~SQL, from: from, to: to, pattern: pattern).first
+      SELECT #{query_parts[:skipped_sums].join(", ")}
+      FROM \"#{table}\"
+    SQL
+
+    skipped.select { |_, count| count.to_i > 0 }
+  end
+
+  def self.raise_contextualized_remap_exception(error, table, columns)
+    details = "columns with length constraints: #{columns.join(", ")}"
+
+    raise PG::StringDataRightTruncation, " #{error.message.strip} (table: #{table}, #{details})"
   end
 end
