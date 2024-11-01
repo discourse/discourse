@@ -504,16 +504,11 @@ module("Unit | Utility | transformers", function (hooks) {
 
   module("applyMutableValueTransformer", function (innerHooks) {
     innerHooks.beforeEach(function () {
-      this.consoleWarnStub = sinon.stub(console, "warn");
       acceptNewTransformerNames();
       withPluginApi("1.34.0", (api) => {
         api.addValueTransformerName("test-mutable-transformer");
       });
       acceptTransformerRegistrations();
-    });
-
-    innerHooks.afterEach(function () {
-      this.consoleWarnStub.restore();
     });
 
     test("mutates the value as expected", function (assert) {
@@ -537,20 +532,22 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.strictEqual(mutated, true, "the value was mutated");
     });
 
-    test("logs a warning if the transformer returns a value different from undefined", function (assert) {
-      withPluginApi("1.34.0", (api) => {
-        api.registerValueTransformer(
-          "test-mutable-transformer",
-          () => "unexpected value"
-        );
-      });
+    test("raises an exception if the transformer returns a value different from undefined", function (assert) {
+      assert.throws(
+        () => {
+          withPluginApi("1.34.0", (api) => {
+            api.registerValueTransformer(
+              "test-mutable-transformer",
+              () => "unexpected value"
+            );
+          });
 
-      applyMutableValueTransformer("test-mutable-transformer", "default value");
-
-      assert.ok(
-        this.consoleWarnStub.calledWith(
-          sinon.match(/expects the value to be mutated instead of returned/)
-        ),
+          applyMutableValueTransformer(
+            "test-mutable-transformer",
+            "default value"
+          );
+        },
+        /expects the value to be mutated instead of returned. Remove the return value in your transformer./,
         "logs warning to the console when the transformer returns a value different from undefined"
       );
     });
