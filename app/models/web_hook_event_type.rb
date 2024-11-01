@@ -35,6 +35,7 @@ class WebHookEventType < ActiveRecord::Base
          user_promoted: 13,
          voting: 14,
          chat: 15,
+         custom: 16,
        },
        _scopes: false
 

@@ -5497,6 +5497,8 @@ en:
           group_name: "Group User Events"
           user_added_to_group: "A user is added to a group"
           user_removed_from_group: "A user is removed from a group"
+        custom_event:
+          group_name: "Custom Events"
         user_promoted_event:
           group_name: "User Promoted Events"
           user_promoted: "A user is promoted"
