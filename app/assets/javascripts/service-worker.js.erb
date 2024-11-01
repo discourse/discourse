@@ -132,9 +132,11 @@ self.addEventListener('message', function(event) {
 
   event.waitUntil(
     self.clients.matchAll().then(function(clients) {
+      const activeClient = clients.find(client => client.focused) || clients.find(client => client.visibilityState === "visible");
+
       clients.forEach(function(client) {
         client.postMessage({
-          primaryTab: client.focused
+          primaryTab: client.id === activeClient?.id
         });
       });
     })
