@@ -200,7 +200,10 @@ export default class FloatKitInstance {
   }
 
   get triggers() {
-    if (!Array.isArray(this.options.triggers)) {
+    if (
+      typeof this.options.triggers === "object" &&
+      !Array.isArray(this.options.triggers)
+    ) {
       return this.site.mobileView
         ? this.options.triggers.mobile ?? ["click"]
         : this.options.triggers.desktop ?? ["click"];
@@ -210,7 +213,10 @@ export default class FloatKitInstance {
   }
 
   get untriggers() {
-    if (!Array.isArray(this.options.untriggers)) {
+    if (
+      typeof this.options.untriggers === "object" &&
+      !Array.isArray(this.options.untriggers)
+    ) {
       return this.site.mobileView
         ? this.options.untriggers.mobile ?? ["click"]
         : this.options.untriggers.desktop ?? ["click"];
