@@ -18,6 +18,10 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
   }
 
+  async function leave() {
+    await triggerEvent(".fk-d-tooltip__trigger", "mouseleave");
+  }
+
   async function close() {
     await triggerKeyEvent(document.activeElement, "keydown", "Escape");
   }
@@ -239,5 +243,41 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await getOwner(this).lookup("service:tooltip").close("test");
 
     assert.dom(".fk-d-tooltip__content.test-content").doesNotExist();
+  });
+
+  test("a tooltip is triggered/untriggered by click on mobile", async function (assert) {
+    this.site.mobileView = true;
+
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__content").exists();
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("a tooltip is triggered/untriggered by click on desktop", async function (assert) {
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__content").exists();
+
+    await click(".fk-d-tooltip__trigger");
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("a tooltip is triggered/untriggered by hover on desktop", async function (assert) {
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
+
+    await hover();
+
+    assert.dom(".fk-d-tooltip__content").exists();
+
+    await leave();
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
 });

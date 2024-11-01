@@ -32,8 +32,6 @@ const CHART_OPTIONS = {};
 )
 @classNames("admin-report")
 export default class AdminReport extends Component {
-  @service site;
-
   isEnabled = true;
   disabledLabel = I18n.t("admin.dashboard.disabled");
   isLoading = false;
