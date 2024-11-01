@@ -11,6 +11,8 @@ require "etc"
 require "open3"
 
 class ImportScripts::Smf2 < ImportScripts::Base
+  BATCH_SIZE ||= 5000
+  
   def self.run
     options = Options.new
     begin
@@ -65,6 +67,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     import_users
     import_categories
     import_posts
+    import_personal_posts
     postprocess_posts
     make_prettyurl_permalinks("/forum")
   end
@@ -266,10 +269,120 @@ class ImportScripts::Smf2 < ImportScripts::Base
           )
         end
       end
-      post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
+      begin
+        post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
+      rescue StandardError
+        post[:raw] = "-- MESSAGE SKIPPED --"
+      end
       next post
     end
   end
+
+  def import_personal_posts
+    puts "Loading pm mapping..."
+
+    @pm_mapping = {}
+
+    Topic
+      .joins(:topic_allowed_users)
+      .where(archetype: Archetype.private_message)
+      .where("title NOT ILIKE 'Re:%'")
+      .group(:id)
+      .order(:id)
+      .pluck(
+        "string_agg(topic_allowed_users.user_id::text, ',' ORDER BY topic_allowed_users.user_id), title, topics.id",
+        )
+      .each do |users, title, topic_id|
+      @pm_mapping[users] ||= {}
+      @pm_mapping[users][title] ||= []
+      @pm_mapping[users][title] << topic_id
+    end
+
+    puts "", "Importing personal posts..."
+
+    last_post_id = -1
+    total =
+      query(
+        "SELECT COUNT(*) count FROM smf_personal_messages WHERE deleted_by_sender = 0",
+        as: :single)
+
+    batches(BATCH_SIZE) do |offset|
+      posts = query(<<~SQL, as: :array)
+        SELECT id_pm
+             , id_member_from
+             , msgtime
+             , subject
+             , body
+             , (SELECT GROUP_CONCAT(id_member) FROM smf_pm_recipients r WHERE r.id_pm = pm.id_pm) recipients
+          FROM smf_personal_messages pm
+         WHERE deleted_by_sender = 0
+           AND id_pm > #{last_post_id}
+         ORDER BY id_pm
+         LIMIT #{BATCH_SIZE}
+      SQL
+
+      break if posts.empty?
+
+      last_post_id = posts[-1][:id_pm]
+      post_ids = posts.map { |p| "pm-#{p[:id_pm]}" }
+
+      next if all_records_exist?(:post, post_ids)
+
+      create_posts(posts, total: total, offset: offset) do |p|
+        next unless user_id = user_id_from_imported_user_id(p[:id_member_from])
+        next if p[:recipients].blank?
+        recipients =
+          p[:recipients].split(",").map { |id| user_id_from_imported_user_id(id) }.compact.uniq
+        next if recipients.empty?
+
+        id = "pm-#{p[:id_pm]}"
+        puts id
+        next if post_id_from_imported_post_id(id)
+
+        post = {
+          id: id,
+          created_at: Time.at(p[:msgtime]),
+          user_id: user_id,
+        }
+        begin
+          post[:raw] = convert_message_body(p[:body])
+        rescue StandardError
+          post[:raw] = "-- MESSAGE SKIPPED --"
+        end
+
+
+        users = (recipients + [user_id]).sort.uniq.join(",")
+        title = decode_entities(p[:subject])
+
+        if topic_id = find_pm_topic_id(users, title)
+          post[:topic_id] = topic_id
+        else
+          post[:archetype] = Archetype.private_message
+          post[:title] = title
+          post[:target_usernames] = User.where(id: recipients).pluck(:username)
+          post[:post_create_action] = proc do |action_post|
+            @pm_mapping[users] ||= {}
+            @pm_mapping[users][title] ||= []
+            @pm_mapping[users][title] << action_post.topic_id
+          end
+        end
+
+        post
+      end
+    end
+  end
+
+  def find_pm_topic_id(users, title)
+    return unless title.start_with?("Re:")
+
+    return unless @pm_mapping[users]
+
+    title = title.gsub(/^(Re:)+/i, "")
+    return unless @pm_mapping[users][title]
+
+    @pm_mapping[users][title][-1]
+  end
+
 
   def import_attachment(post, attachment)
     path =
