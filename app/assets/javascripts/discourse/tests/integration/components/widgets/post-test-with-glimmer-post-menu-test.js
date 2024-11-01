@@ -68,8 +68,14 @@ module(
           <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
       );
 
-      assert.strictEqual(queryAll(".badge.clicks")[0].innerText, "1");
-      assert.strictEqual(queryAll(".badge.clicks")[1].innerText, "2");
+      assert.strictEqual(
+        queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+        "1"
+      );
+      assert.strictEqual(
+        queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+        "2"
+      );
     });
 
     test("post - onebox links", async function (assert) {
@@ -97,9 +103,16 @@ module(
           <MountWidget @widget="post-contents" @model={{this.post}} @args={{this.args}} />`
       );
 
-      assert.strictEqual(count(".badge.clicks"), 2);
-      assert.strictEqual(queryAll(".badge.clicks")[0].innerText, "1");
-      assert.strictEqual(queryAll(".badge.clicks")[1].innerText, "2");
+      assert.strictEqual(
+        queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+        "1",
+        "First link has correct data attribute and content"
+      );
+      assert.strictEqual(
+        queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+        "2",
+        "Second link has correct data attribute and content"
+      );
     });
 
     test("wiki", async function (assert) {
