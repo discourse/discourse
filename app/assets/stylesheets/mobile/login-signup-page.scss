@@ -1,5 +1,13 @@
 // Shared styles
 
+html.keyboard-visible.mobile-view
+  #main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show) {
+  height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
+  max-height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
+  overflow-y: scroll;
+  padding-top: 0;
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
