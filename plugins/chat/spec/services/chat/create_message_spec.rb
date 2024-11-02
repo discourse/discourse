@@ -72,16 +72,6 @@ RSpec.describe Chat::CreateMessage do
         expect(message.message).to eq("aaaaaaa")
       end
 
-      context "when streaming" do
-        before { options[:streaming] = true }
-
-        it "joins the presence channel" do
-          presence_channel = PresenceChannel.new(result.message_instance.presence_channel_name)
-
-          expect(presence_channel.user_ids).to include(result.message_instance.user.id)
-        end
-      end
-
       context "when strip_whitespace is disabled" do
         before do
           options[:strip_whitespaces] = false

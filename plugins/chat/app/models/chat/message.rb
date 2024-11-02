@@ -293,14 +293,6 @@ module Chat
       @parsed_mentions = nil
     end
 
-    def presence_channel_name
-      if in_thread?
-        "/chat-reply/#{self.chat_channel.id}/thread/#{self.thread_id}"
-      else
-        "/chat-reply/#{self.chat_channel.id}"
-      end
-    end
-
     private
 
     def delete_mentions(mention_type, target_ids)

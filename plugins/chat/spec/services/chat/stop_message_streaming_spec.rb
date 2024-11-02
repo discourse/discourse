@@ -37,15 +37,6 @@ RSpec.describe Chat::StopMessageStreaming do
           { "type" => "edit" },
         )
       end
-
-      it "leaves the presence channel" do
-        message_2 =
-          Fabricate(:chat_message, chat_channel: channel_1, streaming: true, use_service: true)
-        params[:message_id] = message_2.id
-        presence_channel = PresenceChannel.new(message_2.presence_channel_name)
-
-        expect { result }.to change { presence_channel.count }.by(-1)
-      end
     end
 
     context "when the user is not part of the channel" do
