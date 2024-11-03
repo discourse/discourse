@@ -1,4 +1,4 @@
-@media screen and (max-width: 1000px) {
+@include breakpoint(large) {
   .main-chat-outlet.has-side-panel-expanded {
     .c-routes.--channel {
       display: none;
