@@ -8,15 +8,21 @@ import { createFile } from "discourse/tests/helpers/qunit-helpers";
 module("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    pretender.post("/uploads.json", () => response({}));
-  });
+  test("uploading", async function (assert) {
+    const done = assert.async();
 
-  test("default", async function (assert) {
-    const done = () => assert.step("avatar is uploaded");
+    pretender.post("/uploads.json", () => {
+      assert.step("avatar is uploaded");
+      return response({});
+    });
+
+    const callback = () => {
+      assert.verifySteps(["avatar is uploaded"]);
+      done();
+    };
 
     await render(<template>
-      <AvatarUploader @id="avatar-uploader" @done={{done}} />
+      <AvatarUploader @id="avatar-uploader" @done={{callback}} />
     </template>);
 
     await this.container
@@ -24,7 +30,5 @@ module("Integration | Component | avatar-uploader", function (hooks) {
       .trigger("upload-mixin:avatar-uploader:add-files", [
         createFile("avatar.png"),
       ]);
-
-    assert.verifySteps(["avatar is uploaded"]);
   });
 });
