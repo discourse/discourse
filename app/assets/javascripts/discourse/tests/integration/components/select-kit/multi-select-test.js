@@ -116,7 +116,7 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await paste(query(".filter-input"), "foo|bar");
 
-    assert.equal(this.subject.header().value(), "1,2");
+    assert.strictEqual(this.subject.header().value(), "1,2");
   });
 
   test("no value property with no content", async function (assert) {

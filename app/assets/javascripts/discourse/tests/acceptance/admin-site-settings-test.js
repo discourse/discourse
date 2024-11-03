@@ -198,7 +198,7 @@ acceptance("Admin - Site Settings", function (needs) {
 
     const navItems = queryAll(".admin-nav .nav-stacked li a");
     navItems.each((_, item) => {
-      assert.equal(
+      assert.strictEqual(
         item.title,
         item.innerText,
         "menu item has title, and the title is equal to menu item's label"

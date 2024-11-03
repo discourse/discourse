@@ -22,10 +22,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await fillIn(".controls.username input", "doesntexist");
 
-    assert.equal(
-      query(".users-list-container").innerText,
-      I18n.t("search.no_results")
-    );
+    assert.dom(".users-list-container").hasText(I18n.t("search.no_results"));
   });
 
   test("sorts users", async function (assert) {
