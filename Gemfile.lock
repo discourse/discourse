@@ -292,7 +292,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 4)
-    oj (3.16.6)
+    oj (3.16.7)
       bigdecimal (>= 3.0)
       ostruct (>= 0.2)
     omniauth (1.9.2)
