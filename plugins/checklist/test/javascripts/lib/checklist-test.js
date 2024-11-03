@@ -1,4 +1,4 @@
-import $ from "jquery";
+import { click } from "@ember/test-helpers";
 import { test } from "qunit";
 import { Promise } from "rsvp";
 import { cook } from "discourse/lib/text";
@@ -9,6 +9,8 @@ import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializ
 let currentRaw;
 
 async function prepare(raw) {
+  currentRaw = raw;
+
   const cooked = await cook(raw, {
     siteSettings: {
       checklist_enabled: true,
@@ -20,29 +22,30 @@ async function prepare(raw) {
   const model = Post.create({ id: 42, can_edit: true });
   const decoratorHelper = { widget, getModel: () => model };
 
-  const $elem = $(`<div>${cooked.toString()}</div>`);
-  checklistSyntax($elem[0], decoratorHelper);
+  const element = document.createElement("div");
+  element.innerHTML = cooked.toString();
+  checklistSyntax(element, decoratorHelper);
 
-  currentRaw = raw;
+  document.querySelector("#ember-testing").append(element);
 
   const updated = new Promise((resolve) => {
     model.save = async (fields) => resolve(fields.raw);
   });
 
-  return [$elem, updated];
+  return { updated };
 }
 
 acceptance("discourse-checklist | checklist", function (needs) {
-  needs.pretender((server) => {
-    server.get("/posts/42", () => [
-      200,
-      { "Content-Type": "application/json" },
-      { raw: currentRaw },
-    ]);
+  needs.pretender((server, helper) => {
+    server.get("/posts/42", () => helper.response({ raw: currentRaw }));
+  });
+
+  needs.hooks.afterEach(function () {
+    document.querySelector("#ember-testing").innerHTML = "";
   });
 
   test("does not clash with date-range bbcode", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 [date-range from=2024-03-22 to=2024-03-23]
 
 [ ] task 1
@@ -50,77 +53,85 @@ acceptance("discourse-checklist | checklist", function (needs) {
 [x] task 3
     `);
 
-    assert.equal($elem.find(".discourse-local-date").length, 2);
-    assert.equal($elem.find(".chcklst-box").length, 3);
-    $elem.find(".chcklst-box")[0].click();
+    assert.dom(".discourse-local-date").exists({ count: 2 });
+    assert.dom(".chcklst-box").exists({ count: 3 });
+    await click(".chcklst-box");
 
     const output = await updated;
-    assert.ok(output.includes("[x] task 1"));
+    assert.true(output.includes("[x] task 1"));
   });
 
   test("does not check an image URL", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 ![](upload://zLd8FtsWc2ZSg3cZKIhwvhYxTcn.jpg)
 [] first
 [] second
     `);
 
-    $elem.find(".chcklst-box")[0].click();
+    await click(".chcklst-box");
 
     const output = await updated;
-    assert.ok(output.includes("[x] first"));
+    assert.true(output.includes("[x] first"));
   });
 
   test("make checkboxes readonly while updating", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 [ ] first
 [x] second
     `);
 
-    const $checklist = $elem.find(".chcklst-box");
-    $checklist.get(0).click();
-    const checkbox = $checklist.get(1);
-    assert.ok(checkbox.classList.contains("readonly"));
-    checkbox.click();
+    const [checkbox1, checkbox2] = [
+      ...document.querySelectorAll(".chcklst-box"),
+    ];
+    checkbox1.click();
+
+    assert.dom(checkbox2).hasClass("readonly");
+    await click(checkbox2);
 
     const output = await updated;
-    assert.ok(output.includes("[x] first"));
-    assert.ok(output.includes("[x] second"));
+    assert.true(output.includes("[x] first"));
+    assert.true(output.includes("[x] second"));
   });
 
   test("checkbox before a code block", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 [ ] first
 [x] actual
 \`[x] nope\`
     `);
 
-    assert.equal($elem.find(".chcklst-box").length, 2);
-    $elem.find(".chcklst-box")[1].click();
+    assert.dom(".chcklst-box").exists({ count: 2 });
+
+    await click([...document.querySelectorAll(".chcklst-box")][1]);
 
     const output = await updated;
-    assert.ok(output.includes("[ ] first"));
-    assert.ok(output.includes("[ ] actual"));
-    assert.ok(output.includes("[x] nope"));
+    assert.true(output.includes("[ ] first"));
+    assert.true(output.includes("[ ] actual"));
+    assert.true(output.includes("[x] nope"));
   });
 
   test("permanently checked checkbox", async function (assert) {
-    const [$elem, updated] = await prepare(`
-[X] perma
-[x] not perma
+    const { updated } = await prepare(`
+[X] permanent
+[x] not permanent
     `);
 
-    assert.equal($elem.find(".chcklst-box").length, 2);
-    $elem.find(".chcklst-box")[0].click();
-    $elem.find(".chcklst-box")[1].click();
+    assert.dom(".chcklst-box").exists({ count: 2 });
+
+    const [checkbox1, checkbox2] = [
+      ...document.querySelectorAll(".chcklst-box"),
+    ];
+
+    await click(checkbox1);
+    await click(checkbox2);
 
     const output = await updated;
-    assert.ok(output.includes("[X] perma"));
-    assert.ok(output.includes("[ ] not perma"));
+    assert.true(output.includes("[X] permanent"));
+    assert.true(output.includes("[ ] not permanent"));
   });
 
   test("checkbox before a multiline code block", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 [ ] first
 [x] actual
 \`\`\`
@@ -129,44 +140,43 @@ acceptance("discourse-checklist | checklist", function (needs) {
 \`\`\`
     `);
 
-    assert.equal($elem.find(".chcklst-box").length, 2);
-    $elem.find(".chcklst-box")[1].click();
+    assert.dom(".chcklst-box").exists({ count: 2 });
+    await click([...document.querySelectorAll(".chcklst-box")][1]);
 
     const output = await updated;
-    assert.ok(output.includes("[ ] first"));
-    assert.ok(output.includes("[ ] actual"));
-    assert.ok(output.includes("[x] nope"));
+    assert.true(output.includes("[ ] first"));
+    assert.true(output.includes("[ ] actual"));
+    assert.true(output.includes("[x] nope"));
   });
 
   test("checkbox before italic/bold sequence", async function (assert) {
-    const [$elem, updated] = await prepare(` [x] *test*
-    `);
+    const { updated } = await prepare(` [x] *test*`);
 
-    assert.equal($elem.find(".chcklst-box").length, 1);
-    $elem.find(".chcklst-box")[0].click();
+    assert.dom(".chcklst-box").exists({ count: 1 });
+    await click(".chcklst-box");
 
     const output = await updated;
-    assert.ok(output.includes("[ ] *test*"));
+    assert.true(output.includes("[ ] *test*"));
   });
 
   test("checkboxes in an unordered list", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 * [x] checked
 * [] test
 * [] two
   `);
 
-    assert.equal($elem.find(".chcklst-box").length, 3);
-    $elem.find(".chcklst-box")[1].click();
+    assert.dom(".chcklst-box").exists({ count: 3 });
+    await click([...document.querySelectorAll(".chcklst-box")][1]);
 
     const output = await updated;
-    assert.ok(output.includes("* [x] checked"));
-    assert.ok(output.includes("* [x] test"));
-    assert.ok(output.includes("* [] two"));
+    assert.true(output.includes("* [x] checked"));
+    assert.true(output.includes("* [x] test"));
+    assert.true(output.includes("* [] two"));
   });
 
   test("checkboxes in italic/bold-like blocks", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 *[x
 *a [*] x]*
 [*x]
@@ -181,15 +191,15 @@ acceptance("discourse-checklist | checklist", function (needs) {
 * [x] 3
   `);
 
-    assert.equal($elem.find(".chcklst-box").length, 4);
-    $elem.find(".chcklst-box")[3].click();
+    assert.dom(".chcklst-box").exists({ count: 4 });
+    await click([...document.querySelectorAll(".chcklst-box")][3]);
 
     const output = await updated;
-    assert.ok(output.includes("* [ ] 3"));
+    assert.true(output.includes("* [ ] 3"));
   });
 
   test("correct checkbox is selected", async function (assert) {
-    const [$elem, updated] = await prepare(`
+    const { updated } = await prepare(`
 \`[x]\`
 *[x]*
 **[x]**
@@ -214,74 +224,43 @@ __[x]__
 Actual checkboxes:
 [] first
 [x] second
-* test[x]*thrid*
+* test[x]*third*
 [x] fourth
 [x] fifth
     `);
 
-    assert.equal($elem.find(".chcklst-box").length, 5);
-    $elem.find(".chcklst-box")[3].click();
+    assert.dom(".chcklst-box").exists({ count: 5 });
+    await click([...document.querySelectorAll(".chcklst-box")][3]);
 
     const output = await updated;
-    assert.ok(output.includes("[ ] fourth"));
+    assert.true(output.includes("[ ] fourth"));
   });
 
   test("rendering in bullet lists", async function (assert) {
-    const [$elem] = await prepare(`
+    await prepare(`
 - [ ] LI 1
 - LI 2 [ ] with checkbox in middle
 - [ ] LI 3
 
 1. [ ] Ordered LI with checkbox
     `);
-    const elem = $elem[0];
 
-    const listItems = [...elem.querySelector("ul").children];
-    assert.equal(listItems.length, 3);
+    assert.dom("ul > li").exists({ count: 3 });
+    const listItems = [...document.querySelectorAll("ul > li")];
 
-    assert.true(
-      listItems[0].classList.contains("has-checkbox"),
-      "LI 1 has `.has-checkbox` class"
-    );
-    assert.true(
-      listItems[0]
-        .querySelector(".chcklst-box")
-        .classList.contains("list-item-checkbox"),
-      "LI 1 checkbox has `.list-item-checkbox`"
-    );
+    assert.dom(listItems[0]).hasClass("has-checkbox");
+    assert.dom(".chcklst-box", listItems[0]).hasClass("list-item-checkbox");
 
-    assert.false(
-      listItems[1].classList.contains("has-checkbox"),
-      "LI 2 does not have `.has-checkbox` class"
-    );
-    assert.false(
-      listItems[1]
-        .querySelector(".chcklst-box")
-        .classList.contains("list-item-checkbox"),
-      "LI 2 checkbox does not have `.list-item-checkbox`"
-    );
+    assert.dom(listItems[1]).doesNotHaveClass("has-checkbox");
+    assert
+      .dom(".chcklst-box", listItems[1])
+      .doesNotHaveClass("list-item-checkbox");
 
-    assert.true(
-      listItems[2].classList.contains("has-checkbox"),
-      "LI 3 has `.has-checkbox` class"
-    );
-    assert.true(
-      listItems[2]
-        .querySelector(".chcklst-box")
-        .classList.contains("list-item-checkbox"),
-      "LI 3 checkbox has `.list-item-checkbox`"
-    );
+    assert.dom(listItems[2]).hasClass("has-checkbox");
+    assert.dom(".chcklst-box", listItems[2]).hasClass("list-item-checkbox");
 
-    const orderedListItems = [...elem.querySelector("ol").children];
-    assert.false(
-      orderedListItems[0].classList.contains("has-checkbox"),
-      "OL does not have `.has-checkbox` class"
-    );
-    assert.false(
-      orderedListItems[0]
-        .querySelector(".chcklst-box")
-        .classList.contains("list-item-checkbox"),
-      "OL checkbox does not have `.list-item-checkbox`"
-    );
+    assert.dom("ol > li").exists({ count: 1 });
+    assert.dom("ol > li").doesNotHaveClass("has-checkbox");
+    assert.dom("ol .chcklst-box").doesNotHaveClass("list-item-checkbox");
   });
 });
