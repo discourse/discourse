@@ -136,20 +136,19 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
     appEventsTriggerSpy.restore();
   });
 
-  test(`correctly calls the lightbox:close event`, async function (assert) {
-    const done = assert.async();
+  test("correctly calls the lightbox:close event", async function (assert) {
     const container = wrap.cloneNode(true);
 
     await this.lightbox.setupLightboxes({ container, selector });
 
     this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, () => {
-      assert.ok(true);
-      done();
+      assert.step("lightbox closed");
     });
 
-    await click(container.querySelector(selector));
+    await click(selector, container);
 
     await this.lightbox.closeLightbox();
+    assert.verifySteps(["lightbox closed"]);
   });
 
   test(`correctly responds to the lightbox:clean event`, async function (assert) {
