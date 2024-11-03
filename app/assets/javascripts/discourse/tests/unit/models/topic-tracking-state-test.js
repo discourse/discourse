@@ -373,7 +373,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       "expect state for topic 111 to be deleted"
     );
 
-    assert.equal(
+    assert.strictEqual(
       stateChangeCallbackCalledTimes,
       1,
       "callback is only called once"

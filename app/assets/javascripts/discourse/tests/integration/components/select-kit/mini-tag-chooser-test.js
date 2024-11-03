@@ -130,7 +130,7 @@ module(
 
       await this.subject.fillInFilter("test");
 
-      assert.equal(this.subject.filter().value(), "#test");
+      assert.strictEqual(this.subject.filter().value(), "#test");
       assert.ok(
         exists(".select-kit-row[data-value='test']"),
         "it filters out the invalid char from the suggested tag"

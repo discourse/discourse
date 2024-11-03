@@ -70,6 +70,6 @@ module("Unit | Utility | text | parseMentions", function (hooks) {
     \`\`\`
     `;
     const mentions = await parseMentions(markdown);
-    assert.equal(mentions.length, 0);
+    assert.strictEqual(mentions.length, 0);
   });
 });

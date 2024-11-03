@@ -801,7 +801,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "shows suffix indicator for new topics on categories link"
     );
 
-    assert.equal(
+    assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,
       initialCallbackCount,
       "it does not add a new topic tracking state callback when the topic is read"

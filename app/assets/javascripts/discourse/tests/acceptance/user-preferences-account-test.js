@@ -308,10 +308,7 @@ acceptance("User Preferences — Account - Download Archive", function (needs) {
     await click(".btn-request-archive");
     await click("#dialog-holder .btn-primary");
 
-    assert.equal(
-      query(".dialog-body").innerText.trim(),
-      I18n.t("user.download_archive.success")
-    );
+    assert.dom(".dialog-body").hasText(I18n.t("user.download_archive.success"));
 
     await click("#dialog-holder .btn-primary");
   });

@@ -31,7 +31,10 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
   test("#removeChatComposerSecondaryActions", async function (assert) {
     withPluginApi("1.1.0", async (api) => {
       // assert that the api method is defined
-      assert.equal(typeof api.removeChatComposerSecondaryActions, "function");
+      assert.strictEqual(
+        typeof api.removeChatComposerSecondaryActions,
+        "function"
+      );
 
       logIn();
       const currentUser = User.current();

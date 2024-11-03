@@ -222,11 +222,9 @@ acceptance("Theme", function (needs) {
 
     await click(".control-unit .btn-primary.finish-install");
 
-    assert.equal(
-      query(".show-current-style .title span").innerText,
-      "discourse-complete-theme",
-      "it updates theme title"
-    );
+    assert
+      .dom(".show-current-style .title span")
+      .hasText("discourse-complete-theme", "it updates theme title");
 
     assert.notOk(
       query(".metadata.control-unit").innerText.includes(
