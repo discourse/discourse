@@ -238,11 +238,11 @@ module("Unit | Utility | sanitizer", function (hooks) {
         .match(/muted/)
     );
     assert.false(
-      engine
-        .sanitize(
+      /muted/.test(
+        engine.sanitize(
           `<p>Hey</p><video><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
-        .match(/muted/)
+      )
     );
   });
 

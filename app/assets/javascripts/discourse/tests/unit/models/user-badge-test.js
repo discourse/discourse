@@ -67,7 +67,7 @@ module("Unit | Model | user-badge", function (hooks) {
   test("favorite", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const userBadge = store.createRecord("user-badge", { id: 1 });
-    assert.false(userBadge.is_favorite);
+    assert.strictEqual(userBadge.is_favorite, undefined);
 
     await userBadge.favorite();
     assert.ok(userBadge.is_favorite);
