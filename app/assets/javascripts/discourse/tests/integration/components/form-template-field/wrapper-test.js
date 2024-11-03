@@ -60,27 +60,23 @@ module(
 - type: multi-select\n  id: multi\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"`;
       this.set("content", content);
 
-      const initialValues = {
+      this.set("initialValues", {
         checkbox: "on",
         name: "Test Name",
         notes: "Test Notes",
         dropdown: "Option 1",
         multi: ["Option 1"],
-      };
-      this.set("initialValues", initialValues);
+      });
 
       await render(
         hbs`<FormTemplateField::Wrapper @content={{this.content}} @initialValues={{this.initialValues}} />`
       );
 
-      Object.keys(initialValues).forEach((componentId) => {
-        assert
-          .dom(`[name='${componentId}']`)
-          .hasValue(
-            initialValues[componentId],
-            `${componentId} component has initial value`
-          );
-      });
+      assert.dom("[name='checkbox']").hasValue("on");
+      assert.dom("[name='name']").hasValue("Test Name");
+      assert.dom("[name='notes']").hasValue("Test Notes");
+      assert.dom("[name='dropdown']").hasValue("Option 1");
+      assert.dom("[name='multi']").hasValue("Option 1");
     });
 
     test("renders a component based on the component type found in the content YAML when passed ids", async function (assert) {

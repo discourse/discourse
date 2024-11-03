@@ -62,7 +62,7 @@ module("Integration | Component | number-field", function (hooks) {
 
     assert.strictEqual(
       this.get("value"),
-      "-1",
+      -1,
       "negative input allowed when min is negative"
     );
   });
