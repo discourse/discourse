@@ -68,7 +68,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
           updatedSecondaryActions.length < secondaryActions.length,
           "the updated secondary actions must contain less items than the original"
         );
-        assert.notOk(
+        assert.false(
           updatedSecondaryActions
             .map((v) => v.id)
             .includes(secondaryActions[0]),

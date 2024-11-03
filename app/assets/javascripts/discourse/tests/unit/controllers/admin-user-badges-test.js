@@ -55,7 +55,7 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
     const badgeNames = controller.availableBadges.map((badge) => badge.name);
 
-    assert.notOk(
+    assert.false(
       badgeNames.includes(badgeDisabled),
       "excludes disabled badges"
     );

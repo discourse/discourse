@@ -90,12 +90,11 @@ acceptance(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-header"
       );
 
-      assert.notOk(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-content"
-        ),
-        "hides the content of the section"
-      );
+        )
+        .doesNotExist("hides the content of the section");
     });
 
     test("personal messages section links", async function (assert) {
@@ -176,12 +175,13 @@ acceptance(
           `personal message ${type} link is marked as active`
         );
 
-        assert.notOk(
-          exists(
+        assert
+          .dom(
             `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}'] .sidebar-section-link-prefix`
-          ),
-          `prefix is not displayed for ${type} personal message section link`
-        );
+          )
+          .doesNotExist(
+            `prefix is not displayed for ${type} personal message section link`
+          );
       });
     });
 
