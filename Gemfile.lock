@@ -118,7 +118,7 @@ GEM
     css_parser (1.19.1)
       addressable
     csv (3.3.0)
-    date (3.3.4)
+    date (3.4.0)
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
     diffy (3.4.3)
