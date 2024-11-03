@@ -881,7 +881,8 @@ class Topic < ActiveRecord::Base
       WHERE
         topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND (
+        Y.topic_id = topics.id AND
+        Z.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
@@ -926,7 +927,8 @@ class Topic < ActiveRecord::Base
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND (
+        Y.topic_id = topics.id AND 
+        Z.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
