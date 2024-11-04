@@ -75,6 +75,14 @@ export default {
           console.error(message);
         }
       } else if (originalTemplate) {
+        deprecated(
+          `[${finalOverrideModuleName}] Overriding component templates is deprecated, and will soon be disabled. Use plugin outlets, CSS, or other customization APIs instead.`,
+          {
+            id: "discourse.component-template-overrides",
+            url: "https://meta.discourse.org/t/247487",
+          }
+        );
+
         const overrideTemplate = require(finalOverrideModuleName).default;
 
         COLOCATED_TEMPLATE_OVERRIDES.set(component, overrideTemplate);
