@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -56,8 +57,8 @@ export default class DEditor extends Component {
   @service("emoji-store") emojiStore;
   @service modal;
 
-  editorComponent = TextareaEditor;
-  textManipulation;
+  @tracked editorComponent;
+  @tracked textManipulation;
 
   ready = false;
   lastSel = null;
@@ -73,10 +74,19 @@ export default class DEditor extends Component {
     },
   };
 
-  init() {
+  async init() {
     super.init(...arguments);
 
     this.register = getRegister(this);
+
+    if (
+      this.siteSettings.experimental_rich_editor &&
+      this.keyValueStore.get("d-editor-prefers-rich-editor") === "true"
+    ) {
+      this.editorComponent = await this.loadProsemirrorEditor();
+    } else {
+      this.editorComponent = TextareaEditor;
+    }
   }
 
   @discourseComputed("placeholder")
@@ -188,7 +198,12 @@ export default class DEditor extends Component {
   @discourseComputed()
   toolbar() {
     const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
+      this.getProperties(
+        "appEvents",
+        "siteSettings",
+        "showLink",
+        "capabilities"
+      )
     );
     toolbar.context = this;
 
@@ -624,7 +639,7 @@ export default class DEditor extends Component {
 
   @action
   setupEditor(textManipulation) {
-    this.set("textManipulation", textManipulation);
+    this.textManipulation = textManipulation;
 
     const destroyEvents = this.setupEvents();
 
@@ -647,6 +662,40 @@ export default class DEditor extends Component {
 
       destroyEditor?.();
     };
+  }
+
+  @action
+  async toggleRichEditor() {
+    this.editorComponent = this.isRichEditorEnabled
+      ? TextareaEditor
+      : await this.loadProsemirrorEditor();
+    scheduleOnce("afterRender", this, this.focus);
+
+    this.keyValueStore.set({
+      key: "d-editor-prefers-rich-editor",
+      value: this.isRichEditorEnabled,
+    });
+  }
+
+  async loadProsemirrorEditor() {
+    this.prosemirrorEditorClass ??= (
+      await import("discourse/static/prosemirror/components/prosemirror-editor")
+    ).default;
+    return this.prosemirrorEditorClass;
+  }
+
+  focus() {
+    this.textManipulation.focus();
+  }
+
+  @action
+  onChange(event) {
+    this.set("value", event?.target?.value);
+    this.change?.(event);
+  }
+
+  get isRichEditorEnabled() {
+    return this.editorComponent === this.prosemirrorEditorClass;
   }
 
   setupEvents() {

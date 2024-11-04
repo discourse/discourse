@@ -13,6 +13,7 @@
     padding: 6px;
     padding-bottom: unquote("max(env(safe-area-inset-bottom), 6px)");
     flex-grow: 1;
+    min-height: 0;
   }
 
   &.open {
