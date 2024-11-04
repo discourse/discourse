@@ -10,9 +10,10 @@
       <div class="contents clearfix body-page">
 
         <ul class="nav-pills">
-          <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n
-                "about.simple_title"
-              }}</LinkTo></li>
+          <li class="nav-item-about"><LinkTo
+              @route="about"
+              class="active"
+            >{{i18n "about.simple_title"}}</LinkTo></li>
           {{#if this.faqOverridden}}
             <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
                   "guidelines"
@@ -93,7 +94,9 @@
               <section
                 class="about category-moderators moderators-{{cm.category.slug}}"
               >
-                <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
+                <h3>{{category-link cm.category}}{{i18n
+                    "about.moderators"
+                  }}</h3>
                 <div class="users">
                   <LegacyAboutPageUsers @users={{cm.moderators}} />
                 </div>
@@ -176,10 +179,14 @@
                           )
                         }}</td>
                       <td>{{number
-                          (get this.model.stats (concat statGroupName "_7_days"))
+                          (get
+                            this.model.stats (concat statGroupName "_7_days")
+                          )
                         }}</td>
                       <td>{{number
-                          (get this.model.stats (concat statGroupName "_30_days"))
+                          (get
+                            this.model.stats (concat statGroupName "_30_days")
+                          )
                         }}</td>
                       <td>{{number
                           (get this.model.stats (concat statGroupName "_count"))
