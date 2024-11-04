@@ -2406,7 +2406,6 @@ fr:
     enable_custom_sidebar_sections: "EXPÉRIMENTAL : activer les sections personnalisées de la barre latérale"
     experimental_topics_filter: "EXPÉRIMENTAL : activer l'itinéraire de filtrage des sujets expérimentaux dans /filter"
     enable_experimental_lightbox: "EXPÉRIMENTAL : remplacer la visionneuse d'image par défaut par le design remanié."
-    enable_experimental_bookmark_redesign_groups: "EXPÉRIMENTAL : affichez un menu d'accès rapide pour les signets sur les publications et une nouvelle fenêtre modale repensée"
     experimental_glimmer_topic_list_groups: "EXPÉRIMENTAL : activez la nouvelle implémentation de la liste de sujets « Glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions sur la base de celui-ci tant que l'implémentation n'est pas finalisée et annoncée."
     experimental_form_templates: "EXPÉRIMENTAL : activez la fonctionnalité des modèles de formulaires. <b>Une fois la fonctionnalité activée,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
@@ -2414,7 +2413,6 @@ fr:
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
-    experimental_flags_admin_page_enabled_groups: "EXPÉRIMENTAL : supprimez le lien Indicateurs de modération de la barre latérale d'administration."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
       invalid_email: "Adresse e-mail invalide."

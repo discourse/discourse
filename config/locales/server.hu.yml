@@ -2430,7 +2430,6 @@ hu:
     enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
     experimental_topics_filter: "KÍSÉRLETI: Engedélyezi a kísérleti téma szűrő útvonalat a /filter címen"
     enable_experimental_lightbox: "KÍSÉRLETI: Az alapértelmezett kép lightbox helyettesítése a megújított dizájnnal."
-    enable_experimental_bookmark_redesign_groups: "KÍSÉRLETI: Gyors hozzáférési menü megjelenítése a könyvjelzőkhöz a bejegyzéseken, valamint egy új, átdolgozott modális ablak"
     experimental_redesigned_about_page_groups: "KÍSÉRLETI: A megújított /about oldal engedélyezése meghatározott csoportok számára."
     experimental_glimmer_topic_list_groups: "KÍSÉRLETI: Az új 'ragyogó' témalista implementáció engedélyezése. Ez az implementáció aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg az implementáció nem véglegesítődik és nem kerül bejelentésre."
     experimental_form_templates: "KÍSÉRLETI: Az űrlapsablonok szolgáltatás engedélyezése. <b>Az engedélyezés után</b> a sablonokat a <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a> menüpont alatt kezelheti."
@@ -2441,7 +2440,6 @@ hu:
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    experimental_flags_admin_page_enabled_groups: "KÍSÉRLETI: A Moderációs Megjelölések link eltávolítása az admin oldalsávból."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
