@@ -746,54 +746,52 @@ export default class DEditor extends Component {
 
       this.element?.removeEventListener("paste", textManipulation.paste);
 
-      this.textManipulation.autocomplete("destroy");
+      textManipulation.autocomplete("destroy");
     };
   }
 
   setupEvents() {
+    const textManipulation = this.textManipulation;
+
     if (this.composerEvents) {
       this.appEvents.on(
         "composer:insert-block",
-        this.textManipulation,
+        textManipulation,
         "insertBlock"
       );
-      this.appEvents.on(
-        "composer:insert-text",
-        this.textManipulation,
-        "insertText"
-      );
+      this.appEvents.on("composer:insert-text", textManipulation, "insertText");
       this.appEvents.on(
         "composer:replace-text",
-        this.textManipulation,
+        textManipulation,
         "replaceText"
       );
       this.appEvents.on("composer:apply-surround", this, "_applySurround");
       this.appEvents.on(
         "composer:indent-selected-text",
-        this.textManipulation,
+        textManipulation,
         "indentSelection"
       );
 
       return () => {
         this.appEvents.off(
           "composer:insert-block",
-          this.textManipulation,
+          textManipulation,
           "insertBlock"
         );
         this.appEvents.off(
           "composer:insert-text",
-          this.textManipulation,
+          textManipulation,
           "insertText"
         );
         this.appEvents.off(
           "composer:replace-text",
-          this.textManipulation,
+          textManipulation,
           "replaceText"
         );
         this.appEvents.off("composer:apply-surround", this, "_applySurround");
         this.appEvents.off(
           "composer:indent-selected-text",
-          this.textManipulation,
+          textManipulation,
           "indentSelection"
         );
       };
