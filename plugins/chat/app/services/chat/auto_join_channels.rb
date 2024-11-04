@@ -11,7 +11,7 @@ module Chat
 
     policy :chat_enabled?
 
-    contract do
+    params do
       attribute :user_id, :integer
       attribute :channel_id, :integer
       attribute :category_id, :integer
@@ -25,7 +25,7 @@ module Chat
       SiteSetting.chat_enabled
     end
 
-    def create_memberships
+    def create_memberships(params:)
       automatic = ::Chat::UserChatChannelMembership.join_modes[:automatic]
       group_permissions = ALLOWED_GROUP_PERMISSIONS
       group_ids = SiteSetting.chat_allowed_groups_map
@@ -35,9 +35,9 @@ module Chat
       last_seen_at = 30.days.ago
 
       # used to filter down to a specific user, chat channel, or category
-      user_sql = context.user_id.to_i > 0 ? "AND u.id = #{context.user_id}" : ""
-      channel_sql = context.channel_id.to_i > 0 ? "AND cc.id = #{context.channel_id}" : ""
-      category_sql = context.category_id.to_i > 0 ? "AND c.id = #{context.category_id}" : ""
+      user_sql = params.user_id ? "AND u.id = #{params.user_id}" : ""
+      channel_sql = params.channel_id ? "AND cc.id = #{params.channel_id}" : ""
+      category_sql = params.category_id ? "AND c.id = #{params.category_id}" : ""
 
       sql = <<~SQL
         WITH chat_users AS ( -- users that are allowed to join chat
@@ -78,8 +78,8 @@ module Chat
         INSERT INTO user_chat_channel_memberships (user_id, chat_channel_id, following, join_mode, created_at, updated_at)
         SELECT p.user_id, p.chat_channel_id, TRUE, :automatic, :now, :now
           FROM (
-            SELECT * FROM public 
-            UNION ALL 
+            SELECT * FROM public
+            UNION ALL
             SELECT * FROM private
           ) p
           LEFT JOIN user_chat_channel_memberships uccm ON uccm.user_id = p.user_id AND uccm.chat_channel_id = p.chat_channel_id

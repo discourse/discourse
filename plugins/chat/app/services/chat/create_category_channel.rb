@@ -93,7 +93,7 @@ module Chat
     end
 
     def auto_join_users_if_needed(channel:)
-      Chat::AutoJoinChannels.call(channel_id: channel.id) if channel.auto_join_users?
+      Chat::AutoJoinChannels.call(params: { channel_id: channel.id }) if channel.auto_join_users?
     end
   end
 end

@@ -11,7 +11,7 @@ module Chat
 
     policy :chat_enabled?
 
-    contract do
+    params do
       attribute :event
       attribute :user_id, :integer
       attribute :group_id, :integer
@@ -27,34 +27,31 @@ module Chat
       SiteSetting.chat_enabled
     end
 
-    def remove_memberships
+    def remove_memberships(params:)
       group_ids = SiteSetting.chat_allowed_groups_map
       group_permissions = ALLOWED_GROUP_PERMISSIONS
+      users_removed_map = Hash.new { |h, k| h[k] = [] }
 
       if !group_ids.include?(Group::AUTO_GROUPS[:everyone])
         sql = <<~SQL
           DELETE FROM user_chat_channel_memberships uccm
           WHERE NOT EXISTS (
-            SELECT 1 
-            FROM group_users gu 
-            WHERE gu.user_id = uccm.user_id 
+            SELECT 1
+            FROM group_users gu
+            WHERE gu.user_id = uccm.user_id
             AND gu.group_id IN (:group_ids)
           )
           RETURNING chat_channel_id, user_id
         SQL
 
-        users_removed_map = Hash.new { |h, k| h[k] = [] }
-
         DB
           .query_array(sql, group_ids:)
           .each { |channel_id, user_id| users_removed_map[channel_id] << user_id }
-
-        Chat::Action::PublishAutoRemovedUser.call(event: context.event, users_removed_map:)
       end
 
-      user_sql = context.user_id.to_i > 0 ? "AND u.id = #{context.user_id}" : ""
-      channel_sql = context.channel_id.to_i > 0 ? "AND cc.id = #{context.channel_id}" : ""
-      category_sql = context.category_id.to_i > 0 ? "AND c.id = #{context.category_id}" : ""
+      user_sql = params.user_id ? "AND u.id = #{params.user_id}" : ""
+      channel_sql = params.channel_id ? "AND cc.id = #{params.channel_id}" : ""
+      category_sql = params.category_id ? "AND c.id = #{params.category_id}" : ""
 
       sql = <<~SQL
         WITH valid_permissions AS (
@@ -75,13 +72,13 @@ module Chat
         RETURNING chat_channel_id, user_id
       SQL
 
-      users_removed_map = Hash.new { |h, k| h[k] = [] }
-
       DB
         .query_array(sql, group_permissions:)
         .each { |channel_id, user_id| users_removed_map[channel_id] << user_id }
 
-      Chat::Action::PublishAutoRemovedUser.call(event: context.event, users_removed_map:)
+      if users_removed_map.present?
+        Chat::Action::PublishAutoRemovedUser.call(event: params.event, users_removed_map:)
+      end
     end
   end
 end

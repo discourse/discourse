@@ -299,7 +299,7 @@ after_initialize do
   end
 
   on(:group_destroyed) do |group, _user_ids|
-    Chat::AutoLeaveChannels.call(group_id: group.id, event: :group_destroyed)
+    Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
   register_presence_channel_prefix("chat") do |channel_name|
@@ -351,15 +351,21 @@ after_initialize do
   end
 
   on(:user_seen) do |user|
-    Chat::AutoJoinChannels.call(user_id: user.id) if user.last_seen_at == user.first_seen_at
+    if user.last_seen_at == user.first_seen_at
+      Chat::AutoJoinChannels.call(params: { user_id: user.id })
+    end
   end
 
-  on(:user_confirmed_email) { |user| Chat::AutoJoinChannels.call(user_id: user.id) if user.active? }
+  on(:user_confirmed_email) do |user|
+    Chat::AutoJoinChannels.call(params: { user_id: user.id }) if user.active?
+  end
 
-  on(:user_added_to_group) { |user, _group| Chat::AutoJoinChannels.call(user_id: user.id) }
+  on(:user_added_to_group) do |user, _group|
+    Chat::AutoJoinChannels.call(params: { user_id: user.id })
+  end
 
   on(:user_removed_from_group) do |user, _group|
-    Chat::AutoLeaveChannels.call(user_id: user.id, event: :user_removed_from_group)
+    Chat::AutoLeaveChannels.call(params: { user_id: user.id, event: :user_removed_from_group })
   end
 
   on(:category_updated) do |category|
@@ -367,8 +373,10 @@ after_initialize do
     next unless category.is_a?(Category)
     next unless category_channel = Chat::Channel.find_by(chatable: category)
 
-    Chat::AutoJoinChannels.call(category_id: category.id) if category_channel.auto_join_users
-    Chat::AutoLeaveChannels.call(category_id: category.id, event: :category_updated)
+    if category_channel.auto_join_users
+      Chat::AutoJoinChannels.call(params: { category_id: category.id })
+    end
+    Chat::AutoLeaveChannels.call(params: { category_id: category.id, event: :category_updated })
   end
 
   # outgoing webhook events

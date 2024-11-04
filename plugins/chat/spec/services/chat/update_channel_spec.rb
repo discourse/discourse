@@ -98,7 +98,7 @@ RSpec.describe Chat::UpdateChannel do
           end
 
           it "auto joins users" do
-            ::Chat::AutoJoinChannels.expects(:call).with(channel_id: channel.id)
+            ::Chat::AutoJoinChannels.expects(:call).with(params: { channel_id: channel.id })
             result
           end
         end

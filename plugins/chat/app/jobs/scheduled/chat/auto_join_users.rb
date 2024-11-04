@@ -8,8 +8,8 @@ module Jobs
       def execute(args = {})
         return if !SiteSetting.chat_enabled
 
-        ::Chat::AutoJoinChannels.call
-        ::Chat::AutoLeaveChannels.call(event: args[:event]&.to_sym || :hourly_job)
+        ::Chat::AutoJoinChannels.call(params: {})
+        ::Chat::AutoLeaveChannels.call(params: { event: args[:event]&.to_sym || :hourly_job })
       end
     end
   end
