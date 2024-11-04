@@ -7061,6 +7061,7 @@ en:
           groups: "Groups"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
