@@ -19,7 +19,34 @@
       animation: background-fade-highlight 2.5s ease-out;
     }
   }
+
+  .d-admin-table {
+    .d-admin-row__content td {
+      vertical-align: middle;
+    }
+
+    .d-admin-row__overview {
+      width: 20%;
+
+      @include breakpoint("tablet") {
+        width: auto;
+      }
+    }
+  }
+
+  .form-horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+    gap: var(--space-3);
+
+    @include breakpoint("tablet") {
+      flex-direction: column;
+      align-items: normal;
+    }
+  }
 }
+
 .admin-emojis__header {
   display: flex;
   justify-content: space-between;
