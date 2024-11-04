@@ -4,21 +4,12 @@ RSpec.describe Chat::AutoLeaveChannels do
   describe ".call" do
     subject(:result) { described_class.call(params: {}) }
 
-    let(:noop) { ->(*) {} }
-
-    # Disable all the event handlers by the chat plugin
-    # Had to noop all the event handlers because of the "DiscourseEvent registrations were not cleaned up" spec
     before do
-      %i[
-        site_setting_changed
-        group_destroyed
-        user_seen
-        user_confirmed_email
-        user_added_to_group
-        user_removed_from_group
-        category_updated
-      ].each { |event| DiscourseEvent.events[event] = [noop] * DiscourseEvent.events[event].size }
+      @previous_events = DiscourseEvent.events.dup
+      DiscourseEvent.events.clear
     end
+
+    after { @previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
 
     context "when chat is disabled" do
       before { SiteSetting.chat_enabled = false }
