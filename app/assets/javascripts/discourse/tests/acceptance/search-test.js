@@ -536,18 +536,14 @@ acceptance("Search - Authenticated", function (needs) {
     await fillIn("#search-term", "Development");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
 
-    const firstSearchResult =
-      ".search-menu .results li:nth-of-type(1) a.search-link";
-    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
-    assert.strictEqual(
-      query(firstSearchResult).getAttribute("href"),
-      firstTopicResultUrl
-    );
+    assert
+      .dom(".search-menu .results li a.search-link")
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
 
-    await click(firstSearchResult);
+    await click(".search-menu .results li a.search-link");
     assert.strictEqual(
       currentURL(),
-      firstTopicResultUrl,
+      "/t/development-mode-super-slow/2179",
       "redirects to clicked search result url"
     );
   });
@@ -579,29 +575,27 @@ acceptance("Search - Authenticated", function (needs) {
       .exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      query(`${container} li:first-child a`).getAttribute("href"),
-      "arrow down selects first element"
-    );
+    assert
+      .dom(`${container} li:first-child a`)
+      .isActive("arrow down selects first element");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      query(`${container} li:nth-child(2) a`).getAttribute("href"),
-      "arrow down selects next element"
-    );
+    assert
+      .dom(`${container} li:nth-child(2) a`)
+      .isActive("arrow down selects next element");
 
     // navigate to the `more link`
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      "/search?q=dev",
-      "arrow down sets focus to more results link"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "href",
+        "/search?q=dev",
+        "arrow down sets focus to more results link"
+      );
 
     await triggerKeyEvent("#search-term", "keydown", "Escape");
     assert.strictEqual(
@@ -673,17 +667,18 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
 
-    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      firstTopicResultUrl,
-      "first search result is highlighted"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "href",
+        "/t/development-mode-super-slow/2179",
+        "first search result is highlighted"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     assert.strictEqual(
       currentURL(),
-      firstTopicResultUrl,
+      "/t/development-mode-super-slow/2179",
       "redirects to selected search result url"
     );
   });

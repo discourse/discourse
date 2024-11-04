@@ -15,12 +15,6 @@ acceptance("Local Dates - composer", function (needs) {
   });
 
   test("composer bbcode", async function (assert) {
-    const getAttr = (attr) => {
-      return query(
-        ".d-editor-preview .discourse-local-date.cooked-date"
-      ).getAttribute(`data-${attr}`);
-    };
-
     await visit("/");
     await click("#create-topic");
     const categoryChooser = selectKit(".category-chooser");
@@ -32,45 +26,51 @@ acceptance("Local Dates - composer", function (needs) {
       '[date=2017-10-23 time=01:30:00 displayedTimezone="America/Chicago" format="LLLL" calendar="off" recurring="1.weeks" timezone=" Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
     );
 
-    assert.strictEqual(
-      getAttr("date"),
-      "2017-10-23",
-      "it has the correct date"
-    );
-    assert.strictEqual(getAttr("time"), "01:30:00", "it has the correct time");
-    assert.strictEqual(
-      getAttr("displayed-timezone"),
-      "America/Chicago",
-      "it has the correct displayed timezone"
-    );
-    assert.strictEqual(getAttr("format"), "LLLL", "it has the correct format");
-    assert.strictEqual(
-      getAttr("timezones"),
-      "Europe/Paris|America/Los_Angeles",
-      "it has the correct timezones"
-    );
-    assert.strictEqual(
-      getAttr("recurring"),
-      "1.weeks",
-      "it has the correct recurring"
-    );
-    assert.strictEqual(
-      getAttr("timezone"),
-      "Asia/Calcutta",
-      "it has the correct timezone"
-    );
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute("data-date", "2017-10-23", "has the correct date");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute("data-time", "01:30:00", "has the correct time");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute(
+        "data-displayed-timezone",
+        "America/Chicago",
+        "has the correct displayed timezone"
+      );
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute("data-format", "LLLL", "has the correct format");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute(
+        "data-timezones",
+        "Europe/Paris|America/Los_Angeles",
+        "has the correct timezones"
+      );
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute("data-recurring", "1.weeks", "has the correct recurring");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute(
+        "data-timezone",
+        "Asia/Calcutta",
+        "has the correct timezone"
+      );
 
     await fillIn(
       ".d-editor-input",
       '[date=2017-10-24 format="LL" timezone="Asia/Calcutta" timezones="Europe/Paris|America/Los_Angeles"]'
     );
 
-    assert.strictEqual(
-      getAttr("date"),
-      "2017-10-24",
-      "it has the correct date"
-    );
-    assert.notOk(getAttr("time"), "it doesn’t have time");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .hasAttribute("data-date", "2017-10-24", "has the correct date");
+    assert
+      .dom(".d-editor-preview .discourse-local-date.cooked-date")
+      .doesNotHaveAttribute("data-time", "doesn’t have time");
   });
 
   test("date modal", async function (assert) {

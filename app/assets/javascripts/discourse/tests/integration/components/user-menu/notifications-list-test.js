@@ -88,11 +88,13 @@ module(
         I18n.t("user.dismiss"),
         "dismiss button has a label"
       );
-      assert.strictEqual(
-        dismissButton.getAttribute("title"),
-        I18n.t("user.dismiss_notifications_tooltip"),
-        "dismiss button has title attribute"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .hasAttribute(
+          "title",
+          I18n.t("user.dismiss_notifications_tooltip"),
+          "dismiss button has title attribute"
+        );
     });
 
     test("doesn't have a dismiss button if all notifications are read", async function (assert) {

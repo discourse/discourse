@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | avatar-flair", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,11 +20,9 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0000; color: #FFFFFF; ",
-      "it has styles"
-    );
+    assert
+      .dom(".avatar-flair")
+      .hasStyle({ backgroundColor: "#CC0000", color: "#FFFFFF" });
   });
 
   test("avatar flair with an image", async function (assert) {

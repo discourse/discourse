@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | d-toggle-switch", function (hooks) {
@@ -14,10 +14,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
-      "false"
-    );
+    assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "false");
   });
 
   test("it renders a toggle button in a enabled state", async function (assert) {
@@ -26,10 +23,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
     await render(hbs`<DToggleSwitch @state={{this.state}}/>`);
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
-    assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
-      "true"
-    );
+    assert.dom(".d-toggle-switch__checkbox").hasAria("checked", "true");
   });
 
   test("it renders a checkmark icon when enabled", async function (assert) {

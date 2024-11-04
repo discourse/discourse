@@ -4,12 +4,7 @@ import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
@@ -44,14 +39,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post-contents" @args={{this.args}} />`
     );
 
-    assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
-      "1"
-    );
-    assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
-      "2"
-    );
+    assert.dom("a[data-clicks='1']").hasAttribute("data-clicks", "1");
+    assert.dom("a[data-clicks='2']").hasAttribute("data-clicks", "2");
   });
 
   test("post - onebox links", async function (assert) {
@@ -78,16 +67,20 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post-contents" @args={{this.args}} />`
     );
 
-    assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
-      "1",
-      "First link has correct data attribute and content"
-    );
-    assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
-      "2",
-      "Second link has correct data attribute and content"
-    );
+    assert
+      .dom("a[data-clicks='1']")
+      .hasAttribute(
+        "data-clicks",
+        "1",
+        "First link has correct data attribute and content"
+      );
+    assert
+      .dom("a[data-clicks='2']")
+      .hasAttribute(
+        "data-clicks",
+        "2",
+        "Second link has correct data attribute and content"
+      );
   });
 
   test("wiki", async function (assert) {
@@ -279,11 +272,13 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
 
-    assert.strictEqual(
-      query("button.like").getAttribute("title"),
-      I18n.t("post.controls.like"),
-      `shows the right button title for anonymous users`
-    );
+    assert
+      .dom("button.like")
+      .hasAttribute(
+        "title",
+        I18n.t("post.controls.like"),
+        "shows the right button title for anonymous users"
+      );
 
     await click(".actions button.like");
     assert.ok(this.loginShown);
@@ -354,11 +349,13 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     assert.strictEqual(count("button.create-flag"), 1, `button is displayed`);
     assert.strictEqual(count("button.delete"), 1, `button is displayed`);
-    assert.strictEqual(
-      query("button.delete").getAttribute("title"),
-      I18n.t("post.controls.delete_topic_disallowed"),
-      `shows the right button title for users without permissions`
-    );
+    assert
+      .dom("button.delete")
+      .hasAttribute(
+        "title",
+        I18n.t("post.controls.delete_topic_disallowed"),
+        "shows the right button title for users without permissions"
+      );
   });
 
   test("recover topic button", async function (assert) {
@@ -1002,10 +999,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     const link = query(".group-request a");
     assert.strictEqual(link.innerText.trim(), I18n.t("groups.requests.handle"));
-    assert.strictEqual(
-      link.getAttribute("href"),
-      "/g/testGroup/requests?filter=foo"
-    );
+    assert
+      .dom(".group-request a")
+      .hasAttribute("href", "/g/testGroup/requests?filter=foo");
   });
 
   test("shows user status if enabled in site settings", async function (assert) {

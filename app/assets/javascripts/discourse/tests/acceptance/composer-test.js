@@ -935,11 +935,13 @@ acceptance("Composer", function (needs) {
     await click("#post_1 .d-icon-pencil");
     await fillIn(".d-editor-input", "");
 
-    assert.strictEqual(
-      query(".d-editor-container textarea").getAttribute("placeholder"),
-      I18n.t("composer.reply_placeholder"),
-      "it should not block because of missing category"
-    );
+    assert
+      .dom(".d-editor-container textarea")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("composer.reply_placeholder"),
+        "it should not block because of missing category"
+      );
   });
 
   test("reply button has envelope icon when replying to private message", async function (assert) {

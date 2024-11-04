@@ -3,7 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { resetFlair } from "discourse/lib/avatar-flair";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 function setupSiteGroups(that) {
   that.site.groups = [
@@ -62,11 +62,10 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC000A; color: #FFFFFA; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "#CC000A",
+      color: "#FFFFFA",
+    });
   });
 
   test("avatar flair for moderator user with fallback to staff", async function (assert) {
@@ -82,11 +81,10 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0005; color: #FFFFF5; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "#CC0005",
+      color: "#FFFFF5",
+    });
   });
 
   test("avatar flair for trust level", async function (assert) {
@@ -102,11 +100,10 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0002; color: #FFFFF2; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "#CC0002",
+      color: "#FFFFF2",
+    });
   });
 
   test("avatar flair for trust level when set to none", async function (assert) {
@@ -136,11 +133,10 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0002; color: #FFFFF2; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "#CC0002",
+      color: "#FFFFF2",
+    });
   });
 
   test("avatar flair for login-required site, before login", async function (assert) {
@@ -176,11 +172,10 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-xmark"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #123456; color: #B0B0B0; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "#123456",
+      color: "#B0B0B0",
+    });
   });
 
   test("user-avatar-flair for user with no flairs", async function (assert) {

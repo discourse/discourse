@@ -1,7 +1,6 @@
 import { getOwner } from "@ember/owner";
 import {
   click,
-  find,
   render,
   triggerEvent,
   triggerKeyEvent,
@@ -220,17 +219,14 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     );
     await open();
 
-    assert.ok(
-      find(".fk-d-menu").getAttribute("style").includes("max-width: 20px;")
-    );
+    assert.dom(".fk-d-menu").hasStyle({ maxWidth: "20px" });
   });
 
   test("applies position", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
     await open();
 
-    assert.dom(".fk-d-menu").hasAttribute("style", /left: /);
-    assert.ok(find(".fk-d-menu").getAttribute("style").includes("top: "));
+    assert.dom(".fk-d-menu").hasStyle({ top: /.+/, left: /.+/ });
   });
 
   test("content close argument", async function (assert) {

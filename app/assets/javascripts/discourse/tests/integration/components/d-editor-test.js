@@ -621,29 +621,17 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 18);
   });
 
-  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
+  test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
     await click("button.toggle-direction");
-    assert.strictEqual(
-      query("textarea.d-editor-input").getAttribute("dir"),
-      "rtl"
-    );
-  });
+    assert.dom("textarea.d-editor-input").hasAttribute("dir", "rtl");
 
-  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
-    this.siteSettings.support_mixed_text_direction = true;
-    this.siteSettings.default_locale = "en";
-
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
-    const textarea = query("textarea.d-editor-input");
-    textarea.setAttribute("dir", "ltr");
     await click("button.toggle-direction");
-    assert.strictEqual(textarea.getAttribute("dir"), "rtl");
+    assert.dom("textarea.d-editor-input").hasAttribute("dir", "ltr");
   });
 
   test("toolbar event supports replaceText", async function (assert) {
@@ -757,12 +745,10 @@ third line`
     await render(hbs`<DEditor />`);
     const buttons = queryAll(".d-editor-button-bar .btn");
 
-    assert.strictEqual(
-      buttons[0].getAttribute("tabindex"),
-      "0",
-      "it makes the first button focusable"
-    );
-    assert.strictEqual(buttons[1].getAttribute("tabindex"), "-1");
+    assert
+      .dom(buttons[0])
+      .hasAttribute("tabindex", "0", "it makes the first button focusable");
+    assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
   });
 
   testCase("replace-text event by default", async function (assert) {
