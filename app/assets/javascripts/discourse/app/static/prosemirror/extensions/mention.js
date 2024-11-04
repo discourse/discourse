@@ -34,8 +34,8 @@ export default {
 
   inputRules: [
     {
-      // TODO: pass unicodeUsernames?
-      match: new RegExp(`(${mentionRegex().source}) $`),
+      // TODO(renato): pass unicodeUsernames?
+      match: new RegExp(`(?<=^|\\W)(${mentionRegex().source}) $`),
       handler: (state, match, start, end) =>
         state.selection.$from.nodeBefore?.type !== state.schema.nodes.mention &&
         state.tr.replaceWith(start, end, [

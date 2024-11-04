@@ -44,10 +44,21 @@ function markInputRule(regexp, markType, getAttrs) {
         tr.delete(start, textStart);
       }
       end = start + match[1].length;
+
+      tr.addMark(start, end, markType.create(attrs));
+      tr.removeStoredMark(markType);
+    } else {
+      tr.delete(start, end);
+      tr.insertText(" ");
+      tr.addMark(start, start + 1, markType.create(attrs));
+      tr.removeStoredMark(markType);
+      tr.insertText(" ");
+
+      tr.setSelection(
+        state.selection.constructor.create(tr.doc, start, start + 1)
+      );
     }
 
-    tr.addMark(start, end, markType.create(attrs));
-    tr.removeStoredMark(markType);
     return tr;
   });
 }
@@ -82,23 +93,9 @@ export function buildInputRules(schema) {
   const markInputRules = [
     markInputRule(/\*\*([^*]+)\*\*$/, marks.strong),
     markInputRule(/(?<=^|\s)__([^_]+)__$/, marks.strong),
-
     markInputRule(/(?:^|(?<!\*))\*([^*]+)\*$/, marks.em),
     markInputRule(/(?<=^|\s)_([^_]+)_$/, marks.em),
-
-    markInputRule(
-      /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
-      marks.link,
-      (match) => {
-        return { href: match[2], title: match[3] };
-      }
-    ),
-
     markInputRule(/`([^`]+)`$/, marks.code),
-
-    markInputRule(/~~([^~]+)~~$/, marks.strikethrough),
-
-    markInputRule(/\[u]([^[]+)\[\/u]$/, marks.underline),
   ];
 
   rules = rules
@@ -114,7 +111,7 @@ export function buildInputRules(schema) {
 
 function processInputRule(inputRule, schema) {
   if (inputRule instanceof Array) {
-    return inputRule.map(processInputRule);
+    return inputRule.map((rule) => processInputRule(rule, schema));
   }
 
   if (inputRule instanceof Function) {

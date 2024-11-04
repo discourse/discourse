@@ -30,7 +30,7 @@ export default {
 
   inputRules: [
     {
-      match: /#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101}) $/,
+      match: /(?<=^|\W)#([\u00C0-\u1FFF\u2C00-\uD7FF\w:-]{1,101}) $/,
       handler: (state, match, start, end) =>
         state.selection.$from.nodeBefore?.type !== state.schema.nodes.hashtag &&
         state.tr.replaceWith(start, end, [

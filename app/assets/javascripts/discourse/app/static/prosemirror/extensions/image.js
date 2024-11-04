@@ -106,7 +106,7 @@ export default {
     },
   },
 
-  plugins: (Plugin) => {
+  plugins: ({ Plugin }) => {
     const shortUrlResolver = new Plugin({
       state: {
         init() {

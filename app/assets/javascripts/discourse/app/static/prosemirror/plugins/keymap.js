@@ -57,6 +57,10 @@ export function buildKeymap(schema, initialKeymap = {}, suppressKeys) {
     bind("Mod-`", toggleMark(type));
   }
 
+  if ((type = schema.marks.underline)) {
+    bind("Mod-u", toggleMark(type));
+  }
+
   if ((type = schema.nodes.blockquote)) {
     bind("Ctrl->", wrapIn(type));
   }

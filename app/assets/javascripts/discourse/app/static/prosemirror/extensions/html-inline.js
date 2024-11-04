@@ -19,6 +19,8 @@ const ALLOWED_INLINE = [
   "mark",
 ];
 
+const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
+
 export default {
   nodeSpec: {
     // TODO(renato): this node is hard to get past when at the end of a block
@@ -47,7 +49,7 @@ export default {
         }
 
         if (ALLOWED_INLINE.includes(tagName)) {
-          state.openNode(state.schema.nodeType("html_inline"), {
+          state.openNode(state.schema.nodeType.html_inline, {
             tag: tagName,
           });
         }
@@ -77,16 +79,37 @@ export default {
     },
   },
   inputRules: {
-    match: new RegExp(`<(${ALLOWED_INLINE.join("|")})>`),
+    match: new RegExp(`<(${ALL_ALLOWED_TAGS.join("|")})>$`, "i"),
     handler: (state, match, start, end) => {
       const tag = match[1];
 
-      // TODO not finished
-      state.tr.replaceWith(
-        start,
-        end,
-        state.schema.nodes.html_inline.create({ tag })
+      const markName = HTML_INLINE_MARKS[tag];
+
+      const tr = state.tr;
+
+      if (markName) {
+        tr.delete(start, end);
+        tr.insertText(" ");
+        tr.addMark(start, start + 1, state.schema.marks[markName].create());
+        tr.removeStoredMark(state.schema.marks[markName]);
+      } else {
+        tr.replaceWith(
+          start,
+          end,
+          state.schema.nodes.html_inline.create({ tag }, [
+            state.schema.text(" "),
+          ])
+        );
+
+        start += 1;
+      }
+
+      tr.insertText(" ");
+      tr.setSelection(
+        state.selection.constructor.create(tr.doc, start, start + 1)
       );
+
+      return tr;
     },
   },
 };

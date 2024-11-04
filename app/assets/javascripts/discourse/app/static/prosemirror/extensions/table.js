@@ -13,7 +13,7 @@
 export default {
   nodeSpec: {
     table: {
-      content: "(table_head | table_body)+",
+      content: "table_head table_body",
       group: "block",
       tableRole: "table",
       isolating: true,
@@ -61,7 +61,15 @@ export default {
         },
       ],
       toDOM(node) {
-        return ["th", { style: `text-align: ${node.attrs.alignment}` }, 0];
+        return [
+          "th",
+          {
+            style: node.attrs.alignment
+              ? `text-align: ${node.attrs.alignment}`
+              : undefined,
+          },
+          0,
+        ];
       },
     },
     table_cell: {
