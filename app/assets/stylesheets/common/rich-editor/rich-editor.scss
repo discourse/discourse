@@ -13,6 +13,10 @@
   outline: 0;
   padding: 0 0.625rem;
 
+  a {
+    pointer-events: none;
+  }
+
   h1,
   h2,
   h3,
@@ -117,12 +121,16 @@
   }
 }
 
+.d-editor__code-block {
+  position: relative;
+}
+
 .d-editor__code-lang-select {
   position: absolute;
   right: 0.25rem;
   top: -0.6rem;
   border: 1px solid var(--primary-low);
-  border-radius: var(--border-radius);
+  border-radius: var(--d-border-radius);
   background-color: var(--primary-very-low);
   color: var(--primary-medium);
   font-size: var(--font-down-1-rem);

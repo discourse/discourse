@@ -15,6 +15,8 @@ export default {
       },
     },
   },
+  inputRules: ({ schema, markInputRule }) =>
+    markInputRule(/~~([^~]+)~~$/, schema.marks.strikethrough),
   parse: {
     s: { mark: "strikethrough" },
     bbcode_s: { mark: "strikethrough" },

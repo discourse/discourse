@@ -7,6 +7,8 @@ export default {
       parseDOM: [{ tag: "u" }],
     },
   },
+  inputRules: ({ schema, markInputRule }) =>
+    markInputRule(/\[u]$/, schema.marks.underline),
   parse: {
     bbcode_u: { mark: "underline" },
   },
