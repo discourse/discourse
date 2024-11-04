@@ -3368,3 +3368,7 @@ experimental:
     default: ""
     type: group_list
     list_type: compact
+  experimental_rich_editor:
+    client: true
+    default: false
+    hidden: true

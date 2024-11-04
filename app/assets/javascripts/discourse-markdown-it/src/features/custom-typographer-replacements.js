@@ -14,9 +14,9 @@
 // (r) (R) → ®
 // (p) (P) -> §
 
-let RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
+export const RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--|-->|<--|->|<-|<->|<-->/;
 
-let SCOPED_ABBR_RE = /\((tm|pa)\)/gi;
+export const SCOPED_ABBR_RE = /\((tm|pa)\)/gi;
 let SCOPED_ABBR = {
   pa: "¶",
   tm: "™",
@@ -32,9 +32,35 @@ function replaceScoped(inlineTokens) {
   for (i = inlineTokens.length - 1; i >= 0; i--) {
     token = inlineTokens[i];
     if (token.type === "text") {
-      token.content = token.content.replace(SCOPED_ABBR_RE, replaceFn);
+      token.content = replaceScopedStr(token.content.replace);
     }
   }
+}
+
+export function replaceScopedStr(str) {
+  return str.replace(SCOPED_ABBR_RE, replaceFn);
+}
+
+export function replaceRareStr(str) {
+  return (
+    str
+      .replace(/\+-/g, "±")
+      // Custom arrows
+      .replace(/(^|\s)-{1,2}>(\s|$)/gm, "\u0020\u2192\u0020")
+      .replace(/(^|\s)<-{1,2}(\s|$)/gm, "\u0020\u2190\u0020")
+      .replace(/(^|\s)<-{1,2}>(\s|$)/gm, "\u0020\u2194\u0020")
+      // .., ..., ....... -> …
+      // but ?..... & !..... -> ?.. & !..
+      .replace(/\.{2,}/g, "…")
+      .replace(/([?!])…/g, "$1..")
+      .replace(/([?!]){4,}/g, "$1$1$1")
+      .replace(/,{2,}/g, ",")
+      // em-dash
+      .replace(/(^|[^-])---(?=[^-]|$)/gm, "$1\u2014")
+      // en-dash
+      .replace(/(^|\s)--(?=\s|$)/gm, "$1\u2013")
+      .replace(/(^|[^-\s])--(?=[^-\s]|$)/gm, "$1\u2013")
+  );
 }
 
 function replaceRare(inlineTokens) {
@@ -47,23 +73,7 @@ function replaceRare(inlineTokens) {
 
     if (token.type === "text" && !inside_autolink) {
       if (RARE_RE.test(token.content)) {
-        token.content = token.content
-          .replace(/\+-/g, "±")
-          // Custom arrows
-          .replace(/(^|\s)-{1,2}>(\s|$)/gm, "\u0020\u2192\u0020")
-          .replace(/(^|\s)<-{1,2}(\s|$)/gm, "\u0020\u2190\u0020")
-          .replace(/(^|\s)<-{1,2}>(\s|$)/gm, "\u0020\u2194\u0020")
-          // .., ..., ....... -> …
-          // but ?..... & !..... -> ?.. & !..
-          .replace(/\.{2,}/g, "…")
-          .replace(/([?!])…/g, "$1..")
-          .replace(/([?!]){4,}/g, "$1$1$1")
-          .replace(/,{2,}/g, ",")
-          // em-dash
-          .replace(/(^|[^-])---(?=[^-]|$)/gm, "$1\u2014")
-          // en-dash
-          .replace(/(^|\s)--(?=\s|$)/gm, "$1\u2013")
-          .replace(/(^|[^-\s])--(?=[^-\s]|$)/gm, "$1\u2013");
+        token.content = replaceRareStr(token.content);
       }
     }
 

@@ -4,6 +4,7 @@ module SvgSprite
   SVG_ICONS =
     Set.new(
       %w[
+        a
         address-book
         align-left
         anchor
@@ -105,6 +106,7 @@ module SvgSprite
         fab-instagram
         fab-linkedin-in
         fab-linux
+        fab-markdown
         fab-threads
         fab-threads-square
         fab-twitter

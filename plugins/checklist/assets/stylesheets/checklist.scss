@@ -68,6 +68,17 @@ ul li.has-checkbox {
   }
 }
 
+.d-editor__editable {
+  // TODO(renato): this is temporary, we should use `has-checkbox` instead
+  li:has(p:first-of-type > span.chcklst-box) {
+    list-style-type: none;
+
+    .chcklst-box:first-of-type {
+      margin-left: -1.33em;
+    }
+  }
+}
+
 .fa-spin {
   display: inline-flex;
   vertical-align: text-bottom;
