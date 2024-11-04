@@ -28,7 +28,7 @@ module DiscourseAutomation
     end
 
     def can_destroy_automation(guardian:)
-      guardian.user.admin?
+      guardian.is_admin?
     end
 
     def log_action(automation:, guardian:)
