@@ -160,8 +160,6 @@ describe "Uploading files in the composer", type: :system do
   end
 
   context "when multiple images are uploaded" do
-    before { SiteSetting.experimental_auto_grid_images = true }
-
     it "automatically wraps images in [grid] tags on 3 or more images" do
       visit "/new-topic"
       expect(composer).to be_opened
@@ -227,8 +225,6 @@ describe "Uploading files in the composer", type: :system do
     end
 
     it "does not automatically wrap images in [grid] tags when setting is disabled" do
-      SiteSetting.experimental_auto_grid_images = false
-
       visit "/new-topic"
       expect(composer).to be_opened
 
