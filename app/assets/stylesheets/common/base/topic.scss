@@ -324,10 +324,11 @@
   #topic-title {
     .edit-topic-title {
       position: relative;
+      min-width: 0;
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
-        top: 7px;
+        top: 0.7em;
       }
       #edit-title {
         width: calc(100% - 50px);
