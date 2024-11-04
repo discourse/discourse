@@ -32,7 +32,6 @@ da:
       deleted_chat_username: slettet
       dates:
         yesterday: "I går"
-        time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
       already_enabled: "Chat er allerede aktiveret på dette emne. Opdater venligst."
       disabled_for_topic: "Chat er deaktiveret på dette emne."
@@ -247,11 +246,13 @@ da:
         activities: "Aktiviteter"
         flags: "Flag"
         symbols: "Symboler"
+        no_results: "Ingen resultater"
       thread:
         title: "Titel"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
+        label: Tråd
         settings: "Indstillinger"
         last_reply: "seneste svar"
         notifications:

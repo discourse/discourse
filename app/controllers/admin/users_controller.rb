@@ -26,6 +26,7 @@ class Admin::UsersController < Admin::StaffController
                   disable_second_factor
                   delete_posts_batch
                   sso_record
+                  delete_associated_accounts
                 ]
 
   def index
@@ -119,14 +120,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def suspend
-    User::Suspend.call do
-      on_success do
+    User::Suspend.call(service_params) do
+      on_success do |params:, user:, full_reason:|
         render_json_dump(
           suspension: {
-            suspend_reason: result.reason,
-            full_suspend_reason: result.full_reason,
-            suspended_till: result.user.suspended_till,
-            suspended_at: result.user.suspended_at,
+            suspend_reason: params.reason,
+            full_suspend_reason: full_reason,
+            suspended_till: user.suspended_till,
+            suspended_at: user.suspended_at,
             suspended_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )
@@ -314,14 +315,14 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def silence
-    User::Silence.call do
-      on_success do
+    User::Silence.call(service_params) do
+      on_success do |full_reason:, user:|
         render_json_dump(
           silence: {
             silenced: true,
-            silence_reason: result.full_reason,
-            silenced_till: result.user.silenced_till,
-            silenced_at: result.user.silenced_at,
+            silence_reason: full_reason,
+            silenced_till: user.silenced_till,
+            silenced_at: user.silenced_at,
             silenced_by: BasicUserSerializer.new(current_user, root: false).as_json,
           },
         )
@@ -511,6 +512,29 @@ class Admin::UsersController < Admin::StaffController
   def sso_record
     guardian.ensure_can_delete_sso_record!(@user)
     @user.single_sign_on_record.destroy!
+    render json: success_json
+  end
+
+  def delete_associated_accounts
+    guardian.ensure_can_delete_user_associated_accounts!(@user)
+    previous_value =
+      @user
+        .user_associated_accounts
+        .select(:provider_name, :provider_uid, :info)
+        .map do |associated_account|
+          {
+            provider: associated_account.provider_name,
+            uid: associated_account.provider_uid,
+            info: associated_account.info,
+          }.to_s
+        end
+        .join(",")
+    StaffActionLogger.new(current_user).log_delete_associated_accounts(
+      @user,
+      previous_value:,
+      context: params[:context],
+    )
+    @user.user_associated_accounts.delete_all
     render json: success_json
   end
 

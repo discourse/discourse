@@ -2,19 +2,11 @@
 
 module Chat
   module Action
-    class CreateMembershipsForAutoJoin
-      def self.call(channel:, contract:)
-        query_args = {
-          chat_channel_id: channel.id,
-          start: contract.start_user_id,
-          end: contract.end_user_id,
-          suspended_until: Time.zone.now,
-          last_seen_at: 3.months.ago,
-          channel_category: channel.category.id,
-          permission_type: CategoryGroup.permission_types[:create_post],
-          everyone: Group::AUTO_GROUPS[:everyone],
-          mode: ::Chat::UserChatChannelMembership.join_modes[:automatic],
-        }
+    class CreateMembershipsForAutoJoin < Service::ActionBase
+      option :channel
+      option :params
+
+      def call
         ::DB.query_single(<<~SQL, query_args)
           INSERT INTO user_chat_channel_memberships (user_id, chat_channel_id, following, created_at, updated_at, join_mode)
           SELECT DISTINCT(users.id), :chat_channel_id, TRUE, NOW(), NOW(), :mode
@@ -43,6 +35,22 @@ module Chat
 
           RETURNING user_chat_channel_memberships.user_id
         SQL
+      end
+
+      private
+
+      def query_args
+        {
+          chat_channel_id: channel.id,
+          start: params.start_user_id,
+          end: params.end_user_id,
+          suspended_until: Time.zone.now,
+          last_seen_at: 3.months.ago,
+          channel_category: channel.category.id,
+          permission_type: CategoryGroup.permission_types[:create_post],
+          everyone: Group::AUTO_GROUPS[:everyone],
+          mode: ::Chat::UserChatChannelMembership.join_modes[:automatic],
+        }
       end
     end
   end

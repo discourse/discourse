@@ -28,13 +28,11 @@ export default class CategoryListItem extends Component {
     );
   }
 
-  @discourseComputed("topicTrackingState.messageCount")
-  unreadTopicsCount() {
+  get unreadTopicsCount() {
     return this.category.unreadTopicsCount;
   }
 
-  @discourseComputed("topicTrackingState.messageCount")
-  newTopicsCount() {
+  get newTopicsCount() {
     return this.category.newTopicsCount;
   }
 

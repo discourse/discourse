@@ -107,18 +107,15 @@ acceptance("flagging", function (needs) {
     await openFlagModal();
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
-    assert.ok(
-      exists("[data-value='agree_and_silence']"),
-      "it shows the silence action option"
-    );
-    assert.ok(
-      exists("[data-value='agree_and_suspend']"),
-      "it shows the suspend action option"
-    );
-    assert.ok(
-      exists("[data-value='agree_and_hide']"),
-      "it shows the hide action option"
-    );
+    assert
+      .dom("[data-value='agree_and_silence']")
+      .exists("it shows the silence action option");
+    assert
+      .dom("[data-value='agree_and_suspend']")
+      .exists("it shows the suspend action option");
+    assert
+      .dom("[data-value='agree_and_hide']")
+      .exists("it shows the hide action option");
   });
 
   test("Can silence from take action", async function (assert) {
@@ -128,19 +125,15 @@ acceptance("flagging", function (needs) {
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "",
-      "penalty message is empty"
-    );
+    assert.dom(".suspend-message").hasValue("", "penalty message is empty");
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.ok(exists(".d-modal__body"));
+    assert.dom(".d-modal__body").exists();
     await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
-    assert.ok(!exists(".d-modal__body"));
+    assert.dom(".d-modal__body").doesNotExist();
   });
 
   test("Message appears in penalty modal", async function (assert) {
@@ -151,11 +144,12 @@ acceptance("flagging", function (needs) {
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
-      "penalty message is prefilled with post text"
-    );
+    assert
+      .dom(".suspend-message")
+      .hasValue(
+        "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
+        "penalty message is prefilled with post text"
+      );
   });
 
   test("Can delete spammer from spam", async function (assert) {
@@ -163,7 +157,7 @@ acceptance("flagging", function (needs) {
     await openFlagModal();
     await click("#radio_spam");
 
-    assert.ok(exists(".delete-spammer"));
+    assert.dom(".delete-spammer").exists();
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
@@ -178,17 +172,17 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     await fillIn("input.silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
-    assert.ok(exists(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-default");
-    assert.ok(!exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
 
     await click(".d-modal-cancel");
-    assert.ok(exists(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!exists(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("CTRL + ENTER accepts the modal", async function (assert) {
@@ -197,14 +191,13 @@ acceptance("flagging", function (needs) {
 
     const modal = query(".d-modal");
     await pressEnter(modal, "ctrlKey");
-    assert.ok(
-      exists(".d-modal:visible"),
-      "The modal wasn't closed because the accept button was disabled"
-    );
+    assert
+      .dom(".d-modal")
+      .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
+    assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 
   test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
@@ -213,13 +206,12 @@ acceptance("flagging", function (needs) {
 
     const modal = query(".d-modal");
     await pressEnter(modal, "metaKey");
-    assert.ok(
-      exists(".d-modal:visible"),
-      "The modal wasn't closed because the accept button was disabled"
-    );
+    assert
+      .dom(".d-modal")
+      .exists("The modal wasn't closed because the accept button was disabled");
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
+    assert.dom(".d-modal").doesNotExist("The modal was closed");
   });
 });

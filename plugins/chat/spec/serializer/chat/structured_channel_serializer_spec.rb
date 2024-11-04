@@ -46,10 +46,9 @@ RSpec.describe Chat::StructuredChannelSerializer do
         .as_json,
     ).to include(
       "chat_channel_id" => channel1.id,
-      "desktop_notification_level" => "mention",
+      "notification_level" => "mention",
       "following" => true,
       "last_read_message_id" => nil,
-      "mobile_notification_level" => "mention",
       "muted" => false,
     )
   end
@@ -64,10 +63,9 @@ RSpec.describe Chat::StructuredChannelSerializer do
         .as_json,
     ).to include(
       "chat_channel_id" => channel3.id,
-      "desktop_notification_level" => "always",
+      "notification_level" => "always",
       "following" => true,
       "last_read_message_id" => nil,
-      "mobile_notification_level" => "always",
       "muted" => false,
     )
   end

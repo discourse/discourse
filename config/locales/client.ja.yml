@@ -26,6 +26,7 @@ ja:
         millions: "%{number}M"
     dates:
       time: "a h:mm"
+      time_short: "h:mm"
       time_with_zone: "a hh:mm (z)"
       time_short_day: "ddd a h:mm"
       timeline_date: "YYYY 年 MMM"
@@ -113,7 +114,6 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
-      twitter: "Twitter で共有"
       facebook: "Facebook で共有"
       email: "メールで送信"
       url: "URL をコピーして共有"
@@ -265,6 +265,7 @@ ja:
       pill: "提案"
       pm_title: "推奨メッセージ"
     about:
+      edit: "このページを編集"
       simple_title: "サイト情報"
       title: "%{title}について"
       stats: "サイトの統計"
@@ -1262,7 +1263,6 @@ ja:
       ignored_users: "無視"
       ignored_users_instructions: "これらのユーザーからのすべての投稿、通知、および PM を抑制します。"
       tracked_topics_link: "表示"
-      automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する。"
       apps: "アプリ連携"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
@@ -1535,7 +1535,6 @@ ja:
         add_email: "代替メールアドレスを追加"
         auth_override_instructions: "メールアドレスは認証プロバイダーから更新できます。"
         no_secondary: "セカンダリメールアドレスはありません"
-        instructions: "絶対に公開されません。"
         admin_note: "注意: 管理者ユーザーが別の非管理者ユーザーのメールを変更すると、そのユーザーは元のメールアカウントにアクセスできなくなるため、パスワードのリセットメールが新しいアドレスに送信されます。ユーザーのメールアドレスは、パスワードのリセットプロセスが完了するまで変更されません。"
         ok: "確認のためにメールを送信します"
         required: "メールアドレスを入力してください"
@@ -1560,19 +1559,18 @@ ja:
         action: "クリックしてアカウントを有効化する"
         already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
         please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
-        continue_button: "%{site_name} に進む"
+        continue_button: "終了!"
         welcome_to: "%{site_name} へようこそ！"
         approval_required: "このフォーラムにアクセスするには、モデレーターがあなたの新規アカウントを手動で承認する必要があります。承認されるとメールで通知されます！"
       name:
         title: "名前"
-        instructions: "あなたの氏名 (オプション) です。"
-        instructions_required: "あなたの氏名です。"
+        instructions: "氏名 (オプション)"
+        instructions_required: "氏名"
         required: "名前を入力してください"
         too_short: "名前が短かすぎます"
         ok: "その名前で良さそうです"
       username:
         title: "ユーザー名"
-        instructions: "一意の短い名前、スペースの使用不可。"
         short_instructions: "@%{username} であなたをメンションできます"
         available: "ユーザー名を使用できます"
         not_available: "利用できません。%{suggestion}を試しますか？"
@@ -1735,12 +1733,11 @@ ja:
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
         invite:
-          new_title: "招待の作成"
-          edit_title: "招待の編集"
           instructions: "このサイトへのアクセスを即時に許可するにはこのリンクを共有します:"
-          copy_link: "リンクをコピー"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
+          copy_link: "リンクをコピーする"
+          link_copied: "リンクがコピーされました！"
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
           restrict: "制限する:"
@@ -1750,11 +1747,11 @@ ja:
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
           invite_to_topic: "トピックに到着"
-          expires_at: "有効期限"
-          custom_message: "オプションの個人メッセージ"
+          expires_after: "有効期限"
           send_invite_email: "保存してメールを送信"
           send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
-          save_invite: "招待を保存"
+          save_invite: "保存"
+          cancel: "キャンセル"
           invite_saved: "招待は保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
@@ -1785,7 +1782,7 @@ ja:
         same_as_email: "パスワードとメールアドレスが同じです。"
         ok: "そのパスワードで良さそうです。"
         instructions:
-          other: "%{count} 文字以上です。"
+          other: "%{count} 文字以上"
         required: "パスワードを入力してください"
         confirm: "確認"
         incorrect_password: "入力したパスワードは誤っています。"
@@ -2030,7 +2027,6 @@ ja:
     search_hint: "ユーザー名、メールアドレス、または IPアドレス"
     create_account:
       header_title: "ようこそ！"
-      subheader_title: "アカウントを作成しましょう"
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
       title: "アカウントを登録"
       failed: "エラーが発生しました。このメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
@@ -2072,7 +2068,6 @@ ja:
       confirm_button: ログイン完了
     login:
       header_title: "おかえりなさい"
-      subheader_title: "アカウントにログインする"
       title: "ログイン"
       username: "ユーザー"
       password: "パスワード"
@@ -2172,7 +2167,6 @@ ja:
       success: "あなたのアカウントが作成され、ログインしました。"
       name_label: "名前"
       password_label: "パスワード"
-      existing_user_can_redeem: "トピックまたはグループへの招待を引き換えましょう。"
     password_reset:
       continue: "%{site_name} に進む"
     emoji_set:
@@ -4480,6 +4474,7 @@ ja:
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "現在のサイト設定に基づいたアドバイス"
+        dismiss_notice: "閉じる"
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
@@ -4942,9 +4937,14 @@ ja:
           screened_ips: "スクリーン対象 IP"
           screened_urls: "スクリーン対象 URL"
           search_logs: "検索ログ"
-          security: "セキュリティ"
-          spam: "迷惑"
           staff_action_logs: "スタッフの操作ログ"
+      section_landing_pages:
+        account:
+          title: "アカウント"
+          backups:
+            title: "バックアップ"
+          whats_new:
+            title: "新着情報"
       config_areas:
         about:
           header: "サイトについて"
@@ -4954,42 +4954,22 @@ ja:
           community_summary: "コミュニティーの概要"
           community_description: "コミュニティーの説明"
           banner_image: "バナー画像"
-          banner_image_help: |
-            これは「情報」ページで使用されます。推奨サイズ: 800x300px。許容される形式: 10 MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
-          community_owner_help: |
-            このサイトの責任者の主要連絡先の名前。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_email: "連絡先メールアドレス"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_url: "連絡先 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            このサイトの連絡先 URL。存在する場合、/about の連絡先メールアドレスを置き換え、公開サイトの匿名ユーザーにも表示されます。
           site_contact_name: "サイトの連絡先名"
-          site_contact_name_help: |
-            自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合、デフォルトのシステムアカウントが使用されます。
           site_contact_group: "サイトの連絡先グループ"
-          site_contact_group_help: |
-            自動的に送信されるすべてのプライベートメッセージに招待される有効なグループ名。
           your_organization: "あなたの組織"
-          company_name: "会社名"
-          company_name_placeholder: "サンプルカンパニー Inc."
-          company_name_help: |
-            会社または組織の名前。
+          company_name: "名前"
+          company_name_placeholder: "Acme 組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           governing_law: "準拠法"
-          governing_law_placeholder: "ニューヨーク州"
-          governing_law_help: |
-            利用規約やプライバシーに関する通知など、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。
           city_for_disputes: "紛争都市"
-          city_for_disputes_placeholder: "ニューヨーク市"
-          city_for_disputes_help: |
-            このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -5031,6 +5011,10 @@ ja:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
+        look_and_feel:
+          title: "外観"
+          themes:
+            title: "テーマ"
       plugins:
         title: "プラグイン"
         name: "名前"
@@ -6237,6 +6221,8 @@ ja:
         history: "変更履歴を表示する"
         reset: "リセット"
         none: "なし"
+        save: "保存"
+        cancel: "キャンセル"
       site_settings:
         emoji_list:
           invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: hugs"
@@ -6397,10 +6383,6 @@ ja:
             with_post: '%{link} で行われた投稿の <span class="username">%{username}</span>'
             with_post_time: '%{link} で <span class="time">%{time}</span> に行われた投稿の <span class="username">%{username}</span>'
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
-        badge_intro:
-          title: "既存のバッジを選択するか、新しいバッジを作成してください"
-          what_are_badges_title: "バッジとは何ですか？"
-          badge_query_examples_title: "バッジクエリの例"
         mass_award:
           title: 一括授与
           description: 一度に複数のユーザーに同じバッジを授与します。

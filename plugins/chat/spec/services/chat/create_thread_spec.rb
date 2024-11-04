@@ -1,28 +1,26 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::CreateThread do
-  describe Chat::CreateThread::Contract, type: :model do
+  describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :original_message_id }
+    it { is_expected.to validate_length_of(:title).is_at_most(Chat::Thread::MAX_TITLE_LENGTH) }
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, another_user]) }
+    fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { nil }
-    let(:params) do
-      {
-        guardian: guardian,
-        original_message_id: message_1.id,
-        channel_id: channel_1.id,
-        title: title,
-      }
-    end
+    let(:params) { { original_message_id: message_1.id, channel_id: channel_1.id, title: } }
+    let(:dependencies) { { guardian: } }
 
     context "when all steps pass" do
       it { is_expected.to run_successfully }
@@ -44,8 +42,17 @@ RSpec.describe Chat::CreateThread do
         expect(result.membership).to eq(result.thread.membership_for(current_user))
       end
 
-      it "publishes a `thread_created` MessageBus event" do
+      it "publishes a `thread_created` MessageBus event for public channels" do
         message = MessageBus.track_publish("/chat/#{channel_1.id}") { result }.first
+        expect(message.data["type"]).to eq("thread_created")
+      end
+
+      it "publishes a `thread_created` MessageBus event for DM channels" do
+        params[:channel_id] = dm_channel.id
+        params[:original_message_id] = dm_message.id
+        params[:guardian] = Guardian.new(another_user)
+        message = MessageBus.track_publish("/chat/#{dm_channel.id}") { result }.first
+
         expect(message.data["type"]).to eq("thread_created")
       end
 
@@ -64,12 +71,6 @@ RSpec.describe Chat::CreateThread do
 
     context "when params are not valid" do
       before { params.delete(:original_message_id) }
-
-      it { is_expected.to fail_a_contract }
-    end
-
-    context "when title is too long" do
-      let(:title) { "a" * Chat::Thread::MAX_TITLE_LENGTH + "a" }
 
       it { is_expected.to fail_a_contract }
     end
@@ -106,8 +107,10 @@ RSpec.describe Chat::CreateThread do
       before do
         Chat::CreateThread.call(
           guardian: current_user.guardian,
-          original_message_id: message_1.id,
-          channel_id: channel_1.id,
+          params: {
+            original_message_id: message_1.id,
+            channel_id: channel_1.id,
+          },
         )
       end
 

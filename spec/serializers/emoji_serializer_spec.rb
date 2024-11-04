@@ -12,6 +12,10 @@ RSpec.describe EmojiSerializer do
       expect(serializer.url).to start_with("/uploads/")
     end
 
+    it "returns the creator's username" do
+      expect(serializer.created_by).to eq(emoji.created_by)
+    end
+
     it "works with a CDN" do
       set_cdn_url("https://cdn.com")
       expect(serializer.url).to start_with("https://cdn.com")

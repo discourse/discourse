@@ -272,6 +272,8 @@ lv:
       yaxis: "Diena"
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
+    site_traffic:
+      yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:
@@ -344,6 +346,8 @@ lv:
       xaxis: "Diena"
     page_view_total_reqs:
       title: "Lapu skatījumi"
+      xaxis: "Diena"
+    page_view_legacy_total_reqs:
       xaxis: "Diena"
     page_view_logged_in_mobile_reqs:
       xaxis: "Diena"

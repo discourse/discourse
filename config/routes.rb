@@ -162,6 +162,7 @@ Discourse::Application.routes.draw do
         put "disable_second_factor"
         delete "sso_record"
         get "similar-users.json" => "users#similar_users"
+        put "delete_associated_accounts"
       end
       get "users/:id.json" => "users#show", :defaults => { format: "json" }
       get "users/:id/:username" => "users#show",
@@ -325,6 +326,7 @@ Discourse::Application.routes.draw do
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
       get "/whats-new" => "dashboard#new_features"
+      post "/toggle-feature" => "dashboard#toggle_feature"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -400,8 +402,16 @@ Discourse::Application.routes.draw do
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
           collection { put "/" => "about#update" }
         end
+
+        resources :look_and_feel,
+                  path: "look-and-feel",
+                  constraints: AdminConstraint.new,
+                  only: %i[index] do
+          collection { get "/themes" => "look_and_feel#themes" }
+        end
       end
 
+      get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
       resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
     end # admin namespace
 
@@ -1341,6 +1351,7 @@ Discourse::Application.routes.draw do
 
     get "new-topic" => "new_topic#index"
     get "new-message" => "new_topic#index"
+    get "new-invite" => "new_invite#index"
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
@@ -1604,6 +1615,8 @@ Discourse::Application.routes.draw do
     root to: "custom_homepage#index",
          constraints: HomePageConstraint.new("custom"),
          as: "custom_index"
+
+    get "/custom" => "custom_homepage#index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

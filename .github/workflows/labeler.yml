@@ -10,7 +10,7 @@ permissions:
 jobs:
   triage:
     if: github.actor != 'discourse-translator-bot'
-    runs-on: debian-12
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/labeler@v5

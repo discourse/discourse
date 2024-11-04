@@ -63,7 +63,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
           end
           expect(find("#quick-access-chat-notifications")).to have_link(
             I18n.t("js.notifications.popup.direct_message_chat_mention.direct"),
-            href: "/discuss/chat/c/#{other_user.username}/#{dm_channel_1.id}/#{message.id}",
+            href: "/discuss/chat/c/-/#{dm_channel_1.id}/#{message.id}",
           )
         end
       end

@@ -43,11 +43,12 @@ acceptance("Admin - User Emails", function (needs) {
   test("viewing self with multiple secondary emails", async function (assert) {
     await visit("/admin/users/3/markvanlan");
 
-    assert.strictEqual(
-      query(".display-row.email .value a").innerText,
-      "markvanlan@example.com",
-      "it should display the user's primary email"
-    );
+    assert
+      .dom(".display-row.email .value a")
+      .hasText(
+        "markvanlan@example.com",
+        "it should display the user's primary email"
+      );
 
     assertMultipleSecondary(
       assert,

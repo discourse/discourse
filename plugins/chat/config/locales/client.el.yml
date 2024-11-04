@@ -12,6 +12,7 @@ el:
           always: "Πάντα"
           never: "Ποτέ"
     chat:
+      back_to_forum: "Φόρουμ"
       deleted_chat_username: διεγράφη
       dates:
         yesterday: "Χτες"
@@ -35,12 +36,14 @@ el:
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
       last_visit: "τελευταία επίσκεψη"
+      placeholder_group: "Συνομιλία στην ομάδα"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
       bookmark_message: "Σελιδοδείκτης"
       bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
       save: "Αποθήκευση"
+      select: "Επιλογή"
       sounds:
         none: "Κανένα"
       exit: "πίσω"
@@ -70,6 +73,11 @@ el:
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"
+        no_results: Δεν υπάρχουν αποτελέσματα
+      channel:
+        memberships_count:
+          one: "%{count} μέλος"
+          other: "%{count} μέλη"
       create_channel:
         type: "Τύπος"
         types:
@@ -84,6 +92,7 @@ el:
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
+        threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"
         preview: "Προεπισκόπηση"
@@ -97,6 +106,7 @@ el:
         members_label: "Μέλη"
       incoming_webhooks:
         back: "Πίσω"
+        channel: "Κανάλι"
         description: "Περιγραφή"
         delete: "Σβήσιμο"
         emoji: "Emoji"
@@ -124,6 +134,7 @@ el:
         activities: "Δραστηριότητες"
         flags: "Σημάνσεις"
         symbols: "Σύμβολα"
+        no_results: "Δεν υπάρχουν αποτελέσματα"
       thread:
         title: "Τίτλος"
         replies:
@@ -143,6 +154,9 @@ el:
         cancel: "Ακύρωση"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} και %{username2}"
+        other: "%{username} και %{count} ακόμη"
     discourse_automation:
       scriptables:
         send_chat_message:

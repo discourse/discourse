@@ -14,7 +14,8 @@ zh_CN:
       select_trigger: 选择触发器
       confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
       confirm_automation_trigger: 此操作将触发自动化，要继续吗？
-      no_automation_yet: 您尚未创建任何自动化。
+      no_automation_yet: 您尚未创建任何自动化。请选择以下选项开始创建。
+      filter_placeholder: 按名称或描述筛选...
       edit_automation:
         trigger_section:
           forced: 此触发器由脚本强制执行。
@@ -149,12 +150,17 @@ zh_CN:
             valid_trust_levels:
               label: 有效信任级别
               description: 仅在这些信任级别的用户创建帖子时触发，默认为任意信任级别
+            restricted_tags:
+              label: 标签
+              description: 可选，仅在帖子具有以下任意标签时触发
             restricted_category:
               label: 类别
               description: 可选，仅在帖子所属话题属于此类别时触发
             restricted_group:
               label: 群组
               description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
+            restricted_groups:
+              label: 群组
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器
@@ -374,6 +380,7 @@ zh_CN:
           fields:
             custom_field_name:
               label: "用户自定义字段名称"
+      unnamed_automation: "未命名的自动化"
       models:
         script:
           name:

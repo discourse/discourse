@@ -816,8 +816,6 @@ RSpec.describe Topic do
     context "with rate limits" do
       before { RateLimiter.enable }
 
-      use_redis_snapshotting
-
       context "when per day" do
         before { SiteSetting.max_topic_invitations_per_day = 1 }
 
@@ -2343,26 +2341,38 @@ RSpec.describe Topic do
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
-      it "doesn't return topics from suppressed tags" do
-        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
-        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
-        topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
-        tag = Fabricate(:tag)
-        tag2 = Fabricate(:tag)
-        Fabricate(:topic_tag, topic: topic, tag: tag)
+      it "doesn't return topics with a suppressed tag" do
+        topic_with_tags = Fabricate(:topic, created_at: 1.minute.ago)
+        topic_without_tags = Fabricate(:topic, created_at: 1.minute.ago)
+        topic_with_other_tags = Fabricate(:topic, created_at: 1.minute.ago)
 
-        SiteSetting.digest_suppress_tags = "#{tag.name}|#{tag2.name}"
+        tag_1 = Fabricate(:tag)
+        tag_2 = Fabricate(:tag)
+        tag_3 = Fabricate(:tag)
+
+        Fabricate(:topic_tag, topic: topic_with_tags, tag: tag_1)
+        Fabricate(:topic_tag, topic: topic_with_tags, tag: tag_2)
+
+        Fabricate(:topic_tag, topic: topic_with_other_tags, tag: tag_2)
+        Fabricate(:topic_tag, topic: topic_with_other_tags, tag: tag_3)
+
+        SiteSetting.digest_suppress_tags = "#{tag_1.name}"
+
         topics = Topic.for_digest(user, 1.year.ago, top_order: true)
-        expect(topics).to eq([topic2])
+
+        expect(topics).to contain_exactly(topic_without_tags, topic_with_other_tags)
 
         Fabricate(
           :topic_user,
           user: user,
-          topic: topic,
+          topic: topic_with_tags,
           notification_level: TopicUser.notification_levels[:regular],
         )
 
-        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic2])
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to contain_exactly(
+          topic_without_tags,
+          topic_with_other_tags,
+        )
       end
 
       it "doesn't return topics from TL0 users" do
@@ -2698,8 +2708,6 @@ RSpec.describe Topic do
       RateLimiter.enable
     end
 
-    use_redis_snapshotting
-
     it "limits new users to max_topics_in_first_day and max_posts_in_first_day" do
       start = Time.now.tomorrow.beginning_of_day
 
@@ -2750,8 +2758,6 @@ RSpec.describe Topic do
       SiteSetting.max_topics_in_first_day = 0
       RateLimiter.enable
     end
-
-    use_redis_snapshotting
 
     it "limits according to max_personal_messages_per_day" do
       create_post(

@@ -56,8 +56,8 @@ class ApplicationController < ActionController::Base
   after_action :clean_xml, if: :is_feed_response?
   after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
-  HONEYPOT_KEY ||= "HONEYPOT_KEY"
-  CHALLENGE_KEY ||= "CHALLENGE_KEY"
+  HONEYPOT_KEY = "HONEYPOT_KEY"
+  CHALLENGE_KEY = "CHALLENGE_KEY"
 
   layout :set_layout
 
@@ -659,7 +659,7 @@ class ApplicationController < ActionController::Base
             .map do |plugin|
               {
                 name: plugin.name.downcase,
-                admin_route: plugin.admin_route,
+                admin_route: plugin.full_admin_route,
                 enabled: plugin.enabled?,
               }
             end,
@@ -928,7 +928,7 @@ class ApplicationController < ActionController::Base
 
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/profile")
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
-    allowed_paths = [redirect_path, second_factor_path, path("/admin")]
+    allowed_paths = [redirect_path, second_factor_path, path("/admin"), path("/safe-mode")]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
       rate_limiter = RateLimiter.new(current_user, "redirect_to_required_fields_log", 1, 24.hours)
 
@@ -1161,5 +1161,9 @@ class ApplicationController < ActionController::Base
 
   def clean_xml
     response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+  end
+
+  def service_params
+    { params: params.to_unsafe_h, guardian: }
   end
 end

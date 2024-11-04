@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Search
-  DIACRITICS ||= /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
+  DIACRITICS = /([\u0300-\u036f]|[\u1AB0-\u1AFF]|[\u1DC0-\u1DFF]|[\u20D0-\u20FF])/
   HIGHLIGHT_CSS_CLASS = "search-highlight"
 
   cattr_accessor :preloaded_topic_custom_fields
@@ -228,7 +228,7 @@ class Search
 
   def self.need_segmenting?(data)
     return false if data.match?(/\A\d+\z/)
-    !URI.parse(data).path.start_with?("/")
+    !URI.parse(data).path.to_s.start_with?("/")
   rescue URI::InvalidURIError
     true
   end

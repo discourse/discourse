@@ -19,5 +19,5 @@ module Migrations
     end
   end
 
-  CommandLineInterface.start
+  Dir.chdir(Rails.root) { CommandLineInterface.start } # rubocop:disable Discourse/NoChdir
 end

@@ -393,6 +393,16 @@ acceptance(
       );
 
       assert.ok(exists(".show-mores"), "displays the topic incoming info");
+
+      await publishNewToMessageBus({ topicId: 2 });
+
+      assert.strictEqual(
+        query(".messages-nav .user-nav__messages-new").innerText.trim(),
+        I18n.t("user.messages.new_with_count", { count: 2 }),
+        "displays the right count"
+      );
+
+      assert.ok(exists(".show-mores"), "displays the topic incoming info");
     });
 
     test("incoming unread messages while viewing unread", async function (assert) {
@@ -839,19 +849,19 @@ acceptance("User Private Messages - user with no messages", function (needs) {
 
   test("It renders the empty state panel", async function (assert) {
     await visit("/u/charlie/messages");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/sent");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/new");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/unread");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
 
     await visit("/u/charlie/messages/archive");
-    assert.ok(exists("div.empty-state"));
+    assert.dom("div.empty-state").exists();
   });
 });
 
@@ -917,7 +927,7 @@ acceptance(
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
 
-      assert.ok(exists("#reply-control .mini-tag-chooser"));
+      assert.dom("#reply-control .mini-tag-chooser").exists();
 
       await fillIn("#reply-title", "Sending a message with tags");
       await fillIn(
@@ -970,7 +980,7 @@ acceptance(
     test("tags are present on private messages - Mobile mode", async function (assert) {
       await visit("/u/eviltrout/messages");
       await click(".new-private-message");
-      assert.ok(exists("#reply-control .mini-tag-chooser"));
+      assert.dom("#reply-control .mini-tag-chooser").exists();
     });
   }
 );

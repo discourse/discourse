@@ -272,12 +272,6 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
-  add_to_serializer(
-    :upload,
-    :thumbnail,
-    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
-  ) { object.thumbnail }
-
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin
@@ -322,8 +316,16 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if chat_channel_id = channel_name[%r{/chat-reply/(\d+)}, 1]
-      chat_channel = Chat::Channel.find(chat_channel_id)
+    if (
+         channel_id, thread_id =
+           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
+       )
+      chat_channel = nil
+      if thread_id
+        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+      else
+        chat_channel = Chat::Channel.find(channel_id)
+      end
 
       PresenceChannel::Config.new.tap do |config|
         config.allowed_group_ids = chat_channel.allowed_group_ids
@@ -463,6 +465,7 @@ after_initialize do
     field :sender, component: :user
 
     placeholder :channel_name
+    placeholder :post_quote, triggerable: :post_created_edited
 
     triggerables %i[recurring topic_tags_changed post_created_edited]
 
@@ -471,11 +474,17 @@ after_initialize do
       channel = Chat::Channel.find_by(id: fields.dig("chat_channel_id", "value"))
       placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
+      if context["kind"] == "post_created_edited"
+        placeholders[:post_quote] = utils.build_quote(context["post"])
+      end
+
       creator =
         ::Chat::CreateMessage.call(
-          chat_channel_id: channel.id,
           guardian: sender.guardian,
-          message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          params: {
+            chat_channel_id: channel.id,
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          },
         )
 
       if creator.failure?

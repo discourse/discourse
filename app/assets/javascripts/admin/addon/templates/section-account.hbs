@@ -1,0 +1,26 @@
+<AdminPageHeader
+  @titleLabel="admin.section_landing_pages.account.title"
+  @hideTabs={{true}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/section/account"
+      @label={{i18n "admin.section_landing_pages.account.title"}}
+    />
+  </:breadcrumbs>
+</AdminPageHeader>
+
+<AdminSectionLandingWrapper>
+  <AdminSectionLandingItem
+    @icon="box-archive"
+    @titleLabel="admin.section_landing_pages.account.backups.title"
+    @descriptionLabel="admin.section_landing_pages.account.backups.description"
+    @titleRoute="admin.backups"
+  />
+  <AdminSectionLandingItem
+    @icon="gift"
+    @titleLabel="admin.section_landing_pages.account.whats_new.title"
+    @descriptionLabel="admin.section_landing_pages.account.whats_new.description"
+    @titleRoute="admin.whatsNew"
+  />
+</AdminSectionLandingWrapper>

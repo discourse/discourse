@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { isPrimaryTab } from "discourse/lib/utilities";
 import { INDICATOR_PREFERENCES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 const MENTION = 29;
@@ -15,6 +16,10 @@ export default {
       return;
     }
 
+    this.canPlaySound = async () => {
+      return await isPrimaryTab();
+    };
+
     withPluginApi("0.12.1", (api) => {
       api.registerDesktopNotificationHandler((data, siteSettings, user) => {
         const indicatorType = user.user_option.chat_header_indicator_preference;
@@ -24,10 +29,7 @@ export default {
           return;
         }
 
-        if (
-          !user.user_option.chat_sound ||
-          indicatorType === INDICATOR_PREFERENCES.never
-        ) {
+        if (!user.chat_sound || indicatorType === INDICATOR_PREFERENCES.never) {
           return;
         }
 
@@ -40,17 +42,21 @@ export default {
 
         if (
           indicatorType === INDICATOR_PREFERENCES.dm_and_mentions &&
-          !data.isDirectMessageChannel &&
+          !data.is_direct_message_channel &&
           !isMention
         ) {
           return;
         }
 
         if (CHAT_NOTIFICATION_TYPES.includes(data.notification_type)) {
-          const chatAudioManager = container.lookup(
-            "service:chat-audio-manager"
-          );
-          chatAudioManager.play(user.chat_sound);
+          this.canPlaySound().then((success) => {
+            if (success) {
+              const chatAudioManager = container.lookup(
+                "service:chat-audio-manager"
+              );
+              chatAudioManager.play(user.chat_sound);
+            }
+          });
         }
       });
     });

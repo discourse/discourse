@@ -60,10 +60,14 @@ hr:
               label: ID teme
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Oznake
             restricted_category:
               label: Kategorija
             restricted_group:
               label: Grupa
+            restricted_groups:
+              label: Grupe
           created: Stvoreno
         category_created_edited:
           fields:

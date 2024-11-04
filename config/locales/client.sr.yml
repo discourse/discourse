@@ -149,7 +149,6 @@ sr:
     share:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       close: "затвори"
-      twitter: "Подели на Твитеру"
       facebook: "Подели на Фејсбуку"
       email: "Пошаљи е-поштом"
       url: "Копирај и подели линк"
@@ -812,8 +811,8 @@ sr:
         welcome_to: "Добро дошли на пројекат %{site_name}!"
       name:
         title: "Ime"
-        instructions: "Vaše ime (opciono)."
-        instructions_required: "Vaše ime."
+        instructions: "Vaše ime (opciono)"
+        instructions_required: "Vaše ime"
         too_short: "Ime vam je prekratko"
         ok: "Vaše ime dobro izgleda"
       username:
@@ -903,6 +902,8 @@ sr:
         invite:
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Сакриј напредне опције"
+          save_invite: "Sačuvaj"
+          cancel: "Odustani"
       password:
         title: "Šifra"
         common: "Ta šifra je pre česta."
@@ -1065,6 +1066,7 @@ sr:
       complete_username_not_found: "Nema naloga koji odgovara korisničkom imenu <b>%{username}</b>"
       complete_email_not_found: "Nema naloga koji odgovara <b>%{email}</b>"
     login:
+      title: "Prijava"
       username: "Korisnik"
       password: "Šifra"
       show_password: "Pokaži"
@@ -1914,6 +1916,7 @@ sr:
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
         latest_version: "Poslednje"
+        dismiss_notice: "Одбаци"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje provereno"
@@ -2031,10 +2034,13 @@ sr:
           screened_emails: "Provereni emailovi"
           screened_ips: "Provereni IP-ovi"
           screened_urls: "Provereni URL-ovi"
-          security: "Sigurnost"
-          spam: "Nepoželjno"
+      section_landing_pages:
+        account:
+          backups:
+            title: "Sigurnosne kopije"
       config_areas:
         about:
+          company_name: "Ime foruma"
           saved: "sačuvano!"
         flags:
           description: "Opis"
@@ -2533,6 +2539,8 @@ sr:
         show_overriden: "Pokazuj samo promenjeno"
         reset: "resetuj"
         none: "ništa"
+        save: "sačuvaj"
+        cancel: "otkaži"
       site_settings:
         title: "Podešavanja"
         no_results: "Nema pronađenih rezultata."

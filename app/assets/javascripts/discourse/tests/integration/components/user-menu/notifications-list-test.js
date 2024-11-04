@@ -47,8 +47,8 @@ module(
     test("empty state when there are no notifications", async function (assert) {
       notificationsData.clear();
       await render(template);
-      assert.ok(exists(".empty-state .empty-state-title"));
-      assert.ok(exists(".empty-state .empty-state-body"));
+      assert.dom(".empty-state .empty-state-title").exists();
+      assert.dom(".empty-state .empty-state-body").exists();
     });
 
     test("doesn't set filter_by_types in the params of the request that fetches the notifications", async function (assert) {
@@ -88,11 +88,13 @@ module(
         I18n.t("user.dismiss"),
         "dismiss button has a label"
       );
-      assert.strictEqual(
-        dismissButton.getAttribute("title"),
-        I18n.t("user.dismiss_notifications_tooltip"),
-        "dismiss button has title attribute"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .hasAttribute(
+          "title",
+          I18n.t("user.dismiss_notifications_tooltip"),
+          "dismiss button has title attribute"
+        );
     });
 
     test("doesn't have a dismiss button if all notifications are read", async function (assert) {
@@ -100,7 +102,9 @@ module(
         notification.read = true;
       });
       await render(template);
-      assert.ok(!exists(".panel-body-bottom .btn.notifications-dismiss"));
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .doesNotExist();
     });
 
     test("dismiss button makes a request to the server and then refreshes the notifications list", async function (assert) {

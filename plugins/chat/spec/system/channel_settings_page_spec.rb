@@ -122,36 +122,18 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       }.to change { membership.reload.muted }.from(false).to(true)
     end
 
-    it "can change desktop notification level" do
+    it "can change notification level" do
       chat_page.visit_channel_settings(channel_1)
       membership = channel_1.membership_for(current_user)
 
       expect {
         select_kit =
-          PageObjects::Components::SelectKit.new(
-            ".c-channel-settings__desktop-notifications-selector",
-          )
+          PageObjects::Components::SelectKit.new(".c-channel-settings__notifications-selector")
         select_kit.expand
         select_kit.select_row_by_name("Never")
 
         expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.desktop_notification_level }.from("mention").to("never")
-    end
-
-    it "can change mobile notification level" do
-      chat_page.visit_channel_settings(channel_1)
-      membership = channel_1.membership_for(current_user)
-
-      expect {
-        select_kit =
-          PageObjects::Components::SelectKit.new(
-            ".c-channel-settings__mobile-notifications-selector",
-          )
-        select_kit.expand
-        select_kit.select_row_by_name("Never")
-
-        expect(toasts).to have_success(I18n.t("js.saved"))
-      }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
+      }.to change { membership.reload.notification_level }.from("mention").to("never")
     end
 
     it "can unfollow channel" do
@@ -182,6 +164,23 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         expect(
           channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
         ).to eq(false)
+      end
+    end
+
+    context "when direct message channel" do
+      fab!(:channel_1) do
+        Fabricate(:direct_message_channel, users: [current_user, Fabricate(:user)])
+      end
+
+      before { channel_1.add(current_user) }
+
+      it "can toggle threading" do
+        chat_page.visit_channel_settings(channel_1)
+
+        expect {
+          PageObjects::Components::DToggleSwitch.new(".c-channel-settings__threading-switch").toggle
+          expect(toasts).to have_success(I18n.t("js.saved"))
+        }.to change { channel_1.reload.threading_enabled }.from(true).to(false)
       end
     end
   end

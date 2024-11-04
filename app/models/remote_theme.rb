@@ -31,6 +31,9 @@ class RemoteTheme < ActiveRecord::Base
   MAX_ASSET_FILE_SIZE = 8.megabytes
   MAX_THEME_FILE_COUNT = 1024
   MAX_THEME_SIZE = 256.megabytes
+  MAX_THEME_SCREENSHOT_FILE_SIZE = 1.megabyte
+  MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160] # 4K resolution
+  THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpg .jpeg .gif .png].freeze
 
   has_one :theme, autosave: false
   scope :joined_remotes,
@@ -250,15 +253,7 @@ class RemoteTheme < ActiveRecord::Base
 
     theme_info["assets"]&.each do |name, relative_path|
       if path = importer.real_path(relative_path)
-        new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
-        File.rename(path, new_path) # OptimizedImage has strict file name restrictions, so rename temporarily
-        upload =
-          UploadCreator.new(
-            File.open(new_path),
-            File.basename(relative_path),
-            for_theme: true,
-          ).create_for(theme.user_id)
-
+        upload = create_upload(path, relative_path)
         if !upload.errors.empty?
           raise ImportError,
                 I18n.t(
@@ -274,6 +269,67 @@ class RemoteTheme < ActiveRecord::Base
           type: :theme_upload_var,
           upload_id: upload.id,
         )
+      end
+    end
+
+    # TODO (martin): Until we are ready to roll this out more
+    # widely, let's avoid doing this work for most sites.
+    if SiteSetting.theme_download_screenshots
+      theme_info["screenshots"] = Array.wrap(theme_info["screenshots"]).take(2)
+      theme_info["screenshots"].each_with_index do |relative_path, idx|
+        if path = importer.real_path(relative_path)
+          if !THEME_SCREENSHOT_ALLOWED_FILE_TYPES.include?(File.extname(path))
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_type",
+                    file_name: File.basename(path),
+                    accepted_formats: THEME_SCREENSHOT_ALLOWED_FILE_TYPES.join(","),
+                  )
+          end
+
+          if File.size(path) > MAX_THEME_SCREENSHOT_FILE_SIZE
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_size",
+                    file_name: File.basename(path),
+                    max_size:
+                      ActiveSupport::NumberHelper.number_to_human_size(
+                        MAX_THEME_SCREENSHOT_FILE_SIZE,
+                      ),
+                  )
+          end
+
+          screenshot_width, screenshot_height = FastImage.size(path)
+          if (screenshot_width.nil? || screenshot_height.nil?) ||
+               screenshot_width > MAX_THEME_SCREENSHOT_DIMENSIONS[0] ||
+               screenshot_height > MAX_THEME_SCREENSHOT_DIMENSIONS[1]
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot_invalid_dimensions",
+                    file_name: File.basename(path),
+                    width: screenshot_width.to_i,
+                    height: screenshot_height.to_i,
+                    max_width: MAX_THEME_SCREENSHOT_DIMENSIONS[0],
+                    max_height: MAX_THEME_SCREENSHOT_DIMENSIONS[1],
+                  )
+          end
+
+          upload = create_upload(path, relative_path)
+          if !upload.errors.empty?
+            raise ImportError,
+                  I18n.t(
+                    "themes.import_error.screenshot",
+                    errors: upload.errors.full_messages.join(","),
+                  )
+          end
+
+          updated_fields << theme.set_field(
+            target: :common,
+            name: "screenshot_#{idx + 1}",
+            type: :theme_screenshot_upload_var,
+            upload_id: upload.id,
+          )
+        end
       end
     end
 
@@ -297,10 +353,12 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     ThemeModifierSet.modifiers.keys.each do |modifier_name|
-      theme.theme_modifier_set.public_send(
-        :"#{modifier_name}=",
-        theme_info.dig("modifiers", modifier_name.to_s),
-      )
+      value = theme_info.dig("modifiers", modifier_name.to_s)
+      if Hash === value && value["type"] == "setting"
+        theme.theme_modifier_set.add_theme_setting_modifier(modifier_name, value["value"])
+      else
+        theme.theme_modifier_set.public_send(:"#{modifier_name}=", value)
+      end
     end
 
     if !theme.theme_modifier_set.valid?
@@ -383,6 +441,8 @@ class RemoteTheme < ActiveRecord::Base
       self.transaction(&transaction_block)
     end
 
+    theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers
+
     self
   ensure
     begin
@@ -461,6 +521,19 @@ class RemoteTheme < ActiveRecord::Base
 
   def is_git?
     remote_url.present?
+  end
+
+  def create_upload(path, relative_path)
+    new_path = "#{File.dirname(path)}/#{SecureRandom.hex}#{File.extname(path)}"
+
+    # OptimizedImage has strict file name restrictions, so rename temporarily
+    File.rename(path, new_path)
+
+    UploadCreator.new(
+      File.open(new_path),
+      File.basename(relative_path),
+      for_theme: true,
+    ).create_for(theme.user_id)
   end
 end
 

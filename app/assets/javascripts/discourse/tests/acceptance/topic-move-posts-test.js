@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Topic move posts", function (needs) {
@@ -23,11 +19,12 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_11 .select-below");
 
-    assert.strictEqual(
-      query(".selected-posts .move-to-topic").innerText.trim(),
-      I18n.t("topic.move_to.action"),
-      "it should show the move to button"
-    );
+    assert
+      .dom(".selected-posts .move-to-topic")
+      .hasText(
+        I18n.t("topic.move_to.action"),
+        "it should show the move to button"
+      );
 
     await click(".selected-posts .move-to-topic");
 
@@ -68,10 +65,7 @@ acceptance("Topic move posts", function (needs) {
     await click(".selected-posts .move-to-topic");
     await fillIn(".choose-topic-modal #split-topic-name", "Existing topic");
     await click(".choose-topic-modal .d-modal__footer .btn-primary");
-    assert.strictEqual(
-      query("#modal-alert").innerText.trim(),
-      I18n.t("topic.move_to.error")
-    );
+    assert.dom("#modal-alert").hasText(I18n.t("topic.move_to.error"));
   });
 
   test("moving all posts", async function (assert) {
@@ -129,10 +123,11 @@ acceptance("Topic move posts", function (needs) {
 
     await fillIn(".choose-topic-modal #choose-topic-title", "Topic");
 
-    assert.notOk(
-      exists(".choose-topic-modal .checkbox-label"),
-      "there is no chronological order checkbox when no topic is selected"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .doesNotExist(
+        "there is no chronological order checkbox when no topic is selected"
+      );
 
     await click(".choose-topic-list .existing-topic:first-child input");
 
@@ -150,11 +145,12 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_1 .select-post");
 
-    assert.strictEqual(
-      query(".selected-posts .move-to-topic").innerText.trim(),
-      I18n.t("topic.move_to.action"),
-      "it should show the move to button"
-    );
+    assert
+      .dom(".selected-posts .move-to-topic")
+      .hasText(
+        I18n.t("topic.move_to.action"),
+        "it should show the move to button"
+      );
 
     await click(".selected-posts .move-to-topic");
 
@@ -186,11 +182,12 @@ acceptance("Topic move posts", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_2 .select-below");
 
-    assert.strictEqual(
-      query(".selected-posts .move-to-topic").innerText.trim(),
-      I18n.t("topic.move_to.action"),
-      "it should show the move to button"
-    );
+    assert
+      .dom(".selected-posts .move-to-topic")
+      .hasText(
+        I18n.t("topic.move_to.action"),
+        "it should show the move to button"
+      );
 
     await click(".selected-posts .move-to-topic");
 
@@ -221,10 +218,11 @@ acceptance("Topic move posts", function (needs) {
 
     await fillIn(".choose-topic-modal #choose-message-title", "Topic");
 
-    assert.notOk(
-      exists(".choose-topic-modal .checkbox-label"),
-      "there is no chronological order checkbox when no message is selected"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .doesNotExist(
+        "there is no chronological order checkbox when no message is selected"
+      );
 
     await click(".choose-topic-modal .existing-message:first-of-type input");
 

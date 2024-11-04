@@ -205,6 +205,12 @@ sq:
             ip_address:
               blocked: "New registrations are not allowed from your IP address."
               max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+        user_password:
+          attributes:
+            password:
+              common: "është një ndër 10000 fjalëkalimet më të përdorur. Ju ftojmë të përdorni një më të sigurtë."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
         color_scheme_color:
           attributes:
             hex:
@@ -439,6 +445,8 @@ sq:
       yaxis: "Dit"
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
+    site_traffic:
+      yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -539,6 +547,8 @@ sq:
       xaxis: "Day"
     page_view_total_reqs:
       xaxis: "Day"
+    page_view_legacy_total_reqs:
+      xaxis: "Dit"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ditë"
     page_view_anon_mobile_reqs:
@@ -660,7 +670,6 @@ sq:
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."

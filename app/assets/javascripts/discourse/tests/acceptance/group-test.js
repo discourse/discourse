@@ -28,10 +28,9 @@ acceptance("Group - Anonymous", function (needs) {
   test("Anonymous Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Messages']"),
-      "it does not show group messages navigation link"
-    );
+    assert
+      .dom(".nav-pills li a[title='Messages']")
+      .doesNotExist("it does not show group messages navigation link");
 
     await click(".nav-pills li a[title='Activity']");
 
@@ -45,14 +44,12 @@ acceptance("Group - Anonymous", function (needs) {
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
     assert.ok(exists(".user-stream-item"), "it lists stream items");
-    assert.ok(
-      !exists(".nav-pills li a[title='Edit Group']"),
-      "it should not show messages tab if user is not admin"
-    );
-    assert.ok(
-      !exists(".nav-pills li a[title='Logs']"),
-      "it should not show Logs tab if user is not admin"
-    );
+    assert
+      .dom(".nav-pills li a[title='Edit Group']")
+      .doesNotExist("it should not show messages tab if user is not admin");
+    assert
+      .dom(".nav-pills li a[title='Logs']")
+      .doesNotExist("it should not show Logs tab if user is not admin");
     assert.ok(exists(".user-stream-item"), "it lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
@@ -72,19 +69,17 @@ acceptance("Group - Anonymous", function (needs) {
 
     await groupDropdown.expand();
 
-    assert.ok(
-      !exists(".group-dropdown-filter"),
-      "it should not display the default header"
-    );
+    assert
+      .dom(".group-dropdown-filter")
+      .doesNotExist("it should not display the default header");
   });
 
   test("Anonymous Viewing Automatic Group", async function (assert) {
     await visit("/g/moderators");
 
-    assert.ok(
-      !exists(".nav-pills li a[title='Manage']"),
-      "it does not show group messages navigation link"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .doesNotExist("it does not show group messages navigation link");
   });
 });
 
@@ -190,10 +185,11 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g");
     await click(".group-index-request");
 
-    assert.strictEqual(
-      query(".d-modal__header .d-modal__title-text").innerText.trim(),
-      I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
-    );
+    assert
+      .dom(".d-modal__header .d-modal__title-text")
+      .hasText(
+        I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+      );
 
     assert.strictEqual(
       query(".request-group-membership-form textarea").value,
@@ -202,10 +198,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".d-modal__footer .btn-primary");
 
-    assert.strictEqual(
-      query(".fancy-title").innerText.trim(),
-      "Internationalization / localization"
-    );
+    assert.dom(".fancy-title").hasText("Internationalization / localization");
 
     await visit("/g/discourse");
 
@@ -226,22 +219,24 @@ acceptance("Group - Authenticated", function (needs) {
     await visit("/g/alternative-group");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.strictEqual(
-      query("span.empty-state-title").innerText.trim(),
-      I18n.t("no_group_messages_title"),
-      "it should display the right text"
-    );
+    assert
+      .dom("span.empty-state-title")
+      .hasText(
+        I18n.t("no_group_messages_title"),
+        "it should display the right text"
+      );
   });
 
   test("Admin viewing group messages", async function (assert) {
     await visit("/g/discourse");
     await click(".nav-pills li a[title='Messages']");
 
-    assert.strictEqual(
-      query(".topic-list-item .link-top-line").innerText.trim(),
-      "This is a private message 1",
-      "it should display the list of group topics"
-    );
+    assert
+      .dom(".topic-list-item .link-top-line")
+      .hasText(
+        "This is a private message 1",
+        "it should display the list of group topics"
+      );
 
     await click("#search-button");
     await fillIn("#search-term", "something");
@@ -266,11 +261,9 @@ acceptance("Group - Authenticated", function (needs) {
       1,
       "it displays show group message button"
     );
-    assert.strictEqual(
-      query(".group-info-name").innerText,
-      "Awesome Team",
-      "it should display the group name"
-    );
+    assert
+      .dom(".group-info-name")
+      .hasText("Awesome Team", "it should display the group name");
 
     await click(".group-details-button button.btn-danger");
 
@@ -303,10 +296,9 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-members-add.btn");
 
-    assert.ok(
-      exists(".group-add-members-modal #set-owner"),
-      "it allows moderators to set group owners"
-    );
+    assert
+      .dom(".group-add-members-modal #set-owner")
+      .exists("it allows moderators to set group owners");
 
     await click(".group-add-members-modal .modal-close");
 

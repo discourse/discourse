@@ -3,7 +3,6 @@ import { test } from "qunit";
 import { setCaretPosition } from "discourse/lib/utilities";
 import {
   acceptance,
-  exists,
   fakeTime,
   loggedInUser,
   query,
@@ -116,18 +115,13 @@ acceptance("Composer - editor mentions", function (needs) {
 
     await simulateKeys(editor, "@u");
 
-    assert.ok(
-      exists(`.autocomplete .emoji[alt='${status.emoji}']`),
-      "status emoji is shown"
-    );
+    assert
+      .dom(`.autocomplete .emoji[alt='${status.emoji}']`)
+      .exists("status emoji is shown");
 
-    assert.equal(
-      query(
-        ".autocomplete .user-status-message-description"
-      ).textContent.trim(),
-      status.description,
-      "status description is shown"
-    );
+    assert
+      .dom(".autocomplete .user-status-message-description")
+      .hasText(status.description, "status description is shown");
   });
 
   test("metadata matches are moved to the end", async function (assert) {

@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::UpdateChannel do
-  subject(:result) { described_class.call(guardian: guardian, channel_id: channel.id, **params) }
+  subject(:result) { described_class.call(params:, **dependencies) }
 
   fab!(:channel) { Fabricate(:chat_channel) }
   fab!(:current_user) { Fabricate(:admin) }
+  fab!(:upload) { Fabricate(:upload) }
 
   let(:guardian) { Guardian.new(current_user) }
   let(:params) do
     {
+      channel_id: channel.id,
       name: "cool channel",
       description: "a channel description",
       slug: "snail",
       allow_channel_wide_mentions: true,
       auto_join_users: false,
+      icon_upload_id: upload.id,
     }
   end
+  let(:dependencies) { { guardian: } }
 
   context "when the user cannot edit the channel" do
     fab!(:current_user) { Fabricate(:user) }
@@ -41,6 +45,7 @@ RSpec.describe Chat::UpdateChannel do
           description: "a channel description",
           allow_channel_wide_mentions: true,
           auto_join_users: false,
+          icon_upload_id: upload.id,
         )
       end
 

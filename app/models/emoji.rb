@@ -4,13 +4,13 @@ class Emoji
   # update this to clear the cache
   EMOJI_VERSION = "12"
 
-  FITZPATRICK_SCALE ||= %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
+  FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
 
-  DEFAULT_GROUP ||= "default"
+  DEFAULT_GROUP = "default"
 
   include ActiveModel::SerializerSupport
 
-  attr_accessor :name, :url, :tonable, :group, :search_aliases
+  attr_accessor :name, :url, :tonable, :group, :search_aliases, :created_by
 
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
@@ -190,6 +190,7 @@ class Emoji
             e.name = emoji.name
             e.url = emoji.upload&.url
             e.group = emoji.group || DEFAULT_GROUP
+            e.created_by = User.where(id: emoji.user_id).pick(:username)
           end
         end
     end

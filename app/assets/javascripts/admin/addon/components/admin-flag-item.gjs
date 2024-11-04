@@ -100,41 +100,50 @@ export default class AdminFlagItem extends Component {
       message: i18n("admin.config_areas.flags.delete_confirm", {
         name: this.args.flag.name,
       }),
-      didConfirm: () => {
-        this.args.deleteFlagCallback(this.args.flag).finally(() => {
+      didConfirm: async () => {
+        try {
+          await this.args.deleteFlagCallback(this.args.flag);
           this.isSaved = true;
-        });
+          this.dMenu.close();
+        } catch (error) {
+          popupAjaxError(error);
+        }
       },
       didCancel: () => {
         this.isSaved = true;
+        this.dMenu.close();
       },
     });
-    this.dMenu.close();
   }
 
   <template>
     <tr
       class={{concatClass
-        "admin-flag-item"
+        "d-admin-row__content admin-flag-item"
         @flag.name_key
         (if this.isSaved "saved")
       }}
     >
-      <td>
-        <p class="admin-flag-item__name">{{@flag.name}}</p>
-        <p class="admin-flag-item__description">{{htmlSafe
+      <td class="d-admin-row__overview">
+        <div
+          class="d-admin-row__overview-name admin-flag-item__name"
+        >{{@flag.name}}</div>
+        <div class="d-admin-row__overview-about">{{htmlSafe
             @flag.description
-          }}</p>
+          }}</div>
       </td>
-      <td>
+      <td class="d-admin-row__detail">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "admin.config_areas.flags.enabled"}}
+        </div>
         <DToggleSwitch
           @state={{this.enabled}}
           class="admin-flag-item__toggle {{@flag.name_key}}"
           {{on "click" (fn this.toggleFlagEnabled @flag)}}
         />
       </td>
-      <td>
-        <div class="admin-flag-item__options admin-table-row-controls">
+      <td class="d-admin-row__controls">
+        <div class="d-admin-row__controls-options">
 
           <DButton
             class="btn-small admin-flag-item__edit"

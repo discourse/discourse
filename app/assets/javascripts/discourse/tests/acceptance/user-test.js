@@ -88,19 +88,17 @@ acceptance("User Routes", function (needs) {
 
     await visit("/u/charlie/summary");
 
-    assert.notOk(
-      exists(".user-nav > .user-nav__notifications"),
-      "does not have the notifications tab"
-    );
+    assert
+      .dom(".user-nav > .user-nav__notifications")
+      .doesNotExist("does not have the notifications tab");
 
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/u/charlie/summary");
 
-    assert.ok(
-      exists(".user-nav > .user-nav__notifications"),
-      "has the notifications tab"
-    );
+    assert
+      .dom(".user-nav > .user-nav__notifications")
+      .exists("has the notifications tab");
   });
 
   test("Root URL - Viewing Self", async function (assert) {
@@ -120,16 +118,14 @@ acceptance("User Routes", function (needs) {
   test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.ok(exists(".user-stream"), "has drafts stream");
-    assert.ok(
-      exists(".user-stream .user-stream-item-draft-actions"),
-      "has draft action buttons"
-    );
+    assert
+      .dom(".user-stream .user-stream-item-draft-actions")
+      .exists("has draft action buttons");
 
     await click(".user-stream button.resume-draft:nth-of-type(1)");
-    assert.ok(
-      exists(".d-editor-input"),
-      "composer is visible after resuming a draft"
-    );
+    assert
+      .dom(".d-editor-input")
+      .exists("composer is visible after resuming a draft");
   });
 });
 
@@ -251,7 +247,7 @@ acceptance("User - Notification level dropdown visibility", function (needs) {
 
   test("Notification level button is not rendered for user who cannot mute or ignore another user", async function (assert) {
     await visit("/u/charlie");
-    assert.notOk(exists(".user-notifications-dropdown"));
+    assert.dom(".user-notifications-dropdown").doesNotExist();
   });
 });
 
@@ -335,7 +331,7 @@ acceptance(
       );
 
       await notificationLevelDropdown.selectRowByValue("changeToIgnored");
-      assert.ok(exists(".ignore-duration-with-username-modal"));
+      assert.dom(".ignore-duration-with-username-modal").exists();
 
       const durationDropdown = selectKit(
         ".ignore-duration-with-username-modal .future-date-input-selector"
@@ -391,16 +387,13 @@ acceptance("User - Logout", function (needs) {
     await visit("/u/eviltrout");
     await publishToMessageBus("/logout/19");
 
-    assert.ok(exists(".dialog-body"));
-    assert.ok(
-      !exists(".dialog-footer .btn-default"),
-      "no cancel button present"
-    );
-    assert.strictEqual(
-      query(".dialog-footer .btn-primary").innerText,
-      I18n.t("house"),
-      "primary dialog button is present"
-    );
+    assert.dom(".dialog-body").exists();
+    assert
+      .dom(".dialog-footer .btn-default")
+      .doesNotExist("no cancel button present");
+    assert
+      .dom(".dialog-footer .btn-primary")
+      .hasText(I18n.t("home"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });

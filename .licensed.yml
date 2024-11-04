@@ -45,6 +45,7 @@ reviewed:
     - concurrent-ruby # MIT
     - css_parser # MIT
     - drb # BSD-2-Clause
+    - dry-initializer # MIT
     - excon # MIT
     - faraday-em_http # MIT
     - faraday-em_synchrony # MIT

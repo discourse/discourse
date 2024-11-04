@@ -1,15 +1,12 @@
 {{body-class "invite-page"}}
-{{hide-application-header-buttons "search" "login" "signup"}}
+{{hide-application-header-buttons "search" "login" "signup" "menu"}}
 {{hide-application-sidebar}}
 <section>
   <div class="container invites-show clearfix">
-    {{#unless this.externalAuthsOnly}}
+    {{#unless (or this.externalAuthsOnly this.existingUserId)}}
       <SignupProgressBar @step={{if this.successMessage "activate" "signup"}} />
     {{/unless}}
-    <WelcomeHeader
-      @header={{this.welcomeTitle}}
-      @subheader={{unless this.successMessage this.subheaderMessage}}
-    />
+    <WelcomeHeader @header={{this.welcomeTitle}} />
 
     <div class={{if this.successMessage "invite-success" "invite-form"}}>
       <div class="col-form">
@@ -85,9 +82,9 @@
                     id="account-email-validation"
                   />
                   {{#unless this.emailValidation.reason}}
-                    <div class="instructions">{{i18n
-                        "user.email.instructions"
-                      }}</div>
+                    <div class="instructions">
+                      {{i18n "user.email.instructions"}}
+                    </div>
                   {{/unless}}
                 </div>
               {{/if}}
@@ -108,11 +105,6 @@
                   @validation={{this.usernameValidation}}
                   id="username-validation"
                 />
-                {{#unless this.usernameValidation.reason}}
-                  <div class="instructions">{{i18n
-                      "user.username.instructions"
-                    }}</div>
-                {{/unless}}
               </div>
 
               {{#unless this.externalAuthsOnly}}
@@ -134,11 +126,6 @@
                         @validation={{this.passwordValidation}}
                         id="password-validation"
                       />
-                      {{#unless this.passwordValidation.reason}}
-                        <span
-                          class="more-info"
-                        >{{this.passwordInstructions}}</span>
-                      {{/unless}}
                       <div
                         class="caps-lock-warning
                           {{unless this.capsLockOn 'hidden'}}"
@@ -174,7 +161,10 @@
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "invites.name_label"}}
                   </label>
-                  <div class="instructions">{{this.nameInstructions}}</div>
+                  <InputTip
+                    @validation={{this.nameValidation}}
+                    id="fullname-validation"
+                  />
                 </div>
               {{/if}}
 

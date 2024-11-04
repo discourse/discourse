@@ -72,6 +72,7 @@ class DiscoursePluginRegistry
   define_register :demon_processes, Set
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
+  define_register :site_setting_areas, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields

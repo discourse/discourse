@@ -22,6 +22,7 @@ import {
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
+import { clearRegisteredTabs } from "discourse/components/more-topics";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
@@ -29,17 +30,18 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
-import { clearCustomStats as clearLegacyAboutPageStats } from "discourse/controllers/about";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
+import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
+  clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/lib/keyboard-shortcuts";
@@ -207,6 +209,7 @@ export function testCleanup(container, app) {
   resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
+  clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
   _clearSnapshots();
@@ -249,8 +252,9 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
-  clearLegacyAboutPageStats();
   resetWidgetCleanCallbacks();
+  clearPluginHeaderActionComponents();
+  clearRegisteredTabs();
 }
 
 function cleanupCssGeneratorTags() {
@@ -436,43 +440,12 @@ export function acceptance(name, optionsOrCallback) {
   }
 }
 
-export function controllerFor(controller, model) {
-  deprecated(
-    'controllerFor is deprecated. Use the standard `getOwner(this).lookup("controller:NAME")` instead',
-    {
-      id: "discourse.controller-for",
-      since: "3.0.0.beta14",
-    }
-  );
-
-  controller = getOwnerWithFallback(this).lookup("controller:" + controller);
-  if (model) {
-    controller.set("model", model);
-  }
-  return controller;
-}
-
 export function fixture(selector) {
   if (selector) {
     return document.querySelector(`#qunit-fixture ${selector}`);
   }
   return document.querySelector("#qunit-fixture");
 }
-
-QUnit.assert.not = function (actual, message) {
-  deprecated("assert.not() is deprecated. Use assert.false() instead.", {
-    since: "2.9.0.beta1",
-    dropFrom: "2.10.0.beta1",
-    id: "discourse.qunit.assert-not",
-  });
-
-  this.pushResult({
-    result: !actual,
-    actual,
-    expected: !actual,
-    message,
-  });
-};
 
 QUnit.assert.blank = function (actual, message) {
   this.pushResult({

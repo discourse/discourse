@@ -546,7 +546,8 @@ class Topic < ActiveRecord::Base
 
   # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since, opts = nil)
-    opts = opts || {}
+    opts ||= {}
+
     period = ListController.best_period_for(since)
 
     topics =
@@ -589,30 +590,29 @@ class Topic < ActiveRecord::Base
     # Remove category topics
     topics = topics.where.not(id: Category.select(:topic_id).where.not(topic_id: nil))
 
+    # Remove suppressed categories
+    if SiteSetting.digest_suppress_categories.present?
+      topics =
+        topics.where.not(category_id: SiteSetting.digest_suppress_categories.split("|").map(&:to_i))
+    end
+
+    # Remove suppressed tags
+    if SiteSetting.digest_suppress_tags.present?
+      tag_ids = Tag.where_name(SiteSetting.digest_suppress_tags.split("|")).pluck(:id)
+
+      topics =
+        topics.where.not(id: TopicTag.where(tag_id: tag_ids).select(:topic_id)) if tag_ids.present?
+    end
+
     # Remove muted and shared draft categories
     remove_category_ids =
       CategoryUser.where(
         user_id: user.id,
         notification_level: CategoryUser.notification_levels[:muted],
       ).pluck(:category_id)
-    if SiteSetting.digest_suppress_categories.present?
-      topics =
-        topics.where(
-          "topics.category_id NOT IN (?)",
-          SiteSetting.digest_suppress_categories.split("|").map(&:to_i),
-        )
-    end
-    if SiteSetting.digest_suppress_tags.present?
-      tag_ids = Tag.where_name(SiteSetting.digest_suppress_tags.split("|")).pluck(:id)
-      if tag_ids.present?
-        topics =
-          topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
-            "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
-            tag_ids,
-          )
-      end
-    end
+
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
+
     if remove_category_ids.present?
       remove_category_ids.uniq!
       topics =
@@ -697,7 +697,7 @@ class Topic < ActiveRecord::Base
     !self.closed?
   end
 
-  MAX_SIMILAR_BODY_LENGTH ||= 200
+  MAX_SIMILAR_BODY_LENGTH = 200
 
   def self.similar_to(title, raw, user = nil)
     return [] if SiteSetting.max_similar_results == 0
@@ -881,7 +881,8 @@ class Topic < ActiveRecord::Base
       WHERE
         topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND (
+        Y.topic_id = topics.id AND
+        Z.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
@@ -926,7 +927,8 @@ class Topic < ActiveRecord::Base
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND (
+        Y.topic_id = topics.id AND 
+        Z.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
@@ -1728,7 +1730,7 @@ class Topic < ActiveRecord::Base
     DB.exec(sql, user_id: user.id, topic_id: id) > 0
   end
 
-  TIME_TO_FIRST_RESPONSE_SQL ||= <<-SQL
+  TIME_TO_FIRST_RESPONSE_SQL = <<-SQL
     SELECT AVG(t.hours)::float AS "hours", t.created_at AS "date"
     FROM (
       SELECT t.id, t.created_at::date AS created_at, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
@@ -1741,7 +1743,7 @@ class Topic < ActiveRecord::Base
     ORDER BY t.created_at
   SQL
 
-  TIME_TO_FIRST_RESPONSE_TOTAL_SQL ||= <<-SQL
+  TIME_TO_FIRST_RESPONSE_TOTAL_SQL = <<-SQL
     SELECT AVG(t.hours)::float AS "hours"
     FROM (
       SELECT t.id, EXTRACT(EPOCH FROM MIN(p.created_at) - t.created_at)::float / 3600.0 AS "hours"
@@ -1787,7 +1789,7 @@ class Topic < ActiveRecord::Base
     total.first["hours"].to_f.round(2)
   end
 
-  WITH_NO_RESPONSE_SQL ||= <<-SQL
+  WITH_NO_RESPONSE_SQL = <<-SQL
     SELECT COUNT(*) as count, tt.created_at AS "date"
     FROM (
       SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
@@ -1822,7 +1824,7 @@ class Topic < ActiveRecord::Base
     builder.query_hash
   end
 
-  WITH_NO_RESPONSE_TOTAL_SQL ||= <<-SQL
+  WITH_NO_RESPONSE_TOTAL_SQL = <<-SQL
     SELECT COUNT(*) as count
     FROM (
       SELECT t.id, MIN(p.post_number) first_reply

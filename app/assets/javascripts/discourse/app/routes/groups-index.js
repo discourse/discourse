@@ -14,11 +14,13 @@ export default class GroupsIndexRoute extends DiscourseRoute {
     return I18n.t("groups.index.title");
   }
 
-  model(params) {
-    return params;
+  async model(params) {
+    const groups = await this.store.findAll("group", params);
+    return { groups };
   }
 
-  setupController(controller, params) {
-    controller.loadGroups(params);
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.set("groups", model.groups);
   }
 }

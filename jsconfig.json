@@ -33,6 +33,10 @@
       "dialog-holder/*": [
         "./app/assets/javascripts/dialog-holder/addon/*"
       ],
+      "discourse/plugins/automation/*": [
+        "./plugins/automation/assets/javascripts/*",
+        "./plugins/automation/test/javascripts/*"
+      ],
       "discourse/plugins/chat/*": [
         "./plugins/chat/assets/javascripts/*",
         "./plugins/chat/test/javascripts/*"
@@ -61,9 +65,17 @@
         "./plugins/discourse-presence/assets/javascripts/*",
         "./plugins/discourse-presence/test/javascripts/*"
       ],
+      "discourse/plugins/footnote/*": [
+        "./plugins/footnote/assets/javascripts/*",
+        "./plugins/footnote/test/javascripts/*"
+      ],
       "discourse/plugins/poll/*": [
         "./plugins/poll/assets/javascripts/*",
         "./plugins/poll/test/javascripts/*"
+      ],
+      "discourse/plugins/spoiler-alert/*": [
+        "./plugins/spoiler-alert/assets/javascripts/*",
+        "./plugins/spoiler-alert/test/javascripts/*"
       ],
       "discourse/plugins/styleguide/*": [
         "./plugins/styleguide/assets/javascripts/*",
@@ -81,6 +93,8 @@
     "./app/assets/javascripts/float-kit/addon",
     "./app/assets/javascripts/truth-helpers/addon",
     "./app/assets/javascripts/dialog-holder/addon",
+    "./plugins/automation/assets/javascripts",
+    "./plugins/automation/test/javascripts",
     "./plugins/chat/assets/javascripts",
     "./plugins/chat/test/javascripts",
     "./plugins/checklist/assets/javascripts",
@@ -95,9 +109,24 @@
     "./plugins/discourse-narrative-bot/test/javascripts",
     "./plugins/discourse-presence/assets/javascripts",
     "./plugins/discourse-presence/test/javascripts",
+    "./plugins/footnote/assets/javascripts",
+    "./plugins/footnote/test/javascripts",
     "./plugins/poll/assets/javascripts",
     "./plugins/poll/test/javascripts",
+    "./plugins/spoiler-alert/assets/javascripts",
+    "./plugins/spoiler-alert/test/javascripts",
     "./plugins/styleguide/assets/javascripts",
     "./plugins/styleguide/test/javascripts"
-  ]
+  ],
+  "exclude": [
+    "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
+    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs"
+  ],
+  "glint": {
+    "environment": [
+      "ember-loose",
+      "ember-template-imports"
+    ],
+    "checkStandaloneTemplates": false
+  }
 }

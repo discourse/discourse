@@ -14,7 +14,6 @@ sv:
       select_trigger: Välj en utlösare
       confirm_automation_reset: Den här åtgärden återställer skriptet och utlösningsalternativen, det nya tillståndet sparas, vill du fortsätta?
       confirm_automation_trigger: Denna åtgärd kommer att utlösa automatisering, vill du fortsätta?
-      no_automation_yet: Du har inte skapat någon automatisering ännu.
       edit_automation:
         trigger_section:
           forced: Denna utlösare tvingas av skript.
@@ -142,10 +141,14 @@ sv:
             valid_trust_levels:
               label: Giltiga förtroendenivåer
               description: Kommer att utlösas endast om inlägg skapas av användare inom dessa förtroendenivåer, standard är samtliga förtroendenivåer
+            restricted_tags:
+              label: Taggar
             restricted_category:
               label: Kategori
             restricted_group:
               label: Grupp
+            restricted_groups:
+              label: Grupper
           created: Skapade
         category_created_edited:
           fields:

@@ -8,9 +8,11 @@ ro:
   js:
     discourse_automation:
       create: Creează
+      no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.
+      filter_placeholder: Filtrează după nume sau descriere...
       fields:
         user:
-          label: Utilizatori
+          label: Utilizator
         pm:
           title:
             label: Titlu
@@ -41,7 +43,7 @@ ro:
             minute: minut
             hour: oră
             day: zi
-            week: săptămană
+            week: săptămână
             month: lună
             year: an
           fields:
@@ -56,13 +58,21 @@ ro:
         topic:
           fields:
             restricted_topic:
-              label: ID discuție
+              label: ID subiect
         post_created_edited:
           fields:
+            original_post_only:
+              label: Doar articolul original
+              description: Se va declanșa doar dacă articolul este articolul original în subiect
+            restricted_tags:
+              label: Etichete
+              description: Opțional, se va declanșa doar dacă articolul are oricare dintre aceste etichete
             restricted_category:
               label: Categorie
             restricted_group:
               label: Grup
+            restricted_groups:
+              label: Grupuri
             skip_via_email:
               label: "Omite prin email"
               description: "Omite declanșatorul dacă articolul a fost creat prin email"
@@ -95,8 +105,11 @@ ro:
               label: Etichete
         post:
           fields:
+            creator:
+              label: Creator
+              updated_user_context: Utilizatorul actualizat
             topic:
-              label: ID discuție
+              label: ID subiect
         topic:
           fields:
             creator:
@@ -127,23 +140,24 @@ ro:
         suspend_user_by_email:
           fields:
             actor:
-              label: Utilizatori
+              label: Utilizator
         pin_topic:
           fields:
             pinnable_topic:
-              label: ID discuție
+              label: ID subiect
         banner_topic:
           fields:
             topic_id:
-              label: ID discuție
+              label: ID subiect
             user:
-              label: Utilizatori
+              label: Utilizator
         close_topic:
           fields:
             topic:
-              label: ID discuție
+              label: ID subiect
             user:
-              label: Utilizatori
+              label: Utilizator
+      unnamed_automation: "Automatizare fără nume"
       models:
         trigger:
           name:

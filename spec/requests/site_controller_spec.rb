@@ -46,6 +46,8 @@ RSpec.describe SiteController do
   end
 
   describe "#statistics" do
+    after { DiscoursePluginRegistry.reset! }
+
     it "is visible for sites requiring login" do
       SiteSetting.login_required = true
       SiteSetting.share_anonymized_statistics = true

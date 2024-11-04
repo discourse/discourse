@@ -14,7 +14,6 @@ it:
       select_trigger: Seleziona evento di attivazione
       confirm_automation_reset: Questa azione ripristinerà script e le opzioni di attivazione e il nuovo stato verrà salvato. Vuoi procedere?
       confirm_automation_trigger: Questa azione attiverà l'automazione, vuoi procedere?
-      no_automation_yet: Non hai ancora creato alcuna automazione.
       edit_automation:
         trigger_section:
           forced: Questa azione di attivazione è forzata dallo script.
@@ -150,12 +149,17 @@ it:
             valid_trust_levels:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
+            restricted_tags:
+              label: Etichette
+              description: Facoltativo, l'attivazione avverrà solo se il messaggio ha una di queste etichette
             restricted_category:
               label: Categoria
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del messaggio rientra in questa categoria
             restricted_group:
               label: Gruppo
               description: Facoltativo, l'attivazione avverrà solo se l'argomento del post è un messaggio privato nella posta in arrivo di questo gruppo
+            restricted_groups:
+              label: Gruppi
             ignore_group_members:
               label: Ignora i membri del gruppo
               description: Salta l'attivazione se il mittente è un membro del gruppo specificato sopra

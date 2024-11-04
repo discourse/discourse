@@ -2,12 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
@@ -56,10 +51,11 @@ module("Integration | Component | themes-list", function (hooks) {
       "components tab is not active"
     );
 
-    assert.notOk(
-      exists(".inactive-indicator"),
-      "there is no inactive themes separator when all themes are inactive"
-    );
+    assert
+      .dom(".inactive-indicator")
+      .doesNotExist(
+        "there is no inactive themes separator when all themes are inactive"
+      );
     assert.strictEqual(
       count(".themes-list-container__item .info"),
       5,
@@ -85,10 +81,11 @@ module("Integration | Component | themes-list", function (hooks) {
 
     this.themes.forEach((theme) => theme.set("user_selectable", true));
     this.set("themes", this.themes);
-    assert.notOk(
-      exists(".inactive-indicator"),
-      "there is no inactive themes separator when all themes are user-selectable"
-    );
+    assert
+      .dom(".inactive-indicator")
+      .doesNotExist(
+        "there is no inactive themes separator when all themes are user-selectable"
+      );
 
     this.set("themes", []);
     assert.strictEqual(
@@ -96,11 +93,12 @@ module("Integration | Component | themes-list", function (hooks) {
       1,
       "shows one entry with a message when there is nothing to display"
     );
-    assert.strictEqual(
-      query(".themes-list-container__item span.empty").innerText.trim(),
-      I18n.t("admin.customize.theme.empty"),
-      "displays the right message"
-    );
+    assert
+      .dom(".themes-list-container__item span.empty")
+      .hasText(
+        I18n.t("admin.customize.theme.empty"),
+        "displays the right message"
+      );
   });
 
   test("current tab is components", async function (assert) {
@@ -134,7 +132,7 @@ module("Integration | Component | themes-list", function (hooks) {
       "themes tab is not active"
     );
 
-    assert.notOk(exists(".inactive-indicator"), "there is no separator");
+    assert.dom(".inactive-indicator").doesNotExist("there is no separator");
     assert.strictEqual(
       count(".themes-list-container__item .info"),
       5,
@@ -147,11 +145,12 @@ module("Integration | Component | themes-list", function (hooks) {
       1,
       "shows one entry with a message when there is nothing to display"
     );
-    assert.strictEqual(
-      query(".themes-list-container__item span.empty").innerText.trim(),
-      I18n.t("admin.customize.theme.empty"),
-      "displays the right message"
-    );
+    assert
+      .dom(".themes-list-container__item span.empty")
+      .hasText(
+        I18n.t("admin.customize.theme.empty"),
+        "displays the right message"
+      );
   });
 
   test("themes search is not visible when there are less than 10 themes", async function (assert) {
@@ -165,10 +164,9 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(
-      !exists(".themes-list-search"),
-      "search input not shown when we have fewer than 10 themes"
-    );
+    assert
+      .dom(".themes-list-search")
+      .doesNotExist("search input not shown when we have fewer than 10 themes");
   });
 
   test("themes search keeps themes whose names include the search term", async function (assert) {
@@ -184,7 +182,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-search__input"));
+    assert.dom(".themes-list-search__input").exists();
     await fillIn(".themes-list-search__input", "  oSAma ");
     assert.deepEqual(
       [...queryAll(".themes-list-container__item .info .name")].map((node) =>
@@ -237,7 +235,7 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{(array)}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.ok(exists(".themes-list-filter__input"));
+    assert.dom(".themes-list-filter__input").exists();
     assert.deepEqual(themeNames(), [
       "Theme enabled 1",
       "Theme enabled 2",
@@ -327,7 +325,7 @@ module("Integration | Component | themes-list", function (hooks) {
         .filter((name) => !name.includes("OtherComponent"));
     }
 
-    assert.ok(exists(".themes-list-filter__input"));
+    assert.dom(".themes-list-filter__input").exists();
     assert.deepEqual(componentNames(), [
       "Component used 1",
       "Component used 2",

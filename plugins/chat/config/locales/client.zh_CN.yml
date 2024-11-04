@@ -49,7 +49,6 @@ zh_CN:
       deleted_chat_username: 已删除
       dates:
         yesterday: "昨天"
-        time_tiny: "h:mm"
       all_loaded: "显示所有消息"
       already_enabled: "此话题已启用聊天。请刷新。"
       disabled_for_topic: "此话题已禁用聊天。"
@@ -430,10 +429,8 @@ zh_CN:
         auto_join_users_info: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问%{category}类别，请将其添加到此频道。"
         auto_join_users_info_no_category: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问所选类别，请将其添加到此频道。"
         auto_join_users_warning: "所有不是此频道成员且有权访问“%{category}”类别的用户都将加入。确定吗？"
-        desktop_notification_level: "桌面通知"
         follow: "加入"
         followed: "已加入"
-        mobile_notification_level: "移动推送通知"
         mute: "将频道设为免打扰"
         threading_enabled: "已启用"
         threading_disabled: "已禁用"

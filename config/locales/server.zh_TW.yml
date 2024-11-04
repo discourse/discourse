@@ -397,6 +397,15 @@ zh_TW:
             ip_address:
               blocked: "不允許從你的 IP 地址註冊新使用者。"
               max_new_accounts_per_registration_ip: "不允許從你的 IP 地址註冊新使用者（達到上限）。聯繫一個管理人員。"
+        user_password:
+          attributes:
+            password:
+              common: "這個密碼是 10000 個最常用密碼之一，請使用一個更安全的密碼"
+              same_as_username: "與你的使用者名稱相同。請使用其他更安全的密碼。"
+              same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
+              same_as_current: "與您目前的密碼相同。"
+              same_as_name: "和你的名字一樣"
+              unique_characters: "你的密碼有太多重複字元了。請使用其他更安全的密碼。"
         user_email:
           attributes:
             user_id:
@@ -773,13 +782,13 @@ zh_TW:
         tl4_reached: "達到信任等級 4"
       yaxis: "天"
     consolidated_page_views:
-      title: "綜合瀏覽量"
+      title_legacy: "綜合瀏覽量"
       xaxis:
         page_view_crawler: "爬蟲"
         page_view_anon: "匿名的使用者"
         page_view_logged_in: "登入的使用者"
       yaxis: "天"
-      description: "已登錄的使用者、匿名使用者和爬蟲瀏覽量"
+      description_legacy: "已登錄的使用者、匿名使用者和爬蟲瀏覽量"
       labels:
         post: 貼文
         editor: 編輯者
@@ -791,6 +800,8 @@ zh_TW:
         user_api: "使用者 API"
       yaxis: "天"
     consolidated_page_views_browser_detection:
+      yaxis: "天"
+    site_traffic:
       yaxis: "天"
     dau_by_mau:
       title: "DAU/MAU"
@@ -940,6 +951,9 @@ zh_TW:
       xaxis: "天"
       yaxis: "總瀏覽量"
       description: "來自所有訪客新的頁面瀏覽次數。"
+    page_view_legacy_total_reqs:
+      xaxis: "天"
+      yaxis: "總瀏覽量"
     page_view_logged_in_mobile_reqs:
       title: "已登錄頁面訪問"
       xaxis: "天"
@@ -1057,8 +1071,17 @@ zh_TW:
       host_names: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
       queue_size: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
       ram: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
+      s3_upload_config: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">網站設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
+      s3_backup_config: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
+      image_magick: '伺服器被設置為給尺寸較大的圖片縮圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
+      failing_emails: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
       subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
+      email_polling_errored_recently:
+        other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='%{base_path}/logs' target='_blank'>日誌</a>尋找詳情。"
       missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
+      poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
+      poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
+      force_https: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"
@@ -1145,12 +1168,10 @@ zh_TW:
     use_admin_ip_allowlist: "當目前的IP剛好處于IP段禁止名單(Admin > Logs > Screened Ips)中的時候，只有管理員才可登入。"
     blocked_ip_blocks: "Discourse 將不會使用爬蟲爬私人IP黑名單清單。"
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
-    allowed_iframes: "允許 Discourse 可以在貼文中安全發布含有 iframe 及 src 網域前綴列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
     content_security_policy_collect_reports: "在 /csp_reports 啟用CSP違規報告蒐集"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
-    post_menu_hidden_items: "貼文菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
     site_contact_group_name: "有效的群組名稱將自動被加入到所有自動發送的訊息。"
@@ -1416,7 +1437,6 @@ zh_TW:
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
-    svg_icon_subset: "用前綴詞'fa-'、'far-'、'fab-'加入你喜歡的 FontAwesome 5 icons\\b 圖案。'fa-'表示實心圖案，'far-'表示一般圖案，'fab-'表示品牌圖案。"
     full_name_required: "全名是使用者個人信息的必填項。"
     enable_names: "在使用者的個人信息、使用者卡片和郵件中顯示全名。禁用將在所有地方隱藏全名。"
     display_name_on_posts: "在使用者的貼文中顯示他們的全名以及他們的 @username。"
@@ -2864,6 +2884,8 @@ zh_TW:
             choices:
               invite_only:
                 label: "僅限邀請"
+          chat_enabled:
+            placeholder: "啟用聊天"
       styling:
         fields:
           styling_preview:

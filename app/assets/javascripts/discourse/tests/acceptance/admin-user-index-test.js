@@ -1,11 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -153,39 +149,29 @@ acceptance("Admin - User Index", function (needs) {
   test("can edit username", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Trying cancel.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username a");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam"
-    );
+    assert.dom(".display-row.username .value").hasText("sam");
 
     // Doing edit.
     await click(".display-row.username button");
     await fillIn(".display-row.username .value input", "new-sam");
     await click(".display-row.username button");
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "new-sam"
-    );
+    assert.dom(".display-row.username .value").hasText("new-sam");
   });
 
   test("shows the number of post edits", async function (assert) {
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(query(".post-edits-count .value").innerText.trim(), "6");
+    assert.dom(".post-edits-count .value").hasText("6");
 
-    assert.ok(
-      exists(".post-edits-count .controls .btn.btn-icon"),
-      "View edits button exists"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .exists("View edits button exists");
   });
 
   test("a link to view post edits report exists", async function (assert) {
@@ -205,20 +191,17 @@ acceptance("Admin - User Index", function (needs) {
   test("hides the 'view Edits' button if the count is zero", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.ok(
-      !exists(".post-edits-count .controls .btn.btn-icon"),
-      "View Edits button not present"
-    );
+    assert
+      .dom(".post-edits-count .controls .btn.btn-icon")
+      .doesNotExist("View Edits button not present");
   });
 
   test("will clear unsaved groups when switching user", async function (assert) {
     await visit("/admin/users/2/sam");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "sam",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("sam", "the name should be correct");
 
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
@@ -231,22 +214,19 @@ acceptance("Admin - User Index", function (needs) {
 
     await visit("/admin/users/1/eviltrout");
 
-    assert.strictEqual(
-      query(".display-row.username .value").innerText.trim(),
-      "eviltrout",
-      "the name should be correct"
-    );
+    assert
+      .dom(".display-row.username .value")
+      .hasText("eviltrout", "the name should be correct");
 
-    assert.ok(
-      !exists('.group-chooser span[title="Macdonald"]'),
-      "group should not be set"
-    );
+    assert
+      .dom('.group-chooser span[title="Macdonald"]')
+      .doesNotExist("group should not be set");
   });
 
   test("grant admin - shows the confirmation dialog", async function (assert) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
+    assert.dom(".dialog-content").exists();
     assert.strictEqual(
       I18n.t("admin.user.grant_admin_confirm"),
       query(".dialog-body").textContent.trim()
@@ -258,12 +238,11 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - optionally allows HTML to be shown in the confirmation dialog", async function (assert) {
     await visit("/admin/users/6/user6");
     await click(".grant-admin");
-    assert.ok(exists(".dialog-content"));
+    assert.dom(".dialog-content").exists();
 
-    assert.ok(
-      exists(".dialog-content .dialog-body strong"),
-      "HTML is rendered in the dialog"
-    );
+    assert
+      .dom(".dialog-content .dialog-body strong")
+      .exists("HTML is rendered in the dialog");
   });
 
   test("grant admin - redirects to the 2fa page", async function (assert) {
@@ -288,7 +267,7 @@ acceptance("Admin - User Index", function (needs) {
 
     await click(".dialog-footer .btn-primary");
 
-    assert.notOk(deleteAndBlock, "user does not get blocked");
+    assert.false(deleteAndBlock, "user does not get blocked");
   });
 
   test("delete user - delete and block works as expected", async function (assert) {

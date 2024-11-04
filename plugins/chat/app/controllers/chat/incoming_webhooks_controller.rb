@@ -56,9 +56,11 @@ module Chat
       webhook.chat_channel.add(Discourse.system_user)
 
       Chat::CreateMessage.call(
-        chat_channel_id: webhook.chat_channel_id,
+        params: {
+          chat_channel_id: webhook.chat_channel_id,
+          message: text,
+        },
         guardian: Discourse.system_user.guardian,
-        message: text,
         incoming_chat_webhook: webhook,
       ) do
         on_success { render json: success_json }

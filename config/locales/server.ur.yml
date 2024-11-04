@@ -524,6 +524,15 @@ ur:
             ip_address:
               blocked: "آپ کے آئی پی ایڈریس سے نئی رجسٹریشنوں کی اجازت نہیں ہے۔"
               max_new_accounts_per_registration_ip: "آپ کے آئی پی ایڈریس سے نئی رجسٹریشنوں کی اجازت نہیں ہے (زیادہ سے زیادہ حد تک پہنچ گئے)۔ ایک سٹاف ممبر سے رابطہ کریں۔"
+        user_password:
+          attributes:
+            password:
+              common: "سب سے زیادہ عام 10000 پاسورڈز میں سے ایک ہے۔ براہ مہربانی مزید محفوظ پاسورڈ کا استعمال کریں۔"
+              same_as_username: "آپ کے صارف نام جیسا ہی ہے۔ براہ مہربانی مزید محفوظ پاسورڈ کا استعمال کریں۔"
+              same_as_email: "آپ کے ای میل جیسا ہی ہے۔ براہ مہربانی مزید محفوظ پاسورڈ کا استعمال کریں۔"
+              same_as_current: "آپ کے موجودہ پاسورڈ جیسا ہی ہے۔"
+              same_as_name: "آپ کے نام جیسا ہی ہے۔"
+              unique_characters: "بار بار اِستعمال ہونے والے بہت زیادہ حروف شامل ہیں۔ براہ مہربانی مزید محفوظ پاسورڈ کا استعمال کریں۔"
         user_profile:
           attributes:
             featured_topic_id:
@@ -991,13 +1000,13 @@ ur:
       yaxis: "دن"
       description: "صارفین کی تعداد جنہوں نے اس مدت کے دوران اپنے اعتماد کی سطح کو بڑھایا۔"
     consolidated_page_views:
-      title: "مجموعی صفحہ ملاحظات"
+      title_legacy: "مجموعی صفحہ ملاحظات"
       xaxis:
         page_view_crawler: "کرالرز"
         page_view_anon: "گمنام صارفین"
         page_view_logged_in: "لاگڈ اِن صارفین"
       yaxis: "دن"
-      description: "لاگڈ اِن صارفین، گمنام صارفین اور کرالرز کے صفحہ ملاحظات۔"
+      description_legacy: "لاگڈ اِن صارفین، گمنام صارفین اور کرالرز کے صفحہ ملاحظات۔"
       labels:
         post: پوسٹ
         editor: ترمیم کنندہ
@@ -1009,6 +1018,8 @@ ur:
         user_api: "یُوزَر API"
       yaxis: "دن"
     consolidated_page_views_browser_detection:
+      yaxis: "دن"
+    site_traffic:
       yaxis: "دن"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1159,6 +1170,9 @@ ur:
       xaxis: "دن"
       yaxis: "صفحہ کے کُل ملاحظات"
       description: "تمام زائرین کی طرف سے نئے صفحہ ملاحظات کی تعداد۔"
+    page_view_legacy_total_reqs:
+      xaxis: "دن"
+      yaxis: "صفحہ کے کُل ملاحظات"
     page_view_logged_in_mobile_reqs:
       title: "صفحہ کے لاگڈ اِن ملاحظات"
       xaxis: "دن"
@@ -1283,8 +1297,24 @@ ur:
       host_names: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
       queue_size: "قطار میں لگی جوبز کی تعداد %{queue_size}ہے، جو زیادہ ہے۔ یہ Sidekiq کے عمل (وں) کے ساتھ کسی مسئلے کی نشاندہی کر سکتا ہے، یا آپ کو Sidekiq کے مزید کارکنوں کو شامل کرنے کی ضرورت پڑ سکتی ہے۔"
       ram: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
+      google_oauth2_config: 'سرور کو گوگل OAuth2 (enable_google_oauth2_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے کنفیگر کیا گیا ہے، لیکن کلائنٹ آئی ڈی اور کلائنٹ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
+      facebook_config: 'سرور کو فیس بک کے ساتھ سائن اپ اور لاگ ان (enable_facebook_logins) کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن ایپ آئی ڈی اور ایپ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
+      twitter_config: 'سرور کو ٹویٹر کے ساتھ سائن اپ اور لاگ ان کرنے کی اجازت دینے کے لیے ترتیب دیا گیا ہے (enable_twitter_logins)، لیکن چابی اور خفیہ اقدار سیٹ نہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لیے یہ ہِدایَات دیکھیں</a>۔'
+      github_config: 'سرور کو گٹ ہب (enable_github_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن کلائنٹ آئی ڈی اور خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
+      s3_upload_config: 'سرور کو S3 پر فائلوں کو اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
+      s3_backup_config: 'سرور کو S3 پر بیک اَپس اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
+      s3_cdn: 'سرور کو S3 پر فائلیں اپ لوڈ کرنے کے لیے کنفیگر کیا گیا ہے، لیکن کوئی S3 CDN کنفیگر نہیں ہے۔ یہ مہنگے S3 اخراجات اور سائٹ کی سست کارکردگی کا باعث بن سکتا ہے۔ <a href="https://meta.discourse.org/t/-/148916" target="_blank">مزید جاننے کے لیے "اپ لوڈز کے لیے آبجیکٹ اسٹوریج کا استعمال" دیکھیں</a>۔'
+      image_magick: 'سرور کو بڑی تصاویر کے تھَمب نَیل تخلیق کرنے کیلئے ترتیب دیا گیا ہے، لیکن ImageMagick اِنسٹال نہیں ہے۔ اپنے پسندیدہ پیکیج مینیجر کا استعمال کرکے ImageMagick اِنسٹال کریں یا <a href="https://www.imagemagick.org/script/download.php" target="_blank">تازہ ترین ورژن ڈاؤن لوڈ کریں</a>۔'
+      failing_emails: 'ناکام ہونے والی %{num_failed_jobs} اِی مَیل جابز موجود ہیں۔ اپنا app.yml چیک کریں اور یہ یقینی بنائیں کہ میل سرور کی ترتیبات درست ہیں۔ <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq میں ناکام جابز ملاحظہ کریں</a>۔'
       subfolder_ends_in_slash: "آپ کا سب-فولڈر سیٹ اپ غلط ہے؛ DISCOURSE_RELATIVE_URL_ROOT ایک سلَیش میں ختم ہوتا ہے۔"
+      email_polling_errored_recently:
+        one: "گزشتہ 24 گھنٹوں میں ای میل پولِنگ نے ایک خرابی دکھائی ہے۔ مزید تفصیلات کیلئے <a href='%{base_path}/logs' target='_blank'>لاگز</a> کا ملاحضہ کریں۔"
+        other: "گزشتہ 24 گھنٹوں میں ای میل پولِنگ نے %{count} خرابیاں دکھائی ہیں۔ مزید تفصیلات کیلئے <a href='%{base_path}/logs' target='_blank'>لاگز</a> کا ملاحضہ کریں۔"
       missing_mailgun_api_key: "سرور کو بذریعہ مَیلگَن ای میل بھیجنے کیلئے ترتیب دیا گیا ہے، لیکن آپ نے وَیب ھُوک٘ پیغامات کی توثیق کرنے کیلئے API کلید فراہم نہیں کی ہے۔"
+      bad_favicon_url: "فَیوِکان لوڈ نہیں ہو رہا ہے۔ <a href='%{base_path}/admin/site_settings'>سائٹ ترتیبات</a> میں اپنی فَیوِکان ترتیبات چیک کریں۔"
+      poll_pop3_timeout: "POP3 سرور کے ساتھ کنِکشن کا وقت ختم ہوا جا رہا ہے۔ آنے والی ای میل حاصل نہیں کی جاسکی۔ براہ مہربانی اپنی <a href='%{base_path}/admin/site_settings/category/email'>POP3 ترتیبات</a> اور سروس فراہم کرنے والے کو چیک کریں۔"
+      poll_pop3_auth_error: "POP3 سرور کے ساتھ کنِکشن ایک اوَتھَینٹیکیشن خرابی سے ناکام ہو رہا ہے۔ آنے والی ای میل حاصل نہیں کی جاسکی۔ براہ مہربانی اپنی <a href='%{base_path}/admin/site_settings/category/email'>POP3 ترتیبات</a> کو چیک کریں۔"
+      force_https: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"
@@ -1395,12 +1425,10 @@ ur:
     use_admin_ip_allowlist: "ایڈمن صرف اُس صورت میں لاگ ان کرسکتے ہیں اگر وہ ایسے IP ایڈریس میں ہیں جو اسکرین کردہ آئی پیز کی فہرست (ایڈمن > لاگز > اسکرین کردہ آئی پیز) میں بیان کیا گیا ہو۔"
     blocked_ip_blocks: "نجی IP بلاکس کی فہرست جو ڈِسکَورس کی طرف سے کبھی کرال نہیں ہونی چاہئیں"
     allowed_internal_hosts: "اندرونی ہَوسٹس کی فہرست جو ڈِسکَورس محفوظ طریقے سے وَن باکس اور دیگر مقاصد کیلئے کرال کر سکتا ہے"
-    allowed_iframes: "iframe src ڈَومَین کے سابقوں کی ایک فہرست جو ڈِسکَورس محفوظ طریقے سے پوسٹس میں شامل ہونے کی اجازت دے سکتا ہے"
     allowed_crawler_user_agents: "وَیب کرالرز کے صارف ایجنٹوں جن کو سائٹ تک رسائی کی اجازت دی جانی چاہیئے۔ انتباہ! اِس ترتیب کو فعال کرنے سے وہ تمام کرالرز جو یہاں فہرست کردہ نہیں ہیں رد کر دہے جائیں گے!"
     slow_down_crawler_rate: "اگر slow_down_crawler_user_agents کی وضاحت کی گئی ہے تو یہ شرح تمام کرالرز پر لاگو ہوگی (درخواستوں کے درمیان سیکنڈوں کی تاخیر)"
     content_security_policy_collect_reports: "سی ایس پی کی خلاف ورزی کی رپورٹ کو /csp_reports پر جمع کرنے کو فعال کریں"
     invalidate_inactive_admin_email_after_days: "ایڈمن اکاؤنٹس جنہوں نے دنوں کی اتنی تعداد میں سائٹ کا دورہ نہیں کیا، اُن کو لاگ اِن کرنے سے پہلے اپنے ایمیل ایڈریس کی دوبارہ توثیق کرنے کی ضرورت ہوگی۔ غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
-    post_menu_hidden_items: "پوسٹ مینیو میں ڈیفالٹ کے طور پرچھپائی جانے والی اشیاء جب تک کسی توسیعی ellipsis پر کلِک نہ کیا جائے۔"
     share_links: "اِس بات کا تعین کریں کہ شیئر ڈائیلاگ پر کونسی، اور کس ترتیب کے ساتھ اشیاء ظاہر ہوں۔"
     site_contact_username: "ایک درست سٹاف صارف نام جس کی طرف سے تمام خود کار طریقے سے پیغامات بھیجے جائیں۔ اگر خالی چھوڑ دیا گیا ہو تو ڈیفالٹ سِسٹم اکاؤنٹ استعمال کیا جائے گا۔"
     site_contact_group_name: "تمام خود کار پیغامات پر مدعو ہونے کیلئے ایک درست گروپ کا نام۔"
@@ -1652,7 +1680,6 @@ ur:
     reset_bounce_score_after_days: "X دنوں بعد بائونس سکور خود بخود رِی سَیٹ کریں۔"
     blocked_attachment_content_types: "مواد کی قسم کی بنیاد پر منسلکات کو بلاک لسٹ کرنے کے لیے استعمال ہونے والے مطلوبہ الفاظ کی فہرست۔"
     blocked_attachment_filenames: "فائل نام کی بنیاد پر منسلکات کو بلاک لسٹ کرنے کے لیے استعمال ہونے والے مطلوبہ الفاظ کی فہرست۔"
-    forwarded_emails_behaviour: "ڈِسکَورس پر فاروَرڈ کردہ ایمیل کے ساتھ کیا کریں۔"
     always_show_trimmed_content: "ہمیشہ آنے والی ای میلز کا حصے دکھائیں۔ انتباہ: ای میل پتوں کو افشاں کر سکتا ہے۔"
     private_email: "مزید رازداری کیلئے ایمیل عنوان یا ایمیل متن میں پوسٹس یا ٹاپکس سے مواد شامل نہ کریں۔ نوٹ: ڈائجسٹ ایمیلز کو بھی غیر فعال کر دیتا ہے۔"
     email_total_attachment_size_limit_kb: "باہر جانے والی ایمیلز کے ساتھ منسلک فائلوں کا زیادہ سے زیادہ سائز۔ منسلکات بھیجنا غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
@@ -1722,7 +1749,6 @@ ur:
     app_association_android: "<a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> اَینڈ پائنٹ کے مشمولات، جو گُوگل کے ڈیجیٹل اَیسٹ لنکس API کیلئے استعمال ہوتے ہیں۔"
     app_association_ios: "<a href='%{base_path}/apple-app-site-association'>اَیپل-اَیپ سائٹ-ایسوسی-ایشن</a> اَینڈ پائنٹ کے مشمولات، جو اِس سائٹ اور iOS ایپس کے مابین یونیورسل لنکس بنانے کیلئے استعمال ہوتے ہیں۔"
     auto_handle_queued_age: "اُن ریکارڈز کو خود کار طریقہ سے ہَینڈل کریں جو اتنے دنوں کے بعد نظر ثانی کے منتظر ہیں۔ فلَیگز کو نظر انداز کیا جائے گا۔ قطار شدہ پوسٹس اور صارفین کو مسترد کردیا جائے گا۔ اِس خصوصیت کو غیر فعال کرنے کیلئے 0 پر سَیٹ کریں۔"
-    svg_icon_subset: "اضافی فونٹ اَوسم 5 آئیکن شامل کریں جو آپ اپنے اثاثوں میں شامل کرنا چاہتے ہیں۔ ٹھوس آئیکنز کیلئے 'fa-' سابقہ، عام آئیکنز کیلئے 'far-' سابقہ اور برانڈ آئیکنز کیلئے 'fab-' سابقہ استعمال کریں۔"
     full_name_required: "مکمل نام ایک صارف کے پروفائل کا لازمی فیلڈ ہے۔"
     enable_names: "صارف کا مکمل نام اُن کے پروفائل، صارف کارڈ، اور ای میل پر دکھائیں۔ ہر جگہ مکمل نام چھپانے کیلئے غیر فعال کریں۔"
     display_name_on_posts: "اپنے @username کے علاوہ صارف کی پوسٹس پر اُن کا مکمل نام بھی دکھائیں۔"

@@ -62,6 +62,10 @@ export const ButtonClass = {
       attributes["aria-pressed"] = attrs.ariaPressed;
     }
 
+    if (attrs.ariaLive) {
+      attributes["aria-live"] = attrs.ariaLive;
+    }
+
     if (attrs.tabAttrs) {
       const tab = attrs.tabAttrs;
       attributes["aria-selected"] = tab["aria-selected"];

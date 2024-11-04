@@ -14,7 +14,8 @@ de:
       select_trigger: Auslöser auswählen
       confirm_automation_reset: Diese Aktion setzt die Skript- und Auslöseroptionen zurück. Der neue Zustand wird gespeichert. Willst du fortfahren?
       confirm_automation_trigger: Diese Aktion löst die Automatisierung aus. Willst du fortfahren?
-      no_automation_yet: Du hast noch keine Automatisierung erstellt.
+      no_automation_yet: Du hast noch keine Automatisierungen erstellt. Wähle unten eine Option, um loszulegen.
+      filter_placeholder: Filter nach Name oder Beschreibung...
       edit_automation:
         trigger_section:
           forced: Dieser Auslöser wird vom Skript erzwungen.
@@ -144,18 +145,27 @@ de:
               label: Themen-ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: Nur Originalbeitrag
+              description: Wird nur ausgelöst, wenn der Beitrag der ursprüngliche Beitrag im Thema ist
             action_type:
               label: Aktionstyp
               description: "Optional. Beschränke die Auslösung auf erstellte oder bearbeitete Ereignisse"
             valid_trust_levels:
               label: Gültige Vertrauensstufen
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird. Standardmäßig eine beliebige Vertrauensstufe
+            restricted_tags:
+              label: Schlagwörter
+              description: Optional. Wird nur ausgelöst, wenn der Beitrag eines dieser Schlagwörter enthält
             restricted_category:
               label: Kategorie
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags in dieser Kategorie ist
             restricted_group:
               label: Gruppe
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine persönliche Nachricht im Posteingang dieser Gruppe ist
+            restricted_groups:
+              label: Gruppen
+              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags eine private Nachricht in einem der Posteingänge der Gruppe ist
             ignore_group_members:
               label: Gruppenmitglieder ignorieren
               description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
@@ -220,6 +230,9 @@ de:
             watching_tags:
               label: Überwachte Schlagwörter
               description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
+            trigger_with_pms:
+              label: Auslösen mit PNs
+              description: Wird auch ausgelöst, wenn die Tags in einer PN geändert wurden
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -378,6 +391,7 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
+      unnamed_automation: "Unbenannte Automatisierung"
       models:
         script:
           name:

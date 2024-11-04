@@ -36,6 +36,7 @@ ca:
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
       long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, AAAA"
       long_date_without_year_with_linebreak: "D MMM <br/>HH:mm"
       wrap_ago: "fa %{date} "
       wrap_on: "el %{date}"
@@ -122,7 +123,6 @@ ca:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
-      twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
       email: "Envia per correu electrònic"
       url: "Copiar i compartir URL"
@@ -255,6 +255,7 @@ ca:
     suggested_topics:
       pm_title: "Missatges recomanats"
     about:
+      edit: "Edita aquesta pàgina"
       simple_title: "Quant a"
       title: "Quant a %{title}"
       stats: "Estadístiques del lloc web"
@@ -984,7 +985,7 @@ ca:
       muted_users: "Silenciat"
       ignored_users: "Ignorat"
       tracked_topics_link: "Mostra"
-      automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final."
+      automatically_unpin_topics: "Desafixa automàticament els temes quan jo arribi al final"
       apps: "Aplicacions"
       revoke_access: "Revoca l'accés"
       undo_revoke_access: "Desfés revocar l'accés"
@@ -1122,7 +1123,7 @@ ca:
         destroy: "Elimina el correu electrònic"
         add_email: "Afegeix un correu electrònic alternatiu"
         no_secondary: "Sense adreces de correu secundàries"
-        instructions: "No es mostra mai en públic."
+        instructions: "No es mostra mai en públic"
         ok: "Us enviarem un correu electrònic de confirmació"
         required: "Introduïu una adreça de correu electrònic"
         invalid: "Introduïu una adreça vàlida de correu electrònic"
@@ -1144,13 +1145,13 @@ ca:
         action: "Feu clic aquí per a activar el vostre compte"
         already_done: "Aquest enllaç ja no és vàlid per a confirmar el compte. Potser el vostre compte ja és actiu?"
         please_continue: "El vostre nou compte està confirmat; us redirigirem a la pàgina principal."
-        continue_button: "Continua a %{site_name}"
+        continue_button: "Acaba!"
         welcome_to: "Benvingut a %{site_name}!"
         approval_required: "Cal que un moderador aprovi manualment el vostre nou compte abans no pugueu accedir al fòrum. Rebreu un correu quan el compte hagi estat aprovat!"
       name:
         title: "Nom"
-        instructions: "El vostre nom complet (opcional)."
-        instructions_required: "El vostre nom complet."
+        instructions: "El vostre nom complet (opcional)"
+        instructions_required: "El vostre nom complet"
         too_short: "El vostre nom és massa curt"
         ok: "El vostre nom sona bé"
       username:
@@ -1283,6 +1284,9 @@ ca:
         valid_for: "L'enllaç d'invitació només és vàlid per a aquesta adreça de correu: %{email}"
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
+        invite:
+          save_invite: "Desa"
+          cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
       password:
@@ -1471,6 +1475,7 @@ ca:
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
     login:
+      title: "Inicia la sessió"
       username: "Usuari"
       password: "Contrasenya"
       show_password: "Mostra"
@@ -2991,6 +2996,7 @@ ca:
         installed_version: "Instal·lat"
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
+        dismiss_notice: "Descarta-ho"
         new_features:
           learn_more: "Per a saber-ne més..."
         last_checked: "Comprovat per darrera vegada"
@@ -3253,11 +3259,15 @@ ca:
           screened_ips: "IPs sota supervisió"
           screened_urls: "URLs sota supervisió"
           search_logs: "Cerca els registres (logs)"
-          security: "Seguretat"
-          spam: "Brossa"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Còpies de seguretat"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nom"
           optional: "(opcional)"
           saved: "desat!"
         flags:
@@ -3274,6 +3284,9 @@ ca:
             invalid_applies_to: "Necessari"
             topic: "temes"
             post: "publicacions"
+        look_and_feel:
+          themes:
+            title: "Aparences"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -4133,6 +4146,8 @@ ca:
         show_overriden: "Mostra només els sobreescrits"
         reset: "restableix"
         none: "cap"
+        save: "desa"
+        cancel: "cancel·la"
       site_settings:
         title: "Configuració"
         no_results: "Sense resultats"
@@ -4252,10 +4267,6 @@ ca:
             with_post: <span class="username">%{username}</span> per a publicació en %{link}
             with_post_time: <span class="username">%{username}</span> per a publicació en %{link} en <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> en <span class="time">%{time}</span>
-        badge_intro:
-          title: "Seleccioneu una insígnia existent o creeu-ne una de nova per a començar."
-          what_are_badges_title: "Què són les insígnies (badges)?"
-          badge_query_examples_title: "Exemples de consulta d'insígnies"
       emoji:
         title: "Emoji"
         add: "Afegeix emoji nou"

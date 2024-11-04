@@ -27,6 +27,7 @@ fr:
         millions: "%{number} M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd [à] HH:mm"
       timeline_date: "MMM YYYY"
@@ -141,7 +142,6 @@ fr:
       topic_html: 'Sujet : <span class="topic-title">%{topicTitle}</span>'
       post: "message #%{postNumber} par @%{username}"
       close: "fermer"
-      twitter: "Partager sur Twitter"
       facebook: "Partager sur Facebook"
       email: "Envoyer par e-mail"
       url: "Copier et partager l'URL"
@@ -297,6 +297,7 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     about:
+      edit: "Modifier cette page"
       simple_title: "À propos"
       title: "À propos du site %{title}"
       stats: "Statistiques du site"
@@ -1333,7 +1334,7 @@ fr:
       ignored_users: "Ignorés"
       ignored_users_instructions: "Ignorer tous les messages, notifications et messages directs provenant de ces utilisateurs."
       tracked_topics_link: "Afficher"
-      automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste."
+      automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'atteins la fin de la liste"
       apps: "Applications"
       revoke_access: "Révoquer l'accès"
       undo_revoke_access: "Annuler la révocation d'accès"
@@ -1624,7 +1625,7 @@ fr:
         add_email: "Ajouter une adresse e-mail alternative"
         auth_override_instructions: "L'e-mail peut être mis à jour à partir du fournisseur d'authentification."
         no_secondary: "Aucune adresse e-mail secondaire"
-        instructions: "Ne sera pas visible publiquement."
+        instructions: "Ne sera pas visible publiquement"
         admin_note: "Remarque : un utilisateur administrateur modifiant l'adresse e-mail d'un autre utilisateur non administrateur indique que l'utilisateur a perdu l'accès à son compte de messagerie d'origine. Un e-mail de réinitialisation du mot de passe sera donc envoyé à sa nouvelle adresse. L'adresse e-mail de l'utilisateur ne changera pas tant qu'il n'aura pas terminé le processus de réinitialisation du mot de passe."
         ok: "Nous vous enverrons un e-mail de confirmation"
         required: "Veuillez saisir une adresse e-mail"
@@ -1650,19 +1651,19 @@ fr:
         action: "Cliquez ici pour activer votre compte"
         already_done: "Nous sommes désolés, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
         please_continue: "Votre nouveau compte est confirmé. Vous allez être redirigé(e) vers la page d'accueil."
-        continue_button: "Continuer vers %{site_name}"
+        continue_button: "Terminer!"
         welcome_to: "Bienvenue sur %{site_name} !"
         approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous puissiez accéder au forum. Vous recevrez un e-mail lorsque que votre compte sera approuvé !"
       name:
         title: "Nom"
-        instructions: "Votre nom complet (facultatif)."
-        instructions_required: "Votre nom complet."
+        instructions: "Votre nom complet (facultatif)"
+        instructions_required: "Votre nom complet"
         required: "Veuillez saisir un nom"
         too_short: "Votre nom est trop court"
         ok: "Votre nom a l'air correct"
       username:
         title: "Nom d'utilisateur"
-        instructions: "Unique, sans espace, court."
+        instructions: "Unique, sans espace, court"
         short_instructions: "Les utilisateurs peuvent vous mentionner avec @%{username}"
         available: "Votre nom d'utilisateur est disponible"
         not_available: "Indisponible. Essayer %{suggestion} ?"
@@ -1826,12 +1827,11 @@ fr:
           success: "Lien d'invitation généré avec succès !"
           error: "Une erreur est survenue lors de la génération du lien d'invitation"
         invite:
-          new_title: "Créer une invitation"
-          edit_title: "Modifier l'invitation"
           instructions: "Partagez ce lien pour accorder instantanément l'accès à ce site :"
-          copy_link: "copier le lien"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
+          copy_link: "Copier le lien"
+          link_copied: "Lien copié !"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
           restrict: "Restreindre à"
@@ -1841,11 +1841,11 @@ fr:
           max_redemptions_allowed: "Nombre max. d'utilisations"
           add_to_groups: "Ajouter la personne invitée à ces groupes"
           invite_to_topic: "Diriger vers ce sujet"
-          expires_at: "Ce lien expirera dans"
-          custom_message: "Message personnel (facultatif)"
+          expires_after: "Ce lien expirera dans"
           send_invite_email: "Enregistrer et envoyer l'e-mail"
           send_invite_email_instructions: "Restreindre l'invitation à l'adresse email pour envoyer un email d'invitation"
-          save_invite: "Enregistrer l'invitation"
+          save_invite: "Enregistrer"
+          cancel: "Annuler"
           invite_saved: "Invitation enregistrée."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
@@ -1877,8 +1877,8 @@ fr:
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
         instructions:
-          one: "Au moins %{count} caractère."
-          other: "Au moins %{count} caractères."
+          one: "Au moins %{count} caractère"
+          other: "Au moins %{count} caractères"
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
         incorrect_password: "Le mot de passe saisi est incorrect."
@@ -2144,7 +2144,6 @@ fr:
     search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
-      subheader_title: "Créons votre compte"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
       title: "S'inscrire"
       failed: "Un problème est survenu. Cette adresse e-mail est peut-être déjà enregistrée. Essayez le lien d'oubli du mot de passe."
@@ -2186,7 +2185,6 @@ fr:
       confirm_button: Complétez la connexion
     login:
       header_title: "Ravi de vous revoir"
-      subheader_title: "Connectez-vous à votre compte"
       title: "Se connecter"
       username: "Utilisateur"
       password: "Mot de passe"
@@ -2286,7 +2284,6 @@ fr:
       success: "Votre compte a été créé et vous êtes maintenant connecté(e)."
       name_label: "Nom"
       password_label: "Mot de passe"
-      existing_user_can_redeem: "Valider votre invitation à participer à un sujet ou à un groupe."
     password_reset:
       continue: "Continuer vers %{site_name}"
     emoji_set:
@@ -4726,6 +4723,7 @@ fr:
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
+        dismiss_notice: "Rejeter"
         new_features:
           title: "Nouveautés"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
@@ -5195,9 +5193,14 @@ fr:
           screened_ips: "IP sous surveillance"
           screened_urls: "URL sous surveillance"
           search_logs: "Journaux de recherche"
-          security: "Sécurité"
-          spam: "Spam"
           staff_action_logs: "Journaux d'action du personnel"
+      section_landing_pages:
+        account:
+          title: "Compte"
+          backups:
+            title: "Sauvegardes"
+          whats_new:
+            title: "Nouveautés"
       config_areas:
         about:
           header: "À propos de votre site"
@@ -5207,42 +5210,22 @@ fr:
           community_summary: "Résumé de la communauté"
           community_description: "Description de la communauté"
           banner_image: "Image de bannière"
-          banner_image_help: |
-            Cela sera utilisé sur votre page À propos. Taille recommandée : 800 x 300 pixels. Types acceptés : JPG, PNG et SVG jusqu'à 10 Mo.
           contact_information: "Informations de contact"
           community_owner: "Propriétaire de la communauté"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            Nom du contact principal responsable de ce site. Utilisé pour les notifications critiques et également affiché sur /about. Visible pour les utilisateurs anonymes sur les sites publics.
           contact_email: "Adresse e-mail du contact"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            Adresse e-mail de la personne responsable de ce site. Elle est utilisée pour les notifications critiques et également affichée sur la page /about pour les questions urgentes. Visible par les utilisateurs anonymes sur les sites publics.
           contact_url: "URL de contact"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            Adresse URL de contact pour ce site. Lorsqu'elle est présente, elle remplace l'adresse e-mail du contact sur la page /about et est visible par les utilisateurs anonymes sur les sites publics.
           site_contact_name: "Nom du contact du site"
-          site_contact_name_help: |
-            Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé.
           site_contact_group: "Groupe de contact du site"
-          site_contact_group_help: |
-            Nom valide d'un groupe qui est invité à participer à tous les messages privés envoyés automatiquement.
           your_organization: "Votre organisation"
-          company_name: "Nom de l'entreprise"
-          company_name_placeholder: "Entreprise d'exemple Inc."
-          company_name_help: |
-            Nom de votre entreprise ou organisation.
+          company_name: "Nom"
+          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
           governing_law: "Droit applicable"
-          governing_law_placeholder: "État de New York"
-          governing_law_help: |
-            Précisez la juridiction qui régit les aspects juridiques du site, y compris les conditions d'utilisation et l'avis de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités.
           city_for_disputes: "Ville pour les litiges"
-          city_for_disputes_placeholder: "Ville de New York"
-          city_for_disputes_help: |
-            Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum.
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -5284,6 +5267,10 @@ fr:
             title: "Plus d'options"
             move_up: "Déplacer vers le haut"
             move_down: "Déplacer vers le bas"
+        look_and_feel:
+          title: "Apparence"
+          themes:
+            title: "Thèmes"
       plugins:
         title: "Extensions"
         name: "Nom"
@@ -6502,6 +6489,8 @@ fr:
         history: "Afficher l'historique des modifications"
         reset: "rétablir"
         none: "aucun"
+        save: "enregistrer"
+        cancel: "annuler"
       site_settings:
         emoji_list:
           invalid_input: "La liste des émojis ne doit contenir que des noms d'émojis valides (p. ex., câlins)"
@@ -6665,10 +6654,6 @@ fr:
             with_post: <span class="username">%{username}</span> pour son message dans %{link}
             with_post_time: <span class="username">%{username}</span> pour son message dans %{link} à <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> à <span class="time">%{time}</span>
-        badge_intro:
-          title: "Choisissez un badge existant ou créez-en un nouveau pour commencer"
-          what_are_badges_title: "Que sont les badges ?"
-          badge_query_examples_title: "Exemple de requête de badge"
         mass_award:
           title: Accorder en masse
           description: Attribuez le même badge à plusieurs utilisateurs à la fois.

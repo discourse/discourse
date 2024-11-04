@@ -4,6 +4,7 @@ module Chat
   class Message < ActiveRecord::Base
     include Trashable
     include TypeMappable
+    include HasCustomFields
 
     self.table_name = "chat_messages"
 
@@ -122,7 +123,14 @@ module Chat
 
     def build_excerpt
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
-      return message if UrlHelper.relaxed_parse(message).is_a?(URI)
+      urls = PrettyText.extract_links(cooked).map(&:url)
+      if urls.present?
+        regex = %r{^[^:]+://}
+        clean_urls = urls.map { |url| url.sub(regex, "") }
+        if message.gsub(regex, "").split.sort == clean_urls.sort
+          return PrettyText.excerpt(urls.join(" "), EXCERPT_LENGTH)
+        end
+      end
 
       # upload-only messages are better represented as the filename
       return uploads.first.original_filename if cooked.blank? && uploads.present?
@@ -212,6 +220,7 @@ module Chat
       blockquote
       emphasis
       replacements
+      heading
     ]
 
     def self.cook(message, opts = {})

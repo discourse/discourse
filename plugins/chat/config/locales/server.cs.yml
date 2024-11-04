@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 cs:
+  site_settings:
+    chat_separate_sidebar_mode: "Zobrazit samostatné režimy postranního panelu pro fórum a chat."
+    chat_enabled: "Povolit chat."
+    chat_channel_retention_days: "Zprávy chatu v běžných kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
+    chat_dm_retention_days: "Zprávy chatu v osobních kanálech budou uchovávány po tento počet dní. Pokud nastavíte hodnotu '0', budou zprávy uchovávány navždy."
   system_messages:
     chat_channel_archive_complete:
       subject_template: "Archivace kanálů chatu byla úspěšně dokončena"
@@ -87,3 +92,4 @@ cs:
   unsubscribe:
     chat_summary:
       never: Nikdy
+      when_away: Jen v nepřítomnosti

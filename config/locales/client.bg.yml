@@ -27,6 +27,7 @@ bg:
         millions: "%{number}M "
     dates:
       time: "HH:mm"
+      time_short: "ч:мм"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "MMM YYYY"
@@ -139,7 +140,6 @@ bg:
       topic_html: 'Тема: <span class="topic-title">%{topicTitle}</span>'
       post: "публикация #%{postNumber} от @%{username}"
       close: "затвори"
-      twitter: "Споделете в Twitter"
       facebook: "Споделете във Facebook"
       email: "Изпратете чрез имейл"
       url: "Копирайте и споделете линка"
@@ -278,6 +278,7 @@ bg:
     suggested_topics:
       pm_title: "Предложени съобщения"
     about:
+      edit: "Редактирайте тази страница"
       simple_title: "Относно"
       title: "За %{title}"
       stats: "Статистика на сайта"
@@ -1208,7 +1209,7 @@ bg:
       ignored_users: "Игнориран"
       ignored_users_instructions: "Спрете всички публикации, известия и PM от тези потребители."
       tracked_topics_link: "Покажи "
-      automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума."
+      automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
@@ -1413,7 +1414,6 @@ bg:
         add_email: "Добавете алтернативен имейл"
         auth_override_instructions: "Имейлът може да бъде актуализиран от доставчика на удостоверяване."
         no_secondary: "Няма вторични имейли"
-        instructions: "Не е публичен"
         admin_note: "Забележка: Администратор, който променя имейла на друг потребител, който не е администратор, показва, че потребителят е загубил достъп до първоначалния си имейл акаунт, така че имейл за нулиране на паролата ще бъде изпратен на новия му адрес. Имейлът на потребителя няма да се промени, докато не завърши процеса на нулиране на паролата."
         ok: "Ще Ви изпратим имейл за потвърждение."
         required: "Моля, въведете имейл адрес"
@@ -1439,13 +1439,12 @@ bg:
         action: "Кликнете тук, за да активирате вашия профил"
         already_done: "Съжаляваме, този линк за потвърждаване на акаунта вече е невалиден. Може би вашият акаунт е вече активен?"
         please_continue: "Вашият нов акаунт е вече потвърден; ще бъдете пренасочени към началната страница."
-        continue_button: "Продължете към %{site_name}"
         welcome_to: "Добре дошли в %{site_name}!"
         approval_required: "Акаунтът Ви трябва да бъде одобрен от модератор преди да получите достъп до този форум. Ще получите имейл когато акаунтът Ви е одобрен!"
       name:
         title: "Име"
-        instructions: "Вашето пълно име (опционално)."
-        instructions_required: "Вашето пълно име."
+        instructions: "Вашето пълно име (опционално)"
+        instructions_required: "Вашето пълно име"
         required: "Моля, въведете име"
         too_short: "Името е твърде кратко."
         ok: "Вашето име изглежда добре"
@@ -1610,10 +1609,7 @@ bg:
           success: "Връзката за покана е генерирана успешно!"
           error: "Имаше грешка при генерирането на връзката за покана"
         invite:
-          new_title: "Създаване на покана"
-          edit_title: "Редактиране на покана"
           instructions: "Споделете тази връзка, за да предоставите незабавно достъп до този сайт:"
-          copy_link: "копиране на връзка"
           expires_in_time: "Изтича след %{time}"
           expired_at_time: "Изтекъл на %{time}"
           show_advanced: "Показване на разширени опции"
@@ -1625,11 +1621,11 @@ bg:
           max_redemptions_allowed: "Максимум използвания"
           add_to_groups: "Добавяне към групи"
           invite_to_topic: "Стигане до темата"
-          expires_at: "Изтича след"
-          custom_message: "Незадължително лично съобщение"
+          expires_after: "Изтича след"
           send_invite_email: "Запазване и изпращане на имейл"
           send_invite_email_instructions: "Ограничете поканата до имейл, за да изпратите имейл с покана"
-          save_invite: "Изпрати покана"
+          save_invite: "Запази "
+          cancel: "Прекрати"
           invite_saved: "Поканата е запазена."
         bulk_invite:
           none: "Няма покани за показване на тази страница."
@@ -1846,7 +1842,6 @@ bg:
     search_hint: "потребителско име, имейл или IP адрес"
     create_account:
       header_title: "Добре дошли!"
-      subheader_title: "Нека създадем вашия акаунт"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
       title: "Регистрирай се"
       failed: "Нещо се случи, вероятно вече има регистрация с този имейл адрес, опитайте с линка за забравена парола."
@@ -1887,7 +1882,6 @@ bg:
       confirm_button: Завършете влизането
     login:
       header_title: "Добре дошли отново"
-      subheader_title: "Влезте в акаунта си"
       title: "Вход"
       username: "Потребител"
       password: "Парола"
@@ -1973,7 +1967,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      existing_user_can_redeem: "Осребрете своята покана за тема или група."
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -1997,6 +1990,8 @@ bg:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Въведете"
+    conditional_loading_section:
+      loading: Зареждане…
     category_row:
       subcategory_count:
         one: "+%{count} подкатегория"
@@ -2114,6 +2109,7 @@ bg:
       saving: "Запаметяване"
       saved: "Запазено!"
       saved_draft: "Публикуването на чернова е в ход. Докоснете, за да възобновите."
+      uploading: "Качване…"
       show_preview: "Покажи преглед"
       hide_preview: "скрий преглед"
       quote_post_title: "Цитирай цялата публикация"
@@ -3446,6 +3442,7 @@ bg:
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
         latest_version: "Последни"
+        dismiss_notice: "Отмени"
         new_features:
           learn_more: "Научете повече..."
         last_checked: "Последна проверка"
@@ -3592,10 +3589,14 @@ bg:
           screened_ips: "Проверени IP-та"
           screened_urls: "Проверени URL-та"
           search_logs: "Търсене в логовете"
-          security: "Сигурност"
-          spam: "Спам"
+      section_landing_pages:
+        account:
+          title: "Профил"
+          backups:
+            title: "Бекъпи"
       config_areas:
         about:
+          company_name: "Име"
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
@@ -3657,6 +3658,7 @@ bg:
         upload:
           label: "Качи"
           title: "Качи бекъп за тази инстанция"
+          uploading: "Качване…"
           error: "Появи се грешка при качването на '%{filename}': %{message}"
         settings: "Настройки"
         operations:
@@ -4267,6 +4269,8 @@ bg:
         show_overriden: "Показване само на презаписаните"
         reset: "изчисти"
         none: "без подкатегория"
+        save: "запази "
+        cancel: "прекрати"
       site_settings:
         title: "Настройки"
         no_results: "Няма резултати"
@@ -4377,14 +4381,12 @@ bg:
             with_post: <span class="username">%{username}</span> за публикации в %{link}
             with_post_time: <span class="username">%{username}</span> за публикация %{link} в <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
-        badge_intro:
-          title: "Изберете съществуваща значка или създайте нова, за да започнете"
-          what_are_badges_title: "Какво са значките?"
         mass_award:
           csv_has_unmatched_users: "Следните записи са в CSV файла, но те не могат да бъдат съчетани със съществуващи потребители и следователно няма да получат значката:"
       emoji:
         title: "Емотикони "
         add: "Добави нова емотикона "
+        uploading: "Качване…"
         name: "Име "
         group: "Група"
         image: "Изображение "
@@ -4437,6 +4439,7 @@ bg:
       back: "Назад"
       next: "Напред"
       step-text: "Стъпка"
+      uploading: "Качване…"
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
       invites:
         add_user: "добавяне"

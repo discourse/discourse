@@ -134,6 +134,16 @@ export default class TopicListItem extends Component {
   }
 
   @action
+  onTitleFocus(event) {
+    event.target.closest(".topic-list-item").classList.add("selected");
+  }
+
+  @action
+  onTitleBlur(event) {
+    event.target.closest(".topic-list-item").classList.remove("selected");
+  }
+
+  @action
   applyTitleDecorators(element) {
     const rawTopicLink = element.querySelector(".raw-topic-link");
 

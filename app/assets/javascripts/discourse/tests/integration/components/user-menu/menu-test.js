@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,16 +23,18 @@ module("Integration | Component | user-menu", function (hooks) {
 
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
     await render(template);
-    const activeTab = query(".top-tabs.tabs-list .btn.active");
-    assert.strictEqual(activeTab.getAttribute("tabindex"), "0");
-    assert.strictEqual(activeTab.getAttribute("aria-selected"), "true");
+    assert.dom(".top-tabs.tabs-list .btn.active").hasAttribute("tabindex", "0");
+    assert.dom(".top-tabs.tabs-list .btn.active").hasAria("selected", "true");
   });
 
   test("inactive tab has a11y attributes that indicate it's inactive", async function (assert) {
     await render(template);
-    const inactiveTab = query(".top-tabs.tabs-list .btn:not(.active)");
-    assert.strictEqual(inactiveTab.getAttribute("tabindex"), "-1");
-    assert.strictEqual(inactiveTab.getAttribute("aria-selected"), "false");
+    assert
+      .dom(".top-tabs.tabs-list .btn:not(.active)")
+      .hasAttribute("tabindex", "-1");
+    assert
+      .dom(".top-tabs.tabs-list .btn:not(.active)")
+      .hasAria("selected", "false");
   });
 
   test("the menu has a group of tabs at the top", async function (assert) {
@@ -44,10 +46,7 @@ module("Integration | Component | user-menu", function (hooks) {
       (tab, index) => {
         assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
         assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
-        assert.strictEqual(
-          tabs[index].getAttribute("aria-controls"),
-          `quick-access-${tab}`
-        );
+        assert.dom(tabs[index]).hasAria("controls", `quick-access-${tab}`);
       }
     );
   });
@@ -60,14 +59,14 @@ module("Integration | Component | user-menu", function (hooks) {
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
     assert.strictEqual(profileTab.dataset.tabNumber, "6");
-    assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
+    assert.dom(profileTab).hasAttribute("tabindex", "-1");
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {
     this.currentUser.set("user_option.likes_notifications_disabled", true);
     this.currentUser.set("can_send_private_messages", true);
     await render(template);
-    assert.ok(!exists("#user-menu-button-likes"));
+    assert.dom("#user-menu-button-likes").doesNotExist();
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
@@ -101,7 +100,7 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 0);
     await render(template);
-    assert.notOk(exists("#user-menu-button-review-queue"));
+    assert.dom("#user-menu-button-review-queue").doesNotExist();
   });
 
   test("messages tab isn't shown if current user does not have can_send_private_messages permission", async function (assert) {
@@ -112,7 +111,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     await render(template);
 
-    assert.ok(!exists("#user-menu-button-messages"));
+    assert.dom("#user-menu-button-messages").doesNotExist();
 
     const tabs = Array.from(queryAll(".tabs-list .btn")); // top and bottom tabs
     assert.strictEqual(tabs.length, 6);
@@ -132,7 +131,7 @@ module("Integration | Component | user-menu", function (hooks) {
 
     await render(template);
 
-    assert.ok(exists("#user-menu-button-messages"));
+    assert.dom("#user-menu-button-messages").exists();
   });
 
   test("reviewables count is shown on the reviewables tab", async function (assert) {
@@ -147,7 +146,9 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("reviewable_count", 0);
     await settled();
 
-    assert.ok(!exists("#user-menu-button-review-queue .badge-notification"));
+    assert
+      .dom("#user-menu-button-review-queue .badge-notification")
+      .doesNotExist();
   });
 
   test("changing tabs", async function (assert) {
@@ -261,7 +262,7 @@ module("Integration | Component | user-menu", function (hooks) {
     });
 
     await click("#user-menu-button-likes");
-    assert.ok(exists("#quick-access-likes.quick-access-panel"));
+    assert.dom("#quick-access-likes.quick-access-panel").exists();
     assert.strictEqual(
       queryParams.filter_by_types,
       "liked,liked_consolidated,reaction",
@@ -278,7 +279,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.strictEqual(queryAll("#quick-access-likes ul li").length, 3);
 
     await click("#user-menu-button-replies");
-    assert.ok(exists("#quick-access-replies.quick-access-panel"));
+    assert.dom("#quick-access-replies.quick-access-panel").exists();
     assert.strictEqual(
       queryParams.filter_by_types,
       "mentioned,group_mentioned,posted,quoted,replied",
@@ -294,7 +295,7 @@ module("Integration | Component | user-menu", function (hooks) {
     );
 
     await click("#user-menu-button-review-queue");
-    assert.ok(exists("#quick-access-review-queue.quick-access-panel"));
+    assert.dom("#quick-access-review-queue.quick-access-panel").exists();
     activeTabs = queryAll(".top-tabs .btn.active");
     assert.strictEqual(activeTabs.length, 1);
     assert.strictEqual(

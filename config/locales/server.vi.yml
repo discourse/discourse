@@ -452,6 +452,15 @@ vi:
             ip_address:
               blocked: "Đăng ký mới không cho phép từ địa chỉ IP của bạn."
               max_new_accounts_per_registration_ip: "Đăng ký tài khoản mới không được chấp nhận từ địa chỉ IP của bạn (đã đạt giới hạn tối), xin hãy liên hệ với BQT."
+        user_password:
+          attributes:
+            password:
+              common: "là một trong 10000 mật khẩu được sử dụng nhiều nhất. Vui lòng sử dụng một mật khẩu an toàn hơn."
+              same_as_username: "giống với tên đăng nhập của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn."
+              same_as_email: "giống với email của bạn. Vui lòng sử dụng mật khẩu bảo mật hơn"
+              same_as_current: "là giống như mật khẩu hiện tại của bạn."
+              same_as_name: "là giống với tên của bạn."
+              unique_characters: "có quá nhiều ký tự lặp lại. Vui lòng sử dụng mật khẩu an toàn hơn."
         user_profile:
           attributes:
             featured_topic_id:
@@ -751,13 +760,13 @@ vi:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Mức độ tin cậy của họ trong khoảng thời gian này."
     consolidated_page_views:
-      title: "Số lần xem trang tổng hợp"
+      title_legacy: "Số lần xem trang tổng hợp"
       xaxis:
         page_view_crawler: "Trình thu thập thông tin"
         page_view_anon: "Người dùng ẩn danh"
         page_view_logged_in: "Người dùng đã đăng nhập"
       yaxis: "Ngày"
-      description: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
+      description_legacy: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
       labels:
         post: Bài viết
         editor: Biên tập
@@ -769,6 +778,8 @@ vi:
         user_api: "API người dùng"
       yaxis: "Ngày"
     consolidated_page_views_browser_detection:
+      yaxis: "Ngày"
+    site_traffic:
       yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
@@ -892,6 +903,9 @@ vi:
       title: "Số lượt xem"
       xaxis: "Ngày"
       yaxis: "Tổng lượt xem trang"
+    page_view_legacy_total_reqs:
+      xaxis: "Ngày"
+      yaxis: "Tổng lượt xem trang"
     page_view_logged_in_mobile_reqs:
       xaxis: "Ngày"
       description: "Số lượt xem trang mới từ thành viên trên thiết bị di động và đăng nhập vào tài khoản."
@@ -984,7 +998,15 @@ vi:
       host_names: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
       queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
       ram: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
+      google_oauth2_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Google OAuth2 (enable_google_oauth2_logins), nhưng id máy khách và giá trị bí mật của máy khách không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
+      facebook_config: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Facebook (enable_facebook_logins), nhưng giá trị id ứng dụng và bí mật ứng dụng không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang web</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
+      s3_backup_config: 'Máy chủ được định cấu hình để tải các bản sao lưu lên S3, nhưng ít nhất một cài đặt sau chưa được đặt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile hoặc s3_backup_bucket. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem "Cách thiết lập tải hình ảnh lên S3?" để tìm hiểu thêm</a>.'
+      s3_cdn: 'Máy chủ được cấu hình để tải lên các tập tin lên S3, nhưng không có S3 CDN cấu hình. Điều này có thể dẫn đến chi phí S3 đắt tiền và hiệu suất trang web chậm hơn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Xem “Sử dụng lưu trữ đối tượng để tải lên” để tìm hiểu thêm</a>.'
       subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
+      email_polling_errored_recently:
+        other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
+      poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
+      poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
@@ -1049,8 +1071,6 @@ vi:
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
     invalidate_inactive_admin_email_after_days: "Các tài khoản quản trị viên chưa truy cập trang web trong số ngày này sẽ cần xác thực lại địa chỉ email của họ trước khi đăng nhập. Đặt thành 0 để tắt."
     top_menu: "Xác định các mục nào hiển thị trong các điều khiển điều hướng trên trang chủ, và theo thứ tự nào."
-    post_menu: "Xác định các mục nào hiển thị trong bảng chọn bài đăng, và theo thứ tự nào."
-    post_menu_hidden_items: "Các mục được để ẩn theo mặc định trong menu bài viết trừ khi click vào dấu '...' để mở rộng."
     share_links: "Xác định các mục nào hiển thị trên hộp thoại chia sẻ, và theo thứ tự nào."
     site_contact_username: "Tên tài khoản quản trị viên hợp lệ để gửi tất cả các thông báo tự động. Nếu để trống, tài khoản mặc định của hệ thống sẽ được sử dụng."
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."

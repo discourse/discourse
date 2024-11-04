@@ -17,6 +17,7 @@ RSpec.describe AdminPluginSerializer do
         location: "admin",
         label: "admin.test",
         full_location: "adminPlugins.admin",
+        use_new_show_route: false,
       )
     end
 

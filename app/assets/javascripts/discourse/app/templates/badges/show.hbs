@@ -37,10 +37,18 @@
 
     {{#if this.canSelectTitle}}
       <div class="badge-set-title {{if this.hiddenSetTitle 'hidden' ''}}">
-        <BadgeTitle
-          @selectableUserBadges={{this.selectableUserBadges}}
-          @closeAction={{this.toggleSetUserTitle}}
-        />
+        <PluginOutlet
+          @name="selectable-user-badges"
+          @outletArgs={{hash
+            selectableUserBadges=this.selectableUserBadges
+            closeAction=this.toggleSetUserTitle
+          }}
+        >
+          <BadgeTitle
+            @selectableUserBadges={{this.selectableUserBadges}}
+            @closeAction={{this.toggleSetUserTitle}}
+          />
+        </PluginOutlet>
       </div>
     {{/if}}
   </div>

@@ -89,6 +89,7 @@ el:
       objects:
         required: "πρέπει να υπάρχει"
         not_valid_integer_value: "πρέπει να είναι ακέραιος αριθμός"
+        string_value_not_valid_url: "πρέπει να είναι μια έγκυρη διεύθυνση URL"
     locale_errors:
       top_level_locale: "Το κλειδί ανώτατου επιπέδου σε ένα αρχείο τοπικών ρυθμίσεων πρέπει να συμφωνεί με το όνομα της τοπικής ρύθμισης"
       invalid_yaml: "Η μετάφραση YAML δεν είναι έγκυρη"
@@ -392,6 +393,14 @@ el:
             ip_address:
               blocked: "Δεν επιτρέπονται νεές εγγραφές από την IP διεύθυνσή σου."
               max_new_accounts_per_registration_ip: "Δεν επιτρέπονται νεές εγγραφές από την IP διεύθυνσή σου (το ανώτατο όριο έχει επιτευχθεί). Επικοινώνησε με ένα μέλος του προσωπικού."
+        user_password:
+          attributes:
+            password:
+              common: "είναι ένας από τους 10000 πιο κοινούς κωδικούς πρόσβασης. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης."
+              same_as_username: "είναι το ίδιο με το όνομα χρήστη σας. Παρακαλώ χρησιμοποιήστε εναν πιο ασφαλή κωδικό πρόσβασης."
+              same_as_email: "είναι το ίδιο με το email σας. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης."
+              same_as_current: "είναι ο ίδιος με τον τρέχοντα κωδικό."
+              unique_characters: "περιέχει πολλούς επαναλαμβανόμενους χαρακτήρες. Παρακαλώ χρησιμοποιήστε έναν πιο ασφαλή κωδικό πρόσβασης. "
         color_scheme_color:
           attributes:
             hex:
@@ -542,6 +551,7 @@ el:
     error: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Ίσως αυτή η διεύθυνση είναι ήδη σε χρήση;"
     error_staged: "Υπήρξε ένα σφάλμα κατά την αλλαγή της διεύθυνσης email σου. Η δεύθυνση αυτή χρησιμοποιείται ήδη από αλλό χρήστη. "
     already_done: "Λυπούμαστε, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως η διεύθυνση email σας να έχει αλλάξει ήδη."
+    confirm: "Επιβεβαίωση"
   activation:
     already_done: "Συγνώμη, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως ο λογαριασμός σας είναι ήδη ενεργός;"
     approval_required: "Ένας συντονιστής θα πρέπει να εγκρίνει το νέο σας λογαριασμό πριν αποκτήσετε πρόσβαση στην ιστοσελίδα. Θα λάβετε ένα email όταν ο λογαριασμός σας εγκριθεί!"
@@ -698,6 +708,12 @@ el:
       yaxis: "Ημέρα"
     consolidated_page_views_browser_detection:
       yaxis: "Ημέρα"
+    site_traffic:
+      title: "Κίνηση ιστότοπου"
+      xaxis:
+        page_view_other: "Άλλη κίνηση"
+      yaxis: "Ημέρα"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       xaxis: "Ημέρα"
     daily_engaged_users:
@@ -730,6 +746,8 @@ el:
       title: "Χρήστες ανάλογα με το Επίπεδο Εμπιστοσύνης"
       xaxis: "Επίπεδο Εμπιστοσύνης"
       yaxis: "Αριθμός χρηστών"
+      labels:
+        level: Επίπεδο
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
     users_by_type:
       xaxis: "Τύπος"
@@ -810,6 +828,9 @@ el:
       yaxis: "Θεάσεις σελίδας από Web Crawlers"
     page_view_total_reqs:
       title: "Προβολές σελίδας"
+      xaxis: "Ημέρα"
+      yaxis: "Σύνολο προβολών σελίδας"
+    page_view_legacy_total_reqs:
       xaxis: "Ημέρα"
       yaxis: "Σύνολο προβολών σελίδας"
     page_view_logged_in_mobile_reqs:
@@ -900,6 +921,11 @@ el:
       queue_size: "Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. "
       ram: "Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης."
       subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη. "
+      email_polling_errored_recently:
+        one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
+        other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
+      poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
+      poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
   site_settings:
     disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
@@ -959,8 +985,6 @@ el:
     use_admin_ip_allowlist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
     allowed_internal_hosts: "Μια λίστα από internal hosts την οποία το discourse μπορεί να ανιχνεύει με ασφάλεια για oneboxing και άλλους λόγους"
-    allowed_iframes: "Μία λίστα από iframe src domain prefixes τα οποία το discourse μπορεί με ασφάλεια να επιτρέπει στις αναρτήσεις."
-    post_menu_hidden_items: "Οι επιλογές που θα κρυφτούν από προεπιλογή στο μενού της ανάρτησης, εκτός αν πατηθεί η επιλογή επέκτασης του μενού. "
     share_links: "Καθόρισε ποια αντικείμενα εμφανίζονται στον διάλογο διαμοιρασμού και με ποια σειρά."
     site_contact_username: "Ένα έγκυρο όνομα χρήστη των συνεργατών από το οποίο θα στέλνονται όλα τα αυτοματοποιημένα μηνύματα. Αν αφεθεί κενό, θα χρησιμοποιείται ο προκαθορισμένος λογαριασμός συστήματος. "
     send_welcome_message: "Στείλε σε όλους τους νέους χρήστες ένα μήνυμα καλωσορίσματος μαζί με ένα γρήγορο οδηγό έναρξης."
@@ -1352,6 +1376,7 @@ el:
     reserved_username: "Αυτό το όνομα χρήστη δεν είναι επιτρεπτό."
     auth_complete: "Η ταυτοποιήση έχει ολοκληρωθεί."
     click_to_continue: "Κλικ εδώ για να συνεχίσετε."
+    second_factor_title: "Έλεγχος Ταυτότητας Δύο Παραγόντων"
     second_factor_backup_description: "Παρακαλώ εισαγάγετε έναν από τους εφεδρικούς κωδικούς σας:"
     second_factor_toggle:
       backup_code: "Χρησιμοποιήστε αντ 'αυτού έναν εφεδρικό κωδικό"
@@ -1769,6 +1794,9 @@ el:
     only_reply_by_email: "Απαντήστε σε αυτό το email για να αποκριθείς."
     visit_link_to_respond: "[Επισκέψου το νήμα](%{base_url}%{url}) για να αποκριθείς."
     posted_by: "Αναρτήθηκε από %{username} στις %{post_date}"
+    more_pm_participants:
+      one: "%{participants} και %{count} ακόμη"
+      other: "%{participants} και %{count} ακόμη"
     user_invited_to_private_message_pm_group:
       title: "Ο χρήστης προσκάλεσε ομάδα σε ΠΜ"
       subject_template: "[%{email_prefix}] %{username} προσκλήθηκε @%{group_name} σε ένα μήνυμα '%{topic_title}'"

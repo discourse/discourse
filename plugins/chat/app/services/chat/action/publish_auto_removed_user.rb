@@ -7,12 +7,15 @@ module Chat
     # were removed and from which channel, as well as logging
     # this in staff actions so it's obvious why these users were
     # removed.
-    class PublishAutoRemovedUser
+    class PublishAutoRemovedUser < Service::ActionBase
       # @param [Symbol] event_type What caused the users to be removed,
       #   each handler will define this, e.g. category_updated, user_removed_from_group
       # @param [Hash] users_removed_map A hash with channel_id as its keys and an
       #   array of user_ids who were removed from the channel.
-      def self.call(event_type:, users_removed_map:)
+      option :event_type
+      option :users_removed_map
+
+      def call
         return if users_removed_map.empty?
 
         users_removed_map.each do |channel_id, user_ids|

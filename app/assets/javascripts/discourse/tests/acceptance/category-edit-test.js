@@ -6,7 +6,6 @@ import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
-  exists,
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -27,19 +26,10 @@ acceptance("Category Edit", function (needs) {
       "it jumps to the correct screen"
     );
 
-    assert.strictEqual(
-      query(".category-breadcrumb .badge-category").innerText,
-      "bug"
-    );
-    assert.strictEqual(
-      query(".category-color-editor .badge-category").innerText,
-      "bug"
-    );
+    assert.dom(".category-breadcrumb .badge-category").hasText("bug");
+    assert.dom(".category-color-editor .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.strictEqual(
-      query(".category-color-editor .badge-category").innerText,
-      "testing"
-    );
+    assert.dom(".category-color-editor .badge-category").hasText("testing");
 
     await fillIn(".edit-text-color input", "ff0000");
 
@@ -77,9 +67,9 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    assert.ok(exists(".minimum-required-tags"));
+    assert.dom(".minimum-required-tags").exists();
 
-    assert.ok(exists(".required-tag-groups"));
+    assert.dom(".required-tag-groups").exists();
     assert.strictEqual(count(".required-tag-group-row"), 0);
 
     await click(".add-required-tag-group");
@@ -191,7 +181,7 @@ acceptance("Category Edit", function (needs) {
       "/c/1-category/edit/general",
       "it goes to the general tab"
     );
-    assert.strictEqual(query("input.category-name").value, "bug");
+    assert.dom("input.category-name").hasValue("bug");
   });
 
   test("Error Saving", async function (assert) {

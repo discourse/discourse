@@ -75,6 +75,10 @@ de:
     import_error:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
       upload: "Fehler beim Erstellen des Upload-Assets: %{name}. %{errors}"
+      screenshot: "Fehler beim Importieren von Theme-Screenshots. %{errors}"
+      screenshot_invalid_type: "Die Theme-Screenshots müssen in einem der folgenden Formate vorliegen: %{accepted_formats}. Der Screenshot %{file_name} hat ein ungültiges Format."
+      screenshot_invalid_size: "Die Screenshots des Themes müssen kleiner als %{max_size}sein. Der Screenshot %{file_name} ist zu groß."
+      screenshot_invalid_dimensions: "Die Screenshots des Themes dürfen maximal %{max_width}x%{max_height}sein. Der Screenshot %{file_name} übertrifft das. Seine Abmessungen sind %{width}x%{height}."
       about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
       about_json_too_big: "Importfehler: about.json ist größer als das Limit von %{limit} ."
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
@@ -559,6 +563,9 @@ de:
         one: "%{count} Benutzer wurde zur Gruppe hinzugefügt."
         other: "%{count} Benutzer wurden zur Gruppe hinzugefügt."
     errors:
+      default_notification_level_users_limit:
+        one: "Die Standardbenachrichtigungsstufe kann nicht für Gruppen eingestellt werden, die größer sind als %{count} Benutzer. Falsche Gruppe: %{group_name}"
+        other: "Die Standardbenachrichtigungsstufe kann nicht für Gruppen mit mehr als %{count} Benutzern festgelegt werden. Falsche Gruppe: %{group_name}"
       grant_trust_level_not_valid: "„%{trust_level}“ ist keine gültige Vertrauensstufe."
       can_not_modify_automatic: "Du kannst eine automatische Gruppe nicht bearbeiten"
       member_already_exist:
@@ -684,6 +691,7 @@ de:
               reply_by_email_disabled: "Antwort per E-Mail ist deaktiviert."
               send_to_email_disabled: "Entschuldige, du kannst leider keine persönlichen Nachrichten per E-Mail versenden."
               target_user_not_found: "Einer der Empfänger dieser Nachricht konnte nicht gefunden werden."
+              too_large_group: "Die Gruppe: %{group_name}, hat zu viele Benutzer, um eine Nachricht zu erhalten. Das Limit ist %{limit}."
               unable_to_update: "Beim Aktualisieren dieses Themas ist ein Fehler aufgetreten."
               unable_to_tag: "Beim Versehen des Themas mit einem Schlagwort ist ein Fehler aufgetreten."
               unable_to_unlist: "Du kannst kein unsichtbares Thema erstellen."
@@ -696,7 +704,6 @@ de:
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
               same_as_current: "ist mit deinem aktuellen Passwort identisch."
-              same_as_previous: "ist mit deinem vorherigen Passwort identisch."
               same_as_name: "ist mit deinem Namen identisch."
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             username:
@@ -706,6 +713,15 @@ de:
             ip_address:
               blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
               max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (maximale Anzahl erreicht). Kontaktiere ein Team-Mitglied."
+        user_password:
+          attributes:
+            password:
+              common: "ist eines der 10.000 am meisten verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
+              same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
+              same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
+              same_as_current: "ist mit deinem aktuellen Passwort identisch."
+              same_as_name: "ist mit deinem Namen identisch."
+              unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1166,6 +1182,7 @@ de:
       wrong_move: "Meldung kann nicht verschoben werden"
       system: "Ein vom System erstellter Meldungsgrund kann nicht aktualisiert oder gelöscht werden."
       used: "Dieser Meldungsgrund kann nicht aktualisiert oder gelöscht werden, weil er bereits verwendet wurde."
+      unique_name: "Der Medlungsname muss eindeutig sein"
   reports:
     default:
       labels:
@@ -1240,13 +1257,15 @@ de:
       yaxis: "Tag"
       description: "Anzahl der Benutzer, die in dieser Zeit eine höhere Vertrauensstufe erreicht haben."
     consolidated_page_views:
-      title: "Zusammengefasste Seitenaufrufe"
+      title: "Veraltete konsolidierte Seitenaufrufe"
+      title_legacy: "Zusammengefasste Seitenaufrufe"
       xaxis:
         page_view_crawler: "Crawler"
         page_view_anon: "Anonyme Benutzer"
         page_view_logged_in: "Angemeldete Benutzer"
       yaxis: "Tag"
-      description: "Seitenaufrufe von angemeldeten Benutzern, anonymen Benutzern und Crawlern."
+      description: "Der alte Bericht zeigt die Seitenaufrufe für eingeloggte Nutzer, anonyme Nutzer und Crawler. Dieser Bericht wurde durch den Bericht \"Website-Verkehr\" abgelöst."
+      description_legacy: "Seitenaufrufe von angemeldeten Benutzern, anonymen Benutzern und Crawlern."
       labels:
         post: Beitrag
         editor: Bearbeiter
@@ -1261,13 +1280,25 @@ de:
       description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
     consolidated_page_views_browser_detection:
       title: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
+      title_legacy: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
       xaxis:
         page_view_anon_browser: "Browser (anonym)"
         page_view_logged_in_browser: "Browser (angemeldet)"
         page_view_crawler: "Bekannter Crawler"
         page_view_other: "Andere Seitenaufrufe"
       yaxis: "Tag"
-      description: "Seitenaufrufe für angemeldete Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass angemeldete/anonyme Anfragen von echten Browsern kommen, bevor sie gezählt werden."
+      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern kommen, bevor sie gezählt werden. Historische Daten für diesen Bericht sind nicht verfügbar. Historische Daten findest du im Bericht \"Veraltete konsolidierte Seitenaufrufe\"."
+      description_legacy: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern stammen, bevor sie gezählt werden. Historische Daten für diesen Bericht sind nicht verfügbar. Historische Daten findest du im Bericht \"Konsolidierte Seitenaufrufe\"."
+    site_traffic:
+      title: "Website-Verkehr"
+      xaxis:
+        page_view_anon_browser: "Seitenaufrufe (anonym)"
+        page_view_logged_in_browser: "Seitenaufrufe (eingeloggt)"
+        page_view_crawler: "Bekannte Crawler"
+        page_view_other: "Sonstiger Verkehr"
+      yaxis: "Tag"
+      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und anderen Verkehr."
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
@@ -1417,6 +1448,11 @@ de:
       xaxis: "Tag"
       yaxis: "Seitenaufrufe insgesamt"
       description: "Anzahl neuer Seitenaufrufe aller Besucher."
+    page_view_legacy_total_reqs:
+      title: "Veraltete Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Seitenaufrufe insgesamt"
+      description: "Veralteter Bericht, der die Anzahl der neuen Seitenaufrufe von allen Besuchern anzeigt."
     page_view_logged_in_mobile_reqs:
       title: "Seitenaufrufe durch angemeldete Benutzer"
       xaxis: "Tag"
@@ -1734,6 +1770,7 @@ de:
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
+    experimental_full_page_login: "EXPERIMENTELL: Ersetze das Login/Signup-Modal durch ein ganzseitiges Login/Signup-Formular."
     ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1747,7 +1784,7 @@ de:
     blocked_ip_blocks: "Eine Liste von privaten IP-Blöcken, die nie von Discourse indiziert werden sollen"
     allowed_internal_hosts: "Eine Liste interner Hosts, die Discourse sicher indizieren kann (für Oneboxing und zu anderen Zwecken)"
     allowed_onebox_iframes: "Eine Liste von „iframe src“-Domains, die in Onebox-Einbettungen erlaubt sind. Mit `*` werden alle Standard-Onebox-Engines zugelassen."
-    allowed_iframes: "Eine Liste von iframe-src-Domain-Präfixen, die Discourse in Beiträgen sicher erlauben kann."
+    allowed_iframes: "Eine Liste von iframe src URL-Präfixen, die Discourse sicher in Beiträgen zulassen kann"
     allowed_crawler_user_agents: "Browserkennungen von Webcrawlern, denen der Zugriff auf die Website erlaubt sein soll. WARNUNG! DIESE EINSTELLUNG BLOCKIERT ALLE HIER NICHT GELISTETEN CRAWLER!"
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: 'Browserkennungen von Webcrawlern, die wie in der Einstellung „slow down crawler rate“ konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
@@ -1761,8 +1798,8 @@ de:
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
     top_menu: "Lege fest, welche Elemente in der Homepage-Navigation erscheinen und in welcher Reihenfolge."
-    post_menu: "Lege fest, welche Elemente im Beitragsmenü erscheinen und in welcher Reihenfolge."
-    post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
+    post_menu: "Konfiguriere die Sichtbarkeit und Reihenfolge der Standard-Post-Menüpunkte. Zusätzliche Elemente, die von Plugins oder Themes hinzugefügt werden, werden separat verwaltet und erscheinen nicht in dieser Liste."
+    post_menu_hidden_items: "Die Menüpunkte, die standardmäßig im Beitragsmenü ausgeblendet werden, wenn nicht auf eine Erweiterungsellipse geklickt wird. Zusätzliche Elemente, die von Plugins oder Themes hinzugefügt werden, werden separat verwaltet und erscheinen nicht in dieser Liste."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     allow_username_in_share_links: "Benutzernamen in Freigabelinks erlauben. Dies ist nützlich, um Abzeichen für einzelne Besucher zu vergeben."
     site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet."
@@ -2053,7 +2090,7 @@ de:
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deiner extern gehosteten Datenschutzerklärung, sofern vorhanden."
     log_anonymizer_details: "Legt fest, ob die Daten eines Benutzers nach Anonymisierung im Log gespeichert werden sollen."
-    display_eu_visitor_stats: "Zeige die Anzahl der globalen und EU-Besucher auf der /about-Seite."
+    display_eu_visitor_stats: "Zeige die Anzahl der globalen und EU-Besucher auf der /about Seite. Es kann ein paar Minuten dauern, bis die Statistiken erscheinen, nachdem du diese Einstellung aktiviert hast."
     newuser_spam_host_threshold: "Wie oft ein neuer Benutzer einen Link zum selben Host innerhalb seiner `newuser_spam_host_threshold` Beiträge veröffentlichen kann, bevor dies als Spam angesehen wird."
     allowed_spam_host_domains: "Liste von Domains, die keinem Spam-Host-Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
     staff_like_weight: "Wie viel Gewicht „Gefällt mir“-Angaben des Teams haben sollen („Gefällt mir“-Angaben von Nicht-Team-Mitgliedern haben ein Gewicht von 1.)"
@@ -2110,7 +2147,7 @@ de:
     reset_bounce_score_after_days: "Bounce-Score automatisch nach X Tagen zurücksetzen."
     blocked_attachment_content_types: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf Inhaltstypen."
     blocked_attachment_filenames: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
-    forwarded_emails_behaviour: "Wie an Discourse weitergeleitete E-Mails behandelt werden"
+    forwarded_emails_behaviour: "Wie du eine weitergeleitete E-Mail an Discourse behandelst. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Mehr erfahren</a>"
     always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: Könnte E-Mail-Adressen preisgeben."
     trim_incoming_emails: "Schneide einen Teil der eingehenden E-Mails ab, der nicht relevant ist."
     private_email: "Füge keine Inhalte von Beiträgen oder Themen in den E-Mail-Titel oder den E-Mail-Text ein. HINWEIS: Deaktiviert auch die E-Mail-Zusammenfassungen."
@@ -2229,7 +2266,7 @@ de:
     auto_handle_queued_age: "Bearbeite Einträge automatisch, die so viele Tage auf Überprüfung warten. Meldungen werden ignoriert. Beiträge und Benutzer in der Warteschlange werden zurückgewiesen. Setze den Wert auf 0, um diese Funktion zu deaktivieren."
     penalty_step_hours: "Standardstrafen für das Stummschalten oder Sperren von Benutzern in Stunden. Beim ersten Verstoß wird standardmäßig der erste Wert verwendet, beim zweiten Verstoß standardmäßig der zweite Wert usw."
     penalty_include_post_message: "Füge automatisch die Nachricht des beanstandeten Beitrags in die E-Mail-Vorlage ein, wenn du einen Benutzer stummschaltest oder sperrst"
-    svg_icon_subset: "Füge zusätzliche „FontAwesome 5“-Symbole hinzu, die du in deine Assets einbinden möchtest. Verwende das Präfix „fa-“ für einfarbige Symbole, „far-“ für normale Symbole und „fab-“ für Markensymbole."
+    svg_icon_subset: "Füge zusätzliche FontAwesome-Symbole hinzu, die du in deine Assets aufnehmen möchtest. Verwende das Präfix \"fa-\" für einfarbige Icons, \"far-\" für normale Icons und \"fab-\" für Markensymbole."
     max_prints_per_hour_per_user: "Maximale Anzahl von /print-Seitenaufrufen (auf 0 setzen, um das Drucken zu deaktivieren)"
     full_name_required: "Vollständiger Name ist ein Pflichtfeld des Benutzerprofils."
     enable_names: "Zeige den vollständigen Namen des Benutzers in seinem Profil, auf der Benutzerkarte und in E-Mails an. Deaktivieren, um den vollständigen Namen überall auszublenden."
@@ -2255,7 +2292,7 @@ de:
     notify_about_reviewable_item_after: "Falls es Elemente zur Überprüfung gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, eine persönliche Nachricht an die Moderatoren senden. Zum Deaktivieren auf 0 setzen."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die seit mehr als (n) Tagen nicht mehr geändert wurden."
     delete_merged_stub_topics_after_days: "Anzahl der Tage, die abgewartet werden, bevor der bei vollständiger Zusammenführung übrig gebliebene Themenstumpf automatisch gelöscht wird; bei -1 wird nie, bei 0 sofort gelöscht."
-    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren und die Schaltfläche „Erste Schritte“ zu entfernen (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
+    bootstrap_mode_min_users: 'Mindestanzahl der Benutzer, die erforderlich ist, um den Bootstrap-Modus zu deaktivieren und die Schaltfläche "Erste Schritte" zu entfernen (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern). Siehe <a target="_blank" href="https://meta.discourse.org/t/-/322876">das Thema Bootstrap-Modus auf Meta</a> für weitere Informationen.'
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
@@ -2310,6 +2347,7 @@ de:
     default_other_notification_level_when_replying: "Globale Standard-Benachrichtigungsstufe, wenn ein Benutzer auf ein Thema antwortet."
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einer neuen Registerkarte."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort-Funktion für hervorgehobenen Text."
+    default_other_enable_smart_lists: "Aktiviere bei der Eingabe im Composer standardmäßig intelligente Listen."
     default_other_enable_defer: "Aktiviere standardmäßig die Funktion zum Aufschieben von Themen."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl der neuen/aktualisierten Themen im Browser-Symbol an."
     default_other_skip_new_user_tips: "Überspringe Tipps und Abzeichen für das Onboarding neuer Benutzer."
@@ -2411,15 +2449,16 @@ de:
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Aktiviere die neu gestaltete /about Seite für bestimmte Gruppen."
-    glimmer_header_mode: "Legt fest, ob die neue „glimmer“-Kopfzeilen-Implementierung verwendet wird. „auto“ wird die Implementierung automatisch aktivieren, sobald alle deine Themes und Plug-ins bereit sind. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "EXPERIMENTELL: Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_auto_grid_images: "EXPERIMENTELL: Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
+    about_page_hidden_groups: "Zeige die Mitglieder bestimmter Gruppen nicht auf der /about Seite an."
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link „Meldungsgründe“ aus der Administrator-Seitenleiste."
+    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link „Moderationsmeldungen“ aus der Administrator-Seitenleiste."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

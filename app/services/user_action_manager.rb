@@ -60,8 +60,8 @@ class UserActionManager
   end
 
   def self.post_rows(post)
-    # first post gets nada
-    return [] if post.is_first_post? || post.topic.blank?
+    # first post gets nada or if the author has been deleted
+    return [] if post.is_first_post? || post.topic.blank? || post.user.blank?
 
     row = {
       action_type: UserAction::REPLY,

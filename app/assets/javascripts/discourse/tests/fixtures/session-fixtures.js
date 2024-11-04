@@ -1,7 +1,5 @@
 import { deepFreeze } from "discourse-common/lib/object";
-import {
-  AUTO_GROUPS,
-} from "discourse/lib/constants";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 
 export default {
   "/session/current.json": deepFreeze({
@@ -45,6 +43,7 @@ export default {
       user_option: {
         external_links_in_new_tab: false,
         enable_quoting: true,
+        enable_smart_lists: true,
         dynamic_favicon: true,
         title_count_mode: "notifications",
         timezone: "Australia/Brisbane",
@@ -130,9 +129,17 @@ export default {
               external: false,
               segment: "secondary",
             },
+            {
+              id: 338,
+              name: "Invite",
+              value: "/new-invite",
+              icon: "paper-plane",
+              external: false,
+              segment: "primary",
+            },
           ],
         },
-      ]
+      ],
     },
   }),
 };

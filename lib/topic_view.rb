@@ -155,6 +155,56 @@ class TopicView
     @personal_message = @topic.private_message?
   end
 
+  def user_badges(badge_names)
+    return if !badge_names.present?
+
+    user_ids = Set.new
+    posts.each { |post| user_ids << post.user_id if post.user_id }
+
+    return if !user_ids.present?
+
+    badges =
+      Badge.where("LOWER(name) IN (?)", badge_names.map(&:downcase)).where(enabled: true).to_a
+
+    sql = <<~SQL
+     SELECT user_id, badge_id
+     FROM user_badges
+     WHERE user_id IN (:user_ids) AND badge_id IN (:badge_ids)
+     GROUP BY user_id, badge_id
+     ORDER BY user_id, badge_id
+   SQL
+
+    user_badges = DB.query(sql, user_ids: user_ids, badge_ids: badges.map(&:id))
+
+    user_badge_mapping = {}
+    user_badges.each do |user_badge|
+      user_badge_mapping[user_badge.user_id] ||= []
+      user_badge_mapping[user_badge.user_id] << user_badge.badge_id
+    end
+
+    indexed_badges = {}
+
+    badges.each do |badge|
+      indexed_badges[badge.id] = {
+        id: badge.id,
+        name: badge.name,
+        slug: badge.slug,
+        description: badge.description,
+        icon: badge.icon,
+        image_url: badge.image_url,
+        badge_grouping_id: badge.badge_grouping_id,
+        badge_type_id: badge.badge_type_id,
+      }
+    end
+
+    user_badge_mapping =
+      user_badge_mapping
+        .map { |user_id, badge_ids| [user_id, { id: user_id, badge_ids: badge_ids }] }
+        .to_h
+
+    { users: user_badge_mapping, badges: indexed_badges }
+  end
+
   def show_read_indicator?
     return false if !@user || !topic.private_message?
 
@@ -875,6 +925,29 @@ class TopicView
     Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
   end
 
+  def find_post_replies_ids(post_id)
+    DB.query_single(<<~SQL, post_id: post_id)
+        WITH RECURSIVE breadcrumb(id, reply_to_post_number, topic_id, level) AS (
+          SELECT id, reply_to_post_number, topic_id, 0
+            FROM posts
+          WHERE id = :post_id
+
+          UNION
+
+          SELECT p.id, p.reply_to_post_number, p.topic_id, b.level + 1
+            FROM posts AS p
+              , breadcrumb AS b
+          WHERE b.reply_to_post_number = p.post_number
+            AND b.topic_id = p.topic_id
+            AND b.level < #{SiteSetting.max_reply_history}
+        )
+        SELECT id
+          FROM breadcrumb
+        WHERE id <> :post_id
+      ORDER BY id
+    SQL
+  end
+
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
@@ -974,33 +1047,23 @@ class TopicView
         )
     end
 
+    # Reply history
+    if @reply_history_for.present?
+      post_ids = find_post_replies_ids(@reply_history_for)
+
+      @filtered_posts = @filtered_posts.where("posts.id IN (:post_ids)", post_ids:)
+      @contains_gaps = true
+    end
+
     # Filtering upwards
     if @filter_upwards_post_id.present?
-      post = Post.find(@filter_upwards_post_id)
-      post_ids = DB.query_single(<<~SQL, post_id: post.id, topic_id: post.topic_id)
-      WITH RECURSIVE breadcrumb(id, reply_to_post_number) AS (
-            SELECT p.id, p.reply_to_post_number FROM posts AS p
-              WHERE p.id = :post_id
-            UNION
-              SELECT p.id, p.reply_to_post_number FROM posts AS p, breadcrumb
-                WHERE breadcrumb.reply_to_post_number = p.post_number
-                  AND p.topic_id = :topic_id
-          )
-      SELECT id from breadcrumb
-      WHERE id <> :post_id
-      ORDER by id
-      SQL
-
-      post_ids = (post_ids[(0 - SiteSetting.max_reply_history)..-1] || post_ids)
-      post_ids.push(post.id)
+      post_ids = find_post_replies_ids(@filter_upwards_post_id) | [@filter_upwards_post_id.to_i]
 
       @filtered_posts =
         @filtered_posts.where(
-          "
-        posts.post_number = 1
-        OR posts.id IN (:post_ids)
-        OR posts.id > :max_post_id",
-          { post_ids: post_ids, max_post_id: post_ids.max },
+          "posts.post_number = 1 OR posts.id IN (:post_ids) OR posts.id > :max_post_id",
+          post_ids:,
+          max_post_id: post_ids.max,
         )
 
       @contains_gaps = true

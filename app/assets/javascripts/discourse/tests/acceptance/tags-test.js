@@ -212,25 +212,32 @@ acceptance("Tags listed by group", function (needs) {
       ["focus", "Escort"],
       "shows the tags in default sort (by count)"
     );
-    assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map((el) =>
-        el.getAttribute("href")
-      ),
-      ["/tag/focus", "/tag/escort"],
-      "always uses lowercase URLs for mixed case tags"
-    );
-    assert.strictEqual(
-      query(`a[data-tag-name="private"]`).getAttribute("href"),
-      "/u/eviltrout/messages/tags/private",
-      "links to private messages"
-    );
+
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(1) .discourse-tag")
+      .hasAttribute("href", "/tag/focus");
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(2) .discourse-tag")
+      .hasAttribute(
+        "href",
+        "/tag/escort",
+        "uses a lowercase URL for a mixed case tag"
+      );
+
+    assert
+      .dom(`a[data-tag-name="private"]`)
+      .hasAttribute(
+        "href",
+        "/u/eviltrout/messages/tags/private",
+        "links to private messages"
+      );
   });
 
   test("new topic button is not available for staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
 
     await visit("/tag/staff-only-tag");
     assert.strictEqual(count("#create-topic:disabled"), 1);
@@ -238,10 +245,10 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
 
     await visit("/tag/staff-only-tag");
-    assert.ok(!exists("#create-topic:disabled"));
+    assert.dom("#create-topic:disabled").doesNotExist();
   });
 });
 
@@ -644,7 +651,7 @@ acceptance(
 
     test("load more footer message is present", async function (assert) {
       await visit("/tag/planters");
-      assert.notOk(exists(".topic-list-bottom .footer-message"));
+      assert.dom(".topic-list-bottom .footer-message").doesNotExist();
     });
   }
 );
@@ -724,6 +731,6 @@ acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
   });
   test("load more footer message is not present", async function (assert) {
     await visit("/tag/planters");
-    assert.ok(exists(".topic-list-bottom .footer-message"));
+    assert.dom(".topic-list-bottom .footer-message").exists();
   });
 });

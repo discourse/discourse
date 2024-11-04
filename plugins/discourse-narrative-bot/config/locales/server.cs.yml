@@ -293,6 +293,10 @@ cs:
         not_found: |-
           Ale ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžeš to označit jako nevhodné pomocí **vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , abys odhalil/a více akcí pro každý příspěvek.
       search:
+        instructions: |-
+          _psst_ … V tomto tématu jsem ukryl překvapení. Pokud tuto výzvu přijímáte, **zvolte ikonu vyhledávání** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> vpravo nahoře &#8599;, vyberte "v tomto tématu" a pak ho zkuste najít.
+
+          Zkuste v tomto tématu vyhledat výraz "capy&#8203;bara".
         hidden_message: |-
           Jak jsi mohl/a přehlédnout tuhle kapybaru? :wink:
 

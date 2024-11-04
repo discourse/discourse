@@ -22,8 +22,8 @@ module("Unit | Utility | icon-library", function (hooks) {
   });
 
   test("convert icon names", function (assert) {
-    const fa5Icon = convertIconClass("fab fa-facebook");
-    assert.ok(iconHTML(fa5Icon).includes("fab-facebook"), "FA 5 syntax");
+    const faIcon = convertIconClass("fab fa-facebook");
+    assert.ok(iconHTML(faIcon).includes("fab-facebook"), "FA syntax");
 
     const iconC = convertIconClass("  fab fa-facebook  ");
     assert.ok(!iconHTML(iconC).includes("  "), "trims whitespace");

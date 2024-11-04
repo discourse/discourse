@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
   "Topic - Plugin API - registerTopicFooterButton - logged in user",
@@ -38,7 +38,7 @@ acceptance(
       });
 
       await visit("/t/internationalization-localization/280");
-      assert.ok(!exists("#topic-footer-button-my-button"));
+      assert.dom("#topic-footer-button-my-button").doesNotExist();
     });
   }
 );
@@ -76,7 +76,7 @@ acceptance(
       });
 
       await visit("/t/internationalization-localization/280");
-      assert.ok(!exists("#topic-footer-button-my-button"));
+      assert.dom("#topic-footer-button-my-button").doesNotExist();
     });
   }
 );

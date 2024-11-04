@@ -186,14 +186,14 @@ RSpec.describe TranslationOverride do
   end
 
   it "sanitizes values before upsert" do
-    xss = "<a target='blank' href='%{path}'>Click here</a> <script>alert('TEST');</script>"
+    xss = "<a target='_blank' href='%{path}'>Click here</a> <script>alert('TEST');</script>"
 
     TranslationOverride.upsert!("en", "js.themes.error_caused_by", xss)
 
     ovr =
       TranslationOverride.where(locale: "en", translation_key: "js.themes.error_caused_by").first
     expect(ovr).to be_present
-    expect(ovr.value).to eq("<a href=\"%{path}\">Click here</a> alert('TEST');")
+    expect(ovr.value).to eq("<a target=\"_blank\" href=\"%{path}\">Click here</a> alert('TEST');")
   end
 
   describe "site cache" do

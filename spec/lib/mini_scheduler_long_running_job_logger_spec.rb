@@ -3,8 +3,6 @@
 require "mini_scheduler_long_running_job_logger"
 
 RSpec.describe MiniSchedulerLongRunningJobLogger do
-  use_redis_snapshotting
-
   class Every10MinutesJob
     extend ::MiniScheduler::Schedule
 

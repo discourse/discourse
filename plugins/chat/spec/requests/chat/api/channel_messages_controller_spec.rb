@@ -76,19 +76,19 @@ RSpec.describe Chat::Api::ChannelMessagesController do
 
   describe "#create" do
     context "when force_thread param is given" do
-      it "removes it from params" do
-        sign_in(current_user)
+      let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
-        message_1 = Fabricate(:chat_message, chat_channel: channel)
+      before { sign_in(current_user) }
 
+      it "ignores it" do
         expect {
           post "/chat/#{channel.id}.json",
                params: {
-                 in_reply_to_id: message_1.id,
+                 in_reply_to_id: message.id,
                  message: "test",
                  force_thread: true,
                }
-        }.to change { Chat::Thread.where(force: false).count }.by(1)
+        }.not_to change { Chat::Thread.where(force: true).count }
       end
     end
   end

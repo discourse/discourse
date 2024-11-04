@@ -49,7 +49,6 @@ ja:
       deleted_chat_username: 削除
       dates:
         yesterday: "昨日"
-        time_tiny: "h:mm"
       all_loaded: "すべてのメッセージを表示中"
       already_enabled: "このトピックのチャットはすでに有効になっています。再読み込みしてください。"
       disabled_for_topic: "このトピックのチャットは無効になっています。"
@@ -429,10 +428,8 @@ ja:
         auto_join_users_info: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。ユーザーが %{category} カテゴリにアクセスできる場合は、このチャンネルに追加します。"
         auto_join_users_info_no_category: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。選択されたカテゴリにユーザーがアクセスできる場合は、このチャンネルに追加します。"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
-        desktop_notification_level: "デスクトップ通知"
         follow: "参加"
         followed: "参加中"
-        mobile_notification_level: "モバイルプッシュ通知"
         mute: "チャンネルをミュート"
         threading_enabled: "有効"
         threading_disabled: "無効"

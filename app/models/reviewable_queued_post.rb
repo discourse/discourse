@@ -73,7 +73,9 @@ class ReviewableQueuedPost < Reviewable
       end
     end
 
-    actions.add(:delete) if guardian.can_delete?(self)
+    actions.add(:delete) do |a|
+      a.label = "reviewables.actions.delete_single.title"
+    end if guardian.can_delete?(self)
   end
 
   def build_editable_fields(fields, guardian, args)
@@ -171,7 +173,7 @@ class ReviewableQueuedPost < Reviewable
       original_post: self.payload["raw"],
       site_name: SiteSetting.title,
     }
-    SystemMessage.create_from_system_user(
+    SystemMessage.create(
       self.target_created_by,
       (
         if self.topic.blank?

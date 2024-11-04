@@ -15,47 +15,11 @@ import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class TopicCell extends Component {
   @service currentUser;
   @service messageBus;
-
-  constructor() {
-    super(...arguments);
-
-    if (this.includeUnreadIndicator) {
-      this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
-    }
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
-  }
-
-  @bind
-  onMessage(data) {
-    const nodeClassList = document.querySelector(
-      `.indicator-topic-${data.topic_id}`
-    ).classList;
-
-    nodeClassList.toggle("read", !data.show_indicator);
-  }
-
-  get unreadIndicatorChannel() {
-    return `/private-messages/unread-indicator/${this.args.topic.id}`;
-  }
-
-  get includeUnreadIndicator() {
-    return typeof this.args.topic.unread_by_group_member !== "undefined";
-  }
-
-  get unreadClass() {
-    return this.args.topic.unread_by_group_member ? "" : "read";
-  }
 
   get newDotText() {
     return this.currentUser?.trust_level > 0
@@ -64,11 +28,11 @@ export default class TopicCell extends Component {
   }
 
   get participantGroups() {
-    if (!this.args.topic.participant_groups) {
+    if (!this.args.topic.get("participant_groups")) {
       return [];
     }
 
-    return this.args.topic.participant_groups.map((name) => ({
+    return this.args.topic.get("participant_groups").map((name) => ({
       name,
       url: groupPath(name),
     }));
@@ -76,12 +40,12 @@ export default class TopicCell extends Component {
 
   @action
   onTitleFocus(event) {
-    event.target.classList.add("selected");
+    event.target.closest(".topic-list-item").classList.add("selected");
   }
 
   @action
   onTitleBlur(event) {
-    event.target.classList.remove("selected");
+    event.target.closest(".topic-list-item").classList.remove("selected");
   }
 
   <template>
@@ -115,11 +79,7 @@ export default class TopicCell extends Component {
           @outletArgs={{hash topic=@topic}}
         />
         {{~! no whitespace ~}}
-        <UnreadIndicator
-          @includeUnreadIndicator={{this.includeUnreadIndicator}}
-          @topicId={{@topic.id}}
-          class={{this.unreadClass}}
-        />
+        <UnreadIndicator @topic={{@topic}} />
         {{~#if @showTopicPostBadges~}}
           <TopicPostBadges
             @unreadPosts={{@topic.unread_posts}}

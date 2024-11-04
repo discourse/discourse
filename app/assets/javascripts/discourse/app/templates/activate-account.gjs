@@ -70,7 +70,7 @@ export default RouteTemplate(
         } else if (response.needs_approval) {
           this.needsApproval = true;
         } else {
-          setTimeout(this.loadHomepage, 2000);
+          setTimeout(this.loadHomepage, 3000);
         }
       } catch (error) {
         this.errorMessage = i18n("user.activate_account.already_done");
@@ -84,7 +84,7 @@ export default RouteTemplate(
 
     <template>
       {{bodyClass "activate-account-page"}}
-      {{hideApplicationHeaderButtons "search" "login" "signup"}}
+      {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
       {{hideApplicationSidebar}}
       {{#if this.errorMessage}}
         <div class="alert alert-error">
@@ -110,10 +110,9 @@ export default RouteTemplate(
               {{else}}
                 <p>{{i18n "user.activate_account.please_continue"}}</p>
                 <DButton
-                  class="continue-button"
+                  class="btn-primary continue-button"
                   @translatedLabel={{i18n
                     "user.activate_account.continue_button"
-                    site_name=this.siteSettings.title
                   }}
                   @action={{this.loadHomepage}}
                 />

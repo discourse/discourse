@@ -26,7 +26,6 @@ ko:
       deleted_chat_username: 삭제되었습니다
       dates:
         yesterday: "어제"
-        time_tiny: "h:mm"
       all_loaded: "모든 메시지 보기"
       bot: "봇"
       create: "글"
@@ -225,7 +224,6 @@ ko:
       settings:
         channel_threading_label: "스레딩"
         auto_join_users_label: "자동으로 사용자 추가"
-        desktop_notification_level: "데스크톱 알림"
         follow: "가입"
         followed: "가입"
         threading_enabled: "활성화"

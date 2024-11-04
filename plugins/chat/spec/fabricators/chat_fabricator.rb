@@ -43,6 +43,7 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
   status { :open }
   name nil
+  threading_enabled true
   after_create do |channel, attrs|
     if attrs[:with_membership]
       channel.chatable.users.each do |user|
@@ -92,16 +93,20 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
 
     result =
       resolved_class.call(
-        chat_channel_id: channel.id,
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            transients[:message] ||
+              Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          thread_id: transients[:thread]&.id,
+          in_reply_to_id: transients[:in_reply_to]&.id,
+          upload_ids: transients[:upload_ids],
+        },
+        options: {
+          process_inline: true,
+        },
         guardian: user.guardian,
-        message:
-          transients[:message] ||
-            Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
-        thread_id: transients[:thread]&.id,
-        in_reply_to_id: transients[:in_reply_to]&.id,
-        upload_ids: transients[:upload_ids],
         incoming_chat_webhook: transients[:incoming_chat_webhook],
-        process_inline: true,
       )
 
     if result.failure?
@@ -193,8 +198,7 @@ Fabricator(:user_chat_channel_membership_for_dm, from: :user_chat_channel_member
   user
   chat_channel
   following true
-  desktop_notification_level 2
-  mobile_notification_level 2
+  notification_level 2
 end
 
 Fabricator(:chat_draft, class_name: "Chat::Draft") do

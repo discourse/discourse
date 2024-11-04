@@ -60,10 +60,14 @@ nb_NO:
               label: Emne-ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Stikkord
             restricted_category:
               label: Kategori
             restricted_group:
               label: Gruppe
+            restricted_groups:
+              label: Grupper
           created: Opprettet
         category_created_edited:
           fields:

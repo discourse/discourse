@@ -67,6 +67,10 @@
             @searchLogId={{this.searchLogId}}
           />
         {{/if}}
+        <PluginOutlet
+          @name="search-menu-with-results-bottom"
+          @outletArgs={{hash resultTypes=this.resultTypesWithComponent}}
+        />
       {{/if}}
       <PluginOutlet
         @name="search-menu-results-bottom"

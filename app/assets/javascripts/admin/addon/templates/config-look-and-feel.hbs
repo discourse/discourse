@@ -1,0 +1,23 @@
+<AdminPageHeader
+  @titleLabel="admin.config_areas.look_and_feel.title"
+  @descriptionLabel="admin.config_areas.look_and_feel.description"
+  @learnMoreUrl="https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966"
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/config/look-and-feel"
+      @label={{i18n "admin.config_areas.look_and_feel.title"}}
+    />
+  </:breadcrumbs>
+
+  <:tabs>
+    <NavItem
+      @route="adminConfig.lookAndFeel.themes"
+      @label="admin.config_areas.look_and_feel.themes.title"
+    />
+  </:tabs>
+</AdminPageHeader>
+
+<div class="admin-container admin-config-page__main-area">
+  {{outlet}}
+</div>

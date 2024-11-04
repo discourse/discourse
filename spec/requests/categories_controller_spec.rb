@@ -416,7 +416,19 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
       end
 
-      it "does not paginate results when lazy_load_categories is disabled" do
+      it "paginates results wihen desktop_category_page_style is categories_only_optimized" do
+        SiteSetting.desktop_category_page_style = "categories_only_optimized"
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+
+        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+      end
+
+      it "does not paginate results by default" do
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(4)
@@ -424,6 +436,11 @@ RSpec.describe CategoriesController do
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["category_list"]["categories"].count).to eq(0)
+      end
+
+      it "does not error out if page is a nested parameter" do
+        get "/categories.json?page[foo]=2"
+        expect(response.status).to eq(200)
       end
     end
   end
@@ -1486,6 +1503,23 @@ RSpec.describe CategoriesController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
+    end
+
+    context "when not logged in" do
+      before { ActionController::Base.allow_forgery_protection = true }
+      after { ActionController::Base.allow_forgery_protection = false }
+
+      it "works and is not CSRF protected" do
+        post "/categories/search.json", params: { term: "" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+          SiteSetting.uncategorized_category_id,
+          category.id,
+          subcategory.id,
+          category2.id,
+        )
+      end
     end
   end
 

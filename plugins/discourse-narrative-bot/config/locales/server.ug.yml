@@ -5,9 +5,59 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    discourse_narrative_bot_enabled: "Discourse Narrative Bot قوزغات (discobot)"
+    disable_discourse_narrative_bot_welcome_post: "Discourse Narrative Bot نىڭ قارشى ئېلىش يازمىسىنى چەكلەيدۇ"
+    discourse_narrative_bot_ignored_usernames: "Discourse Narrative Bot پەرۋا قىلمايدىغان ئىشلەتكۈچى ئاتى"
+    discourse_narrative_bot_disable_public_replies: "Discourse Narrative Bot نىڭ ئاشكارا جاۋابىنى چەكلەيدۇ"
+    discourse_narrative_bot_welcome_post_type: "Discourse Narrative Bot يوللايدىغان قارشى ئېلىش يازمىسىنىڭ تۈرى"
+    discourse_narrative_bot_welcome_post_delay: "Discourse Narrative Bot قارشى ئېلىش يازمىسىنى يوللاشتىن ئىلگىرى كۈتىدىغان ۋاقىت (n) سېكۇنت."
+    discourse_narrative_bot_skip_tutorials: "ئاتلايدىغان Discourse Narrative Bot دەرسى"
+  badges:
+    certified:
+      name: دەلىللەندى
+      description: "يېڭى ئىشلەتكۈچى دەرسىمىز تاماملاندى"
+      long_description: |
+        تەسىرلىشىشچان يېڭى ئىشلەتكۈچى دەرسى مۇۋەپپەقىيەتلىك تاماملانسا بۇ تارتۇق بېرىلىدۇ. سىز ئاكتىپلىق بىلەن سۆھبەت ئاساسىي قوراللىرىنى ئۆگەندىڭىز، ھازىر دەلىللەندىڭىز!
+    licensed:
+      name: ئىجازەت بېرىلدى
+      description: "ئالىي ئىشلەتكۈچى دەرسىمىز تاماملاندى"
+      long_description: |
+        تەسىرلىشىشچان ئالىي ئىشلەتكۈچى دەرسى مۇۋەپپەقىيەتلىك تاماملانسا بۇ تارتۇق بېرىلىدۇ. سىز سۆھبەت ئالىي قوراللىرىنى ئىشلىتىشنى بىلدىڭىز، ھازىر تامامەن دەلىللەندىڭىز!
   discourse_narrative_bot:
+    bio: "سالام، مەن ھەقىقىي ئادەم ئەمەس. مەن بۇ تور بېكەتنى قانداق ئىشلىتىشنى ئۆگىتەلەيدىغان ماشىنا ئادەم. مەن بىلەن تەسىرلەشمەكچى بولسىڭىز، ماڭا ئۇچۇر ئەۋەتىڭ ياكى مېنىڭ ئىسمىمنى ئاتاڭ."
+    tl2_promotion_message:
+      subject_template: "ھازىر سىز ئۆستۈرۈلدىڭىز، بەزى يېڭى ئىقتىدارلارنى ئۆگىنىدىغان ۋاقىت كەلدى!"
+      text_body_template: |
+        «@%{discobot_username} %{reset_trigger}» ئارقىلىق مەزكۇر ئۇچۇرغا جاۋاب قايتۇرۇسىڭىز قانداق ئىشلارنى قىلالايدىغانلىقىڭىزنى بىلەلەيسىز.
+    dice:
+      out_of_range: |-
+        ماتېماتىكىدا ئادىل شىشخالنىڭ [ئەڭ كۆپ بولغاندا 120 يۈزى] (https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) بولىدىغانلىقىنى بىلەمسىز؟
+      results: |-
+        > :game_die: %{results}
     quote:
       trigger: "نەقىل"
+      "1":
+        quote: "ھەر بىر قىيىنچىلىققا پۇرسەت يوشۇرۇنغان"
+        author: "ئالبېرت ئېينىشتىيىن"
+      "2":
+        quote: "ئەگەر ئەركىنلىكنىڭ خاتالىق ئۆتكۈزۈش ئەركىنلىكى بولمىسا ئۇنداقتا ئەركىنلىككە ئېرىشىشكە ئەرزىمەيدۇ."
+        author: "ماھاتما گەندى"
+      "3":
+        quote: "يوقاتقىنىڭ ئۈچۈن قايغۇرما، ئىگە بولۇپ باققانلىقىڭدىن كۈلۈمسىرە."
+        author: "دوكتور سېيۇس"
+      "4":
+        quote: "ئەگەر بىرەر ئىشنىڭ كۆڭلۈڭىزدىكىدەك تاماملىنىشىنى ئويلىسىڭىز ئۆزىڭىز قىلىڭ."
+        author: "چارلېز گىلېيۇم ئېتىننې"
+      "5":
+        quote: "قىلالايدىغانلىقىڭىزغا ئىشەنسىڭىز يولنىڭ يېرىمىغا كەلگەن بولىسىز."
+        author: "تېئودور رۇزۋېلت"
+      "6":
+        quote: "ھايات بىر قۇتا شاكىلاتقا ئوخشايدۇ. نېمىگە ئېرىشىدىغانلىقىڭىزنى ھەرگىز بىلمەيسىز."
+        author: "فوررېست گامپنىڭ ئانىسى"
+      "7":
+        quote: "بۇ مەن ئۈچۈن بىر كىچىك قەدەم، ئىنسانىيەت ئۈچۈن غايەت زور ئىلگىرىلەش."
+        author: "نېل ئارمستروڭ"
       "8":
         author: "ئېلىنور رۇزۋېلت"
       "9":
@@ -70,18 +120,48 @@ ug:
         discobot_disabled: سىز مايىللىقتىن مېنى چەكلەپسىز. سىز يېڭى ئىشلەتكۈچى باشلاش كۆرسەتمىسىگە يول قويسىڭىز ئاندىن مەن بىلەن تەسىرلىشەلەيسىز.
     new_user_narrative:
       reset_trigger: "دەرسلىك"
+      cert_title: "يېڭى ئىشلەتكۈچى دەرسىنى مۇۋەپپەقىيەتلىك تامالىسا تارتۇقلىنىدۇ"
       hello:
         title: "سالام!"
+        message: |-
+          %{title} غا قوشۇلغىنىڭىزغا رەھمەت، مەرھابا!
+
+          - مەن پەقەت بىر ماشىنا ئادەم، ئەمما ئەگەر ياردەمگە ئېھتىياجلىق بولسىڭىز دوستانە باشقۇرغۇچى خادىملىرىمىز (%{base_uri}/about) ياردەم بېرىدۇ.
+
+          - بىخەتەرلىك سەۋەبىدىن، يېڭى ئىشلەتكۈچىنىڭ مەشغۇلاتىنى ۋاقىتلىق چەكلىدۇق، سىزگە بولغان چۈشىنىشىمىشنىڭ چوڭقۇرلىشىشىغا ئەگىشىپ، [يېڭى ئىقتىدار] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) ۋە ([تارتۇق] (%{base_uri}/badges)) قا ئېرىشەلەيسىز.
+
+          - بىزھەمىشە [مەدەنىي جامائەت ھەرىكىتى] (%{base_uri}/guidelines) گە ئىشىنىمىز.
+      onebox:
+        not_found: |-
+          كەچۈرۈڭ، جاۋابىڭىزدىن ئۇلانمىنى تاپالمىدى! :cry:
+
+          سىز كېيىنكى ئىنكاسىڭىزدا ئايرىم بىر قۇرنى ئىگىلەپ، تۆۋەندىكى ئۇلانمىنى قوشۇشنى سىناپ باقامسىز؟
+
+          <https://en.wikipedia.org/wiki/Exotic_Shorthair>
+      images:
+        like_not_found: |-
+          [يازما]منى :heart: ياقتۇرۇشنىئۇنتۇپ قالدىڭىزمۇ؟(%{url}) :crying_cat_face:
       likes:
         reply: |-
           يازمامنى ياقتۇرغانلىقىڭىزغا رەھمەت!
         not_found: |-
           [يازما]منى :heart: ياقتۇرۇشنىئۇنتۇپ قالدىڭىزمۇ؟(%{url}) :crying_cat_face:
+      formatting:
+        reply: |-
+          ياخشى قىلدىڭىز! HTML ۋە BBCode نى پىچىمغا ئىشلىتەلەيسىز - تەپسىلاتىنى بۇ دەرستىن كۆرۈڭ (https://commonmark.org/help) :nerd:
+      bookmark:
+        instructions: |-
+          تېخىمۇ كۆپ ئۇچۇرنى بىلمەكچى بولسىڭىز، تۆۋەندىكى <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> ۋە <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **بۇ شەخسىي ئۇچۇرنى خەتكۈچ قوش**نى تاللاڭ. ئەگەر شۇنداق قىلسىڭىز، كەلگۈسىدە :gift: قا ئېرىشىشىڭىز مۇمكىن!
+      emoji:
+        reply: |-
+          بۇ :sparkles: _چىراي-ئىپادە!_ :sparkles:
       certificate:
         alt: "مۇۋەپپەقىيەت گۇۋاھنامىسى"
     advanced_user_narrative:
       reset_trigger: "ئالىي دەرسلىك"
       title: ":arrow_up: ئالىي ئىشلەتكۈچى ئىقتىدارى"
+      recover:
+        deleted_post_raw: "@%{discobot_username} نېمە ئۈچۈن يازمامنى ئۆچۈردى؟ :anguished:"
       category_hashtag:
         instructions: |-
           يازمىڭىزدا سەھىپە ۋە بەلگىلەرنى نەقىل ئالالايدىغانلىقىڭىزنى بىلەمسىز؟ مەسىلەن، %{category} سەھىپەنى كۆردىڭىزمۇ؟

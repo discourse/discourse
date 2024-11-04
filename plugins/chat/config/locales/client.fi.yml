@@ -50,7 +50,6 @@ fi:
       deleted_chat_username: poistettu
       dates:
         yesterday: "Eilen"
-        time_tiny: "t:mm"
       all_loaded: "Näytetään kaikki viestit"
       already_enabled: "Chat on jo käytössä tässä ketjussa. Päivitä."
       disabled_for_topic: "Chat on poistettu käytöstä tässä ketjussa."
@@ -406,10 +405,8 @@ fi:
         auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy alueelle %{category}."
         auto_join_users_info_no_category: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy valitulle alueelle."
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
-        desktop_notification_level: "Työpöytäilmoitukset"
         follow: "Liity"
         followed: "Liittyi"
-        mobile_notification_level: "Mobiili-push-ilmoitukset"
         mute: "Vaimenna kanava"
         threading_enabled: "Käytössä"
         threading_disabled: "Pois käytöstä"

@@ -7,7 +7,7 @@ RSpec.describe About do
 
   def register_stat(name, stats_block)
     DiscoursePluginRegistry.register_stat(
-      Stat.new(name, show_in_ui: true, expose_via_api: true, &stats_block),
+      Stat.new(name, expose_via_api: true, &stats_block),
       stub(enabled?: true),
     )
   end
@@ -15,8 +15,6 @@ RSpec.describe About do
   after { DiscoursePluginRegistry.reset! }
 
   describe "#stats" do
-    use_redis_snapshotting
-
     it "adds plugin stats to the output" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       register_stat("some_group", Proc.new { stats })

@@ -379,7 +379,7 @@ class BadgeGranter
     { errors: e.message }
   end
 
-  MAX_ITEMS_FOR_DELTA ||= 200
+  MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts = nil)
     return unless SiteSetting.enable_badges
     return unless badge.enabled

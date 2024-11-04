@@ -2440,6 +2440,58 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#delete_associated_accounts" do
+    fab!(:user_associated_accounts) do
+      UserAssociatedAccount.create!(
+        provider_name: "github",
+        provider_uid: "123456789",
+        user_id: user.id,
+        last_used: 1.seconds.ago,
+      )
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "deletes the record and logs the deletion" do
+        put "/admin/users/#{user.id}/delete_associated_accounts.json"
+
+        expect(response.status).to eq(200)
+        expect(user.user_associated_accounts).to eq([])
+        expect(UserHistory.last).to have_attributes(
+          acting_user_id: admin.id,
+          target_user_id: user.id,
+          action: UserHistory.actions[:delete_associated_accounts],
+        )
+        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      it "prevents deletion of associated accounts with a 403 response" do
+        put "/admin/users/#{user.id}/delete_associated_accounts.json"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
+        expect(user.user_associated_accounts).to be_present
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "prevents deletion of associated accounts with a 404 response" do
+        put "/admin/users/#{user.id}/delete_associated_accounts.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        expect(user.user_associated_accounts).to be_present
+      end
+    end
+  end
+
   describe "#anonymize" do
     shared_examples "user anonymization possible" do
       it "will make the user anonymous" do

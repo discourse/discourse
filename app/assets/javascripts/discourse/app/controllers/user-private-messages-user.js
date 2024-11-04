@@ -1,17 +1,16 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 export default class extends Controller {
+  @service currentUser;
   @service router;
   @controller user;
 
   get viewingSelf() {
-    return this.user.viewingSelf;
+    return this.user.get("viewingSelf");
   }
 
-  @computed("viewingSelf", "router.currentRoute.name", "currentUser.admin")
   get showWarningsWarning() {
     return (
       this.router.currentRoute.name === "userPrivateMessages.user.warnings" &&
@@ -20,20 +19,10 @@ export default class extends Controller {
     );
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get newLinkText() {
     return this.#linkText("new");
   }
 
-  @computed(
-    "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter",
-    "pmTopicTrackingState.isTracking"
-  )
   get unreadLinkText() {
     return this.#linkText("unread");
   }

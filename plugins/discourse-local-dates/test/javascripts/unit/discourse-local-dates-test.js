@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import freezeTime from "../helpers/freeze-time";
 import { applyLocalDates } from "../initializers/discourse-local-dates";
-import { freezeTime } from "./local-date-builder-test";
 
 module("Unit | discourse-local-dates", function (hooks) {
   setupTest(hooks);
@@ -48,14 +48,8 @@ module("Unit | discourse-local-dates", function (hooks) {
           discourse_local_dates_enabled: true,
         });
 
-        assert.equal(
-          from.querySelector(".relative-time").textContent,
-          "Yesterday 5:21 PM"
-        );
-        assert.equal(
-          to.querySelector(".relative-time").textContent,
-          "10:22 PM (Singapore)"
-        );
+        assert.dom(".relative-time", from).hasText("Yesterday 5:21 PM");
+        assert.dom(".relative-time", to).hasText("10:22 PM (Singapore)");
       }
     );
   });
@@ -73,14 +67,8 @@ module("Unit | discourse-local-dates", function (hooks) {
           discourse_local_dates_enabled: true,
         });
 
-        assert.equal(
-          from.querySelector(".relative-time").textContent,
-          "Yesterday 5:21 PM"
-        );
-        assert.equal(
-          to.querySelector(".relative-time").textContent,
-          "Yesterday"
-        );
+        assert.dom(".relative-time", from).hasText("Yesterday 5:21 PM");
+        assert.dom(".relative-time", to).hasText("Yesterday");
       }
     );
   });

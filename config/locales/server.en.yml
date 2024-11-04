@@ -85,6 +85,10 @@ en:
     import_error:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
+      screenshot: "Error importing theme screenshots. %{errors}"
+      screenshot_invalid_type: "The theme screenshots must be in one of the following formats: %{accepted_formats}. The screenshot %{file_name} has an invalid format."
+      screenshot_invalid_size: "The theme screenshots must be less than %{max_size}. The screenshot %{file_name} is too large."
+      screenshot_invalid_dimensions: "The theme screenshots must be maximum %{max_width}x%{max_height}. The screenshot %{file_name} exceeds this. Its dimensions are %{width}x%{height}."
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
       about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
@@ -770,7 +774,6 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
-              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -780,6 +783,15 @@ en:
             ip_address:
               blocked: "New registrations are not allowed from your IP address."
               max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+        user_password:
+          attributes:
+            password:
+              common: "is one of the 10000 most common passwords. Please use a more secure password."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
+              same_as_current: "is the same as your current password."
+              same_as_name: "is the same as your name."
+              unique_characters: "has too many repeated characters. Please use a more secure password."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1270,6 +1282,7 @@ en:
       wrong_move: "Flag cannot be moved"
       system: "System flag cannot be updated or deleted."
       used: "Flag cannot be updated or deleted because has already been used."
+      unique_name: "Flag name must be unique"
   reports:
     default:
       labels:
@@ -1344,13 +1357,15 @@ en:
       yaxis: "Day"
       description: "Number of users who increased their Trust Level during this period."
     consolidated_page_views:
-      title: "Consolidated Pageviews"
+      title: "Legacy Consolidated Pageviews"
+      title_legacy: "Consolidated Pageviews"
       xaxis:
         page_view_crawler: "Crawlers"
         page_view_anon: "Anonymous users"
         page_view_logged_in: "Logged in users"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users and crawlers."
+      description: "Legacy report showing pageviews for logged in users, anonymous users and crawlers. This has been superseded by the 'Site traffic' report."
+      description_legacy: "Pageviews for logged in users, anonymous users and crawlers."
       labels:
         post: Post
         editor: Editor
@@ -1365,13 +1380,15 @@ en:
       description: "API requests for regular API keys and user API keys."
     consolidated_page_views_browser_detection:
       title: "Consolidated Pageviews with Browser Detection (Experimental)"
+      title_legacy: "Consolidated Pageviews with Browser Detection (Experimental)"
       xaxis:
         page_view_anon_browser: "Anonymous Browser"
         page_view_logged_in_browser: "Logged In Browser"
         page_view_crawler: "Known Crawler"
         page_view_other: "Other pageviews"
       yaxis: "Day"
-      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the 'Legacy Consolidated Pageviews' report."
+      description_legacy: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them. Historical data for this report is unavailable, for historical data see the ‘Consolidated Pageviews' report."
     site_traffic:
       title: "Site traffic"
       xaxis:
@@ -1532,6 +1549,11 @@ en:
       xaxis: "Day"
       yaxis: "Total Pageviews"
       description: "Number of new pageviews from all visitors."
+    page_view_legacy_total_reqs:
+      title: "Legacy Pageviews"
+      xaxis: "Day"
+      yaxis: "Total Pageviews"
+      description: "Legacy report showing the number of new pageviews from all visitors."
     page_view_logged_in_mobile_reqs:
       title: "Logged In Pageviews"
       xaxis: "Day"
@@ -1855,13 +1877,14 @@ en:
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    must_approve_users: "All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the \"arrive at topic\" invite option)"
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
+    experimental_full_page_login: "EXPERIMENTAL: Replace the login/signup modal with a full page login/signup form."
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1875,7 +1898,7 @@ en:
     blocked_ip_blocks: "A list of private IP blocks that should never be crawled by Discourse"
     allowed_internal_hosts: "A list of internal hosts that discourse can safely crawl for oneboxing and other purposes"
     allowed_onebox_iframes: "A list of iframe src domains which are allowed via Onebox embeds. `*` will allow all default Onebox engines."
-    allowed_iframes: "A list of iframe src domain prefixes that discourse can safely allow in posts"
+    allowed_iframes: "A list of iframe src URL prefixes that Discourse can safely allow in posts"
     allowed_crawler_user_agents: "User agents of web crawlers that should be allowed to access the site. WARNING! SETTING THIS WILL DISALLOW ALL CRAWLERS NOT LISTED HERE!"
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
@@ -2244,7 +2267,7 @@ en:
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     log_anonymizer_details: "Whether to keep a user's details in the log after being anonymized."
-    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page."
+    display_eu_visitor_stats: "Show number of global and EU visitors on the /about page. It may take a few minutes for the stats to appear after turning on this setting."
 
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_threshold` posts before being considered spam."
 
@@ -2315,7 +2338,7 @@ en:
     blocked_attachment_content_types: "List of keywords used to blocklist attachments based on the content type."
     blocked_attachment_filenames: "List of keywords used to blocklist attachments based on the filename."
 
-    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse"
+    forwarded_emails_behaviour: "How to treat a forwarded email to Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Learn more</a>"
     always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
     trim_incoming_emails: "Trim part of the incoming emails that isn't relevant."
     private_email: "Don't include content from posts or topics in email title or email body. NOTE: also disables digest emails."
@@ -2483,7 +2506,7 @@ en:
     auto_handle_queued_age: "Automatically handle records that are waiting to be reviewed after this many days. Flags will be ignored. Queued posts and users will be rejected. Set to 0 to disable this feature."
     penalty_step_hours: "Default penalties for silencing or suspending users in hours. First offense defaults to the first value, second offense defaults to the second value, etc."
     penalty_include_post_message: "Automatically include offending post message in email message template when silencing or suspending a user"
-    svg_icon_subset: "Add additional FontAwesome 5 icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
+    svg_icon_subset: "Add additional FontAwesome icons that you would like to include in your assets. Use prefix 'fa-' for solid icons, 'far-' for regular icons and 'fab-' for brand icons."
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable printing)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -2579,6 +2602,7 @@ en:
     default_other_notification_level_when_replying: "Global default notification level when the user replies to a topic."
     default_other_external_links_in_new_tab: "Open external links in a new tab by default."
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
+    default_other_enable_smart_lists: "Enable smart lists when typing in the composer by default."
     default_other_enable_defer: "Enable defer topic functionality by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_skip_new_user_tips: "Skip new user onboarding tips and badges."
@@ -2697,11 +2721,9 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
-    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Enable the redesigned /about page for specific groups."
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
@@ -2781,41 +2803,9 @@ en:
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
 
     keywords:
-      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
-      here_mention_allowed_groups: "min_trust_level_for_here_mention"
-      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
-      approve_unless_allowed_groups: "approve_unless_trust_level"
-      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
-      email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
-      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
-      create_topic_allowed_groups: "min_trust_to_create_topic"
-      edit_post_allowed_groups: "min_trust_to_edit_post"
-      flag_post_allowed_groups: "min_trust_to_flag_posts"
-      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
-      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
-      create_tag_allowed_groups: "min_trust_to_create_tag"
-      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
-      skip_review_media_groups: "review_media_unless_trust_level"
-      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
-      post_links_allowed_groups: "min_trust_to_post_links"
-      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
-      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
-      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
-      clean_up_inactive_users_after_days:
-        - "deactivated"
-        - "inactive"
-        - "unactivated"
-      purge_unactivated_users_grace_period_days:
-        - "deactivated"
-        - "inactive"
-        - "unactivated"
-      navigation_menu:
-        - "sidebar"
-        - "header dropdown"
+      clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
+      purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
+      navigation_menu: "sidebar|header dropdown"
 
     placeholder:
       discourse_connect_provider_secrets:

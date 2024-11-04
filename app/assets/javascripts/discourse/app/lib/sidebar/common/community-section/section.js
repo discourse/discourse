@@ -13,6 +13,7 @@ import {
 } from "discourse/lib/sidebar/custom-community-section-links";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
+import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invite-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
@@ -26,6 +27,7 @@ const SPECIAL_LINKS_MAP = {
   "/badges": BadgesSectionLink,
   "/admin": AdminSectionLink,
   "/g": GroupsSectionLink,
+  "/new-invite": InviteSectionLink,
 };
 
 export default class CommunitySection {

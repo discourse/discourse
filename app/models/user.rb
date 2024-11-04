@@ -2,7 +2,10 @@
 
 class User < ActiveRecord::Base
   self.ignored_columns = [
-    :old_seen_notification_id, # TODO: Remove when column is dropped. At this point, the migration to drop the column has not been written.
+    :salt, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
+    :password_hash, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
+    :password_algorithm, # TODO: Remove when DropPasswordColumnsFromUsers has been promoted to pre-deploy.
+    :old_seen_notification_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
   ]
 
   include Searchable
@@ -13,11 +16,6 @@ class User < ActiveRecord::Base
   include HasDeprecatedColumns
 
   DEFAULT_FEATURED_BADGE_COUNT = 3
-
-  PASSWORD_SALT_LENGTH = 16
-  TARGET_PASSWORD_ALGORITHM =
-    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
-
   MAX_SIMILAR_USERS = 10
 
   deprecate_column :flag_level, drop_from: "3.2"
@@ -190,7 +188,6 @@ class User < ActiveRecord::Base
   after_update :change_display_name, if: :saved_change_to_name?
 
   before_save :update_usernames
-  before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
@@ -201,7 +198,6 @@ class User < ActiveRecord::Base
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
-  after_save :expire_old_email_tokens
   after_save :index_search
   after_save :check_site_contact_username
   after_save :add_to_user_directory,
@@ -306,6 +302,7 @@ class User < ActiveRecord::Base
   scope :not_suspended, -> { where("suspended_till IS NULL OR suspended_till <= ?", Time.zone.now) }
   scope :activated, -> { where(active: true) }
   scope :not_staged, -> { where(staged: false) }
+  scope :approved, -> { where(approved: true) }
 
   scope :filter_by_username,
         ->(filter) do
@@ -367,7 +364,7 @@ class User < ActiveRecord::Base
     LAST_VISIT = -2
   end
 
-  MAX_STAFF_DELETE_POST_COUNT ||= 5
+  MAX_STAFF_DELETE_POST_COUNT = 5
 
   def self.user_tips
     @user_tips ||=
@@ -410,7 +407,7 @@ class User < ActiveRecord::Base
   end
 
   def self.max_password_length
-    200
+    UserPassword::MAX_PASSWORD_LENGTH
   end
 
   def self.username_length
@@ -443,11 +440,9 @@ class User < ActiveRecord::Base
 
     return true if SiteSetting.here_mention == username
 
-    SiteSetting
-      .reserved_usernames
-      .unicode_normalize
-      .split("|")
-      .any? { |reserved| username.match?(/\A#{Regexp.escape(reserved).gsub('\*', ".*")}\z/) }
+    SiteSetting.reserved_usernames_map.any? do |reserved|
+      username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
+    end
   end
 
   def self.editable_user_custom_fields(by_staff: false)
@@ -923,13 +918,47 @@ class User < ActiveRecord::Base
     )
   end
 
-  def password=(password)
+  def password=(pw)
     # special case for passwordless accounts
-    @raw_password = password if password.present?
+    return if pw.blank?
+
+    if user_password
+      user_password.password = pw
+    else
+      build_user_password(password: pw)
+    end
+    @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
   def password
     "" # so that validator doesn't complain that a password attribute doesn't exist
+  end
+
+  def password_hash
+    Discourse.deprecate(
+      "User#password_hash is deprecated, use UserPassword#password_hash instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
+    user_password&.password_hash
+  end
+
+  def password_algorithm
+    Discourse.deprecate(
+      "User#password_algorithm is deprecated, use UserPassword#password_algorithm instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
+    user_password&.password_algorithm
+  end
+
+  def salt
+    Discourse.deprecate(
+      "User#password_salt is deprecated, use UserPassword#password_salt instead.",
+      drop_from: "3.3",
+      raise_error: false,
+    )
+    user_password&.password_salt
   end
 
   # Indicate that this is NOT a passwordless account for the purposes of validation
@@ -946,7 +975,7 @@ class User < ActiveRecord::Base
   end
 
   def has_password?
-    password_hash.present?
+    user_password ? true : false
   end
 
   def password_validator
@@ -960,20 +989,8 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt && password_algorithm
-    confirmed = self.password_hash == hash_password(password, salt, password_algorithm)
-
-    if confirmed && persisted? && password_algorithm != TARGET_PASSWORD_ALGORITHM
-      # Regenerate password_hash with new algorithm and persist
-      salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      update_columns(
-        password_algorithm: TARGET_PASSWORD_ALGORITHM,
-        salt: salt,
-        password_hash: hash_password(password, salt, TARGET_PASSWORD_ALGORITHM),
-      )
-    end
-
-    confirmed
+    return false if !user_password
+    user_password.confirm_password?(password)
   end
 
   def new_user_posting_on_first_day?
@@ -1549,7 +1566,7 @@ class User < ActiveRecord::Base
     result
   end
 
-  USER_FIELD_PREFIX ||= "user_field_"
+  USER_FIELD_PREFIX = "user_field_"
 
   def user_fields(field_ids = nil)
     field_ids = (@all_user_field_ids ||= UserField.pluck(:id)) if field_ids.nil?
@@ -1692,7 +1709,7 @@ class User < ActiveRecord::Base
       .pluck(:new_email)
   end
 
-  RECENT_TIME_READ_THRESHOLD ||= 60.days
+  RECENT_TIME_READ_THRESHOLD = 60.days
 
   def self.preload_recent_time_read(users)
     times =
@@ -1903,12 +1920,6 @@ class User < ActiveRecord::Base
     BadgeGranter.queue_badge_grant(Badge::Trigger::UserChange, user: self)
   end
 
-  def expire_old_email_tokens
-    if saved_change_to_password_hash? && !saved_change_to_id?
-      email_tokens.where("not expired").update_all(expired: true)
-    end
-  end
-
   def index_search
     # force is needed as user custom fields are updated using SQL and after_save callback is not triggered
     SearchIndexer.index(self, force: true)
@@ -1939,20 +1950,15 @@ class User < ActiveRecord::Base
     email_tokens.create!(email: email, scope: EmailToken.scopes[:signup])
   end
 
-  def ensure_password_is_hashed
-    if @raw_password
-      self.salt = SecureRandom.hex(PASSWORD_SALT_LENGTH)
-      self.password_algorithm = TARGET_PASSWORD_ALGORITHM
-      self.password_hash = hash_password(@raw_password, salt, password_algorithm)
-    end
-  end
-
   def expire_tokens_if_password_changed
     # NOTE: setting raw password is the only valid way of changing a password
     # the password field in the DB is actually hashed, nobody should be amending direct
     if @raw_password
       # Association in model may be out-of-sync
       UserAuthToken.where(user_id: id).destroy_all
+
+      email_tokens.where("not expired").update_all(expired: true) if !saved_change_to_id?
+
       # We should not carry this around after save
       @raw_password = nil
       @password_required = false
@@ -2253,8 +2259,6 @@ end
 #  updated_at                :datetime         not null
 #  name                      :string
 #  last_posted_at            :datetime
-#  password_hash             :string(64)
-#  salt                      :string(32)
 #  active                    :boolean          default(FALSE), not null
 #  username_lower            :string(60)       not null
 #  last_seen_at              :datetime
@@ -2285,7 +2289,6 @@ end
 #  secure_identifier         :string
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
-#  password_algorithm        :string(64)
 #  required_fields_version   :integer
 #  seen_notification_id      :bigint           default(0), not null
 #

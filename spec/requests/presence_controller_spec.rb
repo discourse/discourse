@@ -45,8 +45,6 @@ RSpec.describe PresenceController do
 
   describe "#update" do
     context "in readonly mode" do
-      use_redis_snapshotting
-
       before { Discourse.enable_readonly_mode }
 
       it "produces 503" do

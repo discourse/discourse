@@ -14,7 +14,6 @@ hu:
       select_trigger: Válasszon egy aktiválót
       confirm_automation_reset: Ez a művelet visszaállítja a parancsfájlt és az aktiválási beállításokat, az új állapot mentésre kerül. Folytatja?
       confirm_automation_trigger: Ez a művelet aktiválja az automatizálást, folytatja?
-      no_automation_yet: Még nem hozott létre automatizálást.
       edit_automation:
         trigger_section:
           forced: Ez az aktiválót a parancsfájl kényszeríti ki.
@@ -28,6 +27,9 @@ hu:
       fields:
         key_value:
           label_without_count: "Beállítás"
+          label_with_count:
+            one: "(%{count}) Beállítás szerkesztése"
+            other: "(%{count}) Beállítás szerkesztése"
         user:
           label: Felhasználó
         pm:
@@ -103,6 +105,8 @@ hu:
             P6M: "Hat hónap múlva"
             P1Y: "Egy év múlva"
           fields:
+            restricted_category:
+              label: Kategóriára korlátozva
             stalled_after:
               label: Aktiváló késleltetése
               description: Meghatározza a késleltetést az utolsó wikiszerkesztés és az automatizálás aktiválása között.
@@ -129,51 +133,130 @@ hu:
             TL12: "BSZ1 → BSZ2"
             TL23: "BSZ2 → BSZ3"
             TL34: "BSZ3 → BSZ4"
+        point_in_time:
+          fields:
+            execute_at:
+              label: Végrehajtás ekkor
         topic:
           fields:
             restricted_topic:
               label: Témaazonosító
         post_created_edited:
           fields:
+            original_post_only:
+              label: Csak az eredeti bejegyzés
+              description: Csak akkor aktiválódik, ha a bejegyzés az eredeti bejegyzés a témában
+            action_type:
+              label: Művelet típusa
+              description: "Opcionális, korlátozza az aktiválást csak a létrehozott vagy szerkesztett eseményekre"
             valid_trust_levels:
               label: Érvényes bizalmi szintek
+              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+            restricted_tags:
+              label: Címkék
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
             restricted_category:
               label: Kategória
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_group:
               label: Csoport
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoport postafiókjában
+            restricted_groups:
+              label: Csoportok
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája egy privát üzenet a csoportok egyikében
+            ignore_group_members:
+              label: Csoporttagok figyelmen kívül hagyása
+              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
+            ignore_automated:
+              label: Automatizált figyelmen kívül hagyása
+              description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott bejegyzésekre vonatkozik
+            first_post_only:
+              label: Csak az első bejegyzés
+              description: Csak akkor aktiválódik, ha a bejegyzés a felhasználó által létrehozott első bejegyzés
+            first_topic_only:
+              label: Csak az első téma
+              description: Csak akkor aktiválódik, ha a téma az első téma, amelyet a felhasználó hozott létre
+            skip_via_email:
+              label: "Kihagyás e-mailben"
+              description: "Hagyja ki az eseményindítót, ha a bejegyzés e-mailben jött létre"
           created: Létrehozott
+          edited: Szerkesztve
+        user_updated:
+          fields:
+            user_profile:
+              label: Felhasználói profil mezők
+              description: Csak akkor aktiválódik, ha a felhasználó kitöltötte ezeket a mezőket
+            custom_fields:
+              label: Felhasználói egyéni mezők
+              description: Csak akkor aktiválódik, ha a felhasználó kitöltötte ezeket a mezőket
+            once_per_user:
+              label: Felhasználónként egyszer
+              description: Felhasználónként csak egyszer aktiválódik
+            new_users_only:
+              label: Csak új felhasználók
+              description: Csak azoknál az új felhasználóknál aktiválódik, akik az automatizálás engedélyezése után csatlakoznak
         category_created_edited:
           fields:
             restricted_category:
               label: Szülő kategória
+              description: Opcionális, lehetővé teszi az aktiválási végrehajtás korlátozását erre a kategóriára
         pm_created:
           fields:
             restricted_user:
               label: Felhasználók
+              description: Csak az ennek a felhasználónak küldött PÜ-ek esetén aktiválódik
             restricted_group:
               label: Csoport
+              description: Csak az ehhez a csoporthoz küldött PÜ-ek esetén aktiválódik
             ignore_staff:
               label: Stáb figyelmen kívül hagyása
               description: Az aktiválás kihagyása, ha a küldő stábtag
+            ignore_group_members:
+              label: Csoporttagok figyelmen kívül hagyása
+              description: Hagyja ki az eseményindítót, ha a feladó a fent meghatározott csoport tagja
+            ignore_automated:
+              label: Automatizált figyelmen kívül hagyása
+              description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott PÜ-re vonatkozik
             valid_trust_levels:
               label: Érvényes bizalmi szintek
+              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+        topic_tags_changed:
+          fields:
+            watching_categories:
+              label: Figyelt kategóriák
+              description: Csak akkor aktiválódik, ha a téma e kategóriák egyikébe tartozik
+            watching_tags:
+              label: Figyelt címkék
+              description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
+            trigger_with_pms:
+              label: Aktiválás PÜ-el
+              description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
         after_post_cook:
           fields:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
+              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
             restricted_category:
               label: Kategória
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
             restricted_tags:
               label: Címkék
+              description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
       scriptables:
+        not_found: Nem található a `%{script}` szkript az automatizáláshoz `%{automation}`, ellenőrizze, hogy a kapcsolódó bővítmény telepítve van
         zapier_webhook:
           fields:
             webhook_url:
               label: Webhook webcíme
+              description: "Érvényes Zapier webhook URL-t vár, pl.: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
         auto_responder:
           fields:
+            once:
+              label: Egyszer
+              description: Témánként csak egyszer válaszol
             word_answer_list:
               label: Szó/válasz párok listája
+              description: "Egy kulcs/érték csoportok listáját definiálja, ahol a `kulcs` a keresett kifejezés, az `érték` pedig a válasz szövege. A `kulcs` üresen hagyható, hogy minden triggerre válaszoljon, a tartalomtól függetlenül. Fontos, hogy az `érték` elfogadja a {{key}} helyőrzőt, amelyet a válaszban a `kulcs` értéke vált fel. A `kulcs` regexként kerül értékelésre, ezért a speciális karaktereket, mint a `.`, menekíteni kell, ha valóban pontot jelent, pl.: \\."
             answering_user:
               label: Válaszoló felhasználó
               description: Alapértelmezetten a rendszerfelhasználó
@@ -181,14 +264,39 @@ hu:
           fields:
             tags:
               label: Címkék
+              description: A témához hozzáadandó címkék listája.
         post:
           fields:
+            creator:
+              label: Szerző
+              post_creator_context: Bejegyzés szerzője
+              updated_user_context: Frissített felhasználó
             topic:
               label: Témaazonosító
+            post:
+              label: Bejegyzés tartalma
+        topic:
+          fields:
+            creator:
+              label: Szerző
+              updated_user_context: Frissített felhasználó
+            body:
+              label: Tématörzs
+            title:
+              label: Témacím
+            category:
+              label: Témakategória
+            tags:
+              label: Témacímkék
         group_category_notification_default:
           fields:
             group:
               label: Csoport
+            notification_level:
+              label: Értesítési szint
+            update_existing_members:
+              label: Meglévő tagok frissítése
+              description: Frissíti a meglévő csoporttagok értesítési szintjét
         user_global_notice:
           fields:
             level:
@@ -203,12 +311,24 @@ hu:
             error: Hiba
         user_group_membership_through_badge:
           fields:
+            badge_name:
+              label: Jelvény neve
             group:
               label: Csoport
+              description: Célcsoport. A megadott jelvénnyel rendelkező felhasználók hozzáadódnak ehhez a csoporthoz
+            update_user_title_and_flair:
+              label: Felhasználó címének és hangulatának frissítése
+              description: Opcionális, Felhasználó címének és hangulatának frissítése
+            remove_members_without_badge:
+              label: Távolítsa el a meglévő tagokat jelvény nélkül
+              description: 'Opcionális: Távolítsa el a meglévő csoporttagokat a megadott jelvény nélkül'
             badge:
               label: Jelvény
+              description: Jelvény kiválasztása
         suspend_user_by_email:
           fields:
+            suspend_until:
+              label: Felfüggesztés eddig (alapértelmezett)
             reason:
               label: Ok (alapértelmezett)
             actor:
@@ -226,21 +346,72 @@ hu:
           fields:
             topic_id:
               label: Témaazonosító
+            banner_until:
+              label: Készítsen bannert addig
             user:
               label: Felhasználó
+              description: "A bannert létrehozó felhasználó (alapértelmezett: system)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: Ellenőrzött szavak
+        topic_required_words:
+          fields:
+            words:
+              label: Kötelező szavak listája
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: A résztvevők csoportjának neve
+            giftee_assignment_messages:
+              label: Az ajándékozónak küldött üzenetek
+        send_pms:
+          add_a_pm_btn:
+            label: PÜ hozzáadása
+          fields:
+            receiver:
+              label: PÜ fogadó
+            sendable_pms:
+              label: PÜ-ek
+            sender:
+              label: PÜ feladó
         close_topic:
           fields:
             topic:
               label: Témaazonosító
+            message:
+              label: Záró üzenet
+              description: "Választható üzenet, amelyet a téma lezárt rekordjában kell megjeleníteni"
             user:
               label: Felhasználó
+              description: "A témát lezáró felhasználó (alapértelmezett: rendszer)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "Felhasználó egyéni mező neve"
       models:
+        script:
+          name:
+            label: Szkript
+        trigger:
+          name:
+            label: Trigger
         automation:
           name:
             label: Név
+          trigger:
+            label: Trigger
+          script:
+            label: Szkript
           version:
             label: Verzió
           enabled:
             label: Engedélyezed
           disabled:
             label: Kikapcsolt
+          placeholders:
+            label: Helyőrzők
+          last_updated_at:
+            label: Utolsó frissítés
+          last_updated_by:
+            label: Frissítette

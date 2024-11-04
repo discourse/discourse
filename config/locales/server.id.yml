@@ -510,7 +510,6 @@ id:
               same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_current: "sama dengan kata sandi saat ini."
-              same_as_previous: "sama dengan kata sandi Anda sebelumnya."
               same_as_name: "sama dengan nama Anda."
               unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
             username:
@@ -520,6 +519,15 @@ id:
             ip_address:
               blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
               max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
+        user_password:
+          attributes:
+            password:
+              common: "adalah satu dari 10000 kata sandi umum. Mohon gunakan kata sandi yang lebih aman."
+              same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
+              same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
+              same_as_current: "sama dengan kata sandi saat ini."
+              same_as_name: "sama dengan nama Anda."
+              unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
         user_profile:
           attributes:
             featured_topic_id:
@@ -960,7 +968,7 @@ id:
       yaxis: "Hari"
       description: "Jumlah pengguna yang meningkatkan Trust Level mereka selama periode ini."
     consolidated_page_views:
-      title: "Tampilan Halaman Terkonsolidasi"
+      title_legacy: "Tampilan Halaman Terkonsolidasi"
       xaxis:
         page_view_crawler: "Perayap"
         page_view_anon: "Pengguna anonim"
@@ -980,6 +988,9 @@ id:
       description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
     consolidated_page_views_browser_detection:
       yaxis: "Hari"
+    site_traffic:
+      yaxis: "Hari"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Hari"
@@ -1091,6 +1102,9 @@ id:
       xaxis: "Hari"
     page_view_total_reqs:
       title: "Tampilan halaman"
+      xaxis: "Hari"
+      yaxis: "Total Penampilan-halaman"
+    page_view_legacy_total_reqs:
       xaxis: "Hari"
       yaxis: "Total Penampilan-halaman"
     page_view_logged_in_mobile_reqs:
@@ -1232,7 +1246,6 @@ id:
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
-    post_menu: "Tentukan item mana yang muncul di menu post, dan dalam urutan apa."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
     hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
     blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
@@ -1328,6 +1341,7 @@ id:
     not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
     missing_user_field: "Anda belum mengisi semua kolom yang diperlukan pengguna"
+    second_factor_title: "Otentikasi Dua-Faktor"
     too_many_authenticators: "Maaf, Anda tidak dapat memiliki lebih dari 50 autentikator. Harap hapus yang sudah ada dan coba lagi."
     too_many_security_keys: "Maaf, Anda tidak boleh memiliki lebih dari 50 kunci keamanan. Silakan hapus yang sudah ada dan coba lagi."
   admin:

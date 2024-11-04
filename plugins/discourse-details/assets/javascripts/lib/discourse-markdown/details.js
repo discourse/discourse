@@ -2,8 +2,12 @@ const rule = {
   tag: "details",
   before(state, tagInfo) {
     const attrs = tagInfo.attrs;
-    state.push("bbcode_open", "details", 1);
+    const details = state.push("bbcode_open", "details", 1);
     state.push("bbcode_open", "summary", 1);
+
+    if (attrs.open === "") {
+      details.attrs = [["open", ""]];
+    }
 
     let token = state.push("text", "", 0);
     token.content = attrs["_default"] || "";

@@ -41,10 +41,14 @@ sq:
               label: ID e temës
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Etiketat
             restricted_category:
               label: Kategori
             restricted_group:
               label: Grupi
+            restricted_groups:
+              label: Grupet
           created: Krijuar
         category_created_edited:
           fields:

@@ -4,7 +4,6 @@ import {
   acceptance,
   count,
   exists,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -22,16 +21,17 @@ acceptance("Group Members - Anonymous", function () {
     );
     assert.ok(exists(".group-members .group-member"), "it lists group members");
 
-    assert.ok(
-      !exists(".group-member-dropdown"),
-      "it does not allow anon user to manage group members"
-    );
+    assert
+      .dom(".group-member-dropdown")
+      .doesNotExist("it does not allow anon user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder"),
+        "it should display the right filter placeholder"
+      );
   });
 });
 
@@ -60,16 +60,17 @@ acceptance("Group Members", function (needs) {
   test("Viewing Members as an admin user", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      exists(".group-member-dropdown"),
-      "it allows admin user to manage group members"
-    );
+    assert
+      .dom(".group-member-dropdown")
+      .exists("it allows admin user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder_admin"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder_admin"),
+        "it should display the right filter placeholder"
+      );
   });
 
   test("Shows bulk actions as an admin user", async function (assert) {
@@ -83,20 +84,17 @@ acceptance("Group Members", function (needs) {
     const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
 
-    assert.ok(
-      exists('[data-value="removeMembers"]'),
-      "it includes remove member option"
-    );
+    assert
+      .dom('[data-value="removeMembers"]')
+      .exists("it includes remove member option");
 
-    assert.ok(
-      exists('[data-value="makeOwners"]'),
-      "it includes make owners option"
-    );
+    assert
+      .dom('[data-value="makeOwners"]')
+      .exists("it includes make owners option");
 
-    assert.ok(
-      exists('[data-value="setPrimary"]'),
-      "it includes set primary option"
-    );
+    assert
+      .dom('[data-value="setPrimary"]')
+      .exists("it includes set primary option");
   });
 
   test("Shows bulk actions as a group owner", async function (assert) {
@@ -112,37 +110,32 @@ acceptance("Group Members", function (needs) {
     const memberDropdown = selectKit(".bulk-group-member-dropdown");
     await memberDropdown.expand();
 
-    assert.ok(
-      exists('[data-value="removeMembers"]'),
-      "it includes remove member option"
-    );
+    assert
+      .dom('[data-value="removeMembers"]')
+      .exists("it includes remove member option");
 
-    assert.ok(
-      exists('[data-value="makeOwners"]'),
-      "it includes make owners option"
-    );
+    assert
+      .dom('[data-value="makeOwners"]')
+      .exists("it includes make owners option");
 
-    assert.notOk(
-      exists('[data-value="setPrimary"]'),
-      "it does not include set primary (staff only) option"
-    );
+    assert
+      .dom('[data-value="setPrimary"]')
+      .doesNotExist("it does not include set primary (staff only) option");
   });
 
   test("Bulk actions - Menu, Select all and Clear all buttons", async function (assert) {
     await visit("/g/discourse");
 
-    assert.ok(
-      !exists(".bulk-select-buttons-wrap details"),
-      "it does not show menu button if nothing is selected"
-    );
+    assert
+      .dom(".bulk-select-buttons-wrap details")
+      .doesNotExist("it does not show menu button if nothing is selected");
 
     await click("button.bulk-select");
     await click(".bulk-select-all");
 
-    assert.ok(
-      exists(".bulk-select-buttons-wrap details"),
-      "it shows menu button if something is selected"
-    );
+    assert
+      .dom(".bulk-select-buttons-wrap details")
+      .exists("it shows menu button if something is selected");
   });
 });
 

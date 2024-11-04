@@ -31,7 +31,6 @@ hr:
       deleted_chat_username: izbrisao
       dates:
         yesterday: "Jučer"
-        time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
       already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
       disabled_for_topic: "Chat je onemogućen na ovu temu."
@@ -141,6 +140,7 @@ hr:
       bookmark_message: "Zabilješka"
       bookmark_message_edit: "Uredi oznaku"
       save: "Spremi"
+      select: "Odaberite"
       unread_threads_count:
         one: "Imate %{count} nepročitanu raspravu"
         few: "Imate %{count} nepročitane rasprave"

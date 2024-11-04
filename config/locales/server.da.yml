@@ -89,6 +89,7 @@ da:
       objects:
         required: "skal udfyldes"
         not_valid_integer_value: "skal være et heltal"
+        string_value_not_valid_url: "skal være en gyldig URL"
     locale_errors:
       top_level_locale: "Den øverste nøgle i en locale fil skal matche det relevante locale's navn."
       invalid_yaml: "Oversættelse YAML ugyldig"
@@ -510,6 +511,15 @@ da:
             ip_address:
               blocked: "Nye registreringer er ikke tilladt fra din IP adresse."
               max_new_accounts_per_registration_ip: "Nye kontoer kan ikke oprettes fra din IP-adresse (max antal er nået). Kontakt et medlem af hjælperteamet."
+        user_password:
+          attributes:
+            password:
+              common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              same_as_username: "er det samme som dit brugernavn. Brug venligst en mere sikker adgangskode."
+              same_as_email: "er det samme som din email. Brug venligst en mere sikker adgangskode."
+              same_as_current: "er det samme som din nuværende adgangskode."
+              same_as_name: "er det samme som dit navn."
+              unique_characters: "har for mange af de samme tegn. Brug venligst en mere sikker adgangskode."
         user_profile:
           attributes:
             featured_topic_id:
@@ -955,7 +965,7 @@ da:
         tl4_reached: "Nået TL4"
       yaxis: "Dag"
     consolidated_page_views:
-      title: "Konsoliderede Sidevisninger"
+      title_legacy: "Konsoliderede Sidevisninger"
       xaxis:
         page_view_crawler: "Crawlere"
         page_view_anon: "Anonyme brugere"
@@ -973,6 +983,9 @@ da:
       yaxis: "Dag"
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1115,6 +1128,9 @@ da:
       xaxis: "Dag"
       yaxis: "Totalt antal Sidevisninger"
       description: "Antal nye sidevisninger fra alle besøgende."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal Sidevisninger"
     page_view_logged_in_mobile_reqs:
       title: "Logged in Sidevisninger"
       xaxis: "Dag"
@@ -1232,8 +1248,24 @@ da:
       host_names: "Din config/database.yml fil bruger standardnavnet localhost som værtsnavn. Opdatér den med webstedets værtsnavn."
       queue_size: "Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller at du kan være nødt til at tilføre flere Sidekiq arbejder-resurser."
       ram: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
+      google_oauth2_config: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_google_oauth2_logins), men klient-id''et og klientens hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Se denne vejledning for at lære mere</a>.'
+      facebook_config: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_facebook_logins), men app-id''et og den hemmelige værdi er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Se denne vejledning for at lære mere</a>.'
+      twitter_config: 'Serveren er konfigureret til at tillade tilmelding og login med Twitter (enable_twitter_logins), men nøgle- og hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Se denne vejledning for at lære mere</a>.'
+      github_config: 'Serveren er konfigureret til at tillade tilmelding og login med GitHub (enable_github_logins), men klient-id og hemmelig værdie er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Se denne vejledning for at lære mere</a>.'
+      s3_upload_config: 'Serveren er konfigureret til at overføre filer til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_upload_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
+      s3_backup_config: 'Serveren er konfigureret til at overføre sikkerhedskopier til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_backup_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
+      s3_cdn: 'Serveren er konfigureret til at overføre filer til S3, men der er ingen S3 CDN konfigureret. Dette kan føre til dyre S3-omkostninger og langsommere webstedsydelse. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Se "Brug af objektlagring til overførsler" for at lære mere</a>.'
+      image_magick: 'Serveren er konfigureret til at oprette miniaturebilleder af store billeder, men ImageMagick er ikke installeret. Installer ImageMagick hjælp af din foretrukne pakkehåndtering eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hent den nyeste version</a>.'
+      failing_emails: 'Der er %{num_failed_jobs} e-mail-job(s), der mislykkedes. Tjek din app.yml, og sørg for, at mailserverindstillingerne er korrekte. <a href="%{base_path}/sidekiq/retries" target="_blank">Se de mislykkede job i Sidekiq</a>.'
       subfolder_ends_in_slash: "Din undermappe opsætning er forkert; DISCOURSE_RELATIVE_URL_ROOT ender med en skråstreg."
+      email_polling_errored_recently:
+        one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
+        other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
       missing_mailgun_api_key: "Serveren er konfigureret til at sende e-mails via Mailgun, men du har ikke angivet en API-nøgle, der bruges til at bekræfte webhook-meddelelserne."
+      bad_favicon_url: "Favicon ikonet kunne ikke indlæses. Kontroller din favicon-indstilling i <a href='%{base_path}/admin/site_settings'>Webstedsindstillinger</a>."
+      poll_pop3_timeout: "Forbindelsen til POP3-serveren udløber. Indgående e-mail kunne ikke hentes. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a> og tjenesteudbyder."
+      poll_pop3_auth_error: "Forbindelsen til POP3-serveren mislykkes med en godkendelsesfejl. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a>."
+      force_https: "Dit websted bruger SSL. Men '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' er endnu ikke aktiveret i dine webstedsindstillinger."
       google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
   site_settings:
     disabled: "deaktiveret"
@@ -1322,13 +1354,11 @@ da:
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
-    allowed_iframes: "En liste over iframe src-domænepræfikser, som discourse på sikker vis kan tillade i indlæg"
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
-    post_menu_hidden_items: "Menuen vil automatisk gemme disse elementer i indlægs menuen, med mindre en udvidelse er tilvalgt."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
     send_welcome_message: "Send alle nye brugere en velkomstbesked, med en hurtig start guide."
@@ -1482,7 +1512,6 @@ da:
     mailgun_api_key: "Mailgun Secret API key used to verify webhook messages."
     reset_bounce_score_after_days: "Nulstil automatisk bounce score efter X dage."
     blocked_attachment_filenames: "Liste over nøgleord, der bruges til at blokere vedhæftede filer baseret på filavnet."
-    forwarded_emails_behaviour: "Sådan behandles en videresendt e-mail til Discourse"
     always_show_trimmed_content: "Vis altid beskåret del af indgående e-mails. ADVARSEL: afslører muligvis e-mail-adresser."
     trim_incoming_emails: "Beskær en del af de indgående e-mails, der ikke er relevante."
     delete_rejected_email_after_days: "Slet afviste e-mails, der er ældre end (n) dage."

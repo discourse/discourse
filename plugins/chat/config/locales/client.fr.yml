@@ -50,7 +50,6 @@ fr:
       deleted_chat_username: supprimé
       dates:
         yesterday: "Hier"
-        time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
       already_enabled: "La discussion est déjà activée sur ce sujet. Veuillez actualiser."
       disabled_for_topic: "La discussion est désactivée sur ce sujet."
@@ -459,10 +458,8 @@ fr:
         auto_join_users_info: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie %{category}."
         auto_join_users_info_no_category: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie sélectionnée."
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
-        desktop_notification_level: "Notifications sur le bureau"
         follow: "Rejoindre"
         followed: "Rejoint"
-        mobile_notification_level: "Notifications push mobiles"
         mute: "Mettre le canal en sourdine"
         threading_enabled: "Activée"
         threading_disabled: "Désactivé"

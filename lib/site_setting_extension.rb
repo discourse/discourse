@@ -143,6 +143,12 @@ module SiteSettingExtension
     @deprecated_settings ||= SiteSettings::DeprecatedSettings::SETTINGS.map(&:first).to_set
   end
 
+  def deprecated_setting_alias(setting_name)
+    SiteSettings::DeprecatedSettings::SETTINGS
+      .find { |setting| setting.second.to_s == setting_name.to_s }
+      &.first
+  end
+
   def settings_hash
     result = {}
 
@@ -302,7 +308,29 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
+    translated_keywords = I18n.t("site_settings.keywords.#{setting}", default: "")
+    english_translated_keywords = []
+
+    if I18n.locale != :en
+      english_translated_keywords =
+        I18n.t("site_settings.keywords.#{setting}", default: "", locale: :en).split("|")
+    end
+
+    # TODO (martin) We can remove this workaround of checking if
+    # we get an array back once keyword translations in languages other
+    # than English have been updated not to use YAML arrays.
+    if translated_keywords.is_a?(Array)
+      return(
+        (
+          translated_keywords + [deprecated_setting_alias(setting)] + english_translated_keywords
+        ).compact
+      )
+    end
+
+    translated_keywords
+      .split("|")
+      .concat([deprecated_setting_alias(setting)] + english_translated_keywords)
+      .compact
   end
 
   def placeholder(setting)
@@ -438,7 +466,7 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
-  HOSTNAME_SETTINGS ||= %w[
+  HOSTNAME_SETTINGS = %w[
     disabled_image_download_domains
     blocked_onebox_domains
     exclude_rel_nofollow_domains
@@ -521,6 +549,10 @@ module SiteSettingExtension
         secret?: secret_settings.include?(name),
       }
     end
+  end
+
+  def valid_areas
+    Set.new(SiteSetting::VALID_AREAS | DiscoursePluginRegistry.site_setting_areas.to_a)
   end
 
   protected
@@ -695,9 +727,9 @@ module SiteSettingExtension
 
       if opts[:area]
         split_areas = opts[:area].split("|")
-        if split_areas.any? { |area| !SiteSetting::VALID_AREAS.include?(area) }
+        if split_areas.any? { |area| !SiteSetting.valid_areas.include?(area) }
           raise Discourse::InvalidParameters.new(
-                  "Area is incorrect. Valid areas: #{SiteSetting::VALID_AREAS.join(", ")}",
+                  "Area is invalid, valid areas are: #{SiteSetting.valid_areas.join(", ")}",
                 )
         end
         areas[name] = split_areas

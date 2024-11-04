@@ -21,6 +21,7 @@ fa_IR:
             kb: کیلوبایت
             mb: مگابایت
             tb: ترابایت
+      percent: "%{count}%"
       short:
         thousands: "%{number} هزار"
         millions: "%{number} میلیون"
@@ -123,7 +124,7 @@ fa_IR:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
       close: "بستن"
-      twitter: "در توییتر به اشتراک بگذارید"
+      twitter: "هم‌رسانی در X"
       facebook: "در فیس‌بوک به اشتراک بگذارید"
       email: "ارسال از طریق ایمیل"
       url: "کپی و اشتراک‌گذاری نشانی وب"
@@ -260,6 +261,7 @@ fa_IR:
       pill: "پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     about:
+      edit: "ویرایش این صفحه"
       simple_title: "درباره"
       title: "درباره %{title}"
       stats: "آمارهای سایت"
@@ -277,6 +279,8 @@ fa_IR:
       user_count: "ثبت‌نام‌ها"
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
+      view_more: "نمایش بیشتر"
+      view_less: "نمایش کمتر"
       activities:
         topics:
           one: "%{formatted_number} موضوع"
@@ -284,6 +288,9 @@ fa_IR:
         posts:
           one: "%{formatted_number} فرسته"
           other: "%{formatted_number} نوشته"
+        active_users:
+          one: "%{formatted_number} کاربر فعال"
+          other: "%{formatted_number} کاربر فعال"
         likes:
           one: "%{formatted_number} پسندیده"
           other: "%{formatted_number} پسندیده"
@@ -1141,7 +1148,7 @@ fa_IR:
       allowed_pm_users: "مجاز"
       ignored_users: "صرف نظر شده"
       tracked_topics_link: "نمایش"
-      automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم."
+      automatically_unpin_topics: "برداشتن پین موضوعات وقتی به پایین صفحه رسیدم"
       apps: "برنامه‌ها"
       revoke_access: "لغو دسترسی"
       undo_revoke_access: "بازنشانی لغو دسترسی"
@@ -1305,7 +1312,6 @@ fa_IR:
         add_email: "افزودن ایمیل جایگزین"
         auth_override_instructions: "ایمیل را از طریق ارائه دهنده احراز هویت می‌توانید به‌روزرسانی کنید."
         no_secondary: "بدون ایمیل ثانویه"
-        instructions: "هرگز به عموم نمایش داده نخواهد شد"
         ok: "برای تایید ایمیلی برایتان ارسال خواهیم کرد."
         required: "لطفا یک آدرس ایمیل وارد کنید"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
@@ -1328,13 +1334,12 @@ fa_IR:
         action: "برای فعال کردن حساب‌کاربری خود اینجا کلیک کنید"
         already_done: "متاسفیم، این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب‌کاربری شما در حال حاضر فعال است."
         please_continue: "حساب‌کاربری جدید شما تایید شد؛ شما به صفحه اصلی هدایت می‌شوید. "
-        continue_button: "برو به %{site_name}"
         welcome_to: "به %{site_name} خوش آمدید!"
         approval_required: "یکی از مدیران باید حساب کاربری را برای دسترسی به این انجمن به‌صورت دستی تایید کند. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
       name:
         title: "نام"
-        instructions: "نام و نام‌خانوادگی شما (اختیاری)."
-        instructions_required: "نام و نام خانوادگی شما."
+        instructions: "نام و نام‌خانوادگی شما (اختیاری)"
+        instructions_required: "نام و نام خانوادگی شما"
         required: "لطفاً یک نام وارد کنید"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
@@ -1497,12 +1502,25 @@ fa_IR:
           success: "لینک دعوت با موفقیت ایجاد شد!"
           error: "خطایی در هنگام ایجاد لینک رخ داد"
         invite:
-          new_title: "ایجاد دعوت‌نامه"
+          new_title: "دعوت‌نامه عضوها"
           edit_title: "ویرایش دعوت‌نامه"
           instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
-          copy_link: "کپی پیوند"
           expires_in_time: "در %{time} منقضی می شود"
           expired_at_time: "منقضی شده در %{time}"
+          create_link_to_invite: "یک پیوند ایجاد کنید که بتوان آن را هم‌هم‌رسانی کنید و دسترسی سریع‌تر به این وبگاه را فراهم کند."
+          copy_link_and_share_it: "پیوند زیر را رونوشت کنید و آن را هم‌رسانی کنید تا دسترسی سریع‌تر به این وبگاه فراهم شود."
+          copy_link: "رونوشت پیوند"
+          link_copied: "پیوند رونوشت شد!"
+          share_link: "هم‌رسانی پیوند"
+          link_validity_MF: |
+            پیوند تا حداکثر { user_count, plural,
+                one {# کاربر}
+              other {# کاربر}
+            } معتبر است و در { duration_days, plural,
+                one {# روز}
+              other {# روز}
+            } دیگر منقضی می‌شود.
+          edit_link_options: "گزینه‌های پیوند را ویرایش کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
           restrict: "محدود کردن به"
@@ -1512,11 +1530,15 @@ fa_IR:
           max_redemptions_allowed: "حداکثر استفاده"
           add_to_groups: "افزودن به گروه‌ها"
           invite_to_topic: "وارد شدن به موضوع"
-          expires_at: "انقضا بعد از"
-          custom_message: "پیام شخصی اختیاری"
+          expires_at: "انقضا در"
+          expires_after: "انقضا بعد از"
+          custom_message: "پیام سفارشی"
+          custom_message_placeholder: "یک یادداشت شخصی به دعوت‌نامه خود اضافه کنید."
           send_invite_email: "ذخیره و ارسال ایمیل"
           send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
-          save_invite: "ذخیره دعوت‌نامه"
+          save_invite: "ذخیره"
+          cancel: "انصراف"
+          create_link: "ایجاد پیوند"
           invite_saved: "دعوتنامه ذخیره شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
@@ -1721,7 +1743,6 @@ fa_IR:
     search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
       header_title: "خوش آمدید!"
-      subheader_title: "ثبت نام حساب کاربری جدید"
       disclaimer: "با ثبت نام شما با <a href='%{privacy_link}' target='blank'>حریم خصوصی</a> و <a href='%{tos_link}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
       title: "ثبت نام"
       failed: "اشتباهی روی داده، شاید این نام کاربری پیش‌تر استفاده شده؛ پیوند فراموشی گذرواژه می‌تواند کمک کند."
@@ -1759,7 +1780,6 @@ fa_IR:
       confirm_button: اتمام ورود
     login:
       header_title: "خوش آمدید"
-      subheader_title: "ورود به حساب کاربری"
       title: "ورود"
       username: "کاربر"
       password: "رمز‌عبور"
@@ -3565,8 +3585,15 @@ fa_IR:
         installed_version: "نصب"
         latest_version: "آخرین"
         problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
+        dismiss_notice: "رد کردن"
         new_features:
           learn_more: "بیشتر بدانید..."
+          experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
+          experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
+          experiment_toggled_too_fast: "شما ویژگی آزمایشی را خیلی سریع تغییر داده‌اید. لطفا چند ثانیه منتظر بمانید و دوباره تلاش کنید."
+          experiment_tooltip:
+            title: "ویژگی آزمایشی ما را امتحان کنید."
+            content: "ویژگی جدید ما را امتحان کنید! این ویژگی همچنان در مرحله آزمایشی است، بنابراین ممکن است در هر زمانی حذف شود. شما می‌توانید هر زمان که خواستید از آن انصراف دهید."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
         no_problems: "هیچ مشکلات پیدا نشد."
@@ -3833,15 +3860,20 @@ fa_IR:
           screened_ips: "نمایش IP ها"
           screened_urls: "URL های نمایش داده شده"
           search_logs: "جستجوی گزارش‌ها"
-          security: "امنیت"
-          spam: "هرز‌نامه"
+      section_landing_pages:
+        account:
+          title: "حساب کاربری"
+          backups:
+            title: "نسخه‌های پشتیبان"
+          whats_new:
+            title: "چه چیزی جدید شده"
       config_areas:
         about:
           header: "درباره سایت شما"
           community_name: "نام انجمن"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "سازمان شما"
-          company_name: "نام شرکت"
+          company_name: "نام"
           optional: "(اختیاری)"
           update: "به روز رسانی"
           saved: "ذخیره شد!"
@@ -3859,6 +3891,9 @@ fa_IR:
             invalid_applies_to: "مورد نیاز"
             topic: "موضوعات"
             post: "فرسته‌ها"
+        look_and_feel:
+          themes:
+            title: "قالب‌ها"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -3870,6 +3905,7 @@ fa_IR:
         change_settings_short: "تنظیمات"
         howto: "چگونه یک افزونه نصب کنیم؟"
         author: "توسط %{author}"
+        experimental_badge: "آزمایشی"
         learn_more: "بیشتر بدانید"
         sidebar_link:
           installed: "نصب"
@@ -4287,6 +4323,7 @@ fa_IR:
             approve_user: "کاربر پذیرفته‌شده"
             change_theme_setting: "تغییر دادن تنظیمات قالب"
             delete_group: "حذف گروه"
+            delete_associated_accounts: "حذف حساب‌های کاربری مرتبط"
         screened_emails:
           title: "ایمیل ها نمایش داده شده"
           description: "وقتی کسی سعی می کند یک حساب جدید ایجاد کند، آدرس‌های ایمیل زیر بررسی و ثبت نام مسدود خواهد شد، و یا برخی از اقدام های دیگر انجام می شود."
@@ -4314,6 +4351,7 @@ fa_IR:
             text: "جمع کردن"
             title: "ساخت مسدود سازی زیر شبکه جدید اگر آنها آخرین 'min_ban_entries_for_roll_up' ورودی ها بودند."
         search_logs:
+          title: "جستجوی گزارش‌ها"
           searches: "جستجوها"
           types:
             header: "سربرگ"
@@ -4321,6 +4359,7 @@ fa_IR:
         logster:
           title: "گزارش خطا"
       watched_words:
+        title: "کلمات تماشا شده"
         search: "جست‌وجو"
         clear_filter: "واضح"
         case_sensitive: "«حساس به حروف کوچک و بزرگ»"
@@ -4415,6 +4454,9 @@ fa_IR:
           text: "نشان دادن"
         check_sso:
           text: "نمایش"
+        delete_associated_accounts:
+          title: "حذف تمام حساب‌های کاربرای مرتبط برای این کاربر"
+          text: "حذف حساب‌های کاربری مرتبط"
       user:
         suspend_failed: "در جریان به تعلیق درآوردن این کاربر اشتباهی رخ داد. %{error}"
         unsuspend_failed: "در جریان خارج کردن این کاربر از تعلیق، اشتباهی رخ داد %{error}"
@@ -4618,6 +4660,8 @@ fa_IR:
         history: "مشاهده تاریخچه تغییر"
         reset: "بازنشانی"
         none: "هیچی"
+        save: "ذخیره"
+        cancel: "لغو"
       site_settings:
         emoji_list:
           invalid_input: "فهرست شکلک‌ها فقط باید حاوی نام‌های شکلک معتبر باشد، به عنوان مثال: آغوش"

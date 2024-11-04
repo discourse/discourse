@@ -1,5 +1,5 @@
 :root {
-  --d-sidebar-section-link-prefix-margin-right: 0.35rem;
+  --d-sidebar-section-link-prefix-margin-right: 0.75em;
   --d-sidebar-section-link-prefix-width: 1.35rem;
   --d-sidebar-section-link-icon-size: 0.8em;
 }
@@ -8,6 +8,12 @@
   display: flex;
   align-items: center;
   position: relative;
+
+  &[data-list-item-name="all-categories"],
+  &[data-list-item-name="all-tags"],
+  &[data-list-item-name="configure-default-navigation-menu-tags"] {
+    font-size: var(--font-down-1-rem);
+  }
 
   .sidebar-section-link {
     display: inline-flex;
@@ -26,13 +32,16 @@
     }
 
     &.active {
-      color: var(--d-sidebar-highlight-color);
-      background: var(--d-sidebar-highlight-background);
+      background: var(--d-selected);
+      font-weight: bold;
 
       .sidebar-section-link-prefix {
         &.icon {
           color: var(--d-sidebar-highlight-color);
         }
+      }
+      .sidebar-section-link-hover:hover .sidebar-section-hover-button {
+        background-color: var(--d-selected);
       }
     }
 

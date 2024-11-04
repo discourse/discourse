@@ -82,7 +82,7 @@ export default class AdminConfigAreasFlags extends Component {
       </:actions>
     </AdminPageSubheader>
     <div class="container admin-flags">
-      <table class="admin-flags__items grid">
+      <table class="d-admin-table admin-flags__items">
         <thead>
           <th>{{i18n "admin.config_areas.flags.description"}}</th>
           <th>{{i18n "admin.config_areas.flags.enabled"}}</th>

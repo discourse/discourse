@@ -4,14 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       from:
-        description: 'Starting ref (exclusive). Can be a tag, branch or commit ref. `latest-release` refers to the last beta version bump.'
+        description: "Starting ref (exclusive). Can be a tag, branch or commit ref. `latest-release` refers to the last beta version bump."
         required: true
-        default: 'latest-release'
+        default: "latest-release"
         type: string
       to:
-        description: 'Ending ref (inclusive). Can be a tag, branch or commit ref. `HEAD` refers to the most recent commit.'
+        description: "Ending ref (inclusive). Can be a tag, branch or commit ref. `HEAD` refers to the most recent commit."
         required: true
-        default: 'HEAD'
+        default: "HEAD"
         type: string
 
 permissions:
@@ -20,7 +20,7 @@ permissions:
 jobs:
   build:
     name: run
-    runs-on: debian-12
+    runs-on: ${{ (github.repository != 'discourse/discourse' && 'ubuntu-latest') || 'debian-12' }}
     container: discourse/discourse_test:slim
     timeout-minutes: 10
     env:
@@ -87,7 +87,7 @@ jobs:
 
           echo "From: $from_ref - $(git rev-parse --short $from_ref) - ${{ steps.dates.outputs.from }}" >> $GITHUB_STEP_SUMMARY
           echo "To: $to_ref - $(git rev-parse --short $to_ref) - ${{ steps.dates.outputs.to }}" >> $GITHUB_STEP_SUMMARY
-          
+
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

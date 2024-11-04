@@ -510,6 +510,17 @@ RSpec.describe SiteSettingExtension do
         settings.refresh!
       }.to raise_error(Discourse::InvalidParameters)
     end
+
+    it "allows plugin to register valid areas" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_site_setting_area("plugin_area")
+      settings.setting(:test_plugin_setting, 88, area: "plugin_area")
+      expect(
+        settings
+          .all_settings(filter_area: "plugin_area", include_locale_setting: false)
+          .map { |s| s[:setting].to_sym },
+      ).to eq(%i[test_plugin_setting])
+    end
   end
 
   describe "setting with a validator" do
@@ -1013,6 +1024,36 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
+    end
+  end
+
+  describe "keywords" do
+    it "gets the list of I18n keywords for the setting" do
+      expect(SiteSetting.keywords(:clean_up_inactive_users_after_days)).to eq(
+        I18n.t("site_settings.keywords.clean_up_inactive_users_after_days").split("|"),
+      )
+    end
+
+    it "gets the current locale keywords and the english keywords for the setting" do
+      I18n.locale = :de
+      expect(SiteSetting.keywords(:clean_up_inactive_users_after_days)).to match_array(
+        (
+          I18n.t("site_settings.keywords.clean_up_inactive_users_after_days").split("|") +
+            I18n.t("site_settings.keywords.clean_up_inactive_users_after_days", locale: :en).split(
+              "|",
+            )
+        ).flatten,
+      )
+    end
+
+    context "when a setting also has an alias after renaming" do
+      before { SiteSetting.stubs(:deprecated_setting_alias).returns("some_old_setting") }
+
+      it "is included with the keywords" do
+        expect(SiteSetting.keywords(:clean_up_inactive_users_after_days)).to include(
+          "some_old_setting",
+        )
+      end
     end
   end
 end

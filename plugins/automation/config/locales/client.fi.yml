@@ -14,7 +14,6 @@ fi:
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
-      no_automation_yet: Et ole vielä luonut automaatioita.
       edit_automation:
         trigger_section:
           forced: Tämä triggeri on skriptin pakottama.
@@ -150,12 +149,17 @@ fi:
             valid_trust_levels:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
+            restricted_tags:
+              label: Tunnisteet
+              description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_category:
               label: Alue
               description: Valinnainen, käynnistyy vain, jos viestin ketju on tällä alueella
             restricted_group:
               label: Ryhmä
               description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
+            restricted_groups:
+              label: Ryhmät
             ignore_group_members:
               label: Ohita ryhmän jäsenet
               description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen

@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.1";
+export const PLUGIN_API_VERSION = "1.38.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -23,6 +23,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
+import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
@@ -43,7 +44,6 @@ import { setDesktopScrollAreaHeight } from "discourse/components/topic-timeline/
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { setNotificationsLimit as setUserMenuNotificationsLimit } from "discourse/components/user-menu/notifications-list";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
-import { addLegacyStat as addLegacyAboutPageStat } from "discourse/controllers/about";
 import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
@@ -61,6 +61,7 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
+import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";
@@ -72,7 +73,9 @@ import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import KeyboardShortcuts, {
+  disableDefaultKeyboardShortcuts,
+} from "discourse/lib/keyboard-shortcuts";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
@@ -587,6 +590,21 @@ class PluginApi {
    **/
   addKeyboardShortcut(shortcut, callback, opts = {}) {
     KeyboardShortcuts.addShortcut(shortcut, callback, opts);
+  }
+
+  /**
+   * This function is used to disable a "default" keyboard shortcut. You can pass
+   * an array of shortcut bindings as strings to disable them.
+   *
+   * Please note that this function must be called from a pre-initializer.
+   *
+   * Example:
+   * ```
+   * api.disableDefaultKeyboardShortcuts(['command+f', 'shift+c']);
+   * ```
+   **/
+  disableDefaultKeyboardShortcuts(bindings) {
+    disableDefaultKeyboardShortcuts(bindings);
   }
 
   /**
@@ -2646,7 +2664,7 @@ class PluginApi {
   /**
    * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
    *
-   * @param {String} Name of a FontAwesome 5 icon
+   * @param {String} Name of a FontAwesome icon
    */
   registerCustomCategorySectionLinkLockIcon(icon) {
     return registerCustomCategoryLockIcon(icon);
@@ -2670,7 +2688,7 @@ class PluginApi {
    * @param {string} arg.categoryId - The id of the category
    * @param {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
    * @param {string} arg.prefixValue - The value of the prefix to use.
-   *                                    For "icon", pass in the name of a FontAwesome 5 icon.
+   *                                    For "icon", pass in the name of a FontAwesome icon.
    *                                    For "image", pass in the src of the image.
    *                                    For "text", pass in the text to display.
    *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
@@ -2706,7 +2724,7 @@ class PluginApi {
    *
    * @param {Object} arg - An object
    * @param {string} arg.tagName - The name of the tag
-   * @param {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @param {string} arg.prefixValue - The name of a FontAwesome icon.
    * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
@@ -3002,7 +3020,7 @@ class PluginApi {
    *   return class extends UserMenuTab {
    *     id = "custom-tab-id";
    *     panelComponent = MyCustomPanelGlimmerComponent;
-   *     icon = "some-fa5-icon";
+   *     icon = "some-fa-icon";
    *
    *     get shouldDisplay() {
    *       return this.siteSettings.enable_custom_tab && this.currentUser.admin;
@@ -3249,7 +3267,68 @@ class PluginApi {
    */
   addAboutPageActivity(name, func) {
     addAboutPageActivity(name, func);
-    addLegacyAboutPageStat(name);
+  }
+
+  /**
+   * Registers a component class that will be rendered within the AdminPageHeader component
+   * only on plugins using the AdminPluginConfigPage and the new plugin "show" route.
+   *
+   * This component will be passed an `@actions` argument, with Primary, Default, Danger,
+   * and Wrapped keys, which can be used for various different types of buttons (Wrapped
+   * should be used only in very rare scenarios).
+   *
+   * This component would be used for actions that should be present on the entire UI
+   * for that plugin -- one example is "Create export" for chat.
+   *
+   * @param {string} pluginId - The `dasherizedName` of the plugin using this component.
+   * @param {Class} componentClass - The JS class of the component to render.
+   */
+  registerPluginHeaderActionComponent(pluginId, componentClass) {
+    registerPluginHeaderActionComponent(pluginId, componentClass);
+  }
+
+  /**
+   * Registers a new tab to be displayed in "more topics" area at the bottom of a topic page.
+   *
+   * ```gjs
+   *  api.registerMoreTopicsTab({
+   *    id: "other-topics",
+   *    name: i18n("other_topics.tab"),
+   *    component: <template>tbd</template>,
+   *    condition: ({ topic }) => topic.otherTopics?.length > 0,
+   *  });
+   * ```
+   *
+   * You can additionally use more-topics-tabs value transformer to conditionally show/hide
+   * specific tabs.
+   *
+   * ```js
+   * api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
+   *   if (context.user?.aFeatureFlag) {
+   *     // Remove "suggested" from the topics page
+   *     return value.filter(
+   *       (tab) =>
+   *         context.currentContext !== "topic" ||
+   *         tab.id !== "suggested-topics"
+   *     );
+   *   }
+   * });
+   * ```
+   *
+   * @callback tabCondition
+   * @param {Object} opts
+   * @param {"topic"|"pm"} opts.context - the type of the current page
+   * @param {Topic} opts.topic - the current topic
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - an identifier used in more-topics-tabs value transformer
+   * @param {string} tab.name - a name displayed on the tab
+   * @param {string} tab.icon - an optional icon displayed on the tab
+   * @param {Class} tab.component - contents of the tab
+   * @param {tabCondition} tab.condition - an optional callback to conditionally show the tab
+   */
+  registerMoreTopicsTab(tab) {
+    registeredTabs.push(tab);
   }
 
   // eslint-disable-next-line no-unused-vars

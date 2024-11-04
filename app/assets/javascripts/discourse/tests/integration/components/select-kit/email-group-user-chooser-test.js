@@ -109,7 +109,7 @@ module(
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
-      assert.notOk(exists(".user-status-message"));
+      assert.dom(".user-status-message").doesNotExist();
     });
 
     test("shows user status if enabled", async function (assert) {
@@ -133,18 +133,12 @@ module(
       await fillIn(".filter-input", "test-user");
 
       assert.ok(exists(".user-status-message"), "user status is rendered");
-      assert.equal(
-        query(".user-status-message .emoji").alt,
-        status.emoji,
-        "status emoji is correct"
-      );
-      assert.equal(
-        query(
-          ".user-status-message .user-status-message-description"
-        ).innerText.trim(),
-        status.description,
-        "status description is correct"
-      );
+      assert
+        .dom(".user-status-message .emoji")
+        .hasAttribute("alt", status.emoji, "status emoji is correct");
+      assert
+        .dom(".user-status-message .user-status-message-description")
+        .hasText(status.description, "status description is correct");
     });
   }
 );

@@ -31,7 +31,6 @@ bg:
       deleted_chat_username: изтрит
       dates:
         yesterday: "Вчера"
-        time_tiny: "ч:мм"
       all_loaded: "Показани са всички съобщения"
       already_enabled: "Чатът вече е активиран по тази тема. Моля опреснете страницата."
       disabled_for_topic: "Чатът е деактивиран в тази тема."

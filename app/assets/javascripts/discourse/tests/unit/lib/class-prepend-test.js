@@ -275,4 +275,26 @@ module("Unit | class-prepend", function () {
 
     assert.strictEqual(new Topic().someFunction(), 1, "change is rolled back");
   });
+
+  test("can override method from parent, with super support", function (assert) {
+    class Parent {
+      someFunction() {
+        return 1;
+      }
+    }
+
+    class Child extends Parent {}
+
+    classPrepend(
+      Child,
+      (Superclass) =>
+        class extends Superclass {
+          someFunction() {
+            return super.someFunction() + 1;
+          }
+        }
+    );
+
+    assert.strictEqual(new Child().someFunction(), 2, "it works");
+  });
 });

@@ -1,6 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import { buildResolver, setResolverOption } from "discourse-common/resolver";
 
@@ -247,29 +248,31 @@ module("Unit | Ember | resolver", function (hooks) {
 
     setResolverOption("mobileView", true);
 
-    // Default with mobile/ added
-    lookupTemplate(
-      assert,
-      "template:foo",
-      "discourse/templates/mobile/foo",
-      "finding mobile version even if normal one is not present"
-    );
+    withSilencedDeprecations("discourse.mobile-templates", () => {
+      // Default with mobile/ added
+      lookupTemplate(
+        assert,
+        "template:foo",
+        "discourse/templates/mobile/foo",
+        "finding mobile version even if normal one is not present"
+      );
 
-    // Default with mobile preferred
-    lookupTemplate(
-      assert,
-      "template:bar",
-      "discourse/templates/mobile/bar",
-      "preferring mobile version when both mobile and normal versions are present"
-    );
+      // Default with mobile preferred
+      lookupTemplate(
+        assert,
+        "template:bar",
+        "discourse/templates/mobile/bar",
+        "preferring mobile version when both mobile and normal versions are present"
+      );
 
-    // Default when mobile not present
-    lookupTemplate(
-      assert,
-      "template:baz",
-      "discourse/templates/baz",
-      "falling back to a normal version when mobile version is not present"
-    );
+      // Default when mobile not present
+      lookupTemplate(
+        assert,
+        "template:baz",
+        "discourse/templates/baz",
+        "falling back to a normal version when mobile version is not present"
+      );
+    });
   });
 
   test("resolves templates to plugin and theme namespaces", function (assert) {
@@ -292,20 +295,24 @@ module("Unit | Ember | resolver", function (hooks) {
     );
 
     // Defined in core and plugin
-    lookupTemplate(
-      assert,
-      "template:bar",
-      "discourse/plugins/my-plugin/discourse/templates/bar",
-      "prefers plugin version over core"
-    );
+    withSilencedDeprecations("discourse.resolver-template-overrides", () => {
+      lookupTemplate(
+        assert,
+        "template:bar",
+        "discourse/plugins/my-plugin/discourse/templates/bar",
+        "prefers plugin version over core"
+      );
+    });
 
     // Defined in core and plugin and theme
-    lookupTemplate(
-      assert,
-      "template:baz",
-      "discourse/theme-12/discourse/templates/baz",
-      "prefers theme version over plugin and core"
-    );
+    withSilencedDeprecations("discourse.resolver-template-overrides", () => {
+      lookupTemplate(
+        assert,
+        "template:baz",
+        "discourse/theme-12/discourse/templates/baz",
+        "prefers theme version over plugin and core"
+      );
+    });
 
     // Defined in core only
     lookupTemplate(
@@ -327,28 +334,33 @@ module("Unit | Ember | resolver", function (hooks) {
 
     setResolverOption("mobileView", true);
 
-    // Default with plugin template override
-    lookupTemplate(
-      assert,
-      "template:foo",
-      "discourse/plugins/my-plugin/discourse/templates/mobile/foo",
-      "finding plugin version even if normal one is not present"
-    );
+    withSilencedDeprecations(
+      ["discourse.mobile-templates", "discourse.resolver-template-overrides"],
+      () => {
+        // Default with plugin template override
+        lookupTemplate(
+          assert,
+          "template:foo",
+          "discourse/plugins/my-plugin/discourse/templates/mobile/foo",
+          "finding plugin version even if normal one is not present"
+        );
 
-    // Default with plugin mobile added, takes precedence over non-mobile
-    lookupTemplate(
-      assert,
-      "template:bar",
-      "discourse/plugins/my-plugin/discourse/templates/mobile/bar",
-      "preferring plugin mobile version when both non-mobile plugin version is also present"
-    );
+        // Default with plugin mobile added, takes precedence over non-mobile
+        lookupTemplate(
+          assert,
+          "template:bar",
+          "discourse/plugins/my-plugin/discourse/templates/mobile/bar",
+          "preferring plugin mobile version when both non-mobile plugin version is also present"
+        );
 
-    // Default with when non-plugin mobile version is present
-    lookupTemplate(
-      assert,
-      "template:baz",
-      "discourse/plugins/my-plugin/discourse/templates/mobile/baz",
-      "preferring plugin mobile version over non-plugin mobile version"
+        // Default with when non-plugin mobile version is present
+        lookupTemplate(
+          assert,
+          "template:baz",
+          "discourse/plugins/my-plugin/discourse/templates/mobile/baz",
+          "preferring plugin mobile version over non-plugin mobile version"
+        );
+      }
     );
   });
 

@@ -45,7 +45,7 @@ describe Chat::AutoJoinChannelBatch do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     fab!(:channel) { Fabricate(:chat_channel, auto_join_users: true) }
 

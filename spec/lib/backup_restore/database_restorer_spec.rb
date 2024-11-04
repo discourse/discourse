@@ -157,7 +157,7 @@ RSpec.describe BackupRestore::DatabaseRestorer do
 
   describe "readonly functions" do
     before do
-      BackupRestore::DatabaseRestorer.stubs(:core_migration_files).returns(
+      BackupRestore::DatabaseRestorer.stubs(:all_migration_files).returns(
         Dir[Rails.root.join("spec/fixtures/db/post_migrate/drop_column/**/*.rb")],
       )
     end

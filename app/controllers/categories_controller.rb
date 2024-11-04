@@ -18,6 +18,7 @@ class CategoriesController < ApplicationController
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
   skip_before_action :check_xhr, only: %i[index categories_and_latest categories_and_top redirect]
+  skip_before_action :verify_authenticity_token, only: %i[search]
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
@@ -31,61 +32,25 @@ class CategoriesController < ApplicationController
   def index
     discourse_expires_in 1.minute
 
-    @description = SiteSetting.site_description
-
-    parent_category =
-      if params[:parent_category_id].present?
-        Category.find_by_slug(params[:parent_category_id]) ||
-          Category.find_by(id: params[:parent_category_id].to_i)
-      elsif params[:category_slug_path_with_id].present?
-        Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
-      end
-
-    include_subcategories =
-      SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
-        params[:include_subcategories] == "true"
-
-    category_options = {
-      is_homepage: current_homepage == "categories",
-      parent_category_id: parent_category&.id,
-      include_topics: include_topics(parent_category),
-      include_subcategories: include_subcategories,
-      tag: params[:tag],
-      page: params[:page],
-    }
-
-    @category_list = CategoryList.new(guardian, category_options)
-
-    if category_options[:is_homepage] && SiteSetting.short_site_description.present?
-      @title = "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
-    elsif !category_options[:is_homepage]
-      @title = "#{I18n.t("js.filters.categories.title")} - #{SiteSetting.title}"
-    end
+    @category_list = fetch_category_list
 
     respond_to do |format|
       format.html do
+        @title =
+          if current_homepage == "categories" && SiteSetting.short_site_description.present?
+            "#{SiteSetting.title} - #{SiteSetting.short_site_description}"
+          elsif current_homepage != "categories"
+            "#{I18n.t("js.filters.categories.title")} - #{SiteSetting.title}"
+          end
+
+        @description = SiteSetting.site_description
+
         store_preloaded(
           @category_list.preload_key,
           MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)),
         )
 
-        style = SiteSetting.desktop_category_page_style
-        topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
-
-        if style == "categories_and_latest_topics_created_date"
-          topic_options[:order] = "created"
-          @topic_list = TopicQuery.new(current_user, topic_options).list_latest
-          @topic_list.more_topics_url = url_for(public_send("latest_path", sort: :created))
-        elsif style == "categories_and_latest_topics"
-          @topic_list = TopicQuery.new(current_user, topic_options).list_latest
-          @topic_list.more_topics_url = url_for(public_send("latest_path"))
-        elsif style == "categories_and_top_topics"
-          @topic_list =
-            TopicQuery.new(current_user, topic_options).list_top_for(
-              SiteSetting.top_page_default_timeframe.to_sym,
-            )
-          @topic_list.more_topics_url = url_for(public_send("top_path"))
-        end
+        @topic_list = fetch_topic_list
 
         if @topic_list.present? && @topic_list.topics.present?
           store_preloaded(
@@ -519,35 +484,9 @@ class CategoriesController < ApplicationController
   def categories_and_topics(topics_filter)
     discourse_expires_in 1.minute
 
-    category_options = {
-      is_homepage: current_homepage == "categories",
-      parent_category_id: params[:parent_category_id],
-      include_topics: false,
-      page: params[:page],
-    }
-
-    topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
-
-    topic_options.merge!(build_topic_list_options)
-    style = SiteSetting.desktop_category_page_style
-    topic_options[:order] = "created" if style == "categories_and_latest_topics_created_date"
-
     result = CategoryAndTopicLists.new
-    result.category_list = CategoryList.new(guardian, category_options)
-
-    if topics_filter == :latest
-      result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
-      result.topic_list.more_topics_url =
-        url_for(
-          public_send("latest_path", sort: topic_options[:order] == "created" ? :created : nil),
-        )
-    elsif topics_filter == :top
-      result.topic_list =
-        TopicQuery.new(current_user, topic_options).list_top_for(
-          SiteSetting.top_page_default_timeframe.to_sym,
-        )
-      result.topic_list.more_topics_url = url_for(public_send("top_path"))
-    end
+    result.category_list = fetch_category_list
+    result.topic_list = fetch_topic_list(topics_filter:)
 
     render_serialized(result, CategoryAndTopicListsSerializer, root: false)
   end
@@ -655,15 +594,68 @@ class CategoriesController < ApplicationController
     raise Discourse::NotFound if @category.blank?
   end
 
-  def initialize_staff_action_logger
-    @staff_action_logger = StaffActionLogger.new(current_user)
+  def fetch_category_list
+    parent_category =
+      if params[:parent_category_id].present?
+        Category.find_by_slug(params[:parent_category_id]) ||
+          Category.find_by(id: params[:parent_category_id].to_i)
+      elsif params[:category_slug_path_with_id].present?
+        Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
+      end
+
+    include_topics =
+      view_context.mobile_view? || params[:include_topics] ||
+        (parent_category && parent_category.subcategory_list_includes_topics?) ||
+        SiteSetting.desktop_category_page_style == "categories_with_featured_topics" ||
+        SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
+        SiteSetting.desktop_category_page_style == "categories_boxes_with_topics" ||
+        SiteSetting.desktop_category_page_style == "categories_with_top_topics"
+
+    include_subcategories =
+      SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
+        params[:include_subcategories] == "true"
+
+    category_options = {
+      is_homepage: current_homepage == "categories",
+      parent_category_id: parent_category&.id,
+      include_topics: include_topics,
+      include_subcategories: include_subcategories,
+      tag: params[:tag],
+      page: params[:page].try(:to_i) || 1,
+    }
+
+    @category_list = CategoryList.new(guardian, category_options)
   end
 
-  def include_topics(parent_category = nil)
-    style = SiteSetting.desktop_category_page_style
-    view_context.mobile_view? || params[:include_topics] ||
-      (parent_category && parent_category.subcategory_list_includes_topics?) ||
-      style == "categories_with_featured_topics" || style == "subcategories_with_featured_topics" ||
-      style == "categories_boxes_with_topics" || style == "categories_with_top_topics"
+  def fetch_topic_list(topics_filter: nil)
+    style =
+      if topics_filter
+        "categories_and_#{topics_filter}_topics"
+      else
+        SiteSetting.desktop_category_page_style
+      end
+
+    topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
+    topic_options.merge!(build_topic_list_options)
+    topic_options[:order] = "created" if SiteSetting.desktop_category_page_style ==
+      "categories_and_latest_topics_created_date"
+
+    case style
+    when "categories_and_latest_topics", "categories_and_latest_topics_created_date"
+      @topic_list = TopicQuery.new(current_user, topic_options).list_latest
+      @topic_list.more_topics_url = url_for(latest_path(sort: topic_options[:order]))
+    when "categories_and_top_topics"
+      @topic_list =
+        TopicQuery.new(current_user, topic_options).list_top_for(
+          SiteSetting.top_page_default_timeframe.to_sym,
+        )
+      @topic_list.more_topics_url = url_for(top_path)
+    end
+
+    @topic_list
+  end
+
+  def initialize_staff_action_logger
+    @staff_action_logger = StaffActionLogger.new(current_user)
   end
 end

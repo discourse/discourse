@@ -7,45 +7,38 @@ module Chat
   # of normal or tracking will be returned.
   #
   # @example
-  #  Chat::LookupUserThreads.call(guardian: guardian, limit: 5, offset: 2)
+  #  Chat::LookupUserThreads.call(guardian: guardian, params: { limit: 5, offset: 2 })
   #
   class LookupUserThreads
     include Service::Base
 
     THREADS_LIMIT = 10
 
-    # @!method call(guardian:, limit: nil, offset: nil)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Integer] limit
-    #   @param [Integer] offset
+    #   @param [Hash] params
+    #   @option params [Integer] :limit
+    #   @option params [Integer] :offset
     #   @return [Service::Base::Context]
 
-    contract
-    step :set_limit
-    step :set_offset
+    params do
+      attribute :limit, :integer
+      attribute :offset, :integer
+
+      after_validation do
+        self.limit = (limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
+        self.offset = [offset || 0, 0].max
+      end
+    end
     model :threads
     step :fetch_tracking
     step :fetch_memberships
     step :fetch_participants
     step :build_load_more_url
 
-    # @!visibility private
-    class Contract
-      attribute :limit, :integer
-      attribute :offset, :integer
-    end
-
     private
 
-    def set_limit(contract:)
-      context.limit = (contract.limit || THREADS_LIMIT).to_i.clamp(1, THREADS_LIMIT)
-    end
-
-    def set_offset(contract:)
-      context.offset = [contract.offset || 0, 0].max
-    end
-
-    def fetch_threads(guardian:)
+    def fetch_threads(guardian:, params:)
       ::Chat::Thread
         .includes(
           :channel,
@@ -84,13 +77,7 @@ module Chat
             ::Chat::Channel
               .joins(:user_chat_channel_memberships)
               .where(user_chat_channel_memberships: { user_id: guardian.user.id, following: true })
-              .where(
-                {
-                  chatable_type: "Category",
-                  threading_enabled: true,
-                  status: ::Chat::Channel.statuses[:open],
-                },
-              )
+              .where({ threading_enabled: true, status: ::Chat::Channel.statuses[:open] })
               .select(:id),
         )
         .where("original_message.chat_channel_id = chat_threads.channel_id")
@@ -110,36 +97,36 @@ module Chat
         .order(
           "CASE WHEN user_chat_thread_memberships.last_read_message_id IS NULL OR user_chat_thread_memberships.last_read_message_id < chat_threads.last_message_id THEN true ELSE false END DESC, last_message.created_at DESC",
         )
-        .limit(context.limit)
-        .offset(context.offset)
+        .limit(params.limit)
+        .offset(params.offset)
     end
 
     def fetch_tracking(guardian:, threads:)
-      context.tracking =
-        ::Chat::TrackingStateReportQuery.call(
-          guardian: guardian,
-          thread_ids: threads.map(&:id),
-          include_threads: true,
-        ).thread_tracking
+      context[:tracking] = ::Chat::TrackingStateReportQuery.call(
+        guardian: guardian,
+        thread_ids: threads.map(&:id),
+        include_threads: true,
+      ).thread_tracking
     end
 
     def fetch_memberships(guardian:, threads:)
-      context.memberships =
-        ::Chat::UserChatThreadMembership.where(
-          thread_id: threads.map(&:id),
-          user_id: guardian.user.id,
-        )
+      context[:memberships] = ::Chat::UserChatThreadMembership.where(
+        thread_id: threads.map(&:id),
+        user_id: guardian.user.id,
+      )
     end
 
     def fetch_participants(threads:)
-      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
+      context[:participants] = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
-    def build_load_more_url(contract:)
-      load_more_params = { limit: context.limit, offset: context.offset + context.limit }.to_query
+    def build_load_more_url(params:)
+      load_more_params = { limit: params.limit, offset: params.offset + params.limit }.to_query
 
-      context.load_more_url =
-        ::URI::HTTP.build(path: "/chat/api/me/threads", query: load_more_params).request_uri
+      context[:load_more_url] = ::URI::HTTP.build(
+        path: "/chat/api/me/threads",
+        query: load_more_params,
+      ).request_uri
     end
   end
 end

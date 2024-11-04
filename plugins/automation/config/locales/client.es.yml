@@ -14,7 +14,6 @@ es:
       select_trigger: Selecciona un activador
       confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
       confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
-      no_automation_yet: Todavía no has creado ninguna automatización.
       edit_automation:
         trigger_section:
           forced: Este activador está forzado por script.
@@ -150,12 +149,17 @@ es:
             valid_trust_levels:
               label: Niveles de confianza válidos
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
+            restricted_tags:
+              label: Etiquetas
+              description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
             restricted_category:
               label: Categoría
               description: Opcional, solo se activará si el tema de la publicación está en esta categoría
             restricted_group:
               label: Grupo
               description: Opcional, solo se activará si el tema de la publicación es un mensaje privado en la bandeja de entrada de este grupo
+            restricted_groups:
+              label: Grupos
             ignore_group_members:
               label: Ignorar a los miembros del grupo
               description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente

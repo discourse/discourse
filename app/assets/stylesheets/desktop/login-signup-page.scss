@@ -1,0 +1,83 @@
+// Shared styles
+
+.login-fullpage,
+.signup-fullpage,
+.invites-show {
+  &:not(:has(.has-alt-auth)) .alert {
+    max-width: 500px;
+  }
+
+  .login-page-cta,
+  .signup-page-cta {
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      button {
+        font-size: var(--font-0) !important;
+        width: 100%;
+      }
+    }
+    &__existing-account,
+    &__no-account-yet {
+      font-size: var(--font-down);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      width: 100%;
+      &::before {
+        content: " ";
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: var(--primary-low);
+        margin-block: 1rem;
+      }
+    }
+  }
+
+  #login-buttons {
+    height: 100%;
+  }
+
+  @media screen and (max-width: 767px) {
+    // important to maintain narrow desktop widths
+    // for auth modals in Discourse Hub on iPad
+    .has-alt-auth {
+      flex-direction: column;
+      overflow: auto;
+      gap: 0;
+      .login-page-cta,
+      .signup-page-cta,
+      .btn-social {
+        font-size: var(--font-down-1);
+      }
+      .login-left-side {
+        overflow: unset;
+        padding: 1em;
+        max-width: unset;
+      }
+      .login-right-side {
+        padding: 1em;
+        max-width: unset;
+        &::before {
+          height: 1px;
+          width: calc(100% - 2em);
+          left: 1em;
+          top: 0;
+        }
+      }
+    }
+
+    .signup-progress-bar {
+      font-size: var(--font-down-1);
+    }
+  }
+}
+
+.invites-show.container {
+  box-sizing: border-box;
+  box-shadow: none;
+  max-width: 550px;
+}

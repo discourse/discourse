@@ -19,44 +19,22 @@ import {
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
-import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
-import userSearch from "discourse/lib/user-search";
 import {
-  destroyUserStatuses,
-  initUserStatusHtml,
-  renderUserStatusHtml,
-} from "discourse/lib/user-status-on-autocomplete";
-import {
-  caretPosition,
-  formatUsername,
-  inCodeBlock,
-} from "discourse/lib/utilities";
-import ComposerUploadUppy from "discourse/mixins/composer-upload-uppy";
+  authorizesOneOrMoreImageExtensions,
+  IMAGE_MARKDOWN_REGEX,
+} from "discourse/lib/uploads";
+import UppyComposerUpload from "discourse/lib/uppy/composer-upload";
+import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import { isTesting } from "discourse-common/config/environment";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   debounce,
 } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-
-// original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
-// group 1 `image|foo=bar`
-// group 2 `690x220`
-// group 3 `, 50%`
-// group 4 '|bar=baz'
-// group 5 'upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title"'
-
-// Notes:
-// Group 3 is optional. group 4 can match images with or without a markdown title.
-// All matches are whitespace tolerant as long it's still valid markdown.
-// If the image is inside a code block, we'll ignore it `(?!(.*`))`.
-const IMAGE_MARKDOWN_REGEX =
-  /!\[(.*?)\|(\d{1,4}x\d{1,4})(,\s*\d{1,3}%)?(.*?)\]\((upload:\/\/.*?)\)(?!(.*`))/g;
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -110,23 +88,11 @@ const DEBOUNCE_FETCH_MS = 450;
 const DEBOUNCE_JIT_MS = 2000;
 
 @classNameBindings("showToolbar:toolbar-visible", ":wmd-controls")
-export default class ComposerEditor extends Component.extend(
-  ComposerUploadUppy
-) {
-  editorClass = ".d-editor";
-  fileUploadElementId = "file-uploader";
-  mobileFileUploaderId = "mobile-file-upload";
+export default class ComposerEditor extends Component {
   composerEventPrefix = "composer";
-  uploadType = "composer";
-  uppyId = "composer-editor-uppy";
-  composerModelContentKey = "reply";
-  editorInputClass = ".d-editor-input";
   shouldBuildScrollMap = true;
   scrollMap = null;
   processPreview = true;
-  uploadMarkdownResolvers = uploadMarkdownResolvers;
-  uploadPreProcessors = uploadPreProcessors;
-  uploadHandlers = uploadHandlers;
 
   @alias("composer") composerModel;
 
@@ -134,6 +100,14 @@ export default class ComposerEditor extends Component.extend(
     super.init(...arguments);
     this.warnedCannotSeeMentions = [];
     this.warnedGroupMentions = [];
+
+    this.uppyComposerUpload = new UppyComposerUpload(getOwner(this), {
+      composerEventPrefix: this.composerEventPrefix,
+      composerModel: this.composerModel,
+      uploadMarkdownResolvers,
+      uploadPreProcessors,
+      uploadHandlers,
+    });
   }
 
   @discourseComputed("composer.requiredCategoryMissing")
@@ -206,47 +180,10 @@ export default class ComposerEditor extends Component.extend(
     };
   }
 
-  @bind
-  _afterMentionComplete(value) {
-    this.composer.set("reply", value);
-
-    // ensures textarea scroll position is correct
-    schedule("afterRender", () => {
-      const input = this.element.querySelector(".d-editor-input");
-      input?.blur();
-      input?.focus();
-    });
-  }
-
   @on("didInsertElement")
   _composerEditorInit() {
     const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (this.siteSettings.enable_mentions) {
-      $(input).autocomplete({
-        template: findRawTemplate("user-selector-autocomplete"),
-        dataSource: (term) => {
-          destroyUserStatuses();
-          return userSearch({
-            term,
-            topicId: this.topic?.id,
-            categoryId: this.topic?.category_id || this.composer?.categoryId,
-            includeGroups: true,
-          }).then((result) => {
-            initUserStatusHtml(getOwner(this), result.users);
-            return result;
-          });
-        },
-        onRender: (options) => renderUserStatusHtml(options),
-        key: "@",
-        transformComplete: (v) => v.username || v.name,
-        afterComplete: this._afterMentionComplete,
-        triggerRule: async (textarea) =>
-          !(await inCodeBlock(textarea.value, caretPosition(textarea))),
-        onClose: destroyUserStatuses,
-      });
-    }
 
     input?.addEventListener(
       "scroll",
@@ -261,8 +198,7 @@ export default class ComposerEditor extends Component.extend(
     }
 
     if (this.allowUpload) {
-      this._bindUploadTarget();
-      this._bindMobileUploadButton();
+      this.uppyComposerUpload.setup(this.element);
     }
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
@@ -840,8 +776,7 @@ export default class ComposerEditor extends Component.extend(
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
     if (this.allowUpload) {
-      this._unbindUploadTarget();
-      this._unbindMobileUploadButton();
+      this.uppyComposerUpload.teardown();
     }
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
@@ -905,26 +840,6 @@ export default class ComposerEditor extends Component.extend(
 
   _isQuote(element) {
     return element.tagName === "ASIDE" && element.classList.contains("quote");
-  }
-
-  _cursorIsOnEmptyLine() {
-    const textArea = this.element.querySelector(".d-editor-input");
-    const selectionStart = textArea.selectionStart;
-    if (selectionStart === 0) {
-      return true;
-    } else if (textArea.value.charAt(selectionStart - 1) === "\n") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  _findMatchingUploadHandler(fileName) {
-    return this.uploadHandlers.find((handler) => {
-      const ext = handler.extensions.join("|");
-      const regex = new RegExp(`\\.(${ext})$`, "i");
-      return regex.test(fileName);
-    });
   }
 
   @action

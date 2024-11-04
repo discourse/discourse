@@ -14,7 +14,8 @@ he:
       select_trigger: בחירת גורם מפעיל
       confirm_automation_reset: הפעולה הזאת תאפס את אפשרויות הסקריפט וההזנקה, מצב חדש יישמר, להמשיך?
       confirm_automation_trigger: פעולה זו תקפיץ את האוטומציה, להמשיך?
-      no_automation_yet: לא יצרת אף אוטומציה עדיין.
+      no_automation_yet: עדיין לא יצרת אוטומציות. נא לבחור באפשרות למטה כדי להתחיל.
+      filter_placeholder: סינון לפי שם או תיאור…
       edit_automation:
         trigger_section:
           forced: הקפצה זו נאכפת על ידי סקריפט.
@@ -146,18 +147,27 @@ he:
               label: מזהה נושא
         post_created_edited:
           fields:
+            original_post_only:
+              label: פוסט מקורי בלבד
+              description: יוזנק רק אם הפוסט הוא הפוסט המקורי בנושא
             action_type:
               label: סוג פעולה
               description: "כרשות, הגבלת ההקפצה לאירועים שנוצרו או נערכו בלבד"
             valid_trust_levels:
               label: דרגות אמון תקפות
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
+            restricted_tags:
+              label: תגיות
+              description: כרשות, יוזנק רק אם לפוסט יש לפחות את אחת מהתגיות האלו
             restricted_category:
               label: קטגוריה
               description: הגדרת רשות, להזניק רק אם נושא הפוסט בקטגוריה הזאת
             restricted_group:
               label: קבוצה
               description: הגדרת רשות, להזניק רק אם נושא הפוסט הוא הודעה פרטית בתיבת הדואר הנכנס של הקבוצה הזאת
+            restricted_groups:
+              label: קבוצות
+              description: כרשות, יוזנק רק אם נושא הפוסט הוא הודעה פרטית באחת מתיבות הדוא״ל הנכנס הקבוצתיות
             ignore_group_members:
               label: התעלמות מחברי הקבוצה
               description: לדלג על ההזנקה אם המוען הוא חבר בקבוצה שצוינה לעיל
@@ -222,6 +232,9 @@ he:
             watching_tags:
               label: תגיות במעקב
               description: יוזנק רק אם לנושא יש את אחת מהתגיות האלה
+            trigger_with_pms:
+              label: הזנקה עם הודעות פרטיות
+              description: יוזנק אפילו אם התגיות השתנו בהודעה פרטית
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -380,6 +393,7 @@ he:
           fields:
             custom_field_name:
               label: "שם שדה מותאם אישית של משתמש"
+      unnamed_automation: "אוטומציה ללא שם"
       models:
         script:
           name:

@@ -197,7 +197,7 @@ pl_PL:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
       post: "post #%{postNumber} od @%{username}"
       close: "zamknij"
-      twitter: "Udostępnij na Twitterze"
+      twitter: "Udostępnij na X"
       facebook: "Udostępnij na Facebooku"
       email: "Wyślij e-mailem"
       url: "Skopiuj i udostępnij adres URL"
@@ -361,6 +361,7 @@ pl_PL:
       pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
     about:
+      edit: "Edytuj tę stronę"
       simple_title: "O stronie"
       title: "O %{title}"
       stats: "Statystyki strony"
@@ -377,7 +378,22 @@ pl_PL:
       post_count: "Posty"
       user_count: "Rejestracje"
       active_user_count: "Aktywni użytkownicy"
+      visitor_count: "Odwiedzający"
+      eu_visitor_count: "Odwiedzający z Unii Europejskiej"
+      traffic_info_footer_MF: |
+        W ciągu ostatnich 6 miesięcy ta witryna udostępniła treści szacowanej liczbie { total_visitors, plural,
+            one {# osób}
+            few {# osób}
+            many {# osób}
+          other {# osób}
+        } każdego miesiąca, przy czym szacuje się, że { eu_visitors, plural,
+            one {# osoba pochodziła}
+            few {# osoby pochodziły}
+            many {# osób pochodziło}
+          other {# osób pochodziło}
+        } z Unii Europejskiej.
       contact: "Skontaktuj się z nami"
+      contact_info: "W przypadku krytycznego problemu lub pilnej sprawy dotyczącej tej witryny, skontaktuj się z %{contact_info}."
       site_activity: "Aktywność w witrynie"
       view_more: "Zobacz więcej"
       view_less: "Zobacz mniej"
@@ -392,6 +408,16 @@ pl_PL:
           few: "%{formatted_number} posty"
           many: "%{formatted_number} postów"
           other: "%{formatted_number} wpisów"
+        active_users:
+          one: "%{formatted_number} aktywny użytkownik"
+          few: "%{formatted_number} aktywni użytkownicy"
+          many: "%{formatted_number} aktywni użytkownicy"
+          other: "%{formatted_number} aktywni użytkownicy"
+        sign_ups:
+          one: "%{formatted_number} rejestracja"
+          few: "%{formatted_number} rejestracje"
+          many: "%{formatted_number} rejestracji"
+          other: "%{formatted_number} rejestracji"
         likes:
           one: "%{formatted_number} polubienie"
           few: "%{formatted_number} polubień"
@@ -406,6 +432,16 @@ pl_PL:
         few: "%{formatted_number} Członków"
         many: "%{formatted_number} Członków"
         other: "%{formatted_number} Członków"
+      admin_count:
+        one: "%{formatted_number} Administrator"
+        few: "%{formatted_number} Administratorzy"
+        many: "%{formatted_number} Administratorów"
+        other: "%{formatted_number} Administratorów"
+      moderator_count:
+        one: "%{formatted_number} Moderator"
+        few: "%{formatted_number} Moderatorzy"
+        many: "%{formatted_number} Moderatorów"
+        other: "%{formatted_number} Moderatorów"
       report_inappropriate_content: "Jeśli natkniesz się na nieodpowiednie treści, nie wahaj się i rozpocznij rozmowę z naszymi moderatorami i administratorami. Pamiętaj, aby zalogować się przed kontaktem."
       site_age:
         less_than_one_month: "Utworzono < 1 miesiąc temu"
@@ -955,12 +991,17 @@ pl_PL:
           prefill:
             title: "Wstępne wypełnienie ustawieniami dla:"
             gmail: "Gmail"
+            outlook: "Outlook.com"
+            office365: "Microsoft 365"
           ssl_modes:
             none: "Brak"
+            ssl_tls: "SSL/TLS"
+            starttls: "STARTTLS"
           credentials:
             title: "Poświadczenia"
             smtp_server: "Serwer SMTP"
             smtp_port: "Port SMTP"
+            smtp_ssl_mode: "Tryb SSL"
             imap_server: "Serwer IMAP"
             imap_port: "Port IMAP"
             imap_ssl: "Użyj SSL dla IMAP"
@@ -1137,6 +1178,11 @@ pl_PL:
         image: "Prześlij obraz"
       default_notifications:
         modal_title: "Domyślne powiadomienia użytkownika"
+        modal_description:
+          one: "Czy chcesz zastosować tę zmianę historycznie? Spowoduje to zmianę preferencji dla %{count} istniejącego użytkownika ."
+          few: "Czy chcesz zastosować tę zmianę historycznie? Spowoduje to zmianę preferencji dla %{count} istniejących użytkowników ."
+          many: "Czy chcesz zastosować tę zmianę historycznie? Spowoduje to zmianę preferencji dla %{count} istniejących użytkowników ."
+          other: "Czy chcesz zastosować tę zmianę historycznie? Spowoduje to zmianę preferencji dla %{count} istniejących użytkowników ."
         modal_yes: "Tak"
         modal_no: "Nie, wprowadź zmianę odtąd, na przyszłość"
     user_action_groups:
@@ -1269,6 +1315,7 @@ pl_PL:
         ignore_duration_time_frame_required: "Wybierz przedział czasowy"
         ignore_no_users: "Nie posiadasz ignorowanych użytkowników."
         ignore_option: "Zignorowany"
+        ignore_option_title: "Nie będziesz otrzymywać żadnych powiadomień związanych z tym użytkownikiem, a cała jego zawartość zostanie ukryta."
         add_ignored_user: "Dodaj…"
         mute_option: "Wyciszenie"
         mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień, wiadomości osobistych ani bezpośrednich wiadomości na czacie od tego użytkownika."
@@ -1440,7 +1487,7 @@ pl_PL:
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
-      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony."
+      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony"
       apps: "Aplikacje"
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
@@ -1695,7 +1742,7 @@ pl_PL:
         add_email: "Dodaj alternatywny adres e-mail"
         auth_override_instructions: "Adres e-mail można zaktualizować od dostawcy uwierzytelniania."
         no_secondary: "Brak drugorzędnych adresów e-mail"
-        instructions: "Nie będzie publicznie widoczny."
+        instructions: "Nie będzie publicznie widoczny"
         admin_note: "Uwaga: Użytkownik administratora zmieniający adres e-mail innego użytkownika niebędącego administratorem wskazuje, że użytkownik stracił dostęp do oryginalnego konta e-mail, więc na nowy adres zostanie wysłany e-mail z resetem hasła. Adres e-mail użytkownika nie ulegnie zmianie, dopóki nie zakończy się proces resetowania hasła."
         ok: "Otrzymasz potwierdzenie e-mailem"
         required: "Podaj adres e-mail"
@@ -1723,19 +1770,19 @@ pl_PL:
         action: "Kliknij, by aktywować swoje konto."
         already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
         please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
-        continue_button: "Przejdź do %{site_name}"
+        continue_button: "Zakończ!"
         welcome_to: "Witaj na %{site_name}!"
         approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
-        instructions: "Twoja pełna nazwa (opcjonalnie)."
-        instructions_required: "Twoja pełna nazwa."
+        instructions: "Twoja pełna nazwa (opcjonalnie)"
+        instructions_required: "Twoja pełna nazwa"
         required: "Wprowadź imię"
         too_short: "Twoja nazwa jest zbyt krótka"
         ok: "Twoja nazwa jest ok"
       username:
         title: "Nazwa użytkownika"
-        instructions: "Unikalny, bez spacji, krótki."
+        instructions: "Unikalny, bez spacji, krótki"
         short_instructions: "Inni mogą o tobie wspomnieć pisząc @%{username}"
         available: "Nazwa użytkownika jest dostępna"
         not_available: "Niedostępna. Może spróbuj %{suggestion}?"
@@ -1901,12 +1948,15 @@ pl_PL:
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
         invite:
-          new_title: "Utwórz zaproszenie"
+          new_title: "Zaproś członków"
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
-          copy_link: "skopiuj link"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
+          copy_link: "Skopiuj link"
+          link_copied: "Link skopiowany!"
+          share_link: "Udostępnij link"
+          edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           restrict: "Ogranicz do"
@@ -1916,11 +1966,15 @@ pl_PL:
           max_redemptions_allowed: "Maksymalna liczba użyć"
           add_to_groups: "Dodaj do grup"
           invite_to_topic: "Przyjedź na temat"
-          expires_at: "Wygasa po"
-          custom_message: "Opcjonalna wiadomość osobista"
+          expires_at: "Wygasa o"
+          expires_after: "Wygasa po"
+          custom_message: "Wiadomość niestandardowa"
+          custom_message_placeholder: "Dodaj osobistą notatkę do swojego zaproszenia"
           send_invite_email: "Zapisz i wyślij e-mail"
           send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
-          save_invite: "Zapisz zaproszenie"
+          save_invite: "Zapisz"
+          cancel: "Anuluj"
+          create_link: "Utwórz link"
           invite_saved: "Zaproszenie zapisane."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
@@ -1954,10 +2008,10 @@ pl_PL:
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło wygląda na poprawne."
         instructions:
-          one: "Co najmniej %{count} znak."
-          few: "Co najmniej %{count} znaki."
-          many: "Co najmniej %{count} znaków."
-          other: "Co najmniej %{count} znaków."
+          one: "Co najmniej %{count} znak"
+          few: "Co najmniej %{count} znaki"
+          many: "Co najmniej %{count} znaków"
+          other: "Co najmniej %{count} znaków"
         required: "Wprowadź hasło"
         confirm: "Potwierdź"
         incorrect_password: "Wpisane hasło jest nieprawidłowe."
@@ -2114,6 +2168,18 @@ pl_PL:
         not_an_integer: "Musi być liczbą całkowitą"
         not_accepted: "Musi zostać zaakceptowane"
         not_a_number: "Musi być liczbą"
+        too_high: "Musi być maksymalnie %{count}"
+        too_low: "Musi być co najmniej %{count}"
+        too_long:
+          one: "Musi mieć co najwyżej %{count} znak"
+          few: "Musi mieć co najwyżej %{count} znaki"
+          many: "Musi mieć co najwyżej %{count} znaków"
+          other: "Musi mieć co najwyżej %{count} znaków"
+        too_short:
+          one: "Musi zawierać co najmniej %{count} znak"
+          few: "Musi zawierać co najmniej %{count} znaki"
+          many: "Musi zawierać co najmniej %{count} znaków"
+          other: "Musi zawierać co najmniej %{count} znaków"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2126,6 +2192,7 @@ pl_PL:
     staff_writes_only_mode:
       enabled: "Ta strona jest w trybie tylko dla personelu. Kontynuuj przeglądanie, ale odpowiadanie, polubienia i inne działania są ograniczone tylko do członków personelu."
     learn_more: "Dowiedz się więcej…"
+    learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -2203,15 +2270,16 @@ pl_PL:
     search_hint: "nazwa użytkownika, email lub IP"
     create_account:
       header_title: "Witamy!"
-      subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
       title: "Rejestracja"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
       associate: "Masz już konto? <a href='%{associate_link}'>Zaloguj się</a> , aby połączyć swoje konto %{provider}."
       activation_title: "Aktywuj swoje konto"
       already_have_account: "Masz już konto?"
+      no_account_yet: "Nie masz konta?"
       progress_bar:
         signup: "Rejestracja"
+        activate: "Aktywuj"
         approve: "Zatwierdź"
         login: "Logowanie"
     forgot_password:
@@ -2245,8 +2313,7 @@ pl_PL:
       confirm_button: Dokończ logowanie
     login:
       header_title: "Witamy ponownie"
-      subheader_title: "Zaloguj się na swoje konto"
-      title: "Zaloguj się"
+      title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
       show_password: "Pokaż"
@@ -2323,6 +2390,7 @@ pl_PL:
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
       linkedin_oidc:
+        name: "LinkedIn"
         title: "Zaloguj się za pomocą LinkedIn"
         sr_title: "Zaloguj się za pomocą LinkedIn"
       passkey:
@@ -2344,7 +2412,6 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
-      existing_user_can_redeem: "Zrealizuj zaproszenie do tematu lub grupy."
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -3657,7 +3724,9 @@ pl_PL:
       show_hidden: "Wyświetl ignorowaną treść."
       deleted_by_author_simple: "(post usunięty przez autora)"
       collapse: "zawalić się"
+      load_more_replies: "załaduj więcej odpowiedzi"
       sr_collapse_replies: "Zwiń osadzone odpowiedzi"
+      sr_load_more_replies: "Załaduj więcej osadzonych odpowiedzi"
       sr_date: "Data wysłania"
       sr_expand_replies:
         one: "Ten post ma %{count} odpowiedź"
@@ -4078,6 +4147,7 @@ pl_PL:
         none: "brak podkategorii"
       colors_disabled: "Nie możesz wybrać kolorów, ponieważ nie masz stylu kategorii."
     flagging:
+      title: "Dziękujemy za dbanie o kulturę w naszej społeczności!"
       action: "Oflaguj wpis"
       take_action: "Podejmij działanie…"
       take_action_options:
@@ -4131,6 +4201,7 @@ pl_PL:
           many: "%{count} pozostało"
           other: "%{count} pozostało"
     flagging_topic:
+      title: "Dziękujemy za dbanie o kulturę w naszej społeczności!"
       action: "Zgłoś temat"
       notify_action: "Wiadomość"
     topic_map:
@@ -4146,7 +4217,12 @@ pl_PL:
       menu_titles:
         replies: Najbardziej lubiane odpowiedzi
         views: Ostatnie wyświetlenia
+      view_explainer: Jedno wyświetlenie na unikalnego użytkownika co 8 godzin.
+      no_views: Brak statystyk wyświetleń, sprawdź później.
+      chart_error: Błąd podczas renderowania wykresu. Spróbuj ponownie.
       views: "Odsłony"
+      predicted_views: "Przewidywane wyświetlenia"
+      so_far: (dotychczas)
       read: odczyt
       minutes: min
     post_links:
@@ -4184,10 +4260,15 @@ pl_PL:
       visibility_reasons:
         op_flag_threshold_reached: "Ten temat został automatycznie usunięty z listy, ponieważ osiągnięto próg zgłoszeń"
         op_unhidden: "Temat ten został ponownie poruszony przez autora"
+        embedded_topic: "Ten temat został ponownie umieszczony na liście, ponieważ jest to temat osadzony"
+        manually_unlisted: "Ten temat został ręcznie usunięty z listy przez administratora lub moderatora"
+        manually_relisted: "Ten temat został ponownie umieszczony na liście przez administratora lub moderatora"
+        bulk_action: "Widoczność tego tematu została zmieniona z powodu akcji zbiorczej wykonanej przez użytkownika"
     posts: "Wpisy"
     pending_posts:
       label: "Oczekujące"
       label_with_count: "Oczekujące (%{count})"
+    sr_topic_list_caption: Lista tematów, nagłówki kolumn z przyciskami można sortować.
     posters: "Napisali"
     latest_poster_link: "Profil %{username}, najnowszy postujący"
     original_post: "Oryginalny wpis"
@@ -4627,6 +4708,7 @@ pl_PL:
         everyone_can_use: "Tagi mogą być wykorzystywane przez wszystkich"
         usable_only_by_groups: "Tagi są widoczne dla wszystkich, ale tylko następujące grupy mogą ich używać"
         visible_only_to_groups: "Tagi są widoczne tylko dla następujących grup"
+        cannot_save: "Nie można zapisać grupy tagów. Upewnij się, że istnieje co najmniej jeden tag, nazwa grupy tagów nie jest pusta i ma mniej niż 100 znaków, a grupa jest wybrana dla uprawnień tagów."
         tags_placeholder: "Wyszukaj lub utwórz tagi"
         parent_tag_placeholder: "Opcjonalnie"
         select_groups_placeholder: "Wybierz grupy…"
@@ -4694,6 +4776,8 @@ pl_PL:
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     topic_entrance:
+      sr_jump_top_button: "Przejdź do pierwszego postu - %{date}"
+      sr_jump_bottom_button: "Przejdź do ostatniego postu - %{date}"
       jump_top_button_title: "Przejdź do pierwszego posta"
       jump_bottom_button_title: "Przejdź do ostatniego posta"
     fullscreen_table:
@@ -4759,6 +4843,11 @@ pl_PL:
               label: "Ikona"
               validation:
                 blank: "Ikona nie może być pusta"
+                maximum:
+                  one: "Ikona musi być krótsza niż %{count} znak"
+                  few: "Ikona musi być krótsza niż %{count} znaki"
+                  many: "Ikona musi być krótsza niż %{count} znaków"
+                  other: "Ikona musi być krótsza niż %{count} znaków"
             name:
               label: "Pełna nazwa"
               validation:
@@ -4782,6 +4871,11 @@ pl_PL:
             label: "Tytuł sekcji"
             validation:
               blank: "Tytuł nie może być pusty"
+              maximum:
+                one: "Tytuł musi być krótszy niż %{count} znak"
+                few: "Tytuł musi być krótszy niż %{count} znaki"
+                many: "Tytuł musi być krótszy niż %{count} znaków"
+                other: "Tytuł musi być krótszy niż %{count} znaków"
         about:
           header_link_text: "O stronie"
         messages:
@@ -4865,6 +4959,7 @@ pl_PL:
       clear_filter: "Wyczyść filtr"
       no_results:
         title: "Brak wyników"
+        description: 'Nie mogliśmy znaleźć niczego pasującego do ‘%{filter}’.<br><br>Czy chcesz <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">przeszukać ustawienia witryny</a> lub <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">listę użytkowników administratora?</a>'
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5009,8 +5104,10 @@ pl_PL:
         installed_version: "Zainstalowana"
         latest_version: "Najnowsza"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
+        dismiss_notice: "Odrzuć"
         new_features:
           title: "Co nowego"
+          subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
         last_checked: "Ostatnio sprawdzana"
@@ -5414,6 +5511,12 @@ pl_PL:
           request: "Żądanie"
           response: "Odpowiedź"
           redeliver_confirm: "Czy jesteś pewien, że chcesz dostarczyć ponownie tą samą zawartość?"
+          redeliver_failed_confirm:
+            one: "Czy na pewno chcesz ponownie dostarczyć %{count} zdarzenie webhook?"
+            few: "Czy na pewno chcesz ponownie dostarczyć %{count} zdarzenia webhook?"
+            many: "Czy na pewno chcesz ponownie dostarczyć %{count} zdarzeń webhook?"
+            other: "Czy na pewno chcesz ponownie dostarczyć %{count} zdarzeń webhook?"
+          no_events_to_redeliver: "Brak zdarzeń do ponownego dostarczenia."
           headers: "Nagłówki"
           payload: "Zawartość"
           body: "Body"
@@ -5435,6 +5538,7 @@ pl_PL:
           backups: "Kopie zapasowe"
           whats_new:
             title: "Co nowego"
+            keywords: "dziennik zmian|funkcja|wydanie"
       community:
         title: "Społeczność"
         sidebar_link:
@@ -5460,6 +5564,7 @@ pl_PL:
           themes: "Motywy"
           components:
             title: "Komponenty"
+            keywords: "motyw|rozszerzenie"
           site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
@@ -5483,9 +5588,18 @@ pl_PL:
           screened_ips: "Ekranowane adresy IP"
           screened_urls: "Ekranowane URLe"
           search_logs: "Logi wyszukiwań"
-          security: "Bezpieczeństwo"
-          spam: "Spam"
+          security: "Ustawienia zabezpieczeń"
+          spam: "Ustawienia spamu"
           staff_action_logs: "Dzienniki działań personelu"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Kopie zapasowe"
+            description: "Wykonaj kopię zapasową danych swojej witryny"
+          whats_new:
+            title: "Co nowego"
+            description: "Odkryj nowe wydania i ulepszenia w Discourse"
       config_areas:
         about:
           header: "O Twojej witrynie"
@@ -5496,21 +5610,23 @@ pl_PL:
           community_description: "Opis społeczności"
           banner_image: "Obraz banera"
           banner_image_help: |
-            To zdjęcie zostanie wykorzystane na Twojej stronie "O nas". Zalecany rozmiar: 800x300 pikseli. Akceptowane formaty: JPG, PNG i SVG, do 10 MB.
+            Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
-          community_owner_help: |
-            Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
+          community_owner_placeholder: "Jan Kowalski"
           contact_email: "E-mail kontaktowy"
+          contact_email_placeholder: "kontakt@jan-kowalski.pl"
           contact_url: "URL kontaktowy"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          site_contact_name: "Nazwa kontaktu witryny"
+          site_contact_group: "Grupa kontaktowa witryny"
           your_organization: "Twoja organizacja"
-          company_name: "Nazwa firmy"
-          company_name_placeholder: "Przykładowa firma Inc."
+          company_name: "Nazwa"
+          company_name_placeholder: "Organizacja Acme"
+          company_name_warning: |
+            Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           governing_law: "Obowiązujące prawo"
           city_for_disputes: "Miasto do sporów"
-          city_for_disputes_help: |
-            Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -5520,6 +5636,8 @@ pl_PL:
           saved: "zapisano!"
         flags:
           header: "Flagi moderacji"
+          edit_header: "Edytuj flagę"
+          subheader: "System flagowania w Discourse pomaga Tobie i Twojemu zespołowi moderatorów zarządzać treściami i zachowaniem użytkowników, utrzymując Twoją społeczność w szacunku i zdrowiu. Domyślne ustawienia są odpowiednie dla większości społeczności i nie musisz ich zmieniać. Jeśli jednak Twoja witryna ma szczególne wymagania, możesz wyłączyć flagi, których nie potrzebujesz i dodać własne niestandardowe flagi."
           description: "Opis"
           enabled: "Włączona?"
           add: "Dodaj flagę"
@@ -5528,24 +5646,41 @@ pl_PL:
           delete: "Usuń"
           delete_confirm: 'Czy na pewno chcesz usunąć "%{name}"?'
           flags_tab: "Flagi"
+          settings: "Ustawienia flag"
           form:
             add_header: "Dodaj flagę"
             edit_header: "Edytuj flagę"
             save: "Zapisz"
             name: "Nazwa"
             description: "Opis"
+            applies_to: "Wyświetl tę flagę na"
             invalid_applies_to: "Wymagane"
             topic: "tematy"
             post: "wpisy"
             chat_message: "wiadomości czatu"
+            enabled: "Włącz tę niestandardową flagę po zapisaniu"
+            alert: "Po użyciu flagi niestandardowej można ją wyłączyć, ale nie można jej edytować ani usunąć."
             edit_flag: "Edytuj flagę"
+            non_editable: "Nie możesz edytować tej flagi, ponieważ jest to flaga systemowa lub została już użyta w systemie recenzji, jednak nadal możesz ją wyłączyć."
             delete_flag: "Usuń flagę"
+            non_deletable: "Nie możesz usunąć tej flagi, ponieważ jest to flaga systemowa lub została już użyta w systemie recenzji, jednak nadal możesz ją wyłączyć."
+            require_message: "Poproś użytkowników o podanie dodatkowych powodów"
+            require_message_description: "Po wybraniu tej flagi zostanie wyświetlone pole tekstowe, w którym użytkownik może podać dodatkowe szczegóły dotyczące powodu oflagowania treści."
           more_options:
             title: "Więcej opcji"
             move_up: "Przenieś wyżej"
             move_down: "Przenieś niżej"
+        look_and_feel:
+          title: "Wygląd i odczucia"
+          themes:
+            title: "Motywy"
+            set_default_theme: "Ustaw domyślne"
+            default_theme: "Motyw domyślny"
+            new_theme: "Nowy motyw"
       plugins:
         title: "Wtyczki"
+        installed: "Zainstalowane wtyczki"
+        description: "Wszystkie zainstalowane przez Ciebie wtyczki Discourse lub wtyczki preinstalowane wraz z hostingiem Discourse pojawią się na tej liście."
         name: "Nazwa"
         none_installed: "Brak zainstalowanych wtyczek."
         version: "Wersja"
@@ -5583,8 +5718,11 @@ pl_PL:
         legacy: "Przestarzały"
       backups:
         title: "Kopie zapasowe"
+        files_title: "Pliki kopii zapasowej"
+        description: "Kopie zapasowe Discourse obejmują pełną bazę danych witryny, która zawiera wszystko na stronie: tematy, posty, użytkownicy, grupy, ustawienia, motywy itp. W zależności od tego, jak tworzony jest plik kopii zapasowej, może on zawierać przesłane pliki lub nie."
         menu:
           backups: "Kopie zapasowe"
+          backup_files: "Pliki kopii zapasowej"
           logs: "Logi"
         none: "Brak kopii zapasowych"
         read_only:
@@ -5629,6 +5767,7 @@ pl_PL:
             title: "Usuń kopię zapasową"
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
+            is_disabled: "Przywracanie jest obecnie wyłączone. Aby je włączyć, przejdź do <a href='%{url}'>ustawień witryny</a>."
             label: "Przywróć"
             title: "Przywróć kopię zapasową"
             confirm: "Czy na pewno chcesz przywrócić tę kopię zapasową?"
@@ -5637,6 +5776,7 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy jesteś pewien, że chcesz przywrócić bazę danych do ostatniej działającej wersji?"
         location:
+          local: "Pamięć lokalna"
           s3: "S3"
         backup_storage_error: "Nie można uzyskać dostępu do miejsca zapisywania kopii zapasowej: %{error_message}"
       export_csv:
@@ -5749,6 +5889,9 @@ pl_PL:
           convert_theme_alert_generic: "Czy na pewno chcesz przekonwertować ten motyw na komponent?"
           convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
+          set_default_theme: "Ustaw domyślne"
+          default_theme: "Motyw domyślny"
+          set_default_success: "Domyślny motyw ustawiony na %{theme}"
           inactive_components: "Nieużywane komponenty:"
           selected:
             one: "%{count} wybrano"
@@ -5893,12 +6036,30 @@ pl_PL:
             back_button: "Powrót do %{name}"
             fields:
               required: "*wymagane"
+              groups:
+                at_least:
+                  one: "wymagana jest co najmniej %{count} grupa"
+                  few: "wymagane są co najmniej %{count} grupy"
+                  many: "wymaganych jest co najmniej %{count} grup"
+                  other: "wymaganych jest co najmniej %{count} grup"
+              categories:
+                at_least:
+                  one: "wymagana jest co najmniej %{count} kategoria"
+                  few: "wymagane są co najmniej %{count} kategorie"
+                  many: "wymaganych jest co najmniej %{count} kategorii"
+                  other: "wymaganych jest co najmniej %{count} kategorii"
               tags:
                 at_least:
                   one: "wymagany jest co najmniej %{count} tag"
                   few: "wymagane są co najmniej %{count} tagi"
                   many: "wymagane jest co najmniej %{count} tagów"
                   other: "wymagane jest co najmniej %{count} tagów"
+              string:
+                too_short:
+                  one: "musi zawierać co najmniej %{count} znak"
+                  few: "musi zawierać co najmniej %{count} znaki"
+                  many: "musi zawierać co najmniej %{count} znaków"
+                  other: "musi zawierać co najmniej %{count} znaków"
               number:
                 too_small: "musi być większe lub równe %{count}"
                 too_large: "musi być mniejszy lub równy %{count}"
@@ -5932,6 +6093,7 @@ pl_PL:
             description: "Linki, niektóre przyciski, powiadomienia oraz kolor używany w różnych akcentach."
           quaternary:
             name: "czwartorzędny"
+            description: "Do opcjonalnego wykorzystania w motywach."
           header_background:
             name: "tło nagłówka"
             description: "Kolor tła nagłówka witryny."
@@ -6207,6 +6369,10 @@ pl_PL:
             custom_emoji_destroy: "usuń niestandardowe emoji"
             delete_post_permanently: "trwale usuń post"
             delete_topic_permanently: "trwale usuń temat"
+            tag_group_create: "utwórz grupę tagów"
+            tag_group_destroy: "usuń grupę tagów"
+            tag_group_change: "zmień grupę tagów"
+            delete_associated_accounts: "usuń powiązane konta"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -6257,6 +6423,7 @@ pl_PL:
           many: "pokaż %{count} słów"
           other: "pokaż %{count} słów"
         case_sensitive: "(z uwzg. wielkości liter)"
+        html: "(html)"
         download: Pobierz
         clear_all: Wyczyść wszystko
         clear_all_confirm: "Czy na pewno chcesz wyczyścić wszystkie obejrzane słowa dla akcji %{action}?"
@@ -6433,6 +6600,9 @@ pl_PL:
         check_sso:
           title: "Reveal SSO payload"
           text: "Pokaż"
+        delete_associated_accounts:
+          title: "Usuń wszystkie powiązane konta dla tego użytkownika"
+          text: "Usuń powiązane konta"
       user:
         suspend_failed: "Coś poszło nie tak podczas zawieszania użytkownika %{error}"
         unsuspend_failed: "Coś poszło nie tak podczas odwieszania użytkownika %{error}"
@@ -6528,6 +6698,7 @@ pl_PL:
         post_edits_count: "Edycje wpisu"
         anonymize: "Anonimizuj użytkownika"
         anonymize_confirm: "Jesteś pewien, że chcesz anonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowanie wszystkich informacji o profilu."
+        delete_associated_accounts_confirm: "Czy na pewno chcesz usunąć wszystkie powiązane konta z tego konta? Użytkownik może nie być w stanie się zalogować, jeśli jego adres e-mail uległ zmianie."
         anonymize_yes: "Tak, anonimizuj to konto"
         anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
@@ -6710,8 +6881,11 @@ pl_PL:
             title: "Opcjonalnie"
           for_all_users:
             title: "Dla wszystkich użytkowników"
+            description: "Gdy rejestrują się nowi użytkownicy, muszą wypełnić to pole. Gdy istniejący użytkownicy powrócą na stronę i jest to dla nich nowe wymagane pole, zostaną również poproszeni o jego wypełnienie. Aby ponownie wyświetlić monit wszystkim użytkownikom, usuń to pole niestandardowe i utwórz je ponownie."
           on_signup:
             title: "Podczas rejestracji"
+            description: "Gdy nowi użytkownicy się zarejestrują, muszą wypełnić to pole. Istniejący użytkownicy nie są objęci tą zmianą."
+          confirmation: "Spowoduje to wyświetlenie istniejącym użytkownikom monitu o wypełnienie tego pola i nie pozwoli im na wykonanie żadnych innych czynności w Twojej witrynie, dopóki pole to nie zostanie wypełnione. Kontynuować?"
         editable:
           title: "Edytowalne po rejestracji"
           enabled: "edytowalne"
@@ -6745,6 +6919,7 @@ pl_PL:
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         show_untranslated: "Pokazuj tylko nieprzetłumaczone"
+        only_show_selected_locale: "Pokaż wyniki tylko w wybranej lokalizacji"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -6760,6 +6935,8 @@ pl_PL:
         history: "Wyświetl historię zmian"
         reset: "przywróć domyślne"
         none: "żadne"
+        save: "zapisz"
+        cancel: "anuluj"
       site_settings:
         emoji_list:
           invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"
@@ -6817,6 +6994,11 @@ pl_PL:
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:
+          modal_description:
+            one: "Czy chcesz wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejącego użytkownika."
+            few: "Czy chcesz wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejących użytkowników."
+            many: "Czy chciałbyś wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejących użytkowników."
+            other: "Czy chcesz wprowadzić tę zmianę wstecz? Zmieni to ustawienia %{count} istniejących użytkowników."
           modal_yes: "Tak"
           modal_no: "Nie, wprowadź zmianę odtąd, na przyszłość"
         simple_list:
@@ -6834,18 +7016,24 @@ pl_PL:
         mandatory_group: "Grupa jest obowiązkowa"
         requires_confirmation_messages:
           default:
+            prompt: "Zmiana tego ustawienia może mieć daleko idące lub niezamierzone konsekwencje dla Twojej witryny. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, jestem pewny/a"
           min_password_length:
+            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           min_admin_password_length:
+            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Od teraz będzie to dotyczyć wszystkich administratorów zmieniających hasła. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           password_unique_charactes:
+            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
           block_common_passwords:
+            prompt: "Wkrótce zmienisz zasady dotyczące haseł. Będzie to miało wpływ na wszystkich użytkowników zmieniających swoje hasła od teraz. Czy na pewno chcesz kontynuować?"
             confirm: "Tak, zaktualizuj politykę haseł"
       badges:
         status: Status
         title: Odznaki
+        page_description: Odznaki nagradzają użytkowników za ich aktywność, wkład i osiągnięcia, aby rozpoznawać, potwierdzać i zachęcać do pozytywnych zachowań i zaangażowania w społeczności.
         new_badge: Nowa odznaka
         new: Nowa
         name: Nazwa
@@ -6854,6 +7042,7 @@ pl_PL:
         description: Opis
         long_description: Długi opis
         badge_type: Typ odznaki
+        group_settings: Ustawienia grupy
         badge_grouping: Grupa
         badge_groupings:
           modal_title: Grupy odznak
@@ -6920,9 +7109,8 @@ pl_PL:
             with_post_time: <span class="username">%{username}</span> za wpis w %{link} o <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
         badge_intro:
-          title: "Wybierz istniejącą odznakę lub utwórz nową, aby rozpocząć"
-          what_are_badges_title: "Czym są odznaki?"
-          badge_query_examples_title: "Przykład wykonania zapytania odznaki"
+          title: "Wybierz odznakę lub utwórz nową"
+          description: "Zacznij od wybrania istniejącej plakietki do dostosowania lub stwórz zupełnie nową plakietkę"
         mass_award:
           title: Masowa odznaka
           description: Przyznaj tę samą odznakę wielu użytkownikom jednocześnie.
@@ -6936,6 +7124,11 @@ pl_PL:
             many: "Twój plik CSV został odebrany i %{count} użytkowników wkrótce otrzyma swoją plakietkę."
             other: "Twój plik CSV został odebrany i %{count} użytkowników wkrótce otrzyma swoją plakietkę."
           csv_has_unmatched_users: "Następujące wpisy znajdują się w pliku CSV, ale nie można ich dopasować do istniejących użytkowników, dlatego nie otrzymają plakietki:"
+          csv_has_unmatched_users_truncated_list:
+            one: "W pliku CSV znalazł się %{count} wpis, którego nie można dopasować do istniejących użytkowników i dlatego nikt nie otrzyma odznaki."
+            few: "W pliku CSV znalazły się %{count} wpisy, których nie można dopasować do istniejących użytkowników i dlatego nikt nie otrzyma odznaki. Ze względu na dużą liczbę niedopasowanych wpisów, wyświetlane jest tylko pierwsze 100 wpisów:"
+            many: "W pliku CSV znalazło się %{count} wpisów, których nie można dopasować do istniejących użytkowników i dlatego nikt nie otrzyma odznaki. Ze względu na dużą liczbę niedopasowanych wpisów, wyświetlane jest tylko pierwsze 100 wpisów:"
+            other: "W pliku CSV znalazło się %{count} wpisów, których nie można dopasować do istniejących użytkowników i dlatego nikt nie otrzyma odznaki. Ze względu na dużą liczbę niedopasowanych wpisów, wyświetlane jest tylko pierwsze 100 wpisów:"
           replace_owners: Usuń odznakę od poprzednich właścicieli
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:

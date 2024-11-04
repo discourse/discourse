@@ -120,7 +120,6 @@ da:
       topic_html: 'Emne: <span class="topic-title">%{topicTitle}</span>'
       post: "indlæg #%{postNumber} af @%{username}"
       close: "luk"
-      twitter: "Del på Twitter"
       facebook: "Del på Facebook"
       email: "Send via e-mail"
       url: "Kopiér og del URL"
@@ -255,6 +254,7 @@ da:
       pill: "Foreslået"
       pm_title: "Foreslåede beskeder"
     about:
+      edit: "Rediger denne side"
       simple_title: "Om"
       title: "Om %{title}"
       stats: "Webstedsstatistikker"
@@ -1173,7 +1173,7 @@ da:
       ignored_users: "Ignorerede"
       ignored_users_instructions: "Undertryk alle indlæg, meddelelser og PM'er fra disse brugere."
       tracked_topics_link: "Vis"
-      automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden."
+      automatically_unpin_topics: "Stop automatisk med at følge emner, når jeg når til bunden"
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Fortryd Tilbagekald adgang"
@@ -1354,7 +1354,6 @@ da:
         add_email: "Tilføj alternativ e-mail"
         auth_override_instructions: "E-mail kan opdateres fra godkendelsesudbyderen."
         no_secondary: "Ingen sekundære emails"
-        instructions: "Vis aldrig offentligt"
         admin_note: "Bemærk: En administratorbruger, der skifter en anden ikke-admin-brugers e-mail, indikerer, at brugeren har mistet adgang til deres oprindelige e-mail-konto, så en nulstil-adgangskode-e-mail vil blive sendt til brugerens nye adresse. Brugerens e-mail ændres ikke, før de har afsluttet processen med nulstilling af adgangskode."
         ok: "Vi vil sende dig en bekræftelses email"
         required: "Indtast venligst en e-mail-adresse"
@@ -1380,13 +1379,13 @@ da:
         action: "Klik her for at aktivere din konto"
         already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
         please_continue: "Din nye konto er bekræftet; du bliver nu omdirigeret til forsiden."
-        continue_button: "Fortsæt til %{site_name}"
+        continue_button: "Afslut!"
         welcome_to: "Velkommen til %{site_name}!"
         approval_required: "En moderator skal manuelt godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
       name:
         title: "Navn"
-        instructions: "Dit fulde navn (valgfrit)."
-        instructions_required: "Dit fulde navn."
+        instructions: "Dit fulde navn (valgfrit)"
+        instructions_required: "Dit fulde navn"
         required: "Indtast venligst et navn"
         too_short: "Dit navn er for kort"
         ok: "Dit navn ser fint ud"
@@ -1547,12 +1546,11 @@ da:
           success: "Invitiationslinket blev genereret!"
           error: "Der opstod en fejl under generering af Invitationslink"
         invite:
-          new_title: "Opret Invitation"
-          edit_title: "Rediger Invitation"
           instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
-          copy_link: "kopier link"
           expires_in_time: "Udløber om %{time}"
           expired_at_time: "Udløb kl. %{time}"
+          copy_link: "Kopiér link"
+          link_copied: "Link kopieret!"
           show_advanced: "Vis Avancerede Indstillinger"
           hide_advanced: "Skjul Avancerede Indstillinger"
           restrict: "Begræns til"
@@ -1561,10 +1559,10 @@ da:
           email_or_domain_placeholder: "navn@eksempel.dk eller eksempel.dk"
           max_redemptions_allowed: "Maks. anvendelser"
           add_to_groups: "Tilføj til grupper"
-          expires_at: "Udløber efter"
-          custom_message: "Valgfri personlig meddelelse"
+          expires_after: "Udløber efter"
           send_invite_email: "Gem og send e-mail"
-          save_invite: "Gem Invitation"
+          save_invite: "Gem"
+          cancel: "Annuller"
           invite_saved: "Invitation gemt."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
@@ -1772,7 +1770,6 @@ da:
     search_hint: "brugernavn, email eller IP adresse"
     create_account:
       header_title: "Velkommen!"
-      subheader_title: "Lad os oprette din konto"
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
       title: "Tilmeld dig"
       failed: "Noget gik galt. Måske er e-mail-adressen allerede registreret – prøv “Jeg har glemt min adgangskode”-linket"
@@ -1812,7 +1809,6 @@ da:
       confirm_button: Gennemfør login
     login:
       header_title: "Velkommen tilbage"
-      subheader_title: "Log ind med din konto"
       title: "Log ind"
       username: "Bruger"
       password: "Adgangskode"
@@ -2390,6 +2386,9 @@ da:
         selected:
           one: "Du har valgt <b>%{count}</b> indlæg."
           other: "Du har valgt <b>%{count}</b> indlæg."
+        selected_count:
+          one: "%{count} valgt"
+          other: "%{count} valgt"
         change_tags: "Erstat Mærker"
         append_tags: "Tilføj Mærker"
         choose_new_tags: "Vælg nye mærker for dette emne"
@@ -2433,6 +2432,8 @@ da:
         optional: (valgfri)
       archive_topics:
         name: "Arkiv"
+      archive_messages:
+        name: "Flyt til arkiv"
       move_messages_to_inbox:
         name: "Flyt til indbakke"
       append_tags:
@@ -2458,6 +2459,7 @@ da:
         help: "Flyt beskeder tilbage til Indbakke"
       defer:
         help: "Markér emne som ulæst"
+        title: "Markér som ulæst"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -3846,6 +3848,7 @@ da:
         installed_version: "Installeret"
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
+        dismiss_notice: "Ignorer Alle"
         new_features:
           title: "Hvad er nyt"
           learn_more: "Lær mere..."
@@ -4167,11 +4170,15 @@ da:
           screened_ips: "Blokerede IPer"
           screened_urls: "Blokerede URLer"
           search_logs: "Søgnings logs"
-          security: "Sikkerhed"
-          spam: "Spam"
+      section_landing_pages:
+        account:
+          title: "Konto"
+          backups:
+            title: "Backups"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Navn"
           optional: "(valgfri)"
           update: "Opdater"
           saved: "gemt!"
@@ -4189,6 +4196,12 @@ da:
             invalid_applies_to: "Obligatoriske"
             topic: "emner"
             post: "indlæg"
+          more_options:
+            move_up: "Flyt op"
+            move_down: "Flyt ned"
+        look_and_feel:
+          themes:
+            title: "Temaer"
       plugins:
         title: "Udvidelser"
         name: "Navn"
@@ -4369,6 +4382,9 @@ da:
           convert_theme_tooltip: "Konverter dette tema til komponent"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrugte komponenter:"
+          selected:
+            one: "%{count} valgt"
+            other: "%{count} valgt"
           cancel: "Annuller"
           broken_theme_tooltip: "Dette tema har fejl i dets CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponent er deaktiveret"
@@ -5237,6 +5253,8 @@ da:
         history: "Vis ændringshistorik"
         reset: "nulstil"
         none: "ingen"
+        save: "gem"
+        cancel: "annuller"
       site_settings:
         emoji_list:
           invalid_input: "Humørikon liste bør kun indeholde gyldige humørikon navne, for eksempel: knus"
@@ -5369,10 +5387,6 @@ da:
             with_post: <span class="username">%{username}</span> for indlæg i %{link}
             with_post_time: <span class="username">%{username}</span> for indlæg i %{link} klokken <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> klokken <span class="time">%{time}</span>
-        badge_intro:
-          title: "Vælg et eksisterende emblem, eller opret et nyt for at komme i gang"
-          what_are_badges_title: "Hvad er emblemer?"
-          badge_query_examples_title: "Eksempler på emblem-forespørgsel"
         mass_award:
           title: Masseudnævnelse
           description: Tildel det samme emblem til mange brugere på én gang.

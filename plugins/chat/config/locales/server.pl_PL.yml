@@ -9,6 +9,7 @@ pl_PL:
     chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
     chat_enabled: "Włącz czat."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
+    chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
@@ -22,12 +23,14 @@ pl_PL:
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
     default_emoji_reactions: "Domyślne reakcje emoji dla wiadomości czatu. Dodaj do 5 emotikonów, aby szybko reagować."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
+    chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oznaczać flagami wiadomości czatu. Należy pamiętać, że administratorzy i moderatorzy zawsze mogą oznaczać flagami wiadomości czatu."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
     chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
+    chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
@@ -254,6 +257,17 @@ pl_PL:
         many: "Masz nowe wiadomości na czacie"
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Nowa wiadomość"
+          few: "[%{site_name}] Nowe wiadomości"
+          many: "[%{site_name}] Nowe wiadomości"
+          other: "[%{site_name}] Nowe wiadomości"
+        chat_channel_1:
+          one: "[%{site_name}] Nowa wiadomość w %{channel}"
+          few: "[%{site_name}] Nowe wiadomości w %{channel}"
+          many: "[%{site_name}] Nowe wiadomości w %{channel}"
+          other: "[%{site_name}] Nowe wiadomości w %{channel}"
       unsubscribe: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}, lub %{unsubscribe_link}, aby zrezygnować z subskrypcji."
       unsubscribe_no_link: "To podsumowanie czatu jest wysyłane z %{site_link} kiedy cię nie ma. Zmień swoje %{email_preferences_link}."
       view_messages:

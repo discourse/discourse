@@ -150,10 +150,9 @@ acceptance("User Preferences - Interface", function (needs) {
 
     await visit("/u/eviltrout/preferences/interface");
 
-    assert.ok(
-      exists(".pref-reset-seen-user-tips"),
-      "has reset seen user tips button"
-    );
+    assert
+      .dom(".pref-reset-seen-user-tips")
+      .exists("has reset seen user tips button");
 
     await click(".pref-reset-seen-user-tips");
 
@@ -199,7 +198,7 @@ acceptance(
       site.set("user_color_schemes", []);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(!exists(".control-group.color-scheme"));
+      assert.dom(".control-group.color-scheme").doesNotExist();
     });
 
     test("light color scheme picker", async function (assert) {

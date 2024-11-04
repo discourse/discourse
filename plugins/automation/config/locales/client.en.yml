@@ -1,5 +1,10 @@
 en:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: delete automation
     discourse_automation:
       title: Automation
       create: Create
@@ -8,7 +13,8 @@ en:
       select_trigger: Select a trigger
       confirm_automation_reset: This action will reset script and trigger options, new state will be saved, do you want to proceed?
       confirm_automation_trigger: This action will trigger the automation, do you want to proceed?
-      no_automation_yet: You haven’t created any automation yet.
+      no_automation_yet: You haven’t created any automations yet. Choose an option below to get started.
+      filter_placeholder: Filter by name or description...
       edit_automation:
         trigger_section:
           forced: This trigger is forced by script.
@@ -223,6 +229,9 @@ en:
             watching_tags:
               label: Watching tags
               description: Will trigger only if the topic has any of these tags
+            trigger_with_pms:
+              label: Trigger with PMs
+              description: Will trigger even if the tags were changed in a PM
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -381,6 +390,7 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+      unnamed_automation: "Unnamed automation"
 
       models:
         script:

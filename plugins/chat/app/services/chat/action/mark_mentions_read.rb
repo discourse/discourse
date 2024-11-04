@@ -4,7 +4,7 @@ module Chat
   module Action
     # When updating the read state of chat channel memberships, we also need
     # to be sure to mark any mention-based notifications read at the same time.
-    class MarkMentionsRead
+    class MarkMentionsRead < Service::ActionBase
       # @param [User] user The user that we are marking notifications read for.
       # @param [Array] channel_ids The chat channels that are having their notifications
       #   marked as read.
@@ -12,7 +12,12 @@ module Chat
       #   mentions read for in the channel.
       # @param [Integer] thread_id Optional, if provided then all notifications related
       #   to messages in the thread will be marked as read.
-      def self.call(user, channel_ids:, message_id: nil, thread_id: nil)
+      param :user
+      option :channel_ids, []
+      option :message_id, optional: true
+      option :thread_id, optional: true
+
+      def call
         ::Notification
           .where(notification_type: Notification.types[:chat_mention])
           .where(user: user)

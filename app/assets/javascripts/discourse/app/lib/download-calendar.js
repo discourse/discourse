@@ -9,16 +9,16 @@ export function downloadCalendar(title, dates, options = {}) {
   const formattedDates = formatDates(dates);
   title = title.trim();
 
-  switch (currentUser.user_option.default_calendar) {
-    case "none_selected":
-      _displayModal(title, formattedDates, options);
-      break;
+  switch (currentUser?.user_option.default_calendar) {
     case "ics":
       downloadIcs(title, formattedDates, options);
       break;
     case "google":
       downloadGoogle(title, formattedDates, options);
       break;
+    case "none_selected":
+    default:
+      _displayModal(title, formattedDates, options);
   }
 }
 

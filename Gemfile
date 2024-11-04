@@ -99,7 +99,7 @@ gem "sidekiq"
 gem "mini_scheduler"
 
 gem "execjs", require: false
-gem "mini_racer", "0.17.0.pre4"
+gem "mini_racer"
 
 gem "highline", require: false
 
@@ -243,8 +243,6 @@ if ENV["IMPORT"] == "1"
   gem "reverse_markdown"
   gem "tiny_tds"
   gem "csv"
-
-  gem "parallel", require: false
 end
 
 group :generic_import, optional: true do
@@ -287,3 +285,7 @@ group :migrations, optional: true do
   # CLI
   gem "ruby-progressbar"
 end
+
+gem "dry-initializer", "~> 3.1"
+
+gem "parallel"

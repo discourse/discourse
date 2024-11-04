@@ -58,4 +58,5 @@
         </span>
       </div>
   </div>
+  {{~raw-plugin-outlet name="topic-list-after-columns"}}
 </td>

@@ -26,6 +26,7 @@ zh_CN:
         millions: "%{number}M"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY 年 MMM"
@@ -113,7 +114,7 @@ zh_CN:
       topic_html: '话题：<span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} 发布的帖子 #%{postNumber}"
       close: "关闭"
-      twitter: "分享到 Twitter"
+      twitter: "在 X 上分享"
       facebook: "分享到 Facebook"
       email: "通过电子邮件发送"
       url: "复制并分享 URL"
@@ -265,6 +266,7 @@ zh_CN:
       pill: "推荐"
       pm_title: "建议的消息"
     about:
+      edit: "编辑此页面"
       simple_title: "关于"
       title: "关于%{title}"
       stats: "网站统计信息"
@@ -1262,7 +1264,6 @@ zh_CN:
       ignored_users: "已忽略"
       ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
-      automatically_unpin_topics: "当我到达底部时自动取消置顶话题。"
       apps: "应用"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消访问权限撤消操作"
@@ -1535,7 +1536,7 @@ zh_CN:
         add_email: "添加备用电子邮件"
         auth_override_instructions: "可以通过身份验证服务提供商更新电子邮件。"
         no_secondary: "没有辅助电子邮件"
-        instructions: "不会公开显示。"
+        instructions: "绝不会公开展示"
         admin_note: "注意：管理员用户更改非管理员用户的电子邮件，则说明后者无法访问其原始电子邮件帐户，因此将向后者的新地址发送一封重置密码的电子邮件。在用户完成密码重置流程之前，其电子邮件不会更改。"
         ok: "我们将向您发送电子邮件以确认"
         required: "请输入一个电子邮件地址"
@@ -1560,19 +1561,19 @@ zh_CN:
         action: "点击此处激活您的帐户"
         already_done: "抱歉，此帐户确认链接不再有效。也许您的帐户已经处于有效状态？"
         please_continue: "您的新帐户已确认；您将被重定向到首页。"
-        continue_button: "继续访问 %{site_name}"
+        continue_button: "结束!"
         welcome_to: "欢迎来到 %{site_name}！"
         approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
       name:
         title: "姓名"
         instructions: "您的全名（可选）"
-        instructions_required: "您的全名。"
+        instructions_required: "您的全名"
         required: "请输入姓名"
         too_short: "您的用户名过短"
         ok: "您的姓名没有问题"
       username:
         title: "用户名"
-        instructions: "独一无二，无空格，简短。"
+        instructions: "唯一，没有空格，简短"
         short_instructions: "其他人可以使用 @%{username} 来提及您"
         available: "您的用户名可用"
         not_available: "不可用，试试 %{suggestion}？"
@@ -1735,12 +1736,23 @@ zh_CN:
           success: "邀请链接已成功生成！"
           error: "生成邀请链接时出错"
         invite:
-          new_title: "创建邀请"
+          new_title: "邀请成员"
           edit_title: "编辑邀请"
           instructions: "分享此链接以立即授予访问此网站的权限："
-          copy_link: "复制链接"
           expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
+          create_link_to_invite: "创建一个可共享的链接，以立即授予对该站点的访问权限。"
+          copy_link_and_share_it: "复制下面的链接并分享，即可立即授予访问该网站的权限。"
+          copy_link: "复制链接"
+          link_copied: "链接已复制！"
+          share_link: "分享链接"
+          link_validity_MF: |
+            链接可用于 { user_count, plural,
+                other {# 个用户}
+            }，有效期 { duration_days, plural,
+                other {# 天}
+            }.
+          edit_link_options: "编辑链接选项。"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           restrict: "限制为"
@@ -1750,11 +1762,15 @@ zh_CN:
           max_redemptions_allowed: "最大使用次数"
           add_to_groups: "添加到群组"
           invite_to_topic: "直达话题"
-          expires_at: "过期时间"
-          custom_message: "可选个人信息"
+          expires_at: "有效期至"
+          expires_after: "过期时间"
+          custom_message: "自定义消息"
+          custom_message_placeholder: "在你的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
-          save_invite: "保存邀请"
+          save_invite: "保存"
+          cancel: "取消"
+          create_link: "创建链接"
           invite_saved: "邀请已保存。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
@@ -1785,7 +1801,7 @@ zh_CN:
         same_as_email: "您的密码与您的电子邮件相同。"
         ok: "您的密码没有问题。"
         instructions:
-          other: "至少 %{count} 个字符。"
+          other: "至少 %{count} 个字符"
         required: "请输入密码"
         confirm: "确认"
         incorrect_password: "输入的密码不正确。"
@@ -2016,15 +2032,16 @@ zh_CN:
     search_hint: "用户名、电子邮件或 IP 地址"
     create_account:
       header_title: "欢迎！"
-      subheader_title: "让我们创建您的帐户"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
       title: "注册"
       failed: "出了点问题，可能此电子邮件已被注册，试试点击忘记密码链接"
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
       activation_title: "激活您的帐户"
       already_have_account: "已经有帐户？"
+      no_account_yet: "没有账户？"
       progress_bar:
         signup: "注册"
+        activate: "激活"
         approve: "批准"
         login: "登录"
     forgot_password:
@@ -2058,7 +2075,6 @@ zh_CN:
       confirm_button: 完成登录
     login:
       header_title: "欢迎回来"
-      subheader_title: "登录您的帐户"
       title: "登录"
       username: "用户"
       password: "密码"
@@ -2158,7 +2174,6 @@ zh_CN:
       success: "您的帐户已创建，您现在已登录。"
       name_label: "姓名"
       password_label: "密码"
-      existing_user_can_redeem: "兑换您的话题或群组邀请。"
     password_reset:
       continue: "继续访问 %{site_name}"
     emoji_set:
@@ -2170,6 +2185,7 @@ zh_CN:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "仅类别"
+      categories_only_optimized: "仅限类别(已优化)"
       categories_with_featured_topics: "包含精选话题的类别"
       categories_and_latest_topics: "类别和最新话题"
       categories_and_latest_topics_created_date: "类别和最新话题（按话题创建日期排序）"
@@ -3259,7 +3275,9 @@ zh_CN:
       show_hidden: "查看已忽略的内容。"
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
+      load_more_replies: "加载更多回复"
       sr_collapse_replies: "收起嵌入式回复"
+      sr_load_more_replies: "加载更多嵌入式回复"
       sr_date: "发布日期"
       sr_expand_replies:
         other: "此帖子有 %{count} 条回复"
@@ -4466,6 +4484,7 @@ zh_CN:
         installed_version: "已安装"
         latest_version: "最新"
         problems_found: "基于您当前网站设置的一些建议"
+        dismiss_notice: "关闭"
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
@@ -4587,6 +4606,7 @@ zh_CN:
             publish_read_state: "在群组消息中发布群组阅读状态"
           membership:
             automatic: 自动
+            automatic_tooltip: "此群组是自动创建的，你无法删除它，并且成员会自动添加和删除"
             trust_levels_title: "当用户加入时自动授予其信任级别："
             effects: 影响
             trust_levels_none: "无"
@@ -4928,9 +4948,18 @@ zh_CN:
           screened_ips: "已屏蔽的 IP"
           screened_urls: "已屏蔽的 URL"
           search_logs: "搜索日志"
-          security: "安全性"
-          spam: "垃圾内容"
+          security: "安全设置"
+          spam: "垃圾信息设置"
           staff_action_logs: "管理人员操作日志"
+      section_landing_pages:
+        account:
+          title: "帐户"
+          backups:
+            title: "备份"
+            description: "备份你的网站数据"
+          whats_new:
+            title: "最新变化"
+            description: "发现 Discourse 的新版本和改进之处"
       config_areas:
         about:
           header: "关于您的网站"
@@ -4941,41 +4970,23 @@ zh_CN:
           community_description: "社区描述"
           banner_image: "横幅图片"
           banner_image_help: |
-            这将用于您的“关于”页面。推荐大小：800x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
+            这将用于您的“关于”页面。推荐大小：1100x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
           contact_information: "联系信息"
           community_owner: "社区所有者"
           community_owner_placeholder: "Johnny Smith"
-          community_owner_help: |
-            负责此网站的主要联系人的名称。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_email: "联系电子邮件地址"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            负责此网站的主要联系人的电子邮件地址。用于重要通知，也会显示在 /about 上。对公开网站上的匿名用户可见。
           contact_url: "联系 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            本网站的联系 URL。如果存在，则取代 /about 上的联系电子邮件地址，对公开网站上的匿名用户可见。
           site_contact_name: "网站联系人名称"
-          site_contact_name_help: |
-            用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认的系统帐户。
           site_contact_group: "网站联系群组"
-          site_contact_group_help: |
-            被邀请至所有自动发送的私信的群组的有效名称。
           your_organization: "您的组织"
-          company_name: "公司名称"
-          company_name_placeholder: "示例公司"
-          company_name_help: |
-            您的公司或组织的名称。
+          company_name: "名称"
+          company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
           governing_law: "适用法律"
-          governing_law_placeholder: "纽约州"
-          governing_law_help: |
-            指定管辖网站法律方面（包括《服务条款》和《隐私声明》）的司法管辖区。这通常是运营网站的公司注册或开展业务的国家/地区或州。
           city_for_disputes: "争议城市"
-          city_for_disputes_placeholder: "纽约市"
-          city_for_disputes_help: |
-            指定将用作解决与使用此论坛相关的任何争议的管辖城市。此信息通常包含在法律文件（例如论坛的《服务条款》）中。
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -4985,6 +4996,7 @@ zh_CN:
           saved: "已保存！"
         flags:
           header: "审核举报"
+          edit_header: "编辑举报"
           subheader: "Discourse 中的举报系统可帮助您和您的版主团队管理内容和用户行为，使您的社区保持尊重和健康。默认设置适用于大多数社区，您无需更改它们。但是，如果您的网站有特殊要求，您可以禁用不需要的举报并添加您自己的自定义举报。"
           description: "描述"
           enabled: "已启用？"
@@ -4994,6 +5006,7 @@ zh_CN:
           delete: "删除"
           delete_confirm: '确定要删除“%{name}”吗？'
           flags_tab: "举报"
+          settings: "举报设置"
           form:
             add_header: "添加举报"
             edit_header: "编辑举报"
@@ -5017,8 +5030,14 @@ zh_CN:
             title: "更多选项"
             move_up: "上移"
             move_down: "下移"
+        look_and_feel:
+          title: "外观"
+          themes:
+            title: "主题"
       plugins:
         title: "插件"
+        installed: "安装的插件"
+        description: "您安装的任何 Discourse 插件，或由 Discourse 托管预安装的插件都将出现在此列表中。"
         name: "名称"
         none_installed: "您没有安装任何插件。"
         version: "版本"
@@ -5683,6 +5702,10 @@ zh_CN:
             custom_emoji_destroy: "删除自定义表情符号"
             delete_post_permanently: "永久删除帖子"
             delete_topic_permanently: "永久删除话题"
+            tag_group_create: "创建标签组"
+            tag_group_destroy: "删除标签组"
+            tag_group_change: "修改标签组"
+            delete_associated_accounts: "删除关联帐户"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -5907,6 +5930,9 @@ zh_CN:
         check_sso:
           title: "显示 SSO 有效负载"
           text: "显示"
+        delete_associated_accounts:
+          title: "删除此用户的所有关联帐户"
+          text: "删除关联帐户"
       user:
         suspend_failed: "封禁此用户时出错 %{error}"
         unsuspend_failed: "取消封禁此用户时出错 %{error}"
@@ -6002,6 +6028,7 @@ zh_CN:
         post_edits_count: "帖子编辑"
         anonymize: "对用户进行匿名化处理"
         anonymize_confirm: "确定要对此帐户进行匿名化处理吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
+        delete_associated_accounts_confirm: "你确定要从此帐户删除所有关联帐户吗？如果用户的电子邮件发生变化，则用户可能无法登录。"
         anonymize_yes: "是，对此帐户进行匿名化处理"
         anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"
@@ -6223,6 +6250,8 @@ zh_CN:
         history: "查看变更历史记录"
         reset: "重置"
         none: "无"
+        save: "保存"
+        cancel: "取消"
       site_settings:
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
@@ -6313,6 +6342,7 @@ zh_CN:
       badges:
         status: 状态
         title: 徽章
+        page_description: 徽章奖励用户的活动、贡献和成就，以认可、认证和鼓励社区内的积极行为和参与。
         new_badge: 新徽章
         new: 新
         name: 名称
@@ -6321,6 +6351,7 @@ zh_CN:
         description: 描述
         long_description: 详细描述
         badge_type: 徽章类型
+        group_settings: 组设置
         badge_grouping: 组
         badge_groupings:
           modal_title: 徽章组
@@ -6384,9 +6415,8 @@ zh_CN:
             with_post_time: <span class="username">%{username}</span>，因 <span class="time">%{time}</span> 在 %{link} 下的帖子
             with_time: <span class="username">%{username}</span>，在 <span class="time">%{time}</span>
         badge_intro:
-          title: "选择现有徽章或创建新徽章以开始"
-          what_are_badges_title: "什么是徽章？"
-          badge_query_examples_title: "徽章查询示例"
+          title: "选择徽章或创建新徽章"
+          description: "从选择现有徽章进行自定义或者创建全新的徽章开始"
         mass_award:
           title: 批量授予
           description: 一次将同一个徽章授予多个用户。

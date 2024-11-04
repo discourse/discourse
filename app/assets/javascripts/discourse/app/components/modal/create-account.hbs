@@ -25,7 +25,6 @@
       <WelcomeHeader
         id="create-account-title"
         @header={{i18n "create_account.header_title"}}
-        @subheader={{i18n "create_account.subheader_title"}}
       >
         <PluginOutlet
           @name="create-account-header-bottom"
@@ -42,6 +41,7 @@
           <div class="input-group create-account-email">
             <Input
               {{on "focusout" this.checkEmailAvailability}}
+              {{on "focusin" this.scrollInputIntoView}}
               @type="email"
               @value={{this.model.accountEmail}}
               disabled={{this.emailDisabled}}
@@ -55,19 +55,26 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            <InputTip
-              @validation={{this.emailValidation}}
-              id="account-email-validation"
-            />
-            {{#unless this.emailValidation.reason}}
+            {{#if
+              (or
+                this.emailValidation.ok
+                (and this.emailValidationVisible this.emailValidation.reason)
+              )
+            }}
+              <InputTip
+                @validation={{this.emailValidation}}
+                id="account-email-validation"
+              />
+            {{else}}
               <span class="more-info" id="account-email-validation-more-info">
                 {{i18n "user.email.instructions"}}
               </span>
-            {{/unless}}
+            {{/if}}
           </div>
 
           <div class="input-group create-account__username">
             <Input
+              {{on "focusin" this.scrollInputIntoView}}
               @value={{this.model.accountUsername}}
               disabled={{this.usernameDisabled}}
               maxlength={{this.maxUsernameLength}}
@@ -86,11 +93,6 @@
               @validation={{this.usernameValidation}}
               id="username-validation"
             />
-            {{#unless this.usernameValidation.reason}}
-              <span class="more-info" id="username-validation-more-info">
-                {{i18n "user.username.instructions"}}
-              </span>
-            {{/unless}}
           </div>
 
           <PluginOutlet
@@ -107,6 +109,8 @@
           <div class="input-group create-account__password">
             {{#if this.passwordRequired}}
               <PasswordField
+                {{on "focusout" this.showPasswordValidation}}
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
                 type={{if this.maskPassword "password" "text"}}
@@ -122,15 +126,20 @@
 
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
-                  <InputTip
-                    @validation={{this.passwordValidation}}
-                    id="password-validation"
-                  />
-                  {{#unless this.passwordValidation.reason}}
-                    <span class="more-info" id="password-validation-more-info">
-                      {{this.passwordInstructions}}
-                    </span>
-                  {{/unless}}
+                  {{#if
+                    (or
+                      this.passwordValidation.ok
+                      (and
+                        this.passwordValidationVisible
+                        this.passwordValidation.reason
+                      )
+                    )
+                  }}
+                    <InputTip
+                      @validation={{this.passwordValidation}}
+                      id="password-validation"
+                    />
+                  {{/if}}
                   <div
                     class={{concat-class
                       "caps-lock-warning"
@@ -167,6 +176,7 @@
           {{#if this.requireInviteCode}}
             <div class="input-group create-account__invite-code">
               <Input
+                {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.inviteCode}}
                 id="inviteCode"
                 class={{value-entered this.inviteCode}}
@@ -199,6 +209,7 @@
           >
             {{#if this.fullnameRequired}}
               <TextField
+                {{on "focusin" this.scrollInputIntoView}}
                 @disabled={{this.nameDisabled}}
                 @value={{this.model.accountName}}
                 @id="new-account-name"
@@ -207,18 +218,13 @@
                 class={{value-entered this.model.accountName}}
               />
               <label class="alt-placeholder" for="new-account-name">
-                {{i18n "user.name.title"}}
+                {{this.nameTitle}}
               </label>
 
               <InputTip
                 @validation={{this.nameValidation}}
                 id="fullname-validation"
               />
-              {{#unless this.nameValidation.reason}}
-                <span class="more-info" id="fullname-validation-more-info">
-                  {{this.nameInstructions}}
-                </span>
-              {{/unless}}
             {{/if}}
           </div>
 
@@ -227,6 +233,7 @@
               {{#each this.userFields as |f|}}
                 <div class="input-group">
                   <UserField
+                    {{on "focusin" this.scrollInputIntoView}}
                     @field={{f.field}}
                     @value={{f.value}}
                     @validation={{f.validation}}
@@ -250,34 +257,13 @@
 
         {{#if this.site.desktopView}}
           <div class="d-modal__footer">
-            {{#if this.disclaimerHtml}}
-              <div class="disclaimer">
-                {{html-safe this.disclaimerHtml}}
-              </div>
-            {{/if}}
-            <div class="d-modal__footer-buttons">
-              <DButton
-                @action={{this.createAccount}}
-                @disabled={{this.submitDisabled}}
-                @label="create_account.title"
-                @isLoading={{this.formSubmitted}}
-                class="btn-large btn-primary"
-              />
-
-              {{#unless this.hasAuthOptions}}
-                <hr />
-                <div class="already-have-account">
-                  {{i18n "create_account.already_have_account"}}
-                </div>
-                <DButton
-                  @action={{route-action "showLogin"}}
-                  @disabled={{this.formSubmitted}}
-                  @label="log_in"
-                  id="login-link"
-                  class="btn-large btn-flat"
-                />
-              {{/unless}}
-            </div>
+            <SignupPageCta
+              @formSubmitted={{this.formSubmitted}}
+              @hasAuthOptions={{this.hasAuthOptions}}
+              @createAccount={{this.createAccount}}
+              @submitDisabled={{this.submitDisabled}}
+              @disclaimerHtml={{this.disclaimerHtml}}
+            />
           </div>
 
           <PluginOutlet
@@ -307,34 +293,12 @@
 
   <:footer>
     {{#if (and this.showCreateForm this.site.mobileView)}}
-      {{#if this.disclaimerHtml}}
-        <div class="disclaimer">
-          {{html-safe this.disclaimerHtml}}
-        </div>
-      {{/if}}
-      <div class="d-modal__footer-buttons">
-        <DButton
-          @action={{this.createAccount}}
-          @disabled={{this.submitDisabled}}
-          @label="create_account.title"
-          @isLoading={{this.formSubmitted}}
-          class="btn-large btn-primary"
-        />
-
-        {{#unless this.hasAuthOptions}}
-          <DButton
-            @action={{route-action "showLogin"}}
-            @disabled={{this.formSubmitted}}
-            @label="log_in"
-            id="login-link"
-            class="btn-large btn-flat"
-          />
-        {{/unless}}
-      </div>
-
-      <PluginOutlet
-        @name="create-account-after-modal-footer"
-        @connectorTagName="div"
+      <SignupPageCta
+        @formSubmitted={{this.formSubmitted}}
+        @hasAuthOptions={{this.hasAuthOptions}}
+        @createAccount={{this.createAccount}}
+        @submitDisabled={{this.submitDisabled}}
+        @disclaimerHtml={{this.disclaimerHtml}}
       />
     {{/if}}
   </:footer>

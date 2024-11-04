@@ -13,6 +13,7 @@ const DeprecationSilencer = require("deprecation-silencer");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
 const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
@@ -222,6 +223,11 @@ module.exports = function (defaults) {
 
               return JSON.stringify(output, null, 2);
             },
+          }),
+          new RetryChunkLoadPlugin({
+            retryDelay: 200,
+            maxRetries: 2,
+            chunks: ["assets/discourse.js"],
           }),
         ],
       },

@@ -352,6 +352,14 @@ fa_IR:
             ip_address:
               blocked: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است."
               max_new_accounts_per_registration_ip: "ثبت‌نام‌های جدید از آدرس IP شما ممنوع شده است (به حداکثر تعداد مجاز رسیده است). با یکی از مدیران تماس بگیرید."
+        user_password:
+          attributes:
+            password:
+              common: "این یکی از 10000 رمز عبور مرسوم است. لطفا از رمز عبور امن تری استفاده کنید. "
+              same_as_username: "همانند نام‌کاربری شما است. لطفا از رمز‌عبور امن‌تری استفاده نمایید."
+              same_as_email: "همانند ایمیل شما است. لطفا از رمز عبور امن‌تری استفاده نمایید."
+              same_as_current: "رمز انتخابی مشابه رمز فعلی شما است."
+              unique_characters: "تعداد نویسه تکراری زیاد است. لطفا یک رمز قوی‌تر انتخاب کنید."
         color_scheme_color:
           attributes:
             hex:
@@ -694,6 +702,9 @@ fa_IR:
       description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
     consolidated_page_views_browser_detection:
       yaxis: "روز"
+    site_traffic:
+      yaxis: "روز"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       xaxis: "روز"
     daily_engaged_users:
@@ -808,6 +819,9 @@ fa_IR:
       title: "بازدید"
       xaxis: "روز"
       yaxis: "مجموع بازدید صفحات"
+    page_view_legacy_total_reqs:
+      xaxis: "روز"
+      yaxis: "مجموع بازدید صفحات"
     page_view_logged_in_mobile_reqs:
       title: "نمایش صفحات کاربران وارد شده"
       xaxis: "روز"
@@ -897,6 +911,8 @@ fa_IR:
       queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
       ram: "سرور شما با کمتر از 1 گیگ رم راه اندازی شده است، برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کند."
       subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
+      poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
+      poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
   site_settings:
     disabled: "غیرفعال شده"
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
@@ -951,7 +967,6 @@ fa_IR:
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
     use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
     content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
-    post_menu_hidden_items: "فهرست موارد مخفی شود بطور پیش فرض در فهرست نوشته مگر اینکه رفع گسترش به حالت روشن باشد."
     share_links: "مشخص کنید کدام موارد بر روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود. "
     send_welcome_message: "برای تمام کاربران جدید پیام خوش آمدید به همراه راهنمای شروع سریع بفرست."
@@ -1080,6 +1095,7 @@ fa_IR:
     faq_url: "اگر سوالات متداول را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     tos_url: "اگر شرایط استفاده از خدمات را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     privacy_policy_url: "اگر سیاست حفظ حریم خصوصی را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
+    display_eu_visitor_stats: "نمایش تعداد بازدیدکنندگان جهانی و اتحادیه اروپا در صفحه /about ممکن است، چند دقیقه طول می‌کشد تا آمار پس از فعال کردن این تنظیم ظاهر شود."
     newuser_spam_host_threshold: "یک کاربر چند بار می‌تواند به یک هاست لینک دهد تا `newuser_spam_host_threshold` به عنوان هرزنامه شناخته شود."
     allowed_spam_host_domains: "لیست دامنه‌ها محروم از میزبان تست هرزنامه. هرگز از ساخت نوشته‌ی جدید با پیوند‌هایی از این دامنه‌ها محدود نمی‌شوند. "
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"

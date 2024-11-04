@@ -1145,6 +1145,15 @@ RSpec.describe PostDestroyer do
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "destroys the post when force_destroy is true for posts by deleted users" do
+      regular_post = Fabricate(:post, post_number: 2)
+      UserDestroyer.new(admin).destroy(regular_post.user, delete_posts: true)
+      regular_post.reload
+
+      PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
+      expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
   end
 
   describe "publishes messages to subscribers" do

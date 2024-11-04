@@ -13,8 +13,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
-    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
+    assert.dom(".name").hasText("Evil Trout");
+    assert.dom(".username").hasText("eviltrout");
   });
 
   test("prioritized username", async function (assert) {
@@ -23,8 +23,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
-    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
+    assert.dom(".username").hasText("eviltrout");
+    assert.dom(".name").hasText("Evil Trout");
   });
 
   test("includeLink", async function (assert) {
@@ -36,9 +36,9 @@ module("Integration | Component | user-info", function (hooks) {
     assert.ok(exists(`.name-line a[href="/u/${this.currentUser.username}"]`));
 
     this.set("includeLink", false);
-    assert.notOk(
-      exists(`.name-line a[href="/u/${this.currentUser.username}"]`)
-    );
+    assert
+      .dom(`.name-line a[href="/u/${this.currentUser.username}"]`)
+      .doesNotExist();
   });
 
   test("includeAvatar", async function (assert) {
@@ -47,10 +47,10 @@ module("Integration | Component | user-info", function (hooks) {
     );
 
     this.set("includeAvatar", true);
-    assert.ok(exists(".user-image"));
+    assert.dom(".user-image").exists();
 
     this.set("includeAvatar", false);
-    assert.notOk(exists(".user-image"));
+    assert.dom(".user-image").doesNotExist();
   });
 
   test("shows status if enabled and user has status", async function (assert) {
@@ -61,7 +61,7 @@ module("Integration | Component | user-info", function (hooks) {
       hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
     );
 
-    assert.ok(exists(".user-status-message"));
+    assert.dom(".user-status-message").exists();
   });
 
   test("doesn't show status if enabled but user doesn't have status", async function (assert) {
@@ -71,7 +71,7 @@ module("Integration | Component | user-info", function (hooks) {
       hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
     );
 
-    assert.notOk(exists(".user-status-message"));
+    assert.dom(".user-status-message").doesNotExist();
   });
 
   test("doesn't show status if disabled", async function (assert) {
@@ -82,7 +82,7 @@ module("Integration | Component | user-info", function (hooks) {
       hbs`<UserInfo @user={{this.currentUser}} @showStatus={{false}} />`
     );
 
-    assert.notOk(exists(".user-status-message"));
+    assert.dom(".user-status-message").doesNotExist();
   });
 
   test("doesn't show status by default", async function (assert) {
@@ -91,7 +91,7 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.notOk(exists(".user-status-message"));
+    assert.dom(".user-status-message").doesNotExist();
   });
 
   test("doesn't show status description by default", async function (assert) {

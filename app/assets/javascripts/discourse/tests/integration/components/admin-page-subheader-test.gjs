@@ -1,5 +1,6 @@
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import i18n from "discourse-common/helpers/i18n";
 import AdminPageSubheader from "admin/components/admin-page-subheader";
@@ -127,3 +128,50 @@ module("Integration | Component | AdminPageSubheader", function (hooks) {
     assert.true(actionCalled);
   });
 });
+
+module(
+  "Integration | Component | AdminPageSubheader | Mobile",
+  function (hooks) {
+    hooks.beforeEach(function () {
+      forceMobile();
+    });
+
+    setupRenderingTest(hooks);
+
+    test("action buttons become a dropdown on mobile", async function (assert) {
+      await render(<template>
+        <AdminPageSubheader>
+          <:actions as |actions|>
+            <actions.Primary
+              @route="adminBadges.show"
+              @routeModels="new"
+              @icon="plus"
+              @label="admin.badges.new"
+              class="new-badge"
+            />
+
+            <actions.Default
+              @route="adminBadges.award"
+              @routeModels="new"
+              @icon="upload"
+              @label="admin.badges.mass_award.title"
+              class="award-badge"
+            />
+          </:actions>
+        </AdminPageSubheader>
+      </template>);
+
+      assert
+        .dom(
+          ".admin-page-subheader .fk-d-menu__trigger.admin-page-subheader-mobile-actions-trigger"
+        )
+        .exists();
+
+      await click(".admin-page-subheader-mobile-actions-trigger");
+
+      assert
+        .dom(".dropdown-menu.admin-page-subheader__mobile-actions .new-badge")
+        .exists();
+    });
+  }
+);

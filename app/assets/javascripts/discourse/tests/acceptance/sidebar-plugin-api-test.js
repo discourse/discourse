@@ -7,18 +7,15 @@ import {
   resetCustomCountables,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import Site from "discourse/models/site";
 import {
   acceptance,
-  exists,
-  query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
+  let linkDidInsert, linkDestroy, sectionDestroy;
+
   needs.user({});
 
   needs.settings({
@@ -26,210 +23,82 @@ acceptance("Sidebar - Plugin API", function (needs) {
     navigation_menu: "sidebar",
   });
 
-  needs.hooks.afterEach(() => {
+  needs.hooks.afterEach(function () {
     linkDidInsert = undefined;
     linkDestroy = undefined;
     sectionDestroy = undefined;
   });
-
-  let linkDidInsert, linkDestroy, sectionDestroy;
 
   test("Multiple header actions and links", async function (assert) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           return class extends BaseCustomSidebarSection {
-            get name() {
-              return "test-chat-channels";
-            }
+            name = "test-chat-channels";
+            text = "chat channels text";
+            actionsIcon = "gear";
+            actions = [
+              {
+                id: "browseChannels",
+                title: "Browse channels",
+                action: () => {},
+              },
+              {
+                id: "settings",
+                title: "Settings",
+                action: () => {},
+              },
+            ];
 
-            get text() {
-              return "chat channels text";
-            }
+            willDestroy = () => (sectionDestroy = "section test");
 
-            get actionsIcon() {
-              return "gear";
-            }
-
-            get actions() {
-              return [
-                {
-                  id: "browseChannels",
-                  title: "Browse channels",
-                  action: () => {},
-                },
-                {
-                  id: "settings",
-                  title: "Settings",
-                  action: () => {},
-                },
-              ];
-            }
-
-            @bind
-            willDestroy() {
-              sectionDestroy = "section test";
-            }
-
-            get links() {
-              return [
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "random-channel";
-                  }
-
-                  get classNames() {
-                    return "my-class-name";
-                  }
-
-                  get route() {
-                    return "topic";
-                  }
-
-                  get models() {
-                    return ["some-slug", 1];
-                  }
-
-                  get title() {
-                    return "random channel title";
-                  }
-
-                  get text() {
-                    return "random channel text";
-                  }
-
-                  get prefixType() {
-                    return "icon";
-                  }
-
-                  get prefixValue() {
-                    return "d-chat";
-                  }
-
-                  get prefixColor() {
-                    return "FF0000";
-                  }
-
-                  get prefixBadge() {
-                    return "lock";
-                  }
-
-                  get suffixType() {
-                    return "icon";
-                  }
-
-                  get suffixValue() {
-                    return "circle";
-                  }
-
-                  get suffixCSSClass() {
-                    return "unread";
-                  }
-
-                  @bind
-                  didInsert() {
-                    linkDidInsert = "link test";
-                  }
-
-                  @bind
-                  willDestroy() {
-                    linkDestroy = "link test";
-                  }
-                })(),
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "dev-channel";
-                  }
-
-                  get route() {
-                    return "discovery.latest";
-                  }
-
-                  get title() {
-                    return "dev channel title";
-                  }
-
-                  get text() {
-                    return "dev channel text";
-                  }
-
-                  get prefixColor() {
-                    return "alert";
-                  }
-
-                  get prefixType() {
-                    return "text";
-                  }
-
-                  get prefixValue() {
-                    return "test text";
-                  }
-                })(),
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "fun-channel";
-                  }
-
-                  get route() {
-                    return "discovery.latest";
-                  }
-
-                  get title() {
-                    return "fun channel title";
-                  }
-
-                  get text() {
-                    return "fun channel text";
-                  }
-
-                  get prefixType() {
-                    return "image";
-                  }
-
-                  get prefixValue() {
-                    return "/test.png";
-                  }
-
-                  get hoverType() {
-                    return "icon";
-                  }
-
-                  get hoverValue() {
-                    return "xmark";
-                  }
-
-                  get hoverAction() {
-                    return () => {};
-                  }
-
-                  get hoverTitle() {
-                    return "hover button title attribute";
-                  }
-                })(),
-
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "homepage";
-                  }
-
-                  get classNames() {
-                    return "my-class-name";
-                  }
-
-                  get href() {
-                    return "https://www.discourse.org";
-                  }
-
-                  get title() {
-                    return "Homepage";
-                  }
-
-                  get text() {
-                    return "Homepage";
-                  }
-                })(),
-              ];
-            }
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "random-channel";
+                classNames = "my-class-name";
+                route = "topic";
+                models = ["some-slug", 1];
+                title = "random channel title";
+                text = "random channel text";
+                prefixType = "icon";
+                prefixValue = "d-chat";
+                prefixColor = "FF0000";
+                prefixBadge = "lock";
+                suffixType = "icon";
+                suffixValue = "circle";
+                suffixCSSClass = "unread";
+                didInsert = () => (linkDidInsert = "link test");
+                willDestroy = () => (linkDestroy = "link test");
+              })(),
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "dev-channel";
+                route = "discovery.latest";
+                title = "dev channel title";
+                text = "dev channel text";
+                prefixColor = "alert";
+                prefixType = "text";
+                prefixValue = "test text";
+              })(),
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "fun-channel";
+                route = "discovery.latest";
+                title = "fun channel title";
+                text = "fun channel text";
+                prefixType = "image";
+                prefixValue = "/test.png";
+                hoverType = "icon";
+                hoverValue = "xmark";
+                hoverAction = () => {};
+                hoverTitle = "hover button title attribute";
+              })(),
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "homepage";
+                classNames = "my-class-name";
+                href = "https://www.discourse.org";
+                title = "Homepage";
+                text = "Homepage";
+              })(),
+            ];
           };
         }
       );
@@ -243,13 +112,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "calls link didInsert function"
     );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
-      ).textContent.trim(),
-      "chat channels text",
-      "displays header with correct text"
-    );
+      )
+      .hasText("chat channels text", "displays header with correct text");
 
     assert
       .dom(
@@ -261,61 +128,59 @@ acceptance("Sidebar - Plugin API", function (needs) {
       ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
     );
 
-    assert.strictEqual(
-      queryAll(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-      ).length,
-      2,
-      "displays two actions"
-    );
+      )
+      .exists({ count: 2 }, "displays two actions");
 
-    const actions = queryAll(
-      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
-    );
+    const actions = [
+      ...document.querySelectorAll(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown .select-kit-collection li"
+      ),
+    ];
 
-    assert.strictEqual(
-      actions[0].textContent.trim(),
-      "Browse channels",
-      "displays first header action with correct text"
-    );
+    assert
+      .dom(actions[0])
+      .hasText(
+        "Browse channels",
+        "displays first header action with correct text"
+      );
 
-    assert.strictEqual(
-      actions[1].textContent.trim(),
-      "Settings",
-      "displays second header action with correct text"
-    );
+    assert
+      .dom(actions[1])
+      .hasText("Settings", "displays second header action with correct text");
 
-    const links = queryAll(
-      ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-link"
-    );
+    const links = [
+      ...document.querySelectorAll(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-link"
+      ),
+    ];
 
-    assert.strictEqual(
-      links[0].textContent.trim(),
-      "random channel text",
-      "displays first link with correct text"
-    );
+    assert
+      .dom(links[0])
+      .hasText("random channel text", "displays first link with correct text");
 
-    assert.ok(
-      exists(".sidebar-section-link.my-class-name"),
-      "sets the custom class name for the section link"
-    );
+    assert
+      .dom(".sidebar-section-link.my-class-name")
+      .exists("sets the custom class name for the section link");
 
-    assert.strictEqual(
-      links[0].title,
-      "random channel title",
-      "displays first link with correct title attribute"
-    );
+    assert
+      .dom(links[0])
+      .hasAttribute(
+        "title",
+        "random channel title",
+        "displays first link with correct title attribute"
+      );
 
-    assert.ok(
+    assert.true(
       links[0].href.endsWith("/some-slug/1"),
       "link has the correct href attribute"
     );
 
-    assert.strictEqual(
-      links[0].children[0].style.color,
-      "rgb(255, 0, 0)",
-      "has correct prefix color"
-    );
+    assert
+      .dom(links[0].children[0])
+      .hasStyle({ color: "rgb(255, 0, 0)" }, "has correct prefix color");
 
     assert.strictEqual(
       links[0].children[0].children[0].classList.contains("d-icon-d-chat"),
@@ -335,65 +200,65 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "displays suffix icon"
     );
 
-    assert.strictEqual(
-      links[1].children[1].textContent.trim(),
-      "dev channel text",
-      "displays second link with correct text"
-    );
+    assert
+      .dom(links[1].children[1])
+      .hasText("dev channel text", "displays second link with correct text");
 
-    assert.strictEqual(
-      links[1].title,
-      "dev channel title",
-      "displays second link with correct title attribute"
-    );
+    assert
+      .dom(links[1])
+      .hasAttribute(
+        "title",
+        "dev channel title",
+        "displays second link with correct title attribute"
+      );
 
-    assert.strictEqual(
-      links[1].children[0].style.color,
-      "",
-      "has no color style when value is invalid"
-    );
+    assert
+      .dom(links[1].children[0])
+      .hasNoAttribute("style", "has no color style when value is invalid");
 
-    assert.strictEqual(
-      links[1].children[0].textContent.trim(),
-      "test text",
-      "displays prefix text"
-    );
+    assert
+      .dom(links[1].children[0])
+      .hasText("test text", "displays prefix text");
 
-    assert.strictEqual(
-      links[2].children[1].textContent.trim(),
-      "fun channel text",
-      "displays third link with correct text"
-    );
+    assert
+      .dom(links[2].children[1])
+      .hasText("fun channel text", "displays third link with correct text");
 
-    assert.strictEqual(
-      links[2].title,
-      "fun channel title",
-      "displays third link with correct title attribute"
-    );
+    assert
+      .dom(links[2])
+      .hasAttribute(
+        "title",
+        "fun channel title",
+        "displays third link with correct title attribute"
+      );
 
-    assert.strictEqual(
-      links[2].children[0].children[0].getAttribute("src"),
-      "/test.png",
-      "uses correct prefix image url"
-    );
+    assert
+      .dom(links[2].children[0].children[0])
+      .hasAttribute("src", "/test.png", "uses correct prefix image url");
 
-    assert.strictEqual(
-      links[3].title,
-      "Homepage",
-      "displays external link with correct title attribute"
-    );
+    assert
+      .dom(links[3])
+      .hasAttribute(
+        "title",
+        "Homepage",
+        "displays external link with correct title attribute"
+      );
 
-    assert.strictEqual(
-      links[3].href,
-      "https://www.discourse.org/",
-      "displays external link with correct href attribute"
-    );
+    assert
+      .dom(links[3])
+      .hasAttribute(
+        "href",
+        "https://www.discourse.org",
+        "displays external link with correct href attribute"
+      );
 
-    assert.strictEqual(
-      query(".sidebar-section-link-hover button").title,
-      "hover button title attribute",
-      "displays hover button with correct title"
-    );
+    assert
+      .dom(".sidebar-section-link-hover button")
+      .hasAttribute(
+        "title",
+        "hover button title attribute",
+        "displays hover button with correct title"
+      );
 
     await click(".btn-sidebar-toggle");
 
@@ -414,107 +279,71 @@ acceptance("Sidebar - Plugin API", function (needs) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
-          get name() {
-            return "test-chat-channels";
-          }
-
-          get text() {
-            return "chat channels text";
-          }
-
-          get actionsIcon() {
-            return "gear";
-          }
-
-          get actions() {
-            return [
-              {
-                id: "browseChannels",
-                title: "Browse channels",
-                action: () => {},
-              },
-            ];
-          }
-
-          get links() {
-            return [];
-          }
+          name = "test-chat-channels";
+          text = "chat channels text";
+          actionsIcon = "gear";
+          actions = [
+            {
+              id: "browseChannels",
+              title: "Browse channels",
+              action: () => {},
+            },
+          ];
+          links = [];
         };
       });
     });
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
-      ).textContent.trim(),
-      "chat channels text",
-      "displays header with correct text"
-    );
+      )
+      .hasText("chat channels text", "displays header with correct text");
 
-    assert.ok(
-      exists("button.sidebar-section-header-button"),
-      "displays single header action button"
-    );
+    assert
+      .dom("button.sidebar-section-header-button")
+      .exists("displays single header action button");
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-content a"
-      ),
-      "displays no links"
-    );
+      )
+      .doesNotExist("displays no links");
   });
 
   test("Section that is not displayed via displaySection", async function (assert) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
-          get name() {
-            return "test-chat-channels";
-          }
-
-          get text() {
-            return "chat channels text";
-          }
-
-          get actionsIcon() {
-            return "gear";
-          }
-
-          get actions() {
-            return [
-              {
-                id: "browseChannels",
-                title: "Browse channels",
-                action: () => {},
-              },
-            ];
-          }
-
-          get links() {
-            return [];
-          }
-
-          get displaySection() {
-            return false;
-          }
+          name = "test-chat-channels";
+          text = "chat channels text";
+          actionsIcon = "gear";
+          actions = [
+            {
+              id: "browseChannels",
+              title: "Browse channels",
+              action: () => {},
+            },
+          ];
+          links = [];
+          displaySection = false;
         };
       });
     });
 
     await visit("/");
 
-    assert.notOk(
-      exists(".sidebar-section[data-section-name='test-chat-channels']"),
-      "does not display the section"
-    );
+    assert
+      .dom(".sidebar-section[data-section-name='test-chat-channels']")
+      .doesNotExist("does not display the section");
   });
 
   test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {
     try {
       return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
-        const categories = Site.current().categories;
+        const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         const category2 = categories[1];
 
@@ -537,9 +366,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
         ]);
 
         api.registerUserCategorySectionLinkCountable({
-          badgeTextFunction: (count) => {
-            return `some custom ${count}`;
-          },
+          badgeTextFunction: (count) => `some custom ${count}`,
           route: "discovery.latestCategory",
           routeQuery: { status: "open" },
           shouldRegister: ({ category }) => {
@@ -549,37 +376,37 @@ acceptance("Sidebar - Plugin API", function (needs) {
               return false;
             }
           },
-          refreshCountFunction: ({ category }) => {
-            return category.topic_count;
-          },
-          prioritizeOverDefaults: ({ category }) => {
-            return category.topic_count > 1000;
-          },
+          refreshCountFunction: ({ category }) => category.topic_count,
+          prioritizeOverDefaults: ({ category }) => category.topic_count > 1000,
         });
 
         await visit("/");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
-          ),
-          "the right suffix is displayed when custom countable is active"
-        );
+          )
+          .exists(
+            "the right suffix is displayed when custom countable is active"
+          );
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
-          ).pathname,
-          `/c/${category1.name}/${category1.id}`,
-          "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
-        );
+          )
+          .hasProperty(
+            "pathname",
+            `/c/${category1.name}/${category1.id}`,
+            "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
+          );
 
-        assert.notOk(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
-          ),
-          "does not display suffix when custom countable is not registered"
-        );
+          )
+          .doesNotExist(
+            "does not display suffix when custom countable is not registered"
+          );
 
         updateCurrentUser({
           user_option: {
@@ -588,13 +415,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
           },
         });
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
-          ).innerText.trim(),
-          I18n.t("sidebar.unread_count", { count: 1 }),
-          "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
-        );
+          )
+          .hasText(
+            I18n.t("sidebar.unread_count", { count: 1 }),
+            "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
+          );
 
         category1.set("topic_count", 2000);
 
@@ -602,29 +430,34 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         await settled();
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
-          ).innerText.trim(),
-          `some custom ${category1.topic_count}`,
-          "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
-        );
+          )
+          .hasText(
+            `some custom ${category1.topic_count}`,
+            "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
+          );
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
-          ).pathname,
-          `/c/${category1.name}/${category1.id}/l/latest`,
-          "has the right pathname for section link"
-        );
+          )
+          .hasProperty(
+            "pathname",
+            `/c/${category1.name}/${category1.id}/l/latest`,
+            "has the right pathname for section link"
+          );
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
-          ).search,
-          "?status=open",
-          "has the right query params for section link"
-        );
+          )
+          .hasProperty(
+            "search",
+            "?status=open",
+            "has the right query params for section link"
+          );
       });
     } finally {
       resetCustomCountables();
@@ -634,7 +467,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   test("Customizing the icon used in a category section link to indicate that a category is read restricted", async function (assert) {
     try {
       return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
-        const categories = Site.current().categories;
+        const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         category1.read_restricted = true;
 
@@ -646,12 +479,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         await visit("/");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
-          ),
-          "wrench icon is displayed for the section link's prefix badge"
-        );
+          )
+          .exists(
+            "wrench icon is displayed for the section link's prefix badge"
+          );
       });
     } finally {
       resetCustomCategoryLockIcon();
@@ -661,7 +495,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   test("Customizing the prefix used in a category section link for a particular category", async function (assert) {
     try {
       return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
-        const categories = Site.current().categories;
+        const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         category1.read_restricted = true;
 
@@ -678,20 +512,22 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         await visit("/");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
-          ),
-          "wrench icon is displayed for the section link's prefix icon"
-        );
+          )
+          .exists(
+            "wrench icon is displayed for the section link's prefix icon"
+          );
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
-          ).style.color,
-          "rgb(255, 0, 0)",
-          "section link's prefix icon has the right color"
-        );
+          )
+          .hasStyle(
+            { color: "rgb(255, 0, 0)" },
+            "section link's prefix icon has the right color"
+          );
       });
     } finally {
       resetCustomCategorySectionLinkPrefix();
@@ -718,27 +554,30 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         await visit("/");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-tag-name="tag1"] .prefix-icon.d-icon-wrench`
-          ),
-          "wrench icon is displayed for tag1 section link's prefix icon"
-        );
+          )
+          .exists(
+            "wrench icon is displayed for tag1 section link's prefix icon"
+          );
 
-        assert.strictEqual(
-          query(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-prefix`
-          ).style.color,
-          "rgb(255, 0, 0)",
-          "tag1 section link's prefix icon has the right color"
-        );
+          )
+          .hasStyle(
+            { color: "rgb(255, 0, 0)" },
+            "tag1 section link's prefix icon has the right color"
+          );
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section-link-wrapper[data-tag-name="tag2"] .prefix-icon.d-icon-tag`
-          ),
-          "default tag icon is displayed for tag2 section link's prefix icon"
-        );
+          )
+          .exists(
+            "default tag icon is displayed for tag2 section link's prefix icon"
+          );
       });
     } finally {
       resetCustomTagSectionLinkPrefixIcons();
@@ -749,96 +588,36 @@ acceptance("Sidebar - Plugin API", function (needs) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
-          get key() {
-            return "new-panel";
-          }
-
-          get switchButtonLabel() {
-            "New panel";
-          }
-
-          get switchButtonIcon() {
-            return "d-chat";
-          }
-
-          get switchButtonDefaultUrl() {
-            return "/chat";
-          }
+          key = "new-panel";
+          switchButtonLabel = "New panel";
+          switchButtonIcon = "d-chat";
+          switchButtonDefaultUrl = "/chat";
         };
         return ChatSidebarPanel;
       });
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           return class extends BaseCustomSidebarSection {
-            get name() {
-              return "test-chat-channels";
-            }
-
-            get text() {
-              return "chat channels text";
-            }
-
-            get actionsIcon() {
-              return "gear";
-            }
-
-            get links() {
-              return [
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "random-channel";
-                  }
-
-                  get classNames() {
-                    return "my-class-name";
-                  }
-
-                  get route() {
-                    return "topic";
-                  }
-
-                  get models() {
-                    return ["some-slug", 1];
-                  }
-
-                  get title() {
-                    return "random channel title";
-                  }
-
-                  get text() {
-                    return "random channel text";
-                  }
-
-                  get prefixType() {
-                    return "icon";
-                  }
-
-                  get prefixValue() {
-                    return "d-chat";
-                  }
-
-                  get prefixColor() {
-                    return "FF0000";
-                  }
-
-                  get prefixBadge() {
-                    return "lock";
-                  }
-
-                  get suffixType() {
-                    return "icon";
-                  }
-
-                  get suffixValue() {
-                    return "circle";
-                  }
-
-                  get suffixCSSClass() {
-                    return "unread";
-                  }
-                })(),
-              ];
-            }
+            name = "test-chat-channels";
+            text = "chat channels text";
+            actionsIcon = "gear";
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "random-channel";
+                classNames = "my-class-name";
+                route = "topic";
+                models = ["some-slug", 1];
+                title = "random channel title";
+                text = "random channel text";
+                prefixType = "icon";
+                prefixValue = "d-chat";
+                prefixColor = "FF0000";
+                prefixBadge = "lock";
+                suffixType = "icon";
+                suffixValue = "circle";
+                suffixCSSClass = "unread";
+              })(),
+            ];
           };
         },
         "new-panel"
@@ -850,13 +629,11 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
-      ).textContent.trim(),
-      "chat channels text",
-      "displays header with correct text"
-    );
+      )
+      .hasText("chat channels text", "displays header with correct text");
 
     await click(".sidebar__panel-switch-button");
 
@@ -891,6 +668,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.setCombinedSidebarMode();
     });
+
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").doesNotExist();
 
@@ -904,6 +682,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       api.setSidebarPanel("new-panel");
       api.hideSidebarSwitchPanelButtons();
     });
+
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").doesNotExist();
 
@@ -912,6 +691,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       api.hideSidebarSwitchPanelButtons();
       api.showSidebarSwitchPanelButtons();
     });
+
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").exists();
   });
@@ -920,88 +700,34 @@ acceptance("Sidebar - Plugin API", function (needs) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
-          get key() {
-            return "admin";
-          }
-
-          get hidden() {
-            return true;
-          }
+          key = "admin";
+          hidden = true;
         };
         return AdminSidebarPanel;
       });
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           return class extends BaseCustomSidebarSection {
-            get name() {
-              return "test-admin-section";
-            }
-
-            get text() {
-              return "test admin section";
-            }
-
-            get actionsIcon() {
-              return "gear";
-            }
-
-            get links() {
-              return [
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return "admin-link";
-                  }
-
-                  get classNames() {
-                    return "my-class-name";
-                  }
-
-                  get route() {
-                    return "topic";
-                  }
-
-                  get models() {
-                    return ["some-slug", 1];
-                  }
-
-                  get title() {
-                    return "admin link";
-                  }
-
-                  get text() {
-                    return "admin link";
-                  }
-
-                  get prefixType() {
-                    return "icon";
-                  }
-
-                  get prefixValue() {
-                    return "gear";
-                  }
-
-                  get prefixColor() {
-                    return "FF0000";
-                  }
-
-                  get prefixBadge() {
-                    return "lock";
-                  }
-
-                  get suffixType() {
-                    return "icon";
-                  }
-
-                  get suffixValue() {
-                    return "circle";
-                  }
-
-                  get suffixCSSClass() {
-                    return "unread";
-                  }
-                })(),
-              ];
-            }
+            name = "test-admin-section";
+            text = "test admin section";
+            actionsIcon = "gear";
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "admin-link";
+                classNames = "my-class-name";
+                route = "topic";
+                models = ["some-slug", 1];
+                title = "admin link";
+                text = "admin link";
+                prefixType = "icon";
+                prefixValue = "gear";
+                prefixColor = "FF0000";
+                prefixBadge = "lock";
+                suffixType = "icon";
+                suffixValue = "circle";
+                suffixCSSClass = "unread";
+              })(),
+            ];
           };
         },
         "admin"
@@ -1012,18 +738,18 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='test-admin-section'] .sidebar-section-header-text"
-      ).textContent.trim(),
-      "test admin section",
-      "displays header with correct text"
-    );
+      )
+      .hasText("test admin section", "displays header with correct text");
     assert.dom(".admin-panel").exists();
+
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.setSidebarPanel("main-panel");
       api.setCombinedSidebarMode();
     });
+
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").doesNotExist();
     assert.dom(".admin-panel").doesNotExist();
@@ -1046,28 +772,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
             name = "test-section-1";
             text = "The First Section";
             collapsedByDefault = true;
-
-            get links() {
-              return [
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return `test-link-1`;
-                  }
-
-                  get href() {
-                    return `/test1`;
-                  }
-
-                  get title() {
-                    return `Test Link Title 1`;
-                  }
-
-                  get text() {
-                    return `Test Link Text 1`;
-                  }
-                })(),
-              ];
-            }
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "test-link-1";
+                href = "/test1";
+                title = "Test Link Title 1";
+                text = "Test Link Text 1";
+              })(),
+            ];
           };
         },
         "new-panel"
@@ -1078,28 +790,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
             name = "test-section-2";
             text = "The Second Section";
             collapsedByDefault = true;
-
-            get links() {
-              return [
-                new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return `search`;
-                  }
-
-                  get route() {
-                    return `full-page-search`;
-                  }
-
-                  get title() {
-                    return `Search`;
-                  }
-
-                  get text() {
-                    return `Search`;
-                  }
-                })(),
-              ];
-            }
+            links = [
+              new (class extends BaseCustomSidebarSectionLink {
+                name = "search";
+                route = "full-page-search";
+                title = "Search";
+                text = "Search";
+              })(),
+            ];
           };
         },
         "new-panel"
@@ -1159,21 +857,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
               values.push(
                 new (class extends BaseCustomSidebarSectionLink {
-                  get name() {
-                    return `search`;
-                  }
-
-                  get route() {
-                    return `full-page-search`;
-                  }
-
-                  get title() {
-                    return `Search`;
-                  }
-
-                  get text() {
-                    return `Search`;
-                  }
+                  name = "search";
+                  route = "full-page-search";
+                  title = "Search";
+                  text = "Search";
                 })()
               );
 
@@ -1188,20 +875,19 @@ acceptance("Sidebar - Plugin API", function (needs) {
     });
 
     await visit("/");
-    const sidebarHeight = query(".sidebar-wrapper").clientHeight;
-    const searchLinkOffsetTop = query(
+    const sidebarHeight =
+      document.querySelector(".sidebar-wrapper").clientHeight;
+    const searchLinkOffsetTop = document.querySelector(
       ".sidebar-section-link-wrapper[data-list-item-name='search']"
     ).offsetTop;
 
-    assert.ok(
+    assert.true(
       searchLinkOffsetTop > sidebarHeight,
       "the link offsetTop is greater than the sidebar height"
     );
-    assert.strictEqual(
-      query(".sidebar-sections").scrollTop,
-      0,
-      "the sidebar is not scrolled initially"
-    );
+    assert
+      .dom(".sidebar-sections")
+      .hasProperty("scrollTop", 0, "the sidebar is not scrolled initially");
 
     await visit("/search");
     assert
@@ -1210,12 +896,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
       )
       .exists();
 
-    const sidebarScrollTop = query(".sidebar-sections").scrollTop;
-    assert.ok(
+    const sidebarScrollTop =
+      document.querySelector(".sidebar-sections").scrollTop;
+    assert.true(
       sidebarScrollTop > 0,
       "the sidebar was scrolled to position the active element into view"
     );
-    assert.ok(
+    assert.true(
       searchLinkOffsetTop < sidebarScrollTop + sidebarHeight,
       "the link is into view"
     );

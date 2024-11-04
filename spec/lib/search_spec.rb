@@ -31,6 +31,14 @@ RSpec.describe Search do
         it { is_expected.not_to be_need_segmenting(data) }
       end
 
+      context "when data makes `URI#path` return `nil`" do
+        let(:data) { "in:solved%20category:50%20order:likes" }
+
+        it "doesn’t raise an error" do
+          expect { search.need_segmenting?(data) }.not_to raise_error
+        end
+      end
+
       context "when data is something else" do
         let(:data) { "text" }
 

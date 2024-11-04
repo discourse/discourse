@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Admin User Fields", type: :system, js: true do
+describe "Admin User Fields", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }
@@ -23,7 +23,7 @@ describe "Admin User Fields", type: :system, js: true do
 
     user_fields_page.add_field(name: "Occupation", description: "")
 
-    expect(user_fields_page).to have_text(/Description can't be blank/)
+    expect(user_fields_page.form.field(:description)).to have_errors("Required")
   end
 
   it "makes sure new required fields are editable after signup" do
@@ -40,7 +40,7 @@ describe "Admin User Fields", type: :system, js: true do
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(editable_label, checked: false, disabled: false)
+    expect(form).to have_field(editable_label, checked: true, disabled: false)
   end
 
   it "requires confirmation when applying required fields retroactively" do
@@ -58,5 +58,23 @@ describe "Admin User Fields", type: :system, js: true do
     form.find(".btn-primary").click
 
     expect(page).to have_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
+  end
+
+  context "when editing an existing user field" do
+    fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
+
+    it "does not require confirmation if the field already applies to all users" do
+      user_fields_page.visit
+
+      page.find(".user-field .edit").click
+
+      form = page.find(".user-field")
+
+      form.find(".user-field-name").fill_in(with: "Favourite Transformer")
+
+      form.find(".btn-primary").click
+
+      expect(page).to have_no_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
+    end
   end
 end

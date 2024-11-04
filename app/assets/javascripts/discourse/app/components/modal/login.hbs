@@ -27,10 +27,7 @@
       </div>
     {{else}}
       {{#if this.site.mobileView}}
-        <WelcomeHeader
-          @header={{i18n "login.header_title"}}
-          @subheader={{i18n "login.subheader_title"}}
-        >
+        <WelcomeHeader @header={{i18n "login.header_title"}}>
           <PluginOutlet
             @name="login-header-bottom"
             @outletArgs={{hash createAccount=this.createAccount}}
@@ -48,17 +45,14 @@
       {{#if this.canLoginLocal}}
         <div class={{if this.site.desktopView "login-left-side"}}>
           {{#if this.site.desktopView}}
-            <WelcomeHeader
-              @header={{i18n "login.header_title"}}
-              @subheader={{i18n "login.subheader_title"}}
-            >
+            <WelcomeHeader @header={{i18n "login.header_title"}}>
               <PluginOutlet
                 @name="login-header-bottom"
                 @outletArgs={{hash createAccount=this.createAccount}}
               />
             </WelcomeHeader>
           {{/if}}
-          <Modal::Login::LocalLoginForm
+          <LocalLoginForm
             @loginName={{this.loginName}}
             @loginNameChanged={{this.loginNameChanged}}
             @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
@@ -82,7 +76,7 @@
           />
           {{#if this.site.desktopView}}
             <div class="d-modal__footer">
-              <Modal::Login::Footer
+              <LoginPageCta
                 @canLoginLocal={{this.canLoginLocal}}
                 @showSecurityKey={{this.showSecurityKey}}
                 @login={{this.triggerLogin}}
@@ -101,10 +95,7 @@
       {{#if (and this.showLoginButtons this.site.desktopView)}}
         {{#unless this.canLoginLocal}}
           <div class="login-left-side">
-            <WelcomeHeader
-              @header={{i18n "login.header_title"}}
-              @subheader={{i18n "login.subheader_title"}}
-            />
+            <WelcomeHeader @header={{i18n "login.header_title"}} />
           </div>
         {{/unless}}
         {{#if this.hasAtLeastOneLoginButton}}
@@ -123,7 +114,7 @@
   <:footer>
     {{#if this.site.mobileView}}
       {{#unless this.hasNoLoginOptions}}
-        <Modal::Login::Footer
+        <LoginPageCta
           @canLoginLocal={{this.canLoginLocal}}
           @showSecurityKey={{this.showSecurityKey}}
           @login={{this.triggerLogin}}

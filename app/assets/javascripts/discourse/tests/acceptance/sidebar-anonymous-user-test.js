@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous User", function (needs) {
   needs.settings({
@@ -15,15 +15,13 @@ acceptance("Sidebar - Anonymous User", function (needs) {
       "adds sidebar utility class to body"
     );
 
-    assert.ok(
-      exists(".sidebar-container"),
-      "sidebar exists for anonymous user"
-    );
+    assert
+      .dom(".sidebar-container")
+      .exists("sidebar exists for anonymous user");
 
-    assert.ok(
-      exists(".header-sidebar-toggle"),
-      "toggle button for anonymous user"
-    );
+    assert
+      .dom(".header-sidebar-toggle")
+      .exists("toggle button for anonymous user");
   });
 
   test("sidebar hamburger panel dropdown when sidebar has been disabled", async function (assert) {
@@ -32,10 +30,11 @@ acceptance("Sidebar - Anonymous User", function (needs) {
     await visit("/");
     await click(".hamburger-dropdown button");
 
-    assert.ok(
-      exists(".sidebar-hamburger-dropdown .sidebar-sections-anonymous"),
-      "sidebar hamburger panel dropdown renders anonymous sidebar sections"
-    );
+    assert
+      .dom(".sidebar-hamburger-dropdown .sidebar-sections-anonymous")
+      .exists(
+        "sidebar hamburger panel dropdown renders anonymous sidebar sections"
+      );
   });
 });
 
@@ -48,14 +47,12 @@ acceptance("Sidebar - Anonymous User - Login Required", function (needs) {
   test("sidebar and toggle button is hidden", async function (assert) {
     await visit("/");
 
-    assert.ok(
-      !exists(".sidebar-container"),
-      "sidebar is hidden for anonymous user"
-    );
+    assert
+      .dom(".sidebar-container")
+      .doesNotExist("sidebar is hidden for anonymous user");
 
-    assert.ok(
-      !exists(".header-sidebar-toggle"),
-      "toggle button is hidden for anonymous user"
-    );
+    assert
+      .dom(".header-sidebar-toggle")
+      .doesNotExist("toggle button is hidden for anonymous user");
   });
 });

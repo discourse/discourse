@@ -1,7 +1,7 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
+import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 const addCustomUserFieldValidationCallbacks = [];
@@ -10,8 +10,7 @@ export function addCustomUserFieldValidationCallback(callback) {
 }
 
 export default Mixin.create({
-  @on("init")
-  _createUserFields() {
+  _createUserFields: on("init", function () {
     if (!this.site) {
       return;
     }
@@ -23,10 +22,9 @@ export default Mixin.create({
         .map((f) => EmberObject.create({ value: null, field: f }));
     }
     this.set("userFields", userFields);
-  },
+  }),
 
-  @discourseComputed("userFields.@each.value")
-  userFieldsValidation() {
+  userFieldsValidation: computed("userFields.@each.value", function () {
     if (!this.userFields) {
       return EmberObject.create({ ok: true });
     }
@@ -76,5 +74,5 @@ export default Mixin.create({
     }
 
     return EmberObject.create({ ok: true });
-  },
+  }),
 });

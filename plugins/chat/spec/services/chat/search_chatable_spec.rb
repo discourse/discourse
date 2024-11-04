@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::SearchChatable do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user, username: "bob-user") }
     fab!(:sam) { Fabricate(:user, username: "sam-user") }
@@ -25,15 +25,15 @@ RSpec.describe Chat::SearchChatable do
     let(:excluded_memberships_channel_id) { nil }
     let(:params) do
       {
-        guardian: guardian,
-        term: term,
-        include_users: include_users,
-        include_groups: include_groups,
-        include_category_channels: include_category_channels,
-        include_direct_message_channels: include_direct_message_channels,
-        excluded_memberships_channel_id: excluded_memberships_channel_id,
+        term:,
+        include_users:,
+        include_groups:,
+        include_category_channels:,
+        include_direct_message_channels:,
+        excluded_memberships_channel_id:,
       }
     end
+    let(:dependencies) { { guardian: } }
 
     before do
       SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
@@ -47,10 +47,10 @@ RSpec.describe Chat::SearchChatable do
 
       it "cleans the term" do
         params[:term] = "#bob"
-        expect(result.term).to eq("bob")
+        expect(result.params.term).to eq("bob")
 
         params[:term] = "@bob"
-        expect(result.term).to eq("bob")
+        expect(result.params.term).to eq("bob")
       end
 
       it "fetches user memberships" do

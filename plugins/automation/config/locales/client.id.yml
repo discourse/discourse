@@ -42,8 +42,12 @@ id:
             P1Y: "Satu tahun"
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Label
             restricted_category:
               label: Kategori
+            restricted_groups:
+              label: Grup
           created: Dibuat
         pm_created:
           fields:

@@ -20,10 +20,16 @@ el:
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} και %{count} ακόμη"
+          other: "%{comma_separated_usernames} και %{count} ακόμη"
     mention_warning:
       dismiss: "απόρριψη"
     onebox:
       thread_title_connector: "σε"
+      x_members:
+        one: "%{count} μέλος"
+        other: "%{count} μέλη"
   discourse_push_notifications:
     popup:
       chat_mention:

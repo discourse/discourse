@@ -230,8 +230,6 @@ RSpec.describe Middleware::AnonymousCache do
   describe "#force_anonymous!" do
     before { RateLimiter.enable }
 
-    use_redis_snapshotting
-
     it "will revert to anonymous once we reach the limit" do
       is_anon = false
 

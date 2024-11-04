@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
@@ -17,29 +13,25 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "incorrect");
     await click(".d-modal__footer .btn-primary");
     assert.ok(exists("#modal-alert:visible"), "it displays the login error");
-    assert.notOk(
-      exists(".d-modal__footer .btn-primary:disabled"),
-      "enables the login button"
-    );
+    assert
+      .dom(".d-modal__footer .btn-primary:disabled")
+      .doesNotExist("enables the login button");
 
     // Test password unmasking
-    assert.ok(
-      exists("#login-account-password[type='password']"),
-      "password is masked by default"
-    );
+    assert
+      .dom("#login-account-password[type='password']")
+      .exists("password is masked by default");
     await click(".toggle-password-mask");
-    assert.ok(
-      exists("#login-account-password[type='text']"),
-      "password is unmasked after toggle is clicked"
-    );
+    assert
+      .dom("#login-account-password[type='text']")
+      .exists("password is unmasked after toggle is clicked");
 
     // Use the correct password
     await fillIn("#login-account-password", "correct");
     await click(".d-modal__footer .btn-primary");
-    assert.ok(
-      exists(".d-modal__footer .btn-primary:disabled"),
-      "disables the login button"
-    );
+    assert
+      .dom(".d-modal__footer .btn-primary:disabled")
+      .exists("disables the login button");
   });
 
   test("sign in - not activated", async function (assert) {
@@ -50,17 +42,15 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated");
     await click(".d-modal__footer .btn-primary");
-    assert.strictEqual(
-      query(".d-modal__body b").innerText,
-      "<small>eviltrout@example.com</small>"
-    );
+    assert
+      .dom(".d-modal__body b")
+      .hasText("<small>eviltrout@example.com</small>");
     assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
 
     await click(".d-modal__footer button.resend");
-    assert.strictEqual(
-      query(".d-modal__body b").innerText,
-      "<small>current@example.com</small>"
-    );
+    assert
+      .dom(".d-modal__body b")
+      .hasText("<small>current@example.com</small>");
     assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
   });
 
@@ -93,26 +83,20 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-second-factor");
     await click(".d-modal__footer .btn-primary");
 
-    assert.notOk(
-      exists("#credentials:visible"),
-      "it hides the username and password prompt"
-    );
-    assert.ok(
-      exists("#second-factor:visible"),
-      "it displays the second factor prompt"
-    );
-    assert.notOk(
-      exists(".d-modal__footer .btn-primary:disabled"),
-      "enables the login button"
-    );
+    assert
+      .dom("#credentials")
+      .isNotVisible("hides the username and password prompt");
+    assert.dom("#second-factor").isVisible("displays the second factor prompt");
+    assert
+      .dom(".d-modal__footer .btn-primary:disabled")
+      .doesNotExist("enables the login button");
 
     await fillIn("#login-second-factor", "123456");
     await click(".d-modal__footer .btn-primary");
 
-    assert.ok(
-      exists(".d-modal__footer .btn-primary:disabled"),
-      "disables the login button"
-    );
+    assert
+      .dom(".d-modal__footer .btn-primary:disabled")
+      .exists("disables the login button");
   });
 
   test("security key", async function (assert) {
@@ -125,19 +109,14 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "need-security-key");
     await click(".d-modal__footer .btn-primary");
 
-    assert.notOk(
-      exists("#credentials:visible"),
-      "it hides the username and password prompt"
-    );
-    assert.notOk(
-      exists("#login-second-factor:visible"),
-      "it does not display the second factor prompt"
-    );
-    assert.ok(
-      exists("#security-key:visible"),
-      "it shows the security key prompt"
-    );
-    assert.notOk(exists("#login-button:visible"), "hides the login button");
+    assert
+      .dom("#credentials")
+      .isNotVisible("hides the username and password prompt");
+    assert
+      .dom("#login-second-factor")
+      .isNotVisible("does not display the second factor prompt");
+    assert.dom("#security-key").isVisible("shows the security key prompt");
+    assert.dom("#login-button").isNotVisible("hides the login button");
   });
 
   test("second factor backup - valid token", async function (assert) {
@@ -150,10 +129,9 @@ acceptance("Signing In", function () {
     await fillIn("#login-second-factor", "123456");
     await click(".d-modal__footer .btn-primary");
 
-    assert.ok(
-      exists(".d-modal__footer .btn-primary:disabled"),
-      "it closes the modal when the code is valid"
-    );
+    assert
+      .dom(".d-modal__footer .btn-primary:disabled")
+      .exists("it closes the modal when the code is valid");
   });
 
   test("second factor backup - invalid token", async function (assert) {
@@ -166,9 +144,8 @@ acceptance("Signing In", function () {
     await fillIn("#login-second-factor", "something");
     await click(".d-modal__footer .btn-primary");
 
-    assert.ok(
-      exists("#modal-alert:visible"),
-      "it shows an error when the code is invalid"
-    );
+    assert
+      .dom("#modal-alert")
+      .exists("shows an error when the code is invalid");
   });
 });

@@ -12,7 +12,6 @@ import {
   acceptance,
   count,
   exists,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -45,10 +44,9 @@ acceptance("Admin - Site Settings", function (needs) {
   test("upload site setting", async function (assert) {
     await visit("/admin/site_settings");
 
-    assert.ok(
-      exists(".row.setting.upload .image-uploader"),
-      "image uploader is present"
-    );
+    assert
+      .dom(".row.setting.upload .image-uploader")
+      .exists("image uploader is present");
 
     assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
   });
@@ -56,11 +54,13 @@ acceptance("Admin - Site Settings", function (needs) {
   test("links to staff action log", async function (assert) {
     await visit("/admin/site_settings");
 
-    assert.strictEqual(
-      query(".row.setting .setting-label h3 a").getAttribute("href"),
-      "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
-      "it links to the staff action log"
-    );
+    assert
+      .dom(".row.setting .setting-label h3 a")
+      .hasAttribute(
+        "href",
+        "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
+        "it links to the staff action log"
+      );
   });
 
   test("changing value updates dirty state", async function (assert) {
@@ -75,43 +75,37 @@ acceptance("Admin - Site Settings", function (needs) {
 
     await fillIn(".input-setting-string", "Test");
     await click("button.cancel");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "canceling doesn't mark setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("canceling doesn't mark setting as overridden");
 
     await fillIn(".input-setting-string", "Test");
     await click("button.ok");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "saving marks setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("saving marks setting as overridden");
 
     await click("button.undo");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "setting isn't marked as overridden after undo"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't marked as overridden after undo");
 
     await click("button.cancel");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "setting is marked as overridden after cancel"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("setting is marked as overridden after cancel");
 
     await click("button.undo");
     await click("button.ok");
-    assert.ok(
-      !exists(".row.setting.overridden"),
-      "setting isn't marked as overridden after undo"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't marked as overridden after undo");
 
     await fillIn(".input-setting-string", "Test");
     await triggerKeyEvent(".input-setting-string", "keydown", "Enter");
-    assert.ok(
-      exists(".row.setting.overridden"),
-      "saving via Enter key marks setting as overridden"
-    );
+    assert
+      .dom(".row.setting.overridden")
+      .exists("saving via Enter key marks setting as overridden");
   });
 
   test("always shows filtered site settings if a filter is set", async function (assert) {
@@ -205,7 +199,7 @@ acceptance("Admin - Site Settings", function (needs) {
 
     const navItems = queryAll(".admin-nav .nav-stacked li a");
     navItems.each((_, item) => {
-      assert.equal(
+      assert.strictEqual(
         item.title,
         item.innerText,
         "menu item has title, and the title is equal to menu item's label"

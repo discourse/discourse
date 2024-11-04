@@ -118,7 +118,6 @@ ur:
     share:
       topic_html: 'ٹاپک: <span class="topic-title">%{topicTitle}</span>'
       close: "بند کریں"
-      twitter: "ٹویٹر پر شیئر کریں"
       facebook: "فیس بک پر شیئر کریں"
       email: "ای میل کے ذریعے بھیجیں"
       url: "یو آر ایل کو کاپی اور شیئر کریں"
@@ -253,6 +252,7 @@ ur:
     suggested_topics:
       pm_title: "تجویز کیے گئے پیغامات"
     about:
+      edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
       title: "%{title} کے بارے میں"
       stats: "سائٹ کے اعدادوشمار"
@@ -1123,7 +1123,6 @@ ur:
       ignored_users: "نظر انداز کردہ"
       ignored_users_instructions: "ان صارفین کی تمام پوسٹس، نوٹیفیکیشنز اور PM کو دبا دیں۔"
       tracked_topics_link: "دکھائیں"
-      automatically_unpin_topics: "جب میں سب سے نیچے تک پہنچوں تو خود کار طریقے سے ٹاپک سے پن ہٹایں۔"
       apps: "ایپس"
       revoke_access: "رسائی کالعدم کریں"
       undo_revoke_access: "رسائی کالعدم کو منسوخ کریں"
@@ -1298,7 +1297,6 @@ ur:
         add_email: "متبادل ای میل شامل کریں"
         auth_override_instructions: "توثیق فراہم کرنے والے سے ای میل کو اپ ڈیٹ کیا جاسکتا ہے۔"
         no_secondary: "کوئی ثانوی ایمیلز نہیں"
-        instructions: "کبھی بھی عوام کو دکھایا نہیں گیا۔"
         admin_note: "نوٹ: ایک منتظم صارف جس نے کسی دوسرے غیر منتظم صارف کا ای میل تبدیل کیا ہے اس سے اشارہ ہوتا ہے کہ صارف نے اپنے اصل ای میل اکاؤنٹ تک رسائی کھو دی ہے ، لہذا دوبارہ پاس ورڈ کا ای میل ان کے نئے پتے پر بھیج دیا جائے گا۔ صارف کی ای میل اس وقت تک تبدیل نہیں ہوگی جب تک کہ وہ پاس ورڈ کا دوبارہ ترتیب دینے کا عمل مکمل نہ کریں۔"
         ok: "ہم تصدیق کے لئے آپ کو اِی میل کریں گے"
         required: "براہ مہربانی ای میل ایڈریس درج کریں"
@@ -1324,13 +1322,13 @@ ur:
         action: "اپنا اکاؤنٹ فعال کرنے کیلئے یہاں کلک کریں"
         already_done: "معذرت، یہ اکاؤنٹ تصدیق لنک اب درست نہیں ہے۔ شاید آپ کا اکاؤنٹ پہلے ہی سے فعال ہے؟"
         please_continue: "آپ کا نیا اکاؤنٹ تصدیق کر لیا گیا ہے؛ آپ کو ہَوم پیج پر ری ڈائرَیکٹ کیا جائے گا۔"
-        continue_button: "%{site_name} پر جاری رکھیں"
+        continue_button: "ختم!"
         welcome_to: "%{site_name} پر خوش آمدید!"
         approval_required: "اِس فورم تک رسائی حاصل کرنے سے پہلے ایک ماڈریٹر کو آپ کا نیا اکاؤنٹ دستی طور پر منظور کرنا ضروری ہے۔ جب آپ کا اکاؤنٹ منظور ہوجائے گا تو آپ کو ایک اِی میل مل جائے گی!"
       name:
         title: "نام"
-        instructions: "آپ کا پورا نام (اختیاری)."
-        instructions_required: "آپ کا پورا نام."
+        instructions: "آپ کا پورا نام (اختیاری)"
+        instructions_required: "آپ کا پورا نام"
         required: "براہ کرم ایک نام درج کریں"
         too_short: "آپ کا نام بہت چھوٹا ہے"
         ok: "آپ کا نام صحیح لگ رہا ہے"
@@ -1493,10 +1491,7 @@ ur:
           success: "دعوت لنک کامیابی سے بن گیا!"
           error: "مدعو کرنے کا لنک بنانے میں ایک خرابی تھی"
         invite:
-          new_title: "دعوت نامہ بنائیں"
-          edit_title: "دعوت میں ترمیم کریں"
           instructions: "اس سائٹ تک فوری رسائی دینے کے لیے اس لنک کا اشتراک کریں:"
-          copy_link: "لنک کاپی کریں"
           expires_in_time: "%{time}میں ختم ہو گا"
           expired_at_time: "%{time}پر ختم ہو گا"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
@@ -1508,11 +1503,11 @@ ur:
           max_redemptions_allowed: "زیادہ سے زیادہ استعمال"
           add_to_groups: "گروپوں میں شامل"
           invite_to_topic: "موضوع پر پہنچیں"
-          expires_at: "کے بعدختم"
-          custom_message: "اختیاری ذاتی پیغام"
+          expires_after: "کے بعدختم"
           send_invite_email: "محفوظ کریں اور ای میل بھیجیں"
           send_invite_email_instructions: "ای میل پر مدعوکے لئے دعوت نامہ کی ای میل کو محدود کریں"
-          save_invite: "دعوت نامہ محفوظ کریں"
+          save_invite: "محفوظ کریں"
+          cancel: "منسوخ"
           invite_saved: "دعوت نامہ محفوظ ہے"
         bulk_invite:
           none: "اس صفحہ پر دکھانے کے لیے کوئی دعوت نہیں ہے۔"
@@ -1691,7 +1686,6 @@ ur:
     search_hint: "صارف نام، ای میل یا IP ایڈریس"
     create_account:
       header_title: "خوش آمدید!"
-      subheader_title: "آئیے اپنا اکاؤنٹ بنائیں"
       disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پرائیوِیسی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
       title: "سائن اپ"
       failed: "کچھ غلط ہو گیا، شاید یہ ای میل پہلے ہی سے رجسٹرڈ ہے، پاسورڈ بھول جانے والا لنک اِستعمال کر کے دیکھیں"
@@ -1730,8 +1724,7 @@ ur:
       confirm_button: لاگ اِن مکمل
     login:
       header_title: "خوش آمدید"
-      subheader_title: "اپنے اکاؤنٹ میں لاگ ان کریں"
-      title: "لاگ ان"
+      title: "لاگ اِن"
       username: "صارف"
       password: "پاسورڈ"
       show_password: "دکھائیں"
@@ -3677,6 +3670,7 @@ ur:
         installed_version: "انسٹال کیا ہوا"
         latest_version: "تازہ ترین"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
+        dismiss_notice: "بر خاست کریں"
         new_features:
           learn_more: "مزید جانیں..."
         last_checked: "آخری دفعہ چیک کیا گیا"
@@ -4003,11 +3997,15 @@ ur:
           screened_ips: "سکرین کیے گئے IP"
           screened_urls: "سکرین کیے گئے یو.آر.ایل."
           search_logs: "لاگز سرچ کریں"
-          security: "سیکورٹی"
-          spam: "سپَیم"
+      section_landing_pages:
+        account:
+          title: "اکاؤنٹ"
+          backups:
+            title: "بیک اَپس"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "نام"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           saved: "محفوظ کر لیا گیا!"
@@ -4025,6 +4023,9 @@ ur:
             invalid_applies_to: "درکار"
             topic: "ٹاپک"
             post: "پوسٹ`"
+        look_and_feel:
+          themes:
+            title: "تِھیمز"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -5021,6 +5022,8 @@ ur:
         history: "تبدیلی کی تاریخ دیکھیں"
         reset: "رِی سَیٹ"
         none: "کوئی نہیں"
+        save: "محفوظ کریں"
+        cancel: "منسوخ"
       site_settings:
         emoji_list:
           invalid_input: "ایموجی لسٹ میں صرف درست ایموجی نام ہونے چاہئیں، جیسے: گلے ملنا"
@@ -5149,10 +5152,6 @@ ur:
             with_post: <span class="username">%{username}</span> اِس %{link} میں پوسٹ کیلئے
             with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر اِس %{link} میں پوسٹ کیلئے
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر
-        badge_intro:
-          title: "شروعات کیلئے، ایک موجودہ بَیج منتخب کریں یا ایک نیا بنائیں"
-          what_are_badges_title: "بَیج کیا ہیں؟"
-          badge_query_examples_title: "بَیج قُوَیری کی مثالیں"
         mass_award:
           title: اجتمائی ایوارڈ
           description: ایک ہی وقت میں بہت سے صارفین کو ایک ہی بیج سے نوازیں۔

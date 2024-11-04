@@ -112,24 +112,22 @@ class DecoratorHelper {
    * Returns an element containing a rendered glimmer template. For full usage instructions,
    * see `widgets/render-glimmer.js`.
    *
-   * Example usage:
+   * Example usage in a `.gjs` file:
    *
    * ```
-   * import { hbs } from "ember-cli-htmlbars";
-   *
    * api.decorateCookedElement((cooked, helper) => {
+   *   const iconName = "user-plus";
    *   // Generate a new element with glimmer rendered inside
    *   const glimmerElement = helper.renderGlimmer(
    *     "div.my-wrapper-class",
-   *     hbs`<DButton @icon={{@data.param}} @translatedLabel="Hello world from Glimmer Component"/>`,
-   *     { param: "user-plus" }
+   *     <template><DButton @icon={{iconName}} @translatedLabel="Hello world from Glimmer Component" /></template>
    *   );
    *   cooked.appendChild(glimmerElement);
    *
    *   // Or append to an existing element
    *   helper.renderGlimmer(
    *     cooked.querySelector(".some-container"),
-   *     hbs`I will be appended to some-container`
+   *     <template>I will be appended to some-container</template>
    *   );
    * }, { onlyStream: true });
    * ```

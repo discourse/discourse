@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import i18n from "discourse-common/helpers/i18n";
 import and from "truth-helpers/helpers/and";
 
 const TRUNCATE_LENGTH_LIMIT = 85;
@@ -27,6 +28,8 @@ export default class TopicMapLink extends Component {
       data-ignore-post-id="true"
       target="_blank"
       rel="nofollow ugc noopener noreferrer"
+      data-clicks={{@clickCount}}
+      aria-label={{i18n "topic_map.clicks" count=@clickCount}}
     >
       {{#if @title}}
         {{replaceEmoji this.truncatedContent}}

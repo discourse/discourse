@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Discourse
-  VERSION_REGEXP ||= /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
-  VERSION_COMPATIBILITY_FILENAME ||= ".discourse-compatibility"
+  VERSION_REGEXP = /\A\d+\.\d+\.\d+(\.beta\d+)?\z/
+  VERSION_COMPATIBILITY_FILENAME = ".discourse-compatibility"
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "3.4.0.beta2-dev"
+      STRING = "3.4.0.beta3-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS

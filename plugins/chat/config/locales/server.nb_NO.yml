@@ -22,8 +22,16 @@ nb_NO:
     channel:
       dm_title:
         single_user: "%{username}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} og %{count} annen"
+          other: "%{comma_separated_usernames} og %{count} andre"
     mention_warning:
       dismiss: "forkast"
+    onebox:
+      thread_title_connector: "i"
+      x_members:
+        one: "%{count} medlem"
+        other: "%{count} medlemmer"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -33,6 +41,9 @@ nb_NO:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_body: "%{link}\n\n%{message}"
+  user_notifications:
+    chat_summary:
+      deleted_user: "Slettet bruker"
   unsubscribe:
     chat_summary:
       never: Aldri

@@ -109,6 +109,7 @@ module SvgSprite
         fab-threads-square
         fab-twitter
         fab-twitter-square
+        fab-x-twitter
         fab-wikipedia-w
         fab-windows
         far-bell
@@ -425,12 +426,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
   end
 
   def self.icon_picker_search(keyword, only_available = false)
-    icons = all_icons(SiteSetting.default_theme_id) if only_available
-
     symbols = svgs_for(SiteSetting.default_theme_id)
-    symbols.slice!(*icons) if only_available
-    symbols.reject! { |icon_id, sym| !icon_id.include?(keyword) } unless keyword.empty?
-    symbols.sort_by(&:first).map { |icon_id, symbol| { id: icon_id, symbol: symbol } }
+    symbols.slice!(*all_icons(SiteSetting.default_theme_id)) if only_available
+    symbols.reject! { |icon_id, _sym| !icon_id.include?(keyword) } if keyword.present?
+    symbols.sort_by(&:first).map { |id, symbol| { id:, symbol: } }
   end
 
   # For use in no_ember .html.erb layouts

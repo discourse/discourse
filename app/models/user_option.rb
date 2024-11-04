@@ -73,6 +73,7 @@ class UserOption < ActiveRecord::Base
     self.email_in_reply_to = SiteSetting.default_email_in_reply_to
 
     self.enable_quoting = SiteSetting.default_other_enable_quoting
+    self.enable_smart_lists = SiteSetting.default_other_enable_smart_lists
     self.enable_defer = SiteSetting.default_other_enable_defer
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
@@ -284,6 +285,7 @@ end
 #  chat_separate_sidebar_mode           :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
 #  show_thread_title_prompts            :boolean          default(TRUE), not null
+#  enable_smart_lists                   :boolean          default(TRUE), not null
 #
 # Indexes
 #

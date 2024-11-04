@@ -619,6 +619,10 @@ login:
     default: 1440
     min: 1
     max: 175200
+  experimental_full_page_login:
+    default: false
+    client: true
+
 users:
   min_username_length:
     client: true
@@ -647,6 +651,7 @@ users:
     type: list
     list_type: compact
     default: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
+    mandatory_values: "admin|moderator|administrator|mod|sys|system|community|info|you|name|username|user|nickname|discourse|discourseorg|discourseforum|support|all|here"
   min_password_length:
     client: true
     default: 10
@@ -1180,6 +1185,7 @@ posting:
     client: true
     default: false
   enable_diffhtml_preview:
+    hidden: true
     default: false
     client: true
   enable_fast_edit:
@@ -1520,6 +1526,9 @@ files:
     default: "wasm|jpg|jpeg|png|woff|woff2|svg|eot|ttf|otf|gif|webp|avif|js"
     type: list
     list_type: file_types
+  theme_download_screenshots:
+    default: false
+    hidden: true
   authorized_extensions:
     client: true
     default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
@@ -2430,6 +2439,7 @@ developer:
   enable_experimental_lightbox:
     default: false
     client: true
+    hidden: true
   experimental_topics_filter:
     client: true
     default: false
@@ -2457,10 +2467,6 @@ developer:
     default: ""
     client: true
     hidden: true
-  experimental_redesigned_about_page_groups:
-    default: ""
-    type: group_list
-    allow_any: false
   custom_flags_limit:
     default: 50
     hidden: true
@@ -3048,6 +3054,7 @@ user_preferences:
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_enable_defer: false
+  default_other_enable_smart_lists: true
   default_other_dynamic_favicon: false
   default_other_skip_new_user_tips: false
   default_other_like_notification_frequency:

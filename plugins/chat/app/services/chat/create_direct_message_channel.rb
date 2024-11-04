@@ -9,41 +9,28 @@ module Chat
   # @example
   #  ::Chat::CreateDirectMessageChannel.call(
   #    guardian: guardian,
-  #    target_usernames: ["bob", "alice"]
+  #    params: {
+  #      target_usernames: ["bob", "alice"],
+  #   },
   #  )
   #
   class CreateDirectMessageChannel
     include Service::Base
 
-    # @!method call(guardian:, **params_to_create)
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
-    #   @param [Hash] params_to_create
-    #   @option params_to_create [Array<String>] target_usernames
-    #   @option params_to_create [Array<String>] target_groups
-    #   @option params_to_create [Boolean] upsert
+    #   @param [Hash] params
+    #   @option params [Array<String>] :target_usernames
+    #   @option params [Array<String>] :target_groups
+    #   @option params [Boolean] :upsert
     #   @return [Service::Base::Context]
 
-    contract
-    model :target_users
-    policy :can_create_direct_message
-    policy :satisfies_dms_max_users_limit,
-           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
-    model :user_comm_screener
-    policy :actor_allows_dms
-    policy :targets_allow_dms_from_user,
-           class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
-    model :direct_message, :fetch_or_create_direct_message
-    model :channel, :fetch_or_create_channel
-    step :set_optional_name
-    step :update_memberships
-    step :recompute_users_count
-
-    # @!visibility private
-    class Contract
+    params do
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
       attribute :upsert, :boolean, default: false
+      attribute :icon_upload_id, :integer
 
       validate :target_presence
 
@@ -51,6 +38,19 @@ module Chat
         target_usernames.present? || target_groups.present?
       end
     end
+    model :target_users
+    policy :can_create_direct_message
+    policy :satisfies_dms_max_users_limit,
+           class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+    model :user_comm_screener
+    policy :actor_allows_dms
+    policy :targets_allow_dms_from_user,
+           class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
+    model :direct_message, :fetch_or_create_direct_message
+    model :channel, :fetch_or_create_channel
+    step :set_optional_params
+    step :update_memberships
+    step :recompute_users_count
 
     private
 
@@ -63,10 +63,10 @@ module Chat
         )
     end
 
-    def fetch_target_users(guardian:, contract:)
+    def fetch_target_users(guardian:, params:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
-        usernames: [*contract.target_usernames, guardian.user.username],
-        groups: contract.target_groups,
+        usernames: [*params.target_usernames, guardian.user.username],
+        groups: params.target_groups,
       )
     end
 
@@ -78,11 +78,11 @@ module Chat
       !user_comm_screener.actor_disallowing_all_pms?
     end
 
-    def fetch_or_create_direct_message(target_users:, contract:)
+    def fetch_or_create_direct_message(target_users:, params:)
       ids = target_users.map(&:id)
-      is_group = ids.size > 2 || contract.name.present?
+      is_group = ids.size > 2 || params.name.present?
 
-      if contract.upsert || !is_group
+      if params.upsert || !is_group
         ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
           ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       else
@@ -94,8 +94,10 @@ module Chat
       ::Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def set_optional_name(channel:, contract:)
-      channel.update!(name: contract.name) if contract.name&.length&.positive?
+    def set_optional_params(channel:, params:)
+      optional_params =
+        params.slice(:name, :icon_upload_id).reject { |_, value| value.nil? || value == "" }
+      channel.update!(optional_params) if !optional_params.empty?
     end
 
     def update_memberships(channel:, target_users:)
@@ -108,8 +110,7 @@ module Chat
             chat_channel_id: channel.id,
             muted: false,
             following: false,
-            desktop_notification_level: always_level,
-            mobile_notification_level: always_level,
+            notification_level: always_level,
             created_at: Time.zone.now,
             updated_at: Time.zone.now,
           }

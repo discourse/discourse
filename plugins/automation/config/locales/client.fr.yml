@@ -14,7 +14,6 @@ fr:
       select_trigger: Sélectionner un déclencheur
       confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré. Voulez-vous continuer ?
       confirm_automation_trigger: Cette action déclenchera l'automatisation. Voulez-vous continuer ?
-      no_automation_yet: Vous n'avez pas encore créé d'automatisation.
       edit_automation:
         trigger_section:
           forced: Ce déclencheur est forcé par le script.
@@ -150,12 +149,17 @@ fr:
             valid_trust_levels:
               label: Niveaux de confiance valides
               description: Se déclenchera uniquement si la publication est créée par un utilisateur repris dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
+            restricted_tags:
+              label: Étiquettes
+              description: Facultatif, ne se déclenchera que si la publication contient l'une de ces étiquettes
             restricted_category:
               label: Catégorie
               description: Facultatif, ne se déclenchera que si le sujet de la publication se trouve dans cette catégorie
             restricted_group:
               label: Groupe
               description: Facultatif, se déclenchera uniquement si le sujet de la publication est un message privé dans la boîte de réception de ce groupe
+            restricted_groups:
+              label: Groupes
             ignore_group_members:
               label: Ignorer les membres du groupe
               description: Ignorer le déclencheur si l'expéditeur est membre du groupe spécifié ci-dessus

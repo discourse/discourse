@@ -4,7 +4,7 @@ module HasCustomFields
   extend ActiveSupport::Concern
 
   module Helpers
-    CUSTOM_FIELD_TRUE ||= %w[1 t true T True TRUE].freeze
+    CUSTOM_FIELD_TRUE = %w[1 t true T True TRUE].freeze
   end
 
   class FieldDescriptor < Struct.new(:type, :max_length)

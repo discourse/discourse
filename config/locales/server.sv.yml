@@ -597,6 +597,15 @@ sv:
             ip_address:
               blocked: "Nya registreringar är inte tillåtna från din IP-adress."
               max_new_accounts_per_registration_ip: "Nya registreringar är inte tillåtna från din IP-adress (maxgräns uppnådd). Kontakta personal."
+        user_password:
+          attributes:
+            password:
+              common: "är ett av de 10 000 vanligaste lösenorden. Använd ett säkrare lösenord."
+              same_as_username: "är samma som ditt användarnamn. Använd ett säkrare lösenord."
+              same_as_email: "är samma som din e-postadress. Använd ett säkrare lösenord."
+              same_as_current: "är samma som ert nuvarande lösenord"
+              same_as_name: "är samma som ditt namn."
+              unique_characters: "har för många upprepade tecken. Använd ett säkrare lösenord."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1109,13 +1118,13 @@ sv:
       yaxis: "Dag"
       description: "Antalet användare som ökade sin förtroendenivå under denna period."
     consolidated_page_views:
-      title: "Konsoliderade sidvisningar"
+      title_legacy: "Konsoliderade sidvisningar"
       xaxis:
         page_view_crawler: "Sökrobotar"
         page_view_anon: "Anonyma användare"
         page_view_logged_in: "Inloggade användare"
       yaxis: "Dag"
-      description: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
+      description_legacy: "Sidvisningar för inloggade användare, anonyma användare och sökrobotar."
       labels:
         post: Inlägg
         editor: Redigerare
@@ -1130,6 +1139,9 @@ sv:
       description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
+    site_traffic:
+      yaxis: "Dag"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -1279,6 +1291,9 @@ sv:
       xaxis: "Dag"
       yaxis: "Totalt antal sidvisningar"
       description: "Antal nya sidvisningar från alla besökare."
+    page_view_legacy_total_reqs:
+      xaxis: "Dag"
+      yaxis: "Totalt antal sidvisningar"
     page_view_logged_in_mobile_reqs:
       title: "Inloggade sidvisningar"
       xaxis: "Dag"
@@ -1399,13 +1414,33 @@ sv:
         total_views: Totalt
   dashboard:
     problem:
+      group_email_credentials: 'Det uppstod ett problem med e-postautentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
       rails_env: "Din server kör i %{env}-läge."
       host_names: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
       queue_size: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
       ram: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
+      google_oauth2_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (enable_google_oauth2_logins), men klient-id och klienthemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
+      facebook_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (enable_facebook_logins), men app-id och appens hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
+      twitter_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (enable_twitter_logins), men nyckel och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
+      github_config: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
+      s3_upload_config: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
+      s3_backup_config: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
+      s3_cdn: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
+      image_magick: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
+      failing_emails: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
       subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
+      translation_overrides: "Vissa av dina översättningsåsidosättningar är inaktuella. Kontrollera dina <a href='%{base_path}/admin/customize/site_texts?outdated=true'>textanpassningar</a>."
+      email_polling_errored_recently:
+        one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
+        other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
       missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
+      bad_favicon_url: "Favoritikonen kan inte laddas. Kontrollera dina inställningar för favoritikonen i <a href='%{base_path}/admin/site_settings'>webbplatsinställningarna</a>."
+      poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
+      poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a>."
+      force_https: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
+      watched_words: "Det reguljära uttrycket för %{action}-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a>eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
       google_analytics_version: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
+      category_style_deprecated: "Din Discourse använder för närvarande en utfasad kategoristil som tas bort innan den sista betaversionen av Discourse 3.2 kommer ut. Se <a href='https://meta.discourse.org/t/282441'>Flytta till en enskild webbplatsinställning för kategoristil</a> för instruktioner om hur du behåller din valda kategoristil."
     back_from_logster_text: "Tillbaka till webbplatsen"
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
@@ -1562,7 +1597,6 @@ sv:
     blocked_ip_blocks: "En lista över privata IP-block som aldrig bör genomsökas av Discourse"
     allowed_internal_hosts: "En lista över interna värdar som discourse säkert kan söka igenom för oneboxar och andra syften"
     allowed_onebox_iframes: "En lista över källdomäner för iframe som är tillåtna via Onebox-inbäddningar. `*` kommer tillåta alla standardmotorer för Onebox."
-    allowed_iframes: "En lista med iframekällors domänprefix som Discourse säkert kan tillåta i inlägg"
     allowed_crawler_user_agents: "Användaragenter för sökrobotar som ska få åtkomst till webbplatsen. VARNING! INSTÄLLNING AV DETTA FÖRBJUDER ALLA SÖKMOTORER SOM INTE LISTAS HÄR!"
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
     slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
@@ -1574,8 +1608,6 @@ sv:
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
     top_menu: "Bestäm vilka objekt som visas på startsidans navigering och i vilken ordning."
-    post_menu: "Bestäm vilka objekt som visas på inläggsmenyn och i vilken ordning."
-    post_menu_hidden_items: "Standardinställning för vilka menyobjekt som döljs i inläggsmenyn om inte utvidgnings-ellipsen har klickats på."
     share_links: "Bestäm vilka objekt som syns i den delade dialogen, och i vilken ordning."
     allow_username_in_share_links: "Tillåt att användarnamn omfattas i delningslänkar. Detta är användbart för att tilldela utmärkelser baserat på unika besökare."
     site_contact_username: "Ett giltigt personalanvändarnamn att skicka alla automatiserade meddelanden ifrån. Om det lämnas tomt används standard-System-kontot."
@@ -1889,7 +1921,6 @@ sv:
     reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     blocked_attachment_content_types: "Lista med nyckelord som används för att blockera bilagor baserat på innehållstyp."
     blocked_attachment_filenames: "Lista med nyckelord som används för att blockera bilagor baserat på filnamn."
-    forwarded_emails_behaviour: "Hur man behandlar ett vidarebefordrat e-postmeddelande till Discourse"
     always_show_trimmed_content: "Visa alltid trimmade delar av inkommande e-post. VARNING: kan avslöja e-postadresser."
     trim_incoming_emails: "Trimma en del av de inkommande e-postmeddelandena som inte är relevant."
     private_email: "Inkludera inte innehåll från inlägg eller ämnen i e-posttitel eller e-postinnehåll. NOTERA: inaktiverar även sammanfogade e-postmeddelanden."
@@ -1994,7 +2025,6 @@ sv:
     app_association_ios: "Innehållet i slutpunkten <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>, används för att skapa universella länkar mellan denna webbplats och iOS-appar."
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
     penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
-    svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
     max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera utskrifter)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."

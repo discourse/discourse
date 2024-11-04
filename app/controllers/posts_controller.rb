@@ -27,7 +27,7 @@ class PostsController < ApplicationController
                      :check_xhr,
                      only: %i[markdown_id markdown_num short_link latest user_posts_feed]
 
-  MARKDOWN_TOPIC_PAGE_SIZE ||= 100
+  MARKDOWN_TOPIC_PAGE_SIZE = 100
 
   def markdown_id
     markdown Post.find_by(id: params[:id].to_i)
@@ -310,13 +310,16 @@ class PostsController < ApplicationController
   def reply_history
     post = find_post_from_params
 
-    reply_history = post.reply_history(params[:max_replies].to_i, guardian)
-    user_custom_fields = {}
-    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
-      user_custom_fields = User.custom_fields_for_ids(reply_history.pluck(:user_id), added_fields)
-    end
+    topic_view =
+      TopicView.new(
+        post.topic,
+        current_user,
+        include_suggested: false,
+        include_related: false,
+        reply_history_for: post.id,
+      )
 
-    render_serialized(reply_history, PostSerializer, user_custom_fields: user_custom_fields)
+    render_json_dump(TopicViewPostsSerializer.new(topic_view, scope: guardian).post_stream[:posts])
   end
 
   def reply_ids
@@ -426,17 +429,38 @@ class PostsController < ApplicationController
     render_json_error(e.message)
   end
 
-  # Direct replies to this post
+  MAX_POST_REPLIES = 20
+
   def replies
+    params.permit(:after)
+
+    after = [params[:after].to_i, 1].max
     post = find_post_from_params
-    replies = post.replies.secured(guardian)
 
-    user_custom_fields = {}
-    if (added_fields = User.allowed_user_custom_fields(guardian)).present?
-      user_custom_fields = User.custom_fields_for_ids(replies.pluck(:user_id), added_fields)
+    post_ids =
+      post
+        .replies
+        .secured(guardian)
+        .where(post_number: after + 1..)
+        .limit(MAX_POST_REPLIES)
+        .pluck(:id)
+
+    if post_ids.blank?
+      render_json_dump []
+    else
+      topic_view =
+        TopicView.new(
+          post.topic,
+          current_user,
+          post_ids:,
+          include_related: false,
+          include_suggested: false,
+        )
+
+      render_json_dump(
+        TopicViewPostsSerializer.new(topic_view, scope: guardian).post_stream[:posts],
+      )
     end
-
-    render_serialized(replies, PostSerializer, user_custom_fields: user_custom_fields)
   end
 
   def revisions
@@ -995,20 +1019,15 @@ class PostsController < ApplicationController
     # A deleted post can be seen by staff or a category group moderator for the topic.
     # But we must find the deleted post to determine which category it belongs to, so
     # we must find.with_deleted
-    post = finder.with_deleted.first
-    raise Discourse::NotFound unless post
+    raise Discourse::NotFound unless post = finder.with_deleted.first
+    raise Discourse::NotFound unless post.topic ||= Topic.with_deleted.find_by(id: post.topic_id)
 
-    post.topic = Topic.with_deleted.find_by(id: post.topic_id)
-
-    if !post.topic ||
-         (
-           (post.deleted_at.present? || post.topic.deleted_at.present?) &&
-             !guardian.can_moderate_topic?(post.topic)
-         )
-      raise Discourse::NotFound
+    if post.deleted_at.present? || post.topic.deleted_at.present?
+      raise Discourse::NotFound unless guardian.can_moderate_topic?(post.topic)
     end
 
     guardian.ensure_can_see!(post)
+
     post
   end
 end

@@ -18,7 +18,7 @@ module("Integration | Component | number-field", function (hooks) {
 
     await fillIn(".number-field-test", "33");
 
-    assert.equal(
+    assert.strictEqual(
       this.get("value"),
       33,
       "value is changed when the input is a valid number"
@@ -27,7 +27,7 @@ module("Integration | Component | number-field", function (hooks) {
     await fillIn(".number-field-test", "");
     await triggerKeyEvent(".number-field-test", "keydown", 66); // b
 
-    assert.equal(
+    assert.strictEqual(
       this.get("value"),
       "",
       "value is cleared when the input is NaN"
@@ -46,7 +46,7 @@ module("Integration | Component | number-field", function (hooks) {
     await triggerKeyEvent(".number-field-test", "keydown", 189); // -
     await triggerKeyEvent(".number-field-test", "keydown", 49); // 1
 
-    assert.equal(
+    assert.strictEqual(
       this.get("value"),
       "",
       "value is cleared when the input is less than the min"
@@ -60,9 +60,9 @@ module("Integration | Component | number-field", function (hooks) {
 
     await fillIn(".number-field-test", "-1");
 
-    assert.equal(
+    assert.strictEqual(
       this.get("value"),
-      "-1",
+      -1,
       "negative input allowed when min is negative"
     );
   });

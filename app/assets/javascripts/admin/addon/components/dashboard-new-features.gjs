@@ -45,13 +45,18 @@ export default class DashboardNewFeatures extends Component {
   }
 
   <template>
-    <div class="admin-config-area" {{didInsert this.loadNewFeatures}}>
+    <div
+      class="admin-config-area__primary-content"
+      {{didInsert this.loadNewFeatures}}
+    >
       {{#if this.groupedNewFeatures}}
         {{#each this.groupedNewFeatures as |groupedFeatures|}}
           <AdminConfigAreaCard @translatedHeading={{groupedFeatures.date}}>
-            {{#each groupedFeatures.features as |feature|}}
-              <DashboardNewFeatureItem @item={{feature}} />
-            {{/each}}
+            <:content>
+              {{#each groupedFeatures.features as |feature|}}
+                <DashboardNewFeatureItem @item={{feature}} />
+              {{/each}}
+            </:content>
           </AdminConfigAreaCard>
         {{/each}}
       {{else if this.isLoaded}}

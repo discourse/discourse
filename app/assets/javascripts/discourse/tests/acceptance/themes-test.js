@@ -206,10 +206,7 @@ acceptance("Theme", function (needs) {
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
 
-    assert.notOk(
-      exists(".admin-install-theme-modal:visible"),
-      "modal is closed"
-    );
+    assert.dom(".admin-install-theme-modal").doesNotExist("modal is closed");
   });
 
   test("can continue installation", async function (assert) {
@@ -225,11 +222,9 @@ acceptance("Theme", function (needs) {
 
     await click(".control-unit .btn-primary.finish-install");
 
-    assert.equal(
-      query(".show-current-style .title span").innerText,
-      "discourse-complete-theme",
-      "it updates theme title"
-    );
+    assert
+      .dom(".show-current-style .title span")
+      .hasText("discourse-complete-theme", "it updates theme title");
 
     assert.notOk(
       query(".metadata.control-unit").innerText.includes(

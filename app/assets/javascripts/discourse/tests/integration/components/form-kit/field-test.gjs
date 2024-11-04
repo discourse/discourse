@@ -35,6 +35,20 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
   });
 
+  test("@disabled", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+          <field.Input />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom("#control-foo.is-disabled[data-disabled]")
+      .exists("it sets the disabled class and data attribute");
+  });
+
   test("@description", async function (assert) {
     await render(<template>
       <Form as |form|>
@@ -145,6 +159,23 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     assert.dom(".form-kit__container-title").doesNotExist();
+  });
+
+  test("@format full", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @format="full"
+          as |field|
+        ><field.Input /></form.Field>
+      </Form>
+    </template>);
+
+    assert
+      .dom(".form-kit__field.--full")
+      .exists("it applies the --full class to the field");
   });
 
   test("@onSet", async function (assert) {

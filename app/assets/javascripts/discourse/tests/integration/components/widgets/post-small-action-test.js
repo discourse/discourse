@@ -18,9 +18,9 @@ module(
         hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
       );
 
-      assert.ok(!exists(".small-action-desc .small-action-delete"));
-      assert.ok(!exists(".small-action-desc .small-action-recover"));
-      assert.ok(!exists(".small-action-desc .small-action-edit"));
+      assert.dom(".small-action-desc .small-action-delete").doesNotExist();
+      assert.dom(".small-action-desc .small-action-recover").doesNotExist();
+      assert.dom(".small-action-desc .small-action-edit").doesNotExist();
     });
 
     test("shows edit button if canEdit", async function (assert) {
@@ -108,10 +108,11 @@ module(
           hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
         );
 
-        assert.notOk(
-          exists(".abcde"),
-          "custom CSS class is not added when condition is not met"
-        );
+        assert
+          .dom(".abcde")
+          .doesNotExist(
+            "custom CSS class is not added when condition is not met"
+          );
 
         this.set("args", { id: 123, canRecover: true });
 

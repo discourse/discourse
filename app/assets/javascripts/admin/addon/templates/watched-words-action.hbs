@@ -11,10 +11,9 @@
   />
 
   <WatchedWordUploader
-    @id="watched-word-uploader"
     @uploading={{this.uploading}}
     @actionKey={{this.actionNameKey}}
-    @done={{action "uploadComplete"}}
+    @done={{this.uploadComplete}}
   />
 
   <DButton
@@ -35,14 +34,16 @@
 <p class="about">{{this.actionDescription}}</p>
 
 {{#if this.siteSettings.watched_words_regular_expressions}}
-  <p>{{html-safe
+  <p>
+    {{html-safe
       (i18n "admin.watched_words.regex_warning" basePath=(base-path))
-    }}</p>
+    }}
+  </p>
 {{/if}}
 
 <WatchedWordForm
   @actionKey={{this.actionNameKey}}
-  @action={{action "recordAdded"}}
+  @action={{this.recordAdded}}
   @filteredContent={{this.currentAction.words}}
 />
 
@@ -67,7 +68,7 @@
         <AdminWatchedWord
           @actionKey={{this.actionNameKey}}
           @word={{word}}
-          @action={{action "recordRemoved"}}
+          @action={{this.recordRemoved}}
         />
       </div>
     {{/each}}

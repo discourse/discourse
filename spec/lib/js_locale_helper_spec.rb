@@ -161,25 +161,29 @@ RSpec.describe JsLocaleHelper do
     fab!(:overriden_translation_ja) do
       Fabricate(:translation_override, locale: "ja", translation_key: "js.posts_likes_MF")
     end
-    fab!(:overriden_translation_he) do
-      Fabricate(:translation_override, locale: "he", translation_key: "js.posts_likes_MF")
+    fab!(:overriden_translation_zh_tw) do
+      Fabricate(:translation_override, locale: "zh_TW", translation_key: "js.posts_likes_MF")
     end
     let(:output) { described_class.output_MF(locale).gsub(/^import.*$/, "") }
     let(:generated_locales) { v8_ctx.eval("Object.keys(I18n._mfMessages._data)") }
     let(:translated_message) do
       v8_ctx.eval("I18n._mfMessages.get('posts_likes_MF', {count: 3, ratio: 'med'})")
     end
+    let(:fake_logger) { FakeLogger.new }
 
     before do
+      Rails.logger.broadcast_to(fake_logger)
       overriden_translation_ja.update_columns(
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
-      overriden_translation_he.update_columns(value: "{ count, plural, ")
+      overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
       v8_ctx.eval(output)
     end
 
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
+
     context "when locale is 'en'" do
-      let(:locale) { "en" }
+      let(:locale) { :en }
 
       it "generates messages for the 'en' locale only" do
         expect(generated_locales).to eq %w[en]
@@ -205,7 +209,7 @@ RSpec.describe JsLocaleHelper do
     end
 
     context "when locale is not 'en'" do
-      let(:locale) { "fr" }
+      let(:locale) { :fr }
 
       it "generates messages for the current locale and uses 'en' as fallback" do
         expect(generated_locales).to match(%w[fr en])
@@ -245,7 +249,7 @@ RSpec.describe JsLocaleHelper do
     end
 
     context "when locale contains invalid plural keys" do
-      let(:locale) { "ja" }
+      let(:locale) { :ja }
 
       it "does not raise an error" do
         expect(generated_locales).to match(%w[ja en])
@@ -253,10 +257,15 @@ RSpec.describe JsLocaleHelper do
     end
 
     context "when locale contains malformed messages" do
-      let(:locale) { "he" }
+      let(:locale) { :zh_TW }
 
       it "raises an error" do
         expect(output).to match(/Failed to compile message formats/)
+      end
+
+      it "logs which keys are problematic" do
+        output
+        expect(fake_logger.errors).to include(/posts_likes_MF/)
       end
     end
   end

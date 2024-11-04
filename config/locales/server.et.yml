@@ -271,6 +271,14 @@ et:
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
               unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
+        user_password:
+          attributes:
+            password:
+              common: "on üks 10000 enim kasutatud salasõnast. Palun kasuta turvalisemat parooli."
+              same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
+              same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
+              same_as_current: "ühtib sinu hetkel kehtiva parooliga."
+              unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
         color_scheme_color:
           attributes:
             hex:
@@ -558,6 +566,8 @@ et:
       yaxis: "Päev"
     consolidated_page_views_browser_detection:
       yaxis: "Päev"
+    site_traffic:
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -668,6 +678,8 @@ et:
       xaxis: "Päev"
     page_view_total_reqs:
       title: "Lehekülje vaatamisi"
+      xaxis: "Päev"
+    page_view_legacy_total_reqs:
       xaxis: "Päev"
     page_view_logged_in_mobile_reqs:
       xaxis: "Päev"

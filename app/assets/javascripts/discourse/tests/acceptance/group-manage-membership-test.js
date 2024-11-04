@@ -4,7 +4,6 @@ import Site from "discourse/models/site";
 import {
   acceptance,
   count,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -88,10 +87,9 @@ acceptance("Managing Group Membership", function (needs) {
       "it should disable group public admission input"
     );
 
-    assert.ok(
-      !exists(".group-form-public-exit[disabled]"),
-      "it should not disable group public exit input"
-    );
+    assert
+      .dom(".group-form-public-exit[disabled]")
+      .doesNotExist("it should not disable group public exit input");
 
     assert.strictEqual(
       count(".group-form-membership-request-template"),
@@ -123,7 +121,10 @@ acceptance("Managing Group Membership", function (needs) {
     await associatedGroups.selectRowByName("google_oauth2:test-group");
     await associatedGroups.keyboard("enter");
 
-    assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
+    assert.strictEqual(
+      associatedGroups.header().name(),
+      "google_oauth2:test-group"
+    );
   });
 
   test("As an admin on a site that can't associate groups", async function (assert) {
@@ -133,10 +134,11 @@ acceptance("Managing Group Membership", function (needs) {
 
     await visit("/g/alternative-group/manage/membership");
 
-    assert.ok(
-      !exists('label[for="automatic_membership_associated_groups"]'),
-      "it should not display associated groups automatic membership label"
-    );
+    assert
+      .dom('label[for="automatic_membership_associated_groups"]')
+      .doesNotExist(
+        "it should not display associated groups automatic membership label"
+      );
   });
 
   test("As a group owner", async function (assert) {
@@ -144,30 +146,29 @@ acceptance("Managing Group Membership", function (needs) {
 
     await visit("/g/discourse/manage/membership");
 
-    assert.ok(
-      !exists('label[for="automatic_membership"]'),
-      "it should not display automatic membership label"
-    );
+    assert
+      .dom('label[for="automatic_membership"]')
+      .doesNotExist("it should not display automatic membership label");
 
-    assert.ok(
-      !exists('label[for="automatic_membership_associated_groups"]'),
-      "it should not display associated groups automatic membership label"
-    );
+    assert
+      .dom('label[for="automatic_membership_associated_groups"]')
+      .doesNotExist(
+        "it should not display associated groups automatic membership label"
+      );
 
-    assert.ok(
-      !exists(".groups-form-automatic-membership-retroactive"),
-      "it should not display automatic membership retroactive checkbox"
-    );
+    assert
+      .dom(".groups-form-automatic-membership-retroactive")
+      .doesNotExist(
+        "it should not display automatic membership retroactive checkbox"
+      );
 
-    assert.ok(
-      !exists(".groups-form-primary-group"),
-      "it should not display set as primary group checkbox"
-    );
+    assert
+      .dom(".groups-form-primary-group")
+      .doesNotExist("it should not display set as primary group checkbox");
 
-    assert.ok(
-      !exists(".groups-form-grant-trust-level"),
-      "it should not display grant trust level selector"
-    );
+    assert
+      .dom(".groups-form-grant-trust-level")
+      .doesNotExist("it should not display grant trust level selector");
 
     assert.strictEqual(
       count(".group-form-public-admission"),

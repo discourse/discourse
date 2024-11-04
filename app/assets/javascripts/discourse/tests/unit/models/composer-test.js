@@ -454,7 +454,7 @@ module("Unit | Model | composer", function (hooks) {
     pretender.post("/posts", function (request) {
       const data = parsePostData(request.requestBody);
 
-      assert.equal(data.meta_data.some_custom_field, "some_value");
+      assert.strictEqual(data.meta_data.some_custom_field, "some_value");
       saved = true;
 
       return response(200, {
@@ -478,11 +478,11 @@ module("Unit | Model | composer", function (hooks) {
       draftSequence: 1,
     });
 
-    assert.equal(composer.loading, false);
+    assert.false(composer.loading);
 
     composer.metaData = { some_custom_field: "some_value" };
     await composer.save({});
 
-    assert.equal(saved, true);
+    assert.true(saved);
   });
 });

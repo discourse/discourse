@@ -1,21 +1,9 @@
 .sidebar-section-wrapper {
-  .discourse-no-touch & {
-    &:hover {
-      .sidebar-section-header-wrapper {
-        .btn.dropdown-select-box-header,
-        .sidebar-section-header-button {
-          opacity: 1;
-        }
-      }
-    }
-  }
-
   .sidebar-section-header-wrapper {
     display: flex;
 
     .discourse-no-touch & {
       &:hover {
-        background: var(--d-sidebar-highlight-background);
         .d-icon-globe {
           color: var(--d-sidebar-highlight-color);
         }
@@ -74,16 +62,20 @@
 
   .sidebar-section-header {
     flex: 1 1 auto;
-    color: var(--d-sidebar-header-color);
     align-items: center;
     min-width: 0;
     padding: 0;
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-medium);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 
     &.sidebar-section-header-collapsable {
       justify-content: flex-start;
 
       &:hover {
-        color: var(--primary);
+        color: var(--primary-medium);
       }
 
       &:focus {
@@ -115,8 +107,7 @@
     align-items: center;
     justify-content: center;
 
-    svg {
-      font-size: var(--font-down-1);
+    .d-icon {
       color: var(--d-sidebar-header-icon-color);
     }
   }
@@ -147,7 +138,6 @@
   }
 
   .sidebar-section-content {
-    padding-bottom: 0.875em;
     margin: 0;
     hr {
       margin: 0em 1.5em;

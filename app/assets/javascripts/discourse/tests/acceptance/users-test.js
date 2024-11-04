@@ -18,10 +18,9 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(
-      exists(".directory .directory-table .directory-table__row"),
-      "has a list of users"
-    );
+    assert
+      .dom(".directory .directory-table .directory-table__row")
+      .exists("has a list of users");
   });
 
   test("Visit All Time", async function (assert) {
@@ -35,10 +34,9 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(
-      exists(".directory .directory-table .directory-table__row"),
-      "has a list of users"
-    );
+    assert
+      .dom(".directory .directory-table .directory-table__row")
+      .exists("has a list of users");
   });
 
   test("Visit With Group Exclusion", async function (assert) {
@@ -65,10 +63,9 @@ acceptance("User Directory", function () {
       document.body.classList.contains("users-page"),
       "has the body class"
     );
-    assert.ok(
-      exists(".directory .directory-table .directory-table__row"),
-      "has a list of users"
-    );
+    assert
+      .dom(".directory .directory-table .directory-table__row")
+      .exists("has a list of users");
   });
 
   test("Custom user fields are present", async function (assert) {

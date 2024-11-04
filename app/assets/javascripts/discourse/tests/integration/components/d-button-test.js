@@ -3,7 +3,7 @@ import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import I18n from "discourse-i18n";
 
@@ -15,11 +15,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert.ok(exists("button.btn.btn-icon.no-text"), "it has all the classes");
     assert.ok(exists("button .d-icon.d-icon-plus"), "it has the icon");
-    assert.strictEqual(
-      query("button").getAttribute("tabindex"),
-      "3",
-      "it has the tabindex"
-    );
+    assert.dom("button").hasAttribute("tabindex", "3", "it has the tabindex");
   });
 
   test("icon and text button", async function (assert) {
@@ -54,38 +50,32 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
 
-    assert.ok(
-      exists("button.is-loading .loading-icon"),
-      "it has a spinner showing"
-    );
-    assert.ok(
-      exists("button[disabled]"),
-      "while loading the button is disabled"
-    );
+    assert
+      .dom("button.is-loading .loading-icon")
+      .exists("it has a spinner showing");
+    assert
+      .dom("button[disabled]")
+      .exists("while loading the button is disabled");
 
     this.set("isLoading", false);
 
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
-    assert.ok(
-      exists("button:not([disabled])"),
-      "while not loading the button is enabled"
-    );
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
+    assert
+      .dom("button:not([disabled])")
+      .exists("while not loading the button is enabled");
   });
 
   test("button without isLoading attribute", async function (assert) {
     await render(hbs`<DButton />`);
 
-    assert.notOk(
-      exists("button.is-loading"),
-      "it doesn't have class is-loading"
-    );
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
+    assert
+      .dom("button.is-loading")
+      .doesNotExist("it doesn't have class is-loading");
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
     assert.notOk(exists("button[disabled]"), "it isn't disabled");
   });
 
@@ -94,14 +84,12 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @isLoading={{this.isLoading}} />`);
 
-    assert.notOk(
-      exists("button.is-loading"),
-      "it doesn't have class is-loading"
-    );
-    assert.notOk(
-      exists("button .loading-icon"),
-      "it doesn't have a spinner showing"
-    );
+    assert
+      .dom("button.is-loading")
+      .doesNotExist("it doesn't have class is-loading");
+    assert
+      .dom("button .loading-icon")
+      .doesNotExist("it doesn't have a spinner showing");
     assert.notOk(exists("button[disabled]"), "it isn't disabled");
   });
 
@@ -125,17 +113,14 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("ariaLabel", "test.fooAriaLabel");
 
-    assert.strictEqual(
-      query("button").getAttribute("aria-label"),
-      I18n.t("test.fooAriaLabel")
-    );
+    assert.dom("button").hasAria("label", I18n.t("test.fooAriaLabel"));
 
     this.setProperties({
       ariaLabel: null,
       translatedAriaLabel: "bar",
     });
 
-    assert.strictEqual(query("button").getAttribute("aria-label"), "bar");
+    assert.dom("button").hasAria("label", "bar");
   });
 
   test("title", async function (assert) {
@@ -146,17 +131,14 @@ module("Integration | Component | d-button", function (hooks) {
     );
 
     this.set("title", "test.fooTitle");
-    assert.strictEqual(
-      query("button").getAttribute("title"),
-      I18n.t("test.fooTitle")
-    );
+    assert.dom("button").hasAttribute("title", I18n.t("test.fooTitle"));
 
     this.setProperties({
       title: null,
       translatedTitle: "bar",
     });
 
-    assert.strictEqual(query("button").getAttribute("title"), "bar");
+    assert.dom("button").hasAttribute("title", "bar");
   });
 
   test("label", async function (assert) {
@@ -168,45 +150,39 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.strictEqual(
-      query("button .d-button-label").innerText,
-      I18n.t("test.fooLabel")
-    );
+    assert.dom("button .d-button-label").hasText(I18n.t("test.fooLabel"));
 
     this.setProperties({
       label: null,
       translatedLabel: "bar",
     });
 
-    assert.strictEqual(query("button .d-button-label").innerText, "bar");
+    assert.dom("button .d-button-label").hasText("bar");
   });
 
   test("aria-expanded", async function (assert) {
     await render(hbs`<DButton @ariaExpanded={{this.ariaExpanded}} />`);
 
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
 
     this.set("ariaExpanded", true);
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), "true");
+    assert.dom("button").hasAria("expanded", "true");
 
     this.set("ariaExpanded", false);
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), "false");
+    assert.dom("button").hasAria("expanded", "false");
 
     this.set("ariaExpanded", "false");
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
 
     this.set("ariaExpanded", "true");
-    assert.strictEqual(query("button").getAttribute("aria-expanded"), null);
+    assert.dom("button").doesNotHaveAria("expanded");
   });
 
   test("aria-controls", async function (assert) {
     await render(hbs`<DButton @ariaControls={{this.ariaControls}} />`);
 
     this.set("ariaControls", "foo-bar");
-    assert.strictEqual(
-      query("button").getAttribute("aria-controls"),
-      "foo-bar"
-    );
+    assert.dom("button").hasAria("controls", "foo-bar");
   });
 
   test("onKeyDown callback", async function (assert) {
@@ -261,6 +237,7 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
+    // eslint-disable-next-line ember/no-classic-classes
     this.classicComponent = ClassicComponent.extend({
       actions: {
         myLegacyAction() {
@@ -288,8 +265,9 @@ module("Integration | Component | d-button", function (hooks) {
     this.set("foo", null);
     this.set("legacyActionTriggered", () => this.set("foo", "bar"));
 
-    this.simpleWrapperComponent = ClassicComponent.extend();
+    this.simpleWrapperComponent = class extends ClassicComponent {};
 
+    // eslint-disable-next-line ember/no-classic-classes
     this.classicComponent = ClassicComponent.extend({
       actions: {
         myLegacyAction() {

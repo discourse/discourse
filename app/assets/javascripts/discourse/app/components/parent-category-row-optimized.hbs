@@ -1,0 +1,97 @@
+{{#unless this.isHidden}}
+  <PluginOutlet
+    @name="category-list-above-each-category"
+    @outletArgs={{hash category=this.category}}
+  />
+  {{#if this.site.mobileView}}
+    <div
+      data-category-id={{this.category.id}}
+      data-notification-level={{this.category.notificationLevelString}}
+      style={{border-color this.category.color}}
+      class="category-list-item category {{if this.isMuted 'muted'}}"
+    >
+      <table class="topic-list">
+        <tbody>
+          <tr>
+            <th class="main-link">
+              <CategoryTitleLink @category={{this.category}} />
+            </th>
+          </tr>
+          {{#if this.category.description_excerpt}}
+            <tr class="category-description">
+              <td colspan="3">
+                {{html-safe this.category.description_excerpt}}
+              </td>
+            </tr>
+          {{/if}}
+          {{#if (gt this.category.subcategories.length 0)}}
+            <tr class="category-subcategories">
+              <td colspan="3">
+                <LinkTo
+                  @route="discovery.subcategories"
+                  @model={{this.slugPath}}
+                >
+                  {{i18n
+                    "category_row.subcategory_count"
+                    count=this.category.subcategories.length
+                  }}
+                </LinkTo>
+              </td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  {{else}}
+    <tr
+      data-category-id={{this.category.id}}
+      data-notification-level={{this.category.notificationLevelString}}
+      class="{{if
+          this.category.description_excerpt
+          'has-description'
+          'no-description'
+        }}
+        {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
+    >
+      <td
+        class="category {{if this.isMuted 'muted'}}"
+        style={{category-color-variable this.category.color}}
+      >
+        <CategoryTitleLink @category={{this.category}} />
+        <PluginOutlet
+          @name="below-category-title-link"
+          @connectorTagName="div"
+          @outletArgs={{hash category=this.category}}
+        />
+        {{#if this.category.description_excerpt}}
+          <div class="category-description">
+            {{dir-span this.category.description_excerpt htmlSafe="true"}}
+          </div>
+        {{/if}}
+        {{#if (gt this.category.subcategories.length 0)}}
+          <div class="category-subcategories">
+            <LinkTo @route="discovery.subcategories" @model={{this.slugPath}}>
+              {{i18n
+                "category_row.subcategory_count"
+                count=this.category.subcategories.length
+              }}
+            </LinkTo>
+          </div>
+        {{/if}}
+      </td>
+
+      <td class="topics">
+        <div title={{this.category.statTitle}}>{{html-safe
+            this.category.stat
+          }}</div>
+        <CategoryUnread
+          @category={{this.category}}
+          @tagName="div"
+          @unreadTopicsCount={{this.unreadTopicsCount}}
+          @newTopicsCount={{this.newTopicsCount}}
+          class="unread-new"
+        />
+      </td>
+    </tr>
+  {{/if}}
+{{/unless}}

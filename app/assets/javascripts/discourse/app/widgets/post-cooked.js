@@ -9,7 +9,6 @@ import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
 } from "discourse/lib/update-user-status-on-mention";
-import domFromString from "discourse-common/lib/dom-from-string";
 import escape from "discourse-common/lib/escape";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
@@ -162,16 +161,14 @@ export default class PostCooked {
             !bestElements.has(onebox) ||
             bestElements.get(onebox) === link
           ) {
-            const title = I18n.t("topic_map.clicks", { count: lc.clicks });
-
-            link.appendChild(document.createTextNode(" "));
-            link.appendChild(
-              domFromString(
-                `<span class='badge badge-notification clicks' title='${title}'>${number(
-                  lc.clicks
-                )}</span>`
-              )[0]
-            );
+            link.setAttribute("data-clicks", number(lc.clicks));
+            const ariaLabel = `${link.textContent.trim()} ${I18n.t(
+              "post.link_clicked",
+              {
+                count: lc.clicks,
+              }
+            )}`;
+            link.setAttribute("aria-label", ariaLabel);
           }
         }
       });

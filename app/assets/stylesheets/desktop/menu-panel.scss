@@ -5,7 +5,6 @@
 
   &.drop-down {
     .panel-body {
-      max-height: calc(100vh - var(--header-offset));
       max-width: calc(100vw - 2em);
     }
   }
@@ -45,7 +44,6 @@
       .sidebar-section-header-wrapper {
         margin: 0 0 0.5em;
         padding-bottom: 0.25em;
-        border-bottom: 1px solid var(--primary-low);
         .d-icon-globe {
           color: var(--primary-medium);
         }

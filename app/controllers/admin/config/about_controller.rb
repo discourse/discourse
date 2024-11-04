@@ -12,6 +12,7 @@ class Admin::Config::AboutController < Admin::AdminController
       settings_map[:about_banner_image] = general_settings[:about_banner_image]
 
       settings_map[:extended_site_description] = general_settings[:extended_description]
+      settings_map[:short_site_description] = general_settings[:community_title]
       if settings_map[:extended_site_description].present?
         settings_map[:extended_site_description_cooked] = PrettyText.markdown(
           settings_map[:extended_site_description],
@@ -36,16 +37,20 @@ class Admin::Config::AboutController < Admin::AdminController
     end
 
     settings_map.each do |name, value|
-      UpdateSiteSetting.call(
-        guardian: guardian,
-        setting_name: name,
-        new_value: value,
-        allow_changing_hidden: %i[
-          extended_site_description
-          extended_site_description_cooked
-          about_banner_image
-          community_owner
-        ].include?(name),
+      SiteSetting::Update.call(
+        guardian:,
+        params: {
+          setting_name: name,
+          new_value: value,
+        },
+        options: {
+          allow_changing_hidden: %i[
+            extended_site_description
+            extended_site_description_cooked
+            about_banner_image
+            community_owner
+          ].include?(name),
+        },
       )
     end
     render json: success_json

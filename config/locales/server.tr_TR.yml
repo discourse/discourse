@@ -679,7 +679,6 @@ tr_TR:
               same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir şifre kullanın."
               same_as_email: "e-postanızla aynı. Lütfen daha güvenli bir şifre kullanın."
               same_as_current: "mevcut şifrenizle aynı."
-              same_as_previous: "önceki şifrenizle aynı."
               same_as_name: "adınızla aynı."
               unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
             username:
@@ -689,6 +688,15 @@ tr_TR:
             ip_address:
               blocked: "IP adresinizden yeni kayıtlara izin verilmiyor."
               max_new_accounts_per_registration_ip: "IP adresinizden yeni kayıtlara izin verilmiyor (maksimum limite ulaşıldı). Bir personelle iletişime geçin."
+        user_password:
+          attributes:
+            password:
+              common: "en yaygın 10000 şifreden biri. Lütfen daha güvenli bir şifre kullanın."
+              same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir şifre kullanın."
+              same_as_email: "e-postanızla aynı. Lütfen daha güvenli bir şifre kullanın."
+              same_as_current: "mevcut şifrenizle aynı."
+              same_as_name: "adınızla aynı."
+              unique_characters: "çok fazla tekrarlanan karakter var. Lütfen daha güvenli bir şifre kullanın."
         user_profile:
           attributes:
             featured_topic_id:
@@ -1223,13 +1231,13 @@ tr_TR:
       yaxis: "Gün"
       description: "Bu dönemde Güven Seviyesini artıran kullanıcı sayısı."
     consolidated_page_views:
-      title: "Konsolide Sayfa Görüntülemeleri"
+      title_legacy: "Konsolide Sayfa Görüntülemeleri"
       xaxis:
         page_view_crawler: "Veri Gezginleri"
         page_view_anon: "Anonim kullanıcılar"
         page_view_logged_in: "Giriş yapmış kullanıcılar"
       yaxis: "Gün"
-      description: "Giriş yapmış kullanıcılar, anonim kullanıcılar ve veri gezginleri için sayfa görüntüleme sayısı."
+      description_legacy: "Giriş yapmış kullanıcılar, anonim kullanıcılar ve veri gezginleri için sayfa görüntüleme sayısı."
       labels:
         post: Gönderi
         editor: Düzenleyici
@@ -1244,13 +1252,16 @@ tr_TR:
       description: "Normal API anahtarları ve kullanıcı API anahtarları için API istekleri."
     consolidated_page_views_browser_detection:
       title: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
+      title_legacy: "Tarayıcı Algılama ile Konsolide Sayfa Görüntülemeleri (Deneysel)"
       xaxis:
         page_view_anon_browser: "Anonim Tarayıcı"
         page_view_logged_in_browser: "Giriş Yapılmış Tarayıcı"
         page_view_crawler: "Bilinen Crawler"
         page_view_other: "Diğer sayfa görüntülemeleri"
       yaxis: "Gün"
-      description: "Giriş yapmış kullanıcılar, anonim kullanıcılar, bilinen crawler'lar ve diğerleri için sayfa görüntülemeleri. Bu deneysel rapor, giriş yapmış/anonim istekleri saymadan önce bunların gerçek tarayıcılardan geldiğinden emin olur."
+    site_traffic:
+      yaxis: "Gün"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
@@ -1400,6 +1411,9 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Toplam Sayfa Görüntülemeleri"
       description: "Tüm ziyaretçilerden gelen yeni sayfa görüntüleme sayısı."
+    page_view_legacy_total_reqs:
+      xaxis: "Gün"
+      yaxis: "Toplam Sayfa Görüntülemeleri"
     page_view_logged_in_mobile_reqs:
       title: "Giriş Yapılan Sayfa Görüntülemeleri"
       xaxis: "Gün"
@@ -1730,7 +1744,6 @@ tr_TR:
     blocked_ip_blocks: "Discourse tarafından asla taranmaması gereken özel IP bloklarının bir listesi"
     allowed_internal_hosts: "Discourse'un oneboxing ve diğer amaçlar için güvenle tarayabileceği dahili sunucularının bir listesi"
     allowed_onebox_iframes: "Onebox yerleştirmeleri aracılığıyla izin verilen iframe src alan adlarının bir listesi. *` tüm varsayılan Onebox motorlarına izin verir."
-    allowed_iframes: "Discourse'un gönderilerde güvenle izin verebileceği iframe src alan adı öneklerinin bir listesi"
     allowed_crawler_user_agents: "Siteye erişmesine izin verilmesi gereken web veri gezginlerinin kullanıcı aracıları. UYARI! BUNU AYARLAMAK BURADA LİSTELENMEYEN HİÇBİR VERİ GEZGİNİNE İZİN VERMEZ!"
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web veri gezginlerini tanımlayan kullanıcı aracısı dizesinde büyük/küçük harfe duyarlı olmayan benzersiz kelime. İzin verilenler listesi tanımlanmışsa geçerli değildir."
     slow_down_crawler_user_agents: '"Tarayıcı hızını yavaşlat" ayarında yapılandırıldığı gibi hız sınırlandırılması gereken web veri gezginlerinin kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır.'
@@ -1744,8 +1757,6 @@ tr_TR:
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
     top_menu: "Ana sayfa navigasyonunda hangi ögelerin hangi sırayla görüneceğini belirleyin."
-    post_menu: "Gönderi menüsünde hangi ögelerin hangi sırada görüneceğini belirleyin."
-    post_menu_hidden_items: "Bir genişletme üç noktasına tıklanmadığı sürece yazı menüsünde varsayılan olarak gizlenecek menü ögeleri."
     share_links: "Paylaş iletişim kutusunda hangi ögelerin ve hangi sırada görüneceğini belirleyin."
     allow_username_in_share_links: "Kullanıcı adlarının paylaşım bağlantılarına dahil edilmesine izin verin. Bu, benzersiz ziyaretçilere dayalı rozetleri ödüllendirmek için kullanışlıdır."
     site_contact_username: "Tüm otomatik mesajların gönderileceği geçerli bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır."
@@ -2036,7 +2047,6 @@ tr_TR:
     tos_url: "Başka bir yerde sunucusu olan ve kullanmak istediğiniz bir Hizmet Şartları belgeniz varsa tam URL'yi burada belirtin."
     privacy_policy_url: "Başka bir yerde barındırılan ve kullanmak istediğiniz bir Gizlilik Politikası belgeniz varsa tam URL'yi burada belirtin."
     log_anonymizer_details: "Anonimleştirildikten sonra bir kullanıcının bilgilerinin günlükte tutulup tutulmayacağı."
-    display_eu_visitor_stats: "Global ve AB ziyaretçi sayılarını /about sayfasında göster."
     newuser_spam_host_threshold: "Yeni bir kullanıcının spam olarak değerlendirilmeden önce \"newuser_spam_host_threshold\" gönderileri içinde aynı sunucuya kaç kez bağlantı gönderebileceği."
     allowed_spam_host_domains: "Spam sunucusu testinden hariç tutulan alan adlarının bir listesi. Yeni kullanıcıların bu alan adlarına bağlantı içeren gönderiler oluşturması hiçbir zaman kısıtlanmaz."
     staff_like_weight: "Personel beğenilerine ne kadar ağırlık verileceği (personel dışı beğenilerin ağırlığı 1'dir.)"
@@ -2093,7 +2103,6 @@ tr_TR:
     reset_bounce_score_after_days: "X gün sonra geri dönme puanını otomatik olarak sıfırlayın."
     blocked_attachment_content_types: "İçerik türüne göre ekleri engellemek için kullanılan anahtar kelimelerin listesi."
     blocked_attachment_filenames: "Dosya adına göre ekleri kara listeye almak için kullanılan anahtar kelimelerin listesi."
-    forwarded_emails_behaviour: "Discourse'a iletilen bir e-postayı ele alma şekli"
     always_show_trimmed_content: "Her zaman gelen e-postaların kırpılmış kısmını gösterin. UYARI: E-posta adreslerini gösterebilir."
     trim_incoming_emails: "Gelen e-postaların ilgili olmayan kısımlarını kesin."
     private_email: "E-posta başlığına veya e-posta gövdesine gönderilerden veya konulardan içerik dahil etmeyin. NOT: Özet e-postaları da devre dışı bırakır."
@@ -2212,7 +2221,6 @@ tr_TR:
     auto_handle_queued_age: "Şu kadar gün sonra incelenmeyi bekleyen kayıtları otomatik olarak işleyin. Bayraklar göz ardı edilir. Sıraya alınan gönderiler ve kullanıcılar reddedilir. Bu özelliği devre dışı bırakmak için 0 olarak ayarlayın."
     penalty_step_hours: "Kullanıcıları saat cinsinden susturmak veya askıya almak için varsayılan cezalar. İlk suç varsayılan olarak ilk değere, ikinci suç varsayılan olarak ikinci değere vb."
     penalty_include_post_message: "Bir kullanıcıyı sustururken veya askıya alırken rahatsız edici gönderi mesajını otomatik olarak e-posta mesajı şablonuna ekleyin"
-    svg_icon_subset: "Varlıklarınıza dahil etmek istediğiniz ek FontAwesome 5 simgelerini ekleyin. Katı simgeler için \"fa-\", normal simgeler için \"far-\" ve marka simgeleri için \"fab-\" ön ekini kullanın."
     max_prints_per_hour_per_user: "Maksimum /print sayfa gösterim sayısı (yazdırmayı devre dışı bırakmak için 0 olarak ayarlayın)"
     full_name_required: "Tam ad, kullanıcı profilinin gerekli bir alanıdır."
     enable_names: "Kullanıcının tam adını profilinde, kullanıcı kartında ve e-postalarında gösterin. Tam adı her yerde gizlemek için devre dışı bırakın."
@@ -2238,7 +2246,6 @@ tr_TR:
     notify_about_reviewable_item_after: "Bu kadar saat geçmesine rağmen hâlâ incelenmemiş öge varsa moderatörlere mesaj gönderin. Devre dışı bırakmak için 0 olarak ayarlayın."
     delete_drafts_older_than_n_days: "(n) günden daha uzun süredir değiştirilmemiş taslakları silin."
     delete_merged_stub_topics_after_days: "Tamamen birleştirilmiş taslak konularını otomatik olarak silmeden önce beklenecek gün sayısı. Asla silmemek için -1 olarak ayarlayın. Hemen silmek için 0 olarak ayarlayın."
-    bootstrap_mode_min_users: "Önyükleme modunu devre dışı bırakmak ve Başlarken düğmesini kaldırmak için gereken minimum kullanıcı sayısı (devre dışı bırakmak için 0'a ayarlayın, 24 saate kadar sürebilir)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların ekleri indirmesini önleyin."
     secure_uploads: 'TÜM yüklemelere (resimler, video, ses, metin, pdf''ler, zip''ler ve diğerleri) erişimi sınırlar. "Giriş gerekli" etkinleştirilmişse yüklemelere yalnızca giriş yapmış kullanıcılar erişebilir. Aksi takdirde, erişim yalnızca özel mesajlardaki ve özel kategorilerdeki medya yüklemeleri için sınırlı olacaktır. UYARI: Bu ayar karmaşıktır ve derin bir yönetim anlayışı gerektirir. Ayrıntılar için <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta''daki güvenli yüklemeler konusuna</a> bakın.'
     secure_uploads_allow_embed_images_in_emails: "Boyutları \"güvenli yüklemeler maksimum e-posta yerleştirme görüntü boyutu kb\" ayarından küçükse normalde e-postalara redakte edilecek güvenli görüntülerin yerleştirilmesine izin verir."
@@ -2393,7 +2400,6 @@ tr_TR:
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     enable_experimental_bookmark_redesign_groups: "DENEYSEL: Gönderilerdeki yer imleri için hızlı erişim menüsü ve yeniden tasarlanmış yeni bir modal göster"
-    glimmer_header_mode: "Yeni \"glimmer\" başlık uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"auto\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleşir. https://meta.discourse.org/t/316549"
     experimental_glimmer_topic_list_groups: "DENEYSEL: Yeni 'glimmer' konu listesi uygulamasını etkinleştirin. Bu uygulama aktif olarak geliştirilme aşamasındadır ve üretimde kullanıma yönelik değildir. Uygulama kesinleşip duyurulana kadar buna karşı tema/eklenti geliştirmeyin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."

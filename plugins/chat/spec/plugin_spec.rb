@@ -412,21 +412,16 @@ describe Chat do
         automation_1.upsert_field!(
           "message",
           "message",
-          { value: "[{{topic_title}}]({{topic_url}})" },
+          { value: "[{{topic_title}}]({{topic_url}})\n{{post_quote}}" },
           target: "script",
         )
       end
 
       it "sends the message" do
-        PostCreator.create(
-          user_1,
-          { title: "hello world topic", raw: "my name is fred", archetype: Archetype.default },
-        )
-
-        topic_1 = Topic.last
+        post = PostCreator.create(user_1, { title: "hello world topic", raw: "my name is fred" })
 
         expect(channel_1.chat_messages.last.message).to eq(
-          "[#{topic_1.title}](#{topic_1.relative_url})",
+          "[#{post.topic.title}](#{post.topic.relative_url})\n[quote=#{post.username}, post:#{post.post_number}, topic:#{post.topic_id}]\nmy name is fred\n[/quote]",
         )
       end
     end

@@ -358,8 +358,7 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The settings to modify.
    * @param {boolean} [data.muted] - Mutes the channel.
-   * @param {string} [data.desktop_notification_level] - Notifications level on desktop: never, mention or always.
-   * @param {string} [data.mobile_notification_level] - Notifications level on mobile: never, mention or always.
+   * @param {string} [data.notification_level] - Notifications level: never, mention or always.
    * @returns {Promise}
    */
   updateCurrentUserChannelNotificationsSettings(channelId, data = {}) {

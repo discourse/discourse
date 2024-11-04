@@ -20,21 +20,19 @@ module Chat
     class HandleUserRemovedFromGroup
       include Service::Base
 
-      contract
-      step :assign_defaults
       policy :chat_enabled
+      params do
+        attribute :user_id, :integer
+
+        validates :user_id, presence: true
+      end
+      step :assign_defaults
       policy :not_everyone_allowed
       model :user
       policy :user_not_staff
       step :remove_if_outside_chat_allowed_groups
       step :remove_from_private_channels
       step :publish
-
-      class Contract
-        attribute :user_id, :integer
-
-        validates :user_id, presence: true
-      end
 
       private
 
@@ -50,8 +48,8 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_user(contract:)
-        User.find_by(id: contract.user_id)
+      def fetch_user(params:)
+        User.find_by(id: params.user_id)
       end
 
       def user_not_staff(user:)
@@ -83,11 +81,8 @@ module Chat
 
         return if memberships_to_remove.empty?
 
-        context.merge(
-          users_removed_map:
-            Chat::Action::RemoveMemberships.call(
-              memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
-            ),
+        context[:users_removed_map] = Chat::Action::RemoveMemberships.call(
+          memberships: Chat::UserChatChannelMembership.where(id: memberships_to_remove),
         )
       end
 

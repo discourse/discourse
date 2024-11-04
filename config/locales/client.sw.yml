@@ -203,6 +203,7 @@ sw:
     suggested_topics:
       pm_title: "Ujumbe Uliopendekezwa"
     about:
+      edit: "Hariri ukurasa huu"
       simple_title: "Kuhusu "
       title: "Kuhusu %{title}"
       stats: "Takwimu za tovuti."
@@ -706,7 +707,7 @@ sw:
       users: "Watumiaji"
       muted_users: "Kunyamazisha"
       tracked_topics_link: "Onesha"
-      automatically_unpin_topics: "Otomatikali ondoa mada zilizobandikwa nikifika mwisho wa ukurasa."
+      automatically_unpin_topics: "Otomatikali ondoa mada zilizobandikwa nikifika mwisho wa ukurasa"
       apps: "Programu-tumizi"
       revoke_access: "Tengua ufikivu"
       undo_revoke_access: "Ondoa Utenguaji Fikivu"
@@ -821,13 +822,12 @@ sw:
         action: "Bonyeza hapa kuanzisha akkaunti yako"
         already_done: "Samahani, kiungo cha uthibitisho cha akaunti ni batili. Labda akaunti yako tayari ipo hewani?"
         please_continue: "Akaunti yako imethibitishwa; utapelekwa kwenye ukurasa wa nyumbani."
-        continue_button: "Endelea kwenye %{site_name}"
         welcome_to: "Karibu kwenye %{site_name}!"
         approval_required: "Msimamizi lazima aipe kibali akaunti yako mpya kabla haujaanza kutumia jukwaa. Utatumiwa barua pepe akaunti yako ikipata kibali!"
       name:
         title: "Jina"
-        instructions: "Jina lako lote (sio lazima)."
-        instructions_required: "Jina lako lote."
+        instructions: "Jina lako lote (sio lazima)"
+        instructions_required: "Jina lako lote"
         too_short: "Jina lako ni fupi"
         ok: "Jina lako liko vizuri"
       username:
@@ -934,6 +934,9 @@ sw:
         valid_for: "Kiungo cha Mwaliko kitatumiwa na barua pepe hii tu:%{email}"
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
+        invite:
+          save_invite: "Hifadhi"
+          cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
@@ -1115,6 +1118,7 @@ sw:
       complete_email_not_found: "Hakuna akaunti inayolingana na <b>%{email}</b>"
       confirm_title: Endelea kwenye %{site_name}
     login:
+      title: "Ingia"
       username: "Mtumiaji"
       password: "Nywila"
       show_password: "Onyesha"
@@ -2361,6 +2365,7 @@ sw:
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
+        dismiss_notice: "Ondosha..."
         new_features:
           learn_more: "Jifunze zaidi..."
         last_checked: "Mara ya Mwisho imeangaliwa"
@@ -2552,11 +2557,15 @@ sw:
           screened_ips: "Anwani za mtandao zinazoruhusiwa au kukatazwa"
           screened_urls: "Anwani za tovuti zinazoruhusiwa au kukatazwa"
           search_logs: "Batli ya Utafiti"
-          security: "Ulinzi"
-          spam: "Barua Taka"
+      section_landing_pages:
+        account:
+          title: "Akaunti"
+          backups:
+            title: "Machelezo"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Jina"
           optional: "(sio muhimu)"
           saved: "imehifadhiwa!"
         flags:
@@ -2572,6 +2581,9 @@ sw:
             invalid_applies_to: "Muhimu na Inahitajika"
             topic: "mada"
             post: "machapisho"
+        look_and_feel:
+          themes:
+            title: "Mandhari"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"
@@ -3278,6 +3290,8 @@ sw:
         show_overriden: "Onyesha vilivyobatilishwa pekee"
         reset: "weka au anza upya"
         none: "bila"
+        save: "hifadhi"
+        cancel: "ghairi"
       site_settings:
         title: "Mpangilio"
         no_results: "Hakuna Majibu Yaliyopatikana"

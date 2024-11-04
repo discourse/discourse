@@ -50,7 +50,7 @@ ro:
   remove_posts_deleted_by_author: "Șters de către autor"
   topic_tag_changed:
     added: "Adăugată în %{added}"
-    removed: "A eliminat pe %{removed}"
+    removed: "Eliminată %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   components:
@@ -280,7 +280,7 @@ ro:
   bookmarks:
     reminders:
       at_desktop: "Data viitoare sunt la PC"
-      later_today: "Mai târziu azi"
+      later_today: "Mai târziu astăzi"
       next_business_day: "Următoarea zi lucrătoare"
       tomorrow: "Mâine"
       next_week: "Săptămâna viitoare"
@@ -288,6 +288,10 @@ ro:
       custom: "Data și ora personalizată"
   groups:
     errors:
+      default_notification_level_users_limit:
+        one: "Nivelul implicit de notificare nu poate fi setat pentru grupuri mai mari de %{count} utilizator. Grup incorect: %{group_name}"
+        few: "Nivelul implicit de notificare nu poate fi setat pentru grupuri mai mari de %{count} utilizatori. Grup incorect: %{group_name}"
+        other: "Nivelul implicit de notificare nu poate fi setat pentru grupuri mai mari de %{count} de utilizatori. Grup incorect: %{group_name}"
       can_not_modify_automatic: "Nu poți modifica un grup automat"
       invalid_domain: "'%{domain}' nu este un domeniu valid."
       invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
@@ -353,19 +357,29 @@ ro:
             base:
               too_many_users: "Poți trimite avertizări la un singur utilizator odată."
               no_user_selected: "Trebuie selectat un nume de utilizator valid."
+              too_large_group: "Grupul: %{group_name}, are prea mulți utilizatori pentru a primi un mesaj. Limita este %{limit}."
             featured_link:
               invalid: "e invalid. URL-ul trebuie să includă http:// sau https://."
         user:
           attributes:
             password:
               common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
-              same_as_username: "este identică cu nume utilizator. Te rugăm să folosești o parolă mai sigură."
-              same_as_email: "este identică cu emailul. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
               same_as_current: "este identică cu parola curentă."
               unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
             ip_address:
               blocked: "Nu sunt permise noi înregistrări de la adresa ta de IP."
               max_new_accounts_per_registration_ip: "Nu sunt permise noi înregistrări de la adresa ta de IP (limita maximă a fost atinsă). Contactează un membru al echipei."
+        user_password:
+          attributes:
+            password:
+              common: "este una din cele mai cunoscute 10.000 de parole. Te rugăm să folosești o parolă mai sigură."
+              same_as_username: "este identică cu numele tău de utilizator. Te rugăm să folosești o parolă mai sigură."
+              same_as_email: "este identică cu emailul tău. Te rugăm să folosești o parolă mai sigură."
+              same_as_current: "este identică cu parola ta curentă."
+              same_as_name: "este același cu numele tău."
+              unique_characters: "are prea multe caractere repetate. Te rugăm să folosești o parolă mai sigură."
         color_scheme_color:
           attributes:
             hex:
@@ -552,6 +566,7 @@ ro:
       title: "Necorespunzător"
     illegal:
       title: "Ilegal"
+      short_description: "Acest lucru este ilegal"
       email_title: 'Un articol din „%{title}” necesită atenția echipei'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -634,7 +649,7 @@ ro:
     scopes:
       message_bus: "Actualizări directe (live)"
       notifications: "Citește și șterge notificările"
-      push: "Trimite notificările către servicii externe"
+      push: "Notificări instante către servicii externe"
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"
@@ -672,7 +687,11 @@ ro:
     trust_level_growth:
       yaxis: "Zi"
     consolidated_page_views:
+      title: "Afișări de pagină consolidate vechi"
+      title_legacy: "Afișări de pagină consolidate"
       yaxis: "Zi"
+      description: "Raport vechi care arată afișările de pagini pentru utilizatorii conectați, utilizatorii anonimi și roboții de indexare. Acesta a fost înlocuit de raportul „Trafic site”."
+      description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatorii anonimi și roboții de indexare."
       labels:
         post: Postare
         editor: Editor
@@ -683,7 +702,18 @@ ro:
         user_api: "API Utilizator"
       yaxis: "Zi"
     consolidated_page_views_browser_detection:
+      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
       yaxis: "Zi"
+      description: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate vechi”."
+      description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate”."
+    site_traffic:
+      title: "Trafic site"
+      xaxis:
+        page_view_anon_browser: "Afișări de pagină (anonim)"
+        page_view_logged_in_browser: "Afișări de pagină (conectat)"
+        page_view_other: "Alt trafic"
+      yaxis: "Zi"
+      description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       xaxis: "Zi"
     daily_engaged_users:
@@ -797,6 +827,11 @@ ro:
       title: "Vizualizări"
       xaxis: "Zi"
       yaxis: "Total vizualizări de pagină"
+    page_view_legacy_total_reqs:
+      title: "Afișări de pagină vechi"
+      xaxis: "Zi"
+      yaxis: "Total afișări de pagină"
+      description: "Raport vechi care arată numărul de afișări de pagină noi de la toți vizitatorii."
     page_view_logged_in_mobile_reqs:
       title: "Vizualizări de pagină înregistrate "
       xaxis: "Zi"
@@ -887,6 +922,12 @@ ro:
       queue_size: "Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi Sidekiq workers."
       ram: "Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie."
       subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
+      email_polling_errored_recently:
+        one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+        few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+        other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
+      poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
+      poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
@@ -938,9 +979,12 @@ ro:
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
     must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
+    experimental_full_page_login: "EXPERIMENTAL: Înlocuiește modalul de conectare/înregistrare cu un formular de conectare/înregistrare pe întreaga pagină."
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
-    post_menu_hidden_items: "Elemente de meniu care să fie ascunse implicit în meniul de postări dacă nu se dă click pe partea de extindere a meniului."
+    allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
+    post_menu: "Configurează vizibilitatea și ordinea elementelor implicite din meniul articolului. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
+    post_menu_hidden_items: "Elementele de meniu care se ascund în mod implicit în meniul articolului, cu excepția cazului în care se face clic pe o elipsă de expansiune. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
     share_links: "Determină ce elemente apar în dialogul de distribuire și în ce ordine."
     site_contact_username: "Un nume utilizator valid al unui membru al echipei de la care să se trimită toate mesajele. Dacă e lăsat liber se va folosi contul implicit System."
     send_welcome_message: "Trimite tuturor utilizatorilor un mesaj de bun venit cu un ghid rapid de inițiere."
@@ -1068,6 +1112,7 @@ ro:
     faq_url: "Dacă ai un FAQ găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     tos_url: "Dacă ai un document Condițiile generale de utilizare găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     privacy_policy_url: "Dacă ai un document cu Politica de Confidențialitate găzduit în altă parte, pe care dorești să-l folosești, postează-i întregul URL aici."
+    display_eu_visitor_stats: "Afișează numărul de vizitatori din întreaga lume și din UE pe pagina /despre. Este posibil să dureze câteva minute până când statisticile apar după activarea acestei setări."
     newuser_spam_host_threshold: "De câte ori poate un utilizator nou să posteze un link către aceeași gazdă în limita de `newuser_spam_host_threshold` postări înainte ca să fie considerat spam."
     allowed_spam_host_domains: "O listă de domenii excluse de la testarea gazdelor spam. Noii utilizatori nu vor fi niciodată restricționați să creeze postări cu linkuri către aceste domenii."
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
@@ -1097,6 +1142,7 @@ ro:
     hard_bounce_score: "Rata de ricoșeu adăugată unui utilizator atunci când se produce un ricoșeu permanent."
     bounce_score_threshold: "Rata maximă de ricoșeu înainte să nu îi mai trimitem emailuri utilizatorului."
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
+    forwarded_emails_behaviour: "Cum se tratează un email redirecționat către Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Află mai multe</a>"
     always_show_trimmed_content: "Arată întotdeauna partea trunchiată a emailurilor sosite. ATENȚIE: s-ar putea dezvălui adresele de email."
     email_total_attachment_size_limit_kb: "Dimensiunea totală maximă a fișierelor atașate la emailurile trimise. Setează la 0 pentru a dezactiva trimiterea de atașamente."
     manual_polling_enabled: "Trimite emailuri folosind API-ul pentru răspunsuri prin email."
@@ -1143,6 +1189,7 @@ ro:
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
+    svg_icon_subset: "Adaugă pictograme FontAwesome suplimentare pe care vrei să le incluzi în resursele tale. Folosește prefixul „fa-” pentru pictograme solide, „far-” pentru pictograme obișnuite și „fab-” pentru pictograme de marcă."
     full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
@@ -1156,7 +1203,7 @@ ro:
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
-    bootstrap_mode_min_users: "Numărul minim de utilizatori necesari pentru a dezactiva modul de pornire și a elimina butonul Începe (setează la 0 pentru a dezactiva, poate dura până la 24 de ore)"
+    bootstrap_mode_min_users: 'Numărul minim de utilizatori necesar pentru a dezactiva modul bootstrap și a elimina butonul Începe (setează 0 pentru dezactivare, poate dura până la 24 de ore). Pentru detalii, consultă <a target="_blank" href="https://meta.discourse.org/t/-/322876">subiectul despre modul bootstrap de pe Meta</a>.'
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
@@ -1759,10 +1806,10 @@ ro:
 
         Acesta este un memento prietenos să îți activezi contul.
 
-        Faceți clic pe următorul link pentru a confirma și a activa noul cont:
+        Dă clic pe următoarea legătură pentru a-ți confirma și activa noul cont:
         %{base_url}/u/activate-account/%{email_token}
 
-        Dacă nu poți face clic pe link-u de mai sus, încearcă să o copiezi și să o inserezi în bara de adrese a browser-ului tău.
+        Dacă nu poți da clic pe legătura de mai sus, încearcă să o copiezi și să o inserezi în bara de adresă a navigatorului tău.
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
@@ -1901,7 +1948,7 @@ ro:
       description: Ai invitat 3 utilizatori simpli
     champion:
       name: Campion
-      description: Ai invitat 5 membri
+      description: 5 membri invitați
     first_share:
       name: Prima distribuire
       description: Ai distribuit o postare

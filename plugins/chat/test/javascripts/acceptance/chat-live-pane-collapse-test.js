@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
-import {
-  acceptance,
-  exists,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
   needs.user({
@@ -118,23 +114,22 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
     assert.ok(visible(videoContainer));
     assert.ok(visible(collapseImage), "the open arrow is shown");
-    assert.notOk(exists(expandImage), "the close arrow is hidden");
+    assert.dom(expandImage).doesNotExist("the close arrow is hidden");
 
     await click(collapseImage);
 
-    assert.notOk(visible(videoContainer));
+    assert.dom(videoContainer).isNotVisible();
     assert.ok(visible(expandImage), "the close arrow is shown");
-    assert.notOk(exists(collapseImage), "the open arrow is hidden");
+    assert.dom(collapseImage).doesNotExist("the open arrow is hidden");
 
     await click(expandImage);
 
     assert.ok(visible(videoContainer));
     assert.ok(visible(collapseImage), "the open arrow is shown again");
-    assert.notOk(exists(expandImage), "the close arrow is hidden again");
+    assert.dom(expandImage).doesNotExist("the close arrow is hidden again");
   });
 
   skip("lightbox shows up before and after expand and collapse", async function (assert) {
-    const lightboxImage = ".mfp-img";
     const image = ".chat-message-container[data-id='2'] .chat-img-upload";
     const expandImage =
       ".chat-message-container[data-id='2'] .chat-message-collapser-closed";
@@ -145,20 +140,14 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
     await click(image);
 
-    assert.ok(
-      exists(document.querySelector(lightboxImage)),
-      "can see lightbox"
-    );
-    await click(document.querySelector(".mfp-container"));
+    assert.dom(".mfp-img").exists("can see lightbox");
+    await click(".mfp-container");
 
     await click(collapseImage);
     await click(expandImage);
 
     await click(image);
-    assert.ok(
-      exists(document.querySelector(lightboxImage)),
-      "can see lightbox after collapse expand"
-    );
-    await click(document.querySelector(".mfp-container"));
+    assert.dom(".mfp-img").exists("can see lightbox after collapse expand");
+    await click(".mfp-container");
   });
 });

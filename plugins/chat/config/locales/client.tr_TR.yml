@@ -50,7 +50,6 @@ tr_TR:
       deleted_chat_username: silindi
       dates:
         yesterday: "Dün"
-        time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
       already_enabled: "Bu konuda sohbet zaten etkin. Lütfen yenileyin."
       disabled_for_topic: "Bu konuda sohbet devre dışı bırakılmış."
@@ -459,10 +458,8 @@ tr_TR:
         auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. %{category} kategorisine erişimleri varsa onları bu kanala ekleyin."
         auto_join_users_info_no_category: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. Seçilen kategoriye erişimleri varsa onları bu kanala ekleyin."
         auto_join_users_warning: "Bu kanala üye olmayan ve %{category} adlı kategoriye erişimi olan her kullanıcı katılacak. Emin misiniz?"
-        desktop_notification_level: "Masaüstü bildirimleri"
         follow: "Katıl"
         followed: "Katıldı"
-        mobile_notification_level: "Mobil anlık bildirimleri"
         mute: "Kanalı sessize al"
         threading_enabled: "Etkin"
         threading_disabled: "Devre Dışı"

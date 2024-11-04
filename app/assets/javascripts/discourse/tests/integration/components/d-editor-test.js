@@ -13,12 +13,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { setCaretPosition } from "discourse/lib/utilities";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import {
-  exists,
-  paste,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { paste, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
   setTextareaSelection,
@@ -31,7 +26,7 @@ module("Integration | Component | d-editor", function (hooks) {
   test("preview updates with markdown", async function (assert) {
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    assert.ok(exists(".d-editor-button-bar"));
+    assert.dom(".d-editor-button-bar").exists();
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.strictEqual(this.value, "hello **world**");
@@ -77,8 +72,13 @@ module("Integration | Component | d-editor", function (hooks) {
     return textarea;
   }
 
-  function testCase(title, testFunc) {
+  function testCase(title, testFunc, userOptions = {}) {
     test(title, async function (assert) {
+      this.currentUser.user_option = Object.assign(
+        {},
+        this.currentUser.user_option,
+        userOptions
+      );
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);
@@ -621,29 +621,17 @@ third line`
     assert.strictEqual(textarea.selectionEnd, 18);
   });
 
-  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
+  test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
     await click("button.toggle-direction");
-    assert.strictEqual(
-      query("textarea.d-editor-input").getAttribute("dir"),
-      "rtl"
-    );
-  });
+    assert.dom("textarea.d-editor-input").hasAttribute("dir", "rtl");
 
-  test("clicking the toggle-direction changes dir from ltr to rtl", async function (assert) {
-    this.siteSettings.support_mixed_text_direction = true;
-    this.siteSettings.default_locale = "en";
-
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
-    const textarea = query("textarea.d-editor-input");
-    textarea.setAttribute("dir", "ltr");
     await click("button.toggle-direction");
-    assert.strictEqual(textarea.getAttribute("dir"), "rtl");
+    assert.dom("textarea.d-editor-input").hasAttribute("dir", "ltr");
   });
 
   test("toolbar event supports replaceText", async function (assert) {
@@ -749,20 +737,18 @@ third line`
 
     await render(hbs`<DEditor/>`);
 
-    assert.ok(exists(".d-editor-button-bar button.shown"));
-    assert.notOk(exists(".d-editor-button-bar button.not-shown"));
+    assert.dom(".d-editor-button-bar button.shown").exists();
+    assert.dom(".d-editor-button-bar button.not-shown").doesNotExist();
   });
 
   test("toolbar buttons tabindex", async function (assert) {
     await render(hbs`<DEditor />`);
     const buttons = queryAll(".d-editor-button-bar .btn");
 
-    assert.strictEqual(
-      buttons[0].getAttribute("tabindex"),
-      "0",
-      "it makes the first button focusable"
-    );
-    assert.strictEqual(buttons[1].getAttribute("tabindex"), "-1");
+    assert
+      .dom(buttons[0])
+      .hasAttribute("tabindex", "0", "it makes the first button focusable");
+    assert.dom(buttons[1]).hasAttribute("tabindex", "-1");
   });
 
   testCase("replace-text event by default", async function (assert) {
@@ -1023,6 +1009,23 @@ third line`
   }
 
   testCase(
+    "smart lists - when enable_smart_lists is false pressing enter on a line with a list item starting with *",
+    async function (assert, textarea) {
+      const initialValue = "* first item in list\n";
+      this.set("value", initialValue);
+      setCaretPosition(textarea, initialValue.length);
+      await triggerEnter(textarea);
+
+      assert.strictEqual(
+        this.value,
+        initialValue,
+        "it does not create an empty list item on the next line"
+      );
+    },
+    { enable_smart_lists: false }
+  );
+
+  testCase(
     "smart lists - pressing enter on a line with a list item starting with *",
     async function (assert, textarea) {
       const initialValue = "* first item in list\n";
@@ -1035,7 +1038,8 @@ third line`
         initialValue + "* ",
         "it creates a list item on the next line"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1051,7 +1055,8 @@ third line`
         initialValue + "",
         "it doesn’t continue the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1067,7 +1072,8 @@ third line`
         initialValue + "* ",
         "it continues the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1078,7 +1084,8 @@ third line`
       setCaretPosition(textarea, initialValue.length);
       await triggerEnter(textarea);
       assert.strictEqual(this.value, initialValue + "- ");
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1093,7 +1100,8 @@ third line`
         initialValue + "2. ",
         "it creates a list item on the next line with an auto-incremented number"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1108,7 +1116,8 @@ third line`
         "* first item in list\n* \n* second item in list",
         "it inserts a new list item on the next line"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1123,7 +1132,8 @@ third line`
         "1. first item in list\n2. \n3. second item in list",
         "it inserts a new list item on the next line and renumbers the rest of the list"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   testCase(
@@ -1138,7 +1148,8 @@ third line`
         "* first item in list with empty line\n",
         "it removes the list item"
       );
-    }
+    },
+    { enable_smart_lists: true }
   );
 
   (() => {

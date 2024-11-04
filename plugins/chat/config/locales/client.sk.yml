@@ -52,7 +52,6 @@ sk:
       deleted_chat_username: vymazané
       dates:
         yesterday: "Včera"
-        time_tiny: "h:mm"
       all_loaded: "Zobrazenie všetkých správ"
       already_enabled: "Chat na túto tému je už povolený. Prosím, obnovte ho."
       disabled_for_topic: "Chat je pre túto tému zakázaný."
@@ -266,6 +265,7 @@ sk:
       placeholder_channel: "Chat v %{channelName}"
       placeholder_thread: "Chatovať vo vlákne"
       placeholder_users: "Chatovať s %{commaSeparatedNames}"
+      placeholder_group: "Chat v skupine"
       placeholder_new_message_disallowed:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy."
         closed: "Kanál je zatvorený, nie je možné posielať nové správy."
@@ -514,10 +514,9 @@ sk:
         auto_join_users_info: "Každú hodinu skontrolujte, ktorí používatelia boli aktívni za posledné 3 mesiace. Pridajte ich do tohto kanála, ak majú prístup do kategórie %{category} ."
         auto_join_users_info_no_category: "Každú hodinu skontrolujte, ktorí používatelia boli aktívni za posledné 3 mesiace. Pridajte ich do tohto kanála, ak majú prístup k vybranej kategórii."
         auto_join_users_warning: "Pripojí sa každý používateľ, ktorý nie je členom tohto kanála a má prístup do kategórie %{category} . Si si istý?"
-        desktop_notification_level: "Upozornenia na pracovnej ploche"
+        notification_level: "Odosielanie oznámení push"
         follow: "Pridať sa"
         followed: "Vytvorený"
-        mobile_notification_level: "Mobilné push notifikácie"
         mute: "Stlmiť kanál"
         threading_enabled: "Povolené"
         threading_disabled: "Vypnuté"
@@ -540,6 +539,7 @@ sk:
           title: "Exportovať správy z chatu"
           description: "Týmto sa exportujú všetky správy zo všetkých kanálov."
           create_export: "Vytvoriť export"
+          confirm_export: "Týmto spôsobom sa exportujú všetky správy zo všetkých kanálov a výsledok sa vám odošle v osobnej správe. Ste si istí, že chcete exportovať?"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
       my_threads:
         title: Moje vlákna
@@ -558,6 +558,7 @@ sk:
       incoming_webhooks:
         back: "Späť"
         channel_placeholder: "Vyberte kanál"
+        channel: "Kanál"
         confirm_destroy: "Naozaj chcete odstrániť tento prichádzajúci webhook? To nie je možné vrátiť späť."
         current_emoji: "Aktuálne Emoji"
         description: "Popis"
@@ -581,6 +582,8 @@ sk:
         username: "Používateľské meno"
         username_instructions: "Užívateľské meno robota, ktorý zverejňuje kanál. Predvolené nastavenie je „systém“, keď zostane prázdne."
         instructions: "Prichádzajúce webhooky môžu používať externé systémy na odosielanie správ do určeného kanála chatu ako používateľ robota prostredníctvom koncového bodu <code>/hooks/:key</code> . Užitočné zaťaženie pozostáva z jedného <code>textového</code> parametra, ktorý je obmedzený na 2000 znakov.<br><br>Podporujeme aj obmedzené parametre <code>textu</code> vo formáte Slack, extrahovanie odkazov a zmienok na základe formátu na <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api. slack.com/reference/surfaces/formatting</a>, ale na to je potrebné použiť koncový bod <code>/hooks/:key/slack</code> ."
+        saved: "Zmeny webhooku boli uložené"
+        created: "Webhook bol vytvorený"
       selection:
         cancel: "Zrušiť"
         quote_selection: "Citácia v téme"

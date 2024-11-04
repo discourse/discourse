@@ -15,7 +15,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
   @service currentUser;
   @service router;
   @service dialog;
-  @optionalService("admin-tools") adminTools;
+  @optionalService adminTools;
 
   @controller("user-notifications") userNotifications;
 

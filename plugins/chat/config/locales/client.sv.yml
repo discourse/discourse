@@ -46,7 +46,6 @@ sv:
       deleted_chat_username: raderat
       dates:
         yesterday: "Igår"
-        time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
       already_enabled: "Chatt är redan aktiverat för detta ämne. Vänligen uppdatera."
       disabled_for_topic: "Chatt är inaktiverat för detta ämne."
@@ -444,10 +443,8 @@ sv:
         auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
         auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
         auto_join_users_warning: "Varje användare som inte är medlem i den här kanalen och har tillgång till kategorin %{category} kommer att gå med. Är du säker?"
-        desktop_notification_level: "Skrivbordsaviseringar"
         follow: "Gå med"
         followed: "Gick med"
-        mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
         threading_enabled: "Aktiverad"
         threading_disabled: "Inaktiverad"

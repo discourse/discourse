@@ -2,18 +2,10 @@
 
 module Chat
   module Action
-    class PublishAndFollowDirectMessageChannel
-      attr_reader :channel_membership
+    class PublishAndFollowDirectMessageChannel < Service::ActionBase
+      option :channel_membership
 
       delegate :chat_channel, :user, to: :channel_membership
-
-      def self.call(...)
-        new(...).call
-      end
-
-      def initialize(channel_membership:)
-        @channel_membership = channel_membership
-      end
 
       def call
         return unless chat_channel.direct_message_channel?

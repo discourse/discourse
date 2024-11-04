@@ -44,10 +44,14 @@ et:
               label: Teema ID
         post_created_edited:
           fields:
+            restricted_tags:
+              label: Sildid
             restricted_category:
               label: Foorum
             restricted_group:
               label: Grupp
+            restricted_groups:
+              label: Grupid
           created: Loodud
         category_created_edited:
           fields:

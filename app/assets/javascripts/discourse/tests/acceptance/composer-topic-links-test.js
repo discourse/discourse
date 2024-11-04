@@ -22,10 +22,9 @@ acceptance("Composer topic featured links", function (needs) {
       query(".d-editor-preview").innerHTML.trim().includes("onebox"),
       "it pastes the link into the body and previews it"
     );
-    assert.ok(
-      exists(".d-editor-textarea-wrapper .popup-tip.good"),
-      "the body is now good"
-    );
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.good")
+      .exists("the body is now good");
     assert.strictEqual(
       query(".title-input input").value,
       "An interesting article",
@@ -41,10 +40,9 @@ acceptance("Composer topic featured links", function (needs) {
       query(".d-editor-preview").innerHTML.trim().includes("onebox"),
       "it pastes the link into the body and previews it"
     );
-    assert.ok(
-      exists(".d-editor-textarea-wrapper .popup-tip.good"),
-      "the body is now good"
-    );
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.good")
+      .exists("the body is now good");
     assert.strictEqual(
       query(".title-input input").value,
       "http://www.example.com/no-title.html",
@@ -71,10 +69,9 @@ acceptance("Composer topic featured links", function (needs) {
       query(".d-editor-preview").innerHTML.trim().includes("onebox"),
       "it pastes the link into the body and previews it"
     );
-    assert.ok(
-      exists(".d-editor-textarea-wrapper .popup-tip.good"),
-      "link is pasted into body"
-    );
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.good")
+      .exists("link is pasted into body");
     assert.strictEqual(
       query(".title-input input").value,
       "http://www.example.com/nope-onebox.html",
@@ -114,10 +111,9 @@ acceptance("Composer topic featured links", function (needs) {
       query(".d-editor-preview").innerHTML.trim().includes("onebox"),
       "it pastes the link into the body and previews it"
     );
-    assert.ok(
-      exists(".d-editor-textarea-wrapper .popup-tip.good"),
-      "the body is now good"
-    );
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.good")
+      .exists("the body is now good");
     assert.strictEqual(
       query(".title-input input").value,
       "An interesting article",
@@ -156,10 +152,9 @@ acceptance("Composer topic featured links", function (needs) {
       query(".d-editor-preview").innerHTML.trim().includes("onebox"),
       "it pastes the link into the body and previews it"
     );
-    assert.ok(
-      exists(".d-editor-textarea-wrapper .popup-tip.good"),
-      "the body is now good"
-    );
+    assert
+      .dom(".d-editor-textarea-wrapper .popup-tip.good")
+      .exists("the body is now good");
     assert.blank(query(".title-input input").value, "title is blank");
   });
 });

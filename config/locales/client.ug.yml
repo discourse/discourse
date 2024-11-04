@@ -27,6 +27,7 @@ ug:
         millions: "%{number} مىليون"
     dates:
       time: "HH:mm"
+      time_short: "h:mm"
       time_with_zone: "HH:mm (z)"
       time_short_day: "ddd, HH:mm"
       timeline_date: "YYYY-يىلى M-ئاي"
@@ -141,7 +142,7 @@ ug:
       topic_html: 'تېما: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} يوللىغان يازما سانى #%{postNumber}"
       close: "تاقا"
-      twitter: "Twitter دا ھەمبەھىرلەڭ"
+      twitter: "X دا ھەمبەھىر"
       facebook: "Facebook تا ھەمبەھىرلەڭ"
       email: "ئېلخەتتە يوللا"
       url: "تور ئادرېسىنى كۆچۈرۈپ ھەمبەھىرلە"
@@ -297,6 +298,7 @@ ug:
       pill: "تەۋسىيە"
       pm_title: "تەۋسىيە ئۇچۇر"
     about:
+      edit: "بۇ بەتنى تەھرىرلە"
       simple_title: "ھەققىدە"
       title: "%{title} ھەققىدە"
       stats: "بېكەت ستاتىستىكىسى"
@@ -394,7 +396,7 @@ ug:
       create: "خەتكۈچ قۇر"
       edit: "خەتكۈچ تەھرىر"
       not_bookmarked: "بۇ يازمىنى خەتكۈچكە قوش"
-      remove_reminder_keep_bookmark: "ئەسكەرتىشنى چىقىرىۋېتىپ، خەتكۈچنى ساقلاپ قالىدۇ"
+      remove_reminder_keep_bookmark: "ئەسكەرتىشنى چىقىرىۋېتىپ، خەتكۈچنى ساقلاپ قالىدۇخەتكۈچ"
       created_with_reminder: "سىز بۇ يازمىنى ئەسكەرتىشى %{date} بىلەن قوشۇپ خەتكۈچكە قوشتىڭىز. %{name}"
       created_with_reminder_generic: "سىز بۇنى ئەسكەرتىشى %{date} بىلەن قوشۇپ خەتكۈچكە قوشتىڭىز. %{name}"
       delete: "خەتكۈچنى ئۆچۈر"
@@ -490,7 +492,7 @@ ug:
     clipboard: "چاپلاش تاختىسى"
     uploaded: "يۈكلەندى!"
     pasting: "چاپلاۋاتىدۇ…"
-    enable: "قوزغىتىلدى"
+    enable: "قوزغات"
     disable: "چەكلە"
     continue: "داۋاملاشتۇر"
     switch_to_anon: "نامسىز ھالەتكە كىرىش"
@@ -1273,6 +1275,7 @@ ug:
       allow_private_messages: "باشقا ئىشلەتكۈچىلەرنىڭ ماڭا شەخسىي ئۇچۇر ئەۋەتىشىگە يول قويىدۇ"
       external_links_in_new_tab: "بارلىق سىرتقى ئۇلانمىنى يېڭى بەتكۈچتە ئاچىدۇ"
       enable_quoting: "يورۇتۇلغان تېكىستنىڭ نەقىللىق جاۋاب بېرىشىنىنى قوزغىتىدۇ"
+      enable_smart_lists: "تەھرىرلىگۈچتە يازغاندا ئەقلىي تىزىمنى قوزغىتىدۇ"
       enable_defer: "تېمىغا ئوقۇلمىدى بەلگىسى سېلىشنى قوزغىتىدۇ"
       experimental_sidebar:
         enable: "يانبالداقنى قوزغات"
@@ -1341,7 +1344,7 @@ ug:
       ignored_users: "پەرۋا قىلمايدىغان"
       ignored_users_instructions: "بۇ ئىشلەتكۈچلەرىنىڭ بارلىق يازمىسى، ئۇقتۇرۇشى ۋە شەخسىي ئۇچۇرىنى توسىدۇ."
       tracked_topics_link: "كۆرسەت"
-      automatically_unpin_topics: "ئاستىغا يەتكەندە تېمىنى ئۆزلۈكىدىن چوققىلاشتىن قالدۇرىدۇ."
+      automatically_unpin_topics: "ئاستىغا يەتكەندە تېمىنى ئۆزلۈكىدىن چوققىلاشتىن قالدۇرىدۇ"
       apps: "ئەپلەر"
       revoke_access: "زىيارەتنى بىكار قىل"
       undo_revoke_access: "زىيارەت بىكار قىلىشتىن يېنىۋال"
@@ -1394,6 +1397,62 @@ ug:
         warnings: "رەسمىي ئاگاھلاندۇرۇش"
         read_more_in_group: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ %{groupLink} دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
         read_more: "تېخىمۇ كۆپ ئوقۇماقچىمۇ؟ <a href='%{basePath}/u/%{username}/messages'>شەخسىي ئۇچۇر</a>دىكى باشقا ئۇچۇرلارغا كۆز يۈگۈرتۈڭ."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ئوقۇلمىغان</a>}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ئوقۇلمىغان</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ۋە <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># يېڭى</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+                other { ۋە <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># new</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ئوقۇلمىغان</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+                other {There are <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># ئوقۇلمىغان</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># يېڭى</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+                other {<a href="{basePath}/u/{username}/messages/group/{groupName}/new"># يېڭى</a> ئۇچۇر قالدى ياكى {groupLink} دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/unread"># ئوقۇلمىغان</a>}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ئوقۇلمىغان</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ۋە <a href="{basePath}/u/{username}/messages/new"># يېڭى</a> ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">personal messages</a>}
+                other { ۋە <a href="{basePath}/u/{username}/messages/new"># يېڭى</a> messages ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">شەخسىي ئۇچۇر</a> دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {There is <a href="{basePath}/u/{username}/messages/unread"># ئوقۇلمىغان</a> ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">شەخسىي ئۇچۇر</a> دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+                other {<a href="{basePath}/u/{username}/messages/unread"># ئوقۇلمىغان</a> ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">شەخسىي ئۇچۇر</a> دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {<a href="{basePath}/u/{username}/messages/new"># يېڭى</a> ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">شەخسىي ئۇچۇر</a> دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+                other {<a href="{basePath}/u/{username}/messages/new"># يېڭى</a> ئۇچۇر قالدى ياكى <a href="{basePath}/u/{username}/messages">شەخسىي ئۇچۇر</a> دىكى باشقا ئۇچۇرغا كۆز يۈگۈرتۈڭ}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "ھېسابات"
         security: "بىخەتەرلىك"
@@ -1576,7 +1635,7 @@ ug:
         add_email: "زاپاس ئېلخەت قوش"
         auth_override_instructions: "دەلىللەش تەمىنلىگۈچىدىن ئېلخەتنى يېڭىلىغىلى بولىدۇ."
         no_secondary: "ئىككىنچى ئېلخەت يوق"
-        instructions: "ھەرگىز ئاشكارە كۆرسەتمەيدۇ."
+        instructions: "ھەرگىز ئاشكارە كۆرسەتمەيدۇ"
         admin_note: "ئەسكەرتىش: باشقۇرغۇچى ئىشلەتكۈچى باشقا باشقۇرغۇچى بولمىغان ئىشلەتكۈچىنىڭ ئېلخەت ئادرېسىنى ئۆزگەرتسە، ئۇ ئىشلەتكۈچىنىڭ ئەسلىدىكى ئېلخەت ھېساباتىنى زىيارەت قىلالمىغانلىقىنى بىلدۈرىدۇ، شۇڭلاشقا ئىم ئەسلىگە قايتۇرۇش ئېلخىتىنى يېڭى ئېلخەت ئادرېسىغا ئەۋەتىدۇ. ئىشلەتكۈچى ئىم ئەسلىگە قايتۇرۇش جەريانىنى تاماملاشتىن ئىلگىرى، ئېلخەت ئادرېسى ئۆزگەرتىلمەيدۇ."
         ok: "جەزملەش ئۈچۈن سىزگە ئېلخەت ئەۋەتىمىز"
         required: "ئېلخەت ئادرېسى كىرگۈزۈڭ"
@@ -1602,19 +1661,20 @@ ug:
         action: "ھېساباتىڭىزنى ئاكتىپلاش ئۈچۈن بۇ جاينى چېكىڭ"
         already_done: "كەچۈرۈڭ، بۇ ئاكتىپلاش ئۇلانمىسى ئەمدى ئىناۋەتلىك ئەمەس. بەلكىم ھېساباتىڭىز ئاللىبۇرۇن ئاكتىپلانغان بولۇشى مۇمكىن؟"
         please_continue: "يېڭى ھېساباتىڭىز جەزملەندى؛ سىز باش بەتكە قايتا نىشانلىنىسىز."
-        continue_button: "%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ"
+        continue_button: "تامام!"
         welcome_to: "%{site_name} غا خۇش كەلدىڭىز!"
         approval_required: "رىياسەتچى يېڭى ھېساباتىڭىزنى قولدا تەستىقلىغاندىن كېيىن ئاندىن بۇمۇنبەرنى زىيارەت قىلالايسىز. ھېساباتىڭىز تەستىقلانغاندا ئېلخەت تاپشۇرۇۋالىسىز!"
       name:
         title: "ئىسمى"
-        instructions: "تولۇق ئىسمىڭىز (تاللاشچان)."
-        instructions_required: "تولۇق ئىسمىڭىز."
+        title_optional: "ئىسىم (تاللاشچان)"
+        instructions: "تولۇق ئىسمىڭىز (تاللاشچان)"
+        instructions_required: "تولۇق ئىسمىڭىز"
         required: "ئىسىم كىرگۈزۈڭ"
         too_short: "ئىسمىڭىز بەك قىسقا"
         ok: "ئىسمىڭىز ياخشىدەك قىلىدۇ"
       username:
         title: "ئىشلەتكۈچى ئاتى"
-        instructions: "بىردىنبىر، بوشلۇق يوق، قىسقا."
+        instructions: "بىردىنبىر، بوشلۇق يوق، قىسقا"
         short_instructions: "كىشىلەر سىزنى @%{username} ئارقىلىق ئاتىيالايدۇ"
         available: "ئىشلەتكۈچى ئاتىڭىزنى ئىشلىتەلەيسىز"
         not_available: "ئىشلەتكىلى بولمايدۇ. %{suggestion} نى سىنامسىز؟"
@@ -1778,12 +1838,25 @@ ug:
           success: "تەكلىپ ئۇلانمىسى مۇۋەپپەقىيەتلىك ھاسىللاندى!"
           error: "تەكلىپ ئۇلانمىسىنى ھاسىللاۋاتقاندا خاتالىق كۆرۈلدى"
         invite:
-          new_title: "تەكلىپ قۇر"
+          new_title: "ئەزا تەكلىپ"
           edit_title: "تەكلىپ تەھرىر"
           instructions: "بۇ ئۇلانمىنى ھەمبەھىرلەپ مەزكۇر تور بېكەتنى زىيارەت قىلىش ئىجازىتى بېرىدۇ:"
-          copy_link: "ئۇلانما كۆچۈر"
           expires_in_time: "%{time} ۋاقتى توشىدۇ"
           expired_at_time: "%{time} ۋاقتى توشتى"
+          create_link_to_invite: "بۇ تور بېكەتنى دەرھال زىيارەت قىلالايدىغان ھەمبەھىرلىگىلى بولىدىغان ئۇلانمىدىن بىرنى قۇرىدۇ."
+          copy_link_and_share_it: "تۆۋەندىكى ئۇلانمىنى كۆچۈرۈپ، بۇ تور بېكەتنى دەرھال زىيارەت قىلىش ئۈچۈن ھەمبەھىرلىگىلى بولىدۇ."
+          copy_link: "ئۇلانما كۆچۈر"
+          link_copied: "ئۇلانما كۆچۈرۈلدى!"
+          share_link: "ئۇلانما ھەمبەھىر"
+          link_validity_MF: |
+            ئۇلانمىنى ئەڭ كۆپ بولغاندا { user_count, plural,
+                one {# ئىشلەتكۈچى}
+              other {# ئىشلەتكۈچى}
+            } ئىشلىتەلەيدۇ ھەمدە { duration_days, plural,
+                one {# كۈن}
+              other {# كۈن}
+            } دە ۋاقتى ئۆتىدۇ.
+          edit_link_options: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ."
           show_advanced: "ئالىي تاللانمىنى كۆرسەت"
           hide_advanced: "ئالىي تاللانمىنى يوشۇر"
           restrict: "چەكلىمە"
@@ -1794,10 +1867,14 @@ ug:
           add_to_groups: "گۇرۇپپىغا قوش"
           invite_to_topic: "تېمىغا كېلىدۇ"
           expires_at: "ۋاقتى توشىدۇ"
-          custom_message: "تاللاشچان شەخسىي ئۇچۇر"
+          expires_after: "ۋاقتى توشىدۇ"
+          custom_message: "ئىختىيارى ئۇچۇر"
+          custom_message_placeholder: "تەكلىپىڭىزگە شەخسىي ئىزاھات قوشىدۇ"
           send_invite_email: "ساقلاپ ئېلخەت يوللا"
           send_invite_email_instructions: "ئېلخەت بىلەنلا تەكلىپ قىلىشقا چەكلەپ تەكلىپ ئېلخەت يوللايدۇ"
-          save_invite: "تەكلىپ ساقلا"
+          save_invite: "ساقلا"
+          cancel: "ۋاز كەچ"
+          create_link: "ئۇلانما قۇر"
           invite_saved: "تەكلىپ ساقلاندى."
         bulk_invite:
           none: "بۇ بەتتە كۆرسىتىلىدىغان تەكلىپنامە يوق."
@@ -1829,8 +1906,8 @@ ug:
         same_as_email: "ئىم ئېلخېتىڭىز بىلەن ئوخشاش."
         ok: "ئىم ياخشىدەك قىلىدۇ."
         instructions:
-          one: "كەم دېگەندە %{count} ھەرپ."
-          other: "كەم دېگەندە %{count} ھەرپ."
+          one: "كەم دېگەندە %{count} ھەرپ"
+          other: "كەم دېگەندە %{count} ھەرپ"
         required: "ئىم كىرگۈزۈلىدۇ"
         confirm: "جەزملە"
         incorrect_password: "كىرگۈزۈلگەن ئىم خاتا."
@@ -1913,6 +1990,8 @@ ug:
         sent_by: "يوللىغۇچى"
         private_message: "ئۇچۇر"
         the_topic: "تېما"
+      card: "ئىشلەتكۈچى كارتىسى"
+      profile_link: "%{username}، تەرجىمىھال زىيارەت"
     user_status:
       save: "ساقلا"
       set_custom_status: "ئىختىيارى ھالەت تەڭشەك"
@@ -2102,13 +2181,13 @@ ug:
     search_hint: "ئىشلەتكۈچى ئاتى، ئېلخەت ياكى IP ئادرېسى"
     create_account:
       header_title: "خۇش كەپسىز!"
-      subheader_title: "ھېساباتىڭىزنى قۇرايلى"
       disclaimer: "خەتلەتكىنىڭىز، <a href='%{privacy_link}' target='blank'>شەخسىيەت تۈزۈمى</a> ۋە <a href='%{tos_link}' target='blank'>مۇلازىمەت ماددىلىرى</a>غا قوشۇلغانلىقىڭىزنى بىلدۈرىدۇ."
       title: "تىزىملىتىڭ"
       failed: "خاتالىق كۆرۈلدى، بەلكىم بۇ ئېلخەتتە تىزىملاتقان بولۇشى مۇمكىن، ئىم ئۇنتۇش ئۇلانمىسىنى سىناپ بېقىڭ"
       associate: "ھېساباتىڭىز بارمۇ؟ <a href='%{associate_link}'>تىزىمغا كىر</a>ىپ %{provider} ھېساباتىڭىزغا باغلاڭ."
       activation_title: "ھېساباتىڭىزنى ئاكتىپلاڭ"
       already_have_account: "ھېساباتىڭىز بارمۇ؟"
+      no_account_yet: "ھېساباتىڭىز بارمۇ؟"
       progress_bar:
         signup: "تىزىملىتىڭ"
         activate: "ئاكتىپلا"
@@ -2145,7 +2224,6 @@ ug:
       confirm_button: تىزىمغا كىرىش تامام
     login:
       header_title: "قايتىپ خۇش كەپسىز"
-      subheader_title: "ھېساباتىڭىزغا كىرىدۇ"
       title: "تىزىمغا كىرىش"
       username: "ئىشلەتكۈچى"
       password: "ئىم"
@@ -2245,7 +2323,6 @@ ug:
       success: "ھېساباتىڭىز قۇرۇلدى، تىزىمغا كىردىڭىز."
       name_label: "ئىسمى"
       password_label: "ئىم"
-      existing_user_can_redeem: "بىر تېما ياكى گۇرۇپپىغا تەكلىپىڭىزنى قوللىنىڭ."
     password_reset:
       continue: "%{site_name} زىيارەتنى داۋاملاشتۇر"
     emoji_set:
@@ -2257,6 +2334,7 @@ ug:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "سەھىپىلا"
+      categories_only_optimized: "سەھىپەلەرلا (ئەلالاشتۇرۇلغان)"
       categories_with_featured_topics: "جەۋھەر تېمىلىق سەھىپە"
       categories_and_latest_topics: "سەھىپە ۋە ئاخىرقى تېما"
       categories_and_latest_topics_created_date: "سەھىپە ۋە ئاخىرقى تېما (قۇرۇلغان چېسلا بويىچە تەرتىپلەيدۇ)"
@@ -2804,8 +2882,8 @@ ug:
           other: "خەتكۈچ - %{count} ئوقۇلمىغان خەتكۈچ"
         review_queue: "تەكشۈرۈش ئۆچىرىتى"
         review_queue_with_unread:
-          one: "تەكشۈرۈش ئۆچىرىتى - %{count} تۈرنى تەكشۈرۈش كېرەك"
-          other: "تەكشۈرۈش ئۆچىرىتى - %{count} تۈرنى تەكشۈرۈش كېرەك"
+          one: "تەكشۈرۈش ئۆچرىتى - %{count} تۈرنى تەكشۈرۈش كېرەك"
+          other: "تەكشۈرۈش ئۆچرىتى - %{count} تۈرنى تەكشۈرۈش كېرەك"
         other_notifications: "باشقا ئۇقتۇرۇش"
         other_notifications_with_unread:
           one: "باشقا ئۇقتۇرۇش - %{count} ئوقۇلمىغان ئۇقتۇرۇش"
@@ -2906,6 +2984,8 @@ ug:
         filter: "تېما يوق."
         educate:
           new: '<p>يېڭى تېمىڭىز بۇ جايدا كۆرۈنىدۇ. كۆڭۈلدىكى ئەھۋالدا، ئەگەر ئۆتكەن 2 كۈن ئىچىدە قۇرۇلغان بولسا، تېما يېڭى تېما دەپ قارىلىدۇ ھەمدە <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>كۆرسەتكۈچنى كۆرسىتىدۇ.</p><p>سىزنىڭ <a href="%{userPrefsUrl}">مايىللىق</a> تەڭشىكىڭىزنى زىيارەت قىلىپ بۇنى ئۆزگەرتەلەيسىز.</p>'
+          unread: "<p>ئوقۇلمىغان تېمىڭىز بۇ جايدا كۆرۈنىدۇ.</p><p>كۆڭۈلدىكى ئەھۋالدا، ئەگەر تۆۋەندىكى شەرتنى قانائەتلەندۈرسە، تېما ئوقۇلمىغان دەپ قارىلىدۇ ھەمدە ئوقۇلمىغانلىق سانى كۆرۈنىدۇ <span class=\"badge unread-posts badge-notification\">1</span> ئەگەر سىز:</p><ul><li>قۇرغان تېما</li><li>جاۋاب قايتۇرغان تېما</li><li>تېمىنى 5 مىنۇتتىن ئارتۇق ئوقۇغان</li></ul><p> ياكى ئەگەر ھەر بىر تېمىدا \U0001F514 ئارقىلىق تېمىنى كۆزەتتىكى ياكى ئەگەشكەن دەپ تەڭشىگەن بولسىڭىز.</p><p>سىزنىڭ <a href=\"%{userPrefsUrl}\">مايىللىق</a> تەڭشىكىڭىزدىن بۇنى ئۆزگەرتەلەيسىز.</p>"
+          new_new: "<p>يېڭى تېمىڭىز بۇ جايدا كۆرۈنىدۇ، ھەمدە ئوقۇلمىغان تېمىلىرىڭىزمۇ كۆرسىتىلىدۇ. كۆڭۈلدىكى ئەھۋالدا، ئەگەر ئۇلار يېقىنقى 2 كۈن ئىچىدە قۇرۇلغان بولسا، تېما يېڭى دەپ قارىلىدۇ ھەمدە <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> كۆرسەتكۈچ كۆرۈنىدۇ. ئوقۇلمىغان تېمىنىڭ ئوقۇلمىغان سانى <span class=\"badge unread-posts badge-notification\">1</span> كۆرۈنىدۇ. ئەگەر سىز: قۇرغان تېما، جاۋاب قايتۇرغان تېما، تېمىنى 5 مىنۇتتىن ئارتۇق ئوقۇغان ياكى ئەگەر ھەر بىر تېمىدا \U0001F514 ئارقىلىق تېمىنى كۆزەتتىكى ياكى ئەگەشكەن دەپ تەڭشىگەن بولسىڭىز.</p><p>سىزنىڭ <a href=\"%{userPrefsUrl}\">مايىللىق</a> تەڭشىكىڭىزدىن بۇنى ئۆزگەرتەلەيسىز.</p>"
       bottom:
         latest: "تېخىمۇ كۆپ يېڭى تېما يوق."
         posted: "يوللانغان تېخىمۇ كۆپ تېما يوق."
@@ -3415,7 +3495,9 @@ ug:
       show_hidden: "پەرۋا قىلمىغان مەزمۇننى كۆرسىتىدۇ."
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
+      load_more_replies: "تېخىمۇ كۆپ جاۋابنى يۈكلە"
       sr_collapse_replies: "سىڭدۈرۈلگەن جاۋابنى يىغىدۇ"
+      sr_load_more_replies: "تېخىمۇ كۆپ سىڭدۈرۈلگەن جاۋابنى يۈكلەيدۇ"
       sr_date: "يوللانغان ۋاقتى"
       sr_expand_replies:
         one: "بۇ يازمىدا %{count} جاۋاب بار"
@@ -3688,6 +3770,8 @@ ug:
       badge_colors: "تارتۇق رەڭگى"
       background_color: "تەگلىك رەڭگى"
       foreground_color: "ئالدى رەڭگى"
+      color_used: "ئىشلىتىلىۋاتقان رەڭ"
+      predefined_colors: "ئالدىن بېكىتىلگەن رەڭ تاللانمىسى"
       name_placeholder: "ئەڭ كۆپ بولغاندا بىر ياكى ئىككى سۆز"
       color_placeholder: "خالىغان تور رەڭگى"
       delete_confirm: "بۇ سەھىپىنى راستتىنلا ئۆچۈرەمسىز؟"
@@ -3815,6 +3899,14 @@ ug:
       official_warning: "رەسمىي ئاگاھلاندۇرۇش"
       delete_spammer: "ئەخلەت خەت يوللىغۇچىنى ئۆچۈر"
       flag_for_review: "تەستىقلاش قاتارىغا قوش"
+      delete_confirm_MF: |
+        سىز بۇ ئىشلەتكۈچىنىڭ { POSTS, plural,
+            one {<b>#</b> يازما}
+          other {<b>#</b> يازما}
+        } ۋە{ TOPICS, plural,
+            one {<b>#</b> تېما}
+          other {<b>#</b> تېما}
+        } سىنى ئۆچۈرۈپ، ئۇلارنىڭ ھېساباتىنى چىقىرىۋېتىپ، ئۇلارنىڭIP ئادرېسى <b>{ip_address}</b> نى توسۇپ تىزىملىتىشنى چەكلەيدۇ ھەمدە ئۇلارنىڭ ئېلخەت ئادرېسى <b>{email}</b> نى مەڭگۈلۈك قارا تىزىملىككە قوشىدۇ. بۇ ئىشلەتكۈچى راستتىنلا ئەخلەت ئۇچۇر تارقاتقۇچىمۇ؟
       yes_delete_spammer: "ھەئە، ئەخلەت خەت يوللىغۇچىنى ئۆچۈر"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(يوشۇرۇن)"
@@ -4369,9 +4461,12 @@ ug:
       no_drafts_body: "يازما يوللاشقا تەييار ئەمەسمۇ؟ ھەر قېتىم يازما، جاۋاب ياكى شەخسىي ئۇچۇر يېزىشقا باشلىغاندا، ھەممىسىنى ئاپتوماتىك ساقلاپ يېڭى دەسلەپكى نۇسخىدا ساقلاپ مۇشۇ جايدا كۆرسىتىمىز. ۋاز كەچ توپچە چېكىلسە تاشلىۋېتىدۇ ياكى ساقلا چېكىلسە دەسلەپكى نۇسخىدا ساقلاپ كېيىن داۋاملاشتۇرىدۇ."
       no_likes_title: "تېخى ھېچقانداق تېمىنى ياقتۇرمىدىڭىز"
       no_likes_title_others: "%{username} تېخى ھېچقانداق تېمىنى ياقتۇرمىدى"
+      no_likes_body: "قوشۇلۇپ تۆھپە قوشۇشنىڭ ئاددىي ئۇسۇلى سۆھبەتنى ئوقۇپ، ئاندىن سىز ياقتۇرغان يازمىدا %{heartIcon} نى تاللاشتۇر!"
       no_topics_title: "سىز تېخى ھېچقانداق تېمىنى باشلىمىغان"
+      no_topics_body: "يېڭى سۆھبەتنى باشلاشتىن ئىلگىرى، ئەڭ ياخشىسى ئالدى بىلەن مەۋجۇت سۆھبەتنى <a href='%{searchUrl}'>ئىزدە</a>پ، ئەگەر سىزگە لازىملىق تېما تېپىلمىسا، ئۆزىڭىزگە تەۋە يېڭى تېمىدىن بىرنى باشلىسىڭىز بولىدۇ. تېما تىزىمى، سەھىپە ياكى بەلگىنىڭ ئوڭ ئۈستى ئوڭ بۇرجەكتىكى <kbd>+ يېڭى تېما</kbd> توپچىنى تېپىپ، شۇ دائىرىدە يېڭى تېما قۇرسىڭىز بولىدۇ."
       no_topics_title_others: "%{username} تېخى ھېچقانداق تېمىنى باشلىمىغان"
       no_read_topics_title: "تېخى ھېچقانداق تېمىنى ئوقۇمىدىڭىز"
+      no_read_topics_body: "سۆھبەتنى ئوقۇشنى باشلىغاندا، بۇ جايدا بىر تىزىمنى كۆرەلەيسىز. ئوقۇشنى باشلاشتا، <a href='%{topUrl}'>قىزغىن</a> ياكى <a href='%{categoriesUrl}'>سەھىپە</a> دىن ياكى ئاچقۇچلۇق سۆز %{searchIcon} ئارقىلىق قىزىقىدىغان تېمىنى ئىزدىسىڭىز بولىدۇ."
     no_group_messages_title: "ھېچقانداق گۇرۇپپا ئۇچۇرى تېپىلمىدى"
     topic_entrance:
       sr_jump_top_button: "بىرىنچى يازمىغا ئاتلا - %{date}"
@@ -4678,10 +4773,17 @@ ug:
         installed_version: "ئورنىتىلدى"
         latest_version: "ئاخىرقى"
         problems_found: "نۆۋەتتىكى تور بېكىتىڭىزنىڭ تەڭشىكى ئاساسىدىكى بەزى مەسلىھەتلەر"
+        dismiss_notice: "پەرۋا قىلما"
         new_features:
           title: "يېڭىلىق"
+          subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «تېخىمۇ كۆپ بىلدۈرگۈ» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
           previous_announcements: "سىز <a href='%{url}' target='_blank'>Discourse Meta</a> دىن ئىلگىرىكى يېڭى ئىقتىدار ئۇقتۇرۇشىنى كۆرەلەيسىز"
           learn_more: "تېخىمۇ كۆپ بىلدۈرگۈ…"
+          experiment_enabled: "تەجرىبە ئىقتىدارىنى قوزغاتتىڭىز."
+          experiment_disabled: "تەجرىبە ئىقتىدارىنى چەكلىدىڭىز."
+          experiment_toggled_too_fast: "تەجرىبە ئىقتىدارىنى بەك تېز ئالماشتۇردىڭىز. ئازراق كۈتۈپ ئاندىن قايتا سىناڭ."
+          experiment_tooltip:
+            title: "تەجرىبە ئىقتىدارىمىزنى سىناڭ"
         last_checked: "ئاخىرقى تەكشۈرۈلگەن ۋاقىت"
         refresh_problems: "يېڭىلا"
         no_problems: "ھېچقانداق مەسىلە بايقالمىدى."
@@ -4799,10 +4901,19 @@ ug:
             publish_read_state: "گۇرۇپپا ئۇچۇرىدا گۇرۇپپا ئوقۇش ھالىتىنى ئېلان قىلىدۇ"
           membership:
             automatic: ئۆزلۈكىدىن
+            automatic_tooltip: "بۇ گۇرۇپپا ئۆزلۈكىدىن قۇرۇلغان، ئۇنى ئۆچۈرەلمەيسىز، ئەزالار ئۆزلۈكىدىن قوشۇلۇپ ۋە چىقىرىۋېتىلىدۇ"
             trust_levels_title: "ئەزا قوشۇلغاندا ئۇنىڭ ئىشەنچ دەرىجىسى ئۆزلۈكىدىن بېرىلىدۇ:"
             effects: ئۈنۈم
             trust_levels_none: "يوق"
+            automatic_membership_email_domains: "بۇ تىزىمدىكى ئېلخەت دائىرە ئىسمىغا تولۇق ماس كېلىدىغان ئېلخەت دائىرە ئىسمى بىلەن تىزىملاتقان ئىشلەتكۈچىلەر ئۆزلۈكىدىن بۇ گۇرۇپپىغا قوشۇلىدۇ."
+            automatic_membership_user_count:
+              one: "%{count} ئىشلەتكۈچىنىڭ يېڭى ئېلخەت دائىرە ئىسمى بار، ئۇلار مەزكۇر گۇرۇپپىغا قوشۇلىدۇ."
+              other: "%{count} ئىشلەتكۈچىنىڭ يېڭى ئېلخەت دائىرە ئىسمى بار، ئۇلار مەزكۇر گۇرۇپپىغا قوشۇلىدۇ."
+            automatic_membership_associated_groups: "بۇ جايدا تىزىلغان مۇلازىمەت ئەزاسى سۈپىتىدە تىزىمغا كىرگەن ئىشلەتكۈچىلەر ئۆزلۈكىدىن بۇ گۇرۇپپىغا قوشۇلىدۇ."
             primary_group: "ئۆزلۈكىدىن ئاساسىي گۇرۇپپا قىلىپ تەڭشىلىدۇ"
+          alert:
+            primary_group: "بۇ ئاساسىي گۇرۇپپا بولغانلىقتىن، «%{group_name}» ئات ھەممە ئادەم كۆرەلەيدىغان CSS تۈرىدە ئىشلىتىلىدۇ."
+            flair_group: "بۇ گۇرۇپپىنىڭ ئەزالىق بەلگىسى بولغانلىقتىن، «%{group_name}» ئات ھەممەيلەنگە كۆرۈنىدۇ."
         name_placeholder: "گۇرۇپپا ئىسمى، بوشلۇق يوق، ئىشلەتكۈچى ئىسمى قائىدىسىگە ئوخشاش"
         primary: "ئاساسىي گۇرۇپپا"
         no_primary: "(ئاساسىي گۇرۇپپا يوق)"
@@ -4866,6 +4977,9 @@ ug:
         not_shown_again: بۇ ئاچقۇچ قايتا كۆرۈنمەيدۇ. داۋاملاشتۇرۇشتىن بۇرۇن بىر نۇسخا كۆچۈرۈۋېلىڭ.
         continue: داۋاملاشتۇر
         scopes:
+          description: |
+            دائىرە ئىشلەتكەندە، سىز بىر API ئاچقۇچىنى مۇئەييەن بىر ئاخىرقى ئۇچتا چەكلىيەلەيسىز.
+            سىز يەنە قايسى پارامېتىرلارنى ئىشلىتەلەيدىغانلىقىنى بەلگىلىيەلەيسىز. كۆپ قىممەت پەش بىلەن ئايرىلىدۇ.
           title: دائىرىسى
           granular: ئىنچىكە
           read_only: پەقەت ئوقۇلىدۇ
@@ -5135,9 +5249,18 @@ ug:
           screened_ips: "تەكشۈرۈلگەن IP"
           screened_urls: "تەكشۈرۈلگەن تور ئادرېسى"
           search_logs: "ئىزدەش خاتىرىسى"
-          security: "بىخەتەرلىك"
-          spam: "ئەخلەت خەت"
+          security: "بىخەتەرلىك تەڭشىكى"
+          spam: "ئەخلەت خەت تەڭشىكى"
           staff_action_logs: "باشقۇرغۇچى مەشغۇلات خاتىرىسى"
+      section_landing_pages:
+        account:
+          title: "ھېسابات"
+          backups:
+            title: "زاپاس"
+            description: "تور بېكىتىڭىزنىڭ سانلىق مەلۇماتلىرىنى زاپاسلاڭ"
+          whats_new:
+            title: "يېڭىلىق"
+            description: "Discourse نىڭ يېڭى نەشرى ۋە ياخشىلىنىشلىرىنى بايقاڭ"
       config_areas:
         about:
           header: "تور بېكىتىڭىز ھەققىدە"
@@ -5148,41 +5271,23 @@ ug:
           community_description: "جامائەت چۈشەندۈرۈشى"
           banner_image: "لوزۇنكا سۈرەت"
           banner_image_help: |
-            بۇ سىزنىڭ ھەققىدە بېتىڭىزگە ئىشلىتىلىدۇ. تەۋسىيە چوڭلۇقى: 800x300px. قوللايدىغان سۈرەت تۈرى: JPG، PNG ۋە SVG، سىغىمى 10MB غىچە.
+            بۇ سىزنىڭ ھەققىدە بېتىڭىزگە ئىشلىتىلىدۇ. تەۋسىيە چوڭلۇقى: 1100x300px. قوللايدىغان سۈرەت تۈرى: JPG، PNG ۋە SVG، سىغىمى 10MB غىچە.
           contact_information: "ئالاقە ئۇچۇرى"
           community_owner: "جامائەت ئىگىدارلىقى"
           community_owner_placeholder: "جوننى سىمىت"
-          community_owner_help: |
-            بۇ تور بېكەتنىڭ ئاساسلىق مەسئۇلىنىڭ ئىسمى. مۇھىم ئۇقتۇرۇشقا ئىشلىتىلىدۇ، شۇنداقلا /about دا كۆرۈنىدۇ. ئاممىۋى تور بېكەتتە نامسىز ئىشلەتكۈچىلەرگە كۆرۈنىدۇ.
           contact_email: "ئالاقە ئېلخەت"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            بۇ تور بېكەتنىڭ ئاساسلىق مەسئۇلىنىڭ ئېلخەت ئادرېسى. مۇھىم ئۇقتۇرۇشقا ئىشلىتىلىدۇ، شۇنداقلا /about دا كۆرۈنىدۇ. ئاممىۋى تور بېكەتتە نامسىز ئىشلەتكۈچىلەرگە كۆرۈنىدۇ.
           contact_url: "ئالاقە تور ئادرېسى"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            بۇ تور بېكەتنىڭ ئالاقە تور ئادرېسى. ئەگەر مەۋجۇت بولسا، /about دىكى ئالاقە ئېلخەت ئادرېسنى ئالماشتۇرىدۇ ھەمدە ئاممىۋى تور بېكەتتە ئاممىۋى تور بېكەتتە نامسىز ئىشلەتكۈچىلەرگە كۆرۈنىدۇ.
           site_contact_name: "تور بېكەت ئالاقە ئىسمى"
-          site_contact_name_help: |
-            بارلىق ئاپتوماتىك ئۇچۇرلارنى ئەۋەتىدىغان ئۈنۈملۈك باشقۇرغۇچى خادىمنىڭ ئىشلەتكۈچى ئىسمى. ئەگەر بوش قالدۇرۇلسا، كۆڭۈلدىكى سىستېما ھېساباتى ئىشلىتىلىدۇ.
           site_contact_group: "تور بېكەت ئالاقە گۇرۇپپىسى"
-          site_contact_group_help: |
-            ئىناۋەتلىك گۇرۇپپا ئىسمى، بۇ گۇرۇپپا ئۆزلۈكىدىن يوللانغان شەخسىي ئۇچۇرنىڭ ھەممىسىگە تەكلىپ قىلىنىدۇ.
           your_organization: "تەشكىلاتىڭىز"
-          company_name: "شىركەت ئىسمى"
-          company_name_placeholder: "ئۈلگە شىركەت."
-          company_name_help: |
-            شىركەت ياكى تەشكىلاتىڭىزنىڭ ئىسمى.
+          company_name: "ئىسمى"
+          company_name_placeholder: "Acme تەشكىلاتى"
           company_name_warning: |
             ئەگەر بوش قالدۇرۇلسا، قېلىپسىمان مۇلازىمەت ماددىلىرى ياكى شەخسىيەت باياناتىنى تەمىنلىمەيدۇ
           governing_law: "باشقۇرۇش قانۇنى"
-          governing_law_placeholder: "نيۇ-يورك ئىشتاتى"
-          governing_law_help: |
-            تور بېكەتنىڭ مۇلازىمەت ماددىلىرى ۋە شەخسىيەت باياناتى قاتارلىق قانۇنىي تەرەپلىرىنى باشقۇرىدىغان باشقۇرۇش تەۋەلىكىنى بەلگىلەڭ. بۇ ئادەتتە تور بېكەتنى تىزىملاتقان ياكى سودا قىلىدىغان دۆلەت ياكى ئىشىتاتنى كۆرسىتىدۇ.
           city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
-          city_for_disputes_placeholder: "نيۇ-يورك شەھىرى"
-          city_for_disputes_help: |
-            بۇ مۇنبەرنى ئىشلىتىشكە مۇناسىۋەتلىك تالاش-تارتىشلارنى ھەل قىلىشنىڭ باشقۇرۇش تەۋەلىكى سۈپىتىدە ئىشلىتىلىدىغان شەھەرنى بەلگىلەڭ. بۇ ئۇچۇر ئادەتتە مۇنبەرنىڭ مۇلازىمەت ماددىلىرىغا ئوخشاش قانۇنىي ھۆججەتكە كىرىدۇ.
           optional: "(تاللاشچان)"
           update: "يېڭىلا"
           toasts:
@@ -5192,6 +5297,7 @@ ug:
           saved: "ساقلاندى!"
         flags:
           header: "رىياسەتچى پاش قىلىشى"
+          edit_header: "پاش قىلىش تەھرىر"
           subheader: "Discourse دىكى پاش قىلىش سىستېمىسى سىز ۋە رىياسەتچىلەر قوشۇنىڭىزنىڭ مەزمۇن ۋە ئىشلەتكۈچى قىلمىشىنى باشقۇرۇشۇڭلارغا ياردەملىشىپ، جامائىتىڭىزنى ھۆرمەتكە سازاۋەر ۋە ساغلام قىلىدۇ. كۆڭۈلدىكى ھالەت زور كۆپچىلىك جامائەتكە ماس كېلىدۇ، ئۇلارنى ئۆزگەرتىشىڭىزنىڭ ھاجىتى يوق. شۇنداقتىمۇ، تور بېكىتىڭىزنىڭ باشقا ئالاھىدە تەلەپلىرى بولسا سىز لازىم قىلمايدىغان پاش قىلىشلارنى چەكلەپ، ئۆزىڭىزنىڭ خاس پاش قىلىشلىرىنى قوشالايسىز."
           description: "چۈشەندۈرۈش"
           enabled: "قوزغىتىلدى؟"
@@ -5201,6 +5307,7 @@ ug:
           delete: "ئۆچۈر"
           delete_confirm: '«%{name}» نى راستتىنلا ئۆچۈرەمسىز؟'
           flags_tab: "پاش قىلىش"
+          settings: "پاش قىلىش تەڭشىكى"
           form:
             add_header: "پاش قىلىش قوش"
             edit_header: "پاش قىلىش تەھرىر"
@@ -5220,10 +5327,20 @@ ug:
             non_deletable: "بۇ پاش قىلىشنى ئۆچۈرەلمەيسىز چۈنكى ئۇ سىستېما پاش قىلىشى ياكى تەستىقلاش سىستېمىسىدا ئىشلىتىلگەن، شۇنداقتىمۇ ئۇنى چەكلىيەلەيسىز."
             require_message: "ئىشلەتكۈچىگە قوشۇمچە سەۋەب تەمىنلەشنى ئەسكەرتىدۇ"
             require_message_description: "بۇ پاش قىلىش تاللانغاندا، بىر تېكىست بۆلىكى كۆرۈنۈپ، ئىشلەتكۈچىنىڭ قوشۇمچە تەپسىلاتنى تەمىنلەپ، پاش قىلىدىغان مەزمۇننى چۈشەندۈرۈشىگە قۇلايلىق يارىتىدۇ."
+            auto_action_type: "پاش قىلىنغان مەزمۇننى ئۆزلۈكىدىن يوشۇرىدۇ"
           more_options:
             title: "تېخىمۇ كۆپ تاللانما"
             move_up: "ئۈستىگە يۆتكەل"
             move_down: "ئاستىغا يۆتكەل"
+        look_and_feel:
+          title: "كۆرۈنۈش ۋە تۇيغۇ"
+          themes:
+            title: "ئۆرنەك"
+            themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
+            set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
+            default_theme: "كۆڭۈلدىكى ئۆرنەك"
+            new_theme: "يېڭى ئۆرنەك"
+            user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"
@@ -5389,6 +5506,7 @@ ug:
           theme_name: "ئۆرنەك ئىسمى"
           component_name: "پارچە ئىسمى"
           themes_intro: "باشلاش ئۈچۈن مەۋجۇت ئۆرنەكتىن بىرى تاللىنىدۇ ياكى يېڭىسى ئورنىتىلىدۇ"
+          themes_intro_img_alt: "يېڭى ئۆرنەك ئورۇن بەلگىسى"
           beginners_guide_title: "يېڭىياچىلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
           developers_guide_title: "ئىجادكارلارنىڭ Discourse ئۆرنەك ئىشلىتىش يېتەكچىسى"
           browse_themes: "جامائەت ئۆرنەككە كۆز يۈگۈرت"
@@ -5436,6 +5554,9 @@ ug:
           convert_theme_alert_generic: "بۇ ئۆرنەكنى راستتىنلا پارچىغا ئايلاندۇرامسىز؟"
           convert_theme_tooltip: "بۇ ئۆرنەكنى پارچىغا ئايلاندۇرىدۇ"
           inactive_themes: "ئاكتىپسىز ئۆرنەك:"
+          set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
+          default_theme: "كۆڭۈلدىكى ئۆرنەك"
+          set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
           inactive_components: "ئىشلىتىلمىگەن پارچە:"
           selected:
             one: "%{count} تاللاندى"
@@ -5899,6 +6020,10 @@ ug:
             custom_emoji_destroy: "ئىختىيارى چىراي ئىپادە ئۆچۈر"
             delete_post_permanently: "يازمىنى مەڭگۈلۈك ئۆچۈر"
             delete_topic_permanently: "تېمىنى مەڭگۈلۈك ئۆچۈر"
+            tag_group_create: "بەلگە گۇرۇپپىسى قۇر"
+            tag_group_destroy: "بەلگە گۇرۇپپا ئۆچۈر"
+            tag_group_change: "بەلگە گۇرۇپپا ئۆزگەرت"
+            delete_associated_accounts: "مۇناسىۋەتلىك ھېساباتنى ئۆچۈر"
         screened_emails:
           title: "تەكشۈرۈلگەن ئېلخەت"
           description: "بەزىلەر يېڭى ھېسابات قۇرماقچى بولغاندا، تۆۋەندىكى ئېلخەت ئادرېسى تەكشۈرۈلۈپ تىزىملاش چەكلىنىدۇ ياكى باشقا مەشغۇلات ئېلىپ بېرىلىدۇ."
@@ -6100,7 +6225,7 @@ ug:
           staff: "باشقۇرغۇچى"
           suspended: "توختىتىلغان"
           silenced: "ئۈنسىزلەندى"
-          staged: "ۋاقىتلىق ساقلاندى"
+          staged: "ۋاقىتلىق"
         approved: "تەستىقلاندىمۇ؟"
         titles:
           active: "ئاكتىپ ئىشلەتكۈچى"
@@ -6116,7 +6241,7 @@ ug:
           moderators: "رىياسەتچى"
           silenced: "ئۈنسىز ئىشلەتكۈچى"
           suspended: "توختىتىلغان ئىشلەتكۈچى"
-          staged: "ۋاقىتلىق ساقلانغان ئىشلەتكۈچى"
+          staged: "ۋاقىتلىق ئىشلەتكۈچى"
         not_verified: "دەلىللەنمىدى"
         check_email:
           title: "بۇ ئىشلەتكۈچىنىڭ ئېلخەت ئادرېسىنى كۆرسىتىدۇ"
@@ -6124,6 +6249,9 @@ ug:
         check_sso:
           title: "SSO ئۈنۈملۈك يۈكىنى كۆرسىتىدۇ"
           text: "كۆرسەت"
+        delete_associated_accounts:
+          title: "بۇ ئىشلەتكۈچىگە مۇناسىۋەتلىك بارلىق ھېساباتنى ئۆچۈرىدۇ"
+          text: "مۇناسىۋەتلىك ھېساباتنى ئۆچۈر"
       user:
         suspend_failed: "بۇ ئىشلەتكۈچىنى توختىتىۋاتقاندا خاتالىق كۆرۈلدى %{error}"
         unsuspend_failed: "بۇ ئىشلەتكۈچىنى توختىتىشتىن قالدۇرۇۋاتقاندا خاتالىق كۆرۈلدى %{error}"
@@ -6225,6 +6353,7 @@ ug:
         post_edits_count: "يازما تەھرىر"
         anonymize: "ئىشلەتكۈچىنى نامسىزلاشتۇر"
         anonymize_confirm: "بۇ ھېساباتنى راستتىنلا نامسىزلەشتۈرەمسىز؟ ئىشلەتكۈچى ئىسمى ۋە ئېلخەتنى ئۆزگەرتىپ، بارلىق تەرجىمىھال ئۇچۇرى ئەسلىگە قايتۇرۇلىدۇ."
+        delete_associated_accounts_confirm: "بۇ ھېساباتقا مۇناسىۋەتلىك بارلىق ھېساباتلارنى راستتىنلا ئۆچۈرەمسىز؟ ئەگەر ئۇلار ئېلخەتنى ئۆزگەرتكەن بولسا ئىشلەتكۈچى تىزىمغا كىرەلمەسلىكى مۇمكىن."
         anonymize_yes: "ھەئە، بۇ ھېساباتنى نامسىزلاشتۇر"
         anonymize_failed: "ھېساباتنى نامسىزلاشتۇرۇشتا مەسىلە كۆرۈلدى."
         delete: "ئىشلەتكۈچى ئۆچۈر"
@@ -6451,6 +6580,9 @@ ug:
         history: "ئۆزگىرىش خاتىرىسىنى كۆرسەت"
         reset: "ئەسلىگە قايتۇر"
         none: "يوق"
+        save: "ساقلا"
+        cancel: "ۋاز كەچ"
+        unmask: "نىقابلانمىغان كىرگۈزۈش"
       site_settings:
         emoji_list:
           invalid_input: "چىراي ئىپادە تىزىمى پەقەت ئىناۋەتلىك چىراي ئىپادە ئىسمىنىلا ئۆز ئىچىگە ئالىدۇ، مەسىلەن: hugs"
@@ -6543,6 +6675,7 @@ ug:
       badges:
         status: ھالەت
         title: تارتۇق
+        page_description: تارتۇق جامائەت ئىچىدىكى ئىشلەتكۈچىلەرنىڭ پائالىيىتى، تۆھبىسى ۋە نەتىجىلىرىنى تونۇش، دەلىللەش ھەمدە ئاكتىپ ھەرىكەت ۋە ئىشقا ئاشۇرغان ۋەدىسى ئۈچۈن بېرىلىدۇ
         new_badge: يېڭى تارتۇق
         new: يېڭى
         name: ئىسمى
@@ -6551,6 +6684,7 @@ ug:
         description: چۈشەندۈرۈش
         long_description: تەپسىلىي چۈشەندۈرۈش
         badge_type: تارتۇق تۈرى
+        group_settings: گۇرۇپپا تەڭشىكى
         badge_grouping: گۇرۇپپا
         badge_groupings:
           modal_title: تارتۇق گۇرۇپپىسى
@@ -6615,9 +6749,8 @@ ug:
             with_post_time: <span class="username">%{username}</span> نىڭ <span class="time">%{time}</span> دە %{link} دىكى يازمىسى
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
         badge_intro:
-          title: "باشلاش ئۈچۈن مەۋجۇت تارتۇقتىن بىرى تاللىنىدۇ ياكى يېڭىسى قۇرۇلىدۇ"
-          what_are_badges_title: "تارتۇق دېگەن نېمە؟"
-          badge_query_examples_title: "تارتۇق سۈرۈشتۈرۈش مىسالى"
+          title: "تارتۇقتىن بىرى تاللىنىدۇ ياكى يېڭىدىن بىرى قۇرۇلىدۇ"
+          description: "خاسلاشتۇرۇش ئۈچۈن مەۋجۇت تارتۇقتىن بىرى تاللىنىدۇ ياكى يېڭى تارتۇقتىن بىرى قۇرۇلىدۇ"
         mass_award:
           title: توپ تەغدىم
           description: بىر قېتىمدا ئوخشاش تارتۇقنى كۆپ ئىشلەتكۈچىگە بېرىدۇ.
@@ -6649,6 +6782,12 @@ ug:
       embedding:
         get_started: "ئەگەر Discourse نى باشقا تور بېكەتكە سىڭدۈرمەكچى بولسىڭىز، ئۇنىڭ مۇلازىمېتىرىنى قوشۇشتىن باشلاڭ."
         confirm_delete: "بۇ مۇلازىمېتىرنى راستتىنلا ئۆچۈرەمسىز؟"
+        sample: |
+          <p>تۆۋەندىكى HTML كودىنى تور بېكىتىڭىزنىڭ Discourse تېمىسىنى قۇرۇپ ۋە سىڭدۈرىدىغان جايغا چاپلاڭ. <b>EMBED_URL</b> نى ئۇنى سىز سىڭدۈرمەكچى بولغان بەتنىڭ ئۆلچىمىدىكى تور ئادرېسىغا ئالماشتۇرۇڭ.</p>
+
+          <p>ئەگەر ئىختىيارى ئۇسلۇب ئىشلەتمەكچى بولسىڭىز، ئىزاھاتنى بىكار قىلىپ ھەمدە <b>CLASS_NAME</b> نى ئۆرنەكنىڭ <i>سىڭدۈرمە CSS</i> تە ئېنىقلىما بېرىلگەن CSS خىلىغا ئالماشتۇرىدۇ.</p>
+
+          <p><b>DISCOURSE_USERNAME</b> نى يازما يازغۇچىنىڭ Discourse ئىشلەتكۈچى ئاتىغا ئالماشتۇرىدۇ. Discourse ئۆزى <code>&lt;meta&gt;</code> بەلگىسى ئارقىلىق <code>content</code> خاسلىقى بىلەن ئىشلەتكۈچىنى ئۆزلۈكىدىن ئىزدەيدۇ، ئۇنىڭدىكى <code>name</code> خاسلىقى <code>discourse-username</code> ياكى <code>author</code> غا تەڭشىلىدۇ. <code>discourseUserName</code> پارامېتىرىنى ئىشلەتمەيدۇ ھەمدە Discourse 3.2 دىن چىقىرىۋېتىدۇ.</p>
         title: "سىڭدۈرمە"
         host: "يول قويىدىغان مۇلازىمېتىر"
         allowed_paths: "يول ئىجازەت تىزىمى"

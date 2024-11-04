@@ -5,9 +5,9 @@ module FileStore
   end
 
   class BaseStore
-    UPLOAD_PATH_REGEX ||= %r{/(original/\d+X/.*)}
-    OPTIMIZED_IMAGE_PATH_REGEX ||= %r{/(optimized/\d+X/.*)}
-    TEMPORARY_UPLOAD_PREFIX ||= "temp/"
+    UPLOAD_PATH_REGEX = %r{/(original/\d+X/.*)}
+    OPTIMIZED_IMAGE_PATH_REGEX = %r{/(optimized/\d+X/.*)}
+    TEMPORARY_UPLOAD_PREFIX = "temp/"
 
     def store_upload(file, upload, content_type = nil)
       upload.url = nil
@@ -105,12 +105,6 @@ module FileStore
     end
 
     def download(object, max_file_size_kb: nil, print_deprecation: true)
-      Discourse.deprecate(<<~MESSAGE) if print_deprecation
-          In a future version `FileStore#download` will no longer raise an error when the
-          download fails, and will instead return `nil`. If you need a method that raises
-          an error, use `FileStore#download!`, which raises a `FileStore::DownloadError`.
-        MESSAGE
-
       DistributedMutex.synchronize("download_#{object.sha1}", validity: 3.minutes) do
         extension =
           File.extname(

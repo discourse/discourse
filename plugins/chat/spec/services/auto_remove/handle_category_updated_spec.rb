@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:) }
 
     let(:params) { { category_id: updated_category.id } }
 
@@ -51,9 +51,7 @@ RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
           updated_category.category_groups.delete_all
         end
 
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "does not kick any users since the default permission is Everyone (full)" do
           expect { result }.not_to change {
@@ -90,9 +88,7 @@ RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
           group_2.add(user_1)
         end
 
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+        it { is_expected.to run_successfully }
 
         it "kicks all regular users who are not in any groups with reply + see permissions" do
           expect { result }.to change {

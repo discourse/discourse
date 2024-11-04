@@ -928,7 +928,7 @@ TEXT
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_stat("some_group", show_in_ui: true) { stats }
+      plugin.register_stat("some_group") { stats }
       expect(Stat.all_stats.with_indifferent_access).to match(
         hash_including(
           some_group_last_day: 1,
@@ -937,12 +937,6 @@ TEXT
           some_group_count: 1000,
         ),
       )
-    end
-
-    it "hides the stat group from the UI by default" do
-      stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
-      plugin.register_stat("some_group") { stats }
-      expect(About.displayed_plugin_stat_groups).to eq([])
     end
 
     it "does not allow duplicate named stat groups" do

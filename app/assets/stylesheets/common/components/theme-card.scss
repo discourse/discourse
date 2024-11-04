@@ -1,0 +1,176 @@
+@mixin theme-card-border($color) {
+  border-color: var(--#{$color}-medium);
+  box-shadow: 0px 0px 0px 3px var(--#{$color}-low);
+}
+
+.themes-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1em;
+}
+
+.theme-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0px 0px 0px 3px transparent;
+  transition: box-shadow 0.3s ease-in-out;
+  &.--updating {
+    animation: updating 3s ease-in-out 1,
+      updatingInfinite 3s ease-in-out 3s infinite;
+    @keyframes updating {
+      0% {
+        box-shadow: 0px 0px 0px 3px transparent;
+        border: 1px solid var(--success);
+      }
+      50% {
+        box-shadow: 0px 0px 0px 6px var(--success-low);
+        border: 1px solid var(--success);
+      }
+      100% {
+        box-shadow: 0px 0px 0px 3px var(--success-low);
+        border: 1px solid var(--success);
+      }
+    }
+    @keyframes updatingInfinite {
+      0% {
+        box-shadow: 0px 0px 0px 3px var(--success-low);
+        border: 1px solid var(--success);
+      }
+      50% {
+        box-shadow: 0px 0px 0px 6px var(--success-low);
+        border: 1px solid var(--success);
+      }
+      100% {
+        box-shadow: 0px 0px 0px 3px var(--success-low);
+        border: 1px solid var(--success);
+      }
+    }
+  }
+  &.--updating .d-icon-sync {
+    animation: rotate 3s linear infinite;
+    margin-right: 0.45em;
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+  .admin-config-area-card__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  &.-active {
+    @include theme-card-border(tertiary);
+  }
+
+  &__update-available {
+    position: absolute;
+    right: -9px;
+    top: -9px;
+    color: var(--success);
+    font-size: var(--font-up-1);
+    background: var(--secondary);
+    display: flex;
+  }
+
+  &__icons {
+    display: flex;
+  }
+
+  &__image-wrapper {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+
+    svg {
+      width: 100%;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    border-radius: calc(var(--d-border-radius) + 1px);
+  }
+
+  .ember-checkbox {
+    margin: 0 5px 0 0;
+  }
+
+  &__checkbox-label {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  &__content {
+    padding: 10px 0;
+  }
+
+  &__description {
+    margin: 0 0 10px 0;
+  }
+
+  &__components {
+    display: -webkit-box;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+  }
+
+  &__install-button {
+    margin-top: auto;
+  }
+
+  &__footer {
+    margin-top: auto;
+    display: flex;
+  }
+
+  &__footer-actions {
+    margin-left: auto;
+  }
+
+  .admin-config-area-card__header-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    right: 20px;
+    top: 22px;
+  }
+}
+
+.admin-config-area-card.theme-card
+  .admin-config-area-card__content
+  .external-resources {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  font-size: var(--font-down-1);
+  margin-bottom: 10px;
+
+  .external-link {
+    margin-bottom: 0.25em;
+    color: var(--primary);
+    text-decoration: underline;
+  }
+}
+
+.theme-card .admin-config-area-card {
+  &__title {
+    display: flex;
+    align-items: center;
+  }
+}

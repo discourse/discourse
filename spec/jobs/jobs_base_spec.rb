@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Jobs::Base do
-  use_redis_snapshotting
-
   class GoodJob < ::Jobs::Base
     attr_accessor :count
     def execute(args)

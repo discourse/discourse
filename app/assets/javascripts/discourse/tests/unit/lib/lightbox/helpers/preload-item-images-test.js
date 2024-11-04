@@ -68,7 +68,7 @@ module(
 
       const result = await preloadItemImages(lightboxItem);
 
-      assert.notOk(
+      assert.false(
         result.canZoom,
         "canZoom should be false if fullsizeImage width or height is smaller than window inner width or height"
       );
