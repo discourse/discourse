@@ -1,5 +1,10 @@
 en:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: delete automation
     discourse_automation:
       title: Automation
       create: Create
