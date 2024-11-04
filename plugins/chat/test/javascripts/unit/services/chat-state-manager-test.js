@@ -22,7 +22,7 @@ module(
     });
 
     test("isFullPagePreferred", function (assert) {
-      assert.notOk(this.subject.isFullPagePreferred);
+      assert.false(this.subject.isFullPagePreferred);
 
       this.subject.prefersFullPage();
 
@@ -30,7 +30,7 @@ module(
 
       this.subject.prefersDrawer();
 
-      assert.notOk(this.subject.isFullPagePreferred);
+      assert.false(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
       Site.currentProp("mobileView", true);
@@ -43,7 +43,7 @@ module(
 
       this.subject.prefersFullPage();
 
-      assert.notOk(this.subject.isDrawerPreferred);
+      assert.false(this.subject.isDrawerPreferred);
 
       this.subject.prefersDrawer();
 
@@ -73,7 +73,7 @@ module(
 
     test("isFullPageActive", function (assert) {
       sinon.stub(this.subject.router, "currentRouteName").value("foo");
-      assert.notOk(this.subject.isFullPageActive);
+      assert.false(this.subject.isFullPageActive);
 
       sinon.stub(this.subject.router, "currentRouteName").value("chat");
       assert.ok(this.subject.isFullPageActive);

@@ -108,7 +108,7 @@ module(
       const options = getOptions();
       const customDateAndTime = I18n.t("time_shortcut.custom");
 
-      assert.notOk(options.includes(customDateAndTime));
+      assert.false(options.includes(customDateAndTime));
     });
 
     test("shows the now option if enabled", async function (assert) {

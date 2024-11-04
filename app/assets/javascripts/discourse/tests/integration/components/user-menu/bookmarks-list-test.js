@@ -56,10 +56,11 @@ module(
       this.currentUser.set("grouped_unread_notifications", {});
       await settled();
 
-      assert.notOk(
-        exists(".panel-body-bottom .notifications-dismiss"),
-        "dismiss button is not shown if the user no unread bookmark_reminder notifications"
-      );
+      assert
+        .dom(".panel-body-bottom .notifications-dismiss")
+        .doesNotExist(
+          "dismiss button is not shown if the user no unread bookmark_reminder notifications"
+        );
     });
 
     test("empty state (aka blank page syndrome)", async function (assert) {

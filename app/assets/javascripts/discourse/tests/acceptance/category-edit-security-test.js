@@ -29,7 +29,7 @@ acceptance("Category Edit - Security", function (needs) {
     await visit("/c/bug/edit/security");
 
     await availableGroups.expand();
-    assert.notOk(
+    assert.false(
       availableGroups.rowByValue("everyone").exists(),
       "everyone is already used and is not in the available groups"
     );

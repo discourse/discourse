@@ -185,11 +185,11 @@ module("Unit | Model | user", function (hooks) {
       _clearStatusTimerId: 100,
     });
 
-    assert.notOk(
+    assert.false(
       user.hasOwnProperty("_subscribersCount"),
       "_subscribersCount wasn't set"
     );
-    assert.notOk(
+    assert.false(
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );

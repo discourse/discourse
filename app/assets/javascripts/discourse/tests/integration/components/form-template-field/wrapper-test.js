@@ -16,10 +16,9 @@ module(
         hbs`<FormTemplateField::Wrapper @content={{this.content}} />`
       );
 
-      assert.notOk(
-        exists(".form-template-field"),
-        "A form template field should not exist"
-      );
+      assert
+        .dom(".form-template-field")
+        .doesNotExist("A form template field should not exist");
       assert.ok(exists(".alert"), "An alert message should exist");
     });
 

@@ -57,10 +57,9 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
 
     await click(header.el().querySelector(".btn-clear"));
 
-    assert.notOk(
-      header.el().querySelector(".btn-clear"),
-      "it hides the clear button"
-    );
+    assert
+      .dom(".btn-clear", header.el())
+      .doesNotExist("hides the clear button");
     assert.strictEqual(header.value(), null);
   });
 

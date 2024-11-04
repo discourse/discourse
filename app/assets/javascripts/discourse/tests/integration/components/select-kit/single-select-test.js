@@ -97,7 +97,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     await tab();
 
-    assert.notOk(
+    assert.false(
       this.subject.isExpanded(),
       "when there are no more rows, Tab collapses the dropdown"
     );
@@ -108,7 +108,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     await tab({ backwards: true });
 
-    assert.notOk(this.subject.isExpanded(), "Shift+Tab collapses the dropdown");
+    assert.false(this.subject.isExpanded(), "Shift+Tab collapses the dropdown");
   });
 
   test("value", async function (assert) {

@@ -195,26 +195,29 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
       "link is appended to the root section"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_no_route_or_href\"]"
-      ),
-      "invalid link that has no route or href is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link that has no route or href is not appended to the root section"
+      );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_no_label_or_text\"]"
-      ),
-      "invalid link that has no label or text is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link that has no label or text is not appended to the root section"
+      );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link_invalid_label\"]"
-      ),
-      "invalid link with an invalid I18n key is not appended to the root section"
-    );
+      )
+      .doesNotExist(
+        "invalid link with an invalid I18n key is not appended to the root section"
+      );
   });
 
   test("community section links are added to primary and secondary sections with the plugin API", async function (assert) {
@@ -225,25 +228,24 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
         "#sidebar-section-content-community .sidebar-section-link[data-link-name='primary']"
       )
     );
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         "#sidebar-section-content-community .sidebar-section-link[data-link-name='secondary']"
       )
-    );
+      .doesNotExist();
 
     await click(".sidebar-more-section-links-details-summary");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='primary']"
       )
-    );
+      .doesNotExist();
     assert.ok(
       exists(
         ".sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='secondary']"
       )
     );
-    assert.ok(true);
   });
 });
 

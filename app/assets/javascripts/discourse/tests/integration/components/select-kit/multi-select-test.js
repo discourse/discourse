@@ -74,7 +74,7 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.notOk(this.subject.isExpanded(), "it closes the dropdown");
+    assert.false(this.subject.isExpanded(), "closes the dropdown");
 
     await this.subject.expand();
     await this.subject.deselectItemByValue(1);
