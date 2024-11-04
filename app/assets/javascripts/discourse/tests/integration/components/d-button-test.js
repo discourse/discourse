@@ -131,7 +131,7 @@ module("Integration | Component | d-button", function (hooks) {
     );
 
     this.set("title", "test.fooTitle");
-    assert.dom("button").hasAria("title", I18n.t("test.fooTitle"));
+    assert.dom("button").hasAttribute("title", I18n.t("test.fooTitle"));
 
     this.setProperties({
       title: null,

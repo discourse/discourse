@@ -226,7 +226,8 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await render(hbs`<DMenu @inline={{true}} @label="label" />`);
     await open();
 
-    assert.dom(".fk-d-menu").hasStyle({ top: /.+/, left: /.+/ });
+    assert.dom(".fk-d-menu").hasAttribute("style", /top: [\d.]+?px/);
+    assert.dom(".fk-d-menu").hasAttribute("style", /left: [\d.]+?px/);
   });
 
   test("content close argument", async function (assert) {

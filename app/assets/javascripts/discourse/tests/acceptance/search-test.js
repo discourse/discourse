@@ -577,12 +577,12 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     assert
       .dom(`${container} li:first-child a`)
-      .isActive("arrow down selects first element");
+      .isFocused("arrow down selects first element");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert
       .dom(`${container} li:nth-child(2) a`)
-      .isActive("arrow down selects next element");
+      .isFocused("arrow down selects next element");
 
     // navigate to the `more link`
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");

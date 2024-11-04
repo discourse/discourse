@@ -20,9 +20,10 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
 
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert
-      .dom(".avatar-flair")
-      .hasStyle({ backgroundColor: "#CC0000", color: "#FFFFFF" });
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 0)",
+      color: "rgb(255, 255, 255)",
+    });
   });
 
   test("avatar flair with an image", async function (assert) {

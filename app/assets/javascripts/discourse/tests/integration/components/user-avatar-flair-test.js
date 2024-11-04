@@ -63,8 +63,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
     assert.dom(".avatar-flair").hasStyle({
-      backgroundColor: "#CC000A",
-      color: "#FFFFFA",
+      backgroundColor: "rgb(204, 0, 10)",
+      color: "rgb(255, 255, 250)",
     });
   });
 
@@ -82,8 +82,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
     assert.dom(".avatar-flair").hasStyle({
-      backgroundColor: "#CC0005",
-      color: "#FFFFF5",
+      backgroundColor: "rgb(204, 0, 5)",
+      color: "rgb(255, 255, 245)",
     });
   });
 
@@ -101,8 +101,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
     assert.dom(".avatar-flair").hasStyle({
-      backgroundColor: "#CC0002",
-      color: "#FFFFF2",
+      backgroundColor: "rgb(204, 0, 2)",
+      color: "rgb(255, 255, 242)",
     });
   });
 
@@ -134,8 +134,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-dice-two"), "it has the svg icon");
     assert.dom(".avatar-flair").hasStyle({
-      backgroundColor: "#CC0002",
-      color: "#FFFFF2",
+      backgroundColor: "rgb(204, 0, 2)",
+      color: "rgb(255, 255, 242)",
     });
   });
 
@@ -173,8 +173,8 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     assert.ok(exists(".avatar-flair"), "it has the tag");
     assert.ok(exists("svg.d-icon-xmark"), "it has the svg icon");
     assert.dom(".avatar-flair").hasStyle({
-      backgroundColor: "#123456",
-      color: "#B0B0B0",
+      backgroundColor: "rgb(18, 52, 86)",
+      color: "rgb(176, 176, 176)",
     });
   });
 
