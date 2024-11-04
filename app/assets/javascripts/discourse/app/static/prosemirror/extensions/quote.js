@@ -83,7 +83,7 @@ export default {
           state.renderContent(n);
         }
       });
-      state.write("[/quote]\n");
+      state.write("[/quote]\n\n");
     },
     quote_title() {},
   },

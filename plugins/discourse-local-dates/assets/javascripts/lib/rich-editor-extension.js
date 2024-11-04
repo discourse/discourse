@@ -1,5 +1,5 @@
 export default {
-  // TODO the rendered date needs to be localized to better match the cooked content
+  // TODO(renato): the rendered date needs to be localized to better match the cooked content
   nodeSpec: {
     local_date: {
       attrs: { date: {}, time: {}, timezone: { default: null } },

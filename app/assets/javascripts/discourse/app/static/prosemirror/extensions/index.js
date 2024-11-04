@@ -1,35 +1,43 @@
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
-import codeLangSelector from "./code-lang-selector";
-import emojiExtension from "./emoji";
-import hashtagExtension from "./hashtag";
-import headingExtension from "./heading";
-import htmlInlineExtension from "./html-inline";
-import imageExtension from "./image";
-import linkExtension from "./link";
-import mentionExtension from "./mention";
-import quoteExtension from "./quote";
-import strikethroughExtension from "./strikethrough";
-import tableExtension from "./table";
+import codeBlock from "./code-block";
+import emoji from "./emoji";
+import hashtag from "./hashtag";
+import heading from "./heading";
+import htmlBlock from "./html-block";
+import htmlInline from "./html-inline";
+import image from "./image";
+import link from "./link";
+import markdownPaste from "./markdown-paste";
+import mention from "./mention";
+import onebox from "./onebox";
+import quote from "./quote";
+import strikethrough from "./strikethrough";
+import table from "./table";
+import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
-import underlineExtension from "./underline";
+import underline from "./underline";
 
 const defaultExtensions = [
-  emojiExtension,
+  emoji,
   // image must be after emoji
-  imageExtension,
-  hashtagExtension,
-  mentionExtension,
-  strikethroughExtension,
-  underlineExtension,
-  htmlInlineExtension,
-  linkExtension,
-  headingExtension,
+  image,
+  hashtag,
+  mention,
+  strikethrough,
+  underline,
+  htmlInline,
+  htmlBlock,
+  link,
+  heading,
+  codeBlock,
+  quote,
+  onebox,
+  trailingParagraph,
   typographerReplacements,
-  codeLangSelector,
-  quoteExtension,
+  markdownPaste,
 
   // table must  be last
-  tableExtension,
+  table,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

@@ -93,26 +93,30 @@ export default class TextManipulation {
       return;
     }
 
-    // TODO other cases, probably through md parser
+    const text = i18n(`composer.${exampleKey}`);
+    const doc = convertFromMarkdown(this.schema, head + text + tail);
+
+    this.view.dispatch(
+      this.view.state.tr.replaceWith(sel.start, sel.end, doc.content.firstChild)
+    );
   }
 
-  async addText(sel, text, options) {
-    const doc = await convertFromMarkdown(
-      this.schema,
-      text,
-      this.markdownOptions
-    );
+  addText(sel, text, options) {
+    const doc = convertFromMarkdown(this.schema, text, this.markdownOptions);
 
     // assumes it returns a single block node
-    const content = doc.content.firstChild.content;
+    const content =
+      doc.content.firstChild.type.name === "paragraph"
+        ? doc.content.firstChild.content
+        : doc.content.firstChild;
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(sel.start, sel.end, content)
     );
   }
 
-  async insertBlock(block) {
-    const doc = await convertFromMarkdown(this.schema, block);
+  insertBlock(block) {
+    const doc = convertFromMarkdown(this.schema, block);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(
@@ -161,6 +165,8 @@ export default class TextManipulation {
         command = isInside(applyListMap[exampleKey])
           ? lift
           : wrapIn(applyListMap[exampleKey]);
+      } else {
+        // TODO(renato): fallback to markdown parsing
       }
     }
 
@@ -220,31 +226,30 @@ export default class TextManipulation {
   }
 
   @bind
-  paste(e) {
-    // TODO
-    console.log("paste");
-    // let { clipboard, canPasteHtml, canUpload } = clipboardHelpers(e, {
-    //   siteSettings: this.siteSettings,
-    //   canUpload: true,
-    // });
-
-    // console.log(clipboard);
-
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
+  paste() {
+    // Intentionally no-op
+    // Pasting markdown is being handled by the markdown-paste extension
+    // Pasting an url on top of a text is being handled by the link extension
   }
 
-  selectText() {
-    // TODO
+  selectText(from, length, opts) {
+    const tr = this.view.state.tr.setSelection(
+      new this.view.state.selection.constructor(
+        this.view.state.doc.resolve(from),
+        this.view.state.doc.resolve(from + length)
+      )
+    );
+
+    if (opts.scroll) {
+      tr.scrollIntoView();
+    }
+
+    this.view.dispatch(tr);
   }
 
   @bind
   inCodeBlock() {
-    return (
-      this.view.state.selection.$from.parent.type ===
-      this.schema.nodes.code_block
-    );
+    return this.autocompleteHandler.inCodeBlock();
   }
 
   /**
@@ -287,7 +292,7 @@ class AutocompleteHandler {
    * @param {number} end
    * @param {String} term
    */
-  async replaceTerm({ start, end, term }) {
+  replaceTerm({ start, end, term }) {
     const node = this.view.state.selection.$head.nodeBefore;
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
@@ -307,7 +312,7 @@ class AutocompleteHandler {
     //   );
     // }
 
-    const doc = await convertFromMarkdown(this.schema, term);
+    const doc = convertFromMarkdown(this.schema, term);
 
     const tr = this.view.state.tr.replaceWith(
       from,
@@ -355,8 +360,10 @@ class AutocompleteHandler {
   }
 
   inCodeBlock() {
-    // TODO
-    return false;
+    return (
+      this.view.state.selection.$from.parent.type ===
+      this.schema.nodes.code_block
+    );
   }
 }
 
@@ -418,7 +425,7 @@ class PlaceholderHandler {
     });
   }
 
-  async success(file, markdown) {
+  success(file, markdown) {
     let nodeToReplace = null;
     this.view.state.doc.descendants((node, pos) => {
       if (
@@ -433,7 +440,7 @@ class PlaceholderHandler {
     });
 
     // keeping compatibility with plugins that change the image node via markdown
-    const doc = await convertFromMarkdown(this.schema, markdown);
+    const doc = convertFromMarkdown(this.schema, markdown);
 
     this.view.dispatch(
       this.view.state.tr.replaceWith(
