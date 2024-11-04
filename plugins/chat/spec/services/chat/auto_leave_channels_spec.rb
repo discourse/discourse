@@ -4,12 +4,10 @@ RSpec.describe Chat::AutoLeaveChannels do
   describe ".call" do
     subject(:result) { described_class.call(params: {}) }
 
-    before do
-      @previous_events = DiscourseEvent.events.dup
-      DiscourseEvent.events.clear
-    end
+    let!(:previous_events) { DiscourseEvent.events.dup }
 
-    after { @previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
+    before { DiscourseEvent.events.clear }
+    after { previous_events.each { |event, handlers| DiscourseEvent.events[event] = handlers } }
 
     context "when chat is disabled" do
       before { SiteSetting.chat_enabled = false }
