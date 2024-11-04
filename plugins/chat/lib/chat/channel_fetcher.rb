@@ -198,6 +198,7 @@ module Chat
           .strict_loading
           .where(id: scoped_channels)
           .includes(
+            :icon_upload,
             last_message: [:uploads],
             chatable: [{ direct_message_users: [user: %i[user_option group_users]] }, :users],
           )

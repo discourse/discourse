@@ -38,6 +38,7 @@ module Chat
       attribute :category_id, :integer
       attribute :auto_join_users, :boolean, default: false
       attribute :threading_enabled, :boolean, default: false
+      attribute :icon_upload_id, :integer
 
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
@@ -76,7 +77,14 @@ module Chat
     def create_channel(category:, params:)
       category.create_chat_channel(
         user_count: 1,
-        **params.slice(:name, :slug, :description, :auto_join_users, :threading_enabled),
+        **params.slice(
+          :name,
+          :slug,
+          :icon_upload_id,
+          :description,
+          :auto_join_users,
+          :threading_enabled,
+        ),
       )
     end
 
