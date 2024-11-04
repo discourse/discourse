@@ -36,6 +36,8 @@ module DiscourseAutomation
         "delete_automation",
         id: automation.id,
         name: automation.name,
+        script: automation.script,
+        trigger: automation.trigger,
       )
     end
 

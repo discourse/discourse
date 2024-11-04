@@ -19,7 +19,9 @@ RSpec.describe DiscourseAutomation::DestroyAutomation do
 
     it "logs the action" do
       expect { result }.to change { UserHistory.count }.by(1)
-      expect(UserHistory.last.details).to eq("id: #{automation.id}\nname: #{automation.name}")
+      expect(UserHistory.last.details).to eq(
+        "id: #{automation.id}\nname: #{automation.name}\nscript: #{automation.script}\ntrigger: #{automation.trigger}",
+      )
     end
 
     it "destroys the automation" do
