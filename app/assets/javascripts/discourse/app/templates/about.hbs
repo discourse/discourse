@@ -1,41 +1,208 @@
-{{body-class "about-page"}}
+<PluginOutlet
+  @name="about-wrapper"
+  @outletArgs={{hash model=this.model contactInfo=this.contactInfo}}
+>
 
-<section>
-  <div class="container">
-    <div class="contents clearfix body-page">
+  {{body-class "about-page"}}
 
-      <ul class="nav-pills">
-        <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n
-              "about.simple_title"
-            }}</LinkTo></li>
-        {{#if this.faqOverridden}}
-          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
-                "guidelines"
+  <section>
+    <div class="container">
+      <div class="contents clearfix body-page">
+
+        <ul class="nav-pills">
+          <li class="nav-item-about"><LinkTo @route="about" class="active">{{i18n
+                "about.simple_title"
               }}</LinkTo></li>
-          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
-                "faq"
-              }}</LinkTo></li>
-        {{else if this.renameFaqToGuidelines}}
-          <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
-                "guidelines"
-              }}</LinkTo></li>
+          {{#if this.faqOverridden}}
+            <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
+                  "guidelines"
+                }}</LinkTo></li>
+            <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
+                  "faq"
+                }}</LinkTo></li>
+          {{else if this.renameFaqToGuidelines}}
+            <li class="nav-item-guidelines"><LinkTo @route="guidelines">{{i18n
+                  "guidelines"
+                }}</LinkTo></li>
+          {{else}}
+            <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
+                  "faq"
+                }}</LinkTo></li>
+          {{/if}}
+          {{#if this.site.tos_url}}
+            <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
+                  "tos"
+                }}</LinkTo></li>
+          {{/if}}
+          {{#if this.site.privacy_policy_url}}
+            <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
+                  "privacy"
+                }}</LinkTo></li>
+          {{/if}}
+        </ul>
+        {{#if this.currentUser.render_experimental_about_page}}
+          <AboutPage @model={{this.model}} />
         {{else}}
-          <li class="nav-item-faq"><LinkTo @route="faq">{{i18n
-                "faq"
-              }}</LinkTo></li>
+          <section class="about description">
+            <h2>{{i18n "about.title" title=this.model.title}}</h2>
+            <p>{{this.model.description}}</p>
+          </section>
+
+          <PluginOutlet
+            @name="about-after-description"
+            @connectorTagName="section"
+            @outletArgs={{hash model=this.model}}
+          />
+
+          {{#if this.model.admins}}
+            <section class="about admins">
+              <h3>{{d-icon "users"}} {{i18n "about.our_admins"}}</h3>
+              <div class="users">
+                <LegacyAboutPageUsers @users={{this.model.admins}} />
+              </div>
+            </section>
+          {{/if}}
+
+          <span>
+            <PluginOutlet
+              @name="about-after-admins"
+              @connectorTagName="section"
+              @outletArgs={{hash model=this.model}}
+            />
+          </span>
+
+          {{#if this.model.moderators}}
+            <section class="about moderators">
+              <h3>{{d-icon "users"}} {{i18n "about.our_moderators"}}</h3>
+              <div class="users">
+                <LegacyAboutPageUsers @users={{this.model.moderators}} />
+              </div>
+            </section>
+          {{/if}}
+
+          <span>
+            <PluginOutlet
+              @name="about-after-moderators"
+              @connectorTagName="section"
+              @outletArgs={{hash model=this.model}}
+            />
+          </span>
+
+          {{#if this.model.category_moderators.length}}
+            {{#each this.model.category_moderators as |cm|}}
+              <section
+                class="about category-moderators moderators-{{cm.category.slug}}"
+              >
+                <h3>{{category-link cm.category}}{{i18n "about.moderators"}}</h3>
+                <div class="users">
+                  <LegacyAboutPageUsers @users={{cm.moderators}} />
+                </div>
+                <div class="clearfix"></div>
+              </section>
+            {{/each}}
+          {{/if}}
+          {{#if this.model.can_see_about_stats}}
+            <section class="about stats">
+              <h3>{{d-icon "far-chart-bar"}} {{i18n "about.stats"}}</h3>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>
+                    </th>
+                    <th>{{i18n "about.stat.last_day"}}</th>
+                    <th>{{i18n "about.stat.last_7_days"}}</th>
+                    <th>{{i18n "about.stat.last_30_days"}}</th>
+                    <th>{{i18n "about.stat.all_time"}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="about-topic-count">
+                    <td class="title">{{i18n "about.topic_count"}}</td>
+                    <td>{{number this.model.stats.topics_last_day}}</td>
+                    <td>{{number this.model.stats.topics_7_days}}</td>
+                    <td>{{number this.model.stats.topics_30_days}}</td>
+                    <td>{{number this.model.stats.topics_count}}</td>
+                  </tr>
+                  <tr class="about-post-count">
+                    <td>{{i18n "about.post_count"}}</td>
+                    <td>{{number this.model.stats.posts_last_day}}</td>
+                    <td>{{number this.model.stats.posts_7_days}}</td>
+                    <td>{{number this.model.stats.posts_30_days}}</td>
+                    <td>{{number this.model.stats.posts_count}}</td>
+                  </tr>
+                  <tr class="about-user-count">
+                    <td>{{i18n "about.user_count"}}</td>
+                    <td>{{number this.model.stats.users_last_day}}</td>
+                    <td>{{number this.model.stats.users_7_days}}</td>
+                    <td>{{number this.model.stats.users_30_days}}</td>
+                    <td>{{number this.model.stats.users_count}}</td>
+                  </tr>
+                  <tr class="about-active-user-count">
+                    <td>{{i18n "about.active_user_count"}}</td>
+                    <td>{{number this.model.stats.active_users_last_day}}</td>
+                    <td>{{number this.model.stats.active_users_7_days}}</td>
+                    <td>{{number this.model.stats.active_users_30_days}}</td>
+                    <td>&mdash;</td>
+                  </tr>
+                  {{#if this.siteSettings.display_eu_visitor_stats}}
+                    <tr class="about-visitor-count">
+                      <td>{{i18n "about.visitor_count"}}</td>
+                      <td>{{number this.model.stats.visitors_last_day}}</td>
+                      <td>{{number this.model.stats.visitors_7_days}}</td>
+                      <td>{{number this.model.stats.visitors_30_days}}</td>
+                      <td>&mdash;</td>
+                    </tr>
+                    <tr class="about-eu-visitor-count">
+                      <td>{{i18n "about.eu_visitor_count"}}</td>
+                      <td>{{number this.model.stats.eu_visitors_last_day}}</td>
+                      <td>{{number this.model.stats.eu_visitors_7_days}}</td>
+                      <td>{{number this.model.stats.eu_visitors_30_days}}</td>
+                      <td>&mdash;</td>
+                    </tr>
+                  {{/if}}
+                  <tr class="about-like-count">
+                    <td>{{i18n "about.like_count"}}</td>
+                    <td>{{number this.model.stats.likes_last_day}}</td>
+                    <td>{{number this.model.stats.likes_7_days}}</td>
+                    <td>{{number this.model.stats.likes_30_days}}</td>
+                    <td>{{number this.model.stats.likes_count}}</td>
+                  </tr>
+                  {{#each this.statGroups as |statGroupName|}}
+                    <tr class={{concat "about-" statGroupName "-count"}}>
+                      <td>{{i18n (concat "about." statGroupName "_count")}}</td>
+                      <td>{{number
+                          (get
+                            this.model.stats (concat statGroupName "_last_day")
+                          )
+                        }}</td>
+                      <td>{{number
+                          (get this.model.stats (concat statGroupName "_7_days"))
+                        }}</td>
+                      <td>{{number
+                          (get this.model.stats (concat statGroupName "_30_days"))
+                        }}</td>
+                      <td>{{number
+                          (get this.model.stats (concat statGroupName "_count"))
+                        }}</td>
+                    </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+              {{#if this.siteSettings.display_eu_visitor_stats}}
+                <p class="about stats-table-footer"><small
+                  >{{this.statsTableFooter}}</small></p>
+              {{/if}}
+            </section>
+          {{/if}}
+
+          {{#if this.contactInfo}}
+            <section class="about contact">
+              <h3>{{d-icon "envelope"}} {{i18n "about.contact"}}</h3>
+              <p>{{html-safe this.contactInfo}}</p>
+            </section>
+          {{/if}}
         {{/if}}
-        {{#if this.site.tos_url}}
-          <li class="nav-item-tos"><LinkTo @route="tos">{{i18n
-                "tos"
-              }}</LinkTo></li>
-        {{/if}}
-        {{#if this.site.privacy_policy_url}}
-          <li class="nav-item-privacy"><LinkTo @route="privacy">{{i18n
-                "privacy"
-              }}</LinkTo></li>
-        {{/if}}
-      </ul>
-      <AboutPage @model={{this.model}} />
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</PluginOutlet>
