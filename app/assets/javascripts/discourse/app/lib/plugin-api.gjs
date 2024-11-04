@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.3";
+export const PLUGIN_API_VERSION = "1.38.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -23,6 +23,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
+import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
@@ -3284,6 +3285,50 @@ class PluginApi {
    */
   registerPluginHeaderActionComponent(pluginId, componentClass) {
     registerPluginHeaderActionComponent(pluginId, componentClass);
+  }
+
+  /**
+   * Registers a new tab to be displayed in "more topics" area at the bottom of a topic page.
+   *
+   * ```gjs
+   *  api.registerMoreTopicsTab({
+   *    id: "other-topics",
+   *    name: i18n("other_topics.tab"),
+   *    component: <template>tbd</template>,
+   *    condition: ({ topic }) => topic.otherTopics?.length > 0,
+   *  });
+   * ```
+   *
+   * You can additionally use more-topics-tabs value transformer to conditionally show/hide
+   * specific tabs.
+   *
+   * ```js
+   * api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
+   *   if (context.user?.aFeatureFlag) {
+   *     // Remove "suggested" from the topics page
+   *     return value.filter(
+   *       (tab) =>
+   *         context.currentContext !== "topic" ||
+   *         tab.id !== "suggested-topics"
+   *     );
+   *   }
+   * });
+   * ```
+   *
+   * @callback tabCondition
+   * @param {Object} opts
+   * @param {"topic"|"pm"} opts.context - the type of the current page
+   * @param {Topic} opts.topic - the current topic
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - an identifier used in more-topics-tabs value transformer
+   * @param {string} tab.name - a name displayed on the tab
+   * @param {string} tab.icon - an optional icon displayed on the tab
+   * @param {Class} tab.component - contents of the tab
+   * @param {tabCondition} tab.condition - an optional callback to conditionally show the tab
+   */
+  registerMoreTopicsTab(tab) {
+    registeredTabs.push(tab);
   }
 
   // eslint-disable-next-line no-unused-vars

@@ -22,6 +22,7 @@ import {
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
+import { clearRegisteredTabs } from "discourse/components/more-topics";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
@@ -253,6 +254,7 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
+  clearRegisteredTabs();
 }
 
 function cleanupCssGeneratorTags() {
