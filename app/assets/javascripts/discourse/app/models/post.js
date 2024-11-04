@@ -109,6 +109,7 @@ export default class Post extends RestModel {
 
   @tracked bookmarked;
   @tracked can_delete;
+  @tracked can_edit;
   @tracked can_permanently_delete;
   @tracked can_recover;
   @tracked deleted_at;
@@ -120,6 +121,7 @@ export default class Post extends RestModel {
 
   customShare = null;
 
+  @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
   @or("deleted_at", "deletedViaTopic") deleted;
