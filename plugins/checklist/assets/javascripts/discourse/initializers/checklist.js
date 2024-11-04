@@ -3,12 +3,14 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
+import richEditorExtension from "../../lib/rich-editor-extension";
 
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);
+    api.registerRichEditorExtension(richEditorExtension);
   }
 }
 

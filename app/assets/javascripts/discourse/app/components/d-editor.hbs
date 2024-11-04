@@ -8,7 +8,14 @@
         {{if this.isEditorFocused 'in-focus'}}"
     >
       <div class="d-editor-button-bar" role="toolbar">
-        {{#each this.toolbar.groups as |group|}}
+        {{#if this.siteSettings.experimental_rich_editor}}
+            <Composer::ToggleSwitch
+              @state={{this.isRichEditorEnabled}}
+              {{on "click" this.toggleRichEditor}}
+            />
+          {{/if}}
+
+          {{#each this.toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if (b.condition this)}}
               {{#if b.popupMenu}}
@@ -46,7 +53,7 @@
         @value={{this.value}}
         @placeholder={{this.placeholderTranslated}}
         @disabled={{this.disabled}}
-        @change={{this.change}}
+        @change={{this.onChange}}
         @focusIn={{this.handleFocusIn}}
         @focusOut={{this.handleFocusOut}}
         @id={{this.textAreaId}}

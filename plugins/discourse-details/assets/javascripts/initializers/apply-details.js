@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 function initializeDetails(api) {
   api.decorateCooked(($elem) => $("details", $elem), {
@@ -19,6 +20,8 @@ function initializeDetails(api) {
     icon: "caret-right",
     label: "details.title",
   });
+
+  api.registerRichEditorExtension(richEditorExtension);
 }
 
 export default {
