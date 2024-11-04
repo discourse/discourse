@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
+import { reference } from "@popperjs/core";
 import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
@@ -156,18 +157,33 @@ export default class PostMenu extends Component {
 
     const configuredItems = this.configuredItems;
 
+    let referencePosition = "before";
+
+    const mappedPositions = new Map(
+      configuredItems.map((key, index) => {
+        if (key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
+          referencePosition = "after";
+          return [key, null];
+        } else if (
+          referencePosition === "before" &&
+          index < configuredItems.length - 1
+        ) {
+          return [key, { [referencePosition]: configuredItems[index + 1] }];
+        } else if (referencePosition === "after" && index > 0) {
+          return [key, { [referencePosition]: configuredItems[index - 1] }];
+        } else {
+          return [key, null];
+        }
+      })
+    );
+
     const dag = DAG.from(
       Array.from(coreButtonComponents.entries()).map(
         ([key, ButtonComponent]) => {
           const configuredIndex = configuredItems.indexOf(key);
 
           const position =
-            configuredIndex !== -1
-              ? {
-                  before: configuredItems.slice(configuredIndex + 1),
-                  after: configuredItems.slice(0, configuredIndex),
-                }
-              : {};
+            configuredIndex !== -1 ? mappedPositions.get(key) : null;
 
           return [key, ButtonComponent, position];
         }
