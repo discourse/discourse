@@ -78,11 +78,13 @@ module(
         .dom(".selected-name", this.subject.header().el())
         .doesNotExist("hides the text of the selected item");
 
-      assert.strictEqual(
-        this.subject.header().el().getAttribute("title"),
-        "[en.test_none]",
-        "it adds a title attribute to the button"
-      );
+      assert
+        .dom(this.subject.header().el())
+        .hasAttribute(
+          "title",
+          "[en.test_none]",
+          "it adds a title attribute to the button"
+        );
     });
 
     test("options.showFullTitle=true", async function (assert) {

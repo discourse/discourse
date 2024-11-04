@@ -282,7 +282,9 @@ acceptance("Topic featured links", function (needs) {
 
     const link = query(".title-wrapper .topic-featured-link");
     assert.strictEqual(link.innerText, "example.com");
-    assert.strictEqual(link.getAttribute("rel"), "ugc");
+    assert
+      .dom(".title-wrapper .topic-featured-link")
+      .hasAttribute("rel", "ugc");
   });
 
   test("remove featured link", async function (assert) {

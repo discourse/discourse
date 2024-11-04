@@ -425,16 +425,15 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       hbs`<SingleSelect @value={{this.value}} @content={{this.content}} />`
     );
 
-    assert.strictEqual(
-      this.subject.header().el().getAttribute("name"),
-      I18n.t("select_kit.select_to_filter")
-    );
+    assert
+      .dom(this.subject.header().el())
+      .hasAttribute("name", I18n.t("select_kit.select_to_filter"));
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.strictEqual(
-      this.subject.header().el().getAttribute("name"),
+    assert.dom(this.subject.header().el()).hasAttribute(
+      "name",
       I18n.t("select_kit.filter_by", {
         name: this.content.firstObject.name,
       })

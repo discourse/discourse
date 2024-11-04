@@ -68,10 +68,9 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".action-title .topic-link")
       .hasText("Internationalization / localization");
-    assert.strictEqual(
-      query(".action-title .topic-link").getAttribute("href"),
-      "/t/internationalization-localization/280"
-    );
+    assert
+      .dom(".action-title .topic-link")
+      .hasAttribute("href", "/t/internationalization-localization/280");
     assert.strictEqual(
       query(".d-editor-input").value,
       "test replying to topic when initially replied to post"
