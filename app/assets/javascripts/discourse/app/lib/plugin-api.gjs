@@ -3,8 +3,9 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "2.0.1";
+export const PLUGIN_API_VERSION = "2.1.0";
 
+import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -3387,6 +3388,10 @@ class PluginApi {
    */
   registerReportModeComponent(mode, componentClass) {
     registerReportModeComponent(mode, componentClass);
+  }
+
+  registerRichEditorExtension(extension) {
+    registerRichEditorExtension(extension);
   }
 
   #deprecatedWidgetOverride(widgetName, override) {

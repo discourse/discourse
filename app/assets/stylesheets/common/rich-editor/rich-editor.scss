@@ -1,0 +1,198 @@
+.d-editor__container {
+  margin: 0;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  height: 100%;
+}
+
+.d-editor__editable {
+  outline: 0;
+  padding: 0 0.625rem;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 30px 0 10px;
+    &:first-child {
+      margin-top: 10px;
+    }
+  }
+
+  h1 {
+    font-size: var(--font-up-3-rem);
+  }
+
+  h2 {
+    font-size: var(--font-up-2-rem);
+  }
+
+  h3 {
+    font-size: var(--font-up-1-rem);
+  }
+
+  img {
+    display: inline-block;
+    margin: 0 auto;
+    max-width: 100%;
+
+    &[data-placeholder="true"] {
+      animation: placeholder 1.5s infinite;
+
+      @keyframes placeholder {
+        0% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 0.6;
+        }
+      }
+    }
+  }
+
+  ul,
+  ol {
+    padding-left: 1.25em;
+
+    &[data-tight="true"] > li > p {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  p {
+    line-height: 1.5;
+
+    &:first-child {
+      margin-top: 0.59rem;
+    }
+  }
+
+  p[data-placeholder]::before {
+    pointer-events: none;
+    position: absolute;
+    padding-top: 2px;
+    padding-right: 0.5rem;
+    content: attr(data-placeholder);
+    color: var(--primary-400);
+    line-height: 1.1;
+  }
+
+  del {
+    background-color: var(--danger-low);
+  }
+
+  ins {
+    background-color: var(--success-low);
+  }
+
+  mark {
+    background-color: var(--highlight);
+  }
+
+  td {
+    padding: 3px 3px 3px 0.5em;
+  }
+
+  th {
+    padding-bottom: 2px;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  kbd {
+    // I believe this shouldn't be `inline-flex` in posts either (test with emojis before/after text to see why),
+    // but overriding just for the editor for now
+    display: inline;
+    padding-top: 0.2rem;
+  }
+}
+
+.d-editor__code-lang-select {
+  position: absolute;
+  right: 0.25rem;
+  top: -0.6rem;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--border-radius);
+  background-color: var(--primary-very-low);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1-rem);
+}
+
+/*
+ Everything below was copied from prosemirror-view/style/prosemirror.css
+ */
+
+.ProseMirror {
+  position: relative;
+}
+
+.ProseMirror {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+.ProseMirror li {
+  position: relative;
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+.ProseMirror-hideselection *::-moz-selection {
+  background: transparent;
+}
+.ProseMirror-hideselection {
+  caret-color: transparent;
+}
+
+/* See https://github.com/ProseMirror/prosemirror/issues/1421#issuecomment-1759320191 */
+.ProseMirror [draggable][contenteditable="false"] {
+  user-select: text;
+}
+
+.ProseMirror-selectednode {
+  outline: 2px solid #8cf;
+}
+
+/* Make sure li selections wrap around markers */
+
+li.ProseMirror-selectednode {
+  outline: none;
+}
+
+li.ProseMirror-selectednode:after {
+  content: "";
+  position: absolute;
+  left: -32px;
+  right: -2px;
+  top: -2px;
+  bottom: -2px;
+  border: 2px solid #8cf;
+  pointer-events: none;
+}
+
+/* Protect against generic img rules */
+
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+}

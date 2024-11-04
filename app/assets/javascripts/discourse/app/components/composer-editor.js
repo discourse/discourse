@@ -203,6 +203,11 @@ export default class ComposerEditor extends Component {
 
     input.addEventListener("scroll", this._throttledSyncEditorAndPreviewScroll);
 
+    if (!this.site.mobileView) {
+      this.composer.set("showPreview", this.textManipulation.allowPreview);
+    }
+    this.composer.set("allowPreview", this.textManipulation.allowPreview);
+
     // Focus on the body unless we have a title
     if (!this.get("composer.model.canEditTitle")) {
       this.textManipulation.putCursorAtEnd();
@@ -859,14 +864,15 @@ export default class ComposerEditor extends Component {
 
   @action
   extraButtons(toolbar) {
-    toolbar.addButton({
-      id: "quote",
-      group: "fontStyles",
-      icon: "far-comment",
-      sendAction: this.composer.importQuote,
-      title: "composer.quote_post_title",
-      unshift: true,
-    });
+    // TODO remove this and all "importQuote" refs
+    // toolbar.addButton({
+    //   id: "quote",
+    //   group: "fontStyles",
+    //   icon: "far-comment",
+    //   sendAction: this.composer.importQuote,
+    //   title: "composer.quote_post_title",
+    //   unshift: true,
+    // });
 
     if (
       this.composer.allowUpload &&

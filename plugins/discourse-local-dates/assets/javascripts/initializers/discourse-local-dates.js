@@ -13,6 +13,7 @@ import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
+import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -236,6 +237,8 @@ function initializeDiscourseLocalDates(api) {
       return "";
     }
   });
+
+  api.registerRichEditorExtension(richEditorExtension);
 }
 
 function buildHtmlPreview(element, siteSettings) {
