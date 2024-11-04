@@ -9,13 +9,13 @@
     >
       <div class="d-editor-button-bar" role="toolbar">
         {{#if this.siteSettings.experimental_rich_editor}}
-            <Composer::ToggleSwitch
-              @state={{this.isRichEditorEnabled}}
-              {{on "click" this.toggleRichEditor}}
-            />
-          {{/if}}
+          <Composer::ToggleSwitch
+            @state={{this.isRichEditorEnabled}}
+            {{on "click" this.toggleRichEditor}}
+          />
+        {{/if}}
 
-          {{#each this.toolbar.groups as |group|}}
+        {{#each this.toolbar.groups as |group|}}
           {{#each group.buttons as |b|}}
             {{#if (b.condition this)}}
               {{#if b.popupMenu}}
@@ -56,6 +56,8 @@
         @change={{this.onChange}}
         @focusIn={{this.handleFocusIn}}
         @focusOut={{this.handleFocusOut}}
+        @categoryId={{@categoryId}}
+        @topicId={{@topicId}}
         @id={{this.textAreaId}}
       />
       <PopupInputTip @validation={{this.validation}} />

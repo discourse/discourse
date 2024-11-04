@@ -11,12 +11,14 @@ import {
   getNodeViews,
   getPlugins,
 } from "discourse/lib/composer/rich-editor-extensions";
+import * as ProsemirrorModel from "prosemirror-model";
+import * as ProsemirrorView from "prosemirror-view";
 import { createHighlight } from "../plugins/code-highlight";
 import { baseKeymap } from "prosemirror-commands";
 import { dropCursor } from "prosemirror-dropcursor";
-import { gapCursor } from "prosemirror-gapcursor";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
+import * as ProsemirrorState from "prosemirror-state";
 import { EditorState, Plugin } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { bind } from "discourse-common/utils/decorators";
@@ -54,18 +56,20 @@ export default class ProsemirrorEditor extends Component {
 
     this.plugins ??= [
       buildInputRules(this.schema),
-      // TODO buildPasteRules(),
       keymap(buildKeymap(this.schema, keymapFromArgs)),
       keymap(baseKeymap),
       dropCursor({ color: "var(--primary)" }),
-      gapCursor(),
       history(),
       placeholder(this.args.placeholder),
       createHighlight(),
       ...getPlugins().map((plugin) =>
-        // can be either a function that receives the Plugin class,
-        // or a plugin spec to be passed directly to the Plugin constructor
-        typeof plugin === "function" ? plugin(Plugin) : new Plugin(plugin)
+        typeof plugin === "function"
+          ? plugin({
+              ...ProsemirrorState,
+              ...ProsemirrorModel,
+              ...ProsemirrorView,
+            })
+          : new Plugin(plugin)
       ),
     ];
 
@@ -75,6 +79,10 @@ export default class ProsemirrorEditor extends Component {
     });
 
     this.view = new EditorView(this.rootElement, {
+      discourse: {
+        topicId: this.args.topicId,
+        categoryId: this.args.categoryId,
+      },
       nodeViews: this.args.nodeViews ?? getNodeViews(),
       state: this.state,
       attributes: { class: "d-editor-input d-editor__editable" },
@@ -98,8 +106,7 @@ export default class ProsemirrorEditor extends Component {
         },
       },
       handleKeyDown: (view, event) => {
-        // this happens before the autocomplete event, so we check if it's open
-        // TODO(renato): find a better way to handle these events, or just a better check
+        // skip the event if it's an Enter keypress and the autocomplete is open
         return (
           event.key === "Enter" && !!document.querySelector(".autocomplete")
         );
@@ -114,14 +121,13 @@ export default class ProsemirrorEditor extends Component {
 
     this.destructor = this.args.onSetup(this.textManipulation);
 
-    await this.convertFromValue();
+    this.convertFromValue();
   }
 
   @bind
-  async convertFromValue() {
-    const doc = await convertFromMarkdown(this.schema, this.args.value);
+  convertFromValue() {
+    const doc = convertFromMarkdown(this.schema, this.args.value);
 
-    // doc.check();
     // console.log("Resulting doc:", doc);
 
     const tr = this.state.tr

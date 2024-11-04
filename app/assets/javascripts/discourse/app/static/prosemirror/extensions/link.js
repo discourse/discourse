@@ -1,32 +1,39 @@
-const HTTP_MAILTO_REGEX = new RegExp(
-  /(?:(?:(https|http|ftp)+):\/\/)?(?:\S+(?::\S*)?(@))?(?:(?:([a-z0-9][a-z0-9\-]*)?[a-z0-9]+)(?:\.(?:[a-z0-9\-])*[a-z0-9]+)*(?:\.(?:[a-z]{2,})(:\d{1,5})?))(?:\/[^\s]*)?\s $/
-);
-
-// TODO use site settings
-
 export default {
   inputRules: [
-    {
-      match: HTTP_MAILTO_REGEX,
-      handler: (state, match, start, end) => {
-        const markType = state.schema.marks.link;
-
-        const resolvedStart = state.doc.resolve(start);
-        if (!resolvedStart.parent.type.allowsMarkType(markType)) {
-          return null;
+    // []() replacement
+    ({ schema, markInputRule }) =>
+      markInputRule(
+        /\[([^\]]+)]\(([^)\s]+)(?:\s+[“"']([^“"']+)[”"'])?\)$/,
+        schema.marks.link,
+        (match) => {
+          return { href: match[2], title: match[3] };
         }
-
-        const link = match[0].substring(0, match[0].length - 1);
-        const linkAttrs =
-          match[2] === "@"
-            ? { href: "mailto:" + link }
-            : { href: link, target: "_blank" };
-        const linkTo = markType.create(linkAttrs);
-        return state.tr
-          .removeMark(start, end, markType)
-          .addMark(start, end, linkTo)
-          .insertText(match[5], start);
-      },
-    },
+      ),
+    // TODO(renato): auto-linkify when typing (https://github.com/markdown-it/markdown-it/blob/master/lib/rules_inline/autolink.mjs)
   ],
+  plugins: ({ Plugin, Slice, Fragment }) =>
+    new Plugin({
+      props: {
+        // Auto-linkify plain-text pasted URLs
+        // TODO(renato): URLs copied from HTML will go through the regular HTML parsing
+        //  it would be nice to auto-linkify them too
+        clipboardTextParser(text, $context, plain, view) {
+          // TODO(renato): a less naive regex, reuse existing
+          if (!text.match(/^https?:\/\//) || view.state.selection.empty) {
+            return;
+          }
+
+          const marks = $context.marks();
+          const selectedText = view.state.doc.textBetween(
+            view.state.selection.from,
+            view.state.selection.to
+          );
+          const textNode = view.state.schema.text(selectedText, [
+            ...marks,
+            view.state.schema.marks.link.create({ href: text }),
+          ]);
+          return new Slice(Fragment.from(textNode), 0, 0);
+        },
+      },
+    }),
 };
