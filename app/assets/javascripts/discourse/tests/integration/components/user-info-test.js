@@ -36,9 +36,9 @@ module("Integration | Component | user-info", function (hooks) {
     assert.ok(exists(`.name-line a[href="/u/${this.currentUser.username}"]`));
 
     this.set("includeLink", false);
-    assert.notOk(
-      exists(`.name-line a[href="/u/${this.currentUser.username}"]`)
-    );
+    assert
+      .dom(`.name-line a[href="/u/${this.currentUser.username}"]`)
+      .doesNotExist();
   });
 
   test("includeAvatar", async function (assert) {

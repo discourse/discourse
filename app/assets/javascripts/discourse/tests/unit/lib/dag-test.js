@@ -27,7 +27,7 @@ module("Unit | Lib | DAG", function (hooks) {
     dag.delete("key2");
 
     assert.ok(dag.has("key1"));
-    assert.notOk(dag.has("key2"));
+    assert.false(dag.has("key2"));
     assert.ok(dag.has("key3"));
   });
 

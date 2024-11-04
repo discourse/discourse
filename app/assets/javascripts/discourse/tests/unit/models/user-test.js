@@ -136,10 +136,10 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
+    assert.expect(0);
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user");
     user.statusManager.stopTrackingStatus();
-    assert.ok(true);
   });
 
   test("clears statuses of several users correctly when receiving status updates via appEvents", function (assert) {
@@ -185,11 +185,11 @@ module("Unit | Model | user", function (hooks) {
       _clearStatusTimerId: 100,
     });
 
-    assert.notOk(
+    assert.false(
       user.hasOwnProperty("_subscribersCount"),
       "_subscribersCount wasn't set"
     );
-    assert.notOk(
+    assert.false(
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );

@@ -1106,7 +1106,7 @@ acceptance("Composer - Error Extensibility", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.notOk(exists(".dialog-body"), "it does not pop up an error message");
+    assert.dom(".dialog-body").doesNotExist("does not pop up an error message");
   });
 
   test("Create a topic with server side errors not handled by a plugin", async function (assert) {

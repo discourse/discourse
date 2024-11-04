@@ -108,10 +108,11 @@ module(
           hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
         );
 
-        assert.notOk(
-          exists(".abcde"),
-          "custom CSS class is not added when condition is not met"
-        );
+        assert
+          .dom(".abcde")
+          .doesNotExist(
+            "custom CSS class is not added when condition is not met"
+          );
 
         this.set("args", { id: 123, canRecover: true });
 

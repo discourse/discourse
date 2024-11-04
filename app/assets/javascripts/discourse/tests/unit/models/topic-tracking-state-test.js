@@ -368,7 +368,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     trackingState.sync(list, "unread");
 
-    assert.notOk(
+    assert.false(
       trackingState.states.has("t111"),
       "expect state for topic 111 to be deleted"
     );

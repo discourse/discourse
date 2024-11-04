@@ -388,7 +388,9 @@ export default {
             }
 
             get prefixType() {
-              if (this.channel.chatable.group) {
+              if (this.channel.iconUploadUrl) {
+                return "image";
+              } else if (this.channel.chatable.group) {
                 return "text";
               } else {
                 return "image";
@@ -396,7 +398,9 @@ export default {
             }
 
             get prefixValue() {
-              if (this.channel.chatable.group) {
+              if (this.channel.iconUploadUrl) {
+                return this.channel.iconUploadUrl;
+              } else if (this.channel.chatable.group) {
                 return this.channel.membershipsCount;
               } else {
                 return avatarUrl(
