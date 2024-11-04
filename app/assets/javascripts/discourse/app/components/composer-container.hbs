@@ -298,15 +298,17 @@
               </a>
             {{/if}}
 
-            <a
-              href
-              class="btn btn-default no-text mobile-preview"
-              title={{i18n "composer.show_preview"}}
-              {{on "click" this.composer.togglePreview}}
-              aria-label={{i18n "composer.show_preview"}}
-            >
-              {{d-icon "desktop"}}
-            </a>
+            {{#if this.composer.allowPreview}}
+              <a
+                href
+                class="btn btn-default no-text mobile-preview"
+                title={{i18n "composer.show_preview"}}
+                {{on "click" this.composer.togglePreview}}
+                aria-label={{i18n "composer.show_preview"}}
+              >
+                {{d-icon "desktop"}}
+              </a>
+            {{/if}}
 
             {{#if this.composer.showPreview}}
               <DButton
@@ -369,7 +371,7 @@
             {{/if}}
           </div>
 
-          {{#if this.site.desktopView}}
+          {{#if (and this.composer.allowPreview this.site.desktopView)}}
             <DButton
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
