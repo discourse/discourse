@@ -196,12 +196,28 @@ export default class PostMenu extends Component {
     // the map is initialized here, to ensure only the buttons manipulated by plugins using the API are tracked
     addedKeys = new Set();
 
+    // map to keep track of the labels that should be shown for each button if the plugins wants to override the default
+    const buttonLabels = new Map();
+
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
     // in the value transformer, and extract the data to be used later to resolve the DAG order
     const buttonsRegistry = applyMutableValueTransformer(
       "post-menu-buttons",
       dag,
-      this.staticMethodsArgs
+      {
+        ...this.staticMethodsArgs,
+        buttonLabels: {
+          hide(key) {
+            buttonLabels.set(key, false);
+          },
+          show(key) {
+            buttonLabels.set(key, true);
+          },
+          default(key) {
+            return buttonLabels.delete(key);
+          },
+        },
+      }
     );
 
     return new Map(
@@ -213,6 +229,7 @@ export default class PostMenu extends Component {
           owner: getOwner(this), // to be passed as argument to the static methods
           position,
           replacementMap,
+          showLabel: buttonLabels.get(key),
         });
 
         return [key, config];

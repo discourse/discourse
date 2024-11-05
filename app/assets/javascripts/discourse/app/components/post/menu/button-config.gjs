@@ -8,14 +8,24 @@ export default class PostMenuButtonConfig {
   #owner;
   #position;
   #replacementMap;
+  #showLabel;
 
-  constructor({ key, Component, apiAdded, owner, position, replacementMap }) {
+  constructor({
+    key,
+    Component,
+    apiAdded,
+    owner,
+    position,
+    replacementMap,
+    showLabel,
+  }) {
     this.#Component = Component;
     this.#apiAdded = apiAdded;
     this.#key = key;
     this.#owner = owner;
     this.#position = position;
     this.#replacementMap = replacementMap;
+    this.#showLabel = showLabel;
   }
 
   get Component() {
@@ -62,6 +72,11 @@ export default class PostMenuButtonConfig {
   }
 
   @bind
+  setShowLabel(value) {
+    this.#showLabel = value;
+  }
+
+  @bind
   shouldRender(args) {
     return this.#staticPropertyWithReplacementFallback({
       property: "shouldRender",
@@ -72,11 +87,14 @@ export default class PostMenuButtonConfig {
 
   @bind
   showLabel(args) {
-    return this.#staticPropertyWithReplacementFallback({
-      property: "showLabel",
-      args,
-      defaultValue: false,
-    });
+    return (
+      this.#showLabel ??
+      this.#staticPropertyWithReplacementFallback({
+        property: "showLabel",
+        args,
+        defaultValue: null,
+      })
+    );
   }
 
   #staticPropertyWithReplacementFallback(

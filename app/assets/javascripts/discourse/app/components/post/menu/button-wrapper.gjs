@@ -12,12 +12,20 @@ export default class PostMenuButtonWrapper extends Component {
     return this.args.buttonConfig.delegateShouldRenderToTemplate(this.args);
   }
 
+  get hidden() {
+    return this.args.buttonConfig.hidden(this.args);
+  }
+
   get shouldRender() {
     if (this.delegateShouldRenderToTemplate) {
       return;
     }
 
     return this.args.buttonConfig.shouldRender(this.args);
+  }
+
+  get showLabel() {
+    return this.args.buttonConfig.showLabel(this.args);
   }
 
   @action
@@ -44,11 +52,11 @@ export default class PostMenuButtonWrapper extends Component {
       <@buttonConfig.Component
         class="btn-flat"
         @buttonActions={{@buttonActions}}
-        @hidden={{@buttonConfig.hidden this.args}}
+        @hidden={{this.hidden}}
         @post={{@post}}
         @shouldRender={{this.shouldRender}}
         @showFeedback={{this.showFeedback}}
-        @showLabel={{@showLabel.showLabel this.args}}
+        @showLabel={{this.showLabel}}
         @state={{@state}}
         {{didInsert this.setElement}}
         {{on "click" this.sharedBehaviorOnClick}}
