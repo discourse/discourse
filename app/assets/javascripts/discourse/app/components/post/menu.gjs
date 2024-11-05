@@ -160,26 +160,7 @@ export default class PostMenu extends Component {
     const replacementMap = new WeakMap();
 
     const configuredItems = this.configuredItems;
-
-    let referencePosition = "before";
-
-    const mappedPositions = new Map(
-      configuredItems.map((key, index) => {
-        if (key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
-          referencePosition = "after";
-          return [key, null];
-        } else if (
-          referencePosition === "before" &&
-          index < configuredItems.length - 1
-        ) {
-          return [key, { [referencePosition]: configuredItems[index + 1] }];
-        } else if (referencePosition === "after" && index > 0) {
-          return [key, { [referencePosition]: configuredItems[index - 1] }];
-        } else {
-          return [key, null];
-        }
-      })
-    );
+    const configuredPositions = this.configuredPositions;
 
     const dag = DAG.from(
       Array.from(coreButtonComponents.entries()).map(
@@ -187,7 +168,7 @@ export default class PostMenu extends Component {
           const configuredIndex = configuredItems.indexOf(key);
 
           const position =
-            configuredIndex !== -1 ? mappedPositions.get(key) : null;
+            configuredIndex !== -1 ? configuredPositions.get(key) : null;
 
           return [key, ButtonComponent, position];
         }
@@ -263,6 +244,31 @@ export default class PostMenu extends Component {
     }
 
     return list;
+  }
+
+  @cached
+  get configuredPositions() {
+    let referencePosition = "before";
+
+    const configuredItems = this.configuredItems;
+
+    return new Map(
+      configuredItems.map((key, index) => {
+        if (key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
+          referencePosition = "after";
+          return [key, null];
+        } else if (
+          referencePosition === "before" &&
+          index < configuredItems.length - 1
+        ) {
+          return [key, { [referencePosition]: configuredItems[index + 1] }];
+        } else if (referencePosition === "after" && index > 0) {
+          return [key, { [referencePosition]: configuredItems[index - 1] }];
+        } else {
+          return [key, null];
+        }
+      })
+    );
   }
 
   @cached
