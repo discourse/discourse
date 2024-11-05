@@ -4107,7 +4107,9 @@ ar:
       show_hidden: "عرض المحتوى الذي تم تجاهله"
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"
+      load_more_replies: "حمّل المزيد من الردود"
       sr_collapse_replies: "طي الردود المضمَّنة"
+      sr_load_more_replies: "حمّل المزيد من الردود المضمنة"
       sr_date: "تاريخ المنشور"
       sr_expand_replies:
         zero: "هناك %{count} رد على هذا المنشور"
