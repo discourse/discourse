@@ -75,13 +75,16 @@ export default class DVirtualHeight extends Component {
       height = activeWindow?.height || window.innerHeight;
     }
 
-    const newVh = height * 0.01;
-    if (this.lastVh === newVh) {
+    if (this.previousHeight && Math.abs(this.previousHeight - height) <= 1) {
       return;
     }
 
-    document.documentElement.style.setProperty("--composer-vh", `${newVh}px`);
-    this.lastVh = newVh;
+    this.previousHeight = height;
+
+    document.documentElement.style.setProperty(
+      "--composer-vh",
+      `${height / 100}px`
+    );
   }
 
   @bind
