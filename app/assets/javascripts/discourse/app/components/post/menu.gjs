@@ -162,17 +162,30 @@ export default class PostMenu extends Component {
     const configuredItems = this.configuredItems;
     const configuredPositions = this.configuredPositions;
 
-    const dag = DAG.from(
-      Array.from(coreButtonComponents.entries()).map(
-        ([key, ButtonComponent]) => {
-          const configuredIndex = configuredItems.indexOf(key);
+    // it's important to sort the buttons in the order they were configured, so we can feed them in the correct order
+    // to initialize the DAG because the results are affected by the order of the items were added
+    const sortedButtons = Array.from(coreButtonComponents.entries()).sort(
+      ([keyA], [keyB]) => {
+        const indexA = configuredItems.indexOf(keyA);
+        const indexB = configuredItems.indexOf(keyB);
 
-          const position =
-            configuredIndex !== -1 ? configuredPositions.get(key) : null;
-
-          return [key, ButtonComponent, position];
+        if (indexA === -1) {
+          return -1;
         }
-      ),
+
+        return indexA - indexB;
+      }
+    );
+
+    const dag = DAG.from(
+      Array.from(sortedButtons).map(([key, ButtonComponent]) => {
+        const configuredIndex = configuredItems.indexOf(key);
+
+        const position =
+          configuredIndex !== -1 ? configuredPositions.get(key) : null;
+
+        return [key, ButtonComponent, position];
+      }),
       {
         ...defaultDagOptions,
         // we need to keep track of the buttons that were added by plugins because they won't respect the values in
@@ -278,9 +291,19 @@ export default class PostMenu extends Component {
           referencePosition === "before" &&
           index < configuredItems.length - 1
         ) {
-          return [key, { [referencePosition]: configuredItems[index + 1] }];
+          return [
+            key,
+            {
+              [referencePosition]: [POST_MENU_SHOW_MORE_BUTTON_KEY],
+            },
+          ];
         } else if (referencePosition === "after" && index > 0) {
-          return [key, { [referencePosition]: configuredItems[index - 1] }];
+          return [
+            key,
+            {
+              [referencePosition]: [POST_MENU_SHOW_MORE_BUTTON_KEY],
+            },
+          ];
         } else {
           return [key, null];
         }
