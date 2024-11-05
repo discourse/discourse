@@ -12,7 +12,7 @@ require "open3"
 
 class ImportScripts::Smf2 < ImportScripts::Base
   BATCH_SIZE ||= 5000
-  
+
   def self.run
     options = Options.new
     begin
@@ -291,12 +291,12 @@ class ImportScripts::Smf2 < ImportScripts::Base
       .order(:id)
       .pluck(
         "string_agg(topic_allowed_users.user_id::text, ',' ORDER BY topic_allowed_users.user_id), title, topics.id",
-        )
+      )
       .each do |users, title, topic_id|
-      @pm_mapping[users] ||= {}
-      @pm_mapping[users][title] ||= []
-      @pm_mapping[users][title] << topic_id
-    end
+        @pm_mapping[users] ||= {}
+        @pm_mapping[users][title] ||= []
+        @pm_mapping[users][title] << topic_id
+      end
 
     puts "", "Importing personal posts..."
 
@@ -304,7 +304,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
     total =
       query(
         "SELECT COUNT(*) count FROM smf_personal_messages WHERE deleted_by_sender = 0",
-        as: :single)
+        as: :single,
+      )
 
     batches(BATCH_SIZE) do |offset|
       posts = query(<<~SQL, as: :array)
@@ -339,17 +340,12 @@ class ImportScripts::Smf2 < ImportScripts::Base
         puts id
         next if post_id_from_imported_post_id(id)
 
-        post = {
-          id: id,
-          created_at: Time.at(p[:msgtime]),
-          user_id: user_id,
-        }
+        post = { id: id, created_at: Time.at(p[:msgtime]), user_id: user_id }
         begin
           post[:raw] = convert_message_body(p[:body])
         rescue StandardError
           post[:raw] = "-- MESSAGE SKIPPED --"
         end
-
 
         users = (recipients + [user_id]).sort.uniq.join(",")
         title = decode_entities(p[:subject])
@@ -382,7 +378,6 @@ class ImportScripts::Smf2 < ImportScripts::Base
 
     @pm_mapping[users][title][-1]
   end
-
 
   def import_attachment(post, attachment)
     path =
