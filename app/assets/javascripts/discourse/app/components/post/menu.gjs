@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { inject as service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
-import { reference } from "@popperjs/core";
 import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
@@ -72,6 +71,11 @@ function smallUserAttributes(user) {
     unknown: user.unknown,
   };
 }
+
+const defaultDagOptions = {
+  defaultPosition: { before: POST_MENU_SHOW_MORE_BUTTON_KEY },
+  throwErrorOnCycle: false,
+};
 
 export default class PostMenu extends Component {
   @service appEvents;
@@ -189,6 +193,7 @@ export default class PostMenu extends Component {
         }
       ),
       {
+        ...defaultDagOptions,
         // we need to keep track of the buttons that were added by plugins because they won't respect the values in
         // the post_menu setting
         onAddItem(key) {
@@ -275,7 +280,8 @@ export default class PostMenu extends Component {
     ].filter(isPresent);
 
     return DAG.from(
-      items.map((button) => [button.key, button, button.position])
+      items.map((button) => [button.key, button, button.position]),
+      defaultDagOptions
     )
       .resolve()
       .map(({ value }) => value);
@@ -344,7 +350,8 @@ export default class PostMenu extends Component {
     });
 
     return DAG.from(
-      nonCollapsed.map((button) => [button.key, button, button.position])
+      nonCollapsed.map((button) => [button.key, button, button.position]),
+      defaultDagOptions
     )
       .resolve()
       .map(({ value }) => value);

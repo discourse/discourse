@@ -48,6 +48,29 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
+  test("should not throw an error when throwErrorOnCycle is false when adding an item creates a cycle", function (assert) {
+    dag = new DAG({
+      throwErrorOnCycle: false,
+      defaultPosition: { before: "key3" },
+    });
+
+    dag.add("key1", "value1", { after: "key2" });
+    dag.add("key2", "value2", { after: "key3" });
+
+    // This would normally cause a cycle if throwErrorOnCycle was true
+    dag.add("key3", "value3", { after: "key1" });
+
+    assert.ok(dag.has("key1"));
+    assert.ok(dag.has("key2"));
+    assert.ok(dag.has("key3"));
+
+    const resolved = dag.resolve();
+    const keys = resolved.map((entry) => entry.key);
+
+    // Check that the default position was used to avoid the cycle
+    assert.deepEqual(keys, ["key3", "key2", "key1"]);
+  });
+
   test("should call the method specified for onAddItem callback when an item is added", function (assert) {
     let called = 0;
 

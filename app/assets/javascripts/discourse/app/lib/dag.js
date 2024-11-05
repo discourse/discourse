@@ -12,6 +12,7 @@ export default class DAG {
    * @param {Iterable<[string, any, Object?]>} entriesLike - An iterable of key-value-position tuples to initialize the DAG.
    * @param {Object} [opts] - Optional configuration object.
    * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
+   * @param {boolean} [opts.throwErrorOnCycle=true] - Flag indicating whether to throw an error when a cycle is detected. Default is true. When false, the default position will be used instead.
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
    * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
@@ -35,6 +36,7 @@ export default class DAG {
   #onDeleteItem;
   #onReplaceItem;
   #onRepositionItem;
+  #throwErrorOnCycle;
 
   #rawData = new Map();
   #dag = new DAGMap();
@@ -44,6 +46,7 @@ export default class DAG {
    *
    * @param {Object} [opts] - Optional configuration object.
    * @param {Object} [opts.defaultPosition] - Default positioning rules for new items.
+   * @param {boolean} [opts.throwErrorOnCycle=true] - Flag indicating whether to throw an error when a cycle is detected. When false, the default position will be used instead.
    * @param {string|string[]} [opts.defaultPosition.before] - A key or array of keys of items which should appear before this one.
    * @param {string|string[]} [opts.defaultPosition.after] - A key or array of keys of items which should appear after this one.
    * @param {(key: string, value: any, position: {before?: string|string[], after?: string|string[]}) => void} [opts.onAddItem] - Callback function to be called when an item is added.
@@ -55,6 +58,7 @@ export default class DAG {
     // allows for custom default positioning of new items added to the DAG, eg
     // new DAG({ defaultPosition: { before: "foo", after: "bar" } });
     this.#defaultPosition = opts?.defaultPosition || {};
+    this.#throwErrorOnCycle = opts?.throwErrorOnCycle ?? true;
 
     this.#onAddItem = opts?.onAddItem;
     this.#onDeleteItem = opts?.onDeleteItem;
@@ -67,6 +71,7 @@ export default class DAG {
    *
    * @param {string} key - The key to get the default position for.
    * @returns {Object} The default position object.
+   * @private
    */
   #defaultPositionForKey(key) {
     const pos = { ...this.#defaultPosition };
@@ -102,7 +107,7 @@ export default class DAG {
       after,
     });
 
-    this.#dag.add(key, value, before, after);
+    this.#addHandlingCycles(this.#dag, key, value, before, after);
     this.#onAddItem?.(key, value, position);
 
     return true;
@@ -200,6 +205,35 @@ export default class DAG {
   }
 
   /**
+   * Adds a key/value pair to the DAG map while handling potential cycles.
+   *
+   * @param {DAGMap} dag - The DAG map instance to add the key/value pair to.
+   * @param {string} key - The key of the item to be added.
+   * @param {any} value - The value of the item to be added.
+   * @param {string|string[]} [before] - A key or array of keys of items which should appear before this one.
+   * @param {string|string[]} [after] - A key or array of keys of items which should appear after this one.
+   * @throws {Error} Throws an error if a cycle is detected and `throwErrorOnCycle` is true.
+   * @private
+   */
+  #addHandlingCycles(dag, key, value, before, after) {
+    if (this.#throwErrorOnCycle) {
+      dag.add(key, value, before, after);
+    } else {
+      try {
+        dag.add(key, value, before, after);
+      } catch (e) {
+        if (e.message.match(/cycle/i)) {
+          const { before: newBefore, after: newAfter } =
+            this.#defaultPositionForKey(key);
+
+          // if even the default position causes a cycle, an error will be thrown
+          dag.add(key, value, newBefore, newAfter);
+        }
+      }
+    }
+  }
+
+  /**
    * Replace an existing item in the map.
    *
    * @param {string} key - The key of the item to be replaced.
@@ -210,6 +244,7 @@ export default class DAG {
    * @param {Object} [options] - Additional options.
    * @param {boolean} [options.repositionOnly=false] - Whether the replacement is for repositioning only.
    * @returns {boolean} True if the item was replaced, false otherwise.
+   * @private
    */
   #replace(
     key,
@@ -255,7 +290,7 @@ export default class DAG {
   #refreshDAG() {
     const newDAG = new DAGMap();
     for (const [key, { value, before, after }] of this.#rawData) {
-      newDAG.add(key, value, before, after);
+      this.#addHandlingCycles(newDAG, key, value, before, after);
     }
     this.#dag = newDAG;
   }
