@@ -2406,7 +2406,6 @@ pt_BR:
     enable_custom_sidebar_sections: "EXPERIMENTAL: ative seções personalizadas da barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Exibir um menu de acesso rápido para os favoritos em postagens e um novo modal reprojetado"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Ative a implementação da nova lista de tópicos \"glimme\". Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
     experimental_form_templates: "EXPERIMENTAL: ative o recurso de modelo de formulário. <b>Quando ativado,</b> gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
     admin_sidebar_enabled_groups: "Ative a navegação pela barra lateral da IU da administração para grupos específicos, o que substitui os botões de navegação da administração superiores."
@@ -2414,7 +2413,6 @@ pt_BR:
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
     view_raw_email_allowed_groups: "Grupos que podem visualizar o conteúdo do e-mail não processado de uma postagem se tiver sido criada por um e-mail recebido. Inclui cabeçalhos de e-mail e outras informações técnicas."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Remova o link de sinalizadores de moderação na barra lateral de administradores(as)."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_email: "Endereço de e-mail inválido"

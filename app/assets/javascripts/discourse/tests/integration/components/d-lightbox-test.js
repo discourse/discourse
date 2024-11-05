@@ -5,7 +5,6 @@ import { setupLightboxes } from "discourse/lib/lightbox";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Integration | Component | d-lightbox", function (hooks) {
@@ -56,12 +55,13 @@ module("Integration | Component | d-lightbox", function (hooks) {
     // the content has an aria-labelledby attribute
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("aria-labelledby");
 
-    assert.true(
-      query(SELECTORS.LIGHTBOX_CONTENT)
-        .getAttribute("style")
-        .match(/--d-lightbox/g).length > 0,
-      "the content has the correct css variables added"
-    );
+    assert
+      .dom(SELECTORS.LIGHTBOX_CONTENT)
+      .hasAttribute(
+        "style",
+        /--d-lightbox/,
+        "the content has the correct css variables added"
+      );
 
     // it has focus traps for keyboard navigation
     assert.dom(SELECTORS.FOCUS_TRAP).exists();

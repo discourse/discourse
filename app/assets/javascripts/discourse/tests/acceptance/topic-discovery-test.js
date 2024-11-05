@@ -33,17 +33,21 @@ acceptance("Topic Discovery", function (needs) {
     assert.ok(exists(".topic-list"), "The list of topics was rendered");
     assert.ok(exists(".topic-list .topic-list-item"), "has topics");
 
-    assert.strictEqual(
-      query("a[data-user-card=eviltrout] img.avatar").getAttribute("title"),
-      "eviltrout - Most Posts",
-      "it shows user's full name in avatar title"
-    );
+    assert
+      .dom("a[data-user-card=eviltrout] img.avatar")
+      .hasAttribute(
+        "title",
+        "eviltrout - Most Posts",
+        "it shows user's full name in avatar title"
+      );
 
-    assert.strictEqual(
-      query("a[data-user-card=eviltrout] img.avatar").getAttribute("loading"),
-      "lazy",
-      "it adds loading=`lazy` to topic list avatars"
-    );
+    assert
+      .dom("a[data-user-card=eviltrout] img.avatar")
+      .hasAttribute(
+        "loading",
+        "lazy",
+        "it adds loading=`lazy` to topic list avatars"
+      );
 
     await visit("/c/bug");
     assert.ok(exists(".topic-list"), "The list of topics was rendered");

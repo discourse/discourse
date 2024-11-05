@@ -316,8 +316,16 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if chat_channel_id = channel_name[%r{/chat-reply/(\d+)}, 1]
-      chat_channel = Chat::Channel.find(chat_channel_id)
+    if (
+         channel_id, thread_id =
+           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
+       )
+      chat_channel = nil
+      if thread_id
+        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+      else
+        chat_channel = Chat::Channel.find(channel_id)
+      end
 
       PresenceChannel::Config.new.tap do |config|
         config.allowed_group_ids = chat_channel.allowed_group_ids

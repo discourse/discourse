@@ -125,13 +125,9 @@ acceptance("EmojiPicker", function (needs) {
       "it has multiple recent emojis"
     );
 
-    assert.strictEqual(
-      /grinning/.test(
-        query(".section.recent .section-group img.emoji").getAttribute("src")
-      ),
-      true,
-      "it puts the last used emoji in first"
-    );
+    assert
+      .dom(".section.recent .section-group img.emoji")
+      .hasAttribute("src", /grinning/, "puts the last used emoji in first");
   });
 
   test("updates the recent list when selecting from it (after you close re-open it or select other emoji)", async function (assert) {

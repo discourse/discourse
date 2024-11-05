@@ -97,7 +97,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     await tab();
 
-    assert.notOk(
+    assert.false(
       this.subject.isExpanded(),
       "when there are no more rows, Tab collapses the dropdown"
     );
@@ -108,7 +108,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     await tab({ backwards: true });
 
-    assert.notOk(this.subject.isExpanded(), "Shift+Tab collapses the dropdown");
+    assert.false(this.subject.isExpanded(), "Shift+Tab collapses the dropdown");
   });
 
   test("value", async function (assert) {
@@ -425,16 +425,15 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       hbs`<SingleSelect @value={{this.value}} @content={{this.content}} />`
     );
 
-    assert.strictEqual(
-      this.subject.header().el().getAttribute("name"),
-      I18n.t("select_kit.select_to_filter")
-    );
+    assert
+      .dom(this.subject.header().el())
+      .hasAttribute("name", I18n.t("select_kit.select_to_filter"));
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.strictEqual(
-      this.subject.header().el().getAttribute("name"),
+    assert.dom(this.subject.header().el()).hasAttribute(
+      "name",
       I18n.t("select_kit.filter_by", {
         name: this.content.firstObject.name,
       })

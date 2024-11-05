@@ -10,12 +10,16 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
-function silenceMobileDeprecations(hooks) {
+function silenceMobileAndOverrideDeprecations(hooks) {
   let unsilenceCallback;
   hooks.beforeEach(() => {
     const promise = new Promise((resolve) => (unsilenceCallback = resolve));
     withSilencedDeprecationsAsync(
-      ["discourse.mobile-templates"],
+      [
+        "discourse.mobile-templates",
+        "discourse.resolver-template-overrides",
+        "discourse.component-template-overrides",
+      ],
       () => promise
     );
   });
@@ -112,7 +116,7 @@ function registerTemplateOnlyComponents() {
 }
 
 module("Integration | Initializers | plugin-component-templates", function (h) {
-  silenceMobileDeprecations(h);
+  silenceMobileAndOverrideDeprecations(h);
 
   module("template-only component definition behaviour", function (hooks) {
     hooks.beforeEach(() => registerTemplateOnlyComponents());

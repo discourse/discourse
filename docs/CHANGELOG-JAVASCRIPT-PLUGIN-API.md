@@ -7,10 +7,13 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.38.0] - 2024-10-30
+
+- Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.
+
 ## [1.37.3] - 2024-10-24
 
 - Added `disableDefaultKeyboardShortcuts` which allows plugins/TCs to disable default keyboard shortcuts.
-
 
 ## [1.37.2] - 2024-10-02
 
@@ -26,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.36.0] - 2024-08-06
 
-- Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked and before a search log is created 
+- Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked and before a search log is created
 
 ## [1.35.0] - 2024-07-30
 

@@ -13,8 +13,10 @@ RSpec.describe Chat::CreateCategoryChannel do
     fab!(:category)
     let(:category_id) { category.id }
 
+    let(:name) { "cool channel" }
+    let(:icon_upload_id) { 2 }
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { category_id:, name: "cool channel" } }
+    let(:params) { { category_id:, name: name, icon_upload_id: icon_upload_id } }
     let(:dependencies) { { guardian: } }
 
     context "when public channels are disabled" do
@@ -52,8 +54,9 @@ RSpec.describe Chat::CreateCategoryChannel do
           expect { result }.to change { Chat::Channel.count }.by(1)
           expect(result.channel).to have_attributes(
             chatable: category,
-            name: "cool channel",
+            name: name,
             slug: "cool-channel",
+            icon_upload_id: icon_upload_id,
           )
         end
 

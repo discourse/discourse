@@ -27,10 +27,6 @@ function quoteHtml() {
   `;
 }
 
-function assertDirection(assert, elem, expected, message) {
-  assert.strictEqual(elem.getAttribute("dir"), expected, message);
-}
-
 module("Unit | Utility | text-direction", function (hooks) {
   setupTest(hooks);
 
@@ -62,18 +58,20 @@ module("Unit | Utility | text-direction", function (hooks) {
     const [englishTitle, arabicTitle] = Array.from(
       cooked.querySelectorAll(".title")
     );
-    assertDirection(
-      assert,
-      englishTitle,
-      "ltr",
-      "quote title always matches site direction regardless of its content"
-    );
-    assertDirection(
-      assert,
-      arabicTitle,
-      "ltr",
-      "quote title always matches site direction regardless of its content"
-    );
+    assert
+      .dom(englishTitle)
+      .hasAttribute(
+        "dir",
+        "ltr",
+        "quote title always matches site direction regardless of its content"
+      );
+    assert
+      .dom(arabicTitle)
+      .hasAttribute(
+        "dir",
+        "ltr",
+        "quote title always matches site direction regardless of its content"
+      );
 
     const [
       quotedRtl,
@@ -84,41 +82,39 @@ module("Unit | Utility | text-direction", function (hooks) {
       notQuotedRtl,
     ] = Array.from(cooked.querySelectorAll("p"));
 
-    assertDirection(
-      assert,
-      quotedRtl,
-      "auto",
-      "RTL paragraphs inside quote have auto dir"
-    );
-    assertDirection(
-      assert,
-      quotedLtr,
-      "auto",
-      "LTR paragraphs inside quote have auto dir"
-    );
-    assertDirection(
-      assert,
-      quotedLtrNested,
-      "auto",
-      "LTR paragraphs inside nested quote have auto dir"
-    );
-    assertDirection(
-      assert,
-      quotedRtlNested,
-      "auto",
-      "RTL paragraphs inside nested quote have auto dir"
-    );
-    assertDirection(
-      assert,
-      notQuotedLtr,
-      "auto",
-      "LTR paragraphs outside quotes have auto dir"
-    );
-    assertDirection(
-      assert,
-      notQuotedRtl,
-      "auto",
-      "RTL paragraphs outside quotes have auto dir"
-    );
+    assert
+      .dom(quotedRtl)
+      .hasAttribute("dir", "auto", "RTL paragraphs inside quote have auto dir");
+    assert
+      .dom(quotedLtr)
+      .hasAttribute("dir", "auto", "LTR paragraphs inside quote have auto dir");
+    assert
+      .dom(quotedLtrNested)
+      .hasAttribute(
+        "dir",
+        "auto",
+        "LTR paragraphs inside nested quote have auto dir"
+      );
+    assert
+      .dom(quotedRtlNested)
+      .hasAttribute(
+        "dir",
+        "auto",
+        "RTL paragraphs inside nested quote have auto dir"
+      );
+    assert
+      .dom(notQuotedLtr)
+      .hasAttribute(
+        "dir",
+        "auto",
+        "LTR paragraphs outside quotes have auto dir"
+      );
+    assert
+      .dom(notQuotedRtl)
+      .hasAttribute(
+        "dir",
+        "auto",
+        "RTL paragraphs outside quotes have auto dir"
+      );
   });
 });

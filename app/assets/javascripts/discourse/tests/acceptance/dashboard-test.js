@@ -149,7 +149,7 @@ acceptance("Dashboard: dashboard_hidden_reports", function (needs) {
     await visit("/admin");
 
     assert.ok(exists(".admin-report.signups.is-visible"), "signups report");
-    assert.notOk(exists(".admin-report.is-visible.posts"), "posts report");
+    assert.dom(".admin-report.is-visible.posts").doesNotExist("posts report");
     assert
       .dom(".admin-report.is-visible.dau-by-mau")
       .doesNotExist("dau-by-mau report");

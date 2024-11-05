@@ -99,13 +99,14 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
     assert.true(exists("video.chat-video-upload"), "displays as an video");
-    const video = query("video.chat-video-upload");
-    assert.true(video.hasAttribute("controls"), "has video controls");
-    assert.strictEqual(
-      video.getAttribute("preload"),
-      "metadata",
-      "video has correct preload settings"
-    );
+    assert.dom("video.chat-video-upload").hasAttribute("controls");
+    assert
+      .dom("video.chat-video-upload")
+      .hasAttribute(
+        "preload",
+        "metadata",
+        "video has correct preload settings"
+      );
   });
 
   test("with a audio", async function (assert) {
@@ -114,13 +115,14 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
     assert.true(exists("audio.chat-audio-upload"), "displays as an audio");
-    const audio = query("audio.chat-audio-upload");
-    assert.true(audio.hasAttribute("controls"), "has audio controls");
-    assert.strictEqual(
-      audio.getAttribute("preload"),
-      "metadata",
-      "audio has correct preload settings"
-    );
+    assert.dom("audio.chat-audio-upload").hasAttribute("controls");
+    assert
+      .dom("audio.chat-audio-upload")
+      .hasAttribute(
+        "preload",
+        "metadata",
+        "audio has correct preload settings"
+      );
   });
 
   test("non image upload", async function (assert) {

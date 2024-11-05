@@ -4,7 +4,6 @@ import {
   acceptance,
   count,
   exists,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -26,11 +25,13 @@ acceptance("Group Members - Anonymous", function () {
       .dom(".group-member-dropdown")
       .doesNotExist("it does not allow anon user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder"),
+        "it should display the right filter placeholder"
+      );
   });
 });
 
@@ -63,11 +64,13 @@ acceptance("Group Members", function (needs) {
       .dom(".group-member-dropdown")
       .exists("it allows admin user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder_admin"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder_admin"),
+        "it should display the right filter placeholder"
+      );
   });
 
   test("Shows bulk actions as an admin user", async function (assert) {

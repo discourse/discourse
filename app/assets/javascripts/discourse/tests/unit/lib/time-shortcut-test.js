@@ -28,7 +28,7 @@ module(
       this.clock.restore();
       this.clock = fakeTime("2100-04-19 18:00:00", timezone, true); // evening
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
-      assert.notOk(result.includes("doesn't show later_today in the evening"));
+      assert.false(result.includes("doesn't show later_today in the evening"));
     });
 
     test("hides 'Later This Week' starting from Thursday", function (assert) {
@@ -45,7 +45,7 @@ module(
       this.clock.restore();
       this.clock = fakeTime("2100-04-22 18:00:00", timezone, true); // Thursday
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("later_this_week"),
         "doesn't show later_this_week on Thursdays"
       );
@@ -53,7 +53,7 @@ module(
       this.clock.restore();
       this.clock = fakeTime("2100-04-23 18:00:00", timezone, true); // Friday
       result = hideDynamicTimeShortcuts(shortcuts, timezone).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("later_this_week"),
         "doesn't show later_this_week on Fridays"
       );
@@ -82,7 +82,7 @@ module(
         timezone,
         siteSettings
       ).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Fridays"
       );
@@ -94,7 +94,7 @@ module(
         timezone,
         siteSettings
       ).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Saturdays"
       );
@@ -106,7 +106,7 @@ module(
         timezone,
         siteSettings
       ).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("this_weekend"),
         "doesn't show this_weekend on Sundays"
       );
@@ -123,7 +123,7 @@ module(
         timezone,
         siteSettings
       ).mapBy("id");
-      assert.notOk(
+      assert.false(
         result.includes("this_weekend"),
         "shows this_weekend on Thursdays"
       );

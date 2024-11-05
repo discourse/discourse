@@ -2,12 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
@@ -137,7 +132,7 @@ module("Integration | Component | themes-list", function (hooks) {
       "themes tab is not active"
     );
 
-    assert.notOk(exists(".inactive-indicator"), "there is no separator");
+    assert.dom(".inactive-indicator").doesNotExist("there is no separator");
     assert.strictEqual(
       count(".themes-list-container__item .info"),
       5,

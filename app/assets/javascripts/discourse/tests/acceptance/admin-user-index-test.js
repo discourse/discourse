@@ -267,7 +267,7 @@ acceptance("Admin - User Index", function (needs) {
 
     await click(".dialog-footer .btn-primary");
 
-    assert.notOk(deleteAndBlock, "user does not get blocked");
+    assert.false(deleteAndBlock, "user does not get blocked");
   });
 
   test("delete user - delete and block works as expected", async function (assert) {

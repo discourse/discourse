@@ -452,7 +452,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     const parent = elementOneBefore.parentNode;
     const observer = new MutationObserver(function (mutations) {
-      assert.notOk(
+      assert.false(
         mutations.some((m) =>
           Array.from(m.addedNodes).includes(elementOneBefore)
         )

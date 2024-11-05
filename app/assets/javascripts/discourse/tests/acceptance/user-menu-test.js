@@ -62,36 +62,35 @@ acceptance("User menu", function (needs) {
   test("notifications panel has a11y attributes", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
-    const panel = query("#quick-access-all-notifications");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.querySelector("ul").getAttribute("aria-labelledby"),
-      "user-menu-button-all-notifications"
-    );
+
+    assert
+      .dom("#quick-access-all-notifications")
+      .hasAttribute("tabindex", "-1");
+    assert
+      .dom("#quick-access-all-notifications ul")
+      .hasAria("labelledby", "user-menu-button-all-notifications");
   });
 
   test("replies notifications panel has a11y attributes", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-replies");
-    const panel = query("#quick-access-replies");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.querySelector("ul").getAttribute("aria-labelledby"),
-      "user-menu-button-replies"
-    );
+
+    assert.dom("#quick-access-replies").hasAttribute("tabindex", "-1");
+    assert
+      .dom("#quick-access-replies ul")
+      .hasAria("labelledby", "user-menu-button-replies");
   });
 
   test("profile panel has a11y attributes", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
-    const panel = query("#quick-access-profile");
-    assert.strictEqual(panel.getAttribute("tabindex"), "-1");
-    assert.strictEqual(
-      panel.querySelector("ul").getAttribute("aria-labelledby"),
-      "user-menu-button-profile"
-    );
+
+    assert.dom("#quick-access-profile").hasAttribute("tabindex", "-1");
+    assert
+      .dom("#quick-access-profile ul")
+      .hasAria("labelledby", "user-menu-button-profile");
   });
 
   test("clicking on an unread notification", async function (assert) {

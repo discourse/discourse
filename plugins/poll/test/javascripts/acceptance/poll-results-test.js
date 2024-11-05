@@ -980,14 +980,6 @@ acceptance("Poll results", function (needs) {
           voters: {
             db753fe0bc4e72869ac1ad8765341764: [
               {
-                id: 1,
-                username: "bianca",
-                name: null,
-                avatar_template:
-                  "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
-                title: null,
-              },
-              {
                 id: 7,
                 username: "foo",
                 name: null,
@@ -1004,16 +996,6 @@ acceptance("Poll results", function (needs) {
         return helper.response({
           voters: {
             def034c6770c6fd3754c054ef9ec4721: [
-              {
-                rank: 1,
-                user: {
-                  id: 1,
-                  username: "bianca",
-                  name: null,
-                  avatar_template:
-                    "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
-                },
-              },
               {
                 rank: 1,
                 user: {

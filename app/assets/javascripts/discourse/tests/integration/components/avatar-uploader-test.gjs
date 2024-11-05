@@ -1,6 +1,6 @@
 import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import AvatarUploader from "discourse/components/avatar-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
@@ -8,23 +8,22 @@ import { createFile } from "discourse/tests/helpers/qunit-helpers";
 module("Integration | Component | avatar-uploader", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
-    pretender.post("/uploads.json", () => response({}));
-  });
-
-  test("default", async function (assert) {
+  test("uploading", async function (assert) {
     const done = assert.async();
-    this.set("done", () => {
-      assert.ok(true, "action is called after avatar is uploaded");
-      done();
+
+    pretender.post("/uploads.json", () => {
+      assert.step("avatar is uploaded");
+      return response({});
     });
 
-    await render(hbs`
-      <AvatarUploader
-        @id="avatar-uploader"
-        @done={{this.done}}
-      />
-    `);
+    const callback = () => {
+      assert.verifySteps(["avatar is uploaded"]);
+      done();
+    };
+
+    await render(<template>
+      <AvatarUploader @id="avatar-uploader" @done={{callback}} />
+    </template>);
 
     await this.container
       .lookup("service:app-events")

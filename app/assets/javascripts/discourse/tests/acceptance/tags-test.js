@@ -212,18 +212,25 @@ acceptance("Tags listed by group", function (needs) {
       ["focus", "Escort"],
       "shows the tags in default sort (by count)"
     );
-    assert.deepEqual(
-      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map((el) =>
-        el.getAttribute("href")
-      ),
-      ["/tag/focus", "/tag/escort"],
-      "always uses lowercase URLs for mixed case tags"
-    );
-    assert.strictEqual(
-      query(`a[data-tag-name="private"]`).getAttribute("href"),
-      "/u/eviltrout/messages/tags/private",
-      "links to private messages"
-    );
+
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(1) .discourse-tag")
+      .hasAttribute("href", "/tag/focus");
+    assert
+      .dom(".tag-list .tag-box:nth-of-type(2) .discourse-tag")
+      .hasAttribute(
+        "href",
+        "/tag/escort",
+        "uses a lowercase URL for a mixed case tag"
+      );
+
+    assert
+      .dom(`a[data-tag-name="private"]`)
+      .hasAttribute(
+        "href",
+        "/u/eviltrout/messages/tags/private",
+        "links to private messages"
+      );
   });
 
   test("new topic button is not available for staff-only tags", async function (assert) {
