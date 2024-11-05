@@ -1,16 +1,20 @@
 // Shared styles
 
-html.keyboard-visible.mobile-view
-  #main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show) {
-  height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
-  max-height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
-  overflow-y: scroll;
-  overflow-x: hidden;
-  padding-top: 0;
-  .login-fullpage,
-  .signup-fullpage,
-  .invites-show {
-    padding-top: var(--header-offset);
+html.keyboard-visible.mobile-view {
+  body.login-page,
+  body.signup-page,
+  body.invite-page {
+    height: calc(100dvh - var(--header-offset) - env(keyboard-inset-height));
+    max-height: calc(00dvh - var(--header-offset) - env(keyboard-inset-height));
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-top: 0;
+
+    .login-fullpage,
+    .signup-fullpage,
+    .invites-show {
+      padding-top: var(--header-offset);
+    }
   }
 }
 
@@ -81,6 +85,7 @@ html.keyboard-visible.mobile-view
       .user-field.text label.control-label {
         top: 11px;
       }
+
       div.user-field:not(.dropdown)
         .controls
         input:focus
@@ -90,6 +95,7 @@ html.keyboard-visible.mobile-view
         label.alt-placeholder.control-label {
         top: -10px;
       }
+
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         top: -10px;
@@ -155,6 +161,7 @@ html.keyboard-visible.mobile-view
   .login-welcome-header {
     padding-inline: 0;
   }
+
   .signup-progress-bar {
     margin-inline: 0;
   }
@@ -170,11 +177,13 @@ html.keyboard-visible.mobile-view
         margin-bottom: 0.5rem;
       }
     }
+
     &__signup {
       background: none !important;
       font-size: var(--font-up-1);
       padding: 0;
     }
+
     &__no-account-yet {
       font-size: var(--font-up-1);
     }
@@ -191,11 +200,13 @@ html.keyboard-visible.mobile-view
         margin-bottom: 0.5rem;
       }
     }
+
     &__login {
       background: none !important;
       font-size: var(--font-up-1);
       padding: 0;
     }
+
     &__existing-account {
       font-size: var(--font-up-1);
     }
