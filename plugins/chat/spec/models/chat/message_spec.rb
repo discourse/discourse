@@ -79,7 +79,7 @@ describe Chat::Message do
       HTML
     end
 
-    context "when user is made by a bot" do
+    context "when message is made by a bot user" do
       it "supports headings" do
         cooked = described_class.cook(<<~MD, user_id: -1)
         # h1
