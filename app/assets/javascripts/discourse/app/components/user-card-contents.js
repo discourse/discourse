@@ -253,6 +253,11 @@ export default class UserCardContents extends CardContentsBase.extend(
   }
 
   @action
+  refreshRoute(value) {
+    this.router.transitionTo({ queryParams: { name: value } });
+  }
+
+  @action
   handleShowUser(event) {
     if (wantsNewWindow(event)) {
       return;

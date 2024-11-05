@@ -262,7 +262,10 @@
                           {{! some values are arrays }}
                           <span class="user-field-value-list-item">
                             {{#if uf.field.searchable}}
-                              {{html-safe (generate-users-link v)}}
+                              <LinkTo
+                                @route="users"
+                                @query={{hash name=v}}
+                              >{{v}}</LinkTo>
                             {{else}}
                               {{v}}
                             {{/if}}
