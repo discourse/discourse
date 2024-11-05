@@ -3298,7 +3298,7 @@ experimental:
       - auto
       - enabled
     default: disabled
-  experimental_glimmer_post_menu_groups:
+  glimmer_post_menu_groups:
     client: true
     type: group_list
     list_type: compact

@@ -568,7 +568,7 @@ createWidget("post-contents", {
             ].join("\n- ")
           );
         } else if (this.currentUser?.use_auto_glimmer_post_menu) {
-          // TODO (glimmer-post-menu): remove this else if block when removing the site setting experimental_glimmer_post_menu_groups_map
+          // TODO (glimmer-post-menu): remove this else if block when removing the site setting glimmer_post_menu_groups
           postMenuConsoleWarningLogged = true;
 
           // eslint-disable-next-line no-console
