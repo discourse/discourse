@@ -76,7 +76,7 @@ acceptance("User Directory", function () {
 
     assert.strictEqual(
       userFieldLink.getAttribute("href"),
-      "/u?name=Blue",
+      "/u?name=Blue&order=likes_received",
       "The link points to the correct URL"
     );
 
@@ -106,7 +106,7 @@ acceptance("User Directory", function () {
       ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
     );
 
-    assert.strictEqual(firstRowUserField.textContent, "Blue");
+    assert.strictEqual(firstRowUserField.textContent.trim(), "Blue");
   });
 
   test("Can sort table via keyboard", async function (assert) {
