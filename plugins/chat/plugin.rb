@@ -548,6 +548,10 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
+
+  # When we eventually allow secure_uploads in chat, this will need to be
+  # removed. Depending on the channel, uploads may end up being secure.
+  UploadSecurity.register_custom_public_type("chat-composer")
 end
 
 if Rails.env == "test"
