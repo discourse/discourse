@@ -77,7 +77,7 @@ export default class TopicListHeaderColumn extends Component {
         "topic-list-data"
         @order
         (if @sortable "sortable")
-        (if @isSorting "sorting")
+        (if this.isSorting "sorting")
         (if @number "num")
       }}
       ...attributes
