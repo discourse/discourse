@@ -2,12 +2,14 @@
 class DeleteZeroRankUserVoteCollectionsFromPollVotes < ActiveRecord::Migration[7.1]
   def up
     execute <<~SQL
-    DELETE FROM poll_votes
+      DELETE FROM poll_votes
       WHERE (poll_id, user_id) IN (
-          SELECT poll_id, user_id
+          SELECT poll_votes.poll_id, poll_votes.user_id
           FROM poll_votes
-          GROUP BY poll_id, user_id
-          HAVING SUM(rank) = 0
+          JOIN polls ON polls.id = poll_votes.poll_id
+          WHERE polls.type = 3
+          GROUP BY poll_votes.poll_id, poll_votes.user_id
+          HAVING SUM(poll_votes.rank) = 0
       );
     SQL
   end
