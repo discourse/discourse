@@ -28,8 +28,8 @@ export default class PasswordReset extends DiscourseRoute {
     }
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController(controller) {
+    super.setupController(...arguments);
     controller.initSelectedSecondFactorMethod();
   }
 }
