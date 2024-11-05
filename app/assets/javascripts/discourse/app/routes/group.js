@@ -12,8 +12,4 @@ export default class Group extends DiscourseRoute {
   serialize(model) {
     return { name: model.get("name").toLowerCase() };
   }
-
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
 }

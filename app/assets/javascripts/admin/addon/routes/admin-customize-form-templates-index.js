@@ -7,10 +7,6 @@ export default class AdminCustomizeFormTemplatesIndex extends DiscourseRoute {
     return FormTemplate.findAll();
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
-
   @action
   reloadModel() {
     this.refresh();

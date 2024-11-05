@@ -5,8 +5,4 @@ export default class AdminPermalinksRoute extends DiscourseRoute {
   model() {
     return Permalink.findAll();
   }
-
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
 }

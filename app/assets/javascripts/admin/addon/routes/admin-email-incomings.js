@@ -6,8 +6,8 @@ export default class AdminEmailIncomingsRoute extends DiscourseRoute {
     return IncomingEmail.findAll({ status: this.status });
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
+  setupController(controller) {
+    super.setupController(...arguments);
     controller.set("filter.status", this.status);
   }
 }

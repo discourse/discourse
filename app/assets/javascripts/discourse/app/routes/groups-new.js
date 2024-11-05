@@ -18,10 +18,6 @@ export default class GroupsNew extends DiscourseRoute {
     });
   }
 
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
-
   afterModel() {
     if (!this.get("currentUser.can_create_group")) {
       this.router.transitionTo("groups");
