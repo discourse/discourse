@@ -2416,7 +2416,6 @@ es:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Activa secciones personalizadas de la barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: Activa la ruta del filtro de temas experimentales en /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Mostrar un menú de acceso rápido a marcadores en las entradas y un nuevo modal rediseñado"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Habilita la página rediseñada /about para grupos específicos."
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Activa la nueva implementación de la lista de temas «glimmer». Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
     experimental_form_templates: "EXPERIMENTAL: Activa la función de plantillas de formulario. <b>Una vez activada,</b> gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
@@ -2425,7 +2424,6 @@ es:
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTAL: Elimina el enlace Banderas de moderación de la barra lateral del administrador."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_email: "Dirección de correo electrónico no válida."

@@ -2447,7 +2447,6 @@ de:
     enable_custom_sidebar_sections: "EXPERIMENTELL: Benutzerdefinierte Seitenleistenabschnitte aktivieren"
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
     experimental_redesigned_about_page_groups: "EXPERIMENTAL: Aktiviere die neu gestaltete /about Seite für bestimmte Gruppen."
     experimental_glimmer_topic_list_groups: "EXPERIMENTELL: Aktiviert die neue Implementierung der „glimmer“-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen vorgesehen. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung abgeschlossen und angekündigt ist."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
@@ -2458,7 +2457,6 @@ de:
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Zeige die Mitglieder bestimmter Gruppen nicht auf der /about Seite an."
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTELL: Entferne den Link „Moderationsmeldungen“ aus der Administrator-Seitenleiste."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."

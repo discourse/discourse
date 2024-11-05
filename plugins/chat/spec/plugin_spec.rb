@@ -264,6 +264,8 @@ describe Chat do
   end
 
   describe "secure uploads compatibility" do
+    fab!(:user)
+
     it "disables chat uploads if secure uploads changes from disabled to enabled" do
       enable_secure_uploads
       expect(SiteSetting.chat_allow_uploads).to eq(false)
@@ -275,10 +277,35 @@ describe Chat do
       expect(last_history.context).to eq("Disabled because secure_uploads is enabled")
     end
 
-    it "does not disable chat uploads if the allow_unsecure_chat_uploads global setting is set" do
-      global_setting :allow_unsecure_chat_uploads, true
-      expect { enable_secure_uploads }.not_to change { UserHistory.count }
-      expect(SiteSetting.chat_allow_uploads).to eq(true)
+    context "when the global setting allow_unsecure_chat_uploads is true" do
+      fab!(:filename) { "small.pdf" }
+      fab!(:file) { file_from_fixtures(filename, "pdf") }
+
+      before { global_setting :allow_unsecure_chat_uploads, true }
+
+      it "does not disable chat uploads" do
+        expect { enable_secure_uploads }.not_to change { UserHistory.count }
+        expect(SiteSetting.chat_allow_uploads).to eq(true)
+      end
+
+      it "does not mark chat uploads as secure" do
+        filename = "small.pdf"
+        file = file_from_fixtures(filename, "pdf")
+
+        enable_secure_uploads
+        upload = UploadCreator.new(file, filename, type: "chat-composer").create_for(user.id)
+        expect(upload.secure).to eq(false)
+      end
+
+      context "when login_required is true" do
+        before { SiteSetting.login_required = true }
+
+        it "does not mark chat uploads as secure" do
+          enable_secure_uploads
+          upload = UploadCreator.new(file, filename, type: "chat-composer").create_for(user.id)
+          expect(upload.secure).to eq(false)
+        end
+      end
     end
   end
 

@@ -2598,7 +2598,6 @@ sk:
     enable_custom_sidebar_sections: "EXPERIMENTÁLNE: Povolenie vlastných sekcií bočného panela"
     experimental_topics_filter: "EXPERIMENTÁLNE: Povolí trasu filtrovania experimentálnych tém na /filter"
     enable_experimental_lightbox: "EXPERIMENTÁLNE: Nahraďte predvolený lightbox s obrázkami prepracovaným dizajnom."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTÁLNE: Zobrazenie ponuky rýchleho prístupu k záložkám na príspevkoch a nového prepracovaného modálneho okna"
     experimental_redesigned_about_page_groups: "EXPERIMENTÁLNE: Povoľte prepracovanú stránku /o konkrétnych skupinách."
     experimental_glimmer_topic_list_groups: "EXPERIMENTÁLNE: Povoľte novú implementáciu zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
@@ -2609,7 +2608,6 @@ sk:
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
-    experimental_flags_admin_page_enabled_groups: "EXPERIMENTÁLNE: Odstráňte odkaz Moderovanie príznakov z bočného panela administrátora."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
       invalid_email: "Nesprávna emailová adresa."

@@ -2405,7 +2405,6 @@ fi:
     enable_custom_sidebar_sections: "KOKEELLINEN: ota mukautetut sivupalkin osiot käyttöön"
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
-    enable_experimental_bookmark_redesign_groups: "KOKEELLINEN: näytä kirjanmerkkien pikavalikko viesteissä ja uusi uudistettu modaali"
     experimental_glimmer_topic_list_groups: "KOKEELLINEN: Ota käyttöön uusi glimmer-ketjuluettelouudistus. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
     experimental_form_templates: "KOKEELLINEN: Ota lomakemalliominaisuus käyttöön. <b>Kun ominaisuus on otettu käyttöön,</b> voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     admin_sidebar_enabled_groups: "Ota käyttöön sivupalkkinavigointi ylläpitäjän käyttöliittymässä määritetyille ryhmille, mikä korvaa ylätason ylläpitäjän navigointipainikkeet."
@@ -2413,7 +2412,6 @@ fi:
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
-    experimental_flags_admin_page_enabled_groups: "KOKEELLINEN: poista Valvontaliput-linkki ylläpitäjän sivupalkista."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."

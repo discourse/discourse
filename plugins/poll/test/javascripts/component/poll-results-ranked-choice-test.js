@@ -58,4 +58,18 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
       "displays the winner information"
     );
   });
+
+  test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
+    this.rankedChoiceOutcome = null;
+
+    await render(
+      hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
+    );
+
+    assert.strictEqual(
+      count("table.poll-results-ranked-choice tr"),
+      1,
+      "there are no rounds of ranked choice displayed, only the header"
+    );
+  });
 });

@@ -2399,7 +2399,6 @@ tr_TR:
     enable_custom_sidebar_sections: "DENEYSEL: Özel kenar çubuğu bölümlerini etkinleştirin"
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
-    enable_experimental_bookmark_redesign_groups: "DENEYSEL: Gönderilerdeki yer imleri için hızlı erişim menüsü ve yeniden tasarlanmış yeni bir modal göster"
     experimental_glimmer_topic_list_groups: "DENEYSEL: Yeni 'glimmer' konu listesi uygulamasını etkinleştirin. Bu uygulama aktif olarak geliştirilme aşamasındadır ve üretimde kullanıma yönelik değildir. Uygulama kesinleşip duyurulana kadar buna karşı tema/eklenti geliştirmeyin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     admin_sidebar_enabled_groups: "Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
@@ -2407,7 +2406,6 @@ tr_TR:
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
     view_raw_email_allowed_groups: "Gelen bir e-posta tarafından oluşturulmuşsa gönderinin ham e-posta içeriğini görüntüleyebilen gruplar. Buna e-posta başlıkları ve diğer teknik bilgiler dâhildir."
-    experimental_flags_admin_page_enabled_groups: "DENEYSEL: Yönetici kenar çubuğundan Moderasyon Bayrakları bağlantısını kaldırın."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_email: "Geçersiz e-posta adresi."

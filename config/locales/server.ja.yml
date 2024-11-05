@@ -2332,7 +2332,6 @@ ja:
     enable_custom_sidebar_sections: "実験的: カスタムサイドバーセクションを有効にする"
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
-    enable_experimental_bookmark_redesign_groups: "実験的: 投稿のブックマークのクイックアクセスメニューと新たに改良されたモーダルを表示します"
     experimental_glimmer_topic_list_groups: "実験的: 新しい 'glimmer' トピックリストの実装を有効にします。この実装は開発中であり、本番環境での使用を意図したものではありません。実装が完成してリリースされるまで、これに対するテーマ/プラグインを開発しないでください。"
     experimental_form_templates: "実験的: フォームのテンプレート機能を有効にします。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
     admin_sidebar_enabled_groups: "指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
@@ -2340,7 +2339,6 @@ ja:
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
-    experimental_flags_admin_page_enabled_groups: "実験的: 管理者サイドバーからモデレーション通報リンクを削除します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"

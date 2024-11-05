@@ -10,20 +10,16 @@ export default class UserActivityPending extends DiscourseRoute {
     this.username = this.modelFor("user").username_lower;
   }
 
-  model() {
-    return this.store
-      .findAll("pending-post", {
-        username: this.username,
-      })
-      .then((pendingPosts) => {
-        for (let pendingPost of pendingPosts.content) {
-          pendingPost.title = emojiUnescape(
-            escapeExpression(pendingPost.title)
-          );
-        }
+  async model() {
+    const pendingPosts = await this.store.findAll("pending-post", {
+      username: this.username,
+    });
 
-        return pendingPosts;
-      });
+    for (let pendingPost of pendingPosts.content) {
+      pendingPost.title = emojiUnescape(escapeExpression(pendingPost.title));
+    }
+
+    return pendingPosts;
   }
 
   activate() {

@@ -127,7 +127,9 @@ module SystemHelpers
     page.execute_script(js, selector, start, offset)
   end
 
-  def setup_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
+  def setup_or_skip_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
+    skip_unless_s3_system_specs_enabled!
+
     SiteSetting.enable_s3_uploads = true
 
     SiteSetting.s3_upload_bucket = "discoursetest"

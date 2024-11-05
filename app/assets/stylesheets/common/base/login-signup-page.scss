@@ -9,14 +9,17 @@
   flex-direction: column;
 }
 
-#main-outlet:has(.login-fullpage, .signup-fullpage, .invites-show) {
+body.login-page,
+body.signup-page,
+body.invite-page {
   & ~ .powered-by-discourse,
   .above-main-container-outlet {
     display: none;
   }
 }
 
-body:has(.login-fullpage, .signup-fullpage) {
+body.login-page,
+body.signup-page {
   background-color: var(--secondary);
 }
 
