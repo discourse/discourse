@@ -41,16 +41,16 @@ importers:
         specifier: 6.6.0
         version: 6.6.0
       '@glint/core':
-        specifier: 1.5.0
+        specifier: ^1.5.0
         version: 1.5.0(typescript@5.6.3)
       '@glint/environment-ember-loose':
-        specifier: 1.5.0
+        specifier: ^1.5.0
         version: 1.5.0(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.26.0)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5)))
       '@glint/environment-ember-template-imports':
-        specifier: 1.5.0
+        specifier: ^1.5.0
         version: 1.5.0(@glint/environment-ember-loose@1.5.0(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.26.0)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5))))(@glint/template@1.5.0)
       '@glint/template':
-        specifier: 1.5.0
+        specifier: ^1.5.0
         version: 1.5.0
       '@mixer/parallel-prettier':
         specifier: ^2.0.3
