@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "a11y-dialog": "8.1.1",
-    "ember-auto-import": "^2.9.0",
+    "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.1.3",
