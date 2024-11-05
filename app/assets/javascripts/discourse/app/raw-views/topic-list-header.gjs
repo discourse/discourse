@@ -39,13 +39,13 @@ export default class TopicListHeader extends EmberObject {
               <template>
                 <@data.component
                   @sortable={{@data.sortable}}
-                  @order={{@data.order}}
+                  @activeOrder={{@data.order}}
                   @changeSort={{@data.changeSort}}
                   @ascending={{@data.ascending}}
                   @category={{@data.category}}
-                  @listTitle={{@data.listTitle}}
+                  @name={{@data.listTitle}}
                   @bulkSelectEnabled={{@data.bulkSelectEnabled}}
-                  @toggleInTitle={{@data.toggleInTitle}}
+                  @showBulkToggle={{@data.toggleInTitle}}
                   @canBulkSelect={{@data.canBulkSelect}}
                   @canDoBulkActions={{@data.canDoBulkActions}}
                   @showTopicsAndRepliesToggle={{@data.showTopicsAndRepliesToggle}}
@@ -54,6 +54,9 @@ export default class TopicListHeader extends EmberObject {
                   @newTopicsCount={{@data.newTopicsCount}}
                   @bulkSelectHelper={{@data.bulkSelectHelper}}
                   @changeNewListSubset={{@data.changeNewListSubset}}
+                  @showPosters={{@data.showPosters}}
+                  @showLikes={{@data.showLikes}}
+                  @showOpLikes={{@data.showOpLikes}}
                 />
               </template>,
               {
@@ -75,6 +78,9 @@ export default class TopicListHeader extends EmberObject {
                 bulkSelectHelper: this.bulkSelectHelper,
                 changeNewListSubset:
                   this.discoveryListController.changeNewListSubset,
+                showPosters: this.showPosters,
+                showLikes: this.showLikes,
+                showOpLikes: this.showOpLikes,
               }
             )
           );
