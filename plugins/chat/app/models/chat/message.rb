@@ -224,7 +224,7 @@ module Chat
 
     def self.cook(message, opts = {})
       rules = MARKDOWN_IT_RULES
-      rules << "heading" if opts[:user_id] && opts[:user_id] < 0
+      rules << "heading" if opts[:user_id] && opts[:user_id].negative?
 
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
