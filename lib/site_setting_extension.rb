@@ -96,7 +96,7 @@ module SiteSettingExtension
   end
 
   def shadowed_settings
-    @shadowed_settings ||= []
+    @shadowed_settings ||= Set.new
   end
 
   def requires_confirmation_settings
@@ -124,7 +124,7 @@ module SiteSettingExtension
   end
 
   def secret_settings
-    @secret_settings ||= []
+    @secret_settings ||= Set.new
   end
 
   def plugins
