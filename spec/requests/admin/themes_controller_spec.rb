@@ -516,7 +516,7 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "creates a theme" do
+      it "creates a theme and theme fields" do
         post "/admin/themes.json",
              params: {
                theme: {
@@ -531,6 +531,15 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["theme_fields"].length).to eq(1)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      it "can set a theme to default" do
+        post "/admin/themes.json", params: { theme: { name: "my test name", default: "true" } }
+
+        expect(response.status).to eq(201)
+
+        json = response.parsed_body
+        expect(json["theme"]["default"]).to eq(true)
       end
     end
 
@@ -561,6 +570,20 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(user) }
 
       include_examples "theme creation not allowed"
+    end
+
+    context "when theme allowlist mode is enabled" do
+      before do
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      it "prevents theme creation with 403 error" do
+        expect do
+          post "/admin/themes.json", params: { theme: { name: "my test name" } }
+        end.not_to change { Theme.count }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 

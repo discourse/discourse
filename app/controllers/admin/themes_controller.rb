@@ -183,6 +183,24 @@ class Admin::ThemesController < Admin::AdminController
     respond_to { |format| format.json { render json: payload } }
   end
 
+  def create_v2
+    Themes::Create.call(
+      params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
+      guardian:,
+    ) do
+      on_failed_policy(:ban_in_allowlist_mode) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ban_for_remote_theme) { raise Discourse::InvalidAccess }
+
+      # TODO (martin) I don't think these need format.json, we never use these for another format?
+      on_success do |theme:|
+        format.json { render json: serialize_data(theme, ThemeSerializer), status: :created }
+      end
+      on_failure do |theme:|
+        format.json { render json: @theme.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def create
     ban_in_allowlist_mode!
 
