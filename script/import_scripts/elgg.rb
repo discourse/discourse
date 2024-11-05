@@ -4,7 +4,7 @@ require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Elgg < ImportScripts::Base
-  BATCH_SIZE ||= 1000
+  BATCH_SIZE = 1000
 
   def initialize
     super

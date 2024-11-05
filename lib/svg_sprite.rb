@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SvgSprite
-  SVG_ICONS ||=
+  SVG_ICONS =
     Set.new(
       %w[
         address-book
