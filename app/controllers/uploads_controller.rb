@@ -32,11 +32,9 @@ class UploadsController < ApplicationController
       1.minute.to_i,
     ).performed!
 
-    params.permit(:type, :upload_type)
-    raise Discourse::InvalidParameters if params[:type].blank? && params[:upload_type].blank?
+    params.require(:upload_type)
     # 50 characters ought to be enough for the upload type
-    type =
-      (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
+    type = params[:upload_type].parameterize(separator: "_")[0..50]
 
     if type == "avatar" &&
          (
