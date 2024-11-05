@@ -116,8 +116,8 @@ importers:
         specifier: ^2.8.8
         version: 2.8.8
       puppeteer-core:
-        specifier: ^23.6.1
-        version: 23.6.1
+        specifier: ^23.7.0
+        version: 23.7.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -2490,8 +2490,8 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@puppeteer/browsers@2.4.0':
-    resolution: {integrity: sha512-x8J1csfIygOwf6D6qUAZ0ASk3z63zPb7wkNeHRerCMh82qWKUrOgkuP005AJC8lDL6/evtXETGEJVcwykKT4/g==}
+  '@puppeteer/browsers@2.4.1':
+    resolution: {integrity: sha512-0kdAbmic3J09I6dT8e9vE2JOCSt13wHCW5x/ly8TSt2bDtuIWe2TgLZZDHdcziw9AVCzflMAXCrVyRIhIs44Ng==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -7022,8 +7022,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@23.6.1:
-    resolution: {integrity: sha512-DoNLAzQfGklPauEn33N4h9cM9GubJSINEn+AUMwAXwW159Y9JLk5y34Jsbv4c7kG8P0puOYWV9leu2siMZ/QpQ==}
+  puppeteer-core@23.7.0:
+    resolution: {integrity: sha512-0kC81k3K6n6Upg/k04xv+Mi8yy62bNAJiK7LCA71zfq2XKEo9WAzas1t6UQiLgaNHtGNKM0d1KbR56p/+mgEiQ==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -10920,7 +10920,7 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@puppeteer/browsers@2.4.0':
+  '@puppeteer/browsers@2.4.1':
     dependencies:
       debug: 4.3.7(supports-color@8.1.1)
       extract-zip: 2.0.1
@@ -16607,9 +16607,9 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@23.6.1:
+  puppeteer-core@23.7.0:
     dependencies:
-      '@puppeteer/browsers': 2.4.0
+      '@puppeteer/browsers': 2.4.1
       chromium-bidi: 0.8.0(devtools-protocol@0.0.1354347)
       debug: 4.3.7(supports-color@8.1.1)
       devtools-protocol: 0.0.1354347
