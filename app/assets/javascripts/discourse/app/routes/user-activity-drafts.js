@@ -4,17 +4,17 @@ import I18n from "discourse-i18n";
 export default class UserActivityDrafts extends DiscourseRoute {
   templateName = "user/stream";
 
-  model() {
+  async model() {
     const user = this.modelFor("user");
     const draftsStream = user.get("userDraftsStream");
     draftsStream.reset();
 
-    return draftsStream.findItems(this.site).then(() => {
-      return {
-        stream: draftsStream,
-        emptyState: this.emptyState(),
-      };
-    });
+    await draftsStream.findItems(this.site);
+
+    return {
+      stream: draftsStream,
+      emptyState: this.emptyState(),
+    };
   }
 
   emptyState() {
