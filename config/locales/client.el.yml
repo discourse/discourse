@@ -3776,6 +3776,8 @@ el:
               pending_count:
                 one: "%{count} απομένει"
                 other: "%{count} απομένουν"
+            invite:
+              content: "Πρόσκληση"
       panels:
         forum:
           label: Φόρουμ
@@ -5161,6 +5163,7 @@ el:
           groups: "Ομάδες"
           dashboard: "Πίνακας ελέγχου"
           navigation: "Πλοήγηση"
+          experimental: "Πειραματικό"
         secret_list:
           invalid_input: "Τα πεδία εισαγωγής δε μπορούν να είναι κενά ή να περιέχουν χαρακτήρα κάθετης γραμμής."
         default_categories:

@@ -6,6 +6,11 @@
 
 ro:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: șterge automatizarea
     discourse_automation:
       create: Creează
       no_automation_yet: Încă nu ai creat nicio automatizare. Alege o opțiune de mai jos pentru a începe.

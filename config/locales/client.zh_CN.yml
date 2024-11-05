@@ -4340,6 +4340,8 @@ zh_CN:
               title: "被举报的帖子和其他排队的条目"
               pending_count:
                 other: "%{count} 个待处理"
+            invite:
+              content: "邀请"
         global_section: "全局版块，对所有人可见"
       panels:
         forum:
@@ -6303,6 +6305,7 @@ zh_CN:
           groups: "群组"
           dashboard: "信息中心"
           navigation: "导航"
+          experimental: "实验性"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:

@@ -1219,7 +1219,6 @@ ca:
     markdown_linkify_tlds: "Llista de dominis de nivell superior que es tracten automàticament com a enllaços"
     markdown_typographer_quotation_marks: "Llista de parelles de reemplaçament de cometes simples i dobles"
     post_undo_action_window_mins: "Nombre de minuts durant els quals es permet als usuaris desfer accions recents sobre una publicació (M'agrada, bandera, etc.)."
-    must_approve_users: "L'equip responsable ha d'aprovar tots els comptes d'usuari nous abans que puguin accedir al lloc web."
     maximum_session_age: "L'usuari romandrà amb la sessió iniciada durant n hores des de la darrera visita"
     enable_escaped_fragments: "Torna a l'API Ajax-Crawling de Google si no es detecta cap rastrejador web. Consulteu <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>."
     cors_origins: "Orígens permesos per a peticions d'origen encreuat (CORS). Cada origen ha d'incloure http:// o https://. La variable DISCOURSE_ENABLE_CORS ha de ser \"true\" per a habilitar CORS."
@@ -1242,7 +1241,6 @@ ca:
     topics_per_period_in_top_summary: "Nombre de temes principals en el resum per defecte de temes principals."
     topics_per_period_in_top_page: "Nombre de temes principals que es mostren en els temes principals expandits amb \"mostra'n més\"."
     prioritize_username_in_ux: "Mostra el nom d'usuari primer en la pàgina d'usuari, targeta d'usuari i publicacions (si està desactivat, el nom es mostra primer)"
-    enable_rich_text_paste: "Habilita la conversió automàtica d'HTML a Markdown quan s'enganxa text en el tauler de redacció (experimental)"
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     allow_index_in_robots_txt: "Especifiqueu en robots.txt que els motors de cerca web poden indexar aquest lloc. En casos excepcionals, podeu <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a> de manera permanent."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
@@ -1613,15 +1611,6 @@ ca:
         regex_invalid: "L'expressió regular no és vàlida: %{error}"
         leading_trailing_slash: "L'expressió regular no ha de començar ni acabar amb una barra inclinada."
       unicode_usernames_avatars: "Els avatars de sistema interns no admeten noms d'usuari amb caràcters Unicode."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inactiu"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inactiu"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

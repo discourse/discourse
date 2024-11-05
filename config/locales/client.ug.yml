@@ -1837,6 +1837,7 @@ ug:
           title: "تەكلىپ ئۇلانمىسى"
           success: "تەكلىپ ئۇلانمىسى مۇۋەپپەقىيەتلىك ھاسىللاندى!"
           error: "تەكلىپ ئۇلانمىسىنى ھاسىللاۋاتقاندا خاتالىق كۆرۈلدى"
+        cannot_invite_to_forum: "كەچۈرۈڭ، تەكلىپنامە قۇرۇش ئىجازىتىڭىز يوق. تەكلىپنامە ئىجازىتىگە ئېرىشىش ئۈچۈن باشقۇرغۇچى بىلەن ئالاقىلىشىڭ."
         invite:
           new_title: "ئەزا تەكلىپ"
           edit_title: "تەكلىپ تەھرىر"
@@ -3510,6 +3511,9 @@ ug:
         one: "%{count} يوشۇرۇن جاۋابنى كۆرسەت"
         other: "%{count} يوشۇرۇن جاۋابنى كۆرسەت"
       sr_reply_to: "@%{username} نىڭ #%{post_number} يازمىسىدا جاۋاب"
+      link_clicked:
+        one: "ئۇلانما %{count} قېتىم چېكىلدى"
+        other: "ئۇلانما %{count} قېتىم چېكىلدى"
       notice:
         new_user: "بۇ %{user} نىڭ تۇنجى يازمىسى - ئۇنىڭ جامائىتىمىزغا قوشۇلغانلىقىنى قارشى ئالايلى!"
         returning_user: "%{user} كۆرۈنمىگىنى خېلى ۋاقىت بولدى - ئۇ ئاخىرقى يازمىنى %{time} دا يوللىغان."
@@ -4431,6 +4435,7 @@ ug:
       dismiss: "پەرۋا قىلما"
     safe_mode:
       enabled: "بىخەتەر ھالەت قوزغىتىلغان، بىخەتەر ھالەتتىن چېكىنىشتە بۇ توركۆرگۈ كۆزنىكىنى تاقايدۇ"
+    theme_preview_notice: "سىز ھازىر بىر ئۆرنەكنى ئالدىن كۆزىتىۋاتىسىز، بۇ توركۆرگۈ بەتكۈچى ياكى كۆزنىكىنى تاقىسىڭىز ئادەتتىكى تور بېكەت سەپلىمىسىگە قايتىسىز."
     image_removed: "(سۈرەت چىقىرىۋېتىلدى)"
     pause_notifications:
       title: "ئۇقتۇرۇشنى ۋاقىتلىق توختات…"
@@ -4625,6 +4630,9 @@ ug:
               pending_count:
                 one: "%{count} كۈتۈۋاتىدۇ"
                 other: "%{count} كۈتۈۋاتىدۇ"
+            invite:
+              content: "تەكلىپ"
+              title: "يېڭى ئەزا تەكلىپ قىلىش"
         global_section: "ئومۇمىيەت بۆلىكى، ھەممەيلەنگە كۆرۈنىدۇ"
       panels:
         forum:
@@ -5152,6 +5160,8 @@ ug:
           group_name: "گۇرۇپپا ئىشلەتكۈچى پائالىيىتى"
           user_added_to_group: "ئىشلەتكۈچى گۇرۇپپىغا قوشۇلدى"
           user_removed_from_group: "ئىشلەتكۈچى گۇرۇپپىدىن چىقىرىۋېتىلدى"
+        custom_event:
+          group_name: "ئىختىيارى پائالىيەت"
         user_promoted_event:
           group_name: "ئىشلەتكۈچى ئىشەنچ دەرىجىسى پائالىيىتى"
           user_promoted: "ئىشلەتكۈچى ئىشەنچ دەرىجىسى ئۆستۈرۈلدى"
@@ -5269,6 +5279,7 @@ ug:
           community_name_placeholder: "ئۈلگە جامائەت"
           community_summary: "جامائەت خۇلاسىسى"
           community_description: "جامائەت چۈشەندۈرۈشى"
+          community_title: "جامائەت ئىسمى"
           banner_image: "لوزۇنكا سۈرەت"
           banner_image_help: |
             بۇ سىزنىڭ ھەققىدە بېتىڭىزگە ئىشلىتىلىدۇ. تەۋسىيە چوڭلۇقى: 1100x300px. قوللايدىغان سۈرەت تۈرى: JPG، PNG ۋە SVG، سىغىمى 10MB غىچە.
@@ -5287,7 +5298,9 @@ ug:
           company_name_warning: |
             ئەگەر بوش قالدۇرۇلسا، قېلىپسىمان مۇلازىمەت ماددىلىرى ياكى شەخسىيەت باياناتىنى تەمىنلىمەيدۇ
           governing_law: "باشقۇرۇش قانۇنى"
+          governing_law_placeholder: "ئۆلكە، ئىشتات ياكى دۆلەت"
           city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
+          city_for_disputes_placeholder: "شەھەر"
           optional: "(تاللاشچان)"
           update: "يېڭىلا"
           toasts:
@@ -5557,12 +5570,14 @@ ug:
           set_default_theme: "كۆڭۈلدىكىگە تەڭشە"
           default_theme: "كۆڭۈلدىكى ئۆرنەك"
           set_default_success: "كۆڭۈلدىكى ئۆرنەك %{theme} غا تەڭشەلدى"
+          install_success: "%{theme} مۇۋەپپەقىيەتلىك ئورنىتىلدى!"
           inactive_components: "ئىشلىتىلمىگەن پارچە:"
           selected:
             one: "%{count} تاللاندى"
             other: "%{count} تاللاندى"
           cancel: "ۋاز كەچ"
           broken_theme_tooltip: "بۇ ئۆرنەكنىڭ CSS، HTML ياكى YAML دا خاتالىق بار"
+          broken_theme: "بۇزۇلغان ئۆرنەكنى چەكلە"
           disabled_component_tooltip: "بۇ پارچە چەكلەنگەن"
           default_theme_tooltip: "بۇ ئۆرنەك تور بېكەتنىڭ كۆڭۈلدىكى ئۆرنىكى"
           updates_available_tooltip: "بۇ ئۆرنەكنىڭ يېڭىلانمىسى بار"
@@ -5629,6 +5644,7 @@ ug:
           update_to_latest: "ئەڭ يېڭىسىغا يېڭىلا"
           check_for_updates: "يېڭىلانمىنى تەكشۈر"
           updating: "يېڭىلاۋاتىدۇ…"
+          update_success: "%{theme} نى يېڭىلاش تامام"
           up_to_date: "ئۆرنەك نەشرى ئەڭ يېڭى، ئاخىرقى قېتىم تەكشۈرگەن ۋاقىت:"
           has_overwritten_history: "نۆۋەتتىكى ئۆرنەك نەشرى ئەمدى مەۋجۇت ئەمەس چۈنكى Git تارىخى مەجبۇرىي قاپلىۋېتىلگەن."
           add: "قوش"
@@ -6635,6 +6651,7 @@ ug:
           groups: "گۇرۇپپا"
           dashboard: "باشقۇرۇش تاختا"
           navigation: "يولباشچى"
+          experimental: "تەجرىبە"
         secret_list:
           invalid_input: "كىرگۈزۈش بۆلىكى بوش قالمايدۇ ياكى تىك تاياقچە ھەرپىنى ئۆز ئىچىگە ئالمايدۇ."
         default_categories:
@@ -6775,6 +6792,7 @@ ug:
         uploading: "يۈكلەۋاتىدۇ…"
         name: "ئىسمى"
         group: "گۇرۇپپا"
+        created_by: "قۇرغۇچى"
         image: "سۈرەت"
         alt: "ئىختىيارى چىراي ئىپادەنى ئالدىن كۆزەت"
         delete_confirm: "سىز راستتىنلا %{name}: چىراي ئىپادە: نى ئۆچۈرەمسىز؟"

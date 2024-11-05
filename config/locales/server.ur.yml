@@ -1418,7 +1418,6 @@ ur:
     markdown_linkify_tlds: "سب سے اوپر کی سطح کے ڈَومینز کی فہرست جو خود بخود لِنکس کے طور پر دکھائے جاتے ہیں"
     markdown_typographer_quotation_marks: "ڈبل اور سِنگل قَوٹس کے متبادل جوڑوں کی فہرست"
     post_undo_action_window_mins: "منٹوں کی تعداد جب تک صارفین کو ایک پوسٹ پر حالیہ کارروائیوں (لائیک، فلَیگ، وغیرہ) کو واپس کرلینے کی اجازت ہے۔"
-    must_approve_users: "سائٹ تک رسائی حاصل کرنے سے پہلے سٹاف کا تمام نئے صارف اکاؤنٹس کو منظور کرنا ضروری ہے۔"
     maximum_session_age: "آخری وزٹ سے ن گھنٹوں بعد تک صارف کو لاگڈ اِن رکھا جائے گا"
     enable_escaped_fragments: "اگر کسی وَیب کرالر کا پتہ نہ لگے تو گُوگل اَیجَیکس-کرالِنگ API کا استعمال کریں۔ دیکھیے <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     cors_origins: "وہ اَوریجِن جن کیلئے کراس-اَوریجِن درخواستوں (CORS) کی اجازت ہے۔ ہراَوریجِن میں http:// یا https:// شامل ہونا ضروری ہے۔ CORS کو فعال کرنے کیلئے DISCOURSE_ENABLE_CORS کی وَیلِیو ٹرُو پر مقرر ہونا لاذمی ہے۔"
@@ -1441,7 +1440,6 @@ ur:
     topics_per_period_in_top_summary: "ڈیفالٹ کے طور پر ٹاپ ٹاپکس خلاصہ میں دکھائے گئے ٹاپ ٹاپکس کی تعداد۔"
     topics_per_period_in_top_page: "توسیع کردہ ٹاپ ٹاپکس 'مزید دکھائیں' میں دکھائے گئے ٹاپ ٹاپکس کی تعداد۔"
     prioritize_username_in_ux: "صارف صفحے، صارف کارڈ اور پوسٹس پر پہلے صارف نام دکھائیں (جب غیر فعال ہو تو نام پہلے دکھایا جاتا ہے)"
-    enable_rich_text_paste: "کمپَوزر میں ٹیکسٹ پَیسٹ کرتے وقت خود کار طریقہ سے HTML سے مارکڈائون میں تبادلہ فعال کریں۔ (تجرباتی)"
     email_token_valid_hours: "پاسورڈ بھولنے / اکاؤنٹ چالو کرنے کے ٹوکن (ن) گھنٹوں کیلئے درست ہیں۔"
     allow_index_in_robots_txt: "robots.txt فائل میں وضاحت کریں کہ یہ سائٹ وَیب سرچ اِنجنوں کی طرف سے انڈیکس کی جاسکتی ہے۔ غیر معمولی معاملات میں آپ مستقل طور پر <a href='%{base_path}/admin/customize/robots'>robots.txt کو اَووَررائڈ</a> کرسکتے ہیں۔"
     normalize_emails: "چیک کریں کہ آیا معمولی ای میل منفرد ہے۔ معمولی ای میل صارف نام سے تمام نقطوں اور + اور @ علامتوں کے درمیان ہر چیز کو مٹا دیتی ہے۔"
@@ -1848,15 +1846,6 @@ ur:
         regex_invalid: "رَیگولر اَیکسپرَیشَ غلط ہے: %{error}"
         leading_trailing_slash: "رَیگولر اَیکسپرَیشَ ایک سلیش کے ساتھ شروع اور ختم نہیں ہونا چاہئیے۔"
       unicode_usernames_avatars: "اندرونی سسٹم کے اوتار یونیکَوڈ صارف ناموں کی کفالت نہیں کرتے۔"
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "غیر فعال"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "غیر فعال"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

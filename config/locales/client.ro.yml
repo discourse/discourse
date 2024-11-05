@@ -1146,6 +1146,7 @@ ro:
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
       external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
+      enable_smart_lists: "Activează listele inteligente atunci când scrii în compozitor"
       enable_defer: "Activează marcarea subiectelor ca necitite"
       experimental_sidebar:
         options: "Opțiuni"
@@ -1510,6 +1511,7 @@ ro:
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email: %{email}"
         invite_link:
           success: "Link de invitare generat cu succes!"
+        cannot_invite_to_forum: "Ne pare rău, nu ai permisiunea de a crea invitații. Te rugăm să contactezi un administrator pentru a-ți acorda permisiunea de a invita."
         invite:
           new_title: "Invită membri"
           edit_title: "Editează invitație"
@@ -1635,6 +1637,8 @@ ro:
         sent_by: "Trimis de"
         private_message: "mesaj"
         the_topic: "subiectul"
+      card: "Card utilizator"
+      profile_link: "%{username}, vizitează profil"
     user_status:
       save: "Salvează"
     user_tips:
@@ -2549,6 +2553,10 @@ ro:
         one: "vezi un răspuns ascuns"
         few: "vezi %{count} răspunsuri ascunse"
         other: "vezi %{count} de răspunsuri ascunse"
+      link_clicked:
+        one: "legătură accesată o dată"
+        few: "legătură accesată de %{count} ori"
+        other: "legătură accesată de %{count} de ori"
       notice:
         new_user: "Este prima dată când %{user} a adăugat un comentariu. Să-i spunem bun venit în comunitate!"
       unread: "postarea nu a fost citită"
@@ -3171,6 +3179,7 @@ ro:
       dismiss: "Înlătură"
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
+    theme_preview_notice: "Momentan previzualizezi o temă, închide această filă sau fereastră de navigator pentru a reveni la configurația normală a site-ului."
     pause_notifications:
       options:
         half_hour: "30 de minute"
@@ -3270,6 +3279,9 @@ ro:
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
+            invite:
+              content: "Invită"
+              title: "Invită membri noi"
       panels:
         forum:
           label: Forum
@@ -3527,6 +3539,8 @@ ro:
         groups_filter_instructions: "Webhook-urile relevante vor fi declanșate dacă evenimentul este legat de grupuri specificate. Lasă liber pentru a declanșa webhooks pentru toate grupurile."
         groups_filter: "Grupuri declanșate"
         delete_confirm: "Șterge acest webhook?"
+        custom_event:
+          group_name: "Evenimente personalizate"
         delivery_status:
           title: "Starea livrării"
           inactive: "Inactivă"
@@ -3624,15 +3638,36 @@ ro:
             description: "Descoperă noile versiuni și îmbunătățiri ale Discourse"
       config_areas:
         about:
+          community_title: "Titlu comunitate"
+          community_title_help: "Scurtă descriere, afișată în fila navigatorului, pentru pagini cheie cum ar fi categorii și liste de subiecte."
           banner_image_help: |
             Acesta va fi folosit pe pagina ta Despre. Dimensiune recomandată: 1100x300px. Tipuri acceptate: JPG, PNG și SVG până la 10 MO.
+          community_owner_help: |
+            Nume utilizat pentru notificările critice și, de asemenea, afișat în /despre. Vizibil pentru utilizatorii anonimi de pe site-urile publice.
+          contact_email_help: |
+            Email utilizat pentru notificări critice și, de asemenea, afișat în /despre. Vizibil pentru utilizatorii anonimi de pe site-urile publice.
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            Atunci când este prezentă, înlocuiește adresa de email de contact din /despre și este vizibilă pentru utilizatorii anonimi de pe site-urile publice.
+          site_contact_name_help: |
+            Un nume de utilizator al personalului de la care se trimit toate mesajele automate. Dacă este lăsat gol, va fi utilizat contul de sistem implicit.
+          site_contact_group_help: |
+            Grupul care este invitat la toate mesajele private trimise automat.
+          your_organization_description: "Vom utiliza aceste informații în Termenele serviciului și în Notificarea privind confidențialitatea pentru a arăta cine operează site-ul și sub ce jurisdicție."
           company_name: "Nume"
+          company_name_placeholder: "Organizația Acme"
+          governing_law_placeholder: "Provincie, stat sau țară"
+          governing_law_help: |
+            Specifică jurisdicția pentru termenii legali ai site-ului, de obicei locul în care compania este înregistrată sau își desfășoară activitatea.
+          city_for_disputes_placeholder: "Oraș"
+          city_for_disputes_help: |
+            Specifică orașul pentru soluționarea litigiilor legale legate de acest forum.
           optional: "(opțional)"
           saved: "salvat!"
         flags:
           description: "Descriere"
           enabled: "Activat?"
+          add: "Adaugă steag"
           edit: "Editează"
           delete: "Șterge"
           flags_tab: "Semnalări"
@@ -3648,6 +3683,7 @@ ro:
           more_options:
             title: "Mai multe opțiuni"
         look_and_feel:
+          title: "Aspect și senzație"
           themes:
             title: "Teme"
             themes_intro: "Instalează o temă nouă pentru a începe sau creează una proprie de la zero folosind aceste resurse."
@@ -3805,7 +3841,9 @@ ro:
           set_default_theme: "Setare implicită"
           default_theme: "Temă implicită"
           set_default_success: "Temă implicită setată la %{theme}"
+          install_success: "%{theme} instalată cu succes!"
           cancel: "Anulează"
+          broken_theme: "Dezactivează temă stricată"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"
@@ -3824,6 +3862,7 @@ ro:
           disable: "Dezactivează"
           update_to_latest: "Actualizat la ultima"
           check_for_updates: "Caută actualizări"
+          update_success: "%{theme} Actualizare finalizată"
           up_to_date: "Tema este actuală, ultima verificare:"
           add: "Adaugă"
           edit_objects_theme_setting: "Editor de setări ale obiectelor"
@@ -4452,6 +4491,7 @@ ro:
           groups: "Grupuri"
           dashboard: "Panou de control"
           navigation: "Navigare"
+          experimental: "Experimental"
         default_categories:
           modal_yes: "Da"
         file_types_list:
@@ -4540,6 +4580,7 @@ ro:
         add: "Adaugă un emoji nou"
         name: "Nume"
         group: "Grup"
+        created_by: "Creat de"
         image: "Imagine"
         delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
         settings: "Setări"

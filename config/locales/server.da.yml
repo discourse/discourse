@@ -1342,7 +1342,6 @@ da:
     traditional_markdown_linebreaks: "Brug traditionelle linjeskift i Markdown, som kræver 2 mellemrum i slutningen af sætningen."
     markdown_linkify_tlds: "Liste over top-level domæner, der automatisk behandles som links"
     post_undo_action_window_mins: "Antal minutter som brugere er tilladt at fortryde handlinger på et indlæg ('Synes godt om', anmeldelser, osv.)."
-    must_approve_users: "Personalet skal godkende alle nye brugerkonti, før de får adgang til webstedet."
     invite_code: "Brugeren skal skrive denne kode for at kunne registrere en konto, ignoreret når den er tom (ingen forskel på store og små bogstaver)"
     approve_suspect_users: "Føj mistænkelige brugere til gennemgangskøen. Mistænkelige brugere har indtastet en bio/et websted, men har ingen læseaktivitet."
     persistent_sessions: "Brugere vil forblive logget ind, når webbrowseren er lukket"
@@ -1367,7 +1366,6 @@ da:
     topics_per_period_in_top_summary: "Antallet af top emner der vises som standard i top emner"
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
-    enable_rich_text_paste: "Aktivér automatisk HTML til Markdown-konvertering, når du indsætter tekst i editoren. (Eksperimentel)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
@@ -1621,18 +1619,6 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inaktiv"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inaktiv"
-      - ""
-      navigation_menu:
-      - "sidebjælke"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"

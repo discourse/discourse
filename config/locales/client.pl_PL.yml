@@ -1775,6 +1775,7 @@ pl_PL:
         approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
+        title_optional: "Nazwa (opcjonalnie)"
         instructions: "Twoja pełna nazwa (opcjonalnie)"
         instructions_required: "Twoja pełna nazwa"
         required: "Wprowadź imię"
@@ -1947,15 +1948,30 @@ pl_PL:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
+        cannot_invite_to_forum: "Przepraszamy, nie masz uprawnień do tworzenia zaproszeń. Skontaktuj się z administratorem w celu przyznania uprawnień do tworzenia zaproszeń."
         invite:
           new_title: "Zaproś członków"
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
+          create_link_to_invite: "Utwórz link, który można udostępnić, aby natychmiast przyznać dostęp do tej witryny."
+          copy_link_and_share_it: "Skopiuj poniższy link i udostępnij go, aby natychmiast udzielić dostępu do tej witryny."
           copy_link: "Skopiuj link"
           link_copied: "Link skopiowany!"
           share_link: "Udostępnij link"
+          link_validity_MF: |
+            Link jest ważny do { user_count, plural,
+                one {# użytkownika}
+                few {# użytkowników}
+                many {# użytkowników}
+              other {# użytkowników}
+            } i wygasa za { duration_days, plural,
+                one {# dzień}
+                few {# dni}
+                many {# dni}
+              other {# dni}
+            }.
           edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
@@ -2110,6 +2126,8 @@ pl_PL:
         sent_by: "Wysłane przez"
         private_message: "wiadomość"
         the_topic: "temat"
+      card: "Karta użytkownika"
+      profile_link: "%{username}, odwiedź profil"
     user_status:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
@@ -2423,6 +2441,7 @@ pl_PL:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tylko kategorie"
+      categories_only_optimized: "Tylko kategorie (zoptymalizowane)"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
       categories_and_latest_topics: "Kategorie i ostatnie tematy"
       categories_and_latest_topics_created_date: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
@@ -3743,6 +3762,11 @@ pl_PL:
         many: "pokaż %{count} ukrytych odpowiedzi"
         other: "pokaż %{count} ukrytych odpowiedzi"
       sr_reply_to: "Odpowiedz na post #%{post_number} od @%{username}"
+      link_clicked:
+        one: "link kliknięty %{count} raz"
+        few: "link kliknięty %{count} razy"
+        many: "link kliknięty %{count} razy"
+        other: "link kliknięty %{count} razy"
       notice:
         new_user: "%{user} opublikował(a) coś po raz pierwszy - powitajmy tę osobę w naszej społeczności!"
         returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - ostatni wpis tego użytkownika był %{time}."
@@ -4037,6 +4061,8 @@ pl_PL:
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
       foreground_color: "Kolor pierwszego planu"
+      color_used: "Kolor w użyciu"
+      predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
@@ -4738,6 +4764,7 @@ pl_PL:
       dismiss: "Wyczyść"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
+    theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"
@@ -4948,6 +4975,9 @@ pl_PL:
                 few: "%{count} oczekujących"
                 many: "%{count} oczekujących"
                 other: "%{count} oczekujących"
+            invite:
+              content: "Zaproś"
+              title: "Zaproś nowych członków"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
       panels:
         forum:
@@ -5110,6 +5140,12 @@ pl_PL:
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
+          experiment_enabled: "Włączono funkcję eksperymentalną."
+          experiment_disabled: "Wyłączono funkcję eksperymentalną."
+          experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+          experiment_tooltip:
+            title: "Wypróbuj naszą eksperymentalną funkcję"
+            content: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz z niej zrezygnować, kiedy tylko zechcesz."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5486,6 +5522,8 @@ pl_PL:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
+        custom_event:
+          group_name: "Zdarzenia niestandardowe"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
           user_promoted: "Użytkownik zostaje awansowany"
@@ -5608,6 +5646,7 @@ pl_PL:
           community_name_placeholder: "Przykładowa społeczność"
           community_summary: "Podsumowanie społeczności"
           community_description: "Opis społeczności"
+          community_title: "Tytuł społeczności"
           banner_image: "Obraz banera"
           banner_image_help: |
             Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
@@ -6991,6 +7030,7 @@ pl_PL:
           groups: "Grupy"
           dashboard: "Panel"
           navigation: "Nawigacja"
+          experimental: "Eksperymentalne"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:

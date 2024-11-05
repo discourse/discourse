@@ -6,6 +6,11 @@
 
 uk:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: видалити автоматизацію
     discourse_automation:
       title: Автоматизація
       create: Створити

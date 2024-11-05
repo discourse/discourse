@@ -711,6 +711,7 @@ he:
         chat_mention: "איזכור בצ׳אט"
         chat_invitation: "הזמנה לצ׳אט"
         chat_quoted: "הצ׳אט צוטט"
+        chat_watched_thread: "שרשור צ׳אט במעקב"
     action_codes:
       chat:
         enabled: 'ה<button class="btn-link open-chat">צ׳אט</button>הופעל על ידי%{who} ב־%{when}'
