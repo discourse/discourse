@@ -154,7 +154,8 @@ class PostRevisor
   end
 
   def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
-    if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes
+    if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes ||
+         SiteSetting.whispers_allowed_groups.blank?
       return
     end
 
@@ -165,18 +166,21 @@ class PostRevisor
         from: "##{old_category.slug_ref}",
         to: "##{new_category.slug_ref}",
       ),
-      post_type: Post.types[:small_action],
+      post_type: Post.types[:whisper],
       action_code: "category_changed",
     )
   end
 
   def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
-    return if !SiteSetting.create_post_for_category_and_tag_changes
+    if !SiteSetting.create_post_for_category_and_tag_changes ||
+         SiteSetting.whispers_allowed_groups.blank?
+      return
+    end
 
     topic.add_moderator_post(
       user,
       tags_changed_raw(added: added_tags, removed: removed_tags),
-      post_type: Post.types[:small_action],
+      post_type: Post.types[:whisper],
       action_code: "tags_changed",
       custom_fields: {
         tags_added: added_tags,
