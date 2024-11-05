@@ -1,5 +1,6 @@
 import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
+import { hash } from "@ember/helper";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
@@ -12,6 +13,7 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { createColumns } from "discourse/components/topic-list/topic-list-item";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -459,4 +461,12 @@ export default class TopicListItem extends Component {
         return entry;
       });
   }
+
+  <template>
+    <PluginOutlet
+      @name="above-topic-list-item"
+      @outletArgs={{hash topic=this.topic}}
+    />
+    {{this.topicListItemContents}}
+  </template>
 }
