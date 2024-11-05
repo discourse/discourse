@@ -596,7 +596,7 @@ login:
     type: host_list
     list_type: simple
   normalize_emails:
-    default: false
+    default: true
   auto_approve_email_domains:
     default: ""
     type: host_list
