@@ -760,23 +760,22 @@ RSpec.describe DiscourseNarrativeBot::TrackSelector do
           end
 
           context "when new and advanced user triggers overlap" do
-            before do
-              @overrides = []
-
-              @overrides << TranslationOverride.upsert!(
-                I18n.locale,
-                "discourse_narrative_bot.new_user_narrative.reset_trigger",
-                "tutorial",
-              )
-
-              @overrides << TranslationOverride.upsert!(
-                I18n.locale,
-                "discourse_narrative_bot.advanced_user_narrative.reset_trigger",
-                "tutorial advanced",
-              )
+            let!(:overrides) do
+              [
+                TranslationOverride.upsert!(
+                  I18n.locale,
+                  "discourse_narrative_bot.new_user_narrative.reset_trigger",
+                  "tutorial",
+                ),
+                TranslationOverride.upsert!(
+                  I18n.locale,
+                  "discourse_narrative_bot.advanced_user_narrative.reset_trigger",
+                  "tutorial advanced",
+                ),
+              ]
             end
 
-            after { @overrides.each(&:destroy!) }
+            after { overrides.each(&:destroy!) }
 
             it "should start the right track" do
               post.update!(
