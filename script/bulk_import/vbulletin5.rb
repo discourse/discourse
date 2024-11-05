@@ -9,9 +9,9 @@ require "find"
 
 class BulkImport::VBulletin5 < BulkImport::Base
   DB_PREFIX = ""
-  SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  ATTACH_DIR ||= ENV["ATTACH_DIR"] || "/shared/import/data/attachments"
-  AVATAR_DIR ||= ENV["AVATAR_DIR"] || "/shared/import/data/customavatars"
+  SUSPENDED_TILL = Date.new(3000, 1, 1)
+  ATTACH_DIR = ENV["ATTACH_DIR"] || "/shared/import/data/attachments"
+  AVATAR_DIR = ENV["AVATAR_DIR"] || "/shared/import/data/customavatars"
   ROOT_NODE = 2
 
   def initialize

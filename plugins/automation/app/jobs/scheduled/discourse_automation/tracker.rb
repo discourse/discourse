@@ -4,7 +4,7 @@ module Jobs
   class DiscourseAutomation::Tracker < ::Jobs::Scheduled
     every 1.minute
 
-    BATCH_LIMIT ||= 300
+    BATCH_LIMIT = 300
 
     def execute(_args = nil)
       return unless SiteSetting.discourse_automation_enabled

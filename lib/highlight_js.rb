@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module HighlightJs
-  HIGHLIGHTJS_DIR ||=
+  HIGHLIGHTJS_DIR =
     "#{Rails.root}/app/assets/javascripts/discourse/node_modules/@highlightjs/cdn-assets/"
-  VERSION ||= 1 # bump to invalidate caches following core changes
+  VERSION = 1 # bump to invalidate caches following core changes
 
   def self.languages
     langs = Dir.glob(HIGHLIGHTJS_DIR + "languages/*.js").map { |path| File.basename(path)[0..-8] }

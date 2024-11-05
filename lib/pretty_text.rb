@@ -689,9 +689,9 @@ module PrettyText
 
   private
 
-  USER_TYPE ||= "user"
-  GROUP_TYPE ||= "group"
-  GROUP_MENTIONABLE_TYPE ||= "group-mentionable"
+  USER_TYPE = "user"
+  GROUP_TYPE = "group"
+  GROUP_MENTIONABLE_TYPE = "group-mentionable"
 
   def self.add_mentions(doc, user_id: nil)
     elements = doc.css("span.mention")

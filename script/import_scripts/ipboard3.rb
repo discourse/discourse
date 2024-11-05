@@ -5,8 +5,8 @@ require "reverse_markdown"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::IPBoard3 < ImportScripts::Base
-  BATCH_SIZE ||= 5000
-  UPLOADS_DIR ||= "/path/to/uploads"
+  BATCH_SIZE = 5000
+  UPLOADS_DIR = "/path/to/uploads"
 
   def initialize
     super

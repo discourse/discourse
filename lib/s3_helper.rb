@@ -23,7 +23,7 @@ class S3Helper
   # Controls the following:
   #
   # * presigned put_object URLs for direct S3 uploads
-  UPLOAD_URL_EXPIRES_AFTER_SECONDS ||= 10.minutes.to_i
+  UPLOAD_URL_EXPIRES_AFTER_SECONDS = 10.minutes.to_i
 
   def initialize(s3_bucket_name, tombstone_prefix = "", options = {})
     @s3_client = options.delete(:client)

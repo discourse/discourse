@@ -388,7 +388,7 @@ class HtmlToMarkdown
     end
   end
 
-  HTML5_BLOCK_ELEMENTS ||= %w[
+  HTML5_BLOCK_ELEMENTS = %w[
     article
     aside
     details

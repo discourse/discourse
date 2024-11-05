@@ -459,7 +459,7 @@ class PostRevisor
     remove_flags_and_unhide_post
   end
 
-  USER_ACTIONS_TO_REMOVE ||= [UserAction::REPLY, UserAction::RESPONSE]
+  USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE]
 
   def update_post
     if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id && @post.user_id != nil

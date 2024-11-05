@@ -417,7 +417,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
   end
 
-  IGNORED_BBCODE ||= %w[
+  IGNORED_BBCODE = %w[
     black
     blue
     center
