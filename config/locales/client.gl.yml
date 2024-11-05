@@ -3362,6 +3362,8 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+            invite:
+              content: "Convidar"
       filter: "Filtrar..."
     until: "Ata:"
     form_templates:

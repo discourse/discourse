@@ -1602,6 +1602,7 @@ hy:
         approval_required: "Մոդերատորը պետք է ձեռքով հաստատի Ձեր նոր հաշիվը, մինչև Դուք հասանելիություն կունենաք այս ֆորումից: Դուք էլ. նամակ կստանաք, երբ Ձեր հաշիվը հաստատվի!"
       name:
         title: "Անուն"
+        title_optional: "Անուն (ըստ ցանկության)"
         instructions: "Ձեր անուն ազգանունը (ընտրովի)"
         instructions_required: "Ձեր անուն ազգանունը"
         too_short: "Ձեր անունը շատ կարճ է"
@@ -1983,6 +1984,7 @@ hy:
       associate: "Արդեն հաշիվ ունե՞ք: <a href='%{associate_link}'>Մուտք գործեք</a> ՝ ձեր %{provider} հաշիվը կապելու համար:"
       activation_title: "Ակտիվացրեք ձեր հաշիվը"
       already_have_account: "Արդեն հաշիվ ունե՞ք:"
+      no_account_yet: "Չունե՞ք հաշիվ:"
       progress_bar:
         signup: "Գրանցվել"
         activate: "Ակտիվացնել"
@@ -2075,7 +2077,7 @@ hy:
       discord:
         name: "Discord"
       passkey:
-        name: "Մուտք գործել անվտանգության բանալիով"
+        name: "Մուտք գործեք բանալիով"
       second_factor_toggle:
         totp: "Փոխարենը օգտագործել նույնականացման հավելվածը"
         backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
@@ -3684,6 +3686,8 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+            invite:
+              content: "Հրավիրել"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"

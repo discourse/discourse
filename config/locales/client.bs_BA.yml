@@ -3097,6 +3097,8 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+            invite:
+              content: "Invite"
       filter: "Filter..."
     until: "Sve do:"
     form_templates:

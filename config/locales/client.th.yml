@@ -2497,6 +2497,8 @@ th:
                 other: "%{count}แบบร่าง"
             review:
               content: "รีวิว"
+            invite:
+              content: "เชิญ"
     until: "จนถึง:"
     form_templates:
       upload_field:

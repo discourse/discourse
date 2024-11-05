@@ -2812,6 +2812,8 @@ lv:
               content: "Mani ieraksti"
             review:
               content: "Pārskats"
+            invite:
+              content: "Ielūgt"
       filter: "Filtri..."
     form_templates:
       upload_field:

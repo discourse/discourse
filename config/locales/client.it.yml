@@ -4582,6 +4582,8 @@ it:
               pending_count:
                 one: "%{count} in attesa"
                 other: "%{count} in attesa"
+            invite:
+              content: "Invita"
         global_section: "Sezione globale, visibile a tutti"
       panels:
         forum:
@@ -6551,6 +6553,7 @@ it:
           groups: "Gruppi"
           dashboard: "Dashboard"
           navigation: "Navigazione"
+          experimental: "Sperimentale"
         secret_list:
           invalid_input: "I campi di inserimento non possono essere vuoti o contenere il carattere barra verticale."
         default_categories:

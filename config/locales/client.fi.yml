@@ -4583,6 +4583,8 @@ fi:
               pending_count:
                 one: "%{count} odottaa"
                 other: "%{count} odottaa"
+            invite:
+              content: "Kutsu"
         global_section: "Yleinen osio, joka näkyy kaikille"
       panels:
         forum:
@@ -6551,6 +6553,7 @@ fi:
           groups: "Ryhmät"
           dashboard: "Hallintapaneeli"
           navigation: "Navigointi"
+          experimental: "Kokeellinen"
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:

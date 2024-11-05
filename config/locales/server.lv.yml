@@ -418,15 +418,6 @@ lv:
     default_other_skip_new_user_tips: "Izlaist padomus un emblēmas par jaunu lietotāju iesaisti."
     errors:
       invalid_email: "Nepareiza e-pasta adrese."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "neaktīvs"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "neaktīvs"
-      - ""
   search:
     within_post: "#%{post_number} - %{username}"
     types:

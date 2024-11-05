@@ -4575,6 +4575,8 @@ nl:
               pending_count:
                 one: "%{count} wachtend"
                 other: "%{count} wachtend"
+            invite:
+              content: "Uitnodigen"
         global_section: "Algemene sectie, voor iedereen zichtbaar"
       panels:
         forum:
@@ -6543,6 +6545,7 @@ nl:
           groups: "Groepen"
           dashboard: "Dashboard"
           navigation: "Navigatie"
+          experimental: "Experimenteel"
         secret_list:
           invalid_input: "Invoervelden mogen niet leeg zijn of verticale-streeptekens bevatten."
         default_categories:

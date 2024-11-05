@@ -4330,6 +4330,8 @@ ja:
               title: "通報された投稿とその他の待機中の項目"
               pending_count:
                 other: "%{count} 保留中"
+            invite:
+              content: "招待"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
@@ -6274,6 +6276,7 @@ ja:
           groups: "グループ"
           dashboard: "ダッシュボード"
           navigation: "ナビゲーション"
+          experimental: "実験的"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:

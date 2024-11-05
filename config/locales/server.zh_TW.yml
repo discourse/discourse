@@ -1159,7 +1159,6 @@ zh_TW:
     enable_markdown_linkify: "自動將前方有www、https:// 的字樣加上連結，例如：www.example.com 和 https://example.com 將自動加上超連結。"
     markdown_linkify_tlds: "自動設為連結的最上層網域列表"
     post_undo_action_window_mins: "允許使用者還原貼文上近期動作（讚、標記等）的時間長度（分鐘數）。"
-    must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
     invite_code: "使用者必須輸入此代碼才能被允許註冊帳號，留空時將忽略（不分大小寫）"
     persistent_sessions: "關閉網頁瀏覽器時，使用者將保持登入狀態"
     maximum_session_age: "使用者自訪問後可維持登錄 n 小時"
@@ -1184,7 +1183,6 @@ zh_TW:
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     prioritize_username_in_ux: "在使用者頁、使用者卡片和貼文上優先顯示使用者名（未選時，暱稱將先顯示）"
-    enable_rich_text_paste: "自動啟用 HTML 轉換 Markdown 格式（實驗性功能）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
     version_checks: "當 Discourse 有推新的版本需要更新時，顯示在 <a href='%{base_path}/admin' target='_blank'>/admin/</a>Dashboard 上以提示管理員"
@@ -1538,18 +1536,6 @@ zh_TW:
         regex_invalid: "正則表達式無效：%{error}"
         leading_trailing_slash: "正則表達式不能以斜杠（/）開頭和結尾"
       unicode_usernames_avatars: "內部系統頭像不支援Unicode使用者名稱"
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "不活躍"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "不活躍"
-      - ""
-      navigation_menu:
-      - "側選單"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.範例.com"

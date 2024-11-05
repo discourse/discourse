@@ -1999,6 +1999,8 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+            invite:
+              content: "Fto"
     form_templates:
       upload_field:
         upload: "Ngarko"

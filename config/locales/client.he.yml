@@ -1963,6 +1963,7 @@ he:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
           error: "אירעה שגיאה ביצירת קישור הזמנה."
+        cannot_invite_to_forum: "אין לך הרשאה ליצור הזמנות, סליחה. \nנא ליצור קשר עם ההנהלה כדי להעניק לך הרשאה להזמין."
         invite:
           new_title: "הזמנת חברים"
           edit_title: "עריכת הזמנה"
@@ -3824,6 +3825,11 @@ he:
         many: "הצגת %{count} תגובות שהוסתרו"
         other: "הצגת %{count} תגובות שהוסתרו"
       sr_reply_to: "תגובה לפוסט מס׳ %{post_number} על ידי ‎@%{username}"
+      link_clicked:
+        one: "הקישור נלחץ פעם אחת"
+        two: "הקישור נלחץ פעמיים"
+        many: "הקישור נלחץ %{count} פעמים"
+        other: "הקישור נלחץ %{count} פעמים"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
         returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
@@ -5044,6 +5050,9 @@ he:
                 two: "%{count} ממתינים"
                 many: "%{count} ממתינים"
                 other: "%{count} ממתינים"
+            invite:
+              content: "להזמין"
+              title: "הזמנת חברים חדשים"
         global_section: "סעיף כללי, גלוי לכולם"
       panels:
         forum:
@@ -5588,6 +5597,8 @@ he:
           group_name: "אירועי משתמש בקבוצה"
           user_added_to_group: "משתמש נוסף לקבוצה"
           user_removed_from_group: "משתמש מוסר מקבוצה"
+        custom_event:
+          group_name: "אירועים מותאמים אישית"
         user_promoted_event:
           group_name: "אירועי קידום משתמש"
           user_promoted: "משתמש מקודם"
@@ -5712,6 +5723,8 @@ he:
           community_name_placeholder: "קהילה לדוגמה"
           community_summary: "תקציר קהילה"
           community_description: "תיאור קהילה"
+          community_title: "כותרת הקהילה"
+          community_title_help: "תיאור קצר שמופיע בלשונית הדפדפן, לעמודי מפתח כגון רשימות קטגוריות ונושאים."
           banner_image: "תמונת כרזה"
           banner_image_help: |
             ייעשה בזה שימוש בעמוד העל אודות שלך. הגודל המומלץ: ‎1100×300 פיקסלים. סוגים מורשים: JPG,‏ PNG ו־SVG עד 10 מ״ב
@@ -7124,6 +7137,7 @@ he:
           groups: "קבוצות"
           dashboard: "לוח בקרה"
           navigation: "ניווט"
+          experimental: "ניסיוני"
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
         default_categories:
@@ -7272,6 +7286,7 @@ he:
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
+        created_by: "נוצר על ידי"
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"

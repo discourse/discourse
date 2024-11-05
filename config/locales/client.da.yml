@@ -3775,6 +3775,8 @@ da:
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
+            invite:
+              content: "Invitér"
       panels:
         forum:
           label: Forum
