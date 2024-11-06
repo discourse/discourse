@@ -19,16 +19,18 @@
 
   <hr />
 
-  Show
-  <ComboBox
-    @value={{this.filter}}
-    @content={{this.sortingGroups}}
-    @nameProperty={{null}}
-    @valueProperty={{null}}
-    @onChange={{action "filterGroups"}}
-  />
-
-  <hr />
+  <div class="form-horizontal">
+    <div class="inline-form">
+      <label class="label">Show</label>
+      <ComboBox
+        @value={{this.filter}}
+        @content={{this.sortingGroups}}
+        @nameProperty={{null}}
+        @valueProperty={{null}}
+        @onChange={{action "filterGroups"}}
+      />
+    </div>
+  </div>
 
   {{#if this.sortedEmojis}}
     <table id="custom_emoji" class="d-admin-table">
