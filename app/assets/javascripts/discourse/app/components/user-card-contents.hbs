@@ -370,7 +370,17 @@
                   <span class="user-field-value">
                     {{#each uf.value as |v|}}
                       {{! some values are arrays }}
-                      <span class="user-field-value-list-item">{{v}}</span>
+                      <span class="user-field-value-list-item">
+                        {{#if uf.field.searchable}}
+                          <LinkTo
+                            @route="users"
+                            @query={{hash name=v}}
+                            {{on "click" (fn this.refreshRoute v)}}
+                          >{{v}}</LinkTo>
+                        {{else}}
+                          {{v}}
+                        {{/if}}
+                      </span>
                     {{else}}
                       {{uf.value}}
                     {{/each}}
