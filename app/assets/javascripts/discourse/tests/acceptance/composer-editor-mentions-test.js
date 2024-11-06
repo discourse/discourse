@@ -160,7 +160,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await simulateKeys(".d-editor-input", "abc @");
 
     assert.deepEqual(
-      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      [...document.querySelectorAll(".ac-user .username")].map((e) => e.innerText),
       ["user_group", "user", "user2", "foo"]
     );
   });
