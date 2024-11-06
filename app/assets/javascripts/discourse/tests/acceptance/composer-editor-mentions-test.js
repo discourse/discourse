@@ -157,9 +157,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await click(".topic-list-item .title");
     await click(".btn-primary.create");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "abc @");
+    await simulateKeys(".d-editor-input", "abc @");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
