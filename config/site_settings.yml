@@ -42,25 +42,32 @@ required:
   title:
     client: true
     default: "Discourse"
+    area: "about"
   site_description:
     default: ""
+    area: "about"
   short_site_description:
     default: ""
     client: true
+    area: "about"
   contact_email:
     default: ""
     type: email
+    area: "about"
   contact_url:
     default: ""
+    area: "about"
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
   site_contact_username:
     default: ""
     type: username
+    area: "about"
   site_contact_group_name:
     default: ""
     type: group
+    area: "about"
   exclude_rel_nofollow_domains:
     client: true
     default: ""
@@ -68,10 +75,13 @@ required:
     list_type: simple
   company_name:
     default: ""
+    area: "about"
   governing_law:
     default: ""
+    area: "about"
   city_for_disputes:
     default: ""
+    area: "about"
 
 branding:
   logo:
@@ -414,6 +424,7 @@ basic:
     default: ""
     max: 10_000
     hidden: true
+    area: "about"
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -422,10 +433,12 @@ basic:
     default: ""
     type: upload
     hidden: true
+    area: "about"
   community_owner:
     default: ""
     max: 300
     hidden: true
+    area: "about"
   use_legacy_pageviews:
     default: false
     hidden: true
