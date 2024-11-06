@@ -29,7 +29,7 @@ RSpec.describe UploadsController do
           post "/uploads.json",
                params: {
                  file: Rack::Test::UploadedFile.new(logo_file),
-                 type: "avatar",
+                 upload_type: "avatar",
                }
 
           expect(response.status).to eq(200)
@@ -37,20 +37,20 @@ RSpec.describe UploadsController do
           post "/uploads.json",
                params: {
                  file: Rack::Test::UploadedFile.new(logo_file),
-                 type: "avatar",
+                 upload_type: "avatar",
                }
 
           expect(response.status).to eq(429)
         end
       end
 
-      it "expects a type or upload_type" do
+      it "expects upload_type" do
         post "/uploads.json", params: { file: logo }
         expect(response.status).to eq(400)
         post "/uploads.json",
              params: {
                file: Rack::Test::UploadedFile.new(logo_file),
-               type: "avatar",
+               upload_type: "avatar",
              }
         expect(response.status).to eq 200
         post "/uploads.json",
@@ -62,7 +62,7 @@ RSpec.describe UploadsController do
       end
 
       it "is successful with an image" do
-        post "/uploads.json", params: { file: logo, type: "avatar" }
+        post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq 200
         expect(response.parsed_body["id"]).to be_present
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(1)
@@ -74,14 +74,19 @@ RSpec.describe UploadsController do
         upload = UploadCreator.new(logo_file, "logo.png").create_for(-1)
         logo = Rack::Test::UploadedFile.new(file_from_fixtures("logo.png"))
 
-        post "/uploads.json", params: { file: logo, type: "site_setting", for_site_setting: "true" }
+        post "/uploads.json",
+             params: {
+               file: logo,
+               upload_type: "site_setting",
+               for_site_setting: "true",
+             }
         expect(response.status).to eq 200
         expect(response.parsed_body["url"]).to eq(upload.url)
       end
 
       it "returns cdn url" do
         set_cdn_url "https://awesome.com"
-        post "/uploads.json", params: { file: logo, type: "composer" }
+        post "/uploads.json", params: { file: logo, upload_type: "composer" }
         expect(response.status).to eq 200
         expect(response.parsed_body["url"]).to start_with("https://awesome.com/uploads/default/")
       end
@@ -89,7 +94,7 @@ RSpec.describe UploadsController do
       it "is successful with an attachment" do
         SiteSetting.authorized_extensions = "*"
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
         expect(response.status).to eq 200
 
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
@@ -109,7 +114,7 @@ RSpec.describe UploadsController do
         post "/uploads.json",
              params: {
                url: url,
-               type: "avatar",
+               upload_type: "avatar",
              },
              headers: {
                HTTP_API_KEY: api_key,
@@ -127,7 +132,12 @@ RSpec.describe UploadsController do
       it "correctly sets retain_hours for admins" do
         sign_in(Fabricate(:admin))
 
-        post "/uploads.json", params: { file: logo, retain_hours: 100, type: "profile_background" }
+        post "/uploads.json",
+             params: {
+               file: logo,
+               retain_hours: 100,
+               upload_type: "profile_background",
+             }
 
         id = response.parsed_body["id"]
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
@@ -135,7 +145,7 @@ RSpec.describe UploadsController do
       end
 
       it "requires a file" do
-        post "/uploads.json", params: { type: "composer" }
+        post "/uploads.json", params: { upload_type: "composer" }
 
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
         message = response.parsed_body
@@ -147,7 +157,7 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
 
-        post "/uploads.json", params: { file: text_file, type: "avatar" }
+        post "/uploads.json", params: { file: text_file, upload_type: "avatar" }
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
@@ -159,18 +169,18 @@ RSpec.describe UploadsController do
 
       it "ensures user belongs to uploaded_avatars_allowed_groups when uploading an avatar" do
         SiteSetting.uploaded_avatars_allowed_groups = "13"
-        post "/uploads.json", params: { file: logo, type: "avatar" }
+        post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq(422)
 
         user.change_trust_level!(TrustLevel[3])
 
-        post "/uploads.json", params: { file: logo, type: "avatar" }
+        post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq(200)
       end
 
       it "ensures discourse_connect_overrides_avatar is not enabled when uploading an avatar" do
         SiteSetting.discourse_connect_overrides_avatar = true
-        post "/uploads.json", params: { file: logo, type: "avatar" }
+        post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq(422)
       end
 
@@ -182,7 +192,7 @@ RSpec.describe UploadsController do
         post "/uploads.json",
              params: {
                file: text_file,
-               type: "composer",
+               upload_type: "composer",
                for_private_message: "true",
              }
 
@@ -195,7 +205,12 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions = ""
         user.update!(admin: true)
 
-        post "/uploads.json", params: { file: logo, type: "site_setting", for_site_setting: "true" }
+        post "/uploads.json",
+             params: {
+               file: logo,
+               upload_type: "site_setting",
+               for_site_setting: "true",
+             }
 
         expect(response.status).to eq(200)
         id = response.parsed_body["id"]
@@ -211,7 +226,7 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions_for_staff = "*"
         user.update_columns(moderator: true)
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         expect(response.status).to eq(200)
         data = response.parsed_body
@@ -222,14 +237,14 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions = ""
         SiteSetting.authorized_extensions_for_staff = "*"
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         data = response.parsed_body
         expect(data["errors"].first).to eq(I18n.t("upload.unauthorized", authorized_extensions: ""))
       end
 
       it "returns an error when it could not determine the dimensions of an image" do
-        post "/uploads.json", params: { file: fake_jpg, type: "composer" }
+        post "/uploads.json", params: { file: fake_jpg, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         expect(Jobs::CreateAvatarThumbnails.jobs.size).to eq(0)
@@ -247,7 +262,7 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.max_attachment_size_kb = 1
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         errors = response.parsed_body["errors"]
@@ -260,7 +275,7 @@ RSpec.describe UploadsController do
         SiteSetting.authorized_extensions = "*"
         SiteSetting.system_user_max_attachment_size_kb = 421_730
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
         expect(response.status).to eq(200)
       end
 
@@ -269,7 +284,7 @@ RSpec.describe UploadsController do
         SiteSetting.max_attachment_size_kb = 1
         SiteSetting.system_user_max_attachment_size_kb = 1
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         errors = response.parsed_body["errors"]
@@ -283,7 +298,7 @@ RSpec.describe UploadsController do
         SiteSetting.max_attachment_size_kb = 10
         SiteSetting.system_user_max_attachment_size_kb = 5
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         errors = response.parsed_body["errors"]
@@ -297,7 +312,7 @@ RSpec.describe UploadsController do
         SiteSetting.max_attachment_size_kb = 1
         SiteSetting.system_user_max_attachment_size_kb = 10
 
-        post "/uploads.json", params: { file: text_file, type: "composer" }
+        post "/uploads.json", params: { file: text_file, upload_type: "composer" }
 
         expect(response.status).to eq(422)
         errors = response.parsed_body["errors"]
@@ -313,7 +328,7 @@ RSpec.describe UploadsController do
     SiteSetting.authorized_extensions = "*"
     sign_in(user)
 
-    post "/uploads.json", params: { file: fake_logo, type: "composer" }
+    post "/uploads.json", params: { file: fake_logo, upload_type: "composer" }
 
     expect(response.status).to eq(200)
 

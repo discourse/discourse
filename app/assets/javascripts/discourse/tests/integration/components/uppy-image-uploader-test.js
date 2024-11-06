@@ -9,7 +9,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
   test("with image", async function (assert) {
     await render(hbs`
-      <UppyImageUploader @id="test-uppy-image-uploader" @imageUrl="/images/avatar.png" @placeholderUrl="/not/used.png" />
+      <UppyImageUploader @type="avatar" @id="test-uppy-image-uploader" @imageUrl="/images/avatar.png" @placeholderUrl="/not/used.png" />
     `);
 
     assert.strictEqual(
@@ -38,7 +38,9 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
   });
 
   test("without image", async function (assert) {
-    await render(hbs`<UppyImageUploader @id="test-uppy-image-uploader" />`);
+    await render(
+      hbs`<UppyImageUploader @type="site_setting" @id="test-uppy-image-uploader" />`
+    );
 
     assert.strictEqual(
       count(".d-icon-far-image"),
@@ -55,7 +57,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
   test("with placeholder", async function (assert) {
     await render(
-      hbs`<UppyImageUploader @id="test-uppy-image-uploader" @placeholderUrl="/images/avatar.png" />`
+      hbs`<UppyImageUploader @type="composer" @id="test-uppy-image-uploader" @placeholderUrl="/images/avatar.png" />`
     );
 
     assert.strictEqual(
