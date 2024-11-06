@@ -41,6 +41,14 @@ module PageObjects
         element = find(".admin-config-area-card__title")
         element.has_text?(date)
       end
+
+      def has_experimental_text?
+        page.has_css?(".admin-new-feature-item__header-experimental")
+      end
+
+      def has_no_experimental_text?
+        page.has_no_css?(".admin-new-feature-item__header-experimental")
+      end
     end
   end
 end

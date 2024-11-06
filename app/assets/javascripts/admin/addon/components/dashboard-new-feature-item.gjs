@@ -9,6 +9,7 @@ import CookText from "discourse/components/cook-text";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -77,6 +78,12 @@ export default class DiscourseNewFeatureItem extends Component {
           {{/if}}
           <h3>
             {{@item.title}}
+            {{#if @item.experiment_setting}}
+              <span class="admin-new-feature-item__header-experimental">
+                {{dIcon "flask"}}
+                {{i18n "admin.dashboard.new_features.experimental"}}
+              </span>
+            {{/if}}
           </h3>
           {{#if @item.discourse_version}}
             <div class="admin-new-feature-item__new-feature-version">
