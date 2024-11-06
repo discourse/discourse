@@ -1,10 +1,9 @@
 diff --git a/pkg/standalone/content_tag.js b/pkg/standalone/content_tag.js
-index 761f0fa84a1c545ac8908dd3c3b6d7e6c778791d..41a1112329742f8ee5351df4d56e068fceef4864 100644
+index 0a676a08c4aa05d096d402da649bca24ad60cfc1..68cbe90df17b17eba9c232952b037df56df6648b 100644
 --- a/pkg/standalone/content_tag.js
 +++ b/pkg/standalone/content_tag.js
-@@ -20,6 +20,7 @@ function takeObject(idx) {
-     return ret;
- }
+@@ -1,5 +1,6 @@
+ let wasm;
  
 +const { TextDecoder, TextEncoder } = require('util');
  const cachedTextDecoder = (typeof TextDecoder !== 'undefined' ? new TextDecoder('utf-8', { ignoreBOM: true, fatal: true }) : { decode: () => { throw Error('TextDecoder not available') } } );
