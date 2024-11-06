@@ -520,3 +520,17 @@
     margin-top: 1em;
   }
 }
+
+.d-modal.grant-badge-modal {
+  .d-modal {
+    &__body {
+      @include breakpoint(mobile-extra-large) {
+        flex-grow: 1;
+      }
+
+      @include breakpoint(medium) {
+        overflow: visible;
+      }
+    }
+  }
+}
