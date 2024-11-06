@@ -36,7 +36,7 @@ module(
       await render(<template>
         <Form @mutable={{true}} @data={{data}} as |form|>
           <form.Field @name="image_url" @title="Foo" as |field|>
-            <field.Image />
+            <field.Image @type="site_setting" />
           </form.Field>
         </Form>
       </template>);

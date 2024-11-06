@@ -4339,6 +4339,8 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
+            invite:
+              content: "Inviter"
       filter: "Filtrer..."
     until: "Inntil:"
     form_templates:

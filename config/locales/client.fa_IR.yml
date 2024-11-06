@@ -1501,6 +1501,7 @@ fa_IR:
           title: "لینک دعوت"
           success: "لینک دعوت با موفقیت ایجاد شد!"
           error: "خطایی در هنگام ایجاد لینک رخ داد"
+        cannot_invite_to_forum: "متاسفم، شما اجازه ایجاد دعوت‌نامه را ندارید. لطفا برای دریافت اجازه دعوت‌نامه با مدیریت تماس بگیرید."
         invite:
           new_title: "دعوت‌نامه عضوها"
           edit_title: "ویرایش دعوت‌نامه"
@@ -3531,6 +3532,9 @@ fa_IR:
               pending_count:
                 one: "%{count} در انتظار"
                 other: "%{count} در انتظار"
+            invite:
+              content: "دعوت"
+              title: "دعوت‌نامه عضوهای جدید"
       panels:
         forum:
           label: انجمن
@@ -4708,6 +4712,7 @@ fa_IR:
           groups: "گروه‌ها"
           dashboard: "پیشخوان"
           navigation: "ناوبری"
+          experimental: "آزمایشی"
         default_categories:
           modal_yes: "بله"
         simple_list:

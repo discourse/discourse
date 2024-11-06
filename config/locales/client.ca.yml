@@ -2945,6 +2945,8 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
+            invite:
+              content: "Convida"
       filter: "Filtre..."
     until: "Fins a:"
     form_templates:

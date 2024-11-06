@@ -10,7 +10,7 @@ class ImportScripts::CsvRestoreStagedUsers < ImportScripts::Base
   CSV_CUSTOM_FIELDS = ENV["CSV_CUSTOM_FIELDS"]
   CSV_EMAILS = ENV["CSV_EMAILS"]
 
-  BATCH_SIZE ||= 1000
+  BATCH_SIZE = 1000
 
   def initialize
     super

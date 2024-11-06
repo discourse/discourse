@@ -4575,6 +4575,8 @@ fr:
               pending_count:
                 one: "%{count} en attente"
                 other: "%{count} en attente"
+            invite:
+              content: "Inviter"
         global_section: "Section globale, visible par tous"
       panels:
         forum:
@@ -6543,6 +6545,7 @@ fr:
           groups: "Groupes"
           dashboard: "Tableau de bord"
           navigation: "Navigation"
+          experimental: "Expérimental"
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:

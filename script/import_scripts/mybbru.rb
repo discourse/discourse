@@ -9,8 +9,8 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # If your forum has non-English usernames, don't forget to enable Unicode usernames in /admin/site_settings
 
 class ImportScripts::MybbRu < ImportScripts::Base
-  JSON_TOPICS_FILE_PATH ||= ENV["JSON_TOPICS_FILE"] || "mybbru_export/threads.json"
-  JSON_USERS_FILE_PATH ||= ENV["JSON_USERS_FILE"] || "mybbru_export/users.json"
+  JSON_TOPICS_FILE_PATH = ENV["JSON_TOPICS_FILE"] || "mybbru_export/threads.json"
+  JSON_USERS_FILE_PATH = ENV["JSON_USERS_FILE"] || "mybbru_export/users.json"
 
   def initialize
     super

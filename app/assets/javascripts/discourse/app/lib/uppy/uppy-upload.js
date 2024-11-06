@@ -73,7 +73,7 @@ function lazyMergeConfig(config) {
   return mergedConfig;
 }
 
-const REQUIRED_CONFIG_KEYS = ["id", "uploadDone"];
+const REQUIRED_CONFIG_KEYS = ["id", "uploadDone", "type"];
 function validateConfig(config) {
   for (const key of REQUIRED_CONFIG_KEYS) {
     if (!config[key]) {

@@ -33,7 +33,7 @@ task "import:ensure_consistency" => :environment do
   log "Done!"
 end
 
-MS_SPEND_CREATING_POST ||= 5000
+MS_SPEND_CREATING_POST = 5000
 
 # -- TODO: We need to check the queries are actually adding/updating the necessary
 # data, post migration. The ON CONFLICT DO NOTHING may cause the clauses to be ignored

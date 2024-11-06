@@ -5,16 +5,52 @@
 # https://translate.discourse.org/
 
 sq:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Biseda
   js:
     admin:
       site_settings:
         chat_separate_sidebar_mode:
           always: "Gjithmonë"
+          fullscreen: "Biseda në ekran të plotë"
           never: "Asnjëherë"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Statusi i kanalit të bisedës ndryshoi"
+            chat_channel_delete: "Kanali i bisedës u fshi"
+            chat_auto_remove_membership: "Anëtarësimet hiqen automatikisht nga kanalet"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Krijo një hapësirë për mesazhe në një kanal të caktuar."
+      web_hooks:
+        chat_event:
+          group_name: "Temat e bisedës"
+          chat_message_created: "Mesazhi është shkruar"
+          chat_message_edited: "Mesazhi është redaktuar"
+          chat_message_trashed: "Mesazhi është fshirë"
+          chat_message_restored: "Mesazhi është rishkruar"
+    about:
+      chat_messages_count: "Mesazhet e bisedës"
+      chat_channels_count: "Kanalet e bisedës"
+      chat_users_count: "Përdoruesit e bisedës"
     chat:
+      text_copied: Teksti u kopjua në memo
+      link_copied: Linku u kopjua në memo
+      back_to_forum: "Forumi"
       deleted_chat_username: deleted
       dates:
         yesterday: "Dje"
+      all_loaded: "Shfaq mesazhet"
+      already_enabled: "Biseda është aktivizuar tashmë për këtë temë. Rifreskoni faqen."
+      disabled_for_topic: "Biseda është çaktivizuar për këtë temë."
+      bot: "bot"
+      create: "Krijo"
       cancel: "Anulo"
       channel_settings:
         edit: "Redakto"

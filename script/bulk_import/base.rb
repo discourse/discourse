@@ -849,7 +849,7 @@ class BulkImport::Base
 
   CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
 
-  CHAT_CHANNEL_COLUMNS ||= %i[
+  CHAT_CHANNEL_COLUMNS = %i[
     id
     name
     description
@@ -867,7 +867,7 @@ class BulkImport::Base
     threading_enabled
   ]
 
-  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS ||= %i[
+  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS = %i[
     chat_channel_id
     user_id
     created_at
@@ -881,9 +881,9 @@ class BulkImport::Base
     last_viewed_at
   ]
 
-  DIRECT_MESSAGE_USER_COLUMNS ||= %i[direct_message_channel_id user_id created_at updated_at]
+  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at]
 
-  CHAT_THREAD_COLUMNS ||= %i[
+  CHAT_THREAD_COLUMNS = %i[
     id
     channel_id
     original_message_id
@@ -895,7 +895,7 @@ class BulkImport::Base
     replies_count
   ]
 
-  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS ||= %i[
+  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS = %i[
     user_id
     thread_id
     notification_level
@@ -903,7 +903,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  CHAT_MESSAGE_COLUMNS ||= %i[
+  CHAT_MESSAGE_COLUMNS = %i[
     id
     chat_channel_id
     user_id
@@ -919,9 +919,9 @@ class BulkImport::Base
     thread_id
   ]
 
-  CHAT_MESSAGE_REACTION_COLUMNS ||= %i[chat_message_id user_id emoji created_at updated_at]
+  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at]
 
-  CHAT_MENTION_COLUMNS ||= %i[chat_message_id target_id type created_at updated_at]
+  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)

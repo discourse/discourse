@@ -3637,6 +3637,8 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
+            invite:
+              content: "Mời"
       filter: "Lọc..."
     until: "Cho đến khi:"
     form_templates:

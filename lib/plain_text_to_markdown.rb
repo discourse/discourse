@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PlainTextToMarkdown
-  SIGNATURE_SEPARATOR ||= "-- "
+  SIGNATURE_SEPARATOR = "-- "
 
   def initialize(plaintext, opts = {})
     @plaintext = plaintext

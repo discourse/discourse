@@ -2324,6 +2324,8 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+            invite:
+              content: "Mualiko"
       filter: "Chuja..."
     form_templates:
       upload_field:

@@ -3568,6 +3568,8 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
+            invite:
+              content: "초대"
       filter: "필터..."
       no_results:
         title: "결과 없음"
