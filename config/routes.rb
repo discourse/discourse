@@ -246,6 +246,8 @@ Discourse::Application.routes.draw do
                   only: %i[index create update destroy],
                   constraints: AdminConstraint.new
         resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
+        get "emojis/new" => "emojis#index"
+        get "emojis/settings" => "emojis#index"
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
