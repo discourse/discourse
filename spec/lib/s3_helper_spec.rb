@@ -41,10 +41,10 @@ RSpec.describe "S3Helper" do
 
     stub_request(
       :get,
-      "https://bob.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
+      "https://bob.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
     ).to_return(status: 200, body: @lifecycle, headers: {})
 
-    stub_request(:put, "https://bob.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle")
+    stub_request(:put, "https://bob.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle")
       .with do |req|
         hash = Hash.from_xml(req.body.to_s)
         rules = hash["LifecycleConfiguration"]["Rule"]

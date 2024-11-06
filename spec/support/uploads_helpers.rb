@@ -12,7 +12,7 @@ module UploadsHelpers
 
     stub_request(
       :head,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/",
+      "https://#{SiteSetting.s3_upload_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/",
     )
   end
 

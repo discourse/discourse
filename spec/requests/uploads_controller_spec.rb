@@ -1026,7 +1026,7 @@ RSpec.describe UploadsController do
         XML
         stub_request(
           :post,
-          "https://s3-upload-bucket.s3.us-west-1.amazonaws.com/uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png?uploads",
+          "https://s3-upload-bucket.s3.dualstack.us-west-1.amazonaws.com/uploads/default/#{test_bucket_prefix}/temp/28fccf8259bbe75b873a2bd2564b778c/test.png?uploads",
         ).to_return({ status: 200, body: create_multipart_result })
       end
 
@@ -1170,7 +1170,7 @@ RSpec.describe UploadsController do
         XML
         stub_request(
           :get,
-          "https://s3-upload-bucket.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.us-west-1"}.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}",
+          "https://s3-upload-bucket.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate.dualstack" : "s3.dualstack.us-west-1"}.amazonaws.com/#{external_upload_stub.key}?max-parts=1&uploadId=#{mock_multipart_upload_id}",
         ).to_return({ status: 200, body: list_multipart_result })
       end
 
@@ -1327,7 +1327,7 @@ RSpec.describe UploadsController do
 
   describe "#complete_multipart" do
     let(:upload_base_url) do
-      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.#{SiteSetting.s3_region}"}.amazonaws.com"
+      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate.dualstack" : "s3.dualstack.#{SiteSetting.s3_region}"}.amazonaws.com"
     end
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
@@ -1548,7 +1548,7 @@ RSpec.describe UploadsController do
 
   describe "#abort_multipart" do
     let(:upload_base_url) do
-      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate" : "s3.#{SiteSetting.s3_region}"}.amazonaws.com"
+      "https://#{SiteSetting.s3_upload_bucket}.#{SiteSetting.enable_s3_transfer_acceleration ? "s3-accelerate.dualstack" : "s3.dualstack.#{SiteSetting.s3_region}"}.amazonaws.com"
     end
     let(:mock_multipart_upload_id) do
       "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
