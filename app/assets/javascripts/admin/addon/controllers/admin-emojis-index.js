@@ -3,7 +3,10 @@ import { action, computed } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+<<<<<<< HEAD
 import { popupAjaxError } from "discourse/lib/ajax-error";
+=======
+>>>>>>> 29e0e4676f (DEV: Convert admin emojis UI to new layout)
 import I18n from "discourse-i18n";
 
 const ALL_FILTER = "all";
@@ -15,7 +18,10 @@ export default class AdminEmojisIndexController extends Controller {
   sorting = null;
 
   @sort("filteredEmojis.[]", "sorting") sortedEmojis;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 29e0e4676f (DEV: Convert admin emojis UI to new layout)
   init() {
     super.init(...arguments);
 
@@ -55,6 +61,7 @@ export default class AdminEmojisIndexController extends Controller {
       message: I18n.t("admin.emoji.delete_confirm", {
         name: emoji.get("name"),
       }),
+<<<<<<< HEAD
       didConfirm: () => this.#destroyEmoji(emoji),
     });
   }
@@ -69,4 +76,15 @@ export default class AdminEmojisIndexController extends Controller {
       popupAjaxError(err);
     }
   }
+=======
+      didConfirm: () => {
+        return ajax("/admin/customize/emojis/" + emoji.get("name"), {
+          type: "DELETE",
+        }).then(() => {
+          this.model.removeObject(emoji);
+        });
+      },
+    });
+  }
+>>>>>>> 29e0e4676f (DEV: Convert admin emojis UI to new layout)
 }
