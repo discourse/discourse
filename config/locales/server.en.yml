@@ -2668,7 +2668,7 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
-    create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change, requires whisper posts to be enabled."
+    create_post_for_category_and_tag_changes: "Create a whisper post when a topic's category or tags change, requires whisper posts to be enabled."
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
