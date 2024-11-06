@@ -49,7 +49,8 @@ export default class TopicListHeaderColumn extends Component {
   }
 
   @action
-  onClick() {
+  onClick(event) {
+    event.preventDefault();
     this.args.changeSort(this.args.order);
   }
 
