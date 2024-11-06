@@ -1,0 +1,50 @@
+.markdown-tabs {
+  margin: 1em 0;
+
+  .markdown-tabs-wrapper {
+    display: flex;
+    gap: 0.2em;
+    border-bottom: 2px solid var(--primary-low);
+    padding: 0 0.2em;
+  }
+
+  .markdown-tab {
+    margin-bottom: -2px;
+
+    &[data-selected] {
+      a {
+        color: var(--tertiary);
+        font-weight: 500;
+        border-bottom: 2px solid var(--tertiary);
+      }
+    }
+
+    &:hover:not([data-selected]) {
+      a {
+        color: var(--primary);
+        background: var(--primary-very-low);
+      }
+    }
+
+    a {
+      display: block;
+      padding: 0.5em 1em;
+      color: var(--primary-medium);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+  }
+
+  .markdown-tab-panels {
+    padding: 0 0;
+
+    .markdown-tab-panel {
+      display: none;
+
+      &[data-selected] {
+        display: block;
+      }
+    }
+  }
+}

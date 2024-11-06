@@ -2832,4 +2832,82 @@ HTML
       expect(doc.to_html).to eq(html_with_thumbnail)
     end
   end
+
+  describe "markdown tabs" do
+    it "supports overriding default tab in markdown" do
+      md = <<~MD
+      [tabs]
+      [tab="First Tab"]
+      Tab 1 **content**
+      [/tab]
+      [tab="Second Tab" selected]
+      Tab 2 content
+      [/tab]
+      [/tabs]
+      MD
+
+      html = PrettyText.cook(md)
+      expected = <<~HTML
+        <div class="markdown-tabs">
+        <div class="markdown-tabs-wrapper">
+        <div class="markdown-tab" data-tab-id="tab-0">
+        <a data-tab-id="tab-0">
+        First Tab</a>
+        </div>
+        <div class="markdown-tab" data-tab-id="tab-1" data-selected="">
+        <a data-tab-id="tab-1">
+        Second Tab</a>
+        </div>
+        </div>
+        <div class="markdown-tab-panels">
+        <div class="markdown-tab-panel" data-tab-id="tab-0">
+        <p>Tab 1 <strong>content</strong></p>
+        </div>
+        <div class="markdown-tab-panel" data-tab-id="tab-1" data-selected="">
+        <p>Tab 2 content</p>
+        </div>
+        </div>
+        </div>
+      HTML
+      expect(html).to match_html(expected)
+    end
+
+    it "supports tabs markup" do
+      md = <<~MD
+      [tabs]
+      [tab="First Tab"]
+      Tab 1 **content**
+      [/tab]
+      [tab="Second Tab"]
+      Tab 2 content
+      [/tab]
+      [/tabs]
+      MD
+
+      html = PrettyText.cook(md)
+      expected = <<~HTML
+        <div class="markdown-tabs">
+        <div class="markdown-tabs-wrapper">
+        <div class="markdown-tab" data-tab-id="tab-0" data-selected="">
+        <a data-tab-id="tab-0">
+        First Tab</a>
+        </div>
+        <div class="markdown-tab" data-tab-id="tab-1">
+        <a data-tab-id="tab-1">
+        Second Tab</a>
+        </div>
+        </div>
+        <div class="markdown-tab-panels">
+        <div class="markdown-tab-panel" data-tab-id="tab-0" data-selected="">
+        <p>Tab 1 <strong>content</strong></p>
+        </div>
+        <div class="markdown-tab-panel" data-tab-id="tab-1">
+        <p>Tab 2 content</p>
+        </div>
+        </div>
+        </div>
+      HTML
+      expect(html).to match_html(expected)
+    end
+  end
 end
