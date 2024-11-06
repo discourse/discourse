@@ -5,11 +5,6 @@ class Themes::Create
 
   policy :ban_in_allowlist_mode
 
-  # Conditional policy for set_theme_fields ?
-  # def ban_for_remote_theme!
-  #   raise Discourse::InvalidAccess if @theme.remote_theme&.is_git?
-  # end
-
   params do
     attribute :name, :string
     attribute :user_id, :integer
@@ -21,6 +16,9 @@ class Themes::Create
   end
 
   step :initialize_theme
+
+  policy :ban_for_remote_theme
+
   step :set_theme_fields
   step :save_theme
   step :update_default_theme
@@ -29,17 +27,28 @@ class Themes::Create
   private
 
   def ban_in_allowlist_mode
-    Theme.allowed_remote_theme_ids.present?
+    Theme.allowed_remote_theme_ids.nil?
   end
 
-  def initialize_theme(name:, user_id:, user_selectable:, color_scheme_id:, component:)
-    context[:theme] = Theme.new(name:, user_id:, user_selectable:, color_scheme_id:, component:)
+  def initialize_theme(params:)
+    context[:theme] = Theme.new(
+      name: params.name,
+      user_id: params.user_id,
+      user_selectable: params.user_selectable,
+      color_scheme_id: params.color_scheme_id,
+      component: params.component,
+    )
   end
 
-  def set_theme_fields(theme_fields:, theme:)
-    return if theme_fields.empty?
+  def ban_for_remote_theme(params:, theme:)
+    return if params.theme_fields.blank?
+    !theme.remote_theme&.is_git?
+  end
 
-    theme_fields.each do |field|
+  def set_theme_fields(params:, theme:)
+    return if params.theme_fields.blank?
+
+    params.theme_fields.each do |field|
       theme.set_field(
         target: field[:target],
         name: field[:name],
@@ -56,17 +65,17 @@ class Themes::Create
     theme.save!
   end
 
-  # Might need to be an Action
-  def update_default_theme(default:, theme:)
-    if theme.id == SiteSetting.default_theme_id && !default
+  # TODO (martin) Might need to be an Action, it's used in other theme related things too.
+  def update_default_theme(params:, theme:)
+    if theme.id == SiteSetting.default_theme_id && !params.default
       Theme.clear_default!
-    elsif default
+    elsif params.default
       theme.set_default!
     end
   end
 
-  # Might need to be an Action
-  def log_theme_change(theme:)
-    StaffActionLogger.new(current_user).log_theme_change(nil, theme)
+  # TODO (martin): Might need to be an Action, it is used in other theme related things too.
+  def log_theme_change(theme:, guardian:)
+    StaffActionLogger.new(guardian.user).log_theme_change(nil, theme)
   end
 end
