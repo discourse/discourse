@@ -48,6 +48,10 @@ module PageObjects
         find(".site-text-value").fill_in(with: value)
         find(".save-changes").click
       end
+
+      def click_replace_text_button
+        find(".reseed button").click
+      end
     end
   end
 end
