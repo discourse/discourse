@@ -859,6 +859,7 @@ RSpec.describe UploadsController do
         expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
         expect(result["url"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
         expect(result["url"]).to include("Amz-Expires")
+        expect(result["url"]).to include("dualstack")
       end
 
       it "includes accepted metadata in the response when provided" do
@@ -1251,6 +1252,19 @@ RSpec.describe UploadsController do
         expect(result["presigned_urls"]["4"]).to include(
           "?partNumber=4&uploadId=#{mock_multipart_upload_id}",
         )
+      end
+
+      it "uses dualstack endpoint for presigned URLs based on S3 region" do
+        stub_list_multipart_request
+        post "/uploads/batch-presign-multipart-parts.json",
+             params: {
+               unique_identifier: external_upload_stub.unique_identifier,
+               part_numbers: [2, 3, 4],
+             }
+
+        expect(response.status).to eq(200)
+        result = response.parsed_body
+        expect(result["presigned_urls"]["2"]).to include("dualstack")
       end
 
       context "when enable_s3_transfer_acceleration is true" do

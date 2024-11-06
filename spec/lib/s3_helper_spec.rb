@@ -248,4 +248,42 @@ RSpec.describe "S3Helper" do
       s3_helper.delete_objects(%w[object/one.txt object/two.txt])
     end
   end
+
+  describe "#presigned_url" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "uses the S3 dualstack endpoint" do
+      expect(s3_helper.presigned_url("test/key.jpeg", method: :get_object)).to include("dualstack")
+    end
+
+    context "for a China S3 region" do
+      before { SiteSetting.s3_region = "cn-northwest-1" }
+
+      it "does not use the S3 dualstack endpoint" do
+        expect(s3_helper.presigned_url("test/key.jpeg", method: :get_object)).not_to include(
+          "dualstack",
+        )
+      end
+    end
+  end
+
+  describe "#presigned_request" do
+    let(:s3_helper) { S3Helper.new("test-bucket", "", client: client) }
+
+    it "uses the S3 dualstack endpoint" do
+      expect(s3_helper.presigned_request("test/key.jpeg", method: :get_object)[0]).to include(
+        "dualstack",
+      )
+    end
+
+    context "for a China S3 region" do
+      before { SiteSetting.s3_region = "cn-northwest-1" }
+
+      it "does not use the S3 dualstack endpoint" do
+        expect(s3_helper.presigned_request("test/key.jpeg", method: :get_object)[0]).not_to include(
+          "dualstack",
+        )
+      end
+    end
+  end
 end

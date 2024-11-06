@@ -50,6 +50,7 @@ class S3Helper
     options[:client] = s3_client if s3_client.present?
     options[:use_accelerate_endpoint] = !for_backup &&
       SiteSetting.Upload.enable_s3_transfer_acceleration
+    options[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
     bucket =
       if for_backup
@@ -362,6 +363,7 @@ class S3Helper
         key: key,
         expires_in: expires_in,
         use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
+        use_dualstack_endpoint: @s3_options[:use_dualstack_endpoint],
       }.merge(opts),
     )
   end
@@ -380,6 +382,7 @@ class S3Helper
         key: key,
         expires_in: expires_in,
         use_accelerate_endpoint: @s3_options[:use_accelerate_endpoint],
+        use_dualstack_endpoint: @s3_options[:use_dualstack_endpoint],
       }.merge(opts),
     )
   end

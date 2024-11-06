@@ -168,6 +168,10 @@ class SiteSetting < ActiveRecord::Base
       end
     end
 
+    def self.use_dualstack_endpoint
+      !self.s3_region.start_with?("cn-")
+    end
+
     def self.enable_s3_uploads
       SiteSetting.enable_s3_uploads || GlobalSetting.use_s3?
     end
@@ -190,10 +194,10 @@ class SiteSetting < ActiveRecord::Base
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       if SiteSetting.s3_endpoint.blank? || SiteSetting.s3_endpoint.end_with?("amazonaws.com")
-        if SiteSetting.Upload.s3_region.start_with?("cn-")
-          "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
-        else
+        if SiteSetting.Upload.use_dualstack_endpoint
           "//#{bucket}.s3.dualstack.#{SiteSetting.Upload.s3_region}.amazonaws.com"
+        else
+          "//#{bucket}.s3.#{SiteSetting.Upload.s3_region}.amazonaws.com.cn"
         end
       else
         "//#{bucket}.#{url_basename}"
