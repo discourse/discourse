@@ -49,6 +49,8 @@
     }
 
     &.d-admin-row__controls {
+      text-align: right;
+
       @include breakpoint("tablet") {
         position: absolute;
         top: -3px;
@@ -94,7 +96,6 @@
 
 .d-admin-row__controls {
   &-options {
-    text-align: right;
     display: flex;
     flex-direction: row;
     gap: 0.5em;
