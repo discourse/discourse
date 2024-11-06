@@ -1,6 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setCaretPosition } from "discourse/lib/utilities";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   fakeTime,
@@ -9,6 +10,7 @@ import {
   queryAll,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer - editor mentions", function (needs) {
   let clock = null;
@@ -24,6 +26,11 @@ acceptance("Composer - editor mentions", function (needs) {
   needs.hooks.afterEach(() => clock?.restore());
 
   needs.pretender((server, helper) => {
+    server.get("/t/11557.json", () => {
+      const topicFixture = cloneJSON(topicFixtures["/t/130.json"]);
+      topicFixture.id = 11557;
+      return helper.response(topicFixture);
+    });
     server.get("/u/search/users", () => {
       return helper.response({
         users: [
@@ -142,6 +149,21 @@ acceptance("Composer - editor mentions", function (needs) {
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["foo", "user_group", "user", "user2"]
+    );
+  });
+
+  test("shows users immediately when @ is typed in a reply", async function (assert) {
+    await visit("/");
+    await click(".topic-list-item .title");
+    await click(".btn-primary.create");
+
+    const editor = query(".d-editor-input");
+
+    await simulateKeys(editor, "abc @");
+
+    assert.deepEqual(
+      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      ["user_group", "user", "user2", "foo"]
     );
   });
 });

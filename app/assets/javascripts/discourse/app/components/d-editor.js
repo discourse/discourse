@@ -484,8 +484,8 @@ export default class DEditor extends Component {
         destroyUserStatuses();
         return userSearch({
           term,
-          topicId: this.topic?.id,
-          categoryId: this.topic?.category_id || this.composer?.categoryId,
+          topicId: this.topicId,
+          categoryId: this.categoryId,
           includeGroups: true,
         }).then((result) => {
           initUserStatusHtml(getOwner(this), result.users);
