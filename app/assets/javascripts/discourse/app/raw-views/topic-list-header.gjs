@@ -1,5 +1,4 @@
 import { cached } from "@glimmer/tracking";
-import { inject as controller } from "@ember/controller";
 import EmberObject from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -9,7 +8,6 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class TopicListHeader extends EmberObject {
   @service topicTrackingState;
-  @controller("discovery/list") discoveryListController;
 
   @cached
   get columns() {
@@ -63,7 +61,7 @@ export default class TopicListHeader extends EmberObject {
                 component: entry.value,
                 sortable: this.sortable,
                 order: this.order,
-                changeSort: this.discoveryListController.changeSort,
+                changeSort: this.changeSort,
                 ascending: this.ascending,
                 category: this.topicTrackingState.filterCategory,
                 listTitle: this.listTitle,
@@ -76,8 +74,7 @@ export default class TopicListHeader extends EmberObject {
                 newRepliesCount: this.newRepliesCount,
                 newTopicsCount: this.newTopicsCount,
                 bulkSelectHelper: this.bulkSelectHelper,
-                changeNewListSubset:
-                  this.discoveryListController.changeNewListSubset,
+                changeNewListSubset: this.changeNewListSubset,
                 showPosters: this.showPosters,
                 showLikes: this.showLikes,
                 showOpLikes: this.showOpLikes,
