@@ -34,32 +34,34 @@ import PostMenuShowMoreButton from "./menu/buttons/show-more";
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
-export const POST_MENU_ADMIN_BUTTON_KEY = "admin";
-export const POST_MENU_BOOKMARK_BUTTON_KEY = "bookmark";
-export const POST_MENU_COPY_LINK_BUTTON_KEY = "copyLink";
-export const POST_MENU_DELETE_BUTTON_KEY = "delete";
-export const POST_MENU_EDIT_BUTTON_KEY = "edit";
-export const POST_MENU_FLAG_BUTTON_KEY = "flag";
-export const POST_MENU_LIKE_BUTTON_KEY = "like";
-export const POST_MENU_READ_BUTTON_KEY = "read";
-export const POST_MENU_REPLIES_BUTTON_KEY = "replies";
-export const POST_MENU_REPLY_BUTTON_KEY = "reply";
-export const POST_MENU_SHARE_BUTTON_KEY = "share";
-export const POST_MENU_SHOW_MORE_BUTTON_KEY = "showMore";
+const buttonKeys = Object.freeze({
+  ADMIN: "admin",
+  BOOKMARK: "bookmark",
+  COPY_LINK: "copyLink",
+  DELETE: "delete",
+  EDIT: "edit",
+  FLAG: "flag",
+  LIKE: "like",
+  READ: "read",
+  REPLIES: "replies",
+  REPLY: "reply",
+  SHARE: "share",
+  SHOW_MORE: "showMore",
+});
 
 const coreButtonComponents = new Map([
-  [POST_MENU_ADMIN_BUTTON_KEY, PostMenuAdminButton],
-  [POST_MENU_BOOKMARK_BUTTON_KEY, PostMenuBookmarkButton],
-  [POST_MENU_COPY_LINK_BUTTON_KEY, PostMenuCopyLinkButton],
-  [POST_MENU_DELETE_BUTTON_KEY, PostMenuDeleteButton],
-  [POST_MENU_EDIT_BUTTON_KEY, PostMenuEditButton],
-  [POST_MENU_FLAG_BUTTON_KEY, PostMenuFlagButton],
-  [POST_MENU_LIKE_BUTTON_KEY, PostMenuLikeButton],
-  [POST_MENU_READ_BUTTON_KEY, PostMenuReadButton],
-  [POST_MENU_REPLIES_BUTTON_KEY, PostMenuRepliesButton],
-  [POST_MENU_REPLY_BUTTON_KEY, PostMenuReplyButton],
-  [POST_MENU_SHARE_BUTTON_KEY, PostMenuShareButton],
-  [POST_MENU_SHOW_MORE_BUTTON_KEY, PostMenuShowMoreButton],
+  [buttonKeys.ADMIN, PostMenuAdminButton],
+  [buttonKeys.BOOKMARK, PostMenuBookmarkButton],
+  [buttonKeys.COPY_LINK, PostMenuCopyLinkButton],
+  [buttonKeys.DELETE, PostMenuDeleteButton],
+  [buttonKeys.EDIT, PostMenuEditButton],
+  [buttonKeys.FLAG, PostMenuFlagButton],
+  [buttonKeys.LIKE, PostMenuLikeButton],
+  [buttonKeys.READ, PostMenuReadButton],
+  [buttonKeys.REPLIES, PostMenuRepliesButton],
+  [buttonKeys.REPLY, PostMenuReplyButton],
+  [buttonKeys.SHARE, PostMenuShareButton],
+  [buttonKeys.SHOW_MORE, PostMenuShowMoreButton],
 ]);
 
 function smallUserAttributes(user) {
@@ -73,7 +75,7 @@ function smallUserAttributes(user) {
 }
 
 const defaultDagOptions = {
-  defaultPosition: { before: POST_MENU_SHOW_MORE_BUTTON_KEY },
+  defaultPosition: { before: buttonKeys.SHOW_MORE },
   throwErrorOnCycle: false,
 };
 
@@ -212,6 +214,14 @@ export default class PostMenu extends Component {
     // map to keep track of the labels that should be shown for each button if the plugins wants to override the default
     const buttonLabels = new Map();
 
+    const showMoreButtonPosition = configuredItems.indexOf(
+      buttonKeys.SHOW_MORE
+    );
+
+    const hiddenButtonKeys = this.configuredItems.filter((key) =>
+      this.#hiddenItems.includes(key)
+    );
+
     // the DAG is not resolved now, instead we just use the object for convenience to pass a nice DAG API to be used
     // in the value transformer, and extract the data to be used later to resolve the DAG order
     const buttonsRegistry = applyMutableValueTransformer(
@@ -230,6 +240,19 @@ export default class PostMenu extends Component {
             return buttonLabels.delete(key);
           },
         },
+        buttonKeys,
+        firstButtonKey: this.configuredItems[0],
+        lastHiddenButtonKey: hiddenButtonKeys.length
+          ? hiddenButtonKeys[hiddenButtonKeys.length - 1]
+          : null,
+        lastItemBeforeMoreItemsButtonKey:
+          showMoreButtonPosition > 0
+            ? this.configuredItems[showMoreButtonPosition - 1]
+            : null,
+        secondLastHiddenButtonKey:
+          hiddenButtonKeys.length > 1
+            ? hiddenButtonKeys[hiddenButtonKeys.length - 2]
+            : null,
       }
     );
 
@@ -259,18 +282,18 @@ export default class PostMenu extends Component {
         // if the post is a wiki, make Edit more prominent
         if (this.isWikiMode) {
           switch (key) {
-            case POST_MENU_EDIT_BUTTON_KEY:
-              return POST_MENU_REPLY_BUTTON_KEY;
-            case POST_MENU_REPLY_BUTTON_KEY:
-              return POST_MENU_EDIT_BUTTON_KEY;
+            case buttonKeys.EDIT:
+              return buttonKeys.REPLY;
+            case buttonKeys.REPLY:
+              return buttonKeys.EDIT;
           }
         }
 
         return key;
       });
 
-    if (list.length > 0 && !list.includes(POST_MENU_SHOW_MORE_BUTTON_KEY)) {
-      list.splice(list.length - 1, 0, POST_MENU_SHOW_MORE_BUTTON_KEY);
+    if (list.length > 0 && !list.includes(buttonKeys.SHOW_MORE)) {
+      list.splice(list.length - 1, 0, buttonKeys.SHOW_MORE);
     }
 
     return list;
@@ -284,7 +307,7 @@ export default class PostMenu extends Component {
 
     return new Map(
       configuredItems.map((key, index) => {
-        if (key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
+        if (key === buttonKeys.SHOW_MORE) {
           referencePosition = "after";
           return [key, null];
         } else if (
@@ -294,14 +317,14 @@ export default class PostMenu extends Component {
           return [
             key,
             {
-              [referencePosition]: [POST_MENU_SHOW_MORE_BUTTON_KEY],
+              [referencePosition]: [buttonKeys.SHOW_MORE],
             },
           ];
         } else if (referencePosition === "after" && index > 0) {
           return [
             key,
             {
-              [referencePosition]: [POST_MENU_SHOW_MORE_BUTTON_KEY],
+              [referencePosition]: [buttonKeys.SHOW_MORE],
             },
           ];
         } else {
@@ -313,22 +336,14 @@ export default class PostMenu extends Component {
 
   @cached
   get extraControls() {
-    const repliesButton = this.registeredButtons.get(
-      POST_MENU_REPLIES_BUTTON_KEY
-    );
-
-    const items = [
-      repliesButton,
-      ...Array.from(this.registeredButtons.values()).filter(
+    const items = Array.from(this.registeredButtons.values())
+      .filter(
         (button) =>
           isPresent(button) && button.extraControls(this.staticMethodsArgs)
-      ),
-    ].filter(isPresent);
+      )
+      .map((button) => [button.key, button, button.position]);
 
-    return DAG.from(
-      items.map((button) => [button.key, button, button.position]),
-      defaultDagOptions
-    )
+    return DAG.from(items, defaultDagOptions)
       .resolve()
       .map(({ value }) => value);
   }
@@ -361,14 +376,11 @@ export default class PostMenu extends Component {
 
       // when the value returned by hidden is explicitly false we ignore the hidden items specified in the
       // site setting
-      if (hidden === false || button.key === POST_MENU_SHOW_MORE_BUTTON_KEY) {
+      if (hidden === false || button.key === buttonKeys.SHOW_MORE) {
         return false;
       }
 
-      if (
-        this.args.post.reviewable_id &&
-        button.key === POST_MENU_FLAG_BUTTON_KEY
-      ) {
+      if (this.args.post.reviewable_id && button.key === buttonKeys.FLAG) {
         return false;
       }
 
@@ -404,11 +416,11 @@ export default class PostMenu extends Component {
   }
 
   get repliesButton() {
-    return this.registeredButtons.get(POST_MENU_REPLIES_BUTTON_KEY);
+    return this.registeredButtons.get(buttonKeys.REPLIES);
   }
 
   get showMoreButton() {
-    return this.registeredButtons.get(POST_MENU_SHOW_MORE_BUTTON_KEY);
+    return this.registeredButtons.get(buttonKeys.SHOW_MORE);
   }
 
   get remainingLikedUsers() {
@@ -426,11 +438,9 @@ export default class PostMenu extends Component {
   get isShowMoreButtonAvailable() {
     return (
       this.availableButtons.some(
-        (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
+        (button) => button.key === buttonKeys.SHOW_MORE
       ) ||
-      this.extraControls.some(
-        (button) => button.key === POST_MENU_SHOW_MORE_BUTTON_KEY
-      )
+      this.extraControls.some((button) => button.key === buttonKeys.SHOW_MORE)
     );
   }
 
@@ -528,6 +538,7 @@ export default class PostMenu extends Component {
     this.#fetchWhoRead();
   }
 
+  @cached
   get #hiddenItems() {
     const setting = this.siteSettings.post_menu_hidden_items;
 
@@ -539,8 +550,7 @@ export default class PostMenu extends Component {
       .split("|")
       .filter(
         (itemKey) =>
-          !this.args.post.bookmarked ||
-          itemKey !== POST_MENU_BOOKMARK_BUTTON_KEY
+          !this.args.post.bookmarked || itemKey !== buttonKeys.BOOKMARK
       );
   }
 

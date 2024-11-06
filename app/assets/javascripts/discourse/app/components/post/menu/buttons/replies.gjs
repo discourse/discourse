@@ -7,6 +7,8 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class PostMenuRepliesButton extends Component {
+  static extraControls = true;
+
   static shouldRender(args) {
     const replyCount = args.post.reply_count;
 
