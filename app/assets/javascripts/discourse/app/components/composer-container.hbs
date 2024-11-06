@@ -102,36 +102,7 @@
           />
         </div>
 
-        <ComposerEditor
-          @topic={{this.composer.topic}}
-          @composer={{this.composer.model}}
-          @lastValidatedAt={{this.composer.lastValidatedAt}}
-          @canWhisper={{this.composer.canWhisper}}
-          @storeToolbarState={{this.composer.storeToolbarState}}
-          @onPopupMenuAction={{this.composer.onPopupMenuAction}}
-          @showUploadModal={{route-action "showUploadSelector"}}
-          @popupMenuOptions={{this.composer.popupMenuOptions}}
-          @draftStatus={{this.composer.model.draftStatus}}
-          @isUploading={{this.composer.isUploading}}
-          @isProcessingUpload={{this.composer.isProcessingUpload}}
-          @allowUpload={{this.composer.allowUpload}}
-          @uploadIcon={{this.composer.uploadIcon}}
-          @isCancellable={{this.composer.isCancellable}}
-          @uploadProgress={{this.composer.uploadProgress}}
-          @groupsMentioned={{this.composer.groupsMentioned}}
-          @cannotSeeMention={{this.composer.cannotSeeMention}}
-          @hereMention={{this.composer.hereMention}}
-          @importQuote={{this.composer.importQuote}}
-          @togglePreview={{this.composer.togglePreview}}
-          @processPreview={{this.composer.showPreview}}
-          @showToolbar={{this.composer.showToolbar}}
-          @afterRefresh={{this.composer.afterRefresh}}
-          @focusTarget={{this.composer.focusTarget}}
-          @disableTextarea={{this.composer.disableTextarea}}
-          @formTemplateIds={{this.composer.formTemplateIds}}
-          @formTemplateInitialValues={{this.composer.formTemplateInitialValues}}
-          @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
-        >
+        <ComposerEditor @showUploadModal={{route-action "showUploadSelector"}}>
           <div class="composer-fields">
             <PluginOutlet
               @name="before-composer-fields"

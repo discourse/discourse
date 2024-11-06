@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule, scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -80,30 +80,6 @@ export default class DEditor extends Component {
     super.init(...arguments);
 
     this.register = getRegister(this);
-  }
-
-  @computed("formTemplateIds")
-  get selectedFormTemplateId() {
-    if (this._selectedFormTemplateId) {
-      return this._selectedFormTemplateId;
-    }
-
-    return this.formTemplateId || this.formTemplateIds?.[0];
-  }
-
-  set selectedFormTemplateId(value) {
-    this._selectedFormTemplateId = value;
-  }
-
-  @action
-  updateSelectedFormTemplateId(formTemplateId) {
-    this.selectedFormTemplateId = formTemplateId;
-  }
-
-  @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
-  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
-    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
-    return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
   @discourseComputed("placeholder")

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import EmberObject, { action, computed } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { next, schedule, throttle } from "@ember/runloop";
+import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
@@ -87,14 +87,17 @@ export function addApiImageWrapperButtonClickEvent(fn) {
 const DEBOUNCE_FETCH_MS = 450;
 const DEBOUNCE_JIT_MS = 2000;
 
-@classNameBindings("showToolbar:toolbar-visible", ":wmd-controls")
+@classNameBindings("composer.showToolbar:toolbar-visible", ":wmd-controls")
 export default class ComposerEditor extends Component {
+  @service composer;
+
   composerEventPrefix = "composer";
   shouldBuildScrollMap = true;
   scrollMap = null;
-  processPreview = true;
 
-  @alias("composer") composerModel;
+  get topic() {
+    return this.composer.get("model.topic");
+  }
 
   init() {
     super.init(...arguments);
@@ -103,14 +106,14 @@ export default class ComposerEditor extends Component {
 
     this.uppyComposerUpload = new UppyComposerUpload(getOwner(this), {
       composerEventPrefix: this.composerEventPrefix,
-      composerModel: this.composerModel,
+      composerModel: this.composer.model,
       uploadMarkdownResolvers,
       uploadPreProcessors,
       uploadHandlers,
     });
   }
 
-  @discourseComputed("composer.requiredCategoryMissing")
+  @discourseComputed("composer.model.requiredCategoryMissing")
   replyPlaceholder(requiredCategoryMissing) {
     if (requiredCategoryMissing) {
       return "composer.reply_placeholder_choose_category";
@@ -130,9 +133,9 @@ export default class ComposerEditor extends Component {
     return this.currentUser && this.currentUser.link_posting_access !== "none";
   }
 
-  @observes("focusTarget")
+  @observes("composer.focusTarget")
   setFocus() {
-    if (this.focusTarget === "editor") {
+    if (this.composer.focusTarget === "editor") {
       putCursorAtEnd(this.element.querySelector("textarea"));
     }
   }
@@ -193,11 +196,11 @@ export default class ComposerEditor extends Component {
     this._registerImageAltTextButtonClick(preview);
 
     // Focus on the body unless we have a title
-    if (!this.get("composer.canEditTitle")) {
+    if (!this.get("composer.model.canEditTitle")) {
       putCursorAtEnd(input);
     }
 
-    if (this.allowUpload) {
+    if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
     }
 
@@ -205,11 +208,11 @@ export default class ComposerEditor extends Component {
   }
 
   @discourseComputed(
-    "composer.reply",
-    "composer.replyLength",
-    "composer.missingReplyCharacters",
-    "composer.minimumPostLength",
-    "lastValidatedAt"
+    "composer.model.reply",
+    "composer.model.replyLength",
+    "composer.model.missingReplyCharacters",
+    "composer.model.minimumPostLength",
+    "composer.lastValidatedAt"
   )
   validation(
     reply,
@@ -254,9 +257,9 @@ export default class ComposerEditor extends Component {
   @computed("composer.{creatingTopic,editingFirstPost,creatingSharedDraft}")
   get _isNewTopic() {
     return (
-      this.composer.creatingTopic ||
-      this.composer.editingFirstPost ||
-      this.composer.creatingSharedDraft
+      this.composer.model.creatingTopic ||
+      this.composer.model.editingFirstPost ||
+      this.composer.model.creatingSharedDraft
     );
   }
 
@@ -442,8 +445,8 @@ export default class ComposerEditor extends Component {
   _renderUnseenMentions(preview, unseen) {
     fetchUnseenMentions({
       names: unseen,
-      topicId: this.get("composer.topic.id"),
-      allowedNames: this.get("composer.targetRecipients")?.split(","),
+      topicId: this.get("composer.model.topic.id"),
+      allowedNames: this.get("composer.model.targetRecipients")?.split(","),
     }).then((response) => {
       linkSeenMentions(preview, this.siteSettings);
       this._warnMentionedGroups(preview);
@@ -510,7 +513,7 @@ export default class ComposerEditor extends Component {
           }
 
           this.warnedGroupMentions.push(name);
-          this.groupsMentioned({
+          this.composer.groupsMentioned({
             name,
             userCount: mention.dataset.mentionableUserCount,
             maxMentions: mention.dataset.maxMentions,
@@ -523,7 +526,7 @@ export default class ComposerEditor extends Component {
   // previously we would warn after @bob even if you were about to mention @bob2
   @debounce(DEBOUNCE_JIT_MS)
   _warnCannotSeeMention(preview) {
-    if (this.composer.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.model.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
@@ -534,7 +537,7 @@ export default class ComposerEditor extends Component {
       }
 
       this.warnedCannotSeeMentions.push(name);
-      this.cannotSeeMention({
+      this.composer.cannotSeeMention({
         name,
         reason: mention.dataset.reason,
       });
@@ -549,7 +552,7 @@ export default class ComposerEditor extends Component {
         }
 
         this.warnedCannotSeeMentions.push(name);
-        this.cannotSeeMention({
+        this.composer.cannotSeeMention({
           name,
           reason: mention.dataset.reason,
           notifiedCount: mention.dataset.notifiedUserCount,
@@ -563,7 +566,7 @@ export default class ComposerEditor extends Component {
       return;
     }
 
-    this.hereMention(hereCount);
+    this.composer.hereMention(hereCount);
   }
 
   @bind
@@ -578,8 +581,9 @@ export default class ComposerEditor extends Component {
     );
 
     const scale = event.target.dataset.scale;
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    const matchingPlaceholder = this.get("composer.model.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
 
     if (matchingPlaceholder) {
       const match = matchingPlaceholder[index];
@@ -624,8 +628,9 @@ export default class ComposerEditor extends Component {
 
   commitAltText(buttonWrapper) {
     const index = parseInt(buttonWrapper.getAttribute("data-image-index"), 10);
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    const matchingPlaceholder = this.get("composer.model.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
     const match = matchingPlaceholder[index];
     const input = buttonWrapper.querySelector("input.alt-text-input");
     const replacement = match.replace(
@@ -717,8 +722,9 @@ export default class ComposerEditor extends Component {
       event.target.closest(".button-wrapper").dataset.imageIndex,
       10
     );
-    const matchingPlaceholder =
-      this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    const matchingPlaceholder = this.get("composer.model.reply").match(
+      IMAGE_MARKDOWN_REGEX
+    );
     this.appEvents.trigger(
       `${this.composerEventPrefix}:replace-text`,
       matchingPlaceholder[index],
@@ -737,7 +743,7 @@ export default class ComposerEditor extends Component {
       event.target.closest(".button-wrapper").dataset.imageIndex,
       10
     );
-    const reply = this.get("composer.reply");
+    const reply = this.get("composer.model.reply");
     const matches = reply.match(IMAGE_MARKDOWN_REGEX);
     const closingIndex =
       index + parseInt(event.target.dataset.imageCount, 10) - 1;
@@ -757,6 +763,10 @@ export default class ComposerEditor extends Component {
   }
 
   _registerImageAltTextButtonClick(preview) {
+    if (!preview) {
+      return;
+    }
+
     preview.addEventListener("click", this._handleAltTextCancelButtonClick);
     preview.addEventListener("click", this._handleAltTextEditButtonClick);
     preview.addEventListener("click", this._handleAltTextOkButtonClick);
@@ -775,7 +785,7 @@ export default class ComposerEditor extends Component {
     const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
-    if (this.allowUpload) {
+    if (this.composer.allowUpload) {
       this.uppyComposerUpload.teardown();
     }
 
@@ -811,11 +821,11 @@ export default class ComposerEditor extends Component {
   onExpandPopupMenuOptions(toolbarEvent) {
     const selected = toolbarEvent.selected;
     toolbarEvent.selectText(selected.start, selected.end - selected.start);
-    this.storeToolbarState(toolbarEvent);
+    this.composer.storeToolbarState(toolbarEvent);
   }
 
   showPreview() {
-    this.send("togglePreview");
+    this.composer.togglePreview();
   }
 
   _isInQuote(element) {
@@ -848,16 +858,20 @@ export default class ComposerEditor extends Component {
       id: "quote",
       group: "fontStyles",
       icon: "far-comment",
-      sendAction: this.importQuote,
+      sendAction: this.composer.importQuote,
       title: "composer.quote_post_title",
       unshift: true,
     });
 
-    if (this.allowUpload && this.uploadIcon && this.site.desktopView) {
+    if (
+      this.composer.allowUpload &&
+      this.composer.uploadIcon &&
+      this.site.desktopView
+    ) {
       toolbar.addButton({
         id: "upload",
         group: "insertions",
-        icon: this.uploadIcon,
+        icon: this.composer.uploadIcon,
         title: "upload",
         sendAction: this.showUploadModal,
       });
@@ -884,6 +898,34 @@ export default class ComposerEditor extends Component {
       this._decorateCookedElement(preview);
     }
 
-    this.afterRefresh(preview);
+    this.composer.afterRefresh(preview);
+  }
+
+  @computed("composer.formTemplateIds")
+  get selectedFormTemplateId() {
+    if (this._selectedFormTemplateId) {
+      return this._selectedFormTemplateId;
+    }
+
+    return this.composer.formTemplateId || this.composer.formTemplateIds?.[0];
+  }
+
+  set selectedFormTemplateId(value) {
+    this._selectedFormTemplateId = value;
+  }
+
+  @action
+  updateSelectedFormTemplateId(formTemplateId) {
+    this.selectedFormTemplateId = formTemplateId;
+  }
+
+  @discourseComputed(
+    "composer.formTemplateIds",
+    "composer.model.replyingToTopic",
+    "composer.model.editingPost"
+  )
+  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
+    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
+    return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 }
