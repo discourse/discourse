@@ -24,7 +24,7 @@ export default class DiscardDraftModal extends Component {
       @dismissable={{false}}
     >
       <:body>
-        <div class="instructions">
+        <div class="instructions" role="heading" aria-level="1">
           {{i18n "post.cancel_composer.confirm"}}
         </div>
       </:body>
