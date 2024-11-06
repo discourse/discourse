@@ -1840,3 +1840,13 @@ Allows refusing a field. Only available for: [question](/docs/guides/frontend/fo
 ```ruby
 field.refuse
 ```
+
+### upload_image
+
+Takes an image path on the filesystem and uploads it for the field. Only available for the `Image` control.
+
+**Example**
+
+```ruby
+field.upload_image(image_file_path)
+```
