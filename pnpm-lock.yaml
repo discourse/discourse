@@ -1070,8 +1070,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^2.0.2
-        version: 2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34)
+        specifier: ^2.0.3
+        version: 2.0.3
       decorator-transforms:
         specifier: ^2.2.2
         version: 2.2.2(patch_hash=fjlfhpth5cfhuq4pce5qq7awku)(@babel/core@7.26.0)
@@ -3920,11 +3920,11 @@ packages:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
 
-  content-tag@2.0.1:
-    resolution: {integrity: sha512-jxsETSDs5NbNwyiDuIp672fUMhUyu8Qxc5MOBOJOcgW/fQESI6o5K1LBDrnEE7Bh810a685lWEZHTF4jQYGEEw==}
-
   content-tag@2.0.2:
     resolution: {integrity: sha512-qHRyTp02dgzRK2tsCFxZ1H289bZOuSLNpupr6prvnSFq4SFPmNlBKbbE5PCMb+8+Z1a1z+yCVtXvQIGUCCa3lQ==}
+
+  content-tag@2.0.3:
+    resolution: {integrity: sha512-htLIdtfhhKW2fHlFLnZH7GFzHSdSpHhDLrWVswkNiiPMZ5uXq5JfrGboQKFhNQuAAFF8VNB2EYUj3MsdJrKKpg==}
 
   content-type@1.0.5:
     resolution: {integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA==}
@@ -10657,7 +10657,7 @@ snapshots:
     dependencies:
       '@glint/environment-ember-loose': 1.5.0(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.26.0))
       '@glint/template': 1.5.0
-      content-tag: 2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34)
+      content-tag: 2.0.3
 
   '@glint/template@1.5.0': {}
 
@@ -12600,9 +12600,9 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  content-tag@2.0.1: {}
-
   content-tag@2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34): {}
+
+  content-tag@2.0.3: {}
 
   content-type@1.0.5: {}
 
@@ -13218,7 +13218,7 @@ snapshots:
       compression: 1.7.4
       configstore: 5.0.1
       console-ui: 3.1.2
-      content-tag: 2.0.1
+      content-tag: 2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34)
       core-object: 3.1.5
       dag-map: 2.0.2
       diff: 5.2.0
@@ -13363,7 +13363,7 @@ snapshots:
       '@babel/core': 7.26.0
       '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@8.57.0)
       '@glimmer/syntax': 0.92.3
-      content-tag: 2.0.2(patch_hash=bol33qklj5obdzzczeu3obxk34)
+      content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
     transitivePeerDependencies:
