@@ -21,7 +21,7 @@
     @include breakpoint("tablet") {
       display: block;
       margin-bottom: var(--space-3);
-      box-shadow: var(--shadow-card);
+      border: 1px solid var(--primary-low);
     }
   }
 
@@ -45,6 +45,17 @@
       @include breakpoint("tablet") {
         display: flex;
         justify-content: space-between;
+      }
+    }
+
+    &.d-admin-row__controls {
+      text-align: right;
+
+      @include breakpoint("tablet") {
+        position: absolute;
+        top: -3px;
+        right: 0;
+        border-top: 0;
       }
     }
   }
@@ -84,14 +95,7 @@
 }
 
 .d-admin-row__controls {
-  @include breakpoint("tablet") {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-
   &-options {
-    text-align: right;
     display: flex;
     flex-direction: row;
     gap: 0.5em;
