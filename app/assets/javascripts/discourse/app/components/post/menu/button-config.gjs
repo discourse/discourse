@@ -108,15 +108,10 @@ export default class PostMenuButtonConfig {
     }
 
     let value;
-    if (typeof klass[property] === "function") {
-      value = klass[property](args, helperContext(), this.#owner);
-    } else {
-      value = klass[property];
-    }
 
-    return (
-      value ??
-      this.#staticPropertyWithReplacementFallback(
+    if (typeof klass[property] === "undefined") {
+      // fallback to the replacement map if the property is not defined
+      return this.#staticPropertyWithReplacementFallback(
         {
           klass: this.#replacementMap.get(klass) || null, // passing null explicitly to avoid using the default value
           property,
@@ -124,7 +119,13 @@ export default class PostMenuButtonConfig {
           defaultValue,
         },
         _usedKlasses.add(klass)
-      )
-    );
+      );
+    } else if (typeof klass[property] === "function") {
+      value = klass[property](args, helperContext(), this.#owner);
+    } else {
+      value = klass[property];
+    }
+
+    return value;
   }
 }
