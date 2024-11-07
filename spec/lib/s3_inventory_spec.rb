@@ -153,26 +153,6 @@ RSpec.describe S3Inventory do
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
   end
 
-  it "should fix the url in uploads table correctly" do
-    files = [
-      [
-        "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0184537a4f419224404d013414e913a4f56018f2.jpg",
-        "defcaac0b4aca535c284e95f30d608d0",
-      ],
-      [
-        "#{Discourse.store.absolute_base_url}/uploads/default/original/1X/0789fbf5490babc68326b9cec90eeb0d6590db05.png",
-        "25c02eaceef4cb779fc17030d33f7f06",
-      ],
-    ]
-    files.each { |file| Fabricate(:upload, etag: file[1], url: "") }
-
-    inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
-
-    inventory.backfill_etags_and_list_missing
-
-    expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
-  end
-
   context "when site was restored from a backup" do
     before do
       freeze_time

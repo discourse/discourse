@@ -80,15 +80,6 @@ class S3Inventory
                 #{table_name}.url = #{tmp_table_name}.url",
             )
 
-            # backfilling urls
-            connection.async_exec(
-              "UPDATE #{table_name}
-              SET url = #{tmp_table_name}.url
-              FROM #{tmp_table_name}
-              WHERE #{table_name}.url = '' AND
-                #{table_name}.etag = #{tmp_table_name}.etag",
-            )
-
             uploads = @scope.where("updated_at < ?", inventory_date)
 
             missing_uploads =
