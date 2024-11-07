@@ -2,7 +2,7 @@
 
 {{~#each view.columns as |entry|~}}
   {{~#if entry.value~}}
-    {{~entry.value~}}
+    {{entry.value}}
   {{~/if~}}
   {{~#if (raw-eq entry.key "topic")~}}
     {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
