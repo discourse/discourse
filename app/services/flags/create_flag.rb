@@ -19,9 +19,8 @@ class Flags::CreateFlag
     validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
   end
   policy :unique_name
-  model :flag, :instantiate_flag
   transaction do
-    step :create
+    model :flag, :create_flag
     step :log
   end
 
@@ -35,12 +34,8 @@ class Flags::CreateFlag
     !Flag.custom.where(name: params.name).exists?
   end
 
-  def instantiate_flag(params:)
-    Flag.new(params.merge(notify_type: true))
-  end
-
-  def create(flag:)
-    flag.save!
+  def create_flag(params:)
+    Flag.create(params.merge(notify_type: true))
   end
 
   def log(guardian:, flag:)
