@@ -10,9 +10,11 @@ module UploadsHelpers
     SiteSetting.s3_access_key_id = "some key"
     SiteSetting.s3_secret_access_key = "some secrets3_region key"
 
+    dualstack = SiteSetting.Upload.use_dualstack_endpoint ? ".dualstack" : ""
+
     stub_request(
       :head,
-      "https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/",
+      "https://#{SiteSetting.s3_upload_bucket}.s3#{dualstack}.#{SiteSetting.s3_region}.amazonaws.com/",
     )
   end
 
@@ -22,8 +24,10 @@ module UploadsHelpers
   end
 
   def stub_upload(upload)
+    dualstack = SiteSetting.Upload.use_dualstack_endpoint ? ".dualstack" : ""
+
     url =
-      %r{https://#{SiteSetting.s3_upload_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/original/\d+X.*#{upload.sha1}.#{upload.extension}\?acl}
+      %r{https://#{SiteSetting.s3_upload_bucket}.s3#{dualstack}.#{SiteSetting.s3_region}.amazonaws.com/original/\d+X.*#{upload.sha1}.#{upload.extension}\?acl}
     stub_request(:put, url)
   end
 
