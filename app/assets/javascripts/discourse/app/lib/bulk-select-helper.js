@@ -36,7 +36,7 @@ export default class BulkSelectHelper {
 
   @action
   toggleBulkSelect(event) {
-    event.preventDefault();
+    event?.preventDefault();
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
     this.clear();
   }
