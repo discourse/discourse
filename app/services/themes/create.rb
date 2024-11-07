@@ -3,8 +3,6 @@
 class Themes::Create
   include Service::Base
 
-  policy :ban_in_allowlist_mode
-
   params do
     attribute :name, :string
     attribute :user_id, :integer
@@ -14,6 +12,8 @@ class Themes::Create
     attribute :theme_fields, :array
     attribute :default, :boolean, default: false
   end
+
+  policy :ban_in_allowlist_mode
 
   step :initialize_theme
 
@@ -41,7 +41,7 @@ class Themes::Create
   end
 
   def ban_for_remote_theme(params:, theme:)
-    return if params.theme_fields.blank?
+    return true if params.theme_fields.blank?
     !theme.remote_theme&.is_git?
   end
 
@@ -67,7 +67,7 @@ class Themes::Create
 
   # TODO (martin) Might need to be an Action, it's used in other theme related things too.
   def update_default_theme(params:, theme:)
-    if theme.id == SiteSetting.default_theme_id && !params.default
+    if theme.default? && !params.default
       Theme.clear_default!
     elsif params.default
       theme.set_default!
