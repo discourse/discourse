@@ -220,10 +220,12 @@ module Chat
       blockquote
       emphasis
       replacements
-      heading
     ]
 
     def self.cook(message, opts = {})
+      rules = MARKDOWN_IT_RULES.dup
+      rules << "heading" if opts[:user_id] && opts[:user_id].negative?
+
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
       # generally up to date than the creating user. For example, we use
@@ -235,7 +237,7 @@ module Chat
           message,
           features_override:
             MARKDOWN_FEATURES + DiscoursePluginRegistry.chat_markdown_features.to_a,
-          markdown_it_rules: MARKDOWN_IT_RULES,
+          markdown_it_rules: rules,
           force_quote_link: true,
           user_id: opts[:user_id],
           hashtag_context: "chat-composer",

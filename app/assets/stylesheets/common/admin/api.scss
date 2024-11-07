@@ -48,43 +48,16 @@ table.web-hooks.grid {
 table.api-keys {
   margin-bottom: 0.25em;
 
-  .key-controls {
-    text-align: right;
-  }
-
   tr.revoked {
     color: var(--primary-medium);
   }
 
-  @include breakpoint(tablet) {
-    tr {
-      grid-template-columns: 0.25fr 1fr 1fr;
-    }
-    td.key {
-      grid-row: 1;
-      grid-column-start: 1;
-      grid-column-end: 1;
-      max-width: 100%;
-    }
-    td.key-description {
-      grid-row: 1;
-      grid-column-start: 2;
-      grid-column-end: -1;
-      max-width: 100%;
-    }
-    td.key-user {
-      grid-row: 2;
-      grid-column-start: 1;
-    }
-    td.key-controls {
-      grid-row: 2;
-      grid-column-end: -1;
-      grid-column-start: 2;
-      text-align: right;
-      .btn {
-        margin-bottom: 0.25em;
-      }
-    }
+  .d-admin-row__overview.key {
+    width: 30%;
+  }
+
+  .d-admin-row__content td {
+    vertical-align: middle;
   }
 }
 

@@ -146,6 +146,7 @@ module SvgSprite
         file-lines
         filter
         flag
+        flask
         folder
         folder-open
         forward
