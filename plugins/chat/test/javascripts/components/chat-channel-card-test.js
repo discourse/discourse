@@ -36,14 +36,14 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.status = "closed";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.--closed"));
+    assert.dom(".chat-channel-card.--closed").exists();
   });
 
   test("Archived channel", async function (assert) {
     this.channel.status = "archived";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.--archived"));
+    assert.dom(".chat-channel-card.--archived").exists();
   });
 
   test("Muted channel", async function (assert) {
@@ -51,19 +51,19 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card__muted"));
+    assert.dom(".chat-channel-card__muted").exists();
   });
 
   test("Joined channel", async function (assert) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-    assert.true(exists(".toggle-channel-membership-button.-leave"));
+    assert.dom(".toggle-channel-membership-button.-leave").exists();
   });
 
   test("Joinable channel", async function (assert) {
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card__join-btn"));
+    assert.dom(".chat-channel-card__join-btn").exists();
   });
 
   test("Memberships count", async function (assert) {
@@ -101,6 +101,6 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   test("Read restricted chatable", async function (assert) {
     this.channel.chatable.read_restricted = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-    assert.true(exists(".d-icon-lock"));
+    assert.dom(".d-icon-lock").exists();
   });
 });

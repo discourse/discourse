@@ -3,7 +3,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, visible } from "discourse/tests/helpers/qunit-helpers";
+import { visible } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,7 +13,7 @@ module("Discourse Chat | Component | collapser", function (hooks) {
 
     await render(hbs`<Collapser @header={{this.header}} />`);
 
-    assert.true(exists(".cat"));
+    assert.dom(".cat").exists();
   });
 
   test("collapses and expands yielded body", async function (assert) {

@@ -16,7 +16,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       </ChatMessageText>
     `);
 
-    assert.true(exists(".yield-me"));
+    assert.dom(".yield-me").exists();
   });
 
   test("shows collapsed", async function (assert) {
@@ -29,7 +29,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}} />`
     );
 
-    assert.true(exists(".chat-message-collapser"));
+    assert.dom(".chat-message-collapser").exists();
   });
 
   test("does not collapse a non-image onebox", async function (assert) {
@@ -47,7 +47,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @edited={{true}} />`
     );
 
-    assert.true(exists(".chat-message-edited"));
+    assert.dom(".chat-message-edited").exists();
   });
 
   test("shows edits - collapsible message", async function (assert) {
@@ -60,6 +60,6 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @edited={{true}} />`
     );
 
-    assert.true(exists(".chat-message-edited"));
+    assert.dom(".chat-message-edited").exists();
   });
 });

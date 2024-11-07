@@ -47,7 +47,7 @@ acceptance("Composer - Messages", function (needs) {
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.dom(".composer-popup").exists("shows composer warning message");
 
     assert.true(
       query(".composer-popup").innerHTML.includes(
@@ -101,7 +101,7 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
     );
 
     await fillIn(".d-editor-input", "Mention @staff");
-    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.dom(".composer-popup").exists("shows composer warning message");
     assert.true(
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.cannot_see_group_mention.not_allowed", {
@@ -121,7 +121,7 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
     );
 
     await fillIn(".d-editor-input", "Mention @staff2");
-    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.dom(".composer-popup").exists("shows composer warning message");
     assert.true(
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
@@ -242,7 +242,7 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.true(exists(".composer-popup"), "shows composer warning message");
+    assert.dom(".composer-popup").exists("shows composer warning message");
     assert.true(
       query(".composer-popup").innerHTML.includes(
         I18n.t("composer.yourself_confirm.title")

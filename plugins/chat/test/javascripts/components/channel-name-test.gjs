@@ -114,7 +114,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
       <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
     </template>);
 
-    assert.true(exists(".chat-channel-unread-indicator"));
+    assert.dom(".chat-channel-unread-indicator").exists();
 
     unreadIndicator = false;
     await render(<template>
