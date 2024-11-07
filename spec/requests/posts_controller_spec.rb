@@ -2630,8 +2630,8 @@ RSpec.describe PostsController do
       expect(body).to include(public_post.topic.slug)
     end
 
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
+    it "returns 404 if `hide_profile` user option is checked" do
+      user.user_option.update_columns(hide_profile: true)
 
       get "/u/#{user.username}/activity.rss"
       expect(response.status).to eq(404)
@@ -2641,7 +2641,7 @@ RSpec.describe PostsController do
     end
 
     it "succeeds when `allow_users_to_hide_profile` is false" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
+      user.user_option.update_columns(hide_profile: true)
       SiteSetting.allow_users_to_hide_profile = false
 
       get "/u/#{user.username}/activity.rss"

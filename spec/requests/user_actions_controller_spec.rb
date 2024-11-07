@@ -55,7 +55,7 @@ RSpec.describe UserActionsController do
       context "when user's profile is hidden" do
         fab!(:post)
 
-        before { post.user.user_option.update_column(:hide_profile_and_presence, true) }
+        before { post.user.user_option.update_column(:hide_profile, true) }
 
         context "when `allow_users_to_hide_profile` is disabled" do
           before { SiteSetting.allow_users_to_hide_profile = false }

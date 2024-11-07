@@ -2992,7 +2992,9 @@ user_preferences:
     default: 2
   default_email_in_reply_to:
     default: false
-  default_hide_profile_and_presence:
+  default_hide_profile:
+    default: false
+  default_hide_presence:
     default: false
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"

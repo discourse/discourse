@@ -199,10 +199,16 @@
   {{/if}}
   {{#if this.siteSettings.allow_users_to_hide_profile}}
     <PreferenceCheckbox
-      @labelKey="user.hide_profile_and_presence"
-      @checked={{this.model.user_option.hide_profile_and_presence}}
+      @labelKey="user.hide_profile"
+      @checked={{this.model.user_option.hide_profile}}
       data-setting-name="user-hide-profile"
       class="pref-hide-profile"
+    />
+    <PreferenceCheckbox
+      @labelKey="user.hide_presence"
+      @checked={{this.model.user_option.hide_presence}}
+      data-setting-name="user-hide-presence"
+      class="pref-hide-presence"
     />
   {{/if}}
   <PreferenceCheckbox
