@@ -31,6 +31,7 @@ export default class CreateInvite extends Component {
 
   @tracked saving = false;
   @tracked displayAdvancedOptions = false;
+  @tracked isEmailInvite = emailValid(this.data.restrictTo);
 
   @tracked flashText;
   @tracked flashClass = "info";
@@ -40,6 +41,7 @@ export default class CreateInvite extends Component {
 
   model = this.args.model;
   invite = this.model.invite ?? Invite.create();
+  sendEmail = false;
   formApi;
 
   constructor() {
@@ -103,11 +105,9 @@ export default class CreateInvite extends Component {
 
   async save(data) {
     let isLink = true;
-    let isEmail = false;
 
     if (data.emailOrDomain) {
-      if (emailValid(data.emailOrDomain)) {
-        isEmail = true;
+      if (this.isEmailInvite) {
         isLink = false;
         data.email = data.emailOrDomain;
       } else if (hostnameValid(data.emailOrDomain)) {
@@ -120,14 +120,18 @@ export default class CreateInvite extends Component {
       if (this.invite.email) {
         data.email = data.custom_message = "";
       }
-    } else if (isEmail) {
+    } else {
       if (data.max_redemptions_allowed > 1) {
         data.max_redemptions_allowed = 1;
       }
 
-      data.send_email = true;
-      if (data.topic_id) {
-        data.invite_to_topic = true;
+      if (this.sendEmail) {
+        data.send_email = true;
+        if (data.topic_id) {
+          data.invite_to_topic = true;
+        }
+      } else {
+        data.skip_email = true;
       }
     }
 
@@ -140,7 +144,15 @@ export default class CreateInvite extends Component {
       }
 
       if (!this.simpleMode) {
-        this.flashText = sanitize(I18n.t("user.invited.invite.invite_saved"));
+        if (this.sendEmail) {
+          this.flashText = sanitize(
+            I18n.t("user.invited.invite.invite_saved_with_sending_email")
+          );
+        } else {
+          this.flashText = sanitize(
+            I18n.t("user.invited.invite.invite_saved_without_sending_email")
+          );
+        }
         this.flashClass = "success";
       }
     } catch (error) {
@@ -176,6 +188,21 @@ export default class CreateInvite extends Component {
     return this.currentUser.staff && !this.siteSettings.must_approve_users;
   }
 
+  get simpleMode() {
+    return !this.args.model.editing && !this.displayAdvancedOptions;
+  }
+
+  get inviteCreated() {
+    // use .get to track the id
+    return !!this.invite.get("id");
+  }
+
+  @action
+  handleRestrictToChange(value, { set }) {
+    set("restrictTo", value);
+    this.isEmailInvite = emailValid(value);
+  }
+
   @action
   async onFormSubmit(data) {
     const submitData = {
@@ -199,6 +226,13 @@ export default class CreateInvite extends Component {
 
   @action
   saveInvite() {
+    this.sendEmail = false;
+    this.formApi.submit();
+  }
+
+  @action
+  saveInviteAndSendEmail() {
+    this.sendEmail = true;
     this.formApi.submit();
   }
 
@@ -213,17 +247,9 @@ export default class CreateInvite extends Component {
     this.displayAdvancedOptions = true;
   }
 
-  get simpleMode() {
-    return !this.args.model.editing && !this.displayAdvancedOptions;
-  }
-
-  get inviteCreated() {
-    // use .get to track the id
-    return !!this.invite.get("id");
-  }
-
   @action
   async createLink() {
+    this.sendEmail = false;
     await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
@@ -254,6 +280,7 @@ export default class CreateInvite extends Component {
       }}
       @closeModal={{@closeModal}}
       @hideFooter={{and this.simpleMode this.inviteCreated}}
+      @inline={{@inline}}
     >
       <:belowHeader>
         {{#if (or this.flashText @model.editing)}}
@@ -267,13 +294,8 @@ export default class CreateInvite extends Component {
           >
             {{#if this.flashText}}
               {{htmlSafe this.flashText}}
-            {{/if}}
-            {{#if (and this.inviteCreated (notEq this.flashClass "error"))}}
-              {{#if @model.editing}}
-                {{i18n "user.invited.invite.copy_link_and_share_it"}}
-              {{else}}
-                {{i18n "user.invited.invite.instructions"}}
-              {{/if}}
+            {{else}}
+              {{i18n "user.invited.invite.copy_link_and_share_it"}}
             {{/if}}
           </InviteModalAlert>
         {{/if}}
@@ -313,6 +335,7 @@ export default class CreateInvite extends Component {
               @name="restrictTo"
               @title={{i18n "user.invited.invite.restrict"}}
               @format="large"
+              @onSet={{this.handleRestrictToChange}}
               as |field|
             >
               <field.Input
@@ -322,7 +345,7 @@ export default class CreateInvite extends Component {
               />
             </form.Field>
 
-            {{#unless (emailValid transientData.restrictTo)}}
+            {{#unless this.isEmailInvite}}
               <form.Field
                 @name="maxRedemptions"
                 @title={{i18n "user.invited.invite.max_redemptions_allowed"}}
@@ -410,7 +433,7 @@ export default class CreateInvite extends Component {
               </form.Field>
             {{/if}}
 
-            {{#if (emailValid transientData.restrictTo)}}
+            {{#if this.isEmailInvite}}
               <form.Field
                 @name="customMessage"
                 @title={{i18n "user.invited.invite.custom_message"}}
@@ -438,11 +461,27 @@ export default class CreateInvite extends Component {
           />
         {{else}}
           <DButton
-            @label="user.invited.invite.save_invite"
+            @label={{if
+              this.inviteCreated
+              "user.invited.invite.update_invite"
+              "user.invited.invite.create_link"
+            }}
             @action={{this.saveInvite}}
             @disabled={{this.saving}}
             class="btn-primary save-invite"
           />
+          {{#if this.isEmailInvite}}
+            <DButton
+              @label={{if
+                this.inviteCreated
+                "user.invited.invite.update_invite_and_send_email"
+                "user.invited.invite.create_link_and_send_email"
+              }}
+              @action={{this.saveInviteAndSendEmail}}
+              @disabled={{this.saving}}
+              class="btn-primary save-invite-and-send-email"
+            />
+          {{/if}}
         {{/if}}
         <DButton
           @label="user.invited.invite.cancel"
