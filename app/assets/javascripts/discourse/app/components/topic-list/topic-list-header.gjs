@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
 import DAG from "discourse/lib/dag";
 import { applyValueTransformer } from "discourse/lib/transformer";
