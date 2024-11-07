@@ -103,7 +103,3 @@ end
 #  index_user_api_keys_on_user_api_key_client_id  (user_api_key_client_id)
 #  index_user_api_keys_on_user_id                 (user_id)
 #
-# Foreign Keys
-#
-#  fk_rails_...  (user_api_key_client_id => user_api_key_clients.id)
-#
