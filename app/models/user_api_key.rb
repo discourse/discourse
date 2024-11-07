@@ -3,8 +3,8 @@
 class UserApiKey < ActiveRecord::Base
   self.ignored_columns = [
     "scopes", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
-    "client_id", # TODO: Convert to foreign key in place of user_api_key_client_id in early 2025
-    "application_name", #TODO: Remove in early 2025
+    "client_id", # TODO: Add post-migration to remove column after 3.4.0 stable release (not before early 2025)
+    "application_name", # TODO: Add post-migration to remove column after 3.4.0 stable release (not before early 2025)
   ]
 
   REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])
