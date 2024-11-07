@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class BulkSelectHelper {
   @service router;
@@ -34,8 +34,9 @@ export default class BulkSelectHelper {
     return this.selected.mapBy("category_id").uniq();
   }
 
-  @bind
-  toggleBulkSelect() {
+  @action
+  toggleBulkSelect(event) {
+    event.preventDefault();
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
     this.clear();
   }
