@@ -20,9 +20,12 @@ class Themes::Create
   policy :ban_for_remote_theme
 
   step :set_theme_fields
-  step :save_theme
-  step :update_default_theme
-  step :log_theme_change
+
+  transaction do
+    step :save_theme
+    step :update_default_theme
+    step :log_theme_change
+  end
 
   private
 

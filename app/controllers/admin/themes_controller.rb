@@ -191,32 +191,7 @@ class Admin::ThemesController < Admin::AdminController
       on_failed_policy(:ban_in_allowlist_mode) { raise Discourse::InvalidAccess }
       on_failed_policy(:ban_for_remote_theme) { raise Discourse::InvalidAccess }
       on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
-      on_failure { |theme:| render json: @theme.errors, status: :unprocessable_entity }
-    end
-  end
-
-  # def create
-  def create_old
-    ban_in_allowlist_mode!
-
-    @theme =
-      Theme.new(
-        name: theme_params[:name],
-        user_id: theme_user.id,
-        user_selectable: theme_params[:user_selectable] || false,
-        color_scheme_id: theme_params[:color_scheme_id],
-        component: [true, "true"].include?(theme_params[:component]),
-      )
-    set_fields
-
-    respond_to do |format|
-      if @theme.save
-        update_default_theme
-        log_theme_change(nil, @theme)
-        format.json { render json: serialize_data(@theme, ThemeSerializer), status: :created }
-      else
-        format.json { render json: @theme.errors, status: :unprocessable_entity }
-      end
+      on_failure { |theme:| render json: theme.errors, status: :unprocessable_entity }
     end
   end
 
@@ -281,13 +256,10 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def destroy
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    StaffActionLogger.new(current_user).log_theme_destroy(@theme)
-    @theme.destroy
-
-    respond_to { |format| format.json { head :no_content } }
+    Themes::Destroy.call(service_params) do
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_success { render json: {}, status: :no_content }
+    end
   end
 
   def bulk_destroy

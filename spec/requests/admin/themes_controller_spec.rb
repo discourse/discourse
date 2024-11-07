@@ -990,7 +990,7 @@ RSpec.describe Admin::ThemesController do
       it "returns the right response when an invalid id is given" do
         delete "/admin/themes/9999.json"
 
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(404)
       end
 
       it "deletes the field's javascript cache" do
