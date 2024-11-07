@@ -95,7 +95,7 @@ describe Chat::Message do
         <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
         <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
         <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
-        <h5><a name="h5-5" class="anchor" href="#h5-5 "></a>h5</h5>
+        <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
         <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
         HTML
       end
