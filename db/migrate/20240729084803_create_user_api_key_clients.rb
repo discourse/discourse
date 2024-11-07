@@ -16,7 +16,8 @@ class CreateUserApiKeyClients < ActiveRecord::Migration[7.1]
              SELECT client_id, application_name, created_at, updated_at
              FROM user_api_keys"
 
-    add_reference :user_api_keys, :user_api_key_client, index: true, foreign_key: true
+    add_column :user_api_keys, :user_api_key_client_id, :bigint, null: true
+    add_index :user_api_keys, :user_api_key_client_id
 
     execute "UPDATE user_api_keys keys
              SET user_api_key_client_id = clients.id
