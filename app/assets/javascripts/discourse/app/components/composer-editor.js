@@ -526,7 +526,7 @@ export default class ComposerEditor extends Component {
   // previously we would warn after @bob even if you were about to mention @bob2
   @debounce(DEBOUNCE_JIT_MS)
   _warnCannotSeeMention(preview) {
-    if (this.composer.model.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
+    if (this.composer.model?.draftKey === Composer.NEW_PRIVATE_MESSAGE_KEY) {
       return;
     }
 
@@ -907,7 +907,9 @@ export default class ComposerEditor extends Component {
       return this._selectedFormTemplateId;
     }
 
-    return this.composer.formTemplateId || this.composer.formTemplateIds?.[0];
+    return (
+      this.composer.model.formTemplateId || this.composer.formTemplateIds?.[0]
+    );
   }
 
   set selectedFormTemplateId(value) {
