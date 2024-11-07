@@ -18,17 +18,21 @@
       </thead>
       <tbody>
         {{#each this.model as |k|}}
-          <tr class="d-admin-row__content {{if k.revoked_at "revoked"}}">
+          <tr class="d-admin-row__content {{if k.revoked_at 'revoked'}}">
             <td class="d-admin-row__overview key">
               {{#if k.revoked_at}}{{d-icon "circle-xmark"}}{{/if}}
               {{k.truncatedKey}}
             </td>
             <td class="d-admin-row__detail key-description">
-              <div class="d-admin-row__mobile-label">{{i18n "admin.api.description"}}</div>
+              <div class="d-admin-row__mobile-label">{{i18n
+                  "admin.api.description"
+                }}</div>
               {{k.shortDescription}}
             </td>
             <td class="d-admin-row__detail key-user">
-              <div class="d-admin-row__mobile-label">{{i18n "admin.api.user"}}</div>
+              <div class="d-admin-row__mobile-label">{{i18n
+                  "admin.api.user"
+                }}</div>
               {{#if k.user}}
                 <LinkTo @route="adminUser" @model={{k.user}}>
                   {{avatar k.user imageSize="small"}}
@@ -38,11 +42,15 @@
               {{/if}}
             </td>
             <td class="d-admin-row__detail key-created">
-              <div class="d-admin-row__mobile-label">{{i18n "admin.api.created"}}</div>
+              <div class="d-admin-row__mobile-label">{{i18n
+                  "admin.api.created"
+                }}</div>
               {{format-date k.created_at}}
             </td>
             <td class="d-admin-row__detail key-last-used">
-              <div class="d-admin-row__mobile-label">{{i18n "admin.api.last_used"}}</div>
+              <div class="d-admin-row__mobile-label">{{i18n
+                  "admin.api.last_used"
+                }}</div>
               {{#if k.last_used_at}}
                 {{format-date k.last_used_at}}
               {{else}}
