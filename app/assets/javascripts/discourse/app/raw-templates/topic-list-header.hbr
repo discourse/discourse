@@ -3,10 +3,10 @@
 {{~#each view.columns as |entry|~}}
   {{~#if entry.value~}}
     {{~entry.value~}}
-  {{else if (raw-eq entry.key "topic")}}
-    {{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions showTopicsAndRepliesToggle=showTopicsAndRepliesToggle newListSubset=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount bulkSelectHelper=bulkSelectHelper}}
+  {{~/if~}}
+  {{~#if (raw-eq entry.key "topic")~}}
     {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
-  {{/if}}
+  {{~/if~}}
 {{~/each~}}
 
 {{~raw-plugin-outlet name="topic-list-header-after"~}}

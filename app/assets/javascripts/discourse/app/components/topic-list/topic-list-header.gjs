@@ -25,6 +25,27 @@ const BulkSelectCell = <template>
   {{/if}}
 </template>;
 
+const TopicCell = <template>
+  <TopicListHeaderColumn
+    @order="default"
+    @category={{@category}}
+    @activeOrder={{@activeOrder}}
+    @changeSort={{@changeSort}}
+    @ascending={{@ascending}}
+    @name={{@name}}
+    @bulkSelectEnabled={{@bulkSelectEnabled}}
+    @showBulkToggle={{@showBulkToggle}}
+    @canBulkSelect={{@canBulkSelect}}
+    @canDoBulkActions={{@canDoBulkActions}}
+    @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
+    @newListSubset={{@newListSubset}}
+    @newRepliesCount={{@newRepliesCount}}
+    @newTopicsCount={{@newTopicsCount}}
+    @bulkSelectHelper={{@bulkSelectHelper}}
+    @changeNewListSubset={{@changeNewListSubset}}
+  />
+</template>;
+
 const PostersCell = <template>
   {{#if @showPosters}}
     <TopicListHeaderColumn
@@ -107,7 +128,7 @@ export function createColumns() {
   const columns = new DAG();
   columns.add("topic-list-before-columns");
   columns.add("bulk-select", BulkSelectCell);
-  columns.add("topic");
+  columns.add("topic", TopicCell);
   columns.add("topic-list-after-main-link");
   columns.add("posters", PostersCell);
   columns.add("replies", RepliesCell);
@@ -166,25 +187,6 @@ export default class TopicListHeader extends Component {
             @showPosters={{@showPosters}}
             @showLikes={{@showLikes}}
             @showOpLikes={{@showOpLikes}}
-          />
-        {{else if (eq entry.key "topic")}}
-          <TopicListHeaderColumn
-            @order="default"
-            @category={{@category}}
-            @activeOrder={{@order}}
-            @changeSort={{@changeSort}}
-            @ascending={{@ascending}}
-            @name={{@listTitle}}
-            @bulkSelectEnabled={{@bulkSelectEnabled}}
-            @showBulkToggle={{@toggleInTitle}}
-            @canBulkSelect={{@canBulkSelect}}
-            @canDoBulkActions={{@canDoBulkActions}}
-            @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-            @newListSubset={{@newListSubset}}
-            @newRepliesCount={{@newRepliesCount}}
-            @newTopicsCount={{@newTopicsCount}}
-            @bulkSelectHelper={{@bulkSelectHelper}}
-            @changeNewListSubset={{@changeNewListSubset}}
           />
         {{/if}}
       {{/each}}
