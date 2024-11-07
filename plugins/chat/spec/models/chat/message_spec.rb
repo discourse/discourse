@@ -79,23 +79,33 @@ describe Chat::Message do
       HTML
     end
 
-    it "supports headings" do
-      cooked = described_class.cook <<~MD
-      # h1
-      ## h2
-      ### h3
-      #### h4
-      ##### h5
-      ###### h6
-      MD
+    context "when message is made by a bot user" do
+      it "supports headings" do
+        cooked = described_class.cook(<<~MD, user_id: -1)
+        # h1
+        ## h2
+        ### h3
+        #### h4
+        ##### h5
+        ###### h6
+        MD
+
+        expect(cooked).to match_html <<~HTML
+        <h1><a name="h1-1" class="anchor" href="#h1-1"></a>h1</h1>
+        <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
+        <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
+        <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
+        <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
+        <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
+        HTML
+      end
+    end
+
+    it "doesn't support headings" do
+      cooked = described_class.cook("# test")
 
       expect(cooked).to match_html <<~HTML
-      <h1><a name="h1-1" class="anchor" href="#h1-1"></a>h1</h1>
-      <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
-      <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
-      <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
-      <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
-      <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
+      <p># test</p>
       HTML
     end
 
