@@ -83,7 +83,7 @@ export default class CategoriesDisplay extends Component {
   get categoriesComponent() {
     if (
       this.args.parentCategory &&
-      this.router.currentRouteName === "discovery.category"
+      this.router.currentRouteName !== "discovery.subcategories"
     ) {
       return this.#componentForSubcategories;
     } else {

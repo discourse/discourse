@@ -6,6 +6,11 @@
 
 he:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: מחיקת אוטומציה
     discourse_automation:
       title: אוטומציה
       create: ליצור

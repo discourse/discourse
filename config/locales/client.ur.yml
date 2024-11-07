@@ -3618,6 +3618,8 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
+            invite:
+              content: "دعوت دیں"
       filter: "فِلٹر..."
     until: "جب تک:"
     form_templates:

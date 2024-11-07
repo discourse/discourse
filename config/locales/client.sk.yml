@@ -2037,6 +2037,7 @@ sk:
           title: "Odkaz na pozvánku"
           success: "Pozývací link bol úspešne vygenerovaný!"
           error: "Vyskytla sa chyba pri generovaní odkazu na pozvanie"
+        cannot_invite_to_forum: "Ľutujeme, nemáte povolenie na vytváranie pozvánok. Kontaktujte správcu, aby vám udelil povolenie na pozvanie."
         invite:
           new_title: "Pozvať členov"
           edit_title: "Upraviť pozvánku"
@@ -3898,6 +3899,11 @@ sk:
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
       sr_reply_to: "Odpoveď na príspevok #%{post_number} od @%{username}"
+      link_clicked:
+        one: "kliknutie na odkaz %{count} krát"
+        few: "kliknutie na odkaz %{count} krát"
+        many: "kliknutie na odkaz %{count} krát"
+        other: "kliknutie na odkaz %{count} krát"
       notice:
         new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
         returning_user: "Už je to nejaký čas, čo sme videli %{user} - ich posledný príspevok bol %{time}."
@@ -4913,6 +4919,7 @@ sk:
       dismiss: "Zahodiť"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
+    theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
     image_removed: "(obrázok odstránený)"
     pause_notifications:
       title: "Pozastavenie oznámení pre…"
@@ -5123,6 +5130,9 @@ sk:
                 few: "%{count} čaká"
                 many: "%{count} čaká"
                 other: "%{count} čaká"
+            invite:
+              content: "Pozvi"
+              title: "Pozvanie nových členov"
         global_section: "Globálna sekcia, viditeľná pre všetkých"
       panels:
         forum:
@@ -5667,6 +5677,8 @@ sk:
           group_name: "Skupinové používateľské udalosti"
           user_added_to_group: "Používateľ je pridaný do skupiny"
           user_removed_from_group: "Používateľ je odstránený zo skupiny"
+        custom_event:
+          group_name: "Vlastné udalosti"
         user_promoted_event:
           group_name: "Udalosti podporované používateľom"
           user_promoted: "Používateľ je povýšený"
@@ -5791,6 +5803,8 @@ sk:
           community_name_placeholder: "Príklad Spoločenstva"
           community_summary: "Súhrn komunity"
           community_description: "Popis komunity"
+          community_title: "Názov spoločenstva"
+          community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
           banner_image_help: |
             Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
@@ -5814,12 +5828,19 @@ sk:
           site_contact_group_help: |
             Skupina, ktorá dostane pozvánku do všetkých automaticky odoslaných súkromných správ.
           your_organization: "Vaša organizácia"
+          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
           company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           governing_law: "Platné právo"
+          governing_law_placeholder: "Provincia, štát alebo krajina"
+          governing_law_help: |
+            Uveďte jurisdikciu pre právne podmienky stránky, zvyčajne tam, kde je spoločnosť registrovaná alebo kde pôsobí.
           city_for_disputes: "Mesto pre spory"
+          city_for_disputes_placeholder: "Mesto"
+          city_for_disputes_help: |
+            Uveďte mesto na riešenie právnych sporov týkajúcich sa tohto fóra.
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:
@@ -5866,6 +5887,7 @@ sk:
             move_down: "Posunúť sa nadol"
         look_and_feel:
           title: "Pozri a cíť"
+          description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
           themes:
             title: "Témy"
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
@@ -6092,6 +6114,7 @@ sk:
           set_default_theme: "Nastavenie predvoleného nastavenia"
           default_theme: "Predvolená téma"
           set_default_success: "Predvolená téma nastavená na %{theme}"
+          install_success: "%{theme} úspešne nainštalované!"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybrané"
@@ -6100,6 +6123,7 @@ sk:
             other: "%{count} vybrané"
           cancel: "Zrušiť"
           broken_theme_tooltip: "Táto téma má chyby v CSS, HTML alebo YAML"
+          broken_theme: "Zakázať nefunkčnú tému"
           disabled_component_tooltip: "Tento komponent bol zakázaný"
           default_theme_tooltip: "Táto téma je predvolená téma stránky"
           updates_available_tooltip: "Pre túto tému sú k dispozícii aktualizácie"
@@ -6168,6 +6192,7 @@ sk:
           update_to_latest: "Aktualizácia na najnovšie"
           check_for_updates: "Skontrolovať aktualizácie"
           updating: "Aktualizujem..."
+          update_success: "%{theme} Aktualizácia dokončená"
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"
           has_overwritten_history: "Aktuálna verzia témy už neexistuje, pretože história systému Git bola prepísaná."
           add: "Pridať"
@@ -7198,6 +7223,7 @@ sk:
           groups: "Skupiny"
           dashboard: "Ovládací panel"
           navigation: "Navigácia"
+          experimental: "Experimentálne"
         secret_list:
           invalid_input: "Vstupné polia nemôžu byť prázdne alebo obsahovať znak vertikálnej čiary."
         default_categories:
@@ -7346,6 +7372,7 @@ sk:
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"

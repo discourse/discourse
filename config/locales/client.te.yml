@@ -4292,6 +4292,8 @@ te:
               pending_count:
                 one: "%{count} పెండింగ్లో"
                 other: "%{count} పెండింగ్లో"
+            invite:
+              content: "ఆహ్వానించండి"
         global_section: "సార్వత్రిక విభాగం, అందరికీ కనిపిస్తుంది"
       panels:
         forum:

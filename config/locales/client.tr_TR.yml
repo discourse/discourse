@@ -4583,6 +4583,8 @@ tr_TR:
               pending_count:
                 one: "%{count} beklemede"
                 other: "%{count} beklemede"
+            invite:
+              content: "Davet et"
         global_section: "Genel bölüm, herkes tarafından görülebilir"
       panels:
         forum:
@@ -6552,6 +6554,7 @@ tr_TR:
           groups: "Gruplar"
           dashboard: "Pano"
           navigation: "Navigasyon"
+          experimental: "Deneysel"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:

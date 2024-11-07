@@ -121,4 +121,11 @@ describe "Admin Site Texts Page", type: :system do
     expect(site_texts_page).to have_translation_value("Some overridden value")
     expect(TranslationOverride.exists?(translation_key: "js.skip_to_main_content")).to eq(true)
   end
+
+  it "properly display category names in replace text modal" do
+    site_texts_page.visit
+    site_texts_page.click_replace_text_button
+
+    expect(page.all(".modal label span").map(&:text)).to eq(["Uncategorized"])
+  end
 end

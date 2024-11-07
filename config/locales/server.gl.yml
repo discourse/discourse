@@ -1354,7 +1354,6 @@ gl:
     markdown_linkify_tlds: "Listaxe de dominios de nivel superior que se tratan automaticamente como ligazóns"
     markdown_typographer_quotation_marks: "Listaxe de pares de substitución de comiñas dobres e simples"
     post_undo_action_window_mins: "Número de minutos que os usuarios teñen para desfacer accións recentes nunha publicación (gústame, denuncias etc)."
-    must_approve_users: "O equipo debe aprobar todas as novas contas antes de que teñan permiso para acceder ao sitio."
     invite_code: "O usuario debe inserir este código para que se lle permita rexistrar a conta, ignórase cando está baleiro (non distingue entre maiúsculas e minúsculas)"
     approve_suspect_users: "Engadir usuarios sospeitosos á cola de revisión. Os usuarios sospeitosos inseriron unha biografía ou sitio web, pero non teñen actividade de lectura."
     persistent_sessions: "Os usuarios conservarán a sesión iniciada cando o navegador estea pechado"
@@ -1388,7 +1387,6 @@ gl:
     topics_per_period_in_top_summary: "Número de temas destacados que se mostran no resumo de temas destacados."
     topics_per_period_in_top_page: "Número de temas destacados que se mostran na vista expandida ao premer en «Mostrar máis»."
     prioritize_username_in_ux: "Mostrar o nome de usuario primeiro na páxina de usuario, a tarxeta de usuario e nas publicacións (cando está desactivado, o nome móstrase primeiro)"
-    enable_rich_text_paste: "Activar conversión automática de HTML a Markdown ao pegar texto no editor. (Experimental)"
     send_old_credential_reminder_days: "Lembrar as credenciais antigas despois de días"
     email_token_valid_hours: "Os tokens para restabelecer o contrasinal ou activar a conta son válidos durante (n) horas."
     allow_index_in_robots_txt: "Especificar en robots.txt que se permite que este sitio sexa indexado polos motores de busca en internet. En casos excepcionais, pode <a href='%{base_path}/admin/customize/robots'>sobrescribir robots.txt</a>permanentemente."
@@ -1848,15 +1846,6 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inactivo"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inactivo"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

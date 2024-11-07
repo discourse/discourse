@@ -659,6 +659,16 @@
   }
 }
 
+.admin-new-feature-item__header-experimental {
+  color: var(--tertiary);
+  background-color: var(--tertiary-very-low);
+  padding: 0.5em;
+  font-size: var(--font-down-3);
+  margin-left: 0.5rem;
+  font-weight: 400;
+  border-radius: var(--d-border-radius);
+}
+
 .admin-new-feature-item__body {
   display: flex;
   justify-content: space-between;

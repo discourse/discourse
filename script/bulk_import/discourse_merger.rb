@@ -3,7 +3,7 @@
 require_relative "base"
 
 class BulkImport::DiscourseMerger < BulkImport::Base
-  NOW ||= "now()"
+  NOW = "now()"
   CUSTOM_FIELDS = %w[category group post topic user]
 
   # DB_NAME: name of database being merged into the current local db

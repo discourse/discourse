@@ -4584,6 +4584,8 @@ es:
               pending_count:
                 one: "%{count} pendiente"
                 other: "%{count} pendientes"
+            invite:
+              content: "Invitar"
         global_section: "Sección global, visible para todos"
       panels:
         forum:
@@ -6556,6 +6558,7 @@ es:
           groups: "Grupos"
           dashboard: "Panel de control"
           navigation: "Navegación"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:

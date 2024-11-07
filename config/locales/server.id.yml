@@ -1295,11 +1295,6 @@ id:
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
     default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
-    experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
-    enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
-    experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
-    enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
-    experimental_glimmer_topic_list_groups: "EKSPERIMENTAL: Mengaktifkan implementasi daftar topik 'glimmer' yang baru. Implementasi ini sedang dalam pengembangan aktif, dan tidak dimaksudkan untuk penggunaan produksi. Jangan mengembangkan tema/plugin yang bertentangan dengan ini sampai implementasi selesai dan diumumkan."
     admin_sidebar_enabled_groups: "Aktifkan navigasi bilah sisi untuk UI admin untuk grup tertentu, yang menggantikan tombol navigasi admin tingkat atas."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
@@ -1310,20 +1305,6 @@ id:
       max_username_length_range: "Anda tidak bisa menentukan jumlah maksimum dibawah jumlah minimum."
       invalid_uncategorized_category_setting: 'Kategori "Uncategorized" tidak dapat dipilih jika ''allow uncategorized topics'' tidak diaktifkan.'
       invalid_search_ranking_weights: "Nilai tidak valid untuk setelan situs search_ranking_weights. Contoh: '{0.1,0.2,0.3,1.0}'. Perhatikan bahwa nilai maksimum untuk setiap bobot adalah 1,0."
-    keywords:
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      clean_up_inactive_users_after_days:
-      - "dinonaktifkan"
-      - "tidak aktif"
-      - "tidak diaktifkan"
-      purge_unactivated_users_grace_period_days:
-      - "dinonaktifkan"
-      - "tidak aktif"
-      - "tidak diaktifkan"
-      navigation_menu:
-      - "bilah sisi"
-      - "tarik-turun tajuk"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:

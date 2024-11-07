@@ -4785,6 +4785,8 @@ cs:
                 few: "%{count} čeká na vyřízení"
                 many: "%{count} čeká na vyřízení"
                 other: "%{count} čeká na vyřízení"
+            invite:
+              content: "Pozvat"
         global_section: "Globální sekce viditelná pro všechny"
       panels:
         forum:
@@ -6329,6 +6331,7 @@ cs:
           groups: "Skupiny"
           dashboard: "Nástěnka"
           navigation: "Navigace"
+          experimental: "Experimentální"
         default_categories:
           modal_yes: "Ano"
           modal_no: "Ne, změny aplikovat pouze do budoucna"

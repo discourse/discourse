@@ -19,38 +19,59 @@
 
   <hr />
 
+  <div class="form-horizontal">
+    <div class="inline-form">
+      <label class="label">Show</label>
+      <ComboBox
+        @value={{this.filter}}
+        @content={{this.sortingGroups}}
+        @nameProperty={{null}}
+        @valueProperty={{null}}
+        @onChange={{action "filterGroups"}}
+      />
+    </div>
+  </div>
+
   {{#if this.sortedEmojis}}
-    <table id="custom_emoji">
+    <table id="custom_emoji" class="d-admin-table">
       <thead>
         <tr>
           <th>{{i18n "admin.emoji.image"}}</th>
           <th>{{i18n "admin.emoji.name"}}</th>
           <th>{{i18n "admin.emoji.group"}}</th>
-          <th>{{i18n "admin.emoji.created_by"}}</th>
-          <th colspan="2">
-            <ComboBox
-              @value={{this.filter}}
-              @content={{this.sortingGroups}}
-              @nameProperty={{null}}
-              @valueProperty={{null}}
-              @onChange={{action "filterGroups"}}
-            />
-          </th>
+          <th colspan="3">{{i18n "admin.emoji.created_by"}}</th>
         </tr>
       </thead>
       <tbody>
         {{#each this.sortedEmojis as |e|}}
-          <tr>
-            <td><img
+          <tr class="d-admin-row__content">
+            <td class="d-admin-row__overview">
+              <img
                 class="emoji emoji-custom"
                 src={{e.url}}
                 title={{e.name}}
                 alt={{i18n "admin.emoji.alt"}}
-              /></td>
-            <td>:{{e.name}}:</td>
-            <td>{{e.group}}</td>
-            <td>{{e.created_by}}</td>
-            <td class="action">
+              />
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "admin.emoji.name"}}
+              </div>
+              :{{e.name}}:
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "admin.emoji.group"}}
+              </div>
+              {{e.group}}
+            </td>
+            <td class="d-admin-row__detail">
+              <div class="d-admin-row__mobile-label">
+                {{i18n "admin.emoji.created_by"}}
+              </div>
+              {{e.created_by}}
+            </td>
+            <td class="d-admin-row__controls action">
               <DButton
                 @action={{fn this.destroyEmoji e}}
                 @icon="trash-can"

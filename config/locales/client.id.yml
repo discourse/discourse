@@ -2244,6 +2244,8 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
+            invite:
+              content: "Undang"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"

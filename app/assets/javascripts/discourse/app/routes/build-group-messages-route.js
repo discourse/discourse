@@ -7,21 +7,23 @@ export default (type) => {
       return I18n.t(`user.messages.${type}`);
     }
 
-    model() {
+    async model() {
       const groupName = this.modelFor("group").get("name");
       const username = this.currentUser.get("username_lower");
+
       let filter = `topics/private-messages-group/${username}/${groupName}`;
       if (this._isArchive()) {
         filter = `${filter}/archive`;
       }
-      return this.store.findFiltered("topicList", { filter }).then((model) => {
-        // andrei: we agreed that this is an anti pattern,
-        // it's better to avoid mutating a rest model like this
-        // this place we'll be refactored later
-        // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-        model.set("emptyState", this.emptyState());
-        return model;
-      });
+
+      const model = await this.store.findFiltered("topicList", { filter });
+
+      // andrei: we agreed that this is an anti pattern,
+      // it's better to avoid mutating a rest model like this
+      // this place we'll be refactored later
+      // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+      model.set("emptyState", this.emptyState());
+      return model;
     }
 
     setupController() {
