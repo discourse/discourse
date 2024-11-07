@@ -568,7 +568,7 @@ GEM
       kgio (~> 2.6)
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
-    uri (0.13.1)
+    uri (1.0.0)
     version_gem (1.1.4)
     web-push (3.0.1)
       jwt (~> 2.0)
