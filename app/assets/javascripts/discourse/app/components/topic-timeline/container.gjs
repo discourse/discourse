@@ -660,10 +660,6 @@ export default class TopicTimelineScrollArea extends Component {
           />
         {{/if}}
 
-        {{#if this.currentUser}}
-          <TopicNotificationsButton @topic={{@model}} @expanded={{false}} />
-        {{/if}}
-
         <PluginOutlet
           @name="timeline-footer-controls-after"
           @outletArgs={{hash model=@model fullscreen=@fullscreen}}
