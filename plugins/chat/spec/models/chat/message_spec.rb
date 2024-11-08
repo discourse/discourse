@@ -99,6 +99,16 @@ describe Chat::Message do
         <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
         HTML
       end
+
+      it "cooks the grid bbcode" do
+        cooked = described_class.cook("[grid]\ntest\n[/grid]", user_id: -1)
+
+        expect(cooked).to match_html <<~HTML
+        <div class="d-image-grid">
+        <p>test</p>
+        </div>
+        HTML
+      end
     end
 
     it "doesn't support headings" do
@@ -106,6 +116,14 @@ describe Chat::Message do
 
       expect(cooked).to match_html <<~HTML
       <p># test</p>
+      HTML
+    end
+
+    it "doesn't support grid" do
+      cooked = described_class.cook("[grid]\ntest\n[/grid]")
+
+      expect(cooked).to match_html <<~HTML
+      <p>[grid]<br>test<br>[/grid]</p>
       HTML
     end
 
