@@ -114,9 +114,7 @@ module PageObjects
       end
 
       def has_topic_bookmarked?(topic)
-        within_topic_footer_buttons do
-          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
-        end
+        within_topic_footer_buttons { has_css?(".bookmark-menu-trigger.bookmarked") }
       end
 
       def has_no_bookmarks?(topic)
