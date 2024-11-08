@@ -249,6 +249,8 @@ RSpec.describe PostMover do
         context "when moved to a new topic" do
           it "works correctly" do
             topic.expects(:add_moderator_post).once
+            p2_id = p2.id
+            p4_id = p4.id
             new_topic =
               topic.move_posts(
                 user,
@@ -308,6 +310,26 @@ RSpec.describe PostMover do
               ),
             ).to eq(true)
             expect(TopicUser.exists?(user_id: user, topic_id: new_topic.id)).to eq(true)
+
+            # moved_post records are created correctly
+            expect(
+              MovedPost.exists?(
+                new_topic: new_topic,
+                new_post_id: p2.id,
+                old_topic: topic,
+                old_post_id: p2.id,
+                created_new_topic: true,
+              ),
+            ).to eq(true)
+            expect(
+              MovedPost.exists?(
+                new_topic: new_topic,
+                new_post_id: p4.id,
+                old_topic: topic,
+                old_post_id: p4.id,
+                created_new_topic: true,
+              ),
+            ).to eq(true)
           end
 
           it "moving all posts will close the topic" do
@@ -670,6 +692,25 @@ RSpec.describe PostMover do
             expect(
               TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number,
             ).to eq(p3.post_number)
+
+            expect(
+              MovedPost.exists?(
+                new_topic: destination_topic,
+                new_post_id: p2.id,
+                old_topic: topic,
+                old_post_id: p2.id,
+                created_new_topic: false,
+              ),
+            ).to eq(true)
+            expect(
+              MovedPost.exists?(
+                new_topic: destination_topic,
+                new_post_id: p4.id,
+                old_topic: topic,
+                old_post_id: p4.id,
+                created_new_topic: false,
+              ),
+            ).to eq(true)
           end
 
           it "moving all posts will close the topic" do
