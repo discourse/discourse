@@ -1970,7 +1970,6 @@ en:
           new_title: "Invite members"
           edit_title: "Edit invite"
 
-          instructions: "Share this link to instantly grant access to this site:"
           expires_in_time: "Expires in %{time}"
           expired_at_time: "Expired at %{time}"
           create_link_to_invite: "Create a link that can be shared to instantly grant access to this site."
@@ -2006,11 +2005,14 @@ en:
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save"
+          update_invite: "Update"
+          update_invite_and_send_email: "Update and send email"
           cancel: "Cancel"
           create_link: "Create link"
+          create_link_and_send_email: "Create link and send email"
 
-          invite_saved: "Invite saved."
+          invite_saved_without_sending_email: "Invite saved. Copy the link below and share it to instantly grant access to this site."
+          invite_saved_with_sending_email: "Invite email has been sent. You can also copy the link below and share it to instantly grant access to this site."
 
         bulk_invite:
           none: "No invitations to display on this page."
