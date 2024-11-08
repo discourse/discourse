@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -52,7 +52,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__date"));
+    assert.dom(".chat-message-info__date").exists();
   });
 
   test("bookmark (with reminder)", async function (assert) {
@@ -66,9 +66,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(
-      exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
-    );
+    assert
+      .dom(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
+      .exists();
   });
 
   test("bookmark (no reminder)", async function (assert) {
@@ -84,7 +84,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__bookmark .d-icon-bookmark"));
+    assert.dom(".chat-message-info__bookmark .d-icon-bookmark").exists();
   });
 
   test("user status", async function (assert) {
@@ -95,7 +95,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__status .user-status-message"));
+    assert.dom(".chat-message-info__status .user-status-message").exists();
   });
 
   test("flag status", async function (assert) {

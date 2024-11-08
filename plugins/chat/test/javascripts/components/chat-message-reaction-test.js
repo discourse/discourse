@@ -12,13 +12,13 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
       <ChatMessageReaction @reaction={{hash emoji="heart" reacted=true}} />
     `);
 
-    assert.true(exists(".chat-message-reaction.reacted"));
+    assert.dom(".chat-message-reaction.reacted").exists();
   });
 
   test("adds reaction name as class", async function (assert) {
     await render(hbs`<ChatMessageReaction @reaction={{hash emoji="heart"}} />`);
 
-    assert.true(exists(`.chat-message-reaction[data-emoji-name="heart"]`));
+    assert.dom(`.chat-message-reaction[data-emoji-name="heart"]`).exists();
   });
 
   test("title/alt attributes", async function (assert) {

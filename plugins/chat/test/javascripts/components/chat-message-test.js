@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-message", function (hooks) {
@@ -20,7 +20,7 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await render(template);
 
-    assert.true(exists(".chat-message-edited"), "has the correct css class");
+    assert.dom(".chat-message-edited").exists("has the correct css class");
   });
 
   test("Deleted message", async function (assert) {
@@ -30,10 +30,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await render(template);
 
-    assert.true(
-      exists(".chat-message-text.-deleted .chat-message-expand"),
-      "has the correct css class and expand button within"
-    );
+    assert
+      .dom(".chat-message-text.-deleted .chat-message-expand")
+      .exists("has the correct css class and expand button within");
   });
 
   test("Hidden message", async function (assert) {
@@ -42,10 +41,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await render(template);
 
-    assert.true(
-      exists(".chat-message-text.-hidden .chat-message-expand"),
-      "has the correct css class and expand button within"
-    );
+    assert
+      .dom(".chat-message-text.-hidden .chat-message-expand")
+      .exists("has the correct css class and expand button within");
   });
 
   test("Message by a bot", async function (assert) {
@@ -79,10 +77,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     });
     await render(template);
 
-    assert.true(
-      exists(".chat-message-container.has-reply"),
-      "has the correct css class"
-    );
+    assert
+      .dom(".chat-message-container.has-reply")
+      .exists("has the correct css class");
   });
 
   test("Message with streaming", async function (assert) {

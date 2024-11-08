@@ -35,10 +35,9 @@ module(
         "it shows the channel title"
       );
 
-      assert.true(
-        exists(query(".chat-channel-icon.--category-badge")),
-        "it shows the category hashtag badge"
-      );
+      assert
+        .dom(".chat-channel-icon.--category-badge")
+        .exists("shows the category hashtag badge");
     });
 
     test("channel description", async function (assert) {
@@ -61,28 +60,25 @@ module(
         "no line is left for the channel description if there is none"
       );
 
-      assert.true(
-        exists(".chat-channel-preview-card.-no-description"),
-        "it adds a modifier class for styling"
-      );
+      assert
+        .dom(".chat-channel-preview-card.-no-description")
+        .exists("adds a modifier class for styling");
     });
 
     test("join", async function (assert) {
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.true(
-        exists(".toggle-channel-membership-button.-join"),
-        "it shows the join channel button"
-      );
+      assert
+        .dom(".toggle-channel-membership-button.-join")
+        .exists("shows the join channel button");
     });
 
     test("browse all", async function (assert) {
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.true(
-        exists(".chat-channel-preview-card__browse-all"),
-        "it shows a link to browse all channels"
-      );
+      assert
+        .dom(".chat-channel-preview-card__browse-all")
+        .exists("shows a link to browse all channels");
     });
 
     test("closed channel", async function (assert) {

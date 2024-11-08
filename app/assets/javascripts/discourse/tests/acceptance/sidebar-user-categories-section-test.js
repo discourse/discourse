@@ -141,10 +141,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       ".sidebar-section[data-section-name='categories'] .sidebar-section-header-button"
     );
 
-    assert.true(
-      exists(".sidebar-categories-form"),
-      "it shows the categories form modal"
-    );
+    assert
+      .dom(".sidebar-categories-form")
+      .exists("shows the categories form modal");
   });
 
   test("categories section is shown with site's top categories when user has not added any categories and there are no default categories set for the user", async function (assert) {
