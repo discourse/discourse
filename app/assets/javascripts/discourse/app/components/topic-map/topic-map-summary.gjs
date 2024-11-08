@@ -28,7 +28,7 @@ const MIN_LIKES_COUNT = 5;
 const MIN_PARTICIPANTS_COUNT = 5;
 const MIN_USERS_COUNT_FOR_AVATARS = 2;
 
-export const MIN_POSTS_COUNT = 10;
+export const MIN_POSTS_COUNT = 5;
 
 export default class TopicMapSummary extends Component {
   @service site;
