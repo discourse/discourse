@@ -193,7 +193,6 @@ export default class CreateInvite extends Component {
   }
 
   get inviteCreated() {
-    // use .get to track the id
     return !!this.invite.get("id");
   }
 
