@@ -21,14 +21,21 @@ describe "Topic Map", type: :system do
     topic_page.visit_topic(topic)
 
     expect(topic_page).to have_topic_map
-    Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 3)
-    Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 1)
+    2.times { Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 1) }
     page.refresh
     expect(topic_page).to have_topic_map
     expect(topic_map).to have_no_users
 
     Fabricate(:post, topic: topic, created_at: 1.day.ago)
     page.refresh
+
+    # bottom map, avatars details with post counts
+    expect(topic_map).to have_no_bottom_map
+
+    Fabricate(:post, topic: topic, created_at: 2.day.ago)
+    Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 3)
+    page.refresh
+
     expect(topic_map.users_count).to eq 6
 
     # user count
@@ -39,9 +46,6 @@ describe "Topic Map", type: :system do
       topic_page.send_reply("this is a cool-cat post") # fabricating posts doesn't update the last post details
       topic_page.visit_topic(topic)
     }.to change(topic_map, :users_count).by(1)
-
-    # bottom map, avatars details with post counts
-    expect(topic_map).to have_no_bottom_map
 
     Fabricate(:post, topic: topic)
     Fabricate(:post, user: user, topic: topic)
