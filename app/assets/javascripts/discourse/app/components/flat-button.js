@@ -9,12 +9,14 @@ import I18n from "discourse-i18n";
 
 @tagName("button")
 @classNames("btn-flat")
-@attributeBindings("disabled", "translatedTitle:title")
+@attributeBindings("disabled", "resolvedTitle:title")
 export default class FlatButton extends Component {
-  @discourseComputed("title")
-  translatedTitle(title) {
+  @discourseComputed("title", "translatedTitle")
+  resolvedTitle(title, translatedTitle) {
     if (title) {
       return I18n.t(title);
+    } else if (translatedTitle) {
+      return translatedTitle;
     }
   }
 
