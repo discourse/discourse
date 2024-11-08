@@ -30,9 +30,7 @@ export default class ChatChannelUnreadIndicator extends Component {
       return this.hasChannelMentions;
     }
     return (
-      this.isDirectMessage ||
-      this.hasChannelMentions ||
-      this.hasWatchedThreads
+      this.isDirectMessage || this.hasChannelMentions || this.hasWatchedThreads
     );
   }
 
