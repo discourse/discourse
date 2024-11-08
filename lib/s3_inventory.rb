@@ -85,9 +85,7 @@ class S3Inventory
             missing_uploads =
               uploads.joins(
                 "LEFT JOIN #{tmp_table_name} ON #{tmp_table_name}.etag = #{table_name}.etag",
-              ).where(
-                "#{tmp_table_name}.etag IS NULL OR #{tmp_table_name}.url != #{table_name}.url",
-              )
+              ).where("#{tmp_table_name}.etag IS NULL")
 
             exists_with_different_etag =
               missing_uploads
@@ -97,20 +95,11 @@ class S3Inventory
                 .where("inventory2.etag IS NOT NULL")
                 .pluck(:id)
 
-            exists_with_different_url =
-              missing_uploads
-                .joins(
-                  "LEFT JOIN #{tmp_table_name} inventory3 ON inventory3.etag = #{table_name}.etag",
-                )
-                .where("inventory3.url != #{table_name}.url")
-                .pluck(:id)
-
             # marking as verified/not verified
             if @model == Upload
               sql_params = {
                 inventory_date: inventory_date,
                 invalid_etag: Upload.verification_statuses[:invalid_etag],
-                invalid_url: Upload.verification_statuses[:invalid_url],
                 s3_file_missing_confirmed: Upload.verification_statuses[:s3_file_missing_confirmed],
                 verified: Upload.verification_statuses[:verified],
                 seeded_id_threshold: @model::SEEDED_ID_THRESHOLD,
@@ -146,22 +135,6 @@ class S3Inventory
                         WHERE #{tmp_table_name}.etag = #{table_name}.etag
                     )
               SQL
-
-              DB.exec(<<~SQL, sql_params)
-                UPDATE #{table_name}
-                SET verification_status = :invalid_url
-                WHERE verification_status <> :invalid_url
-                  AND verification_status <> :invalid_etag
-                  AND verification_status <> :s3_file_missing_confirmed
-                  AND updated_at < :inventory_date
-                  AND id > :seeded_id_threshold
-                  AND NOT EXISTS
-                    (
-                        SELECT 1
-                        FROM #{tmp_table_name}
-                        WHERE #{tmp_table_name}.url = #{table_name}.url
-                    )
-              SQL
             end
 
             if (missing_count = missing_uploads.count) > 0
@@ -170,8 +143,6 @@ class S3Inventory
                 .find_each do |upload|
                   if exists_with_different_etag.include?(upload.id)
                     log "#{upload.url} has different etag"
-                  elsif exists_with_different_url.include?(upload.id)
-                    log "#{upload.url} has different url"
                   else
                     log upload.url
                   end
@@ -181,10 +152,6 @@ class S3Inventory
               if exists_with_different_etag.present?
                 log "#{exists_with_different_etag.count} of these are caused by differing etags"
                 log "Null the etag column and re-run for automatic backfill"
-              end
-              if exists_with_different_url.present?
-                log "#{exists_with_different_url.count} of these are caused by differing urls"
-                log "Empty the url column and re-run for automatic backfill"
               end
             end
 
