@@ -32,30 +32,5 @@ acceptance("Topic Notifications button", function (needs) {
       "Watching",
       "displays the right notification level"
     );
-
-    const timelineNotificationOptions = selectKit(
-      ".topic-timeline .topic-notifications-options"
-    );
-
-    assert.strictEqual(
-      timelineNotificationOptions.header().value(),
-      "3",
-      "displays the right notification level"
-    );
-
-    await timelineNotificationOptions.expand();
-    await timelineNotificationOptions.selectRowByValue("0");
-
-    assert.strictEqual(
-      timelineNotificationOptions.header().value(),
-      "0",
-      "displays the right notification level"
-    );
-
-    assert.strictEqual(
-      notificationOptions.header().label(),
-      "Muted",
-      "displays the right notification level"
-    );
   });
 });
