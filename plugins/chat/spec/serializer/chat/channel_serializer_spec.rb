@@ -113,4 +113,10 @@ describe Chat::ChannelSerializer do
       end
     end
   end
+
+  it "has a unicode_title" do
+    chat_channel.update!(name: ":cat: Cats")
+
+    expect(serializer.as_json[:unicode_title]).to eq("🐱 Cats")
+  end
 end
