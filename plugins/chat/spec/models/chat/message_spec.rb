@@ -115,6 +115,12 @@ describe Chat::Message do
       expect(cooked).to eq("<p>—</p>")
     end
 
+    it "supports escape sequence" do
+      cooked = described_class.cook('\*test\*')
+
+      expect(cooked).to eq("<p>*test*</p>")
+    end
+
     it "supports backticks rule" do
       cooked = described_class.cook("`test`")
 
