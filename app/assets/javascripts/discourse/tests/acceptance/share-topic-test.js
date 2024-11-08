@@ -6,7 +6,6 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
 acceptance("Share and Invite modal", function (needs) {
@@ -104,13 +103,7 @@ acceptance("Share and Invite modal - mobile", function (needs) {
   test("Topic footer mobile button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert
-      .dom("#topic-footer-button-share-and-invite")
-      .doesNotExist("the button doesn’t exist");
-
-    const subject = selectKit(".topic-footer-mobile-dropdown");
-    await subject.expand();
-    await subject.selectRowByValue("share-and-invite");
+    await click(".topic-footer-button.share-and-invite");
 
     assert.ok(exists(".share-topic-modal"), "it shows the modal");
   });
