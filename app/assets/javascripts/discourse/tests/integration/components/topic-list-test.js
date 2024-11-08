@@ -24,6 +24,7 @@ module("Integration | Component | topic-list", function (hooks) {
         @bulkSelectHelper={{this.bulkSelectHelper}}
         @topics={{this.topics}}
       />
+      <RenderGlimmerContainer />
     `);
 
     assert.strictEqual(
