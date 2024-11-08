@@ -249,8 +249,6 @@ RSpec.describe PostMover do
         context "when moved to a new topic" do
           it "works correctly" do
             topic.expects(:add_moderator_post).once
-            p2_id = p2.id
-            p4_id = p4.id
             new_topic =
               topic.move_posts(
                 user,
