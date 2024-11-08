@@ -3,7 +3,6 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -34,24 +33,21 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await click(pollBuilderButtonSelector);
 
-    assert.true(
-      exists(".poll-type-value-regular.active"),
-      "regular type is active"
-    );
+    assert
+      .dom(".poll-type-value-regular.active")
+      .exists("regular type is active");
 
     await click(".poll-type-value-multiple");
 
-    assert.true(
-      exists(".poll-type-value-multiple.active"),
-      "multiple type is active"
-    );
+    assert
+      .dom(".poll-type-value-multiple.active")
+      .exists("multiple type is active");
 
     await click(".poll-type-value-regular");
 
-    assert.true(
-      exists(".poll-type-value-regular.active"),
-      "regular type is active"
-    );
+    assert
+      .dom(".poll-type-value-regular.active")
+      .exists("regular type is active");
   });
 
   test("regular user - insufficient trust level", async function (assert) {

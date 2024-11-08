@@ -101,13 +101,13 @@ class PostAlerter
       clients =
         user
           .user_api_keys
-          .joins(:scopes)
+          .joins(:scopes, :client)
           .where("user_api_key_scopes.name IN ('push', 'notifications')")
           .where("push_url IS NOT NULL AND push_url <> ''")
           .where("position(push_url IN ?) > 0", SiteSetting.allowed_user_api_push_urls)
           .where("revoked_at IS NULL")
-          .order(client_id: :asc)
-          .pluck(:client_id, :push_url)
+          .order("user_api_key_clients.client_id ASC")
+          .pluck("user_api_key_clients.client_id, user_api_keys.push_url")
 
       return if clients.length == 0
 

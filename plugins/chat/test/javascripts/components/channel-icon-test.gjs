@@ -42,7 +42,7 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.true(exists(".d-icon-lock"));
+    assert.dom(".d-icon-lock").exists();
   });
 
   test("category channel - not read restricted", async function (assert) {
@@ -67,7 +67,7 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.true(exists(`.chat-user-avatar .avatar[title="${user.username}"]`));
+    assert.dom(`.chat-user-avatar .avatar[title="${user.username}"]`).exists();
   });
 
   test("dm channel - multiple users", async function (assert) {

@@ -1625,6 +1625,8 @@ Discourse::Application.routes.draw do
     get "/user-api-key/otp" => "user_api_keys#otp"
     post "/user-api-key/otp" => "user_api_keys#create_otp"
 
+    post "/user-api-key-client/register" => "user_api_key_clients#register"
+
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"
 
