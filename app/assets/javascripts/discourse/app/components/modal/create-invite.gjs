@@ -329,7 +329,7 @@ export default class CreateInvite extends Component {
             @data={{this.data}}
             @onSubmit={{this.onFormSubmit}}
             @onRegisterApi={{this.registerApi}}
-            as |form transientData|
+            as |form|
           >
             <form.Field
               @name="restrictTo"
