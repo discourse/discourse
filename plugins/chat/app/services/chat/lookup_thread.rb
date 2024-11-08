@@ -5,18 +5,19 @@ module Chat
   # match, and the channel must specifically have threading enabled.
   #
   # @example
-  #  Chat::LookupThread.call(thread_id: 88, channel_id: 2, guardian: guardian)
+  #  Chat::LookupThread.call(params: { thread_id: 88, channel_id: 2 }, guardian: guardian)
   #
   class LookupThread
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:)
-    #   @param [Integer] thread_id
-    #   @param [Integer] channel_id
+    # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian
+    #   @param [Hash] params
+    #   @option params [Integer] :thread_id
+    #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
-    contract do
+    params do
       attribute :thread_id, :integer
       attribute :channel_id, :integer
 
@@ -30,12 +31,12 @@ module Chat
 
     private
 
-    def fetch_thread(contract:)
+    def fetch_thread(params:)
       Chat::Thread.includes(
         :channel,
         original_message_user: :user_status,
         original_message: :chat_webhook_event,
-      ).find_by(id: contract.thread_id, channel_id: contract.channel_id)
+      ).find_by(id: params.thread_id, channel_id: params.channel_id)
     end
 
     def invalid_access(guardian:, thread:)

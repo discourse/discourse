@@ -33,7 +33,7 @@ task "import:ensure_consistency" => :environment do
   log "Done!"
 end
 
-MS_SPEND_CREATING_POST ||= 5000
+MS_SPEND_CREATING_POST = 5000
 
 # -- TODO: We need to check the queries are actually adding/updating the necessary
 # data, post migration. The ON CONFLICT DO NOTHING may cause the clauses to be ignored
@@ -164,6 +164,7 @@ def insert_user_options
                   include_tl0_in_digests,
                   automatically_unpin_topics,
                   enable_quoting,
+                  enable_smart_lists,
                   external_links_in_new_tab,
                   dynamic_favicon,
                   new_topic_duration_minutes,
@@ -187,6 +188,7 @@ def insert_user_options
                   , #{SiteSetting.default_include_tl0_in_digests}
                   , #{SiteSetting.default_topics_automatic_unpin}
                   , #{SiteSetting.default_other_enable_quoting}
+                  , #{SiteSetting.default_other_enable_smart_lists}
                   , #{SiteSetting.default_other_external_links_in_new_tab}
                   , #{SiteSetting.default_other_dynamic_favicon}
                   , #{SiteSetting.default_other_new_topic_duration_minutes}

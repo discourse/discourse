@@ -1244,12 +1244,14 @@ hu:
       yaxis: "Nap"
       description: "Azon felhasználók száma, akik növelték bizalmi szintjüket ebben az időszakban."
     consolidated_page_views:
+      title: "Korábbi összevont oldalmegtekintések"
       title_legacy: "Összevont oldalmegtekintések"
       xaxis:
         page_view_crawler: "Keresőrobotok"
         page_view_anon: "Névtelen felhasználók"
         page_view_logged_in: "Bejelentkezett felhasználók"
       yaxis: "Nap"
+      description: "Korábbi jelentés, amely a bejelentkezett felhasználók, névtelen felhasználók és keresőrobotok oldalmegtekintéseit mutatja. Ezt felváltotta a „Webhelyforgalom” jelentés."
       description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, névtelen felhasználók és feltérképező robotok számára."
       labels:
         post: Bejegyzés
@@ -1272,6 +1274,7 @@ hu:
         page_view_crawler: "Ismert keresőrobotok"
         page_view_other: "Egyéb oldalmegtekintések"
       yaxis: "Nap"
+      description: "A bejelentkezett felhasználók, névtelen felhasználók, ismert keresőrobotok és egyéb oldalmegtekintések. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/névtelen kérések valódi böngészőkből érkezzenek, mielőtt megszámolnák őket. Régebbi adatok ehhez a jelentéshez nem érhetők el, azokért az adatokért lásd a „Régi összesített oldalletöltések” jelentést."
       description_legacy: "Oldalmegtekintések bejelentkezett felhasználók, anonim felhasználók, ismert keresőrobotok és egyebek számára. Ez a kísérleti jelentés biztosítja, hogy a bejelentkezett/anonim kérések valódi böngészőkből érkezzenek, mielőtt számításba vennék őket. A jelentéshez nincs elérhető történelmi adat, a korábbi adatokért lásd a „Konszolidált oldalmegtekintések” jelentést."
     site_traffic:
       title: "Látogatottság"
@@ -1433,8 +1436,10 @@ hu:
       yaxis: "Összes oldalmegtekintés"
       description: "Az összes látogatótól származó új oldalmegtekintések száma."
     page_view_legacy_total_reqs:
+      title: "Régi oldalmegtekintések"
       xaxis: "Nap"
       yaxis: "Összes oldalmegtekintés"
+      description: "Régi jelentés, amely az összes látogatótól származó új oldalmegtekintések számát mutatja."
     page_view_logged_in_mobile_reqs:
       title: "Bejelentkezett oldalmegtekintések"
       xaxis: "Nap"
@@ -1745,14 +1750,12 @@ hu:
     markdown_linkify_tlds: "A legfelső szintű domainek listája, amelyek automatikusan linkként kezelődnek"
     markdown_typographer_quotation_marks: "Az egyszeres és kétszeres idézőjelek helyettesítő párjainak listája"
     post_undo_action_window_mins: "A percek száma, amíg a felhasználók visszavonhatják a bejegyzéseken végzett közelmúltbeli műveleteiket (például kedvelés, jelzés, stb)."
-    must_approve_users: "A személyzetnek minden új felhasználói fiókot jóvá kell hagynia, mielőtt azok hozzáférhetnének az oldalhoz."
     invite_code: "A felhasználónak be kell írnia ezt a kódot a fiók regisztrációjának engedélyezéséhez, figyelmen kívül hagyja ha üres (nem kis- és nagybetű érzékeny)"
     approve_suspect_users: "Adja hozzá a gyanús felhasználókat az ellenőrzési sorhoz. Gyanús felhasználóknak számítanak azok, akik kitöltötték a bemutatkozásukat/weboldalukat, de nincs olvasási aktivitásuk."
     review_every_post: "Küldjön minden új bejegyzést az ellenőrzési sorba moderálásra. A bejegyzések továbbra is azonnal közzétételre kerülnek és láthatóak minden felhasználó számára. FIGYELMEZTETÉS! Nem ajánlott nagy forgalmú oldalakhoz a potenciálisan nagy mennyiségű, ellenőrzésre váró bejegyzés miatt."
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
-    experimental_full_page_login: "KÍSÉRLETI: Cserélje ki a bejelentkezési/regisztrációs módot egy teljes oldalas bejelentkezési/regisztrációs űrlapra."
     ga_version: "A használandó Google Universal Analytics verziója: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics követőkód azonosítója, pl.: UA-12345678-9; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1800,7 +1803,6 @@ hu:
     top_page_default_timeframe: "A legjobb témák oldalának alapértelmezett időszaka névtelen felhasználók számára (bejelentkezett felhasználóknál automatikusan igazodik az utolsó látogatásuk alapján)."
     moderators_view_emails: "Engedélyezze a moderátoroknak a felhasználói e-mail címek megtekintését."
     prioritize_username_in_ux: "A felhasználónév megjelenítése először a felhasználói oldalon, a felhasználói kártyán és a bejegyzésekben (letiltott esetben a név jelenik meg először)"
-    enable_rich_text_paste: "Engedélyezze az automatikus HTML-ből Markdown konvertálást, amikor szöveget illeszt be az íróba. (Kísérleti)"
     send_old_credential_reminder_days: "Napok múlva emlékeztessen a régi hitelesítő adatokra"
     email_token_valid_hours: "Elfelejtett jelszó / fiókaktiválási tokenek (n) óráig érvényesek."
     enable_badges: "Engedélyezze a jelvényrendszert, amely a gamifikáció egy formája a pozitív felhasználói tevékenységek megerősítésére. További információért lásd <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Mik azok a Kitűzők?</a> című cikket a Discourse Meta oldalon."
@@ -1858,7 +1860,6 @@ hu:
     google_oauth2_client_secret: "A Google-alkalmazás titkos kliens kódja."
     google_oauth2_prompt: "Egy opcionális szóközzel elválasztott karakterlánc-értékek listája, amely meghatározza, hogy az autorizációs szerver kér-e újrahitelesítést és hozzájárulást a felhasználótól. A lehetséges értékeket lásd itt: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>."
     google_oauth2_hd: "Egy opcionális Google Apps által hosztolt domain, amelyre a bejelentkezés korlátozva lesz. További részletek: <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "(kísérleti) A felhasználók Google-csoportjainak lekérése a hosztolt domainen hitelesítéskor. A lekért Google-csoportok felhasználhatók automatikus Discourse csoporttagság megadására (lásd csoportbeállítások). További információért: https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Egy Google Workspace adminisztrátori fiókhoz tartozó e-mail cím. A szolgáltatásfiók hitelesítő adataival együtt használva a csoportinformációk lekérésére szolgál."
     google_oauth2_hd_groups_service_account_json: "JSON formátumú kulcsinformáció a szolgáltatásfiókhoz. Csoportinformációk lekérésére lesz használva."
     enable_twitter_logins: "A Twitter hitelesítés engedélyezése, twitter_consumer_key és twitter_consumer_secret szükséges hozzá. Lásd <a href='https://meta.discourse.org/t/13395' target='_blank'>A Twitter bejelentkezés (és gazdag beágyazások) konfigurálása a Discourse-hoz</a>."
@@ -2072,7 +2073,7 @@ hu:
     tos_url: "Ha van máshol elhelyezett, használni kívánt Általános Szerződési Feltételek dokumentuma, adja meg itt a teljes URL-címet."
     privacy_policy_url: "Ha van máshol elhelyezett adatvédelmi irányelv dokumentum, amelyet használni szeretne, adja meg itt a teljes URL-címet."
     log_anonymizer_details: "Anonimizálás után meg kell-e őrizni a felhasználó adatait a naplóban."
-    display_eu_visitor_stats: "A globális és uniós látogatók számának megjelenítése a /about oldalon."
+    display_eu_visitor_stats: "A globális és uniós látogatók számának megjelenítése a /about oldalon. A beállítás bekapcsolása után eltarthat néhány percig, amíg a statisztikák megjelennek."
     newuser_spam_host_threshold: "Hányszor tehet közzé egy új felhasználó ugyanarra a weboldalra mutató linket az első `newuser_spam_host_threshold` bejegyzésében, mielőtt spamnek minősülne."
     allowed_spam_host_domains: "Spamhosztok teszteléséből kizárt domainek listája. Az új felhasználóknak soha nem lesz korlátozva olyan bejegyzések létrehozása, amelyek ezekre a domainekre mutató linkeket tartalmaznak."
     staff_like_weight: "A stábtagok által adott kedvelések súlyozása (a nem stabtagok kedvelések súlya 1)."
@@ -2399,7 +2400,6 @@ hu:
     heading_font: "Az oldal címsoraihoz használt betűtípus. A témákban a `--heading-font-family` egyéni CSS tulajdonsággal felülírható."
     enable_sitemap: "Oldaltérkép generálása a webhelye számára és adja hozzá a robots.txt fájlba."
     sitemap_page_size: "Az egyes oldaltérkép oldalakba belefoglalandó URL-ek száma. Maximum 50.000"
-    enable_user_status: "(kísérleti) Lehetővé teszi a felhasználók számára, hogy egyéni állapotüzenetet állítsanak be (emoji + leírás)."
     enable_user_tips: "Új felhasználói tippek engedélyezése, amelyek ismertetik a legfontosabb funkciókat a felhasználók számára."
     short_title: "A rövid cím a felhasználó kezdőképernyőjén, az indítóképernyőn vagy más olyan helyeken kerül felhasználásra, ahol a hely korlátozott lehet. 12 karakterre kell korlátozni."
     dashboard_hidden_reports: "Engedélyezze a megadott jelentések elrejtését a vezérlőpulton."
@@ -2421,21 +2421,11 @@ hu:
     navigation_menu: "Adja meg, hogy az oldalsáv vagy a fejléc legördülő menüje legyen az oldal fő navigációs menüje. Az oldalsáv ajánlott."
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
-    experimental_new_new_view_groups: 'Kísérleti: Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és az új témákat, és az oldalsávban lévő "Minden" linket kapcsolja rá.'
-    enable_custom_sidebar_sections: "Kísérleti: Egyéni oldalsáv szekciók engedélyezése"
-    experimental_topics_filter: "KÍSÉRLETI: Engedélyezi a kísérleti téma szűrő útvonalat a /filter címen"
-    enable_experimental_lightbox: "KÍSÉRLETI: Az alapértelmezett kép lightbox helyettesítése a megújított dizájnnal."
-    enable_experimental_bookmark_redesign_groups: "KÍSÉRLETI: Gyors hozzáférési menü megjelenítése a könyvjelzőkhöz a bejegyzéseken, valamint egy új, átdolgozott modális ablak"
-    experimental_redesigned_about_page_groups: "KÍSÉRLETI: A megújított /about oldal engedélyezése meghatározott csoportok számára."
-    experimental_glimmer_topic_list_groups: "KÍSÉRLETI: Az új 'ragyogó' témalista implementáció engedélyezése. Ez az implementáció aktív fejlesztés alatt áll, és nem alkalmas éles használatra. Ne fejlesszen hozzá témákat/bővítményeket, amíg az implementáció nem véglegesítődik és nem kerül bejelentésre."
-    experimental_form_templates: "KÍSÉRLETI: Az űrlapsablonok szolgáltatás engedélyezése. <b>Az engedélyezés után</b> a sablonokat a <a href='%{base_path}/admin/customize/form-templates'>Testreszabás / Sablonok</a> menüpont alatt kezelheti."
     admin_sidebar_enabled_groups: "A megadott csoportok számára az oldalsáv navigáció engedélyezése az admin felhasználói felületen, amely helyettesíti a felső szintű admin navigációs gombokat."
-    lazy_load_categories_groups: "KÍSÉRLETI: Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
     about_page_hidden_groups: "Ne jelenítse meg bizonyos csoportok tagjait a /about oldalon."
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    experimental_flags_admin_page_enabled_groups: "KÍSÉRLETI: A Moderációs Megjelölések link eltávolítása az admin oldalsávból."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_email: "Érvénytelen e-mail cím."
@@ -2502,18 +2492,6 @@ hu:
       delete_rejected_email_after_days: "Ez a beállítás nem lehet alacsonyabb, mint a delete_email_logs_after_days beállítás, és nem lehet nagyobb, mint %{max}"
       invalid_uncategorized_category_setting: 'A "Nem kategorizált" kategória nem választható ki, ha a "nem kategorizált témák engedélyezése" nincs engedélyezve.'
       invalid_search_ranking_weights: "Az érték érvénytelen a search_ranking_weights webhely beállításánál. Példa: „{0.1,0.2,0.3,1.0}”. Vegye figyelembe, hogy az egyes súlyok maximális értéke 1,0."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - "kikapcsolva"
-      - "inaktív"
-      - "kikapcsolva"
-      purge_unactivated_users_grace_period_days:
-      - "kikapcsolva"
-      - "inaktív"
-      - "kikapcsolva"
-      navigation_menu:
-      - "oldalsáv"
-      - "fejléc legördülő menü"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

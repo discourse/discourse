@@ -165,7 +165,7 @@ module Oneboxer
     doc
   end
 
-  HTML5_BLOCK_ELEMENTS ||= %w[
+  HTML5_BLOCK_ELEMENTS = %w[
     address
     article
     aside

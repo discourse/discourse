@@ -6,15 +6,18 @@ import CategoriesAndTopTopics from "discourse/components/categories-and-top-topi
 import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CategoriesOnly from "discourse/components/categories-only";
+import CategoriesOnlyOptimized from "discourse/components/categories-only-optimized";
 import CategoriesWithFeaturedTopics from "discourse/components/categories-with-featured-topics";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SubcategoriesWithFeaturedTopics from "discourse/components/subcategories-with-featured-topics";
+import { MAX_UNOPTIMIZED_CATEGORIES } from "discourse/lib/constants";
 
 const mobileCompatibleViews = [
   "categories_with_featured_topics",
   "subcategories_with_featured_topics",
+  "categories_only_optimized",
 ];
 
 const subcategoryComponents = {
@@ -31,6 +34,7 @@ const globalComponents = {
   categories_boxes_with_topics: CategoriesBoxesWithTopics,
   categories_boxes: CategoriesBoxes,
   categories_only: CategoriesOnly,
+  categories_only_optimized: CategoriesOnlyOptimized,
   categories_with_featured_topics: CategoriesWithFeaturedTopics,
   subcategories_with_featured_topics: SubcategoriesWithFeaturedTopics,
 };
@@ -54,15 +58,22 @@ export default class CategoriesDisplay extends Component {
     return component;
   }
 
-  get #globalComponent() {
+  get style() {
     let style = this.siteSettings.desktop_category_page_style;
     if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
       style = mobileCompatibleViews[0];
     }
-    const component = globalComponents[style];
+    if (this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES) {
+      style = "categories_only_optimized";
+    }
+    return style;
+  }
+
+  get #globalComponent() {
+    const component = globalComponents[this.style];
     if (!component) {
       // eslint-disable-next-line no-console
-      console.error("Unknown category list style: " + style);
+      console.error("Unknown category list style: " + this.style);
       return CategoriesOnly;
     }
 
@@ -72,7 +83,7 @@ export default class CategoriesDisplay extends Component {
   get categoriesComponent() {
     if (
       this.args.parentCategory &&
-      this.router.currentRouteName === "discovery.category"
+      this.router.currentRouteName !== "discovery.subcategories"
     ) {
       return this.#componentForSubcategories;
     } else {
@@ -81,7 +92,11 @@ export default class CategoriesDisplay extends Component {
   }
 
   get canLoadMore() {
-    return this.site.lazy_load_categories && this.args.loadMore;
+    return (
+      this.args.loadMore &&
+      (this.site.lazy_load_categories ||
+        this.style === "categories_only_optimized")
+    );
   }
 
   <template>

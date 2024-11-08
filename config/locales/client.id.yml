@@ -1254,7 +1254,6 @@ id:
         action: "Klik disini untuk mengaktifkan akun anda"
         already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah akun anda sudah aktif?"
         please_continue: "Akun baru Anda telah dikonfirmasi. Anda akan diarahkan ke halaman utama."
-        continue_button: "Lanjut ke %{site_name}"
         welcome_to: "Selamat datang ke %{site_name}!"
         approval_required: "Seorang moderator harus menyetujui akun baru anda sebelum anda bisa mengakses forum ini. Anda akan menerima surel saat akun anda telah disetujui!"
       name:
@@ -2245,6 +2244,8 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
+            invite:
+              content: "Undang"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
@@ -2425,6 +2426,7 @@ id:
         about:
           community_name: "Nama komunitas"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nama"
           optional: "(opsional)"
           toasts:
             general_settings_saved: "Pengaturan umum disimpan"
@@ -2754,6 +2756,8 @@ id:
       settings:
         reset: "reset"
         none: "Tak ada"
+        save: "simpan"
+        cancel: "batal"
       site_settings:
         title: "Pengaturan"
         more_site_setting_results:

@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | emoji-picker", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,10 +17,9 @@ module("Integration | Component | emoji-picker", function (hooks) {
     `);
 
     await click(".emoji-picker-anchor");
-    assert.strictEqual(
-      query(".emoji-picker.opened").getAttribute("data-popper-placement"),
-      "bottom"
-    );
+    assert
+      .dom(".emoji-picker.opened")
+      .hasAttribute("data-popper-placement", "bottom");
   });
 
   test("when placement == right, places the picker on the right", async function (assert) {
@@ -35,9 +33,8 @@ module("Integration | Component | emoji-picker", function (hooks) {
     `);
 
     await click(".emoji-picker-anchor");
-    assert.strictEqual(
-      query(".emoji-picker.opened").getAttribute("data-popper-placement"),
-      "right"
-    );
+    assert
+      .dom(".emoji-picker.opened")
+      .hasAttribute("data-popper-placement", "right");
   });
 });

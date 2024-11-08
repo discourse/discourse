@@ -26,6 +26,7 @@
     }
 
     button {
+      padding-block: 0.65rem;
       width: fit-content;
     }
   }
@@ -43,10 +44,6 @@
 
       margin-bottom: 1em;
 
-      .user-field:not(.dropdown) label.alt-placeholder {
-        top: 8px;
-      }
-
       input:focus + label,
       input.value-entered + label.alt-placeholder {
         top: -10px;
@@ -58,6 +55,30 @@
 
       label.more-info {
         color: var(--primary-medium);
+      }
+    }
+  }
+
+  #login-form,
+  .login-form,
+  .invite-form {
+    .input-group {
+      label.alt-placeholder,
+      .user-field.text label.control-label {
+        top: 11px;
+      }
+      div.user-field:not(.dropdown)
+        .controls
+        input:focus
+        + label.alt-placeholder.control-label,
+      div.user-field.value-entered:not(.dropdown)
+        .controls
+        label.alt-placeholder.control-label {
+        top: -10px;
+      }
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label {
+        top: -10px;
       }
     }
   }
@@ -116,6 +137,15 @@
   }
 }
 
+.invites-show {
+  .login-welcome-header {
+    padding-inline: 0;
+  }
+  .signup-progress-bar {
+    margin-inline: 0;
+  }
+}
+
 // Login page
 
 .login-fullpage .login-body {
@@ -128,8 +158,11 @@
     }
     &__signup {
       background: none !important;
-      font-size: var(--font-down);
+      font-size: var(--font-up-1);
       padding: 0;
+    }
+    &__no-account-yet {
+      font-size: var(--font-up-1);
     }
   }
 }
@@ -146,8 +179,11 @@
     }
     &__login {
       background: none !important;
-      font-size: var(--font-down);
+      font-size: var(--font-up-1);
       padding: 0;
+    }
+    &__existing-account {
+      font-size: var(--font-up-1);
     }
   }
 
@@ -158,10 +194,6 @@
   .login-welcome-header {
     padding-bottom: 0.25rem;
     padding-top: 0;
-  }
-
-  .signup-progress-bar {
-    padding-inline: 1em;
   }
 
   #login-form {

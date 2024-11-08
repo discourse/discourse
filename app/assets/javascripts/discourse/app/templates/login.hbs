@@ -6,9 +6,10 @@
 }}
   {{hide-application-header-buttons "search" "login" "signup" "menu"}}
   {{hide-application-sidebar}}
-
-  <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+  {{body-class "login-page"}}
   <div class="login-fullpage">
+    <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+
     <div class={{concat-class "login-body" this.bodyClasses}}>
       <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
 
@@ -29,10 +30,7 @@
         </div>
       {{else}}
         {{#if this.site.mobileView}}
-          <WelcomeHeader
-            @header={{i18n "login.header_title"}}
-            @subheader={{i18n "login.subheader_title"}}
-          >
+          <WelcomeHeader @header={{i18n "login.header_title"}}>
             <PluginOutlet
               @name="login-header-bottom"
               @outletArgs={{hash createAccount=this.createAccount}}
@@ -50,10 +48,7 @@
         {{#if this.canLoginLocal}}
           <div class={{if this.site.desktopView "login-left-side"}}>
             {{#if this.site.desktopView}}
-              <WelcomeHeader
-                @header={{i18n "login.header_title"}}
-                @subheader={{i18n "login.subheader_title"}}
-              >
+              <WelcomeHeader @header={{i18n "login.header_title"}}>
                 <PluginOutlet
                   @name="login-header-bottom"
                   @outletArgs={{hash createAccount=this.createAccount}}
@@ -101,10 +96,7 @@
         {{#if (and this.showLoginButtons this.site.desktopView)}}
           {{#unless this.canLoginLocal}}
             <div class="login-left-side">
-              <WelcomeHeader
-                @header={{i18n "login.header_title"}}
-                @subheader={{i18n "login.subheader_title"}}
-              />
+              <WelcomeHeader @header={{i18n "login.header_title"}} />
             </div>
           {{/unless}}
           {{#if this.hasAtLeastOneLoginButton}}

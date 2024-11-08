@@ -38,11 +38,13 @@ module ChatSystemHelpers
       last_user = ((users - [last_user]).presence || users).sample
       creator =
         Chat::CreateMessage.call(
-          chat_channel_id: channel.id,
-          in_reply_to_id: in_reply_to,
-          thread_id: thread_id,
           guardian: last_user.guardian,
-          message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          params: {
+            chat_channel_id: channel.id,
+            in_reply_to_id: in_reply_to,
+            thread_id: thread_id,
+            message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
+          },
         )
 
       raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
@@ -69,10 +71,14 @@ module ChatSpecHelpers
   def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)
     Chat::UpdateMessage.call(
       guardian: user.guardian,
-      message_id: message.id,
-      upload_ids: upload_ids,
-      message: text,
-      process_inline: true,
+      params: {
+        message_id: message.id,
+        upload_ids: upload_ids,
+        message: text,
+      },
+      options: {
+        process_inline: true,
+      },
     ) do |result|
       on_success { result.message_instance }
       on_failure { service_failed!(result) }
@@ -81,8 +87,10 @@ module ChatSpecHelpers
 
   def trash_message!(message, user: Discourse.system_user)
     Chat::TrashMessage.call(
-      message_id: message.id,
-      channel_id: message.chat_channel_id,
+      params: {
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+      },
       guardian: user.guardian,
     ) do |result|
       on_success { result }
@@ -92,8 +100,10 @@ module ChatSpecHelpers
 
   def restore_message!(message, user: Discourse.system_user)
     Chat::RestoreMessage.call(
-      message_id: message.id,
-      channel_id: message.chat_channel_id,
+      params: {
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+      },
       guardian: user.guardian,
     ) do |result|
       on_success { result }
@@ -104,8 +114,10 @@ module ChatSpecHelpers
   def add_users_to_channel(users, channel, user: Discourse.system_user)
     ::Chat::AddUsersToChannel.call(
       guardian: user.guardian,
-      channel_id: channel.id,
-      usernames: Array(users).map(&:username),
+      params: {
+        channel_id: channel.id,
+        usernames: Array(users).map(&:username),
+      },
     ) do |result|
       on_success { result }
       on_failure { service_failed!(result) }
@@ -121,9 +133,11 @@ module ChatSpecHelpers
 
     ::Chat::UpsertDraft.call(
       guardian: user.guardian,
-      channel_id: channel.id,
-      thread_id: thread&.id,
-      data: data.to_json,
+      params: {
+        channel_id: channel.id,
+        thread_id: thread&.id,
+        data: data.to_json,
+      },
     ) do |result|
       on_success { result }
       on_failure { service_failed!(result) }
@@ -138,25 +152,5 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     # Or a very large value, if you do want to truncate at some point
     c.max_formatted_output_length = nil
-  end
-
-  config.before(:suite) do
-    migrate_column_to_bigint(Chat::Channel, :chatable_id)
-    migrate_column_to_bigint(Chat::ChannelArchive, :chat_channel_id)
-    migrate_column_to_bigint(Chat::DirectMessageUser, :direct_message_channel_id)
-    migrate_column_to_bigint(Chat::Draft, :chat_channel_id)
-    migrate_column_to_bigint(Chat::IncomingWebhook, :chat_channel_id)
-    migrate_column_to_bigint(Chat::Mention, :chat_message_id)
-    migrate_column_to_bigint(Chat::MentionNotification, :chat_mention_id)
-    migrate_column_to_bigint(Chat::MentionNotification, :notification_id)
-    migrate_column_to_bigint(Chat::Message, :chat_channel_id)
-    migrate_column_to_bigint(Chat::Message, :in_reply_to_id)
-    migrate_column_to_bigint(Chat::MessageReaction, :chat_message_id)
-    migrate_column_to_bigint(Chat::MessageRevision, :chat_message_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :chat_channel_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :last_read_message_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :last_unread_mention_when_emailed_id)
-    migrate_column_to_bigint(Chat::WebhookEvent, :chat_message_id)
-    migrate_column_to_bigint(Chat::WebhookEvent, :incoming_chat_webhook_id)
   end
 end

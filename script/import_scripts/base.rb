@@ -586,7 +586,7 @@ class ImportScripts::Base
     [created, skipped]
   end
 
-  STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
+  STAFF_GUARDIAN = Guardian.new(Discourse.system_user)
 
   def create_post(opts, import_id)
     user = User.find(opts[:user_id])

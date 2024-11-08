@@ -125,11 +125,11 @@ export default class AdminFlagsForm extends Component {
   }
 
   <template>
+    <BackButton
+      @route="adminConfig.flags"
+      @label="admin.config_areas.flags.back"
+    />
     <div class="admin-config-area">
-      <BackButton
-        @route="adminConfig.flags"
-        @label="admin.config_areas.flags.back"
-      />
       <div class="admin-config-area__primary-content admin-flag-form">
         <AdminConfigAreaCard @heading={{this.header}}>
           <:content>
@@ -202,11 +202,7 @@ export default class AdminFlagsForm extends Component {
                   }}
                   as |field|
                 >
-                  <field.Checkbox>
-                    {{i18n
-                      "admin.config_areas.flags.form.auto_action_type_description"
-                    }}
-                  </field.Checkbox>
+                  <field.Checkbox />
                 </checkboxGroup.Field>
               </form.CheckboxGroup>
 

@@ -1322,7 +1322,7 @@ hr:
       ignored_users: "Ignorirao"
       ignored_users_instructions: "Suzbijte sve objave, obavijesti i PM-ove od tih korisnika."
       tracked_topics_link: "Pokaži"
-      automatically_unpin_topics: "Automatski otkvačite teme kada dođem do dna."
+      automatically_unpin_topics: "Automatski otkvačite teme kada dođem do dna"
       apps: "Aplikacije"
       revoke_access: "Opoziv pristupa"
       undo_revoke_access: "Poništi opozivanje pristupa"
@@ -1567,7 +1567,7 @@ hr:
         action: "Kliknite ovdje kako bi aktivirali vaš korisnički račun"
         already_done: "Žao nam je, poveznica za aktivaciju računa više nije važeća. Možda vam je račun već aktivan?"
         please_continue: "Vaš novi račun je potvrđen, biti će te preusmjereni na glavnu stranicu."
-        continue_button: "Nastavite na %{site_name}"
+        continue_button: "Završi!"
         welcome_to: "Dobrodošli na %{site_name}"
         approval_required: "Moderator vam mora ručno odobriti račun da bi mogli pristupiti ovom forumu. Dobiti će te email kad vam račun bude odobren!"
       name:
@@ -2010,7 +2010,6 @@ hr:
     search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Dobrodošli!"
-      subheader_title: "Kreirajmo vaš račun"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
       title: "Učlani se"
       failed: "Nešto je pošlo krivo, možda je ovaj e-mail već registriran, pokušajte s poveznicom za zaboravljenu zaporku."
@@ -2052,7 +2051,6 @@ hr:
       confirm_button: Završi prijavu
     login:
       header_title: "Dobro došli natrag"
-      subheader_title: "Prijavite se na svoj račun"
       title: "Prijava"
       username: "Korisnik"
       password: "Zaporka"
@@ -2147,7 +2145,6 @@ hr:
       success: "Vaš račun je kreiran i sada ste prijavljeni."
       name_label: "Ime"
       password_label: "Lozinka"
-      existing_user_can_redeem: "Iskoristite svoju pozivnicu za temu ili grupu."
     password_reset:
       continue: "Nastavite na %{site_name}"
     emoji_set:
@@ -4350,6 +4347,8 @@ hr:
                 one: "%{count} na čekanju"
                 few: "%{count} na čekanju"
                 other: "%{count} na čekanju"
+            invite:
+              content: "Pozovite"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
@@ -4787,6 +4786,7 @@ hr:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Ime"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"
@@ -5865,6 +5865,8 @@ hr:
         history: "Prikaz povijesti promjena"
         reset: "resetiraj"
         none: "ništa"
+        save: "spremi"
+        cancel: "otkaži"
       site_settings:
         emoji_list:
           invalid_input: "Emotikona lista treba sadržavati samo važeća imena emoji, npr.: zagrljaji"

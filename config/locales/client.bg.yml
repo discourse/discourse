@@ -1209,7 +1209,7 @@ bg:
       ignored_users: "Игнориран"
       ignored_users_instructions: "Спрете всички публикации, известия и PM от тези потребители."
       tracked_topics_link: "Покажи "
-      automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума."
+      automatically_unpin_topics: "Автоматично отключете темите когато стигнете най-долу на форума"
       apps: "Приложения"
       revoke_access: "Прекратяване на достъпа"
       undo_revoke_access: "Отмяна прекратяване на достъпа"
@@ -1439,7 +1439,6 @@ bg:
         action: "Кликнете тук, за да активирате вашия профил"
         already_done: "Съжаляваме, този линк за потвърждаване на акаунта вече е невалиден. Може би вашият акаунт е вече активен?"
         please_continue: "Вашият нов акаунт е вече потвърден; ще бъдете пренасочени към началната страница."
-        continue_button: "Продължете към %{site_name}"
         welcome_to: "Добре дошли в %{site_name}!"
         approval_required: "Акаунтът Ви трябва да бъде одобрен от модератор преди да получите достъп до този форум. Ще получите имейл когато акаунтът Ви е одобрен!"
       name:
@@ -1843,7 +1842,6 @@ bg:
     search_hint: "потребителско име, имейл или IP адрес"
     create_account:
       header_title: "Добре дошли!"
-      subheader_title: "Нека създадем вашия акаунт"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
       title: "Регистрирай се"
       failed: "Нещо се случи, вероятно вече има регистрация с този имейл адрес, опитайте с линка за забравена парола."
@@ -1884,7 +1882,6 @@ bg:
       confirm_button: Завършете влизането
     login:
       header_title: "Добре дошли отново"
-      subheader_title: "Влезте в акаунта си"
       title: "Вход"
       username: "Потребител"
       password: "Парола"
@@ -1970,7 +1967,6 @@ bg:
       success: "Профилът ви е създаден и вече сте влезли в него."
       name_label: "Име"
       password_label: "Парола"
-      existing_user_can_redeem: "Осребрете своята покана за тема или група."
     password_reset:
       continue: "Продължете към %{site_name}"
     emoji_set:
@@ -3402,6 +3398,8 @@ bg:
               content: "Моите публикации"
             review:
               content: "Преглед"
+            invite:
+              content: "Покана"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
     form_templates:
@@ -3600,6 +3598,7 @@ bg:
             title: "Бекъпи"
       config_areas:
         about:
+          company_name: "Име"
           optional: "(по избор)"
           update: "Актуализация"
           saved: "запазено!"
@@ -4272,6 +4271,8 @@ bg:
         show_overriden: "Показване само на презаписаните"
         reset: "изчисти"
         none: "без подкатегория"
+        save: "запази "
+        cancel: "прекрати"
       site_settings:
         title: "Настройки"
         no_results: "Няма резултати"

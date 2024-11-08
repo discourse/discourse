@@ -50,7 +50,7 @@ ro:
   remove_posts_deleted_by_author: "Șters de către autor"
   topic_tag_changed:
     added: "Adăugată în %{added}"
-    removed: "A eliminat pe %{removed}"
+    removed: "Eliminată %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} de %{username}"
   components:
@@ -61,6 +61,11 @@ ro:
       json_value:
         too_large: "a depășit dimensiunea maximă de %{max_size} octeți."
   themes:
+    import_error:
+      screenshot: "Eroare la importarea capturilor de ecran ale temei. %{errors}"
+      screenshot_invalid_type: "Capturile de ecran ale temei trebuie să fie într-unul dintre următoarele formate: %{accepted_formats}. Captura de ecran %{file_name} are un format nevalid."
+      screenshot_invalid_size: "Capturile de ecran ale temei trebuie să fie mai mici de %{max_size}. Captura de ecran %{file_name} este prea mare."
+      screenshot_invalid_dimensions: "Capturile de ecran ale temei trebuie să fie de maximum %{max_width}x%{max_height}. Captura de ecran %{file_name} depășește această limită. Dimensiunile sale sunt %{width}x%{height}."
     settings_errors:
       data_type_inclusion: "Setarea tipului `%{name}` nu este acceptată. Tipurile acceptate sunt `integer`, `bool`, `list`, `enum` și `upload`"
       default_value_missing: "Setarea `%{name}` nu are o valoare implicită."
@@ -977,9 +982,9 @@ ro:
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
-    must_approve_users: "Personalul trebuie să aprobe toate conturile utilizatorilor noi înainte ca ei să aibă aces în site."
+    must_approve_users: "Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”)."
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
-    experimental_full_page_login: "EXPERIMENTAL: Înlocuiește modalul de conectare/înregistrare cu un formular de conectare/înregistrare pe întreaga pagină."
+    experimental_full_page_login: "Înlocuiește modalul de conectare sau înregistrare cu un formular de conectare sau înregistrare pe întreaga pagină."
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL pentru iframe src pe care Discourse le poate permite în siguranță în mesaje"
@@ -996,6 +1001,7 @@ ro:
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
     top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
+    enable_rich_text_paste: "Activează conversia automată din HTML în Markdown la lipirea textului în compozitor."
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
@@ -1007,6 +1013,7 @@ ro:
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
+    google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
     automatic_backups_enabled: "Rulează automat operațiuni de backup după cum este definit la frecvența de backup"
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
@@ -1112,6 +1119,7 @@ ro:
     faq_url: "Dacă ai un FAQ găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     tos_url: "Dacă ai un document Condițiile generale de utilizare găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     privacy_policy_url: "Dacă ai un document cu Politica de Confidențialitate găzduit în altă parte, pe care dorești să-l folosești, postează-i întregul URL aici."
+    display_eu_visitor_stats: "Afișează numărul de vizitatori din întreaga lume și din UE pe pagina /despre. Este posibil să dureze câteva minute până când statisticile apar după activarea acestei setări."
     newuser_spam_host_threshold: "De câte ori poate un utilizator nou să posteze un link către aceeași gazdă în limita de `newuser_spam_host_threshold` postări înainte ca să fie considerat spam."
     allowed_spam_host_domains: "O listă de domenii excluse de la testarea gazdelor spam. Noii utilizatori nu vor fi niciodată restricționați să creeze postări cu linkuri către aceste domenii."
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."
@@ -1219,6 +1227,7 @@ ro:
     default_other_notification_level_when_replying: "Nivelul global implicit de notificare atunci când un utilizator răspunde la un subiect."
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
+    default_other_enable_smart_lists: "Activează listele inteligente atunci când introduci în compozitor în mod implicit."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
     default_other_skip_new_user_tips: "Omite sfaturi și insigne de înscriere pentru utilizatori noi."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
@@ -1237,10 +1246,11 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
+    enable_user_status: "Permite utilizatorilor să seteze un mesaj de stare personalizat (emoji + descriere)."
     show_bottom_topic_map: "Arată harta subiectului în partea de jos a subiectului atunci când are 10 răspunsuri sau mai multe."
     show_topic_map_in_topics_without_replies: "Arată harta subiectului chiar dacă subiectul nu are răspunsuri."
-    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
-    experimental_redesigned_about_page_groups: "EXPERIMENTAL: Activează pagina reproiectată/despre pentru grupuri specifice."
+    experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
+    experimental_topics_filter: "Activează ruta de filtrare a subiectelor experimentale la /filter"
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1265,33 +1275,9 @@ ro:
       min_username_length_range: "Nu poți seta minimum cu o valoare mai mare decât a maximului."
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
     keywords:
-      here_mention_allowed_groups: "min_trust_level_for_here_mention"
-      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
-      approve_unless_allowed_groups: "approve_unless_trust_level"
-      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
-      email_in_allowed_groups: "email_in_min_trust"
-      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
-      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
-      create_topic_allowed_groups: "min_trust_to_create_topic"
-      edit_post_allowed_groups: "min_trust_to_edit_post"
-      flag_post_allowed_groups: "min_trust_to_flag_posts"
-      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
-      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
-      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
-      clean_up_inactive_users_after_days:
-      - "dezactivat"
-      - "inactiv"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - "dezactivat"
-      - "inactiv"
-      - ""
-      navigation_menu:
-      - "bară laterală"
-      - ""
+      clean_up_inactive_users_after_days: "dezactivat|inactiv|neactivat"
+      purge_unactivated_users_grace_period_days: "dezactivat|inactiv|neactivat"
+      navigation_menu: "bară laterală|listă derulantă din antet"
   search:
     within_post: "#%{post_number} de %{username}:"
     types:

@@ -2,7 +2,7 @@
 
 # NOTE: This spec covers core functionality, but it is much easier
 # to test plugin related things inside an actual plugin.
-describe "Admin Plugins List", type: :system, js: true do
+describe "Admin Plugins List", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
   let(:admin_plugins_list_page) { PageObjects::Pages::AdminPluginsList.new }
 
@@ -37,7 +37,7 @@ describe "Admin Plugins List", type: :system, js: true do
     toggle_switch =
       PageObjects::Components::DToggleSwitch.new(
         admin_plugins_list_page.plugin_row_selector("automation") +
-          " .admin-plugins-list__enabled .d-toggle-switch",
+          " .admin-plugins-list__enabled .d-toggle-switch__checkbox",
       )
     toggle_switch.toggle
     expect(toggle_switch).to be_unchecked

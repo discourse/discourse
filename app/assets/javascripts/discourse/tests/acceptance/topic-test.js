@@ -271,13 +271,20 @@ acceptance("Topic featured links", function (needs) {
     display_name_on_posts: false,
     prioritize_username_in_ux: true,
   });
+  needs.pretender((server, helper) => {
+    server.get("/inline-onebox", () => {
+      return helper.response({ "inline-oneboxes": [] });
+    });
+  });
 
   test("remove nofollow attribute", async function (assert) {
     await visit("/t/-/299/1");
 
     const link = query(".title-wrapper .topic-featured-link");
     assert.strictEqual(link.innerText, "example.com");
-    assert.strictEqual(link.getAttribute("rel"), "ugc");
+    assert
+      .dom(".title-wrapper .topic-featured-link")
+      .hasAttribute("rel", "ugc");
   });
 
   test("remove featured link", async function (assert) {
@@ -433,7 +440,6 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 .cooked");
     await click(".quote-button .insert-quote");
-
     assert.ok(
       query(".d-editor-input").value.includes(
         'quote="pekka, post:5, topic:280, full:true"'

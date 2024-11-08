@@ -975,7 +975,7 @@ class Post < ActiveRecord::Base
       .count
   end
 
-  MAX_REPLY_LEVEL ||= 1000
+  MAX_REPLY_LEVEL = 1000
 
   def reply_ids(guardian = nil, only_replies_to_single_post: true)
     builder = DB.build(<<~SQL)

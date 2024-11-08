@@ -8,42 +8,9 @@
   }
 
   .admin-plugins-list {
-    @media screen and (min-width: 550px) {
-      .admin-plugins-list__row {
-        grid-template-columns: 0fr repeat(4, 1fr);
-      }
-    }
-
-    @include breakpoint(mobile-extra-large) {
-      .admin-plugins-list__row {
-        grid-template-columns: 0fr repeat(3, 1fr);
-      }
-
-      .admin-plugins-list {
-        &__name-details {
-          grid-column-start: 2;
-          grid-column-end: -1;
-        }
-
-        &__settings {
-          grid-row: 2;
-          grid-column-start: 4;
-          text-align: right;
-
-          button {
-            display: flex;
-          }
-        }
-
-        &__version {
-          grid-row: 2;
-          grid-column-start: 3;
-        }
-
-        &__enabled {
-          grid-row: 2;
-          grid-column-start: 2;
-        }
+    .plugin-version {
+      @include breakpoint("tablet") {
+        text-align: right;
       }
     }
 
@@ -51,19 +18,13 @@
       background-color: var(--primary-low);
     }
 
-    &__author {
-      font-size: var(--font-down-2);
-      padding: 0 0 0.25em 0;
-    }
-
     &__name-with-badges {
       display: flex;
-      padding: 8px 0 4px;
+      flex-wrap: wrap;
     }
 
-    &__name {
-      font-weight: bold;
-      margin-right: 0.5em;
+    .badges {
+      margin-left: var(--space-1);
     }
 
     &__badge {
@@ -74,22 +35,11 @@
       padding: 4px 8px;
 
       & + .admin-plugins-list__badge {
-        margin-left: 0.5em;
+        margin-left: var(--space-1);
       }
-    }
 
-    &__version {
-      .commit-hash {
-        font-size: var(--font-down-1);
-      }
-    }
-
-    &__about {
-      padding: 8px 0;
-
-      .d-icon {
-        font-size: var(--font-down-3);
-        margin-bottom: 0.1em;
+      &:last-of-type {
+        margin-right: var(--space-1);
       }
     }
   }

@@ -4,6 +4,7 @@ module Chat
   class Channel < ActiveRecord::Base
     include Trashable
     include TypeMappable
+    include HasCustomFields
 
     # TODO (martin) Remove once we are using last_message instead,
     # should be around August 2023.
@@ -27,6 +28,7 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
+    has_one :icon_upload, class_name: "Upload", foreign_key: :id, primary_key: :icon_upload_id
 
     def last_message
       super || NullMessage.new
@@ -299,12 +301,13 @@ end
 #  user_count                  :integer          default(0), not null
 #  auto_join_users             :boolean          default(FALSE), not null
 #  user_count_stale            :boolean          default(FALSE), not null
-#  slug                        :string
 #  type                        :string
+#  slug                        :string
 #  allow_channel_wide_mentions :boolean          default(TRUE), not null
 #  messages_count              :integer          default(0), not null
 #  threading_enabled           :boolean          default(FALSE), not null
 #  last_message_id             :bigint
+#  icon_upload_id              :integer
 #
 # Indexes
 #
@@ -312,6 +315,6 @@ end
 #  index_chat_channels_on_chatable_id_and_chatable_type  (chatable_id,chatable_type)
 #  index_chat_channels_on_last_message_id                (last_message_id)
 #  index_chat_channels_on_messages_count                 (messages_count)
-#  index_chat_channels_on_slug                           (slug) UNIQUE
+#  index_chat_channels_on_slug                           (slug) UNIQUE WHERE ((slug)::text <> ''::text)
 #  index_chat_channels_on_status                         (status)
 #

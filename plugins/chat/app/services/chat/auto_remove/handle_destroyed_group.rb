@@ -22,7 +22,7 @@ module Chat
       include Service::Base
 
       policy :chat_enabled
-      contract do
+      params do
         attribute :destroyed_group_user_ids, :array
 
         validates :destroyed_group_user_ids, presence: true
@@ -48,7 +48,7 @@ module Chat
         !SiteSetting.chat_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
       end
 
-      def fetch_scoped_users(contract:)
+      def fetch_scoped_users(params:)
         User
           .real
           .activated
@@ -56,7 +56,7 @@ module Chat
           .not_staged
           .includes(:group_users)
           .where("NOT admin AND NOT moderator")
-          .where(id: contract.destroyed_group_user_ids)
+          .where(id: params.destroyed_group_user_ids)
           .joins(:user_chat_channel_memberships)
           .distinct
       end

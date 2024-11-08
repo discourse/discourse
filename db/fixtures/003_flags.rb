@@ -74,5 +74,3 @@ Flag.unscoped.seed do |s|
   s.applies_to = %w[Post]
   s.skip_reset_flag_callback = true
 end
-
-Flag.reset_flag_settings!

@@ -181,8 +181,8 @@ class Category < ActiveRecord::Base
           end
         end
 
-  TOPIC_CREATION_PERMISSIONS ||= [:full]
-  POST_CREATION_PERMISSIONS ||= %i[create_post full]
+  TOPIC_CREATION_PERMISSIONS = [:full]
+  POST_CREATION_PERMISSIONS = %i[create_post full]
 
   scope :topic_create_allowed,
         ->(guardian) do

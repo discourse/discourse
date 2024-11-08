@@ -316,8 +316,16 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if chat_channel_id = channel_name[%r{/chat-reply/(\d+)}, 1]
-      chat_channel = Chat::Channel.find(chat_channel_id)
+    if (
+         channel_id, thread_id =
+           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
+       )
+      chat_channel = nil
+      if thread_id
+        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+      else
+        chat_channel = Chat::Channel.find(channel_id)
+      end
 
       PresenceChannel::Config.new.tap do |config|
         config.allowed_group_ids = chat_channel.allowed_group_ids
@@ -472,9 +480,11 @@ after_initialize do
 
       creator =
         ::Chat::CreateMessage.call(
-          chat_channel_id: channel.id,
           guardian: sender.guardian,
-          message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          params: {
+            chat_channel_id: channel.id,
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          },
         )
 
       if creator.failure?
@@ -538,6 +548,10 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
+
+  # When we eventually allow secure_uploads in chat, this will need to be
+  # removed. Depending on the channel, uploads may end up being secure.
+  UploadSecurity.register_custom_public_type("chat-composer")
 end
 
 if Rails.env == "test"

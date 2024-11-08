@@ -2,7 +2,6 @@
   <div class="topic-footer-main-buttons__actions">
     <TopicAdminMenu
       @topic={{this.topic}}
-      @openUpwards="true"
       @toggleMultiSelect={{this.toggleMultiSelect}}
       @showTopicSlowModeUpdate={{this.showTopicSlowModeUpdate}}
       @deleteTopic={{this.deleteTopic}}
@@ -163,7 +162,7 @@
 {{#if this.showNotificationUserTip}}
   <UserTip
     @id="topic_notification_levels"
-    @triggerSelector=".topic-notifications-button details"
+    @triggerSelector=".topic-notifications-button-footer details"
     @titleText={{i18n "user_tips.topic_notification_levels.title"}}
     @contentText={{i18n "user_tips.topic_notification_levels.content"}}
     @priority={{800}}

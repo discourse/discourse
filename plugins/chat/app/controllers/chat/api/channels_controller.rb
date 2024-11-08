@@ -55,7 +55,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     # at the moment. This may change in future, at which point we will need to pass in
     # a chatable_type param as well and switch to the correct service here.
     Chat::CreateCategoryChannel.call(
-      service_params.merge(channel_params.merge(category_id: channel_params[:chatable_id])),
+      service_params.merge(params: channel_params.merge(category_id: channel_params[:chatable_id])),
     ) do
       on_success do |channel:, membership:|
         render_serialized(channel, Chat::ChannelSerializer, root: "channel", membership:)
@@ -95,7 +95,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
       auto_join_limiter(channel_from_params).performed!
     end
 
-    Chat::UpdateChannel.call(service_params.merge(params_to_edit)) do
+    Chat::UpdateChannel.call(service_params.deep_merge(params: params_to_edit.to_unsafe_h)) do
       on_success do |channel:|
         render_serialized(
           channel,

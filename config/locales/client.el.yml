@@ -1198,7 +1198,7 @@ el:
       ignored_users: "Αγνοήθηκε "
       ignored_users_instructions: "Απόκρυψη όλων των αναρτήσεωμ, ειδοποιήσεων και ΠΜ από αυτούς τους χρήστες."
       tracked_topics_link: "Δείξε"
-      automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος."
+      automatically_unpin_topics: "Τα θέματα ξεκαρφιτσώνονται αυτόματα όταν φτάνω στο κάτω μέρος"
       apps: "Εφαρμογές"
       revoke_access: "Ανάκληση Πρόσβασης"
       undo_revoke_access: "Απενεργοποίηση Ανάκλησης Πρόσβασης"
@@ -1397,7 +1397,7 @@ el:
         action: "Πατήστε εδώ για να ενεργοποιήσετε το λογαριασμό σας."
         already_done: "Συγνώμη, αυτός ο σύνδεσμος επιβεβαίωσης του λογαριασμού σας δεν είναι πλέον έγκυρος. Ίσως ο λογαριασμός σας είναι ήδη ενεργός;"
         please_continue: "Ο νέος λογαριασμός σας έχει επιβεβαιωθεί. Θα μεταφερθείτε στην αρχική σελίδα."
-        continue_button: "Συνεχίστε στην %{site_name}"
+        continue_button: "Τέλος!"
         welcome_to: "Καλώς ήλθατε στην %{site_name}!"
         approval_required: "Ένας συντονιστής θα πρέπει να εγκρίνει το νέο σας λογαριασμό πριν αποκτήσετε πρόσβαση στην ιστοσελίδα. Θα λάβετε ένα email όταν ο λογαριασμός σας εγκριθεί!"
       name:
@@ -1808,7 +1808,6 @@ el:
     search_hint: "όνομα χρήστη, email ή IP διεύθυνση"
     create_account:
       header_title: "Καλωσόρισες!"
-      subheader_title: "Ας δημιουργήσουμε τον λογαριασμό σας"
       disclaimer: "Κάνοντας εγγραφή συμφωνείς με την <a href='%{privacy_link}'>πολιτική ιδιωτικότητας</a> και με τους <a href='%{tos_link}'>όρους χρήσης</a>."
       title: "Εγγραφή"
       failed: "Κάτι πήγε στραβά. Ίσως αυτή η διεύθυνση email να είναι ήδη δηλωμένη. Δοκίμασε την λειτουργία «ξέχασα τον κωδικό μου»."
@@ -1848,7 +1847,6 @@ el:
       confirm_button: Ολοκληρώστε τη σύνδεση
     login:
       header_title: "Καλώς ήρθατε και πάλι"
-      subheader_title: "Συνδέσου στον λογαριασμό σου"
       title: "Σύνδεση"
       username: "Όνομα Χρήστη"
       password: "Κωδικός Πρόσβασης"
@@ -3778,6 +3776,8 @@ el:
               pending_count:
                 one: "%{count} απομένει"
                 other: "%{count} απομένουν"
+            invite:
+              content: "Πρόσκληση"
       panels:
         forum:
           label: Φόρουμ
@@ -4155,6 +4155,7 @@ el:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Όνομα"
           optional: "(προεραιτικό)"
           update: "Ενημέρωση"
           saved: "αποθηκεύτηκε!"
@@ -5116,6 +5117,8 @@ el:
         show_overriden: "Δείξε μόνο αυτά που άλλαξαν"
         reset: "επαναφορά"
         none: "κανένα"
+        save: "αποθήκευση"
+        cancel: "ακύρωση"
       site_settings:
         title: "Ρυθμίσεις"
         no_results: "Δεν βρέθηκαν αποτελέσματα."
@@ -5160,6 +5163,7 @@ el:
           groups: "Ομάδες"
           dashboard: "Πίνακας ελέγχου"
           navigation: "Πλοήγηση"
+          experimental: "Πειραματικό"
         secret_list:
           invalid_input: "Τα πεδία εισαγωγής δε μπορούν να είναι κενά ή να περιέχουν χαρακτήρα κάθετης γραμμής."
         default_categories:

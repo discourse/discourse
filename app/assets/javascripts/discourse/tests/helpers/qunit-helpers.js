@@ -22,6 +22,7 @@ import {
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
 import { clearExtraHeaderIcons as clearExtraGlimmerHeaderIcons } from "discourse/components/header/icons";
+import { clearRegisteredTabs } from "discourse/components/more-topics";
 import { resetWidgetCleanCallbacks } from "discourse/components/mount-widget";
 import { resetDecorators as resetPluginOutletDecorators } from "discourse/components/plugin-connector";
 import { resetItemSelectCallbacks } from "discourse/components/search-menu/results/assistant-item";
@@ -29,7 +30,6 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetTopicTitleDecorators } from "discourse/components/topic-title";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
-import { clearCustomStats as clearLegacyAboutPageStats } from "discourse/controllers/about";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
@@ -41,6 +41,7 @@ import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import {
+  clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
   PLATFORM_KEY_MODIFIER,
 } from "discourse/lib/keyboard-shortcuts";
@@ -208,6 +209,7 @@ export function testCleanup(container, app) {
   resetPostMenuExtraButtons();
   resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
+  clearDisabledDefaultKeyboardBindings();
   clearNavItems();
   setTopicList(null);
   _clearSnapshots();
@@ -250,9 +252,9 @@ export function testCleanup(container, app) {
   resetTransformers();
   rollbackAllPrepends();
   clearAboutPageActivities();
-  clearLegacyAboutPageStats();
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
+  clearRegisteredTabs();
 }
 
 function cleanupCssGeneratorTags() {

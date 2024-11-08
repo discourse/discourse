@@ -110,7 +110,7 @@ export default class CodeblockButtons {
 
       if (this.showCopy) {
         const copyButton = document.createElement("button");
-        copyButton.classList.add("btn", "nohighlight", "copy-cmd");
+        copyButton.classList.add("btn", "nohighlight", "copy-cmd", "btn-flat");
         copyButton.ariaLabel = I18n.t("copy_codeblock.copy");
         copyButton.innerHTML = iconHTML("copy");
         wrapperEl.appendChild(copyButton);
@@ -121,7 +121,12 @@ export default class CodeblockButtons {
 
       if (this.showFullscreen && !Mobile.isMobileDevice) {
         const fullscreenButton = document.createElement("button");
-        fullscreenButton.classList.add("btn", "nohighlight", "fullscreen-cmd");
+        fullscreenButton.classList.add(
+          "btn",
+          "nohighlight",
+          "fullscreen-cmd",
+          "btn-flat"
+        );
         fullscreenButton.ariaLabel = I18n.t("copy_codeblock.fullscreen");
         fullscreenButton.innerHTML = iconHTML("discourse-expand");
         wrapperEl.appendChild(fullscreenButton);

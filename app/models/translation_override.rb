@@ -69,7 +69,7 @@ class TranslationOverride < ActiveRecord::Base
 
     translation_override = find_or_initialize_by(params)
     sanitized_value =
-      translation_override.sanitize_field(value, additional_attributes: ["data-auto-route"])
+      translation_override.sanitize_field(value, additional_attributes: %w[data-auto-route target])
     original_translation =
       I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 

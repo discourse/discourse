@@ -1053,7 +1053,7 @@ gl:
       ignored_users: "Ignorado"
       ignored_users_instructions: "Suprimir todas as publicacións, notificacións e mensaxes privadas destes usuarios."
       tracked_topics_link: "Amosar"
-      automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo."
+      automatically_unpin_topics: "Desprender os temas automaticamente cando acade o fondo"
       apps: "Apps"
       revoke_access: "Revogar acceso"
       undo_revoke_access: "Desfacer a revogación de acceso"
@@ -1245,7 +1245,7 @@ gl:
         action: "Prema aquí para activar a súa conta"
         already_done: "Sentímolo, esta ligazón de confirmación da conta xa non está dispoñible. Estará xa a súa conta activada?"
         please_continue: "A súa nova conta está confirmada; redirixirémolo á páxina de inicio."
-        continue_button: "Continuar en %{site_name}"
+        continue_button: "Finalizar!"
         welcome_to: "Dámoslle a benvida a %{site_name}!"
         approval_required: "Un moderador debe aprobar manualmente a súa nova conta antes de que poida acceder a este foro. Recibirá un correo electrónico cando a súa conta sexa aprobada!"
       name:
@@ -1593,7 +1593,6 @@ gl:
     search_hint: "nome de usuario, enderezo de  correo ou enderezo IP"
     create_account:
       header_title: "Dámoslle a benvida!"
-      subheader_title: "Déixenos crear a súa conta"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
       title: "Crear conta"
       failed: "Algo foi mal, quizais este correo electrónico xa está rexistrado, ténteo coa ligazón de «Esqueceume o contrasinal»"
@@ -1629,7 +1628,6 @@ gl:
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
     login:
-      subheader_title: "Iniciar sesión na súa conta"
       title: "Acceder"
       username: "Usuario"
       password: "Contrasinal"
@@ -3364,6 +3362,8 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
+            invite:
+              content: "Convidar"
       filter: "Filtrar..."
     until: "Ata:"
     form_templates:
@@ -3722,6 +3722,7 @@ gl:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "Nome"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -4713,6 +4714,8 @@ gl:
         history: "Ver o historial de cambios"
         reset: "restabelecer"
         none: "ningunha"
+        save: "gardar"
+        cancel: "cancelar"
       site_settings:
         title: "Axustes"
         no_results: "Non se atoparon resultados."

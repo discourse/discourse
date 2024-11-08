@@ -6,15 +6,17 @@ module Chat
   #
   # @example
   #  Chat::AutoJoinChannelBatch.call(
-  #   channel_id: 1,
-  #   start_user_id: 27,
-  #   end_user_id: 58,
+  #    params: {
+  #      channel_id: 1,
+  #      start_user_id: 27,
+  #      end_user_id: 58,
+  #    }
   #  )
   #
   class AutoJoinChannelBatch
     include Service::Base
 
-    contract do
+    params do
       # Backward-compatible attributes
       attribute :chat_channel_id, :integer
       attribute :starts_at, :integer
@@ -42,14 +44,14 @@ module Chat
 
     private
 
-    def fetch_channel(contract:)
-      ::Chat::CategoryChannel.find_by(id: contract.channel_id, auto_join_users: true)
+    def fetch_channel(params:)
+      ::Chat::CategoryChannel.find_by(id: params.channel_id, auto_join_users: true)
     end
 
-    def create_memberships(channel:, contract:)
+    def create_memberships(channel:, params:)
       context[:added_user_ids] = ::Chat::Action::CreateMembershipsForAutoJoin.call(
-        channel: channel,
-        contract: contract,
+        channel:,
+        params:,
       )
     end
 

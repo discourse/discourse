@@ -659,9 +659,20 @@
   }
 }
 
+.admin-new-feature-item__header-experimental {
+  color: var(--tertiary);
+  background-color: var(--tertiary-very-low);
+  padding: 0.5em;
+  font-size: var(--font-down-3);
+  margin-left: 0.5rem;
+  font-weight: 400;
+  border-radius: var(--d-border-radius);
+}
+
 .admin-new-feature-item__body {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 1em;
   .d-toggle-switch {
     margin-left: 1em;
     align-items: flex-start;
@@ -669,6 +680,10 @@
   p {
     margin-top: 0;
   }
+}
+
+.admin-new-feature-item__screenshot {
+  margin-bottom: 1em;
 }
 .admin-new-feature-item__tooltip-header {
   font-weight: bold;

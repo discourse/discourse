@@ -1263,7 +1263,6 @@ ja:
       ignored_users: "無視"
       ignored_users_instructions: "これらのユーザーからのすべての投稿、通知、および PM を抑制します。"
       tracked_topics_link: "表示"
-      automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する。"
       apps: "アプリ連携"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
@@ -1560,7 +1559,7 @@ ja:
         action: "クリックしてアカウントを有効化する"
         already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
         please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
-        continue_button: "%{site_name} に進む"
+        continue_button: "終了!"
         welcome_to: "%{site_name} へようこそ！"
         approval_required: "このフォーラムにアクセスするには、モデレーターがあなたの新規アカウントを手動で承認する必要があります。承認されるとメールで通知されます！"
       name:
@@ -2028,7 +2027,6 @@ ja:
     search_hint: "ユーザー名、メールアドレス、または IPアドレス"
     create_account:
       header_title: "ようこそ！"
-      subheader_title: "アカウントを作成しましょう"
       disclaimer: "登録すると、<a href='%{privacy_link}' target='blank'>プライバシーポリシー</a>と<a href='%{tos_link}' target='blank'>利用規約</a>に同意することになります。"
       title: "アカウントを登録"
       failed: "エラーが発生しました。このメールアドレスは使用中かもしれません。「パスワードを忘れました」リンクを試してみてください"
@@ -2070,7 +2068,6 @@ ja:
       confirm_button: ログイン完了
     login:
       header_title: "おかえりなさい"
-      subheader_title: "アカウントにログインする"
       title: "ログイン"
       username: "ユーザー"
       password: "パスワード"
@@ -2170,7 +2167,6 @@ ja:
       success: "あなたのアカウントが作成され、ログインしました。"
       name_label: "名前"
       password_label: "パスワード"
-      existing_user_can_redeem: "トピックまたはグループへの招待を引き換えましょう。"
     password_reset:
       continue: "%{site_name} に進む"
     emoji_set:
@@ -4334,6 +4330,8 @@ ja:
               title: "通報された投稿とその他の待機中の項目"
               pending_count:
                 other: "%{count} 保留中"
+            invite:
+              content: "招待"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
@@ -4961,37 +4959,19 @@ ja:
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
-          community_owner_help: |
-            このサイトの責任者の主要連絡先の名前。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_email: "連絡先メールアドレス"
           contact_email_placeholder: "contact@johnny-smith.com"
-          contact_email_help: |
-            このサイトの責任者の主要連絡先のメールアドレス。重要な通知に使用され、サイト情報にも表示されます。公開サイトの匿名ユーザーにも表示されます。
           contact_url: "連絡先 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            このサイトの連絡先 URL。存在する場合、/about の連絡先メールアドレスを置き換え、公開サイトの匿名ユーザーにも表示されます。
           site_contact_name: "サイトの連絡先名"
-          site_contact_name_help: |
-            自動送信メールの from に使用される有効なスタッフのユーザー名。空欄の場合、デフォルトのシステムアカウントが使用されます。
           site_contact_group: "サイトの連絡先グループ"
-          site_contact_group_help: |
-            自動的に送信されるすべてのプライベートメッセージに招待される有効なグループ名。
           your_organization: "あなたの組織"
-          company_name: "会社名"
-          company_name_placeholder: "サンプルカンパニー Inc."
-          company_name_help: |
-            会社または組織の名前。
+          company_name: "名前"
+          company_name_placeholder: "Acme 組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           governing_law: "準拠法"
-          governing_law_placeholder: "ニューヨーク州"
-          governing_law_help: |
-            利用規約やプライバシーに関する通知など、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。
           city_for_disputes: "紛争都市"
-          city_for_disputes_placeholder: "ニューヨーク市"
-          city_for_disputes_help: |
-            このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -5034,6 +5014,7 @@ ja:
             move_up: "上に移動"
             move_down: "下に移動"
         look_and_feel:
+          title: "外観"
           themes:
             title: "テーマ"
       plugins:
@@ -6242,6 +6223,8 @@ ja:
         history: "変更履歴を表示する"
         reset: "リセット"
         none: "なし"
+        save: "保存"
+        cancel: "キャンセル"
       site_settings:
         emoji_list:
           invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: hugs"
@@ -6293,6 +6276,7 @@ ja:
           groups: "グループ"
           dashboard: "ダッシュボード"
           navigation: "ナビゲーション"
+          experimental: "実験的"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:

@@ -1253,7 +1253,7 @@ sv:
       ignored_users: "Ignorerade"
       ignored_users_instructions: "Undanta alla inlägg, notiser och PM från dessa användare."
       tracked_topics_link: "Visa"
-      automatically_unpin_topics: "Ta automatiskt ner ämnen när jag når botten."
+      automatically_unpin_topics: "Ta automatiskt ner ämnen när jag når botten"
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
@@ -1512,7 +1512,7 @@ sv:
         action: "Klicka här för att aktivera ditt konto"
         already_done: "Tyvärr är denna kontoaktiveringslänk inte längre giltig. Kanske har ditt konto redan aktiverats?"
         please_continue: "Ditt nya konto har bekräftats; du kommer att skickas till startsidan."
-        continue_button: "Fortsätt till %{site_name}"
+        continue_button: "Avsluta!"
         welcome_to: "Välkommen till %{site_name}!"
         approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få e-post när ditt konto har godkänts!"
       name:
@@ -1947,7 +1947,6 @@ sv:
     search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
       header_title: "Välkommen!"
-      subheader_title: "Låt oss skapa ditt konto"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
       title: "Registrera dig"
       failed: "Något gick fel, kanske är denna e-postadress redan registrerad, prova länken Glömt lösenord"
@@ -1989,7 +1988,6 @@ sv:
       confirm_button: Avsluta inloggning
     login:
       header_title: "Välkommen tillbaka"
-      subheader_title: "Logga in till ditt konto"
       title: "Logga in"
       username: "Användare"
       password: "Lösenord"
@@ -2084,7 +2082,6 @@ sv:
       success: "Ditt konto har skapats och du är nu inloggad."
       name_label: "Namn"
       password_label: "Lösenord"
-      existing_user_can_redeem: "Lös in din inbjudan till ett ämne eller en grupp."
     password_reset:
       continue: "Fortsätt till %{site_name}"
     emoji_set:
@@ -4279,6 +4276,8 @@ sv:
               pending_count:
                 one: "%{count} väntande"
                 other: "%{count} väntande"
+            invite:
+              content: "Bjud in"
         global_section: "Globalt avsnitt, synligt för alla"
       panels:
         forum:
@@ -4865,7 +4864,8 @@ sv:
           community_name: "Forumets namn"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "Din organisation"
-          company_name: "Företagsnamn"
+          company_name: "Namn"
+          company_name_placeholder: "Acme Organization"
           governing_law: "Gällande lag"
           city_for_disputes: "Domstol vid tvister"
           optional: "(valfri)"
@@ -4887,6 +4887,7 @@ sv:
             post: "inlägg"
             chat_message: "chattmeddelanden"
         look_and_feel:
+          title: "Utseende och känsla"
           themes:
             title: "Teman"
       plugins:
@@ -6048,6 +6049,8 @@ sv:
         history: "Visa ändringshistorik"
         reset: "återställ"
         none: "ingen"
+        save: "spara"
+        cancel: "avbryt"
       site_settings:
         emoji_list:
           invalid_input: "Emoji-listan får endast innehålla giltiga emoji-namn, t.ex.: kramar"

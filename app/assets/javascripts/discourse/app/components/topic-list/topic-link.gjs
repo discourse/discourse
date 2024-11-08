@@ -13,6 +13,8 @@ export default class TopicLink extends Component {
     <a
       href={{this.url}}
       data-topic-id={{@topic.id}}
+      role="heading"
+      aria-level="2"
       class="title"
       ...attributes
     >{{htmlSafe @topic.fancyTitle}}</a>

@@ -27,103 +27,114 @@
       </div>
     {{else}}
       <div class="card-row first-row">
-        <div class="user-card-avatar">
-          {{#if this.contentHidden}}
-            <span class="card-huge-avatar">{{bound-avatar
-                this.user
-                "huge"
-              }}</span>
-          {{else}}
-            <a
-              {{on "click" this.handleShowUser}}
-              href={{this.user.path}}
-              class="card-huge-avatar"
-            >{{bound-avatar this.user "huge"}}</a>
-          {{/if}}
-
-          <UserAvatarFlair @user={{this.user}} />
-
-          <div>
-            <PluginOutlet
-              @name="user-card-avatar-flair"
-              @connectorTagName="div"
-              @outletArgs={{hash user=this.user}}
-            />
-          </div>
-        </div>
-        <div class="names">
-          <div
-            class="names__primary
-              {{this.staff}}
-              {{this.newUser}}
-              {{if this.nameFirst 'full-name' 'username'}}"
-          >
+        <PluginOutlet
+          @name="user-card-main-info"
+          @outletArgs={{hash
+            user=this.user
+            post=this.post
+            contentHidden=this.contentHidden
+            handleShowUser=this.handleShowUser
+          }}
+        >
+          <div class="user-card-avatar" aria-hidden="true">
             {{#if this.contentHidden}}
-              <span
-                id="discourse-user-card-title"
-                class="name-username-wrapper"
-              >
-                {{if
-                  this.nameFirst
-                  this.user.name
-                  (format-username this.user.username)
-                }}
-              </span>
+              <span class="card-huge-avatar">{{bound-avatar
+                  this.user
+                  "huge"
+                }}</span>
             {{else}}
               <a
                 {{on "click" this.handleShowUser}}
                 href={{this.user.path}}
-                class="user-profile-link"
-              >
-                <span
-                  id="discourse-user-card-title"
-                  class="name-username-wrapper"
-                >
+                class="card-huge-avatar"
+                tabindex="-1"
+              >{{bound-avatar this.user "huge"}}</a>
+            {{/if}}
+
+            <UserAvatarFlair @user={{this.user}} />
+
+            <div>
+              <PluginOutlet
+                @name="user-card-avatar-flair"
+                @connectorTagName="div"
+                @outletArgs={{hash user=this.user}}
+              />
+            </div>
+          </div>
+          <div class="names">
+            <div
+              class="names__primary
+                {{this.staff}}
+                {{this.newUser}}
+                {{if this.nameFirst 'full-name' 'username'}}"
+            >
+              {{#if this.contentHidden}}
+                <span class="name-username-wrapper">
                   {{if
                     this.nameFirst
                     this.user.name
                     (format-username this.user.username)
                   }}
                 </span>
-                {{user-status this.user currentUser=this.currentUser}}
-              </a>
-            {{/if}}
-          </div>
-          <PluginOutlet
-            @name="user-card-after-username"
-            @connectorTagName="div"
-            @outletArgs={{hash user=this.user showUser=this.handleShowUser}}
-          />
-          {{#if this.nameFirst}}
-            <div class="names__secondary username">{{this.user.username}}</div>
-          {{else}}
-            {{#if this.user.name}}
-              <div class="names__secondary full-name">{{this.user.name}}</div>
-            {{/if}}
-          {{/if}}
-          {{#if this.user.title}}
-            <div class="names__secondary">{{this.user.title}}</div>
-          {{/if}}
-          {{#if this.user.staged}}
-            <div class="names__secondary staged">{{i18n "user.staged"}}</div>
-          {{/if}}
-          {{#if this.hasStatus}}
-            <div class="user-status">
-              {{html-safe this.userStatusEmoji}}
-              <span class="user-status__description">
-                {{this.user.status.description}}
-              </span>
-              {{format-date this.user.status.ends_at format="tiny"}}
+              {{else}}
+                <a
+                  {{on "click" this.handleShowUser}}
+                  href={{this.user.path}}
+                  class="user-profile-link"
+                  aria-label={{i18n
+                    "user.profile_link"
+                    username=this.user.username
+                  }}
+                >
+                  <span class="name-username-wrapper">
+                    {{if
+                      this.nameFirst
+                      this.user.name
+                      (format-username this.user.username)
+                    }}
+                  </span>
+                  {{user-status this.user currentUser=this.currentUser}}
+                </a>
+              {{/if}}
             </div>
-          {{/if}}
-          <div>
             <PluginOutlet
-              @name="user-card-post-names"
+              @name="user-card-after-username"
               @connectorTagName="div"
-              @outletArgs={{hash user=this.user}}
+              @outletArgs={{hash user=this.user showUser=this.handleShowUser}}
             />
+            {{#if this.nameFirst}}
+              <div
+                class="names__secondary username"
+              >{{this.user.username}}</div>
+            {{else}}
+              {{#if this.user.name}}
+                <div class="names__secondary full-name">{{this.user.name}}</div>
+              {{/if}}
+            {{/if}}
+            {{#if this.user.title}}
+              <div class="names__secondary">{{this.user.title}}</div>
+            {{/if}}
+            {{#if this.user.staged}}
+              <div class="names__secondary staged">{{i18n "user.staged"}}</div>
+            {{/if}}
+            {{#if this.hasStatus}}
+              <div class="user-status">
+                {{html-safe this.userStatusEmoji}}
+                <span class="user-status__description">
+                  {{this.user.status.description}}
+                </span>
+                {{format-date this.user.status.ends_at format="tiny"}}
+              </div>
+            {{/if}}
+            <div>
+              <PluginOutlet
+                @name="user-card-post-names"
+                @connectorTagName="div"
+                @outletArgs={{hash user=this.user}}
+              />
+            </div>
           </div>
-        </div>
+        </PluginOutlet>
         <ul class="usercard-controls">
           {{#if this.user.can_send_private_message_to_user}}
             <li class="compose-pm">
@@ -185,13 +196,13 @@
       {{#if this.user.profile_hidden}}
         <div class="card-row second-row">
           <div class="profile-hidden">
-            <span>{{i18n "user.profile_hidden"}}</span>
+            <span role="alert">{{i18n "user.profile_hidden"}}</span>
           </div>
         </div>
       {{else if this.user.inactive}}
         <div class="card-row second-row">
           <div class="inactive-user">
-            <span>{{i18n "user.inactive_user"}}</span>
+            <span role="alert">{{i18n "user.inactive_user"}}</span>
           </div>
         </div>
       {{/if}}
@@ -359,7 +370,17 @@
                   <span class="user-field-value">
                     {{#each uf.value as |v|}}
                       {{! some values are arrays }}
-                      <span class="user-field-value-list-item">{{v}}</span>
+                      <span class="user-field-value-list-item">
+                        {{#if uf.field.searchable}}
+                          <LinkTo
+                            @route="users"
+                            @query={{hash name=v}}
+                            {{on "click" (fn this.refreshRoute v)}}
+                          >{{v}}</LinkTo>
+                        {{else}}
+                          {{v}}
+                        {{/if}}
+                      </span>
                     {{else}}
                       {{uf.value}}
                     {{/each}}
@@ -379,20 +400,25 @@
 
       {{#if this.showBadges}}
         <div class="card-row">
-          {{#if this.user.featured_user_badges}}
-            <div class="badge-section">
-              {{#each this.user.featured_user_badges as |ub|}}
-                <UserBadge @badge={{ub.badge}} @user={{this.user}} />
-              {{/each}}
-              {{#if this.showMoreBadges}}
-                <span class="more-user-badges">
-                  <LinkTo @route="user.badges" @model={{this.user}}>
-                    {{i18n "badges.more_badges" count=this.moreBadgesCount}}
-                  </LinkTo>
-                </span>
-              {{/if}}
-            </div>
-          {{/if}}
+          <PluginOutlet
+            @name="user-card-badges"
+            @outletArgs={{hash user=this.user post=this.post}}
+          >
+            {{#if this.user.featured_user_badges}}
+              <div class="badge-section">
+                {{#each this.user.featured_user_badges as |ub|}}
+                  <UserBadge @badge={{ub.badge}} @user={{this.user}} />
+                {{/each}}
+                {{#if this.showMoreBadges}}
+                  <span class="more-user-badges">
+                    <LinkTo @route="user.badges" @model={{this.user}}>
+                      {{i18n "badges.more_badges" count=this.moreBadgesCount}}
+                    </LinkTo>
+                  </span>
+                {{/if}}
+              </div>
+            {{/if}}
+          </PluginOutlet>
         </div>
       {{/if}}
     {{/if}}

@@ -28,7 +28,7 @@ const MIN_LIKES_COUNT = 5;
 const MIN_PARTICIPANTS_COUNT = 5;
 const MIN_USERS_COUNT_FOR_AVATARS = 2;
 
-export const MIN_POSTS_COUNT = 10;
+export const MIN_POSTS_COUNT = 5;
 
 export default class TopicMapSummary extends Component {
   @service site;
@@ -344,19 +344,13 @@ export default class TopicMapSummary extends Component {
             <ul class="topic-links">
               {{#each this.linksToShow as |link|}}
                 <li>
-                  <span
-                    class="badge badge-notification clicks"
-                    title={{i18n "topic_map.clicks" count=link.clicks}}
-                  >
-                    {{link.clicks}}
-                  </span>
-
                   <TopicMapLink
                     @attachment={{link.attachment}}
                     @title={{link.title}}
                     @rootDomain={{link.root_domain}}
                     @url={{link.url}}
                     @userId={{link.user_id}}
+                    @clickCount={{link.clicks}}
                   />
                 </li>
               {{/each}}

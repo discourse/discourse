@@ -8,77 +8,73 @@ import {
   generateLightboxMarkup,
   generateLightboxObject,
 } from "discourse/tests/helpers/lightbox-helpers";
-import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Unit | Service | Experimental Lightbox", function (hooks) {
   setupTest(hooks);
 
-  const wrap = domFromString(generateLightboxMarkup())[0];
-  const selector = ".lightbox";
-
   hooks.beforeEach(function () {
     this.lightbox = getOwner(this).lookup("service:lightbox");
     this.appEvents = getOwner(this).lookup("service:app-events");
+
+    document.querySelector("#ember-testing").innerHTML =
+      generateLightboxMarkup();
   });
 
-  test("Lightbox Service has appEvents", async function (assert) {
-    assert.ok(this.lightbox.appEvents);
+  hooks.afterEach(function () {
+    document.querySelector("#ember-testing").innerHTML = "";
   });
 
   test("Does not add event listener if no lightboxes are found", async function (assert) {
     const container = document.createElement("div");
     const addEventListenerSpy = sinon.spy(container, "addEventListener");
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector: ".lightbox" });
 
-    assert.strictEqual(
-      addEventListenerSpy.called,
-      false,
-      "does not add event listener"
-    );
+    assert.false(addEventListenerSpy.called, "does not add event listener");
 
     addEventListenerSpy.restore();
   });
 
   test("Adds event listener if lightboxes are found", async function (assert) {
-    const container = wrap.cloneNode(true);
+    const container = document.querySelector(".lightbox-wrapper");
     const addEventListenerSpy = sinon.spy(container, "addEventListener");
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector: ".lightbox" });
 
-    assert.strictEqual(
-      addEventListenerSpy.calledOnce,
-      true,
-      "adds event listener"
-    );
+    assert.true(addEventListenerSpy.calledOnce, "adds event listener");
 
     addEventListenerSpy.restore();
   });
 
   test("Correctly sets event listeners", async function (assert) {
-    const container = wrap.cloneNode(true);
-
+    const container = document.querySelector(".lightbox-wrapper");
     const openLightboxSpy = sinon.spy(this.lightbox, "openLightbox");
     const removeEventListenerSpy = sinon.spy(container, "removeEventListener");
-    const clickTarget = container.querySelector(selector);
+    const clickTarget = container.querySelector(".lightbox");
 
-    await this.lightbox.setupLightboxes({ container, selector, clickTarget });
+    await this.lightbox.setupLightboxes({
+      container,
+      selector: ".lightbox",
+      clickTarget,
+    });
 
-    await click(container.querySelector(selector));
+    await click(".lightbox");
 
     container.appendChild(document.createElement("p"));
 
     await click(container.querySelector("p"));
 
-    assert.strictEqual(
-      openLightboxSpy.calledWith({ container, selector, clickTarget }),
-      true,
+    assert.true(
+      openLightboxSpy.calledWith({
+        container,
+        selector: ".lightbox",
+        clickTarget,
+      }),
       "calls openLightbox on lightboxed element click"
     );
 
-    assert.strictEqual(
+    assert.true(
       openLightboxSpy.calledOnce,
-      true,
       "only calls open lightbox when lightboxed element is clicked"
     );
 
@@ -90,9 +86,8 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
 
     await this.lightbox.cleanupLightboxes();
 
-    assert.strictEqual(
+    assert.true(
       removeEventListenerSpy.calledOnce,
-      true,
       "removes event listener from element on cleanup"
     );
 
@@ -108,11 +103,11 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
     removeEventListenerSpy.restore();
   });
 
-  test(`correctly calls the lightbox:open event`, async function (assert) {
+  test("correctly calls the lightbox:open event", async function (assert) {
     const done = assert.async();
-    const container = wrap.cloneNode(true);
+    const container = document.querySelector(".lightbox-wrapper");
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector: ".lightbox" });
 
     const appEventsTriggerSpy = sinon.spy(this.appEvents, "trigger");
 
@@ -129,35 +124,34 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
       done();
     });
 
-    await click(container.querySelector(selector));
+    await click(".lightbox");
 
-    assert.ok(appEventsTriggerSpy.calledWith(expectedEvent));
+    assert.true(appEventsTriggerSpy.calledWith(expectedEvent));
 
     appEventsTriggerSpy.restore();
   });
 
-  test(`correctly calls the lightbox:close event`, async function (assert) {
-    const done = assert.async();
-    const container = wrap.cloneNode(true);
+  test("correctly calls the lightbox:close event", async function (assert) {
+    const container = document.querySelector(".lightbox-wrapper");
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector: ".lightbox" });
 
     this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, () => {
-      assert.ok(true);
-      done();
+      assert.step("lightbox closed");
     });
 
-    await click(container.querySelector(selector));
+    await click(".lightbox");
 
     await this.lightbox.closeLightbox();
+    assert.verifySteps(["lightbox closed"]);
   });
 
-  test(`correctly responds to the lightbox:clean event`, async function (assert) {
-    const container = wrap.cloneNode(true);
+  test("correctly responds to the lightbox:clean event", async function (assert) {
+    const container = document.querySelector(".lightbox-wrapper");
 
-    await this.lightbox.setupLightboxes({ container, selector });
+    await this.lightbox.setupLightboxes({ container, selector: ".lightbox" });
 
-    await click(container.querySelector(".lightbox"));
+    await click(".lightbox");
 
     assert.strictEqual(
       this.lightbox.lightboxClickElements.length,
@@ -165,11 +159,7 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
       "correctly stores lightbox click elements for cleanup"
     );
 
-    assert.strictEqual(
-      this.lightbox.lightboxIsOpen,
-      true,
-      "sets lightboxIsOpen to true"
-    );
+    assert.true(this.lightbox.lightboxIsOpen, "sets lightboxIsOpen to true");
 
     this.appEvents.trigger(LIGHTBOX_APP_EVENT_NAMES.CLEAN);
 
@@ -179,10 +169,6 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
       "correctly removes stored entry from lightboxClickElements on cleanup"
     );
 
-    assert.strictEqual(
-      this.lightbox.lightboxIsOpen,
-      false,
-      "sets lightboxIsOpen to false"
-    );
+    assert.false(this.lightbox.lightboxIsOpen, "sets lightboxIsOpen to false");
   });
 });

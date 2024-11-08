@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -12,16 +13,47 @@ import lightbox, {
   setupLightboxes,
 } from "discourse/lib/lightbox";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 @classNames("image-uploader")
-export default class UppyImageUploader extends Component.extend(
-  UppyUploadMixin
-) {
-  @or("notAllowed", "uploading", "processing") disabled;
+export default class UppyImageUploader extends Component {
+  @or("notAllowed", "uppyUpload.uploading", "uppyUpload.processing") disabled;
+
+  uppyUpload = null;
+
+  @on("init")
+  setupUppyUpload() {
+    // The uppyUpload configuration depends on arguments. In classic components like
+    // this one, the arguments are not available during field initialization, so we have to
+    // defer until init(). When this component is glimmer-ified in future, this can be turned
+    // into a simple field initializer.
+    this.uppyUpload = new UppyUpload(getOwner(this), {
+      id: this.id,
+      type: this.type,
+      additionalParams: this.additionalParams,
+      validateUploadedFilesOptions: { imagesOnly: true },
+      uploadDone: (upload) => {
+        this.setProperties({
+          imageFilesize: upload.human_filesize,
+          imageFilename: upload.original_filename,
+          imageWidth: upload.width,
+          imageHeight: upload.height,
+        });
+
+        // the value of the property used for imageUrl should be set
+        // in this callback. this should be done in cases where imageUrl
+        // is bound to a computed property of the parent component.
+        if (this.onUploadDone) {
+          this.onUploadDone(upload);
+        } else {
+          this.set("imageUrl", upload.url);
+        }
+      },
+    });
+  }
 
   @discourseComputed("siteSettings.enable_experimental_lightbox")
   experimentalLightboxEnabled(experimentalLightboxEnabled) {
@@ -79,28 +111,6 @@ export default class UppyImageUploader extends Component.extend(
       return;
     }
     return imageUrl.split("/").slice(-1)[0];
-  }
-
-  validateUploadedFilesOptions() {
-    return { imagesOnly: true };
-  }
-
-  uploadDone(upload) {
-    this.setProperties({
-      imageFilesize: upload.human_filesize,
-      imageFilename: upload.original_filename,
-      imageWidth: upload.width,
-      imageHeight: upload.height,
-    });
-
-    // the value of the property used for imageUrl should be set
-    // in this callback. this should be done in cases where imageUrl
-    // is bound to a computed property of the parent component.
-    if (this.onUploadDone) {
-      this.onUploadDone(upload);
-    } else {
-      this.set("imageUrl", upload.url);
-    }
   }
 
   @on("didRender")

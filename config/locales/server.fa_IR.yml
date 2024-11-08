@@ -962,7 +962,6 @@ fa_IR:
     tl4_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای tl4 ( راهبران) از طریق حاصل ضرب این شماره"
     traditional_markdown_linebreaks: "در مدل‌های نشانه گزاری از خط جدید سنتی استفاده کن،‌ که برای linebreak نیاز به دو فضای انتهایی دارد ."
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری،‌ چیزهای دیگر)."
-    must_approve_users: "مدیران باید کاربران جدید را قبل از اجازه دسترسی به سایت تایید کنند."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
     use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
@@ -1095,6 +1094,7 @@ fa_IR:
     faq_url: "اگر سوالات متداول را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     tos_url: "اگر شرایط استفاده از خدمات را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
     privacy_policy_url: "اگر سیاست حفظ حریم خصوصی را در میزبان دیگری قرار دادید و می‌خواهید از آن استفاده کنید، لینک کامل را در اینجا قرار دهید."
+    display_eu_visitor_stats: "نمایش تعداد بازدیدکنندگان جهانی و اتحادیه اروپا در صفحه /about ممکن است، چند دقیقه طول می‌کشد تا آمار پس از فعال کردن این تنظیم ظاهر شود."
     newuser_spam_host_threshold: "یک کاربر چند بار می‌تواند به یک هاست لینک دهد تا `newuser_spam_host_threshold` به عنوان هرزنامه شناخته شود."
     allowed_spam_host_domains: "لیست دامنه‌ها محروم از میزبان تست هرزنامه. هرگز از ساخت نوشته‌ی جدید با پیوند‌هایی از این دامنه‌ها محدود نمی‌شوند. "
     topic_view_duration_hours: "بازدید‌های موضوعات را به ازای هر آیپی/کاربر در N ساعت محاسبه کن"
@@ -1212,7 +1212,6 @@ fa_IR:
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
-    enable_user_status: "(آزمایشی) به کاربران اجازه می‌دهد، که پیام وضعیت را تغییر دهند (شکلک + توضیحات)."
     use_name_for_username_suggestions: "هنگام پیشنهاد نام‌کاربری از نام کامل، کاربر استفاده کنید."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
@@ -1237,21 +1236,6 @@ fa_IR:
       min_username_length_range: "شما نمیتوانید مقدار حداقل را بیشتر از حداکثر قرار دهید."
       max_username_length_range: "شما نمی‌توانید حداکثر را کمتر از حداقل قرار دهید."
       markdown_linkify_tlds: "شما مقدار «*» را نمی‌توانید وارد کنید."
-    keywords:
-      invite_allowed_groups: "min_trust_level_to_allow_invite"
-      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
-      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
-      clean_up_inactive_users_after_days:
-      - ""
-      - "غیر‌فعال"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "غیر‌فعال"
-      - ""
-      navigation_menu:
-      - "نوار کناری"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

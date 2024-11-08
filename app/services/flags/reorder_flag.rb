@@ -3,7 +3,7 @@
 class Flags::ReorderFlag
   include Service::Base
 
-  contract do
+  params do
     attribute :flag_id, :integer
     attribute :direction, :string
 
@@ -21,8 +21,8 @@ class Flags::ReorderFlag
 
   private
 
-  def fetch_flag(contract:)
-    Flag.find_by(id: contract.flag_id)
+  def fetch_flag(params:)
+    Flag.find_by(id: params.flag_id)
   end
 
   def invalid_access(guardian:, flag:)
@@ -33,25 +33,25 @@ class Flags::ReorderFlag
     Flag.where.not(name_key: "notify_user").order(:position).to_a
   end
 
-  def invalid_move(flag:, contract:, all_flags:)
-    return false if all_flags.first == flag && contract.direction == "up"
-    return false if all_flags.last == flag && contract.direction == "down"
+  def invalid_move(flag:, params:, all_flags:)
+    return false if all_flags.first == flag && params.direction == "up"
+    return false if all_flags.last == flag && params.direction == "down"
     true
   end
 
-  def move(flag:, contract:, all_flags:)
+  def move(flag:, params:, all_flags:)
     old_position = flag.position
     index = all_flags.index(flag)
-    target_flag = all_flags[contract.direction == "up" ? index - 1 : index + 1]
+    target_flag = all_flags[params.direction == "up" ? index - 1 : index + 1]
 
     flag.update!(position: target_flag.position)
     target_flag.update!(position: old_position)
   end
 
-  def log(guardian:, flag:, contract:)
+  def log(guardian:, flag:, params:)
     StaffActionLogger.new(guardian.user).log_custom(
       "move_flag",
-      { flag: flag.name, direction: contract.direction },
+      { flag: flag.name, direction: params.direction },
     )
   end
 end

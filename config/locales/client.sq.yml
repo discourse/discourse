@@ -606,7 +606,7 @@ sq:
       users: "Anëtarët"
       muted_users: "Të heshtur"
       tracked_topics_link: "Shfaq"
-      automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes."
+      automatically_unpin_topics: "Çngjiti temat automatikisht kur arrij fundin e faqes"
       apps: "Aplikimet"
       revoke_access: "Hiqi aksesin"
       undo_revoke_access: "Anullo heqjen e aksesit"
@@ -710,7 +710,6 @@ sq:
         action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
         already_done: "Na vjen keq, ky link nuk vlen më. Mbase llogaria është që tani e aktivizuar?"
         please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
-        continue_button: "Vazhdo tek %{site_name}"
         welcome_to: "Mirë se vini tek %{site_name}!"
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
       name:
@@ -2000,6 +1999,8 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+            invite:
+              content: "Fto"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -2184,6 +2185,7 @@ sq:
             title: "Rezervat"
       config_areas:
         about:
+          company_name: "Emri"
           saved: "u ruajt!"
         flags:
           description: "Përshkrimi"
@@ -2771,6 +2773,8 @@ sq:
         show_overriden: "Shfaq vetëm të ndryshuarat"
         reset: "rivendos"
         none: "asnjë"
+        save: "ruaj"
+        cancel: "anulo"
       site_settings:
         title: "Rregullimet"
         no_results: "Nuk u gjet asnjë rezultat."

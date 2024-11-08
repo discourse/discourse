@@ -39,7 +39,6 @@ class SiteSerializer < ApplicationSerializer
     :markdown_additional_options,
     :hashtag_configurations,
     :hashtag_icons,
-    :displayed_about_plugin_stat_groups,
     :anonymous_default_navigation_menu_tags,
     :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
@@ -285,10 +284,6 @@ class SiteSerializer < ApplicationSerializer
 
   def hashtag_icons
     HashtagAutocompleteService.data_source_icon_map
-  end
-
-  def displayed_about_plugin_stat_groups
-    About.displayed_plugin_stat_groups
   end
 
   SIDEBAR_TOP_TAGS_TO_SHOW = 5

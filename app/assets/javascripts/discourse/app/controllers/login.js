@@ -35,7 +35,7 @@ export default class LoginPageController extends Controller {
   @tracked loggingIn = false;
   @tracked loggedIn = false;
   @tracked showLoginButtons = true;
-  @tracked showLogin = false;
+  @tracked showLogin = true;
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";

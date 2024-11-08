@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { skip } from "qunit";
-import {
-  acceptance,
-  exists,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, visible } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
   needs.user({
@@ -118,19 +114,19 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
     assert.ok(visible(videoContainer));
     assert.ok(visible(collapseImage), "the open arrow is shown");
-    assert.notOk(exists(expandImage), "the close arrow is hidden");
+    assert.dom(expandImage).doesNotExist("the close arrow is hidden");
 
     await click(collapseImage);
 
-    assert.notOk(visible(videoContainer));
+    assert.dom(videoContainer).isNotVisible();
     assert.ok(visible(expandImage), "the close arrow is shown");
-    assert.notOk(exists(collapseImage), "the open arrow is hidden");
+    assert.dom(collapseImage).doesNotExist("the open arrow is hidden");
 
     await click(expandImage);
 
     assert.ok(visible(videoContainer));
     assert.ok(visible(collapseImage), "the open arrow is shown again");
-    assert.notOk(exists(expandImage), "the close arrow is hidden again");
+    assert.dom(expandImage).doesNotExist("the close arrow is hidden again");
   });
 
   skip("lightbox shows up before and after expand and collapse", async function (assert) {

@@ -724,7 +724,6 @@ export default {
           can_revoke: true,
         },
       ],
-      displayed_about_plugin_stat_groups: ["chat_messages"],
       hashtag_configurations: { "topic-composer": ["category", "tag"] },
       hashtag_icons: { "category": "folder", "tag": "tag" },
       anonymous_sidebar_sections: [
@@ -803,6 +802,14 @@ export default {
               icon: "certificate",
               external: false,
               segment: "secondary",
+            },
+            {
+              id: 338,
+              name: "Invite",
+              value: "/new-invite",
+              icon: "paper-plane",
+              external: false,
+              segment: "primary",
             },
           ],
           slug: "community",

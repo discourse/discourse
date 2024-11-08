@@ -1342,7 +1342,7 @@ fi:
       ignored_users: "Sivuutettu"
       ignored_users_instructions: "Älä näytä viestejä ja ilmoituksia tai vastaanota yksityisviestejä näiltä käyttäjiltä."
       tracked_topics_link: "Näytä"
-      automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
+      automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun"
       apps: "Sovellukset"
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
@@ -1659,7 +1659,7 @@ fi:
         action: "Aktivoi tilisi klikkaamalla tästä"
         already_done: "Tämä tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
         please_continue: "Tilisi on nyt varmennettu; sinut ohjataan aloitussivulle."
-        continue_button: "Jatka sivustolle %{site_name}"
+        continue_button: "Valmis!"
         welcome_to: "Tervetuloa sivustolle %{site_name}!"
         approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset foorumille. Saat sähköpostin, kun tilisi on hyväksytty."
       name:
@@ -2152,7 +2152,6 @@ fi:
     search_hint: "käyttäjätunnus, sähköposti tai IP-osoite"
     create_account:
       header_title: "Tervetuloa!"
-      subheader_title: "Luodaan sinulle käyttäjätili"
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
       title: "Rekisteröidy"
       failed: "Jokin meni vikaan. Tämä sähköpostiosoite on ehkä jo rekisteröity, kokeile salasanan unohduslinkkiä"
@@ -2194,7 +2193,6 @@ fi:
       confirm_button: Kirjaudu
     login:
       header_title: "Tervetuloa takaisin"
-      subheader_title: "Kirjaudu sisään tilillesi"
       title: "Kirjaudu"
       username: "Käyttäjä"
       password: "Salasana"
@@ -2294,7 +2292,6 @@ fi:
       success: "Tili luotiin, ja olet nyt kirjautunut sisään."
       name_label: "Nimi"
       password_label: "Salasana"
-      existing_user_can_redeem: "Lunasta kutsusi ketjuun tai ryhmään."
     password_reset:
       continue: "Jatka sivustolle %{site_name}"
     emoji_set:
@@ -4586,6 +4583,8 @@ fi:
               pending_count:
                 one: "%{count} odottaa"
                 other: "%{count} odottaa"
+            invite:
+              content: "Kutsu"
         global_section: "Yleinen osio, joka näkyy kaikille"
       panels:
         forum:
@@ -5223,37 +5222,19 @@ fi:
           contact_information: "Yhteystiedot"
           community_owner: "Yhteisön omistaja"
           community_owner_placeholder: "Matti Meikäläinen"
-          community_owner_help: |
-            Sivustosta vastaavan henkilön nimi. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös /about-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           contact_email: "Yhteyssähköposti"
           contact_email_placeholder: "yhteys@matti-meikalainen.com"
-          contact_email_help: |
-            Sivustosta vastaavan henkilön sähköpostiosoite. Siihen lähetetään kriittiset ilmoitukset, ja se näkyy myös /about-sivulla. Näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           contact_url: "Yhteydenotto-URL"
           contact_url_placeholder: "https://matti-meikalainen.com/yhteydenotto"
-          contact_url_help: |
-            Tämän sivuston yhteydenotto-URL. Kun tämä on asetettu, se korvaa yhteyssähköpostiosoitteen /about-sivulla ja näkyy anonyymeille käyttäjille julkisilla sivustoilla.
           site_contact_name: "Sivuston yhteyshenkilön nimi"
-          site_contact_name_help: |
-            Kelvollinen henkilökunnan käyttäjänimi, jonka nimissä kaikki automaattiset viestit lähetetään. Jos tämä jätetään tyhjäksi, oletuksena on oletusjärjestelmätili.
           site_contact_group: "Sivuston yhteysryhmä"
-          site_contact_group_help: |
-            Kelvollinen ryhmän nimi, joka saa kutsun kaikkiin automaattisesti lähetettyihin yksityisviesteihin.
           your_organization: "Organisaatiosi"
-          company_name: "Yrityksen nimi"
-          company_name_placeholder: "Esimerkkiyritys Oy"
-          company_name_help: |
-            Yrityksesi tai organisaatiosi nimi.
+          company_name: "Nimi"
+          company_name_placeholder: "Esimerkkiorganisaatio"
           company_name_warning: |
             Jos tämä jätetään tyhjäksi, käyttöehtojen tai tietosuojailmoituksen pohjaa ei tarjota.
           governing_law: "Sovellettava lainsäädäntö"
-          governing_law_placeholder: "Suomi"
-          governing_law_help: |
-            Määritä lainkäyttöalue, joka sääntelee sivuston oikeudellisia aspekteja, kuten käyttöehtoja ja tietosuojailmoitusta. Tämä on yleensä maa tai osavaltio, jossa sivustoa ylläpitävä yritys on rekisteröity tai jossa se harjoittaa liiketoimintaa.
           city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
-          city_for_disputes_placeholder: "Helsinki"
-          city_for_disputes_help: |
-            Määritä kaupunki, jota käytetään lainkäyttöalueena tämän foorumin käyttöön liittyvien kiistojen ratkaisemiseen. Nämä tiedot sisältyvät yleensä oikeudellisiin asiakirjoihin, kuten foorumin käyttöehtoihin.
           optional: "(valinnainen)"
           update: "Päivitä"
           toasts:
@@ -5296,6 +5277,7 @@ fi:
             move_up: "Siirrä ylös"
             move_down: "Siirrä alas"
         look_and_feel:
+          title: "Ulkoasu ja tuntuma"
           themes:
             title: "Teemat"
       plugins:
@@ -6517,6 +6499,8 @@ fi:
         history: "Näytä muutoshistoria"
         reset: "nollaa"
         none: "ei mitään"
+        save: "tallenna"
+        cancel: "peruuta"
       site_settings:
         emoji_list:
           invalid_input: "Emoji-luettelossa tulisi olla vain kelvollisia emojien nimiä, esim. hugs"
@@ -6569,6 +6553,7 @@ fi:
           groups: "Ryhmät"
           dashboard: "Hallintapaneeli"
           navigation: "Navigointi"
+          experimental: "Kokeellinen"
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:

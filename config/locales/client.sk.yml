@@ -1433,6 +1433,7 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      enable_smart_lists: "Povolenie inteligentných zoznamov pri písaní v aplikácii Composer"
       enable_defer: "Povoliť označenie tém ako neprečítaných"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
@@ -1503,7 +1504,7 @@ sk:
       ignored_users: "Ignorovať"
       ignored_users_instructions: "Potlačiť všetky príspevky, upozornenia a PM od týchto používateľov."
       tracked_topics_link: "Zobraziť"
-      automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítam na koniec."
+      automatically_unpin_topics: "Automaticky zrušiť pripnutie témy ak sa dočítam na koniec"
       apps: "Appky"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
@@ -1858,11 +1859,12 @@ sk:
         action: "Pre aktiváciu účtu kliknite sem"
         already_done: "Ľutujeme, tento podvrdzovací odkaz je už neplatný. Nie je Váš účet už aktivny?"
         please_continue: "Váš nový účet je potvrdený. Budete presmerovaní na domovskú stránku."
-        continue_button: "Pokračujte na %{site_name}"
+        continue_button: "Dokončiť!"
         welcome_to: "Vitajte na %{site_name}!"
         approval_required: "Moderátor musí manuálne povoliť Váš prístup na toto fórum. O schválení prístupu budete upovedomení emailom."
       name:
         title: "Meno"
+        title_optional: "Názov (nepovinné)"
         instructions: "Vaše celé meno (nepovinné)"
         instructions_required: "Vaše celé meno"
         required: "Prosím zadajte meno"
@@ -2035,6 +2037,7 @@ sk:
           title: "Odkaz na pozvánku"
           success: "Pozývací link bol úspešne vygenerovaný!"
           error: "Vyskytla sa chyba pri generovaní odkazu na pozvanie"
+        cannot_invite_to_forum: "Ľutujeme, nemáte povolenie na vytváranie pozvánok. Kontaktujte správcu, aby vám udelil povolenie na pozvanie."
         invite:
           new_title: "Pozvať členov"
           edit_title: "Upraviť pozvánku"
@@ -2212,6 +2215,8 @@ sk:
         sent_by: "Odoslané používateľom"
         private_message: "správa"
         the_topic: "téma"
+      card: "Karta používateľa"
+      profile_link: "%{username}, navštívte profil"
     user_status:
       save: "Uložiť"
       set_custom_status: "Nastaviť vlastný stav"
@@ -2427,7 +2432,6 @@ sk:
     search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
       header_title: "Vitajte!"
-      subheader_title: "Vytvorme si účet"
       disclaimer: "Registráciou súhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobných údajov</a> a <a href='%{tos_link}' target='blank'>zmluvnými podmienkami</a>."
       title: "Registrovať sa"
       failed: "Niečo sa pokazilo, možno je tento e-mail už registrovaný, vyskúšajte odkaz pre zabudnuté heslo"
@@ -2471,7 +2475,6 @@ sk:
       confirm_button: Dokončiť prihlásenie
     login:
       header_title: "Vitajte späť"
-      subheader_title: "Prihláste sa do svojho účtu"
       title: "Prihlásenie"
       username: "Používateľ"
       password: "Heslo"
@@ -2571,7 +2574,6 @@ sk:
       success: "Váš účet bol vytvorený a ste prihlásený."
       name_label: "Meno"
       password_label: "Heslo"
-      existing_user_can_redeem: "Uplatnite si pozvánku na tému alebo skupinu."
     password_reset:
       continue: "Pokračujte na %{site_name}"
     emoji_set:
@@ -2583,6 +2585,7 @@ sk:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Iba kategórie"
+      categories_only_optimized: "Len kategórie (optimalizované)"
       categories_with_featured_topics: "Kategórie s odporúčanými témami"
       categories_and_latest_topics: "Kategórie a najnovšie témy"
       categories_and_latest_topics_created_date: "Kategórie a najnovšie témy (zoradiť podľa dátumu vytvorenia témy)"
@@ -3896,6 +3899,11 @@ sk:
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
       sr_reply_to: "Odpoveď na príspevok #%{post_number} od @%{username}"
+      link_clicked:
+        one: "kliknutie na odkaz %{count} krát"
+        few: "kliknutie na odkaz %{count} krát"
+        many: "kliknutie na odkaz %{count} krát"
+        other: "kliknutie na odkaz %{count} krát"
       notice:
         new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
         returning_user: "Už je to nejaký čas, čo sme videli %{user} - ich posledný príspevok bol %{time}."
@@ -4190,6 +4198,8 @@ sk:
       badge_colors: "Farby odznakov"
       background_color: "Farba pozadia"
       foreground_color: "Farba popredia"
+      color_used: "Používaná farba"
+      predefined_colors: "Preddefinované možnosti farieb"
       name_placeholder: "Maximálne jedno dve slová"
       color_placeholder: "Ľubovoľná farba stránky"
       delete_confirm: "Ste si istý že chcete zmazať túto kategóriu?"
@@ -4909,6 +4919,7 @@ sk:
       dismiss: "Zahodiť"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
+    theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
     image_removed: "(obrázok odstránený)"
     pause_notifications:
       title: "Pozastavenie oznámení pre…"
@@ -5119,6 +5130,9 @@ sk:
                 few: "%{count} čaká"
                 many: "%{count} čaká"
                 other: "%{count} čaká"
+            invite:
+              content: "Pozvi"
+              title: "Pozvanie nových členov"
         global_section: "Globálna sekcia, viditeľná pre všetkých"
       panels:
         forum:
@@ -5619,8 +5633,6 @@ sk:
           post_edited: "Príspevok je aktualizovaný"
           post_destroyed: "Príspevok je vymazaný"
           post_recovered: "Príspevok je obnovený"
-          category_experts_approved: "Príspevok označený ako príspevok odborníkov na kategóriu"
-          category_experts_unapproved: "Príspevok nie je označený ako príspevok odborníkov na kategóriu"
         group_event:
           group_name: "Skupinové udalosti"
           group_created: "Skupina je vytvorená"
@@ -5665,6 +5677,8 @@ sk:
           group_name: "Skupinové používateľské udalosti"
           user_added_to_group: "Používateľ je pridaný do skupiny"
           user_removed_from_group: "Používateľ je odstránený zo skupiny"
+        custom_event:
+          group_name: "Vlastné udalosti"
         user_promoted_event:
           group_name: "Udalosti podporované používateľom"
           user_promoted: "Používateľ je povýšený"
@@ -5783,12 +5797,14 @@ sk:
       config_areas:
         about:
           header: "O vašej stránke"
-          description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému."
+          description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
           general_settings: "Všeobecné nastavenia"
           community_name: "Názov komunity"
           community_name_placeholder: "Príklad Spoločenstva"
           community_summary: "Súhrn komunity"
           community_description: "Popis komunity"
+          community_title: "Názov spoločenstva"
+          community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
           banner_image_help: |
             Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
@@ -5796,36 +5812,35 @@ sk:
           community_owner: "Vlastník komunity"
           community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
-            Meno kľúčového kontaktu zodpovedného za túto stránku. Používa sa pre kritické oznámenia a zobrazuje sa aj v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
+            Názov používaný pre kritické oznámenia a tiež zobrazovaný v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
           contact_email: "Kontaktný e-mail"
           contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
-            E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na /about. Viditeľná pre anonymných používateľov na verejných stránkach.
+            E-mail používaný na kritické oznámenia a zobrazený aj v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
           contact_url: "Adresa URL kontaktu"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            Kontaktná adresa URL pre túto stránku. Ak je prítomná, nahrádza kontaktnú e-mailovú adresu na /about a je viditeľná pre anonymných používateľov na verejných stránkach.
+            Ak je prítomná, nahrádza kontaktnú e-mailovú adresu na /about a je viditeľná pre anonymných používateľov na verejných stránkach.
           site_contact_name: "Kontaktné meno stránky"
           site_contact_name_help: |
-            Platné používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
+            Používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
           site_contact_group: "Kontaktná skupina stránky"
           site_contact_group_help: |
-            Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ.
+            Skupina, ktorá dostane pozvánku do všetkých automaticky odoslaných súkromných správ.
           your_organization: "Vaša organizácia"
-          company_name: "Názov spoločnosti"
-          company_name_placeholder: "Vzorová spoločnosť Inc."
-          company_name_help: |
-            Názov vašej spoločnosti alebo organizácie.
+          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
+          company_name: "Meno"
+          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           governing_law: "Platné právo"
-          governing_law_placeholder: "Štát New York"
+          governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |
-            Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a oznámenia o ochrane osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká.
+            Uveďte jurisdikciu pre právne podmienky stránky, zvyčajne tam, kde je spoločnosť registrovaná alebo kde pôsobí.
           city_for_disputes: "Mesto pre spory"
-          city_for_disputes_placeholder: "Mesto New York"
+          city_for_disputes_placeholder: "Mesto"
           city_for_disputes_help: |
-            Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra.
+            Uveďte mesto na riešenie právnych sporov týkajúcich sa tohto fóra.
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:
@@ -5865,15 +5880,14 @@ sk:
             non_deletable: "Tento príznak nemôžete odstrániť, pretože je to systémový príznak alebo už bol použitý v systéme hodnotenia, môžete ho však vypnúť."
             require_message: "Vyzvať používateľov, aby uviedli ďalšie dôvody"
             require_message_description: "Po výbere tohto príznaku sa zobrazí textové pole, v ktorom môže používateľ uviesť ďalšie podrobnosti o dôvode označenia obsahu."
-            auto_action_type: "Automatický typ akcie"
-            auto_action_type_description: "Keď je príspevok označený zamestnancom, je automaticky skrytý."
+            auto_action_type: "Automatické skrytie označeného obsahu"
           more_options:
             title: "Ďalšie možnosti"
             move_up: "Posunúť sa nahor"
             move_down: "Posunúť sa nadol"
         look_and_feel:
-          title: "Vzhľad & pocit"
-          description: "Témy, komponenty a farebné schémy môžete použiť na prispôsobenie a označenie svojej stránky Discourse, čím jej dodáte osobitý štýl."
+          title: "Pozri a cíť"
+          description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
           themes:
             title: "Témy"
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
@@ -6100,6 +6114,7 @@ sk:
           set_default_theme: "Nastavenie predvoleného nastavenia"
           default_theme: "Predvolená téma"
           set_default_success: "Predvolená téma nastavená na %{theme}"
+          install_success: "%{theme} úspešne nainštalované!"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybrané"
@@ -6108,6 +6123,7 @@ sk:
             other: "%{count} vybrané"
           cancel: "Zrušiť"
           broken_theme_tooltip: "Táto téma má chyby v CSS, HTML alebo YAML"
+          broken_theme: "Zakázať nefunkčnú tému"
           disabled_component_tooltip: "Tento komponent bol zakázaný"
           default_theme_tooltip: "Táto téma je predvolená téma stránky"
           updates_available_tooltip: "Pre túto tému sú k dispozícii aktualizácie"
@@ -6176,6 +6192,7 @@ sk:
           update_to_latest: "Aktualizácia na najnovšie"
           check_for_updates: "Skontrolovať aktualizácie"
           updating: "Aktualizujem..."
+          update_success: "%{theme} Aktualizácia dokončená"
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"
           has_overwritten_history: "Aktuálna verzia témy už neexistuje, pretože história systému Git bola prepísaná."
           add: "Pridať"
@@ -7149,6 +7166,9 @@ sk:
         history: "Zobraziť históriu zmien"
         reset: "zrušiť"
         none: "žiadne"
+        save: "uložiť"
+        cancel: "zrušiť"
+        unmask: "odmaskovať vstup"
       site_settings:
         emoji_list:
           invalid_input: "Zoznam emodži by mal obsahovať len platné názvy emodži, napr.: objatie"
@@ -7203,6 +7223,7 @@ sk:
           groups: "Skupiny"
           dashboard: "Ovládací panel"
           navigation: "Navigácia"
+          experimental: "Experimentálne"
         secret_list:
           invalid_input: "Vstupné polia nemôžu byť prázdne alebo obsahovať znak vertikálnej čiary."
         default_categories:
@@ -7351,6 +7372,7 @@ sk:
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"

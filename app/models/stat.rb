@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 class Stat
-  def initialize(name, show_in_ui: false, expose_via_api: false, &block)
+  def initialize(name, expose_via_api: false, &block)
     @name = name
-    @show_in_ui = show_in_ui
     @expose_via_api = expose_via_api
     @block = block
   end
 
-  attr_reader :name, :expose_via_api, :show_in_ui
+  attr_reader :name, :expose_via_api
 
   def calculate
     @block.call.transform_keys { |key| build_key(key) }
@@ -41,23 +40,19 @@ class Stat
 
   def self.core_stats
     list = [
-      Stat.new("topics", show_in_ui: true, expose_via_api: true) { Statistics.topics },
-      Stat.new("posts", show_in_ui: true, expose_via_api: true) { Statistics.posts },
-      Stat.new("users", show_in_ui: true, expose_via_api: true) { Statistics.users },
-      Stat.new("active_users", show_in_ui: true, expose_via_api: true) { Statistics.active_users },
-      Stat.new("likes", show_in_ui: true, expose_via_api: true) { Statistics.likes },
-      Stat.new("participating_users", show_in_ui: false, expose_via_api: true) do
-        Statistics.participating_users
-      end,
+      Stat.new("topics", expose_via_api: true) { Statistics.topics },
+      Stat.new("posts", expose_via_api: true) { Statistics.posts },
+      Stat.new("users", expose_via_api: true) { Statistics.users },
+      Stat.new("active_users", expose_via_api: true) { Statistics.active_users },
+      Stat.new("likes", expose_via_api: true) { Statistics.likes },
+      Stat.new("participating_users", expose_via_api: true) { Statistics.participating_users },
     ]
 
     if SiteSetting.display_eu_visitor_stats
       list.concat(
         [
-          Stat.new("visitors", show_in_ui: true, expose_via_api: true) { Statistics.visitors },
-          Stat.new("eu_visitors", show_in_ui: true, expose_via_api: true) do
-            Statistics.eu_visitors
-          end,
+          Stat.new("visitors", expose_via_api: true) { Statistics.visitors },
+          Stat.new("eu_visitors", expose_via_api: true) { Statistics.eu_visitors },
         ],
       )
     end

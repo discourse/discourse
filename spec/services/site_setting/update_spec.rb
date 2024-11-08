@@ -6,7 +6,7 @@ RSpec.describe SiteSetting::Update do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(**params, **options, **dependencies) }
+    subject(:result) { described_class.call(params:, options:, **dependencies) }
 
     fab!(:admin)
     let(:params) { { setting_name:, new_value: } }

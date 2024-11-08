@@ -5,6 +5,7 @@ module Chat
     MAX_TITLE_LENGTH = 100
 
     include Chat::ThreadCache
+    include HasCustomFields
 
     self.table_name = "chat_threads"
 

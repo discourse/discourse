@@ -4,7 +4,7 @@ class Flags::CreateFlag
   include Service::Base
 
   policy :invalid_access
-  contract do
+  params do
     attribute :name, :string
     attribute :description, :string
     attribute :require_message, :boolean
@@ -31,12 +31,12 @@ class Flags::CreateFlag
     guardian.can_create_flag?
   end
 
-  def unique_name(contract:)
-    !Flag.custom.where(name: contract.name).exists?
+  def unique_name(params:)
+    !Flag.custom.where(name: params.name).exists?
   end
 
-  def instantiate_flag(contract:)
-    Flag.new(contract.attributes.merge(notify_type: true))
+  def instantiate_flag(params:)
+    Flag.new(params.merge(notify_type: true))
   end
 
   def create(flag:)

@@ -102,8 +102,8 @@ module(
 
       await settled();
 
-      assert.notOk(this.manager.picker);
-      assert.notOk(this.manager.closing);
+      assert.strictEqual(this.manager.picker, null);
+      assert.false(this.manager.closing);
       assert.deepEqual(
         this.manager.visibleSections,
         ["favorites", "smileys_&_emotion"],

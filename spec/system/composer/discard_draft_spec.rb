@@ -94,5 +94,24 @@ describe "Composer - discard draft modal", type: :system do
 
       wait_for(timeout: 5) { Draft.find_by(draft_key: draft_key) == nil }
     end
+
+    it "resumes draft when using /new-message" do
+      visit "/new-message"
+
+      composer.fill_content("a b c d e f g")
+      composer.close
+
+      expect(discard_draft_modal).to be_open
+      discard_draft_modal.click_save
+
+      visit "/new-message"
+
+      expect(dialog).to be_open
+      expect(page).to have_content(I18n.t("js.drafts.abandon.confirm"))
+      dialog.click_button I18n.t("js.drafts.abandon.no_value")
+
+      expect(composer).to be_opened
+      expect(composer).to have_content("a b c d e f g")
+    end
   end
 end

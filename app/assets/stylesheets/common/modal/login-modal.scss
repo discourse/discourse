@@ -11,6 +11,7 @@
     &__container {
       position: relative;
       width: max-content;
+      width: 100%;
     }
     &__header {
       border-bottom: none;
@@ -63,7 +64,7 @@
   }
 
   #login-form {
-    margin: 3em 0 1.2em 0;
+    margin: 2em 0 1em 0;
     display: flex;
     flex-direction: column;
 
@@ -80,17 +81,32 @@
   }
 
   .tip {
+    font-size: var(--font-down-1);
+    min-height: 1.4em;
+    display: block;
     &.bad {
       color: var(--danger);
-      display: block;
     }
+  }
+
+  .toggle-password-mask span {
+    font-size: var(--font-down-1-rem);
   }
 
   .more-info,
   .instructions {
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
-    min-height: 1.4em;
     overflow-wrap: anywhere;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    & ~ .more-info,
+    & ~ .instructions {
+      opacity: 1;
+    }
   }
 
   .caps-lock-warning {
@@ -118,6 +134,46 @@
     }
   }
 
+  .login-page-cta,
+  .signup-page-cta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__disclaimer {
+      color: var(--primary-medium);
+      margin-bottom: 1rem;
+    }
+
+    &__buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+
+      button {
+        font-size: var(--font-0) !important;
+        width: 100%;
+      }
+    }
+    &__existing-account,
+    &__no-account-yet {
+      color: var(--primary-medium);
+      font-size: var(--font-down);
+      margin-bottom: 0.5rem;
+      text-align: center;
+      width: 100%;
+      &::before {
+        content: " ";
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-color: var(--primary-low);
+        margin-block: 1rem;
+      }
+    }
+  }
+
   .desktop-view & {
     @media screen and (max-width: 767px) {
       // important to maintain narrow desktop widths
@@ -129,8 +185,9 @@
       .has-alt-auth {
         flex-direction: column;
         overflow: auto;
-        gap: 1em;
-        .d-modal__footer {
+        gap: 0;
+        .d-modal__footer,
+        .btn-social {
           font-size: var(--font-down-1);
         }
         .login-left-side {
@@ -151,13 +208,23 @@
     }
   }
 }
+
+.invites-show {
+  #account-email-validation:not(:has(*)) {
+    display: none;
+  }
+}
+
 /* end shared styles */
 
-.d-modal.create-account {
+.d-modal.create-account,
+.d-modal.login-modal {
   &:not(:has(.login-right-side)) .d-modal__container {
     max-width: 500px;
   }
+}
 
+.d-modal.create-account {
   .d-modal {
     &__container {
       width: 100%;
@@ -205,7 +272,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 0.8em;
+      margin-bottom: 1em;
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
@@ -236,7 +303,7 @@
         position: absolute;
         pointer-events: none;
         left: 1em;
-        top: 10px;
+        top: 13px;
         box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
         transition: 0.2s ease all;
       }
@@ -249,6 +316,9 @@
         background-color: var(--secondary);
         padding: 0 0.25em 0 0.25em;
         font-size: $font-down-1;
+      }
+      .user-field.text label.control-label {
+        top: 13px;
       }
       .user-field.text:focus-within,
       .user-field.dropdown:focus-within,
@@ -265,6 +335,13 @@
       }
       input.alt-placeholder:invalid {
         color: var(--primary);
+      }
+      .user-field.dropdown,
+      .user-field.multiselect {
+        .more-info,
+        .instructions {
+          opacity: 1;
+        }
       }
 
       #email-login-link {
@@ -321,7 +398,6 @@
             font-size: 16px;
             position: absolute;
             pointer-events: none;
-            top: 12px;
             transition: 0.2s ease all;
             max-width: calc(100% - 2em);
             white-space: nowrap;
@@ -343,9 +419,12 @@
           box-shadow: 0 0 0 2px rgba(var(--tertiary-rgb), 0.25);
         }
         .controls .checkbox-label {
+          display: flex;
+          align-items: center;
           input[type="checkbox"].ember-checkbox {
             width: 1em !important;
             min-width: unset;
+            margin-block: 0;
           }
         }
       }

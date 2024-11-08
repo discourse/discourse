@@ -5,6 +5,14 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  it "supports custom fields" do
+    message.custom_fields["test"] = "test"
+    message.save_custom_fields
+    loaded_message = Chat::Message.find(message.id)
+    expect(loaded_message.custom_fields["test"]).to eq("test")
+    expect(Chat::MessageCustomField.first.message.id).to eq(message.id)
+  end
+
   describe "validations" do
     subject(:message) { described_class.new(message: "") }
 
@@ -61,10 +69,44 @@ describe Chat::Message do
       )
     end
 
-    it "does not support headings" do
-      cooked = described_class.cook("## heading 2")
+    it "supports kbd" do
+      cooked = described_class.cook <<~MD
+      <kbd>Esc</kbd> is pressed
+      MD
 
-      expect(cooked).to eq("<p>## heading 2</p>")
+      expect(cooked).to match_html <<~HTML
+      <p><kbd>Esc</kbd> is pressed</p>
+      HTML
+    end
+
+    context "when message is made by a bot user" do
+      it "supports headings" do
+        cooked = described_class.cook(<<~MD, user_id: -1)
+        # h1
+        ## h2
+        ### h3
+        #### h4
+        ##### h5
+        ###### h6
+        MD
+
+        expect(cooked).to match_html <<~HTML
+        <h1><a name="h1-1" class="anchor" href="#h1-1"></a>h1</h1>
+        <h2><a name="h2-2" class="anchor" href="#h2-2"></a>h2</h2>
+        <h3><a name="h3-3" class="anchor" href="#h3-3"></a>h3</h3>
+        <h4><a name="h4-4" class="anchor" href="#h4-4"></a>h4</h4>
+        <h5><a name="h5-5" class="anchor" href="#h5-5"></a>h5</h5>
+        <h6><a name="h6-6" class="anchor" href="#h6-6"></a>h6</h6>
+        HTML
+      end
+    end
+
+    it "doesn't support headings" do
+      cooked = described_class.cook("# test")
+
+      expect(cooked).to match_html <<~HTML
+      <p># test</p>
+      HTML
     end
 
     it "supports horizontal replacement" do
@@ -509,7 +551,7 @@ describe Chat::Message do
     it "destroys upload_references" do
       message_1 = Fabricate(:chat_message)
       upload_reference_1 = Fabricate(:upload_reference, target: message_1)
-      upload_1 = Fabricate(:upload)
+      _upload_1 = Fabricate(:upload)
 
       message_1.destroy!
 

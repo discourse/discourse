@@ -60,8 +60,12 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     registerTemporaryModule(`${CLASS_PREFIX}/test-name/conditional-render`, {
-      shouldRender(args, context) {
-        return args.shouldDisplay || context.siteSettings.always_display;
+      shouldRender(args, context, owner) {
+        return (
+          args.shouldDisplay ||
+          context.siteSettings.always_display ||
+          owner.lookup("service:site-settings").alternativeAccess
+        );
       },
     });
 
@@ -403,6 +407,17 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       .doesNotExist("doesn't render conditional outlet");
 
     getOwner(this).lookup("service:site-settings").always_display = true;
+    await settled();
+    assert.dom(".conditional-render").exists("renders conditional outlet");
+  });
+
+  test("shouldRender receives an owner argument", async function (assert) {
+    await render(hbs`<PluginOutlet @name="test-name" />`);
+    assert
+      .dom(".conditional-render")
+      .doesNotExist("doesn't render conditional outlet");
+
+    getOwner(this).lookup("service:site-settings").alternativeAccess = true;
     await settled();
     assert.dom(".conditional-render").exists("renders conditional outlet");
   });

@@ -1,13 +1,11 @@
 .d-admin-table {
-  box-shadow: none;
-
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     border-collapse: collapse;
     margin-bottom: var(--space-3);
   }
 
   thead {
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: none;
     }
   }
@@ -20,24 +18,43 @@
     position: relative;
     padding: var(--space-1) 0;
 
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: block;
       margin-bottom: var(--space-3);
-      box-shadow: var(--shadow-card);
+      border: 1px solid var(--primary-low);
     }
   }
 
   td {
-    border-top: none;
+    vertical-align: top;
+    padding-top: var(--space-3);
+    padding-bottom: var(--space-3);
 
-    @include breakpoint("mobile-extra-large") {
+    @include breakpoint("tablet") {
       display: block;
-      border-top: 1px solid var(--primary-very-low);
+      border-top: 1px solid var(--primary-low);
     }
 
-    &:first-child,
-    &:last-child {
-      @include breakpoint("mobile-extra-large") {
+    &:first-child {
+      @include breakpoint("tablet") {
+        border-top: 0;
+      }
+    }
+
+    &.d-admin-row__detail {
+      @include breakpoint("tablet") {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+
+    &.d-admin-row__controls {
+      text-align: right;
+
+      @include breakpoint("tablet") {
+        position: absolute;
+        top: -3px;
+        right: 0;
         border-top: 0;
       }
     }
@@ -45,17 +62,31 @@
 }
 
 .d-admin-row__overview {
+  width: 55%;
+
+  @include breakpoint("tablet") {
+    width: auto;
+    border-top: 0;
+  }
+
   &-name {
     font-weight: 700;
     max-width: 80%;
+    margin-bottom: var(--space-1);
   }
 
   &-author {
-    font-size: var(--font-down-2);
-    padding: 0 0 var(--space-1) 0;
+    font-size: var(--font-down-1);
+    margin-bottom: var(--space-1);
   }
 
   &-about {
+    padding-right: var(--space-4);
+
+    @include breakpoint("tablet") {
+      padding-top: var(--space-1);
+    }
+
     .d-icon {
       font-size: var(--font-down-3);
       margin-bottom: 0.1em;
@@ -63,23 +94,8 @@
   }
 }
 
-td.d-admin-row__detail {
-  @include breakpoint("mobile-extra-large") {
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid var(--primary-low);
-  }
-}
-
-.d-admin-row__toggle {
-  .d-toggle-switch {
-    display: inline-block;
-  }
-}
-
-.d-admin-row__control {
+.d-admin-row__controls {
   &-options {
-    text-align: right;
     display: flex;
     flex-direction: row;
     gap: 0.5em;
@@ -89,19 +105,13 @@ td.d-admin-row__detail {
       font-size: var(--font-down-1);
     }
   }
-
-  @include breakpoint("mobile-extra-large") {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
 }
 
 .d-admin-row__mobile-label {
   display: none;
 
-  @include breakpoint("mobile-extra-large") {
+  @include breakpoint("tablet") {
     display: inline-flex;
-    color: var(--secondary-medium);
+    color: var(--primary-high);
   }
 }

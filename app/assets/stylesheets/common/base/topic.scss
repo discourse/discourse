@@ -245,10 +245,11 @@
   #topic-title {
     .edit-topic-title {
       position: relative;
+      min-width: 0;
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
-        top: 7px;
+        top: 0.7em;
       }
       #edit-title {
         width: calc(100% - 50px);
@@ -308,10 +309,6 @@
       margin-bottom: 0.5em;
       a[href] {
         color: var(--primary-med-or-secondary-med);
-      }
-      .clicks {
-        margin-left: 0.5em;
-        flex: 0 0 auto;
       }
       .d-icon {
         font-size: var(--font-down-2);
@@ -378,4 +375,8 @@ a.topic-featured-link {
     border-radius: 3px;
     text-transform: lowercase;
   }
+}
+
+a[data-clicks]::after {
+  @include click-counter-badge;
 }

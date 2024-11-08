@@ -198,7 +198,7 @@ he:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
       post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
-      twitter: "שתפו ב-X"
+      twitter: "שיתוף ב־X"
       facebook: "שיתוף בפייסבוק"
       email: "שליחה בדוא״ל"
       url: "העתקה ושיתוף של כתובת"
@@ -381,6 +381,18 @@ he:
       active_user_count: "משתמשים פעילים"
       visitor_count: "מבקרים"
       eu_visitor_count: "מבקרים מהאיחוד האירופי"
+      traffic_info_footer_MF: |
+        במחצית השנה האחרונה האתר הזה הגיש תוכן לבערך { total_visitors, plural,
+            one {אדם אחד}
+            two {שני אנשים}
+            many {# אנשים}
+          other {# אנשים}
+        } בכל חודש, מתוכם בערך { eu_visitors, plural,
+            one {אדם אחד}
+            two {שני אנשים}
+            many {# אנשים}
+          other {# אנשים}
+        } מהאיחוד האירופי.
       contact: "יצירת קשר אתנו"
       contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור קשר דרך: %{contact_info}."
       site_activity: "פעילות באתר"
@@ -1421,6 +1433,7 @@ he:
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
+      enable_smart_lists: "הפעלת רשימות חכמות בעת כתיבה בחלון עריכת הודעות"
       enable_defer: "הפעלת סימון נושאים כלא נקראו"
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
@@ -1489,7 +1502,7 @@ he:
       ignored_users: "זכה להתעלמות"
       ignored_users_instructions: "הדחקת כל הפוסטים, ההתראות וההודעות הפרטיות מהמשתמשים האלה."
       tracked_topics_link: "הצגה"
-      automatically_unpin_topics: "ביטול נעיצה אוטומטית של נושאים עם הגעה לתחתית."
+      automatically_unpin_topics: "ביטול נעיצה אוטומטית של נושאים עם הגעה לתחתית"
       apps: "אפליקציות"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
@@ -1772,11 +1785,12 @@ he:
         action: "יש ללחוץ כאן להפעלת החשבון שלך"
         already_done: "כתובת אישור החשבון הזו אינה זמינה יותר, עמך הסליחה. אולי החשבון שלך כבר פעיל?"
         please_continue: "חשבונך החדש אושר, כעת תתבצע הפנייה לעמוד הבית."
-        continue_button: "להמשיך אל %{site_name}"
+        continue_button: "סיום!"
         welcome_to: "ברוך בואך אל %{site_name}!"
         approval_required: "על מפקח לאשר את החשבון החדש שלך ידנית בטרם תתאפשר גישתך לפורום. כאשר חשבונך יאושר תישלח אליך הודעה בדוא״ל!"
       name:
         title: "שם"
+        title_optional: "שם (רשות)"
         instructions: "שמך המלא (רשות)"
         instructions_required: "שמך המלא"
         required: "נא למלא שם"
@@ -1949,6 +1963,7 @@ he:
           title: "קישור הזמנה"
           success: "קישור הזמנה יוצר בהצלחה!"
           error: "אירעה שגיאה ביצירת קישור הזמנה."
+        cannot_invite_to_forum: "אין לך הרשאה ליצור הזמנות, סליחה. \nנא ליצור קשר עם ההנהלה כדי להעניק לך הרשאה להזמין."
         invite:
           new_title: "הזמנת חברים"
           edit_title: "עריכת הזמנה"
@@ -2128,6 +2143,8 @@ he:
         sent_by: "נשלח על ידי"
         private_message: "הודעה"
         the_topic: "הנושא"
+      card: "כרטיס משתמש"
+      profile_link: "%{username}, הצגת פרופיל"
     user_status:
       save: "שמירה"
       set_custom_status: "הגדרת מצב משלך"
@@ -2337,7 +2354,6 @@ he:
     search_hint: "שם משתמש, דוא״ל או כתובת IP"
     create_account:
       header_title: "ברוך בואך!"
-      subheader_title: "הבה ניצור לך חשבון"
       disclaimer: "עצם הרשמתך מביעה את הסכמתך ל<a href='%{privacy_link}' target='blank'>מדיניות הפרטיות</a> ול<a href='%{tos_link}' target='blank'>תנאי השירות</a>."
       title: "הרשמה"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
@@ -2381,7 +2397,6 @@ he:
       confirm_button: סיום הכניסה
     login:
       header_title: "ברוך שובך"
-      subheader_title: "כניסה לחשבון שלך"
       title: "כניסה"
       username: "משתמש"
       password: "סיסמה"
@@ -2481,7 +2496,6 @@ he:
       success: "החשבון נוצר ונכנסת אליו."
       name_label: "שם"
       password_label: "ססמה"
-      existing_user_can_redeem: "מימוש ההזמנה שלך לנושא או לקבוצה."
     password_reset:
       continue: "המשיכו ל-%{site_name}"
     emoji_set:
@@ -2493,6 +2507,7 @@ he:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "קטגוריות בלבד"
+      categories_only_optimized: "קטגוריות בלבד (ממוטב)"
       categories_with_featured_topics: "קטגוריות עם נושאים מומלצים"
       categories_and_latest_topics: "קטגוריות ונושאים אחרונים"
       categories_and_latest_topics_created_date: "קטגוריות ונושאים עדכניים (מיון לפי תאריך יצירת הנושא)"
@@ -3810,6 +3825,11 @@ he:
         many: "הצגת %{count} תגובות שהוסתרו"
         other: "הצגת %{count} תגובות שהוסתרו"
       sr_reply_to: "תגובה לפוסט מס׳ %{post_number} על ידי ‎@%{username}"
+      link_clicked:
+        one: "הקישור נלחץ פעם אחת"
+        two: "הקישור נלחץ פעמיים"
+        many: "הקישור נלחץ %{count} פעמים"
+        other: "הקישור נלחץ %{count} פעמים"
       notice:
         new_user: "זהו הפרסום הראשון מאת %{user} - הבה נקבל את פניו/ה לקהילה שלנו!"
         returning_user: "עבר זמן מה מאז שראינו במחוזותינו את %{user} - הפרסום האחרון שלו/ה היה %{time}."
@@ -4104,6 +4124,8 @@ he:
       badge_colors: "צבעי העיטורים"
       background_color: "צבע רקע"
       foreground_color: "צבע קדמי"
+      color_used: "צבע בשימוש"
+      predefined_colors: "אפשרויות צבע מוגדרות מראש"
       name_placeholder: "מילה או שתיים לכל היותר"
       color_placeholder: "כל צבע אינטרנטי"
       delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
@@ -4817,6 +4839,7 @@ he:
       dismiss: "דחייה"
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
+    theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
       title: "השהיית התראות למשך…"
@@ -5027,6 +5050,9 @@ he:
                 two: "%{count} ממתינים"
                 many: "%{count} ממתינים"
                 other: "%{count} ממתינים"
+            invite:
+              content: "להזמין"
+              title: "הזמנת חברים חדשים"
         global_section: "סעיף כללי, גלוי לכולם"
       panels:
         forum:
@@ -5194,6 +5220,7 @@ he:
           experiment_toggled_too_fast: "החלפת את המצב של היכולת הניסיונית מהר מדי. נא להמתין כמה שניות בטרם ניסיון חוזר."
           experiment_tooltip:
             title: "התנסות ביכולת הניסיונית שלנו"
+            content: "מזמינים אותך לעשות סיבוב על היכולת החדשה שאנו מפתחים! היא עדיין בשלבי ניסוי, לכן יכול להיות שנסיר אותה בכל רגע נתון. אפשר לכבות אותה בכל רגע נתון."
         last_checked: "נבדק לאחרונה"
         refresh_problems: "רענן"
         no_problems: "לא נמצאו בעיות."
@@ -5526,8 +5553,6 @@ he:
           post_edited: "פוסט מעודכן"
           post_destroyed: "פוסט נמחק"
           post_recovered: "נושא משוחזר"
-          category_experts_approved: "הפוסט סומן כפוסט מומחי קטגוריה"
-          category_experts_unapproved: "הוסר הסימון מהפוסט כפוסט מומחי קטגוריה"
         group_event:
           group_name: "אירועי קבוצה"
           group_created: "קבוצה נוצרה"
@@ -5572,6 +5597,8 @@ he:
           group_name: "אירועי משתמש בקבוצה"
           user_added_to_group: "משתמש נוסף לקבוצה"
           user_removed_from_group: "משתמש מוסר מקבוצה"
+        custom_event:
+          group_name: "אירועים מותאמים אישית"
         user_promoted_event:
           group_name: "אירועי קידום משתמש"
           user_promoted: "משתמש מקודם"
@@ -5690,12 +5717,14 @@ he:
       config_areas:
         about:
           header: "על האתר שלך"
-          description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו."
+          description: "כאן יש לספק מידע על האתר והצוות שלך כדי שאנשים יוכלו ללמוד מה מהות הקהילה שלך, מי העומדים מאחרויה ואיך לפנות אליך אם קורה משהו. מוצג ב<a href='%{basePath}/about'>עמוד על</a> האתר שלך."
           general_settings: "הגדרות כלליות"
           community_name: "שם הקהילה"
           community_name_placeholder: "קהילה לדוגמה"
           community_summary: "תקציר קהילה"
           community_description: "תיאור קהילה"
+          community_title: "כותרת הקהילה"
+          community_title_help: "תיאור קצר שמופיע בלשונית הדפדפן, לעמודי מפתח כגון רשימות קטגוריות ונושאים."
           banner_image: "תמונת כרזה"
           banner_image_help: |
             ייעשה בזה שימוש בעמוד העל אודות שלך. הגודל המומלץ: ‎1100×300 פיקסלים. סוגים מורשים: JPG,‏ PNG ו־SVG עד 10 מ״ב
@@ -5703,36 +5732,35 @@ he:
           community_owner: "בעלות על הקהילה"
           community_owner_placeholder: "יוסי כהן"
           community_owner_help: |
-            שם איש או אשת הקשר הראשיים האחראיים לאתר הזה. משמש להתראות משמעותיות, ומוצג גם ב־‎/about. גלוי למשתמשים אלמוניים באתרים ציבוריים.
+            שם שמשמש להתראות משמעותיות, ומוצג גם ב־‎/about. גלוי למשתמשים אלמוניים באתרים ציבוריים.
           contact_email: "דוא״ל ליצירת קשר"
           contact_email_placeholder: "contact@yossi-cohen.com"
           contact_email_help: |
-            כתובת דוא״ל של איש או אשת קשר מובילים שאחראיים על האתר הזה. משמש להתראות משמעותיות, וגם יוצג ב־‎/about. חשוף בפני משתמשים אלמוניים באתרים ציבוריים.
+            כתובת דוא״ל שמשמשת להתראות משמעותיות, ומוצגת גם ב־‎/about. גלויה למשתמשים אלמוניים באתרים ציבוריים.
           contact_url: "כתובת ליצירת קשר"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            כתובת ליצירת קשר עבור אתר זה. כאשר קיימת, מופיעה במקום כתובת דוא״ל ב־‎/about וגלויה בפני משתמשים אלמוניים באתרים ציבוריים.
+            כאשר קיימת, מופיעה במקום כתובת דוא״ל ב־‎/about וגלויה בפני משתמשים אלמוניים באתרים ציבוריים.
           site_contact_name: "שם איש או אשת הקשר באתר"
           site_contact_name_help: |
-            שם משתמש תקין של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון בררת המחדל של המערכת.
+            שם משתמש של חבר סגל ממנו יישלחו כל ההודעות האוטומטיות. במקרה של העדר בחירה, ייעשה שימוש בחשבון ברירת המחדל של המערכת.
           site_contact_group: "קבוצת הקשר באתר"
           site_contact_group_help: |
-            שם תקף של קבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות.
+            הקבוצה שתוזמן לכל ההודעות הפרטיות שנשלחות אוטומטית.
           your_organization: "הארגון שלך"
-          company_name: "שם החברה"
-          company_name_placeholder: "חברה לדוגמה בע״מ"
-          company_name_help: |
-            שם החברה או הארגון שלך.
+          your_organization_description: "אנו נשתמש במידע זה בתנאי השירות ובהצהרת הפרטיות כדי להראות מי מפעיל את האתר ותחת איזו סמכות שיפוט."
+          company_name: "שם"
+          company_name_placeholder: "עמותת לקט ישראל"
           company_name_warning: |
             אם השדה יישאר ריק, לא יסופקו תנאי שירות או הצהרת פרטיות ראשוניים.
           governing_law: "החוק המחייב"
-          governing_law_placeholder: "אזור הצפון"
+          governing_law_placeholder: "מחוז, מדינה או ארץ"
           governing_law_help: |
-            ציון תחום השיפוט שאחראי על ההיבטים המשפטיים של האתר, לרבות תנאי השירות והצהרת הפרטיות. בדרך כלל מדובר במדינה או המחוז שבהם רשומה החברה שמפעילה את האתר או המקום העיקרי ממנו היא עושה עסקים.
+            נא לציין את תחום השיפוט להליכים המשפטיים, בפרט איפה שהחברה רשומה ומתנהלת.
           city_for_disputes: "עיר המחלוקת"
-          city_for_disputes_placeholder: "כרמיאל"
+          city_for_disputes_placeholder: "עיר"
           city_for_disputes_help: |
-            ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום.
+            נא לציין את העיר ליישוב סכסוכים משפטיים שקשורים בפורום הזה.
           optional: "(רשות)"
           update: "עדכון"
           toasts:
@@ -5772,19 +5800,21 @@ he:
             non_deletable: "אי אפשר למחוק את הסימון הזה כיוון שזה הוא סימון מערכת או שכבר נעשה בו שימוש במערכת הסקירה, עם זאת, ניתן להשבית אותו."
             require_message: "לבקש מהמשתמשים לספק סיבות נוספות"
             require_message_description: "כשהסימון הזה נבחר, יוצג שדה טקסט כדי לבקש מהמשתמשים לספק פרטים על למה הם סימנו את התוכן הזה"
+            auto_action_type: "להסתיר תוכן מסומן אוטומטית"
           more_options:
             title: "אפשרויות נוספות"
             move_up: "קידום למעלה"
             move_down: "העברה למטה"
         look_and_feel:
           title: "מראה ותחושה"
-          description: "אפשר להתאים ערכות עיצוב/צבע ורכיבים ולמתג את אתר ה־Discourse שלך, כדי להעניק לו סגנון ייחודי."
+          description: "אפשר להתאים ולמתג את אתר ה־Discourse שלך כדי להעניק לו סגנון ייחודי."
           themes:
             title: "תמות"
             themes_intro: "יש להתקין ערכת עיצוב חדשה כדי להתחיל או ליצור אחת משלך מאפס באמצעות המשאבים האלה."
             themes_intro_img_alt: "ממלא מקום לערכת עיצוב חדשה"
             set_default_theme: "הגדרת ברירת מחדל"
             default_theme: "ערכת עיצוב כברירת מחדל"
+            themes_description: "ערכות עיצוב הן ערכות מתרחבות שמשנות מגוון פריטי עיצוב לסגנון הפורום שלך ובדרך כלל כוללים גם יכולות מצד מנשק המשתמש."
             new_theme: "ערכת עיצוב חדשה"
             user_selectable: "לבחירת המשתמש"
       plugins:
@@ -6004,6 +6034,7 @@ he:
           set_default_theme: "הגדרת ברירת מחדל"
           default_theme: "ערכת עיצוב כברירת מחדל"
           set_default_success: "ברירת המחדל של ערכת העיצוב הוגדרה לכדי %{theme}"
+          install_success: "%{theme} הותקנה בהצלחה!"
           inactive_components: "רכיבים שאינם בשימוש:"
           selected:
             one: "%{count} נבחרו"
@@ -6012,6 +6043,7 @@ he:
             other: "%{count} נבחרו"
           cancel: "ביטול"
           broken_theme_tooltip: "לערכת עיצוב זו יש שגיאות ב־CSS,‏ HTML או YAML"
+          broken_theme: "השבתת ערכת עיצוב פגומה"
           disabled_component_tooltip: "הרכיב הזה נוטרל"
           default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"
           updates_available_tooltip: "קיימים עדכונים לערכת עיצוב זו"
@@ -6080,6 +6112,7 @@ he:
           update_to_latest: "עדכון לגרסה אחרונה"
           check_for_updates: "בדיקת עדכונים"
           updating: "מתבצע עדכון…"
+          update_success: "העדכון של %{theme} הושלם"
           up_to_date: "ערכת העיצוב עדכנית, מועד הבדיקה האחרונה:"
           has_overwritten_history: "גרסת ערכת העיצוב הנוכחית אינה קיימת עוד כיוון שהיסטוריית ה־Git שוכתבה על ידי דחיפה כפויה (force push)."
           add: "הוספה"
@@ -7047,6 +7080,9 @@ he:
         history: "הצגת היסטוריית שינויים"
         reset: "אתחול"
         none: "ללא"
+        save: "שמירה"
+        cancel: "ביטול"
+        unmask: "ביטול מיסוך קלט"
       site_settings:
         emoji_list:
           invalid_input: "רשימות האמוג׳י אמורה להכיל רק שמות סימני אמוג׳י תקניים, למשל: hugs (חיבוקים)"
@@ -7101,6 +7137,7 @@ he:
           groups: "קבוצות"
           dashboard: "לוח בקרה"
           navigation: "ניווט"
+          experimental: "ניסיוני"
         secret_list:
           invalid_input: "שדות הקלט לא יכולים להישאר ריקים או להכיל תווים של קווים אנכיים."
         default_categories:
@@ -7249,6 +7286,7 @@ he:
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
+        created_by: "נוצר על ידי"
         image: "תמונה"
         alt: "תצוגה מקדימה של אמוג׳י מותאם"
         delete_confirm: "להסיר את האמוג׳י :%{name}:?"

@@ -950,15 +950,6 @@ sw:
       enable_local_logins_disabled: "Kwanza ruhusu 'ruhusu programu-jalizi ' kabla ya kuruhusu mpangilio huu."
       min_username_length_range: "Hauwezi ukaseti kiwango cha chini kiwe zaidi ya kiwango cha juu."
       max_username_length_range: "Hauwezi ukaweka kiwango cha juu kiwe kidogo ya kiwango cha chini."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "isiyo Amilifu"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "isiyo Amilifu"
-      - ""
   search:
     within_post: "#%{post_number} za %{username}"
     types:

@@ -1,19 +1,16 @@
-.admin-flag-item {
-  &__name {
-    font-weight: bold;
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-  &__description {
-    margin-top: 0.5em;
-  }
-  .d-toggle-switch__label {
-    margin-bottom: 0;
-  }
-  .d-toggle-switch {
-    margin-right: 2em;
-  }
+.admin-flags {
+  table.d-admin-table {
+    td:first-child {
+      width: 70%;
 
+      @include breakpoint("tablet") {
+        width: auto;
+      }
+    }
+  }
+}
+
+.admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
     border-top: 1px solid var(--primary-low);

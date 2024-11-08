@@ -133,36 +133,64 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
     end
 
     context "for my threads" do
-      fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: message) }
-      fab!(:thread_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+      context "with public channels" do
+        fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: message) }
+        fab!(:thread_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
-      before { SiteSetting.chat_threads_enabled = true }
+        before { SiteSetting.chat_threads_enabled = true }
 
-      it "is unread" do
-        visit("/")
-        chat_page.open_from_header
+        it "is unread" do
+          visit("/")
+          chat_page.open_from_header
 
-        expect(page).to have_css("#c-footer-threads .c-unread-indicator")
+          expect(page).to have_css("#c-footer-threads .c-unread-indicator")
+        end
+
+        it "is not unread when thread is from a muted channel" do
+          channel.membership_for(current_user).update!(muted: true)
+
+          visit("/")
+          chat_page.open_from_header
+
+          expect(page).to have_no_css("#c-footer-threads .c-unread-indicator")
+        end
+
+        it "is urgent for watched thread messages" do
+          thread.membership_for(current_user).update!(
+            notification_level: ::Chat::NotificationLevels.all[:watching],
+          )
+
+          visit("/")
+          chat_page.open_from_header
+
+          expect(page).to have_css("#c-footer-threads .c-unread-indicator.-urgent")
+        end
       end
 
-      it "is not unread when thread is from a muted channel" do
-        channel.membership_for(current_user).update!(muted: true)
+      context "with direct messages" do
+        fab!(:dm_channel) do
+          Fabricate(
+            :direct_message_channel,
+            threading_enabled: true,
+            users: [current_user, other_user],
+          )
+        end
+        fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
+        fab!(:dm_thread) do
+          Fabricate(:chat_thread, channel: dm_channel, original_message: dm_message)
+        end
+        fab!(:dm_thread_message) do
+          Fabricate(:chat_message, chat_channel: dm_channel, thread: dm_thread, user: other_user)
+        end
 
-        visit("/")
-        chat_page.open_from_header
+        before { SiteSetting.chat_threads_enabled = true }
 
-        expect(page).to have_no_css("#c-footer-threads .c-unread-indicator")
-      end
+        it "is unread" do
+          visit("/")
+          chat_page.open_from_header
 
-      it "is urgent for watched thread messages" do
-        thread.membership_for(current_user).update!(
-          notification_level: ::Chat::NotificationLevels.all[:watching],
-        )
-
-        visit("/")
-        chat_page.open_from_header
-
-        expect(page).to have_css("#c-footer-threads .c-unread-indicator.-urgent")
+          expect(page).to have_css("#c-footer-threads .c-unread-indicator")
+        end
       end
     end
   end

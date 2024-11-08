@@ -1487,7 +1487,7 @@ pl_PL:
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       tracked_topics_link: "Pokaż"
-      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony."
+      automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy dotrę do końca strony"
       apps: "Aplikacje"
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
@@ -1770,11 +1770,12 @@ pl_PL:
         action: "Kliknij, by aktywować swoje konto."
         already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne?"
         please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
-        continue_button: "Przejdź do %{site_name}"
+        continue_button: "Zakończ!"
         welcome_to: "Witaj na %{site_name}!"
         approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
+        title_optional: "Nazwa (opcjonalnie)"
         instructions: "Twoja pełna nazwa (opcjonalnie)"
         instructions_required: "Twoja pełna nazwa"
         required: "Wprowadź imię"
@@ -1947,15 +1948,30 @@ pl_PL:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
+        cannot_invite_to_forum: "Przepraszamy, nie masz uprawnień do tworzenia zaproszeń. Skontaktuj się z administratorem w celu przyznania uprawnień do tworzenia zaproszeń."
         invite:
           new_title: "Zaproś członków"
           edit_title: "Edytuj zaproszenie"
           instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
+          create_link_to_invite: "Utwórz link, który można udostępnić, aby natychmiast przyznać dostęp do tej witryny."
+          copy_link_and_share_it: "Skopiuj poniższy link i udostępnij go, aby natychmiast udzielić dostępu do tej witryny."
           copy_link: "Skopiuj link"
           link_copied: "Link skopiowany!"
           share_link: "Udostępnij link"
+          link_validity_MF: |
+            Link jest ważny do { user_count, plural,
+                one {# użytkownika}
+                few {# użytkowników}
+                many {# użytkowników}
+              other {# użytkowników}
+            } i wygasa za { duration_days, plural,
+                one {# dzień}
+                few {# dni}
+                many {# dni}
+              other {# dni}
+            }.
           edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
@@ -2110,6 +2126,8 @@ pl_PL:
         sent_by: "Wysłane przez"
         private_message: "wiadomość"
         the_topic: "temat"
+      card: "Karta użytkownika"
+      profile_link: "%{username}, odwiedź profil"
     user_status:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
@@ -2270,7 +2288,6 @@ pl_PL:
     search_hint: "nazwa użytkownika, email lub IP"
     create_account:
       header_title: "Witamy!"
-      subheader_title: "Utwórzmy Twoje konto"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki świadczenia usług</a> ."
       title: "Rejestracja"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
@@ -2314,7 +2331,6 @@ pl_PL:
       confirm_button: Dokończ logowanie
     login:
       header_title: "Witamy ponownie"
-      subheader_title: "Zaloguj się na swoje konto"
       title: "Logowanie"
       username: "Użytkownik"
       password: "Hasło"
@@ -2414,7 +2430,6 @@ pl_PL:
       success: "Twoje konto zostało utworzone i jesteś teraz zalogowany."
       name_label: "Nazwa"
       password_label: "Hasło"
-      existing_user_can_redeem: "Zrealizuj zaproszenie do tematu lub grupy."
     password_reset:
       continue: "Przejdź do %{site_name}"
     emoji_set:
@@ -2426,6 +2441,7 @@ pl_PL:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Tylko kategorie"
+      categories_only_optimized: "Tylko kategorie (zoptymalizowane)"
       categories_with_featured_topics: "Kategorie z wybranymi tematami"
       categories_and_latest_topics: "Kategorie i ostatnie tematy"
       categories_and_latest_topics_created_date: "Kategorie i najnowsze tematy (sortuj według daty utworzenia tematu)"
@@ -3746,6 +3762,11 @@ pl_PL:
         many: "pokaż %{count} ukrytych odpowiedzi"
         other: "pokaż %{count} ukrytych odpowiedzi"
       sr_reply_to: "Odpowiedz na post #%{post_number} od @%{username}"
+      link_clicked:
+        one: "link kliknięty %{count} raz"
+        few: "link kliknięty %{count} razy"
+        many: "link kliknięty %{count} razy"
+        other: "link kliknięty %{count} razy"
       notice:
         new_user: "%{user} opublikował(a) coś po raz pierwszy - powitajmy tę osobę w naszej społeczności!"
         returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - ostatni wpis tego użytkownika był %{time}."
@@ -4040,6 +4061,8 @@ pl_PL:
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
       foreground_color: "Kolor pierwszego planu"
+      color_used: "Kolor w użyciu"
+      predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
@@ -4741,6 +4764,7 @@ pl_PL:
       dismiss: "Wyczyść"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
+    theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"
@@ -4951,6 +4975,9 @@ pl_PL:
                 few: "%{count} oczekujących"
                 many: "%{count} oczekujących"
                 other: "%{count} oczekujących"
+            invite:
+              content: "Zaproś"
+              title: "Zaproś nowych członków"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
       panels:
         forum:
@@ -5113,6 +5140,12 @@ pl_PL:
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
+          experiment_enabled: "Włączono funkcję eksperymentalną."
+          experiment_disabled: "Wyłączono funkcję eksperymentalną."
+          experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+          experiment_tooltip:
+            title: "Wypróbuj naszą eksperymentalną funkcję"
+            content: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz z niej zrezygnować, kiedy tylko zechcesz."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5445,8 +5478,6 @@ pl_PL:
           post_edited: "Post został zaktualizowany"
           post_destroyed: "Post został usunięty"
           post_recovered: "Post został odzyskany"
-          category_experts_approved: "Post oznaczony jako post eksperta kategorii"
-          category_experts_unapproved: "Post nieoznaczony jako post eksperta kategorii"
         group_event:
           group_name: "Zdarzenia grupy"
           group_created: "Grupa została utworzona"
@@ -5491,6 +5522,8 @@ pl_PL:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
+        custom_event:
+          group_name: "Zdarzenia niestandardowe"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
           user_promoted: "Użytkownik zostaje awansowany"
@@ -5608,47 +5641,31 @@ pl_PL:
       config_areas:
         about:
           header: "O Twojej witrynie"
-          description: "Podaj tutaj informacje o tej stronie i swoim zespole, aby ludzie mogli dowiedzieć się, czym jest twoja społeczność, kto za nią stoi i jak się z tobą skontaktować w razie problemów."
           general_settings: "Ustawienia główne"
           community_name: "Nazwa społeczności"
           community_name_placeholder: "Przykładowa społeczność"
           community_summary: "Podsumowanie społeczności"
           community_description: "Opis społeczności"
+          community_title: "Tytuł społeczności"
           banner_image: "Obraz banera"
           banner_image_help: |
             Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
           contact_information: "Informacje kontaktowe"
           community_owner: "Właściciel społeczności"
           community_owner_placeholder: "Jan Kowalski"
-          community_owner_help: |
-            Nazwa kluczowego kontaktu odpowiedzialnego za tę witrynę. Używana do krytycznych powiadomień, a także wyświetlana na /about. Widoczna dla anonimowych użytkowników w publicznych witrynach.
           contact_email: "E-mail kontaktowy"
           contact_email_placeholder: "kontakt@jan-kowalski.pl"
-          contact_email_help: |
-            Adres e-mail kluczowej osoby kontaktowej odpowiedzialnej za tę witrynę. Używany do krytycznych powiadomień, a także wyświetlany na /about. Widoczny dla anonimowych użytkowników na stronach publicznych.
           contact_url: "URL kontaktowy"
           contact_url_placeholder: "https://johnny-smith.com/contact"
-          contact_url_help: |
-            Adres URL kontaktu dla tej witryny. Jeśli jest obecny, zastępuje kontaktowy adres e-mail na podstronie /about i jest widoczny dla anonimowych użytkowników na stronach publicznych.
           site_contact_name: "Nazwa kontaktu witryny"
-          site_contact_name_help: |
-            Prawidłowa nazwa użytkownika, z której będą wysyłane wszystkie automatyczne wiadomości. Jeśli pozostanie puste, zostanie użyte domyślne konto systemowe.
           site_contact_group: "Grupa kontaktowa witryny"
-          site_contact_group_help: |
-            Prawidłowa nazwa grupy, która jest zapraszana do wszystkich automatycznie wysyłanych wiadomości prywatnych.
           your_organization: "Twoja organizacja"
-          company_name: "Nazwa firmy"
-          company_name_placeholder: "Przykładowa firma Inc."
-          company_name_help: |
-            Nazwa Twojej firmy lub organizacji.
+          company_name: "Nazwa"
+          company_name_placeholder: "Organizacja Acme"
           company_name_warning: |
             Jeśli pozostawisz to pole puste, nie zostaną dostarczone standardowe warunki świadczenia usług ani polityka prywatności.
           governing_law: "Obowiązujące prawo"
-          governing_law_placeholder: "Stan Nowy Jork"
           city_for_disputes: "Miasto do sporów"
-          city_for_disputes_placeholder: "Nowy Jork"
-          city_for_disputes_help: |
-            Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -6957,6 +6974,8 @@ pl_PL:
         history: "Wyświetl historię zmian"
         reset: "przywróć domyślne"
         none: "żadne"
+        save: "zapisz"
+        cancel: "anuluj"
       site_settings:
         emoji_list:
           invalid_input: "Lista emoji powinna zawierać tylko poprawne nazwy emoji, np. hugs"
@@ -7011,6 +7030,7 @@ pl_PL:
           groups: "Grupy"
           dashboard: "Panel"
           navigation: "Nawigacja"
+          experimental: "Eksperymentalne"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:

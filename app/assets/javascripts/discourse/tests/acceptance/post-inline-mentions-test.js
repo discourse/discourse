@@ -177,11 +177,9 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       statusTooltip.querySelector("img").src.includes(status.emoji),
       "emoji is correct"
     );
-    assert.equal(
-      statusTooltip.querySelector(".user-status-tooltip-description").innerText,
-      status.description,
-      "status description is correct"
-    );
+    assert
+      .dom(".user-status-tooltip-description", statusTooltip)
+      .hasText(status.description, "status description is correct");
   });
 });
 

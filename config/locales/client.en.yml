@@ -1358,6 +1358,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
+      enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
@@ -1427,7 +1428,7 @@ en:
       ignored_users: "Ignored"
       ignored_users_instructions: "Suppress all posts, notifications, and PMs from these users."
       tracked_topics_link: "Show"
-      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom"
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
@@ -1771,12 +1772,13 @@ en:
         action: "Click here to activate your account"
         already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
         please_continue: "Your new account is confirmed; you will be redirected to the home page."
-        continue_button: "Continue to %{site_name}"
+        continue_button: "Finish!"
         welcome_to: "Welcome to %{site_name}!"
         approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
 
       name:
         title: "Name"
+        title_optional: "Name (optional)"
         instructions: "Your full name (optional)"
         instructions_required: "Your full name"
         required: "Please enter a name"
@@ -1962,6 +1964,7 @@ en:
           title: "Invite Link"
           success: "Invite link generated successfully!"
           error: "There was an error generating Invite link"
+        cannot_invite_to_forum: "Sorry, you don't have permission to create invites. Please contact an admin to grant you invite permission."
 
         invite:
           new_title: "Invite members"
@@ -2130,6 +2133,9 @@ en:
         sent_by: "Sent by"
         private_message: "message"
         the_topic: "the topic"
+
+      card: "User card"
+      profile_link: "%{username}, visit profile"
 
     user_status:
       save: "Save"
@@ -2348,7 +2354,6 @@ en:
 
     create_account:
       header_title: "Welcome!"
-      subheader_title: "Let's create your account"
       disclaimer: "By registering, you agree to the <a href='%{privacy_link}' target='blank'>privacy policy</a> and <a href='%{tos_link}' target='blank'>terms of service</a>."
       title: "Sign Up"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
@@ -2396,7 +2401,6 @@ en:
 
     login:
       header_title: "Welcome back"
-      subheader_title: "Log in to your account"
       title: "Log In"
       username: "User"
       password: "Password"
@@ -2498,7 +2502,6 @@ en:
       success: "Your account has been created and you're now logged in."
       name_label: "Name"
       password_label: "Password"
-      existing_user_can_redeem: "Redeem your invitation to a topic or group."
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -2513,6 +2516,7 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
+      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
@@ -3762,6 +3766,9 @@ en:
         one: "view %{count} hidden reply"
         other: "view %{count} hidden replies"
       sr_reply_to: "Reply to post #%{post_number} by @%{username}"
+      link_clicked:
+        one: "link clicked %{count} time"
+        other: "link clicked %{count} times"
 
       notice:
         new_user: "This is the first time %{user} has posted — let’s welcome them to our community!"
@@ -4044,6 +4051,8 @@ en:
       badge_colors: "Badge colors"
       background_color: "Background color"
       foreground_color: "Foreground color"
+      color_used: "Color in use"
+      predefined_colors: "Predefined color options"
       name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
@@ -4735,6 +4744,8 @@ en:
     safe_mode:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
+    theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+
     image_removed: "(image removed)"
 
     pause_notifications:
@@ -4938,6 +4949,9 @@ en:
               pending_count:
                 one: "%{count} pending"
                 other: "%{count} pending"
+            invite:
+              content: "Invite"
+              title: "Invite new members"
         global_section: "Global section, visible to everyone"
       panels:
         forum:
@@ -5104,6 +5118,7 @@ en:
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
           previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Learn more..."
+          experimental: "Experimental"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
           experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
@@ -5439,8 +5454,6 @@ en:
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
-          category_experts_approved: "Post marked as category experts post"
-          category_experts_unapproved: "Post unmarked as category experts post"
         group_event:
           group_name: "Group Events"
           group_created: "Group is created"
@@ -5485,6 +5498,8 @@ en:
           group_name: "Group User Events"
           user_added_to_group: "A user is added to a group"
           user_removed_from_group: "A user is removed from a group"
+        custom_event:
+          group_name: "Custom Events"
         user_promoted_event:
           group_name: "User Promoted Events"
           user_promoted: "A user is promoted"
@@ -5610,6 +5625,8 @@ en:
           community_name_placeholder: "Example Community"
           community_summary: "Community summary"
           community_description: "Community description"
+          community_title: "Community title"
+          community_title_help: "Short description, shown in the browser tab, for key pages such as categories and topic lists."
           banner_image: "Banner image"
           banner_image_help: |
             This will be used on your About page. Recommended size: 1100x300px. Accepted types: JPG, PNG, and SVG up to 10MB.
@@ -5617,36 +5634,35 @@ en:
           community_owner: "Community owner"
           community_owner_placeholder: "Johnny Smith"
           community_owner_help: |
-            Name of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Name used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_email: "Contact email"
           contact_email_placeholder: "contact@johnny-smith.com"
           contact_email_help: |
-            Email address of key contact responsible for this site. Used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
+            Email used for critical notifications, and also displayed on /about. Visible to anonymous users on public sites.
           contact_url: "Contact URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
           contact_url_help: |
-            Contact URL for this site. When present, replaces contact email address on /about and visible to anonymous users on public sites.
+            When present, replaces contact email address on /about and visible to anonymous users on public sites.
           site_contact_name: "Site contact name"
           site_contact_name_help: |
-            A valid staff username to send all automated messages from. If left blank, the default System account will be used.
+            A staff username to send all automated messages from. If left blank, the default System account will be used.
           site_contact_group: "Site contact group"
           site_contact_group_help: |
-            A valid name of a group that gets invited to all automatically sent private messages.
+            The group that gets invited to all automatically sent private messages.
           your_organization: "Your organization"
-          company_name: "Company name"
-          company_name_placeholder: "Sample Company Inc."
-          company_name_help: |
-            Name of your company or organization.
+          your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
+          company_name: "Name"
+          company_name_placeholder: "Acme Organization"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
           governing_law: "Governing law"
-          governing_law_placeholder: "State of New York"
+          governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |
-            Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Notice. This is typically the country or state where the company operating the site is registered or conducts business.
+            Specify the jurisdiction for the site's legal terms, typically where the company is registered or operates.
           city_for_disputes: "City for disputes"
-          city_for_disputes_placeholder: "New York City"
+          city_for_disputes_placeholder: "City"
           city_for_disputes_help: |
-            Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
+            Specify the city for resolving legal disputes related to this forum.
           optional: "(optional)"
           update: "Update"
           toasts:
@@ -5660,7 +5676,7 @@ en:
           subheader: "The flagging system in Discourse helps you and your moderator team manage content and user behavior, keeping your community respectful and healthy. The defaults are suitable for most communities and you don’t have to change them. However, if your site has particular requirements you can disable flags you don’t need and add your own custom flags."
           description: "Description"
           enabled: "Enabled?"
-          add: "Add Flag"
+          add: "Add flag"
           edit: "Edit"
           back: "Back to flags"
           delete: "Delete"
@@ -5686,15 +5702,14 @@ en:
             non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
             require_message: "Prompt users to provide additional reasons"
             require_message_description: "When this flag is selected, a text field will be displayed for the user to provide additional detail about why they are flagging the content"
-            auto_action_type: "Auto action type"
-            auto_action_type_description: "When a post is flagged by a staff member it is automatically hidden"
+            auto_action_type: "Auto hide flagged content"
           more_options:
             title: "More options"
             move_up: "Move up"
             move_down: "Move down"
         look_and_feel:
-          title: "Look & feel"
-          description: "Themes, components, and color schemes can be used to customise and brand your Discourse site, giving it a distinctive style."
+          title: "Look and feel"
+          description: "Customize and brand your Discourse site, giving it a distinctive style."
           themes:
             title: "Themes"
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
@@ -5928,12 +5943,14 @@ en:
           set_default_theme: "Set default"
           default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
+          install_success: "%{theme} installed successfully!"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
             other: "%{count} selected"
           cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
+          broken_theme: "Disable broken theme"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
@@ -6000,6 +6017,7 @@ en:
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
           updating: "Updating…"
+          update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
@@ -6752,8 +6770,9 @@ en:
         time_read: "Read Time"
         post_edits_count: "Post Edits"
         anonymize: "Anonymize User"
-        anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
-        delete_associated_accounts_confirm: "Are you SURE you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."
+        anonymize_confirm: "Are you sure you want to anonymize this account? This will change the username and email, and reset all profile information."
+        delete_associated_accounts_confirm: "Are you sure you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."
+        disable_second_factor_confirm: "Are you sure you want to disable Two-Factor Authentication for this account?"
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
@@ -6814,7 +6833,7 @@ en:
         cant_delete_all_too_many_posts:
           one: "Can't delete all posts because the user has more than %{count} post. (delete_all_posts_max)"
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
-        delete_confirm_title: "Are you SURE you want to delete this user? This is permanent!"
+        delete_confirm_title: "Are you sure you want to delete this user? This is permanent!"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
@@ -6989,6 +7008,9 @@ en:
         history: "View change history"
         reset: "reset"
         none: "none"
+        save: "save"
+        cancel: "cancel"
+        unmask: "unmask input"
       site_settings:
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
@@ -7041,6 +7063,7 @@ en:
           groups: "Groups"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
@@ -7183,6 +7206,7 @@ en:
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
+        created_by: "Created By"
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"

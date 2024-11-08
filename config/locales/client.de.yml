@@ -1275,6 +1275,7 @@ de:
       allow_private_messages: "Anderen Benutzern erlauben, mir persönliche Nachrichten zu schicken"
       external_links_in_new_tab: "Öffne alle externen Links in einer neuen Registerkarte"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
+      enable_smart_lists: "Aktiviere intelligente Listen beim Schreiben im Composer"
       enable_defer: "„Themen als ungelesen markieren“ aktivieren"
       experimental_sidebar:
         enable: "Seitenleiste aktivieren"
@@ -1343,7 +1344,7 @@ de:
       ignored_users: "Ignoriert"
       ignored_users_instructions: "Alle Beiträge, Benachrichtigungen und persönlichen Nachrichten von diesen Benutzern unterdrücken."
       tracked_topics_link: "Anzeigen"
-      automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
+      automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe"
       apps: "Apps"
       revoke_access: "Zugriffsrecht entziehen"
       undo_revoke_access: "Zugriffsrecht wiederherstellen"
@@ -1660,11 +1661,12 @@ de:
         action: "Klicke hier, um dein Konto zu aktivieren"
         already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
         please_continue: "Dein neues Konto ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
-        continue_button: "Weiter zu %{site_name}"
+        continue_button: "Fertig!"
         welcome_to: "Willkommen bei %{site_name}!"
         approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
       name:
         title: "Name"
+        title_optional: "Name (optional)"
         instructions: "Dein vollständiger Name (optional)"
         instructions_required: "Dein vollständiger Name"
         required: "Bitte gib einen Namen ein"
@@ -1835,6 +1837,7 @@ de:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
+        cannot_invite_to_forum: "Du hast leider nicht die Erlaubnis, Einladungen zu erstellen. Bitte wende dich an einen Administrator, damit er dir das Recht zum Einladen erteilt."
         invite:
           new_title: "Mitglieder einladen"
           edit_title: "Einladung bearbeiten"
@@ -1988,6 +1991,8 @@ de:
         sent_by: "Gesendet von"
         private_message: "Senden"
         the_topic: "das Thema"
+      card: "Benutzerkarte"
+      profile_link: "%{username}, Profil besuchen"
     user_status:
       save: "Speichern"
       set_custom_status: "Benutzerdefinierten Status festlegen"
@@ -2171,7 +2176,6 @@ de:
     search_hint: "Benutzername, E-Mail- oder IP-Adresse"
     create_account:
       header_title: "Willkommen!"
-      subheader_title: "Lass uns dein Konto erstellen"
       disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
       title: "Registrieren"
       failed: "Etwas ist schiefgelaufen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
@@ -2215,7 +2219,6 @@ de:
       confirm_button: Anmeldung fertigstellen
     login:
       header_title: "Willkommen zurück"
-      subheader_title: "Bei deinem Konto anmelden"
       title: "Anmelden"
       username: "Benutzername"
       password: "Passwort"
@@ -2315,7 +2318,6 @@ de:
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
       name_label: "Name"
       password_label: "Passwort"
-      existing_user_can_redeem: "Löse deine Einladung zu einem Thema oder einer Gruppe ein."
     password_reset:
       continue: "Weiter zu %{site_name}"
     emoji_set:
@@ -2327,6 +2329,7 @@ de:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Nur Kategorien"
+      categories_only_optimized: "Nur Kategorien (Optimiert)"
       categories_with_featured_topics: "Kategorien mit hervorgehobenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
       categories_and_latest_topics_created_date: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
@@ -3502,6 +3505,9 @@ de:
         one: "%{count} versteckten Beitrag anzeigen"
         other: "%{count} versteckte Beiträge anzeigen"
       sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
+      link_clicked:
+        one: "Link %{count} mal angeklickt"
+        other: "Link %{count} mal angeklickt"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -3762,6 +3768,8 @@ de:
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
+      color_used: "Farbe im Einsatz"
+      predefined_colors: "Vordefinierte Farboptionen"
       name_placeholder: "Ein oder maximal zwei Wörter"
       color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
@@ -4415,6 +4423,7 @@ de:
       dismiss: "Schließen"
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
+    theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
     image_removed: "(Bild entfernt)"
     pause_notifications:
       title: "Benachrichtigungen pausieren für …"
@@ -4609,6 +4618,9 @@ de:
               pending_count:
                 one: "%{count} ausstehend"
                 other: "%{count} ausstehend"
+            invite:
+              content: "Einladen"
+              title: "Neue Mitglieder einladen"
         global_section: "Globaler Abschnitt, für alle sichtbar"
       panels:
         forum:
@@ -5093,8 +5105,6 @@ de:
           post_edited: "Beitrag aktualisiert"
           post_destroyed: "Beitrag gelöscht"
           post_recovered: "Beitrag wiederhergestellt"
-          category_experts_approved: "Beitrag als Kategorie Expertenbeitrag markiert"
-          category_experts_unapproved: "Beitrag unmarkiert als Kategorie Expertenbeitrag"
         group_event:
           group_name: "Gruppenereignisse"
           group_created: "Gruppe erstellt"
@@ -5139,6 +5149,8 @@ de:
           group_name: "Gruppenbenutzerereignisse"
           user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
           user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
+        custom_event:
+          group_name: "Benutzerdefinierte Ereignisse"
         user_promoted_event:
           group_name: "Benutzerbeförderungsereignisse"
           user_promoted: "Ein Benutzer wird befördert"
@@ -5251,12 +5263,14 @@ de:
       config_areas:
         about:
           header: "Über deine Website"
-          description: "Stelle hier Informationen über diese Seite und dein Team zur Verfügung, damit die Leute erfahren, worum es in deiner Community geht, wer dahinter steht und wie sie dich erreichen können, falls es ein Problem gibt."
+          description: "Gib hier Informationen über diese Website und dein Team an, damit die Leute erfahren, worum es in deiner Community geht, wer dahinter steht und wie sie dich erreichen können, falls es ein Problem gibt. Wird auf der <a href='%{basePath}/about'>Info-Seite</a> deiner Website angezeigt."
           general_settings: "Allgemeine Einstellungen"
           community_name: "Name der Community"
           community_name_placeholder: "Beispiel-Community"
           community_summary: "Kurzbeschreibung der Community"
           community_description: "Beschreibung der Community"
+          community_title: "Gemeinschaftstitel"
+          community_title_help: "Kurze Beschreibung, die im Browser-Tab angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
           banner_image: "Bannerbild"
           banner_image_help: |
             Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100x300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
@@ -5264,36 +5278,35 @@ de:
           community_owner: "Eigentümer der Community"
           community_owner_placeholder: "Max Mustermann"
           community_owner_help: |
-            Name einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
+            Name, der für kritische Benachrichtigungen verwendet und auch auf /about angezeigt wird. Für anonyme Benutzer auf öffentlichen Websites sichtbar.
           contact_email: "Kontakt-E-Mail-Adresse"
           contact_email_placeholder: "kontakt@max-mustermann.com"
           contact_email_help: |
-            E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
+            E-Mail, die für wichtige Benachrichtigungen verwendet und auch auf /about angezeigt wird. Für anonyme Benutzer auf öffentlichen Websites sichtbar.
           contact_url: "Kontakt-URL"
           contact_url_placeholder: "https://max-mustermann.com/kontakt"
           contact_url_help: |
-            Kontakt-URL für diese Website. Wenn vorhanden, ersetzt sie die Kontakt-E-Mail-Adresse unter /about und ist für anonyme Benutzer auf öffentlichen Websites sichtbar.
+            Wenn vorhanden, ersetzt sie die Kontakt-E-Mail-Adresse unter /about und ist für anonyme Benutzer auf öffentlichen Websites sichtbar.
           site_contact_name: "Website-Ansprechpartner"
           site_contact_name_help: |
-            Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet.
+            Ein Mitarbeiterbenutzername, von dem alle automatisierten Nachrichten gesendet werden. Wenn dieses Feld leer gelassen wird, wird das Standardsystemkonto verwendet.
           site_contact_group: "Website-Ansprechpartner-Gruppe"
           site_contact_group_help: |
-            Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird.
+            Die Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
-          company_name: "Firmenname"
-          company_name_placeholder: "Musterfirma"
-          company_name_help: |
-            Name deiner Firma oder deiner Organisation.
+          your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Seite betreibt und unter welcher Gerichtsbarkeit."
+          company_name: "Name"
+          company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
             Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder eine entsprechende Datenschutzrichtlinie bereitgestellt.
           governing_law: "Anzuwendendes Recht"
-          governing_law_placeholder: "Musterland"
+          governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |
-            Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzrichtlinie. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Seite betreibt, registriert ist oder Geschäfte tätigt.
+            Gib den Gerichtsstand für die rechtlichen Bestimmungen der Website an, in der Regel den Ort, an dem das Unternehmen registriert ist oder arbeitet.
           city_for_disputes: "Stadt für Rechtsstreitigkeiten"
-          city_for_disputes_placeholder: "Musterstadt"
+          city_for_disputes_placeholder: "Stadt"
           city_for_disputes_help: |
-            Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten.
+            Gib die Stadt für die Beilegung von Rechtsstreitigkeiten im Zusammenhang mit diesem Forum an.
           optional: "(optional)"
           update: "Aktualisieren"
           toasts:
@@ -5333,15 +5346,14 @@ de:
             non_deletable: "Du kannst diesen Meldungsgrund nicht löschen, weil er vom System erstellt oder bereits im Überprüfungssystem verwendet wurde. Du kannst ihn aber immer noch deaktivieren."
             require_message: "Benutzer auffordern, zusätzliche Gründe anzugeben"
             require_message_description: "Wenn dieser Meldungsgrund ausgewählt ist, wird ein Textfeld angezeigt, in dem der Benutzer zusätzliche Angaben zu den Gründen für die Meldung des Inhalts machen kann"
-            auto_action_type: "Typ der automatischen Aktion"
-            auto_action_type_description: "Wenn ein Beitrag von einem Mitarbeiter markiert wird, wird er automatisch ausgeblendet"
+            auto_action_type: "Automatisches Ausblenden markierter Inhalte"
           more_options:
             title: "Mehr Optionen"
             move_up: "Nach oben"
             move_down: "Nach unten"
         look_and_feel:
-          title: "Look & Feel"
-          description: "Mit Themes, Komponenten und Farbschemata kannst du deine Discourse-Website anpassen und ihr einen unverwechselbaren Stil verleihen."
+          title: "Look and Feel"
+          description: "Passe deine Discourse-Seite an und verleihe ihr einen unverwechselbaren Stil."
           themes:
             title: "Themes"
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
@@ -5568,12 +5580,14 @@ de:
           set_default_theme: "Standard setzen"
           default_theme: "Standard-Theme"
           set_default_success: "Standard-Theme auf %{theme} gesetzt"
+          install_success: "%{theme} erfolgreich installiert!"
           inactive_components: "Nicht verwendete Komponenten:"
           selected:
             one: "%{count} ausgewählt"
             other: "%{count} ausgewählt"
           cancel: "Abbrechen"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
+          broken_theme: "Deaktiviere das kaputte Theme"
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."
           updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
@@ -5640,6 +5654,7 @@ de:
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
           updating: "Wird aktualisiert …"
+          update_success: "%{theme} Update abgeschlossen"
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
@@ -6585,6 +6600,9 @@ de:
         history: "Änderungsverlauf ansehen"
         reset: "zurücksetzen"
         none: "keine"
+        save: "speichern"
+        cancel: "Abbrechen"
+        unmask: "Eingabe demaskieren"
       site_settings:
         emoji_list:
           invalid_input: "Emoji-Liste sollte nur gültige Emoji-Namen enthalten, z. B.: „hugs“"
@@ -6637,6 +6655,7 @@ de:
           groups: "Gruppen"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -6777,6 +6796,7 @@ de:
         uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"
+        created_by: "Erstellt von"
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"

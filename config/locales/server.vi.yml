@@ -1082,7 +1082,6 @@ vi:
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."
     topics_per_period_in_top_page: "Số lượng chủ đề top hiển thị khi click 'Xem thêm'."
     prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
-    enable_rich_text_paste: "Bật chuyển đổi HTML sang Markdown tự động khi dán văn bản vào trình soạn thảo. (Thực nghiệm)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
     normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
@@ -1111,7 +1110,6 @@ vi:
     enable_google_oauth2_logins: "Bật xác thực Google Oauth2. Đây là phương thức xác thực mà Google hiện đang hỗ trợ. Yêu cầu khóa và bí mật. Xem <a href='https://meta.discourse.org/t/15858' target='_blank'>Định cấu hình đăng nhập Google cho Discourse</a>."
     google_oauth2_client_secret: "Client secret ứng dụng Google của bạn."
     google_oauth2_prompt: "Danh sách các giá trị chuỗi được phân tách bằng dấu cách tùy chọn chỉ định liệu máy chủ ủy quyền có nhắc người dùng xác thực lại và đồng ý hay không. Xem <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> để biết các giá trị có thể có."
-    google_oauth2_hd_groups: "(thử nghiệm) Truy xuất nhóm Google của người dùng trên miền được lưu trữ khi xác thực. Các nhóm Google đã truy xuất có thể được sử dụng để cấp quyền thành viên nhóm Discourse tự động (xem cài đặt nhóm). Để biết thêm thông tin, hãy xem https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Địa chỉ email thuộc tài khoản quản trị viên Google Workspace. Sẽ được sử dụng với thông tin đăng nhập tài khoản dịch vụ để tìm nạp thông tin nhóm."
     google_oauth2_hd_groups_service_account_json: "Thông tin chính được định dạng JSON cho Tài khoản dịch vụ. Sẽ được sử dụng để tìm nạp thông tin nhóm."
     enable_twitter_logins: "Bật xác thực Twitter, yêu cầu twitter_consumer_key và twitter_consumer_secret. Xem <a href='https://meta.discourse.org/t/13395' target='_blank'>Định cấu hình đăng nhập Twitter (và nhúng) cho Discourse</a>."
@@ -1332,7 +1330,6 @@ vi:
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
-    enable_user_status: "(thử nghiệm) Cho phép người dùng đặt thông báo trạng thái tùy chỉnh (biểu tượng cảm xúc + mô tả)."
     short_title: "Tiêu đề ngắn sẽ được sử dụng trên màn hình chính, trình khởi chạy của người dùng hoặc những nơi khác mà không gian có thể bị hạn chế. Nó nên được giới hạn trong 12 ký tự."
     dashboard_hidden_reports: "Cho phép ẩn các báo cáo đã chỉ định khỏi bảng điều khiển."
     dashboard_visible_tabs: "Chọn tab bảng điều khiển nào được hiển thị."
@@ -1362,18 +1359,6 @@ vi:
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "không hoạt động"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "không hoạt động"
-      - ""
-      navigation_menu:
-      - "thanh bên"
-      - ""
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:

@@ -419,4 +419,11 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
   end
+
+  it "renders emojis in page title" do
+    channel_1.update!(name: ":dog: Dogs")
+    chat_page.visit_channel(channel_1)
+
+    expect(page).to have_title("#🐶 Dogs - Chat - Discourse")
+  end
 end

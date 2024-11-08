@@ -78,13 +78,11 @@ export default class ChatTrackingStateManager extends Service {
   }
 
   get hasUnreadThreads() {
-    return this.#publicChannels.some(
-      (channel) => channel.unreadThreadsCount > 0
-    );
+    return this.#allChannels.some((channel) => channel.unreadThreadsCount > 0);
   }
 
   get watchedThreadsUnreadCount() {
-    return this.#publicChannels.reduce((unreadCount, channel) => {
+    return this.#allChannels.reduce((unreadCount, channel) => {
       return unreadCount + channel.tracking.watchedThreadsUnreadCount;
     }, 0);
   }
@@ -128,5 +126,9 @@ export default class ChatTrackingStateManager extends Service {
 
   get #directMessageChannels() {
     return this.chatChannelsManager.directMessageChannels;
+  }
+
+  get #allChannels() {
+    return this.chatChannelsManager.allChannels;
   }
 }

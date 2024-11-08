@@ -1016,7 +1016,6 @@ zh_TW:
       allow_private_messages_from_specific_users: "只允許指定的使用者寄送個人訊息給我"
       ignored_users: "忽略"
       tracked_topics_link: "顯示"
-      automatically_unpin_topics: "當我完整閲讀了話題時自動解除置頂。"
       apps: "應用"
       revoke_access: "撤銷許可"
       undo_revoke_access: "解除撤銷許可"
@@ -1160,7 +1159,7 @@ zh_TW:
         action: "點擊此處啟用你的帳戶"
         already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
         please_continue: "你的新帳號已啟用；即將轉到主頁。"
-        continue_button: "繼續連接至 %{site_name}"
+        continue_button: "結束!"
         welcome_to: "歡迎來到 %{site_name}！"
         approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
       name:
@@ -1579,7 +1578,6 @@ zh_TW:
       success: "你的帳號已被建立，且您已經登入了。"
       name_label: "姓名"
       password_label: "密碼"
-      existing_user_can_redeem: "兌換您對某個主題或群組的邀請。"
     password_reset:
       continue: "繼續連接至 %{site_name}"
     emoji_set:
@@ -3032,6 +3030,8 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
+            invite:
+              content: "邀請"
       panels:
         forum:
           label: 論壇
@@ -3341,6 +3341,7 @@ zh_TW:
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          company_name: "名字"
           optional: "(選擇性)"
           update: "更新"
           saved: "儲存完畢!"
@@ -4218,6 +4219,8 @@ zh_TW:
         show_overriden: "只顯示被覆寫的內容"
         reset: "重置"
         none: "無"
+        save: "保存"
+        cancel: "取消"
       site_settings:
         title: "設定"
         no_results: "未找到任何結果。"

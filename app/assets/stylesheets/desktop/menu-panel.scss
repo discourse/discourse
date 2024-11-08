@@ -5,7 +5,6 @@
 
   &.drop-down {
     .panel-body {
-      max-height: calc(100vh - var(--header-offset));
       max-width: calc(100vw - 2em);
     }
   }

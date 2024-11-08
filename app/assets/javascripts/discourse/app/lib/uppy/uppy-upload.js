@@ -73,7 +73,7 @@ function lazyMergeConfig(config) {
   return mergedConfig;
 }
 
-const REQUIRED_CONFIG_KEYS = ["id", "uploadDone"];
+const REQUIRED_CONFIG_KEYS = ["id", "uploadDone", "type"];
 function validateConfig(config) {
   for (const key of REQUIRED_CONFIG_KEYS) {
     if (!config[key]) {
@@ -133,11 +133,11 @@ export default class UppyUpload {
 
   @bind
   setup(fileInputEl) {
-    this._fileInputEl = fileInputEl;
-
-    this.allowMultipleFiles = this._fileInputEl.multiple;
-
-    this.#bindFileInputChange();
+    if (fileInputEl) {
+      this._fileInputEl = fileInputEl;
+      this.allowMultipleFiles = this._fileInputEl.multiple;
+      this.#bindFileInputChange();
+    }
 
     this.uppyWrapper.uppyInstance = new Uppy({
       id: this.config.id,
@@ -200,23 +200,18 @@ export default class UppyUpload {
       },
     });
 
-    if (this.config.uploadDropTargetOptions) {
+    const resolvedDropTargetOptions = this.#resolvedDropTargetOptions;
+    if (resolvedDropTargetOptions) {
       // DropTarget is a UI plugin, only preprocessors must call _useUploadPlugin
-      this.uppyWrapper.uppyInstance.use(
-        DropTarget,
-        this.config.uploadDropTargetOptions
-      );
+      this.uppyWrapper.uppyInstance.use(DropTarget, resolvedDropTargetOptions);
     }
 
     this.uppyWrapper.uppyInstance.on("progress", (progress) => {
       this.uploadProgress = progress;
     });
 
-    this.uppyWrapper.uppyInstance.on("upload", (data) => {
-      this.uppyWrapper.addNeedProcessing(data.fileIDs.length);
-      const files = data.fileIDs.map((fileId) =>
-        this.uppyWrapper.uppyInstance.getFile(fileId)
-      );
+    this.uppyWrapper.uppyInstance.on("upload", (uploadId, files) => {
+      this.uppyWrapper.addNeedProcessing(files.length);
       this.processing = true;
       this.cancellable = false;
       files.forEach((file) => {
@@ -289,6 +284,9 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
+        if (response.aborted) {
+          return; // User cancelled the upload
+        }
         this.#removeInProgressUpload(file.id);
         displayErrorForUpload(response || error, this.siteSettings, file.name);
         this.#reset();
@@ -404,6 +402,7 @@ export default class UppyUpload {
   #useXHRUploads() {
     this.uppyWrapper.uppyInstance.use(XHRUpload, {
       endpoint: this.#xhrUploadUrl(),
+      shouldRetry: () => false,
       headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
       }),
@@ -422,6 +421,7 @@ export default class UppyUpload {
   #useS3Uploads() {
     this.#usingS3Uploads = true;
     this.uppyWrapper.uppyInstance.use(AwsS3, {
+      shouldUseMultipart: false,
       getUploadParameters: (file) => {
         const data = {
           file_name: file.name,
@@ -533,6 +533,14 @@ export default class UppyUpload {
     }
   }
 
+  get #resolvedDropTargetOptions() {
+    if (typeof this.config.uploadDropTargetOptions === "function") {
+      return this.config.uploadDropTargetOptions();
+    } else {
+      return this.config.uploadDropTargetOptions;
+    }
+  }
+
   #reset() {
     this.uppyWrapper.uppyInstance?.cancelAll();
     Object.assign(this, {
@@ -542,7 +550,9 @@ export default class UppyUpload {
       uploadProgress: 0,
       filesAwaitingUpload: false,
     });
-    this._fileInputEl.value = "";
+    if (this._fileInputEl) {
+      this._fileInputEl.value = "";
+    }
   }
 
   #removeInProgressUpload(fileId) {

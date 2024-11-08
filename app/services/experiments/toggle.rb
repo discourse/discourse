@@ -4,7 +4,7 @@ class Experiments::Toggle
   include Service::Base
 
   policy :current_user_is_admin
-  contract do
+  params do
     attribute :setting_name, :string
     validates :setting_name, presence: true
   end
@@ -17,14 +17,14 @@ class Experiments::Toggle
     guardian.is_admin?
   end
 
-  def setting_is_available(contract:)
-    SiteSetting.respond_to?(contract.setting_name)
+  def setting_is_available(params:)
+    SiteSetting.respond_to?(params.setting_name)
   end
 
-  def toggle(contract:, guardian:)
+  def toggle(params:, guardian:)
     SiteSetting.set_and_log(
-      contract.setting_name,
-      !SiteSetting.send(contract.setting_name),
+      params.setting_name,
+      !SiteSetting.public_send(params.setting_name),
       guardian.user,
     )
   end

@@ -14,7 +14,6 @@ tr_TR:
       select_trigger: Tetikleyici seçin
       confirm_automation_reset: Bu eylem komut dosyası ve tetikleyici seçeneklerini sıfırlar, yeni durum kaydedilir, devam etmek istiyor musunuz?
       confirm_automation_trigger: Bu eylem otomasyonu tetikler, devam etmek istiyor musunuz?
-      no_automation_yet: Henüz otomasyon oluşturmadınız.
       edit_automation:
         trigger_section:
           forced: Bu tetikleyici, komut dosyası ile zorlanır.

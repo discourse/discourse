@@ -27,6 +27,7 @@ class Service::StepsInspector
     def type
       self.class.name.split("::").last.downcase
     end
+    alias inspect_type type
 
     def emoji
       "#{result_emoji}#{unexpected_result_emoji}"
@@ -37,7 +38,7 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{type}] '#{name}' #{emoji}".rstrip
+      "#{"  " * nesting_level}[#{inspect_type}] '#{name}' #{emoji}".rstrip
     end
 
     private
@@ -75,6 +76,10 @@ class Service::StepsInspector
     def error
       "#{step_result.errors.inspect}\n\nProvided parameters: #{step_result.parameters.pretty_inspect}"
     end
+
+    def inspect_type
+      "params"
+    end
   end
 
   # @!visibility private
@@ -98,6 +103,10 @@ class Service::StepsInspector
       nil
     end
   end
+  #
+  # @!visibility private
+  class Options < Step
+  end
 
   attr_reader :steps, :result
 
@@ -109,7 +118,7 @@ class Service::StepsInspector
   # Inspect the provided result object.
   # Example output:
   #   [1/4] [model] 'channel' ✅
-  #   [2/4] [contract] 'default' ✅
+  #   [2/4] [params] 'default' ✅
   #   [3/4] [policy] 'check_channel_permission' ❌
   #   [4/4] [step] 'change_status'
   # @return [String] the steps of the result object with their state

@@ -24,23 +24,31 @@ class Auth::GoogleOAuth2Authenticator < Auth::ManagedAuthenticator
     options = {
       setup:
         lambda do |env|
-          strategy = env["omniauth.strategy"]
-          strategy.options[:client_id] = SiteSetting.google_oauth2_client_id
-          strategy.options[:client_secret] = SiteSetting.google_oauth2_client_secret
+          opts = env["omniauth.strategy"].options
+          opts[:client_id] = SiteSetting.google_oauth2_client_id
+          opts[:client_secret] = SiteSetting.google_oauth2_client_secret
 
           if (google_oauth2_hd = SiteSetting.google_oauth2_hd).present?
-            strategy.options[:hd] = google_oauth2_hd
+            opts[:hd] = google_oauth2_hd
           end
 
           if (google_oauth2_prompt = SiteSetting.google_oauth2_prompt).present?
-            strategy.options[:prompt] = google_oauth2_prompt.gsub("|", " ")
+            opts[:prompt] = google_oauth2_prompt.gsub("|", " ")
           end
-
+          opts[:client_options][:connection_build] = lambda do |builder|
+            if SiteSetting.google_oauth2_verbose_logging
+              builder.response :logger,
+                               Rails.logger,
+                               { bodies: true, formatter: Auth::OauthFaradayFormatter }
+            end
+            builder.request :url_encoded
+            builder.adapter FinalDestination::FaradayAdapter
+          end
           # All the data we need for the `info` and `credentials` auth hash
           # are obtained via the user info API, not the JWT. Using and verifying
           # the JWT can fail due to clock skew, so let's skip it completely.
           # https://github.com/zquestz/omniauth-google-oauth2/pull/392
-          strategy.options[:skip_jwt] = true
+          opts[:skip_jwt] = true
         end,
     }
     omniauth.provider :google_oauth2, options

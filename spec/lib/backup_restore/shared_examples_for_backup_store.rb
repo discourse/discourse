@@ -171,16 +171,14 @@ RSpec.shared_examples "backup store" do
       end
 
       it "runs if SiteSetting.automatic_backups_enabled? is true" do
-        stub_request(
-          :get,
-          "https://s3-backup-bucket.s3.amazonaws.com/?list-type=2&prefix=default/",
-        ).to_return(status: 200, body: "", headers: {})
-        stub_request(:head, "https://s3-backup-bucket.s3.amazonaws.com/").to_return(
+        base_backup_s3_url = "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com"
+        stub_request(:get, "#{base_backup_s3_url}/?list-type=2&prefix=default/").to_return(
           status: 200,
           body: "",
           headers: {
           },
         )
+        stub_request(:head, "#{base_backup_s3_url}/").to_return(status: 200, body: "", headers: {})
 
         SiteSetting.automatic_backups_enabled = true
         scheduleBackup = Jobs::ScheduleBackup.new
@@ -287,7 +285,7 @@ RSpec.shared_examples "remote backup store" do
       def upload_file
         # time has fidelity issues freeze a time that is not going to be prone
         # to that
-        freeze_time(Time.now.to_s)
+        freeze_time(Time.now.round)
 
         backup = BackupFile.new(filename: "foo.tar.gz", size: 33, last_modified: Time.zone.now)
 

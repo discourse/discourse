@@ -31,6 +31,7 @@ module("Unit | Utility | computed", function (hooks) {
   test("setting", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
 
+    // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
       siteSettings,
       vehicle: setting("vehicle"),
@@ -50,6 +51,7 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   test("propertyEqual", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
       same: propertyEqual("cookies", "biscuits"),
     }).create({
@@ -63,6 +65,7 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   test("propertyNotEqual", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
       diff: propertyNotEqual("cookies", "biscuits"),
     }).create({
@@ -76,6 +79,7 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   test("fmt", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
       exclaimyUsername: fmt("username", "!!! %@ !!!"),
       multiple: fmt("username", "mood", "%@ is %@"),
@@ -110,6 +114,7 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   test("i18n", function (assert) {
+    // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
       exclaimyUsername: i18n("username", "!!! %@ !!!"),
       multiple: i18n("username", "mood", "%@ is %@"),
@@ -146,6 +151,7 @@ module("Unit | Utility | computed", function (hooks) {
   test("url", function (assert) {
     let t, testClass;
 
+    // eslint-disable-next-line ember/no-classic-classes
     testClass = EmberObject.extend({
       userUrl: url("username", "/u/%@"),
     });
@@ -168,6 +174,7 @@ module("Unit | Utility | computed", function (hooks) {
 
   test("htmlSafe", function (assert) {
     const cookies = "<p>cookies and <b>biscuits</b></p>";
+    // eslint-disable-next-line ember/no-classic-classes
     const t = EmberObject.extend({
       desc: htmlSafe("cookies"),
     }).create({ cookies });

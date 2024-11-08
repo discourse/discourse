@@ -1342,7 +1342,7 @@ es:
       ignored_users: "Ignorados"
       ignored_users_instructions: "Omitir todas las publicaciones, notificaciones y mensajes personales de estos usuarios."
       tracked_topics_link: "Mostrar"
-      automatically_unpin_topics: "Desanclar temas automáticamente cuando los leo por completo."
+      automatically_unpin_topics: "Desanclar temas automáticamente cuando los leo por completo"
       apps: "Aplicaciones"
       revoke_access: "Revocar acceso"
       undo_revoke_access: "Deshacer revocación de acceso"
@@ -1659,7 +1659,7 @@ es:
         action: "Haz clic aquí para activar tu cuenta"
         already_done: "Lo sentimos, este enlace de confirmación de cuenta ya no es válido. ¿Quizás tu cuenta ya está activa?"
         please_continue: "Tu nueva cuenta está confirmada; se te redirigirá a la página de inicio."
-        continue_button: "Continuar a %{site_name}"
+        continue_button: "Terminar!"
         welcome_to: "¡Te damos la bienvenida a %{site_name}!"
         approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un correo electrónico cuando tu cuenta sea aprobada!"
       name:
@@ -2152,7 +2152,6 @@ es:
     search_hint: "usuario, correo electrónico o dirección IP"
     create_account:
       header_title: "¡Hola!"
-      subheader_title: "Vamos a crear tu cuenta"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
       title: "Registrarse"
       failed: "Algo salió mal. Quizás este correo electrónico ya se encuentra registrado. Prueba con el enlace «olvidé la contraseña»"
@@ -2195,7 +2194,6 @@ es:
       confirm_button: Finalizar inicio de sesión
     login:
       header_title: "Bienvenido/a de vuelta"
-      subheader_title: "Inicia sesión en tu cuenta"
       title: "Iniciar sesión"
       username: "Usuario"
       password: "Contraseña"
@@ -2295,7 +2293,6 @@ es:
       success: "Tu cuenta ha sido creada y has iniciado sesión."
       name_label: "Nombre"
       password_label: "Contraseña"
-      existing_user_can_redeem: "Canjea tu invitación a un tema o grupo."
     password_reset:
       continue: "Continuar a %{site_name}"
     emoji_set:
@@ -4587,6 +4584,8 @@ es:
               pending_count:
                 one: "%{count} pendiente"
                 other: "%{count} pendientes"
+            invite:
+              content: "Invitar"
         global_section: "Sección global, visible para todos"
       panels:
         forum:
@@ -5225,37 +5224,19 @@ es:
           contact_information: "Información de contacto"
           community_owner: "Propietario de la comunidad"
           community_owner_placeholder: "Pepe Luis"
-          community_owner_help: |
-            Nombre del contacto clave responsable de este sitio. Utilizado para notificaciones críticas, y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_email: "Correo electrónico de contacto"
           contact_email_placeholder: "contacto@pepe-luis.com"
-          contact_email_help: |
-            Dirección de correo electrónico del contacto clave responsable de este sitio. Se utiliza para notificaciones críticas y también se muestra en /about. Visible para usuarios anónimos en sitios públicos.
           contact_url: "URL de contacto"
           contact_url_placeholder: "https://pepe-luis.com/contacto"
-          contact_url_help: |
-            URL de contacto para este sitio. Cuando está presente, sustituye a la dirección de correo electrónico de contacto en /about y es visible para los usuarios anónimos en los sitios públicos.
           site_contact_name: "Nombre del contacto del sitio"
-          site_contact_name_help: |
-            Un nombre de usuario de personal válido desde el que enviar todos los mensajes automatizados. Si se deja en blanco, se utilizará la cuenta predeterminada del Sistema.
           site_contact_group: "Grupo de contacto del sitio"
-          site_contact_group_help: |
-            Un nombre válido de un grupo al que se invita a todos los mensajes privados enviados automáticamente.
           your_organization: "Tu organización"
-          company_name: "Nombre de la empresa"
-          company_name_placeholder: "Empresa de ejemplo S.A."
-          company_name_help: |
-            Nombre de tu empresa u organización.
+          company_name: "Nombre"
+          company_name_placeholder: "Organización Acme"
           company_name_warning: |
             Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad.
           governing_law: "Ley que rige"
-          governing_law_placeholder: "Estado de Nueva York"
-          governing_law_help: |
-            Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y el Aviso de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades.
           city_for_disputes: "Ciudad para disputas"
-          city_for_disputes_placeholder: "Ciudad de Nueva York"
-          city_for_disputes_help: |
-            Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro.
           optional: "(opcional)"
           update: "Actualizar"
           toasts:
@@ -5299,6 +5280,7 @@ es:
             move_up: "Subir"
             move_down: "Bajar"
         look_and_feel:
+          title: "Aspecto y estilo"
           themes:
             title: "Tema"
       plugins:
@@ -6522,6 +6504,8 @@ es:
         history: "Ver historial de cambios"
         reset: "restablecer"
         none: "ninguno"
+        save: "guardar"
+        cancel: "cancelar"
       site_settings:
         emoji_list:
           invalid_input: "Las listas de emojis solo pueden contener nombres válidos de emojis. Ej.: abrazos"
@@ -6574,6 +6558,7 @@ es:
           groups: "Grupos"
           dashboard: "Panel de control"
           navigation: "Navegación"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:

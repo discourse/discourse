@@ -9,15 +9,15 @@ class ImportScripts::Modx < ImportScripts::Base
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "modx"
-  DB_PW ||= ENV["DB_PW"] || "modex"
-  DB_USER ||= ENV["DB_USER"] || "modx"
-  TIMEZONE ||= ENV["TIMEZONE"] || "America/Los_Angeles"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "modx_"
-  ATTACHMENT_DIR ||= ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
-  RANDOM_CATEGORY_COLOR ||= !ENV["RANDOM_CATEGORY_COLOR"].nil?
-  SUSPEND_ALL_USERS ||= !ENV["SUSPEND_ALL_USERS"]
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "modx"
+  DB_PW = ENV["DB_PW"] || "modex"
+  DB_USER = ENV["DB_USER"] || "modx"
+  TIMEZONE = ENV["TIMEZONE"] || "America/Los_Angeles"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "modx_"
+  ATTACHMENT_DIR = ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
+  RANDOM_CATEGORY_COLOR = !ENV["RANDOM_CATEGORY_COLOR"].nil?
+  SUSPEND_ALL_USERS = !ENV["SUSPEND_ALL_USERS"]
 
   #   TODO: replace modx_ with #{TABLE_PREFIX}
 

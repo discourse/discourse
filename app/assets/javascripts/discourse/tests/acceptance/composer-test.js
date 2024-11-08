@@ -408,7 +408,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".topic-post:last-of-type .cooked p")
       .hasText(
-        "If you use gettext format you could leverage Launchpad 13 translations and the community behind it."
+        "If you use gettext format you could leverage Launchpad translations and the community behind it."
       );
   });
 
@@ -935,11 +935,13 @@ acceptance("Composer", function (needs) {
     await click("#post_1 .d-icon-pencil");
     await fillIn(".d-editor-input", "");
 
-    assert.strictEqual(
-      query(".d-editor-container textarea").getAttribute("placeholder"),
-      I18n.t("composer.reply_placeholder"),
-      "it should not block because of missing category"
-    );
+    assert
+      .dom(".d-editor-container textarea")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("composer.reply_placeholder"),
+        "it should not block because of missing category"
+      );
   });
 
   test("reply button has envelope icon when replying to private message", async function (assert) {
@@ -1104,7 +1106,7 @@ acceptance("Composer - Error Extensibility", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.notOk(exists(".dialog-body"), "it does not pop up an error message");
+    assert.dom(".dialog-body").doesNotExist("does not pop up an error message");
   });
 
   test("Create a topic with server side errors not handled by a plugin", async function (assert) {

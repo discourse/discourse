@@ -125,11 +125,7 @@ acceptance("flagging", function (needs) {
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "",
-      "penalty message is empty"
-    );
+    assert.dom(".suspend-message").hasValue("", "penalty message is empty");
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
@@ -148,11 +144,12 @@ acceptance("flagging", function (needs) {
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
-      "penalty message is prefilled with post text"
-    );
+    assert
+      .dom(".suspend-message")
+      .hasValue(
+        "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
+        "penalty message is prefilled with post text"
+      );
   });
 
   test("Can delete spammer from spam", async function (assert) {

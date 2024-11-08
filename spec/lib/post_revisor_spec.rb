@@ -233,7 +233,10 @@ RSpec.describe PostRevisor do
       fab!(:tag1) { Fabricate(:tag, name: "First tag") }
       fab!(:tag2) { Fabricate(:tag, name: "Second tag") }
 
-      before { SiteSetting.create_post_for_category_and_tag_changes = true }
+      before do
+        SiteSetting.create_post_for_category_and_tag_changes = true
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+      end
 
       it "Creates a small_action post with correct translation when both adding and removing tags" do
         post.topic.update!(tags: [tag1])
@@ -290,6 +293,16 @@ RSpec.describe PostRevisor do
             from: "##{current_category.slug}",
           ),
         )
+      end
+
+      it "Creates a small_action as a whisper when category is changed" do
+        category = Fabricate(:category)
+
+        expect { post_revisor.revise!(admin, category_id: category.id) }.to change {
+          Post.where(topic_id: post.topic_id, action_code: "category_changed").count
+        }.by(1)
+
+        expect(post.topic.ordered_posts.last.post_type).to eq(Post.types[:whisper])
       end
 
       describe "with PMs" do

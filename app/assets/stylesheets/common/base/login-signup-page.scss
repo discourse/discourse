@@ -9,6 +9,20 @@
   flex-direction: column;
 }
 
+body.login-page,
+body.signup-page,
+body.invite-page {
+  & ~ .powered-by-discourse,
+  .above-main-container-outlet {
+    display: none;
+  }
+}
+
+body.login-page,
+body.signup-page {
+  background-color: var(--secondary);
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
@@ -18,6 +32,14 @@
     justify-content: center;
     width: 100%;
     max-width: 800px;
+    box-sizing: border-box;
+  }
+
+  .alert {
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+    margin: 0;
   }
 
   .login-page-cta,
@@ -65,7 +87,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    margin-bottom: 0.8em;
+    margin-bottom: 1em;
 
     input,
     .select-kit-header {
@@ -101,7 +123,7 @@
       position: absolute;
       pointer-events: none;
       left: 1em;
-      top: 10px;
+      top: 13px;
       box-shadow: 0 0 0 0px rgba(var(--tertiary-rgb), 0);
       transition: 0.2s ease all;
     }
@@ -116,7 +138,9 @@
       padding: 0 0.25em 0 0.25em;
       font-size: $font-down-1;
     }
-
+    .user-field.text label.control-label {
+      top: 13px;
+    }
     .user-field.text:focus-within,
     .user-field.dropdown:focus-within,
     .user-field.multiselect:focus-within {
@@ -134,6 +158,13 @@
 
     input.alt-placeholder:invalid {
       color: var(--primary);
+    }
+    .user-field.dropdown,
+    .user-field.multiselect {
+      .more-info,
+      .instructions {
+        opacity: 1;
+      }
     }
 
     #email-login-link {
@@ -196,17 +227,32 @@
   }
 
   .tip {
+    font-size: var(--font-down-1);
+    min-height: 1.4em;
+    display: block;
     &.bad {
       color: var(--danger);
-      display: block;
     }
+  }
+
+  .toggle-password-mask span {
+    font-size: var(--font-down-1-rem);
   }
 
   .more-info,
   .instructions {
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
-    min-height: 1.4em;
     overflow-wrap: anywhere;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+  }
+
+  .input-group input:focus {
+    & ~ .more-info,
+    & ~ .instructions {
+      opacity: 1;
+    }
   }
 
   .caps-lock-warning {
@@ -223,6 +269,29 @@
 
   .inline-spinner {
     display: inline-flex;
+  }
+
+  .invitation-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    &__accept {
+      width: 100%;
+    }
+    &__info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 0.5rem;
+      line-height: 1rem;
+      color: var(--primary-medium);
+    }
+    &__sign-in {
+      padding: 0;
+      height: 100%;
+      font-size: 1rem;
+    }
   }
 }
 
@@ -296,9 +365,12 @@
       }
 
       .controls .checkbox-label {
+        display: flex;
+        align-items: center;
         input[type="checkbox"].ember-checkbox {
           width: 1em !important;
           min-width: unset;
+          margin-block: 0;
         }
       }
     }

@@ -99,7 +99,6 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-
 self.addEventListener('pushsubscriptionchange', function(event) {
   event.waitUntil(
     Promise.all(
@@ -125,6 +124,24 @@ self.addEventListener('pushsubscriptionchange', function(event) {
     )
   );
 });
+
+self.addEventListener('message', function(event) {
+  if (event.data?.action !== "primaryTab") {
+    return;
+  }
+
+  event.waitUntil(
+    self.clients.matchAll().then(function(clients) {
+      const activeClient = clients.find(client => client.focused) || clients.find(client => client.visibilityState === "visible");
+
+      clients.forEach(function(client) {
+        client.postMessage({
+          primaryTab: client.id === activeClient?.id
+        });
+      });
+    })
+  );
+ });
 
 <% DiscoursePluginRegistry.service_workers.each do |js| %>
 <%=raw "#{File.read(js)}" %>

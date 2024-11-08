@@ -39,3 +39,23 @@ ensure
   db&.stop
   db&.remove
 end
+
+desc "regenerate plugin model annotations using a temporary database"
+task "annotate:clean:plugins", [:plugin] => :environment do |task, args|
+  specific_plugin = "--model-dir plugins/#{args[:plugin]}/app/models" if args[:plugin].present?
+
+  db = TemporaryDb.new
+  db.start
+  db.with_env do
+    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rake db:migrate", exception: true)
+    system("RAILS_ENV=test LOAD_PLUGINS=1 bin/rake annotate:ensure_all_indexes", exception: true)
+    system(
+      "RAILS_ENV=test LOAD_PLUGINS=1 bin/annotate --models #{specific_plugin}",
+      exception: true,
+    )
+  end
+  STDERR.puts "Annotate executed successfully"
+ensure
+  db&.stop
+  db&.remove
+end

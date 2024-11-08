@@ -23,15 +23,15 @@ module("Unit | Utility | uploads", function (hooks) {
   });
 
   test("validateUploadedFiles", function (assert) {
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(null, { siteSettings: this.siteSettings }),
       "no files are invalid"
     );
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(undefined, { siteSettings: this.siteSettings }),
       "undefined files are invalid"
     );
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([], { siteSettings: this.siteSettings }),
       "empty array of files is invalid"
     );
@@ -40,7 +40,7 @@ module("Unit | Utility | uploads", function (hooks) {
   test("uploading one file", function (assert) {
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
     );
     assert.ok(dialog.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
@@ -50,7 +50,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.newuser_max_embedded_media = 0;
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "image.png" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
@@ -94,7 +94,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.newuser_max_attachments = 0;
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "roman.txt" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
@@ -109,7 +109,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
   test("ensures an authorized upload", function (assert) {
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "unauthorized.html" }], {
         siteSettings: this.siteSettings,
       })
@@ -130,7 +130,7 @@ module("Unit | Utility | uploads", function (hooks) {
     const files = [{ name: "backup.tar.gz" }];
     sinon.stub(dialog, "alert");
 
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(files, {
         skipValidation: false,
         siteSettings: this.siteSettings,
@@ -149,7 +149,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions_for_staff = "";
 
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "test.jpg" }], {
         user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
@@ -165,7 +165,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions_for_staff = "";
 
     sinon.stub(dialog, "alert");
-    assert.notOk(
+    assert.false(
       validateUploadedFiles([{ name: "test.jpg" }], {
         user: this.store.createRecord("user", { staff: true }),
         siteSettings: this.siteSettings,
@@ -182,7 +182,7 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
 
     let user = this.store.createRecord("user", { moderator: true });
-    assert.notOk(
+    assert.false(
       validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
     );
     assert.ok(
@@ -231,7 +231,7 @@ module("Unit | Utility | uploads", function (hooks) {
       })
     );
 
-    assert.notOk(dialog.alert.calledOnce);
+    assert.false(dialog.alert.calledOnce);
   });
 
   test("isImage", function (assert) {
@@ -245,9 +245,9 @@ module("Unit | Utility | uploads", function (hooks) {
         );
       }
     );
-    assert.notOk(isImage("file.txt"));
-    assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
-    assert.notOk(isImage(""));
+    assert.false(isImage("file.txt"));
+    assert.false(isImage("http://foo.bar/path/to/file.txt"));
+    assert.false(isImage(""));
   });
 
   test("allowsImages", function (assert) {
@@ -275,7 +275,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
   test("allowsAttachments", function (assert) {
     this.siteSettings.authorized_extensions = "jpg|jpeg|gif";
-    assert.notOk(
+    assert.false(
       allowsAttachments(false, this.siteSettings),
       "no attachments allowed by default"
     );
@@ -444,7 +444,7 @@ module("Unit | Utility | uploads", function (hooks) {
     displayErrorForUpload(
       {
         status: 422,
-        body: { message: "upload failed" },
+        responseText: JSON.stringify({ message: "upload failed" }),
       },
       "test.png",
       { max_attachment_size_kb: 1024, max_image_size_kb: 1024 }

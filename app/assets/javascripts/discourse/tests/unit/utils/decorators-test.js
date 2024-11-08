@@ -14,6 +14,7 @@ import discourseComputed, {
   on,
 } from "discourse-common/utils/decorators";
 
+// eslint-disable-next-line ember/no-classic-classes
 const fooComponent = Component.extend({
   classNames: ["foo-component"],
 
@@ -37,6 +38,7 @@ const fooComponent = Component.extend({
   },
 });
 
+// eslint-disable-next-line ember/no-classic-classes
 const EmberObjectComponent = Component.extend({
   name: "",
   layout: hbs`<span class="ember-object-component">{{this.text}}</span>`,
@@ -57,6 +59,7 @@ class NativeComponent extends Component {
   }
 }
 
+// eslint-disable-next-line ember/no-classic-classes
 const TestStub = EmberObject.extend({
   counter: 0,
   otherCounter: 0,
@@ -226,6 +229,7 @@ module("Unit | Utils | decorators", function (hooks) {
       };
     });
 
+    // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithObserver = EmberObject.extend({
       counter: 0,
       @observes("value")
@@ -265,6 +269,7 @@ module("Unit | Utils | decorators", function (hooks) {
       };
     });
 
+    // eslint-disable-next-line ember/no-classic-classes
     const ExtendWithOn = EmberObject.extend({
       counter: 0,
       @on("init")

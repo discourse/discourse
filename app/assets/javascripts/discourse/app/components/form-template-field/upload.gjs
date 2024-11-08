@@ -1,29 +1,34 @@
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import icon from "discourse-common/helpers/d-icon";
+import { bind } from "discourse-common/utils/decorators";
 
-export default class FormTemplateFieldUpload extends Component.extend(
-  UppyUploadMixin
-) {
+export default class FormTemplateFieldUpload extends Component {
   @tracked uploadValue;
   @tracked uploadedFiles = [];
-  @tracked disabled = this.uploadingOrProcessing;
-  @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
+  @tracked fileUploadElementId = `${dasherize(this.args.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
-  type = "composer";
+  uppyUpload = new UppyUpload(getOwner(this), {
+    id: this.args.id,
+    type: "composer",
+    uploadDone: this.uploadDone,
+  });
 
-  @computed("uploadingOrProcessing")
   get uploadStatusLabel() {
-    return this.uploadingOrProcessing
+    return this.uppyUpload.uploading || this.uppyUpload.processing
       ? "form_templates.upload_field.uploading"
       : "form_templates.upload_field.upload";
+  }
+
+  get disabled() {
+    return this.uppyUpload.uploading || this.uppyUpload.processing;
   }
 
   /**
@@ -37,7 +42,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
    */
   isUploadedFileAllowed(file) {
     // same logic from PickFilesButton._hasAcceptedExtensionOrType
-    const fileTypes = this.attributes.file_types;
+    const fileTypes = this.args.attributes.file_types;
     const extension = file.name.split(".").pop();
 
     return (
@@ -47,9 +52,10 @@ export default class FormTemplateFieldUpload extends Component.extend(
     );
   }
 
+  @bind
   uploadDone(upload) {
     // If re-uploading, clear the existing file if multiple aren't allowed
-    if (!this.attributes.allow_multiple && this.uploadValue) {
+    if (!this.args.attributes.allow_multiple && this.uploadValue) {
       this.uploadedFiles = [];
       this.uploadValue = "";
     }
@@ -57,7 +63,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
     this.uploadedFiles.pushObject(upload);
 
     const uploadMarkdown = this.buildMarkdown(upload);
-    if (this.uploadValue && this.allowMultipleFiles) {
+    if (this.uploadValue && this.uppyUpload.allowMultipleFiles) {
       // multiple file upload
       this.uploadValue = `${this.uploadValue}\n${uploadMarkdown}`;
     } else {
@@ -102,6 +108,7 @@ export default class FormTemplateFieldUpload extends Component.extend(
       <input type="hidden" name={{@id}} value={{this.uploadValue}} />
 
       <PickFilesButton
+        @registerFileInput={{this.uppyUpload.setup}}
         @fileInputClass="form-template-field__upload"
         @fileInputId={{this.fileUploadElementId}}
         @allowMultiple={{@attributes.allow_multiple}}

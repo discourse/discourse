@@ -2,9 +2,10 @@
 
 RSpec.describe Chat::MarkAllUserChannelsRead do
   describe ".call" do
-    subject(:result) { described_class.call(params) }
+    subject(:result) { described_class.call(params:, **dependencies) }
 
-    let(:params) { { guardian: guardian } }
+    let(:params) { {} }
+    let(:dependencies) { { guardian: } }
     let(:guardian) { Guardian.new(current_user) }
 
     fab!(:current_user) { Fabricate(:user) }
