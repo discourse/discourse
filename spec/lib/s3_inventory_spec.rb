@@ -74,29 +74,20 @@ RSpec.describe S3Inventory do
       differing_etag = Upload.find_by(etag: "defcaac0b4aca535c284e95f30d608d0")
       differing_etag.update_columns(etag: "somethingelse")
 
-      differing_url = Upload.find_by(etag: "0cdc623af39cde0adb382670a6dc702a")
-      differing_url.update_columns(url: differing_url.url.gsub("default", "notdefault"))
-
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
       expect(output).to eq(<<~TEXT)
         #{differing_etag.url} has different etag
-        #{differing_url.url} has different url
         #{@upload_1.url}
         #{@no_etag.url}
-        4 of 5 uploads are missing
+        3 of 5 uploads are missing
         1 of these are caused by differing etags
         Null the etag column and re-run for automatic backfill
-        1 of these are caused by differing urls
-        Empty the url column and re-run for automatic backfill
       TEXT
-      expect(Discourse.stats.get("missing_s3_uploads")).to eq(4)
+      expect(Discourse.stats.get("missing_s3_uploads")).to eq(3)
     end
 
     it "marks missing uploads as not verified and found uploads as verified. uploads not checked will be verified nil" do
-      differing_url = Upload.find_by(etag: "0cdc623af39cde0adb382670a6dc702a")
-      differing_url.update_columns(url: differing_url.url.gsub("default", "notdefault"))
-
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
       ).to eq(12)
@@ -105,10 +96,9 @@ RSpec.describe S3Inventory do
       verification_status = Upload.pluck(:verification_status)
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:verified]).count,
-      ).to eq(2)
+      ).to eq(3)
 
       expect(Upload.with_invalid_etag_verification_status.count).to eq(2)
-      expect(Upload.with_invalid_url_verification_status.count).to eq(1)
 
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
@@ -208,12 +198,7 @@ RSpec.describe S3Inventory do
 
     CSV.foreach(csv_filename, headers: false) do |row|
       next if row[S3Inventory::CSV_KEY_INDEX].exclude?("default")
-      Fabricate(
-        :upload,
-        url: File.join(Discourse.store.absolute_base_url, row[S3Inventory::CSV_KEY_INDEX]),
-        etag: row[S3Inventory::CSV_ETAG_INDEX],
-        updated_at: 2.days.ago,
-      )
+      Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
     upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
