@@ -15,12 +15,20 @@ module PageObjects
         within(modal) { find(".save-invite") }
       end
 
+      def save_and_email_button
+        within(modal) { find(".save-invite-and-send-email") }
+      end
+
       def copy_button
         within(modal) { find(".copy-button") }
       end
 
       def has_copy_button?
         within(modal) { has_css?(".copy-button") }
+      end
+
+      def has_alert_message?(message)
+        within(modal) { has_css?("#modal-alert .invite-link", text: message) }
       end
 
       def has_invite_link_input?

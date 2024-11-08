@@ -230,7 +230,7 @@
     </div>
   {{/if}}
 
-  <div class="display-row">
+  <div class="display-row second-factor">
     <div class="field">{{i18n "user.second_factor.title"}}</div>
     <div class="value">
       {{#if this.model.second_factor_enabled}}
@@ -245,7 +245,7 @@
           @action={{this.disableSecondFactor}}
           @icon="unlock-keyhole"
           @label="user.second_factor.disable"
-          class="btn-default"
+          class="btn-default disable-second-factor"
         />
       {{/if}}
     </div>
