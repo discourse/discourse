@@ -347,7 +347,7 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
     if (typeof parsedBody === "string") {
       try {
         parsedBody = JSON.parse(parsedBody);
-      } catch (e) {
+      } catch {
         // ignore
       }
     }

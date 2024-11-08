@@ -1,10 +1,8 @@
-/* eslint-disable simple-import-sort/imports */
 import "./deprecation-workflow";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./global-compat";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
-/* eslint-enable simple-import-sort/imports */
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();

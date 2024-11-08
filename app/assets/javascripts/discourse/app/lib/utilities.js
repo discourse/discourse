@@ -383,7 +383,7 @@ export function unicodeSlugify(string) {
       .replace(/--+/g, "-") // replace multiple dashes with a single dash
       .replace(/^-+/, "") // Remove leading dashes
       .replace(/-+$/, ""); // Remove trailing dashes
-  } catch (e) {
+  } catch {
     // in case the regex construct \p{Letter} is not supported by the browser
     // fall back to the basic slugify function
     return slugify(string);
@@ -425,7 +425,7 @@ export function areCookiesEnabled() {
     let ret = document.cookie.includes("cookietest=");
     document.cookie = "cookietest=1; expires=Thu, 01-Jan-1970 00:00:01 GMT";
     return ret;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
