@@ -6,11 +6,7 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import pretender, { response } from "../helpers/create-pretender";
@@ -40,10 +36,9 @@ acceptance("Composer - Messages", function (needs) {
     await visit("/u/charlie");
     await click("button.compose-pm");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
@@ -95,10 +90,9 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
   test("Shows warning in composer if group hasn't been invited", async function (assert) {
     await visit("/t/130");
     await click("button.create");
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await fillIn(".d-editor-input", "Mention @staff");
     assert.dom(".composer-popup").exists("shows composer warning message");
@@ -115,10 +109,9 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
   test("Shows warning in composer if group hasn't been invited, but some members have access already", async function (assert) {
     await visit("/t/130");
     await click("button.create");
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown by default"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning is not shown by default");
 
     await fillIn(".d-editor-input", "Mention @staff2");
     assert.dom(".composer-popup").exists("shows composer warning message");
@@ -229,10 +222,11 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await fillIn("#reply-title", "Private message test title");
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown if the target recipients are empty"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "composer warning is not shown if the target recipients are empty"
+      );
 
     // filling the input with the username of the current user
     await privateMessageUsers.expand();
@@ -274,10 +268,11 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await fillIn("#reply-title", "Private message test title");
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
-    assert.false(
-      exists(".composer-popup"),
-      "composer warning is not shown if the target recipients are empty"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "composer warning is not shown if the target recipients are empty"
+      );
 
     // filling the input with the username of another user
     await privateMessageUsers.expand();
@@ -286,7 +281,7 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await privateMessageUsers.collapse();
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
-    assert.false(exists(".composer-popup"), "do not show it for other user");
+    assert.dom(".composer-popup").doesNotExist("do not show it for other user");
 
     // filling the input with the username of the current user
     await privateMessageUsers.expand();
@@ -295,9 +290,10 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await privateMessageUsers.collapse();
 
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
-    assert.false(
-      exists(".composer-popup"),
-      "do not show it when the current user is just one of the target recipients"
-    );
+    assert
+      .dom(".composer-popup")
+      .doesNotExist(
+        "do not show it when the current user is just one of the target recipients"
+      );
   });
 });

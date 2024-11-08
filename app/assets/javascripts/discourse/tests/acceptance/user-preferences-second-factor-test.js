@@ -8,7 +8,6 @@ import {
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -67,7 +66,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     await click(".new-totp");
-    assert.ok(exists(".qr-code img"), "shows qr code image");
+    assert.dom(".qr-code img").exists("shows qr code image");
 
     await click(".modal a.show-second-factor-key");
     assert
@@ -85,7 +84,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     await click(".new-security-key");
-    assert.ok(exists("#security-key-name"), "shows security key name input");
+    assert.dom("#security-key-name").exists("shows security key name input");
 
     await fillIn("#security-key-name", "");
 

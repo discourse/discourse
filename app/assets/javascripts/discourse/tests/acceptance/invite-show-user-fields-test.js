@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Accept Invite - User Fields", function (needs) {
   needs.site({
@@ -42,8 +42,8 @@ acceptance("Accept Invite - User Fields", function (needs) {
     });
 
     await visit("/invites/myvalidinvitetoken");
-    assert.ok(exists(".invites-show"), "shows the accept invite page");
-    assert.ok(exists(".user-field"), "it has at least one user field");
+    assert.dom(".invites-show").exists("shows the accept invite page");
+    assert.dom(".user-field").exists("has at least one user field");
     assert
       .dom(".invites-show .btn-primary:disabled")
       .exists("submit is disabled");
@@ -52,7 +52,7 @@ acceptance("Accept Invite - User Fields", function (needs) {
     await fillIn("#new-account-username", "validname");
     await fillIn("#new-account-password", "secur3ty4Y0uAndMe");
 
-    assert.ok(exists(".username-input .good"), "username is valid");
+    assert.dom(".username-input .good").exists("username is valid");
     assert
       .dom(".invites-show .btn-primary:disabled")
       .exists("submit is still disabled due to lack of user fields");

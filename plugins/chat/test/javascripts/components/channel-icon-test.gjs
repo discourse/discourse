@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -30,7 +30,7 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.false(exists(".xss"));
+    assert.dom(".xss").doesNotExist();
   });
 
   test("category channel - read restricted", async function (assert) {
@@ -54,7 +54,7 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.false(exists(".d-icon-lock"));
+    assert.dom(".d-icon-lock").doesNotExist();
   });
 
   test("dm channel - one user", async function (assert) {

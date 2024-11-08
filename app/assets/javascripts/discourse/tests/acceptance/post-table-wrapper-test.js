@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Post Table Wrapper Test", function () {
   test("fullscreen table wrapper appears on post with large table", async function (assert) {
@@ -14,12 +10,11 @@ acceptance("Post Table Wrapper Test", function () {
       .dom(`${postWithLargeTable} .fullscreen-table-wrapper`)
       .exists("The wrapper is present on the post with the large table");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper__buttons .open-popup-link`
-      ),
-      "buttons for the table wrapper appear inside a separate div"
-    );
+      )
+      .exists("buttons for the table wrapper appear inside a separate div");
 
     const fullscreenButtonWrapper = query(
       `${postWithLargeTable} .fullscreen-table-wrapper .fullscreen-table-wrapper__buttons`

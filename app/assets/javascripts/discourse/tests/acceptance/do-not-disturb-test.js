@@ -4,7 +4,6 @@ import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
   count,
-  exists,
   query,
   queryAll,
   updateCurrentUser,
@@ -31,7 +30,7 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.ok(exists(".do-not-disturb-modal"), "modal to choose time appears");
+    assert.dom(".do-not-disturb-modal").exists("modal to choose time appears");
 
     let tiles = queryAll(".do-not-disturb-tile");
     assert.ok(tiles.length === 4, "There are 4 duration choices");
@@ -40,12 +39,11 @@ acceptance("Do not disturb", function (needs) {
 
     assert.dom(".d-modal").doesNotExist("modal is hidden");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
-      ),
-      "dnd icon is present in header"
-    );
+      )
+      .exists("dnd icon is present in header");
   });
 
   test("Can be invoked via keyboard", async function (assert) {
@@ -56,7 +54,7 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.ok(exists(".do-not-disturb-modal"), "DND modal is displayed");
+    assert.dom(".do-not-disturb-modal").exists("DND modal is displayed");
 
     assert.strictEqual(
       count(".do-not-disturb-tile"),
@@ -74,12 +72,11 @@ acceptance("Do not disturb", function (needs) {
       .dom(".d-modal")
       .doesNotExist("DND modal is hidden after making a choice");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
-      ),
-      "dnd icon is shown in header avatar"
-    );
+      )
+      .exists("dnd icon is shown in header avatar");
   });
 
   test("when turned on, it can be turned off", async function (assert) {

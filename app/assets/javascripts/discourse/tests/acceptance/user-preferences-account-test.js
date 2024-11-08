@@ -6,11 +6,7 @@ import pretender, {
   fixturesByUrl,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -269,7 +265,7 @@ acceptance("User Preferences - Account", function (needs) {
     await visit("/u/eviltrout/preferences/account");
     await click(".pref-avatar .btn");
 
-    assert.ok(exists(".avatar-choice"), "opens the avatar selection modal");
+    assert.dom(".avatar-choice").exists("opens the avatar selection modal");
 
     await click(".avatar-selector-refresh-gravatar");
 

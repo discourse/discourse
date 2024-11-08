@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
+import { count } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | uppy-image-uploader", function (hooks) {
   setupRenderingTest(hooks);
@@ -48,7 +48,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       "it displays the upload icon"
     );
 
-    assert.ok(!exists(".d-icon-trash-can"), "it does not display trash icon");
+    assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
       .dom(".image-uploader-lightbox-btn")
@@ -66,7 +66,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       "it displays the upload icon"
     );
 
-    assert.ok(!exists(".d-icon-trash-can"), "it does not display trash icon");
+    assert.dom(".d-icon-trash-can").doesNotExist("does not display trash icon");
 
     assert
       .dom(".image-uploader-lightbox-btn")

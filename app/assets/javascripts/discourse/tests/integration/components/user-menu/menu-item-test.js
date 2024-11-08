@@ -11,7 +11,7 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -68,14 +68,12 @@ module(
       this.item.notification.read = true;
       await settled();
 
-      assert.ok(
-        exists("li.read"),
-        "the item re-renders when the read property is updated"
-      );
-      assert.notOk(
-        exists("li.unread"),
-        "the item re-renders when the read property is updated"
-      );
+      assert
+        .dom("li.read")
+        .exists("the item re-renders when the read property is updated");
+      assert
+        .dom("li.unread")
+        .doesNotExist("the item re-renders when the read property is updated");
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
@@ -95,10 +93,9 @@ module(
       );
       await settled();
 
-      assert.ok(
-        exists("li.private-message"),
-        "replaces underscores in type name with dashes"
-      );
+      assert
+        .dom("li.private-message")
+        .exists("replaces underscores in type name with dashes");
     });
 
     test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {
@@ -208,10 +205,11 @@ module(
         })
       );
       await render(template);
-      assert.ok(
-        exists("li a .item-description img.emoji"),
-        "emojis are unescaped when fancy_title is used for description"
-      );
+      assert
+        .dom("li a .item-description img.emoji")
+        .exists(
+          "emojis are unescaped when fancy_title is used for description"
+        );
     });
 
     test("topic_title from data is emoji-unescaped safely", async function (assert) {
@@ -232,10 +230,9 @@ module(
         "unsafe title with <a> unescaped emoji",
         "topic_title is rendered safely"
       );
-      assert.ok(
-        exists(".item-description img.emoji"),
-        "emoji is rendered correctly"
-      );
+      assert
+        .dom(".item-description img.emoji")
+        .exists("emoji is rendered correctly");
     });
 
     test("various aspects can be customized according to the notification's render director", async function (assert) {
@@ -289,10 +286,9 @@ module(
 
       await render(template);
 
-      assert.ok(
-        exists("li.additional.classes"),
-        "extra classes are included on the item"
-      );
+      assert
+        .dom("li.additional.classes")
+        .exists("extra classes are included on the item");
 
       const link = query("li a");
       assert.ok(
@@ -305,7 +301,7 @@ module(
         "link title is customized and rendered safely"
       );
 
-      assert.ok(exists("svg.d-icon-wrench"), "icon is customized");
+      assert.dom("svg.d-icon-wrench").exists("icon is customized");
 
       const label = query("li .item-label");
       assert.ok(
@@ -356,7 +352,9 @@ module(
       );
 
       await render(template);
-      assert.notOk(exists(".item-description"), "description is not rendered");
+      assert
+        .dom(".item-description")
+        .doesNotExist("description is not rendered");
       assert.strictEqual(
         query("li").textContent.trim(),
         "notification label",
@@ -395,7 +393,7 @@ module(
         "notification description",
         "only notification description is displayed"
       );
-      assert.notOk(exists(".item-label"), "label is not rendered");
+      assert.dom(".item-label").doesNotExist("label is not rendered");
     });
   }
 );

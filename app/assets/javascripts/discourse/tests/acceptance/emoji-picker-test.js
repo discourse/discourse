@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -24,10 +23,10 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
 
     await click("button.emoji.btn");
-    assert.ok(exists(".emoji-picker.opened"), "it opens the picker");
+    assert.dom(".emoji-picker.opened").exists("opens the picker");
 
     await click("button.emoji.btn");
-    assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
+    assert.dom(".emoji-picker.opened").doesNotExist("closes the picker");
   });
 
   test("filters emoji", async function (assert) {
@@ -83,12 +82,11 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-      ),
-      "it shows recent selected emoji"
-    );
+      )
+      .exists("shows recent selected emoji");
 
     assert
       .dom('.emoji-picker .category-button[data-section="recent"]')
@@ -96,12 +94,11 @@ acceptance("EmojiPicker", function (needs) {
 
     await click(".emoji-picker .trash-recent");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-      ),
-      "it has cleared recent emojis"
-    );
+      )
+      .doesNotExist("has cleared recent emojis");
 
     assert
       .dom('.emoji-picker .section[data-section="recent"]')

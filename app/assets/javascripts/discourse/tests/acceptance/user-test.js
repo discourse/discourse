@@ -10,7 +10,6 @@ import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
   queryAll,
@@ -112,12 +111,12 @@ acceptance("User Routes", function (needs) {
       "userActivity.index",
       "it defaults to activity"
     );
-    assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
+    assert.dom(".container.viewing-self").exists("has the viewing-self class");
   });
 
   test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream"), "has drafts stream");
+    assert.dom(".user-stream").exists("has drafts stream");
     assert
       .dom(".user-stream .user-stream-item-draft-actions")
       .exists("has draft action buttons");
@@ -168,7 +167,7 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
       document.body.classList.contains("user-messages-page"),
       "has the body class"
     );
-    assert.ok(exists("div.alert-info"), "has the permissions alert");
+    assert.dom("div.alert-info").exists("has the permissions alert");
   });
 });
 
@@ -276,10 +275,9 @@ acceptance(
 
     test("Notification level is set to normal and can be changed to muted", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const dropdown = selectKit(".user-notifications-dropdown");
       await dropdown.expand();
@@ -316,10 +314,9 @@ acceptance(
     });
     test("Notification level can be changed to ignored", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const notificationLevelDropdown = selectKit(
         ".user-notifications-dropdown"

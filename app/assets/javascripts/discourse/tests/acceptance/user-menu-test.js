@@ -17,7 +17,6 @@ import TopicFixtures from "discourse/tests/fixtures/topic";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import {
   acceptance,
-  exists,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -798,7 +797,9 @@ acceptance("User menu", function (needs) {
       "/u/eviltrout/notifications",
       "clicking on active tab navigates to the page it links to"
     );
-    assert.notOk(exists(".user-menu"), "user menu is closed after navigating");
+    assert
+      .dom(".user-menu")
+      .doesNotExist("user menu is closed after navigating");
 
     const tabs = [
       ["#user-menu-button-custom-tab-1", "/u/eviltrout/preferences/account"],
@@ -820,15 +821,13 @@ acceptance("User menu", function (needs) {
           expectedLink,
           `clicking on the ${id} tab navigates to ${expectedLink}`
         );
-        assert.notOk(
-          exists(".user-menu"),
-          "user menu is closed after navigating"
-        );
+        assert
+          .dom(".user-menu")
+          .doesNotExist("user menu is closed after navigating");
       } else {
-        assert.ok(
-          exists(".user-menu"),
-          "user menu remains open if tab doesn't link to anywhere"
-        );
+        assert
+          .dom(".user-menu")
+          .exists("user menu remains open if tab doesn't link to anywhere");
       }
       await click("#site-logo");
     }
@@ -1096,9 +1095,9 @@ acceptance("User menu - Dismiss button", function (needs) {
 
     await click(".user-menu .notifications-dismiss");
 
-    assert.ok(
-      !exists("#user-menu-button-other-notifications .badge-notification")
-    );
+    assert
+      .dom("#user-menu-button-other-notifications .badge-notification")
+      .doesNotExist();
     assert.ok(
       markRead,
       "mark-read request is sent without a confirmation modal"

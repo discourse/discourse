@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
@@ -21,7 +21,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
 
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.false(exists(".xss"));
+    assert.dom(".xss").doesNotExist();
   });
 
   test("escapes channel description", async function (assert) {
@@ -29,7 +29,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
 
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.false(exists(".xss"));
+    assert.dom(".xss").doesNotExist();
   });
 
   test("Closed channel", async function (assert) {
@@ -80,7 +80,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.description = null;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.false(exists(".chat-channel-card__description"));
+    assert.dom(".chat-channel-card__description").doesNotExist();
   });
 
   test("Description", async function (assert) {

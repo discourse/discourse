@@ -13,7 +13,6 @@ import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
   count,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -62,7 +61,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
     await click("#search-button");
 
-    assert.ok(exists("#search-term"), "it shows the search input");
+    assert.dom("#search-term").exists("shows the search input");
     assert
       .dom(".show-advanced-search")
       .exists("it shows full page search button");
@@ -400,12 +399,11 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".search-menu .search-result-topic .item .topic-title span#topic-with-html"
-      ),
-      "html in the topic title is properly escaped"
-    );
+      )
+      .exists("html in the topic title is properly escaped");
   });
 
   test("topic results - search result escapes emojis in topic title", async function (assert) {
@@ -414,12 +412,9 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.ok(
-      exists(
-        ".search-menu .search-result-topic .item .topic-title img[alt='+1']"
-      ),
-      ":+1: in the topic title is properly converted to an emoji"
-    );
+    assert
+      .dom(".search-menu .search-result-topic .item .topic-title img[alt='+1']")
+      .exists(":+1: in the topic title is properly converted to an emoji");
   });
 });
 
@@ -567,7 +562,7 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "dev");
-    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    assert.dom(`${container} ul li`).exists("has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
     assert
@@ -603,7 +598,7 @@ acceptance("Search - Authenticated", function (needs) {
       query("#search-button"),
       "Escaping search returns focus to search button"
     );
-    assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
+    assert.dom(".search-menu").doesNotExist("Esc removes search dropdown");
 
     await click("#search-button");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
@@ -627,12 +622,12 @@ acceptance("Search - Authenticated", function (needs) {
       .dom(query(`.search-menu`))
       .doesNotExist("search dropdown is collapsed after second Enter hit");
 
-    //new search launched, Enter key should be reset
+    // new search launched, Enter key should be reset
     await click("#search-button");
-    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    assert.dom(`${container} ul li`).exists("has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+    assert.dom(`.search-menu`).exists("search dropdown is visible");
   });
 
   test("search menu keyboard navigation - while composer is open", async function (assert) {
@@ -845,7 +840,7 @@ acceptance("Search - with tagging enabled", function (needs) {
     const firstItem =
       ".search-menu .results ul.search-menu-assistant .search-link";
 
-    assert.ok(exists(query(firstItem)));
+    assert.dom(firstItem).exists();
 
     const firstTag = query(`${firstItem} .search-item-tag`).textContent.trim();
     assert.strictEqual(firstTag, "monkey");
@@ -1219,13 +1214,13 @@ acceptance("Search - assistant", function (needs) {
     await visit("/u/charlie/messages");
     await click("#search-button");
 
-    assert.ok(exists(".btn.search-context"), "it shows the button");
+    assert.dom(".btn.search-context").exists("shows the button");
 
     await fillIn("#search-term", "");
     await query("input#search-term").focus();
     await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
-    assert.notOk(exists(".btn.search-context"), "it removes the button");
+    assert.dom(".btn.search-context").doesNotExist("removes the button");
 
     await clickOutside();
     await click("#search-button");

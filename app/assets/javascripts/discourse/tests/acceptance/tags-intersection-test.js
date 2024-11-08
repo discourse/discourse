@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Tags intersection", function (needs) {
   needs.user();
@@ -28,7 +28,7 @@ acceptance("Tags intersection", function (needs) {
     await visit("/tags/intersection/first/second");
     await click("#create-topic");
 
-    assert.ok(exists(".mini-tag-chooser"), "The tag selector appears");
+    assert.dom(".mini-tag-chooser").exists("the tag selector appears");
     assert
       .dom(".composer-fields .mini-tag-chooser")
       .hasText("first, second", "populates the tags when clicking 'New topic'");

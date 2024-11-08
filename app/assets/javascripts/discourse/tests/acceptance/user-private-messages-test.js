@@ -11,7 +11,6 @@ import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
-  exists,
   publishToMessageBus,
   query,
   updateCurrentUser,
@@ -38,10 +37,9 @@ acceptance(
         "displays the topic list"
       );
 
-      assert.ok(
-        !exists(".group-notifications-button"),
-        "displays the group notifications button"
-      );
+      assert
+        .dom(".group-notifications-button")
+        .doesNotExist("displays the group notifications button");
     });
 
     test("viewing messages of another user", async function (assert) {
@@ -49,15 +47,13 @@ acceptance(
 
       await visit("/u/eviltrout/messages");
 
-      assert.ok(
-        !exists(".messages-nav li a.new"),
-        "it does not display new filter"
-      );
+      assert
+        .dom(".messages-nav li a.new")
+        .doesNotExist("it does not display new filter");
 
-      assert.ok(
-        !exists(".messages-nav li a.unread"),
-        "it does not display unread filter"
-      );
+      assert
+        .dom(".messages-nav li a.unread")
+        .doesNotExist("it does not display unread filter");
     });
   }
 );
@@ -304,11 +300,11 @@ acceptance("User Private Messages - sorting", function (needs) {
   test("order by posts_count", async function (assert) {
     await visit("/u/eviltrout/messages");
 
-    assert.ok(exists(".topic-list-header th.posts.sortable"), "is sortable");
+    assert.dom(".topic-list-header th.posts.sortable").exists("is sortable");
 
     await click(".topic-list-header th.posts.sortable");
 
-    assert.ok(exists(".topic-list-header th.posts.sortable.sorting"), "sorted");
+    assert.dom(".topic-list-header th.posts.sortable.sorting").exists("sorted");
   });
 });
 
@@ -326,10 +322,9 @@ acceptance(
         actingUserId: 5,
       });
 
-      assert.ok(
-        !exists(".show-mores"),
-        `does not display the topic incoming info`
-      );
+      assert
+        .dom(".show-mores")
+        .doesNotExist(`does not display the topic incoming info`);
     });
 
     test("incoming group archive message on inbox and archive filter", async function (assert) {
@@ -341,10 +336,9 @@ acceptance(
 
         await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
 
-        assert.ok(
-          exists(".show-mores"),
-          `${url} displays the topic incoming info`
-        );
+        assert
+          .dom(".show-mores")
+          .exists(`${url} displays the topic incoming info`);
       }
 
       for (const url of [
@@ -355,10 +349,9 @@ acceptance(
 
         await publishGroupArchiveToMessageBus({ groupIds: [14], topicId: 1 });
 
-        assert.ok(
-          !exists(".show-mores"),
-          `${url} does not display the topic incoming info`
-        );
+        assert
+          .dom(".show-mores")
+          .doesNotExist(`${url} does not display the topic incoming info`);
       }
     });
 
@@ -392,7 +385,7 @@ acceptance(
         "displays the right count"
       );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
 
       await publishNewToMessageBus({ topicId: 2 });
 
@@ -402,7 +395,7 @@ acceptance(
         "displays the right count"
       );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
     });
 
     test("incoming unread messages while viewing unread", async function (assert) {
@@ -416,7 +409,7 @@ acceptance(
         "displays the right count"
       );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
     });
 
     test("incoming unread and new messages while viewing group unread", async function (assert) {
@@ -439,7 +432,7 @@ acceptance(
         "displays the right count"
       );
 
-      assert.ok(exists(".show-mores"), "displays the topic incoming info");
+      assert.dom(".show-mores").exists("displays the topic incoming info");
 
       await visit("/u/charlie/messages/unread");
 
@@ -464,10 +457,9 @@ acceptance(
 
       await visit("/u/charlie/messages");
 
-      assert.ok(
-        !exists(".show-mores"),
-        "does not display the topic incoming info"
-      );
+      assert
+        .dom(".show-mores")
+        .doesNotExist("does not display the topic incoming info");
     });
 
     test("dismissing all unread messages", async function (assert) {
@@ -640,10 +632,9 @@ acceptance(
         "displays the right topic list"
       );
 
-      assert.ok(
-        exists(".group-notifications-button"),
-        "displays the group notifications button"
-      );
+      assert
+        .dom(".group-notifications-button")
+        .exists("displays the group notifications button");
     });
 
     test("navigating between user messages route with dropdown", async function (assert) {

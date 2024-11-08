@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -101,7 +100,7 @@ acceptance(
     test("For a group with a default_notification_level of 0", async function (assert) {
       await visit("/g/alternative-group/manage/interaction");
 
-      await assert.ok(exists(".groups-form"), "should have the form");
+      await assert.dom(".groups-form").exists("has the form");
       await assert.strictEqual(
         selectKit(".groups-form-default-notification-level").header().value(),
         "0",
@@ -112,7 +111,7 @@ acceptance(
     test("For a group with a null default_notification_level", async function (assert) {
       await visit("/g/discourse/manage/interaction");
 
-      await assert.ok(exists(".groups-form"), "should have the form");
+      await assert.dom(".groups-form").exists("has the form");
       await assert.strictEqual(
         selectKit(".groups-form-default-notification-level").header().value(),
         "3",
@@ -123,7 +122,7 @@ acceptance(
     test("For a group with a selected default_notification_level", async function (assert) {
       await visit("/g/support/manage/interaction");
 
-      await assert.ok(exists(".groups-form"), "should have the form");
+      await assert.dom(".groups-form").exists("has the form");
       await assert.strictEqual(
         selectKit(".groups-form-default-notification-level").header().value(),
         "2",

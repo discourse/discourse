@@ -3,7 +3,6 @@ import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   query,
   queryAll,
   selectText,
@@ -34,8 +33,8 @@ acceptance("Topic - Quote button - logged in", function (needs) {
   test("Does not show the quote share buttons by default", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
-    assert.ok(exists(".insert-quote"), "it shows the quote button");
-    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
+    assert.dom(".insert-quote").exists("shows the quote button");
+    assert.dom(".quote-sharing").doesNotExist("does not show quote sharing");
   });
 
   test("Shows quote share buttons with the right site settings", async function (assert) {
@@ -44,7 +43,7 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
+    assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
       .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
       .exists("it includes the twitter share button");
@@ -80,7 +79,7 @@ acceptance("Closed Topic - Quote button - logged in", function (needs) {
   test("Shows quote button in closed topics", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .cooked p:first-child");
-    assert.ok(exists(".insert-quote"), "it shows the quote button");
+    assert.dom(".insert-quote").exists("shows the quote button");
 
     await click(".insert-quote");
     assert.ok(
@@ -109,7 +108,9 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     assert
       .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
       .exists("it includes the email share button");
-    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+    assert
+      .dom(".insert-quote")
+      .doesNotExist("it does not show the quote button");
   });
 
   test("Shows single share button when site setting only has one item", async function (assert) {
@@ -118,7 +119,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.ok(exists(".quote-sharing"), "it shows the quote sharing options");
+    assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
       .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
       .exists("it includes the twitter share button");
@@ -133,8 +134,8 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 blockquote");
 
-    assert.ok(!exists(".quote-sharing"), "it does not show quote sharing");
-    assert.ok(!exists(".insert-quote"), "it does not show the quote button");
+    assert.dom(".quote-sharing").doesNotExist("does not show quote sharing");
+    assert.dom(".insert-quote").doesNotExist("does not show the quote button");
   });
 });
 
@@ -145,7 +146,7 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .cooked");
     await triggerKeyEvent(document, "keypress", "Q");
-    assert.ok(exists(".d-editor-input"), "the editor is open");
+    assert.dom(".d-editor-input").exists("the editor is open");
 
     assert.ok(
       query(".d-editor-input").value.includes("Any plans to support"),

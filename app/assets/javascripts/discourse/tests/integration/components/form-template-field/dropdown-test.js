@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
@@ -21,10 +21,9 @@ module(
       await render(
         hbs`<FormTemplateField::Dropdown @choices={{this.choices}}/>`
       );
-      assert.ok(
-        exists(".form-template-field__dropdown"),
-        "A dropdown component exists"
-      );
+      assert
+        .dom(".form-template-field__dropdown")
+        .exists("a dropdown component exists");
 
       const dropdown = queryAll(
         ".form-template-field__dropdown option:not(.form-template-field__dropdown-placeholder)"
@@ -60,10 +59,9 @@ module(
       await render(
         hbs`<FormTemplateField::Dropdown @choices={{this.choices}} @attributes={{this.attributes}} />`
       );
-      assert.ok(
-        exists(".form-template-field__dropdown"),
-        "A dropdown component exists"
-      );
+      assert
+        .dom(".form-template-field__dropdown")
+        .exists("a dropdown component exists");
 
       assert.strictEqual(
         query(".form-template-field__dropdown-placeholder").innerText,

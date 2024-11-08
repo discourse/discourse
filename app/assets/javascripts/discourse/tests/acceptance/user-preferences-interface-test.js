@@ -7,7 +7,6 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -28,9 +27,9 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
 
     const savePreferences = async () => {
-      assert.ok(!exists(".saved"), "it hasn't been saved yet");
+      assert.dom(".saved").doesNotExist("hasn't been saved yet");
       await click(".save-changes");
-      assert.ok(exists(".saved"), "it displays the saved message");
+      assert.dom(".saved").exists("it displays the saved message");
       query(".saved").remove();
     };
 
@@ -72,7 +71,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
   test("does not show option to disable dark mode by default", async function (assert) {
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok(!exists(".control-group.dark-mode"), "option not visible");
+    assert.dom(".control-group.dark-mode").doesNotExist("option not visible");
   });
 
   test("shows light/dark color scheme pickers", async function (assert) {
@@ -83,8 +82,8 @@ acceptance("User Preferences - Interface", function (needs) {
     ]);
 
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
-    assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
+    assert.dom(".light-color-scheme").exists("has regular dropdown");
+    assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
   });
 
   test("shows light color scheme default option when theme's color scheme is not user selectable", async function (assert) {
@@ -96,7 +95,7 @@ acceptance("User Preferences - Interface", function (needs) {
     site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
     await visit("/u/eviltrout/preferences/interface");
-    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+    assert.dom(".light-color-scheme").exists("has regular dropdown");
 
     assert.strictEqual(
       selectKit(".light-color-scheme .select-kit").header().value(),
@@ -132,7 +131,7 @@ acceptance("User Preferences - Interface", function (needs) {
 
     await visit("/u/eviltrout/preferences/interface");
 
-    assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+    assert.dom(".light-color-scheme").exists("has regular dropdown");
     assert.strictEqual(selectKit(".theme .select-kit").header().value(), "2");
 
     await selectKit(".light-color-scheme .select-kit").expand();
@@ -187,10 +186,9 @@ acceptance(
     test("show option to disable dark mode", async function (assert) {
       await visit("/u/eviltrout/preferences/interface");
 
-      assert.ok(
-        exists(".control-group.dark-mode"),
-        "it has the option to disable dark mode"
-      );
+      assert
+        .dom(".control-group.dark-mode")
+        .exists("has the option to disable dark mode");
     });
 
     test("no color scheme picker by default", async function (assert) {
@@ -206,11 +204,10 @@ acceptance(
       site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(exists(".light-color-scheme"), "has regular picker dropdown");
-      assert.ok(
-        !exists(".dark-color-scheme"),
-        "does not have a dark color scheme picker"
-      );
+      assert.dom(".light-color-scheme").exists("has regular picker dropdown");
+      assert
+        .dom(".dark-color-scheme")
+        .doesNotExist("does not have a dark color scheme picker");
     });
 
     test("light color scheme defaults to custom scheme selected by user", async function (assert) {
@@ -220,7 +217,7 @@ acceptance(
       site.set("user_color_schemes", [{ id: 2, name: "Cool Breeze" }]);
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(exists(".light-color-scheme"), "has light scheme dropdown");
+      assert.dom(".light-color-scheme").exists("has light scheme dropdown");
       assert.strictEqual(
         query(".light-color-scheme .selected-name").dataset.value,
         session.userColorSchemeId.toString(),
@@ -243,7 +240,7 @@ acceptance(
 
       await visit("/u/eviltrout/preferences/interface");
 
-      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
+      assert.dom(".light-color-scheme").exists("has regular dropdown");
       const dropdownObject = selectKit(".light-color-scheme .select-kit");
       assert.strictEqual(dropdownObject.header().value(), null);
       assert.strictEqual(
@@ -269,24 +266,23 @@ acceptance(
       ]);
 
       const savePreferences = async () => {
-        assert.ok(!exists(".saved"), "it hasn't been saved yet");
+        assert.dom(".saved").doesNotExist("hasn't been saved yet");
         await click(".save-changes");
-        assert.ok(exists(".saved"), "it displays the saved message");
+        assert.dom(".saved").exists("displays the saved message");
         query(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");
-      assert.ok(exists(".light-color-scheme"), "has regular dropdown");
-      assert.ok(exists(".dark-color-scheme"), "has dark color scheme dropdown");
+      assert.dom(".light-color-scheme").exists("has regular dropdown");
+      assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
       assert.strictEqual(
         query(".dark-color-scheme .selected-name").dataset.value,
         session.userDarkSchemeId.toString(),
         "sets site default as selected dark scheme"
       );
-      assert.ok(
-        !exists(".control-group.dark-mode"),
-        "it does not show disable dark mode checkbox"
-      );
+      assert
+        .dom(".control-group.dark-mode")
+        .doesNotExist("does not show disable dark mode checkbox");
 
       removeCookie("color_scheme_id");
       removeCookie("dark_scheme_id");
@@ -298,10 +294,9 @@ acceptance(
         undefined,
         "cookie is not set"
       );
-      assert.ok(
-        exists(".color-scheme-checkbox input:checked"),
-        "defaults to storing values in user options"
-      );
+      assert
+        .dom(".color-scheme-checkbox input:checked")
+        .exists("defaults to storing values in user options");
 
       await savePreferences();
       assert.strictEqual(

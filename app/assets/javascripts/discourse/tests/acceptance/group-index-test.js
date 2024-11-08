@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -19,7 +18,7 @@ acceptance("Group Members - Anonymous", function () {
       1,
       "it displays the group's avatar flair"
     );
-    assert.ok(exists(".group-members .group-member"), "it lists group members");
+    assert.dom(".group-members .group-member").exists("lists group members");
 
     assert
       .dom(".group-member-dropdown")

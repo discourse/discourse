@@ -4,7 +4,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   normalizeHtml,
   query,
   visible,
@@ -36,7 +35,7 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream - resume draft", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream-item"), "has drafts");
+    assert.dom(".user-stream-item").exists("has drafts");
 
     await click(".user-stream-item .resume-draft");
     assert.strictEqual(
@@ -47,7 +46,7 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream - has excerpt", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream-item"), "has drafts");
+    assert.dom(".user-stream-item").exists("has drafts");
     assert.strictEqual(
       query(".user-stream-item:nth-child(3) .category").textContent,
       "meta"

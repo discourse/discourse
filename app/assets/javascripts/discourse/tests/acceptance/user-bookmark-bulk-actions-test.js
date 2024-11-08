@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -26,7 +25,7 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
 
     await dropdown.selectRowByValue("clear-reminders");
 
-    assert.ok(exists(".dialog-container"), "it should show the modal");
+    assert.dom(".dialog-container").exists("shows the modal");
     assert.dom(".dialog-container .dialog-body").includesText(
       I18n.t("js.bookmark_bulk_actions.clear_reminders.description", {
         count: 2,
@@ -52,7 +51,7 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
     await dropdown.expand();
     await dropdown.selectRowByValue("delete-bookmarks");
 
-    assert.ok(exists(".dialog-container"), "it should show the modal");
+    assert.dom(".dialog-container").exists("shows the modal");
 
     assert.dom(".dialog-container .dialog-body").includesText(
       I18n.t("js.bookmark_bulk_actions.delete_bookmarks.description", {

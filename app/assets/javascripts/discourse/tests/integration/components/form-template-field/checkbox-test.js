@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | checkbox",
@@ -12,12 +11,11 @@ module(
     test("renders a checkbox input", async function (assert) {
       await render(hbs`<FormTemplateField::Checkbox />`);
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".form-template-field[data-field-type='checkbox'] input[type='checkbox']"
-        ),
-        "A checkbox component exists"
-      );
+        )
+        .exists("a checkbox component exists");
     });
 
     test("renders a checkbox with a label", async function (assert) {
@@ -30,12 +28,11 @@ module(
         hbs`<FormTemplateField::Checkbox @attributes={{this.attributes}} />`
       );
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".form-template-field[data-field-type='checkbox'] input[type='checkbox']"
-        ),
-        "A checkbox component exists"
-      );
+        )
+        .exists("a checkbox component exists");
 
       assert.dom(".form-template-field__label").hasText("Click this box");
     });

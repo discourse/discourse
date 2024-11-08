@@ -25,7 +25,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
-  exists,
   invisible,
   metaModifier,
   query,
@@ -154,10 +153,10 @@ acceptance("Composer", function (needs) {
 
   test("composer controls", async function (assert) {
     await visit("/");
-    assert.ok(exists("#create-topic"), "the create button is visible");
+    assert.dom("#create-topic").exists("the create button is visible");
 
     await click("#create-topic");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
     await focus(".title-input input");
     assert
       .dom(".title-input .popup-tip.good.hide")
@@ -222,10 +221,12 @@ acceptance("Composer", function (needs) {
     );
 
     await click("#reply-control a.cancel");
-    assert.ok(exists(".d-modal"), "it pops up a confirmation dialog");
+    assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
     await click(".d-modal__footer .discard-draft");
-    assert.ok(!exists(".d-modal__body"), "the confirmation can be cancelled");
+    assert
+      .dom(".d-modal__body")
+      .doesNotExist("the confirmation can be cancelled");
   });
 
   test("Create a topic with server side errors", async function (assert) {
@@ -238,11 +239,11 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    assert.dom(".dialog-body").exists("pops up an error message");
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!exists(".dialog-body"), "it dismisses the error");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".dialog-body").doesNotExist("dismisses the error");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
   });
 
   test("Create a Topic", async function (assert) {
@@ -313,7 +314,7 @@ acceptance("Composer", function (needs) {
       .doesNotExist("the post is not in the DOM");
 
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
     assert
       .dom("#reply-title")
       .doesNotExist("there is no title since this is a reply");
@@ -460,7 +461,7 @@ acceptance("Composer", function (needs) {
     assert.dom(".pending-posts .reviewable-item").doesNotExist();
 
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
     assert
       .dom("#reply-title")
       .doesNotExist("there is no title since this is a reply");
@@ -496,7 +497,7 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "This is the new text for the post");
     await fillIn("#reply-title", "This is the new text for the title");
     await click("#reply-control button.create");
-    assert.ok(!exists(".d-editor-input"), "it closes the composer");
+    assert.dom(".d-editor-input").doesNotExist("closes the composer");
     assert
       .dom(".topic-post:nth-of-type(1) .post-info.edits")
       .exists("it has the edits icon");
@@ -723,7 +724,7 @@ acceptance("Composer", function (needs) {
     );
 
     await visit("/");
-    assert.ok(exists("#create-topic"), "the create topic button is visible");
+    assert.dom("#create-topic").exists("the create topic button is visible");
 
     await click("#create-topic");
     assert
@@ -862,12 +863,9 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", longText);
 
-    assert.ok(
-      exists(
-        '.action-title a[href="/t/internationalization-localization/280"]'
-      ),
-      "the mode should be: reply to post"
-    );
+    assert
+      .dom('.action-title a[href="/t/internationalization-localization/280"]')
+      .exists("the mode should be: reply to post");
 
     await click("article#post_3 button.reply");
 
@@ -875,19 +873,16 @@ acceptance("Composer", function (needs) {
     await composerActions.expand();
     await composerActions.selectRowByValue("reply_as_new_topic");
 
-    assert.ok(!exists(".d-modal__body"), "abandon popup shouldn't come");
+    assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
     assert.ok(
       query(".d-editor-input").value.includes(longText),
       "entered text should still be there"
     );
 
-    assert.ok(
-      !exists(
-        '.action-title a[href="/t/internationalization-localization/280"]'
-      ),
-      "mode should have changed"
-    );
+    assert
+      .dom('.action-title a[href="/t/internationalization-localization/280"]')
+      .doesNotExist("mode should have changed");
   });
 
   test("Loading draft also replaces the recipients", async function (assert) {
@@ -1008,7 +1003,7 @@ acceptance("Composer", function (needs) {
       .doesNotExist("Doesn't show the 'group_mentioned' notice in a quote");
 
     await fillIn(".d-editor-input", "@staff");
-    assert.ok(exists(".composer-popup"), "Shows the 'group_mentioned' notice");
+    assert.dom(".composer-popup").exists("shows the 'group_mentioned' notice");
   });
 
   test("Does not save invalid draft", async function (assert) {
@@ -1119,14 +1114,14 @@ acceptance("Composer - Error Extensibility", function (needs) {
     await fillIn("#reply-title", "this title triggers an error");
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
-    assert.ok(exists(".dialog-body"), "it pops up an error message");
+    assert.dom(".dialog-body").exists("pops up an error message");
     assert.ok(
       query(".dialog-body").innerText.match(/PLUGIN_ABC ERROR/),
       "it contains the server side error text"
     );
     await click(".dialog-footer .btn-primary");
-    assert.ok(!exists(".dialog-body"), "it dismisses the error");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".dialog-body").doesNotExist("dismisses the error");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
   });
 });
 
@@ -1340,7 +1335,7 @@ acceptance("Composer - current time", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     await click("#topic-footer-buttons .btn.create");
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
     await fillIn(".d-editor-input", "and the time now is: ");
 
     const date = moment().format("YYYY-MM-DD");

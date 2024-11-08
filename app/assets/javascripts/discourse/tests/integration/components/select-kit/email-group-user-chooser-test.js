@@ -2,7 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
+import { paste, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender, { response } from "../../../helpers/create-pretender";
 
@@ -132,7 +132,7 @@ module(
       await this.subject.expand();
       await fillIn(".filter-input", "test-user");
 
-      assert.ok(exists(".user-status-message"), "user status is rendered");
+      assert.dom(".user-status-message").exists("user status is rendered");
       assert
         .dom(".user-status-message .emoji")
         .hasAttribute("alt", status.emoji, "status emoji is correct");
