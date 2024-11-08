@@ -11,7 +11,7 @@ export default {
     if (caps.isAppWebview) {
       window
         .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", this.updateAppBackground);
+        .addEventListener("change", this.updateAppBackground.bind(this));
       this.updateAppBackground();
     }
   },
