@@ -70,6 +70,10 @@ module PageObjects
         channels_index.has_no_unread_channel?(channel)
       end
 
+      def has_urgent_channel?(channel)
+        channels_index.has_unread_channel?(channel, urgent: true)
+      end
+
       def has_user_threads_section?
         has_css?("#c-footer-threads")
       end
