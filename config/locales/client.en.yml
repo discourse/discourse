@@ -6772,6 +6772,7 @@ en:
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         delete_associated_accounts_confirm: "Are you SURE you want to delete all associated accounts from this account? The user may not be able to log in if their email has changed."
+        disable_second_factor_confirm: "Are you SURE you want to disable Two-Factor Authentication for this account?"
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
