@@ -21,7 +21,6 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind, debounce } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
-import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
 
