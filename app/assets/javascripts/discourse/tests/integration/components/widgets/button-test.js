@@ -66,7 +66,7 @@ module("Integration | Component | Widget | button", function (hooks) {
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
     assert
-      .dom("button.btn.btn-icon")
+      .dom("button.btn.btn-icon-text")
       .doesNotHaveClass("no-text", "skips no-text class");
   });
 });

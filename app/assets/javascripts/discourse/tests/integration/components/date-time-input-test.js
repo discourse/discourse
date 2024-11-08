@@ -61,7 +61,7 @@ module("Integration | Component | date-time-input", function (hooks) {
       hbs`<DateTimeInput @date={{this.date}} @showTime={{false}} />`
     );
 
-    assert.dom(timeInput()).exists();
+    assert.dom(".d-time-input .combo-box-header").exists();
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {

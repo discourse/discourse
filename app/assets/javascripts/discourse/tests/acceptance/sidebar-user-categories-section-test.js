@@ -169,7 +169,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     topCategories.forEach((category) => {
       assert
-        .dom(`.sidebar-section-link-wrapper[data-category-id=${category.id}]`)
+        .dom(`.sidebar-section-link-wrapper[data-category-id="${category.id}"]`)
         .exists(`${category.displayName} section link is shown`);
     });
   });
@@ -850,7 +850,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-suffix`
       )
-      .exists(
+      .doesNotExist(
         "hides suffix indicator when there's no new/unread content on category link"
       );
   });
@@ -955,7 +955,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       )
-      .exists(`does not display any badge ${category1.slug} section link`);
+      .doesNotExist(
+        `does not display any badge ${category1.slug} section link`
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 3,

@@ -439,7 +439,7 @@ acceptance("Poll in a post reply history", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_poll_in_post_reply_history");
     await click(".reply-to-tab");
-    assert.dm(".poll").exists("poll is rendered");
-    assert.dm(".poll-buttons").exists("poll is extended");
+    assert.dom(".poll").exists("poll is rendered");
+    assert.dom(".poll-buttons").exists("poll is extended");
   });
 });
