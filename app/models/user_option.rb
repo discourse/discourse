@@ -11,7 +11,7 @@ class UserOption < ActiveRecord::Base
     6 => "bookmarks",
     7 => "unseen",
     8 => "hot",
-  }
+  }.freeze
 
   self.ignored_columns = [
     "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy

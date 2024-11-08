@@ -11,7 +11,7 @@ module Migrations::Converters::Base
       cache_keys: true,
       class_cache: true,
       symbol_keys: true,
-    }
+    }.freeze
 
     def initialize(index, input_queue, output_queue, job)
       @index = index

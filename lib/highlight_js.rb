@@ -2,7 +2,7 @@
 
 module HighlightJs
   HIGHLIGHTJS_DIR =
-    "#{Rails.root}/app/assets/javascripts/discourse/node_modules/@highlightjs/cdn-assets/"
+    "#{Rails.root}/app/assets/javascripts/discourse/node_modules/@highlightjs/cdn-assets/".freeze
   VERSION = 1 # bump to invalidate caches following core changes
 
   def self.languages

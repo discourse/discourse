@@ -2,8 +2,8 @@
 
 class TemporaryDb
   PG_TEMP_PATH = "/tmp/pg_schema_tmp"
-  PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf"
-  PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets"
+  PG_CONF = "#{PG_TEMP_PATH}/postgresql.conf".freeze
+  PG_SOCK_PATH = "#{PG_TEMP_PATH}/sockets".freeze
 
   def port_available?(port)
     TCPServer.open(port).close

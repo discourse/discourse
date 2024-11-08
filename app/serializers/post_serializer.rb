@@ -11,7 +11,7 @@ class PostSerializer < BasicPostSerializer
     post_actions
     all_post_actions
     add_excerpt
-  ]
+  ].freeze
 
   INSTANCE_VARS.each { |v| self.public_send(:attr_accessor, v) }
 

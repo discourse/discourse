@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Category < ActiveRecord::Base
-  RESERVED_SLUGS = ["none"]
+  RESERVED_SLUGS = ["none"].freeze
 
   self.ignored_columns = [
     :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
@@ -181,8 +181,8 @@ class Category < ActiveRecord::Base
           end
         end
 
-  TOPIC_CREATION_PERMISSIONS = [:full]
-  POST_CREATION_PERMISSIONS = %i[create_post full]
+  TOPIC_CREATION_PERMISSIONS = [:full].freeze
+  POST_CREATION_PERMISSIONS = %i[create_post full].freeze
 
   scope :topic_create_allowed,
         ->(guardian) do

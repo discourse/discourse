@@ -19,9 +19,9 @@ class RobotsTxtController < ApplicationController
     /user-api-key
     /*?api_key*
     /*?*api_key*
-  ]
+  ].freeze
 
-  DISALLOWED_WITH_HEADER_PATHS = %w[/badges /u/ /my /search /tag/*/l /g /t/*/*.rss /c/*.rss]
+  DISALLOWED_WITH_HEADER_PATHS = %w[/badges /u/ /my /search /tag/*/l /g /t/*/*.rss /c/*.rss].freeze
 
   def index
     if (overridden = SiteSetting.overridden_robots_txt.dup).present?

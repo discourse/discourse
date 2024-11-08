@@ -67,7 +67,7 @@ module BadgeQueries
     JOIN incoming_links i2 ON i2.id = views.i_id
   SQL
 
-  FirstFlag = <<~SQL
+  FirstFlag = <<~SQL.freeze
     SELECT pa1.user_id, pa1.created_at granted_at, pa1.post_id
     FROM (
       SELECT pa.user_id, min(pa.id) id
@@ -126,7 +126,7 @@ module BadgeQueries
     GROUP BY p.user_id
   SQL
 
-  Autobiographer = <<~SQL
+  Autobiographer = <<~SQL.freeze
     SELECT u.id user_id, current_timestamp granted_at
     FROM users u
     JOIN user_profiles up on u.id = up.user_id

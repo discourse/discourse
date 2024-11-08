@@ -1066,7 +1066,7 @@ class Plugin::Instance
   #
   #   get "contact" => "static#show", id: "contact"
   def add_topic_static_page(page, options = {}, &blk)
-    StaticController::CUSTOM_PAGES[page] = blk ? { topic_id: blk } : options
+    StaticController.custom_pages[page] = blk ? { topic_id: blk } : options
   end
 
   # Let plugin define custom unsubscribe keys,

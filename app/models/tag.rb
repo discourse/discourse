@@ -12,7 +12,7 @@ class Tag < ActiveRecord::Base
   RESERVED_TAGS = [
     "none",
     "constructor", # prevents issues with javascript's constructor of objects
-  ]
+  ].freeze
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 

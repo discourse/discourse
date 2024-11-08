@@ -6,7 +6,7 @@ class AdminDashboardData
   cattr_reader :problem_messages, default: []
 
   # kept for backward compatibility
-  GLOBAL_REPORTS = []
+  GLOBAL_REPORTS = [].freeze
 
   PROBLEM_MESSAGE_PREFIX = "admin-problem:"
   SCHEDULED_PROBLEM_STORAGE_KEY = "admin-found-scheduled-problems-list"

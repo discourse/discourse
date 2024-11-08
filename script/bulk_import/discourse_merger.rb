@@ -4,7 +4,7 @@ require_relative "base"
 
 class BulkImport::DiscourseMerger < BulkImport::Base
   NOW = "now()"
-  CUSTOM_FIELDS = %w[category group post topic user]
+  CUSTOM_FIELDS = %w[category group post topic user].freeze
 
   # DB_NAME: name of database being merged into the current local db
   # DB_HOST: hostname of database being merged

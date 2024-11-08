@@ -25,7 +25,7 @@ class Auth::Result
     overrides_email
     overrides_username
     overrides_name
-  ]
+  ].freeze
 
   attr_accessor *ATTRIBUTES
 
@@ -43,7 +43,7 @@ class Auth::Result
     overrides_email
     overrides_username
     overrides_name
-  ]
+  ].freeze
 
   def [](key)
     key = key.to_sym

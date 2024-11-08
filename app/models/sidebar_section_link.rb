@@ -10,7 +10,7 @@ class SidebarSectionLink < ActiveRecord::Base
   validates :linkable_type, presence: true
   validate :ensure_supported_linkable_type, if: :will_save_change_to_linkable_type?
 
-  SUPPORTED_LINKABLE_TYPES = %w[Category Tag SidebarUrl]
+  SUPPORTED_LINKABLE_TYPES = %w[Category Tag SidebarUrl].freeze
 
   before_validation :inherit_user_id
   before_create do

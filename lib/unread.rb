@@ -28,7 +28,7 @@ class Unread
   DO_NOT_NOTIFY_LEVELS = [
     TopicUser.notification_levels[:muted],
     TopicUser.notification_levels[:regular],
-  ]
+  ].freeze
 
   def do_not_notify?(notification_level)
     DO_NOT_NOTIFY_LEVELS.include?(notification_level)

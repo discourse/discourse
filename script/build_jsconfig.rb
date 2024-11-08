@@ -15,7 +15,7 @@ CORE_NAMESPACES = {
   "float-kit/*" => ["app/assets/javascripts/float-kit/addon"],
   "truth-helpers/*" => ["app/assets/javascripts/truth-helpers/addon"],
   "dialog-holder/*" => ["app/assets/javascripts/dialog-holder/addon"],
-}
+}.freeze
 
 def relative(from, to)
   relative_path = Pathname.new(to).relative_path_from(from).to_s

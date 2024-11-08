@@ -6,7 +6,7 @@ require "pathname"
 RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
 PORT = ENV["UNICORN_PORT"] ||= "3000"
 HOSTNAME = ENV["DISCOURSE_HOSTNAME"] ||= "127.0.0.1"
-CUSTOM_ARGS = %w[--try --test --build --unicorn -u --forward-host]
+CUSTOM_ARGS = %w[--try --test --build --unicorn -u --forward-host].freeze
 PROXY =
   if ARGV.include?("--try")
     "https://try.discourse.org"

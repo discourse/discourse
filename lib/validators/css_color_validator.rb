@@ -149,7 +149,7 @@ class CssColorValidator
     whitesmoke
     yellow
     yellowgreen
-  ]
+  ].freeze
 
   def initialize(opts = {})
     @opts = opts

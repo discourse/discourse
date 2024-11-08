@@ -7,7 +7,7 @@ module Onebox
     class DownloadTooLarge < StandardError
     end
 
-    IGNORE_CANONICAL_DOMAINS = %w[www.instagram.com medium.com youtube.com]
+    IGNORE_CANONICAL_DOMAINS = %w[www.instagram.com medium.com youtube.com].freeze
 
     def self.clean(html)
       html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")

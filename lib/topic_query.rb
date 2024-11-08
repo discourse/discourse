@@ -110,7 +110,7 @@ class TopicQuery
     "posters" => "participant_count",
     "category" => "category_id",
     "created" => "created_at",
-  }
+  }.freeze
 
   cattr_accessor :results_filter_callbacks
   self.results_filter_callbacks = []

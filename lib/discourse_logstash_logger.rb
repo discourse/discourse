@@ -43,7 +43,7 @@ class DiscourseLogstashLogger < Logger
     HTTP_REFERER
     HTTP_X_FORWARDED_FOR
     HTTP_X_REAL_IP
-  ]
+  ].freeze
 
   # :nodoc:
   def add_with_opts(severity, message = nil, progname = nil, opts = {}, &block)

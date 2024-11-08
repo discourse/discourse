@@ -254,7 +254,7 @@ module SvgSprite
       ],
     )
 
-  FA_4_ICON_MAP = { "far fa-" => "far-", "fab fa-" => "fab-", "fas fa-" => "", "fa-" => "" }
+  FA_4_ICON_MAP = { "far fa-" => "far-", "fab fa-" => "fab-", "fas fa-" => "", "fa-" => "" }.freeze
 
   CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
 
@@ -1238,5 +1238,5 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     "window-alt" => "window-flip",
     "window-close" => "rectangle-xmark",
     "wine-glass-alt" => "wine-glass-empty",
-  }
+  }.freeze
 end

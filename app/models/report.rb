@@ -14,7 +14,7 @@ class Report
     trust_level
     file_extension
     include_subcategories
-  ]
+  ].freeze
 
   include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests

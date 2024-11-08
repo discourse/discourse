@@ -21,7 +21,7 @@ class RenameSsoSiteSettings < ActiveRecord::Migration[6.0]
     %w[sso_overrides_card_background discourse_connect_overrides_card_background],
     %w[external_auth_skip_create_confirm auth_skip_create_confirm],
     %w[external_auth_immediately auth_immediately],
-  ]
+  ].freeze
 
   def up
     # Copying the rows so that things keep working during deploy

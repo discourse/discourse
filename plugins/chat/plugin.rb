@@ -36,7 +36,7 @@ module ::Chat
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
-  }
+  }.freeze
 end
 
 require_relative "lib/chat/engine"

@@ -2,7 +2,7 @@
 
 module CanonicalURL
   module ControllerExtensions
-    ALLOWED_CANONICAL_PARAMS = %w[page]
+    ALLOWED_CANONICAL_PARAMS = %w[page].freeze
 
     def canonical_url(url_for_options = {})
       case url_for_options

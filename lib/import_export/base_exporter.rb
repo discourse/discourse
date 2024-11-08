@@ -20,7 +20,7 @@ module ImportExport
       topic_template
       all_topics_wiki
       permissions_params
-    ]
+    ].freeze
 
     GROUP_ATTRS = %i[
       id
@@ -43,7 +43,7 @@ module ImportExport
       mentionable_level
       members_visibility_level
       publish_read_state
-    ]
+    ].freeze
 
     USER_ATTRS = %i[
       id
@@ -55,9 +55,9 @@ module ImportExport
       active
       last_emailed_at
       custom_fields
-    ]
+    ].freeze
 
-    TOPIC_ATTRS = %i[id title created_at views category_id closed archived archetype]
+    TOPIC_ATTRS = %i[id title created_at views category_id closed archived archetype].freeze
 
     POST_ATTRS = %i[
       id
@@ -69,7 +69,7 @@ module ImportExport
       hidden
       hidden_reason_id
       wiki
-    ]
+    ].freeze
 
     def categories
       @categories ||= Category.all.to_a

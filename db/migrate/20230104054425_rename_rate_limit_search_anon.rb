@@ -4,7 +4,7 @@ class RenameRateLimitSearchAnon < ActiveRecord::Migration[7.0]
   RENAME_SETTINGS = [
     %w[rate_limit_search_anon_user rate_limit_search_anon_user_per_minute],
     %w[rate_limit_search_anon_global rate_limit_search_anon_global_per_minute],
-  ]
+  ].freeze
 
   def up
     # Copying the rows so that things keep working during deploy

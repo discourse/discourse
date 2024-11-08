@@ -35,14 +35,14 @@ class LocaleFileChecker
 
   private
 
-  YML_DIRS = %w[config/locales plugins/**/locales]
+  YML_DIRS = %w[config/locales plugins/**/locales].freeze
   PLURALS_FILE = "config/locales/plurals.rb"
   REFERENCE_LOCALE = "en"
-  REFERENCE_PLURAL_KEYS = %w[one other]
+  REFERENCE_PLURAL_KEYS = %w[one other].freeze
 
   # Some languages should always use %{count} in pluralized strings.
   # https://meta.discourse.org/t/always-use-count-variable-when-translating-pluralized-strings/83969
-  FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk]
+  FORCE_PLURAL_COUNT_LOCALES = %w[bs fr lt lv ru sl sr uk].freeze
 
   def locale_files
     YML_DIRS.map { |dir| Dir["#{Rails.root}/#{dir}/{client,server}.#{@locale}.yml"] }.flatten

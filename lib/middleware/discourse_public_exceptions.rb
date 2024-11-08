@@ -8,7 +8,7 @@ module Middleware
     EXCEPTION_RESPONSE_MIDDLEWARES = [
       ContentSecurityPolicy::Middleware,
       Middleware::CspScriptNonceInjector,
-    ]
+    ].freeze
 
     INVALID_REQUEST_ERRORS =
       Set.new(

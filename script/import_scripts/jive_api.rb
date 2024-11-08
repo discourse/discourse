@@ -150,7 +150,7 @@ class ImportScripts::JiveApi < ImportScripts::Base
       },
       category_id: 5,
     },
-  ]
+  ].freeze
 
   def initialize
     super

@@ -20,7 +20,7 @@ module Chat
     FUTURE_MESSAGE_LIMIT = 25
     PAST = "past"
     FUTURE = "future"
-    VALID_DIRECTIONS = [PAST, FUTURE]
+    VALID_DIRECTIONS = [PAST, FUTURE].freeze
     MAX_PAGE_SIZE = 50
 
     # @param channel [Chat::Channel] The channel to query messages within.

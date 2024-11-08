@@ -25,7 +25,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   DISCUZX_BASE_DIR = "/var/www/discuz/upload"
   AVATAR_DIR = "/uc_server/data/avatar"
   ATTACHMENT_DIR = "/data/attachment/forum"
-  AUTHORIZED_EXTENSIONS = %w[jpg jpeg png gif zip rar pdf]
+  AUTHORIZED_EXTENSIONS = %w[jpg jpeg png gif zip rar pdf].freeze
 
   def initialize
     super

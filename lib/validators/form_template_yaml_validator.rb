@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class FormTemplateYamlValidator < ActiveModel::Validator
-  RESERVED_KEYWORDS = %w[title body category category_id tags]
-  ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload]
+  RESERVED_KEYWORDS = %w[title body category category_id tags].freeze
+  ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload].freeze
   HTML_SANITIZATION_OPTIONS = {
     elements: ["a"],
     attributes: {
@@ -13,7 +13,7 @@ class FormTemplateYamlValidator < ActiveModel::Validator
         "href" => %w[http https mailto],
       },
     },
-  }
+  }.freeze
 
   def validate(record)
     begin

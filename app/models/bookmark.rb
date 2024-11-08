@@ -4,7 +4,7 @@ class Bookmark < ActiveRecord::Base
   DEFAULT_BOOKMARKABLES = [
     RegisteredBookmarkable.new(PostBookmarkable),
     RegisteredBookmarkable.new(TopicBookmarkable),
-  ]
+  ].freeze
 
   def self.registered_bookmarkables
     Set.new(DEFAULT_BOOKMARKABLES | DiscoursePluginRegistry.bookmarkables)

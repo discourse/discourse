@@ -43,7 +43,7 @@ class UserAction < ActiveRecord::Base
       ].each_with_index.to_a.flatten
     ]
 
-  USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE]
+  USER_ACTED_TYPES = [LIKE, NEW_TOPIC, REPLY, NEW_PRIVATE_MESSAGE].freeze
 
   def self.types
     @types ||=

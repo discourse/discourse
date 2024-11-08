@@ -5,7 +5,7 @@ class MigratePollsData < ActiveRecord::Migration[5.2]
     PG::Connection.escape_string(text)
   end
 
-  POLL_TYPES = { "regular" => 0, "multiple" => 1, "number" => 2 }
+  POLL_TYPES = { "regular" => 0, "multiple" => 1, "number" => 2 }.freeze
 
   PG_INTEGER_MAX = 2_147_483_647
 

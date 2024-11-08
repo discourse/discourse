@@ -30,7 +30,7 @@ class UserApiKeyScope < ActiveRecord::Base
       RouteMatcher.new(methods: :put, actions: "user_status#set"),
       RouteMatcher.new(methods: :delete, actions: "user_status#clear"),
     ],
-  }
+  }.freeze
 
   def self.all_scopes
     scopes = SCOPES

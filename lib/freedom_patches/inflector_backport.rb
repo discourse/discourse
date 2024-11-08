@@ -7,16 +7,16 @@
 module ActiveSupport
   module Inflector
     LRU_CACHE_SIZE = 200
-    LRU_CACHES = []
+    @@lua_caches = []
 
     def self.clear_memoize!
-      LRU_CACHES.each(&:clear)
+      @@lua_caches.each(&:clear)
     end
 
     def self.memoize(*args)
       args.each do |method_name|
         cache = LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
-        LRU_CACHES << cache
+        @@lua_caches << cache
 
         uncached = "#{method_name}_without_cache"
         alias_method uncached, method_name

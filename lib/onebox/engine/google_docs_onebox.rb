@@ -7,8 +7,13 @@ module Onebox
       include StandardEmbed
       include LayoutSupport
 
-      SUPPORTED_ENDPOINTS = %w[spreadsheets document forms presentation]
-      SHORT_TYPES = { spreadsheets: :sheets, document: :docs, presentation: :slides, forms: :forms }
+      SUPPORTED_ENDPOINTS = %w[spreadsheets document forms presentation].freeze
+      SHORT_TYPES = {
+        spreadsheets: :sheets,
+        document: :docs,
+        presentation: :slides,
+        forms: :forms,
+      }.freeze
 
       matches_regexp(
         %r{^(https?:)?//(docs\.google\.com)/(?<endpoint>(#{SUPPORTED_ENDPOINTS.join("|")}))/d/((?<key>[\w-]*)).+$},

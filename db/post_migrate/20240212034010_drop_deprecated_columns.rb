@@ -16,7 +16,7 @@ class DropDeprecatedColumns < ActiveRecord::Migration[7.0]
     user_options: %i[disable_jump_reply sidebar_list_destination],
     user_profiles: %i[badge_granted_title],
     user_stats: %i[topic_reply_count],
-  }
+  }.freeze
 
   def up
     DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }

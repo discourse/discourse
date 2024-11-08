@@ -4,7 +4,7 @@ require "stylesheet/importer"
 
 module Stylesheet
   class Compiler
-    ASSET_ROOT = "#{Rails.root}/app/assets/stylesheets" unless defined?(ASSET_ROOT)
+    ASSET_ROOT = "#{Rails.root}/app/assets/stylesheets".freeze unless defined?(ASSET_ROOT)
 
     def self.compile_asset(asset, options = {})
       importer = Importer.new(options)

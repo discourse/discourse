@@ -473,7 +473,7 @@ module SiteSettingExtension
     blocked_email_domains
     allowed_email_domains
     allowed_spam_host_domains
-  ]
+  ].freeze
 
   def filter_value(name, value)
     if HOSTNAME_SETTINGS.include?(name)

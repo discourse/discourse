@@ -23,7 +23,7 @@ class RejectionMailer < ActionMailer::Base
     allow_reply_by_email
     private_reply
     from_alias
-  ]
+  ].freeze
 
   # Send an email rejection message.
   #

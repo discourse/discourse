@@ -189,7 +189,7 @@ module FileStore
       get_path_for("optimized", upload.id, upload.sha1, extension)
     end
 
-    CACHE_DIR = "#{Rails.root}/tmp/download_cache/"
+    CACHE_DIR = "#{Rails.root}/tmp/download_cache/".freeze
     CACHE_MAXIMUM_SIZE = 500
 
     def get_cache_path_for(filename)

@@ -199,7 +199,7 @@ RSpec.describe StaticController do
     context "with plugin api extensions" do
       after do
         Rails.application.reload_routes!
-        StaticController::CUSTOM_PAGES.clear
+        StaticController.custom_pages.clear
       end
 
       it "adds new topic-backed pages" do

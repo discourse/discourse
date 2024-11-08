@@ -24,7 +24,7 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
     Timeout::Error,
     OpenURI::HTTPError,
     OpenSSL::SSL::SSLError,
-  ]
+  ].freeze
 
   MAX_RETRIES = 5
 

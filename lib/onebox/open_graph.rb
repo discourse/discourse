@@ -22,7 +22,7 @@ module Onebox
 
     private
 
-    COLLECTIONS = %i[article_section article_section_color article_tag]
+    COLLECTIONS = %i[article_section article_section_color article_tag].freeze
 
     def extract(doc)
       return {} if doc.blank?

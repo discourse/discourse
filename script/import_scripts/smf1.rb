@@ -634,7 +634,7 @@ class ImportScripts::Smf1 < ImportScripts::Base
     table
     time
     white
-  ]
+  ].freeze
 
   def pre_process_raw(raw)
     return "" if raw.blank?

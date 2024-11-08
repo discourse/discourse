@@ -4,7 +4,7 @@ module Autospec
 end
 
 class Autospec::ReloadCss
-  WATCHERS = {}
+  WATCHERS = {}.freeze
   def self.watch(pattern, &blk)
     WATCHERS[pattern] = blk
   end

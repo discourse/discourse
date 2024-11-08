@@ -235,7 +235,7 @@ class DiscoursePluginRegistry
   VENDORED_CORE_PRETTY_TEXT_MAP = {
     "moment.js" => "vendor/assets/javascripts/moment.js",
     "moment-timezone.js" => "vendor/assets/javascripts/moment-timezone-with-data.js",
-  }
+  }.freeze
   def self.core_asset_for_name(name)
     asset = VENDORED_CORE_PRETTY_TEXT_MAP[name]
     raise KeyError, "Asset #{name} not found in #{VENDORED_CORE_PRETTY_TEXT_MAP}" unless asset

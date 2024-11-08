@@ -3,7 +3,7 @@
 require "migration/table_dropper"
 
 class RemoveSuperfluousTables < ActiveRecord::Migration[5.2]
-  DROPPED_TABLES = %i[category_featured_users versions topic_status_updates]
+  DROPPED_TABLES = %i[category_featured_users versions topic_status_updates].freeze
 
   def up
     DROPPED_TABLES.each { |table| Migration::TableDropper.execute_drop(table) }

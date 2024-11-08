@@ -22,7 +22,7 @@ module Onebox
     allowed_schemes: %w[http https],
     sanitize_config: SanitizeConfig::ONEBOX,
     redirect_limit: 5,
-  }
+  }.freeze
 
   @@options = DEFAULTS
 

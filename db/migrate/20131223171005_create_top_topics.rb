@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class CreateTopTopics < ActiveRecord::Migration[4.2]
-  PERIODS = %i[yearly monthly weekly daily]
-  SORT_ORDERS = %i[posts views likes]
+  PERIODS = %i[yearly monthly weekly daily].freeze
+  SORT_ORDERS = %i[posts views likes].freeze
 
   def change
     create_table :top_topics, force: true do |t|

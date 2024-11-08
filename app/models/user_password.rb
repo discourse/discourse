@@ -3,7 +3,7 @@
 class UserPassword < ActiveRecord::Base
   MAX_PASSWORD_LENGTH = 200
   TARGET_PASSWORD_ALGORITHM =
-    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$"
+    "$pbkdf2-#{Rails.configuration.pbkdf2_algorithm}$i=#{Rails.configuration.pbkdf2_iterations},l=32$".freeze
   PASSWORD_SALT_LENGTH = 16
 
   belongs_to :user, required: true

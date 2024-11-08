@@ -5,7 +5,7 @@ module Chat
     self.table_name = "user_chat_channel_memberships"
     self.ignored_columns = %w[desktop_notification_level mobile_notification_level] # TODO: Remove once 20241003122030_add_notification_level_to_user_chat_channel_memberships has been promoted to pre-deploy
 
-    NOTIFICATION_LEVELS = { never: 0, mention: 1, always: 2 }
+    NOTIFICATION_LEVELS = { never: 0, mention: 1, always: 2 }.freeze
 
     belongs_to :user
     belongs_to :last_read_message, class_name: "Chat::Message", optional: true

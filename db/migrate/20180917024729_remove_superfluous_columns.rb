@@ -52,7 +52,7 @@ class RemoveSuperfluousColumns < ActiveRecord::Migration[5.2]
     themes: %i[key],
     email_logs: %i[topic_id reply_key skipped skipped_reason],
     posts: %i[vote_count],
-  }
+  }.freeze
 
   def up
     BadgePostsViewManager.drop!

@@ -29,7 +29,7 @@ class Statistics
     SE
     SI
     SK
-  ]
+  ].freeze
 
   def self.active_users
     {

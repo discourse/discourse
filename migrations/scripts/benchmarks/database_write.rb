@@ -14,7 +14,7 @@ gemfile(true) do
 end
 
 ROW_COUNT = 50_000_000
-SOME_DATA = ["The quick, brown fox jumps over a lazy dog.", 1_234_567_890]
+SOME_DATA = ["The quick, brown fox jumps over a lazy dog.", 1_234_567_890].freeze
 
 def with_db_path
   tempfile = Tempfile.new

@@ -53,7 +53,7 @@ class LocaleSiteSetting < EnumSiteSetting
     @lock.synchronize { @values = @language_names = @supported_locales = nil }
   end
 
-  FALLBACKS = { en_GB: :en }
+  FALLBACKS = { en_GB: :en }.freeze
 
   def self.fallback_locale(locale)
     fallback_locale = FALLBACKS[locale.to_sym]

@@ -4,7 +4,7 @@ class Flag < ActiveRecord::Base
   # TODO(2025-01-15): krisk remove
   self.ignored_columns = ["custom_type"]
 
-  DEFAULT_VALID_APPLIES_TO = %w[Post Topic]
+  DEFAULT_VALID_APPLIES_TO = %w[Post Topic].freeze
   MAX_SYSTEM_FLAG_ID = 1000
   MAX_NAME_LENGTH = 200
   MAX_DESCRIPTION_LENGTH = 1000

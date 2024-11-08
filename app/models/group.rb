@@ -99,10 +99,10 @@ class Group < ActiveRecord::Base
     trust_level_2: 12,
     trust_level_3: 13,
     trust_level_4: 14,
-  }
+  }.freeze
 
   AUTO_GROUP_IDS = Hash[*AUTO_GROUPS.to_a.flatten.reverse]
-  STAFF_GROUPS = %i[admins moderators staff]
+  STAFF_GROUPS = %i[admins moderators staff].freeze
 
   AUTO_GROUPS_ADD = "add"
   AUTO_GROUPS_REMOVE = "remove"
@@ -114,7 +114,7 @@ class Group < ActiveRecord::Base
     imap_mailbox_name
     email_username
     email_password
-  ]
+  ].freeze
 
   SMTP_SETTING_ATTRIBUTES = %w[
     imap_server
@@ -123,7 +123,7 @@ class Group < ActiveRecord::Base
     email_username
     email_password
     email_from_alias
-  ]
+  ].freeze
 
   ALIAS_LEVELS = {
     nobody: 0,
@@ -132,7 +132,7 @@ class Group < ActiveRecord::Base
     members_mods_and_admins: 3,
     owners_mods_and_admins: 4,
     everyone: 99,
-  }
+  }.freeze
 
   VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
 

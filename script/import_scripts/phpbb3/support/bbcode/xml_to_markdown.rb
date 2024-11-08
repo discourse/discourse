@@ -28,9 +28,9 @@ module ImportScripts::PhpBB3::BBCode
 
     private
 
-    IGNORED_ELEMENTS = %w[s e i]
-    ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI]
-    ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U]
+    IGNORED_ELEMENTS = %w[s e i].freeze
+    ELEMENTS_WITHOUT_LEADING_WHITESPACES = %w[LIST LI].freeze
+    ELEMENTS_WITH_HARD_LINEBREAKS = %w[B I U].freeze
     EXPLICIT_LINEBREAK_THRESHOLD = 2
 
     def preprocess_xml

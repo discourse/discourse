@@ -96,7 +96,18 @@ class Plugin::Metadata
       ],
     )
 
-  FIELDS = %i[name about version authors contact_emails url required_version meta_topic_id label]
+  FIELDS = %i[
+    name
+    about
+    version
+    authors
+    contact_emails
+    url
+    required_version
+    meta_topic_id
+    label
+  ].freeze
+
   attr_accessor(*FIELDS)
 
   MAX_FIELD_LENGTHS = {
@@ -106,7 +117,7 @@ class Plugin::Metadata
     contact_emails: 200,
     url: 500,
     label: 20,
-  }
+  }.freeze
 
   def meta_topic_id=(value)
     @meta_topic_id =

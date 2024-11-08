@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropChatUploads < ActiveRecord::Migration[7.0]
-  DROPPED_TABLES = %i[chat_uploads]
+  DROPPED_TABLES = %i[chat_uploads].freeze
 
   def up
     DROPPED_TABLES.each { |table| Migration::TableDropper.execute_drop(table) }

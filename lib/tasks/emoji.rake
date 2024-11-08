@@ -208,7 +208,7 @@ EMOJI_ALIASES = {
   "face_vomiting" => ["puke"],
   "smile" => ["grinning_face_with_smiling_eyes"],
   "frowning_with_open_mouth" => ["frowning_face_with_open_mouth"],
-}
+}.freeze
 
 EMOJI_GROUPS = [
   { "name" => "smileys_&_emotion", "tabicon" => "grinning" },
@@ -220,9 +220,9 @@ EMOJI_GROUPS = [
   { "name" => "objects", "tabicon" => "eyeglasses" },
   { "name" => "symbols", "tabicon" => "white_check_mark" },
   { "name" => "flags", "tabicon" => "checkered_flag" },
-]
+].freeze
 
-FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff]
+FITZPATRICK_SCALE = %w[1f3fb 1f3fc 1f3fd 1f3fe 1f3ff].freeze
 
 DEFAULT_SET = "twitter"
 
@@ -234,7 +234,7 @@ EMOJI_IMAGES_PATCH = {
   "windows" => {
     "country-flag" => "twitter",
   },
-}
+}.freeze
 
 EMOJI_SETS = {
   "apple" => "apple",
@@ -243,7 +243,7 @@ EMOJI_SETS = {
   "facebook" => "facebook_messenger",
   "twitter" => "twitter",
   "windows" => "win10",
-}
+}.freeze
 
 EMOJI_DB_REPO = "git@github.com:xfalcox/emoji-db.git"
 

@@ -2,7 +2,7 @@
 
 module Autospec
   class RspecRunner < BaseRunner
-    WATCHERS = {}
+    WATCHERS = {}.freeze
     def self.watch(pattern, &blk)
       WATCHERS[pattern] = blk
     end

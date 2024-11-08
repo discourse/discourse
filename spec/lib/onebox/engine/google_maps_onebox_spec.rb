@@ -50,7 +50,7 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
       ],
       expect: "https://maps.google.com/maps?ll=40.6894264,-74.0449146&z=16&output=embed&dg=ntvb",
     },
-  }
+  }.freeze
 
   # Register URL redirects
   # Prevent sleep from wasting our time when we test with strange redirects

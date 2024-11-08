@@ -2,7 +2,7 @@
 
 module DiscoursePoll
   class PollsUpdater
-    POLL_ATTRIBUTES = %w[close_at max min results status step type visibility title groups]
+    POLL_ATTRIBUTES = %w[close_at max min results status step type visibility title groups].freeze
 
     def self.update(post, polls)
       ::Poll.transaction do

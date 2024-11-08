@@ -40,9 +40,9 @@ class DiscourseConnectBase
     title
     username
     website
-  ]
+  ].freeze
 
-  FIXNUMS = []
+  FIXNUMS = [].freeze
 
   BOOLS = %i[
     admin
@@ -56,7 +56,7 @@ class DiscourseConnectBase
     require_2fa
     require_activation
     suppress_welcome_message
-  ]
+  ].freeze
 
   def self.nonce_expiry_time
     @nonce_expiry_time ||= 30.minutes

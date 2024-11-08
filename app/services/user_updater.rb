@@ -7,15 +7,16 @@ class UserUpdater
     tracked_category_ids: :tracking,
     regular_category_ids: :regular,
     muted_category_ids: :muted,
-  }
+  }.freeze
 
   TAG_NAMES = {
     watching_first_post_tags: :watching_first_post,
     watched_tags: :watching,
     tracked_tags: :tracking,
     muted_tags: :muted,
-  }
+  }.freeze
 
+  # rubocop:disable Style/MutableConstant
   OPTION_ATTR = %i[
     mailing_list_mode
     mailing_list_mode_frequency
@@ -56,6 +57,7 @@ class UserUpdater
     watched_precedence_over_muted
     topics_unread_when_closed
   ]
+  # rubocop:enable Style/MutableConstant
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]

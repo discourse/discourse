@@ -21,7 +21,7 @@ class AllowlistAndBlocklistSiteSettings < ActiveRecord::Migration[6.0]
     white_listed_spam_host_domains: "allowed_spam_host_domains",
     embed_blacklist_selector: "blocked_embed_selectors",
     embed_classname_whitelist: "allowed_embed_classnames",
-  }
+  }.freeze
 
   def up
     ALLOWLIST_DEPRECATED_SITE_SETTINGS.each_pair { |old_key, new_key| DB.exec <<~SQL }

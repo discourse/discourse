@@ -7,7 +7,7 @@ module Onebox
       include LayoutSupport
       include HTML
 
-      DEFAULTS = { MAX_DESCRIPTION_CHARS: 500 }
+      DEFAULTS = { MAX_DESCRIPTION_CHARS: 500 }.freeze
 
       matches_regexp(%r{^https?://play\.(?:(?:\w)+\.)?(google)\.com(?:/)?/store/apps/})
       always_https

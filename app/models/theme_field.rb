@@ -534,7 +534,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   class ThemeFileMatcher
-    OPTIONS = %i[name type target]
+    OPTIONS = %i[name type target].freeze
     # regex: used to match file names to fields (import).
     #        can contain named capture groups for name/type/target
     # canonical: a lambda which converts name/type/target
@@ -653,7 +653,7 @@ class ThemeField < ActiveRecord::Base
       targets: :migrations,
       canonical: ->(h) { "migrations/settings/#{h[:name]}.js" },
     ),
-  ]
+  ].freeze
 
   # For now just work for standard fields
   def file_path
@@ -744,7 +744,7 @@ class ThemeField < ActiveRecord::Base
 
   private
 
-  JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript]
+  JAVASCRIPT_TYPES = %w[text/javascript application/javascript application/ecmascript].freeze
 
   def inline_javascript?(node)
     if node["src"].present?

@@ -22,7 +22,7 @@ module Onebox
         SHOW_LINE_NUMBER: true,
         MAX_LINES: 20,
         MAX_CHARS: 5000,
-      }
+      }.freeze
 
       module InstanceMethods
         def initialize(url, timeout = nil)

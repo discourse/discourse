@@ -250,7 +250,7 @@ class ThemeSettingsObjectValidator
       klass: Tag,
       column: :name,
     },
-  }
+  }.freeze
   private_constant :TYPE_TO_MODEL_MAP
 
   def valid_ids(type)

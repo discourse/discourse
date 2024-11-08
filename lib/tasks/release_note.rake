@@ -9,7 +9,7 @@ CHANGE_TYPES = [
   { pattern: /\ASECURITY:/, heading: "Security Changes" },
   { pattern: /\APERF:/, heading: "Performance" },
   { pattern: /\AA11Y:/, heading: "Accessibility" },
-]
+].freeze
 
 desc "generate a release note from the important commits"
 task "release_note:generate", :from, :to, :repo do |t, args|

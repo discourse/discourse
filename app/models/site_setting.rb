@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SiteSetting < ActiveRecord::Base
-  VALID_AREAS = %w[flags about]
+  VALID_AREAS = %w[flags about].freeze
 
   extend GlobalPath
   extend SiteSettingExtension

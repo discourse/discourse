@@ -117,7 +117,7 @@ module PageObjects
         has_no_css?(AUTOCOMPLETE_MENU)
       end
 
-      EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"
+      EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname".freeze
 
       def has_emoji_suggestion?(emoji)
         has_css?(EMOJI_SUGGESTION_SELECTOR, text: emoji)
@@ -135,7 +135,7 @@ module PageObjects
         page.has_no_css?(emoji_preview_selector(emoji))
       end
 
-      COMPOSER_INPUT_SELECTOR = "#{COMPOSER_ID} .d-editor-input"
+      COMPOSER_INPUT_SELECTOR = "#{COMPOSER_ID} .d-editor-input".freeze
 
       def has_no_composer_input?
         page.has_no_css?(COMPOSER_INPUT_SELECTOR)

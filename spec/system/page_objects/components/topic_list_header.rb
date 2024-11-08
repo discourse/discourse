@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class TopicListHeader < PageObjects::Components::Base
       TOPIC_LIST_HEADER_SELECTOR = ".topic-list .topic-list-header"
-      TOPIC_LIST_DATA_SELECTOR = "#{TOPIC_LIST_HEADER_SELECTOR} .topic-list-data"
+      TOPIC_LIST_DATA_SELECTOR = "#{TOPIC_LIST_HEADER_SELECTOR} .topic-list-data".freeze
 
       def topic_list_header
         TOPIC_LIST_HEADER_SELECTOR

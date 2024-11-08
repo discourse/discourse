@@ -395,7 +395,7 @@ module DiscourseTagging
     )
   SQL
 
-  PERMITTED_TAGS_SQL = <<~SQL
+  PERMITTED_TAGS_SQL = <<~SQL.freeze
     permitted_tag_groups AS (
       SELECT tg.id as tag_group_id, tgp.group_id as group_id, tgp.permission_type as permission_type
       FROM tags t

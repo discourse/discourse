@@ -15,7 +15,7 @@ class TinyJapaneseSegmenter
     }.map { |pattern, value| [Regexp.compile(pattern), value] }
 
   BIAS = -322
-  BC1 = { "HH" => 6, "II" => 2461, "KH" => 406, "OH" => -1378 }
+  BC1 = { "HH" => 6, "II" => 2461, "KH" => 406, "OH" => -1378 }.freeze
   BC2 = {
     "AA" => -3267,
     "AI" => 2744,
@@ -34,7 +34,7 @@ class TinyJapaneseSegmenter
     "MH" => -3132,
     "MK" => 3334,
     "OO" => -2920,
-  }
+  }.freeze
   BC3 = {
     "HH" => 996,
     "HI" => 626,
@@ -47,9 +47,9 @@ class TinyJapaneseSegmenter
     "MM" => 4034,
     "OA" => -1652,
     "OH" => 266,
-  }
-  BP1 = { "BB" => 295, "OB" => 304, "OO" => -125, "UB" => 352 }
-  BP2 = { "BO" => 60, "OO" => -1762 }
+  }.freeze
+  BP1 = { "BB" => 295, "OB" => 304, "OO" => -125, "UB" => 352 }.freeze
+  BP2 = { "BO" => 60, "OO" => -1762 }.freeze
   BQ1 = {
     "BHH" => 1150,
     "BHM" => 1521,
@@ -65,7 +65,7 @@ class TinyJapaneseSegmenter
     "OKH" => -1020,
     "OKK" => 904,
     "OOO" => 2965,
-  }
+  }.freeze
   BQ2 = {
     "BHH" => 118,
     "BHI" => -1159,
@@ -77,7 +77,7 @@ class TinyJapaneseSegmenter
     "OHM" => -181,
     "OIH" => 153,
     "UHI" => -1146,
-  }
+  }.freeze
   BQ3 = {
     "BHH" => -792,
     "BHI" => 2664,
@@ -95,7 +95,7 @@ class TinyJapaneseSegmenter
     "OKO" => -2242,
     "OMH" => -2402,
     "OOO" => 11_699,
-  }
+  }.freeze
   BQ4 = {
     "BHH" => -3895,
     "BIH" => 3761,
@@ -108,7 +108,7 @@ class TinyJapaneseSegmenter
     "OHH" => 266,
     "OHK" => -2036,
     "ONN" => -973,
-  }
+  }.freeze
   BW1 = {
     ",と" => 660,
     ",同" => 727,
@@ -181,7 +181,7 @@ class TinyJapaneseSegmenter
     "Ｂ１あ" => 1404,
     "Ｂ１同" => 542,
     "｣と" => 1682,
-  }
+  }.freeze
   BW2 = {
     ".." => -11_822,
     "11" => -669,
@@ -303,7 +303,7 @@ class TinyJapaneseSegmenter
     "第に" => -1612,
     "米国" => -4268,
     "１１" => -669,
-  }
+  }.freeze
   BW3 = {
     "あた" => -2194,
     "あり" => 719,
@@ -419,7 +419,7 @@ class TinyJapaneseSegmenter
     "日、" => 974,
     "社会" => 2024,
     "ｶ月" => 990,
-  }
+  }.freeze
   TC1 = {
     "AAA" => 1093,
     "HHH" => 1029,
@@ -433,7 +433,7 @@ class TinyJapaneseSegmenter
     "IOM" => 467,
     "MMH" => 187,
     "OOI" => -1832,
-  }
+  }.freeze
   TC2 = {
     "HHO" => 2088,
     "HII" => -1023,
@@ -441,7 +441,7 @@ class TinyJapaneseSegmenter
     "IHI" => -1965,
     "KKH" => 703,
     "OII" => -2649,
-  }
+  }.freeze
   TC3 = {
     "AAA" => -294,
     "HHH" => 346,
@@ -466,7 +466,7 @@ class TinyJapaneseSegmenter
     "NNH" => -1689,
     "NNO" => 662,
     "OHO" => -3393,
-  }
+  }.freeze
   TC4 = {
     "HHH" => -203,
     "HHI" => 1344,
@@ -491,7 +491,7 @@ class TinyJapaneseSegmenter
     "MMH" => -241,
     "MMM" => 661,
     "MOM" => 841,
-  }
+  }.freeze
   TQ1 = {
     "BHHH" => -227,
     "BHHI" => 316,
@@ -506,8 +506,8 @@ class TinyJapaneseSegmenter
     "OHIH" => 249,
     "OIHI" => 200,
     "OIIH" => -68,
-  }
-  TQ2 = { "BIHH" => -1401, "BIII" => -1033, "BKAK" => -543, "BOOO" => -5591 }
+  }.freeze
+  TQ2 = { "BIHH" => -1401, "BIII" => -1033, "BKAK" => -543, "BOOO" => -5591 }.freeze
   TQ3 = {
     "BHHH" => 478,
     "BHHM" => -1073,
@@ -529,7 +529,7 @@ class TinyJapaneseSegmenter
     "OKKA" => 679,
     "OOHH" => 110,
     "OOII" => -685,
-  }
+  }.freeze
   TQ4 = {
     "BHHH" => -721,
     "BHHM" => -3604,
@@ -547,8 +547,8 @@ class TinyJapaneseSegmenter
     "OIIH" => 626,
     "OIII" => -4007,
     "OKAK" => -8156,
-  }
-  TW1 = { "につい" => -4681, "東京都" => 2026 }
+  }.freeze
+  TW1 = { "につい" => -4681, "東京都" => 2026 }.freeze
   TW2 = {
     "ある程" => -2049,
     "いった" => -1256,
@@ -566,7 +566,7 @@ class TinyJapaneseSegmenter
     "大きな" => -1255,
     "対して" => -2721,
     "社会党" => -3216,
-  }
+  }.freeze
   TW3 = {
     "いただ" => -1734,
     "してい" => 1314,
@@ -579,7 +579,7 @@ class TinyJapaneseSegmenter
     "のもの" => -600,
     "れから" => -3752,
     "十二月" => -2287,
-  }
+  }.freeze
   TW4 = {
     "いう." => 8576,
     "いう。" => 8576,
@@ -593,10 +593,10 @@ class TinyJapaneseSegmenter
     "ません" => 1097,
     "ようと" => -4258,
     "よると" => 5865,
-  }
-  UC1 = { "A" => 484, "K" => 93, "M" => 645, "O" => -505 }
-  UC2 = { "A" => 819, "H" => 1059, "I" => 409, "M" => 3987, "N" => 5775, "O" => 646 }
-  UC3 = { "A" => -1370, "I" => 2311 }
+  }.freeze
+  UC1 = { "A" => 484, "K" => 93, "M" => 645, "O" => -505 }.freeze
+  UC2 = { "A" => 819, "H" => 1059, "I" => 409, "M" => 3987, "N" => 5775, "O" => 646 }.freeze
+  UC3 = { "A" => -1370, "I" => 2311 }.freeze
   UC4 = {
     "A" => -2643,
     "H" => 1809,
@@ -605,12 +605,12 @@ class TinyJapaneseSegmenter
     "M" => 3565,
     "N" => 3876,
     "O" => 6646,
-  }
-  UC5 = { "H" => 313, "I" => -1238, "K" => -799, "M" => 539, "O" => -831 }
-  UC6 = { "H" => -506, "I" => -253, "K" => 87, "M" => 247, "O" => -387 }
-  UP1 = { "O" => -214 }
-  UP2 = { "B" => 69, "O" => 935 }
-  UP3 = { "B" => 189 }
+  }.freeze
+  UC5 = { "H" => 313, "I" => -1238, "K" => -799, "M" => 539, "O" => -831 }.freeze
+  UC6 = { "H" => -506, "I" => -253, "K" => 87, "M" => 247, "O" => -387 }.freeze
+  UP1 = { "O" => -214 }.freeze
+  UP2 = { "B" => 69, "O" => 935 }.freeze
+  UP3 = { "B" => 189 }.freeze
   UQ1 = {
     "BH" => 21,
     "BI" => -12,
@@ -621,8 +621,8 @@ class TinyJapaneseSegmenter
     "OI" => 477,
     "OK" => 410,
     "OO" => -2422,
-  }
-  UQ2 = { "BH" => 216, "BI" => 113, "OK" => 1759 }
+  }.freeze
+  UQ2 = { "BH" => 216, "BI" => 113, "OK" => 1759 }.freeze
   UQ3 = {
     "BA" => -479,
     "BH" => 42,
@@ -633,7 +633,7 @@ class TinyJapaneseSegmenter
     "BO" => 14_761,
     "OI" => -827,
     "ON" => -3212,
-  }
+  }.freeze
   UW1 = {
     "," => 156,
     "、" => 156,
@@ -673,7 +673,7 @@ class TinyJapaneseSegmenter
     "都" => -718,
     "｢" => -463,
     "･" => -135,
-  }
+  }.freeze
   UW2 = {
     "," => -829,
     "、" => -829,
@@ -782,7 +782,7 @@ class TinyJapaneseSegmenter
     "ｱ" => -587,
     "ｶ" => 306,
     "ｷ" => 568,
-  }
+  }.freeze
   UW3 = {
     "," => 4889,
     "1" => -800,
@@ -1001,7 +1001,7 @@ class TinyJapaneseSegmenter
     "ﾙ" => 1591,
     "ﾛ" => 2201,
     "ﾝ" => 278,
-  }
+  }.freeze
   UW4 = {
     "," => 3930,
     "." => 3508,
@@ -1223,7 +1223,7 @@ class TinyJapaneseSegmenter
     "ﾘ" => -541,
     "ﾙ" => -856,
     "ﾝ" => -3637,
-  }
+  }.freeze
   UW5 = {
     "," => 465,
     "." => -299,
@@ -1324,7 +1324,7 @@ class TinyJapaneseSegmenter
     "ｲ" => 241,
     "ﾙ" => 451,
     "ﾝ" => -343,
-  }
+  }.freeze
   UW6 = {
     "," => 227,
     "." => 808,
@@ -1379,7 +1379,7 @@ class TinyJapaneseSegmenter
     "Ｅ１" => 306,
     "ﾙ" => -673,
     "ﾝ" => -496,
-  }
+  }.freeze
 
   class << self
     def segment(text)

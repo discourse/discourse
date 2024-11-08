@@ -92,7 +92,7 @@ module DiscourseNarrativeBot
           action: :reply_to_details,
         },
       },
-    }
+    }.freeze
 
     def self.badge_name
       BADGE_NAME

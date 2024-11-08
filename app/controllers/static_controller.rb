@@ -9,8 +9,8 @@ class StaticController < ApplicationController
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
-  PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
-  MODAL_PAGES = %w[password_reset signup]
+  PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup].freeze
+  MODAL_PAGES = %w[password_reset signup].freeze
   DEFAULT_PAGES = {
     "faq" => {
       redirect: "faq_url",
@@ -24,8 +24,13 @@ class StaticController < ApplicationController
       redirect: "privacy_policy_url",
       topic_id: "privacy_topic_id",
     },
-  }
-  CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
+  }.freeze
+
+  @@custom_pages = {} # Add via `#add_topic_static_page` in plugin API
+
+  def self.custom_pages
+    @@custom_pages
+  end
 
   def show
     if current_user && (params[:id] == "login" || params[:id] == "signup")
@@ -44,7 +49,7 @@ class StaticController < ApplicationController
       return redirect_to(path("/guidelines")) if redirect_paths.include?(request.path)
     end
 
-    map = DEFAULT_PAGES.deep_merge(CUSTOM_PAGES)
+    map = DEFAULT_PAGES.deep_merge(@@custom_pages)
     @page = params[:id]
 
     if map.has_key?(@page)

@@ -18,7 +18,7 @@ class EmailSettingsExceptionHandler
     Net::ReadTimeout,
     SocketError,
     Errno::ECONNREFUSED,
-  ]
+  ].freeze
 
   class GenericProvider
     def initialize(exception)

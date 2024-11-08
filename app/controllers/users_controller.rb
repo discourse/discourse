@@ -1300,7 +1300,7 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar]
+  AVATAR_TYPES_WITH_UPLOAD = %w[uploaded custom gravatar].freeze
 
   def pick_avatar
     user = fetch_user_from_params

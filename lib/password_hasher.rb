@@ -7,10 +7,10 @@ class PasswordHasher
   class UnsupportedAlgorithmError < StandardError
   end
 
-  HANDLERS = {}
+  @@handlers = {}
 
   def self.register_handler(id, &blk)
-    HANDLERS[id] = blk
+    @@handlers[id] = blk
   end
 
   # Algorithm should be specified according to the id/params parts of the
@@ -26,7 +26,7 @@ class PasswordHasher
 
     algorithm_params = algorithm_params.split(",").map { |pair| pair.split("=") }.to_h
 
-    handler = HANDLERS[algorithm_id]
+    handler = @@handlers[algorithm_id]
     if handler.nil?
       raise UnsupportedAlgorithmError.new "#{algorithm_id} is not a supported password algorithm"
     end

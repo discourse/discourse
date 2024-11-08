@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ThemeJavascriptsController < ApplicationController
-  DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache"
-  TESTS_DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache/tests"
+  DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache".freeze
+  TESTS_DISK_CACHE_PATH = "#{Rails.root}/tmp/javascript-cache/tests".freeze
 
   skip_before_action(
     :check_xhr,

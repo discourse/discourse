@@ -9,7 +9,7 @@ class TopicsFilter
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
+  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }.freeze
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -541,7 +541,7 @@ class TopicsFilter
     "views" => {
       column: "topics.views",
     },
-  }
+  }.freeze
   private_constant :ORDER_BY_MAPPINGS
 
   ORDER_BY_REGEXP = /\A(?<order_by>#{ORDER_BY_MAPPINGS.keys.join("|")})(?<asc>-asc)?\z/

@@ -5,7 +5,7 @@ class Admin::Config::SiteSettingsController < Admin::AdminController
     extended_site_description
     about_banner_image
     community_owner
-  ]
+  ].freeze
 
   # This endpoint is intended to be used only for admin config areas,
   # for a specific collection of site settings. The admin site settings

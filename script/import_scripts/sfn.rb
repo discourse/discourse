@@ -193,7 +193,7 @@ class ImportScripts::Sfn < ImportScripts::Base
     "{1392DC10-37A0-46A6-9979-4568D0224C5F}" => 48, # "Scientific Research",
     "{E4891409-0F4F-4151-B550-ECE53655E231}" => 48, # "Scientific Research",
     "{9613BAC2-229B-4563-9E1C-35C31CDDCE2F}" => 49, # "Students",
-  }
+  }.freeze
 
   def import_categories
     puts "", "importing categories..."

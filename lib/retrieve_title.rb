@@ -6,7 +6,7 @@ module RetrieveTitle
     Net::ReadTimeout,
     FinalDestination::SSRFError,
     FinalDestination::UrlEncodingError,
-  ]
+  ].freeze
 
   def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false)
     fetch_title(

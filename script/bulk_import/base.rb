@@ -65,7 +65,7 @@ class BulkImport::Base
     "ucs2" => Encoding::UTF_16BE,
     "ujis" => Encoding::EucJP_ms,
     "utf8" => Encoding::UTF_8,
-  }
+  }.freeze
 
   def initialize
     charset = ENV["DB_CHARSET"] || "utf8"
@@ -488,7 +488,7 @@ class BulkImport::Base
     messageable_level
     created_at
     updated_at
-  ]
+  ].freeze
 
   USER_COLUMNS = %i[
     id
@@ -509,9 +509,9 @@ class BulkImport::Base
     last_emailed_at
     created_at
     updated_at
-  ]
+  ].freeze
 
-  USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at]
+  USER_EMAIL_COLUMNS = %i[id user_id email primary created_at updated_at].freeze
 
   USER_STAT_COLUMNS = %i[
     user_id
@@ -529,13 +529,20 @@ class BulkImport::Base
     bounce_score
     reset_bounce_score_after
     digest_attempted_at
-  ]
+  ].freeze
 
-  USER_HISTORY_COLUMNS = %i[action acting_user_id target_user_id details created_at updated_at]
+  USER_HISTORY_COLUMNS = %i[
+    action
+    acting_user_id
+    target_user_id
+    details
+    created_at
+    updated_at
+  ].freeze
 
-  USER_AVATAR_COLUMNS = %i[id user_id custom_upload_id created_at updated_at]
+  USER_AVATAR_COLUMNS = %i[id user_id custom_upload_id created_at updated_at].freeze
 
-  USER_PROFILE_COLUMNS = %i[user_id location website bio_raw bio_cooked views]
+  USER_PROFILE_COLUMNS = %i[user_id location website bio_raw bio_cooked views].freeze
 
   USER_SSO_RECORD_COLUMNS = %i[
     id
@@ -550,7 +557,7 @@ class BulkImport::Base
     external_avatar_url
     external_profile_background_url
     external_card_background_url
-  ]
+  ].freeze
 
   USER_ASSOCIATED_ACCOUNT_COLUMNS = %i[
     provider_name
@@ -562,7 +569,7 @@ class BulkImport::Base
     extra
     created_at
     updated_at
-  ]
+  ].freeze
 
   USER_OPTION_COLUMNS = %i[
     user_id
@@ -591,17 +598,17 @@ class BulkImport::Base
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
-  ]
+  ].freeze
 
-  USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
+  USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at].freeze
 
-  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at].freeze
 
-  USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
+  USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at].freeze
 
-  POST_CUSTOM_FIELD_COLUMNS = %i[post_id name value created_at updated_at]
+  POST_CUSTOM_FIELD_COLUMNS = %i[post_id name value created_at updated_at].freeze
 
-  TOPIC_CUSTOM_FIELD_COLUMNS = %i[topic_id name value created_at updated_at]
+  TOPIC_CUSTOM_FIELD_COLUMNS = %i[topic_id name value created_at updated_at].freeze
 
   USER_ACTION_COLUMNS = %i[
     action_type
@@ -612,9 +619,9 @@ class BulkImport::Base
     acting_user_id
     created_at
     updated_at
-  ]
+  ].freeze
 
-  MUTED_USER_COLUMNS = %i[user_id muted_user_id created_at updated_at]
+  MUTED_USER_COLUMNS = %i[user_id muted_user_id created_at updated_at].freeze
 
   CATEGORY_COLUMNS = %i[
     id
@@ -629,15 +636,15 @@ class BulkImport::Base
     uploaded_logo_id
     created_at
     updated_at
-  ]
+  ].freeze
 
-  CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
+  CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at].freeze
 
-  CATEGORY_GROUP_COLUMNS = %i[id category_id group_id permission_type created_at updated_at]
+  CATEGORY_GROUP_COLUMNS = %i[id category_id group_id permission_type created_at updated_at].freeze
 
-  CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
+  CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at].freeze
 
-  CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
+  CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at].freeze
 
   TOPIC_COLUMNS = %i[
     id
@@ -658,7 +665,7 @@ class BulkImport::Base
     created_at
     bumped_at
     updated_at
-  ]
+  ].freeze
 
   POST_COLUMNS = %i[
     id
@@ -676,7 +683,7 @@ class BulkImport::Base
     created_at
     last_version_at
     updated_at
-  ]
+  ].freeze
 
   POST_ACTION_COLUMNS = %i[
     id
@@ -696,13 +703,13 @@ class BulkImport::Base
     deferred_at
     disagreed_at
     disagreed_by_id
-  ]
+  ].freeze
 
-  TOPIC_ALLOWED_USER_COLUMNS = %i[topic_id user_id created_at updated_at]
+  TOPIC_ALLOWED_USER_COLUMNS = %i[topic_id user_id created_at updated_at].freeze
 
-  TOPIC_ALLOWED_GROUP_COLUMNS = %i[topic_id group_id created_at updated_at]
+  TOPIC_ALLOWED_GROUP_COLUMNS = %i[topic_id group_id created_at updated_at].freeze
 
-  TOPIC_TAG_COLUMNS = %i[topic_id tag_id created_at updated_at]
+  TOPIC_TAG_COLUMNS = %i[topic_id tag_id created_at updated_at].freeze
 
   TOPIC_USER_COLUMNS = %i[
     user_id
@@ -714,9 +721,9 @@ class BulkImport::Base
     notifications_changed_at
     notifications_reason_id
     total_msecs_viewed
-  ]
+  ].freeze
 
-  TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at]
+  TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at].freeze
 
   UPLOAD_COLUMNS = %i[
     id
@@ -743,9 +750,9 @@ class BulkImport::Base
     security_last_changed_at
     security_last_changed_reason
     dominant_color
-  ]
+  ].freeze
 
-  UPLOAD_REFERENCE_COLUMNS = %i[upload_id target_type target_id created_at updated_at]
+  UPLOAD_REFERENCE_COLUMNS = %i[upload_id target_type target_id created_at updated_at].freeze
 
   OPTIMIZED_IMAGE_COLUMNS = %i[
     sha1
@@ -759,11 +766,11 @@ class BulkImport::Base
     version
     created_at
     updated_at
-  ]
+  ].freeze
 
-  POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
+  POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at].freeze
 
-  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at]
+  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at].freeze
 
   BADGE_COLUMNS = %i[
     id
@@ -777,11 +784,18 @@ class BulkImport::Base
     updated_at
     multiple_grant
     query
-  ]
+  ].freeze
 
-  USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
+  USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at].freeze
 
-  GAMIFICATION_SCORE_EVENT_COLUMNS = %i[user_id date points description created_at updated_at]
+  GAMIFICATION_SCORE_EVENT_COLUMNS = %i[
+    user_id
+    date
+    points
+    description
+    created_at
+    updated_at
+  ].freeze
 
   POST_EVENT_COLUMNS = %i[
     id
@@ -797,7 +811,7 @@ class BulkImport::Base
     recurrence
     timezone
     minimal
-  ]
+  ].freeze
 
   POST_EVENT_DATES_COLUMNS = %i[
     event_id
@@ -809,7 +823,7 @@ class BulkImport::Base
     finished_at
     created_at
     updated_at
-  ]
+  ].freeze
 
   POLL_COLUMNS = %i[
     id
@@ -829,13 +843,13 @@ class BulkImport::Base
     chart_type
     groups
     title
-  ]
+  ].freeze
 
-  POLL_OPTION_COLUMNS = %i[id poll_id digest html anonymous_votes created_at updated_at]
+  POLL_OPTION_COLUMNS = %i[id poll_id digest html anonymous_votes created_at updated_at].freeze
 
-  POLL_VOTE_COLUMNS = %i[poll_id poll_option_id user_id created_at updated_at]
+  POLL_VOTE_COLUMNS = %i[poll_id poll_option_id user_id created_at updated_at].freeze
 
-  PLUGIN_STORE_ROW_COLUMNS = %i[plugin_name key type_name value]
+  PLUGIN_STORE_ROW_COLUMNS = %i[plugin_name key type_name value].freeze
 
   PERMALINK_COLUMNS = %i[
     url
@@ -847,9 +861,9 @@ class BulkImport::Base
     external_url
     created_at
     updated_at
-  ]
+  ].freeze
 
-  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
+  CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at].freeze
 
   CHAT_CHANNEL_COLUMNS = %i[
     id
@@ -867,7 +881,7 @@ class BulkImport::Base
     allow_channel_wide_mentions
     auto_join_users
     threading_enabled
-  ]
+  ].freeze
 
   USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS = %i[
     chat_channel_id
@@ -881,9 +895,9 @@ class BulkImport::Base
     last_read_message_id
     join_mode
     last_viewed_at
-  ]
+  ].freeze
 
-  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at]
+  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at].freeze
 
   CHAT_THREAD_COLUMNS = %i[
     id
@@ -895,7 +909,7 @@ class BulkImport::Base
     created_at
     updated_at
     replies_count
-  ]
+  ].freeze
 
   USER_CHAT_THREAD_MEMBERSHIP_COLUMNS = %i[
     user_id
@@ -903,7 +917,7 @@ class BulkImport::Base
     notification_level
     created_at
     updated_at
-  ]
+  ].freeze
 
   CHAT_MESSAGE_COLUMNS = %i[
     id
@@ -919,11 +933,11 @@ class BulkImport::Base
     cooked_version
     last_editor_id
     thread_id
-  ]
+  ].freeze
 
-  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at]
+  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at].freeze
 
-  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
+  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at].freeze
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -1327,7 +1341,7 @@ class BulkImport::Base
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
-  }
+  }.freeze
 
   def process_user_option(user_option)
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }

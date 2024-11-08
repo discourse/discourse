@@ -88,7 +88,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   context "when the public key algorithm is not supported by the server" do
     before do
       @original_supported_alg_value = DiscourseWebauthn::SUPPORTED_ALGORITHMS
-      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = [-999] }
+      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = [-999].freeze }
     end
 
     it "raises a UnsupportedPublicKeyAlgorithmError" do
@@ -106,7 +106,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   context "when the attestation format is not supported" do
     before do
       @original_supported_alg_value = DiscourseWebauthn::VALID_ATTESTATION_FORMATS
-      silence_warnings { DiscourseWebauthn::VALID_ATTESTATION_FORMATS = ["err"] }
+      silence_warnings { DiscourseWebauthn::VALID_ATTESTATION_FORMATS = ["err"].freeze }
     end
 
     it "raises a UnsupportedAttestationFormatError" do

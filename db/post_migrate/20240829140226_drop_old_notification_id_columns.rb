@@ -6,7 +6,7 @@ class DropOldNotificationIdColumns < ActiveRecord::Migration[7.1]
     shelved_notifications: %i[old_notification_id],
     users: %i[old_seen_notification_id],
     user_badges: %i[old_notification_id],
-  }
+  }.freeze
 
   def up
     DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }

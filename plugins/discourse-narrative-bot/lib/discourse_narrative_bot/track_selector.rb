@@ -7,7 +7,7 @@ module DiscourseNarrativeBot
     GENERIC_REPLIES_COUNT_PREFIX = "discourse-narrative-bot:track-selector-count:".freeze
     PUBLIC_DISPLAY_BOT_HELP_KEY = "discourse-narrative-bot:track-selector:display-bot-help".freeze
 
-    TRACKS = [AdvancedUserNarrative, NewUserNarrative]
+    TRACKS = [AdvancedUserNarrative, NewUserNarrative].freeze
 
     TOPIC_ACTIONS = %i[delete topic_notification_level_changed].each(&:freeze)
 

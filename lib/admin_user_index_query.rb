@@ -21,7 +21,7 @@ class AdminUserIndexQuery
     "topics_viewed" => "user_stats.topics_entered",
     "posts" => "user_stats.post_count",
     "read_time" => "user_stats.time_read",
-  }
+  }.freeze
 
   def find_users(limit = 100)
     page = params[:page].to_i - 1

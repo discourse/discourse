@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmbeddableHostSerializer < ApplicationSerializer
-  TO_SERIALIZE = %i[id host allowed_paths class_name category_id tags user]
+  TO_SERIALIZE = %i[id host allowed_paths class_name category_id tags user].freeze
 
   attributes *TO_SERIALIZE
 

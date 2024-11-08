@@ -131,7 +131,7 @@ module DiscourseNarrativeBot
           action: :reply_to_search,
         },
       },
-    }
+    }.freeze
 
     def self.badge_name
       BADGE_NAME

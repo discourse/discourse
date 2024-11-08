@@ -351,7 +351,7 @@ module Middleware
       @app = app
     end
 
-    PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD]
+    PAYLOAD_INVALID_REQUEST_METHODS = %w[GET HEAD].freeze
 
     def call(env)
       return @app.call(env) if defined?(@@disabled) && @@disabled

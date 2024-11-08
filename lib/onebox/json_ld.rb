@@ -4,7 +4,7 @@ module Onebox
   class JsonLd < Normalizer
     # Full schema.org hierarchy can be found here: https://schema.org/docs/full.html
     MOVIE_JSON_LD_TYPE = "Movie"
-    SUPPORTED_TYPES = [MOVIE_JSON_LD_TYPE]
+    SUPPORTED_TYPES = [MOVIE_JSON_LD_TYPE].freeze
 
     def initialize(doc)
       @data = extract(doc)

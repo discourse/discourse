@@ -21,7 +21,7 @@ SQL_TABLE = <<~SQL
   )
 SQL
 SQL_INSERT = "INSERT INTO users VALUES (?, ?, ?, ?)"
-USER = [1, "John", "john@example.com", "2023-12-29T11:10:04Z"]
+USER = [1, "John", "john@example.com", "2023-12-29T11:10:04Z"].freeze
 ROW_COUNT = Etc.nprocessors * 200_000
 
 def create_extralite_db(path, initialize: false)

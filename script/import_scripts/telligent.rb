@@ -49,7 +49,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     %r{\[View:[^\]]*?/cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)(?:\:[:\d\s]*?)?\]}i,
     %r{\[(?<tag>img|url)\][^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\[/\k<tag>\]}i,
     %r{\[(?<tag>img|url)=[^\[]*?cfs-file(?:systemfile)?(?:\.ashx)?/__key/(?<directory>[^/]+)/(?<path>[^/]+)/(?<filename>.+?)\][^\[]*?\[/\k<tag>\]}i,
-  ]
+  ].freeze
   PROPERTY_NAMES_REGEX = /(?<name>\w+):S:(?<start>\d+):(?<length>\d+):/
   INTERNAL_LINK_REGEX =
     %r{\shref=".*?/f/\d+(?:(/t/(?<topic_id>\d+))|(?:/p/\d+/(?<post_id>\d+))|(?:/p/(?<post_id>\d+)/reply))\.aspx[^"]*?"}i
@@ -85,7 +85,7 @@ class ImportScripts::Telligent < ImportScripts::Base
     "B000" => "°",
     "0003" => ["0300".to_i(16)].pack("U"),
     "0103" => ["0301".to_i(16)].pack("U"),
-  }
+  }.freeze
 
   def initialize
     super()

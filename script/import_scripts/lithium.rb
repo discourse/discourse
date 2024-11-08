@@ -40,7 +40,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     { name: "user_field_1", profile: "jobtitle" },
     { name: "user_field_2", profile: "company" },
     { name: "user_field_3", profile: "industry" },
-  ]
+  ].freeze
 
   LITHIUM_PROFILE_FIELDS =
     "'profile.jobtitle', 'profile.company', 'profile.industry', 'profile.location'"
@@ -564,7 +564,7 @@ class ImportScripts::Lithium < ImportScripts::Base
     "catfrustrated" => "grumpycat",
     "catembarrassed" => "kissing_cat",
     "catlol" => "joy_cat",
-  }
+  }.freeze
 
   def import_likes
     puts "\nimporting likes..."

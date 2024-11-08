@@ -12,7 +12,7 @@ module DiscourseAutomation
         { id: "P3M", name: "discourse_automation.triggerables.stalled_wiki.durations.P3M" },
         { id: "P6M", name: "discourse_automation.triggerables.stalled_wiki.durations.P6M" },
         { id: "P1Y", name: "discourse_automation.triggerables.stalled_wiki.durations.P1Y" },
-      ]
+      ].freeze
     end
   end
 end

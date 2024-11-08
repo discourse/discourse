@@ -45,7 +45,7 @@ class Admin::ThemesController < Admin::AdminController
     application/x-gzip
     application/x-zip-compressed
     application/zip
-  ]
+  ].freeze
 
   def import
     @theme = nil

@@ -28,7 +28,7 @@
 #------------------------------------------------------------------------------
 
 class Mapping
-  FIELDS = %w[size rss shared_clean shared_dirty private_clean private_dirty swap pss]
+  FIELDS = %w[size rss shared_clean shared_dirty private_clean private_dirty swap pss].freeze
   attr_reader :address_start
   attr_reader :address_end
   attr_reader :perms

@@ -37,14 +37,14 @@ class LocaleFileValidator
       "Pluralized strings must have only the sub-keys 'one' and 'other'.\nThe following keys have missing or additional keys:",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
-  }
+  }.freeze
 
-  PLURALIZATION_KEYS = %w[zero one two few many other]
-  ENGLISH_KEYS = %w[one other]
+  PLURALIZATION_KEYS = %w[zero one two few many other].freeze
+  ENGLISH_KEYS = %w[one other].freeze
 
   EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS = [
     "js.discourse_automation.scriptables.auto_responder.fields.word_answer_list.description",
-  ]
+  ].freeze
 
   def initialize(filename)
     @filename = filename

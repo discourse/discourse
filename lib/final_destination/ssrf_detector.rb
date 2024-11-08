@@ -30,7 +30,7 @@ class FinalDestination
       IPAddr.new("203.0.113.0/24"),
       IPAddr.new("240.0.0.0/4"),
       IPAddr.new("255.255.255.255/32"),
-    ]
+    ].freeze
 
     # This is a list of private IPv6 IP ranges that are not allowed to be globally reachable as given by
     # https://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml.
@@ -46,7 +46,7 @@ class FinalDestination
       IPAddr.new("2001:db8::/32"),
       IPAddr.new("fc00::/7"),
       IPAddr.new("fe80::/10"),
-    ]
+    ].freeze
 
     PRIVATE_IP_RANGES = PRIVATE_IPV4_RANGES + PRIVATE_IPV6_RANGES
 

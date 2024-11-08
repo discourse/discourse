@@ -522,7 +522,7 @@ class PostAlerter
     Notification.types[:posted],
     Notification.types[:private_message],
     Notification.types[:watching_category_or_tag],
-  ]
+  ].freeze
 
   def create_notification(user, type, post, opts = {})
     opts = @default_opts.merge(opts)

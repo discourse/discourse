@@ -203,7 +203,7 @@ module Chat
       upload-protocol
       watched-words
       chat-html-inline
-    ]
+    ].freeze
 
     MARKDOWN_IT_RULES = %w[
       autolink
@@ -221,7 +221,7 @@ module Chat
       emphasis
       replacements
       escape
-    ]
+    ].freeze
 
     def self.cook(message, opts = {})
       bot = opts[:user_id] && opts[:user_id].negative?

@@ -95,7 +95,7 @@ module Email
     attr_reader :mail
     attr_reader :message_id
 
-    COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"]
+    COMMON_ENCODINGS = [-"utf-8", -"windows-1252", -"iso-8859-1"].freeze
 
     def self.formats
       @formats ||= Enum.new(plaintext: 1, markdown: 2)
@@ -538,7 +538,7 @@ module Email
       [:zimbra, /data-marker="__/],
       [:newton, /(id|class)="cm_/],
       [:front, /class="front-/],
-    ]
+    ].freeze
 
     def extract_from_gmail(doc)
       # GMail adds a bunch of 'gmail_' prefixed classes like: gmail_signature, gmail_extra, gmail_quote, gmail_default...

@@ -12,7 +12,7 @@ class ExtraLocalesController < ApplicationController
   OVERRIDES_BUNDLE = "overrides"
   MD5_HASH_LENGTH = 32
   MF_BUNDLE = "mf"
-  BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE]
+  BUNDLES = [OVERRIDES_BUNDLE, MF_BUNDLE].freeze
 
   class << self
     def js_digests

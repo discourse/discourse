@@ -13,7 +13,7 @@ class PostActionTypeView
     position
     enabled
     score_type
-  ]
+  ].freeze
 
   def all_flags
     @all_flags ||=

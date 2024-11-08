@@ -18,7 +18,7 @@ CLOSED_POLL_PREFIXES = {
   "te" => "మూసేసిన ఓటు",
   "tr_TR" => "Bitmiş Anket",
   "zh_CN" => "已关闭的投票：",
-}
+}.freeze
 
 def poll_was_closed?(title)
   prefix = CLOSED_POLL_PREFIXES[SiteSetting.default_locale] || "Closed Poll"

@@ -41,7 +41,7 @@ class TranslationOverride < ActiveRecord::Base
       optional_tags
     ],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
-  }
+  }.freeze
 
   include HasSanitizableFields
 

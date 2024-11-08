@@ -9,7 +9,7 @@ class TwitterApi
       user.fields=id,name,username,profile_image_url
       media.fields=type,height,width,variants,preview_image_url,url
       expansions=attachments.media_keys,referenced_tweets.id.author_id
-    ]
+    ].freeze
 
     def prettify_tweet(tweet)
       text = tweet[:data][:text].dup.to_s

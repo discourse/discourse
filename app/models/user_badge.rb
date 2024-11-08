@@ -11,7 +11,7 @@ class UserBadge < ActiveRecord::Base
   belongs_to :notification, dependent: :destroy
   belongs_to :post
 
-  BOOLEAN_ATTRIBUTES = %w[is_favorite]
+  BOOLEAN_ATTRIBUTES = %w[is_favorite].freeze
 
   scope :grouped_with_count,
         -> do

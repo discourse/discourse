@@ -33,7 +33,7 @@ class GroupsController < ApplicationController
     close: Proc.new { |groups| groups.where(public_admission: false, automatic: false) },
     automatic: Proc.new { |groups| groups.where(automatic: true) },
     non_automatic: Proc.new { |groups| groups.where(automatic: false) },
-  }
+  }.freeze
   ADD_MEMBERS_LIMIT = 1000
 
   def index

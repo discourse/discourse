@@ -11,7 +11,7 @@ class InsertCommunityToSidebarSections < ActiveRecord::Migration[7.0]
     { name: "FAQ", path: "/faq", icon: "question-circle", segment: 1 },
     { name: "Groups", path: "/g", icon: "user-friends", segment: 1 },
     { name: "Badges", path: "/badges", icon: "certificate", segment: 1 },
-  ]
+  ].freeze
   def up
     result = DB.query <<~SQL
       INSERT INTO sidebar_sections(user_id, title, public, section_type, created_at, updated_at)

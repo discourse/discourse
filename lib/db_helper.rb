@@ -18,7 +18,7 @@ class DbHelper
      WHERE trigger_name LIKE '%_readonly'
   SQL
 
-  TRUNCATABLE_COLUMNS = ["topic_links.url"]
+  TRUNCATABLE_COLUMNS = ["topic_links.url"].freeze
 
   def self.remap(
     from,

@@ -12,7 +12,7 @@ class Stylesheet::Manager
   CACHE_PATH = "tmp/stylesheet-cache"
   private_constant :CACHE_PATH
 
-  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}".freeze
   THEME_REGEX = /_theme\z/
   COLOR_SCHEME_STYLESHEET = "color_definitions"
 

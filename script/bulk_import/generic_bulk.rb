@@ -19,7 +19,7 @@ end
 class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
-  CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages]
+  CONTENT_UPLOAD_REFERENCE_TYPES = %w[posts chat_messages].freeze
   LAST_VIEWED_AT_PLACEHOLDER = "1970-01-01 00:00:00"
 
   def initialize(db_path, uploads_db_path = nil)

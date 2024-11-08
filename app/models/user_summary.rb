@@ -79,7 +79,7 @@ class UserSummary
     user_counts(liked_users)
   end
 
-  REPLY_ACTIONS = [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION]
+  REPLY_ACTIONS = [UserAction::RESPONSE, UserAction::QUOTE, UserAction::MENTION].freeze
 
   def most_replied_to_users
     replied_users = {}
@@ -130,7 +130,7 @@ class UserSummary
 
   class CategoryWithCounts < OpenStruct
     include ActiveModel::SerializerSupport
-    KEYS = %i[id name color text_color slug read_restricted parent_category_id]
+    KEYS = %i[id name color text_color slug read_restricted parent_category_id].freeze
   end
 
   def top_categories

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-GEOLITE_DBS = %w[GeoLite2-City GeoLite2-ASN]
+GEOLITE_DBS = %w[GeoLite2-City GeoLite2-ASN].freeze
 
 desc "downloads MaxMind's GeoLite2-City databases"
 task "maxminddb:get" => "environment" do

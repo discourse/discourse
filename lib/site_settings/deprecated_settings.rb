@@ -47,7 +47,7 @@ module SiteSettings::DeprecatedSettings
       false,
       "3.3",
     ],
-  ]
+  ].freeze
 
   OVERRIDE_TL_GROUP_SETTINGS = %w[
     anonymous_posting_min_trust_level
@@ -73,7 +73,7 @@ module SiteSettings::DeprecatedSettings
     min_trust_level_for_user_api_key
     min_trust_level_to_tag_topics
     min_trust_level_to_allow_profile_background
-  ]
+  ].freeze
 
   def group_to_tl(old_setting, new_setting)
     tl_and_staff = is_tl_and_staff_setting?(old_setting)

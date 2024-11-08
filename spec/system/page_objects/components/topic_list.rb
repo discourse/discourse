@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class TopicList < PageObjects::Components::Base
       TOPIC_LIST_BODY_SELECTOR = ".topic-list-body"
-      TOPIC_LIST_ITEM_SELECTOR = "#{TOPIC_LIST_BODY_SELECTOR} .topic-list-item"
+      TOPIC_LIST_ITEM_SELECTOR = "#{TOPIC_LIST_BODY_SELECTOR} .topic-list-item".freeze
 
       def topic_list
         TOPIC_LIST_BODY_SELECTOR

@@ -3,7 +3,7 @@
 module Chat
   class MessageProcessor
     include ::CookedProcessorMixin
-    IMG_FILETYPES = %w[jpg jpeg gif png heic heif webp]
+    IMG_FILETYPES = %w[jpg jpeg gif png heic heif webp].freeze
 
     def initialize(chat_message, opts = {})
       @model = chat_message

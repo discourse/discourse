@@ -40,7 +40,7 @@ class PostRevisor
     end
   end
 
-  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type]
+  POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type].freeze
 
   attr_reader :category_changed, :post_revision
 
@@ -463,7 +463,7 @@ class PostRevisor
     remove_flags_and_unhide_post
   end
 
-  USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE]
+  USER_ACTIONS_TO_REMOVE = [UserAction::REPLY, UserAction::RESPONSE].freeze
 
   def update_post
     if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id && @post.user_id != nil

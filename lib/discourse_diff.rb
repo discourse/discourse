@@ -271,14 +271,14 @@ class DiscourseDiff
       me.tokens
     end
 
-    USELESS_TAGS = %w[html body]
+    USELESS_TAGS = %w[html body].freeze
     def start_element(name, attributes = [])
       return if USELESS_TAGS.include?(name)
       attrs = attributes.map { |a| " #{a[0]}=\"#{CGI.escapeHTML(a[1])}\"" }.join
       @tokens << "<#{name}#{attrs}>"
     end
 
-    AUTOCLOSING_TAGS = %w[area base br col embed hr img input meta]
+    AUTOCLOSING_TAGS = %w[area base br col embed hr img input meta].freeze
     def end_element(name)
       return if USELESS_TAGS.include?(name) || AUTOCLOSING_TAGS.include?(name)
       @tokens << "</#{name}>"

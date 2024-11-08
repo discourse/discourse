@@ -233,7 +233,7 @@ module DiscourseAutomation
           },
         },
       },
-    }
+    }.freeze
 
     private
 

@@ -438,7 +438,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
     table
     time
     white
-  ]
+  ].freeze
 
   def convert_bbcode(raw)
     return "" if raw.blank?
@@ -579,7 +579,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
   AttachmentPatterns = [
     [/^\[attach(?:|img|url|mini)=(?<num>\d+)\]$/, ->(u) { "\n" + get_upload_markdown(u) + "\n" }],
     [/\[attach(?:|img|url|mini)=(?<num>\d+)\]/, ->(u) { get_upload_markdown(u) }],
-  ]
+  ].freeze
 
   # Provides command line options and parses the SMF settings file.
   class Options

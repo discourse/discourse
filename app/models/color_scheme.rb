@@ -275,7 +275,7 @@ class ColorScheme < ActiveRecord::Base
       "love_low" => "4B3F50",
       "love" => "fa6c8d",
     },
-  }
+  }.freeze
 
   LIGHT_THEME_ID = "Light"
 
@@ -314,9 +314,9 @@ class ColorScheme < ActiveRecord::Base
 
   validates_associated :color_scheme_colors
 
-  BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss"
+  BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss".freeze
   COLOR_TRANSFORMATION_FILE =
-    "#{Rails.root}/app/assets/stylesheets/common/foundation/color_transformations.scss"
+    "#{Rails.root}/app/assets/stylesheets/common/foundation/color_transformations.scss".freeze
 
   @mutex = Mutex.new
 

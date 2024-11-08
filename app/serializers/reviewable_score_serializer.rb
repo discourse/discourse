@@ -15,7 +15,7 @@ class ReviewableScoreSerializer < ApplicationSerializer
     email_spam: "email_in_spam_header",
     suspect_user: "approve_suspect_users",
     contains_media: "skip_media_review_groups",
-  }
+  }.freeze
 
   attributes :id, :score, :agree_stats, :reason, :created_at, :reviewed_at
 

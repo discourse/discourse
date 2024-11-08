@@ -8,7 +8,7 @@ class RemoteTheme < ActiveRecord::Base
     theme_version
     minimum_discourse_version
     maximum_discourse_version
-  ]
+  ].freeze
 
   class ImportError < StandardError
   end
@@ -22,7 +22,7 @@ class RemoteTheme < ActiveRecord::Base
     after_header
     body_tag
     footer
-  ]
+  ].freeze
 
   GITHUB_REGEXP = %r{\Ahttps?://github\.com/}
   GITHUB_SSH_REGEXP = %r{\Assh://git@github\.com:}
@@ -32,7 +32,7 @@ class RemoteTheme < ActiveRecord::Base
   MAX_THEME_FILE_COUNT = 1024
   MAX_THEME_SIZE = 256.megabytes
   MAX_THEME_SCREENSHOT_FILE_SIZE = 1.megabyte
-  MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160] # 4K resolution
+  MAX_THEME_SCREENSHOT_DIMENSIONS = [3840, 2160].freeze # 4K resolution
   THEME_SCREENSHOT_ALLOWED_FILE_TYPES = %w[.jpg .jpeg .gif .png].freeze
 
   has_one :theme, autosave: false

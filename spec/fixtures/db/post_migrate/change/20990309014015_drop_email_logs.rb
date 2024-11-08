@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DropEmailLogs < ActiveRecord::Migration[5.2]
-  DROPPED_TABLES = %i[email_logs]
+  DROPPED_TABLES = %i[email_logs].freeze
 
   def change
     drop_table :email_logs

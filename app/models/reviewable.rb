@@ -5,7 +5,7 @@ class Reviewable < ActiveRecord::Base
     ReviewableFlaggedPost: BasicReviewableFlaggedPostSerializer,
     ReviewableQueuedPost: BasicReviewableQueuedPostSerializer,
     ReviewableUser: BasicReviewableUserSerializer,
-  }
+  }.freeze
 
   self.ignored_columns = [:reviewable_by_group_id]
 

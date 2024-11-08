@@ -7,7 +7,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Jive < ImportScripts::Base
   BATCH_SIZE = 1000
-  CATEGORY_IDS = [2023, 2003, 2004, 2042, 2036, 2029] # categories that should be imported
+  CATEGORY_IDS = [2023, 2003, 2004, 2042, 2036, 2029].freeze # categories that should be imported
 
   def initialize(path)
     @path = path

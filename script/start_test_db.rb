@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-BIN = "/usr/lib/postgresql/#{ENV["PG_MAJOR"]}/bin"
+BIN = "/usr/lib/postgresql/#{ENV["PG_MAJOR"]}/bin".freeze
 DATA = "/tmp/test_data/pg"
 
 def run(*args)

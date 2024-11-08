@@ -37,7 +37,7 @@ class ContentSecurityPolicy
       ["/plugins/", false, true, true],
       ["/theme-javascripts/", false, true, false],
       ["/svg-sprite/", false, true, false],
-    ]
+    ].freeze
 
     def script_assets(
       base = base_url,

@@ -7,7 +7,7 @@ module Migrations
     class ValidationError < StandardError
     end
 
-    REQUIRED_KEYS = %i[source_db_path output_db_path root_paths]
+    REQUIRED_KEYS = %i[source_db_path output_db_path root_paths].freeze
 
     def initialize(options)
       @options = options

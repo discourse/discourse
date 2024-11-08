@@ -254,7 +254,7 @@ class PresenceChannel
   end
 
   def self.redis_eval(key, *args)
-    LUA_SCRIPTS[key].eval(redis, *args)
+    @@lua_scripts[key].eval(redis, *args)
   end
 
   # Register a callback to configure channels with a given prefix
@@ -469,9 +469,9 @@ class PresenceChannel
     end
   LUA
 
-  LUA_SCRIPTS = {}
+  @@lua_scripts = {}
 
-  LUA_SCRIPTS[:present] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:present] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -500,7 +500,7 @@ class PresenceChannel
     return added_users
   LUA
 
-  LUA_SCRIPTS[:leave] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:leave] = DiscourseRedis::EvalHelper.new <<~LUA
     #{COMMON_PRESENT_LEAVE_LUA}
 
     if mutex_locked then
@@ -530,7 +530,7 @@ class PresenceChannel
     return removed_users
   LUA
 
-  LUA_SCRIPTS[:release_mutex] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:release_mutex] = DiscourseRedis::EvalHelper.new <<~LUA
     local mutex_key = KEYS[1]
     local expected_value = ARGV[1]
 
@@ -539,7 +539,7 @@ class PresenceChannel
     end
   LUA
 
-  LUA_SCRIPTS[:user_ids] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:user_ids] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -560,7 +560,7 @@ class PresenceChannel
     return { message_bus_id, user_ids }
   LUA
 
-  LUA_SCRIPTS[:count] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:count] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local message_bus_id_key = KEYS[4]
@@ -580,7 +580,7 @@ class PresenceChannel
     return { message_bus_id, count }
   LUA
 
-  LUA_SCRIPTS[:auto_leave] = DiscourseRedis::EvalHelper.new <<~LUA
+  @@lua_scripts[:auto_leave] = DiscourseRedis::EvalHelper.new <<~LUA
     local zlist_key = KEYS[1]
     local hash_key = KEYS[2]
     local channels_key = KEYS[3]

@@ -203,7 +203,7 @@ module Oneboxer
     tfoot
     ul
     video
-  ]
+  ].freeze
 
   def self.apply(string_or_doc, extra_paths: nil)
     doc = string_or_doc

@@ -47,7 +47,7 @@ class SidebarUrl < ActiveRecord::Base
       icon: "certificate",
       segment: SidebarUrl.segments["secondary"],
     },
-  ]
+  ].freeze
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }
   validates :name, presence: true, length: { maximum: MAX_NAME_LENGTH }

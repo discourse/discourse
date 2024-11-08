@@ -86,7 +86,7 @@ class WebHookEventType < ActiveRecord::Base
     chat_message_edited: 1802,
     chat_message_trashed: 1803,
     chat_message_restored: 1804,
-  }
+  }.freeze
 
   has_and_belongs_to_many :web_hooks
 

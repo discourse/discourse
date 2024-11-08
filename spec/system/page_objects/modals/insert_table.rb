@@ -4,7 +4,7 @@ module PageObjects
   module Modals
     class InsertTable < PageObjects::Modals::Base
       MODAL_SELECTOR = ".insert-table-modal"
-      SPREADSHEET_TABLE_SELECTOR = "#{MODAL_SELECTOR} .jexcel"
+      SPREADSHEET_TABLE_SELECTOR = "#{MODAL_SELECTOR} .jexcel".freeze
 
       def click_insert_table
         find("#{MODAL_SELECTOR} .btn-insert-table").click

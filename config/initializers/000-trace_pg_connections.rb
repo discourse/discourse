@@ -77,7 +77,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
       async_prepare
       sync_exec_prepared
       async_exec_prepared
-    ]
+    ].freeze
 
     LOG_ACCESS_METHODS.each do |method|
       new_method = "#{method}_without_logging".to_sym

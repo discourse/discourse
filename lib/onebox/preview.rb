@@ -11,7 +11,7 @@ module Onebox
       Timeout::Error,
       Net::HTTPError,
       Errno::ECONNREFUSED,
-    ]
+    ].freeze
 
     def initialize(url, options = Onebox.options)
       @url = url

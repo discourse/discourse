@@ -11,7 +11,7 @@
 require "uri"
 require "net/smtp"
 
-SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError]
+SMTP_CLIENT_ERRORS = [Net::SMTPFatalError, Net::SMTPSyntaxError].freeze
 BYPASS_DISABLE_TYPES = %w[
   admin_login
   test_message
@@ -20,7 +20,7 @@ BYPASS_DISABLE_TYPES = %w[
   invite_password_instructions
   download_backup_message
   admin_confirmation_message
-]
+].freeze
 
 module Email
   class Sender

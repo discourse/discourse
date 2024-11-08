@@ -2,8 +2,8 @@
 
 class TemporaryRedis
   REDIS_TEMP_DIR = "/tmp/discourse_temp_redis"
-  REDIS_LOG_PATH = "#{REDIS_TEMP_DIR}/redis.log"
-  REDIS_PID_PATH = "#{REDIS_TEMP_DIR}/redis.pid"
+  REDIS_LOG_PATH = "#{REDIS_TEMP_DIR}/redis.log".freeze
+  REDIS_PID_PATH = "#{REDIS_TEMP_DIR}/redis.pid".freeze
 
   attr_reader :instance
 

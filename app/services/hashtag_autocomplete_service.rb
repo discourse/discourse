@@ -3,11 +3,11 @@
 class HashtagAutocompleteService
   HASHTAGS_PER_REQUEST = 20
   SEARCH_MAX_LIMIT = 50
-  DEFAULT_DATA_SOURCES = [CategoryHashtagDataSource, TagHashtagDataSource]
+  DEFAULT_DATA_SOURCES = [CategoryHashtagDataSource, TagHashtagDataSource].freeze
   DEFAULT_CONTEXTUAL_TYPE_PRIORITIES = [
     { type: "category", context: "topic-composer", priority: 100 },
     { type: "tag", context: "topic-composer", priority: 50 },
-  ]
+  ].freeze
 
   def self.search_conditions
     @search_conditions ||= Enum.new(contains: 0, starts_with: 1)

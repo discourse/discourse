@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module UserNameSuggester
-  GENERIC_NAMES = %w[i me info support admin webmaster hello mail office contact team]
+  GENERIC_NAMES = %w[i me info support admin webmaster hello mail office contact team].freeze
   LAST_RESORT_USERNAME = "user"
 
   def self.suggest(*input, current_username: nil)

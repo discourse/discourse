@@ -21,7 +21,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     [6, 60, 56],
     [6, 56, 52],
     [6, 52, 48],
-  ]
+  ].freeze
 
   def self.watch(ip_address, opts = {})
     match_for_ip_address(ip_address) ||

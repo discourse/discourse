@@ -3,13 +3,13 @@
 class Admin::ReportsController < Admin::StaffController
   REPORTS_LIMIT = 50
 
-  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
+  HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs].freeze
 
   HIDDEN_LEGACY_PAGEVIEW_REPORTS = %w[
     consolidated_page_views_browser_detection
     page_view_anon_reqs
     page_view_logged_in_reqs
-  ]
+  ].freeze
 
   def index
     page_view_req_report_methods =

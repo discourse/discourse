@@ -23,7 +23,7 @@ module Jobs
       post_actions
       queued_posts
       visits
-    ]
+    ].freeze
 
     HEADER_ATTRS_FOR =
       HashWithIndifferentAccess.new(

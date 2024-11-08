@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Rtl
-  LOCALES = %w[ar fa_IR he ug ur]
+  LOCALES = %w[ar fa_IR he ug ur].freeze
 
   attr_reader :user
 

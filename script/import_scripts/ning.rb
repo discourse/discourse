@@ -6,8 +6,8 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Ning < ImportScripts::Base
   JSON_FILES_DIR = "/Users/techapj/Downloads/ben/ADEM"
-  ATTACHMENT_PREFIXES = %w[discussions pages blogs members photos]
-  EXTRA_AUTHORIZED_EXTENSIONS = %w[bmp ico txt pdf gif jpg jpeg html]
+  ATTACHMENT_PREFIXES = %w[discussions pages blogs members photos].freeze
+  EXTRA_AUTHORIZED_EXTENSIONS = %w[bmp ico txt pdf gif jpg jpeg html].freeze
 
   def initialize
     super

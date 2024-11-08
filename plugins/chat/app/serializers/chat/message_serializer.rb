@@ -13,7 +13,7 @@ module Chat
       thread_id
       chat_channel_id
       streaming
-    ]
+    ].freeze
     attributes(
       *(
         BASIC_ATTRIBUTES +

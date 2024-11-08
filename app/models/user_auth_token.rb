@@ -11,7 +11,7 @@ class UserAuthToken < ActiveRecord::Base
 
   MAX_SESSION_COUNT = 60
 
-  USER_ACTIONS = ["generate"]
+  USER_ACTIONS = ["generate"].freeze
 
   attr_accessor :unhashed_auth_token
 

@@ -15,7 +15,7 @@ module Discourse
     URI_REGEXP = URI.regexp(%w[http https])
 
     # TODO: Remove this once we drop support for Ruby 2.
-    EMPTY_KEYWORDS = {}
+    EMPTY_KEYWORDS = {}.freeze
 
     # Usage:
     #   Discourse::Utils.execute_command("pwd", chdir: 'mydirectory')
@@ -330,7 +330,7 @@ module Discourse
   end
 
   # list of pixel ratios Discourse tries to optimize for
-  PIXEL_RATIOS = [1, 1.5, 2, 3]
+  PIXEL_RATIOS = [1, 1.5, 2, 3].freeze
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
@@ -496,7 +496,7 @@ module Discourse
       authenticator: Auth::LinkedInOidcAuthenticator.new,
       icon: "fab-linkedin-in",
     ),
-  ]
+  ].freeze
 
   def self.auth_providers
     BUILTIN_AUTH + DiscoursePluginRegistry.auth_providers.to_a
@@ -673,7 +673,7 @@ module Discourse
     PG_READONLY_MODE_KEY,
     USER_READONLY_MODE_KEY,
     PG_FORCE_READONLY_MODE_KEY,
-  ]
+  ].freeze
 
   def self.enable_readonly_mode(key = READONLY_MODE_KEY, expires: nil)
     if key == PG_READONLY_MODE_KEY || key == PG_FORCE_READONLY_MODE_KEY
@@ -1182,7 +1182,7 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
+  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS].freeze
 
   def self.is_cdn_request?(env, request_method)
     return if CDN_REQUEST_METHODS.exclude?(request_method)

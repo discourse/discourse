@@ -3,7 +3,7 @@
 require "migration/column_dropper"
 
 class DropEmailUserOptionsColumns < ActiveRecord::Migration[5.2]
-  DROPPED_COLUMNS = { user_options: %i[email_direct email_private_messages email_always] }
+  DROPPED_COLUMNS = { user_options: %i[email_direct email_private_messages email_always] }.freeze
 
   def up
     DROPPED_COLUMNS.each { |table, columns| Migration::ColumnDropper.execute_drop(table, columns) }

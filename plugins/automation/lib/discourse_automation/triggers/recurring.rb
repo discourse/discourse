@@ -11,7 +11,7 @@ module DiscourseAutomation
         { id: "week", name: "discourse_automation.triggerables.recurring.frequencies.week" },
         { id: "month", name: "discourse_automation.triggerables.recurring.frequencies.month" },
         { id: "year", name: "discourse_automation.triggerables.recurring.frequencies.year" },
-      ]
+      ].freeze
 
       def self.setup_pending_automation(automation, fields, previous_fields)
         start_date = fields.dig("start_date", "value")

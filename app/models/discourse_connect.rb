@@ -95,7 +95,7 @@ class DiscourseConnect < DiscourseConnectBase
     "USED_SSO_NONCE_#{nonce}"
   end
 
-  BANNED_EXTERNAL_IDS = %w[none nil blank null]
+  BANNED_EXTERNAL_IDS = %w[none nil blank null].freeze
 
   def lookup_or_create_user(ip_address = nil)
     # we don't want to ban 0 from being an external id

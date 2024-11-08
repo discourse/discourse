@@ -37,7 +37,7 @@ class UploadSecurity
     category_background
     group_flair
     badge_image
-  ]
+  ].freeze
 
   PUBLIC_UPLOAD_REFERENCE_TYPES = %w[
     Badge
@@ -49,7 +49,7 @@ class UploadSecurity
     User
     UserAvatar
     UserProfile
-  ]
+  ].freeze
 
   def self.register_custom_public_type(type)
     @@custom_public_types << type if !@@custom_public_types.include?(type)

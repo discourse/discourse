@@ -66,7 +66,7 @@ class Auth::DefaultCurrentUserProvider
     ),
     RouteMatcher.new(methods: :get, actions: "users#bookmarks", formats: :ics),
     RouteMatcher.new(methods: :post, actions: "admin/email#handle_mail", formats: nil),
-  ]
+  ].freeze
 
   def self.find_v0_auth_cookie(request)
     cookie = request.cookies[TOKEN_COOKIE]

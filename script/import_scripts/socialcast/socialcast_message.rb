@@ -17,7 +17,7 @@ class SocialcastMessage
       category: "Orange Peels",
       tags: ["oily"],
     },
-  }
+  }.freeze
 
   def initialize(message_json)
     @parsed_json = JSON.parse message_json

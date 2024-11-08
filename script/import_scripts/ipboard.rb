@@ -51,18 +51,18 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
   EMO_DIR = ENV["EMO_DIR"] || "default"
   OLD_FORMAT = false
   if OLD_FORMAT
-    MEMBERS_TABLE = "#{TABLE_PREFIX}core_members"
-    FORUMS_TABLE = "#{TABLE_PREFIX}forums_forums"
-    POSTS_TABLE = "#{TABLE_PREFIX}forums_posts"
-    TOPICS_TABLE = "#{TABLE_PREFIX}forums_topics"
+    MEMBERS_TABLE = "#{TABLE_PREFIX}core_members".freeze
+    FORUMS_TABLE = "#{TABLE_PREFIX}forums_forums".freeze
+    POSTS_TABLE = "#{TABLE_PREFIX}forums_posts".freeze
+    TOPICS_TABLE = "#{TABLE_PREFIX}forums_topics".freeze
   else
-    MEMBERS_TABLE = "#{TABLE_PREFIX}members"
-    FORUMS_TABLE = "#{TABLE_PREFIX}forums"
-    POSTS_TABLE = "#{TABLE_PREFIX}posts"
-    TOPICS_TABLE = "#{TABLE_PREFIX}topics"
-    GROUPS_TABLE = "#{TABLE_PREFIX}groups"
-    PROFILE_TABLE = "#{TABLE_PREFIX}profile_portal"
-    ATTACHMENT_TABLE = "#{TABLE_PREFIX}attachments"
+    MEMBERS_TABLE = "#{TABLE_PREFIX}members".freeze
+    FORUMS_TABLE = "#{TABLE_PREFIX}forums".freeze
+    POSTS_TABLE = "#{TABLE_PREFIX}posts".freeze
+    TOPICS_TABLE = "#{TABLE_PREFIX}topics".freeze
+    GROUPS_TABLE = "#{TABLE_PREFIX}groups".freeze
+    PROFILE_TABLE = "#{TABLE_PREFIX}profile_portal".freeze
+    ATTACHMENT_TABLE = "#{TABLE_PREFIX}attachments".freeze
   end
 
   # TODO: replace ipb_ with TABLE_PREFIX

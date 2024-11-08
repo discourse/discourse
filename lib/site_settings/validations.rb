@@ -24,7 +24,7 @@ module SiteSettings::Validations
     iphone
     ipad
     mac
-  ]
+  ].freeze
 
   def validate_error(key, opts = {})
     raise Discourse::InvalidParameters.new(I18n.t("errors.site_settings.#{key}", opts))

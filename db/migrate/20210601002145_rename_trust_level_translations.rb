@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RenameTrustLevelTranslations < ActiveRecord::Migration[6.1]
-  KEYS = %w[newuser basic member regular leader]
+  KEYS = %w[newuser basic member regular leader].freeze
 
   def up
     KEYS.each { |key| execute <<~SQL }

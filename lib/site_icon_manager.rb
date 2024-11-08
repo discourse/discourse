@@ -57,7 +57,7 @@ module SiteIconManager
       fallback_to_sketch: true,
       resize_required: false,
     },
-  }
+  }.freeze
 
   WATCHED_SETTINGS = ICONS.keys + %i[logo logo_small]
 

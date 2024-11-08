@@ -24,7 +24,7 @@ module ::DiscourseAutomation
     { id: "TL12", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL12" },
     { id: "TL23", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL23" },
     { id: "TL34", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL34" },
-  ]
+  ].freeze
 
   AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids_json"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
