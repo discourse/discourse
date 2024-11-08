@@ -34,6 +34,7 @@ import Composer from "discourse/models/composer";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
+import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -41,6 +42,7 @@ import I18n from "discourse-i18n";
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
+const MIN_BOTTOM_MAP_WORD_COUNT = 200;
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -233,12 +235,25 @@ export default class TopicController extends Controller.extend(
     return Category.findById(categoryId)?.minimumRequiredTags || 0;
   }
 
-  @discourseComputed("model.posts_count", "model.postStream.loadingFilter")
-  showBottomTopicMap(postsCount, loading) {
+  @discourseComputed(
+    "model.postStream.posts",
+    "model.word_count",
+    "model.postStream.loadingFilter"
+  )
+  showBottomTopicMap(posts, wordCount, loading) {
+    // filter out small posts, because they're short
+    const postsCount =
+      posts?.filter((post) => post.post_type !== 3).length || 0;
+
+    const minWordCount = isTesting
+      ? true
+      : wordCount > MIN_BOTTOM_MAP_WORD_COUNT;
+
     return (
       this.siteSettings.show_bottom_topic_map &&
       !loading &&
-      postsCount > MIN_POSTS_COUNT
+      postsCount > MIN_POSTS_COUNT &&
+      minWordCount
     );
   }
 
