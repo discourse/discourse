@@ -139,10 +139,6 @@ module SystemHelpers
     SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
     SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
 
-    # This is necessary for Minio because you cannot use dualstack
-    # at the same time as using a custom S3 endpoint.
-    SiteSetting.Upload.stubs(:use_dualstack_endpoint).returns(false)
-
     SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
     SiteSetting.secure_uploads = enable_secure_uploads
 
