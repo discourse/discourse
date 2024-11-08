@@ -81,6 +81,24 @@ acceptance("Admin - User Index", function (needs) {
       });
     });
 
+    server.get("/admin/users/7.json", () => {
+      return helper.response({
+        id: 7,
+        username: "jimmy",
+        name: "Jimmy Johnson",
+        avatar_template: "/letter_avatar_proxy/v4/letter/b/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_grant_admin: true,
+        can_revoke_admin: false,
+        can_grant_moderation: true,
+        can_revoke_moderation: false,
+        second_factor_enabled: true,
+        can_disable_second_factor: true,
+      });
+    });
+
     server.put("/admin/users/4/grant_admin", () => {
       return helper.response(403, {
         second_factor_challenge_nonce: "some-nonce",
@@ -139,6 +157,10 @@ acceptance("Admin - User Index", function (needs) {
         error: "A message with <strong>bold</strong> text.",
         html_message: true,
       });
+    });
+
+    server.put("/admin/users/7/disable_second_factor", () => {
+      return helper.response({ success: "OK" });
     });
   });
 
@@ -253,6 +275,18 @@ acceptance("Admin - User Index", function (needs) {
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
     );
+  });
+
+  test("disable 2fa - shows the confirmation dialog", async function (assert) {
+    await visit("/admin/users/7/jimmy");
+    await click(".disable-second-factor");
+    assert.dom(".dialog-content").exists();
+    assert.strictEqual(
+      I18n.t("admin.user.disable_second_factor_confirm"),
+      query(".dialog-body").textContent.trim()
+    );
+
+    await click(".dialog-footer .btn-primary");
   });
 
   test("delete user - delete without blocking works as expected", async function (assert) {

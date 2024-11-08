@@ -374,7 +374,12 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   disableSecondFactor() {
-    return this.model.disableSecondFactor();
+    this.dialog.yesNoConfirm({
+      message: I18n.t("admin.user.disable_second_factor_confirm"),
+      didConfirm: () => {
+        return this.model.disableSecondFactor();
+      },
+    });
   }
 
   @action
