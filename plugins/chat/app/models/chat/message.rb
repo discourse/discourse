@@ -220,6 +220,7 @@ module Chat
       blockquote
       emphasis
       replacements
+      escape
     ]
 
     def self.cook(message, opts = {})
