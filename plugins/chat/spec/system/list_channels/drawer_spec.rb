@@ -149,36 +149,29 @@ RSpec.describe "List channels | Drawer", type: :system do
         drawer_page.visit_index
         drawer_page.click_direct_messages
 
-        # watched thread
-        message =
-          Fabricate(
-            :chat_message,
-            chat_channel: dm_channel_4,
-            user: current_user,
-            use_service: true,
-          )
-        dm_thread =
-          Fabricate(
-            :chat_thread,
-            channel: dm_channel_4,
-            original_message: message,
-            use_service: true,
-          )
-        dm_thread.membership_for(current_user).update!(notification_level: :watching)
-        Fabricate(:chat_message, thread: dm_thread, user: user_3, use_service: true)
-
-        # unread thread
-        message =
-          Fabricate(
-            :chat_message,
-            chat_channel: dm_channel_3,
-            user: current_user,
-            use_service: true,
-          )
         Fabricate(
           :chat_thread,
-          channel: dm_channel_3,
-          original_message: message,
+          notification_level: :watching,
+          original_message:
+            Fabricate(
+              :chat_message,
+              chat_channel: dm_channel_4,
+              user: current_user,
+              use_service: true,
+            ),
+          with_replies: 2,
+          use_service: true,
+        )
+
+        Fabricate(
+          :chat_thread,
+          original_message:
+            Fabricate(
+              :chat_message,
+              chat_channel: dm_channel_3,
+              user: current_user,
+              use_service: true,
+            ),
           with_replies: 2,
           use_service: true,
         )

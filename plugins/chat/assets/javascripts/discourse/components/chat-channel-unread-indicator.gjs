@@ -16,42 +16,42 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get urgentCount() {
-    if (this.#hasChannelMentions()) {
+    if (this.hasChannelMentions) {
       return this.args.channel.tracking.mentionCount;
     }
-    if (this.#hasWatchedThreads()) {
+    if (this.hasWatchedThreads) {
       return this.args.channel.tracking.watchedThreadsUnreadCount;
     }
     return this.args.channel.tracking.unreadCount;
   }
 
   get isUrgent() {
-    if (this.#onlyMentions()) {
-      return this.#hasChannelMentions();
+    if (this.onlyMentions) {
+      return this.hasChannelMentions;
     }
     return (
-      this.#isDirectMessage() ||
-      this.#hasChannelMentions() ||
-      this.#hasWatchedThreads()
+      this.isDirectMessage ||
+      this.hasChannelMentions ||
+      this.hasWatchedThreads
     );
   }
 
-  #isDirectMessage() {
+  get isDirectMessage() {
     return (
       this.args.channel.isDirectMessageChannel &&
       this.args.channel.tracking.unreadCount > 0
     );
   }
 
-  #hasChannelMentions() {
+  get hasChannelMentions() {
     return this.args.channel.tracking.mentionCount > 0;
   }
 
-  #hasWatchedThreads() {
+  get hasWatchedThreads() {
     return this.args.channel.tracking.watchedThreadsUnreadCount > 0;
   }
 
-  #onlyMentions() {
+  get onlyMentions() {
     return hasChatIndicator(this.currentUser).ONLY_MENTIONS;
   }
 
