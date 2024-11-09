@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category Banners", function (needs) {
   needs.user();
@@ -55,11 +55,9 @@ acceptance("Category Banners", function (needs) {
     await click(".dialog-footer .btn-primary");
     assert.dom(".dialog-body").doesNotExist("closes the modal");
     assert.dom(".category-read-only-banner").exists("shows a banner");
-    assert.strictEqual(
-      count(".category-read-only-banner .inner"),
-      1,
-      "it allows staff to embed html in the message"
-    );
+    assert
+      .dom(".category-read-only-banner .inner")
+      .exists({ count: 1 }, "allows staff to embed html in the message");
   });
 });
 

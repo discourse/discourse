@@ -2,7 +2,6 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   query,
   queryAll,
   updateCurrentUser,
@@ -193,11 +192,12 @@ acceptance("Tags listed by group", function (needs) {
   test("list the tags in groups", async function (assert) {
     await visit("/tags");
 
-    assert.strictEqual(
-      count(".tag-list"),
-      4,
-      "shows separate lists for the 3 groups and the ungrouped tags"
-    );
+    assert
+      .dom(".tag-list")
+      .exists(
+        { count: 4 },
+        "shows separate lists for the 3 groups and the ungrouped tags"
+      );
     assert.deepEqual(
       [...queryAll(".tag-list h3")].map((el) => el.innerText),
       ["Ford Cars", "Honda Cars", "Makes", "Other Tags"],
@@ -238,7 +238,7 @@ acceptance("Tags listed by group", function (needs) {
     assert.dom("#create-topic:disabled").doesNotExist();
 
     await visit("/tag/staff-only-tag");
-    assert.strictEqual(count("#create-topic:disabled"), 1);
+    assert.dom("#create-topic").isDisabled();
 
     updateCurrentUser({ moderator: true });
 
@@ -429,7 +429,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/planters");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists("show tag");
@@ -437,16 +437,10 @@ acceptance("Tag info", function (needs) {
       query(".tag-info .tag-associations").innerText.includes("Gardening"),
       "show tag group names"
     );
-    assert.strictEqual(
-      count(".tag-info .synonyms-list .tag-box"),
-      2,
-      "shows the synonyms"
-    );
-    assert.strictEqual(
-      count(".tag-info .badge-category"),
-      1,
-      "show the category"
-    );
+    assert
+      .dom(".tag-info .synonyms-list .tag-box")
+      .exists({ count: 2 }, "shows the synonyms");
+    assert.dom(".tag-info .badge-category").exists("show the category");
     assert.dom("#rename-tag").doesNotExist("can't rename tag");
     assert.dom("#edit-synonyms").doesNotExist("can't edit synonyms");
     assert.dom("#delete-tag").doesNotExist("can't delete tag");
@@ -456,7 +450,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/happy-monkey");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists("show tag");
@@ -478,7 +472,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/happy-monkey");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists("show tag");
@@ -595,7 +589,7 @@ acceptance("Tag info", function (needs) {
     updateCurrentUser({ moderator: false, admin: true });
 
     await visit("/tag/planters");
-    assert.strictEqual(count("#show-tag-info"), 1);
+    assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
     assert.dom(".edit-tag").exists("can rename tag");
@@ -603,23 +597,17 @@ acceptance("Tag info", function (needs) {
     assert.dom("#delete-tag").exists("can delete tag");
 
     await click("#edit-synonyms");
-    assert.strictEqual(
-      count(".unlink-synonym:visible"),
-      2,
-      "unlink UI is visible"
-    );
-    assert.strictEqual(
-      count(".delete-synonym:visible"),
-      2,
-      "delete UI is visible"
-    );
+    assert
+      .dom(".unlink-synonym")
+      .isVisible({ count: 2 }, "unlink UI is visible");
+    assert
+      .dom(".delete-synonym")
+      .isVisible({ count: 2 }, "delete UI is visible");
 
     await click(".unlink-synonym:nth-of-type(1)");
-    assert.strictEqual(
-      count(".tag-info .synonyms-list .tag-box"),
-      1,
-      "removed a synonym"
-    );
+    assert
+      .dom(".tag-info .synonyms-list .tag-box")
+      .exists({ count: 1 }, "removed a synonym");
   });
 
   test("composer will not set tags if user cannot create them", async function (assert) {

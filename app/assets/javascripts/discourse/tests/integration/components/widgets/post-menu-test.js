@@ -4,7 +4,6 @@ import { module, test } from "qunit";
 import { h } from "virtual-dom";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { createWidget } from "discourse/widgets/widget";
 
@@ -31,11 +30,9 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
 
-    assert.strictEqual(
-      count(".actions .extra-buttons .hot-coffee"),
-      1,
-      "It renders extra button"
-    );
+    assert
+      .dom(".actions .extra-buttons .hot-coffee")
+      .exists("renders extra button");
   });
 
   test("add extra button with feedback", async function (assert) {
@@ -67,17 +64,11 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     await click(".hot-coffee");
 
     assert.strictEqual(testPost.id, 123, "callback was called with post");
-    assert.strictEqual(
-      count(".post-action-feedback-button"),
-      1,
-      "It renders feedback"
-    );
+    assert.dom(".post-action-feedback-button").exists("renders feedback");
 
-    assert.strictEqual(
-      count(".actions .extra-buttons .hot-coffee"),
-      1,
-      "It renders extra button"
-    );
+    assert
+      .dom(".actions .extra-buttons .hot-coffee")
+      .exists("renders extra button");
   });
 
   test("removes button based on callback", async function (assert) {

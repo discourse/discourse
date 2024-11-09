@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -38,7 +34,7 @@ acceptance("Group - Anonymous", function (needs) {
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
     assert.ok(query(".topic-list"), "it shows the topic list");
-    assert.strictEqual(count(".topic-list-item"), 2, "it lists stream items");
+    assert.dom(".topic-list-item").exists({ count: 2 }, "lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
@@ -203,7 +199,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-message-button");
 
-    assert.strictEqual(count("#reply-control"), 1, "it opens the composer");
+    assert.dom("#reply-control").exists("opens the composer");
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
       privateMessageUsers.header().value(),
@@ -249,17 +245,13 @@ acceptance("Group - Authenticated", function (needs) {
   test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user is admin"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user is admin");
 
-    assert.strictEqual(
-      count(".group-message-button"),
-      1,
-      "it displays show group message button"
-    );
+    assert
+      .dom(".group-message-button")
+      .exists("displays show group message button");
     assert
       .dom(".group-info-name")
       .hasText("Awesome Team", "it should display the group name");
@@ -287,11 +279,9 @@ acceptance("Group - Authenticated", function (needs) {
   test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user can_admin_group"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user can_admin_group");
 
     await click(".group-members-add.btn");
 

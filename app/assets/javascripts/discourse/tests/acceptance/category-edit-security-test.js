@@ -2,7 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -19,7 +18,7 @@ acceptance("Category Edit - Security", function (needs) {
     const badgeName = firstRow.querySelector(".group-name-label").innerText;
     assert.strictEqual(badgeName, "everyone");
 
-    assert.strictEqual(count(".d-icon-square-check"), 3);
+    assert.dom(".d-icon-square-check").exists({ count: 3 });
   });
 
   test("removing a permission", async function (assert) {
@@ -82,11 +81,7 @@ acceptance("Category Edit - Security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("everyone");
 
-    assert.strictEqual(
-      count(".row-body"),
-      1,
-      "adds back the permission tp the list"
-    );
+    assert.dom(".row-body").exists("adds back the permission tp the list");
 
     const firstRow = query(".row-body");
 

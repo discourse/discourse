@@ -6,7 +6,7 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -266,7 +266,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(hbs`<MountWidget @widget="attach-test" />`);
 
-    assert.ok(count(".container"), "renders container");
+    assert.dom(".container").exists("renders container");
     assert.dom(".container .value").hasText("hello world");
   });
 
@@ -279,7 +279,7 @@ module("Integration | Component | Widget | base", function (hooks) {
       hbs`<MountWidget @widget="hbs-icon-test" @args={{this.args}} />`
     );
 
-    assert.strictEqual(count(".d-icon-arrow-down"), 1);
+    assert.dom(".d-icon-arrow-down").exists();
   });
 
   test("handlebars i18n", async function (assert) {
@@ -328,7 +328,7 @@ module("Integration | Component | Widget | base", function (hooks) {
       hbs`<MountWidget @widget="hbs-each-test" @args={{this.args}} />`
     );
 
-    assert.strictEqual(count("ul li"), 3);
+    assert.dom("ul li").exists({ count: 3 });
     assert.dom("ul li:nth-of-type(1)").hasText("one");
   });
 

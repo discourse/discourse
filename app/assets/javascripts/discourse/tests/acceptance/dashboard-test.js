@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Dashboard", function (needs) {
@@ -73,28 +73,24 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 1);
+    assert.dom(".dashboard .admin-reports-list__report").exists({ count: 1 });
 
     await fillIn(".dashboard .admin-reports-header__filter", "flags");
 
-    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 0);
+    assert.dom(".dashboard .admin-reports-list__report").doesNotExist();
 
     await click(".dashboard .navigation-item.security .navigation-link");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(
-      count(".dashboard .admin-reports-list__report"),
-      1,
-      "navigating back and forth resets filter"
-    );
+    assert
+      .dom(".dashboard .admin-reports-list__report")
+      .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".dashboard .admin-reports-header__filter", "activities");
 
-    assert.strictEqual(
-      count(".dashboard .admin-reports-list__report"),
-      1,
-      "filter is case insensitive"
-    );
+    assert
+      .dom(".dashboard .admin-reports-list__report")
+      .exists({ count: 1 }, "filter is case insensitive");
   });
 
   test("reports filters", async function (assert) {

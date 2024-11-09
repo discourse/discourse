@@ -1,11 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});
@@ -71,11 +67,9 @@ acceptance("Composer - Image Preview", function (needs) {
 
     await fillIn(".d-editor-input", uploads.join("\n"));
 
-    assert.strictEqual(
-      count(".button-wrapper"),
-      10,
-      "it adds correct amount of scaling button groups"
-    );
+    assert
+      .dom(".button-wrapper")
+      .exists({ count: 10 }, "adds correct number of scaling button groups");
 
     // Default
     uploads[0] =

@@ -4,11 +4,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -135,10 +131,9 @@ acceptance("User Preferences - Interface", function (needs) {
     assert.strictEqual(selectKit(".theme .select-kit").header().value(), "2");
 
     await selectKit(".light-color-scheme .select-kit").expand();
-    assert.strictEqual(
-      count(".light-color-scheme .select-kit .select-kit-row"),
-      2
-    );
+    assert
+      .dom(".light-color-scheme .select-kit .select-kit-row")
+      .exists({ count: 2 });
 
     document.querySelector("meta[name='discourse_theme_id']").remove();
   });

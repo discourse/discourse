@@ -2,7 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   fakeTime,
   loggedInUser,
   queryAll,
@@ -78,11 +77,9 @@ acceptance("User notification schedule", function (needs) {
       "None",
       "set monday label to none"
     );
-    assert.strictEqual(
-      count(".day.Monday .select-kit.single-select"),
-      1,
-      "The end time input is hidden"
-    );
+    assert
+      .dom(".day.Monday .select-kit.single-select")
+      .exists({ count: 1 }, "the end time input is hidden");
   });
 
   test("If start time is after end time, end time gets bumped 30 minutes past start time", async function (assert) {
