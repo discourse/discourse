@@ -20,16 +20,16 @@ const animatedImageCooked =
 
 const externalImageCooked =
   "<p>written text</p>" +
-  '<p><a href="http://cat1.com" class="onebox"><img src=""></img></a></p>' +
+  '<p><a href="http://cat1.com" class="onebox"><img src="/images/d-logo-sketch-small.png" width=8" height="8"></img></a></p>' +
   "<p>more written text</p>" +
-  '<p><a href="http://cat2.com" class="onebox"><img src=""></img></a></p>' +
+  '<p><a href="http://cat2.com" class="onebox"><img src="/images/d-logo-sketch-small.png" width=8" height="8"></img></a></p>' +
   "<p>and even more</p>";
 
 const imageCooked =
   "<p>written text</p>" +
-  '<p><img src="/images/avatar.png" alt="shows alt"></p>' +
+  '<p><img src="/images/avatar.png" alt="shows alt" width="8" height="8"></p>' +
   "<p>more written text</p>" +
-  '<p><img src="/images/d-logo-sketch-small.png" alt=""></p>' +
+  '<p><img src="/images/d-logo-sketch-small.png" alt="" width="8" height="8"></p>' +
   "<p>and even more</p>" +
   '<p><img src="/images/d-logo-sketch.png" class="emoji"></p>';
 
@@ -209,7 +209,14 @@ module(
 
     test("collapses and expands images", async function (assert) {
       this.set("cooked", imageTextCooked);
-      this.set("uploads", [{ original_filename: "tomtom.png" }]);
+      this.set("uploads", [
+        {
+          original_filename: "tomtom.png",
+          url: "images/d-logo-sketch-small.png",
+          width: 16,
+          height: 16,
+        },
+      ]);
 
       await render(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
