@@ -473,7 +473,7 @@ $mobile-breakpoint: 700px;
   }
 
   .username {
-    input {
+    input[type="text"] {
       min-width: 15em;
       @media screen and (max-width: 500px) {
         box-sizing: border-box;

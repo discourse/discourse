@@ -402,6 +402,22 @@ class Admin::UsersController < Admin::StaffController
     end
   end
 
+  def destroy_bulk
+    hijack do
+      User::BulkDestroy.call(service_params) do
+        on_success { render json: { deleted: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        end
+
+        on_failed_policy(:can_delete_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
+        end
+      end
+    end
+  end
+
   def badges
   end
 

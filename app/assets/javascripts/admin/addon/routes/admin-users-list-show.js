@@ -24,6 +24,8 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
           listFilter: transition.to.queryParams.username,
           query: params.filter,
           refreshing: false,
+          bulkSelectedUsers: null,
+          displayBulkActions: false,
         });
 
         controller.resetFilters();

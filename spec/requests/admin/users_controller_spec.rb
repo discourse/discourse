@@ -1435,6 +1435,67 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#destroy_bulk" do
+    fab!(:deleted_users) { Fabricate.times(3, :user) }
+
+    shared_examples "bulk user deletion possible" do
+      it "can delete multiple users" do
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: deleted_users.map(&:id) }
+        expect(response.status).to eq(200)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
+      end
+
+      it "doesn't allow deleting a user that can't be deleted" do
+        deleted_users[0].update!(admin: true)
+
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: deleted_users.map(&:id) }
+        expect(response.status).to eq(403)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(3)
+      end
+
+      it "doesn't accept more than 100 user ids" do
+        delete "/admin/users/destroy-bulk.json",
+               params: {
+                 user_ids: deleted_users.map(&:id) + (1..101).to_a,
+               }
+        expect(response.status).to eq(400)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(3)
+      end
+
+      it "doesn't fail when a user id doesn't exist" do
+        user_id = (User.unscoped.maximum(:id) || 0) + 1
+        delete "/admin/users/destroy-bulk.json",
+               params: {
+                 user_ids: deleted_users.map(&:id).push(user_id),
+               }
+        expect(response.status).to eq(200)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "bulk user deletion possible"
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "bulk user deletion possible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "responds with a 404 and doesn't delete users" do
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: deleted_users.map(&:id) }
+        expect(response.status).to eq(404)
+        expect(User.where(id: deleted_users.map(&:id)).count).to eq(3)
+      end
+    end
+  end
+
   describe "#activate" do
     fab!(:reg_user) { Fabricate(:inactive_user) }
 

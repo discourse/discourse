@@ -19,19 +19,46 @@
   {{/if}}
 </div>
 
-<div class="username controls">
-  <TextField
-    @value={{this.listFilter}}
-    @placeholder={{this.searchHint}}
-    @title={{this.searchHint}}
-  />
+<div class="admin-users-list__controls">
+  <div class="username">
+    <TextField
+      @value={{this.listFilter}}
+      @placeholder={{this.searchHint}}
+      @title={{this.searchHint}}
+    />
+  </div>
+  {{#if this.displayBulkActions}}
+    <div class="bulk-actions-dropdown">
+      <DMenu @autofocus={{true}} @identifier="bulk-select-admin-users-dropdown">
+        <:trigger>
+          <span class="d-button-label">
+            {{i18n "admin.users.bulk_actions.title"}}
+          </span>
+          {{dIcon "angle-down"}}
+        </:trigger>
+
+        <:content>
+          <DropdownMenu as |dropdown|>
+            <dropdown.item>
+              <DButton
+                @translatedLabel={{i18n "admin.users.bulk_actions.delete"}}
+                @icon="trash-can"
+                @action={{this.performBulkDelete}}
+                class="bulk-delete btn-danger"
+              />
+            </dropdown.item>
+          </DropdownMenu>
+        </:content>
+      </DMenu>
+    </div>
+  {{/if}}
 </div>
 <LoadMore
   @selector=".directory-table .directory-table__cell"
   @action={{action "loadMore"}}
   class="users-list-container"
 >
-  {{#if this.model}}
+  {{#if this.users}}
     <ResponsiveTable
       @className="users-list"
       @aria-label={{this.title}}
@@ -42,18 +69,24 @@
           ", minmax(min-content, 1fr))"
         )
       }}
-      @updates={{this.model.email}}
     >
       <:header>
-        <TableHeaderToggle
-          @onToggle={{this.updateOrder}}
-          @field="username"
-          @labelKey="username"
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{true}}
-          class="directory-table__column-header--username"
-        />
+        <div class="directory-table__column-header-wrapper">
+          <DButton
+            class="btn-flat bulk-select"
+            @icon="list-check"
+            @action={{this.toggleBulkSelect}}
+          />
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="username"
+            @labelKey="username"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+            class="directory-table__column-header--username"
+          />
+        </div>
         <TableHeaderToggle
           @onToggle={{this.updateOrder}}
           @field="email"
@@ -130,14 +163,23 @@
       </:header>
 
       <:body>
-        {{#each this.model as |user|}}
+        {{#each this.users as |user|}}
           <div
             class="user
               {{user.selected}}
               {{unless user.active 'not-activated'}}
               directory-table__row"
+            data-user-id={{user.id}}
           >
             <div class="directory-table__cell username">
+              {{#if this.bulkSelect}}
+                <input
+                  type="checkbox"
+                  class="directory-table__cell-bulk-select"
+                  checked={{eq (get this.bulkSelectedUsers user.id) 1}}
+                  {{on "click" (fn this.bulkSelectItemToggle user.id)}}
+                />
+              {{/if}}
               <a
                 class="avatar"
                 href={{user.path}}

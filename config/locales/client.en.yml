@@ -6639,6 +6639,15 @@ en:
         status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
+        bulk_actions:
+          title: "Bulk actions"
+          delete: "Delete users…"
+          confirm_delete_title:
+            one: "Delete %{count} user?"
+            other: "Delete %{count} users?"
+          confirm_delete_body:
+            one: "Are you sure you want to delete %{count} user? This action is permanent and cannot be reversed."
+            other: "Are you sure you want to delete %{count} users? This action is permanent and cannot be reversed."
         nav:
           new: "New"
           active: "Active"
