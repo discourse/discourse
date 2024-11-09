@@ -123,6 +123,15 @@ shared_examples "login scenarios" do |login_page_object|
       login_form.fill(username: "john", password: "supersecurepassword").click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+
+    it "shows login form when visiting /login route directly" do
+      skip "Only applies on full page login" if !SiteSetting.experimental_full_page_login
+
+      visit "/login"
+
+      expect(page).to have_css("#login-account-name")
+      expect(page).to have_css("#login-form")
+    end
   end
 
   context "with two-factor authentication" do

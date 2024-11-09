@@ -8,6 +8,10 @@ export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
   @service router;
 
+  queryParams = {
+    welcome: { refreshModel: true },
+  };
+
   beforeModel() {
     if (
       !this.siteSettings.login_required &&
@@ -33,9 +37,5 @@ export default class LoginRoute extends DiscourseRoute {
     controller.set("canSignUp", canSignUp);
     controller.set("flashType", "");
     controller.set("flash", "");
-
-    if (this.siteSettings.login_required) {
-      controller.set("showLogin", false);
-    }
   }
 }

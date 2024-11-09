@@ -35,7 +35,6 @@ export default class LoginPageController extends Controller {
   @tracked loggingIn = false;
   @tracked loggedIn = false;
   @tracked showLoginButtons = true;
-  @tracked showLogin = true;
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
@@ -54,6 +53,7 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+  queryParams = ["welcome"];
 
   get isAwaitingApproval() {
     return (
@@ -118,7 +118,7 @@ export default class LoginPageController extends Controller {
 
   @action
   showLoginPage() {
-    this.showLogin = true;
+    this.router.transitionTo("login", { queryParams: { welcome: undefined } });
   }
 
   @action
