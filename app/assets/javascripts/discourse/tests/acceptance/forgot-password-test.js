@@ -19,10 +19,9 @@ acceptance("Forgot password", function (needs) {
     await click("header .login-button");
     await click("#forgot-password-link");
 
-    assert.ok(
-      query(".forgot-password-reset").disabled,
-      "it should disable the button until the field is filled"
-    );
+    assert
+      .dom(".forgot-password-reset")
+      .isDisabled("disables the button until the field is filled");
 
     await fillIn("#username-or-email", "someuser");
     await click(".forgot-password-reset");
@@ -94,10 +93,9 @@ acceptance(
       await click("header .login-button");
       await click("#forgot-password-link");
 
-      assert.ok(
-        query(".forgot-password-reset").disabled,
-        "it should disable the button until the field is filled"
-      );
+      assert
+        .dom(".forgot-password-reset")
+        .isDisabled("disables the button until the field is filled");
 
       await fillIn("#username-or-email", "someuser");
       await click(".forgot-password-reset");
