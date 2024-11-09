@@ -20,8 +20,11 @@ acceptance("Plugin Outlet - Multi Template", function (needs) {
 
   test("Renders a template into the outlet", async function (assert) {
     await visit("/u/eviltrout");
-    assert.dom(".user-profile-primary-outlet").hasClass("hello");
-    assert.dom(".user-profile-primary-outlet").hasClass("goodbye");
+    assert.dom(".user-profile-primary-outlet").exists({ count: 2 });
+    assert.dom(".user-profile-primary-outlet.hello").exists("has class names");
+    assert
+      .dom(".user-profile-primary-outlet.goodbye")
+      .exists("has class names");
     assert.dom(".hello-span").hasText("Hello", "renders into the outlet");
     assert.dom(".bye-span").hasText("Goodbye", "renders into the outlet");
   });
