@@ -132,6 +132,21 @@ shared_examples "login scenarios" do |login_page_object|
       expect(page).to have_css("#login-account-name")
       expect(page).to have_css("#login-form")
     end
+
+    it "shows login form when visiting non-root route" do
+      skip "Only applies on full page login" if !SiteSetting.experimental_full_page_login
+      visit "/about"
+
+      expect(page).to have_css("#login-account-name")
+      expect(page).to have_css("#login-form")
+      expect(page).to have_current_path("/login")
+
+      EmailToken.confirm(Fabricate(:email_token, user: user).token)
+      login_form.fill(username: "john", password: "supersecurepassword").click_login
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      expect(page).to have_current_path("/about")
+    end
   end
 
   context "with two-factor authentication" do
