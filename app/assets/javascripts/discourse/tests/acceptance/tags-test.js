@@ -235,7 +235,7 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
-    assert.dom("#create-topic:disabled").doesNotExist();
+    assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
     assert.dom("#create-topic").isDisabled();
@@ -243,10 +243,10 @@ acceptance("Tags listed by group", function (needs) {
     updateCurrentUser({ moderator: true });
 
     await visit("/tag/regular-tag");
-    assert.dom("#create-topic:disabled").doesNotExist();
+    assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
-    assert.dom("#create-topic:disabled").doesNotExist();
+    assert.dom("#create-topic").isEnabled();
   });
 });
 

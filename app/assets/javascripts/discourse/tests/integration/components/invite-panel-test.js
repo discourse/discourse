@@ -31,7 +31,7 @@ module("Integration | Component | invite-panel", function (hooks) {
     await input.expand();
     await input.fillInFilter("eviltrout@example.com");
     await input.selectRowByValue("eviltrout@example.com");
-    assert.dom(".send-invite:disabled").doesNotExist();
+    assert.dom(".send-invite").isEnabled();
 
     await click(".generate-invite-link");
     assert.strictEqual(
