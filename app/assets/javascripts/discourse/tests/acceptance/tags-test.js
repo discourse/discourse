@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  invisible,
   query,
   queryAll,
   updateCurrentUser,
@@ -118,12 +117,12 @@ acceptance("Tags", function (needs) {
     await visit("/tag/test/l/unread");
     await click("button.dismiss-read");
     await click(".dismiss-read-modal button.btn-primary");
-    assert.ok(invisible(".dismiss-read-modal"));
+    assert.dom(".dismiss-read-modal").doesNotExist();
   });
 
   test("hide tag notifications menu", async function (assert) {
     await visit("/tags/c/faq/4/test");
-    assert.ok(invisible(".tag-notifications-button"));
+    assert.dom(".tag-notifications-button").doesNotExist();
   });
 });
 

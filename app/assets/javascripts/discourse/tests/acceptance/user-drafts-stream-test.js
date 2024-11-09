@@ -6,7 +6,6 @@ import {
   count,
   normalizeHtml,
   query,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Drafts", function (needs) {
@@ -17,7 +16,7 @@ acceptance("User Drafts", function (needs) {
     assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
 
     await click(".user-stream-item:first-child .remove-draft");
-    assert.ok(visible(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
     assert.strictEqual(
@@ -27,7 +26,7 @@ acceptance("User Drafts", function (needs) {
     );
 
     await visit("/");
-    assert.ok(visible("#create-topic"));
+    assert.dom("#create-topic").exists();
     assert
       .dom("#create-topic.open-draft")
       .doesNotExist("Open Draft button is not present");
