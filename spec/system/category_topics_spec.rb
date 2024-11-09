@@ -36,13 +36,13 @@ end
 describe "Viewing category topic list", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
 
-  context "when parent category has no_subcategories=true" do
+  context "when parent category has default_list_filter=none" do
     fab!(:parent_category) { Fabricate(:category_with_definition, default_list_filter: "none") }
     fab!(:subcategoryA) { Fabricate(:category_with_definition, parent_category: parent_category) }
     fab!(:topic) { Fabricate(:topic, category: subcategoryA) }
     fab!(:post) { create_post(topic: topic) }
 
-    it "shows the topic on the subcategory" do
+    it "lists the topic on the subcategory" do
       visit "/c/#{parent_category.slug}/#{subcategoryA.slug}"
       expect(topic_list).to have_topic(topic)
     end
