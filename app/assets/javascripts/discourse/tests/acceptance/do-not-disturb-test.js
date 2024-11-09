@@ -3,7 +3,6 @@ import { test } from "qunit";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
-  count,
   query,
   queryAll,
   updateCurrentUser,
@@ -55,12 +54,9 @@ acceptance("Do not disturb", function (needs) {
     await click("#quick-access-profile .do-not-disturb .btn");
 
     assert.dom(".do-not-disturb-modal").exists("DND modal is displayed");
-
-    assert.strictEqual(
-      count(".do-not-disturb-tile"),
-      4,
-      "There are 4 duration choices"
-    );
+    assert
+      .dom(".do-not-disturb-tile")
+      .exists({ count: 4 }, "there are 4 duration choices");
 
     await triggerKeyEvent(
       ".do-not-disturb-tile:nth-child(1)",

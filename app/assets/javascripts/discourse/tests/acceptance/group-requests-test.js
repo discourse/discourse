@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group Requests", function (needs) {
   let requests;
@@ -89,7 +85,7 @@ acceptance("Group Requests", function (needs) {
   test("Group Requests", async function (assert) {
     await visit("/g/Macdonald/requests");
 
-    assert.strictEqual(count(".group-members .group-member"), 2);
+    assert.dom(".group-members .group-member").exists({ count: 2 });
     assert.strictEqual(
       query(".group-members .directory-table__row:first-child .user-detail")
         .innerText.trim()

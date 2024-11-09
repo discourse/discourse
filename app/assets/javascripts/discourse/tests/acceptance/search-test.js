@@ -12,7 +12,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
-  count,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -286,7 +285,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "@admin");
 
-    assert.strictEqual(count(".search-menu-assistant-item"), 2);
+    assert.dom(".search-menu-assistant-item").exists({ count: 2 });
     assert.strictEqual(
       query(
         ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
@@ -513,13 +512,13 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     await click(document.activeElement);
 
-    assert.notStrictEqual(count(".search-menu .results .item"), 0);
+    assert.dom(".search-menu .results .item").exists();
 
     await fillIn("#search-term", "plans empty");
     await triggerKeyEvent("#search-term", "keyup", 13);
 
-    assert.strictEqual(count(".search-menu .results .item"), 0);
-    assert.strictEqual(count(".search-menu .results .no-results"), 1);
+    assert.dom(".search-menu .results .item").doesNotExist();
+    assert.dom(".search-menu .results .no-results").exists({ count: 1 });
     assert
       .dom(".search-menu .results .no-results")
       .hasText(I18n.t("search.no_results"));
@@ -1232,11 +1231,9 @@ acceptance("Search - assistant", function (needs) {
     await query("input#search-term").focus();
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.strictEqual(
-      count(".search-menu .search-result-topic"),
-      1,
-      "it passes the PM search context to the search query"
-    );
+    assert
+      .dom(".search-menu .search-result-topic")
+      .exists({ count: 1 }, "passes the PM search context to the search query");
   });
 
   test("topic results - updates search term when selecting a initial category option", async function (assert) {

@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -34,19 +30,15 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
 
     await click("button.bulk-clear-all");
 
-    assert.strictEqual(
-      count("input.bulk-select:checked"),
-      0,
-      "Clear all should clear all selection"
-    );
+    assert
+      .dom("input.bulk-select:checked")
+      .doesNotExist("Clear all should clear all selection");
 
     await click("button.bulk-select-all");
 
-    assert.strictEqual(
-      count("input.bulk-select:checked"),
-      2,
-      "Select all should select all topics"
-    );
+    assert
+      .dom("input.bulk-select:checked")
+      .exists({ count: 2 }, "Select all should select all topics");
 
     await dropdown.expand();
     await dropdown.selectRowByValue("delete-bookmarks");

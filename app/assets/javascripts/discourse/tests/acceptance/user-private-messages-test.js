@@ -10,7 +10,6 @@ import {
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  count,
   publishToMessageBus,
   query,
   updateCurrentUser,
@@ -31,11 +30,7 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/eviltrout/messages");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        1,
-        "displays the topic list"
-      );
+      assert.dom(".topic-list-item").exists("displays the topic list");
 
       assert
         .dom(".group-notifications-button")
@@ -469,11 +464,9 @@ acceptance(
       await publishUnreadToMessageBus({ topicId: 2, userId: 5 });
       await publishUnreadToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
@@ -484,49 +477,39 @@ acceptance(
         "displays the right count"
       );
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing personal unread messages", async function (assert) {
       await visit("/u/charlie/messages/unread");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing group unread messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/unread");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing new messages", async function (assert) {
@@ -536,11 +519,9 @@ acceptance(
       await publishNewToMessageBus({ topicId: 2, userId: 5 });
       await publishNewToMessageBus({ topicId: 3, userId: 5 });
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
@@ -550,47 +531,37 @@ acceptance(
         "displays the right count"
       );
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing personal new messages", async function (assert) {
       await visit("/u/charlie/messages/new");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("dismissing new group messages", async function (assert) {
       await visit("/u/charlie/messages/group/awesome_group/new");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        0,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .doesNotExist("displays the right topic list");
     });
 
     test("viewing messages when highest read cache has been set for a topic", async function (assert) {
@@ -612,11 +583,9 @@ acceptance(
     test("viewing messages", async function (assert) {
       await visit("/u/charlie/messages");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        3,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 3 }, "displays the right topic list");
 
       assert.strictEqual(
         query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
@@ -626,11 +595,9 @@ acceptance(
 
       await visit("/u/charlie/messages/group/awesome_group");
 
-      assert.strictEqual(
-        count(".topic-list-item"),
-        2,
-        "displays the right topic list"
-      );
+      assert
+        .dom(".topic-list-item")
+        .exists({ count: 2 }, "displays the right topic list");
 
       assert
         .dom(".group-notifications-button")

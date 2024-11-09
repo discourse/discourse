@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
@@ -28,7 +27,7 @@ module("Integration | Component | slow-mode-info", function (hooks) {
 
     await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    assert.strictEqual(count(".slow-mode-heading"), 1);
+    assert.dom(".slow-mode-heading").exists();
   });
 
   test("staff and TL4 users can disable slow mode", async function (assert) {
@@ -41,7 +40,7 @@ module("Integration | Component | slow-mode-info", function (hooks) {
       hbs`<SlowModeInfo @topic={{this.topic}} @user={{this.user}} />`
     );
 
-    assert.strictEqual(count(".slow-mode-remove"), 1);
+    assert.dom(".slow-mode-remove").exists();
   });
 
   test("regular users can't disable slow mode", async function (assert) {
@@ -56,6 +55,6 @@ module("Integration | Component | slow-mode-info", function (hooks) {
 
     assert
       .dom(".slow-mode-remove")
-      .doesNotExist("it doesn't let you disable slow mode");
+      .doesNotExist("doesn't let you disable slow mode");
   });
 });

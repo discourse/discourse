@@ -3,7 +3,6 @@ import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   acceptance,
-  count,
   publishToMessageBus,
   query,
   queryAll,
@@ -101,13 +100,11 @@ acceptance(
         )
         .exists("displays the personal message inbox link");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        1,
-        "only displays the personal message inbox link"
-      );
+        )
+        .exists({ count: 1 }, "only displays the personal message inbox link");
 
       await click(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
@@ -119,13 +116,14 @@ acceptance(
         )
         .exists("personal message inbox link is marked as active");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        5,
-        "expands and displays the links for personal messages"
-      );
+        )
+        .exists(
+          { count: 5 },
+          "expands and displays the links for personal messages"
+        );
     });
 
     ["new", "archive", "sent", "unread"].forEach((type) => {
@@ -146,13 +144,14 @@ acceptance(
           `it should transition to user's ${type} personal messages`
         );
 
-        assert.strictEqual(
-          count(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
-          ),
-          2,
-          "only two links are marked as active in the sidebar"
-        );
+          )
+          .exists(
+            { count: 2 },
+            "only two links are marked as active in the sidebar"
+          );
 
         assert
           .dom(
@@ -210,41 +209,36 @@ acceptance(
 
       await visit("/u/eviltrout/messages/group/GrOuP1");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        6,
-        "expands and displays the links for group1 group messages"
-      );
+        )
+        .exists(
+          { count: 6 },
+          "expands and displays the links for group1 group messages"
+        );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
-        ),
-        4,
-        "expands the links for group1 group messages"
-      );
+        )
+        .exists({ count: 4 }, "expands the links for group1 group messages");
 
       await click(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group3"
       );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
-        ),
-        1,
-        "collapses the links for group1 group messages"
-      );
+        )
+        .exists({ count: 1 }, "collapses the links for group1 group messages");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group3"
-        ),
-        4,
-        "expands the links for group3 group messages"
-      );
+        )
+        .exists({ count: 4 }, "expands the links for group3 group messages");
     });
 
     ["new", "archive", "unread"].forEach((type) => {
@@ -282,13 +276,14 @@ acceptance(
           `it should transition to user's ${type} personal messages`
         );
 
-        assert.strictEqual(
-          count(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
-          ),
-          2,
-          "only two links are marked as active in the sidebar"
-        );
+          )
+          .exists(
+            { count: 2 },
+            "only two links are marked as active in the sidebar"
+          );
 
         assert
           .dom(
@@ -316,29 +311,29 @@ acceptance(
 
       await visit("/t/130");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        5,
-        "5 section links are displayed"
-      );
+        )
+        .exists({ count: 5 }, "5 section links are displayed");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
-        ),
-        1,
-        "personal messages inbox filter links are not shown"
-      );
+        )
+        .exists(
+          { count: 1 },
+          "personal messages inbox filter links are not shown"
+        );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
-        ),
-        4,
-        "foo_group messages inbox filter links are shown"
-      );
+        )
+        .exists(
+          { count: 4 },
+          "foo_group messages inbox filter links are shown"
+        );
     });
 
     test("viewing personal message topic", async function (assert) {
@@ -353,29 +348,26 @@ acceptance(
 
       await visit("/t/34");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        6,
-        "6 section links are displayed"
-      );
+        )
+        .exists({ count: 6 }, "6 section links are displayed");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
-        ),
-        5,
-        "personal messages inbox filter links are shown"
-      );
+        )
+        .exists({ count: 5 }, "personal messages inbox filter links are shown");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
-        ),
-        1,
-        "foo_group messages inbox filter links are not shown"
-      );
+        )
+        .exists(
+          { count: 1 },
+          "foo_group messages inbox filter links are not shown"
+        );
     });
 
     test("new and unread counts for group messages", async function (assert) {

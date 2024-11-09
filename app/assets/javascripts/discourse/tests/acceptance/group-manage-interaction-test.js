@@ -2,7 +2,6 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -20,35 +19,25 @@ acceptance("Managing Group Interaction Settings", function (needs) {
 
     await visit("/g/alternative-group/manage/interaction");
 
-    assert.strictEqual(
-      count(".groups-form-visibility-level"),
-      1,
-      "it should display visibility level selector"
-    );
+    assert
+      .dom(".groups-form-visibility-level")
+      .exists("displays visibility level selector");
 
-    assert.strictEqual(
-      count(".groups-form-mentionable-level"),
-      1,
-      "it should display mentionable level selector"
-    );
+    assert
+      .dom(".groups-form-mentionable-level")
+      .exists("displays mentionable level selector");
 
-    assert.strictEqual(
-      count(".groups-form-messageable-level"),
-      1,
-      "it should display messageable level selector"
-    );
+    assert
+      .dom(".groups-form-messageable-level")
+      .exists("displays messageable level selector");
 
-    assert.strictEqual(
-      count(".groups-form-incoming-email"),
-      1,
-      "it should display incoming email input"
-    );
+    assert
+      .dom(".groups-form-incoming-email")
+      .exists("displays incoming email input");
 
-    assert.strictEqual(
-      count(".groups-form-default-notification-level"),
-      1,
-      "it should display default notification level input"
-    );
+    assert
+      .dom(".groups-form-default-notification-level")
+      .exists("displays default notification level input");
   });
 
   test("As a group owner", async function (assert) {
@@ -60,35 +49,25 @@ acceptance("Managing Group Interaction Settings", function (needs) {
 
     await visit("/g/discourse/manage/interaction");
 
-    assert.strictEqual(
-      count(".groups-form-visibility-level"),
-      0,
-      "it should not display visibility level selector"
-    );
+    assert
+      .dom(".groups-form-visibility-level")
+      .doesNotExist("does not display visibility level selector");
 
-    assert.strictEqual(
-      count(".groups-form-mentionable-level"),
-      1,
-      "it should display mentionable level selector"
-    );
+    assert
+      .dom(".groups-form-mentionable-level")
+      .exists("displays mentionable level selector");
 
-    assert.strictEqual(
-      count(".groups-form-messageable-level"),
-      1,
-      "it should display messageable level selector"
-    );
+    assert
+      .dom(".groups-form-messageable-level")
+      .exists("displays messageable level selector");
 
-    assert.strictEqual(
-      count(".groups-form-incoming-email"),
-      0,
-      "it should not display incoming email input"
-    );
+    assert
+      .dom(".groups-form-incoming-email")
+      .doesNotExist("does not display incoming email input");
 
-    assert.strictEqual(
-      count(".groups-form-default-notification-level"),
-      1,
-      "it should display default notification level input"
-    );
+    assert
+      .dom(".groups-form-default-notification-level")
+      .exists("displays default notification level input");
   });
 });
 

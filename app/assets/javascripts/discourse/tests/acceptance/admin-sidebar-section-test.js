@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Admin Sidebar - Sections", function (needs) {
@@ -96,30 +96,26 @@ acceptance("Admin Sidebar - Sections", function (needs) {
     await click(".sidebar-toggle-all-sections");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.strictEqual(count(".admin-reports-list__report"), 1);
+    assert.dom(".admin-reports-list__report").exists({ count: 1 });
 
     await fillIn(".admin-reports-header__filter", "flags");
 
-    assert.strictEqual(count(".admin-reports-list__report"), 0);
+    assert.dom(".admin-reports-list__report").doesNotExist();
 
     await click(
       ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
     );
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
-    assert.strictEqual(
-      count(".admin-reports-list__report"),
-      1,
-      "navigating back and forth resets filter"
-    );
+    assert
+      .dom(".admin-reports-list__report")
+      .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".admin-reports-header__filter", "activities");
 
-    assert.strictEqual(
-      count(".admin-reports-list__report"),
-      1,
-      "filter is case insensitive"
-    );
+    assert
+      .dom(".admin-reports-list__report")
+      .exists({ count: 1 }, "filter is case insensitive");
   });
 });
 

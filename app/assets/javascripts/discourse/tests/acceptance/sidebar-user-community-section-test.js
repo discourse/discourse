@@ -10,7 +10,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
-  count,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -111,13 +110,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the latest page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -143,13 +140,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the latest page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -185,13 +180,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the new page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -235,13 +228,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the unread page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -275,13 +266,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the users url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -381,13 +370,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the groups url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -525,13 +512,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "should transition to the user's activity url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -567,13 +552,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "transitions to the user's activity drafts url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -674,13 +657,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("visiting top route", async function (assert) {
     await visit("/top");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -692,13 +673,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("visiting unread route", async function (assert) {
     await visit("/unread");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -710,13 +689,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("visiting new route", async function (assert) {
     await visit("/new");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(

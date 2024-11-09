@@ -12,7 +12,6 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   chromeTest,
-  count,
   publishToMessageBus,
   query,
   selectText,
@@ -141,7 +140,7 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.strictEqual(count("button.wiki"), 1, "it shows the wiki icon");
+    assert.dom("button.wiki").exists("shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {

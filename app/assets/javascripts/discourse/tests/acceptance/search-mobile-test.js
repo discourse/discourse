@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
@@ -31,7 +27,7 @@ acceptance("Search - Mobile", function (needs) {
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.strictEqual(count(".fps-topic"), 1, "has one post");
+    assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
 
     assert
       .dom(".advanced-filters[open]")
