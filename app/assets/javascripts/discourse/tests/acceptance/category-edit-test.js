@@ -7,7 +7,6 @@ import {
   acceptance,
   count,
   query,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
@@ -197,7 +196,7 @@ acceptance("Category Edit", function (needs) {
     );
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!visible(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
   });
 
   test("Nested subcategory error when saving", async function (assert) {
@@ -217,33 +216,31 @@ acceptance("Category Edit", function (needs) {
     );
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!visible(".dialog-body"));
+    assert.dom(".dialog-body").doesNotExist();
 
-    assert.ok(
-      !visible(".category-breadcrumb .category-drop-header[data-value='1002']"),
-      "it doesn't show the nested subcategory in the breadcrumb"
-    );
+    assert
+      .dom(".category-breadcrumb .category-drop-header[data-value='1002']")
+      .doesNotExist("doesn't show the nested subcategory in the breadcrumb");
 
-    assert.ok(
-      !visible(".category-breadcrumb .single-select-header[data-value='1002']"),
-      "it clears the category chooser"
-    );
+    assert
+      .dom(".category-breadcrumb .single-select-header[data-value='1002']")
+      .doesNotExist("clears the category chooser");
   });
 
   test("Subcategory list settings", async function (assert) {
     await visit("/c/bug/edit/settings");
 
-    assert.ok(
-      !visible(".subcategory-list-style-field"),
-      "subcategory list style isn't visible by default"
-    );
+    assert
+      .dom(".subcategory-list-style-field")
+      .doesNotExist("subcategory list style isn't visible by default");
 
     await click(".show-subcategory-list-field input[type=checkbox]");
 
-    assert.ok(
-      visible(".subcategory-list-style-field"),
-      "subcategory list style is shown if show subcategory list is checked"
-    );
+    assert
+      .dom(".subcategory-list-style-field")
+      .exists(
+        "subcategory list style is shown if show subcategory list is checked"
+      );
 
     await visit("/c/bug/edit/general");
 
@@ -255,14 +252,14 @@ acceptance("Category Edit", function (needs) {
 
     await visit("/c/bug/edit/settings");
 
-    assert.ok(
-      !visible(".show-subcategory-list-field"),
-      "show subcategory list isn't visible for child categories"
-    );
-    assert.ok(
-      !visible(".subcategory-list-style-field"),
-      "subcategory list style isn't visible for child categories"
-    );
+    assert
+      .dom(".show-subcategory-list-field")
+      .doesNotExist("show subcategory list isn't visible for child categories");
+    assert
+      .dom(".subcategory-list-style-field")
+      .doesNotExist(
+        "subcategory list style isn't visible for child categories"
+      );
   });
 });
 

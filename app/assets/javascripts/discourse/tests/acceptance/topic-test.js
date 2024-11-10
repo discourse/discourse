@@ -16,7 +16,6 @@ import {
   publishToMessageBus,
   query,
   selectText,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
@@ -229,16 +228,14 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
-    assert.ok(
-      visible(".delete-topic-confirm-modal"),
-      "it shows the delete confirmation modal"
-    );
+    assert
+      .dom(".delete-topic-confirm-modal")
+      .exists("shows the delete confirmation modal");
 
     await click(".delete-topic-confirm-modal .btn-primary");
-    assert.ok(
-      !visible(".delete-topic-confirm-modal"),
-      "it hides the delete confirmation modal"
-    );
+    assert
+      .dom(".delete-topic-confirm-modal")
+      .doesNotExist("hides the delete confirmation modal");
     await click(".widget-button.delete");
     await click(".delete-topic-confirm-modal .btn-danger");
     await click(".toggle-admin-menu");

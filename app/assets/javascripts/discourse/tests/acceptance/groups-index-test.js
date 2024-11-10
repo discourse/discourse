@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  invisible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Groups", function () {
   test("Browsing Groups", async function (assert) {
@@ -28,7 +24,7 @@ acceptance("Groups", function () {
     assert.dom(".modal.login-modal").exists("shows the login modal");
 
     await click(".login-modal .modal-close");
-    assert.ok(invisible(".modal.login-modal"), "it closes the login modal");
+    assert.dom(".modal.login-modal").doesNotExist("closes the login modal");
 
     await click(".group-index-request");
     assert.dom(".modal.login-modal").exists("shows the login modal");

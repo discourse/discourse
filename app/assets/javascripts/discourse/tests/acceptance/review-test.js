@@ -6,7 +6,6 @@ import {
   loggedInUser,
   publishToMessageBus,
   query,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
@@ -63,7 +62,7 @@ acceptance("Review", function (needs) {
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_delete");
 
-    assert.ok(visible(".reject-reason-reviewable-modal"));
+    assert.dom(".reject-reason-reviewable-modal").exists();
     assert.ok(
       query(
         ".reject-reason-reviewable-modal .d-modal__title"
@@ -75,7 +74,7 @@ acceptance("Review", function (needs) {
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
-    assert.ok(visible(".reject-reason-reviewable-modal"));
+    assert.dom(".reject-reason-reviewable-modal").exists();
     assert.ok(
       query(
         ".reject-reason-reviewable-modal .d-modal__title"

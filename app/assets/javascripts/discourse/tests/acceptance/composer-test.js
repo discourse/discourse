@@ -25,11 +25,9 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
-  invisible,
   metaModifier,
   query,
   updateCurrentUser,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -279,11 +277,11 @@ acceptance("Composer", function (needs) {
     await fillIn("#reply-title", "Internationalization Localization");
     await fillIn(".d-editor-input", "enqueue this content please");
     await click("#reply-control button.create");
-    assert.ok(visible(".d-modal"), "it pops up a modal");
+    assert.dom(".d-modal").exists("pops up a modal");
     assert.strictEqual(currentURL(), "/", "it doesn't change routes");
 
     await click(".d-modal__footer button");
-    assert.ok(invisible(".d-modal"), "the modal can be dismissed");
+    assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
   });
 
   test("Can display a message and route to a URL", async function (assert) {
@@ -350,7 +348,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.edit");
 
     await click(".d-modal__footer button.keep-editing");
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.dom(".discard-draft-modal.modal").doesNotExist();
     assert.strictEqual(
       query(".d-editor-input").value,
       "this is the content of my reply",
@@ -358,9 +356,9 @@ acceptance("Composer", function (needs) {
     );
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(invisible(".d-modal__footer button.save-draft"));
+    assert.dom(".d-modal__footer button.save-draft").doesNotExist();
     await click(".d-modal__footer button.discard-draft");
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.dom(".discard-draft-modal.modal").doesNotExist();
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -377,10 +375,10 @@ acceptance("Composer", function (needs) {
 
     await visit("/t/this-is-a-test-topic/9");
     await click("#topic-footer-buttons .create");
-    assert.ok(visible(".discard-draft-modal.modal"));
+    assert.dom(".discard-draft-modal.modal").exists();
 
     await click(".d-modal__footer button.keep-editing");
-    assert.ok(invisible(".discard-draft-modal.modal"));
+    assert.dom(".discard-draft-modal.modal").doesNotExist();
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -403,7 +401,7 @@ acceptance("Composer", function (needs) {
       "/t/1-3-0beta9-no-rate-limit-popups/28830"
     );
     await click("#reply-control button.create");
-    assert.ok(visible(".reply-where-modal"), "it pops up a modal");
+    assert.dom(".reply-where-modal").exists("pops up a modal");
 
     await click(".btn-reply-here");
     assert
@@ -430,7 +428,7 @@ acceptance("Composer", function (needs) {
 
     await click(".d-modal__footer button.keep-editing");
 
-    assert.ok(invisible(".discard-draft-modal.modal"), "hides modal");
+    assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
     await click("#topic-footer-buttons .btn.create");
     assert
       .dom(".discard-draft-modal.modal")
@@ -473,10 +471,10 @@ acceptance("Composer", function (needs) {
         "enqueue this content please",
       "it doesn't insert the post"
     );
-    assert.ok(visible(".d-modal"), "it pops up a modal");
+    assert.dom(".d-modal").exists("pops up a modal");
 
     await click(".d-modal__footer button");
-    assert.ok(invisible(".d-modal"), "the modal can be dismissed");
+    assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
     assert.dom(".pending-posts .reviewable-item").exists();
   });
 
@@ -788,7 +786,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".discard-draft-modal.modal")
       .exists("it pops up a confirmation dialog");
-    assert.ok(invisible(".d-modal__footer button.save-draft"));
+    assert.dom(".d-modal__footer button.save-draft").doesNotExist();
     assert
       .dom(".d-modal__footer button.keep-editing")
       .hasText(

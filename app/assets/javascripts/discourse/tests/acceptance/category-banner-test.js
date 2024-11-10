@@ -1,11 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import {
-  acceptance,
-  count,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category Banners", function (needs) {
   needs.user();
@@ -44,22 +40,21 @@ acceptance("Category Banners", function (needs) {
     await visit("/c/test-read-only-without-banner");
 
     await click("#create-topic");
-    assert.ok(!visible(".dialog-body"), "it does not pop up a modal");
-    assert.ok(
-      !visible(".category-read-only-banner"),
-      "it does not show a banner"
-    );
+    assert.dom(".dialog-body").doesNotExist("does not pop up a modal");
+    assert
+      .dom(".category-read-only-banner")
+      .doesNotExist("does not show a banner");
   });
 
   test("Displays category banners when set", async function (assert) {
     await visit("/c/test-read-only-with-banner");
 
     await click("#create-topic");
-    assert.ok(visible(".dialog-body"), "it pops up a modal");
+    assert.dom(".dialog-body").exists("pops up a modal");
 
     await click(".dialog-footer .btn-primary");
-    assert.ok(!visible(".dialog-body"), "it closes the modal");
-    assert.ok(visible(".category-read-only-banner"), "it shows a banner");
+    assert.dom(".dialog-body").doesNotExist("closes the modal");
+    assert.dom(".category-read-only-banner").exists("shows a banner");
     assert.strictEqual(
       count(".category-read-only-banner .inner"),
       1,
@@ -91,9 +86,8 @@ acceptance("Anonymous Category Banners", function (needs) {
 
   test("Does not display category banners when set", async function (assert) {
     await visit("/c/test-read-only-with-banner");
-    assert.ok(
-      !visible(".category-read-only-banner"),
-      "it does not show a banner"
-    );
+    assert
+      .dom(".category-read-only-banner")
+      .doesNotExist("does not show a banner");
   });
 });
