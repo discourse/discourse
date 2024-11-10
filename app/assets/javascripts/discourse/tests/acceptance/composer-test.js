@@ -24,7 +24,6 @@ import TopicFixtures from "discourse/tests/fixtures/topic";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  count,
   metaModifier,
   query,
   updateCurrentUser,
@@ -523,7 +522,7 @@ acceptance("Composer", function (needs) {
 
     pretender.put("/posts/:post_id", async () => {
       // at this point, request is in flight, so post is staged
-      assert.strictEqual(count(".topic-post.staged"), 1);
+      assert.dom(".topic-post.staged").exists();
       assert.ok(query(".topic-post").classList.contains("staged"));
       assert.strictEqual(
         query(".topic-post.staged .cooked").innerText.trim(),
@@ -536,7 +535,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
 
     await visit("/t/internationalization-localization/280");
-    assert.strictEqual(count(".topic-post.staged"), 0);
+    assert.dom(".topic-post.staged").doesNotExist();
   });
 
   test("Composer can switch between edits", async function (assert) {
@@ -601,11 +600,9 @@ acceptance("Composer", function (needs) {
     await menu.expand();
     await menu.selectRowByName("toggle-whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "it sets the post type to whisper"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("sets the post type to whisper");
 
     await menu.expand();
     await menu.selectRowByName("toggle-whisper");
@@ -631,78 +628,56 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:nth-of-type(1) button.reply");
 
-    assert.strictEqual(
-      count("#reply-control.open"),
-      1,
-      "it starts in open state by default"
-    );
+    assert.dom("#reply-control.open").exists("starts in open state by default");
 
     await click(".toggle-fullscreen");
 
-    assert.strictEqual(
-      count("#reply-control.fullscreen"),
-      1,
-      "it expands composer to full screen"
-    );
+    assert
+      .dom("#reply-control.fullscreen")
+      .exists("expands composer to full screen");
 
-    assert.strictEqual(
-      count(".composer-fullscreen-prompt"),
-      1,
-      "the exit fullscreen prompt is visible"
-    );
+    assert
+      .dom(".composer-fullscreen-prompt")
+      .exists("the exit fullscreen prompt is visible");
 
     await click(".toggle-fullscreen");
 
-    assert.strictEqual(
-      count("#reply-control.open"),
-      1,
-      "it collapses composer to regular size"
-    );
+    assert
+      .dom("#reply-control.open")
+      .exists("collapses composer to regular size");
 
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggler");
 
-    assert.strictEqual(
-      count("#reply-control.draft"),
-      1,
-      "it collapses composer to draft bar"
-    );
+    assert
+      .dom("#reply-control.draft")
+      .exists("collapses composer to draft bar");
 
     await click(".toggle-fullscreen");
 
-    assert.strictEqual(
-      count("#reply-control.open"),
-      1,
-      "from draft, it expands composer back to open state"
-    );
+    assert
+      .dom("#reply-control.open")
+      .exists("from draft, it expands composer back to open state");
   });
 
   test("Composer fullscreen submit button", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
     await click(".topic-post:nth-of-type(1) button.reply");
 
-    assert.strictEqual(
-      count("#reply-control.open"),
-      1,
-      "it starts in open state by default"
-    );
+    assert.dom("#reply-control.open").exists("starts in open state by default");
 
     await click(".toggle-fullscreen");
 
-    assert.strictEqual(
-      count("#reply-control button.create"),
-      1,
-      "it shows composer submit button in fullscreen"
-    );
+    assert
+      .dom("#reply-control button.create")
+      .exists("shows composer submit button in fullscreen");
 
     await fillIn(".d-editor-input", "too short");
     await click("#reply-control button.create");
 
-    assert.strictEqual(
-      count("#reply-control.open"),
-      1,
-      "it goes back to open state if there's errors"
-    );
+    assert
+      .dom("#reply-control.open")
+      .exists("goes back to open state if there's errors");
   });
 
   test("Composer can toggle between reply and createTopic", async function (assert) {
@@ -715,11 +690,9 @@ acceptance("Composer", function (needs) {
       "toggle-whisper"
     );
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "it sets the post type to whisper"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("sets the post type to whisper");
 
     await visit("/");
     assert.dom("#create-topic").exists("the create topic button is visible");
@@ -943,11 +916,9 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".save-or-cancel button.create")
       .hasText(I18n.t("composer.create_pm"), "reply button says Message");
-    assert.strictEqual(
-      count(".save-or-cancel button.create svg.d-icon-envelope"),
-      1,
-      "reply button has envelope icon"
-    );
+    assert
+      .dom(".save-or-cancel button.create svg.d-icon-envelope")
+      .exists("reply button has envelope icon");
   });
 
   test("edit button when editing a post in a PM", async function (assert) {
@@ -958,11 +929,9 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".save-or-cancel button.create")
       .hasText(I18n.t("composer.save_edit"), "save button says Save Edit");
-    assert.strictEqual(
-      count(".save-or-cancel button.create svg.d-icon-pencil"),
-      1,
-      "save button has pencil icon"
-    );
+    assert
+      .dom(".save-or-cancel button.create svg.d-icon-pencil")
+      .exists("save button has pencil icon");
   });
 
   test("Shows duplicate_link notice", async function (assert) {
@@ -988,7 +957,7 @@ acceptance("Composer", function (needs) {
     assert.dom(".composer-popup").doesNotExist();
 
     await fillIn(".d-editor-input", "[](https://github.com)");
-    assert.strictEqual(count(".composer-popup"), 1);
+    assert.dom(".composer-popup").exists();
   });
 
   test("Shows the 'group_mentioned' notice", async function (assert) {

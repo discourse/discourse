@@ -2,7 +2,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -110,7 +109,9 @@ acceptance("Review", function (needs) {
       "<b>cooked content</b>"
     );
 
-    assert.strictEqual(count(".reviewable-flagged-post .reviewable-score"), 2);
+    assert
+      .dom(".reviewable-flagged-post .reviewable-score")
+      .exists({ count: 2 });
   });
 
   test("Flag related", async function (assert) {
@@ -221,10 +222,7 @@ acceptance("Review", function (needs) {
 
     const reviewable = query(`[data-reviewable-id="1234"]`);
     assert.notOk(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(
-      count(`[data-reviewable-id="1234"] .status .pending`),
-      1
-    );
+    assert.dom("[data-reviewable-id='1234'] .status .pending").exists();
     assert.dom(".stale-help").doesNotExist();
 
     await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
@@ -235,13 +233,13 @@ acceptance("Review", function (needs) {
     });
 
     assert.ok(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
-    assert.strictEqual(count(".stale-help"), 1);
+    assert.dom("[data-reviewable-id='1234'] .status .approved").exists();
+    assert.dom(".stale-help").exists();
     assert.ok(query(".stale-help").innerText.includes("foo"));
 
     await visit("/");
     await visit("/review"); // reload review
 
-    assert.strictEqual(count(".stale-help"), 0);
+    assert.dom(".stale-help").doesNotExist();
   });
 });

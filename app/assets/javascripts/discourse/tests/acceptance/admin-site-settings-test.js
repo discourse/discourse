@@ -8,11 +8,7 @@ import {
 import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  count,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -65,11 +61,9 @@ acceptance("Admin - Site Settings", function (needs) {
   test("changing value updates dirty state", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", " title ");
-    assert.strictEqual(
-      count(".row.setting"),
-      1,
-      "filter returns 1 site setting"
-    );
+    assert
+      .dom(".row.setting")
+      .exists({ count: 1 }, "filter returns 1 site setting");
     assert
       .dom(".row.setting.overridden")
       .doesNotExist("setting isn't overridden");
@@ -112,15 +106,15 @@ acceptance("Admin - Site Settings", function (needs) {
   test("always shows filtered site settings if a filter is set", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", "title");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
 
     // navigate away to the "Dashboard" page
     await click(".nav.nav-pills li:nth-child(1) a");
-    assert.strictEqual(count(".row.setting"), 0);
+    assert.dom(".row.setting").exists({ count: 0 });
 
     // navigate back to the "Settings" page
     await click(".nav.nav-pills li:nth-child(2) a");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
   });
 
   test("filtering overridden settings", async function (assert) {
@@ -135,11 +129,11 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     await fillIn("#setting-filter", "plugin:discourse-logo");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
 
     // inexistent plugin
     await fillIn("#setting-filter", "plugin:discourse-plugin");
-    assert.strictEqual(count(".row.setting"), 0);
+    assert.dom(".row.setting").exists({ count: 0 });
   });
 
   test("category name is preserved", async function (assert) {

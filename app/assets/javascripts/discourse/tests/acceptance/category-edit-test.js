@@ -3,11 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -69,16 +65,16 @@ acceptance("Category Edit", function (needs) {
     assert.dom(".minimum-required-tags").exists();
 
     assert.dom(".required-tag-groups").exists();
-    assert.strictEqual(count(".required-tag-group-row"), 0);
+    assert.dom(".required-tag-group-row").doesNotExist();
 
     await click(".add-required-tag-group");
-    assert.strictEqual(count(".required-tag-group-row"), 1);
+    assert.dom(".required-tag-group-row").exists({ count: 1 });
 
     await click(".add-required-tag-group");
-    assert.strictEqual(count(".required-tag-group-row"), 2);
+    assert.dom(".required-tag-group-row").exists({ count: 2 });
 
     await click(".delete-required-tag-group");
-    assert.strictEqual(count(".required-tag-group-row"), 1);
+    assert.dom(".required-tag-group-row").exists({ count: 1 });
 
     const tagGroupChooser = selectKit(
       ".required-tag-group-row .tag-group-chooser"
@@ -87,13 +83,13 @@ acceptance("Category Edit", function (needs) {
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
     await click("#save-category");
-    assert.strictEqual(count(".required-tag-group-row"), 1);
+    assert.dom(".required-tag-group-row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
-    assert.strictEqual(count(".required-tag-group-row"), 0);
+    assert.dom(".required-tag-group-row").doesNotExist();
 
     await click("#save-category");
-    assert.strictEqual(count(".required-tag-group-row"), 0);
+    assert.dom(".required-tag-group-row").doesNotExist();
   });
 
   test("Editing allowed tags and tag groups", async function (assert) {

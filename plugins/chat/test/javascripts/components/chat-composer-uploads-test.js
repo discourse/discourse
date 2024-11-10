@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { count, createFile } from "discourse/tests/helpers/qunit-helpers";
+import { createFile } from "discourse/tests/helpers/qunit-helpers";
 
 const fakeUpload = {
   type: ".png",
@@ -48,8 +48,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
       <ChatComposerUploads @existingUploads={{this.existingUploads}} @fileUploadElementId="chat-widget-uploader" />
     `);
 
-    assert.strictEqual(count(".chat-composer-upload"), 1);
-    assert.dom(".chat-composer-upload").exists();
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
   });
 
   test("upload starts and completes", async function (assert) {
@@ -130,9 +129,9 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
     );
 
     await waitFor(".chat-composer-upload");
-    assert.strictEqual(count(".chat-composer-upload"), 1);
+    assert.dom(".chat-composer-upload").exists({ count: 1 });
 
     await click(".chat-composer-upload__remove-btn");
-    assert.strictEqual(count(".chat-composer-upload"), 0);
+    assert.dom(".chat-composer-upload").doesNotExist();
   });
 });

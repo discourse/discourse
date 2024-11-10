@@ -3,7 +3,6 @@ import { IMAGE_VERSION } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   normalizeHtml,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -13,17 +12,15 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
+    assert.dom(".user-stream-item").exists({ count: 3 }, "has drafts");
 
     await click(".user-stream-item:first-child .remove-draft");
     assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
-    assert.strictEqual(
-      count(".user-stream-item"),
-      2,
-      "draft removed, list length diminished by one"
-    );
+    assert
+      .dom(".user-stream-item")
+      .exists({ count: 2 }, "draft removed, list length diminished by one");
 
     await visit("/");
     assert.dom("#create-topic").exists();

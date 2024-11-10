@@ -7,7 +7,6 @@ import categoryFixture from "discourse/tests/fixtures/category-fixtures";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
-  count,
   publishToMessageBus,
   query,
   queryAll,
@@ -40,13 +39,14 @@ acceptance(
 
       await visit("/");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
-        ),
-        1,
-        "there should only be one section link under the section"
-      );
+        )
+        .exists(
+          { count: 1 },
+          "there should only be one section link under the section"
+        );
 
       assert
         .dom(
@@ -416,13 +416,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
-      ),
-      4,
-      "there should only be 4 section link under the section"
-    );
+      )
+      .exists(
+        { count: 4 },
+        "there should only be 4 section link under the section"
+      );
 
     assert
       .dom(
@@ -450,13 +451,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it should transition to the category1 page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -474,13 +473,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it should transition to the category2's page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -523,13 +520,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it should transition to the category1 default view page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -568,13 +563,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it should transition to the category1 new page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -621,13 +614,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       "it should transition to the category1 unread page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -677,13 +668,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit(`/c/${category1.slug}/${category1.id}/l/new`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -699,13 +688,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit(`/c/${category1.slug}/${category1.id}/l/unread`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -721,13 +708,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit(`/c/${category1.slug}/${category1.id}/l/top`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -743,13 +728,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit(`/c/${category1.slug}/${category1.id}/none`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(
@@ -765,13 +748,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit(`/c/${category1.slug}/${category1.id}/all`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='categories'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(

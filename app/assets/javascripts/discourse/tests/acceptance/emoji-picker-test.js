@@ -2,7 +2,6 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -116,11 +115,9 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='sunglasses']");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      count('.section[data-section="recent"] .section-group img.emoji'),
-      2,
-      "it has multiple recent emojis"
-    );
+    assert
+      .dom('.section[data-section="recent"] .section-group img.emoji')
+      .exists({ count: 2 }, "has multiple recent emojis");
 
     assert
       .dom(".section.recent .section-group img.emoji")
