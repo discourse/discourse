@@ -429,11 +429,11 @@ en:
 
   topic_invite:
     failed_to_invite: "The user cannot be invited into this topic without a group membership in either one of the following groups: %{group_names}."
-    not_pm: "You can only invite to private messages."
+    not_pm: "You can only invite to personal messages."
     user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
     muted_topic: "Sorry, that user muted this topic."
-    receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them private messages."
-    sender_does_not_allow_pm: "Sorry, you do not allow that user to send you private messages."
+    receiver_does_not_allow_pm: "Sorry, that user does not allow you to send them personal messages."
+    sender_does_not_allow_pm: "Sorry, you do not allow that user to send you personal messages."
     user_cannot_see_topic: "%{username} cannot see the topic."
 
   backup:
@@ -1495,12 +1495,12 @@ en:
       title: "Notify Moderators"
       xaxis: "Day"
       yaxis: "Number of messages"
-      description: "Number of times moderators have been privately notified by a flag."
+      description: "Number of times moderators received personal messages with additional flag details."
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Day"
       yaxis: "Number of messages"
-      description: "Number of times users have been privately notified by a flag."
+      description: "Number of times users have been sent personal messages using the flag dialog."
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -1917,7 +1917,7 @@ en:
     share_links: "Determine which items appear on the share dialog, and in what order."
     allow_username_in_share_links: "Allow usernames to be included in share links. This is useful to reward badges based on unique visitors."
     site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
-    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent private messages."
+    site_contact_group_name: "A valid name of a group that gets invited to all automatically sent personal messages."
     send_welcome_message: "Send all new users a welcome message with a quick start guide."
     send_tl1_welcome_message: "Send new trust level 1 users a welcome message."
     send_tl2_promotion_message: "Send new trust level 2 users a message about promotion."
@@ -2540,7 +2540,7 @@ en:
     bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
-    secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
+    secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in personal messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
     secure_uploads_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure uploads max email embed image size kb' setting."
     secure_uploads_max_email_embed_image_size_kb: "The size cutoff for secure images that will be embedded in emails if the 'secure uploads allow embed in emails' setting is enabled. Without that setting enabled, this setting has no effect."
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
@@ -2670,7 +2670,7 @@ en:
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a whisper post when a topic's category or tags change, requires whisper posts to be enabled."
-    automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or private messages on a daily basis."
+    automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
@@ -5057,7 +5057,7 @@ en:
       name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes
       long_description: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you’ll also get lots more likes per day.
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, and you’ll also get lots more likes per day.
     leader:
       name: Leader
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> global edit, pin, close, archive, split and merge, more likes
@@ -5508,7 +5508,7 @@ en:
       quoted: '%{username} quoted you in "%{topic}" - %{site_title}'
       replied: '%{username} replied to you in "%{topic}" - %{site_title}'
       posted: '%{username} posted in "%{topic}" - %{site_title}'
-      private_message: '%{username} sent you a private message in "%{topic}" - %{site_title}'
+      private_message: '%{username} sent you a personal message in "%{topic}" - %{site_title}'
       linked: '%{username} linked to your post from "%{topic}" - %{site_title}'
       watching_first_post: '%{username} created a new topic "%{topic}" - %{site_title}'
       confirm_title: "Notifications enabled - %{site_title}"
