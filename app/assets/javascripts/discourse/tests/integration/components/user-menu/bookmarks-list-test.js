@@ -20,11 +20,11 @@ module(
 
       assert.strictEqual(items.length, 2);
 
-      assert.ok(items[0].classList.contains("notification"));
-      assert.ok(items[0].classList.contains("unread"));
-      assert.ok(items[0].classList.contains("bookmark-reminder"));
+      assert.dom(items[0]).hasClass("notification");
+      assert.dom(items[0]).hasClass("unread");
+      assert.dom(items[0]).hasClass("bookmark-reminder");
 
-      assert.ok(items[1].classList.contains("bookmark"));
+      assert.dom(items[1]).hasClass("bookmark");
     });
 
     test("show all button for bookmark notifications", async function (assert) {

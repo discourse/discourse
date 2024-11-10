@@ -107,15 +107,15 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 3);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
 
-    assert.ok(items[2].classList.contains("message"));
+    assert.dom(items[2]).hasClass("message");
   });
 
   test("does not error when there are no group_message_summary notifications", async function (assert) {
@@ -132,11 +132,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("message"));
+    assert.dom(items[1]).hasClass("message");
   });
 
   test("does not error when there are no messages", async function (assert) {
@@ -154,13 +154,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
   });
 
   test("merge-sorts group_message_summary notifications and messages", async function (assert) {

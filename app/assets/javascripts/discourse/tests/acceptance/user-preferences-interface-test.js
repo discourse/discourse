@@ -35,11 +35,11 @@ acceptance("User Preferences - Interface", function (needs) {
     const textSize = selectKit(".text-size .combo-box");
     await textSize.expand();
     await textSize.selectRowByValue("larger");
-    assert.ok(document.documentElement.classList.contains("text-size-larger"));
+    assert.dom(document.documentElement).hasClass("text-size-larger");
 
     await textSize.expand();
     await textSize.selectRowByValue("largest");
-    assert.ok(document.documentElement.classList.contains("text-size-largest"));
+    assert.dom(document.documentElement).hasClass("text-size-largest");
 
     assert.strictEqual(cookie("text_size"), undefined, "cookie is not set");
 

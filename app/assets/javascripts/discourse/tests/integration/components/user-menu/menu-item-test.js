@@ -82,8 +82,7 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      let item = query("li");
-      assert.ok(item.classList.contains("mentioned"));
+      assert.dom("li").hasClass("mentioned");
 
       this.set(
         "item",
@@ -303,24 +302,20 @@ module(
 
       assert.dom("svg.d-icon-wrench").exists("icon is customized");
 
-      const label = query("li .item-label");
-      assert.ok(
-        label.classList.contains("label-wrapper-1"),
-        "label wrapper has additional classes"
-      );
+      assert
+        .dom("li .item-label")
+        .hasClass("label-wrapper-1", "label wrapper has additional classes");
       assert.strictEqual(
-        label.textContent.trim(),
+        query("li .item-label").textContent.trim(),
         "notification label 666 <span>",
         "label content is customized"
       );
 
-      const description = query(".item-description");
-      assert.ok(
-        description.classList.contains("description-class-1"),
-        "description has additional classes"
-      );
+      assert
+        .dom(".item-description")
+        .hasClass("description-class-1", "description has additional classes");
       assert.strictEqual(
-        description.textContent.trim(),
+        query(".item-description").textContent.trim(),
         "notification description 123 <script>",
         "description content is customized"
       );

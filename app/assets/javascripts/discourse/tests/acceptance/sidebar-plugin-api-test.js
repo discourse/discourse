@@ -182,23 +182,17 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .dom(links[0].children[0])
       .hasStyle({ color: "rgb(255, 0, 0)" }, "has correct prefix color");
 
-    assert.strictEqual(
-      links[0].children[0].children[0].classList.contains("d-icon-d-chat"),
-      true,
-      "displays prefix icon"
-    );
+    assert
+      .dom(links[0].children[0].children[0])
+      .hasClass("d-icon-d-chat", "displays prefix icon");
 
-    assert.strictEqual(
-      links[0].children[0].children[1].classList.contains("d-icon-lock"),
-      true,
-      "displays prefix icon badge"
-    );
+    assert
+      .dom(links[0].children[0].children[1])
+      .hasClass("d-icon-lock", "displays prefix icon badge");
 
-    assert.strictEqual(
-      links[0].children[2].children[0].classList.contains("d-icon-circle"),
-      true,
-      "displays suffix icon"
-    );
+    assert
+      .dom(links[0].children[2].children[0])
+      .hasClass("d-icon-circle", "displays suffix icon");
 
     assert
       .dom(links[1].children[1])
