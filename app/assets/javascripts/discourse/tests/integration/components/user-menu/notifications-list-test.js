@@ -67,12 +67,13 @@ module(
 
     test("show all button for all notifications page", async function (assert) {
       await render(template);
-      const showAllBtn = query(".panel-body-bottom .btn.show-all");
-      assert.strictEqual(
-        showAllBtn.title,
-        I18n.t("user_menu.view_all_notifications"),
-        "has the correct title"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.show-all")
+        .hasAttribute(
+          "title",
+          I18n.t("user_menu.view_all_notifications"),
+          "has the correct title"
+        );
     });
 
     test("has a dismiss button if some notification types have unread notifications", async function (assert) {

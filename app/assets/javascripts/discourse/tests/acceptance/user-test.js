@@ -12,7 +12,6 @@ import {
   acceptance,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -77,11 +76,11 @@ acceptance("User Routes", function (needs) {
       "has the body class"
     );
 
-    const $links = queryAll(".notification a");
+    const links = [...document.querySelectorAll(".notification a")];
 
-    assert.ok(
-      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
-    );
+    assert
+      .dom(links[2])
+      .hasAttribute("href", /^\/u\/eviltrout\/notifications\/likes-received/);
 
     updateCurrentUser({ moderator: true, admin: false });
 

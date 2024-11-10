@@ -1,10 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("EmojiPicker", function (needs) {
   needs.user();
@@ -131,26 +127,32 @@ acceptance("EmojiPicker", function (needs) {
     await click(`.emoji-picker-emoji-area img.emoji[title="sunglasses"]`);
     await click(`.emoji-picker-emoji-area img.emoji[title="grinning"]`);
 
-    let recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "grinning");
-    assert.strictEqual(recent[1].title, "sunglasses");
+    let recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "grinning");
+    assert.dom(recent[1]).hasAttribute("title", "sunglasses");
 
     await click(
       `.section[data-section="recent"] .section-group img.emoji[title="sunglasses"]`
     );
 
     // The order is still the same
-    recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "grinning");
-    assert.strictEqual(recent[1].title, "sunglasses");
+    recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "grinning");
+    assert.dom(recent[1]).hasAttribute("title", "sunglasses");
 
     await click("button.emoji.btn");
     await click("button.emoji.btn");
 
     // but updates when you re-open
-    recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "sunglasses");
-    assert.strictEqual(recent[1].title, "grinning");
+    recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "sunglasses");
+    assert.dom(recent[1]).hasAttribute("title", "grinning");
   });
 
   test("emoji picker persists state", async function (assert) {

@@ -85,25 +85,29 @@ acceptance("Topic Discovery Tracked", function (needs) {
         "the categories nav item is not displayed when tracked filter is present"
       );
 
-    assert.ok(
-      query("#navigation-bar li.unread a").href.endsWith("/unread?f=tracked"),
-      "unread link has tracked filter"
-    );
+    assert
+      .dom("#navigation-bar li.unread a")
+      .hasAttribute(
+        "href",
+        "/unread?f=tracked",
+        "unread link has tracked filter"
+      );
 
-    assert.ok(
-      query("#navigation-bar li.new a").href.endsWith("/new?f=tracked"),
-      "new link has tracked filter"
-    );
+    assert
+      .dom("#navigation-bar li.new a")
+      .hasAttribute("href", "/new?f=tracked", "new link has tracked filter");
 
-    assert.ok(
-      query("#navigation-bar li.hot a").href.endsWith("/hot?f=tracked"),
-      "hot link has tracked filter"
-    );
+    assert
+      .dom("#navigation-bar li.hot a")
+      .hasAttribute("href", "/hot?f=tracked", "hot link has tracked filter");
 
-    assert.ok(
-      query("#navigation-bar li.latest a").href.endsWith("/latest?f=tracked"),
-      "latest link has tracked filter"
-    );
+    assert
+      .dom("#navigation-bar li.latest a")
+      .hasAttribute(
+        "href",
+        "/latest?f=tracked",
+        "latest link has tracked filter"
+      );
   });
 
   test("visit discovery pages with tracked filter", async function (assert) {

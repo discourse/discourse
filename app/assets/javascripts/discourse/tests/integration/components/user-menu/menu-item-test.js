@@ -125,8 +125,7 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      const link = query("li a");
-      assert.ok(link.href.endsWith("/t/this-is-fancy-title/449/113"));
+      assert.dom("li a").hasAttribute("href", "/t/this-is-fancy-title/449/113");
     });
 
     test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {
@@ -144,8 +143,7 @@ module(
         })
       );
       await render(template);
-      const link = query("li a");
-      assert.ok(link.href.endsWith("/u/ossaama/messages/grouperss"));
+      assert.dom("li a").hasAttribute("href", "/u/ossaama/messages/grouperss");
     });
 
     test("the item's link has a title for accessibility", async function (assert) {
@@ -154,8 +152,10 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      const link = query("li a");
-      assert.strictEqual(link.title, I18n.t("notifications.titles.mentioned"));
+
+      assert
+        .dom("li a")
+        .hasAttribute("title", I18n.t("notifications.titles.mentioned"));
     });
 
     test("has elements for label and description", async function (assert) {
@@ -290,16 +290,16 @@ module(
         .dom("li.additional.classes")
         .exists("extra classes are included on the item");
 
-      const link = query("li a");
-      assert.ok(
-        link.href.endsWith("/somewhere/awesome"),
-        "link href is customized"
-      );
-      assert.strictEqual(
-        link.title,
-        "hello world this is unsafe '\"<span>",
-        "link title is customized and rendered safely"
-      );
+      assert
+        .dom("li a")
+        .hasAttribute("href", "/somewhere/awesome", "link href is customized");
+      assert
+        .dom("li a")
+        .hasAttribute(
+          "title",
+          "hello world this is unsafe '\"<span>",
+          "link title is customized and rendered safely"
+        );
 
       assert.dom("svg.d-icon-wrench").exists("icon is customized");
 
@@ -495,9 +495,9 @@ module(
     test("uses bookmarkable_url for the href", async function (assert) {
       this.set("item", getBookmark({}, this.siteSettings, this.site));
       await render(template);
-      assert.ok(
-        query("li.bookmark a").href.endsWith("/t/this-bookmarkable-url/227/1")
-      );
+      assert
+        .dom("li.bookmark a")
+        .hasAttribute("href", "/t/this-bookmarkable-url/227/1");
     });
 
     test("item label is the bookmarked post author", async function (assert) {

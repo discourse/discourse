@@ -29,12 +29,13 @@ module(
 
     test("show all button for bookmark notifications", async function (assert) {
       await render(template);
-      const link = query(".panel-body-bottom .show-all");
-      assert.strictEqual(
-        link.title,
-        I18n.t("user_menu.view_all_bookmarks"),
-        "has the correct title"
-      );
+      assert
+        .dom(".panel-body-bottom .show-all")
+        .hasAttribute(
+          "title",
+          I18n.t("user_menu.view_all_bookmarks"),
+          "has the correct title"
+        );
     });
 
     test("dismiss button", async function (assert) {
@@ -47,11 +48,13 @@ module(
         dismiss,
         "dismiss button is shown if the user has unread bookmark_reminder notifications"
       );
-      assert.strictEqual(
-        dismiss.title,
-        I18n.t("user.dismiss_bookmarks_tooltip"),
-        "dismiss button has a title"
-      );
+      assert
+        .dom(".panel-body-bottom .notifications-dismiss")
+        .hasAttribute(
+          "title",
+          I18n.t("user.dismiss_bookmarks_tooltip"),
+          "dismiss button has a title"
+        );
 
       this.currentUser.set("grouped_unread_notifications", {});
       await settled();

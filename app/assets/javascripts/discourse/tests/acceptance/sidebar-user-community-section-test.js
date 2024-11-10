@@ -470,13 +470,15 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='faq']"
-      ).href,
-      "http://some.faq.url/",
-      "href attribute is set to custom FAQ URL on the section link"
-    );
+      )
+      .hasAttribute(
+        "href",
+        "http://some.faq.url",
+        "href attribute is set to custom FAQ URL on the section link"
+      );
   });
 
   test("navigating to admin from sidebar", async function (assert) {
@@ -576,21 +578,25 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   test("my posts title changes when drafts are present", async function (assert) {
     await visit("/");
 
-    assert.strictEqual(
-      query(".sidebar-section-link[data-link-name='my-posts']").title,
-      I18n.t("sidebar.sections.community.links.my_posts.title"),
-      "displays the default title when no drafts are present"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasAttribute(
+        "title",
+        I18n.t("sidebar.sections.community.links.my_posts.title"),
+        "displays the default title when no drafts are present"
+      );
 
     await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
       draft_count: 1,
     });
 
-    assert.strictEqual(
-      query(".sidebar-section-link[data-link-name='my-posts']").title,
-      I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
-      "displays the draft title when drafts are present"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasAttribute(
+        "title",
+        I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
+        "displays the draft title when drafts are present"
+      );
   });
 
   test("my posts changes its text when drafts are present and new new view experiment is enabled", async function (assert) {
@@ -1027,11 +1033,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "displays the right text for the link"
     );
 
-    assert.strictEqual(
-      query(".sidebar-section-link[data-link-name='unread']").title,
-      "List of unread topics",
-      "displays the right title for the link"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='unread']")
+      .hasAttribute(
+        "title",
+        "List of unread topics",
+        "displays the right title for the link"
+      );
 
     assert
       .dom(
@@ -1099,11 +1107,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "displays the right text for the link"
     );
 
-    assert.strictEqual(
-      query(".sidebar-section-link[data-link-name='user-summary']").title,
-      "eviltrout summary",
-      "displays the right title for the link"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='user-summary']")
+      .hasAttribute(
+        "title",
+        "eviltrout summary",
+        "displays the right title for the link"
+      );
 
     assert
       .dom(

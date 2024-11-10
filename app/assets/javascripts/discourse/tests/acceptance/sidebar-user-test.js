@@ -3,7 +3,6 @@ import { test } from "qunit";
 import Sinon from "sinon";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -211,11 +210,13 @@ acceptance(
           "has the right accessibility attributes set when sidebar is expanded"
         );
 
-      assert.strictEqual(
-        query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.title"),
-        "has the right title attribute when sidebar is expanded"
-      );
+      assert
+        .dom(".btn-sidebar-toggle")
+        .hasAttribute(
+          "title",
+          I18n.t("sidebar.title"),
+          "has the right title attribute when sidebar is expanded"
+        );
 
       await click(".btn-sidebar-toggle");
 
@@ -227,11 +228,13 @@ acceptance(
           "has the right accessibility attributes set when sidebar is collapsed"
         );
 
-      assert.strictEqual(
-        query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.title"),
-        "has the right title attribute when sidebar is collapsed"
-      );
+      assert
+        .dom(".btn-sidebar-toggle")
+        .hasAttribute(
+          "title",
+          I18n.t("sidebar.title"),
+          "has the right title attribute when sidebar is collapsed"
+        );
     });
   }
 );

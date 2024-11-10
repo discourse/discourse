@@ -255,12 +255,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
   test("show all button for message notifications", async function (assert) {
     await render(template);
-    const link = query(".panel-body-bottom .show-all");
-    assert.strictEqual(
-      link.title,
-      I18n.t("user_menu.view_all_messages"),
-      "has the correct title"
-    );
+    assert
+      .dom(".panel-body-bottom .show-all")
+      .hasAttribute(
+        "title",
+        I18n.t("user_menu.view_all_messages"),
+        "has the correct title"
+      );
   });
 
   test("dismiss button", async function (assert) {
@@ -268,16 +269,19 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
     await render(template);
+
     const dismiss = query(".panel-body-bottom .notifications-dismiss");
     assert.ok(
       dismiss,
       "dismiss button is shown if the user has unread private_message notifications"
     );
-    assert.strictEqual(
-      dismiss.title,
-      I18n.t("user.dismiss_messages_tooltip"),
-      "dismiss button has a title"
-    );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .hasAttribute(
+        "title",
+        I18n.t("user.dismiss_messages_tooltip"),
+        "dismiss button has a title"
+      );
 
     this.currentUser.set("grouped_unread_notifications", {});
     await settled();
@@ -297,7 +301,9 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         read_notifications: [],
       });
     });
+
     await render(template);
+
     assert.strictEqual(
       query(".empty-state-title").textContent.trim(),
       I18n.t("user.no_messages_title"),
@@ -306,10 +312,12 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     assert
       .dom(".empty-state-body svg.d-icon-envelope")
       .exists("icon is correctly rendered in the empty state body");
-    const emptyStateBodyLink = query(".empty-state-body a");
-    assert.ok(
-      emptyStateBodyLink.href.endsWith("/about"),
-      "link inside empty state body is rendered"
-    );
+    assert
+      .dom(".empty-state-body a")
+      .hasAttribute(
+        "href",
+        "/about",
+        "link inside empty state body is rendered"
+      );
   });
 });
