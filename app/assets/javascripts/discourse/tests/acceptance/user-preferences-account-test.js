@@ -80,7 +80,7 @@ acceptance("User Preferences - Account", function (needs) {
     assert.dom(".username-preference__input").hasValue("eviltrout");
     assert.dom(".username-preference__submit").isDisabled();
 
-    await fillIn(query(".username-preference__input"), "good_trout");
+    await fillIn(".username-preference__input", "good_trout");
     assert.dom(".username-preference__submit").isEnabled();
 
     await click(".username-preference__submit");

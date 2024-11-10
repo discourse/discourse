@@ -16,7 +16,7 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(query(".d-editor-input"), "a :blonde_wo\t");
+    await simulateKeys(".d-editor-input", "a :blonde_wo\t");
 
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
@@ -30,7 +30,7 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(query(".d-editor-input"), "an :arrow");
+    await simulateKeys(".d-editor-input", "an :arrow");
     // the 6th item in the list is the "more..."
     await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
 
@@ -49,7 +49,7 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await fillIn(query(".d-editor-input"), "a :blonde_woman:t5:");
+    await fillIn(".d-editor-input", "a :blonde_woman:t5:");
 
     assert.strictEqual(
       normalizeHtml(query(".d-editor-preview").innerHTML.trim()),

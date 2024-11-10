@@ -6,7 +6,6 @@ import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
@@ -171,7 +170,7 @@ module("Integration | Component | Widget | base", function (hooks) {
     assert.dom("button.test").exists("renders the button");
     assert.dom("button.test").hasText("0 clicks");
 
-    await click(query("button"));
+    await click("button");
     assert.dom("button.test").hasText("1 clicks");
   });
 
