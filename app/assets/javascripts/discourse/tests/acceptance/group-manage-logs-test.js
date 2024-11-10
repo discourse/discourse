@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group logs", function (needs) {
   needs.user();
@@ -99,7 +99,7 @@ acceptance("Group logs", function (needs) {
       .dom("tr.group-manage-logs-row")
       .exists({ count: 2 }, "displays the right number of logs");
 
-    await click(query(".group-manage-logs-row button"));
+    await click(".group-manage-logs-row button");
     assert
       .dom("tr.group-manage-logs-row")
       .exists({ count: 1 }, "displays the right number of logs");
