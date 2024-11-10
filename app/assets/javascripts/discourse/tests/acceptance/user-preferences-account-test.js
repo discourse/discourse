@@ -78,10 +78,10 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".username-preference__edit-username");
 
     assert.dom(".username-preference__input").hasValue("eviltrout");
-    assert.true(query(".username-preference__submit").disabled);
+    assert.dom(".username-preference__submit").isDisabled();
 
     await fillIn(query(".username-preference__input"), "good_trout");
-    assert.false(query(".username-preference__submit").disabled);
+    assert.dom(".username-preference__submit").isEnabled();
 
     await click(".username-preference__submit");
     await click(".dialog-container .btn-primary");

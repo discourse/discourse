@@ -14,8 +14,8 @@ acceptance("Signing In", function () {
     await click(".d-modal__footer .btn-primary");
     assert.dom("#modal-alert").exists("displays the login error");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .doesNotExist("enables the login button");
+      .dom(".d-modal__footer .btn-primary")
+      .isEnabled("enables the login button");
 
     // Test password unmasking
     assert
@@ -30,8 +30,8 @@ acceptance("Signing In", function () {
     await fillIn("#login-account-password", "correct");
     await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("disables the login button");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("disables the login button");
   });
 
   test("sign in - not activated", async function (assert) {
@@ -92,15 +92,15 @@ acceptance("Signing In", function () {
       .isNotVisible("hides the username and password prompt");
     assert.dom("#second-factor").isVisible("displays the second factor prompt");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .doesNotExist("enables the login button");
+      .dom(".d-modal__footer .btn-primary")
+      .isEnabled("enables the login button");
 
     await fillIn("#login-second-factor", "123456");
     await click(".d-modal__footer .btn-primary");
 
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("disables the login button");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("disables the login button");
   });
 
   test("security key", async function (assert) {
@@ -133,9 +133,7 @@ acceptance("Signing In", function () {
     await fillIn("#login-second-factor", "123456");
     await click(".d-modal__footer .btn-primary");
 
-    assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("closes the modal when the code is valid");
+    assert.dom(".d-modal__footer .btn-primary").isDisabled();
   });
 
   test("second factor backup - invalid token", async function (assert) {

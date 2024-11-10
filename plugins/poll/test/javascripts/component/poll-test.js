@@ -201,7 +201,7 @@ module("Poll | Component | poll", function (hooks) {
     });
     await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
 
-    assert.dom(".poll-buttons .cast-votes:disabled").exists();
+    assert.dom(".poll-buttons .cast-votes").isDisabled();
 
     await click(
       "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"

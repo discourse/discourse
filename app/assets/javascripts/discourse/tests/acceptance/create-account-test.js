@@ -48,8 +48,8 @@ acceptance("Create Account", function () {
 
     await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("create account is disabled");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
   });
@@ -119,8 +119,8 @@ acceptance("Create Account - full_name_required", function (needs) {
 
     await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("create account is disabled");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
   });
