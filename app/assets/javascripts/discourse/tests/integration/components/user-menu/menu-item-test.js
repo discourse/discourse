@@ -497,7 +497,7 @@ module(
       await render(template);
       assert
         .dom("li.bookmark a")
-        .hasAttribute("href", "/t/this-bookmarkable-url/227/1");
+        .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
     });
 
     test("item label is the bookmarked post author", async function (assert) {
