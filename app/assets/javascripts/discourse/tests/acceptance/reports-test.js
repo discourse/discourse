@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Reports", function (needs) {
   needs.user();
@@ -10,21 +10,15 @@ acceptance("Reports", function (needs) {
 
     assert.dom(".admin-reports-list__report").exists({ count: 1 });
 
-    const report = query(".admin-reports-list__report:first-child");
+    assert
+      .dom(".admin-reports-list__report .admin-reports-list__report-title")
+      .hasHtml("My report");
 
-    assert.strictEqual(
-      report
-        .querySelector(".admin-reports-list__report-title")
-        .innerHTML.trim(),
-      "My report"
-    );
-
-    assert.strictEqual(
-      report
-        .querySelector(".admin-reports-list__report-description")
-        .innerHTML.trim(),
-      "List of my activities"
-    );
+    assert
+      .dom(
+        ".admin-reports-list__report .admin-reports-list__report-description"
+      )
+      .hasHtml("List of my activities");
   });
 
   test("Visit report page", async function (assert) {

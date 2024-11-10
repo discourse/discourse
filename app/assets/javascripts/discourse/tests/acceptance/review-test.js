@@ -62,24 +62,24 @@ acceptance("Review", function (needs) {
     await reviewableActionDropdown.selectRowByValue("reject_user_delete");
 
     assert.dom(".reject-reason-reviewable-modal").exists();
-    assert.ok(
-      query(
-        ".reject-reason-reviewable-modal .d-modal__title"
-      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
-      "it opens reject reason modal when user is rejected"
-    );
+    assert
+      .dom(".reject-reason-reviewable-modal .d-modal__title")
+      .includesHtml(
+        I18n.t("review.reject_reason.title"),
+        "opens reject reason modal when user is rejected"
+      );
 
     await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
     assert.dom(".reject-reason-reviewable-modal").exists();
-    assert.ok(
-      query(
-        ".reject-reason-reviewable-modal .d-modal__title"
-      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
-      "it opens reject reason modal when user is rejected and blocked"
-    );
+    assert
+      .odom(".reject-reason-reviewable-modal .d-modal__title")
+      .includesHtml(
+        I18n.t("review.reject_reason.title"),
+        "opens reject reason modal when user is rejected and blocked"
+      );
   });
 
   test("Settings", async function (assert) {
@@ -104,10 +104,9 @@ acceptance("Review", function (needs) {
       .dom(".reviewable-flagged-post .post-contents .username a[href]")
       .exists("it has a link to the user");
 
-    assert.strictEqual(
-      query(".reviewable-flagged-post .post-body").innerHTML.trim(),
-      "<b>cooked content</b>"
-    );
+    assert
+      .dom(".reviewable-flagged-post .post-body")
+      .hasHtml("<b>cooked content</b>");
 
     assert
       .dom(".reviewable-flagged-post .reviewable-score")

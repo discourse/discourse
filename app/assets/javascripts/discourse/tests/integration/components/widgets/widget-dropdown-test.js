@@ -192,9 +192,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     this.setProperties(DEFAULT_CONTENT);
 
     await render(TEMPLATE);
-
     await toggle();
-    assert.strictEqual(rowById(4).innerHTML.trim(), "<span><b>baz</b></span>");
+
+    assert.dom(rowById(4)).hasHtml("<span><b>baz</b></span>");
   });
 
   test("separator", async function (assert) {

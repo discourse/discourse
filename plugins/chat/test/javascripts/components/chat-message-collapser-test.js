@@ -53,11 +53,9 @@ module("Discourse Chat | Component | chat message collapser", function (hooks) {
     this.set("uploads", [{ original_filename: evilString }]);
     await render(hbs`<ChatMessageCollapser @uploads={{this.uploads}} />`);
 
-    assert.true(
-      query(".chat-message-collapser-link-small").innerHTML.includes(
-        evilStringEscaped
-      )
-    );
+    assert
+      .dom(".chat-message-collapser-link-small")
+      .includesHtml(evilStringEscaped);
   });
 });
 
@@ -392,16 +390,14 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        queryAll(".chat-message-collapser-link-small")[0].innerHTML.includes(
-          evilStringEscaped
-        )
-      );
-      assert.true(
-        queryAll(".chat-message-collapser-link-small")[1].innerHTML.includes(
-          "&lt;script&gt;someeviltitle&lt;/script&gt;"
-        )
-      );
+      const links = [
+        ...document.querySelectorAll(".chat-message-collapser-link-small"),
+      ];
+
+      assert.dom(links[0]).includesHtml(evilStringEscaped);
+      assert
+        .dom(links[1])
+        .includesHtml("&lt;script&gt;someeviltitle&lt;/script&gt;");
     });
 
     test("shows alt or links (if no alt) for linked image", async function (assert) {
@@ -504,10 +500,7 @@ module(
           "%3Cscript%3Esomeeviltitle%3C/script%3E"
         )
       );
-      assert.strictEqual(
-        query(".chat-message-collapser-link-small").innerHTML.trim(),
-        "someeviltitle"
-      );
+      assert.dom(".chat-message-collapser-link-small").hasHtml("someeviltitle");
     });
 
     test("removes album title overlay", async function (assert) {

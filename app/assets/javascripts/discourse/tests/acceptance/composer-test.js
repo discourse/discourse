@@ -195,11 +195,12 @@ acceptance("Composer", function (needs) {
       .exists("body error is dismissed via keyboard");
 
     await fillIn(".d-editor-input", "this is the *content* of a post");
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>this is the <em>content</em> of a post</p>",
-      "it previews content"
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
+        "<p>this is the <em>content</em> of a post</p>",
+        "previews content"
+      );
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
