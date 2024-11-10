@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
+import { count } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | slow-mode-info", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,7 +12,7 @@ module("Integration | Component | slow-mode-info", function (hooks) {
 
     await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
+    assert.dom(".slow-mode-heading").doesNotExist("doesn't render the notice");
   });
 
   test("doesn't render if the slow mode is disabled", async function (assert) {
@@ -20,7 +20,7 @@ module("Integration | Component | slow-mode-info", function (hooks) {
 
     await render(hbs`<SlowModeInfo @topic={{this.topic}} />`);
 
-    assert.ok(!exists(".slow-mode-heading"), "it doesn't render the notice");
+    assert.dom(".slow-mode-heading").doesNotExist("doesn't render the notice");
   });
 
   test("renders if slow mode is enabled", async function (assert) {

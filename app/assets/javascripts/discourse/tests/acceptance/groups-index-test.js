@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   invisible,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -26,13 +25,13 @@ acceptance("Groups", function () {
     );
 
     await click(".group-index-join");
-    assert.ok(exists(".modal.login-modal"), "it shows the login modal");
+    assert.dom(".modal.login-modal").exists("shows the login modal");
 
     await click(".login-modal .modal-close");
     assert.ok(invisible(".modal.login-modal"), "it closes the login modal");
 
     await click(".group-index-request");
-    assert.ok(exists(".modal.login-modal"), "it shows the login modal");
+    assert.dom(".modal.login-modal").exists("shows the login modal");
 
     await click("a[href='/g/discourse/members']");
     assert
@@ -40,6 +39,6 @@ acceptance("Groups", function () {
       .hasText("Awesome Team", "it displays the group page");
 
     await click(".group-index-join");
-    assert.ok(exists(".modal.login-modal"), "it shows the login modal");
+    assert.dom(".modal.login-modal").exists("shows the login modal");
   });
 });

@@ -11,7 +11,6 @@ import pretender from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
-  exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -48,7 +47,7 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.upload .image-uploader")
       .exists("image uploader is present");
 
-    assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
+    assert.dom(".row.setting.upload .undo").exists("undo button is present");
   });
 
   test("links to staff action log", async function (assert) {
@@ -71,7 +70,9 @@ acceptance("Admin - Site Settings", function (needs) {
       1,
       "filter returns 1 site setting"
     );
-    assert.ok(!exists(".row.setting.overridden"), "setting isn't overridden");
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't overridden");
 
     await fillIn(".input-setting-string", "Test");
     await click("button.cancel");

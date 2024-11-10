@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -76,7 +75,9 @@ acceptance("Category Edit - Security", function (needs) {
     await visit("/c/bug/edit/security");
     await click(".row-body .remove-permission");
 
-    assert.ok(!exists(".row-body"), "removes the permission from the list");
+    assert
+      .dom(".row-body")
+      .doesNotExist("removes the permission from the list");
 
     await availableGroups.expand();
     await availableGroups.selectRowByValue("everyone");

@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const DEFAULT_CONTENT = {
@@ -148,7 +148,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(exists(header().querySelector(".d-icon-xmark")));
+    assert.dom(".d-icon-xmark", header()).exists();
   });
 
   test("class", async function (assert) {
@@ -185,7 +185,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.ok(exists(rowById(3).querySelector(".d-icon-xmark")));
+    assert.dom(".d-icon-xmark", rowById(3)).exists();
   });
 
   test("content with html", async function (assert) {
@@ -248,9 +248,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(
-      exists("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
-    );
+    assert
+      .dom("#my-dropdown .widget-dropdown-header .d-icon-caret-down")
+      .exists();
   });
 
   test("disabled widget", async function (assert) {

@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   invisible,
   query,
   queryAll,
@@ -112,7 +111,7 @@ acceptance("Tags", function (needs) {
       document.body.classList.contains("tags-page"),
       "has the body class"
     );
-    assert.ok(exists(`[data-tag-name="eviltrout"]`), "shows the eviltrout tag");
+    assert.dom(`[data-tag-name="eviltrout"]`).exists("shows the eviltrout tag");
   });
 
   test("dismiss notifications", async function (assert) {
@@ -434,7 +433,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
     assert.ok(
       query(".tag-info .tag-associations").innerText.includes("Gardening"),
       "show tag group names"
@@ -449,9 +448,9 @@ acceptance("Tag info", function (needs) {
       1,
       "show the category"
     );
-    assert.ok(!exists("#rename-tag"), "can't rename tag");
-    assert.ok(!exists("#edit-synonyms"), "can't edit synonyms");
-    assert.ok(!exists("#delete-tag"), "can't delete tag");
+    assert.dom("#rename-tag").doesNotExist("can't rename tag");
+    assert.dom("#edit-synonyms").doesNotExist("can't edit synonyms");
+    assert.dom("#delete-tag").doesNotExist("can't delete tag");
   });
 
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {
@@ -461,7 +460,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click("#edit-synonyms");
 
@@ -483,7 +482,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists(".tag-info .tag-name"), "show tag");
+    assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click(".edit-tag");
     assert.strictEqual(
@@ -600,9 +599,9 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(count("#show-tag-info"), 1);
 
     await click("#show-tag-info");
-    assert.ok(exists(".edit-tag"), "can rename tag");
-    assert.ok(exists("#edit-synonyms"), "can edit synonyms");
-    assert.ok(exists("#delete-tag"), "can delete tag");
+    assert.dom(".edit-tag").exists("can rename tag");
+    assert.dom("#edit-synonyms").exists("can edit synonyms");
+    assert.dom("#delete-tag").exists("can delete tag");
 
     await click("#edit-synonyms");
     assert.strictEqual(

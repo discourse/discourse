@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module(
@@ -78,10 +78,9 @@ module(
         I18n.t("user.no_bookmarks_body", { icon: "" }).trim(),
         "empty state body is shown"
       );
-      assert.ok(
-        exists(".empty-state-body svg.d-icon-bookmark"),
-        "icon is correctly rendered in the empty state body"
-      );
+      assert
+        .dom(".empty-state-body svg.d-icon-bookmark")
+        .exists("icon is correctly rendered in the empty state body");
     });
   }
 );

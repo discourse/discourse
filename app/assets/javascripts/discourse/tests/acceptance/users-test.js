@@ -4,7 +4,6 @@ import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -25,7 +24,7 @@ acceptance("User Directory", function () {
 
   test("Visit All Time", async function (assert) {
     await visit("/u?period=all");
-    assert.ok(exists(".time-read"), "has time read column");
+    assert.dom(".time-read").exists("has time read column");
   });
 
   test("Visit Without Usernames", async function (assert) {

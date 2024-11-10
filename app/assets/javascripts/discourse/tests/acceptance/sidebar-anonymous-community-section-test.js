@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
@@ -34,12 +30,11 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
-      ),
-      "users section link is not shown in sidebar"
-    );
+      )
+      .doesNotExist("users section link is not shown in sidebar");
   });
 
   test("users, about, faq, groups and badges section links are shown in more...", async function (assert) {

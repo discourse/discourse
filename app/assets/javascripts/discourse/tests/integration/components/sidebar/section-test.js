@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);
@@ -43,7 +42,7 @@ module("Integration | Component | sidebar | section", function (hooks) {
       .doesNotExist("section is not displayed");
 
     this.set("displaySection", true);
-    assert.ok(exists(".sidebar-section-wrapper"), "section is displayed");
+    assert.dom(".sidebar-section-wrapper").exists("section is displayed");
   });
 
   test("can expand and collapse content when section is collapsible", async function (assert) {
@@ -59,7 +58,7 @@ module("Integration | Component | sidebar | section", function (hooks) {
     this.headerActions = [];
     await render(template);
 
-    assert.ok(exists(".sidebar-section-content"), "shows content by default");
+    assert.dom(".sidebar-section-content").exists("shows content by default");
 
     await click(".sidebar-section-header-caret");
 

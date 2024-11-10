@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -35,8 +34,8 @@ acceptance("Review", function (needs) {
   test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
 
-    assert.ok(exists(".reviewable-item"), "has a list of items");
-    assert.ok(exists(user));
+    assert.dom(".reviewable-item").exists("has a list of items");
+    assert.dom(user).exists();
     assert
       .dom(`${user}.reviewable-user`)
       .exists("applies a class for the type");
@@ -88,7 +87,7 @@ acceptance("Review", function (needs) {
   test("Settings", async function (assert) {
     await visit("/review/settings");
 
-    assert.ok(exists(".reviewable-score-type"), "has a list of bonuses");
+    assert.dom(".reviewable-score-type").exists("has a list of bonuses");
 
     const field = selectKit(
       ".reviewable-score-type:nth-of-type(1) .field .combo-box"
@@ -97,7 +96,7 @@ acceptance("Review", function (needs) {
     await field.selectRowByValue("5");
     await click(".save-settings");
 
-    assert.ok(exists(".reviewable-settings .saved"), "it saved");
+    assert.dom(".reviewable-settings .saved").exists("it saved");
   });
 
   test("Flag related", async function (assert) {
@@ -118,13 +117,13 @@ acceptance("Review", function (needs) {
   test("Flag related", async function (assert) {
     await visit("/review/1");
 
-    assert.ok(exists(".reviewable-flagged-post"), "it shows the flagged post");
+    assert.dom(".reviewable-flagged-post").exists("shows the flagged post");
   });
 
   test("Clicking the buttons triggers actions", async function (assert) {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
-    assert.ok(!exists(user), "it removes the reviewable on success");
+    assert.dom(user).doesNotExist("removes the reviewable on success");
   });
 
   test("Editing a reviewable", async function (assert) {
@@ -132,8 +131,8 @@ acceptance("Review", function (needs) {
 
     await visit("/review");
 
-    assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .badge-category__name`));
+    assert.dom(`${topic} .reviewable-action.approve`).exists();
+    assert.dom(`${topic} .badge-category__name`).doesNotExist();
 
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,

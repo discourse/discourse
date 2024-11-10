@@ -1,18 +1,18 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In", function () {
   test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    assert.ok(exists(".login-modal"), "it shows the login modal");
+    assert.dom(".login-modal").exists("shows the login modal");
 
     // Test invalid password first
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "incorrect");
     await click(".d-modal__footer .btn-primary");
-    assert.ok(exists("#modal-alert:visible"), "it displays the login error");
+    assert.dom("#modal-alert").exists("displays the login error");
     assert
       .dom(".d-modal__footer .btn-primary:disabled")
       .doesNotExist("enables the login button");
@@ -37,7 +37,7 @@ acceptance("Signing In", function () {
   test("sign in - not activated", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    assert.ok(exists(".login-modal"), "it shows the login modal");
+    assert.dom(".login-modal").exists("shows the login modal");
 
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated");
@@ -45,19 +45,23 @@ acceptance("Signing In", function () {
     assert
       .dom(".d-modal__body b")
       .hasText("<small>eviltrout@example.com</small>");
-    assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
+    assert
+      .dom(".d-modal__body small")
+      .doesNotExist("escapes the email address");
 
     await click(".d-modal__footer button.resend");
     assert
       .dom(".d-modal__body b")
       .hasText("<small>current@example.com</small>");
-    assert.ok(!exists(".d-modal__body small"), "it escapes the email address");
+    assert
+      .dom(".d-modal__body small")
+      .doesNotExist("escapes the email address");
   });
 
   test("sign in - not activated - edit email", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    assert.dom(".login-modal").exists("it shows the login modal");
+    assert.dom(".login-modal").exists("shows the login modal");
 
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "not-activated-edit");
@@ -77,7 +81,7 @@ acceptance("Signing In", function () {
     await visit("/");
     await click("header .login-button");
 
-    assert.ok(exists(".login-modal"), "it shows the login modal");
+    assert.dom(".login-modal").exists("shows the login modal");
 
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "need-second-factor");
@@ -103,7 +107,7 @@ acceptance("Signing In", function () {
     await visit("/");
     await click("header .login-button");
 
-    assert.ok(exists(".login-modal"), "it shows the login modal");
+    assert.dom(".login-modal").exists("shows the login modal");
 
     await fillIn("#login-account-name", "eviltrout");
     await fillIn("#login-account-password", "need-security-key");
@@ -131,7 +135,7 @@ acceptance("Signing In", function () {
 
     assert
       .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("it closes the modal when the code is valid");
+      .exists("closes the modal when the code is valid");
   });
 
   test("second factor backup - invalid token", async function (assert) {

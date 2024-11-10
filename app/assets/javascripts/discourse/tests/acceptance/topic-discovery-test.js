@@ -6,7 +6,6 @@ import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import topFixtures from "discourse/tests/fixtures/top-fixtures";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -30,8 +29,8 @@ acceptance("Topic Discovery", function (needs) {
       document.body.classList.contains("navigation-topics"),
       "has the default navigation"
     );
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
+    assert.dom(".topic-list").exists("the list of topics was rendered");
+    assert.dom(".topic-list .topic-list-item").exists("has topics");
 
     assert
       .dom("a[data-user-card=eviltrout] img.avatar")
@@ -50,9 +49,9 @@ acceptance("Topic Discovery", function (needs) {
       );
 
     await visit("/c/bug");
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
-    assert.ok(!exists(".category-list"), "doesn't render subcategories");
+    assert.dom(".topic-list").exists("the list of topics was rendered");
+    assert.dom(".topic-list .topic-list-item").exists("has topics");
+    assert.dom(".category-list").doesNotExist("doesn't render subcategories");
     assert.ok(
       document.body.classList.contains("category-bug"),
       "has a custom css class for the category id on the body"
@@ -67,7 +66,7 @@ acceptance("Topic Discovery", function (needs) {
       !document.body.classList.contains("category-bug"),
       "removes the custom category class"
     );
-    assert.ok(exists(".category"), "has a list of categories");
+    assert.dom(".category").exists("has a list of categories");
     assert.ok(
       document.body.classList.contains("categories-list"),
       "has a custom class to indicate categories"
@@ -78,16 +77,16 @@ acceptance("Topic Discovery", function (needs) {
       !document.body.classList.contains("categories-list"),
       "removes the `categories-list` class"
     );
-    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
+    assert.dom(".topic-list .topic-list-item").exists("has topics");
 
     await visit("/c/feature");
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
+    assert.dom(".topic-list").exists("The list of topics was rendered");
     assert
       .dom(".category-boxes")
       .exists("The list of subcategories were rendered with box style");
 
     await visit("/c/dev");
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
+    assert.dom(".topic-list").exists("The list of topics was rendered");
     assert
       .dom(".category-boxes-with-topics")
       .exists(

@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -34,7 +33,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".nav-pills li a[title='Activity']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
@@ -43,14 +42,14 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
     assert
       .dom(".nav-pills li a[title='Edit Group']")
       .doesNotExist("it should not show messages tab if user is not admin");
     assert
       .dom(".nav-pills li a[title='Logs']")
       .doesNotExist("it should not show Logs tab if user is not admin");
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
@@ -212,7 +211,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it prefills the group name"
     );
 
-    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
+    assert.dom(".add-warning").doesNotExist("groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {

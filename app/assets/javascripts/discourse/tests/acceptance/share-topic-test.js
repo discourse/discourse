@@ -1,11 +1,7 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -35,7 +31,7 @@ acceptance("Share and Invite modal", function (needs) {
 
     await click("#topic-footer-button-share-and-invite");
 
-    assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.dom(".share-topic-modal").exists("shows the modal");
 
     assert
       .dom("#modal-alert.alert-warning")
@@ -66,7 +62,7 @@ acceptance("Share and Invite modal", function (needs) {
     );
 
     await click("#post_2 a.post-date");
-    assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+    assert.dom(".share-topic-modal").exists("shows the share modal");
     assert.strictEqual(
       currentURL(),
       "/t/short-topic-with-two-posts/54077",
@@ -83,7 +79,7 @@ acceptance("Share and Invite modal", function (needs) {
 
     await click("#topic-footer-button-share-and-invite");
 
-    assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.dom(".share-topic-modal").exists("shows the modal");
     assert
       .dom("#modal-alert.alert-warning")
       .exists("it shows restricted warning");
@@ -112,7 +108,7 @@ acceptance("Share and Invite modal - mobile", function (needs) {
     await subject.expand();
     await subject.selectRowByValue("share-and-invite");
 
-    assert.ok(exists(".share-topic-modal"), "it shows the modal");
+    assert.dom(".share-topic-modal").exists("shows the modal");
   });
 });
 

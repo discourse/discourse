@@ -4,7 +4,7 @@ import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { count, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
@@ -21,8 +21,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".names"), "includes poster name");
-    assert.ok(exists("a.post-date"), "includes post date");
+    assert.dom(".names").exists("includes poster name");
+    assert.dom("a.post-date").exists("includes post date");
   });
 
   test("post - links", async function (assert) {
@@ -220,7 +220,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".actions button.share"), "it renders a share button");
+    assert.dom(".actions button.share").exists("renders a share button");
   });
 
   test("copy link button", async function (assert) {
@@ -301,7 +301,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.edit"), "button is not displayed");
+    assert.dom("button.edit").doesNotExist("button is not displayed");
   });
 
   test("recover button", async function (assert) {
@@ -333,7 +333,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `button is not displayed`);
+    assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   test(`delete topic button - can't delete when topic author without permission`, async function (assert) {
@@ -375,7 +375,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.recover"), `button is not displayed`);
+    assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
   test("delete post button", async function (assert) {
@@ -396,7 +396,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `button is not displayed`);
+    assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   test(`delete post button - can't delete, can't flag`, async function (assert) {
@@ -408,8 +408,10 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `delete button is not displayed`);
-    assert.ok(!exists("button.create-flag"), `flag button is not displayed`);
+    assert.dom("button.delete").doesNotExist("delete button is not displayed");
+    assert
+      .dom("button.create-flag")
+      .doesNotExist("flag button is not displayed");
   });
 
   test("recover post button", async function (assert) {
@@ -429,7 +431,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.recover"), `button is not displayed`);
+    assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
   test(`flagging`, async function (assert) {
@@ -487,8 +489,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("a.reply-to-tab"), "hides the tab");
-    assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
+    assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
+    assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
   });
 
   test("reply a few posts above (suppressed)", async function (assert) {
@@ -500,7 +502,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists("a.reply-to-tab"), "shows the tab");
+    assert.dom("a.reply-to-tab").exists("shows the tab");
     assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
   });
 
@@ -540,7 +542,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} @expandHidden={{this.expandHidden}} />
     `);
 
-    assert.ok(!exists(".topic-body .expand-hidden"), "button is not displayed");
+    assert
+      .dom(".topic-body .expand-hidden")
+      .doesNotExist("button is not displayed");
   });
 
   test("expand first post", async function (assert) {
@@ -553,7 +557,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".topic-body .expand-post");
-    assert.ok(!exists(".expand-post"), "button is gone");
+    assert.dom(".expand-post").doesNotExist("button is gone");
   });
 
   test("can't bookmark", async function (assert) {

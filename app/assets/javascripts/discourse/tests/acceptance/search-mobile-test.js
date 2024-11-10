@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   count,
-  exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -19,7 +18,9 @@ acceptance("Search - Mobile", function (needs) {
       .dom("input.full-page-search")
       .exists("it shows the full page search form");
 
-    assert.ok(!exists(".search-results .fps-topic"), "no results by default");
+    assert
+      .dom(".search-results .fps-topic")
+      .doesNotExist("no results by default");
 
     await click(".advanced-filters summary");
 

@@ -5,7 +5,6 @@ import { observes as nativeClassObserves } from "@ember-decorators/object";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import discourseComputed, {
   afterRender,
@@ -121,12 +120,12 @@ module("Unit | Utils | decorators", function (hooks) {
 
     await render(hbs`<FooComponent @baz={{this.baz}} />`);
 
-    assert.ok(exists(document.querySelector(".foo-component")));
+    assert.dom(".foo-component").exists();
     assert.strictEqual(this.baz, 1);
 
     await clearRender();
 
-    assert.ok(!exists(document.querySelector(".foo-component")));
+    assert.dom(".foo-component").doesNotExist();
     assert.strictEqual(this.baz, 1);
   });
 

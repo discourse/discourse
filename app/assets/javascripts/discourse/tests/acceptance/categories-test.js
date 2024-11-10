@@ -2,11 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Categories - 'categories_only'", function (needs) {
@@ -80,20 +76,17 @@ acceptance(
     });
     test("basic functionality", async function (assert) {
       await visit("/categories");
-      assert.ok(
-        exists("table.subcategory-list.with-topics thead h3 .category-name"),
-        "shows heading for top-level category"
-      );
-      assert.ok(
-        exists(
+      assert
+        .dom("table.subcategory-list.with-topics thead h3 .category-name")
+        .exists("shows heading for top-level category");
+      assert
+        .dom(
           "table.subcategory-list.with-topics tr[data-category-id='26'] h3 .category-name"
-        ),
-        "shows table row for subcategories"
-      );
-      assert.ok(
-        exists("table.category-list.with-topics div[data-topic-id='11994']"),
-        "shows a featured topic"
-      );
+        )
+        .exists("shows table row for subcategories");
+      assert
+        .dom("table.category-list.with-topics div[data-topic-id='11994']")
+        .exists("shows a featured topic");
     });
   }
 );
@@ -107,20 +100,17 @@ acceptance(
     });
     test("basic functionality", async function (assert) {
       await visit("/categories");
-      assert.ok(
-        exists("div.subcategory-list.with-topics h3 .category-name"),
-        "shows heading for top-level category"
-      );
-      assert.ok(
-        exists(
+      assert
+        .dom("div.subcategory-list.with-topics h3 .category-name")
+        .exists("shows heading for top-level category");
+      assert
+        .dom(
           "div.subcategory-list.with-topics div[data-category-id='26'] h3 .category-name"
-        ),
-        "shows element for subcategories"
-      );
-      assert.ok(
-        exists("div.category-list.with-topics a[data-topic-id='11994']"),
-        "shows a featured topic"
-      );
+        )
+        .exists("shows element for subcategories");
+      assert
+        .dom("div.category-list.with-topics a[data-topic-id='11994']")
+        .exists("shows a featured topic");
     });
   }
 );

@@ -4,7 +4,6 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   acceptance,
   count,
-  exists,
   publishToMessageBus,
   query,
   queryAll,
@@ -28,10 +27,9 @@ acceptance(
     test("clicking on section header button", async function (assert) {
       await visit("/");
 
-      assert.ok(
-        !exists(".sidebar-section[data-section-name='messages']"),
-        "does not display messages section in sidebar"
-      );
+      assert
+        .dom(".sidebar-section[data-section-name='messages']")
+        .doesNotExist("does not display messages section in sidebar");
     });
   }
 );
@@ -78,10 +76,7 @@ acceptance(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-header-button"
       );
 
-      assert.ok(
-        exists("#reply-control.private-message"),
-        "it opens the composer"
-      );
+      assert.dom("#reply-control.private-message").exists("opens the composer");
     });
 
     test("clicking on section header link", async function (assert) {
@@ -100,12 +95,11 @@ acceptance(
     test("personal messages section links", async function (assert) {
       await visit("/");
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
-        ),
-        "displays the personal message inbox link"
-      );
+        )
+        .exists("displays the personal message inbox link");
 
       assert.strictEqual(
         count(
@@ -119,12 +113,11 @@ acceptance(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
       );
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
-        ),
-        "personal message inbox link is marked as active"
-      );
+        )
+        .exists("personal message inbox link is marked as active");
 
       assert.strictEqual(
         count(
@@ -161,19 +154,17 @@ acceptance(
           "only two links are marked as active in the sidebar"
         );
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
-          ),
-          "personal message inbox link is marked as active"
-        );
+          )
+          .exists("personal message inbox link is marked as active");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}'].active`
-          ),
-          `personal message ${type} link is marked as active`
-        );
+          )
+          .exists(`personal message ${type} link is marked as active`);
 
         assert
           .dom(
@@ -299,19 +290,17 @@ acceptance(
           "only two links are marked as active in the sidebar"
         );
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group1.active"
-          ),
-          "group1 group message inbox link is marked as active"
-        );
+          )
+          .exists("group1 group message inbox link is marked as active");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-${type}'].group1.active`
-          ),
-          `group1 group message ${type} link is marked as active`
-        );
+          )
+          .exists(`group1 group message ${type} link is marked as active`);
       });
     });
 

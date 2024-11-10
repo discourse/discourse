@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Signing In - Mobile", function (needs) {
   needs.mobileView();
@@ -8,6 +8,6 @@ acceptance("Signing In - Mobile", function (needs) {
   test("sign in", async function (assert) {
     await visit("/");
     await click("header .login-button");
-    assert.ok(exists("#login-form"), "it shows the login modal");
+    assert.dom("#login-form").exists("shows the login modal");
   });
 });
