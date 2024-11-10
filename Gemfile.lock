@@ -266,7 +266,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.5.0)
       uri
-    net-imap (0.5.0)
+    net-imap (0.5.1)
       date
       net-protocol
     net-pop (0.1.2)
