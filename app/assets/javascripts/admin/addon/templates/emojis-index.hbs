@@ -1,12 +1,5 @@
-<AdminPageSubheader @titleLabel="admin.emoji.title">
-  <:actions as |actions|>
-    <actions.Primary @route="adminEmojis.new" @label="admin.emoji.new" />
-  </:actions>
-</AdminPageSubheader>
-
 <div class="form-horizontal">
   <div class="inline-form">
-    <label class="label">Show</label>
     <ComboBox
       @value={{this.filter}}
       @content={{this.sortingGroups}}
@@ -28,13 +21,13 @@
       </tr>
     </thead>
     <tbody>
-      {{#each this.sortedEmojis as |e|}}
+      {{#each this.sortedEmojis as |emoji|}}
         <tr class="d-admin-row__content">
           <td class="d-admin-row__overview">
             <img
               class="emoji emoji-custom"
-              src={{e.url}}
-              title={{e.name}}
+              src={{emoji.url}}
+              title={{emoji.name}}
               alt={{i18n "admin.emoji.alt"}}
             />
           </td>
@@ -42,25 +35,25 @@
             <div class="d-admin-row__mobile-label">
               {{i18n "admin.emoji.name"}}
             </div>
-            :{{e.name}}:
+            :{{emoji.name}}:
           </td>
           <td class="d-admin-row__detail">
             <div class="d-admin-row__mobile-label">
               {{i18n "admin.emoji.group"}}
             </div>
-            {{e.group}}
+            {{emoji.group}}
           </td>
           <td class="d-admin-row__detail">
             <div class="d-admin-row__mobile-label">
               {{i18n "admin.emoji.created_by"}}
             </div>
-            {{e.created_by}}
+            {{emoji.created_by}}
           </td>
           <td class="d-admin-row__controls action">
             <DButton
-              @action={{fn this.destroyEmoji e}}
+              @action={{fn this.destroyEmoji emoji}}
               @icon="trash-can"
-              class="btn-danger"
+              class="btn-small"
             />
           </td>
         </tr>

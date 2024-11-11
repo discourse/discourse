@@ -3,6 +3,7 @@ import { action, computed } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 const ALL_FILTER = "all";
@@ -14,6 +15,7 @@ export default class AdminEmojisIndexController extends Controller {
   sorting = null;
 
   @sort("filteredEmojis.[]", "sorting") sortedEmojis;
+
   init() {
     super.init(...arguments);
 
@@ -53,13 +55,18 @@ export default class AdminEmojisIndexController extends Controller {
       message: I18n.t("admin.emoji.delete_confirm", {
         name: emoji.get("name"),
       }),
-      didConfirm: () => {
-        return ajax("/admin/customize/emojis/" + emoji.get("name"), {
-          type: "DELETE",
-        }).then(() => {
-          this.model.removeObject(emoji);
-        });
-      },
+      didConfirm: () => this.#destroyEmoji(emoji),
     });
+  }
+
+  async #destroyEmoji(emoji) {
+    try {
+      await ajax("/admin/customize/emojis/" + emoji.get("name"), {
+        type: "DELETE",
+      });
+      this.model.removeObject(emoji);
+    } catch (err) {
+      popupAjaxError(err);
+    }
   }
 }

@@ -9,6 +9,9 @@
         @label={{i18n "admin.emoji.title"}}
       />
     </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary @route="adminEmojis.new" @label="admin.emoji.new" />
+    </:actions>
     <:tabs>
       <NavItem
         @route="adminEmojis.settings"

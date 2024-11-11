@@ -6,6 +6,7 @@ const ALL_FILTER = "all";
 
 export default class AdminEmojisNewController extends Controller {
   @service router;
+  @service currentUser;
 
   @computed("model")
   get emojiGroups() {
@@ -21,6 +22,7 @@ export default class AdminEmojisNewController extends Controller {
   emojiUploaded(emoji, group) {
     emoji.url += "?t=" + new Date().getTime();
     emoji.group = group;
+    emoji.created_by = this.currentUser.username;
     this.model.pushObject(EmberObject.create(emoji));
     this.router.transitionTo("adminEmojis.index");
   }
