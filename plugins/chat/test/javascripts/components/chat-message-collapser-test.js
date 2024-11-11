@@ -13,9 +13,9 @@ const youtubeCooked =
 
 const animatedImageCooked =
   "<p>written text</p>" +
-  '<p><img src="/images/avatar.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/avatar.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>more written text</p>" +
-  '<p><img src="/images/d-logo-sketch-small.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/d-logo-sketch-small.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>and even more</p>";
 
 const externalImageCooked =
@@ -74,11 +74,12 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link").href.includes(
-          "%3Cscript%3Esomeeviltitle%3C/script%3E"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link")
+        .hasProperty(
+          "href",
+          "https://www.youtube.com/watch?v=%3Cscript%3Esomeeviltitle%3C/script%3E"
+        );
     });
 
     test("shows youtube link in header", async function (assert) {
@@ -89,8 +90,12 @@ module(
       const link = queryAll(".chat-message-collapser-link");
 
       assert.strictEqual(link.length, 2, "two youtube links rendered");
-      assert.strictEqual(link[0].href, "https://www.youtube.com/watch?v=ytId1");
-      assert.strictEqual(link[1].href, "https://www.youtube.com/watch?v=ytId2");
+      assert
+        .dom(link[0])
+        .hasAttribute("href", "https://www.youtube.com/watch?v=ytId1");
+      assert
+        .dom(link[1])
+        .hasAttribute("href", "https://www.youtube.com/watch?v=ytId2");
     });
 
     test("shows all user written text", async function (assert) {
@@ -247,12 +252,14 @@ module(
       const links = queryAll("a.chat-message-collapser-link-small");
 
       assert.true(links[0].innerText.trim().includes("avatar.png"));
-      assert.true(links[0].href.includes("avatar.png"));
+      assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
       assert.true(
         links[1].innerText.trim().includes("d-logo-sketch-small.png")
       );
-      assert.true(links[1].href.includes("d-logo-sketch-small.png"));
+      assert
+        .dom(links[1])
+        .hasAttribute("href", "/images/d-logo-sketch-small.png");
     });
 
     test("shows all user written text", async function (assert) {
@@ -319,10 +326,10 @@ module(
       const links = queryAll("a.chat-message-collapser-link-small");
 
       assert.true(links[0].innerText.trim().includes("http://cat1.com"));
-      assert.true(links[0].href.includes("http://cat1.com"));
+      assert.dom(links[0]).hasAttribute("href", "http://cat1.com/");
 
       assert.true(links[1].innerText.trim().includes("http://cat2.com"));
-      assert.true(links[1].href.includes("http://cat2.com"));
+      assert.dom(links[1]).hasAttribute("href", "http://cat2.com/");
     });
 
     test("shows all user written text", async function (assert) {
@@ -408,12 +415,14 @@ module(
       const links = queryAll("a.chat-message-collapser-link-small");
 
       assert.true(links[0].innerText.trim().includes("shows alt"));
-      assert.true(links[0].href.includes("/images/avatar.png"));
+      assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
       assert.true(
         links[1].innerText.trim().includes("/images/d-logo-sketch-small.png")
       );
-      assert.true(links[1].href.includes("/images/d-logo-sketch-small.png"));
+      assert
+        .dom(links[1])
+        .hasAttribute("href", "/images/d-logo-sketch-small.png");
     });
 
     test("shows all user written text", async function (assert) {
@@ -495,11 +504,9 @@ module(
       );
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link-small").href.includes(
-          "%3Cscript%3Esomeeviltitle%3C/script%3E"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .hasProperty("href", /%3Cscript%3Esomeeviltitle%3C\/script%3E$/);
       assert.dom(".chat-message-collapser-link-small").hasHtml("someeviltitle");
     });
 

@@ -203,11 +203,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.ok(
-      query(
-        "#my-dropdown .widget-dropdown-item:nth-child(3)"
-      ).classList.contains("separator")
-    );
+    assert
+      .dom("#my-dropdown .widget-dropdown-item:nth-child(3)")
+      .hasClass("separator");
   });
 
   test("hides widget if no content", async function (assert) {
@@ -225,9 +223,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.ok(header().classList.contains("widget-dropdown-header"));
-    assert.ok(header().classList.contains("btn-small"));
-    assert.ok(header().classList.contains("and-text"));
+    assert.dom(header()).hasClass("widget-dropdown-header");
+    assert.dom(header()).hasClass("btn-small");
+    assert.dom(header()).hasClass("and-text");
   });
 
   test("bodyClass option", async function (assert) {
@@ -237,9 +235,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.ok(body().classList.contains("widget-dropdown-body"));
-    assert.ok(body().classList.contains("gigantic"));
-    assert.ok(body().classList.contains("and-yet-small"));
+    assert.dom(body()).hasClass("widget-dropdown-body");
+    assert.dom(body()).hasClass("gigantic");
+    assert.dom(body()).hasClass("and-yet-small");
   });
 
   test("caret option", async function (assert) {

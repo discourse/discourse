@@ -6,10 +6,9 @@ acceptance("User Anonymous", function () {
   test("Root URL", async function (assert) {
     await visit("/u/eviltrout");
 
-    assert.ok(
-      document.body.classList.contains("user-summary-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-summary-page", "has the body class");
     assert.strictEqual(
       currentRouteName(),
       "user.summary",
@@ -19,10 +18,9 @@ acceptance("User Anonymous", function () {
 
   test("Filters", async function (assert) {
     await visit("/u/eviltrout/activity");
-    assert.ok(
-      document.body.classList.contains("user-activity-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-activity-page", "has the body class");
     assert.dom(".user-main .about").exists("has the about section");
     assert.dom(".user-stream .item").exists("has stream items");
 
@@ -40,10 +38,9 @@ acceptance("User Anonymous", function () {
   test("Badges", async function (assert) {
     await visit("/u/eviltrout/badges");
 
-    assert.ok(
-      document.body.classList.contains("user-badges-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-badges-page", "has the body class");
     assert.dom(".badge-group-list .badge-card").exists("shows a badge");
   });
 

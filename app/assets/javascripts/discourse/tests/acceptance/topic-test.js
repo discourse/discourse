@@ -565,20 +565,24 @@ acceptance("Topic filter replies to post number", function (needs) {
   test("visit topic", async function (assert) {
     await visit("/t/-/280");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.filtered_replies_hint", { count: 3 }),
-      "it displays the right title for filtering by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.filtered_replies_hint", { count: 3 }),
+        "displays the right title for filtering by replies"
+      );
 
     await visit("/");
     await visit("/t/-/280?replies_to_post_number=3");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.view_all_posts"),
-      "it displays the right title when filtered by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.view_all_posts"),
+        "displays the right title when filtered by replies"
+      );
   });
 });
 

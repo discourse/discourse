@@ -523,8 +523,8 @@ acceptance("Composer", function (needs) {
 
     pretender.put("/posts/:post_id", async () => {
       // at this point, request is in flight, so post is staged
-      assert.dom(".topic-post.staged").exists();
-      assert.ok(query(".topic-post").classList.contains("staged"));
+      assert.dom(".topic-post").exists();
+      assert.dom(".topic-post").hasClass("staged");
       assert.strictEqual(
         query(".topic-post.staged .cooked").innerText.trim(),
         "will return empty json"
@@ -1104,11 +1104,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await composer.focusComposer({ fallbackToNewTopic: true });
 
     await settled();
-    assert.strictEqual(
-      document.activeElement.classList.contains("d-editor-input"),
-      true,
-      "composer is opened and focused"
-    );
+    assert.dom(".d-editor-input").isFocused("composer is open and focused");
     assert.strictEqual(composer.model.action, Composer.CREATE_TOPIC);
   });
 
@@ -1122,11 +1118,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     });
 
     await settled();
-    assert.strictEqual(
-      document.activeElement.classList.contains("d-editor-input"),
-      true,
-      "composer is opened and focused"
-    );
+    assert.dom(".d-editor-input").isFocused("composer is open and focused");
     assert.strictEqual(
       query("textarea.d-editor-input").value.trim(),
       "this is appended"
@@ -1141,11 +1133,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await composer.focusComposer();
 
     await settled();
-    assert.strictEqual(
-      document.activeElement.classList.contains("d-editor-input"),
-      true,
-      "composer is opened and focused"
-    );
+    assert.dom(".d-editor-input").isFocused("composer is open and focused");
   });
 
   test("Focusing a composer which is already open and append text", async function (assert) {
@@ -1156,11 +1144,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
-    assert.strictEqual(
-      document.activeElement.classList.contains("d-editor-input"),
-      true,
-      "composer is opened and focused"
-    );
+    assert.dom(".d-editor-input").isFocused("composer is open and focused");
     assert.strictEqual(
       query("textarea.d-editor-input").value.trim(),
       "this is some appended text"
@@ -1178,11 +1162,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
-    assert.strictEqual(
-      document.activeElement.classList.contains("d-editor-input"),
-      true,
-      "composer is opened and focused"
-    );
+    assert.dom(".d-editor-input").isFocused("composer is open and focused");
     assert.strictEqual(
       query("textarea.d-editor-input").value.trim(),
       "This is a dirty reply\n\nthis is some appended text"
