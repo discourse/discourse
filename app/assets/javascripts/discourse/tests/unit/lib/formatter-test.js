@@ -130,11 +130,9 @@ module("Unit | Utility | formatter", function (hooks) {
       longDate(new Date())
     );
 
-    assert.ok(
-      domFromString(formatDays(0, { format: "medium" }))[0].classList.contains(
-        "date"
-      )
-    );
+    assert
+      .dom(domFromString(formatDays(0, { format: "medium" }))[0])
+      .hasClass("date");
 
     this.clock.restore();
     this.clock = fakeTime("2012-01-09 12:00");

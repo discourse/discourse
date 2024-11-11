@@ -4,12 +4,13 @@ import {
   getSettledState,
   settled,
   visit,
+  waitFor,
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
 import AboutFixtures from "discourse/tests/fixtures/about";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const SPINNER_SELECTOR =
   "#main-outlet-wrapper .route-loading-spinner div.spinner";
@@ -85,16 +86,11 @@ acceptance("Page Loading Indicator", function (needs) {
     assert.strictEqual(currentRouteName(), "discovery.latest");
     assert.dom(SPINNER_SELECTOR).doesNotExist();
 
-    await waitUntil(() =>
-      query(".loading-indicator-container").classList.contains("loading")
-    );
+    await waitFor(".loading-indicator-container.loading");
 
     pretender.resolve(aboutRequest);
 
-    await waitUntil(() =>
-      query(".loading-indicator-container").classList.contains("done")
-    );
-
+    await waitFor(".loading-indicator-container.done");
     await settled();
 
     assert.strictEqual(currentRouteName(), "about");

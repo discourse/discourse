@@ -2,7 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
@@ -40,16 +40,10 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.strictEqual(
-      query(".themes-tab").classList.contains("active"),
-      true,
-      "themes tab is active"
-    );
-    assert.strictEqual(
-      query(".components-tab").classList.contains("active"),
-      false,
-      "components tab is not active"
-    );
+    assert.dom(".themes-tab").hasClass("active", "themes tab is active");
+    assert
+      .dom(".components-tab")
+      .doesNotHaveClass("active", "components tab is not active");
 
     assert
       .dom(".inactive-indicator")
@@ -120,16 +114,12 @@ module("Integration | Component | themes-list", function (hooks) {
       hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
     );
 
-    assert.strictEqual(
-      query(".components-tab").classList.contains("active"),
-      true,
-      "components tab is active"
-    );
-    assert.strictEqual(
-      query(".themes-tab").classList.contains("active"),
-      false,
-      "themes tab is not active"
-    );
+    assert
+      .dom(".components-tab")
+      .hasClass("active", "components tab is active");
+    assert
+      .dom(".themes-tab")
+      .doesNotHaveClass("active", "themes tab is not active");
 
     assert.dom(".inactive-indicator").doesNotExist("there is no separator");
     assert
