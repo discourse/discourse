@@ -2518,7 +2518,7 @@ en:
     default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Apply syntax highlighting to HTML-authored &lt;code&gt; blocks, even if they didn't specify a language. To configure markdown-authored code blocks, use the 'default code lang' setting."
-    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
+    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> for a demo"
     show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
