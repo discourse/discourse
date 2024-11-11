@@ -2,13 +2,14 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Categories - 'categories_only'", function (needs) {
   needs.settings({
     desktop_category_page_style: "categories_only",
   });
+
   test("basic functionality", async function (assert) {
     await visit("/categories");
     assert
@@ -21,6 +22,7 @@ acceptance("Categories - 'categories_and_latest_topics'", function (needs) {
   needs.settings({
     desktop_category_page_style: "categories_and_latest_topics",
   });
+
   test("basic functionality", async function (assert) {
     await visit("/categories");
     assert
@@ -29,10 +31,13 @@ acceptance("Categories - 'categories_and_latest_topics'", function (needs) {
     assert
       .dom("div.latest-topic-list div[data-topic-id='8']")
       .exists("shows the topic list");
-    assert.notOk(
-      query(".more-topics a").href.endsWith("?order=created"),
-      "the load more button doesn't include the order=created param"
-    );
+    assert
+      .dom(".more-topics a")
+      .hasAttribute(
+        "href",
+        "/latest",
+        "the load more button doesn't include the order=created param"
+      );
   });
 });
 
@@ -42,13 +47,17 @@ acceptance(
     needs.settings({
       desktop_category_page_style: "categories_and_latest_topics_created_date",
     });
+
     test("order topics by", async function (assert) {
       await visit("/categories");
 
-      assert.ok(
-        query(".more-topics a").href.endsWith("?order=created"),
-        "the load more button includes the order=created param"
-      );
+      assert
+        .dom(".more-topics a")
+        .hasAttribute(
+          "href",
+          "/latest?order=created",
+          "the load more button includes the order=created param"
+        );
     });
   }
 );
@@ -57,6 +66,7 @@ acceptance("Categories - 'categories_with_featured_topics'", function (needs) {
   needs.settings({
     desktop_category_page_style: "categories_with_featured_topics",
   });
+
   test("basic functionality", async function (assert) {
     await visit("/categories");
     assert
@@ -74,6 +84,7 @@ acceptance(
     needs.settings({
       desktop_category_page_style: "subcategories_with_featured_topics",
     });
+
     test("basic functionality", async function (assert) {
       await visit("/categories");
       assert
@@ -98,6 +109,7 @@ acceptance(
     needs.settings({
       desktop_category_page_style: "subcategories_with_featured_topics",
     });
+
     test("basic functionality", async function (assert) {
       await visit("/categories");
       assert

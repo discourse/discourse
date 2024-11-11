@@ -173,10 +173,13 @@ acceptance("Sidebar - Plugin API", function (needs) {
         "displays first link with correct title attribute"
       );
 
-    assert.true(
-      links[0].href.endsWith("/some-slug/1"),
-      "link has the correct href attribute"
-    );
+    assert
+      .dom(links[0])
+      .hasAttribute(
+        "href",
+        "/t/some-slug/1",
+        "link has the correct href attribute"
+      );
 
     assert
       .dom(links[0].children[0])

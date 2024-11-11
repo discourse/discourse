@@ -8,7 +8,7 @@ import {
 import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -192,14 +192,18 @@ acceptance("Admin - Site Settings", function (needs) {
   test("nav menu items have titles", async (assert) => {
     await visit("/admin/site_settings");
 
-    const navItems = queryAll(".admin-nav .nav-stacked li a");
-    navItems.each((_, item) => {
-      assert.strictEqual(
-        item.title,
-        item.innerText,
-        "menu item has title, and the title is equal to menu item's label"
-      );
-    });
+    const navItems = [
+      ...document.querySelectorAll(".admin-nav .nav-stacked li a"),
+    ];
+    for (const item of navItems) {
+      assert
+        .dom(item)
+        .hasAttribute(
+          "title",
+          item.innerText,
+          "menu item has title, and the title is equal to menu item's label"
+        );
+    }
   });
 
   test("can perform fuzzy search", async function (assert) {
