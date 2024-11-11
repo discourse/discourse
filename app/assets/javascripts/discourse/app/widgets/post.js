@@ -12,6 +12,7 @@ import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
 import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
@@ -24,6 +25,7 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
+import { registerDeprecationHandler } from "discourse-common/lib/deprecated";
 import getURL, {
   getAbsoluteURL,
   getURLWithCDN,
@@ -40,6 +42,19 @@ function transformWithCallbacks(post, topicUrl, store) {
 
   return transformed;
 }
+
+let postMenuWidgetExtensionsAdded = null;
+let postMenuConsoleWarningLogged = false;
+
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === "discourse.post-menu-widget-overrides") {
+    if (!postMenuWidgetExtensionsAdded) {
+      postMenuWidgetExtensionsAdded = new Set();
+    }
+
+    postMenuWidgetExtensionsAdded.add(consolePrefix().slice(1, -1));
+  }
+});
 
 export function avatarImg(wanted, attrs) {
   const size = translateSize(wanted);
@@ -532,7 +547,94 @@ createWidget("post-contents", {
         filteredRepliesShown: state.filteredRepliesShown,
       },
     };
-    result.push(this.attach("post-menu", attrs, extraState));
+
+    if (
+      this.siteSettings.glimmer_post_menu_mode === "enabled" ||
+      ((this.siteSettings.glimmer_post_menu_mode === "auto" ||
+        this.currentUser?.use_auto_glimmer_post_menu) &&
+        !postMenuWidgetExtensionsAdded)
+    ) {
+      if (!postMenuConsoleWarningLogged) {
+        if (postMenuWidgetExtensionsAdded) {
+          postMenuConsoleWarningLogged = true;
+
+          // eslint-disable-next-line no-console
+          console.warn(
+            [
+              "Using the new 'glimmer' post menu, even though there are themes and/or plugins using deprecated APIs (glimmer_post_menu_mode = enabled).\n" +
+                "The following plugins and/or themes are using deprecated APIs, their post menu customizations are broken and may cause your site to not work properly:",
+              ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+              // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
+            ].join("\n- ")
+          );
+        } else if (this.currentUser?.use_auto_glimmer_post_menu) {
+          // TODO (glimmer-post-menu): remove this else if block when removing the site setting glimmer_post_menu_groups
+          postMenuConsoleWarningLogged = true;
+
+          // eslint-disable-next-line no-console
+          console.log("✅  Using the new 'glimmer' post menu!");
+        }
+      }
+
+      const filteredRepliesView =
+        this.siteSettings.enable_filtered_replies_view;
+      result.push(
+        this.attach("glimmer-post-menu", {
+          canCreatePost: attrs.canCreatePost,
+          filteredRepliesView,
+          nextPost: attrs.nextPost,
+          post: this.findAncestorModel(),
+          prevPost: attrs.prevPost,
+          repliesShown: filteredRepliesView
+            ? extraState.state.filteredRepliesShown
+            : extraState.state.repliesShown,
+          showReadIndicator: attrs.showReadIndicator,
+          changeNotice: () => this.sendWidgetAction("changeNotice"), // this action comes from the post stream
+          changePostOwner: () => this.sendWidgetAction("changePostOwner"), // this action comes from the post stream
+          copyLink: () => this.sendWidgetAction("copyLink"),
+          deletePost: () => this.sendWidgetAction("deletePost"), // this action comes from the post stream
+          editPost: () => this.sendWidgetAction("editPost"), // this action comes from the post stream
+          grantBadge: () => this.sendWidgetAction("grantBadge"), // this action comes from the post stream
+          lockPost: () => this.sendWidgetAction("lockPost"), // this action comes from the post stream
+          permanentlyDeletePost: () =>
+            this.sendWidgetAction("permanentlyDeletePost"),
+          rebakePost: () => this.sendWidgetAction("rebakePost"), // this action comes from the post stream
+          recoverPost: () => this.sendWidgetAction("recoverPost"), // this action comes from the post stream
+          replyToPost: () => this.sendWidgetAction("replyToPost"), // this action comes from the post stream
+          share: () => this.sendWidgetAction("share"),
+          showFlags: () => this.sendWidgetAction("showFlags"), // this action comes from the post stream
+          showLogin: () => this.sendWidgetAction("showLogin"), // this action comes from application route
+          showPagePublish: () => this.sendWidgetAction("showPagePublish"), // this action comes from the post stream
+          toggleLike: () => this.sendWidgetAction("toggleLike"),
+          togglePostType: () => this.sendWidgetAction("togglePostType"), // this action comes from the post stream
+          toggleReplies: filteredRepliesView
+            ? () => this.sendWidgetAction("toggleFilteredRepliesView")
+            : () => this.sendWidgetAction("toggleRepliesBelow"),
+          toggleWiki: () => this.sendWidgetAction("toggleWiki"), // this action comes from the post stream
+          unhidePost: () => this.sendWidgetAction("unhidePost"), // this action comes from the post stream
+          unlockPost: () => this.sendWidgetAction("unlockPost"), // this action comes from the post stream
+        })
+      );
+    } else {
+      if (
+        (this.siteSettings.glimmer_post_menu_mode !== "disabled" ||
+          this.currentUser?.use_auto_glimmer_post_menu) &&
+        postMenuWidgetExtensionsAdded &&
+        !postMenuConsoleWarningLogged
+      ) {
+        postMenuConsoleWarningLogged = true;
+        // eslint-disable-next-line no-console
+        console.warn(
+          [
+            "Using the legacy 'widget' post menu because the following plugins and/or themes are using deprecated APIs:",
+            ...Array.from(postMenuWidgetExtensionsAdded).sort(),
+            // TODO (glimmer-post-menu): add link to meta topic here when the roadmap for the update is announced
+          ].join("\n- ")
+        );
+      }
+
+      result.push(this.attach("post-menu", attrs, extraState));
+    }
 
     const repliesBelow = state.repliesBelow;
     if (repliesBelow.length) {
@@ -942,6 +1044,7 @@ createWidget("post-article", {
 });
 
 let addPostClassesCallbacks = null;
+
 export function addPostClassesCallback(callback) {
   addPostClassesCallbacks = addPostClassesCallbacks || [];
   addPostClassesCallbacks.push(callback);
@@ -1025,15 +1128,15 @@ export default createWidget("post", {
     return [this.attach("post-article", attrs)];
   },
 
-  toggleLike() {
+  async toggleLike() {
     const post = this.model;
     const likeAction = post.get("likeAction");
 
     if (likeAction && likeAction.get("canToggle")) {
-      return likeAction.togglePromise(post).then((result) => {
-        this.appEvents.trigger("page:like-toggled", post, likeAction);
-        return this._warnIfClose(result);
-      });
+      const result = await likeAction.togglePromise(post);
+
+      this.appEvents.trigger("page:like-toggled", post, likeAction);
+      return this._warnIfClose(result);
     }
   },
 
