@@ -168,7 +168,10 @@ acceptance(
       await fillIn("#reply-title", "http://www.example.com/has-title.html");
       assert
         .dom(".d-editor-preview")
-        .includesHtm("onebox", "pastes the link into the body and previews it");
+        .includesHtml(
+          "onebox",
+          "pastes the link into the body and previews it"
+        );
       assert
         .dom(".d-editor-textarea-wrapper .popup-tip.good")
         .exists("the body is now good");

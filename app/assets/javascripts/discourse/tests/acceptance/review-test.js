@@ -75,7 +75,7 @@ acceptance("Review", function (needs) {
 
     assert.dom(".reject-reason-reviewable-modal").exists();
     assert
-      .odom(".reject-reason-reviewable-modal .d-modal__title")
+      .dom(".reject-reason-reviewable-modal .d-modal__title")
       .includesHtml(
         I18n.t("review.reject_reason.title"),
         "opens reject reason modal when user is rejected and blocked"
