@@ -1468,7 +1468,7 @@ Discourse::Application.routes.draw do
     get "raw/:topic_id(/:post_number)" => "posts#markdown_num"
 
     resources :invites, only: %i[create update destroy]
-    get "/invites/:id" => "invites#show", :constraints => { format: :html }
+    get "/invites/:id" => "invites#show"
     post "invites/create-multiple" => "invites#create_multiple", :constraints => { format: :json }
 
     post "invites/upload_csv" => "invites#upload_csv"
