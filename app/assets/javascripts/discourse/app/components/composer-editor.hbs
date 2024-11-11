@@ -50,7 +50,7 @@
 
 {{#if this.composer.allowUpload}}
   <PickFilesButton
-    @fileInputId="file-uploader"
+    @fileInputId={{this.uppyComposerUpload.fileUploadElementId}}
     @allowMultiple={{true}}
     name="file-uploader"
   />

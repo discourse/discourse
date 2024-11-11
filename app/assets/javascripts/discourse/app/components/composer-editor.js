@@ -929,4 +929,8 @@ export default class ComposerEditor extends Component {
   showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
+
+  showUploadModal() {
+    document.querySelector(this.uppyComposerUpload.fileUploadElementId).click();
+  }
 }
