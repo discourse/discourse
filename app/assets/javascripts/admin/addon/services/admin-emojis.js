@@ -1,52 +1,53 @@
-import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
-import { sort } from "@ember/object/computed";
-import { service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import EmberObject, { action } from "@ember/object";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 const ALL_FILTER = "all";
 
-export default class AdminEmojisIndexController extends Controller {
+export default class AdminEmojis extends Service {
   @service dialog;
 
-  filter = null;
-  sorting = null;
+  @tracked emojis = [];
 
-  @sort("filteredEmojis.[]", "sorting") sortedEmojis;
+  @tracked filter = ALL_FILTER;
+  @tracked sorting = ["group", "name"];
 
-  init() {
-    super.init(...arguments);
+  constructor() {
+    super(...arguments);
 
-    this.setProperties({
-      filter: ALL_FILTER,
-      sorting: ["group", "name"],
-    });
+    this.#fetchEmojis();
   }
 
-  @computed("model.[]", "filter")
   get filteredEmojis() {
     if (!this.filter || this.filter === ALL_FILTER) {
-      return this.model;
+      return this.emojis;
     } else {
-      return this.model.filterBy("group", this.filter);
+      return this.emojis.filterBy("group", this.filter);
     }
   }
 
-  @computed("model.[]")
-  get emojiGroups() {
-    return this.model.mapBy("group").uniq();
+  get sortedEmojis() {
+    return this.filteredEmojis.sortBy("sorting");
   }
 
-  @computed("emojiGroups.[]")
+  get emojiGroups() {
+    return this.emojis.mapBy("group").uniq();
+  }
+
   get sortingGroups() {
     return [ALL_FILTER].concat(this.emojiGroups);
   }
 
-  @action
-  filterGroups(value) {
-    this.set("filter", value);
+  async #fetchEmojis() {
+    try {
+      const data = await ajax("/admin/customize/emojis.json");
+      this.emojis = data.map((emoji) => EmberObject.create(emoji));
+    } catch (err) {
+      popupAjaxError(err);
+    }
   }
 
   @action
@@ -64,7 +65,7 @@ export default class AdminEmojisIndexController extends Controller {
       await ajax("/admin/customize/emojis/" + emoji.get("name"), {
         type: "DELETE",
       });
-      this.model.removeObject(emoji);
+      this.emojis.removeObject(emoji);
     } catch (err) {
       popupAjaxError(err);
     }
