@@ -245,6 +245,7 @@ module PageObjects
       end
 
       def open_flag_topic_modal
+        expect(page).to have_css(".flag-topic", wait: Capybara.default_max_wait_time * 3)
         find(".flag-topic").click
       end
 
