@@ -74,8 +74,8 @@ To customize the look and feel of your community beyond what you configured in t
 - [Custom user fields](%{base_url}/admin/customize/user_fields)
 - [Terms of service and privacy policies](%{base_url}/admin/site_settings/category/legal)
 
-[details="Advanced options"]
-
+<details>
+<summary>Advanced options</summary>
 Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have done and to give and get advice.
 
 - Add one or more social login options: [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), [Discord](https://meta.discourse.org/t/configure-discord-login-for-discourse/127129?u=tobiaseigen), [Apple](https://www.discourse.org/plugins/apple-login), [Amazon, LinkedIn, and Microsoft](https://www.discourse.org/plugins/amazon-linkedin-microsoft-login)
@@ -84,7 +84,8 @@ Discourse is very configurable and there is a great deal programmers and web des
 - [Build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717)
 - [Create your own theme](https://meta.discourse.org/docs?topic=93648)
 - [Interact with Discourse from other applications using the API](https://meta.discourse.org/t/create-and-configure-an-api-key/230124?u=tobiaseigen)
-[/details]
+
+</details>
 
 ## :arrows_clockwise: Repeat!
 
@@ -119,7 +120,8 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Moderation documentation topics](https://meta.discourse.org/tags/c/documentation/10/moderation)
 - [Using Discourse documentation topics](https://meta.discourse.org/c/-/126)
 
-[details="Additional resources for maintaining your server"]
+<details>
+<summary>Additional resources for maintaining your server</summary>
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
@@ -138,7 +140,7 @@ Here are some additional resources from [the Discourse blog](http://blog.discour
 - [Configure a firewall on your server](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
 - [A user friendly offline page when rebuilding or upgrading](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 
-[/details]
+</details>
 
 ----
 
