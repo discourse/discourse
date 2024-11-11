@@ -13,9 +13,9 @@ const youtubeCooked =
 
 const animatedImageCooked =
   "<p>written text</p>" +
-  '<p><img src="/images/avatar.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/avatar.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>more written text</p>" +
-  '<p><img src="/images/d-logo-sketch-small.png" class="animated onebox"></img></p>' +
+  '<p><img src="/images/d-logo-sketch-small.png" width="8" height="8" class="animated onebox"></img></p>' +
   "<p>and even more</p>";
 
 const externalImageCooked =
