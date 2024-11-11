@@ -927,7 +927,6 @@ export default class ComposerEditor extends Component {
     "composer.model.editingPost"
   )
   showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
-    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 }
