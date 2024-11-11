@@ -933,7 +933,8 @@ export default class ComposerEditor extends Component {
     return formTemplateIds?.length > 0 && !replyingToTopic && !editingPost;
   }
 
+  @action
   showUploadModal() {
-    document.querySelector(this.fileUploadElementId).click();
+    document.getElementById(this.fileUploadElementId).click();
   }
 }
