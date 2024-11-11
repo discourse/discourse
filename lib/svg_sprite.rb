@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SvgSprite
-  SVG_ICONS ||=
+  SVG_ICONS =
     Set.new(
       %w[
         address-book
@@ -146,6 +146,7 @@ module SvgSprite
         file-lines
         filter
         flag
+        flask
         folder
         folder-open
         forward

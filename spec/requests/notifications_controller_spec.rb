@@ -631,8 +631,6 @@ RSpec.describe NotificationsController do
     fab!(:user)
     let(:user_api_key) do
       UserApiKey.create!(
-        application_name: "my app",
-        client_id: "",
         scopes: ["notifications"].map { |name| UserApiKeyScope.new(name: name) },
         user_id: user.id,
       )

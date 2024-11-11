@@ -10,8 +10,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
-  count,
-  exists,
   loggedInUser,
   publishToMessageBus,
   query,
@@ -53,30 +51,29 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
-      ),
-      "additional section links are displayed"
-    );
+      )
+      .exists("additional section links are displayed");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='true']"
-      ),
-      "aria-expanded toggles to true when additional links are displayed"
-    );
+      )
+      .exists(
+        "aria-expanded toggles to true when additional links are displayed"
+      );
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
-      ),
-      "additional section links are hidden"
-    );
+      )
+      .doesNotExist("additional section links are hidden");
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
@@ -84,19 +81,21 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await click("#main-outlet");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content"
-      ),
-      "additional section links are hidden when clicking outside"
-    );
+      )
+      .doesNotExist(
+        "additional section links are hidden when clicking outside"
+      );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary[aria-expanded='false']"
-      ),
-      "aria-expanded toggles to false when additional links are hidden"
-    );
+      )
+      .exists(
+        "aria-expanded toggles to false when additional links are hidden"
+      );
   });
 
   test("clicking on everything link", async function (assert) {
@@ -108,23 +107,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/latest",
-      "it should transition to the latest page"
+      "should transition to the latest page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("clicking on everything link - sidebar_link_to_filtered_list set to true and no unread or new topics", async function (assert) {
@@ -141,23 +137,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/latest",
-      "it should transition to the latest page"
+      "should transition to the latest page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("clicking on everything link - sidebar_link_to_filtered_list set to true with new topics", async function (assert) {
@@ -184,23 +177,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/new",
-      "it should transition to the new page"
+      "should transition to the new page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("clicking on everything link - sidebar_link_to_filtered_list set to true with new and unread topics", async function (assert) {
@@ -235,34 +225,32 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/unread",
-      "it should transition to the unread page"
+      "should transition to the unread page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("clicking on users link", async function (assert) {
     await visit("/t/280");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
-      ),
-      "users link is not displayed in sidebar when it is not the active route"
-    );
+      )
+      .doesNotExist(
+        "users link is not displayed in sidebar when it is not the active route"
+      );
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
@@ -275,23 +263,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/u?order=likes_received",
-      "it should transition to the users url"
+      "should transition to the users url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users'].active"
-      ),
-      "the users link is marked as active"
-    );
+      )
+      .exists("the users link is marked as active");
 
     assert.strictEqual(
       query(
@@ -303,12 +288,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/u");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users'].active"
-      ),
-      "users link is displayed in sidebar when it is the active route"
-    );
+      )
+      .exists("users link is displayed in sidebar when it is the active route");
   });
 
   test("users section link is not shown when enable_user_directory site setting is disabled", async function (assert) {
@@ -320,12 +304,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
-      ),
-      "users section link is not displayed in sidebar"
-    );
+      )
+      .doesNotExist("users section link is not displayed in sidebar");
   });
 
   test("clicking on badges link", async function (assert) {
@@ -342,7 +325,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/badges",
-      "it should transition to the badges url"
+      "should transition to the badges url"
     );
   });
 
@@ -355,23 +338,23 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='badges']"
-      ),
-      "badges section link is not shown in sidebar"
-    );
+      )
+      .doesNotExist("badges section link is not shown in sidebar");
   });
 
   test("clicking on groups link", async function (assert) {
     await visit("/t/280");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups']"
-      ),
-      "groups link is not displayed in sidebar when it is not the active route"
-    );
+      )
+      .doesNotExist(
+        "groups link is not displayed in sidebar when it is not the active route"
+      );
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
@@ -384,23 +367,20 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/g",
-      "it should transition to the groups url"
+      "should transition to the groups url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups'].active"
-      ),
-      "the groups link is marked as active"
-    );
+      )
+      .exists("the groups link is marked as active");
 
     assert.strictEqual(
       query(
@@ -412,12 +392,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/g");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups'].active"
-      ),
-      "groups link is displayed in sidebar when it is the active route"
-    );
+      )
+      .exists(
+        "groups link is displayed in sidebar when it is the active route"
+      );
   });
 
   test("groups section link is not shown when enable_group_directory site setting has been disabled", async function (assert) {
@@ -429,12 +410,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='groups']"
-      ),
-      "groups section link is not shown in sidebar"
-    );
+      )
+      .doesNotExist("groups section link is not shown in sidebar");
   });
 
   test("navigating to about from sidebar", async function (assert) {
@@ -454,12 +434,13 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "navigates to about route correctly"
     );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about'].active"
-      ),
-      "about section link link is displayed in the main section and marked as active"
-    );
+      )
+      .exists(
+        "about section link link is displayed in the main section and marked as active"
+      );
   });
 
   test("navigating to FAQ from sidebar", async function (assert) {
@@ -512,11 +493,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
       )
-    );
+      .doesNotExist();
   });
 
   test("clicking on my posts link", async function (assert) {
@@ -528,32 +509,30 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/u/${loggedInUser().username}/activity`,
-      "it should transition to the user's activity url"
+      "should transition to the user's activity url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
-      ),
-      "the my posts link is marked as active"
-    );
+      )
+      .exists("the my posts link is marked as active");
 
     await visit(`/u/${loggedInUser().username}/activity/drafts`);
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
-      ),
-      "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
-    );
+      )
+      .doesNotExist(
+        "the my posts link is not marked as active when user has no drafts and visiting the user activity drafts URL"
+      );
   });
 
   test("clicking on my posts link when user has a draft", async function (assert) {
@@ -570,32 +549,28 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     assert.strictEqual(
       currentURL(),
       `/u/${loggedInUser().username}/activity/drafts`,
-      "it transitions to the user's activity drafts url"
+      "transitions to the user's activity drafts url"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
-      ),
-      "the my posts link is marked as active"
-    );
+      )
+      .exists("the my posts link is marked as active");
 
     await visit(`/u/${loggedInUser().username}/activity`);
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-posts'].active"
-      ),
-      "the my posts link is marked as active"
-    );
+      )
+      .exists("the my posts link is marked as active");
   });
 
   test("my posts title changes when drafts are present", async function (assert) {
@@ -655,61 +630,76 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     );
   });
 
+  test("the invite section link is not visible to people who cannot invite to the forum", async function (assert) {
+    updateCurrentUser({ can_invite_to_forum: false });
+
+    await visit("/");
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='invite']"
+      )
+      .doesNotExist("invite section link is not visible");
+  });
+
+  test("clicking the invite section link opens the invite modal and doesn't change the route", async function (assert) {
+    updateCurrentUser({ can_invite_to_forum: true });
+
+    await visit("/");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='invite']"
+    );
+
+    assert.dom(".create-invite-modal").exists("invite modal is open");
+    assert.strictEqual(currentURL(), "/", "route doesn't change");
+  });
+
   test("visiting top route", async function (assert) {
     await visit("/top");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("visiting unread route", async function (assert) {
     await visit("/unread");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("visiting new route", async function (assert) {
     await visit("/new");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='everything'].active"
-      ),
-      "the everything link is marked as active"
-    );
+      )
+      .exists("the everything link is marked as active");
   });
 
   test("show suffix indicator for unread and new content on everything link", async function (assert) {
@@ -744,12 +734,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
-      ),
-      "shows suffix indicator for unread posts on everything link"
-    );
+      )
+      .exists("shows suffix indicator for unread posts on everything link");
 
     const topicTrackingState = this.container.lookup(
       "service:topic-tracking-state"
@@ -770,17 +759,16 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       },
     });
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
-      ),
-      "shows suffix indicator for new topics on categories link"
-    );
+      )
+      .exists("shows suffix indicator for new topics on categories link");
 
-    assert.equal(
+    assert.strictEqual(
       Object.keys(topicTrackingState.stateChangeCallbacks).length,
       initialCallbackCount,
-      "it does not add a new topic tracking state callback when the topic is read"
+      "does not add a new topic tracking state callback when the topic is read"
     );
 
     // simulate reading topic 1
@@ -794,12 +782,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       },
     });
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-suffix"
-      ),
-      "it removes the suffix indicator when all topics are read"
-    );
+      )
+      .doesNotExist("removes the suffix indicator when all topics are read");
   });
 
   test("new and unread count for everything link", async function (assert) {
@@ -859,7 +846,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "3 unread",
-      "it displays the right unread count"
+      "displays the right unread count"
     );
 
     // simulate reading topic 2
@@ -878,7 +865,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "2 unread",
-      "it updates the unread count"
+      "updates the unread count"
     );
 
     // simulate reading topic 3
@@ -908,7 +895,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
       ).textContent.trim(),
       "1 new",
-      "it displays the new count once there are no unread topics"
+      "displays the new count once there are no unread topics"
     );
 
     await publishToMessageBus("/unread", {
@@ -921,12 +908,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       },
     });
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
-      ),
-      "it removes new count once there are no new topics"
-    );
+      )
+      .doesNotExist("removes new count once there are no new topics");
   });
 
   test("review link is not shown when user cannot review", async function (assert) {
@@ -934,23 +920,21 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is not shown"
-    );
+      )
+      .doesNotExist("review link is not shown");
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is not shown"
-    );
+      )
+      .doesNotExist("review link is not shown");
   });
 
   test("review link when user can review", async function (assert) {
@@ -961,43 +945,43 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/review");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'].active"
-      ),
-      "review link is shown as active when visiting the review route even if there are no pending reviewables"
-    );
+      )
+      .exists(
+        "review link is shown as active when visiting the review route even if there are no pending reviewables"
+      );
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is not shown as part of the main section links"
-    );
+      )
+      .doesNotExist(
+        "review link is not shown as part of the main section links"
+      );
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is displayed in the more drawer"
-    );
+      )
+      .exists("review link is displayed in the more drawer");
 
     await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
       reviewable_count: 34,
     });
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is shown as part of the main section links"
-    );
+      )
+      .exists("review link is shown as part of the main section links");
 
     assert.strictEqual(
       query(
@@ -1011,12 +995,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content .sidebar-section-link[data-link-name='review']"
-      ),
-      "review link is not displayed in the more drawer"
-    );
+      )
+      .doesNotExist("review link is not displayed in the more drawer");
   });
 
   test("adding section link via plugin API with Object", async function (assert) {
@@ -1050,12 +1033,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "displays the right title for the link"
     );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='unread'] .sidebar-section-link-prefix.icon .d-icon-wrench"
-      ),
-      "displays the wrench icon for the link"
-    );
+      )
+      .exists("displays the wrench icon for the link");
 
     await click(".sidebar-section-link[data-link-name='unread']");
 
@@ -1123,12 +1105,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "displays the right title for the link"
     );
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='user-summary'] .sidebar-section-link-prefix.icon .d-icon-link"
-      ),
-      "displays the link icon for the link"
-    );
+      )
+      .exists("displays the link icon for the link");
 
     await click(".btn-sidebar-toggle");
 

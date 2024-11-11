@@ -11,7 +11,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq, not } from "truth-helpers";
+import { eq, lt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -547,6 +547,7 @@ export default class ChatMessage extends Component {
           (if this.pane.selectingMessages "-selectable")
           (if @message.highlighted "-highlighted")
           (if @message.streaming "-streaming")
+          (if (lt @message.user.id 0) "is-bot")
           (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
           (if (eq @message.id this.currentUser.id) "is-by-current-user")
           (if

@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
@@ -14,7 +10,9 @@ acceptance("Admin - Users List", function (needs) {
     await visit("/admin/users/list/active");
 
     assert.dom(".users-list .user").exists();
-    assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
+    assert
+      .dom(".user:nth-of-type(1) .email small")
+      .doesNotExist("escapes email");
   });
 
   test("searching users with no matches", async function (assert) {
@@ -22,10 +20,7 @@ acceptance("Admin - Users List", function (needs) {
 
     await fillIn(".controls.username input", "doesntexist");
 
-    assert.equal(
-      query(".users-list-container").innerText,
-      I18n.t("search.no_results")
-    );
+    assert.dom(".users-list-container").hasText(I18n.t("search.no_results"));
   });
 
   test("sorts users", async function (assert) {

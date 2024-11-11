@@ -1,10 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Reports", function (needs) {
   needs.user();
@@ -12,7 +8,7 @@ acceptance("Reports", function (needs) {
   test("Visit reports page", async function (assert) {
     await visit("/admin/reports");
 
-    assert.strictEqual(count(".admin-reports-list__report"), 1);
+    assert.dom(".admin-reports-list__report").exists({ count: 1 });
 
     const report = query(".admin-reports-list__report:first-child");
 

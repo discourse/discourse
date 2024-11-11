@@ -191,7 +191,7 @@ body.has-full-page-chat {
 
   .c-navbar-container {
     position: sticky;
-    top: var(--header-offset);
+    top: var(--main-outlet-offset);
   }
 
   .chat-messages-scroller {

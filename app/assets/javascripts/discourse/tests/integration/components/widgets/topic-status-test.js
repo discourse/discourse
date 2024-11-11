@@ -4,7 +4,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | topic-status", function (hooks) {
   setupRenderingTest(hooks);
@@ -54,19 +53,21 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       hbs`<MountWidget @widget="topic-status" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
+    assert.dom(".topic-statuses .pinned").exists("pinned icon is shown");
     assert
       .dom(".topic-statuses .unpinned")
       .doesNotExist("unpinned icon is not shown");
 
     await click(".topic-statuses .pin-toggle-button");
 
-    assert.ok(!exists(".topic-statuses .pinned"), "pinned icon is not shown");
-    assert.ok(exists(".topic-statuses .unpinned"), "unpinned icon is shown");
+    assert
+      .dom(".topic-statuses .pinned")
+      .doesNotExist("pinned icon is not shown");
+    assert.dom(".topic-statuses .unpinned").exists("unpinned icon is shown");
 
     await click(".topic-statuses .pin-toggle-button");
 
-    assert.ok(exists(".topic-statuses .pinned"), "pinned icon is shown");
+    assert.dom(".topic-statuses .pinned").exists("pinned icon is shown");
     assert
       .dom(".topic-statuses .unpinned")
       .doesNotExist("unpinned icon is not shown");

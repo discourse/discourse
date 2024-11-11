@@ -4619,6 +4619,8 @@ hu:
               pending_count:
                 one: "%{count} függőben"
                 other: "%{count} függőben"
+            invite:
+              content: "Meghívás"
         global_section: "Globális szekció, mindenki számára látható"
       panels:
         forum:
@@ -6638,6 +6640,7 @@ hu:
           groups: "Csoportok"
           dashboard: "Vezérlőpult"
           navigation: "Navigáció"
+          experimental: "Kísérleti"
         secret_list:
           invalid_input: "A beviteli mezők nem lehetnek üresek, és nem tartalmazhatnak függőleges vonalkaraktert."
         default_categories:

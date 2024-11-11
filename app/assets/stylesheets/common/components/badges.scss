@@ -112,17 +112,6 @@
     width: 8px;
     border-radius: 50%;
   }
-
-  // Click count
-
-  &.clicks {
-    font-weight: normal;
-    background-color: var(--primary-low);
-    top: -1px;
-    color: var(--primary-medium);
-    position: relative;
-    border: none;
-  }
 }
 
 // Posts badge

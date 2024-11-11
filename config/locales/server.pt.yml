@@ -1022,7 +1022,6 @@ pt:
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
-    must_approve_users: "O pessoal deverá aprovar todas as contas dos novos utilizadores antes destes terem permissão para aceder ao sítio."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
     use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
@@ -1284,18 +1283,6 @@ pt:
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "inativo"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "inativo"
-      - ""
-      navigation_menu:
-      - "barra Lateral"
-      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:

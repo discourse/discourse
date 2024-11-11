@@ -267,10 +267,12 @@ export default class Composer extends RestModel {
     return categoryId ? Category.findById(categoryId) : null;
   }
 
+  @dependentKeyCompat
   get replyingToTopic() {
     return this.get("action") === REPLY;
   }
 
+  @dependentKeyCompat
   get editingPost() {
     return isEdit(this.get("action"));
   }

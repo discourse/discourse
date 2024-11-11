@@ -492,14 +492,14 @@ module("Unit | Utility | formatter | until", function (hooks) {
     const timezone = "UTC";
     this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
     const result = until("2100-01-01 13:00:00.000Z", timezone, "en");
-    assert.equal(result, "Until: 1:00 PM");
+    assert.strictEqual(result, "Until: 1:00 PM");
   });
 
   test("shows date if until moment is tomorrow", function (assert) {
     const timezone = "UTC";
     this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
     const result = until("2100-01-02 12:00:00.000Z", timezone, "en");
-    assert.equal(result, "Until: Jan 2");
+    assert.strictEqual(result, "Until: Jan 2");
   });
 
   test("shows until moment in user's timezone", function (assert) {
@@ -510,6 +510,6 @@ module("Unit | Utility | formatter | until", function (hooks) {
     this.clock = fakeTime("2100-01-01 12:00:00.000Z", timezone);
     const result = until(`2100-01-01 ${untilUTC}:00.000Z`, timezone, "en");
 
-    assert.equal(result, `Until: ${untilTbilisi}`);
+    assert.strictEqual(result, `Until: ${untilTbilisi}`);
   });
 });

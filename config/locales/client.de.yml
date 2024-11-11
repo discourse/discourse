@@ -1837,6 +1837,7 @@ de:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
+        cannot_invite_to_forum: "Du hast leider nicht die Erlaubnis, Einladungen zu erstellen. Bitte wende dich an einen Administrator, damit er dir das Recht zum Einladen erteilt."
         invite:
           new_title: "Mitglieder einladen"
           edit_title: "Einladung bearbeiten"
@@ -3504,6 +3505,9 @@ de:
         one: "%{count} versteckten Beitrag anzeigen"
         other: "%{count} versteckte Beiträge anzeigen"
       sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
+      link_clicked:
+        one: "Link %{count} mal angeklickt"
+        other: "Link %{count} mal angeklickt"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -4614,6 +4618,9 @@ de:
               pending_count:
                 one: "%{count} ausstehend"
                 other: "%{count} ausstehend"
+            invite:
+              content: "Einladen"
+              title: "Neue Mitglieder einladen"
         global_section: "Globaler Abschnitt, für alle sichtbar"
       panels:
         forum:
@@ -5142,6 +5149,8 @@ de:
           group_name: "Gruppenbenutzerereignisse"
           user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
           user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
+        custom_event:
+          group_name: "Benutzerdefinierte Ereignisse"
         user_promoted_event:
           group_name: "Benutzerbeförderungsereignisse"
           user_promoted: "Ein Benutzer wird befördert"
@@ -5260,6 +5269,8 @@ de:
           community_name_placeholder: "Beispiel-Community"
           community_summary: "Kurzbeschreibung der Community"
           community_description: "Beschreibung der Community"
+          community_title: "Gemeinschaftstitel"
+          community_title_help: "Kurze Beschreibung, die im Browser-Tab angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
           banner_image: "Bannerbild"
           banner_image_help: |
             Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100x300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
@@ -6644,6 +6655,7 @@ de:
           groups: "Gruppen"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -6784,6 +6796,7 @@ de:
         uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"
+        created_by: "Erstellt von"
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"

@@ -1,19 +1,19 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Post - Admin Menu - Anonymous", function () {
   test("Enter as a anon user", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".show-more-actions");
 
-    assert.ok(exists("#topic"), "The topic was rendered");
+    assert.dom("#topic").exists("the topic is rendered");
     assert
       .dom("#post_1 .post-controls .edit")
-      .exists("The edit button was not rendered");
+      .exists("the edit button is not rendered");
     assert
       .dom(".show-post-admin-menu")
-      .doesNotExist("The wrench button was not rendered");
+      .doesNotExist("the wrench button is not rendered");
   });
 });
 
@@ -26,7 +26,7 @@ acceptance("Post - Admin Menu - Authenticated", function (needs) {
 
     assert
       .dom("#post_1 .post-controls .edit")
-      .exists("The edit button was rendered");
-    assert.ok(exists(".add-notice"), "The add notice button was rendered");
+      .exists("the edit button is rendered");
+    assert.dom(".add-notice").exists("the add notice button is rendered");
   });
 });

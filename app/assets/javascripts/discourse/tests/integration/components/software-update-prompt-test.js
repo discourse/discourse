@@ -2,10 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  publishToMessageBus,
-} from "discourse/tests/helpers/qunit-helpers";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | software-update-prompt", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,10 +16,8 @@ module("Integration | Component | software-update-prompt", function (hooks) {
 
     await publishToMessageBus("/global/asset-version", "somenewversion");
 
-    assert.strictEqual(
-      count("div.software-update-prompt.require-software-refresh"),
-      1,
-      "it does have the class to show the prompt"
-    );
+    assert
+      .dom("div.software-update-prompt")
+      .hasClass("require-software-refresh", "has the class to show the prompt");
   });
 });

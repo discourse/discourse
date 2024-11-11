@@ -733,15 +733,6 @@ sl:
     skip_auto_delete_reply_likes: "Pri samodejnem brisanju starih odgovorov preskočite brisanje objav s tem ali večjim številom všečkov."
     default_other_skip_new_user_tips: "Preskoči namige in značke za nove uporabnike."
     shared_drafts_min_trust_level: "Uporabnikom omogočite ogled in urejanje osnutkov v skupni rabi."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "nedejaven"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "nedejaven"
-      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:

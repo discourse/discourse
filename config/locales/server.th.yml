@@ -297,15 +297,6 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "ไม่ใช้งาน"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "ไม่ใช้งาน"
-      - ""
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:

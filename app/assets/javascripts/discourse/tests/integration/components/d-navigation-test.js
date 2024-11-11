@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,11 +23,9 @@ module("Integration | Component | d-navigation", function (hooks) {
     await render(hbs`<DNavigation @filterMode="categories" />`);
     await click(".category-drop .select-kit-header-wrapper");
 
-    assert.strictEqual(
-      count(".category-row"),
-      1,
-      "displays only categories that are not muted"
-    );
+    assert
+      .dom(".category-row")
+      .exists({ count: 1 }, "displays only categories that are not muted");
     assert.strictEqual(
       query(".category-row .badge-category span").textContent.trim(),
       "dev"

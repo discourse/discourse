@@ -4,11 +4,8 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Meta Tag Updater", function (needs) {
   needs.pretender((server, helper) => {
-    server.get("/about", () => {
-      return helper.response({});
-    });
+    server.get("/about", () => helper.response({}));
   });
-  needs.site({});
 
   test("updates OG title and URL", async function (assert) {
     await visit("/");
@@ -17,40 +14,20 @@ acceptance("Meta Tag Updater", function (needs) {
     );
     await click("a[href='/about']");
 
-    assert.strictEqual(
-      document
-        .querySelector("meta[property='og:title']")
-        .getAttribute("content"),
-      document.title,
-      "it should update OG title"
-    );
-    assert.ok(
-      document
-        .querySelector("meta[property='og:url']")
-        .getAttribute("content")
-        .endsWith("/about"),
-      "it should update OG URL"
-    );
-    assert.strictEqual(
-      document
-        .querySelector("meta[name='twitter:title']")
-        .getAttribute("content"),
-      document.title,
-      "it should update Twitter title"
-    );
-    assert.ok(
-      document
-        .querySelector("meta[name='twitter:url']")
-        .getAttribute("content")
-        .endsWith("/about"),
-      "it should update Twitter URL"
-    );
-    assert.ok(
-      document
-        .querySelector("link[rel='canonical']")
-        .getAttribute("href")
-        .endsWith("/about"),
-      "it should update the canonical URL"
-    );
+    assert
+      .dom("meta[property='og:title']", document)
+      .hasAttribute("content", document.title, "updates OG title");
+    assert
+      .dom("meta[property='og:url']", document)
+      .hasAttribute("content", /\/about$/, "updates OG URL");
+    assert
+      .dom("meta[name='twitter:title']", document)
+      .hasAttribute("content", document.title, "updates Twitter title");
+    assert
+      .dom("meta[name='twitter:url']", document)
+      .hasAttribute("content", /\/about$/, "updates Twitter URL");
+    assert
+      .dom("link[rel='canonical']", document)
+      .hasAttribute("href", /\/about$/, "updates the canonical URL");
   });
 });

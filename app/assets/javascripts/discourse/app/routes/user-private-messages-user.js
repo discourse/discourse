@@ -4,8 +4,4 @@ export default class extends DiscourseRoute {
   model() {
     return this.modelFor("user");
   }
-
-  setupController(controller, model) {
-    controller.set("model", model);
-  }
 }

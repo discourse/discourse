@@ -6,8 +6,8 @@ require "htmlentities"
 require "ruby-bbcode-to-md"
 
 class BulkImport::PhpBB < BulkImport::Base
-  SUSPENDED_TILL ||= Date.new(3000, 1, 1)
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "phpbb_"
+  SUSPENDED_TILL = Date.new(3000, 1, 1)
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "phpbb_"
 
   def initialize
     super

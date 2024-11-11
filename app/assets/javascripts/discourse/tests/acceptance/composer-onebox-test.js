@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  query,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Onebox", function (needs) {
   needs.user();
@@ -32,7 +28,7 @@ http://www.example.com/has-title.html
         `
     );
 
-    assert.ok(visible(".d-editor-preview"));
+    assert.dom(".d-editor-preview").exists();
     assert.strictEqual(
       query(".d-editor-preview").innerHTML.trim(),
       `

@@ -4,8 +4,6 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
-  count,
-  exists,
   publishToMessageBus,
   query,
   updateCurrentUser,
@@ -72,13 +70,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   test("tag section links for user", async function (assert) {
     await visit("/");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-tags'])"
-      ),
-      4,
-      "4 section links under the section"
-    );
+      )
+      .exists({ count: 4 }, "4 section links under the section");
 
     assert.strictEqual(
       query(
@@ -112,13 +108,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to tag1's topics discovery page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
@@ -132,13 +126,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to tag2's topics discovery page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag2] a.active`)
@@ -161,13 +153,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to tag1's topics discovery page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
@@ -204,13 +194,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to tag1's topics new page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
@@ -247,13 +235,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to tag1's topics unread page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag1] a.active`)
@@ -271,13 +257,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       "it should transition to user's private message tag4 tag page"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(`.sidebar-section-link-wrapper[data-tag-name=tag4] a.active`)
@@ -287,13 +271,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   test("visiting tag discovery top route", async function (assert) {
     await visit(`/tag/tag1/l/top`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
@@ -303,13 +285,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   test("visiting tag discovery new ", async function (assert) {
     await visit(`/tag/tag1/l/new`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
@@ -319,13 +299,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   test("visiting tag discovery unread route", async function (assert) {
     await visit(`/tag/tag1/l/unread`);
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='tags'] .sidebar-section-link.active"
-      ),
-      1,
-      "only one link is marked as active"
-    );
+      )
+      .exists({ count: 1 }, "only one link is marked as active");
 
     assert
       .dom(".sidebar-section-link-wrapper[data-tag-name=tag1] a.active")
@@ -377,26 +355,25 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
-      ),
-      "shows suffix indicator for new content on tag1 link"
-    );
+      )
+      .exists("shows suffix indicator for new content on tag1 link");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag2] .sidebar-section-link-suffix`
-      ),
-      "shows suffix indicator for new content on tag2 link"
-    );
+      )
+      .exists("shows suffix indicator for new content on tag2 link");
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag3] .sidebar-section-link-suffix`
-      ),
-      "hides suffix indicator when there's no new content on tag3 link"
-    );
+      )
+      .doesNotExist(
+        "hides suffix indicator when there's no new content on tag3 link"
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -407,12 +384,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       },
     });
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
-      ),
-      "shows suffix indicator for new topic on tag1 link"
-    );
+      )
+      .exists("shows suffix indicator for new topic on tag1 link");
 
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -423,12 +399,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       },
     });
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-suffix`
-      ),
-      "hides suffix indicator for tag1 section link"
-    );
+      )
+      .doesNotExist("hides suffix indicator for tag1 section link");
   });
 
   test("new and unread count for tag section links", async function (assert) {
@@ -503,12 +478,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       `displays 1 unread count for tag2 section link`
     );
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag3] .sidebar-section-link-content-badge`
-      ),
-      "does not display any badge for tag3 section link"
-    );
+      )
+      .doesNotExist("does not display any badge for tag3 section link");
 
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -536,12 +510,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       },
     });
 
-    assert.ok(
-      !exists(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
-      ),
-      `does not display any badge tag1 section link`
-    );
+      )
+      .doesNotExist(`does not display any badge tag1 section link`);
   });
 
   test("cleans up topic tracking state state changed callbacks when section is destroyed", async function (assert) {
@@ -572,12 +545,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     await visit("/");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"
-      ),
-      "section link to configure default sidebar tags is shown"
-    );
+      )
+      .exists("section link to configure default sidebar tags is shown");
 
     await click(
       ".sidebar-section-link[data-link-name='configure-default-navigation-menu-tags']"

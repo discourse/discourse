@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer topic featured links", function (needs) {
   needs.user();
@@ -173,28 +169,25 @@ acceptance(
     test("Pasting a link enables the text input area", async function (assert) {
       await visit("/");
       await click("#create-topic");
-      assert.ok(
-        exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is disabled"
-      );
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .exists("textarea is disabled");
       await fillIn("#reply-title", "http://www.example.com/has-title.html");
       assert.ok(
         query(".d-editor-preview").innerHTML.trim().includes("onebox"),
         "it pastes the link into the body and previews it"
       );
-      assert.ok(
-        exists(".d-editor-textarea-wrapper .popup-tip.good"),
-        "the body is now good"
-      );
+      assert
+        .dom(".d-editor-textarea-wrapper .popup-tip.good")
+        .exists("the body is now good");
       assert.strictEqual(
         query(".title-input input").value,
         "An interesting article",
         "title is from the oneboxed article"
       );
-      assert.ok(
-        !exists(".d-editor-textarea-wrapper.disabled"),
-        "textarea is enabled"
-      );
+      assert
+        .dom(".d-editor-textarea-wrapper.disabled")
+        .doesNotExist("textarea is enabled");
     });
   }
 );

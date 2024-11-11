@@ -1,6 +1,5 @@
 .admin-contents.admin-emojis {
-  #custom_emoji .select-kit,
-  .emoji-uploader .select-kit {
+  .select-kit {
     max-width: 210px;
   }
   #custom_emoji td.action {
@@ -19,7 +18,47 @@
       animation: background-fade-highlight 2.5s ease-out;
     }
   }
+
+  .emoji-uploader.form-horizontal {
+    padding: var(--space-3);
+    margin-top: var(--space-2);
+    background: var(--primary-very-low);
+    display: flex;
+    gap: var(--space-3);
+    flex-direction: row;
+    align-items: end;
+
+    @include breakpoint("tablet") {
+      flex-direction: column;
+      align-items: normal;
+    }
+
+    .control-group {
+      margin-bottom: 0;
+    }
+
+    .label {
+      font-weight: bold;
+      margin-right: var(--space-2);
+      color: var(--primary-high);
+    }
+  }
 }
+
+.d-admin-table {
+  .d-admin-row__content td {
+    vertical-align: middle;
+  }
+
+  .d-admin-row__overview {
+    width: 20%;
+
+    @include breakpoint("tablet") {
+      width: auto;
+    }
+  }
+}
+
 .admin-emojis__header {
   display: flex;
   justify-content: space-between;

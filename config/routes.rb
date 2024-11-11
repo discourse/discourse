@@ -1351,6 +1351,7 @@ Discourse::Application.routes.draw do
 
     get "new-topic" => "new_topic#index"
     get "new-message" => "new_topic#index"
+    get "new-invite" => "new_invite#index"
 
     # Topic routes
     get "t/id_for/:slug" => "topics#id_for_slug"
@@ -1623,6 +1624,8 @@ Discourse::Application.routes.draw do
     post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
     get "/user-api-key/otp" => "user_api_keys#otp"
     post "/user-api-key/otp" => "user_api_keys#create_otp"
+
+    post "/user-api-key-client/register" => "user_api_key_clients#register"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

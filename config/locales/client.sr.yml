@@ -1877,6 +1877,8 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+            invite:
+              content: "Pozovite"
     form_templates:
       upload_field:
         upload: "Upload"

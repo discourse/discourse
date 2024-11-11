@@ -17,7 +17,7 @@
     "@babel/core": "^7.26.0",
     "discourse-common": "workspace:1.0.0",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.8.1",
+    "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "xss": "^1.0.15"
@@ -27,7 +27,7 @@
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.32",
-    "@types/qunit": "^2.19.11",
+    "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~5.12.0",
@@ -40,7 +40,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.95.0"
+    "webpack": "^5.96.1"
   },
   "engines": {
     "node": ">= 18",

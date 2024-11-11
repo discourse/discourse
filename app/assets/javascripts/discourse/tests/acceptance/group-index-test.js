@@ -2,9 +2,6 @@ import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -15,22 +12,22 @@ acceptance("Group Members - Anonymous", function () {
   test("Viewing Members as anon user", async function (assert) {
     await visit("/g/discourse");
 
-    assert.strictEqual(
-      count(".avatar-flair .d-icon-circle-half-stroke"),
-      1,
-      "it displays the group's avatar flair"
-    );
-    assert.ok(exists(".group-members .group-member"), "it lists group members");
+    assert
+      .dom(".avatar-flair .d-icon-circle-half-stroke")
+      .exists("displays the group's avatar flair");
+    assert.dom(".group-members .group-member").exists("lists group members");
 
     assert
       .dom(".group-member-dropdown")
       .doesNotExist("it does not allow anon user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder"),
+        "it should display the right filter placeholder"
+      );
   });
 });
 
@@ -49,11 +46,7 @@ acceptance("Group Members", function (needs) {
     await visit("/g/discourse");
     await click(".group-members-add");
 
-    assert.strictEqual(
-      count(".user-chooser"),
-      1,
-      "it should display the add members modal"
-    );
+    assert.dom(".user-chooser").exists("displays the add members modal");
   });
 
   test("Viewing Members as an admin user", async function (assert) {
@@ -63,11 +56,13 @@ acceptance("Group Members", function (needs) {
       .dom(".group-member-dropdown")
       .exists("it allows admin user to manage group members");
 
-    assert.strictEqual(
-      query(".group-username-filter").getAttribute("placeholder"),
-      I18n.t("groups.members.filter_placeholder_admin"),
-      "it should display the right filter placeholder"
-    );
+    assert
+      .dom(".group-username-filter")
+      .hasAttribute(
+        "placeholder",
+        I18n.t("groups.members.filter_placeholder_admin"),
+        "it should display the right filter placeholder"
+      );
   });
 
   test("Shows bulk actions as an admin user", async function (assert) {

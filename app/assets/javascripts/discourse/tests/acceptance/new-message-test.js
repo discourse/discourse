@@ -1,10 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Message - Anonymous", function () {
@@ -13,7 +9,7 @@ acceptance("New Message - Anonymous", function () {
       "/new-message?username=charlie&title=message%20title&body=message%20body"
     );
 
-    assert.ok(exists(".modal.login-modal"), "it shows the login modal");
+    assert.dom(".modal.login-modal").exists("shows the login modal");
   });
 });
 
@@ -25,7 +21,7 @@ acceptance("New Message - Authenticated", function (needs) {
       "/new-message?username=charlie,john&title=message%20title&body=message%20body"
     );
 
-    assert.ok(exists(".composer-fields"), "it opens composer");
+    assert.dom(".composer-fields").exists("opens the composer");
     assert.strictEqual(
       query("#reply-title").value.trim(),
       "message title",

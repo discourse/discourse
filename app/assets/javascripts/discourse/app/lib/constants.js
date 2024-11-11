@@ -97,3 +97,5 @@ export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = {
   simple: "simple",
   user_option: "user_option",
 };
+
+export const MAX_UNOPTIMIZED_CATEGORIES = 1000;

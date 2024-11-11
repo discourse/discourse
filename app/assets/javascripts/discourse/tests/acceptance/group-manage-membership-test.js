@@ -3,7 +3,6 @@ import { test } from "qunit";
 import Site from "discourse/models/site";
 import {
   acceptance,
-  count,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -30,72 +29,50 @@ acceptance("Managing Group Membership", function (needs) {
 
     await visit("/g/alternative-group/manage/membership");
 
-    assert.strictEqual(
-      count('label[for="automatic_membership"]'),
-      1,
-      "it should display automatic membership label"
-    );
+    assert
+      .dom('label[for="automatic_membership"]')
+      .exists("displays automatic membership label");
 
-    assert.strictEqual(
-      count(".groups-form-primary-group"),
-      1,
-      "it should display set as primary group checkbox"
-    );
+    assert
+      .dom(".groups-form-primary-group")
+      .exists("displays set as primary group checkbox");
 
-    assert.strictEqual(
-      count(".groups-form-grant-trust-level"),
-      1,
-      "it should display grant trust level selector"
-    );
+    assert
+      .dom(".groups-form-grant-trust-level")
+      .exists("displays grant trust level selector");
 
-    assert.strictEqual(
-      count(".group-form-public-admission"),
-      1,
-      "it should display group public admission input"
-    );
+    assert
+      .dom(".group-form-public-admission")
+      .exists("displays group public admission input");
 
-    assert.strictEqual(
-      count(".group-form-public-exit"),
-      1,
-      "it should display group public exit input"
-    );
+    assert
+      .dom(".group-form-public-exit")
+      .exists("displays group public exit input");
 
-    assert.strictEqual(
-      count(".group-form-allow-membership-requests"),
-      1,
-      "it should display group allow_membership_request input"
-    );
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays group allow_membership_request input");
 
-    assert.strictEqual(
-      count(".group-form-allow-membership-requests[disabled]"),
-      1,
-      "it should disable group allow_membership_request input"
-    );
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .isDisabled("disables group allow_membership_request input");
 
-    assert.strictEqual(
-      count(".group-flair-inputs"),
-      1,
-      "it should display avatar flair inputs"
-    );
+    assert.dom(".group-flair-inputs").exists("displays avatar flair inputs");
 
     await click(".group-form-public-admission");
     await click(".group-form-allow-membership-requests");
 
-    assert.strictEqual(
-      count(".group-form-public-admission[disabled]"),
-      1,
-      "it should disable group public admission input"
-    );
+    assert
+      .dom(".group-form-public-admission")
+      .isDisabled("disables group public admission input");
 
     assert
-      .dom(".group-form-public-exit[disabled]")
-      .doesNotExist("it should not disable group public exit input");
+      .dom(".group-form-public-exit")
+      .isNotDisabled("it should not disable group public exit input");
 
-    assert.strictEqual(
-      count(".group-form-membership-request-template"),
-      1,
-      "it should display the membership request template field"
-    );
+    assert
+      .dom(".group-form-membership-request-template")
+      .exists("displays the membership request template field");
 
     const emailDomains = selectKit(
       ".group-form-automatic-membership-automatic"
@@ -121,7 +98,10 @@ acceptance("Managing Group Membership", function (needs) {
     await associatedGroups.selectRowByName("google_oauth2:test-group");
     await associatedGroups.keyboard("enter");
 
-    assert.equal(associatedGroups.header().name(), "google_oauth2:test-group");
+    assert.strictEqual(
+      associatedGroups.header().name(),
+      "google_oauth2:test-group"
+    );
   });
 
   test("As an admin on a site that can't associate groups", async function (assert) {
@@ -167,28 +147,20 @@ acceptance("Managing Group Membership", function (needs) {
       .dom(".groups-form-grant-trust-level")
       .doesNotExist("it should not display grant trust level selector");
 
-    assert.strictEqual(
-      count(".group-form-public-admission"),
-      1,
-      "it should display group public admission input"
-    );
+    assert
+      .dom(".group-form-public-admission")
+      .exists("displays group public admission input");
 
-    assert.strictEqual(
-      count(".group-form-public-exit"),
-      1,
-      "it should display group public exit input"
-    );
+    assert
+      .dom(".group-form-public-exit")
+      .exists("displays group public exit input");
 
-    assert.strictEqual(
-      count(".group-form-allow-membership-requests"),
-      1,
-      "it should display group allow_membership_request input"
-    );
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .exists("displays group allow_membership_request input");
 
-    assert.strictEqual(
-      count(".group-form-allow-membership-requests[disabled]"),
-      1,
-      "it should disable group allow_membership_request input"
-    );
+    assert
+      .dom(".group-form-allow-membership-requests")
+      .isDisabled("disables group allow_membership_request input");
   });
 });

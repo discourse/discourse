@@ -4,11 +4,7 @@ import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
@@ -69,13 +65,13 @@ acceptance("Password Reset", function (needs) {
     PreloadStore.store("password_reset", { is_developer: false });
 
     await visit("/u/password-reset/myvalidtoken");
-    assert.ok(exists(".password-reset input"), "shows the input");
+    assert.dom(".password-reset input").exists("shows the input");
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
-    assert.ok(exists(".password-reset .tip.good"), "input looks good");
+    assert.dom(".password-reset .tip.good").exists("input looks good");
 
     await fillIn(".password-reset input", "123");
-    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+    assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.ok(
       query(".password-reset .tip.bad").innerHTML.includes(
         I18n.t("user.password.too_short", {
@@ -87,7 +83,7 @@ acceptance("Password Reset", function (needs) {
 
     await fillIn(".password-reset input", "jonesyAlienSlayer");
     await click(".password-reset form button[type='submit']");
-    assert.ok(exists(".password-reset .tip.bad"), "input is not valid");
+    assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.ok(
       query(".password-reset .tip.bad").innerHTML.includes(
         "Password is the name of your cat"
@@ -117,13 +113,13 @@ acceptance("Password Reset", function (needs) {
 
     await visit("/u/password-reset/requiretwofactor");
 
-    assert.notOk(exists("#new-account-password"), "does not show the input");
-    assert.ok(exists("#second-factor"), "shows the second factor prompt");
+    assert.dom("#new-account-password").doesNotExist("does not show the input");
+    assert.dom("#second-factor").exists("shows the second factor prompt");
 
     await fillIn("input#second-factor", "0000");
     await click(".password-reset form button");
 
-    assert.ok(exists(".alert-error"), "shows 2 factor error");
+    assert.dom(".alert-error").exists("shows 2FA error");
 
     assert.ok(
       query(".alert-error").innerHTML.includes("invalid token"),
@@ -133,8 +129,8 @@ acceptance("Password Reset", function (needs) {
     await fillIn("input#second-factor", "123123");
     await click(".password-reset form button");
 
-    assert.notOk(exists(".alert-error"), "hides error");
-    assert.ok(exists("#new-account-password"), "shows the input");
+    assert.dom(".alert-error").doesNotExist("hides error");
+    assert.dom("#new-account-password").exists("shows the input");
 
     await fillIn(".password-reset input", "perf3ctly5ecur3");
 

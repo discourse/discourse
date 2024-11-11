@@ -765,15 +765,6 @@ bs_BA:
       regex_mismatch: "Value doesn't match the required format."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "neaktivan"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "neaktivan"
-      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:

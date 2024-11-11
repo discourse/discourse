@@ -3,11 +3,8 @@ import { IMAGE_VERSION } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
   normalizeHtml,
   query,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Drafts", function (needs) {
@@ -15,20 +12,18 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.strictEqual(count(".user-stream-item"), 3, "has drafts");
+    assert.dom(".user-stream-item").exists({ count: 3 }, "has drafts");
 
     await click(".user-stream-item:first-child .remove-draft");
-    assert.ok(visible(".dialog-body"));
+    assert.dom(".dialog-body").exists();
 
     await click(".dialog-footer .btn-primary");
-    assert.strictEqual(
-      count(".user-stream-item"),
-      2,
-      "draft removed, list length diminished by one"
-    );
+    assert
+      .dom(".user-stream-item")
+      .exists({ count: 2 }, "draft removed, list length diminished by one");
 
     await visit("/");
-    assert.ok(visible("#create-topic"));
+    assert.dom("#create-topic").exists();
     assert
       .dom("#create-topic.open-draft")
       .doesNotExist("Open Draft button is not present");
@@ -36,7 +31,7 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream - resume draft", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream-item"), "has drafts");
+    assert.dom(".user-stream-item").exists("has drafts");
 
     await click(".user-stream-item .resume-draft");
     assert.strictEqual(
@@ -47,7 +42,7 @@ acceptance("User Drafts", function (needs) {
 
   test("Stream - has excerpt", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream-item"), "has drafts");
+    assert.dom(".user-stream-item").exists("has drafts");
     assert.strictEqual(
       query(".user-stream-item:nth-child(3) .category").textContent,
       "meta"

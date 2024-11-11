@@ -2,12 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
@@ -61,11 +56,9 @@ module("Integration | Component | themes-list", function (hooks) {
       .doesNotExist(
         "there is no inactive themes separator when all themes are inactive"
       );
-    assert.strictEqual(
-      count(".themes-list-container__item .info"),
-      5,
-      "displays all themes"
-    );
+    assert
+      .dom(".themes-list-container__item .info")
+      .exists({ count: 5 }, "displays all themes");
 
     [2, 3].forEach((num) => this.themes[num].set("user_selectable", true));
     this.themes[4].set("default", true);
@@ -93,11 +86,12 @@ module("Integration | Component | themes-list", function (hooks) {
       );
 
     this.set("themes", []);
-    assert.strictEqual(
-      count(".themes-list-container__item .empty"),
-      1,
-      "shows one entry with a message when there is nothing to display"
-    );
+    assert
+      .dom(".themes-list-container__item .empty")
+      .exists(
+        { count: 1 },
+        "shows one entry with a message when there is nothing to display"
+      );
     assert
       .dom(".themes-list-container__item span.empty")
       .hasText(
@@ -137,19 +131,18 @@ module("Integration | Component | themes-list", function (hooks) {
       "themes tab is not active"
     );
 
-    assert.notOk(exists(".inactive-indicator"), "there is no separator");
-    assert.strictEqual(
-      count(".themes-list-container__item .info"),
-      5,
-      "displays all components"
-    );
+    assert.dom(".inactive-indicator").doesNotExist("there is no separator");
+    assert
+      .dom(".themes-list-container__item .info")
+      .exists({ count: 5 }, "displays all components");
 
     this.set("components", []);
-    assert.strictEqual(
-      count(".themes-list-container__item .empty"),
-      1,
-      "shows one entry with a message when there is nothing to display"
-    );
+    assert
+      .dom(".themes-list-container__item .empty")
+      .exists(
+        { count: 1 },
+        "shows one entry with a message when there is nothing to display"
+      );
     assert
       .dom(".themes-list-container__item span.empty")
       .hasText(

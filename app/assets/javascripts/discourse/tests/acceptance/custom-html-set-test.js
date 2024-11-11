@@ -2,12 +2,12 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setCustomHTML } from "discourse/helpers/custom-html";
 import PreloadStore from "discourse/lib/preload-store";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("CustomHTML set", function () {
   test("has no custom HTML in the top", async function (assert) {
     await visit("/static/faq");
-    assert.ok(!exists("span.custom-html-test"), "it has no markup");
+    assert.dom("span.custom-html-test").doesNotExist("has no markup");
   });
 
   test("renders set HTML", async function (assert) {

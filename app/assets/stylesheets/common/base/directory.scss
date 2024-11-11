@@ -4,6 +4,11 @@
 }
 
 .directory {
+  .directory-value-list-item:not(:empty)
+    ~ .directory-value-list-item:not(:empty):before {
+    content: "| ";
+  }
+
   margin-bottom: 100px;
   background: var(--d-content-background);
 

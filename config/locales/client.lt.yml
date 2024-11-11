@@ -3619,6 +3619,8 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
+            invite:
+              content: "Kviesti"
       filter: "Filtruoti..."
     until: "Iki:"
     form_templates:

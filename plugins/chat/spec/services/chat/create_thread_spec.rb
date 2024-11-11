@@ -11,8 +11,11 @@ RSpec.describe Chat::CreateThread do
     subject(:result) { described_class.call(params:, **dependencies) }
 
     fab!(:current_user) { Fabricate(:user) }
+    fab!(:another_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, another_user]) }
+    fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:title) { nil }
@@ -31,16 +34,20 @@ RSpec.describe Chat::CreateThread do
         expect {
           result
           message_1.reload
-        }.to change { message_1.thread_id }.from(nil).to(result.thread.id)
+        }.to change { message_1.thread }.from(nil).to(result.thread)
       end
 
-      it "fetches the membership" do
-        result
-        expect(result.membership).to eq(result.thread.membership_for(current_user))
-      end
-
-      it "publishes a `thread_created` MessageBus event" do
+      it "publishes a `thread_created` MessageBus event for public channels" do
         message = MessageBus.track_publish("/chat/#{channel_1.id}") { result }.first
+        expect(message.data["type"]).to eq("thread_created")
+      end
+
+      it "publishes a `thread_created` MessageBus event for DM channels" do
+        params[:channel_id] = dm_channel.id
+        params[:original_message_id] = dm_message.id
+        params[:guardian] = Guardian.new(another_user)
+        message = MessageBus.track_publish("/chat/#{dm_channel.id}") { result }.first
+
         expect(message.data["type"]).to eq("thread_created")
       end
 
@@ -55,6 +62,22 @@ RSpec.describe Chat::CreateThread do
         result
         expect(result.thread.title).to eq(params[:title])
       end
+
+      context "when a thread is already present" do
+        before do
+          Chat::CreateThread.call(
+            guardian: current_user.guardian,
+            params: {
+              original_message_id: message_1.id,
+              channel_id: channel_1.id,
+            },
+          )
+        end
+
+        it "uses the existing thread" do
+          expect { result }.not_to change { Chat::Thread.count }
+        end
+      end
     end
 
     context "when params are not valid" do
@@ -63,18 +86,10 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when original message is not found" do
-      fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
+    context "when channel does not exist" do
+      before { params[:channel_id] = 0 }
 
-      before { params[:channel_id] = channel_2.id }
-
-      it { is_expected.to fail_to_find_a_model(:original_message) }
-    end
-
-    context "when original message is not found" do
-      before { message_1.destroy! }
-
-      it { is_expected.to fail_to_find_a_model(:original_message) }
+      it { is_expected.to fail_to_find_a_model(:channel) }
     end
 
     context "when user cannot see channel" do
@@ -91,20 +106,18 @@ RSpec.describe Chat::CreateThread do
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
 
-    context "when a thread is already present" do
-      before do
-        Chat::CreateThread.call(
-          guardian: current_user.guardian,
-          params: {
-            original_message_id: message_1.id,
-            channel_id: channel_1.id,
-          },
-        )
-      end
+    context "when original message is not found" do
+      fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }
 
-      it "uses the existing thread" do
-        expect { result }.not_to change { Chat::Thread.count }
-      end
+      before { params[:channel_id] = channel_2.id }
+
+      it { is_expected.to fail_to_find_a_model(:original_message) }
+    end
+
+    context "when original message is not found" do
+      before { message_1.destroy! }
+
+      it { is_expected.to fail_to_find_a_model(:original_message) }
     end
   end
 end

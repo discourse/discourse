@@ -4,7 +4,6 @@ import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -25,7 +24,7 @@ acceptance("User Directory", function () {
 
   test("Visit All Time", async function (assert) {
     await visit("/u?period=all");
-    assert.ok(exists(".time-read"), "has time read column");
+    assert.dom(".time-read").exists("has time read column");
   });
 
   test("Visit Without Usernames", async function (assert) {
@@ -57,6 +56,34 @@ acceptance("User Directory", function () {
     );
   });
 
+  test("Searchable user fields display as links", async function (assert) {
+    pretender.get("/directory_items", () => {
+      return response(cloneJSON(directoryFixtures["directory_items"]));
+    });
+
+    await visit("/u");
+
+    const firstRowUserField = query(
+      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
+    );
+
+    const userFieldLink = firstRowUserField.querySelector("a");
+
+    assert.ok(userFieldLink, "User field is displayed as a link");
+
+    assert.strictEqual(
+      userFieldLink.getAttribute("href"),
+      "/u?name=Blue&order=likes_received",
+      "The link points to the correct URL"
+    );
+
+    assert.strictEqual(
+      userFieldLink.textContent.trim(),
+      "Blue",
+      "Link text is correct"
+    );
+  });
+
   test("Visit With Group Filter", async function (assert) {
     await visit("/u?group=trust_level_0");
     assert.ok(
@@ -75,7 +102,7 @@ acceptance("User Directory", function () {
       ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
     );
 
-    assert.strictEqual(firstRowUserField.textContent, "Blue");
+    assert.strictEqual(firstRowUserField.textContent.trim(), "Blue");
   });
 
   test("Can sort table via keyboard", async function (assert) {

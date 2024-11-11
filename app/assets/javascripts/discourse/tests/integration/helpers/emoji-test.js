@@ -2,14 +2,13 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Helper | emoji", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders", async function (assert) {
     await render(hbs`{{emoji "tada"}}`);
-    assert.ok(exists(`.emoji[title="tada"]`));
+    assert.dom(`.emoji[title="tada"]`).exists();
   });
 
   test("it renders custom title", async function (assert) {
@@ -18,6 +17,6 @@ module("Integration | Helper | emoji", function (hooks) {
 
     await render(hbs`{{emoji "tada" title=this.title}}`);
 
-    assert.ok(exists(`.emoji[title="${title}"]`));
+    assert.dom(`.emoji[title="${title}"]`).exists();
   });
 });

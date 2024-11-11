@@ -3030,6 +3030,8 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
+            invite:
+              content: "邀請"
       panels:
         forum:
           label: 論壇

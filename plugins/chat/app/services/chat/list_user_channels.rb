@@ -24,9 +24,11 @@ module Chat
     end
 
     def inject_unread_thread_overview(structured:, guardian:)
+      channel_ids =
+        structured[:public_channels].map(&:id) + structured[:direct_message_channels].map(&:id)
       structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
         guardian: guardian,
-        channel_ids: structured[:public_channels].map(&:id),
+        channel_ids: channel_ids,
         include_threads: true,
         include_read: false,
         include_last_reply_details: true,

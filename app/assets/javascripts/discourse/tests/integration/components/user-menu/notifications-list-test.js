@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -88,11 +88,13 @@ module(
         I18n.t("user.dismiss"),
         "dismiss button has a label"
       );
-      assert.strictEqual(
-        dismissButton.getAttribute("title"),
-        I18n.t("user.dismiss_notifications_tooltip"),
-        "dismiss button has title attribute"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .hasAttribute(
+          "title",
+          I18n.t("user.dismiss_notifications_tooltip"),
+          "dismiss button has title attribute"
+        );
     });
 
     test("doesn't have a dismiss button if all notifications are read", async function (assert) {
@@ -118,10 +120,9 @@ module(
         2,
         "notifications list is refreshed"
       );
-      assert.ok(
-        !exists(".panel-body-bottom .btn.notifications-dismiss"),
-        "dismiss button is not shown"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .doesNotExist("dismiss button is not shown");
     });
 
     test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {

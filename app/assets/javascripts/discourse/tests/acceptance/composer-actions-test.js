@@ -6,7 +6,6 @@ import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  count,
   query,
   selectText,
   updateCurrentUser,
@@ -68,10 +67,9 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".action-title .topic-link")
       .hasText("Internationalization / localization");
-    assert.strictEqual(
-      query(".action-title .topic-link").getAttribute("href"),
-      "/t/internationalization-localization/280"
-    );
+    assert
+      .dom(".action-title .topic-link")
+      .hasAttribute("href", "/t/internationalization-localization/280");
     assert.strictEqual(
       query(".d-editor-input").value,
       "test replying to topic when initially replied to post"
@@ -92,20 +90,16 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .doesNotExist("whisper icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "whisper icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -246,20 +240,16 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-anchor"),
-      1,
-      "no-bump icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-anchor")
+      .exists("no-bump icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -270,11 +260,9 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
   });
 
   test("replying to post - whisper and no bump", async function (assert) {
@@ -289,27 +277,21 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".reply-details .whisper .d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "whisper icon is visible"
-    );
-    assert.strictEqual(
-      count(".reply-details .no-bump .d-icon-anchor"),
-      1,
-      "no-bump icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
+    assert
+      .dom(".reply-details .no-bump .d-icon-anchor")
+      .exists("no-bump icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -435,11 +417,9 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     assert
       .dom("#reply-control .btn-primary.create .d-button-label")
       .hasText(I18n.t("composer.create_shared_draft"));
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-clipboard"),
-      1,
-      "shared draft icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {

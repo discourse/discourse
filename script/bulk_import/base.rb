@@ -761,6 +761,8 @@ class BulkImport::Base
 
   POST_VOTING_VOTE_COLUMNS = %i[user_id votable_type votable_id direction created_at]
 
+  TOPIC_VOTING_COLUMNS = %i[topic_id user_id archive created_at updated_at]
+
   BADGE_COLUMNS = %i[
     id
     name
@@ -847,7 +849,7 @@ class BulkImport::Base
 
   CHAT_DIRECT_MESSAGE_CHANNEL_COLUMNS = %i[id group created_at updated_at]
 
-  CHAT_CHANNEL_COLUMNS ||= %i[
+  CHAT_CHANNEL_COLUMNS = %i[
     id
     name
     description
@@ -865,7 +867,7 @@ class BulkImport::Base
     threading_enabled
   ]
 
-  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS ||= %i[
+  USER_CHAT_CHANNEL_MEMBERSHIP_COLUMNS = %i[
     chat_channel_id
     user_id
     created_at
@@ -879,9 +881,9 @@ class BulkImport::Base
     last_viewed_at
   ]
 
-  DIRECT_MESSAGE_USER_COLUMNS ||= %i[direct_message_channel_id user_id created_at updated_at]
+  DIRECT_MESSAGE_USER_COLUMNS = %i[direct_message_channel_id user_id created_at updated_at]
 
-  CHAT_THREAD_COLUMNS ||= %i[
+  CHAT_THREAD_COLUMNS = %i[
     id
     channel_id
     original_message_id
@@ -893,7 +895,7 @@ class BulkImport::Base
     replies_count
   ]
 
-  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS ||= %i[
+  USER_CHAT_THREAD_MEMBERSHIP_COLUMNS = %i[
     user_id
     thread_id
     notification_level
@@ -901,7 +903,7 @@ class BulkImport::Base
     updated_at
   ]
 
-  CHAT_MESSAGE_COLUMNS ||= %i[
+  CHAT_MESSAGE_COLUMNS = %i[
     id
     chat_channel_id
     user_id
@@ -917,9 +919,9 @@ class BulkImport::Base
     thread_id
   ]
 
-  CHAT_MESSAGE_REACTION_COLUMNS ||= %i[chat_message_id user_id emoji created_at updated_at]
+  CHAT_MESSAGE_REACTION_COLUMNS = %i[chat_message_id user_id emoji created_at updated_at]
 
-  CHAT_MENTION_COLUMNS ||= %i[chat_message_id target_id type created_at updated_at]
+  CHAT_MENTION_COLUMNS = %i[chat_message_id target_id type created_at updated_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -1049,6 +1051,10 @@ class BulkImport::Base
 
   def create_post_voting_votes(rows, &block)
     create_records(rows, "post_voting_vote", POST_VOTING_VOTE_COLUMNS, &block)
+  end
+
+  def create_topic_voting_votes(rows, &block)
+    create_records(rows, "topic_voting_vote", TOPIC_VOTING_COLUMNS, &block)
   end
 
   def create_post_custom_fields(rows, &block)
@@ -1556,6 +1562,12 @@ class BulkImport::Base
   def process_post_voting_vote(vote)
     vote[:created_at] ||= NOW
     vote
+  end
+
+  def process_topic_voting_vote(topic_vote)
+    topic_vote[:created_at] ||= NOW
+    topic_vote[:updated_at] ||= NOW
+    topic_vote
   end
 
   def process_user_avatar(avatar)

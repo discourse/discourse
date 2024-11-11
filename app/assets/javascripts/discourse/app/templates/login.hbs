@@ -6,9 +6,10 @@
 }}
   {{hide-application-header-buttons "search" "login" "signup" "menu"}}
   {{hide-application-sidebar}}
-
-  <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+  {{body-class "login-page"}}
   <div class="login-fullpage">
+    <FlashMessage @flash={{this.flash}} @type={{this.flashType}} />
+
     <div class={{concat-class "login-body" this.bodyClasses}}>
       <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
 

@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Theme", function (needs) {
@@ -189,20 +185,14 @@ acceptance("Theme", function (needs) {
     );
     await click(".install-theme-content button.advanced-repo");
 
-    assert.notOk(
-      exists(
-        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
-      ),
-      "no Git warning is displayed"
-    );
+    assert
+      .dom(".admin-install-theme-modal .d-modal__footer .install-theme-warning")
+      .doesNotExist("no Git warning is displayed");
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-primary");
-    assert.ok(
-      exists(
-        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
-      ),
-      "Git warning is displayed"
-    );
+    assert
+      .dom(".admin-install-theme-modal .d-modal__footer .install-theme-warning")
+      .exists("Git warning is displayed");
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
 
@@ -222,11 +212,9 @@ acceptance("Theme", function (needs) {
 
     await click(".control-unit .btn-primary.finish-install");
 
-    assert.equal(
-      query(".show-current-style .title span").innerText,
-      "discourse-complete-theme",
-      "it updates theme title"
-    );
+    assert
+      .dom(".show-current-style .title span")
+      .hasText("discourse-complete-theme", "it updates theme title");
 
     assert.notOk(
       query(".metadata.control-unit").innerText.includes(

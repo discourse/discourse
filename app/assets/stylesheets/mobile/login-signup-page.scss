@@ -158,8 +158,11 @@
     }
     &__signup {
       background: none !important;
-      font-size: var(--font-down);
+      font-size: var(--font-up-1);
       padding: 0;
+    }
+    &__no-account-yet {
+      font-size: var(--font-up-1);
     }
   }
 }
@@ -176,8 +179,11 @@
     }
     &__login {
       background: none !important;
-      font-size: var(--font-down);
+      font-size: var(--font-up-1);
       padding: 0;
+    }
+    &__existing-account {
+      font-size: var(--font-up-1);
     }
   }
 

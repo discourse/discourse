@@ -4276,6 +4276,8 @@ sv:
               pending_count:
                 one: "%{count} väntande"
                 other: "%{count} väntande"
+            invite:
+              content: "Bjud in"
         global_section: "Globalt avsnitt, synligt för alla"
       panels:
         forum:

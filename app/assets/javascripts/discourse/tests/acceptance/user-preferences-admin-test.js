@@ -1,13 +1,13 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("User Preferences Admin", function (needs) {
   needs.user({ admin: true });
 
   test("Desktop user admin button", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(exists(".user-admin"), "desktop user admin nav button exists");
+    assert.dom(".user-admin").exists("desktop user admin nav button exists");
   });
 });
 

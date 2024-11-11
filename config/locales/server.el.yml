@@ -1261,15 +1261,6 @@ el:
       reply_by_email_disabled: "Θα πρέπει να ενεργοποιήσετε την απάντηση μέσω email πριν ενεργοποιήσετε αυτή τη ρύθμιση."
       min_username_length_range: "Δεν μπορείς να θέσεις το ελάχιστο πιο πάνω από το μέγιστο"
       max_username_length_range: "Δεν μπορείς να θέσεις το μέγιστο πιο κάτω από το ελάχιστο."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "ανενεργό"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "ανενεργό"
-      - ""
   search:
     within_post: "#%{post_number} από %{username}"
     types:

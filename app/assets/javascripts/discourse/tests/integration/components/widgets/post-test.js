@@ -4,12 +4,7 @@ import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
@@ -26,8 +21,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".names"), "includes poster name");
-    assert.ok(exists("a.post-date"), "includes post date");
+    assert.dom(".names").exists("includes poster name");
+    assert.dom("a.post-date").exists("includes post date");
   });
 
   test("post - links", async function (assert) {
@@ -44,8 +39,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post-contents" @args={{this.args}} />`
     );
 
-    assert.strictEqual(queryAll(".badge.clicks")[0].innerText, "1");
-    assert.strictEqual(queryAll(".badge.clicks")[1].innerText, "2");
+    assert.dom("a[data-clicks='1']").hasAttribute("data-clicks", "1");
+    assert.dom("a[data-clicks='2']").hasAttribute("data-clicks", "2");
   });
 
   test("post - onebox links", async function (assert) {
@@ -72,9 +67,20 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post-contents" @args={{this.args}} />`
     );
 
-    assert.strictEqual(count(".badge.clicks"), 2);
-    assert.strictEqual(queryAll(".badge.clicks")[0].innerText, "1");
-    assert.strictEqual(queryAll(".badge.clicks")[1].innerText, "2");
+    assert
+      .dom("a[data-clicks='1']")
+      .hasAttribute(
+        "data-clicks",
+        "1",
+        "First link has correct data attribute and content"
+      );
+    assert
+      .dom("a[data-clicks='2']")
+      .hasAttribute(
+        "data-clicks",
+        "2",
+        "Second link has correct data attribute and content"
+      );
   });
 
   test("wiki", async function (assert) {
@@ -163,8 +169,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".topic-post.whisper"), 1);
-    assert.strictEqual(count(".post-info.whisper"), 1);
+    assert.dom(".topic-post.whisper").exists();
+    assert.dom(".post-info.whisper").exists();
   });
 
   test("like count button", async function (assert) {
@@ -184,13 +190,13 @@ module("Integration | Component | Widget | post", function (hooks) {
       hbs`<MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`
     );
 
-    assert.strictEqual(count("button.like-count"), 1);
+    assert.dom("button.like-count").exists();
     assert.dom(".who-liked").doesNotExist();
 
     // toggle it on
     await click("button.like-count");
-    assert.strictEqual(count(".who-liked"), 1);
-    assert.strictEqual(count(".who-liked a.trigger-user-card"), 1);
+    assert.dom(".who-liked").exists();
+    assert.dom(".who-liked a.trigger-user-card").exists();
 
     // toggle it off
     await click("button.like-count");
@@ -214,7 +220,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists(".actions button.share"), "it renders a share button");
+    assert.dom(".actions button.share").exists("renders a share button");
   });
 
   test("copy link button", async function (assert) {
@@ -245,7 +251,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(".actions button.like");
     assert.dom(".actions button.like").doesNotExist();
     assert.dom(".actions button.has-like").exists();
-    assert.strictEqual(count(".actions button.like-count"), 1);
+    assert.dom(".actions button.like-count").exists();
 
     await click(".actions button.has-like");
     assert.dom(".actions button.like").exists();
@@ -266,11 +272,13 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom(".actions button.like").exists();
     assert.dom(".actions button.like-count").doesNotExist();
 
-    assert.strictEqual(
-      query("button.like").getAttribute("title"),
-      I18n.t("post.controls.like"),
-      `shows the right button title for anonymous users`
-    );
+    assert
+      .dom("button.like")
+      .hasAttribute(
+        "title",
+        I18n.t("post.controls.like"),
+        "shows the right button title for anonymous users"
+      );
 
     await click(".actions button.like");
     assert.ok(this.loginShown);
@@ -293,7 +301,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.edit"), "button is not displayed");
+    assert.dom("button.edit").doesNotExist("button is not displayed");
   });
 
   test("recover button", async function (assert) {
@@ -325,7 +333,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `button is not displayed`);
+    assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   test(`delete topic button - can't delete when topic author without permission`, async function (assert) {
@@ -339,13 +347,15 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await click(".show-more-actions");
 
-    assert.strictEqual(count("button.create-flag"), 1, `button is displayed`);
-    assert.strictEqual(count("button.delete"), 1, `button is displayed`);
-    assert.strictEqual(
-      query("button.delete").getAttribute("title"),
-      I18n.t("post.controls.delete_topic_disallowed"),
-      `shows the right button title for users without permissions`
-    );
+    assert.dom("button.create-flag").exists("button is displayed");
+    assert.dom("button.delete").exists("button is displayed");
+    assert
+      .dom("button.delete")
+      .hasAttribute(
+        "title",
+        I18n.t("post.controls.delete_topic_disallowed"),
+        "shows the right button title for users without permissions"
+      );
   });
 
   test("recover topic button", async function (assert) {
@@ -365,7 +375,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.recover"), `button is not displayed`);
+    assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
   test("delete post button", async function (assert) {
@@ -386,7 +396,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `button is not displayed`);
+    assert.dom("button.delete").doesNotExist("button is not displayed");
   });
 
   test(`delete post button - can't delete, can't flag`, async function (assert) {
@@ -398,8 +408,10 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.delete"), `delete button is not displayed`);
-    assert.ok(!exists("button.create-flag"), `flag button is not displayed`);
+    assert.dom("button.delete").doesNotExist("delete button is not displayed");
+    assert
+      .dom("button.create-flag")
+      .doesNotExist("flag button is not displayed");
   });
 
   test("recover post button", async function (assert) {
@@ -419,7 +431,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("button.recover"), `button is not displayed`);
+    assert.dom("button.recover").doesNotExist("button is not displayed");
   });
 
   test(`flagging`, async function (assert) {
@@ -430,7 +442,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} @showFlags={{this.showFlags}} />
     `);
 
-    assert.strictEqual(count("button.create-flag"), 1);
+    assert.dom("button.create-flag").exists();
 
     await click("button.create-flag");
     assert.ok(this.flagsShown, "it triggered the action");
@@ -477,8 +489,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(!exists("a.reply-to-tab"), "hides the tab");
-    assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
+    assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
+    assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
   });
 
   test("reply a few posts above (suppressed)", async function (assert) {
@@ -490,8 +502,8 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.ok(exists("a.reply-to-tab"), "shows the tab");
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom("a.reply-to-tab").exists("shows the tab");
+    assert.dom(".avoid-tab").exists("has the avoid tab class");
   });
 
   test("reply directly above", async function (assert) {
@@ -504,10 +516,10 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom(".avoid-tab").exists("has the avoid tab class");
     await click("a.reply-to-tab");
-    assert.strictEqual(count("section.embedded-posts.top .cooked"), 1);
-    assert.strictEqual(count("section.embedded-posts .d-icon-arrow-up"), 1);
+    assert.dom("section.embedded-posts.top .cooked").exists();
+    assert.dom("section.embedded-posts .d-icon-arrow-up").exists();
   });
 
   test("cooked content hidden", async function (assert) {
@@ -530,7 +542,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} @expandHidden={{this.expandHidden}} />
     `);
 
-    assert.ok(!exists(".topic-body .expand-hidden"), "button is not displayed");
+    assert
+      .dom(".topic-body .expand-hidden")
+      .doesNotExist("button is not displayed");
   });
 
   test("expand first post", async function (assert) {
@@ -543,7 +557,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".topic-body .expand-post");
-    assert.ok(!exists(".expand-post"), "button is gone");
+    assert.dom(".expand-post").doesNotExist("button is gone");
   });
 
   test("can't bookmark", async function (assert) {
@@ -565,7 +579,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} @toggleBookmark={{this.toggleBookmark}} />
     `);
 
-    assert.strictEqual(count(".post-menu-area .bookmark"), 1);
+    assert.dom(".post-menu-area .bookmark").exists();
     assert.dom("button.bookmarked").doesNotExist();
   });
 
@@ -753,7 +767,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert.strictEqual(count("button.show-replies"), 1);
+    assert.dom("button.show-replies").exists();
   });
 
   test("replies - one below, suppressed", async function (assert) {
@@ -772,8 +786,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
     await click("button.show-replies");
-    assert.strictEqual(count("section.embedded-posts.bottom .cooked"), 1);
-    assert.strictEqual(count("section.embedded-posts .d-icon-arrow-down"), 1);
+    assert.dom("section.embedded-posts.bottom .cooked").exists();
+    assert.dom("section.embedded-posts .d-icon-arrow-down").exists();
   });
 
   test("shows the topic map when setting the 'topicMap' attribute", async function (assert) {
@@ -989,10 +1003,9 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     const link = query(".group-request a");
     assert.strictEqual(link.innerText.trim(), I18n.t("groups.requests.handle"));
-    assert.strictEqual(
-      link.getAttribute("href"),
-      "/g/testGroup/requests?filter=foo"
-    );
+    assert
+      .dom(".group-request a")
+      .hasAttribute("href", "/g/testGroup/requests?filter=foo");
   });
 
   test("shows user status if enabled in site settings", async function (assert) {

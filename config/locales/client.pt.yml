@@ -3570,6 +3570,8 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
+            invite:
+              content: "Convidar"
     until: "Até:"
     form_templates:
       upload_field:

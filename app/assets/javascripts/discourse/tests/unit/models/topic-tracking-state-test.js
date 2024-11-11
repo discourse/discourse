@@ -368,12 +368,12 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     trackingState.sync(list, "unread");
 
-    assert.notOk(
+    assert.false(
       trackingState.states.has("t111"),
       "expect state for topic 111 to be deleted"
     );
 
-    assert.equal(
+    assert.strictEqual(
       stateChangeCallbackCalledTimes,
       1,
       "callback is only called once"

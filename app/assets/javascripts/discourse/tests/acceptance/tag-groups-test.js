@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { setPrefix } from "discourse-common/lib/get-url";
 
@@ -54,7 +54,7 @@ acceptance("Tag Groups", function (needs) {
 
     await tags.expand();
     await tags.deselectItemByValue("monkey");
-    assert.ok(!query(".tag-group-content .btn.btn-danger").disabled);
+    assert.dom(".tag-group-content .btn.btn-danger").isEnabled();
   });
 
   test("tag groups can have multiple groups added to them", async function (assert) {
@@ -73,7 +73,7 @@ acceptance("Tag Groups", function (needs) {
     await groups.selectRowByIndex(1);
     await groups.selectRowByIndex(0);
 
-    assert.ok(!query(".tag-group-content .btn.btn-primary").disabled);
+    assert.dom(".tag-group-content .btn.btn-primary").isEnabled();
 
     await click(".tag-group-content .btn.btn-primary");
     await click(".tag-groups-sidebar li:first-child a");

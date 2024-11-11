@@ -3643,6 +3643,8 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
+            invite:
+              content: "Povabi"
       filter: "Filter..."
     until: "Do:"
     form_templates:

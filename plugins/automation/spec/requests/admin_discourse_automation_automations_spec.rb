@@ -235,6 +235,13 @@ describe DiscourseAutomation::AdminAutomationsController do
         delete "/admin/plugins/discourse-automation/automations/#{automation.id}.json"
         expect(DiscourseAutomation::Automation.find_by(id: automation.id)).to eq(nil)
       end
+
+      context "when the automation is not found" do
+        it "raises a 404" do
+          delete "/admin/plugins/discourse-automation/automations/999.json"
+          expect(response.status).to eq(404)
+        end
+      end
     end
 
     context "when logged in as a regular user" do

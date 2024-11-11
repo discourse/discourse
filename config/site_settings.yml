@@ -42,25 +42,32 @@ required:
   title:
     client: true
     default: "Discourse"
+    area: "about"
   site_description:
     default: ""
+    area: "about"
   short_site_description:
     default: ""
     client: true
+    area: "about"
   contact_email:
     default: ""
     type: email
+    area: "about"
   contact_url:
     default: ""
+    area: "about"
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
   site_contact_username:
     default: ""
     type: username
+    area: "about"
   site_contact_group_name:
     default: ""
     type: group
+    area: "about"
   exclude_rel_nofollow_domains:
     client: true
     default: ""
@@ -68,10 +75,13 @@ required:
     list_type: simple
   company_name:
     default: ""
+    area: "about"
   governing_law:
     default: ""
+    area: "about"
   city_for_disputes:
     default: ""
+    area: "about"
 
 branding:
   logo:
@@ -396,9 +406,6 @@ basic:
     default: true
   sitemap_page_size:
     default: 10000
-  enable_user_status:
-    client: true
-    default: false
   enable_user_tips:
     client: true
     default: true
@@ -420,6 +427,7 @@ basic:
     default: ""
     max: 10_000
     hidden: true
+    area: "about"
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -428,10 +436,12 @@ basic:
     default: ""
     type: upload
     hidden: true
+    area: "about"
   community_owner:
     default: ""
     max: 300
     hidden: true
+    area: "about"
   use_legacy_pageviews:
     default: false
     hidden: true
@@ -482,14 +492,13 @@ login:
       - "select_account"
   google_oauth2_hd:
     default: ""
-  google_oauth2_hd_groups:
-    default: false
-    validator: GoogleOauth2HdGroupsValidator
   google_oauth2_hd_groups_service_account_admin_email:
     default: ""
   google_oauth2_hd_groups_service_account_json:
     default: ""
     textarea: true
+  google_oauth2_verbose_logging:
+    default: false
   enable_twitter_logins:
     default: false
   twitter_consumer_key:
@@ -605,7 +614,7 @@ login:
     type: host_list
     list_type: simple
   normalize_emails:
-    default: false
+    default: true
   auto_approve_email_domains:
     default: ""
     type: host_list
@@ -622,9 +631,6 @@ login:
     default: 1440
     min: 1
     max: 175200
-  experimental_full_page_login:
-    default: false
-    client: true
 
 users:
   min_username_length:
@@ -984,9 +990,6 @@ posting:
     locale_default:
       de: "„|“|‚|‘"
       fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
-  enable_rich_text_paste:
-    client: true
-    default: true
   suppress_reply_directly_below:
     client: true
     default: true
@@ -1188,6 +1191,7 @@ posting:
     client: true
     default: false
   enable_diffhtml_preview:
+    hidden: true
     default: false
     client: true
   enable_fast_edit:
@@ -2414,36 +2418,9 @@ developer:
   enable_safe_mode:
     default: true
     client: true
-  experimental_hashtag_search_result_limit:
-    default: 20
-    client: true
-    hidden: true
   include_associated_account_ids:
     default: false
     hidden: true
-  experimental_form_templates:
-    client: true
-    default: false
-  experimental_new_new_view_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-  experimental_glimmer_topic_list_groups:
-    client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
-    refresh: true
-  enable_experimental_lightbox:
-    default: false
-    client: true
-  experimental_topics_filter:
-    client: true
-    default: false
   max_sidebar_section_links:
     default: 50
     hidden: true
@@ -2456,10 +2433,6 @@ developer:
     default: "1|2"
     allow_any: false
     refresh: true
-  lazy_load_categories_groups:
-    default: ""
-    type: group_list
-    list_type: compact
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -2471,9 +2444,6 @@ developer:
   custom_flags_limit:
     default: 50
     hidden: true
-    client: true
-  experimental_auto_grid_images:
-    default: false
     client: true
 
 navigation:
@@ -2531,10 +2501,6 @@ legal:
     default: ""
   log_anonymizer_details:
     default: true
-  experimental_rename_faq_to_guidelines:
-    default: false
-    hidden: true
-    client: true
   display_eu_visitor_stats:
     default: false
     client: true
@@ -3311,3 +3277,53 @@ dashboard:
     hidden: true
     default: false
     client: true
+
+experimental:
+  experimental_full_page_login:
+    default: false
+    client: true
+  experimental_rename_faq_to_guidelines:
+    default: false
+    hidden: true
+    client: true
+  experimental_hashtag_search_result_limit:
+    default: 20
+    client: true
+    hidden: true
+  experimental_form_templates:
+    client: true
+    default: false
+  experimental_new_new_view_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  experimental_glimmer_topic_list_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  enable_experimental_lightbox:
+    default: false
+    client: true
+    hidden: true
+  experimental_topics_filter:
+    client: true
+    default: false
+  enable_rich_text_paste:
+    client: true
+    default: true
+  google_oauth2_hd_groups:
+    default: false
+    validator: GoogleOauth2HdGroupsValidator
+  enable_user_status:
+    client: true
+    default: false
+  lazy_load_categories_groups:
+    default: ""
+    type: group_list
+    list_type: compact
