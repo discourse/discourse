@@ -95,6 +95,8 @@ export default class ComposerEditor extends Component {
   shouldBuildScrollMap = true;
   scrollMap = null;
 
+  fileUploadElementId = "file-uploader";
+
   get topic() {
     return this.composer.get("model.topic");
   }
@@ -110,6 +112,7 @@ export default class ComposerEditor extends Component {
       uploadMarkdownResolvers,
       uploadPreProcessors,
       uploadHandlers,
+      fileUploadElementId: this.fileUploadElementId,
     });
   }
 
@@ -931,6 +934,6 @@ export default class ComposerEditor extends Component {
   }
 
   showUploadModal() {
-    document.querySelector(this.uppyComposerUpload.fileUploadElementId).click();
+    document.querySelector(this.fileUploadElementId).click();
   }
 }
