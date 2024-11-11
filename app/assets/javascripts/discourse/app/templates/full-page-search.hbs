@@ -151,7 +151,13 @@
       <PluginOutlet
         @name="full-page-search-below-search-info"
         @connectorTagName="div"
-        @outletArgs={{hash search=this.searchTerm}}
+        @outletArgs={{hash
+          search=this.searchTerm
+          type=this.search_type
+          model=this.model
+          addSearchResults=this.addSearchResults
+          sortOrder=this.sortOrder
+        }}
       />
     </span>
 
