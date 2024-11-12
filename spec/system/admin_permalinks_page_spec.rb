@@ -9,7 +9,7 @@ describe "Admin Permalinks Page", type: :system do
 
   before { sign_in(admin) }
 
-  it "allows admin to created edit and destroy permalink" do
+  it "allows admin to create, edit, and destroy permalink" do
     admin_permalinks_page.visit
     admin_permalinks_page.click_add_permalink
     admin_permalink_form_page
