@@ -4743,7 +4743,7 @@ hu:
           totals_for_sample: "A minta összesített értéke"
           average_for_sample: "A minta átlaga"
           total: "Mindenkori összes"
-          no_data: "Nincs adat amit ki tudna mutatni"
+          no_data: "Nincs megjeleníthető adat."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Keresési napló</a>'
             disabled: 'A trendkeresési jelentés le van tiltva. Engedélyezze a <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">naplózott keresési lekérdezéseket</a> az adatgyűjtéshez.'
@@ -5523,7 +5523,7 @@ hu:
           theme_translations: "Téma fordítások"
           empty: "Nincsenek elemek"
           commits_behind:
-            one: "A téma %{count} verzióval le van maradva!"
+            one: "%{count} commit-al régebbi!"
             other: "A téma %{count} verzióval le van maradva!"
           compare_commits: "(Változások megtekintése)"
           remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"

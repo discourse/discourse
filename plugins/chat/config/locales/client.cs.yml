@@ -179,7 +179,7 @@ cs:
           settings: Nastavení
       new_message_modal:
         user_search_placeholder: "...přidat další členy"
-        create_group_placeholder: "Název skupinové konverzace (volitelné)"
+        create_group_placeholder: "Název skupinové konverzace (nepovinné)"
         new_group_chat: "Nová skupinová konverzace"
         filter: "Filtr"
         cant_add_more_members: "Byl dosažen maximální počet členů"
@@ -189,6 +189,7 @@ cs:
         title: Nová zpráva
         prefix: "Komu:"
         no_results: Žádné výsledky
+        group_name: "Název skupinové konverzace (nepovinné)"
         members_counter:
           one: "%{count}/%{max} člena"
           few: "%{count}/%{max} členů"

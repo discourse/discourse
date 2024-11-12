@@ -94,7 +94,7 @@ de:
         description: Ein Thema in ein Banner verwandeln
       gift_exchange:
         title: Austausch von Geschenken
-        description: Ermöglicht das anonyme Paaren von Benutzern einer Gruppe, um sich gegenseitig ein Geschenk zu senden.
+        description: Ermöglicht es, Benutzer einer Gruppe anonym zusammenzubringen, um sich gegenseitig ein Geschenk zu schicken.
         doc: Der Austausch von Geschenken erfordert eine bestehende Gruppe mit mindestens 3 Benutzern. Zum gewählten Datum wird jeder Benutzer der Gruppe mit einem Schenkenden und einem Beschenkten gepaart.
       send_pms:
         title: PN senden
