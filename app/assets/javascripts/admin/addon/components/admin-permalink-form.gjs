@@ -123,14 +123,6 @@ export default class AdminFlagsForm extends Component {
     return data[TYPE_TO_FIELD_MAP[data.permalinkType]];
   }
 
-  validatePermalinkTypeValue(data, { removeError }) {
-    Object.keys(TYPE_TO_FIELD_MAP).forEach((type) => {
-      if (data.permalinkType !== type) {
-        removeError(TYPE_TO_FIELD_MAP[type]);
-      }
-    });
-  }
-
   <template>
     <BackButton @route="adminPermalinks" @label="admin.permalink.back" />
     <div class="admin-config-area">
@@ -140,7 +132,6 @@ export default class AdminFlagsForm extends Component {
             <Form
               @onSubmit={{this.save}}
               @data={{this.formData}}
-              @validate={{this.validatePermalinkTypeValue}}
               as |form transientData|
             >
               <form.Field
