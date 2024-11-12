@@ -75,9 +75,9 @@ export default class AdminFlagsForm extends Component {
   }
 
   @action
-  save(data) {
+  async save(data) {
     const createOrUpdate = this.isUpdate ? this.update : this.create;
-    createOrUpdate(data);
+    await createOrUpdate(data);
   }
 
   @bind
@@ -88,9 +88,7 @@ export default class AdminFlagsForm extends Component {
         permalink_type: data.permalinkType,
         permalink_type_value: this.valueForPermalinkType(data),
       });
-      this.adminPermalinks.model.unshiftObject(
-        Permalink.create(result.payload)
-      );
+      this.adminPermalinks.model.unshift(Permalink.create(result.payload));
       this.router.transitionTo("adminPermalinks");
     } catch (error) {
       popupAjaxError(error);
