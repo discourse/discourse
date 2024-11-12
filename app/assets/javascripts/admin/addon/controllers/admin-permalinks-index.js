@@ -11,7 +11,6 @@ import Permalink from "admin/models/permalink";
 
 export default class AdminPermalinksIndexController extends Controller {
   @service dialog;
-  @service router;
   @service toasts;
 
   loading = false;
@@ -56,10 +55,5 @@ export default class AdminPermalinksIndexController extends Controller {
         }
       },
     });
-  }
-
-  @action
-  edit(record) {
-    this.router.transitionTo("adminPermalinks.edit", record);
   }
 }

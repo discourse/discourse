@@ -76,8 +76,7 @@ export default class AdminFlagsForm extends Component {
 
   @action
   async save(data) {
-    const createOrUpdate = this.isUpdate ? this.update : this.create;
-    await createOrUpdate(data);
+    this.isUpdate ? await this.update(data) : await this.create(data);
   }
 
   @bind

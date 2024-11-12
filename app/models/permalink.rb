@@ -9,9 +9,9 @@ class Permalink < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
+  before_validation :clear_associations
   before_validation :normalize_url, :encode_url
   before_validation :set_association_value
-  before_update :clear_associations
 
   validates :url, uniqueness: true
 
@@ -115,12 +115,12 @@ class Permalink < ActiveRecord::Base
   end
 
   def clear_associations
-    self.topic_id = nil if !self.topic_type?
-    self.post_id = nil if !self.post_type?
-    self.category_id = nil if !self.category_type?
-    self.user_id = nil if !self.user_type?
-    self.tag_id = nil if !self.tag_type?
-    self.external_url = nil if !self.external_url_type?
+    self.topic_id = nil
+    self.post_id = nil
+    self.category_id = nil
+    self.user_id = nil
+    self.tag_id = nil
+    self.external_url = nil
   end
 
   def set_association_value
