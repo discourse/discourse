@@ -305,19 +305,34 @@ RSpec.describe UserApiKeysController do
           application_name: fixed_args[:application_name],
           public_key: public_key,
           auth_redirect: fixed_args[:auth_redirect],
+          scopes: "read",
         )
       end
 
       before { sign_in(user) }
 
-      it "does not require allowed_user_api_auth_redirects to contain registered auth_redirect" do
-        post "/user-api-key.json", params: fixed_args
-        expect(response.status).to eq(302)
+      context "with allowed scopes" do
+        it "does not require allowed_user_api_auth_redirects to contain registered auth_redirect" do
+          post "/user-api-key.json", params: fixed_args
+          expect(response.status).to eq(302)
+        end
+
+        it "does not require application_name or public_key params" do
+          post "/user-api-key.json", params: fixed_args.except(:application_name, :public_key)
+          expect(response.status).to eq(302)
+        end
       end
 
-      it "does not require application_name or public_key params" do
-        post "/user-api-key.json", params: fixed_args.except(:application_name, :public_key)
-        expect(response.status).to eq(302)
+      context "without allowed scopes" do
+        let!(:invalid_scope_args) do
+          fixed_args[:scopes] = "write"
+          fixed_args
+        end
+
+        it "returns a 403" do
+          post "/user-api-key.json", params: invalid_scope_args
+          expect(response.status).to eq(403)
+        end
       end
     end
   end

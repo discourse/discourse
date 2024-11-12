@@ -190,6 +190,9 @@ class UserApiKeysController < ApplicationController
   def validate_params
     requested_scopes = Set.new(params[:scopes].split(","))
     raise Discourse::InvalidAccess unless UserApiKey.allowed_scopes.superset?(requested_scopes)
+    if @client&.scopes.present? && !@client.allowed_scopes.superset?(requested_scopes)
+      raise Discourse::InvalidAccess
+    end
 
     # our pk has got to parse
     OpenSSL::PKey::RSA.new(params[:public_key]) if params[:public_key]
