@@ -1515,7 +1515,6 @@ ca:
     show_time_gap_days: "Si es fan dues publicacions amb aquesta diferència de dies, mostra la diferència de temps en el tema."
     short_progress_text_threshold: "Després que el nombre de publicacions en un tema superi aquesta xifra, la barra de progrés només mostrarà el nombre actual de publicacions. Si voleu canviar l'amplada de la barra de progrés, cal modificar aquest valor."
     warn_reviving_old_topic_age: "Es mostra un avís quan algú comença una resposta a un tema on la darrera resposta té més dies que els indicats. Per a inhabilitar-ho, deixeu-ho a 0."
-    highlighted_languages: "Regles incloses de ressaltat de sintaxi. (Advertència: incloure-hi massa llenguatges pot afectar el rendiment.) Vegeu: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> per a una demostració."
     embed_any_origin: "Permet el contingut incrustable independentment de l’origen. Això és necessari per a aplicacions mòbils amb HTML estàtic."
     embed_support_markdown: "Admet el format de Markdown per a les publicacions incrustades."
     allowed_embed_selectors: "Llista separada per comes d'elements CSS permesos en les incrustacions."
