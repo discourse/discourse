@@ -16,16 +16,11 @@ end
 
 # == Schema Information
 #
-# Table name: user_api_key_scopes
+# Table name: user_api_key_client_scopes
 #
-#  id                 :bigint           not null, primary key
-#  user_api_key_client_id    :integer          not null
-#  name               :string           not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  allowed_parameters :jsonb
-#
-# Indexes
-#
-#  index_user_api_key_scopes_on_user_api_key_id  (user_api_key_id)
+#  id                     :bigint           not null, primary key
+#  user_api_key_client_id :bigint           not null
+#  name                   :string           not null
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
