@@ -2,7 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const TOKEN = "sometoken";
@@ -49,23 +49,21 @@ acceptance("Login with email", function (needs) {
     await fillIn("#login-account-name", "someuser");
     await click("#email-login-link");
 
-    assert.strictEqual(
-      query("#modal-alert").innerHTML.trim(),
+    assert.dom("#modal-alert").hasHtml(
       I18n.t("email_login.complete_username_not_found", {
         username: "someuser",
       }),
-      "it should display an error for an invalid username"
+      "displays an error for an invalid username"
     );
 
     await fillIn("#login-account-name", "someuser@gmail.com");
     await click("#email-login-link");
 
-    assert.strictEqual(
-      query("#modal-alert").innerHTML.trim(),
+    assert.dom("#modal-alert").hasHtml(
       I18n.t("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),
-      "it should display an error for an invalid email"
+      "displays an error for an invalid email"
     );
 
     await fillIn("#login-account-name", "someuser");
@@ -74,23 +72,23 @@ acceptance("Login with email", function (needs) {
 
     await click("#email-login-link");
 
-    assert.strictEqual(
-      query(".alert-success").innerHTML.trim(),
-      I18n.t("email_login.complete_username_found", { username: "someuser" }),
-      "it should display a success message for a valid username"
-    );
+    assert
+      .dom(".alert-success")
+      .hasHtml(
+        I18n.t("email_login.complete_username_found", { username: "someuser" }),
+        "displays a success message for a valid username"
+      );
 
     await visit("/");
     await click("header .login-button");
     await fillIn("#login-account-name", "someuser@gmail.com");
     await click("#email-login-link");
 
-    assert.strictEqual(
-      query(".alert-success").innerHTML.trim(),
+    assert.dom(".alert-success").hasHtml(
       I18n.t("email_login.complete_email_found", {
         email: "someuser@gmail.com",
       }),
-      "it should display a success message for a valid email"
+      "displays a success message for a valid email"
     );
 
     userFound = false;

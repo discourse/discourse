@@ -2,7 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -39,7 +38,7 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
 
     await click(".second-factor-backup-edit-modal .btn-primary");
 
-    assert.ok(exists(".backup-codes-area"), "shows backup codes");
+    assert.dom(".backup-codes-area").exists("shows backup codes");
   });
 
   test("delete backup codes", async function (assert) {

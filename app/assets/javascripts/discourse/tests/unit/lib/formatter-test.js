@@ -125,16 +125,13 @@ module("Unit | Utility | formatter", function (hooks) {
       shortDateYear(500)
     );
 
-    assert.strictEqual(
-      domFromString(formatDays(0, { format: "medium" }))[0].title,
-      longDate(new Date())
-    );
+    assert
+      .dom(domFromString(formatDays(0, { format: "medium" }))[0])
+      .hasAttribute("title", longDate(new Date()));
 
-    assert.ok(
-      domFromString(formatDays(0, { format: "medium" }))[0].classList.contains(
-        "date"
-      )
-    );
+    assert
+      .dom(domFromString(formatDays(0, { format: "medium" }))[0])
+      .hasClass("date");
 
     this.clock.restore();
     this.clock = fakeTime("2012-01-09 12:00");
@@ -237,10 +234,10 @@ module("Unit | Utility | formatter", function (hooks) {
     let elem = domFromString(autoUpdatingRelativeAge(d))[0];
     assert.strictEqual(elem.dataset.format, "tiny");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
-    assert.strictEqual(elem.title, "");
+    assert.dom(elem).doesNotHaveAttribute("title");
 
     elem = domFromString(autoUpdatingRelativeAge(d, { title: true }))[0];
-    assert.strictEqual(elem.title, longDate(d));
+    assert.dom(elem).hasAttribute("title", longDate(d));
 
     elem = domFromString(
       autoUpdatingRelativeAge(d, {
@@ -252,17 +249,17 @@ module("Unit | Utility | formatter", function (hooks) {
 
     assert.strictEqual(elem.dataset.format, "medium-with-ago");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
-    assert.strictEqual(elem.title, longDate(d));
-    assert.strictEqual(elem.innerHTML, "1 day ago");
+    assert.dom(elem).hasAttribute("title", longDate(d));
+    assert.dom(elem).hasHtml("1 day ago");
 
     elem = domFromString(autoUpdatingRelativeAge(d, { format: "medium" }))[0];
     assert.strictEqual(elem.dataset.format, "medium");
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
-    assert.strictEqual(elem.title, "");
-    assert.strictEqual(elem.innerHTML, "1 day");
+    assert.dom(elem).doesNotHaveAttribute("title");
+    assert.dom(elem).hasHtml("1 day");
 
     elem = domFromString(autoUpdatingRelativeAge(d, { prefix: "test" }))[0];
-    assert.strictEqual(elem.innerHTML, "test 1d");
+    assert.dom(elem).hasHtml("test 1d");
   });
 
   test("updateRelativeAge", function (assert) {
@@ -272,7 +269,7 @@ module("Unit | Utility | formatter", function (hooks) {
 
     updateRelativeAge(elem);
 
-    assert.strictEqual(elem.innerHTML, "2m");
+    assert.dom(elem).hasHtml("2m");
 
     d = new Date();
     elem = domFromString(
@@ -282,7 +279,7 @@ module("Unit | Utility | formatter", function (hooks) {
 
     updateRelativeAge(elem);
 
-    assert.strictEqual(elem.innerHTML, "2 mins ago");
+    assert.dom(elem).hasHtml("2 mins ago");
   });
 
   test("number", function (assert) {

@@ -15,6 +15,23 @@ class Field {
     return this.element.dataset.controlType;
   }
 
+  value() {
+    switch (this.controlType) {
+      case "input-text":
+        const input = this.element.querySelector("input");
+        return parseInt(input.value, 10);
+    }
+  }
+
+  options() {
+    if (this.controlType !== "select") {
+      throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+    return [...this.element.querySelectorAll("select option")].map((node) =>
+      node.getAttribute("value")
+    );
+  }
+
   async fillIn(value) {
     let element;
 
@@ -131,15 +148,17 @@ class Form {
   }
 
   field(name) {
-    const field = new Field(
-      this.element.querySelector(`[data-name="${name}"]`)
-    );
+    const fieldElement = this.element.querySelector(`[data-name="${name}"]`);
 
-    if (!field) {
+    if (!fieldElement) {
       throw new Error(`Field with name ${name} not found`);
     }
 
-    return field;
+    return new Field(fieldElement);
+  }
+
+  hasField(name) {
+    return !!this.element.querySelector(`[data-name="${name}"]`);
   }
 }
 export default function form(selector = "form") {
@@ -154,6 +173,10 @@ export default function form(selector = "form") {
     },
     field(name) {
       return helper.field(name);
+    },
+
+    hasField(name) {
+      return helper.hasField(name);
     },
   };
 }

@@ -246,6 +246,8 @@ Discourse::Application.routes.draw do
                   only: %i[index create update destroy],
                   constraints: AdminConstraint.new
         resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
+        get "emojis/new" => "emojis#index"
+        get "emojis/settings" => "emojis#index"
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
@@ -1624,6 +1626,8 @@ Discourse::Application.routes.draw do
     post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
     get "/user-api-key/otp" => "user_api_keys#otp"
     post "/user-api-key/otp" => "user_api_keys#create_otp"
+
+    post "/user-api-key-client/register" => "user_api_key_clients#register"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

@@ -1,11 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Site from "discourse/models/site";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({
@@ -133,11 +129,12 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         `.sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='${firstCategory.slug}']`
-      ),
-      "category section link is not shown in sidebar after being marked as uncategorized"
-    );
+      )
+      .doesNotExist(
+        "category section link is not shown in sidebar after being marked as uncategorized"
+      );
   });
 });

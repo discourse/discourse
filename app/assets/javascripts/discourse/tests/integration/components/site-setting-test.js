@@ -35,8 +35,8 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
-    await fillIn(query(".setting input"), "value");
-    await click(query(".setting .d-icon-check"));
+    await fillIn(".setting input", "value");
+    await click(".setting .d-icon-check");
 
     assert.strictEqual(query(".validation-error h1").outerHTML, message);
   });
@@ -55,8 +55,8 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
-    await fillIn(query(".setting input"), "value");
-    await click(query(".setting .d-icon-check"));
+    await fillIn(".setting input", "value");
+    await click(".setting .d-icon-check");
 
     assert.dom(".validation-error h1").doesNotExist();
   });
@@ -72,13 +72,13 @@ module("Integration | Component | site-setting", function (hooks) {
 
     assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
 
-    await click(query(".file-types-list__button.image"));
+    await click(".file-types-list__button.image");
 
     assert
       .dom(".formatted-selection")
       .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
 
-    await click(query(".file-types-list__button.image"));
+    await click(".file-types-list__button.image");
 
     assert
       .dom(".formatted-selection")

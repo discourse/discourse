@@ -2,11 +2,11 @@
   {{#each this.options key="id" as |option|}}
     {{#unless option.hidden}}
       <TapTile
-        @icon={{option.icon}}
         @tileId={{option.id}}
         @activeTile={{grid.activeTile}}
         @onChange={{action "selectShortcut"}}
       >
+
         <div class="tap-tile-title">{{i18n option.label}}</div>
         <div class="tap-tile-date">{{option.timeFormatted}}</div>
       </TapTile>

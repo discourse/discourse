@@ -2,7 +2,7 @@ import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | secret-value-list", function (hooks) {
@@ -23,31 +23,31 @@ module("Integration | Component | secret-value-list", function (hooks) {
     await fillIn(".new-value-input.key", "thirdKey");
     await click(".add-value-btn");
 
-    assert.strictEqual(
-      count(".values .value"),
-      2,
-      "it doesn't add the value to the list if secret is missing"
-    );
+    assert
+      .dom(".values .value")
+      .exists(
+        { count: 2 },
+        "doesn't add the value to the list if secret is missing"
+      );
 
     await fillIn(".new-value-input.key", "");
     await fillIn(".new-value-input.secret", "thirdValue");
     await click(".add-value-btn");
 
-    assert.strictEqual(
-      count(".values .value"),
-      2,
-      "it doesn't add the value to the list if key is missing"
-    );
+    assert
+      .dom(".values .value")
+      .exists(
+        { count: 2 },
+        "doesn't add the value to the list if key is missing"
+      );
 
     await fillIn(".new-value-input.key", "thirdKey");
     await fillIn(".new-value-input.secret", "thirdValue");
     await click(".add-value-btn");
 
-    assert.strictEqual(
-      count(".values .value"),
-      3,
-      "it adds the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.deepEqual(
       this.values,
@@ -144,11 +144,9 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
-    assert.strictEqual(
-      count(".values .value"),
-      1,
-      "it removes the value from the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 1 }, "removes the value from the list of values");
 
     assert.strictEqual(
       this.values,

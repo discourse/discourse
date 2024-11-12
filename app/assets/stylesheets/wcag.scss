@@ -34,7 +34,8 @@ html.discourse-no-touch {
       color: var(--secondary);
     }
   }
-  .btn-flat.delete.d-hover {
+  .btn-flat.delete.d-hover,
+  .btn-flat.delete:hover {
     background: var(--danger);
   }
 
@@ -218,6 +219,7 @@ html {
       }
       button {
         &.d-hover,
+        &:hover,
         &:focus,
         &:active {
           background: var(--primary-medium);
@@ -241,7 +243,8 @@ html {
             .d-icon {
               color: var(--tertiary);
             }
-            &.d-hover {
+            &.d-hover,
+            &:hover {
               .d-icon {
                 color: var(--tertiary-medium);
               }

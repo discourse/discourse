@@ -2,7 +2,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
   updateCurrentUser,
@@ -94,11 +93,9 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.equal(
-      query(`.btn-emoji img.emoji`).title,
-      userStatusEmoji,
-      "status emoji is shown"
-    );
+    assert
+      .dom(".btn-emoji img.emoji")
+      .hasAttribute("title", userStatusEmoji, "status emoji is shown");
     assert.equal(
       query(".user-status-description").value,
       userStatus,
@@ -122,10 +119,10 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.ok(exists(`.d-icon-discourse-emojis`), "empty status icon is shown");
+    assert.dom(".d-icon-discourse-emojis").exists("empty status icon is shown");
 
     await click(".btn-emoji");
-    assert.ok(exists(".emoji-picker.opened"), "emoji picker is opened");
+    assert.dom(".emoji-picker.opened").exists("emoji picker is opened");
 
     await fillIn(".emoji-picker-content .filter", userStatusEmoji);
     await click(".results .emoji");
@@ -249,7 +246,7 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
     await pickEmoji(userStatusEmoji);
 
-    assert.ok(exists(`.btn-primary[disabled]`), "the save button is disabled");
+    assert.dom(".btn-primary").isDisabled("the save button is disabled");
   });
 
   test("sets default status emoji automatically after user started inputting  status description", async function (assert) {
@@ -279,11 +276,13 @@ acceptance("User Status", function (needs) {
     await click(".d-modal-cancel");
     await openUserStatusModal();
 
-    assert.equal(
-      query(`.btn-emoji img.emoji`).title,
-      userStatusEmoji,
-      "the actual status emoji is shown"
-    );
+    assert
+      .dom(".btn-emoji img.emoji")
+      .hasAttribute(
+        "title",
+        userStatusEmoji,
+        "the actual status emoji is shown"
+      );
     assert.equal(
       query(".user-status-description").value,
       userStatus,
@@ -323,7 +322,7 @@ acceptance("User Status", function (needs) {
     await click(".btn.delete-status");
     await openUserStatusModal();
 
-    assert.ok(exists(`.d-icon-discourse-emojis`), "empty status icon is shown");
+    assert.dom(".d-icon-discourse-emojis").exists("empty status icon is shown");
     assert.equal(
       query(".user-status-description").value,
       "",
@@ -496,7 +495,7 @@ acceptance("User Status - user menu", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.ok(exists("li.set-user-status .btn"), "shows the button");
+    assert.dom("li.set-user-status .btn").exists("shows the button");
     assert
       .dom("li.set-user-status svg.d-icon-circle-plus")
       .exists("shows the icon on the button");

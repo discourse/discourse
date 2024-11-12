@@ -31,14 +31,14 @@ if (
     "> pnpm was run inside a plugin directory. Re-executing with --ignore-workspace..."
   );
 
+  const indexOfPnpm = process.argv.findIndex((a) => a.endsWith("pnpm"));
+  const newArgs = [...process.argv];
+  newArgs.splice(indexOfPnpm + 1, 0, "--ignore-workspace");
+
   try {
-    execFileSync(
-      process.argv[0],
-      [...process.argv.slice(1), "--ignore-workspace"],
-      {
-        stdio: "inherit",
-      }
-    );
+    execFileSync(newArgs[0], newArgs.slice(1), {
+      stdio: "inherit",
+    });
   } catch (e) {
     if (e.status) {
       process.exit(e.status);

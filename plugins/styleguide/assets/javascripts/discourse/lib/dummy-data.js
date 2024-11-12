@@ -169,11 +169,11 @@ export function createData(store) {
     canManage: true,
     canDelete: true,
     post_number: 1,
+    topic: createTopic(),
   };
 
   const postModel = store.createRecord("post", {
     ...transformedPost,
-    topic: createTopic(),
   });
 
   _data = {

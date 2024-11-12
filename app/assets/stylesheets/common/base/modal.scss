@@ -70,6 +70,10 @@
     padding: 1rem 1.5rem;
     box-sizing: border-box;
 
+    &.empty {
+      display: none;
+    }
+
     input {
       width: auto;
 

@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | wrapper",
@@ -19,7 +18,7 @@ module(
       assert
         .dom(".form-template-field")
         .doesNotExist("A form template field should not exist");
-      assert.ok(exists(".alert"), "An alert message should exist");
+      assert.dom(".alert").exists("an alert message should exist");
     });
 
     test("renders a component based on the component type found in the content YAML", async function (assert) {
@@ -44,10 +43,9 @@ module(
       );
 
       componentTypes.forEach((componentType) => {
-        assert.ok(
-          exists(`.form-template-field[data-field-type='${componentType}']`),
-          `${componentType} component exists`
-        );
+        assert
+          .dom(`.form-template-field[data-field-type='${componentType}']`)
+          .exists(`${componentType} component exists`);
       });
     });
 
@@ -95,10 +93,9 @@ module(
         hbs`<FormTemplateField::Wrapper @id={{this.formTemplateId}} />`
       );
 
-      assert.ok(
-        exists(`.form-template-field[data-field-type='checkbox']`),
-        `Checkbox component renders`
-      );
+      assert
+        .dom(`.form-template-field[data-field-type='checkbox']`)
+        .exists("checkbox component renders");
     });
   }
 );

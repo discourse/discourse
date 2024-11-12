@@ -11,6 +11,7 @@ module Chat
                :chatable_url,
                :description,
                :title,
+               :unicode_title,
                :slug,
                :status,
                :archive_failed,
@@ -51,6 +52,10 @@ module Chat
 
     def title
       object.name || object.title(scope.user)
+    end
+
+    def unicode_title
+      Emoji.gsub_emoji_to_unicode(title)
     end
 
     def chatable

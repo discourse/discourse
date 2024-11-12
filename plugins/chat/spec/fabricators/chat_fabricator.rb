@@ -220,7 +220,12 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
-  transient :with_replies, :channel, :original_message_user, :old_om, use_service: false
+  transient :with_replies,
+            :channel,
+            :original_message_user,
+            :old_om,
+            use_service: false,
+            notification_level: :tracking
 
   original_message do |attrs|
     Fabricate(
@@ -239,7 +244,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     attrs[:created_at] = 1.week.ago if transients[:old_om]
 
     thread.original_message.update!(**attrs)
-    thread.add(thread.original_message_user)
+    thread.add(thread.original_message_user, notification_level: transients[:notification_level])
 
     if transients[:with_replies]
       Fabricate

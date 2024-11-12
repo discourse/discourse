@@ -33,9 +33,8 @@ module(
     });
 
     test("when channel is a public channel", async function (assert) {
-      const count = 10;
       this.channel = new ChatFabricators(getOwner(this)).channel();
-      this.siteSettings.chat_channel_retention_days = count;
+      this.siteSettings.chat_channel_retention_days = 10;
 
       await render(
         hbs`<ChatRetentionReminderText @channel={{this.channel}} />`
@@ -43,7 +42,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.long", { count }));
+        .includesText(I18n.t("chat.retention_reminders.long", { count: 10 }));
 
       await render(
         hbs`<ChatRetentionReminderText @channel={{this.channel}} @type="short" />`
@@ -51,13 +50,12 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.short", { count }));
+        .includesText(I18n.t("chat.retention_reminders.short", { count: 10 }));
     });
 
     test("when channel is a DM channel", async function (assert) {
-      const count = 10;
       this.channel = new ChatFabricators(getOwner(this)).directMessageChannel();
-      this.siteSettings.chat_dm_retention_days = count;
+      this.siteSettings.chat_dm_retention_days = 10;
 
       await render(
         hbs`<ChatRetentionReminderText @channel={{this.channel}} />`
@@ -65,7 +63,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.long", { count }));
+        .includesText(I18n.t("chat.retention_reminders.long", { count: 10 }));
 
       await render(
         hbs`<ChatRetentionReminderText @channel={{this.channel}} @type="short" />`
@@ -73,7 +71,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.short", { count }));
+        .includesText(I18n.t("chat.retention_reminders.short", { count: 10 }));
     });
   }
 );

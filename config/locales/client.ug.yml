@@ -2335,7 +2335,6 @@ ug:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "سەھىپىلا"
-      categories_only_optimized: "سەھىپەلەرلا (ئەلالاشتۇرۇلغان)"
       categories_with_featured_topics: "جەۋھەر تېمىلىق سەھىپە"
       categories_and_latest_topics: "سەھىپە ۋە ئاخىرقى تېما"
       categories_and_latest_topics_created_date: "سەھىپە ۋە ئاخىرقى تېما (قۇرۇلغان چېسلا بويىچە تەرتىپلەيدۇ)"

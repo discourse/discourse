@@ -55,7 +55,7 @@ RSpec.describe Chat::CategoryChannel do
     end
 
     context "when channel is not public" do
-      let(:staff_groups) { Group::AUTO_GROUPS.slice(:staff, :moderators, :admins).values }
+      let(:staff_groups) { Group::AUTO_GROUPS.values_at(:staff, :moderators, :admins) }
       let(:group) { Fabricate(:group) }
       let(:private_category) { Fabricate(:private_category, group: group) }
       let(:channel) { Fabricate(:category_channel, chatable: private_category) }

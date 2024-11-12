@@ -196,4 +196,25 @@ RSpec.describe SiteSetting do
       expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
     end
   end
+
+  describe "Upload" do
+    before { setup_s3 }
+
+    describe "#use_dualstack_endpoint" do
+      it "returns false if s3_endpoint has been set" do
+        SiteSetting.s3_endpoint = "https://s3clone.test.com"
+        expect(SiteSetting.Upload.use_dualstack_endpoint).to eq(false)
+      end
+
+      it "returns false if the s3_region is in China" do
+        SiteSetting.s3_region = "cn-north-1"
+        expect(SiteSetting.Upload.use_dualstack_endpoint).to eq(false)
+      end
+
+      it "returns true if the s3_region is not in China" do
+        SiteSetting.s3_region = "us-west-1"
+        expect(SiteSetting.Upload.use_dualstack_endpoint).to eq(true)
+      end
+    end
+  end
 end

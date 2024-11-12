@@ -220,10 +220,18 @@ module Chat
       blockquote
       emphasis
       replacements
-      heading
+      escape
     ]
 
     def self.cook(message, opts = {})
+      bot = opts[:user_id] && opts[:user_id].negative?
+
+      features = MARKDOWN_FEATURES.dup
+      features << "image-grid" if bot
+
+      rules = MARKDOWN_IT_RULES.dup
+      rules << "heading" if bot
+
       # A rule in our Markdown pipeline may have Guardian checks that require a
       # user to be present. The last editing user of the message will be more
       # generally up to date than the creating user. For example, we use
@@ -233,9 +241,8 @@ module Chat
       cooked =
         PrettyText.cook(
           message,
-          features_override:
-            MARKDOWN_FEATURES + DiscoursePluginRegistry.chat_markdown_features.to_a,
-          markdown_it_rules: MARKDOWN_IT_RULES,
+          features_override: features + DiscoursePluginRegistry.chat_markdown_features.to_a,
+          markdown_it_rules: rules,
           force_quote_link: true,
           user_id: opts[:user_id],
           hashtag_context: "chat-composer",

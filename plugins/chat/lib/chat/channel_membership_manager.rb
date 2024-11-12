@@ -64,18 +64,5 @@ module Chat
         last_read_message_id: channel.chat_messages.last&.id,
       )
     end
-
-    def enforce_automatic_channel_memberships
-      Jobs.enqueue(Jobs::Chat::AutoJoinChannelMemberships, chat_channel_id: channel.id)
-    end
-
-    def enforce_automatic_user_membership(user)
-      Jobs.enqueue(
-        Jobs::Chat::AutoJoinChannelBatch,
-        chat_channel_id: channel.id,
-        starts_at: user.id,
-        ends_at: user.id,
-      )
-    end
   end
 end

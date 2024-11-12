@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { and, equal, not, or } from "@ember/object/computed";
+import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -104,14 +105,29 @@ export default class Post extends RestModel {
   }
 
   @service currentUser;
+  @service site;
+
+  @tracked bookmarked;
+  @tracked can_delete;
+  @tracked can_edit;
+  @tracked can_permanently_delete;
+  @tracked can_recover;
+  @tracked deleted_at;
+  @tracked likeAction;
+  @tracked post_type;
+  @tracked user_deleted;
+  @tracked user_id;
+  @tracked yours;
 
   customShare = null;
 
+  @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
   @or("deleted_at", "deletedViaTopic") deleted;
   @not("deleted") notDeleted;
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
+  @alias("topic.details.created_by.id") topicCreatedById;
 
   // Posts can show up as deleted if the topic is deleted
   @and("firstPost", "topic.deleted_at") deletedViaTopic;
@@ -200,6 +216,112 @@ export default class Post extends RestModel {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   }
 
+  get canBookmark() {
+    return !!this.currentUser;
+  }
+
+  get canDelete() {
+    return (
+      this.can_delete &&
+      !this.deleted_at &&
+      this.currentUser &&
+      (this.currentUser.staff || !this.user_deleted)
+    );
+  }
+
+  get canDeleteTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_delete;
+  }
+
+  get canEditStaffNotes() {
+    return !!this.topic.details.can_edit_staff_notes;
+  }
+
+  get canFlag() {
+    return !this.topic.deleted && !isEmpty(this.flagsAvailable);
+  }
+
+  get canManage() {
+    return this.currentUser?.canManageTopic;
+  }
+
+  get canPermanentlyDelete() {
+    return (
+      this.deleted &&
+      (this.firstPost
+        ? this.topic.details.can_permanently_delete
+        : this.can_permanently_delete)
+    );
+  }
+
+  get canPublishPage() {
+    return this.firstPost && !!this.topic.details.can_publish_page;
+  }
+
+  get canRecover() {
+    return this.deleted && this.can_recover;
+  }
+
+  get isRecovering() {
+    return !this.deleted && this.can_recover;
+  }
+
+  get canRecoverTopic() {
+    return this.firstPost && this.deleted && this.topic.details.can_recover;
+  }
+
+  get isRecoveringTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_recover;
+  }
+
+  get canToggleLike() {
+    return !!this.likeAction?.get("canToggle");
+  }
+
+  get filteredRepliesPostNumber() {
+    return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get isWhisper() {
+    return this.post_type === this.site.post_types.whisper;
+  }
+
+  get isModeratorAction() {
+    return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get liked() {
+    return !!this.likeAction?.get("acted");
+  }
+
+  get likeCount() {
+    return this.likeAction?.get("count");
+  }
+
+  /**
+   * Show a "Flag to delete" message if not staff and you can't otherwise delete it.
+   */
+  get showFlagDelete() {
+    return (
+      !this.canDelete &&
+      this.yours &&
+      this.canFlag &&
+      this.currentUser &&
+      !this.currentUser.staff
+    );
+  }
+
+  get showLike() {
+    if (
+      !this.currentUser ||
+      (this.topic?.get("archived") && this.user_id !== this.currentUser.id)
+    ) {
+      return true;
+    }
+
+    return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
   afterUpdate(res) {
     if (res.category) {
       this.site.updateCategory(res.category);
@@ -277,9 +399,9 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to be deleted. Does not call the server, that should be
-    done elsewhere.
-  **/
+   Changes the state of the post to be deleted. Does not call the server, that should be
+   done elsewhere.
+   **/
   setDeletedState(deletedBy) {
     let promise;
     this.set("oldCooked", this.cooked);
@@ -316,10 +438,10 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to NOT be deleted. Does not call the server.
-    This can only be called after setDeletedState was called, but the delete
-    failed on the server.
-  **/
+   Changes the state of the post to NOT be deleted. Does not call the server.
+   This can only be called after setDeletedState was called, but the delete
+   failed on the server.
+   **/
   undoDeleteState() {
     if (this.oldCooked) {
       this.setProperties({
@@ -344,9 +466,9 @@ export default class Post extends RestModel {
   }
 
   /**
-    Updates a post from another's attributes. This will normally happen when a post is loading but
-    is already found in an identity map.
-  **/
+   Updates a post from another's attributes. This will normally happen when a post is loading but
+   is already found in an identity map.
+   **/
   updateFromPost(otherPost) {
     Object.keys(otherPost).forEach((key) => {
       let value = otherPost[key],

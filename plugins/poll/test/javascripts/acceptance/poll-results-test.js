@@ -2,7 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -1043,16 +1042,12 @@ acceptance("Poll results", function (needs) {
 
   test("can load more voters", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      1,
-      "Initially, one voter shown on first option"
-    );
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0,
-      "Initially, no voter shown on second option"
-    );
+    assert
+      .dom(".poll-container .results li:nth-child(1) .poll-voters li")
+      .exists({ count: 1 }, "initially, one voter shown on first option");
+    assert
+      .dom(".poll-container .results li:nth-child(2) .poll-voters li")
+      .doesNotExist("initially, no voter shown on second option");
 
     await publishToMessageBus("/polls/134", {
       post_id: "156",
@@ -1093,30 +1088,30 @@ acceptance("Poll results", function (needs) {
       ],
     });
 
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      1,
-      "after incoming message, one voter shown on first option"
-    );
+    assert
+      .dom(".poll-container .results li:nth-child(1) .poll-voters li")
+      .exists(
+        { count: 1 },
+        "after incoming message, one voter shown on first option"
+      );
 
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0,
-      "after incoming message, no voter shown on second option"
-    );
+    assert
+      .dom(".poll-container .results li:nth-child(2) .poll-voters li")
+      .doesNotExist("after incoming message, no voter shown on second option");
 
     await click(".poll-voters-toggle-expand");
 
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(1) .poll-voters li"),
-      2,
-      "after clicking fetch voters button, two voters shown on first option"
-    );
-    assert.strictEqual(
-      count(".poll-container .results li:nth-child(2) .poll-voters li"),
-      0,
-      "after clicking fetch voters button, no voters shown on second option"
-    );
+    assert
+      .dom(".poll-container .results li:nth-child(1) .poll-voters li")
+      .exists(
+        { count: 2 },
+        "after clicking fetch voters button, two voters shown on first option"
+      );
+    assert
+      .dom(".poll-container .results li:nth-child(2) .poll-voters li")
+      .doesNotExist(
+        "after clicking fetch voters button, no voters shown on second option"
+      );
   });
 
   test("can load more voters - ranked choice", async function (assert) {
@@ -1142,23 +1137,22 @@ acceptance("Poll results", function (needs) {
       "Votes tab is active"
     );
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".poll-container .discourse-poll-ranked_choice-results .poll-voters li"
-      ),
-      1,
-      "Initially, one voter shown on first option"
-    );
+      )
+      .exists({ count: 1 }, "Initially, one voter shown on first option");
 
     await click(".poll-voters-toggle-expand");
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".poll-container .discourse-poll-ranked_choice-results .results li:nth-child(1) .poll-voters li"
-      ),
-      2,
-      "after clicking fetch voters button, two voters shown on first option"
-    );
+      )
+      .exists(
+        { count: 2 },
+        "after clicking fetch voters button, two voters shown on first option"
+      );
 
     await publishToMessageBus("/polls/135", {
       post_id: "158",
@@ -1224,13 +1218,14 @@ acceptance("Poll results", function (needs) {
       ],
     });
 
-    assert.strictEqual(
-      count(
+    assert
+      .dom(
         ".poll-container .discourse-poll-ranked_choice-results .results li:nth-child(1) .poll-voters li"
-      ),
-      2,
-      "after incoming message containing 3 voters, only 2 voters shown on first option as bus updates are not supported once voters are expanded"
-    );
+      )
+      .exists(
+        { count: 2 },
+        "after incoming message containing 3 voters, only 2 voters shown on first option as bus updates are not supported once voters are expanded"
+      );
   });
 
   test("can unvote", async function (assert) {
@@ -1238,13 +1233,13 @@ acceptance("Poll results", function (needs) {
 
     await click(".toggle-results");
 
-    assert.strictEqual(count(".poll-container .d-icon-circle"), 1);
-    assert.strictEqual(count(".poll-container .d-icon-far-circle"), 1);
+    assert.dom(".poll-container .d-icon-circle").exists({ count: 1 });
+    assert.dom(".poll-container .d-icon-far-circle").exists({ count: 1 });
 
     await click(".remove-vote");
 
-    assert.strictEqual(count(".poll-container .d-icon-circle"), 0);
-    assert.strictEqual(count(".poll-container .d-icon-far-circle"), 2);
+    assert.dom(".poll-container .d-icon-circle").doesNotExist();
+    assert.dom(".poll-container .d-icon-far-circle").exists({ count: 2 });
   });
 });
 

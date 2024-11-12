@@ -1,11 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 
@@ -202,7 +198,7 @@ acceptance("Second Factor Auth Page", function (needs) {
       );
 
     await click(".toggle-second-factor-method.totp");
-    assert.ok(exists("form.totp-token"), "TOTP form is now shown");
+    assert.dom("form.totp-token").exists("TOTP form is now shown");
     assert
       .dom(".toggle-second-factor-method.security-key")
       .exists("security key is now shown as alternative method");
@@ -280,6 +276,6 @@ acceptance("Second Factor Auth Page", function (needs) {
 
     await visit("/session/2fa?nonce=ok110111");
 
-    assert.notOk(exists(".sidebar-container"), "does not display the sidebar");
+    assert.dom(".sidebar-container").doesNotExist();
   });
 });

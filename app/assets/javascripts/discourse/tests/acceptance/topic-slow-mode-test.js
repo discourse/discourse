@@ -3,7 +3,6 @@ import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -56,8 +55,8 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
         "enabled until combobox is switched to the option Pick Date and Time"
       );
 
-    assert.ok(exists("input.date-picker"), "date picker is rendered");
-    assert.ok(exists("input.time-input"), "time picker is rendered");
+    assert.dom("input.date-picker").exists("date picker is rendered");
+    assert.dom("input.time-input").exists("time picker is rendered");
   });
 
   test("'Enable' button changes to 'Update' button when slow mode is enabled", async function (assert) {

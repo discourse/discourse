@@ -11,7 +11,7 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -68,14 +68,12 @@ module(
       this.item.notification.read = true;
       await settled();
 
-      assert.ok(
-        exists("li.read"),
-        "the item re-renders when the read property is updated"
-      );
-      assert.notOk(
-        exists("li.unread"),
-        "the item re-renders when the read property is updated"
-      );
+      assert
+        .dom("li.read")
+        .exists("the item re-renders when the read property is updated");
+      assert
+        .dom("li.unread")
+        .doesNotExist("the item re-renders when the read property is updated");
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
@@ -84,8 +82,7 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      let item = query("li");
-      assert.ok(item.classList.contains("mentioned"));
+      assert.dom("li").hasClass("mentioned");
 
       this.set(
         "item",
@@ -95,10 +92,9 @@ module(
       );
       await settled();
 
-      assert.ok(
-        exists("li.private-message"),
-        "replaces underscores in type name with dashes"
-      );
+      assert
+        .dom("li.private-message")
+        .exists("replaces underscores in type name with dashes");
     });
 
     test("pushes is-warning to the classList if the notification originates from a warning PM", async function (assert) {
@@ -128,8 +124,7 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      const link = query("li a");
-      assert.ok(link.href.endsWith("/t/this-is-fancy-title/449/113"));
+      assert.dom("li a").hasAttribute("href", "/t/this-is-fancy-title/449/113");
     });
 
     test("the item's href links to the group messages if the notification is for a group messages", async function (assert) {
@@ -147,8 +142,7 @@ module(
         })
       );
       await render(template);
-      const link = query("li a");
-      assert.ok(link.href.endsWith("/u/ossaama/messages/grouperss"));
+      assert.dom("li a").hasAttribute("href", "/u/ossaama/messages/grouperss");
     });
 
     test("the item's link has a title for accessibility", async function (assert) {
@@ -157,8 +151,10 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      const link = query("li a");
-      assert.strictEqual(link.title, I18n.t("notifications.titles.mentioned"));
+
+      assert
+        .dom("li a")
+        .hasAttribute("title", I18n.t("notifications.titles.mentioned"));
     });
 
     test("has elements for label and description", async function (assert) {
@@ -208,10 +204,11 @@ module(
         })
       );
       await render(template);
-      assert.ok(
-        exists("li a .item-description img.emoji"),
-        "emojis are unescaped when fancy_title is used for description"
-      );
+      assert
+        .dom("li a .item-description img.emoji")
+        .exists(
+          "emojis are unescaped when fancy_title is used for description"
+        );
     });
 
     test("topic_title from data is emoji-unescaped safely", async function (assert) {
@@ -232,10 +229,9 @@ module(
         "unsafe title with <a> unescaped emoji",
         "topic_title is rendered safely"
       );
-      assert.ok(
-        exists(".item-description img.emoji"),
-        "emoji is rendered correctly"
-      );
+      assert
+        .dom(".item-description img.emoji")
+        .exists("emoji is rendered correctly");
     });
 
     test("various aspects can be customized according to the notification's render director", async function (assert) {
@@ -289,42 +285,37 @@ module(
 
       await render(template);
 
-      assert.ok(
-        exists("li.additional.classes"),
-        "extra classes are included on the item"
-      );
+      assert
+        .dom("li.additional.classes")
+        .exists("extra classes are included on the item");
 
-      const link = query("li a");
-      assert.ok(
-        link.href.endsWith("/somewhere/awesome"),
-        "link href is customized"
-      );
+      assert
+        .dom("li a")
+        .hasAttribute("href", "/somewhere/awesome", "link href is customized");
+      assert
+        .dom("li a")
+        .hasAttribute(
+          "title",
+          "hello world this is unsafe '\"<span>",
+          "link title is customized and rendered safely"
+        );
+
+      assert.dom("svg.d-icon-wrench").exists("icon is customized");
+
+      assert
+        .dom("li .item-label")
+        .hasClass("label-wrapper-1", "label wrapper has additional classes");
       assert.strictEqual(
-        link.title,
-        "hello world this is unsafe '\"<span>",
-        "link title is customized and rendered safely"
-      );
-
-      assert.ok(exists("svg.d-icon-wrench"), "icon is customized");
-
-      const label = query("li .item-label");
-      assert.ok(
-        label.classList.contains("label-wrapper-1"),
-        "label wrapper has additional classes"
-      );
-      assert.strictEqual(
-        label.textContent.trim(),
+        query("li .item-label").textContent.trim(),
         "notification label 666 <span>",
         "label content is customized"
       );
 
-      const description = query(".item-description");
-      assert.ok(
-        description.classList.contains("description-class-1"),
-        "description has additional classes"
-      );
+      assert
+        .dom(".item-description")
+        .hasClass("description-class-1", "description has additional classes");
       assert.strictEqual(
-        description.textContent.trim(),
+        query(".item-description").textContent.trim(),
         "notification description 123 <script>",
         "description content is customized"
       );
@@ -356,7 +347,9 @@ module(
       );
 
       await render(template);
-      assert.notOk(exists(".item-description"), "description is not rendered");
+      assert
+        .dom(".item-description")
+        .doesNotExist("description is not rendered");
       assert.strictEqual(
         query("li").textContent.trim(),
         "notification label",
@@ -395,7 +388,7 @@ module(
         "notification description",
         "only notification description is displayed"
       );
-      assert.notOk(exists(".item-label"), "label is not rendered");
+      assert.dom(".item-label").doesNotExist("label is not rendered");
     });
   }
 );
@@ -497,9 +490,9 @@ module(
     test("uses bookmarkable_url for the href", async function (assert) {
       this.set("item", getBookmark({}, this.siteSettings, this.site));
       await render(template);
-      assert.ok(
-        query("li.bookmark a").href.endsWith("/t/this-bookmarkable-url/227/1")
-      );
+      assert
+        .dom("li.bookmark a")
+        .hasAttribute("href", /\/t\/this-bookmarkable-url\/227\/1$/);
     });
 
     test("item label is the bookmarked post author", async function (assert) {

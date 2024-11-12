@@ -169,7 +169,7 @@ class SiteSetting < ActiveRecord::Base
     end
 
     def self.use_dualstack_endpoint
-      !SiteSetting.Upload.s3_region.start_with?("cn-")
+      SiteSetting.Upload.s3_endpoint.blank? && !SiteSetting.Upload.s3_region.start_with?("cn-")
     end
 
     def self.enable_s3_uploads
