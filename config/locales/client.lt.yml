@@ -1547,7 +1547,6 @@ lt:
           success: "Pavyko sugeneruoti pakvietimo nuorodą"
           error: "Generuojant kvietimo nuorodą įvyko klaida"
         invite:
-          instructions: "Bendrinkite šią nuorodą, kad akimirksniu suteiktumėte prieigą prie šios svetainės:"
           expires_in_time: "Baigia galioti %{time}"
           expired_at_time: "Galiojimo laikas baigėsi %{time}"
           show_advanced: "Rodyti išplėstines parinktis"
@@ -1558,9 +1557,8 @@ lt:
           add_to_groups: "Pridėti prie grupių"
           expires_after: "Baigia galioti"
           send_invite_email: "Išsaugoti ir siųsti el. laišką"
-          save_invite: "Išsaugoti"
+          update_invite: "Atnaujinti"
           cancel: "Atšaukti"
-          invite_saved: "Kvietimas išsaugotas."
         bulk_invite:
           text: "Masinis kvietimas"
           error: "Atsiprašome, failas privalo buti CSV formato."
@@ -2343,6 +2341,8 @@ lt:
         top: "Daugiau nėra jokių populiarių temų."
         bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
+      dismiss:
+        name: "Praleisti"
       close_topics:
         name: "Uždaryti"
         optional: (pasoronktinai)
@@ -2803,16 +2803,20 @@ lt:
       few_likes_left: "Ačiū, kad dalinatės meile! Šiandien jums liko tik keli patikimai."
       controls:
         reply: "Pradėk rašyti atsakymą šiam įrašui"
+        like_action: "Patinka"
         like: "įrašas man patinka"
         has_liked: "tau patinka šis įrašas"
         read_indicator: "nariai, kurie skaito šį įrašą"
+        undo_like_action: "Anuliuoti Patinka"
         undo_like: "nepatinka"
         edit: "redaguoti įrašą"
         edit_action: "Redaguoti"
         edit_anonymous: "Apgailestaujame, bet jūs turite būti prisijungęs, kad redaguotumėte šį įrašą."
+        flag_action: "Pranešti"
         flag: "Uždėk įrašui privačią vėliavą arba išsiųsk privatų pranešimą"
         delete: "ištrinti įrašą"
         undelete: "anuliuoti įrašo ištrinimą"
+        share_action: "Dalintis"
         share: "pasidalinti nuoroda į šį įrašą"
         more: "Daugiau"
         delete_replies:
@@ -2829,6 +2833,7 @@ lt:
             other: "Taip, ir visus %{count} atsakymus"
           just_the_post: "Ne, tik šį įrašą"
         admin: "įrašo administravimas"
+        admin_action: "Administratorius"
         permanently_delete: "Ištrinti visam laikui"
         permanently_delete_confirmation: "Ar tikrai norite visam laikui ištrinti šį įrašą? Jūs negalėsite jo susigrąžinti."
         wiki: "Sukurti Wiki"
@@ -4728,7 +4733,6 @@ lt:
         time_read: "Skaitymo laikas"
         post_edits_count: "Pranešimo redagavimai"
         anonymize: "Vartotojai su Anonimiškumo funkcijomis"
-        anonymize_confirm: "Ar TIKRAI norite suteikti anoniminę funkciją šiai paskyrai. Tai pakeis vartotojo vardą, el. pašto adresą ir perkraus visą paskyros informaciją."
         anonymize_yes: "Taip, Anonimizuoti šįą paskyrą"
         anonymize_failed: "Įvyko klaida anonimizuojant šią paskyrą"
         delete: "Ištrinti vartotoją"
@@ -5047,6 +5051,7 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
+        new: "Pridėti"
         add: "Pridėti Naują Šypsenėlę"
         name: "Vardas"
         group: "Grupė"

@@ -1827,7 +1827,6 @@ fr:
           success: "Lien d'invitation généré avec succès !"
           error: "Une erreur est survenue lors de la génération du lien d'invitation"
         invite:
-          instructions: "Partagez ce lien pour accorder instantanément l'accès à ce site :"
           expires_in_time: "Arrivera à expiration dans %{time}"
           expired_at_time: "Arrivée à expiration le %{time}"
           copy_link: "Copier le lien"
@@ -1844,9 +1843,8 @@ fr:
           expires_after: "Ce lien expirera dans"
           send_invite_email: "Enregistrer et envoyer l'e-mail"
           send_invite_email_instructions: "Restreindre l'invitation à l'adresse email pour envoyer un email d'invitation"
-          save_invite: "Enregistrer"
+          update_invite: "Mettre à jour"
           cancel: "Annuler"
-          invite_saved: "Invitation enregistrée."
         bulk_invite:
           none: "Aucune invitation à afficher sur cette page."
           text: "Invitation en masse"
@@ -2960,6 +2958,8 @@ fr:
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
+      dismiss:
+        name: "Rejeter"
       close_topics:
         name: "Fermer"
         note: "Note"
@@ -3529,17 +3529,23 @@ fr:
       few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques « J'aime » à attribuer aujourd'hui."
       controls:
         reply: "commencer à répondre à ce message"
+        like_action: "J'aime"
         like: "attribuer un « J'aime » à ce message"
         has_liked: "vous avez aimé ce message"
         read_indicator: "Membres ayant lu ce message"
+        undo_like_action: "Annuler le J'aime"
         undo_like: "annuler le « J'aime »"
         edit: "modifier ce message"
         edit_action: "Modifier"
         edit_anonymous: "Nous sommes désolés, mais vous devez être connecté(e) pour modifier ce message."
+        flag_action: "Signalement"
         flag: "signaler secrètement ce message pour attirer l'attention ou envoyer une notification privée à son sujet"
+        delete_action: "Supprimer le message"
         delete: "supprimer ce message"
         undelete: "annuler la suppression de ce message"
+        share_action: "Partager"
         share: "partager ce message"
+        copy_action: "Copier le lien"
         copy_title: "copier un lien vers ce message dans le presse-papiers"
         link_copied: "Lien copié !"
         more: "Plus"
@@ -3553,6 +3559,7 @@ fr:
             other: "Oui, et les %{count} réponses"
           just_the_post: "Non, uniquement ce message"
         admin: "actions d'administration sur le message"
+        admin_action: "Administrateur"
         permanently_delete: "Supprimer définitivement"
         permanently_delete_confirmation: "Voulez-vous vraiment supprimer définitivement ce message ? Vous ne pourrez plus le récupérer."
         wiki: "Basculer en mode wiki"
@@ -4731,6 +4738,7 @@ fr:
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
           previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
+          experimental: "Expérimental"
         last_checked: "Dernière vérification"
         refresh_problems: "Actualiser"
         no_problems: "Aucun problème n'a été trouvé."
@@ -6265,7 +6273,6 @@ fr:
         time_read: "Temps de lecture"
         post_edits_count: "Modifications de message"
         anonymize: "Rendre l'utilisateur anonyme"
-        anonymize_confirm: "Voulez-vous vraiment rendre ce compte anonyme ? Cela entraînera la modification du nom d'utilisateur et de l'adresse e-mail, et réinitialisera les informations du profil."
         anonymize_yes: "Oui, rendre ce compte anonyme"
         anonymize_failed: "Un problème est survenu lors de l'anonymisation du compte."
         delete: "Supprimer l'utilisateur"
@@ -6322,7 +6329,6 @@ fr:
         cant_delete_all_too_many_posts:
           one: "Impossible de supprimer tous les messages parce que l'utilisateur a plus d'un message. (delete_all_posts_max)"
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
-        delete_confirm_title: "Voulez-vous VRAIMENT supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse e-mail et adresse IP."
         delete_dont_block: "Supprimer uniquement"
@@ -6675,7 +6681,8 @@ fr:
           grant_existing_holders: Accordez des badges supplémentaires aux détenteurs de badges existants
       emoji:
         title: "Émoji"
-        help: "Ajoutez de nouveaux émojis que tout le monde pourra utiliser. Vous pouvez glisser-déposer plusieurs fichiers en une seule fois pour créer des émojis qui hériteront du nom de leurs fichiers d'origine respectifs. Vous pouvez aussi utiliser le bouton « Ajouter un nouvel émoji » pour ouvrir une boîte de dialogue de sélection de fichiers."
+        description: "Ajoutez de nouveaux émojis que tout le monde pourra utiliser. Vous pouvez glisser-déposer plusieurs fichiers en une seule fois pour créer des émojis qui hériteront du nom de leurs fichiers d'origine respectifs. Vous pouvez aussi utiliser le bouton « Ajouter un nouvel émoji » pour ouvrir une boîte de dialogue de sélection de fichiers."
+        new: "Ajouter"
         add: "Ajouter un nouvel émoji"
         choose_files: "Choisissez des fichiers"
         uploading: "Téléversement…"

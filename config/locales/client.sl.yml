@@ -1538,16 +1538,13 @@ sl:
           success: "Povezava s povabilom ustvarjena!"
           error: "Pri ustvarjanju povezave povabila je prišlo do napake"
         invite:
-          instructions: "Delite to povezavo in takoj omogočite dostop do te strani:"
           expires_in_time: "Poteče čez %{time}"
           link_copied: "Povezava kopirana!"
           show_advanced: "Pokaži dodatne možnosti"
           add_to_groups: "Dodaj v skupine"
           expires_after: "Poteče po"
           send_invite_email: "Shrani in pošlji e-pošto"
-          save_invite: "Shrani"
           cancel: "Prekliči"
-          invite_saved: "Vabilo shranjeno."
         bulk_invite:
           none: "Ni povabil za prikaz na tej strani."
           text: "Skupinsko povabilo"
@@ -2358,6 +2355,8 @@ sl:
         top: "Ni več najboljših tem."
         bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
+      dismiss:
+        name: "Opusti"
       close_topics:
         name: "Zapri"
         optional: (neobvezno)
@@ -2833,13 +2832,16 @@ sl:
         like: "všečkaj ta prispevek"
         has_liked: "všečkali ste prispevek"
         read_indicator: "člani, ki so prebrali ta prispevek"
+        undo_like_action: "Razveljavi všeček"
         undo_like: "razveljavi všeček"
         edit: "uredi prispevek"
         edit_action: "Uredi"
         edit_anonymous: "Oprostite vendar morate biti prijavljeni, da lahko uredite ta prispevek."
+        flag_action: "Prijavi"
         flag: "prijavi ta prispevek moderatorjem ali pošlji opozorilo avtorju"
         delete: "izbriši prispevek"
         undelete: "razveljavi izbris prispevka"
+        share_action: "Deli"
         share: "deli povezavo do tega prispevka"
         copy_title: "kopiraj povezavo do te teme v odložišče"
         link_copied: "Povezava kopirana!"
@@ -2858,6 +2860,7 @@ sl:
             other: "Da, in vseh %{count} odgovorov"
           just_the_post: "Ne, samo ta prispevek"
         admin: "ukrepi administratorja"
+        admin_action: "Admin"
         permanently_delete: "Trajno izbriši"
         wiki: "Naredi wiki"
         unwiki: "Odstrani wiki"
@@ -4447,7 +4450,6 @@ sl:
         approve_bulk_success: "Uspeh! Vsi izbrani uporabniki/ce, so bili potrjeni in obveščeni."
         time_read: "Čas branja"
         anonymize: "Anonimiziraj uporabnika"
-        anonymize_confirm: "Ali ste PREPRIČANI da hočete anonomizirati tega uporabnika? To bo spremenilo njegovo uporabniško ime in e-naslov ter ponastavilo vse profilne podatke."
         anonymize_yes: "Da, anonimiziraj tega uporabnika"
         delete: "Izbriši uporabnika"
         delete_posts:
@@ -4706,6 +4708,7 @@ sl:
             with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        new: "Dodaj"
         add: "Dodaj nov emoji"
         uploading: "Nalagam..."
         name: "Ime"
