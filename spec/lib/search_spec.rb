@@ -804,11 +804,11 @@ RSpec.describe Search do
     end
 
     context "with all topics" do
-      let!(:u1) { Fabricate(:user, username: "fred", name: "bob jones", email: "fred@bar.baz") }
-      let!(:u2) { Fabricate(:user, username: "bob", name: "fred jones", email: "bob@bar.baz") }
-      let!(:u3) { Fabricate(:user, username: "jones", name: "bob fred", email: "jones@bar.baz") }
+      let!(:u1) { Fabricate(:user, username: "fred", name: "bob jones", email: "foo+1@bar.baz") }
+      let!(:u2) { Fabricate(:user, username: "bob", name: "fred jones", email: "foo+2@bar.baz") }
+      let!(:u3) { Fabricate(:user, username: "jones", name: "bob fred", email: "foo+3@bar.baz") }
       let!(:u4) do
-        Fabricate(:user, username: "alice", name: "bob fred", email: "alice@bar.baz", admin: true)
+        Fabricate(:user, username: "alice", name: "bob fred", email: "foo+4@bar.baz", admin: true)
       end
 
       let!(:public_topic) { Fabricate(:topic, user: u1) }
