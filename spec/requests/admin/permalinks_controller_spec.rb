@@ -10,10 +10,20 @@ RSpec.describe Admin::PermalinksController do
       before { sign_in(admin) }
 
       it "filters url" do
-        Fabricate(:permalink, url: "/forum/23")
-        Fabricate(:permalink, url: "/forum/98")
-        Fabricate(:permalink, url: "/discuss/topic/45")
-        Fabricate(:permalink, url: "/discuss/topic/76")
+        Fabricate(:permalink, url: "/forum/23", permalink_type_value: "1", permalink_type: "topic")
+        Fabricate(:permalink, url: "/forum/98", permalink_type_value: "1", permalink_type: "topic")
+        Fabricate(
+          :permalink,
+          url: "/discuss/topic/45",
+          permalink_type_value: "1",
+          permalink_type: "topic",
+        )
+        Fabricate(
+          :permalink,
+          url: "/discuss/topic/76",
+          permalink_type_value: "1",
+          permalink_type: "topic",
+        )
 
         get "/admin/permalinks.json", params: { filter: "topic" }
 
@@ -23,10 +33,26 @@ RSpec.describe Admin::PermalinksController do
       end
 
       it "filters external url" do
-        Fabricate(:permalink, external_url: "http://google.com")
-        Fabricate(:permalink, external_url: "http://wikipedia.org")
-        Fabricate(:permalink, external_url: "http://www.discourse.org")
-        Fabricate(:permalink, external_url: "http://try.discourse.org")
+        Fabricate(
+          :permalink,
+          permalink_type_value: "http://google.com",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          permalink_type_value: "http://wikipedia.org",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          permalink_type_value: "http://www.discourse.org",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          permalink_type_value: "http://try.discourse.org",
+          permalink_type: "external_url",
+        )
 
         get "/admin/permalinks.json", params: { filter: "discourse" }
 
@@ -36,10 +62,30 @@ RSpec.describe Admin::PermalinksController do
       end
 
       it "filters url and external url both" do
-        Fabricate(:permalink, url: "/forum/23", external_url: "http://google.com")
-        Fabricate(:permalink, url: "/discourse/98", external_url: "http://wikipedia.org")
-        Fabricate(:permalink, url: "/discuss/topic/45", external_url: "http://discourse.org")
-        Fabricate(:permalink, url: "/discuss/topic/76", external_url: "http://try.discourse.org")
+        Fabricate(
+          :permalink,
+          url: "/forum/23",
+          permalink_type_value: "http://google.com",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          url: "/discourse/98",
+          permalink_type_value: "http://wikipedia.org",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          url: "/discuss/topic/45",
+          permalink_type_value: "http://discourse.org",
+          permalink_type: "external_url",
+        )
+        Fabricate(
+          :permalink,
+          url: "/discuss/topic/76",
+          permalink_type_value: "http://try.discourse.org",
+          permalink_type: "external_url",
+        )
 
         get "/admin/permalinks.json", params: { filter: "discourse" }
 
