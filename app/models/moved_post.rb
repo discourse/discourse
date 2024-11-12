@@ -13,9 +13,9 @@ end
 # Table name: moved_posts
 #
 #  id                :bigint           not null, primary key
-#  old_topic_id      :bigint
-#  old_post_id       :bigint
-#  old_post_number   :bigint
+#  old_topic_id      :bigint           not null
+#  old_post_id       :bigint           not null
+#  old_post_number   :bigint           not null
 #  new_topic_id      :bigint           not null
 #  new_topic_title   :string           not null
 #  new_post_id       :bigint           not null
