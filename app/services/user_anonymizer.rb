@@ -40,7 +40,9 @@ class UserAnonymizer
       end
 
       @user.save!
+
       @user.primary_email.update_attribute(:email, "#{@user.username}#{EMAIL_SUFFIX}")
+      @user.primary_email.update_attribute(:normalized_email, "#{@user.username}#{EMAIL_SUFFIX}")
 
       options = @user.user_option
       options.mailing_list_mode = false
