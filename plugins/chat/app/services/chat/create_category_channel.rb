@@ -54,7 +54,7 @@ module Chat
       model :channel, :create_channel
       model :membership, :create_membership
     end
-    step :enforce_automatic_channel_memberships
+    step :auto_join_users_if_needed
 
     private
 
@@ -92,9 +92,8 @@ module Chat
       channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
-    def enforce_automatic_channel_memberships(channel:)
-      return if !channel.auto_join_users?
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
+    def auto_join_users_if_needed(channel:)
+      Chat::AutoJoinChannels.call(params: { channel_id: channel.id }) if channel.auto_join_users?
     end
   end
 end
