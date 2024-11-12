@@ -7280,7 +7280,7 @@ en:
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
-        add: "Add Permalink"
+        add: "Add permalink"
         back: "Back to Permalinks"
         more_options: "More options"
         copy_success: "Permalink copied to clipboard"
