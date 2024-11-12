@@ -188,8 +188,7 @@ class Admin::ThemesController < Admin::AdminController
       params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
       guardian:,
     ) do
-      on_failed_policy(:ban_in_allowlist_mode) { raise Discourse::InvalidAccess }
-      on_failed_policy(:ban_for_remote_theme) { raise Discourse::InvalidAccess }
+      on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
       on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
       on_failure { |theme:| render json: theme.errors, status: :unprocessable_entity }
     end

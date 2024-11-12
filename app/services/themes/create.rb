@@ -13,12 +13,8 @@ class Themes::Create
     attribute :default, :boolean, default: false
   end
 
-  policy :ban_in_allowlist_mode
-
-  step :initialize_theme
-
-  policy :ban_for_remote_theme
-
+  policy :ensure_remote_themes_are_not_allowlisted
+  model :theme, :instantiate_theme
   step :set_theme_fields
 
   transaction do
@@ -29,43 +25,34 @@ class Themes::Create
 
   private
 
-  def ban_in_allowlist_mode
+  def ensure_remote_themes_are_not_allowlisted
     Theme.allowed_remote_theme_ids.nil?
   end
 
-  def initialize_theme(params:)
+  def instantiate_theme(params:)
     context[:theme] = Theme.new(
-      name: params.name,
-      user_id: params.user_id,
-      user_selectable: params.user_selectable,
-      color_scheme_id: params.color_scheme_id,
-      component: params.component,
+      params.slice(:name, :user_id, :user_selectable, :color_scheme_id, :component),
     )
-  end
-
-  def ban_for_remote_theme(params:, theme:)
-    return true if params.theme_fields.blank?
-    !theme.remote_theme&.is_git?
   end
 
   def set_theme_fields(params:, theme:)
     return if params.theme_fields.blank?
 
     params.theme_fields.each do |field|
-      theme.set_field(
-        target: field[:target],
-        name: field[:name],
-        value: field[:value],
-        type_id: field[:type_id],
-        upload_id: field[:upload_id],
-      )
+      begin
+        theme.set_field(**field.symbolize_keys)
+      rescue Theme::InvalidFieldTargetError, Theme::InvalidFieldTypeError => err
+        fail!(err.message)
+      end
     end
   end
 
-  # TODO (martin) Ask loic about this, the old theme controller expected the
-  # errors from the theme model save to be shown to the user.
   def save_theme(theme:)
-    theme.save!
+    theme.save
+
+    if theme.errors.any?
+      fail!("Could not save theme with errors #{theme.errors.full_messages.join(",")}")
+    end
   end
 
   # TODO (martin) Might need to be an Action, it's used in other theme related things too.
