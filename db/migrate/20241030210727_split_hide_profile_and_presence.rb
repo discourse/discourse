@@ -27,7 +27,8 @@ class SplitHideProfileAndPresence < ActiveRecord::Migration[7.1]
     execute <<-SQL
       UPDATE user_options
       SET hide_profile = hide_profile_and_presence,
-          hide_presence = hide_profile_and_presence;
+          hide_presence = hide_profile_and_presence
+      WHERE hide_profile_and_presence;
     SQL
   end
 
