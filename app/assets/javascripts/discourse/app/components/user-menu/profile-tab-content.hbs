@@ -23,11 +23,11 @@
     </li>
   {{/if}}
 
-  <li class="online">
+  <li class="online" title={{i18n "presence_toggle.title"}}>
     <DButton @action={{this.togglePresence}} class="btn-flat profile-tab-btn">
       {{d-icon (if this.isPresenceHidden "toggle-on" "toggle-off")}}
       <span class="item-label">
-        {{i18n "user_status.online"}}
+        {{i18n "presence_toggle.label"}}
       </span>
     </DButton>
   </li>
