@@ -413,7 +413,7 @@ GEM
     rexml (3.3.9)
     rinku (2.0.6)
     rotp (6.3.0)
-    rouge (4.5.0)
+    rouge (4.5.1)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
