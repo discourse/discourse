@@ -7288,7 +7288,7 @@ en:
           label: "New:"
           add_header: "Add permalink"
           edit_header: "Edit permalink"
-          filter: "Search (URL or External URL)"
+          filter: "Search URL or destination URL"
           url: "URL"
           permalink_type: "Permalink type"
           save: "Save"
