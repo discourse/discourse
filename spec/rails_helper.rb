@@ -1030,6 +1030,7 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
+  options.add_argument("--remote-allow-origins=*")
 
   # A file that contains just a list of paths like so:
   #
