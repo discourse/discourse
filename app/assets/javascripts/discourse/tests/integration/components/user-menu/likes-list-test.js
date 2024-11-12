@@ -16,17 +16,21 @@ module(
       pretender.get("/notifications", () => {
         return response({ notifications: [] });
       });
+
       await render(template);
+
       assert.strictEqual(
         query(".empty-state-title").textContent.trim(),
         I18n.t("user.no_likes_title"),
         "empty state title for the likes tab is shown"
       );
-      const emptyStateBodyLink = query(".empty-state-body a");
-      assert.ok(
-        emptyStateBodyLink.href.endsWith("/my/preferences/notifications"),
-        "link to /my/preferences/notification inside empty state body is rendered"
-      );
+      assert
+        .dom(".empty-state-body a")
+        .hasAttribute(
+          "href",
+          "/my/preferences/notifications",
+          "link to /my/preferences/notification inside empty state body is rendered"
+        );
     });
   }
 );

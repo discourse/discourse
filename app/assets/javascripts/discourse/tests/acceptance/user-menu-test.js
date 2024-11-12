@@ -215,21 +215,21 @@ acceptance("User menu", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     for (const [key, title] of Object.entries(expectedTitles)) {
-      assert.strictEqual(
-        query(`#${key}`).title,
-        title,
-        `${key} tab has the right title`
-      );
+      assert
+        .dom(`#${key}`)
+        .hasAttribute("title", title, `${key} tab has the right title`);
     }
 
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
       unread_high_priority_notifications: 22,
     });
-    assert.strictEqual(
-      query("#user-menu-button-tiny-tab-1").title,
-      "Custom title: 22",
-      "tabs titles can update dynamically"
-    );
+    assert
+      .dom("#user-menu-button-tiny-tab-1")
+      .hasAttribute(
+        "title",
+        "Custom title: 22",
+        "tabs titles can update dynamically"
+      );
   });
 
   test("tabs added via the plugin API", async function (assert) {

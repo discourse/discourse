@@ -121,22 +121,19 @@ acceptance("User Preferences - Account", function (needs) {
       .dom(".pref-associated-accounts")
       .exists("it has the connected accounts section");
 
-    assert.ok(
-      query(
+    assert
+      .dom(
         ".pref-associated-accounts table tr:nth-of-type(1) td:nth-of-type(1)"
-      ).innerHTML.includes("Facebook"),
-      "it lists facebook"
-    );
+      )
+      .includesHtml("Facebook", "lists facebook");
 
     await click(
       ".pref-associated-accounts table tr:nth-of-type(1) td:last-child button"
     );
 
-    assert.ok(
-      query(
-        ".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type"
-      ).innerHTML.includes("Connect")
-    );
+    assert
+      .dom(".pref-associated-accounts table tr:nth-of-type(1) td:last-of-type")
+      .includesHtml("Connect");
   });
 
   test("avatars are selectable for staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {

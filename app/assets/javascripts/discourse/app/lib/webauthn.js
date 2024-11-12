@@ -1,5 +1,3 @@
-/* global PublicKeyCredential */
-
 import { ajax } from "discourse/lib/ajax";
 import I18n from "discourse-i18n";
 
@@ -77,7 +75,6 @@ export function getWebauthnCredential(
     })
     .then((credential) => {
       // 3. If credential.response is not an instance of AuthenticatorAssertionResponse, abort the ceremony.
-      // eslint-disable-next-line no-undef
       if (!(credential.response instanceof AuthenticatorAssertionResponse)) {
         return errorCallback(
           I18n.t("login.security_key_invalid_response_error")

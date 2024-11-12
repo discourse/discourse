@@ -105,10 +105,7 @@ acceptance("Tags", function (needs) {
   test("list the tags", async function (assert) {
     await visit("/tags");
 
-    assert.ok(
-      document.body.classList.contains("tags-page"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("tags-page", "has the body class");
     assert.dom(`[data-tag-name="eviltrout"]`).exists("shows the eviltrout tag");
   });
 

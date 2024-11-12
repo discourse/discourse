@@ -3,7 +3,6 @@ import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -52,9 +51,6 @@ module("Integration | Component | ComposerEditor", function (hooks) {
     </template>);
 
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>"&gt;<svg></svg></p>'
-    );
+    assert.dom(".d-editor-preview").hasHtml('<p>"&gt;<svg></svg></p>');
   });
 });

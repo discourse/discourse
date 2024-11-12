@@ -274,6 +274,10 @@ class UserHistory < ActiveRecord::Base
       tag_group_destroy
       tag_group_change
       delete_associated_accounts
+      toggle_flag
+      delete_flag
+      update_flag
+      create_flag
     ]
   end
 

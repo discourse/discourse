@@ -16,9 +16,9 @@ module("Integration | Component | user-menu", function (hooks) {
     const activeTab = query(".top-tabs.tabs-list .btn.active");
     assert.strictEqual(activeTab.id, "user-menu-button-all-notifications");
     const notifications = queryAll("#quick-access-all-notifications ul li");
-    assert.ok(notifications[0].classList.contains("edited"));
-    assert.ok(notifications[1].classList.contains("replied"));
-    assert.ok(notifications[2].classList.contains("liked-consolidated"));
+    assert.dom(notifications[0]).hasClass("edited");
+    assert.dom(notifications[1]).hasClass("replied");
+    assert.dom(notifications[2]).hasClass("liked-consolidated");
   });
 
   test("active tab has a11y attributes that indicate it's active", async function (assert) {

@@ -8,7 +8,6 @@ import {
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -74,10 +73,12 @@ acceptance("User Preferences - Second Factor", function (needs) {
       .exists("displays second factor key");
 
     await click(".add-totp");
-    assert.ok(
-      query(".alert-error").innerHTML.includes("provide a name and the code"),
-      "shows name/token missing error message"
-    );
+    assert
+      .dom(".alert-error")
+      .includesHtml(
+        "provide a name and the code",
+        "shows name/token missing error message"
+      );
   });
 
   test("second factor security keys", async function (assert) {
@@ -93,10 +94,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
     if (typeof PublicKeyCredential !== "undefined") {
       await click(".add-security-key");
 
-      assert.ok(
-        query(".alert-error").innerHTML.includes("provide a name"),
-        "shows name missing error message"
-      );
+      assert
+        .dom(".alert-error")
+        .includesHtml("provide a name", "shows name missing error message");
     }
   });
 

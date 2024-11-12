@@ -61,7 +61,7 @@ module("Unit | Utils | multi-cache", function (hooks) {
 
     try {
       await response1;
-    } catch (e) {}
+    } catch {}
 
     const response2 = cache.fetch([10]);
     assert.strictEqual(requests.length, 1);

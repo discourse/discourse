@@ -7,7 +7,7 @@ module Chat
         Chat::UserChatChannelMembership
           .joins(:user)
           .includes(:user)
-          .where(user: User.human_users.activated.not_suspended.not_staged)
+          .where(user: User.real.activated.not_staged.not_suspended.not_silenced)
           .where(chat_channel: channel)
 
       query = query.where(following: true) if channel.category_channel?

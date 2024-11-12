@@ -654,13 +654,13 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
-        `.sidebar-section-link-wrapper[data-category-id="${category.id}"] a`
-      ).title,
-      category.descriptionText,
-      "category description without HTML entity is used as the link's title"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-category-id="${category.id}"] a`)
+      .hasAttribute(
+        "title",
+        category.descriptionText,
+        "category description without HTML entity is used as the link's title"
+      );
   });
 
   test("visiting category discovery new route", async function (assert) {
@@ -1211,26 +1211,35 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
-        ).href.endsWith("/c/meta/3/l/new"),
-        "links to the new topics list for the category because there's 1 new topic"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/meta/3/l/new",
+          "links to the new topics list for the category because there's 1 new topic"
+        );
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] a`
-        ).href.endsWith("/c/howto/10/l/new"),
-        "links to the new topics list for the category because there's 1 unread topic"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/howto/10/l/new",
+          "links to the new topics list for the category because there's 1 unread topic"
+        );
 
-      assert.true(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] a`
-        ).href.endsWith("/c/feature/spec/26"),
-        "links to the latest topics list for the category because there are no unread or new topics"
-      );
+        )
+        .hasAttribute(
+          "href",
+          "/c/feature/spec/26",
+          "links to the latest topics list for the category because there are no unread or new topics"
+        );
     });
 
     test("category link href is always the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {

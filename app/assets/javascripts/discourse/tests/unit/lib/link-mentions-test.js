@@ -44,9 +44,6 @@ module("Unit | Utility | link-mentions", function (hooks) {
       root.querySelector("a[data-mentionable-user-count]").innerText,
       "@mentionable_group"
     );
-    assert.strictEqual(
-      root.querySelector("span.mention").innerHTML,
-      "@invalid"
-    );
+    assert.dom("span.mention", root).hasHtml("@invalid");
   });
 });

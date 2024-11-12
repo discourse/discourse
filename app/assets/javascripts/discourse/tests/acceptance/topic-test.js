@@ -168,10 +168,9 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title").innerHTML.trim().includes("bike.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml("bike.png", "displays the new title with emojis");
   });
 
   test("Updating the topic title with unicode emojis", async function (assert) {
@@ -182,10 +181,9 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title").innerHTML.trim().includes("man_farmer.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml("man_farmer.png", "displays the new title with emojis");
   });
 
   test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
@@ -197,12 +195,12 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title")
-        .innerHTML.trim()
-        .includes("slightly_smiling_face.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml(
+        "slightly_smiling_face.png",
+        "displays the new title with emojis"
+      );
   });
 
   test("Suggested topics", async function (assert) {
@@ -346,21 +344,21 @@ acceptance("Topic featured links", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_3 .select-below");
 
-    assert.ok(
-      query(".selected-posts").innerHTML.includes(
-        I18n.t("topic.multi_select.description", { count: 18 })
-      ),
-      "it should select the right number of posts"
-    );
+    assert
+      .dom(".selected-posts")
+      .includesHtml(
+        I18n.t("topic.multi_select.description", { count: 18 }),
+        "selects the right number of posts"
+      );
 
     await click("#post_2 .select-below");
 
-    assert.ok(
-      query(".selected-posts").innerHTML.includes(
-        I18n.t("topic.multi_select.description", { count: 19 })
-      ),
-      "it should select the right number of posts"
-    );
+    assert
+      .dom(".selected-posts")
+      .includesHtml(
+        I18n.t("topic.multi_select.description", { count: 19 }),
+        "selects the right number of posts"
+      );
   });
 
   test("View Hidden Replies", async function (assert) {
@@ -567,20 +565,24 @@ acceptance("Topic filter replies to post number", function (needs) {
   test("visit topic", async function (assert) {
     await visit("/t/-/280");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.filtered_replies_hint", { count: 3 }),
-      "it displays the right title for filtering by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.filtered_replies_hint", { count: 3 }),
+        "displays the right title for filtering by replies"
+      );
 
     await visit("/");
     await visit("/t/-/280?replies_to_post_number=3");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.view_all_posts"),
-      "it displays the right title when filtered by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.view_all_posts"),
+        "displays the right title when filtered by replies"
+      );
   });
 });
 

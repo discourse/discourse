@@ -35,15 +35,16 @@ acceptance("Lightbox", function (needs) {
       "image · 1500×842 234 KB · download · original image"
     );
 
-    assert.equal(
-      query(".image-source-link:nth-child(1)").href,
-      "http://discourse.local/uploads/default/ad768537789cdf4679a18161ac0b0b6f0f4ccf9e"
-    );
+    assert
+      .dom(".image-source-link:nth-child(1)")
+      .hasAttribute(
+        "href",
+        "//discourse.local/uploads/default/ad768537789cdf4679a18161ac0b0b6f0f4ccf9e"
+      );
 
-    assert.equal(
-      query(".image-source-link:nth-child(2)").href,
-      `${document.location.origin}/images/d-logo-sketch.png`
-    );
+    assert
+      .dom(".image-source-link:nth-child(2)")
+      .hasAttribute("href", `/images/d-logo-sketch.png`);
 
     await click(".mfp-close");
   });

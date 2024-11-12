@@ -42,7 +42,7 @@ export default class ChatDraftsManager extends Service {
         threadId,
       });
       message.draftSaved = true;
-    } catch (e) {
+    } catch {
       // We don't want to throw an error if the draft fails to save
     }
   }

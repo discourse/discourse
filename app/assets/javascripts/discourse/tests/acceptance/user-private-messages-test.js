@@ -688,7 +688,7 @@ acceptance(
         const row = messagesDropdown.rowByName("test nav");
 
         assert.strictEqual(row.value(), "/u/eviltrout/preferences");
-        assert.ok(row.icon().classList.contains("d-icon-arrow-left"));
+        assert.dom(row.icon()).hasClass("d-icon-arrow-left");
       } finally {
         resetCustomUserNavMessagesDropdownRows();
       }

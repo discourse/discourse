@@ -35,7 +35,7 @@ class SiteSettingsPlugin extends Plugin {
       let yaml;
       try {
         yaml = fs.readFileSync(file, { encoding: "UTF-8" });
-      } catch (err) {
+      } catch {
         // the plugin does not have a config file, go to the next file
         return;
       }
