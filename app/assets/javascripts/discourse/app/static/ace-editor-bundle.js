@@ -1,4 +1,3 @@
-// eslint-disable-next-line simple-import-sort/imports
 export * from "ace-builds/src-noconflict/ace";
 
 import "ace-builds/src-noconflict/mode-scss";

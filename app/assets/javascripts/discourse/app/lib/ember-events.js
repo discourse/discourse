@@ -1,4 +1,3 @@
-// eslint-disable-next-line ember/no-classic-components
 import { EventDispatcher } from "@ember/-internals/views";
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
@@ -54,7 +53,6 @@ export function normalizeEmberEventHandling(app) {
  * runtime overhead.
  */
 function eliminateClassicEventDelegation() {
-  // eslint-disable-next-line no-undef
   EventDispatcher.reopen({
     events: {},
   });
@@ -144,13 +142,11 @@ function rewireClassicComponentEvents(app) {
       }
     },
 
-    // eslint-disable-next-line ember/no-component-lifecycle-hooks
     didInsertElement() {
       this._super(...arguments);
       setupComponentEventListeners(this, allEventMethods);
     },
 
-    // eslint-disable-next-line ember/no-component-lifecycle-hooks
     willDestroyElement() {
       teardownComponentEventListeners(this);
       this._super(...arguments);

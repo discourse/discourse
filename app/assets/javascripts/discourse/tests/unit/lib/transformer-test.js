@@ -212,7 +212,7 @@ module("Unit | Utility | transformers", function (hooks) {
         try {
           testCallback();
           return true;
-        } catch (error) {
+        } catch {
           return false;
         }
       };
@@ -781,7 +781,7 @@ module("Unit | Utility | transformers", function (hooks) {
         try {
           testCallback();
           return true;
-        } catch (error) {
+        } catch {
           return false;
         }
       };

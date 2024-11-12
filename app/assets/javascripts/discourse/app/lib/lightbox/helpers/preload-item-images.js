@@ -38,7 +38,7 @@ export async function preloadItemImages(lightboxItem) {
         fullsizeImage.naturalWidth > window.innerWidth ||
         fullsizeImage.naturalHeight > window.innerHeight,
     };
-  } catch (error) {
+  } catch {
     lightboxItem.hasLoadingError = true;
     // eslint-disable-next-line no-console
     console.error(
