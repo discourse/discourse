@@ -5,7 +5,7 @@ class SplitHideProfileAndPresence < ActiveRecord::Migration[7.1]
     # Split default_hide_profile_and_presence if setting exists
     result =
       execute(
-        "SELECT * FROM site_settings WHERE name = 'default_hide_profile_and_presence' LIMIT 1",
+        "SELECT value, data_type FROM site_settings WHERE name = 'default_hide_profile_and_presence' LIMIT 1",
       ).first
 
     if result
