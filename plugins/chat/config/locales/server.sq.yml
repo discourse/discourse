@@ -5,6 +5,22 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    chat_separate_sidebar_mode: "Shfaq metoda të posaçme të seksionit anësor për forumin dhe bisedën."
+    chat_enabled: "Aktivizo bisedën."
+    enable_public_channels: "Aktivizo kanalet publike bazuar në kategori."
+    chat_allowed_groups: "Përdoruesit në këto grupe mund të dërgojnë mesazhe. Vëreni që operatorët dhe moderatorët mund të kenë gjithmonë kontroll në bisedë."
+    chat_channel_retention_days: "Mesazhet e bisedës në kanalet më të përdorura ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."
+    chat_allowed_messages_for_trust_level_0: "Numri i mesazheve që u lejohet përdoruesve të nivelit 0 të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_allowed_messages_for_other_trust_levels: "Numri i mesazheve që përdoruesit me nivele limiti 1-4 lejohen të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_silence_user_sensitivity: "Mundësia e një përdoruesi të shënuar në bisedë do të ndërpritet automatikisht."
+    chat_auto_silence_from_flags_duration: "Numri i minutave për të cilat përdoruesit do të ndërpriten automatikisht për shkak të mesazheve në bisedën e shënuar."
+    chat_duplicate_message_sensitivity: "Mundësia e një mesazhi të kopjuar nga i njëjti dërgues do të bllokohet në një periudhë të shkurtër. Numri decimal midis 0 dhe 1.0, me 1.0 është rendi më i lartë (bllokon mesazhet më shpesh në një kohë më të shkurtër). Kliko tek `0` për të lejuar mesazhe të kopjuara."
+    chat_minimum_message_length: "Numri minimal i karaktereve për një kanal bisede."
+    chat_allow_uploads: "Lejo ngarkimet në kanalet e bisedës publike dhe kanalet e mesazheve direkte."
+    chat_archive_destination_topic_status: "Statusi që duhet të jetë tema e synuar pasi të përfundojë ruajtja në kanal. Kjo vlen vetëm kur tema e synuar është një temë e re, jo një aktuale."
   chat:
     deleted_chat_username: deleted
     reviewables:

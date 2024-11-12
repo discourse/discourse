@@ -353,20 +353,21 @@ cs:
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
       member_count:
-        one: "%{formatted_number} Člen"
-        few: "%{formatted_number} Členové"
-        many: "%{formatted_number} Členů"
-        other: "%{formatted_number} Členů"
+        one: "%{formatted_number} člen"
+        few: "%{formatted_number} členové"
+        many: "%{formatted_number} členů"
+        other: "%{formatted_number} členů"
       admin_count:
-        one: "%{formatted_number} Správce"
-        few: "%{formatted_number} Správci"
-        many: "%{formatted_number} Správců"
-        other: "%{formatted_number} Správců"
+        one: "%{formatted_number} správce"
+        few: "%{formatted_number} správci"
+        many: "%{formatted_number} správců"
+        other: "%{formatted_number} správců"
       moderator_count:
-        one: "%{formatted_number} Moderátor"
-        few: "%{formatted_number} Moderátoři"
-        many: "%{formatted_number} Moderátorů"
-        other: "%{formatted_number} Moderátorů"
+        one: "%{formatted_number} moderátor"
+        few: "%{formatted_number} moderátoři"
+        many: "%{formatted_number} moderátorů"
+        other: "%{formatted_number} moderátorů"
+      report_inappropriate_content: "Pokud narazíte na nevhodný obsah, neváhejte zahájit konverzaci s našimi moderátory a administrátory. Nezapomeňte se před oslovením přihlásit."
     bookmarked:
       title: "Záložka"
       edit_bookmark: "Upravit záložku"
@@ -1408,6 +1409,74 @@ cs:
         warnings: "Oficiální varování"
         read_more_in_group: "Chcete si přečíst více? Projděte další zprávy v %{groupLink}."
         read_more: "Chcete si přečíst více? Projděte další <a href='%{basePath}/u/%{username}/messages'>osobní zprávy</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtená</a>}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtené</a>}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtených</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtená</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtené</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtených</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtená</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/unread"># nepřečtené</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { a <a href="{basePath}/u/{username}/messages/new"># nová</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few { a <a href="{basePath}/u/{username}/messages/new"># nové</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many { a <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other { a <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtená</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/unread"># nepřečtené</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/new"># nová</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/new"># nové</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"
@@ -3930,7 +3999,7 @@ cs:
       sort_ascending: "Vzestupně"
       sort_descending: "Sestupně"
       subcategory_list_styles:
-        rows: "Řady"
+        rows: "Řádky"
         rows_with_featured_topics: "Řádky s vybranými tématy"
         boxes: "Boxy "
         boxes_with_featured_topics: "Boxy s vybranými tématy"
@@ -5129,7 +5198,7 @@ cs:
       web_hooks:
         title: "Webhooks"
         none: "Právě tu nejsou žádné webhooks."
-        instruction: "Webhooks umožňuje Discoursu upozornit na externí služby pokud se na vaší stránce děje nějaká údálost. Pokud je wehook zaplý, bude žádost o příspěvek poslaná na uvedené URL adresy."
+        instruction: "Webhook umožňuje službě Discourse upozorňovat externí služby, když na vašem webu dojde k určité události. Po spuštění webhooku se na zadané adresy URL odešle požadavek POST."
         detailed_instruction: "Pokud nastane vybraná událost, žádost o příspěvek bude odeslána na uvedené URL."
         new: "Nový Webhook"
         create: "Vytvoř"
@@ -5358,7 +5427,7 @@ cs:
           onebox: "Onebox"
           files: "Soubory"
           other_options: "Ostatní"
-          search: "Prohledat"
+          search: "Vyhledávání"
           experimental: "Experimentální"
           all_site_settings: "Všechna nastavení"
       navigation_menu:
@@ -5542,6 +5611,7 @@ cs:
           import_web_tip: "Úložiště obsahující motiv"
           import_web_advanced: "Pokročilé…"
           is_private: "Motiv je v soukromém git úložišti"
+          remote_branch: "Název pobočky (nepovinné)"
           public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
           installed: "Nainstalováno"
@@ -5807,6 +5877,7 @@ cs:
             check_personal_message: "zkontrolovat soukromou zprávu"
             post_approved: "příspěvek schválen"
             post_rejected: "příspěvek zamítnut"
+            merge_user: "sloučit uživatele"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -6023,7 +6094,7 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byly jim rozeslány notifikace."
         time_read: "Čas strávený čtením"
         post_edits_count: "Úpravy příspěvků"
-        anonymize: "Anonymní uživatel"
+        anonymize: "Anonymizovat uživatele"
         anonymize_confirm: "Opravdu chcete tento účet anonymizovat? Tím se změní uživatelské jméno a e-mail a vyčistí všechny informace v profilu."
         anonymize_yes: "Ano, udělejte tento účet anonymním"
         anonymize_failed: "Nastal problém při anonymizování účtu."
@@ -6035,13 +6106,28 @@ cs:
           confirmation:
             cancel: "Zrušit"
         merge:
+          button: "Sloučit"
           prompt:
+            title: "Přenést a odstranit @%{username}"
             description: |
-              <p>Vyberte prosím nového vlastníka pro obsah <b>@%{username}'s</b> .</p>
+              <p>Vyberte prosím nového vlastníka pro obsah uživatele <b>@%{username}</b> .</p>
 
               <p>Přenesena budou všechna témata, příspěvky, zprávy a další obsah vytvořený uživatelem <b>@%{username}</b>.</p>
+            target_username_placeholder: "Uživatelské jméno nového vlastníka"
+            transfer_and_delete: "Přenést a odstranit @%{username}"
             cancel: "Zrušit"
+          progress:
+            title: "Průběh slučování"
           confirmation:
+            title: "Přenést a odstranit @%{username}"
+            description: |
+              <p>Veškerý obsah uživatele <b>@%{username}</b> bude přenesen a připsán uživateli <b>@%{targetUsername}</b>. Po dokončení přenosu obsahu bude účet <b>@%{username}s</b> odstraněn.</p>
+
+              <p><b>Toto nelze vzít zpět!</b></p>
+
+              <p>Chcete-li pokračovat, zadejte: <code>%{text}</code></p>
+            text: "převést @%{username} na @%{targetUsername}"
+            transfer_and_delete: "Přenést a odstranit @%{username}"
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         delete_forbidden_because_staff: "Správci ani moderátoři nemůžou být odstraněni."

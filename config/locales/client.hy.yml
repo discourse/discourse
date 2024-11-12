@@ -2003,8 +2003,12 @@ hy:
       not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք կստանաք ծանուցում էլ. նամակի միջոցով, երբ այն հաստատվի:"
       google_oauth2:
         name: "Google"
+        title: "Մուտք Google-ով"
+        sr_title: "Մուտք Google-ով"
       twitter:
         name: "Twitter"
+        title: "Մուտք Twitter-ով"
+        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
