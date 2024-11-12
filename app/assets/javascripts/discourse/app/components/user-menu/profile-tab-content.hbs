@@ -23,6 +23,36 @@
     </li>
   {{/if}}
 
+  <li class="online">
+    <DButton @action={{this.togglePresence}} class="btn-flat profile-tab-btn">
+      {{d-icon (if this.isPresenceHidden "toggle-on" "toggle-off")}}
+      <span class="item-label">
+        {{i18n "user_status.online"}}
+      </span>
+    </DButton>
+  </li>
+
+  <li class="do-not-disturb">
+    <DButton
+      @action={{this.doNotDisturbClick}}
+      class="btn-flat profile-tab-btn"
+    >
+      {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
+      <span class="item-label">
+        {{#if this.isInDoNotDisturb}}
+          <span>{{i18n "pause_notifications.label"}}</span>
+          {{#if this.showDoNotDisturbEndDate}}
+            {{format-age this.doNotDisturbDateTime}}
+          {{/if}}
+        {{else}}
+          {{i18n "pause_notifications.label"}}
+        {{/if}}
+      </span>
+    </DButton>
+  </li>
+
+  <hr />
+
   <li class="summary">
     <LinkTo @route="user.summary" @model={{this.currentUser}}>
       {{d-icon "user"}}
@@ -72,25 +102,6 @@
         {{i18n "user.preferences.title"}}
       </span>
     </LinkTo>
-  </li>
-
-  <li class="do-not-disturb">
-    <DButton
-      @action={{this.doNotDisturbClick}}
-      class="btn-flat profile-tab-btn"
-    >
-      {{d-icon (if this.isInDoNotDisturb "toggle-on" "toggle-off")}}
-      <span class="item-label">
-        {{#if this.isInDoNotDisturb}}
-          <span>{{i18n "pause_notifications.label"}}</span>
-          {{#if this.showDoNotDisturbEndDate}}
-            {{format-age this.doNotDisturbDateTime}}
-          {{/if}}
-        {{else}}
-          {{i18n "pause_notifications.label"}}
-        {{/if}}
-      </span>
-    </DButton>
   </li>
 
   {{#if this.showToggleAnonymousButton}}

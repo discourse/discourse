@@ -2143,6 +2143,7 @@ en:
       set_custom_status: "Set custom status"
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
+      online: "Online"
       remove_status: "Remove status"
 
     user_tips:
