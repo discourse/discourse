@@ -276,6 +276,15 @@ class Topic < ActiveRecord::Base
   has_many :tags, through: :topic_tags, dependent: :destroy # dependent destroy applies to the topic_tags records
   has_many :tag_users, through: :tags
 
+  has_many :moved_posts_as_old_topic,
+           class_name: "MovedPost",
+           foreign_key: :old_topic_id,
+           dependent: :destroy
+  has_many :moved_posts_as_new_topic,
+           class_name: "MovedPost",
+           foreign_key: :new_topic_id,
+           dependent: :destroy
+
   has_one :top_topic
   has_one :shared_draft, dependent: :destroy
   has_one :published_page
@@ -927,7 +936,7 @@ class Topic < ActiveRecord::Base
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
-        Y.topic_id = topics.id AND 
+        Y.topic_id = topics.id AND
         Z.topic_id = topics.id AND (
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
