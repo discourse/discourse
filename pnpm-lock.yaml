@@ -1070,8 +1070,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^2.0.3
-        version: 2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy)
+        specifier: ^3.0.0
+        version: 3.0.0
       decorator-transforms:
         specifier: ^2.2.2
         version: 2.2.2(patch_hash=fjlfhpth5cfhuq4pce5qq7awku)(@babel/core@7.26.0)
