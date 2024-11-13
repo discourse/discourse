@@ -32,9 +32,21 @@ class UploadsController < ApplicationController
       1.minute.to_i,
     ).performed!
 
-    params.require(:upload_type)
+    type =
+      if params[:upload_type].presence
+        params[:upload_type]
+      elsif params[:type].presence
+        Discourse.deprecate(
+          "the :type param of `POST /uploads` is deprecated, use the :upload_type param instead",
+          since: "3.4",
+          drop_from: "3.5",
+        )
+        params[:type]
+      else
+        params.require(:upload_type)
+      end
     # 50 characters ought to be enough for the upload type
-    type = params[:upload_type].parameterize(separator: "_")[0..50]
+    type = type.parameterize(separator: "_")[0..50]
 
     if type == "avatar" &&
          (

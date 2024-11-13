@@ -61,6 +61,21 @@ RSpec.describe UploadsController do
         expect(response.status).to eq 200
       end
 
+      it "accepts the type param but logs a deprecation message when used" do
+        allow(Discourse).to receive(:deprecate)
+        post "/uploads.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(logo_file),
+               type: "avatar",
+             }
+        expect(response.status).to eq 200
+        expect(Discourse).to have_received(:deprecate).with(
+          "the :type param of `POST /uploads` is deprecated, use the :upload_type param instead",
+          since: "3.4",
+          drop_from: "3.5",
+        )
+      end
+
       it "is successful with an image" do
         post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq 200
