@@ -22,25 +22,25 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "vbulletin"
-  DB_PW ||= ENV["DB_PW"] || ""
-  DB_USER ||= ENV["DB_USER"] || "root"
-  TIMEZONE ||= ENV["TIMEZONE"] || "America/Los_Angeles"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "vb_"
-  ATTACHMENT_DIR ||= ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
-  IMAGES_DIR ||= ENV["IMAGES_DIR"] || "/path/to/your/images/folder"
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "vbulletin"
+  DB_PW = ENV["DB_PW"] || ""
+  DB_USER = ENV["DB_USER"] || "root"
+  TIMEZONE = ENV["TIMEZONE"] || "America/Los_Angeles"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "vb_"
+  ATTACHMENT_DIR = ENV["ATTACHMENT_DIR"] || "/path/to/your/attachment/folder"
+  IMAGES_DIR = ENV["IMAGES_DIR"] || "/path/to/your/images/folder"
 
   # Hostname + path of the forum. Used to transform deeplinks to posts and attachments to internal links
-  FORUM_URL ||= ENV["FORUM_URL"] || "localhost/"
+  FORUM_URL = ENV["FORUM_URL"] || "localhost/"
 
   # vBulletin forum ID to make to pre-seeded categories
-  FORUM_GENERAL_ID ||= ENV["FORUM_GENERAL_ID"].to_i || -1
-  FORUM_FEEDBACK_ID ||= ENV["FORUM_FEEDBACK_ID"].to_i || -1
-  FORUM_STAFF_ID ||= ENV["FORUM_STAFF_ID"].to_i || -1
+  FORUM_GENERAL_ID = ENV["FORUM_GENERAL_ID"].to_i || -1
+  FORUM_FEEDBACK_ID = ENV["FORUM_FEEDBACK_ID"].to_i || -1
+  FORUM_STAFF_ID = ENV["FORUM_STAFF_ID"].to_i || -1
 
   # If non zero, create a user field containing the user title
-  CREATE_USERTITLE_FIELD ||= ENV["CREATE_USERTITLE_FIELD"].to_i != 0 || false
+  CREATE_USERTITLE_FIELD = ENV["CREATE_USERTITLE_FIELD"].to_i != 0 || false
 
   # You might also want to change the title and message for the imported private message archive
   # search for "PM ARCHIVE MESSAGE" in this script
