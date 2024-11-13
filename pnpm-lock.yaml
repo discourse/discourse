@@ -95,8 +95,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(encoding@0.1.13)
       lint-to-the-future-ember-template:
-        specifier: ^1.1.1
-        version: 1.2.0(ember-template-lint@6.0.0)
+        specifier: ^2.0.0
+        version: 2.0.0(ember-template-lint@6.0.0)
       lint-to-the-future-eslint:
         specifier: ^2.2.0
         version: 2.2.0(eslint@9.14.0)
@@ -5958,8 +5958,8 @@ packages:
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
 
-  lint-to-the-future-ember-template@1.2.0:
-    resolution: {integrity: sha512-MtbF3OITW2fh900RU08TQsrGt5ljvzYklvV3SEli4o1RqQ5oM4+yTsU4irvO3usmuO4C1lpXUAGZ6az7kqeXxw==}
+  lint-to-the-future-ember-template@2.0.0:
+    resolution: {integrity: sha512-juJZa5jyYJeDgadQbXYaKilH03M8zLx3NNlYK8ypQ9uRhl8okz7rTrEA5fM2ruAj92tfxkP5IypSu0zvb9i7sw==}
     engines: {node: 10.* || >= 12.*}
     peerDependencies:
       ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -15411,11 +15411,10 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@1.2.0(ember-template-lint@6.0.0):
+  lint-to-the-future-ember-template@2.0.0(ember-template-lint@6.0.0):
     dependencies:
       ember-template-lint: 6.0.0
       esm: 3.2.25
-      import-cwd: 3.0.0
       walk-sync: 2.2.0
 
   lint-to-the-future-eslint@2.2.0(eslint@9.14.0):
