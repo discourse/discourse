@@ -4282,8 +4282,8 @@ RSpec.describe UsersController do
       end
     end
 
-    context "when `hide_profile_and_presence` user option is checked" do
-      before_all { user1.user_option.update_columns(hide_profile_and_presence: true) }
+    context "when `hide_profile` user option is checked" do
+      before_all { user1.user_option.update_columns(hide_profile: true) }
 
       it "returns 404" do
         get "/u/#{user1.username_lower}/summary.json"
@@ -4642,7 +4642,7 @@ RSpec.describe UsersController do
       end
 
       it "returns a hidden profile" do
-        user.user_option.update_column(:hide_profile_and_presence, true)
+        user.user_option.update_column(:hide_profile, true)
 
         get "/u/#{user.username}.json"
         expect(response.status).to eq(200)
@@ -4840,7 +4840,7 @@ RSpec.describe UsersController do
 
     it "should not be able to view a private user profile" do
       user1.user_profile.update!(bio_raw: "Hello world!")
-      user1.user_option.update!(hide_profile_and_presence: true)
+      user1.user_option.update!(hide_profile: true)
 
       get "/u/#{user1.username}"
 
@@ -4913,7 +4913,7 @@ RSpec.describe UsersController do
       end
 
       context "when hidden users" do
-        before { user.user_option.update!(hide_profile_and_presence: true) }
+        before { user.user_option.update!(hide_profile: true) }
 
         it "returns the correct partial response when the user has messages enabled" do
           user.user_option.update!(allow_private_messages: true)
@@ -4952,8 +4952,8 @@ RSpec.describe UsersController do
       expect(response).to have_http_status(:forbidden)
     end
 
-    context "when `hide_profile_and_presence` user option is checked" do
-      before { user2.user_option.update_columns(hide_profile_and_presence: true) }
+    context "when `hide_profile` user option is checked" do
+      before { user2.user_option.update_columns(hide_profile: true) }
 
       it "does not include hidden profiles" do
         get "/user-cards.json?user_ids=#{user.id},#{user2.id}"

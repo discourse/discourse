@@ -942,8 +942,8 @@ RSpec.describe ListController do
       end
     end
 
-    context "when `hide_profile_and_presence` is true" do
-      before { user.user_option.update_columns(hide_profile_and_presence: true) }
+    context "when `hide_profile` is true" do
+      before { user.user_option.update_columns(hide_profile: true) }
 
       it "returns 404" do
         get "/topics/created-by/#{user.username}.json"
@@ -1149,8 +1149,8 @@ RSpec.describe ListController do
   end
 
   describe "user_topics_feed" do
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
+    it "returns 404 if `hide_profile` user option is checked" do
+      user.user_option.update_columns(hide_profile: true)
       get "/u/#{user.username}/activity/topics.rss"
       expect(response.status).to eq(404)
     end
