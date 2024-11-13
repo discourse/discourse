@@ -3,10 +3,12 @@
     @route="adminLogs.staffActionLogs"
     @label="admin.logs.staff_actions.title"
   />
-  <NavItem
-    @route="adminLogs.screenedEmails"
-    @label="admin.logs.screened_emails.title"
-  />
+  {{#if this.currentUser.can_see_emails}}
+    <NavItem
+      @route="adminLogs.screenedEmails"
+      @label="admin.logs.screened_emails.title"
+    />
+  {{/if}}
   <NavItem
     @route="adminLogs.screenedIpAddresses"
     @label="admin.logs.screened_ips.title"
