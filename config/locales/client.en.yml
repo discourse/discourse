@@ -2147,7 +2147,8 @@ en:
       remove_status: "Remove status"
 
     presence_toggle:
-      label: "Online"
+      online: "Online"
+      offline: "Offline"
       title: "Toggle presence features"
 
     user_tips:

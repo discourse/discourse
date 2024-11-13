@@ -25,9 +25,13 @@
 
   <li class="online" title={{i18n "presence_toggle.title"}}>
     <DButton @action={{this.togglePresence}} class="btn-flat profile-tab-btn">
-      {{d-icon (if this.isPresenceHidden "toggle-on" "toggle-off")}}
+      {{d-icon (if this.isPresenceHidden "toggle-off" "toggle-on")}}
       <span class="item-label">
-        {{i18n "presence_toggle.label"}}
+        {{#if this.isPresenceHidden}}
+          {{i18n "presence_toggle.offline"}}
+        {{else}}
+          {{i18n "presence_toggle.online"}}
+        {{/if}}
       </span>
     </DButton>
   </li>
