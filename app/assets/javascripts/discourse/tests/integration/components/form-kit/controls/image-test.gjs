@@ -46,6 +46,6 @@ module(
       assert.form().field("image_url").hasValue(data.image_url);
     });
 
-    todo("when disabled", async function (assert) {});
+    todo("when disabled", async function () {});
   }
 );
