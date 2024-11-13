@@ -1839,7 +1839,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Hide my public profile and presence features"
+      hide_profile: "Hide my public profile"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
@@ -2145,6 +2145,10 @@ en:
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
+
+    presence_toggle:
+      label: "Online"
+      title: "Toggle presence features"
 
     user_tips:
       button: "Got it!"

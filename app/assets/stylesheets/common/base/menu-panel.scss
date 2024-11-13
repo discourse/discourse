@@ -236,6 +236,11 @@
         color: var(--tertiary);
       }
     }
+
+    hr {
+      border-top: 1px solid var(--primary-low);
+      width: 100%;
+    }
   }
 }
 

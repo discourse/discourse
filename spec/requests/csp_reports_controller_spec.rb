@@ -2,15 +2,16 @@
 
 RSpec.describe CspReportsController do
   describe "#create" do
+    let(:fake_logger) { FakeLogger.new }
+
     before do
       SiteSetting.content_security_policy = true
       SiteSetting.content_security_policy_collect_reports = true
 
-      @orig_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
+      Rails.logger.broadcast_to(fake_logger)
     end
 
-    after { Rails.logger = @orig_logger }
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     def send_report
       post "/csp_reports",
@@ -73,7 +74,7 @@ RSpec.describe CspReportsController do
 
     it "logs the violation report" do
       send_report
-      expect(@fake_logger.warnings).to include(
+      expect(fake_logger.warnings).to include(
         "CSP Violation: 'http://suspicio.us/assets.js' \n\nconsole.log('unsafe')",
       )
     end

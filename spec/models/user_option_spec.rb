@@ -28,7 +28,8 @@ RSpec.describe UserOption do
     end
 
     it "should not hide the profile and presence by default" do
-      expect(user.user_option.hide_profile_and_presence).to eq(false)
+      expect(user.user_option.hide_profile).to eq(false)
+      expect(user.user_option.hide_presence).to eq(false)
     end
 
     it "should correctly set digest frequency" do
