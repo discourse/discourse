@@ -21,7 +21,6 @@ describe "Topic Map", type: :system do
     topic_page.visit_topic(topic)
 
     expect(topic_page).to have_topic_map
-    2.times { Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 1) }
     page.refresh
     expect(topic_page).to have_topic_map
     expect(topic_map).to have_no_users
@@ -32,6 +31,7 @@ describe "Topic Map", type: :system do
     # bottom map, avatars details with post counts
     expect(topic_map).to have_no_bottom_map
 
+    2.times { Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 1) }
     Fabricate(:post, topic: topic, created_at: 2.day.ago)
     Fabricate(:post, topic: topic, created_at: 1.day.ago, like_count: 3)
     page.refresh
