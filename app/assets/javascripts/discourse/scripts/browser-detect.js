@@ -16,6 +16,7 @@
     // checks for `null` and `undefined`).
     try {
       new WeakMap().has(0);
+      // eslint-disable-next-line no-unused-vars -- old browsers require binding this variable, even if unused
     } catch (err) {
       window.unsupportedBrowser = true;
     }

@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Topic move posts", function (needs) {
@@ -28,33 +28,30 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
-        I18n.t("topic.move_to.title")
-      ),
-      "it opens move to modal"
-    );
+    assert
+      .dom(".choose-topic-modal .d-modal__title")
+      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.split_topic.radio_label")
-      ),
-      "it shows an option to move to new topic"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.split_topic.radio_label"),
+        "shows an option to move to new topic"
+      );
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.merge_topic.radio_label")
-      ),
-      "it shows an option to move to existing topic"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.merge_topic.radio_label"),
+        "shows an option to move to existing topic"
+      );
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.move_to_new_message.radio_label")
-      ),
-      "it shows an option to move to new message"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.move_to_new_message.radio_label"),
+        "shows an option to move to new message"
+      );
   });
 
   test("display error when new topic has invalid title", async function (assert) {
@@ -75,33 +72,30 @@ acceptance("Topic move posts", function (needs) {
     await click(".select-all");
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
-        I18n.t("topic.move_to.title")
-      ),
-      "it opens move to modal"
-    );
+    assert
+      .dom(".choose-topic-modal .d-modal__title")
+      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
 
-    assert.notOk(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.split_topic.radio_label")
-      ),
-      "it does not show an option to move to new topic"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .doesNotIncludeHtml(
+        I18n.t("topic.split_topic.radio_label"),
+        "does not show an option to move to new topic"
+      );
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.merge_topic.radio_label")
-      ),
-      "it shows an option to move to existing topic"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.merge_topic.radio_label"),
+        "shows an option to move to existing topic"
+      );
 
-    assert.notOk(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.move_to_new_message.radio_label")
-      ),
-      "it does not show an option to move to new message"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .doesNotIncludeHtml(
+        I18n.t("topic.move_to_new_message.radio_label"),
+        "does not show an option to move to new message"
+      );
   });
 
   test("moving posts to existing topic", async function (assert) {
@@ -112,12 +106,12 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.merge_topic.radio_label")
-      ),
-      "it shows an option to move to an existing topic"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.merge_topic.radio_label"),
+        "shows an option to move to an existing topic"
+      );
 
     await click(".choose-topic-modal .radios #move-to-existing-topic");
 
@@ -131,12 +125,12 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".choose-topic-list .existing-topic:first-child input");
 
-    assert.ok(
-      query(".choose-topic-modal .checkbox-label").innerHTML.includes(
-        I18n.t("topic.merge_topic.chronological_order")
-      ),
-      "it shows a checkbox to merge posts in chronological order"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .includesHtml(
+        I18n.t("topic.merge_topic.chronological_order"),
+        "shows a checkbox to merge posts in chronological order"
+      );
   });
 
   test("moving posts from personal message", async function (assert) {
@@ -154,26 +148,23 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
-        I18n.t("topic.move_to.title")
-      ),
-      "it opens move to modal"
-    );
+    assert
+      .dom(".choose-topic-modal .d-modal__title")
+      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.move_to_new_message.radio_label")
-      ),
-      "it shows an option to move to new message"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.move_to_new_message.radio_label"),
+        "shows an option to move to new message"
+      );
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.move_to_existing_message.radio_label")
-      ),
-      "it shows an option to move to existing message"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.move_to_existing_message.radio_label"),
+        "shows an option to move to existing message"
+      );
   });
 
   test("group moderator moving posts", async function (assert) {
@@ -191,12 +182,9 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .d-modal__title").innerHTML.includes(
-        I18n.t("topic.move_to.title")
-      ),
-      "it opens move to modal"
-    );
+    assert
+      .dom(".choose-topic-modal .d-modal__title")
+      .includesHtml(I18n.t("topic.move_to.title"), "opens move to modal");
   });
 
   test("moving posts from personal message to existing message", async function (assert) {
@@ -207,12 +195,12 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".selected-posts .move-to-topic");
 
-    assert.ok(
-      query(".choose-topic-modal .radios").innerHTML.includes(
-        I18n.t("topic.move_to_existing_message.radio_label")
-      ),
-      "it shows an option to move to an existing message"
-    );
+    assert
+      .dom(".choose-topic-modal .radios")
+      .includesHtml(
+        I18n.t("topic.move_to_existing_message.radio_label"),
+        "shows an option to move to an existing message"
+      );
 
     await click(".choose-topic-modal .radios #move-to-existing-message");
 
@@ -226,11 +214,11 @@ acceptance("Topic move posts", function (needs) {
 
     await click(".choose-topic-modal .existing-message:first-of-type input");
 
-    assert.ok(
-      query(".choose-topic-modal .checkbox-label").innerHTML.includes(
-        I18n.t("topic.merge_topic.chronological_order")
-      ),
-      "it shows a checkbox to merge posts in chronological order"
-    );
+    assert
+      .dom(".choose-topic-modal .checkbox-label")
+      .includesHtml(
+        I18n.t("topic.merge_topic.chronological_order"),
+        "shows a checkbox to merge posts in chronological order"
+      );
   });
 });

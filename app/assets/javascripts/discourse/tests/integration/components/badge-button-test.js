@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | badge-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -36,19 +35,19 @@ module("Integration | Component | badge-button", function (hooks) {
 
     await render(hbs`<BadgeButton @badge={{this.badge}} />`);
 
-    assert.strictEqual(
-      query(".user-badge").title,
-      "a good run",
-      "it strips html"
-    );
+    assert
+      .dom(".user-badge")
+      .hasAttribute("title", "a good run", "strips html");
 
     this.set("badge", { description: "a bad run" });
 
-    assert.strictEqual(
-      query(".user-badge").title,
-      "a bad run",
-      "it updates title when changing description"
-    );
+    assert
+      .dom(".user-badge")
+      .hasAttribute(
+        "title",
+        "a bad run",
+        "updates title when changing description"
+      );
   });
 
   test("icon", async function (assert) {

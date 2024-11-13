@@ -4,7 +4,6 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
@@ -34,8 +33,9 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    const btn = query(".chat-channel-leave-btn");
-    assert.strictEqual(btn.title, I18n.t("chat.direct_messages.leave"));
+    assert
+      .dom(".chat-channel-leave-btn")
+      .hasAttribute("title", I18n.t("chat.direct_messages.leave"));
   });
 
   test("has a specific title for message channel", async function (assert) {
@@ -43,8 +43,9 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
 
     await render(hbs`<ChatChannelLeaveBtn @channel={{this.channel}} />`);
 
-    const btn = query(".chat-channel-leave-btn");
-    assert.strictEqual(btn.title, I18n.t("chat.leave"));
+    assert
+      .dom(".chat-channel-leave-btn")
+      .hasAttribute("title", I18n.t("chat.leave"));
   });
 
   test("is not visible on mobile", async function (assert) {

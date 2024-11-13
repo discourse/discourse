@@ -93,11 +93,9 @@ acceptance("User Status", function (needs) {
     await visit("/");
     await openUserStatusModal();
 
-    assert.equal(
-      query(`.btn-emoji img.emoji`).title,
-      userStatusEmoji,
-      "status emoji is shown"
-    );
+    assert
+      .dom(".btn-emoji img.emoji")
+      .hasAttribute("title", userStatusEmoji, "status emoji is shown");
     assert.equal(
       query(".user-status-description").value,
       userStatus,
@@ -278,11 +276,13 @@ acceptance("User Status", function (needs) {
     await click(".d-modal-cancel");
     await openUserStatusModal();
 
-    assert.equal(
-      query(`.btn-emoji img.emoji`).title,
-      userStatusEmoji,
-      "the actual status emoji is shown"
-    );
+    assert
+      .dom(".btn-emoji img.emoji")
+      .hasAttribute(
+        "title",
+        userStatusEmoji,
+        "the actual status emoji is shown"
+      );
     assert.equal(
       query(".user-status-description").value,
       userStatus,

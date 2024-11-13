@@ -107,16 +107,20 @@ acceptance("User Profile - Summary - Stats", function (needs) {
     await visit("/u/eviltrout/summary");
 
     assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
-    assert.equal(
-      query(".stats-time-read span").title,
-      I18n.t("user.summary.time_read_title", { duration: "1 day" })
-    );
+    assert
+      .dom(".stats-time-read span")
+      .hasAttribute(
+        "title",
+        I18n.t("user.summary.time_read_title", { duration: "1 day" })
+      );
 
     assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
-    assert.equal(
-      query(".stats-recent-read span").title,
-      I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
-    );
+    assert
+      .dom(".stats-recent-read span")
+      .hasAttribute(
+        "title",
+        I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
+      );
   });
 });
 

@@ -1834,7 +1834,6 @@ it:
           success: "Link di invito generato con successo!"
           error: "Si è verificato un errore durante la generazione del link di invito"
         invite:
-          instructions: "Condividi questo link per concedere istantaneamente l'accesso a questo sito:"
           expires_in_time: "Scade tra %{time}"
           expired_at_time: "Scaduto alle %{time}"
           copy_link: "Copia link"
@@ -1851,9 +1850,8 @@ it:
           expires_after: "Scadenza:"
           send_invite_email: "Salva e invia Email"
           send_invite_email_instructions: "Limita l'invito alle e-mail per inviare un'e-mail di invito"
-          save_invite: "Salva"
+          update_invite: "Aggiorna"
           cancel: "Annulla"
-          invite_saved: "Invito salvato."
         bulk_invite:
           none: "Nessun invito da visualizzare in questa pagina."
           text: "Inviti di gruppo"
@@ -2967,6 +2965,8 @@ it:
         bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
         filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
+      dismiss:
+        name: "Ignora"
       close_topics:
         name: "Chiudi"
         note: "Nota"
@@ -3536,17 +3536,23 @@ it:
       few_likes_left: "Grazie per aver condiviso affetto! Hai ancora pochi \"Mi piace\" rimasti per oggi."
       controls:
         reply: "inizia a comporre una risposta a questo messaggio"
+        like_action: "Mi piace"
         like: "metti \"Mi piace\" al messaggio"
         has_liked: "ti è piaciuto questo messaggio"
         read_indicator: "utenti che leggono questo messaggio"
+        undo_like_action: "Annulla il \"Mi piace\""
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
         edit_action: "Modifica"
         edit_anonymous: "Spiacenti, devi effettuare l'accesso per poter modificare questo messaggio."
+        flag_action: "Segnala"
         flag: "segnala privatamente questo messaggio o invia una notifica privata"
+        delete_action: "Elimina messaggio"
         delete: "cancella questo messaggio"
         undelete: "recupera questo messaggio"
+        share_action: "Condividi"
         share: "condividi un collegamento a questo messaggio"
+        copy_action: "Copia link"
         copy_title: "copia un collegamento a questo messaggio negli appunti"
         link_copied: "Link copiato!"
         more: "Altro"
@@ -3560,6 +3566,7 @@ it:
             other: "Sì, e tutte le %{count} risposte"
           just_the_post: "No, solo questo messaggio"
         admin: "azioni post-amministrazione"
+        admin_action: "Amministrazione"
         permanently_delete: "Elimina definitivamente"
         permanently_delete_confirmation: "Sicuro di voler eliminare definitivamente questo messaggio? Non sarà possibile recuperarlo."
         wiki: "Rendi Wiki"
@@ -4738,6 +4745,7 @@ it:
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
           previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
+          experimental: "Sperimentale"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
         no_problems: "Nessun problema rilevato."
@@ -6272,7 +6280,6 @@ it:
         time_read: "Tempo di lettura"
         post_edits_count: "Modifiche Messaggio"
         anonymize: "Rendi Anonimo Utente "
-        anonymize_confirm: "Sei SICURO di voler rendere anonimo questo account? Il nome utente e l'indirizzo email saranno modificati e saranno reimpostate tutte le informazioni del profilo."
         anonymize_yes: "Sì, rendi anonimo questo account"
         anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
@@ -6329,7 +6336,6 @@ it:
         cant_delete_all_too_many_posts:
           one: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggio. (delete_all_posts_max)"
           other: "Impossibile cancellare tutti i messaggi perché l'utente ha più di %{count} messaggi. (delete_all_posts_max.)"
-        delete_confirm_title: "Vuoi DAVVERO eliminare questo utente? Questa operazione è irreversibile!"
         delete_confirm: "In genere è preferibile rendere anonimi gli utenti piuttosto che eliminarli, per evitare di rimuoverne i contenuti dalle discussioni esistenti."
         delete_and_block: "Elimina e <b>blocca</b> questa email e indirizzo IP"
         delete_dont_block: "Elimina soltanto"
@@ -6683,7 +6689,8 @@ it:
           grant_existing_holders: Assegna distintivi aggiuntivi ai titolari di distintivi già esistenti
       emoji:
         title: "Emoji"
-        help: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina più file alla volta senza inserire un nome per creare emoji usando i nomi dei loro file. Il gruppo selezionato verrà utilizzato per tutti i file aggiunti. Puoi anche fare clic su \"Aggiungi nuova emoji\" per aprire il selettore di file."
+        description: "Aggiungi nuove emoji che saranno disponibili per tutti. Trascina più file alla volta senza inserire un nome per creare emoji usando i nomi dei loro file. Il gruppo selezionato verrà utilizzato per tutti i file aggiunti. Puoi anche fare clic su \"Aggiungi nuova emoji\" per aprire il selettore di file."
+        new: "Aggiungi"
         add: "Aggiungi Nuovo Emoji"
         choose_files: "Scegli file"
         uploading: "Caricamento…"

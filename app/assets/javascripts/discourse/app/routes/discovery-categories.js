@@ -25,7 +25,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     let style =
       this.site.desktopView && this.siteSettings.desktop_category_page_style;
     if (this.site.categories.length > MAX_UNOPTIMIZED_CATEGORIES) {
-      style = "categories_only_optimized";
+      style = "categories_only";
     }
 
     if (

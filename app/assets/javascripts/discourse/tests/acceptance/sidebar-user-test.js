@@ -3,7 +3,6 @@ import { test } from "qunit";
 import Sinon from "sinon";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
@@ -112,10 +111,9 @@ acceptance(
     test("showing and hiding sidebar", async function (assert) {
       await visit("/");
 
-      assert.ok(
-        document.body.classList.contains("has-sidebar-page"),
-        "adds sidebar utility class to body"
-      );
+      assert
+        .dom(document.body)
+        .hasClass("has-sidebar-page", "adds sidebar utility class to body");
 
       assert
         .dom(".sidebar-container")
@@ -123,10 +121,12 @@ acceptance(
 
       await click(".btn-sidebar-toggle");
 
-      assert.ok(
-        !document.body.classList.contains("has-sidebar-page"),
-        "removes sidebar utility class from body"
-      );
+      assert
+        .dom(document.body)
+        .doesNotHaveClass(
+          "has-sidebar-page",
+          "removes sidebar utility class from body"
+        );
 
       assert.dom(".sidebar-container").doesNotExist("hides the sidebar");
 
@@ -211,11 +211,13 @@ acceptance(
           "has the right accessibility attributes set when sidebar is expanded"
         );
 
-      assert.strictEqual(
-        query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.title"),
-        "has the right title attribute when sidebar is expanded"
-      );
+      assert
+        .dom(".btn-sidebar-toggle")
+        .hasAttribute(
+          "title",
+          I18n.t("sidebar.title"),
+          "has the right title attribute when sidebar is expanded"
+        );
 
       await click(".btn-sidebar-toggle");
 
@@ -227,11 +229,13 @@ acceptance(
           "has the right accessibility attributes set when sidebar is collapsed"
         );
 
-      assert.strictEqual(
-        query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.title"),
-        "has the right title attribute when sidebar is collapsed"
-      );
+      assert
+        .dom(".btn-sidebar-toggle")
+        .hasAttribute(
+          "title",
+          I18n.t("sidebar.title"),
+          "has the right title attribute when sidebar is collapsed"
+        );
     });
   }
 );

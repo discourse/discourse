@@ -25,10 +25,9 @@ acceptance("Topic Discovery", function (needs) {
 
   test("Visit Discovery Pages", async function (assert) {
     await visit("/");
-    assert.ok(
-      document.body.classList.contains("navigation-topics"),
-      "has the default navigation"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("navigation-topics", "has the default navigation");
     assert.dom(".topic-list").exists("the list of topics was rendered");
     assert.dom(".topic-list .topic-list-item").exists("has topics");
 
@@ -52,31 +51,32 @@ acceptance("Topic Discovery", function (needs) {
     assert.dom(".topic-list").exists("the list of topics was rendered");
     assert.dom(".topic-list .topic-list-item").exists("has topics");
     assert.dom(".category-list").doesNotExist("doesn't render subcategories");
-    assert.ok(
-      document.body.classList.contains("category-bug"),
-      "has a custom css class for the category id on the body"
-    );
+    assert
+      .dom(document.body)
+      .hasClass(
+        "category-bug",
+        "has a custom css class for the category id on the body"
+      );
 
     await visit("/categories");
-    assert.ok(
-      document.body.classList.contains("navigation-categories"),
-      "has the body class"
-    );
-    assert.ok(
-      !document.body.classList.contains("category-bug"),
-      "removes the custom category class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("navigation-categories", "has the body class");
+    assert
+      .dom(document.body)
+      .doesNotHaveClass("category-bug", "removes the custom category class");
     assert.dom(".category").exists("has a list of categories");
-    assert.ok(
-      document.body.classList.contains("categories-list"),
-      "has a custom class to indicate categories"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("categories-list", "has a custom class to indicate categories");
 
     await visit("/top");
-    assert.ok(
-      !document.body.classList.contains("categories-list"),
-      "removes the `categories-list` class"
-    );
+    assert
+      .dom(document.body)
+      .doesNotHaveClass(
+        "categories-list",
+        "removes the `categories-list` class"
+      );
     assert.dom(".topic-list .topic-list-item").exists("has topics");
 
     await visit("/c/feature");

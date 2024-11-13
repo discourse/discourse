@@ -1768,7 +1768,6 @@ ko:
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
     short_progress_text_threshold: "주제의 게시물 수가 이 수를 초과하면 진행률 표시줄에 현재 게시물 번호만 표시됩니다. 진행률 표시줄의 너비를 변경하는 경우 이 값을 변경해야 할 수도 있습니다."
     warn_reviving_old_topic_age: "마지막 댓글이 이 날짜보다 오래된 주제에 누군가가 댓글을 달기 시작하면 경고가 표시됩니다. 비활성화하려면 0으로 설정합니다. "
-    highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고: 너무 많은 언어를 포함하면 퍼포먼스에 영향을 줄 수 있습니다) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>를 참조하세요."
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 임베드 가능한 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_set_canonical_url: "임베드된 주제의 표준 URL을 임베드 콘텐츠의 URL로 설정합니다."

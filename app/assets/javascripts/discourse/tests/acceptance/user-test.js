@@ -12,7 +12,6 @@ import {
   acceptance,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -63,25 +62,23 @@ acceptance("User Routes", function (needs) {
 
   test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    assert.ok(
-      document.body.classList.contains("user-invites-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-invites-page", "has the body class");
   });
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
-    assert.ok(
-      document.body.classList.contains("user-notifications-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-notifications-page", "has the body class");
 
-    const $links = queryAll(".notification a");
+    const links = [...document.querySelectorAll(".notification a")];
 
-    assert.ok(
-      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
-    );
+    assert
+      .dom(links[2])
+      .hasAttribute("href", /^\/u\/eviltrout\/notifications\/likes-received/);
 
     updateCurrentUser({ moderator: true, admin: false });
 
@@ -102,10 +99,9 @@ acceptance("User Routes", function (needs) {
 
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(
-      document.body.classList.contains("user-activity-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-activity-page", "has the body class");
     assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
@@ -163,10 +159,9 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 
   test("Messages - Warnings", async function (assert) {
     await visit("/u/eviltrout/messages/warnings");
-    assert.ok(
-      document.body.classList.contains("user-messages-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-messages-page", "has the body class");
     assert.dom("div.alert-info").exists("has the permissions alert");
   });
 });

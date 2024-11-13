@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -20,11 +19,9 @@ module(
         hbs`<Chat::Modal::DeleteChannel @inline={{true}} @model={{hash channel=this.channel}} />`
       );
 
-      assert.true(
-        query(".chat-modal-delete-channel__instructions").innerHTML.includes(
-          "&lt;script&gt;someeviltitle&lt;/script&gt;"
-        )
-      );
+      assert
+        .dom(".chat-modal-delete-channel__instructions")
+        .includesHtml("&lt;script&gt;someeviltitle&lt;/script&gt;");
     });
   }
 );

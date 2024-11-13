@@ -4,7 +4,7 @@ import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
@@ -72,24 +72,22 @@ acceptance("Password Reset", function (needs) {
 
     await fillIn(".password-reset input", "123");
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
-    assert.ok(
-      query(".password-reset .tip.bad").innerHTML.includes(
-        I18n.t("user.password.too_short", {
-          count: this.siteSettings.min_password_length,
-        })
-      ),
+    assert.dom(".password-reset .tip.bad").includesHtml(
+      I18n.t("user.password.too_short", {
+        count: this.siteSettings.min_password_length,
+      }),
       "password too short"
     );
 
     await fillIn(".password-reset input", "jonesyAlienSlayer");
     await click(".password-reset form button[type='submit']");
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
-    assert.ok(
-      query(".password-reset .tip.bad").innerHTML.includes(
-        "Password is the name of your cat"
-      ),
-      "server validation error message shows"
-    );
+    assert
+      .dom(".password-reset .tip.bad")
+      .includesHtml(
+        "Password is the name of your cat",
+        "server validation error message shows"
+      );
 
     assert
       .dom("#new-account-password[type='password']")
@@ -121,10 +119,9 @@ acceptance("Password Reset", function (needs) {
 
     assert.dom(".alert-error").exists("shows 2FA error");
 
-    assert.ok(
-      query(".alert-error").innerHTML.includes("invalid token"),
-      "shows server validation error message"
-    );
+    assert
+      .dom(".alert-error")
+      .includesHtml("invalid token", "shows server validation error message");
 
     await fillIn("input#second-factor", "123123");
     await click(".password-reset form button");

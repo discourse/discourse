@@ -5,7 +5,6 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import { tomorrow } from "discourse/lib/time-utils";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module("Integration | Component | bookmark-icon", function (hooks) {
@@ -25,8 +24,8 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     assert
       .dom(".d-icon-discourse-bookmark-clock.bookmark-icon__bookmarked")
       .exists();
-    assert.strictEqual(
-      query(".svg-icon-title").title,
+    assert.dom(".svg-icon-title").hasAttribute(
+      "title",
       I18n.t("bookmarks.created_with_reminder_generic", {
         date: formattedReminderTime(
           this.bookmark.reminder_at,
@@ -49,8 +48,8 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
 
     assert.dom(".d-icon-bookmark.bookmark-icon__bookmarked").exists();
-    assert.strictEqual(
-      query(".svg-icon-title").title,
+    assert.dom(".svg-icon-title").hasAttribute(
+      "title",
       I18n.t("bookmarks.created_generic", {
         name: "some name",
       })
@@ -65,9 +64,8 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     await render(hbs`<BookmarkIcon @bookmark={{this.bookmark}} />`);
 
     assert.dom(".d-icon-bookmark.bookmark-icon").exists();
-    assert.strictEqual(
-      query(".svg-icon-title").title,
-      I18n.t("bookmarks.create")
-    );
+    assert
+      .dom(".svg-icon-title")
+      .hasAttribute("title", I18n.t("bookmarks.create"));
   });
 });

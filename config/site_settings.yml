@@ -614,7 +614,7 @@ login:
     type: host_list
     list_type: simple
   normalize_emails:
-    default: true
+    default: false
   auto_approve_email_domains:
     default: ""
     type: host_list
@@ -3301,6 +3301,22 @@ experimental:
     allow_any: false
     refresh: true
   experimental_glimmer_topic_list_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_menu_mode:
+    client: true
+    hidden: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
+  glimmer_post_menu_groups:
     client: true
     type: group_list
     list_type: compact

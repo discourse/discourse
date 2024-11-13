@@ -87,7 +87,7 @@ export default class Validator {
     try {
       // eslint-disable-next-line no-new
       new URL(value);
-    } catch (e) {
+    } catch {
       return I18n.t("form_kit.errors.invalid_url");
     }
   }

@@ -19,10 +19,10 @@ export default class SmallUserList extends Component {
   }
 
   get users() {
-    let users = this.args.data.users;
+    let users = this.args.users;
 
     if (
-      this.args.data.addSelf &&
+      this.args.addSelf &&
       !users.some((u) => u.username === this.currentUser.username)
     ) {
       users = users.concat(this.smallUserAtts(this.currentUser));
@@ -38,38 +38,48 @@ export default class SmallUserList extends Component {
   }
 
   <template>
-    {{#each this.users as |user|}}
-      {{#if user.unknown}}
-        <div
-          title={{i18n "post.unknown_user"}}
-          class="unknown"
-          role="listitem"
-        ></div>
-      {{else}}
-        <a
-          class="trigger-user-card"
-          data-user-card={{user.username}}
-          title={{user.username}}
-          aria-hidden="false"
-          role="listitem"
+    {{#if this.users}}
+      <div class="clearfix small-user-list" ...attributes>
+        <span
+          class="small-user-list-content"
+          aria-label={{@ariaLabel}}
+          role="list"
         >
-          {{avatar user.template "tiny"}}
-        </a>
-      {{/if}}
-    {{/each}}
+          {{#each this.users key="username" as |user|}}
+            {{#if user.unknown}}
+              <div
+                title={{i18n "post.unknown_user"}}
+                class="unknown"
+                role="listitem"
+              ></div>
+            {{else}}
+              <a
+                class="trigger-user-card"
+                data-user-card={{user.username}}
+                title={{user.username}}
+                aria-hidden="false"
+                role="listitem"
+              >
+                {{avatar user.template "tiny"}}
+              </a>
+            {{/if}}
+          {{/each}}
 
-    {{#if @data.description}}
-      {{#if this.postUrl}}
-        <a href={{this.postUrl}}>
-          <span aria-hidden="true" class="list-description">
-            {{i18n @data.description count=@data.count}}
-          </span>
-        </a>
-      {{else}}
-        <span aria-hidden="true" class="list-description">
-          {{i18n @data.description count=@data.count}}
+          {{#if @description}}
+            {{#if this.postUrl}}
+              <a href={{this.postUrl}}>
+                <span aria-hidden="true" class="list-description">
+                  {{i18n @description count=@count}}
+                </span>
+              </a>
+            {{else}}
+              <span aria-hidden="true" class="list-description">
+                {{i18n @description count=@count}}
+              </span>
+            {{/if}}
+          {{/if}}
         </span>
-      {{/if}}
+      </div>
     {{/if}}
   </template>
 }

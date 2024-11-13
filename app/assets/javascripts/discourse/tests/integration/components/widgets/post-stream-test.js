@@ -5,6 +5,7 @@ import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
@@ -30,15 +31,17 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
   postStreamTest("extensibility", {
     posts() {
       withPluginApi("0.14.0", (api) => {
-        api.addPostMenuButton("coffee", (transformedPost) => {
-          lastTransformedPost = transformedPost;
-          return {
-            action: "drinkCoffee",
-            icon: "mug-saucer",
-            className: "hot-coffee",
-            title: "coffee.title",
-            position: "first",
-          };
+        withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+          api.addPostMenuButton("coffee", (transformedPost) => {
+            lastTransformedPost = transformedPost;
+            return {
+              action: "drinkCoffee",
+              icon: "mug-saucer",
+              className: "hot-coffee",
+              title: "coffee.title",
+              position: "first",
+            };
+          });
         });
       });
 

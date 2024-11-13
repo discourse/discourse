@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-thread-list-item", function (hooks) {
@@ -17,9 +16,8 @@ module("Discourse Chat | Component | chat-thread-list-item", function (hooks) {
       <Chat::ThreadList::Item @thread={{this.thread}} />
     `);
 
-    assert.equal(
-      query(".chat-thread-list-item__title").innerHTML.trim(),
-      "&lt;style&gt;body { background: red;}&lt;/style&gt;"
-    );
+    assert
+      .dom(".chat-thread-list-item__title")
+      .hasHtml("&lt;style&gt;body { background: red;}&lt;/style&gt;");
   });
 });

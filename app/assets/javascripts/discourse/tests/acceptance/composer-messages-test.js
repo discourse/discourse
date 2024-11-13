@@ -44,13 +44,11 @@ acceptance("Composer - Messages", function (needs) {
 
     assert.dom(".composer-popup").exists("shows composer warning message");
 
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.user_not_seen_in_a_while.single", {
-          usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
-          time_ago: "1 year ago",
-        })
-      ),
+    assert.dom(".composer-popup").includesHtml(
+      I18n.t("composer.user_not_seen_in_a_while.single", {
+        usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
+        time_ago: "1 year ago",
+      }),
       "warning message has correct body"
     );
 
@@ -96,12 +94,10 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
 
     await fillIn(".d-editor-input", "Mention @staff");
     assert.dom(".composer-popup").exists("shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.cannot_see_group_mention.not_allowed", {
-          group: "staff",
-        })
-      ),
+    assert.dom(".composer-popup").includesHtml(
+      I18n.t("composer.cannot_see_group_mention.not_allowed", {
+        group: "staff",
+      }),
       "warning message has correct body"
     );
   });
@@ -115,13 +111,11 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
 
     await fillIn(".d-editor-input", "Mention @staff2");
     assert.dom(".composer-popup").exists("shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
-          group: "staff2",
-          count: 10,
-        })
-      ),
+    assert.dom(".composer-popup").includesHtml(
+      I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
+        group: "staff2",
+        count: 10,
+      }),
       "warning message has correct body"
     );
   });
@@ -237,18 +231,18 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     await triggerKeyEvent(".d-editor-input", "keyup", "Space");
 
     assert.dom(".composer-popup").exists("shows composer warning message");
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.yourself_confirm.title")
-      ),
-      "warning message has correct title"
-    );
-    assert.true(
-      query(".composer-popup").innerHTML.includes(
-        I18n.t("composer.yourself_confirm.body")
-      ),
-      "warning message has correct body"
-    );
+    assert
+      .dom(".composer-popup")
+      .includesHtml(
+        I18n.t("composer.yourself_confirm.title"),
+        "warning message has correct title"
+      );
+    assert
+      .dom(".composer-popup")
+      .includesHtml(
+        I18n.t("composer.yourself_confirm.body"),
+        "warning message has correct body"
+      );
   });
 
   test("Does not show a warning in the composer if the message is sent to other users", async function (assert) {

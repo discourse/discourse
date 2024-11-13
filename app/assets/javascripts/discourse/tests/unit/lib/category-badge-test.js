@@ -31,11 +31,9 @@ module("Unit | Utility | category-badge", function (hooks) {
     );
 
     const label = tag.children[0];
-    assert.strictEqual(
-      label.title,
-      "cool description",
-      "it has the correct title"
-    );
+    assert
+      .dom(label)
+      .hasAttribute("title", "cool description", "has the correct title");
     assert.strictEqual(
       label.children[0].innerText,
       "hello",

@@ -1394,7 +1394,6 @@ hr:
     enable_category_group_moderation: "Dopustite grupama moderiranje sadržaja u određenim kategorijama"
     group_in_subject: "Postavite %%{optional_pm} u predmetu e-pošte prema imenu prve grupe u PM-u, pogledajte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prilagodite format predmeta za standardne e-poruke</a>"
     anonymous_posting_min_trust_level: "Minimalna razina povjerenja potrebna za omogućavanje anonimnog objavljivanja"
-    highlighted_languages: "Uključena pravila za označavanje sintakse. (Upozorenje: uključivanje previše jezika može utjecati na performanse) pogledajte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> za demo"
     show_copy_button_on_codeblocks: "Dodajte gumb kodnim blokovima za kopiranje sadržaja bloka u korisnički međuspremnik."
     embed_any_origin: "Dopusti sadržaj koji se može ugraditi bez obzira na podrijetlo. Ovo je potrebno za mobilne aplikacije sa statičnim HTML-om."
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
