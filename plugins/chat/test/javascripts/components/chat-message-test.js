@@ -4,7 +4,6 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-message", function (hooks) {
@@ -64,11 +63,9 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
     await this.message.cook();
     await render(template);
 
-    assert.true(
-      query(".chat-message-text")
-        .innerHTML.trim()
-        .includes("<p>what <mark>test</mark></p>")
-    );
+    assert
+      .dom(".chat-message-text")
+      .includesHtml("<p>what <mark>test</mark></p>");
   });
 
   test("Message with reply", async function (assert) {

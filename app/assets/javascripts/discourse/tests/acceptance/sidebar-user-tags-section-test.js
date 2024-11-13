@@ -749,26 +749,29 @@ acceptance(
 
       await visit("/");
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag1"] a'
-        ).href.endsWith("/tag/tag1/l/new"),
-        "links to the new topics list for the tag because there's 1 new topic"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag1"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag1/l/new",
+          "links to the new topics list for the tag because there's 1 new topic"
+        );
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag2"] a'
-        ).href.endsWith("/tag/tag2/l/new"),
-        "links to the new topics list for the tag because there's 1 unread topic"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag2"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag2/l/new",
+          "links to the new topics list for the tag because there's 1 unread topic"
+        );
 
-      assert.true(
-        query(
-          '.sidebar-section-link-wrapper[data-tag-name="tag3"] a'
-        ).href.endsWith("/tag/tag3"),
-        "links to the latest topics list for the tag because there are no unread or new topics"
-      );
+      assert
+        .dom('.sidebar-section-link-wrapper[data-tag-name="tag3"] a')
+        .hasAttribute(
+          "href",
+          "/tag/tag3",
+          "links to the latest topics list for the tag because there are no unread or new topics"
+        );
     });
 
     test("tag link href is always to the latest topics list when sidebar_link_to_filtered_list is false", async function (assert) {

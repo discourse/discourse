@@ -35,9 +35,10 @@ export function recentlyCopied(postId, actionClass) {
   );
 }
 
-export function showAlert(postId, actionClass, messageKey) {
+export function showAlert(postId, actionClass, messageKey, opts = {}) {
   const postSelector = `article[data-post-id='${postId}']`;
-  const actionBtn = document.querySelector(`${postSelector} .${actionClass}`);
+  const actionBtn =
+    opts.actionBtn || document.querySelector(`${postSelector} .${actionClass}`);
 
   actionBtn?.classList.add("post-action-feedback-button");
 

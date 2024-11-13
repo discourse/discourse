@@ -982,7 +982,7 @@ ro:
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
     traditional_markdown_linebreaks: "Folosește întreruperi de rând tradiționale în Markdown, ceea ce necesită două spații pentru un capăt de rând. "
     post_undo_action_window_mins: "Numărul de minute în care utilizatorii pot anula acțiunile recente asupra unei postări (aprecieri, marcări cu marcaje de avertizare, etc)."
-    must_approve_users: "Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”)."
+    must_approve_users: 'Toți utilizatorii noi trebuie să aștepte aprobarea moderatorului sau a administratorului înainte de a li se permite să se conecteze. (Notă: activarea acestei setări elimină și opțiunea de invitare „ajunge la subiect”).'
     maximum_session_age: "Utilizatorul va rămâne autentificat pentru n ore de la ultima vizită"
     experimental_full_page_login: "Înlocuiește modalul de conectare sau înregistrare cu un formular de conectare sau înregistrare pe întreaga pagină."
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
@@ -1119,7 +1119,7 @@ ro:
     faq_url: "Dacă ai un FAQ găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     tos_url: "Dacă ai un document Condițiile generale de utilizare găzduit în altă parte pe care dorești să-l folosești, postează-i întregul URL aici."
     privacy_policy_url: "Dacă ai un document cu Politica de Confidențialitate găzduit în altă parte, pe care dorești să-l folosești, postează-i întregul URL aici."
-    display_eu_visitor_stats: "Afișează numărul de vizitatori din întreaga lume și din UE pe pagina /despre. Este posibil să dureze câteva minute până când statisticile apar după activarea acestei setări."
+    display_eu_visitor_stats: "Afișează numărul de vizitatori din întreaga lume și din UE pe pagina /about. Este posibil să dureze câteva minute până când statisticile apar după activarea acestei setări."
     newuser_spam_host_threshold: "De câte ori poate un utilizator nou să posteze un link către aceeași gazdă în limita de `newuser_spam_host_threshold` postări înainte ca să fie considerat spam."
     allowed_spam_host_domains: "O listă de domenii excluse de la testarea gazdelor spam. Noii utilizatori nu vor fi niciodată restricționați să creeze postări cu linkuri către aceste domenii."
     topic_view_duration_hours: "Contorizează încă o vizualizare a unui subiect nou o singură dată per IP/Utilizator la fiecare N ore."

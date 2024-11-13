@@ -30,10 +30,9 @@ module("Integration | Component | d-editor", function (hooks) {
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.strictEqual(this.value, "hello **world**");
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>hello <strong>world</strong></p>"
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml("<p>hello <strong>world</strong></p>");
   });
 
   test("links in preview are not tabbable", async function (assert) {
@@ -41,10 +40,11 @@ module("Integration | Component | d-editor", function (hooks) {
 
     await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
+        '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
+      );
   });
 
   test("updating the value refreshes the preview", async function (assert) {
@@ -52,18 +52,12 @@ module("Integration | Component | d-editor", function (hooks) {
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>evil trout</p>"
-    );
+    assert.dom(".d-editor-preview").hasHtml("<p>evil trout</p>");
 
     this.set("value", "zogstrip");
     await settled();
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>zogstrip</p>"
-    );
+    assert.dom(".d-editor-preview").hasHtml("<p>zogstrip</p>");
   });
 
   function jumpEnd(textarea) {

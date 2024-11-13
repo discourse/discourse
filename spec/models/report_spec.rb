@@ -1036,12 +1036,11 @@ RSpec.describe Report do
   end
 
   describe "unexpected error on report initialization" do
-    before do
-      @orig_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @orig_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "returns no report" do
       class ReportInitError < StandardError
@@ -1053,7 +1052,7 @@ RSpec.describe Report do
 
       expect(report).to be_nil
 
-      expect(@fake_logger.errors).to eq(["Couldn’t create report `signups`: <ReportInitError x>"])
+      expect(fake_logger.errors).to eq(["Couldn’t create report `signups`: <ReportInitError x>"])
     end
   end
 

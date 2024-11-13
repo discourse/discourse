@@ -88,7 +88,7 @@ export function subscribe(callback, applicationServerKey) {
     return serviceWorkerRegistration.pushManager
       .subscribe({
         userVisibleOnly: true,
-        applicationServerKey: new Uint8Array(applicationServerKey.split("|")), // eslint-disable-line no-undef
+        applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
       })
       .then((subscription) => {
         sendSubscriptionToServer(subscription, true);

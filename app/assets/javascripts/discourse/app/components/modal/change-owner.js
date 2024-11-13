@@ -43,7 +43,7 @@ export default class ChangeOwnerModal extends Component {
         this.args.model.toggleMultiSelect();
       }
       DiscourseURL.routeTo(this.args.model.topic.url);
-    } catch (error) {
+    } catch {
       this.flash = I18n.t("topic.change_owner.error");
       this.saving = false;
     }

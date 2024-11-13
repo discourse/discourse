@@ -70,10 +70,7 @@ RSpec.describe Chat::CreateCategoryChannel do
         end
 
         it "does not enforce automatic memberships" do
-          Chat::ChannelMembershipManager
-            .any_instance
-            .expects(:enforce_automatic_channel_memberships)
-            .never
+          Chat::AutoJoinChannels.expects(:call).never
           result
         end
 
@@ -88,10 +85,7 @@ RSpec.describe Chat::CreateCategoryChannel do
           let(:params) { { guardian: guardian, category_id: category_id, auto_join_users: "" } }
 
           it "defaults to false" do
-            Chat::ChannelMembershipManager
-              .any_instance
-              .expects(:enforce_automatic_channel_memberships)
-              .never
+            Chat::AutoJoinChannels.expects(:call).never
             result
           end
         end
@@ -100,10 +94,7 @@ RSpec.describe Chat::CreateCategoryChannel do
           let(:params) { { guardian: guardian, category_id: category_id, auto_join_users: "true" } }
 
           it "enforces automatic memberships" do
-            Chat::ChannelMembershipManager
-              .any_instance
-              .expects(:enforce_automatic_channel_memberships)
-              .once
+            Chat::AutoJoinChannels.expects(:call).once
             result
           end
         end

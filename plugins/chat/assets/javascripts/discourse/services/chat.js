@@ -260,7 +260,7 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.currentUser.user_option?.hide_profile_and_presence) {
+      if (this.currentUser.user_option?.hide_presence) {
         return;
       }
 

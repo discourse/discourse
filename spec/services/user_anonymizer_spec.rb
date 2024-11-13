@@ -39,6 +39,14 @@ RSpec.describe UserAnonymizer do
       expect(user.reload.email).to eq("#{user.username}@anonymized.invalid")
     end
 
+    it "changes the primary email normalized email address" do
+      make_anonymous
+
+      primary_email = user.reload.primary_email
+
+      expect(primary_email.normalized_email).to eq("#{user.username}@anonymized.invalid")
+    end
+
     it "changes the primary email address when there is an email domain allowlist" do
       SiteSetting.allowed_email_domains = "example.net|wayne.com|discourse.org"
 

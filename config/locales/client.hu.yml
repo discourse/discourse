@@ -1840,7 +1840,6 @@ hu:
         invite:
           new_title: "Tagok meghívása"
           edit_title: "Meghívó szerkesztése"
-          instructions: "Ossza meg ezt a hivatkozást, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez:"
           expires_in_time: "%{time} múlva lejár"
           expired_at_time: "Lejárt: %{time}"
           create_link_to_invite: "Hozzon létre egy linket, amelyet megoszthat, hogy azonnal hozzáférést biztosítson ehhez a webhelyhez."
@@ -1872,10 +1871,9 @@ hu:
           custom_message_placeholder: "Személyes megjegyzés hozzáadása a meghívóhoz"
           send_invite_email: "Mentés és e-mail küldése"
           send_invite_email_instructions: "Meghívó e-mailre korlátozása meghívó e-mail küldéséhez"
-          save_invite: "Mentés"
+          update_invite: "Frissítés"
           cancel: "Mégse"
           create_link: "Link létrehozása"
-          invite_saved: "Meghívó mentve."
         bulk_invite:
           none: "Nincs megjeleníthető meghívó ezen az oldalon."
           text: "Tömeges meghívás"
@@ -2328,7 +2326,6 @@ hu:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Csak kategóriák szerint"
-      categories_only_optimized: "Csak kategóriák (Optimalizált)"
       categories_with_featured_topics: "Kategóriák funkciók szerint"
       categories_and_latest_topics: "Kategóriák és legutóbbi témák"
       categories_and_latest_topics_created_date: "Kategóriák és legutóbbi témák (rendezése a téma létrehozási dátuma szerint)"
@@ -2994,6 +2991,8 @@ hu:
         bookmarks: "Nincs több könyvjelzőzött téma."
         filter: "Nincs több téma."
     topic_bulk_actions:
+      dismiss:
+        name: "Elvetés"
       close_topics:
         name: "Lezárás"
         note: "Megjegyzés"
@@ -3565,17 +3564,23 @@ hu:
       few_likes_left: "Köszönjük, hogy aktívan osztja a kedveléseket! Már csak néhány kiosztható kedvelése maradt mára."
       controls:
         reply: "kezdjen el választ írni ehhez a bejegyzéshez"
+        like_action: "Kedvelés"
         like: "bejegyzés kedvelése"
         has_liked: "kedvelte ezt a bejegyzést"
         read_indicator: "tagok, akik elolvasták ezt a bejegyzést"
+        undo_like_action: "Kedvelés visszavonása"
         undo_like: "kedvelés visszavonása"
         edit: "bejegyzés szerkesztése"
         edit_action: "Szerkesztés"
         edit_anonymous: "Sajnos be kell jelentkeznie, hogy szerkeszthesse ezt a bejegyzést."
+        flag_action: "Jelölés"
         flag: "a bejegyzés titkos megjelölése, hogy felhívja rá a moderátorok figyelmét, vagy privát értesítést küldjön róla"
+        delete_action: "Bejegyzés törlése"
         delete: "bejegyzés törlése"
         undelete: "bejegyzés visszaállítása"
+        share_action: "Megosztás"
         share: "bejegyzés hivatkozásának megosztása"
+        copy_action: "Link másolása"
         copy_title: "másolja a bejegyzés linkjét a vágólapra"
         link_copied: "Link másolva!"
         more: "Több"
@@ -3589,6 +3594,7 @@ hu:
             other: "Igen, és %{count} válasz"
           just_the_post: "Nem, csak ezt a bejegyzést"
         admin: "bejegyzés-adminisztrátori műveletek"
+        admin_action: "Adminisztrátor"
         permanently_delete: "Végleges törlés"
         permanently_delete_confirmation: "Biztos, hogy végleg törölni szeretné ezt a bejegyzést? Nem fogja tudni visszaállítani."
         wiki: "Wiki létrehozása"
@@ -4775,6 +4781,7 @@ hu:
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
           previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a>oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
+          experimental: "Kísérleti"
           experiment_enabled: "Engedélyezte a kísérleti funkciót."
           experiment_disabled: "Letiltotta a kísérleti funkciót."
           experiment_toggled_too_fast: "Túl gyorsan váltotta a kísérleti funkciót. Kérjük, várjon néhány másodpercet, mielőtt újra próbálkozna."
@@ -4842,7 +4849,7 @@ hu:
           totals_for_sample: "A minta összesített értéke"
           average_for_sample: "A minta átlaga"
           total: "Mindenkori összes"
-          no_data: "Nincs adat amit ki tudna mutatni"
+          no_data: "Nincs megjeleníthető adat."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Keresési napló</a>'
             disabled: 'A trendkeresési jelentés le van tiltva. Engedélyezze a <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">naplózott keresési lekérdezéseket</a> az adatgyűjtéshez.'
@@ -5644,7 +5651,7 @@ hu:
           theme_translations: "Téma fordítások"
           empty: "Nincsenek elemek"
           commits_behind:
-            one: "A téma %{count} verzióval le van maradva!"
+            one: "%{count} commit-al régebbi!"
             other: "A téma %{count} verzióval le van maradva!"
           compare_commits: "(Változások megtekintése)"
           remote_theme_edits: "Ha szerkeszteni szeretnéd ezt a témát, <a href='%{repoURL}' target='_blank'>módosítást kell küldenie a tárolójában</a>"
@@ -6357,8 +6364,6 @@ hu:
         time_read: "Olvasási idő"
         post_edits_count: "Bejegyzés szerkesztések"
         anonymize: "Felhasználó névtelenítése"
-        anonymize_confirm: "TELJESEN biztos, hogy anonimizálni szeretné ezt a fiókot? Ez megváltoztatja a felhasználónevet és az e-mail-címet, és visszaállítja az összes profiladatot."
-        delete_associated_accounts_confirm: "BIZTOS, hogy törölni szeretné az összes társított fiókot ebből a fiókból? Előfordulhat, hogy a felhasználó nem tud bejelentkezni, ha az e-mail címe megváltozott."
         anonymize_yes: "Igen, anonimizálom ezt a fiókot"
         anonymize_failed: "Hiba történt a fiók névtelenítése során."
         delete: "Felhasználó törlése"
@@ -6415,7 +6420,6 @@ hu:
         cant_delete_all_too_many_posts:
           one: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
           other: "Nem lehet törölni az összes hozzászólást, mert a felhasználónak több mint %{count} hozzászólása van. (delete_all_posts_max)"
-        delete_confirm_title: "Biztos vagy benne, hogy törölni akarod ezt a felhasználót? Ez végleges!"
         delete_confirm: "Általában előnyösebb a felhasználók anonimizálása, mint a törlésük, hogy elkerüljük a meglévő viták tartalmának eltávolítását."
         delete_and_block: "Az e-mail és az IP-cím törlése és <b>blokkolása</b>"
         delete_dont_block: "Csak törlés"
@@ -6775,7 +6779,8 @@ hu:
           grant_existing_holders: Adjon további jelvényeket a meglévő jelvénytulajdonosoknak
       emoji:
         title: "Emodzsi"
-        help: "Új emojik hozzáadása, amelyek mindenki számára elérhetőek lesznek. Egyszerre több fájlt húzhatsz és dobhatsz be név megadása nélkül, hogy emojikat hozz létre a fájlnevek felhasználásával. A kiválasztott csoportot az összes egyszerre hozzáadott fájlra használni fogja. Az \"Új emoji hozzáadása\" gombra is kattinthat a fájlválasztó megnyitásához."
+        description: "Új emojik hozzáadása, amelyek mindenki számára elérhetőek lesznek. Egyszerre több fájlt húzhatsz és dobhatsz be név megadása nélkül, hogy emojikat hozz létre a fájlnevek felhasználásával. A kiválasztott csoportot az összes egyszerre hozzáadott fájlra használni fogja. Az \"Új emoji hozzáadása\" gombra is kattinthat a fájlválasztó megnyitásához."
+        new: "Hozzáad"
         add: "Új emodzsi hozzáadása"
         choose_files: "Fájlok kiválasztása"
         uploading: "Feltöltés..."

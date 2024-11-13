@@ -481,10 +481,9 @@ acceptance("Prioritize Full Name", function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_3 button.reply");
 
-    assert.strictEqual(
-      query(".action-title .user-link").innerHTML.trim(),
-      "&lt;h1&gt;Tim Stone&lt;/h1&gt;"
-    );
+    assert
+      .dom(".action-title .user-link")
+      .hasHtml("&lt;h1&gt;Tim Stone&lt;/h1&gt;");
   });
 
   test("Quotes use full name", async function (assert) {

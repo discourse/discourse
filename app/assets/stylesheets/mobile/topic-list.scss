@@ -144,16 +144,6 @@
       border-left: 6px solid;
     }
   }
-
-  &.optimized {
-    tr {
-      border: none;
-    }
-
-    th {
-      padding: 10px 0 10px;
-    }
-  }
 }
 
 .category-list-item.category {
@@ -263,14 +253,6 @@ tr.category-topic-link {
   .category-description td {
     padding-top: 0;
     padding-bottom: 15px;
-  }
-
-  .category-subcategories td {
-    padding-top: 0;
-  }
-
-  .category-description + .category-subcategories td {
-    padding-top: 0;
   }
 
   .subcategories-list {

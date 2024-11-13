@@ -107,15 +107,15 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 3);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
 
-    assert.ok(items[2].classList.contains("message"));
+    assert.dom(items[2]).hasClass("message");
   });
 
   test("does not error when there are no group_message_summary notifications", async function (assert) {
@@ -132,11 +132,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("message"));
+    assert.dom(items[1]).hasClass("message");
   });
 
   test("does not error when there are no messages", async function (assert) {
@@ -154,13 +154,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
   });
 
   test("merge-sorts group_message_summary notifications and messages", async function (assert) {
@@ -255,12 +255,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
   test("show all button for message notifications", async function (assert) {
     await render(template);
-    const link = query(".panel-body-bottom .show-all");
-    assert.strictEqual(
-      link.title,
-      I18n.t("user_menu.view_all_messages"),
-      "has the correct title"
-    );
+    assert
+      .dom(".panel-body-bottom .show-all")
+      .hasAttribute(
+        "title",
+        I18n.t("user_menu.view_all_messages"),
+        "has the correct title"
+      );
   });
 
   test("dismiss button", async function (assert) {
@@ -268,16 +269,19 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
     await render(template);
+
     const dismiss = query(".panel-body-bottom .notifications-dismiss");
     assert.ok(
       dismiss,
       "dismiss button is shown if the user has unread private_message notifications"
     );
-    assert.strictEqual(
-      dismiss.title,
-      I18n.t("user.dismiss_messages_tooltip"),
-      "dismiss button has a title"
-    );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .hasAttribute(
+        "title",
+        I18n.t("user.dismiss_messages_tooltip"),
+        "dismiss button has a title"
+      );
 
     this.currentUser.set("grouped_unread_notifications", {});
     await settled();
@@ -297,7 +301,9 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         read_notifications: [],
       });
     });
+
     await render(template);
+
     assert.strictEqual(
       query(".empty-state-title").textContent.trim(),
       I18n.t("user.no_messages_title"),
@@ -306,10 +312,12 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     assert
       .dom(".empty-state-body svg.d-icon-envelope")
       .exists("icon is correctly rendered in the empty state body");
-    const emptyStateBodyLink = query(".empty-state-body a");
-    assert.ok(
-      emptyStateBodyLink.href.endsWith("/about"),
-      "link inside empty state body is rendered"
-    );
+    assert
+      .dom(".empty-state-body a")
+      .hasAttribute(
+        "href",
+        "/about",
+        "link inside empty state body is rendered"
+      );
   });
 });

@@ -8,7 +8,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
   test("with image", async function (assert) {
     await render(hbs`
-      <UppyImageUploader @type="avatar" @id="test-uppy-image-uploader" @imageUrl="/images/avatar.png" @placeholderUrl="/not/used.png" />
+      <UppyImageUploader @type="avatar" @id="uploader" @imageUrl="/images/avatar.png" @placeholderUrl="/not/used.png" />
     `);
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
@@ -29,7 +29,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
   test("without image", async function (assert) {
     await render(
-      hbs`<UppyImageUploader @type="site_setting" @id="test-uppy-image-uploader" />`
+      hbs`<UppyImageUploader @type="site_setting" @id="uploader" />`
     );
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
@@ -42,7 +42,7 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
   test("with placeholder", async function (assert) {
     await render(
-      hbs`<UppyImageUploader @type="composer" @id="test-uppy-image-uploader" @placeholderUrl="/images/avatar.png" />`
+      hbs`<UppyImageUploader @type="composer" @id="uploader" @placeholderUrl="/images/avatar.png" />`
     );
 
     assert.dom(".d-icon-far-image").exists("displays the upload icon");
@@ -53,5 +53,52 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
       .doesNotExist("it does not display the button to open image lightbox");
 
     assert.dom(".placeholder-overlay").exists("displays the placeholder image");
+  });
+
+  test("when dragging image", async function (assert) {
+    await render(
+      hbs`
+      <UppyImageUploader @type="composer" @id="uploader1" />
+      <UppyImageUploader @type="composer" @id="uploader2" />
+      `
+    );
+
+    const dropImage = (target) => {
+      target = document.querySelector(target);
+      const dataTransfer = new DataTransfer();
+      const file = new File(["dummy content"], "test-image.png", {
+        type: "image/png",
+      });
+      dataTransfer.items.add(file);
+      const dragEnterEvent = new DragEvent("dragenter", { dataTransfer });
+      target.dispatchEvent(dragEnterEvent);
+      const dragOverEvent = new DragEvent("dragover", { dataTransfer });
+      target.dispatchEvent(dragOverEvent);
+
+      return () => {
+        const dragLeaveEvent = new DragEvent("dragleave", { dataTransfer });
+        target.dispatchEvent(dragLeaveEvent);
+      };
+    };
+
+    const leave1 = dropImage("#uploader1 .uploaded-image-preview");
+
+    assert
+      .dom("#uploader1 .uploaded-image-preview")
+      .hasClass("uppy-is-drag-over");
+    assert
+      .dom("#uploader2 .uploaded-image-preview")
+      .hasNoClass("uppy-is-drag-over");
+
+    leave1();
+
+    dropImage("#uploader2 .uploaded-image-preview");
+
+    assert
+      .dom("#uploader2 .uploaded-image-preview")
+      .hasClass("uppy-is-drag-over");
+    assert
+      .dom("#uploader1 .uploaded-image-preview")
+      .hasNoClass("uppy-is-drag-over");
   });
 });

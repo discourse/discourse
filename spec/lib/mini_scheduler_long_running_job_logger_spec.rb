@@ -38,12 +38,11 @@ RSpec.describe MiniSchedulerLongRunningJobLogger do
     manager.stop!
   end
 
-  before do
-    @orig_logger = Rails.logger
-    Rails.logger = @fake_logger = FakeLogger.new
-  end
+  let(:fake_logger) { FakeLogger.new }
 
-  after { Rails.logger = @orig_logger }
+  before { Rails.logger.broadcast_to(fake_logger) }
+
+  after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
   it "logs long running jobs" do
     with_running_scheduled_job(Every10MinutesJob) do
@@ -58,28 +57,28 @@ RSpec.describe MiniSchedulerLongRunningJobLogger do
 
         wait_for { loops == 1 }
 
-        expect(@fake_logger.warnings.size).to eq(1)
+        expect(fake_logger.warnings.size).to eq(1)
 
-        expect(@fake_logger.warnings.first).to match(
+        expect(fake_logger.warnings.first).to match(
           "Sidekiq scheduled job `Every10MinutesJob` has been running for more than 30 minutes",
         )
 
         # Matches the backtrace
-        expect(@fake_logger.warnings.first).to match("sleep")
+        expect(fake_logger.warnings.first).to match("sleep")
 
         # Check that the logger doesn't log repeated warnings after 2 loops
         expect do
           checker.thread.wakeup # Force the thread to run the next loop
 
           wait_for { loops == 2 }
-        end.not_to change { @fake_logger.warnings.size }
+        end.not_to change { fake_logger.warnings.size }
 
         # Check that the logger doesn't log repeated warnings after 3 loops
         expect do
           checker.thread.wakeup # Force the thread to run the next loop
 
           wait_for { loops == 3 }
-        end.not_to change { @fake_logger.warnings.size }
+        end.not_to change { fake_logger.warnings.size }
       ensure
         checker.stop
         expect(checker.thread).to eq(nil)
@@ -100,9 +99,9 @@ RSpec.describe MiniSchedulerLongRunningJobLogger do
 
         wait_for { loops == 1 }
 
-        expect(@fake_logger.warnings.size).to eq(1)
+        expect(fake_logger.warnings.size).to eq(1)
 
-        expect(@fake_logger.warnings.first).to match(
+        expect(fake_logger.warnings.first).to match(
           "Sidekiq scheduled job `DailyJob` has been running for more than 120 minutes",
         )
       ensure

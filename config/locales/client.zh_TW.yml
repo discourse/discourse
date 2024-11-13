@@ -1314,7 +1314,7 @@ zh_TW:
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
-          save_invite: "保存"
+          update_invite: "更新"
           cancel: "取消"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
@@ -1967,6 +1967,8 @@ zh_TW:
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
+      dismiss:
+        name: "忽略"
       close_topics:
         name: "關閉"
         optional: (選擇性)
@@ -2354,16 +2356,21 @@ zh_TW:
       few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
       controls:
         reply: "開始編寫對此貼文的回覆"
+        like_action: "讚"
         like: "給此貼文按讚"
         has_liked: "你已對此貼文按讚"
+        undo_like_action: "撤回讚"
         undo_like: "撤回讚"
         edit: "編輯此貼文"
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
+        flag_action: "檢舉"
         flag: "檢舉此貼文或傳送私人通知"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
+        share_action: "分享"
         share: "分享此貼文的連結"
+        copy_action: "複製連結"
         more: "更多"
         delete_replies:
           confirm: "您是否也要刪除所有此貼文底下的回應？"
@@ -2373,6 +2380,7 @@ zh_TW:
             other: "是，包含所有%{count}條回覆"
           just_the_post: "否，僅刪除此貼文。"
         admin: "貼文管理動作"
+        admin_action: "管理員"
         wiki: "做為共筆"
         unwiki: "取消共筆"
         convert_to_moderator: "增加工作人員顏色"
@@ -4066,7 +4074,6 @@ zh_TW:
         time_read: "閱讀時間"
         post_edits_count: "編輯貼文"
         anonymize: "匿名使用者"
-        anonymize_confirm: "你確定要將這個帳戶變成匿名？這將改變使用者名和電子郵件，並重置所有個人資料信息。"
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
@@ -4341,6 +4348,7 @@ zh_TW:
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        new: "加入"
         add: "新增emoji"
         name: "名稱"
         group: "群組"

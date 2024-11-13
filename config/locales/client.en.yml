@@ -1839,7 +1839,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Hide my public profile and presence features"
+      hide_profile: "Hide my public profile"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
@@ -2145,6 +2145,10 @@ en:
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
+
+    presence_toggle:
+      label: "Online"
+      title: "Toggle presence features"
 
     user_tips:
       button: "Got it!"
@@ -2518,7 +2522,6 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
-      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
@@ -3847,17 +3850,24 @@ en:
 
       controls:
         reply: "begin composing a reply to this post"
+        like_action: "Like"
         like: "like this post"
         has_liked: "you've liked this post"
         read_indicator: "members who read this post"
+        undo_like_action: "Undo like"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
+        flag_action: "Flag"
         flag: "privately flag this post for attention or send a private notification about it"
+        delete_action: "Delete post"
         delete: "delete this post"
+        undelete_action: "Undelete post"
         undelete: "undelete this post"
+        share_action: "Share"
         share: "share a link to this post"
+        copy_action: "Copy link"
         copy_title: "copy a link to this post to clipboard"
         link_copied: "Link copied!"
         more: "More"
@@ -3871,6 +3881,7 @@ en:
             other: "Yes, and all %{count} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
+        admin_action: "Admin"
         permanently_delete: "Permanently Delete"
         permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
         wiki: "Make Wiki"

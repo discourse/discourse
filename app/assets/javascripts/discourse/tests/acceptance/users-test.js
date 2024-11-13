@@ -13,10 +13,7 @@ import I18n from "discourse-i18n";
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
     await visit("/u");
-    assert.ok(
-      document.body.classList.contains("users-page"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("users-page", "has the body class");
     assert
       .dom(".directory .directory-table .directory-table__row")
       .exists("has a list of users");
@@ -29,10 +26,7 @@ acceptance("User Directory", function () {
 
   test("Visit Without Usernames", async function (assert) {
     await visit("/u?exclude_usernames=system");
-    assert.ok(
-      document.body.classList.contains("users-page"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("users-page", "has the body class");
     assert
       .dom(".directory .directory-table .directory-table__row")
       .exists("has a list of users");
@@ -86,10 +80,7 @@ acceptance("User Directory", function () {
 
   test("Visit With Group Filter", async function (assert) {
     await visit("/u?group=trust_level_0");
-    assert.ok(
-      document.body.classList.contains("users-page"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("users-page", "has the body class");
     assert
       .dom(".directory .directory-table .directory-table__row")
       .exists("has a list of users");
