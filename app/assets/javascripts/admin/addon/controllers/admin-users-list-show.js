@@ -65,7 +65,7 @@ export default class AdminUsersListShowController extends Controller.extend(
     this._page = 1;
     this._results = [];
     this._canLoadMore = true;
-    this._refreshUsers();
+    return this._refreshUsers();
   }
 
   _refreshUsers() {
@@ -76,7 +76,7 @@ export default class AdminUsersListShowController extends Controller.extend(
     const page = this._page;
     this.set("refreshing", true);
 
-    AdminUser.findAll(this.query, {
+    return AdminUser.findAll(this.query, {
       filter: this.listFilter,
       show_emails: this.showEmails,
       order: this.order,
@@ -156,9 +156,9 @@ export default class AdminUsersListShowController extends Controller.extend(
             type: "DELETE",
             data: { user_ids: userIds },
           });
+          await this.resetFilters();
           this.bulkSelectedUsers = null;
           this.displayBulkActions = false;
-          this.resetFilters();
         } catch (err) {
           this.dialog.alert(extractError(err));
         }
