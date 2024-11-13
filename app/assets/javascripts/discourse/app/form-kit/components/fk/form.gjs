@@ -160,6 +160,7 @@ class FKForm extends Component {
   @action
   unregisterField(name) {
     this.fields.delete(name);
+    this.removeError(name);
   }
 
   @action
