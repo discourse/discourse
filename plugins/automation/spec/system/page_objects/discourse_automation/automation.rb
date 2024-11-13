@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def has_name?(name)
-        form.find_field("automation-name").value == name
+        form.find_field("automation-name", with: name)
       end
 
       def set_triggerables(triggerable)
