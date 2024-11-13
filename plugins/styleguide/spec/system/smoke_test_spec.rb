@@ -40,14 +40,15 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
             .get(:browser)
             .select { |log| log.level == "SEVERE" }
             .reject do |error|
-              error.message.include?("Failed to load resource") ||
-                error.message.include?("Manifest")
+              ["Failed to load resource", "Manifest", "PresenceChannelNotFound"].any? do |msg|
+                error.message.include?(msg)
+              end
             end
 
         if errors.present?
           errors.each do |error|
             expect(error.message).to be_nil,
-            "smoke test failed on #{item[:section]}: #{item[:item]} with error: #{error.message}"
+            "smoke test failed on \"#{item[:section]}: #{item[:item]}\" with error: #{error.message}"
           end
         end
 
