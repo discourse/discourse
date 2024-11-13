@@ -1,3 +1,6 @@
 <StyleguideExample @title="topic-map">
-  <MountWidget @widget="topic-map" @args={{@dummy.transformedPost}} />
+  <TopicMap
+    @model={{@dummy.postModel}}
+    @topicDetails={{@dummy.postModel.topic.details}}
+  />
 </StyleguideExample>
