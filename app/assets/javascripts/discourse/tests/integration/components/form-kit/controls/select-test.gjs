@@ -48,9 +48,7 @@ module(
         </Form>
       </template>);
 
-      await pauseTest();
-
-      assert.dom(".form-kit__control-radio").hasAttribute("disabled");
+      assert.dom(".form-kit__control-select").hasAttribute("disabled");
     });
   }
 );
