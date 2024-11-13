@@ -2849,24 +2849,16 @@ HTML
       html = PrettyText.cook(md)
       expected = <<~HTML
         <div class="markdown-tabs">
-        <div class="markdown-tabs-wrapper">
-        <div class="markdown-tab" data-tab-id="tab-0">
-        <a data-tab-id="tab-0">
-        First Tab</a>
-        </div>
-        <div class="markdown-tab" data-tab-id="tab-1" data-selected="">
-        <a data-tab-id="tab-1">
-        Second Tab</a>
-        </div>
-        </div>
-        <div class="markdown-tab-panels">
-        <div class="markdown-tab-panel" data-tab-id="tab-0">
+        <section>
+        <h4>
+        First Tab</h4>
         <p>Tab 1 <strong>content</strong></p>
-        </div>
-        <div class="markdown-tab-panel" data-tab-id="tab-1" data-selected="">
+        </section>
+        <section data-selected="">
+        <h4>
+        Second Tab</h4>
         <p>Tab 2 content</p>
-        </div>
-        </div>
+        </section>
         </div>
       HTML
       expect(html).to match_html(expected)
@@ -2887,24 +2879,16 @@ HTML
       html = PrettyText.cook(md)
       expected = <<~HTML
         <div class="markdown-tabs">
-        <div class="markdown-tabs-wrapper">
-        <div class="markdown-tab" data-tab-id="tab-0" data-selected="">
-        <a data-tab-id="tab-0">
-        First Tab</a>
-        </div>
-        <div class="markdown-tab" data-tab-id="tab-1">
-        <a data-tab-id="tab-1">
-        Second Tab</a>
-        </div>
-        </div>
-        <div class="markdown-tab-panels">
-        <div class="markdown-tab-panel" data-tab-id="tab-0" data-selected="">
+        <section>
+        <h4>
+        First Tab</h4>
         <p>Tab 1 <strong>content</strong></p>
-        </div>
-        <div class="markdown-tab-panel" data-tab-id="tab-1">
+        </section>
+        <section>
+        <h4>
+        Second Tab</h4>
         <p>Tab 2 content</p>
-        </div>
-        </div>
+        </section>
         </div>
       HTML
       expect(html).to match_html(expected)

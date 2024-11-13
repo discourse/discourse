@@ -1,17 +1,17 @@
 .markdown-tabs {
   margin: 1em 0;
 
-  .markdown-tabs-wrapper {
+  &__headers {
     display: flex;
     gap: 0.2em;
     border-bottom: 2px solid var(--primary-low);
     padding: 0 0.2em;
   }
 
-  .markdown-tab {
+  &__header {
     margin-bottom: -2px;
 
-    &[data-selected] {
+    &.selected {
       a {
         color: var(--tertiary);
         font-weight: 500;
@@ -36,15 +36,15 @@
     }
   }
 
-  .markdown-tab-panels {
+  &__panels {
     padding: 0 0;
+  }
 
-    .markdown-tab-panel {
-      display: none;
+  &__panel {
+    display: none;
 
-      &[data-selected] {
-        display: block;
-      }
+    &.selected {
+      display: block;
     }
   }
 }
