@@ -547,11 +547,12 @@ class InvitesController < ApplicationController
       info[:username] = current_user.username
     end
 
-    store_preloaded("invite_info", MultiJson.dump(info))
-
     secure_session["invite-key"] = invite.invite_key
 
-    render layout: "application"
+    respond_to do |format|
+      format.html { store_preloaded("invite_info", MultiJson.dump(info)) }
+      format.json { render_json_dump(info) }
+    end
   end
 
   def show_irredeemable_invite(invite)
