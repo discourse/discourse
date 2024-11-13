@@ -54,4 +54,28 @@ module("Integration | Component | uppy-image-uploader", function (hooks) {
 
     assert.dom(".placeholder-overlay").exists("displays the placeholder image");
   });
+
+  test("when dragging image", async function (assert) {
+    await render(
+      hbs`<UppyImageUploader @type="composer" @id="test-uppy-image-uploader" />`
+    );
+
+    const target = document.querySelector(".uploaded-image-preview");
+    const dataTransfer = new DataTransfer();
+    const file = new File(["dummy content"], "test-image.png", {
+      type: "image/png",
+    });
+    dataTransfer.items.add(file);
+    const dragEnterEvent = new DragEvent("dragenter", {
+      dataTransfer,
+    });
+    target.dispatchEvent(dragEnterEvent);
+
+    const dragOverEvent = new DragEvent("dragover", {
+      dataTransfer,
+    });
+    target.dispatchEvent(dragOverEvent);
+
+    assert.dom(".uploaded-image-preview").hasClass("uppy-is-drag-over");
+  });
 });
