@@ -1,4 +1,3 @@
-import transformPost from "discourse/lib/transform-post";
 import NavItem from "discourse/models/nav-item";
 
 let topicId = 2000000;
@@ -6,7 +5,7 @@ let userId = 1000000;
 
 let _data;
 
-export function createData(store, site) {
+export function createData(store) {
   if (_data) {
     return _data;
   }
@@ -154,53 +153,116 @@ export function createData(store, site) {
 
     <p>Case everti equidem ius ea, ubique veritus vim id. Eros omnium conclusionemque qui te, usu error alienum imperdiet ut, ex ius meis adipisci. Libris reprehendunt eos ex, mea at nisl suavitate. Altera virtute democritum pro cu, melius latine in ius.</p>`;
 
-  const dummyPostData = {
+  const transformedPost = {
     id: 1234,
-    cooked,
-    created_at: moment().subtract(3, "days"),
-    user_id: user.id,
+    topic,
+    name: user.name,
     username: user.username,
     avatar_template: user.avatar_template,
+    created_at: "2024-11-13T21:12:37.835Z",
+    cooked,
     post_number: 1,
-    uploaded_avatar_id: 9,
+    post_type: 1,
+    updated_at: moment().subtract(2, "days"),
     reply_count: 0,
     reply_to_post_number: null,
     quote_count: 0,
     incoming_link_count: 0,
     reads: 1,
+    readers_count: 0,
     score: 0,
-    yours: true,
-    display_username: "",
+    yours: false,
+    topic_id: topic.id,
+    topic_slug: topic.slug,
+    display_username: user.name,
     primary_group_name: null,
+    flair_name: null,
+    flair_url: null,
+    flair_bg_color: null,
+    flair_color: null,
+    flair_group_id: null,
     version: 1,
     can_edit: true,
     can_delete: true,
     can_recover: true,
+    can_see_hidden_post: true,
+    can_wiki: true,
     read: true,
-    user_title: null,
+    user_title: "",
+    bookmarked: false,
     actions_summary: [
-      { id: 3, can_act: true },
-      { id: 4, can_act: true },
-      { id: 5, hidden: true, can_act: true },
-      { id: 7, can_act: true },
-      { id: 8, can_act: true },
+      {
+        id: 2,
+        count: 1,
+        acted: true,
+        can_undo: true,
+      },
+      {
+        id: 6,
+        can_act: true,
+      },
+      {
+        id: 3,
+        can_act: true,
+      },
+      {
+        id: 4,
+        can_act: true,
+      },
+      {
+        id: 8,
+        can_act: true,
+      },
+      {
+        id: 10,
+        can_act: true,
+      },
+      {
+        id: 7,
+        can_act: true,
+      },
     ],
+    moderator: false,
+    admin: true,
+    staff: true,
+    user_id: user.id,
     hidden: false,
-    hidden_reason_id: null,
-    trust_level: 4,
+    trust_level: user.trust_level,
     deleted_at: null,
     user_deleted: false,
     edit_reason: null,
     can_view_edit_history: true,
     wiki: false,
+    activity_pub_enabled: false,
+    category_expert_approved_group: null,
+    needs_category_expert_approval: null,
+    can_manage_category_expert_posts: false,
+    reactions: [
+      {
+        id: "heart",
+        type: "emoji",
+        count: 1,
+      },
+    ],
+    current_user_reaction: {
+      id: "heart",
+      type: "emoji",
+      can_undo: true,
+    },
+    reaction_users_count: 1,
+    current_user_used_main_reaction: true,
+    shared_edits_enabled: null,
+    can_accept_answer: false,
+    can_unaccept_answer: false,
+    accepted_answer: false,
+    topic_accepted_answer: false,
+    can_translate: false,
   };
 
   const postModel = store.createRecord("post", {
-    dummyPostData,
+    transformedPost,
   });
-  postModel.set("topic", store.createRecord("topic", topic));
-
-  const transformedPost = transformPost(user, site, postModel);
+  postModel.set("topic", store.createRecord("topic", transformedPost.topic));
 
   _data = {
     options: [

@@ -10,7 +10,7 @@ export default class StyleguideShow extends Route {
   setupController(controller, section) {
     controller.setProperties({
       section,
-      dummy: createData(this.store, this.site),
+      dummy: createData(this.store),
     });
   }
 }
