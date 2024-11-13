@@ -3645,6 +3645,40 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
       expect(pm.allowed_groups.first.id).to eq(admins.id)
     end
+
+    it "allows disabling notifications" do
+      user = Fabricate(:user)
+      Fabricate(:post, topic: pm)
+      admins.add(user)
+      admins
+        .group_users
+        .find_by(user_id: user.id)
+        .update!(notification_level: NotificationLevels.all[:watching])
+
+      Notification.delete_all
+      Jobs.run_immediately!
+      post "/t/#{pm.id}/invite-group.json", params: { group: "admins", skip_notification: true }
+
+      expect(response.status).to eq(200)
+      expect(Notification.count).to eq(0)
+    end
+
+    it "sends a notification to the group" do
+      user = Fabricate(:user)
+      Fabricate(:post, topic: pm)
+      admins.add(user)
+      admins
+        .group_users
+        .find_by(user_id: user.id)
+        .update!(notification_level: NotificationLevels.all[:watching])
+
+      Notification.delete_all
+      Jobs.run_immediately!
+      post "/t/#{pm.id}/invite-group.json", params: { group: "admins" }
+
+      expect(response.status).to eq(200)
+      expect(Notification.count).to eq(1)
+    end
   end
 
   describe "#make_banner" do

@@ -757,7 +757,9 @@ class TopicsController < ApplicationController
 
     if topic.private_message?
       guardian.ensure_can_invite_group_to_private_message!(group, topic)
-      topic.invite_group(current_user, group)
+      skip_notification =
+        params[:skip_notification].present? && params[:skip_notification] == "true"
+      topic.invite_group(current_user, group, skip_notification: skip_notification)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
     else
       render json: failed_json, status: 422
