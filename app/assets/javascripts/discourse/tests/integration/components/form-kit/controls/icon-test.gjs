@@ -32,4 +32,16 @@ module("Integration | Component | FormKit | Controls | Icon", function (hooks) {
     assert.deepEqual(data.foo, "pencil");
     assert.form().field("foo").hasValue("pencil");
   });
+
+  test("when disabled", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+          <field.Icon />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert.dom(".form-kit__control-icon.is-disabled").exists();
+  });
 });

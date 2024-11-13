@@ -119,11 +119,8 @@ class FieldHelper {
   }
 
   get disabled() {
-    this.context
-      .dom(this.element)
-      .exists(`Could not find field (name: ${this.name}).`);
-
-    this.context.ok(this.element.dataset.disabled === "");
+    this.context.dom(this.element).exists();
+    return this.element.dataset.disabled === "";
   }
 
   hasTitle(title, message) {
