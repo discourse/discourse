@@ -278,19 +278,29 @@ export default class Chat extends Service {
       : 0;
   }
 
-  switchChannelUpOrDown(direction) {
+  switchChannelUpOrDown(direction, unreadOnly = false) {
     const { activeChannel } = this;
     if (!activeChannel) {
       return; // Chat isn't open. Return and do nothing!
     }
 
+    let channels, DMs;
+
+    if (unreadOnly) {
+      channels = this.chatChannelsManager.publicMessageChannelsWithActivity;
+      DMs = this.chatChannelsManager.directMessageChannelsWithActivity;
+    } else {
+      channels = this.chatChannelsManager.publicMessageChannels;
+      DMs = this.chatChannelsManager.directMessageChannels;
+    }
+
     let currentList, otherList;
     if (activeChannel.isDirectMessageChannel) {
-      currentList = this.chatChannelsManager.truncatedDirectMessageChannels;
-      otherList = this.chatChannelsManager.publicMessageChannels;
+      currentList = DMs;
+      otherList = channels;
     } else {
-      currentList = this.chatChannelsManager.publicMessageChannels;
-      otherList = this.chatChannelsManager.truncatedDirectMessageChannels;
+      currentList = channels;
+      otherList = DMs;
     }
 
     const directionUp = direction === "up";

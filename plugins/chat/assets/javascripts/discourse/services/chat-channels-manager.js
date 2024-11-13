@@ -131,6 +131,16 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
+  @cached
+  get publicMessageChannelsWithActivity() {
+    return this.publicMessageChannels.filter(
+      (channel) =>
+        channel.tracking.unreadCount +
+          channel.threadsManager.unreadThreadCount >
+        0
+    );
+  }
+
   get publicMessageChannelsByActivity() {
     return this.#sortChannelsByActivity(this.publicMessageChannels);
   }
@@ -142,6 +152,16 @@ export default class ChatChannelsManager extends Service {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership.following;
       })
+    );
+  }
+
+  @cached
+  get directMessageChannelsWithActivity() {
+    return this.directMessageChannels.filter(
+      (channel) =>
+        channel.tracking.unreadCount +
+          channel.threadsManager.unreadThreadCount >
+        0
     );
   }
 
