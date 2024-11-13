@@ -1,13 +1,12 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
+import { debug } from "@ember/debug";
 import { action, getProperties } from "@ember/object";
-import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 
@@ -43,11 +42,9 @@ export default class AdminBadgesShowController extends Controller {
   @tracked model;
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
-  @tracked userBadges;
-  @tracked userBadgesAll;
 
-  @alias("model.listable") listable;
-  @alias("model.show_posts") showPosts;
+  @tracked listable;
+  @tracked show_posts;
 
   @cached
   get formData() {
@@ -86,25 +83,30 @@ export default class AdminBadgesShowController extends Controller {
     return this.model.system;
   }
 
-  @discourseComputed("listable", "showPosts")
-  showPostHeaderTooltip(listable, showPosts) {
-    // We don't need to show the tooltip on system badges, since the other options are disabled
-    return (!listable || !showPosts) && !this.model.system;
-  }
-
-  @discourseComputed("listable", "showPosts")
-  disableBadgeOnPosts(listable, showPosts) {
-    return !listable || !showPosts;
-  }
-
   @action
   onSetListable(value) {
-    this.listable = value;
+    this.set("listable", value);
   }
 
   @action
   onSetShowPosts(value) {
-    this.showPosts = value;
+    this.set("show_posts", value);
+  }
+
+  get showPostHeaderTooltip() {
+    // We don't need to show the tooltip on system badges, since the other options are disabled
+    const val =
+      (!this.get("listable") || !this.get("show_posts")) && !this.model.system;
+    debug("showPostHeaderTooltip");
+    debug(val);
+    return val;
+  }
+
+  get disableBadgeOnPosts() {
+    const val = !this.get("listable") || !this.get("show_posts");
+    debug("disableBadgeOnPosts");
+    debug(val);
+    return val;
   }
 
   setup() {
@@ -123,6 +125,9 @@ export default class AdminBadgesShowController extends Controller {
         this.model.set("trigger", this.badgeTriggers?.[0]?.id);
       }
     }
+
+    this.listable = this.model.listable;
+    this.show_posts = this.model.show_posts;
   }
 
   hasQuery(query) {
