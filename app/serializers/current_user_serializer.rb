@@ -76,7 +76,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :use_glimmer_topic_list?,
              :login_method,
-             :render_experimental_about_page
+             :render_experimental_about_page,
+             :can_see_emails
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -319,5 +320,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def use_glimmer_topic_list?
     scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
+  end
+
+  def can_see_emails
+    scope.can_see_emails?
+  end
+
+  def include_can_see_emails?
+    object.staff?
   end
 end

@@ -1,7 +1,10 @@
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import PreloadStore from "discourse/lib/preload-store";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+import {
+  ADMIN_NAV_MAP,
+  LOGS_SCREENED_EMAILS_LINK_KEY,
+} from "discourse/lib/sidebar/admin-nav-map";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
@@ -340,7 +343,12 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!currentUser.admin && currentUser.moderator) {
       navConfig.forEach((section) => {
-        section.links = section.links.filterBy("moderator");
+        section.links = section.links.filter((link) => {
+          if (link.name === LOGS_SCREENED_EMAILS_LINK_KEY) {
+            return siteSettings.moderators_view_emails;
+          }
+          return link.moderator;
+        });
       });
       navConfig = navConfig.filterBy("links.length");
     }

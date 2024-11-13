@@ -282,6 +282,29 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
         "What's New",
         "All",
         "Watched Words",
+        "Screened IPs",
+        "Screened URLs",
+        "Search Logs",
+        "Staff Action Logs",
+      ],
+    )
+  end
+
+  it "displays limited links for moderator with screened emails if allowed" do
+    SiteSetting.moderators_view_emails = true
+    sign_in(moderator)
+    visit("/admin")
+
+    sidebar.toggle_all_sections
+
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.map(&:text)).to eq(
+      [
+        "Dashboard",
+        "Users",
+        "What's New",
+        "All",
+        "Watched Words",
         "Screened Emails",
         "Screened IPs",
         "Screened URLs",

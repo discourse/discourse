@@ -23,8 +23,11 @@ RSpec.describe Admin::ScreenedEmailsController do
       include_examples "screened emails accessible"
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    context "when logged in as a moderator and has permission to view emails" do
+      before do
+        sign_in(moderator)
+        SiteSetting.moderators_view_emails = true
+      end
 
       include_examples "screened emails accessible"
     end
@@ -37,6 +40,17 @@ RSpec.describe Admin::ScreenedEmailsController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator but no permission to view emails" do
+      before { sign_in(moderator) }
+
+      it "denies access with a 403 response" do
+        get "/admin/logs/screened_emails.json"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
       end
     end
   end
@@ -58,8 +72,11 @@ RSpec.describe Admin::ScreenedEmailsController do
       include_examples "screened email deletion possible"
     end
 
-    context "when logged in as a moderator" do
-      before { sign_in(moderator) }
+    context "when logged in as a moderator and has permission to view emails" do
+      before do
+        sign_in(moderator)
+        SiteSetting.moderators_view_emails = true
+      end
 
       include_examples "screened email deletion possible"
     end
@@ -72,6 +89,17 @@ RSpec.describe Admin::ScreenedEmailsController do
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator but no permission to view emails" do
+      before { sign_in(moderator) }
+
+      it "prevents deletion with a 403 response" do
+        delete "/admin/logs/screened_emails/#{screened_email.id}.json"
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invalid_access"))
       end
     end
   end
