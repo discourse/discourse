@@ -246,6 +246,8 @@
     </form.Field>
 
     <form.CheckboxGroup as |group|>
+      <h4>{{i18n "admin.badges.usage_heading"}}</h4>
+
       <group.Field
         @title={{i18n "admin.badges.allow_title"}}
         @showTitle={{false}}
@@ -264,6 +266,8 @@
       >
         <field.Checkbox />
       </group.Field>
+
+      <h4>{{i18n "admin.badges.visibility_heading"}}</h4>
 
       <group.Field
         @title={{i18n "admin.badges.listable"}}

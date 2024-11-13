@@ -7141,8 +7141,10 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        usage_heading: Usage
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        visibility_heading: Visibility
         listable: Show badge on the public badges page
         post_header: Show badge on the post it was granted for
         post_header_disabled: Requires both ‘Show badge on the public badges page’ and ‘Show post granting badge on badge page’ to be enabled.
