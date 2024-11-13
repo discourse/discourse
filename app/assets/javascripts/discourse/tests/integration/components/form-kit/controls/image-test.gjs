@@ -1,6 +1,6 @@
+import { fn } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test, todo } from "qunit";
-import { fn } from "@ember/helper";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
