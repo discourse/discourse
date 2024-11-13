@@ -1251,7 +1251,7 @@ RSpec.describe Topic do
 
             Notification.delete_all
             Jobs.run_immediately!
-            topic.invite_group(topic.user, group, skip_notification: true)
+            topic.invite_group(topic.user, group, should_notify: false)
 
             expect(Notification.count).to eq(0)
           end

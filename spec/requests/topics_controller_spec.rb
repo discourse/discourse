@@ -3657,7 +3657,7 @@ RSpec.describe TopicsController do
 
       Notification.delete_all
       Jobs.run_immediately!
-      post "/t/#{pm.id}/invite-group.json", params: { group: "admins", skip_notification: true }
+      post "/t/#{pm.id}/invite-group.json", params: { group: "admins", should_notify: false }
 
       expect(response.status).to eq(200)
       expect(Notification.count).to eq(0)

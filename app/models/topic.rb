@@ -1186,7 +1186,7 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_allowed_message_recipients
   end
 
-  def invite_group(user, group, skip_notification: false)
+  def invite_group(user, group, should_notify: true)
     TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
     self.allowed_groups.reload
 
@@ -1194,7 +1194,7 @@ class Topic < ActiveRecord::Base
       self.posts.order("post_number desc").where("not hidden AND posts.deleted_at IS NULL").first
     if last_post
       add_small_action(user, "invited_group", group.name)
-      if !skip_notification
+      if should_notify
         Jobs.enqueue(:post_alert, post_id: last_post.id)
         Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
       end
