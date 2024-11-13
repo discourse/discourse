@@ -2,7 +2,7 @@
 
 module Jobs
   class CheckNewFeatures < ::Jobs::Scheduled
-    every 1.hour
+    every 1.day
 
     def execute(args)
       admin_ids = User.human_users.where(admin: true).pluck(:id)
