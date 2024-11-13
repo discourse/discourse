@@ -1,11 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import {
+  click,
   fillIn,
   render,
   resetOnerror,
   settled,
   setupOnerror,
-  click,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";

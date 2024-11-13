@@ -1,5 +1,5 @@
 import { render } from "@ember/test-helpers";
-import { module, todo, test } from "qunit";
+import { module, test, todo } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
