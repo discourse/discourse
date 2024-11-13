@@ -757,7 +757,12 @@ class TopicsController < ApplicationController
 
     if topic.private_message?
       guardian.ensure_can_invite_group_to_private_message!(group, topic)
-      should_notify = params[:should_notify].present? && params[:should_notify] == "true"
+      should_notify =
+        if params[:should_notify].blank?
+          true
+        else
+          params[:should_notify] == "true"
+        end
       topic.invite_group(current_user, group, should_notify: should_notify)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
     else
