@@ -1,3 +1,4 @@
+import transformPost from "discourse/lib/transform-post";
 import NavItem from "discourse/models/nav-item";
 
 let topicId = 2000000;
@@ -5,7 +6,7 @@ let userId = 1000000;
 
 let _data;
 
-export function createData(store) {
+export function createData(store, site) {
   if (_data) {
     return _data;
   }
@@ -153,28 +154,53 @@ export function createData(store) {
 
     <p>Case everti equidem ius ea, ubique veritus vim id. Eros omnium conclusionemque qui te, usu error alienum imperdiet ut, ex ius meis adipisci. Libris reprehendunt eos ex, mea at nisl suavitate. Altera virtute democritum pro cu, melius latine in ius.</p>`;
 
-  let transformedPost = {
+  const dummyPostData = {
     id: 1234,
     cooked,
     created_at: moment().subtract(3, "days"),
     user_id: user.id,
     username: user.username,
     avatar_template: user.avatar_template,
-    showLike: true,
-    canToggleLike: true,
-    canFlag: true,
-    canEdit: false,
-    canCreatePost: true,
-    canBookmark: true,
-    canManage: true,
-    canDelete: true,
     post_number: 1,
-    topic: createTopic(),
+    uploaded_avatar_id: 9,
+    reply_count: 0,
+    reply_to_post_number: null,
+    quote_count: 0,
+    incoming_link_count: 0,
+    reads: 1,
+    score: 0,
+    yours: true,
+    display_username: "",
+    primary_group_name: null,
+    version: 1,
+    can_edit: true,
+    can_delete: true,
+    can_recover: true,
+    read: true,
+    user_title: null,
+    actions_summary: [
+      { id: 3, can_act: true },
+      { id: 4, can_act: true },
+      { id: 5, hidden: true, can_act: true },
+      { id: 7, can_act: true },
+      { id: 8, can_act: true },
+    ],
+    hidden: false,
+    hidden_reason_id: null,
+    trust_level: 4,
+    deleted_at: null,
+    user_deleted: false,
+    edit_reason: null,
+    can_view_edit_history: true,
+    wiki: false,
   };
 
   const postModel = store.createRecord("post", {
-    ...transformedPost,
+    dummyPostData,
   });
+  postModel.set("topic", store.createRecord("topic", topic));
+
+  const transformedPost = transformPost(user, site, postModel);
 
   _data = {
     options: [
