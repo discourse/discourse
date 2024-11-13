@@ -212,16 +212,19 @@ RSpec.describe DirectoryItemsController do
 
     context "with custom user fields" do
       fab!(:coding_horror)
-
-      it "orders users by user fields" do
+      # test for sorting by a single user field (single key/value pair)
+      # another test that's essentially this: more than one field but only one value each
+      # third test for multiselect user field with more than one value each
+      # a mix of the two? (one single value, one multiselect)
+      it "orders users by a single user field" do
         group.add(walter_white)
         field1 = Fabricate(:user_field, searchable: true)
-        field2 = Fabricate(:user_field, searchable: true)
 
         user_fields = [
           { user: walter_white, field: field1, value: "Yellow", order: 1 },
           { user: stage_user, field: field1, value: "Apple", order: 0 },
-          { user: evil_trout, field: field2, value: "Moon", order: 2 },
+          { user: evil_trout, field: field1, value: "Moon", order: 2 },
+          { user: coding_horror, field: field1, value: "ZZZZ", order: 3 },
         ]
 
         user_fields.each do |data|
@@ -237,7 +240,7 @@ RSpec.describe DirectoryItemsController do
               period: "all",
               group: group.name,
               order: field1.name,
-              user_field_ids: "#{field1.id}|#{field2.id}",
+              user_field_ids: "#{field1.id}",
               asc: true,
             }
         expect(response.status).to eq(200)
@@ -248,10 +251,21 @@ RSpec.describe DirectoryItemsController do
         expect(items.length).to eq(3)
         expect(json["meta"]["total_rows_directory_items"]).to eq(3)
 
+        # grab field ids before iterating over values for each field
+        field_keys = items.map { |item| item["user"]["user_fields"].keys }.flatten.uniq
+        field_values =
+          field_keys.map { |key| UserCustomField.find_by(name: "user_field_#{key}").value }
+        expect(field_values).to eq(field_values.sort)
+
+        # test order is stage_user, heisenberg, evil_trout, coding_horror
+        # received evil_trout first (even after adding in codding_horror, so initial alphabetical assumption isn't correct)
+        # expected heisenberg first
         user_fields.each do |data|
           user = items[data[:order]]["user"]
           expect(user["username"]).to eq(data[:user].username)
-          expect(user["user_fields"]).to eq({ data[:field].id.to_s => data[:value] })
+          expect(user["user_fields"]).to eq(
+            { data[:field].id.to_s => { "searchable" => true, "value" => [data[:value]] } },
+          )
         end
       end
 
