@@ -77,7 +77,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_view_raw_email,
              :use_glimmer_topic_list?,
              :login_method,
-             :has_unseen_features
+             :has_unseen_features,
+             :can_see_emails
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -328,5 +329,13 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def do_not_disturb_channel_position
     MessageBus.last_id("/do-not-disturb/#{object.id}")
+  end
+
+  def can_see_emails
+    scope.can_see_emails?
+  end
+
+  def include_can_see_emails?
+    object.staff?
   end
 end

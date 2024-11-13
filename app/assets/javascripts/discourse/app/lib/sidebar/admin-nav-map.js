@@ -1,5 +1,6 @@
 import getURL from "discourse-common/lib/get-url";
 
+export const LOGS_SCREENED_EMAILS_LINK_KEY = "admin_logs_screened_emails";
 export const ADMIN_NAV_MAP = [
   {
     name: "account",
@@ -236,7 +237,7 @@ export const ADMIN_NAV_MAP = [
         icon: "up-right-from-square",
       },
       {
-        name: "admin_logs_screened_emails",
+        name: LOGS_SCREENED_EMAILS_LINK_KEY,
         route: "adminLogs.screenedEmails",
         label: "admin.security.sidebar_link.screened_emails",
         icon: "envelope",
