@@ -426,12 +426,11 @@ RSpec.describe ApplicationController do
       end
 
       describe "no logspam" do
-        before do
-          @orig_logger = Rails.logger
-          Rails.logger = @fake_logger = FakeLogger.new
-        end
+        let(:fake_logger) { FakeLogger.new }
 
-        after { Rails.logger = @orig_logger }
+        before { Rails.logger.broadcast_to(fake_logger) }
+
+        after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
         it "should handle 404 to a css file" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
@@ -453,9 +452,9 @@ RSpec.describe ApplicationController do
           expect(response.body).to include(topic1.title)
           expect(response.body).to_not include(topic2.title)
 
-          expect(@fake_logger.fatals.length).to eq(0)
-          expect(@fake_logger.errors.length).to eq(0)
-          expect(@fake_logger.warnings.length).to eq(0)
+          expect(fake_logger.fatals.length).to eq(0)
+          expect(fake_logger.errors.length).to eq(0)
+          expect(fake_logger.warnings.length).to eq(0)
         end
       end
 
