@@ -140,13 +140,15 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
-  onSetListable(value) {
+  onSetListable(value, { set }) {
     this.listable = value;
+    set("listable", value);
   }
 
   @action
-  onSetShowPosts(value) {
+  onSetShowPosts(value, { set }) {
     this.showPosts = value;
+    set("show_posts", value);
   }
 
   @action

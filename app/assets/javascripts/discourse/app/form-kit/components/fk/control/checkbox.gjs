@@ -8,8 +8,8 @@ export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";
 
   @action
-  handleInput(event) {
-    this.args.field.set(event.target.checked);
+  handleInput() {
+    this.args.field.set(!this.args.value);
   }
 
   <template>
