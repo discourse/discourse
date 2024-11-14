@@ -42,9 +42,6 @@ export default class AdminBadgesShowController extends Controller {
   @tracked previewLoading = false;
   @tracked selectedGraphicType = null;
 
-  @tracked listable;
-  @tracked showPosts;
-
   @cached
   get formData() {
     const data = getProperties(this.model, ...FORM_FIELDS);
@@ -82,13 +79,15 @@ export default class AdminBadgesShowController extends Controller {
     return this.model.system;
   }
 
-  get showPostHeaderTooltip() {
-    // We don't need to show the tooltip on system badges, since the other options are disabled
-    return this.disableBadgeOnPosts && !this.model.system;
+  @action
+  postHeaderDescription(data = {}) {
+    return this.disableBadgeOnPosts(data) && !data.system;
   }
 
-  get disableBadgeOnPosts() {
-    return !this.listable || !this.showPosts;
+  @action
+  disableBadgeOnPosts(data = {}) {
+    const { listable, show_posts } = data;
+    return !listable || !show_posts;
   }
 
   setup() {
@@ -107,9 +106,6 @@ export default class AdminBadgesShowController extends Controller {
         this.model.set("trigger", this.badgeTriggers?.[0]?.id);
       }
     }
-
-    this.listable = this.model.listable;
-    this.showPosts = this.model.show_posts;
   }
 
   hasQuery(query) {
@@ -137,18 +133,6 @@ export default class AdminBadgesShowController extends Controller {
     set("icon", value);
     set("image_upload_id", "");
     set("image_url", "");
-  }
-
-  @action
-  onSetListable(value, { set }) {
-    this.listable = value;
-    set("listable", value);
-  }
-
-  @action
-  onSetShowPosts(value, { set }) {
-    this.showPosts = value;
-    set("show_posts", value);
   }
 
   @action
