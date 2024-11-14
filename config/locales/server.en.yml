@@ -1276,6 +1276,10 @@ en:
     invalid_public_key: "Sorry, the public key is invalid."
     invalid_auth_redirect: "Sorry, this auth_redirect host is not allowed."
     invalid_token: "Missing, invalid or expired token."
+  user_api_key_client:
+    title: "Create user API client"
+    create: "Create"
+    description: 'Create "%{application_name}" with the following scopes:'
   flags:
     errors:
       already_handled: "Flag was already handled"
