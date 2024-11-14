@@ -1,8 +1,8 @@
 {{~raw-plugin-outlet name="topic-list-before-columns"}}
 
 {{~#each columns as |entry|~}}
-  {{~#if entry.value~}}
-    {{~entry.value~}}
+  {{~#if entry.value.item~}}
+    {{~entry.value.item~}}
   {{else if (raw-eq entry.key "bulk-select")}}
     {{#if bulkSelectEnabled}}
       <td class="bulk-select topic-list-data">

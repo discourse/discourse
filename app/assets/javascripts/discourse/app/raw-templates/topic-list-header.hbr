@@ -1,8 +1,8 @@
 {{~raw-plugin-outlet name="topic-list-header-before"~}}
 
 {{~#each view.columns as |entry|~}}
-  {{~#if entry.value~}}
-    {{entry.value}}
+  {{~#if entry.value.header~}}
+    {{entry.value.header}}
   {{~/if~}}
   {{~#if (raw-eq entry.key "topic")~}}
     {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
