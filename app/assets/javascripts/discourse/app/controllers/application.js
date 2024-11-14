@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
@@ -37,6 +38,10 @@ export default class ApplicationController extends Controller {
 
   get showPoweredBy() {
     return this.showFooter && this.siteSettings.enable_powered_by_discourse;
+  }
+
+  get showBannerContent() {
+    return applyValueTransformer("show-application-banner-content", true);
   }
 
   @discourseComputed

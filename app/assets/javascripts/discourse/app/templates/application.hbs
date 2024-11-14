@@ -47,34 +47,44 @@
 
     <LoadingSliderFallbackSpinner />
 
-    <PluginOutlet @name="before-main-outlet" />
+    {{#if this.showBannerContent}}
+      <PluginOutlet @name="before-main-outlet" />
+    {{/if}}
 
     <div id="main-outlet">
-      <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+      {{#if this.showBannerContent}}
+        <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+      {{/if}}
       <div class="container" id="main-container">
-        {{#if this.showTop}}
-          <CustomHtml @name="top" />
+        {{#if this.showBannerContent}}
+          {{#if this.showTop}}
+            <CustomHtml @name="top" />
+          {{/if}}
+          <NotificationConsentBanner />
+          <PwaInstallBanner />
+          <GlobalNotice />
+          <PluginOutlet
+            @name="top-notices"
+            @connectorTagName="div"
+            @outletArgs={{hash currentPath=this.router._router.currentPath}}
+          />
         {{/if}}
-        <NotificationConsentBanner />
-        <PwaInstallBanner />
-        <GlobalNotice />
-        <PluginOutlet
-          @name="top-notices"
-          @connectorTagName="div"
-          @outletArgs={{hash currentPath=this.router._router.currentPath}}
-        />
       </div>
 
       {{outlet}}
 
       <CardContainer />
-      <PluginOutlet
-        @name="main-outlet-bottom"
-        @outletArgs={{hash showFooter=this.showFooter}}
-      />
+      {{#if this.showBannerContent}}
+        <PluginOutlet
+          @name="main-outlet-bottom"
+          @outletArgs={{hash showFooter=this.showFooter}}
+        />
+      {{/if}}
     </div>
 
-    <PluginOutlet @name="after-main-outlet" />
+    {{#if this.showBannerContent}}
+      <PluginOutlet @name="after-main-outlet" />
+    {{/if}}
 
     {{#if this.showPoweredBy}}
       <PoweredByDiscourse />

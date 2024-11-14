@@ -172,6 +172,16 @@ class ChatSetupInit {
         category: "organisms",
         id: "chat",
       });
+
+      api.registerValueTransformer(
+        "show-application-banner-content",
+        ({ value }) => {
+          if (this.router.currentRouteName.startsWith("chat.")) {
+            return false;
+          }
+          return value;
+        }
+      );
     });
   }
 
