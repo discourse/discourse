@@ -7,6 +7,7 @@ RSpec.describe "Bookmark message", type: :system do
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
+  let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   fab!(:category_channel_1) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
@@ -46,6 +47,36 @@ RSpec.describe "Bookmark message", type: :system do
       visit bookmark.bookmarkable.url
 
       expect(thread_page).to have_bookmarked_message(first_message)
+    end
+
+    context "in drawer mode" do
+      fab!(:category_channel_2) { Fabricate(:category_channel) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: category_channel_2) }
+
+      fab!(:bookmark_1) { Bookmark.create!(bookmarkable: message_1, user: current_user) }
+      fab!(:bookmark_2) { Bookmark.create!(bookmarkable: message_2, user: current_user) }
+
+      before do
+        chat_page.prefers_drawer
+        category_channel_2.add(current_user)
+      end
+
+      it "supports visiting multiple chat bookmarks from the user menu" do
+        visit("/")
+
+        user_menu.open
+        user_menu.click_bookmarks_tab
+
+        expect(user_menu).to have_bookmark_count_of(2)
+
+        user_menu.click_bookmark(bookmark_1)
+
+        expect(channel_page).to have_bookmarked_message(message_1)
+
+        user_menu.click_bookmark(bookmark_2)
+
+        expect(channel_page).to have_bookmarked_message(message_2)
+      end
     end
 
     context "when the user has a bookmark auto_delete_preference" do
