@@ -29,8 +29,8 @@ export default class TopicListHeader extends EmberObject {
     )
       .resolve()
       .map((entry) => {
-        if (entry.value.column) {
-          entry.value.column = htmlSafe(
+        if (entry.value.header) {
+          entry.value.header = htmlSafe(
             rawRenderGlimmer(
               this,
               "th.hbr-ember-outlet",
@@ -58,7 +58,7 @@ export default class TopicListHeader extends EmberObject {
                 />
               </template>,
               {
-                component: entry.value.column,
+                component: entry.value.header,
                 sortable: this.sortable,
                 order: this.order,
                 changeSort: this.changeSort,
