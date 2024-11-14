@@ -3624,63 +3624,6 @@ RSpec.describe TopicsController do
     end
   end
 
-  describe "#invite_group" do
-    let!(:admins) { Group[:admins] }
-
-    before do
-      sign_in(admin)
-      admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
-      admins.save!
-    end
-
-    it "disallows inviting a group to a topic" do
-      post "/t/#{topic.id}/invite-group.json", params: { group: "admins" }
-
-      expect(response.status).to eq(422)
-    end
-
-    it "allows inviting a group to a PM" do
-      post "/t/#{pm.id}/invite-group.json", params: { group: "admins" }
-
-      expect(response.status).to eq(200)
-      expect(pm.allowed_groups.first.id).to eq(admins.id)
-    end
-
-    it "allows disabling notifications" do
-      user = Fabricate(:user)
-      Fabricate(:post, topic: pm)
-      admins.add(user)
-      admins
-        .group_users
-        .find_by(user_id: user.id)
-        .update!(notification_level: NotificationLevels.all[:watching])
-
-      Notification.delete_all
-      Jobs.run_immediately!
-      post "/t/#{pm.id}/invite-group.json", params: { group: "admins", should_notify: false }
-
-      expect(response.status).to eq(200)
-      expect(Notification.count).to eq(0)
-    end
-
-    it "sends a notification to the group" do
-      user = Fabricate(:user)
-      Fabricate(:post, topic: pm)
-      admins.add(user)
-      admins
-        .group_users
-        .find_by(user_id: user.id)
-        .update!(notification_level: NotificationLevels.all[:watching])
-
-      Notification.delete_all
-      Jobs.run_immediately!
-      post "/t/#{pm.id}/invite-group.json", params: { group: "admins" }
-
-      expect(response.status).to eq(200)
-      expect(Notification.count).to be > 0
-    end
-  end
-
   describe "#make_banner" do
     it "needs you to be a staff member" do
       tl4_topic = Fabricate(:topic, user: sign_in(trust_level_4))
@@ -5306,7 +5249,7 @@ RSpec.describe TopicsController do
     end
   end
 
-  describe "invite_group" do
+  describe "#invite_group" do
     let!(:admins) { Group[:admins] }
 
     def invite_group(topic, expected_status)
@@ -5351,6 +5294,40 @@ RSpec.describe TopicsController do
       it "allows inviting a group to a PM" do
         invite_group(pm, 200)
         expect(pm.allowed_groups.first.id).to eq(admins.id)
+      end
+
+      it "sends a notification to the group" do
+        user = Fabricate(:user)
+        Fabricate(:post, topic: pm)
+        admins.add(user)
+        admins
+          .group_users
+          .find_by(user_id: user.id)
+          .update!(notification_level: NotificationLevels.all[:watching])
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: "admins" }
+
+        expect(response.status).to eq(200)
+        expect(Notification.count).to be > 0
+      end
+
+      it "allows disabling notifications for that invite" do
+        user = Fabricate(:user)
+        Fabricate(:post, topic: pm)
+        admins.add(user)
+        admins
+          .group_users
+          .find_by(user_id: user.id)
+          .update!(notification_level: NotificationLevels.all[:watching])
+
+        Notification.delete_all
+        Jobs.run_immediately!
+        post "/t/#{pm.id}/invite-group.json", params: { group: "admins", should_notify: false }
+
+        expect(response.status).to eq(200)
+        expect(Notification.count).to eq(0)
       end
     end
 
