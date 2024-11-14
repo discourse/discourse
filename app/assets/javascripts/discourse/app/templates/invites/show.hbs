@@ -66,6 +66,7 @@
               {{#if this.isInviteLink}}
                 <div class="input email-input input-group">
                   <Input
+                    {{on "focusin" this.scrollInputIntoView}}
                     @type="email"
                     @value={{this.email}}
                     id="new-account-email"
@@ -91,6 +92,7 @@
 
               <div class="input username-input input-group">
                 <Input
+                  {{on "focusin" this.scrollInputIntoView}}
                   @value={{this.accountUsername}}
                   class={{value-entered this.accountUsername}}
                   id="new-account-username"
@@ -107,9 +109,26 @@
                 />
               </div>
 
+              {{#if this.fullnameRequired}}
+                <FullnameInput
+                  @nameValidation={{this.nameValidation}}
+                  @nameTitle={{this.nameTitle}}
+                  @accountName={{this.accountName}}
+                  @nameDisabled={{this.nameDisabled}}
+                  @onFocusIn={{this.scrollInputIntoView}}
+                  class={{concat-class
+                    "input"
+                    "name-input"
+                    "input-group"
+                    (if this.siteSettings.full_name_required "name-required")
+                  }}
+                />
+              {{/if}}
+
               {{#unless this.externalAuthsOnly}}
                 <div class="input password-input input-group">
                   <PasswordField
+                    {{on "focusin" this.scrollInputIntoView}}
                     @value={{this.accountPassword}}
                     @capsLockOn={{this.capsLockOn}}
                     type={{if this.maskPassword "password" "text"}}
@@ -143,29 +162,20 @@
                 </div>
               {{/unless}}
 
-              {{#if this.fullnameRequired}}
-                <div
+              {{#if (and this.showFullname (not this.fullnameRequired))}}
+                <FullnameInput
+                  @nameValidation={{this.nameValidation}}
+                  @nameTitle={{this.nameTitle}}
+                  @accountName={{this.accountName}}
+                  @nameDisabled={{this.nameDisabled}}
+                  @onFocusIn={{this.scrollInputIntoView}}
                   class={{concat-class
                     "input"
                     "name-input"
                     "input-group"
                     (if this.siteSettings.full_name_required "name-required")
                   }}
-                >
-                  <Input
-                    @value={{this.accountName}}
-                    class={{value-entered this.accountName}}
-                    id="new-account-name"
-                    name="name"
-                  />
-                  <label class="alt-placeholder" for="new-account-name">
-                    {{i18n "invites.name_label"}}
-                  </label>
-                  <InputTip
-                    @validation={{this.nameValidation}}
-                    id="fullname-validation"
-                  />
-                </div>
+                />
               {{/if}}
 
               {{#if this.userFields}}
@@ -173,6 +183,7 @@
                   {{#each this.userFields as |f|}}
                     <div class="input-group">
                       <UserField
+                        {{on "focusin" this.scrollInputIntoView}}
                         @field={{f.field}}
                         @value={{f.value}}
                         class={{value-entered f.value}}
