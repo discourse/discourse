@@ -205,8 +205,8 @@ class DbHelper
   end
 
   def self.log_remap_message(table, rows_updated, skipped_counts)
-    return if rows_updated < 1 || skipped_counts.blank?
-  
+    return if rows_updated == 0 && skipped_counts.blank?
+
     message = +"#{table}=#{rows_updated}"
 
     if skipped_counts&.any?
