@@ -1,0 +1,3 @@
+# Non-bundled plugins are gitignore'd, but we want them to
+# show up in search tools / IDEs so we un-ignore them here
+!/plugins/*
