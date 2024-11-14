@@ -271,7 +271,10 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
       begin
         post[:raw] = convert_message_body(message[:body], attachments, ignore_quotes: ignore_quotes)
-      rescue StandardError
+      rescue => e
+        puts "Failed to import message with ID #{post[:id]}"
+        puts e.message
+        puts e.backtrace.join("\n")
         post[:raw] = "-- MESSAGE SKIPPED --"
       end
       next post
@@ -337,13 +340,15 @@ class ImportScripts::Smf2 < ImportScripts::Base
         next if recipients.empty?
 
         id = "pm-#{p[:id_pm]}"
-        puts id
         next if post_id_from_imported_post_id(id)
 
         post = { id: id, created_at: Time.at(p[:msgtime]), user_id: user_id }
         begin
           post[:raw] = convert_message_body(p[:body])
-        rescue StandardError
+        rescue => e
+          puts "Failed to import personal message with ID #{post[:id]}"
+          puts e.message
+          puts e.backtrace.join("\n")
           post[:raw] = "-- MESSAGE SKIPPED --"
         end
 
@@ -369,6 +374,11 @@ class ImportScripts::Smf2 < ImportScripts::Base
   end
 
   def find_pm_topic_id(users, title)
+    # Please note that this approach to topic matching is lifted straight from smf1.rb.
+    # With SMFv2 we could update this to use id_pm_head, which contains
+    # the id of the message this is a reply to, or the message's own id_pm
+    # if it's the first in the messages thread.
+    #
     return unless title.start_with?("Re:")
 
     return unless @pm_mapping[users]
