@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "deps/yarn",
+      "label": "deps/pnpm",
       "type": "shell",
-      "command": "yarn install",
+      "command": "pnpm install",
       "presentation": {
         "reveal": "always",
         "group": "deps",
@@ -28,7 +28,7 @@
     {
       "label": "deps/all",
       "dependsOn": [
-        "deps/yarn",
+        "deps/pnpm",
         "deps/bundle"
       ],
       "problemMatcher": []
