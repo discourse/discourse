@@ -2,7 +2,7 @@ import { cached } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { createColumns } from "discourse/components/topic-list/topic-list-header";
+import { createColumns } from "discourse/components/topic-list/dag";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
@@ -29,8 +29,8 @@ export default class TopicListHeader extends EmberObject {
     )
       .resolve()
       .map((entry) => {
-        if (entry.value) {
-          entry.value = htmlSafe(
+        if (entry.value.column) {
+          entry.value.column = htmlSafe(
             rawRenderGlimmer(
               this,
               "th.hbr-ember-outlet",
@@ -58,7 +58,7 @@ export default class TopicListHeader extends EmberObject {
                 />
               </template>,
               {
-                component: entry.value,
+                component: entry.value.column,
                 sortable: this.sortable,
                 order: this.order,
                 changeSort: this.changeSort,

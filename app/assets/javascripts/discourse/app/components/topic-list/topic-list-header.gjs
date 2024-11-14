@@ -1,143 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
-import DAG from "discourse/lib/dag";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-
-const BulkSelectCell = <template>
-  {{#if @bulkSelectEnabled}}
-    <th class="bulk-select topic-list-data">
-      {{#if @canBulkSelect}}
-        <button
-          {{on "click" @bulkSelectHelper.toggleBulkSelect}}
-          title={{i18n "topics.bulk.toggle"}}
-          class="btn-flat bulk-select"
-        >
-          {{icon "list-check"}}
-        </button>
-      {{/if}}
-    </th>
-  {{/if}}
-</template>;
-
-const TopicCell = <template>
-  <TopicListHeaderColumn
-    @order="default"
-    @category={{@category}}
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name={{@name}}
-    @bulkSelectEnabled={{@bulkSelectEnabled}}
-    @showBulkToggle={{@showBulkToggle}}
-    @canBulkSelect={{@canBulkSelect}}
-    @canDoBulkActions={{@canDoBulkActions}}
-    @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-    @newListSubset={{@newListSubset}}
-    @newRepliesCount={{@newRepliesCount}}
-    @newTopicsCount={{@newTopicsCount}}
-    @bulkSelectHelper={{@bulkSelectHelper}}
-    @changeNewListSubset={{@changeNewListSubset}}
-  />
-</template>;
-
-const PostersCell = <template>
-  {{#if @showPosters}}
-    <TopicListHeaderColumn
-      @order="posters"
-      @activeOrder={{@activeOrder}}
-      @changeSort={{@changeSort}}
-      @ascending={{@ascending}}
-      @name="posters"
-      @screenreaderOnly={{true}}
-      aria-label={{i18n "category.sort_options.posters"}}
-    />
-  {{/if}}
-</template>;
-
-const RepliesCell = <template>
-  <TopicListHeaderColumn
-    @sortable={{@sortable}}
-    @number="true"
-    @order="posts"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="replies"
-  />
-</template>;
-
-const LikesCell = <template>
-  {{#if @showLikes}}
-    <TopicListHeaderColumn
-      @sortable={{@sortable}}
-      @number="true"
-      @order="likes"
-      @activeOrder={{@activeOrder}}
-      @changeSort={{@changeSort}}
-      @ascending={{@ascending}}
-      @name="likes"
-    />
-  {{/if}}
-</template>;
-
-const OpLikesCell = <template>
-  {{#if @showOpLikes}}
-    <TopicListHeaderColumn
-      @sortable={{@sortable}}
-      @number="true"
-      @order="op_likes"
-      @activeOrder={{@activeOrder}}
-      @changeSort={{@changeSort}}
-      @ascending={{@ascending}}
-      @name="likes"
-    />
-  {{/if}}
-</template>;
-
-const ViewsCell = <template>
-  <TopicListHeaderColumn
-    @sortable={{@sortable}}
-    @number="true"
-    @order="views"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="views"
-  />
-</template>;
-
-const ActivityCell = <template>
-  <TopicListHeaderColumn
-    @sortable={{@sortable}}
-    @number="true"
-    @order="activity"
-    @activeOrder={{@activeOrder}}
-    @changeSort={{@changeSort}}
-    @ascending={{@ascending}}
-    @name="activity"
-  />
-</template>;
-
-export function createColumns() {
-  const columns = new DAG();
-  columns.add("topic-list-before-columns");
-  columns.add("bulk-select", BulkSelectCell);
-  columns.add("topic", TopicCell);
-  columns.add("topic-list-after-main-link");
-  columns.add("posters", PostersCell);
-  columns.add("replies", RepliesCell);
-  columns.add("likes", LikesCell);
-  columns.add("op-likes", OpLikesCell);
-  columns.add("views", ViewsCell);
-  columns.add("activity", ActivityCell);
-  columns.add("topic-list-after-columns");
-  return columns;
-}
+import { createColumns } from "./dag";
 
 export default class TopicListHeader extends Component {
   @service topicTrackingState;
@@ -165,8 +30,8 @@ export default class TopicListHeader extends Component {
   <template>
     <tr>
       {{#each (this.columns.resolve) as |entry|}}
-        {{#if entry.value}}
-          <entry.value
+        {{#if entry.value.header}}
+          <entry.value.header
             @sortable={{@sortable}}
             @activeOrder={{@order}}
             @changeSort={{@changeSort}}
