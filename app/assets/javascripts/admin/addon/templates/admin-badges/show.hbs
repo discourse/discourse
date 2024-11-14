@@ -299,17 +299,11 @@
         @disabled={{this.disableBadgeOnPosts}}
         as |field|
       >
-        {{#if this.showPostHeaderTooltip}}
-          <DTooltip>
-            <:trigger>
-              <field.Checkbox />
-            </:trigger>
-            <:content>{{i18n "admin.badges.post_header_disabled"}}</:content>
-          </DTooltip>
-        {{/if}}
-        {{#unless this.showPostHeaderTooltip}}
-          <field.Checkbox />
-        {{/unless}}
+        <field.Checkbox>
+          {{#if this.showPostHeaderTooltip}}
+            {{i18n "admin.badges.post_header_disabled"}}
+          {{/if}}
+        </field.Checkbox>
       </group.Field>
     </form.CheckboxGroup>
   </form.Section>
