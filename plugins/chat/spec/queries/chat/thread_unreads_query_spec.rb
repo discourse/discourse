@@ -211,14 +211,37 @@ describe Chat::ThreadUnreadsQuery do
         let!(:message) { create_mention(message_1, channel_1, thread_1) }
 
         it "counts both unread messages and mentions separately" do
-          expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
-            {
-              thread_id: thread_1.id,
-              channel_id: channel_1.id,
-              unread_count: 1,
-              mention_count: 1,
-              watched_threads_unread_count: 0,
-            },
+          expect(query.map(&:to_h)).to eq(
+            [
+              {
+                channel_id: channel_1.id,
+                thread_id: thread_1.id,
+                mention_count: 1,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_1.id,
+                thread_id: thread_2.id,
+                mention_count: 0,
+                unread_count: 0,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_2.id,
+                thread_id: thread_3.id,
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_2.id,
+                thread_id: thread_4.id,
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+            ],
           )
         end
 

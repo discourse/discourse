@@ -72,6 +72,7 @@ module Chat
           AND user_chat_channel_memberships.user_id = :user_id
           AND chat_channels.threading_enabled
           AND chat_messages.deleted_at IS NULL
+          AND chat_messages.thread_id = memberships.thread_id
           AND NOT user_chat_channel_memberships.muted
         ) AS mention_count,
         (
