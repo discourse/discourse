@@ -5,10 +5,12 @@ class UserApiKeyClientsController < ApplicationController
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
   def register
+    rate_limit
     require_params
     validate_params
+    ensure_new_client
 
-    client = UserApiKeyClient.find_or_initialize_by(client_id: params[:client_id])
+    client = UserApiKeyClient.new(client_id: params[:client_id])
     client.application_name = params[:application_name]
     client.public_key = params[:public_key]
     client.auth_redirect = params[:auth_redirect]
@@ -25,6 +27,10 @@ class UserApiKeyClientsController < ApplicationController
     end
   end
 
+  def rate_limit
+    RateLimiter.new(nil, "user-api-key-clients-#{request.remote_ip}", 1, 24.hours).performed!
+  end
+
   def require_params
     %i[client_id application_name public_key auth_redirect scopes].each { |p| params.require(p) }
     @scopes = params[:scopes].split(",")
@@ -33,5 +39,9 @@ class UserApiKeyClientsController < ApplicationController
   def validate_params
     raise Discourse::InvalidAccess unless UserApiKeyClientScope.allowed.superset?(Set.new(@scopes))
     OpenSSL::PKey::RSA.new(params[:public_key])
+  end
+
+  def ensure_new_client
+    raise Discourse::InvalidAccess if UserApiKeyClient.where(client_id: params[:client_id]).exists?
   end
 end

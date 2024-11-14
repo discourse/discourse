@@ -66,7 +66,6 @@ class UserApiKeysController < ApplicationController
 
     @client = UserApiKeyClient.new(client_id: params[:client_id]) if @client.blank?
     @client.application_name = params[:application_name] if params[:application_name].present?
-    @client.public_key = params[:public_key] if params[:public_key].present?
     @client.save! if @client.new_record? || @client.changed?
 
     # destroy any old keys the user had with the client
@@ -88,7 +87,8 @@ class UserApiKeysController < ApplicationController
       api: AUTH_API_VERSION,
     }.to_json
 
-    public_key = OpenSSL::PKey::RSA.new(@client.public_key)
+    public_key_str = @client.public_key.present? ? @client.public_key : params[:public_key]
+    public_key = OpenSSL::PKey::RSA.new(public_key_str)
     @payload = Base64.encode64(public_key.public_encrypt(@payload))
 
     if scopes.include?("one_time_password")

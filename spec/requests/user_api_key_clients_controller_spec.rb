@@ -58,17 +58,13 @@ RSpec.describe UserApiKeyClientsController do
           expect(client.scopes.map(&:name)).to match_array(["user_status"])
         end
 
-        it "updates a registered client" do
-          Fabricate(:user_api_key_client, **args)
-          args_with_scopes[:application_name] = "bar"
-          post "/user-api-key-client/register.json", params: args_with_scopes
-          expect(response.status).to eq(200)
-          expect(
-            UserApiKeyClient.exists?(
-              client_id: args_with_scopes[:client_id],
-              application_name: args_with_scopes[:application_name],
-            ),
-          ).to eq(true)
+        context "if the client is already registered" do
+          before { Fabricate(:user_api_key_client, **args) }
+
+          it "returns a 403" do
+            post "/user-api-key-client/register.json", params: args_with_scopes
+            expect(response.status).to eq(403)
+          end
         end
       end
     end
