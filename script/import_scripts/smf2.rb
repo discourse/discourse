@@ -11,7 +11,7 @@ require "etc"
 require "open3"
 
 class ImportScripts::Smf2 < ImportScripts::Base
-  BATCH_SIZE ||= 5000
+  BATCH_SIZE = 5000
 
   def self.run
     options = Options.new
