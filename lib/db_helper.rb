@@ -168,7 +168,7 @@ class DbHelper
     columns.each_with_object(
       { updates: [], conditions: [], skipped_sums: [], length_constrained_columns: [] },
     ) do |column, parts|
-      replace = "REPLACE(\"#{column[:name]}\", :from, :to)"
+      replace = %|REPLACE("#{column[:name]}", :from, :to)|
       replace = truncate(replace, table, column)
 
       if column[:max_length].present?
@@ -179,7 +179,7 @@ class DbHelper
       # Build SQL update statements for each column
       parts[:updates] << %("#{column[:name]}" = #{replace})
 
-      # Build the base SQL condition clausse for each column
+      # Build the base SQL condition clause for each column
       basic_condition = %("#{column[:name]}" IS NOT NULL AND "#{column[:name]}" LIKE :pattern)
 
       if skip_max_length_violations && column[:max_length].present?
@@ -205,20 +205,20 @@ class DbHelper
   end
 
   def self.log_remap_message(table, rows_updated, skipped_counts)
-    if (rows_updated > 0) || skipped_counts&.any?
-      message = +"#{table}=#{rows_updated}"
+    return if rows_updated < 1 || skipped_counts.blank?
+  
+    message = +"#{table}=#{rows_updated}"
 
-      if skipped_counts&.any?
-        message << " SKIPPED: "
-        message << skipped_counts
-          .map do |column, count|
-            "#{column.delete_suffix("_skipped")}: #{count} #{"update".pluralize(count)}"
-          end
-          .join(", ")
-      end
-
-      puts message
+    if skipped_counts&.any?
+      message << " SKIPPED: "
+      message << skipped_counts
+        .map do |column, count|
+          "#{column.delete_suffix("_skipped")}: #{count} #{"update".pluralize(count)}"
+        end
+        .join(", ")
     end
+
+    puts message
   end
 
   def self.skipped_remap_counts(table, from, to, pattern, query_parts, skip_max_length_violations)
