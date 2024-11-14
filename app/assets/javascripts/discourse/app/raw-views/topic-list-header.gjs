@@ -29,7 +29,7 @@ export default class TopicListHeader extends EmberObject {
     )
       .resolve()
       .map((entry) => {
-        if (entry.value.header) {
+        if (entry.value?.header) {
           entry.value.header = htmlSafe(
             rawRenderGlimmer(
               this,

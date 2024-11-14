@@ -424,7 +424,7 @@ export default class TopicListItem extends Component {
     )
       .resolve()
       .map((entry) => {
-        if (entry.value.item) {
+        if (entry.value?.item) {
           entry.value.item = htmlSafe(
             rawRenderGlimmer(
               this,
