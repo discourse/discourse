@@ -935,7 +935,6 @@ sw:
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         invite:
-          save_invite: "Hifadhi"
           cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
@@ -1495,6 +1494,8 @@ sw:
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
+      dismiss:
+        name: "Ondosha..."
       close_topics:
         name: "Funga"
         optional: (sio muhimu)
@@ -1804,21 +1805,26 @@ sw:
       few_likes_left: "Asante kwa kutoa upendo! Umebakiwa na upendo mchache kwa ajili ya leo."
       controls:
         reply: "anza kuandika jibu kwenye mada hii"
+        like_action: "Penda"
         like: "penda hili chapisho"
         has_liked: "umependa chapisho hili"
+        undo_like_action: "Ondoa upendo"
         undo_like: "ondoa upendo"
         edit: "hariri chapisho hili"
         edit_action: "Hariri"
         edit_anonymous: "Samahani, lazima uwe umeingia kuhariri chapisho hili."
+        flag_action: "Bendera"
         flag: "ripoti kwa siri chapisho hili liangaliwe au tuma ujumbe binafsi wa taarifa kuhusiana na hii"
         delete: "futa chapisho hili"
         undelete: "rudisha chapisho hili"
+        share_action: "Shirikisha"
         share: "gawiza kiungo kwenye mada hii"
         more: "Zaidi"
         delete_replies:
           confirm: "Je unataka pia kufuta majibu ya chapisho hili?"
           just_the_post: "Hapana, chapisho hili tu"
         admin: "chapisha vitendo vya kiongozi"
+        admin_action: "Kiongozi"
         wiki: "Tengeneza Wiki"
         unwiki: "Ondoa Wiki"
         convert_to_moderator: "Ongeza Rangi ya Wasaidizi"
@@ -2324,6 +2330,8 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+            invite:
+              content: "Mualiko"
       filter: "Chuja..."
     form_templates:
       upload_field:
@@ -3144,7 +3152,6 @@ sw:
         approve_bulk_success: "Umefanikiwa! Watumiaji wamethibitishwa na wamejulishwa."
         time_read: "Mda wa Kusoma"
         anonymize: "Mfanye Mtumiaji Asijulikane"
-        anonymize_confirm: "Una UHAKIKA unataka kufanya hii akaunti iwe ya mtu asiyejulikana? Kitendo hicho kitabadilisha jina la mtumiaji na barua pepe, na kuanzisha upya taarifa zote binafsi."
         anonymize_yes: "Ndio, fanya hii akaunti iwe ya mtu asiyejulikana"
         anonymize_failed: "Tatizo limetokea wakati wa kufanya akaunti iwe ya mtu asiyejulikana."
         delete: "Futa Mtumiaji"
@@ -3398,6 +3405,7 @@ sw:
             with_time: <span class="username">%{username}</span> kwenye %{time}<span class="time">
       emoji:
         title: "Emoji"
+        new: "ongeza"
         add: "Ongeza Emoji Mpya"
         name: "Jina"
         group: "Kikundi"

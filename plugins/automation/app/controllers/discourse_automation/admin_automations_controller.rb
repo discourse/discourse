@@ -81,9 +81,11 @@ module DiscourseAutomation
     end
 
     def destroy
-      automation = DiscourseAutomation::Automation.find(params[:id])
-      automation.destroy!
-      render json: success_json
+      DiscourseAutomation::DestroyAutomation.call(service_params) do
+        on_success { render(json: success_json) }
+        on_model_not_found(:automation) { raise Discourse::NotFound }
+        on_failed_policy(:can_destroy_automation) { raise Discourse::InvalidAccess }
+      end
     end
 
     private

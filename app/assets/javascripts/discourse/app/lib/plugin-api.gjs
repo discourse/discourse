@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.37.3";
+export const PLUGIN_API_VERSION = "1.38.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -23,6 +23,7 @@ import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from 
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
 import { headerIconsDAG } from "discourse/components/header/icons";
+import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
@@ -162,6 +163,12 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+
+const DEPRECATED_POST_MENU_WIDGETS = [
+  "post-menu",
+  "post-user-tip-shim",
+  "small-user-list",
+];
 
 const appliedModificationIds = new WeakMap();
 
@@ -417,9 +424,10 @@ class PluginApi {
    * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
    * the default behavior will be completely overridden
    * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.BEHAVIOR,
       behaviorCallback
@@ -484,9 +492,10 @@ class PluginApi {
    * mutating the input value, return the same output for the same input and not have any side effects.
    * @param {*} valueCallback.value the value to be transformed
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.VALUE,
       valueCallback
@@ -831,6 +840,14 @@ class PluginApi {
    *  }
    **/
   addPostMenuButton(name, callback) {
+    deprecated(
+      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
@@ -901,6 +918,14 @@ class PluginApi {
    * ```
    **/
   removePostMenuButton(name, callback) {
+    deprecated(
+      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     removeButton(name, callback);
   }
 
@@ -921,6 +946,14 @@ class PluginApi {
    * });
    **/
   replacePostMenuButton(name, widget) {
+    deprecated(
+      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     replaceButton(name, widget);
   }
 
@@ -2502,7 +2535,6 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
-          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
@@ -3286,6 +3318,50 @@ class PluginApi {
     registerPluginHeaderActionComponent(pluginId, componentClass);
   }
 
+  /**
+   * Registers a new tab to be displayed in "more topics" area at the bottom of a topic page.
+   *
+   * ```gjs
+   *  api.registerMoreTopicsTab({
+   *    id: "other-topics",
+   *    name: i18n("other_topics.tab"),
+   *    component: <template>tbd</template>,
+   *    condition: ({ topic }) => topic.otherTopics?.length > 0,
+   *  });
+   * ```
+   *
+   * You can additionally use more-topics-tabs value transformer to conditionally show/hide
+   * specific tabs.
+   *
+   * ```js
+   * api.registerValueTransformer("more-topics-tabs", ({ value, context }) => {
+   *   if (context.user?.aFeatureFlag) {
+   *     // Remove "suggested" from the topics page
+   *     return value.filter(
+   *       (tab) =>
+   *         context.currentContext !== "topic" ||
+   *         tab.id !== "suggested-topics"
+   *     );
+   *   }
+   * });
+   * ```
+   *
+   * @callback tabCondition
+   * @param {Object} opts
+   * @param {"topic"|"pm"} opts.context - the type of the current page
+   * @param {Topic} opts.topic - the current topic
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - an identifier used in more-topics-tabs value transformer
+   * @param {string} tab.name - a name displayed on the tab
+   * @param {string} tab.icon - an optional icon displayed on the tab
+   * @param {Class} tab.component - contents of the tab
+   * @param {tabCondition} tab.condition - an optional callback to conditionally show the tab
+   */
+  registerMoreTopicsTab(tab) {
+    registeredTabs.push(tab);
+  }
+
   // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
@@ -3300,6 +3376,16 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.post-menu-widget-overrides",
+        }
+      );
+    }
   }
 }
 

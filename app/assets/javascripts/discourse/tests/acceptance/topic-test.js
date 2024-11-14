@@ -12,12 +12,9 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   chromeTest,
-  count,
-  exists,
   publishToMessageBus,
   query,
   selectText,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
@@ -49,7 +46,7 @@ acceptance("Topic", function (needs) {
     await click("button.share:nth-of-type(1)");
     await click("button.new-topic");
 
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
 
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
@@ -68,7 +65,7 @@ acceptance("Topic", function (needs) {
     await click("button.share:nth-of-type(1)");
     await click("button.new-topic");
 
-    assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
 
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
@@ -88,7 +85,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:first-child button.share");
 
-    assert.ok(exists(".share-topic-modal"), "it shows the share modal");
+    assert.dom(".share-topic-modal").exists("shows the share modal");
   });
 
   test("Copy Link Button", async function (assert) {
@@ -105,14 +102,14 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .d-icon-pencil");
 
-    assert.ok(exists("#edit-title"), "it shows the editing controls");
+    assert.dom("#edit-title").exists("shows the editing controls");
     assert
       .dom(".title-wrapper .remove-featured-link")
       .doesNotExist("link to remove featured link is not shown");
 
     await fillIn("#edit-title", "this is the new title");
     await click("#topic-title .cancel-edit");
-    assert.ok(!exists("#edit-title"), "it hides the editing controls");
+    assert.dom("#edit-title").doesNotExist("hides the editing controls");
   });
 
   test("Updating the topic title and category", async function (assert) {
@@ -137,13 +134,13 @@ acceptance("Topic", function (needs) {
   test("Marking a topic as wiki", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(!exists("a.wiki"), "it does not show the wiki icon");
+    assert.dom("a.wiki").doesNotExist("does not show the wiki icon");
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.show-post-admin-menu");
     await click(".btn.wiki");
 
-    assert.strictEqual(count("button.wiki"), 1, "it shows the wiki icon");
+    assert.dom("button.wiki").exists("shows the wiki icon");
   });
 
   test("Visit topic routes", async function (assert) {
@@ -171,10 +168,9 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title").innerHTML.trim().includes("bike.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml("bike.png", "displays the new title with emojis");
   });
 
   test("Updating the topic title with unicode emojis", async function (assert) {
@@ -185,10 +181,9 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title").innerHTML.trim().includes("man_farmer.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml("man_farmer.png", "displays the new title with emojis");
   });
 
   test("Updating the topic title with unicode emojis without whitespace", async function (assert) {
@@ -200,12 +195,12 @@ acceptance("Topic", function (needs) {
 
     await click("#topic-title .submit-edit");
 
-    assert.ok(
-      query(".fancy-title")
-        .innerHTML.trim()
-        .includes("slightly_smiling_face.png"),
-      "it displays the new title with emojis"
-    );
+    assert
+      .dom(".fancy-title")
+      .includesHtml(
+        "slightly_smiling_face.png",
+        "displays the new title with emojis"
+      );
   });
 
   test("Suggested topics", async function (assert) {
@@ -222,7 +217,7 @@ acceptance("Topic", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
     await click(".toggle-admin-menu");
-    assert.ok(exists(".topic-admin-recover"), "it shows the recover button");
+    assert.dom(".topic-admin-recover").exists("shows the recover button");
   });
 
   test("Deleting a popular topic displays confirmation modal", async function (assert) {
@@ -230,27 +225,25 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".widget-button.delete");
-    assert.ok(
-      visible(".delete-topic-confirm-modal"),
-      "it shows the delete confirmation modal"
-    );
+    assert
+      .dom(".delete-topic-confirm-modal")
+      .exists("shows the delete confirmation modal");
 
     await click(".delete-topic-confirm-modal .btn-primary");
-    assert.ok(
-      !visible(".delete-topic-confirm-modal"),
-      "it hides the delete confirmation modal"
-    );
+    assert
+      .dom(".delete-topic-confirm-modal")
+      .doesNotExist("hides the delete confirmation modal");
     await click(".widget-button.delete");
     await click(".delete-topic-confirm-modal .btn-danger");
     await click(".toggle-admin-menu");
-    assert.ok(exists(".topic-admin-recover"), "it shows the recover button");
+    assert.dom(".topic-admin-recover").exists("shows the recover button");
   });
 
   test("Group category moderator posts", async function (assert) {
     await visit("/t/topic-for-group-moderators/2480");
 
-    assert.ok(exists(".category-moderator"), "it has a class applied");
-    assert.ok(exists(".d-icon-shield-halved"), "it shows an icon");
+    assert.dom(".category-moderator").exists("has a class applied");
+    assert.dom(".d-icon-shield-halved").exists("shows an icon");
   });
 
   test("Suspended user posts", async function (assert) {
@@ -282,7 +275,9 @@ acceptance("Topic featured links", function (needs) {
 
     const link = query(".title-wrapper .topic-featured-link");
     assert.strictEqual(link.innerText, "example.com");
-    assert.strictEqual(link.getAttribute("rel"), "ugc");
+    assert
+      .dom(".title-wrapper .topic-featured-link")
+      .hasAttribute("rel", "ugc");
   });
 
   test("remove featured link", async function (assert) {
@@ -295,14 +290,6 @@ acceptance("Topic featured links", function (needs) {
     assert
       .dom(".title-wrapper .remove-featured-link")
       .exists("link to remove featured link");
-
-    // TODO: decide if we want to test this, test is flaky so it
-    // was commented out.
-    // If not fixed by May 2021, delete this code block
-    //
-    //await click(".title-wrapper .remove-featured-link");
-    //await click(".title-wrapper .submit-edit");
-    //assert.ok(!exists(".title-wrapper .topic-featured-link"), "link is gone");
   });
 
   test("Converting to a public topic", async function (assert) {
@@ -357,28 +344,28 @@ acceptance("Topic featured links", function (needs) {
     await click(".topic-admin-multi-select .btn");
     await click("#post_3 .select-below");
 
-    assert.ok(
-      query(".selected-posts").innerHTML.includes(
-        I18n.t("topic.multi_select.description", { count: 18 })
-      ),
-      "it should select the right number of posts"
-    );
+    assert
+      .dom(".selected-posts")
+      .includesHtml(
+        I18n.t("topic.multi_select.description", { count: 18 }),
+        "selects the right number of posts"
+      );
 
     await click("#post_2 .select-below");
 
-    assert.ok(
-      query(".selected-posts").innerHTML.includes(
-        I18n.t("topic.multi_select.description", { count: 19 })
-      ),
-      "it should select the right number of posts"
-    );
+    assert
+      .dom(".selected-posts")
+      .includesHtml(
+        I18n.t("topic.multi_select.description", { count: 19 }),
+        "selects the right number of posts"
+      );
   });
 
   test("View Hidden Replies", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(".gap");
 
-    assert.ok(!exists(".gap"), "it hides gap");
+    assert.dom(".gap").doesNotExist("hides gap");
   });
 
   test("Quoting a quote keeps the original poster name", async function (assert) {
@@ -578,20 +565,24 @@ acceptance("Topic filter replies to post number", function (needs) {
   test("visit topic", async function (assert) {
     await visit("/t/-/280");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.filtered_replies_hint", { count: 3 }),
-      "it displays the right title for filtering by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.filtered_replies_hint", { count: 3 }),
+        "displays the right title for filtering by replies"
+      );
 
     await visit("/");
     await visit("/t/-/280?replies_to_post_number=3");
 
-    assert.equal(
-      query("#post_3 .show-replies").title,
-      I18n.t("post.view_all_posts"),
-      "it displays the right title when filtered by replies"
-    );
+    assert
+      .dom("#post_3 .show-replies")
+      .hasAttribute(
+        "title",
+        I18n.t("post.view_all_posts"),
+        "displays the right title when filtered by replies"
+      );
   });
 });
 

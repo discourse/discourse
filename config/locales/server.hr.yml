@@ -1196,7 +1196,6 @@ hr:
     markdown_linkify_tlds: "Popis domena najviše razine koje se automatski tretiraju kao veze"
     markdown_typographer_quotation_marks: "Popis zamjenskih parova dvostrukih i jednostrukih navodnika"
     post_undo_action_window_mins: "Broj minuta koliko je korisnicima dopušteno poništiti nedavne radnje na objavi (sviđa mi se, označiti itd.)."
-    must_approve_users: "Osoblje mora odobriti sve nove korisničke račune prije nego im se dopusti pristup stranici."
     invite_code: "Korisnik mora upisati ovaj kod kako bi mu se omogućila registracija računa, zanemaruje se kada je prazan (neosjetljivo je na velika i mala slova)"
     approve_suspect_users: "Dodajte sumnjive korisnike u red čekanja za pregled. Sumnjivi korisnici ušli su u biografiju/web stranicu, ali nemaju aktivnosti čitanja."
     pending_users_reminder_delay_minutes: "Obavijesti moderatore ako novi korisnici čekaju na odobrenje dulje od ovoliko minuta. Postavite na -1 da biste onemogućili obavijesti."
@@ -1247,7 +1246,6 @@ hr:
     google_oauth2_client_secret: "Tajna klijenta vaše Google aplikacije."
     google_oauth2_prompt: "Izborni razmakom razgraničeni popis vrijednosti niza koji navodi hoće li autorizacijski poslužitelj tražiti od korisnika ponovnu provjeru autentičnosti i pristanak. Pogledajte <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> za moguće vrijednosti."
     google_oauth2_hd: "Neobavezna domena s hostom za Google Apps na koju će prijava biti ograničena. Pogledajte <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> za više pojedinosti."
-    google_oauth2_hd_groups: "(eksperimentalno) Dohvaćanje korisničkih Google grupa na hostiranoj domeni nakon provjere autentičnosti. Dohvaćene Google grupe mogu se koristiti za dodjelu automatskog članstva u Discourse grupi (pogledajte postavke grupe). Za više informacija pogledajte https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Adresa e-pošte koja pripada Google Workspace administratorskom računu. Koristit će se s vjerodajnicama računa usluge za dohvaćanje informacija o grupi."
     google_oauth2_hd_groups_service_account_json: "JSON formatirane ključne informacije za račun usluge. Koristit će se za dohvaćanje informacija o grupi."
     enable_twitter_logins: "Omogući provjeru autentičnosti Twittera, zahtijeva twitter_consumer_key i twitter_consumer_secret. Pogledajte <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguriranje prijave na Twitter (i obogaćenih umetanja) za Discourse</a>."
@@ -1396,7 +1394,6 @@ hr:
     enable_category_group_moderation: "Dopustite grupama moderiranje sadržaja u određenim kategorijama"
     group_in_subject: "Postavite %%{optional_pm} u predmetu e-pošte prema imenu prve grupe u PM-u, pogledajte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prilagodite format predmeta za standardne e-poruke</a>"
     anonymous_posting_min_trust_level: "Minimalna razina povjerenja potrebna za omogućavanje anonimnog objavljivanja"
-    highlighted_languages: "Uključena pravila za označavanje sintakse. (Upozorenje: uključivanje previše jezika može utjecati na performanse) pogledajte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> za demo"
     show_copy_button_on_codeblocks: "Dodajte gumb kodnim blokovima za kopiranje sadržaja bloka u korisnički međuspremnik."
     embed_any_origin: "Dopusti sadržaj koji se može ugraditi bez obzira na podrijetlo. Ovo je potrebno za mobilne aplikacije sa statičnim HTML-om."
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
@@ -1444,7 +1441,6 @@ hr:
     heading_font: "Font koji se koristi za naslove na stranici. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--heading-font-family`."
     enable_sitemap: "Generirajte kartu web stranice za svoju web stranicu i uključite je u datoteku robots.txt."
     sitemap_page_size: "Broj URL-ova koje treba uključiti u svaku stranicu karte web-lokacije. Najviše 50.000"
-    enable_user_status: "(eksperimentalno) Omogućuje korisnicima postavljanje prilagođene statusne poruke (emoji + opis)."
     short_title: "Kratki naslov koristit će se na korisničkom početnom zaslonu, pokretaču ili drugim mjestima gdje je prostor ograničen. Trebao bi biti ograničen na 12 znakova."
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
@@ -1468,18 +1464,6 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "neaktivan"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "neaktivan"
-      - ""
-      navigation_menu:
-      - "bočna traka"
-      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:

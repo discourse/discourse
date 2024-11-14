@@ -12,8 +12,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
-  count,
-  exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -62,7 +60,7 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/");
     await click("#search-button");
 
-    assert.ok(exists("#search-term"), "it shows the search input");
+    assert.dom("#search-term").exists("shows the search input");
     assert
       .dom(".show-advanced-search")
       .exists("it shows full page search button");
@@ -287,7 +285,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "@admin");
 
-    assert.strictEqual(count(".search-menu-assistant-item"), 2);
+    assert.dom(".search-menu-assistant-item").exists({ count: 2 });
     assert.strictEqual(
       query(
         ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
@@ -400,12 +398,11 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".search-menu .search-result-topic .item .topic-title span#topic-with-html"
-      ),
-      "html in the topic title is properly escaped"
-    );
+      )
+      .exists("html in the topic title is properly escaped");
   });
 
   test("topic results - search result escapes emojis in topic title", async function (assert) {
@@ -414,12 +411,9 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.ok(
-      exists(
-        ".search-menu .search-result-topic .item .topic-title img[alt='+1']"
-      ),
-      ":+1: in the topic title is properly converted to an emoji"
-    );
+    assert
+      .dom(".search-menu .search-result-topic .item .topic-title img[alt='+1']")
+      .exists(":+1: in the topic title is properly converted to an emoji");
   });
 });
 
@@ -518,13 +512,13 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
     await click(document.activeElement);
 
-    assert.notStrictEqual(count(".search-menu .results .item"), 0);
+    assert.dom(".search-menu .results .item").exists();
 
     await fillIn("#search-term", "plans empty");
     await triggerKeyEvent("#search-term", "keyup", 13);
 
-    assert.strictEqual(count(".search-menu .results .item"), 0);
-    assert.strictEqual(count(".search-menu .results .no-results"), 1);
+    assert.dom(".search-menu .results .item").doesNotExist();
+    assert.dom(".search-menu .results .no-results").exists({ count: 1 });
     assert
       .dom(".search-menu .results .no-results")
       .hasText(I18n.t("search.no_results"));
@@ -536,18 +530,14 @@ acceptance("Search - Authenticated", function (needs) {
     await fillIn("#search-term", "Development");
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
 
-    const firstSearchResult =
-      ".search-menu .results li:nth-of-type(1) a.search-link";
-    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
-    assert.strictEqual(
-      query(firstSearchResult).getAttribute("href"),
-      firstTopicResultUrl
-    );
+    assert
+      .dom(".search-menu .results li a.search-link")
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
 
-    await click(firstSearchResult);
+    await click(".search-menu .results li a.search-link");
     assert.strictEqual(
       currentURL(),
-      firstTopicResultUrl,
+      "/t/development-mode-super-slow/2179",
       "redirects to clicked search result url"
     );
   });
@@ -571,7 +561,7 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "dev");
-    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    assert.dom(`${container} ul li`).exists("has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
     assert
@@ -579,29 +569,27 @@ acceptance("Search - Authenticated", function (needs) {
       .exists("has topic results");
 
     await triggerKeyEvent("#search-term", "keyup", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      query(`${container} li:first-child a`).getAttribute("href"),
-      "arrow down selects first element"
-    );
+    assert
+      .dom(`${container} li:first-child a`)
+      .isFocused("arrow down selects first element");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      query(`${container} li:nth-child(2) a`).getAttribute("href"),
-      "arrow down selects next element"
-    );
+    assert
+      .dom(`${container} li:nth-child(2) a`)
+      .isFocused("arrow down selects next element");
 
     // navigate to the `more link`
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      "/search?q=dev",
-      "arrow down sets focus to more results link"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "href",
+        "/search?q=dev",
+        "arrow down sets focus to more results link"
+      );
 
     await triggerKeyEvent("#search-term", "keydown", "Escape");
     assert.strictEqual(
@@ -609,7 +597,7 @@ acceptance("Search - Authenticated", function (needs) {
       query("#search-button"),
       "Escaping search returns focus to search button"
     );
-    assert.ok(!exists(".search-menu:visible"), "Esc removes search dropdown");
+    assert.dom(".search-menu").doesNotExist("Esc removes search dropdown");
 
     await click("#search-button");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
@@ -633,12 +621,12 @@ acceptance("Search - Authenticated", function (needs) {
       .dom(query(`.search-menu`))
       .doesNotExist("search dropdown is collapsed after second Enter hit");
 
-    //new search launched, Enter key should be reset
+    // new search launched, Enter key should be reset
     await click("#search-button");
-    assert.ok(exists(query(`${container} ul li`)), "has a list of items");
+    assert.dom(`${container} ul li`).exists("has a list of items");
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
-    assert.ok(exists(query(`.search-menu`)), "search dropdown is visible");
+    assert.dom(`.search-menu`).exists("search dropdown is visible");
   });
 
   test("search menu keyboard navigation - while composer is open", async function (assert) {
@@ -673,17 +661,18 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent(document.activeElement, "keyup", "Enter");
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
 
-    const firstTopicResultUrl = "/t/development-mode-super-slow/2179";
-    assert.strictEqual(
-      document.activeElement.getAttribute("href"),
-      firstTopicResultUrl,
-      "first search result is highlighted"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "href",
+        "/t/development-mode-super-slow/2179",
+        "first search result is highlighted"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
     assert.strictEqual(
       currentURL(),
-      firstTopicResultUrl,
+      "/t/development-mode-super-slow/2179",
       "redirects to selected search result url"
     );
   });
@@ -850,7 +839,7 @@ acceptance("Search - with tagging enabled", function (needs) {
     const firstItem =
       ".search-menu .results ul.search-menu-assistant .search-link";
 
-    assert.ok(exists(query(firstItem)));
+    assert.dom(firstItem).exists();
 
     const firstTag = query(`${firstItem} .search-item-tag`).textContent.trim();
     assert.strictEqual(firstTag, "monkey");
@@ -1224,13 +1213,13 @@ acceptance("Search - assistant", function (needs) {
     await visit("/u/charlie/messages");
     await click("#search-button");
 
-    assert.ok(exists(".btn.search-context"), "it shows the button");
+    assert.dom(".btn.search-context").exists("shows the button");
 
     await fillIn("#search-term", "");
     await query("input#search-term").focus();
     await triggerKeyEvent("input#search-term", "keyup", "Backspace");
 
-    assert.notOk(exists(".btn.search-context"), "it removes the button");
+    assert.dom(".btn.search-context").doesNotExist("removes the button");
 
     await clickOutside();
     await click("#search-button");
@@ -1242,11 +1231,9 @@ acceptance("Search - assistant", function (needs) {
     await query("input#search-term").focus();
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
-    assert.strictEqual(
-      count(".search-menu .search-result-topic"),
-      1,
-      "it passes the PM search context to the search query"
-    );
+    assert
+      .dom(".search-menu .search-result-topic")
+      .exists({ count: 1 }, "passes the PM search context to the search query");
   });
 
   test("topic results - updates search term when selecting a initial category option", async function (assert) {

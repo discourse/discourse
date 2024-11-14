@@ -25,29 +25,29 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
     set(this.currentUser, "admin", false);
     set(this.currentUser, "moderator", false);
     this.siteSettings.chat_enabled = false;
-    assert.notOk(this.chatGuardian.canEditChatChannel());
+    assert.false(this.chatGuardian.canEditChatChannel());
 
     set(this.currentUser, "has_chat_enabled", true);
     set(this.currentUser, "admin", true);
     this.siteSettings.chat_enabled = false;
-    assert.notOk(this.chatGuardian.canEditChatChannel());
+    assert.false(this.chatGuardian.canEditChatChannel());
 
     set(this.currentUser, "has_chat_enabled", false);
     set(this.currentUser, "admin", false);
     set(this.currentUser, "moderator", false);
     this.siteSettings.chat_enabled = true;
-    assert.notOk(this.chatGuardian.canEditChatChannel());
+    assert.false(this.chatGuardian.canEditChatChannel());
 
     set(this.currentUser, "has_chat_enabled", false);
     set(this.currentUser, "admin", true);
     this.siteSettings.chat_enabled = true;
-    assert.notOk(this.chatGuardian.canEditChatChannel());
+    assert.false(this.chatGuardian.canEditChatChannel());
 
     set(this.currentUser, "has_chat_enabled", true);
     set(this.currentUser, "admin", false);
     set(this.currentUser, "moderator", false);
     this.siteSettings.chat_enabled = true;
-    assert.notOk(this.chatGuardian.canEditChatChannel());
+    assert.false(this.chatGuardian.canEditChatChannel());
 
     set(this.currentUser, "has_chat_enabled", true);
     set(this.currentUser, "admin", true);
@@ -58,11 +58,11 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
   test("#canUseChat", async function (assert) {
     set(this.currentUser, "has_chat_enabled", false);
     this.siteSettings.chat_enabled = true;
-    assert.notOk(this.chatGuardian.canUseChat());
+    assert.false(this.chatGuardian.canUseChat());
 
     set(this.currentUser, "has_chat_enabled", true);
     this.siteSettings.chat_enabled = false;
-    assert.notOk(this.chatGuardian.canUseChat());
+    assert.false(this.chatGuardian.canUseChat());
 
     set(this.currentUser, "has_chat_enabled", true);
     this.siteSettings.chat_enabled = true;
@@ -80,16 +80,16 @@ acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
 
     set(this.currentUser, "admin", false);
     set(this.currentUser, "moderator", false);
-    assert.notOk(this.chatGuardian.canArchiveChannel(channel));
+    assert.false(this.chatGuardian.canArchiveChannel(channel));
     set(this.currentUser, "admin", true);
     set(this.currentUser, "moderator", true);
 
     channel.status = "read_only";
-    assert.notOk(this.chatGuardian.canArchiveChannel(channel));
+    assert.false(this.chatGuardian.canArchiveChannel(channel));
     channel.status = "open";
 
     channel.status = "archived";
-    assert.notOk(this.chatGuardian.canArchiveChannel(channel));
+    assert.false(this.chatGuardian.canArchiveChannel(channel));
     channel.status = "open";
   });
 });

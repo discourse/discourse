@@ -1,10 +1,6 @@
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  invisible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login Required", function (needs) {
   needs.settings({ login_required: true });
@@ -25,9 +21,9 @@ acceptance("Login Required", function (needs) {
     );
 
     await click("header .login-button");
-    assert.ok(exists(".login-modal"), "they can still access the login modal");
+    assert.dom(".login-modal").exists("they can still access the login modal");
 
     await click(".d-modal__header .modal-close");
-    assert.ok(invisible(".login-modal"), "it closes the login modal");
+    assert.dom(".login-modal").doesNotExist("closes the login modal");
   });
 });

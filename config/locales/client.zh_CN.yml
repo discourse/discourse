@@ -1738,7 +1738,6 @@ zh_CN:
         invite:
           new_title: "邀请成员"
           edit_title: "编辑邀请"
-          instructions: "分享此链接以立即授予访问此网站的权限："
           expires_in_time: "于 %{time}过期"
           expired_at_time: "过期时间为 %{time}"
           create_link_to_invite: "创建一个可共享的链接，以立即授予对该站点的访问权限。"
@@ -1768,10 +1767,9 @@ zh_CN:
           custom_message_placeholder: "在你的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
-          save_invite: "保存"
+          update_invite: "更新"
           cancel: "取消"
           create_link: "创建链接"
-          invite_saved: "邀请已保存。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -2185,7 +2183,6 @@ zh_CN:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "仅类别"
-      categories_only_optimized: "仅限类别(已优化)"
       categories_with_featured_topics: "包含精选话题的类别"
       categories_and_latest_topics: "类别和最新话题"
       categories_and_latest_topics_created_date: "类别和最新话题（按话题创建日期排序）"
@@ -2804,6 +2801,8 @@ zh_CN:
         bookmarks: "没有更多已加入书签的话题了。"
         filter: "没有更多话题了。"
     topic_bulk_actions:
+      dismiss:
+        name: "关闭"
       close_topics:
         name: "关闭"
         note: "备注"
@@ -3341,17 +3340,23 @@ zh_CN:
       few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
       controls:
         reply: "开始撰写对此帖子的回复"
+        like_action: "点赞"
         like: "点赞此帖子"
         has_liked: "您已点赞此帖子"
         read_indicator: "读过此帖子的成员"
+        undo_like_action: "取消赞"
         undo_like: "取消赞"
         edit: "编辑此帖子"
         edit_action: "编辑"
         edit_anonymous: "抱歉，您需要登录才能编辑此帖子。"
+        flag_action: "举报"
         flag: "以私密方式举报此帖子以引起注意，或发送一个关于它的不公开通知"
+        delete_action: "删除帖子"
         delete: "删除此帖子"
         undelete: "取消删除此帖子"
+        share_action: "分享"
         share: "分享此帖子的链接"
+        copy_action: "复制链接"
         copy_title: "将此帖子的链接复制到剪贴板"
         link_copied: "链接已复制！"
         more: "更多"
@@ -3363,6 +3368,7 @@ zh_CN:
             other: "是，%{count} 个回复"
           just_the_post: "否，仅删除此帖子"
         admin: "帖子管理员操作"
+        admin_action: "管理员"
         permanently_delete: "永久删除"
         permanently_delete_confirmation: "确定要永久删除此帖子吗？您将无法恢复它。"
         wiki: "设为 Wiki"
@@ -4340,6 +4346,8 @@ zh_CN:
               title: "被举报的帖子和其他排队的条目"
               pending_count:
                 other: "%{count} 个待处理"
+            invite:
+              content: "邀请"
         global_section: "全局版块，对所有人可见"
       panels:
         forum:
@@ -4490,6 +4498,7 @@ zh_CN:
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
+          experimental: "实验性"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"
@@ -6027,8 +6036,9 @@ zh_CN:
         time_read: "阅读时间"
         post_edits_count: "帖子编辑"
         anonymize: "对用户进行匿名化处理"
-        anonymize_confirm: "确定要对此帐户进行匿名化处理吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
-        delete_associated_accounts_confirm: "你确定要从此帐户删除所有关联帐户吗？如果用户的电子邮件发生变化，则用户可能无法登录。"
+        anonymize_confirm: "你确定要匿名化此帐户吗？这将更改用户名和电子邮件，并重置所有个人资料信息。"
+        delete_associated_accounts_confirm: "你确定要删除此账户的所有关联账户吗？如果用户的电子邮件发生变化，则可能无法登录。"
+        disable_second_factor_confirm: "你确定要为此帐户禁用双重身份验证吗？"
         anonymize_yes: "是，对此帐户进行匿名化处理"
         anonymize_failed: "对帐户进行匿名化处理时出现问题。"
         delete: "删除用户"
@@ -6082,7 +6092,7 @@ zh_CN:
           other: "无法删除所有帖子。某些帖子的存在时间超过 %{count} 天。（delete_user_max_post_age 设置。）"
         cant_delete_all_too_many_posts:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
-        delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
+        delete_confirm_title: "你确定要删除此用户吗？这是永久性的！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
         delete_and_block: "删除并<b>禁止</b>该电子邮件和 IP 地址"
         delete_dont_block: "仅删除"
@@ -6303,6 +6313,7 @@ zh_CN:
           groups: "群组"
           dashboard: "信息中心"
           navigation: "导航"
+          experimental: "实验性"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
         default_categories:
@@ -6433,7 +6444,8 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        help: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。所选组将用于同时添加的所有文件。您还可以点击“添加新表情符号”以打开文件选择器。"
+        description: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。所选组将用于同时添加的所有文件。您还可以点击“添加新表情符号”以打开文件选择器。"
+        new: "添加"
         add: "添加新表情符号"
         choose_files: "选择文件"
         uploading: "正在上传…"

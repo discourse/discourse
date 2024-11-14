@@ -6,7 +6,7 @@ export function adminRouteValid(router, adminRoute) {
       router.urlFor(adminRoute.full_location);
     }
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

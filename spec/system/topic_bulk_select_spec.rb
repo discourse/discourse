@@ -24,6 +24,51 @@ describe "Topic bulk select", type: :system do
     expect(topic_bulk_actions_modal).to be_open
   end
 
+  context "when dismissing unread topics" do
+    fab!(:topic) { Fabricate(:topic, user: admin) }
+    fab!(:post1) { create_post(user: admin, topic: topic) }
+    fab!(:post2) { create_post(topic: topic) }
+
+    it "removes the topics from the list" do
+      sign_in(admin)
+      visit("/unread")
+
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topic)
+
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-unread")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(page).to have_text(I18n.t("js.topics.none.unread"))
+    end
+  end
+
+  context "when dismissing new topics" do
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post1) { create_post(user: user, topic: topic) }
+
+    it "removes the topics from the list" do
+      sign_in(admin)
+      visit("/new")
+
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topic)
+
+      topic_list.click_topic_checkbox(topic)
+
+      topic_list_header.click_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_button("dismiss-new")
+
+      topic_bulk_actions_modal.click_dismiss_confirm
+
+      expect(page).to have_text(I18n.t("js.topics.none.new"))
+    end
+  end
+
   context "when appending tags" do
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag) }

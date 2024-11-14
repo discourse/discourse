@@ -7,11 +7,11 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # https://developers.jivesoftware.com/api/v3/cloud/rest/index.html
 
 class ImportScripts::JiveApi < ImportScripts::Base
-  USER_COUNT ||= 1000
-  POST_COUNT ||= 100
-  STAFF_GUARDIAN ||= Guardian.new(Discourse.system_user)
+  USER_COUNT = 1000
+  POST_COUNT = 100
+  STAFF_GUARDIAN = Guardian.new(Discourse.system_user)
 
-  TO_IMPORT ||= [
+  TO_IMPORT = [
     #############################
     # WHOLE CATEGORY OF CONTENT #
     #############################

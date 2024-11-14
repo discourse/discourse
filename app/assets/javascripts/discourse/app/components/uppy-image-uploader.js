@@ -35,6 +35,9 @@ export default class UppyImageUploader extends Component {
       type: this.type,
       additionalParams: this.additionalParams,
       validateUploadedFilesOptions: { imagesOnly: true },
+      uploadDropTargetOptions: () => ({
+        target: document.querySelector(`#${this.id} .uploaded-image-preview`),
+      }),
       uploadDone: (upload) => {
         this.setProperties({
           imageFilesize: upload.human_filesize,

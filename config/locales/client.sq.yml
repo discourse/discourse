@@ -817,7 +817,6 @@ sq:
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
         create: "Fto"
         invite:
-          save_invite: "Ruaj"
           cancel: "Anulo"
         bulk_invite:
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
@@ -1220,6 +1219,8 @@ sq:
         top: "Nuk ka më tema popullore."
         bookmarks: "Nuk ka më tema të preferuara."
     topic_bulk_actions:
+      dismiss:
+        name: "Hiqe"
       close_topics:
         name: "Mbyll"
       archive_topics:
@@ -1496,20 +1497,25 @@ sq:
       few_likes_left: "Ju falenderojmë! Ju kanë ngelur edhe disa pëlqime për sot."
       controls:
         reply: "shkruaj një përgjigje tek ky diskutim"
+        like_action: "Pëlqe"
         like: "pëlqeje postimin"
         has_liked: "ju pëlqeni këtë postim"
+        undo_like_action: "Anulo pëlqimin"
         undo_like: "anulo pëlqimin"
         edit: "redakto këtë postim"
         edit_action: "Redakto"
         edit_anonymous: "Na vjen keq, ju duhet të jeni të identifikuar për të redaktuar këtë postim. "
+        flag_action: "Sinjalizoni"
         flag: "sinjalizojeni privatisht këtë postim për të tërhequr vëmendjen e adminëve"
         delete: "fshini këtë postim"
         undelete: "anuloni fshirjen e postimit"
+        share_action: "Shpërndaje"
         share: "shpërndani një link tek ky postim"
         more: "Më shumë"
         delete_replies:
           just_the_post: "Jo, vetëm këtë postim"
         admin: "veprimet administrative mbi postimin"
+        admin_action: "Admin"
         wiki: "Bëje Wiki"
         unwiki: "Hiqe Wiki"
         convert_to_moderator: "Shto ngjyrë stafi"
@@ -1999,6 +2005,8 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+            invite:
+              content: "Fto"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -2639,7 +2647,6 @@ sq:
         approve_bulk_success: "Sukses! Të gjithë anëtarët e zgjedhur janë aprovuar dhe notifikuar."
         time_read: "Koha e Leximit"
         anonymize: "Anonimizo përdoruesin"
-        anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Po, anonimizo këtë llogari"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Fshi Përdoruesin"
@@ -2881,6 +2888,7 @@ sq:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        new: "Shto"
         add: "Add New Emoji"
         name: "Emri"
         group: "Grupi"

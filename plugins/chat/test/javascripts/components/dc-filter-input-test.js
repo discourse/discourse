@@ -2,7 +2,6 @@ import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | dc-filter-input", function (hooks) {
   setupRenderingTest(hooks);
@@ -10,26 +9,26 @@ module("Discourse Chat | Component | dc-filter-input", function (hooks) {
   test("Left icon", async function (assert) {
     await render(hbs`<DcFilterInput @icons={{hash left="bell"}} />`);
 
-    assert.true(exists(".d-icon-bell.-left"));
+    assert.dom(".d-icon-bell.-left").exists();
   });
 
   test("Right icon", async function (assert) {
     await render(hbs`<DcFilterInput @icons={{hash right="bell"}} />`);
 
-    assert.true(exists(".d-icon-bell.-right"));
+    assert.dom(".d-icon-bell.-right").exists();
   });
 
   test("containerClass argument", async function (assert) {
     await render(hbs`<DcFilterInput @containerClass="foo" />`);
 
-    assert.true(exists(".dc-filter-input-container.foo"));
+    assert.dom(".dc-filter-input-container.foo").exists();
   });
 
   test("Html attributes", async function (assert) {
     await render(hbs`<DcFilterInput data-foo="1" placeholder="bar" />`);
 
-    assert.true(exists('.dc-filter-input[data-foo="1"]'));
-    assert.true(exists('.dc-filter-input[placeholder="bar"]'));
+    assert.dom('.dc-filter-input[data-foo="1"]').exists();
+    assert.dom('.dc-filter-input[placeholder="bar"]').exists();
   });
 
   test("Filter action", async function (assert) {
@@ -47,10 +46,10 @@ module("Discourse Chat | Component | dc-filter-input", function (hooks) {
     await render(hbs`<DcFilterInput @filterAction={{this.action}} />`);
     await triggerEvent(".dc-filter-input", "focusin");
 
-    assert.true(exists(".dc-filter-input-container.is-focused"));
+    assert.dom(".dc-filter-input-container.is-focused").exists();
 
     await triggerEvent(".dc-filter-input", "focusout");
 
-    assert.false(exists(".dc-filter-input-container.is-focused"));
+    assert.dom(".dc-filter-input-container.is-focused").doesNotExist();
   });
 });

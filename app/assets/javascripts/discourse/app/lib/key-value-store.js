@@ -13,7 +13,7 @@ try {
     // makes sure we can write to the local storage
     safeLocalStorage["safeLocalStorage"] = true;
   }
-} catch (e) {
+} catch {
   // local storage disabled
   safeLocalStorage = null;
 }
@@ -41,7 +41,7 @@ export default class KeyValueStore {
       let v = safeLocalStorage[k];
       try {
         v = JSON.parse(v);
-      } catch (e) {}
+      } catch {}
 
       if (
         k.substring(0, this.context.length) === this.context &&
@@ -106,7 +106,7 @@ export default class KeyValueStore {
 
     try {
       return JSON.parse(safeLocalStorage[this.context + key]);
-    } catch (e) {}
+    } catch {}
   }
 }
 

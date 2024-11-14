@@ -25,7 +25,7 @@ module("Unit | Model | topic", function (hooks) {
       last_read_post_number: 1,
     });
 
-    assert.notOk(topic.visited, "not visited unless we've read all the posts");
+    assert.false(topic.visited, "not visited unless we've read all the posts");
 
     topic.set("last_read_post_number", 2);
     assert.ok(topic.visited, "is visited once we've read all the posts");

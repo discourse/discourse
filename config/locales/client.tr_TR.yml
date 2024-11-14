@@ -1835,7 +1835,6 @@ tr_TR:
           success: "Davet bağlantısı başarıyla oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata oluştu"
         invite:
-          instructions: "Bu siteye anında erişim vermek için bu bağlantıyı paylaşın:"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
           copy_link: "Bağlantıyı kopyala"
@@ -1852,9 +1851,8 @@ tr_TR:
           expires_after: "Geçerliliğini yitireceği zaman"
           send_invite_email: "Kaydet ve E-posta Gönder"
           send_invite_email_instructions: "Davet e-postası göndermek için e-postaya daveti kısıtla"
-          save_invite: "Kaydet"
+          update_invite: "Güncelle"
           cancel: "İptal et"
-          invite_saved: "Davet kaydedildi."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
           text: "Toplu Davet"
@@ -2968,6 +2966,8 @@ tr_TR:
         bookmarks: "Başka yer imli konu yok."
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
+      dismiss:
+        name: "Kapat"
       close_topics:
         name: "Kapat"
         note: "Not"
@@ -3537,17 +3537,23 @@ tr_TR:
       few_likes_left: "Beğendiğiniz için teşekkürler! Bugün için yalnızca birkaç beğeniniz kaldı."
       controls:
         reply: "bu gönderiye bir yanıt oluşturmaya başlayın"
+        like_action: "Beğen"
         like: "bu gönderiyi beğen"
         has_liked: "bu gönderiyi beğendiniz"
         read_indicator: "bu gönderiyi okuyan üyeler"
+        undo_like_action: "Beğenini geri al"
         undo_like: "beğeniyi geri al"
         edit: "bu gönderiyi düzenle"
         edit_action: "Düzenle"
         edit_anonymous: "Üzgünüz, ancak bu gönderiyi düzenleyebilmek için giriş yapmalısınız."
+        flag_action: "Bayrak ekle"
         flag: "bu gönderinin incelenmesi için özel olarak bayrak ekleyin veya bununla ilgili özel bir bildirim gönderin"
+        delete_action: "Gönderiyi sil"
         delete: "bu gönderiyi sil"
         undelete: "bu gönderiyi silme işlemini geri al"
+        share_action: "Paylaş"
         share: "bu gönderiye bir bağlantı paylaş"
+        copy_action: "Bağlantıyı kopyala"
         copy_title: "bu gönderinin bağlantısını panoya kopyala"
         link_copied: "Bağlantı kopyalandı!"
         more: "Daha fazla"
@@ -3561,6 +3567,7 @@ tr_TR:
             other: "Evet, ve %{count} yanıtın tamamı"
           just_the_post: "Hayır, yalnızca bu gönderi"
         admin: "gönderi yönetici eylemleri"
+        admin_action: "Yönetici"
         permanently_delete: "Kalıcı Olarak Sil"
         permanently_delete_confirmation: "Bu gönderiyi kalıcı olarak silmek istediğinizden emin misiniz? Gönderiyi geri kurtaramazsınız."
         wiki: "Wiki Yap"
@@ -4583,6 +4590,8 @@ tr_TR:
               pending_count:
                 one: "%{count} beklemede"
                 other: "%{count} beklemede"
+            invite:
+              content: "Davet et"
         global_section: "Genel bölüm, herkes tarafından görülebilir"
       panels:
         forum:
@@ -4737,6 +4746,7 @@ tr_TR:
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
           previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
+          experimental: "Deneysel"
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."
@@ -6271,7 +6281,6 @@ tr_TR:
         time_read: "Okuma Zamanı"
         post_edits_count: "Gönderi Düzenlemeleri"
         anonymize: "Kullanıcıyı Anonimleştir"
-        anonymize_confirm: "Bu hesabı anonimleştirmek istediğinizden EMİN misiniz? Bu, kullanıcı adını ve e-postayı değiştirecek ve tüm profil bilgilerini sıfırlar."
         anonymize_yes: "Evet, bu hesabı anonimleştir"
         anonymize_failed: "Hesap anonimleştirilirken bir sorun oluştu."
         delete: "Kullanıcıyı Sil"
@@ -6328,7 +6337,6 @@ tr_TR:
         cant_delete_all_too_many_posts:
           one: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
           other: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
-        delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem kalıcıdır!"
         delete_confirm: "Mevcut tartışmalardan içeriğin kaldırılmasını önlemek için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Yalnızca sil"
@@ -6552,6 +6560,7 @@ tr_TR:
           groups: "Gruplar"
           dashboard: "Pano"
           navigation: "Navigasyon"
+          experimental: "Deneysel"
         secret_list:
           invalid_input: "Girdi alanları boş olamaz veya dikey çubuk karakteri içeremez."
         default_categories:
@@ -6681,7 +6690,8 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
-        help: "Herkese açık olacak yeni emoji ekleyin. Dosya adlarını kullanarak emoji oluşturmak için ad girmeden birden fazla dosyayı aynı anda sürükleyip bırakın. Seçilen grup, aynı anda eklenen tüm dosyalar için kullanılır. Dosya seçiciyi açmak için \"Yeni Emoji Ekle\"ye de tıklayabilirsiniz."
+        description: "Herkese açık olacak yeni emoji ekleyin. Dosya adlarını kullanarak emoji oluşturmak için ad girmeden birden fazla dosyayı aynı anda sürükleyip bırakın. Seçilen grup, aynı anda eklenen tüm dosyalar için kullanılır. Dosya seçiciyi açmak için \"Yeni Emoji Ekle\"ye de tıklayabilirsiniz."
+        new: "Ekle"
         add: "Yeni Emoji Ekle"
         choose_files: "Dosyaları Seçin"
         uploading: "Yükleniyor…"

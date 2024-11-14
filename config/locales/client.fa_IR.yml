@@ -1501,10 +1501,10 @@ fa_IR:
           title: "لینک دعوت"
           success: "لینک دعوت با موفقیت ایجاد شد!"
           error: "خطایی در هنگام ایجاد لینک رخ داد"
+        cannot_invite_to_forum: "متاسفم، شما اجازه ایجاد دعوت‌نامه را ندارید. لطفا برای دریافت اجازه دعوت‌نامه با مدیریت تماس بگیرید."
         invite:
           new_title: "دعوت‌نامه عضوها"
           edit_title: "ویرایش دعوت‌نامه"
-          instructions: "این لینک را برای ارائه دسترسی فوری به سایت٬ به اشتراک بگذارید:"
           expires_in_time: "در %{time} منقضی می شود"
           expired_at_time: "منقضی شده در %{time}"
           create_link_to_invite: "یک پیوند ایجاد کنید که بتوان آن را هم‌هم‌رسانی کنید و دسترسی سریع‌تر به این وبگاه را فراهم کند."
@@ -1536,10 +1536,9 @@ fa_IR:
           custom_message_placeholder: "یک یادداشت شخصی به دعوت‌نامه خود اضافه کنید."
           send_invite_email: "ذخیره و ارسال ایمیل"
           send_invite_email_instructions: "محدود کردن ارسال ایمیل برای ارسال دعوت‌نامه"
-          save_invite: "ذخیره"
+          update_invite: "به روز رسانی"
           cancel: "انصراف"
           create_link: "ایجاد پیوند"
-          invite_saved: "دعوتنامه ذخیره شد."
         bulk_invite:
           none: "دعوتنامه ای برای نمایش در این صفحه موجود نیست."
           text: "دعوت به تعداد بالا"
@@ -2378,6 +2377,8 @@ fa_IR:
         bookmarks: "موضوع نشانک‌دار دیگری وجود ندارد."
         filter: "هیچ موضوع بیشتری وجود ندارد."
     topic_bulk_actions:
+      dismiss:
+        name: "رد کردن"
       close_topics:
         name: "بستن"
         note: "یادداشت"
@@ -2795,22 +2796,29 @@ fa_IR:
       few_likes_left: "با تشکر از علاقه شما! فقط امکان چند پسندیدن دیگر را برای امروز دارید."
       controls:
         reply: "آغاز ساخت یک پاسخ به این نوشته"
+        like_action: "پسندیدن"
         like: "پسندیدن این نوشته"
         has_liked: "شما این نوشته را پسندیده‌اید"
         read_indicator: "کاربرانی که این فرسته را خوانده‌اند."
+        undo_like_action: "برداشتن پسند"
         undo_like: "برداشتن پسند"
         edit: "ویرایش این نوشته"
         edit_action: "ویرایش"
         edit_anonymous: "با عرض پوزش، اما شما برای ویرایش این نوشته باید وارد سیستم شوید."
+        flag_action: "پرچم"
         flag: "پرچم خصوصی این نوشته برا رسیدگی یا ارسال پیام خصوصی در باره آن"
+        delete_action: "حذف نوشته"
         delete: "حذف این نوشته"
         undelete: "بازگردانی این نوشته"
+        share_action: "اشتراک‌گذاری"
         share: "اشتراک گذاری پیوند این نوشته"
+        copy_action: "رونوشت پیوند"
         more: "بیشتر"
         delete_replies:
           confirm: "ایا مایل به حذف پاسخ ها یه این پست هم هستید؟"
           just_the_post: "نه، تنها این نوشته"
         admin: "عملیات مدیریت نوشته"
+        admin_action: "مدیر کل"
         wiki: "ساخت دانشنامه"
         unwiki: "حذف دانشنامه"
         convert_to_moderator: "اضافه کردن رنگ همکاران"
@@ -3531,6 +3539,9 @@ fa_IR:
               pending_count:
                 one: "%{count} در انتظار"
                 other: "%{count} در انتظار"
+            invite:
+              content: "دعوت"
+              title: "دعوت‌نامه عضوهای جدید"
       panels:
         forum:
           label: انجمن
@@ -3588,6 +3599,7 @@ fa_IR:
         dismiss_notice: "رد کردن"
         new_features:
           learn_more: "بیشتر بدانید..."
+          experimental: "آزمایشی"
           experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
           experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
           experiment_toggled_too_fast: "شما ویژگی آزمایشی را خیلی سریع تغییر داده‌اید. لطفا چند ثانیه منتظر بمانید و دوباره تلاش کنید."
@@ -4509,7 +4521,6 @@ fa_IR:
         approve_bulk_success: "موفقیت! همه کاربران انتخابی تایید و اطلاعیه ارسال شد."
         time_read: "زمان خواندن"
         anonymize: "کاربر بینام"
-        anonymize_confirm: "آیا مطمئن هستید که می‌خواهید این حساب‌کاربری را بینام کنید؟ این ایمیل و نام‌کاربری را تغییر و تمام اطلاعات نمایه را بطور مجدد تنظیم می کند"
         anonymize_yes: "بله، حساب‌کاربری را بینام کن"
         anonymize_failed: "یک مشکل با حساب‌کاربری بینام وجود دارد"
         delete: "حذف کاربر"
@@ -4533,7 +4544,6 @@ fa_IR:
         cant_delete_all_too_many_posts:
           one: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
           other: "نمی توان همه نوشته ها را خذف کرد. چون تعداد کاربران از %{count} تعداد نوشته ها بیشتر است.(delete_all_posts_max)"
-        delete_confirm_title: "آیا مطمئن هستید که می‌خواهید این کاربر را حذف کنید؟ این دائمی است!"
         delete_and_block: "آدرس IP و ایمیل را حذف و <b>مسدود</b>کن."
         delete_dont_block: "فقط حذف"
         deleting_user: "درحال حذف کاربر…"
@@ -4708,6 +4718,7 @@ fa_IR:
           groups: "گروه‌ها"
           dashboard: "پیشخوان"
           navigation: "ناوبری"
+          experimental: "آزمایشی"
         default_categories:
           modal_yes: "بله"
         simple_list:
@@ -4784,6 +4795,7 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
+        new: "اضافه کردن"
         add: "افزودن شکلک جدید"
         choose_files: "انتخاب پرونده"
         uploading: "در حال بارگذاری…"

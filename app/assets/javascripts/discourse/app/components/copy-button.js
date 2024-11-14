@@ -44,6 +44,6 @@ export default class CopyButton extends Component {
       this.set("copyTranslatedLabel", this.translatedLabelAfterCopy);
 
       discourseDebounce(this._restoreButton, 3000);
-    } catch (err) {}
+    } catch {}
   }
 }

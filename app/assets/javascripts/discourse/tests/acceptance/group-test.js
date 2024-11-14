@@ -1,11 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -34,23 +29,23 @@ acceptance("Group - Anonymous", function (needs) {
 
     await click(".nav-pills li a[title='Activity']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
     assert.ok(query(".topic-list"), "it shows the topic list");
-    assert.strictEqual(count(".topic-list-item"), 2, "it lists stream items");
+    assert.dom(".topic-list-item").exists({ count: 2 }, "lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
     assert
       .dom(".nav-pills li a[title='Edit Group']")
       .doesNotExist("it should not show messages tab if user is not admin");
     assert
       .dom(".nav-pills li a[title='Logs']")
       .doesNotExist("it should not show Logs tab if user is not admin");
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
@@ -204,7 +199,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-message-button");
 
-    assert.strictEqual(count("#reply-control"), 1, "it opens the composer");
+    assert.dom("#reply-control").exists("opens the composer");
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
       privateMessageUsers.header().value(),
@@ -212,7 +207,7 @@ acceptance("Group - Authenticated", function (needs) {
       "it prefills the group name"
     );
 
-    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
+    assert.dom(".add-warning").doesNotExist("groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {
@@ -250,17 +245,13 @@ acceptance("Group - Authenticated", function (needs) {
   test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user is admin"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user is admin");
 
-    assert.strictEqual(
-      count(".group-message-button"),
-      1,
-      "it displays show group message button"
-    );
+    assert
+      .dom(".group-message-button")
+      .exists("displays show group message button");
     assert
       .dom(".group-info-name")
       .hasText("Awesome Team", "it should display the group name");
@@ -288,11 +279,9 @@ acceptance("Group - Authenticated", function (needs) {
   test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user can_admin_group"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user can_admin_group");
 
     await click(".group-members-add.btn");
 

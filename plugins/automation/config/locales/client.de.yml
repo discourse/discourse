@@ -6,6 +6,11 @@
 
 de:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: Automatisierung löschen
     discourse_automation:
       title: Automatisierung
       create: Erstellen

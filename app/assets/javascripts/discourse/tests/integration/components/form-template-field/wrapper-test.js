@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | wrapper",
@@ -16,11 +15,10 @@ module(
         hbs`<FormTemplateField::Wrapper @content={{this.content}} />`
       );
 
-      assert.notOk(
-        exists(".form-template-field"),
-        "A form template field should not exist"
-      );
-      assert.ok(exists(".alert"), "An alert message should exist");
+      assert
+        .dom(".form-template-field")
+        .doesNotExist("A form template field should not exist");
+      assert.dom(".alert").exists("an alert message should exist");
     });
 
     test("renders a component based on the component type found in the content YAML", async function (assert) {
@@ -45,10 +43,9 @@ module(
       );
 
       componentTypes.forEach((componentType) => {
-        assert.ok(
-          exists(`.form-template-field[data-field-type='${componentType}']`),
-          `${componentType} component exists`
-        );
+        assert
+          .dom(`.form-template-field[data-field-type='${componentType}']`)
+          .exists(`${componentType} component exists`);
       });
     });
 
@@ -60,26 +57,23 @@ module(
 - type: multi-select\n  id: multi\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"`;
       this.set("content", content);
 
-      const initialValues = {
+      this.set("initialValues", {
         checkbox: "on",
         name: "Test Name",
         notes: "Test Notes",
         dropdown: "Option 1",
         multi: ["Option 1"],
-      };
-      this.set("initialValues", initialValues);
+      });
 
       await render(
         hbs`<FormTemplateField::Wrapper @content={{this.content}} @initialValues={{this.initialValues}} />`
       );
 
-      Object.keys(initialValues).forEach((componentId) => {
-        assert.equal(
-          query(`[name='${componentId}']`).value,
-          initialValues[componentId],
-          `${componentId} component has initial value`
-        );
-      });
+      assert.dom("[name='checkbox']").hasValue("on");
+      assert.dom("[name='name']").hasValue("Test Name");
+      assert.dom("[name='notes']").hasValue("Test Notes");
+      assert.dom("[name='dropdown']").hasValue("Option 1");
+      assert.dom("[name='multi']").hasValue("Option 1");
     });
 
     test("renders a component based on the component type found in the content YAML when passed ids", async function (assert) {
@@ -99,10 +93,9 @@ module(
         hbs`<FormTemplateField::Wrapper @id={{this.formTemplateId}} />`
       );
 
-      assert.ok(
-        exists(`.form-template-field[data-field-type='checkbox']`),
-        `Checkbox component renders`
-      );
+      assert
+        .dom(`.form-template-field[data-field-type='checkbox']`)
+        .exists("checkbox component renders");
     });
   }
 );

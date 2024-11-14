@@ -1733,7 +1733,6 @@ ja:
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
         invite:
-          instructions: "このサイトへのアクセスを即時に許可するにはこのリンクを共有します:"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
           copy_link: "リンクをコピーする"
@@ -1750,9 +1749,8 @@ ja:
           expires_after: "有効期限"
           send_invite_email: "保存してメールを送信"
           send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
-          save_invite: "保存"
+          update_invite: "更新"
           cancel: "キャンセル"
-          invite_saved: "招待は保存されました。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -2796,6 +2794,8 @@ ja:
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
     topic_bulk_actions:
+      dismiss:
+        name: "閉じる"
       close_topics:
         name: "閉じる"
         note: "注意"
@@ -3331,17 +3331,23 @@ ja:
       few_likes_left: "愛を共有してくれてありがとう！今日は後数個しか「いいね！」できません。"
       controls:
         reply: "この投稿の返信を作成する"
+        like_action: "いいね！"
         like: "この投稿に「いいね！」する"
         has_liked: "この投稿に「いいね！」しました"
         read_indicator: "この投稿を読んだメンバー"
+        undo_like_action: "「いいね！」を取り消す"
         undo_like: "「いいね！」を取り消す"
         edit: "この投稿を編集"
         edit_action: "編集"
         edit_anonymous: "この投稿を編集するには、ログインする必要があります。"
+        flag_action: "通報する"
         flag: "この投稿を非公開に通報するか、または非公開の通知を送信する"
+        delete_action: "投稿を削除する"
         delete: "この投稿を削除する"
         undelete: "この投稿の削除を取り消す"
+        share_action: "共有"
         share: "この投稿へのリンクを共有する"
+        copy_action: "リンクをコピーする"
         copy_title: "この投稿へのリンクをクリップボードにコピー"
         link_copied: "リンクがコピーされました！"
         more: "もっと"
@@ -3353,6 +3359,7 @@ ja:
             other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
+        admin_action: "管理"
         permanently_delete: "永久に削除"
         permanently_delete_confirmation: "この投稿を永久に削除してよろしいですか？復元できなくなります。"
         wiki: "ウィキにする"
@@ -4330,6 +4337,8 @@ ja:
               title: "通報された投稿とその他の待機中の項目"
               pending_count:
                 other: "%{count} 保留中"
+            invite:
+              content: "招待"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
@@ -4480,6 +4489,7 @@ ja:
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
           previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
+          experimental: "実験的"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
@@ -5999,7 +6009,6 @@ ja:
         time_read: "閲覧時間"
         post_edits_count: "投稿の編集"
         anonymize: "ユーザーを匿名化"
-        anonymize_confirm: "このアカウントを匿名化してよろしいですか？ユーザー名とメールアドレスが変更され、すべてのプロファイル情報がリセットされます。"
         anonymize_yes: "はい。このアカウントを匿名化する"
         anonymize_failed: "アカウントの匿名化中に問題が発生しました。"
         delete: "ユーザーを削除"
@@ -6053,7 +6062,6 @@ ja:
           other: "すべての投稿を削除できません。%{count} 日以上経過した投稿があります。(delete_user_max_post_age の設定)"
         cant_delete_all_too_many_posts:
           other: "すべての投稿を削除することはできませんでした。ユーザーは %{count} 件以上投稿しています。(delete_all_posts_max)"
-        delete_confirm_title: "このユーザーを削除してもよろしいですか？永久に削除されます！"
         delete_confirm: "一般に、ユーザーを削除するのではなく、匿名化して既存のディスカッションからコンテンツを削除しないようにするのが推奨されます。"
         delete_and_block: "このメールと IP アドレスを削除して<b>ブロック</b>する"
         delete_dont_block: "削除のみ"
@@ -6274,6 +6282,7 @@ ja:
           groups: "グループ"
           dashboard: "ダッシュボード"
           navigation: "ナビゲーション"
+          experimental: "実験的"
         secret_list:
           invalid_input: "入力フィールドを空にしたり、縦棒文字を含めることはできません。"
         default_categories:
@@ -6399,7 +6408,8 @@ ja:
           grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
-        help: "誰でも使用できる新しい絵文字を追加します。名前を入力せずに、複数のファイルを一度にドラッグアンドドロップすると、ファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。「新しい絵文字を追加」をクリックして、ファイルピッカーを開くこともできます。"
+        description: "誰でも使用できる新しい絵文字を追加します。名前を入力せずに、複数のファイルを一度にドラッグアンドドロップすると、ファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。「新しい絵文字を追加」をクリックして、ファイルピッカーを開くこともできます。"
+        new: "追加"
         add: "新しい絵文字を追加"
         choose_files: "ファイルを選択"
         uploading: "アップロード中…"

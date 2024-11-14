@@ -1,15 +1,13 @@
 import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 async function openFlagModal() {
-  if (exists(".topic-post:first-child button.show-more-actions")) {
+  if (
+    document.querySelector(".topic-post:first-child button.show-more-actions")
+  ) {
     await click(".topic-post:first-child button.show-more-actions");
   }
   await click(".topic-post:first-child button.create-flag");
@@ -99,7 +97,7 @@ acceptance("flagging", function (needs) {
   test("Flag modal opening", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
-    assert.ok(exists(".flag-modal-body"), "it shows the flag modal");
+    assert.dom(".flag-modal-body").exists("shows the flag modal");
   });
 
   test("Flag take action dropdown exists", async function (assert) {
@@ -124,12 +122,8 @@ acceptance("flagging", function (needs) {
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
-    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "",
-      "penalty message is empty"
-    );
+    assert.dom(".silence-user-modal").exists("shows the silence modal");
+    assert.dom(".suspend-message").hasValue("", "penalty message is empty");
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
@@ -147,12 +141,13 @@ acceptance("flagging", function (needs) {
     await click("#radio_inappropriate");
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
-    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-    assert.equal(
-      query(".suspend-message").value,
-      "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
-      "penalty message is prefilled with post text"
-    );
+    assert.dom(".silence-user-modal").exists("shows the silence modal");
+    assert
+      .dom(".suspend-message")
+      .hasValue(
+        "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
+        "penalty message is prefilled with post text"
+      );
   });
 
   test("Can delete spammer from spam", async function (assert) {
@@ -179,7 +174,7 @@ acceptance("flagging", function (needs) {
 
     await click(".dialog-footer .btn-default");
     assert.dom(".dialog-body").doesNotExist();
-    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
+    assert.dom(".silence-user-modal").exists("shows the silence modal");
 
     await click(".d-modal-cancel");
     assert.dom(".dialog-body").exists();

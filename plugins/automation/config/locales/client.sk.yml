@@ -6,6 +6,11 @@
 
 sk:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: vymazať automatizáciu
     discourse_automation:
       title: Automatizácia
       create: Vytvoriť

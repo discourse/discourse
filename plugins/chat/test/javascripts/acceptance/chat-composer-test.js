@@ -62,7 +62,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
 
     await settled();
 
-    assert.equal(document.querySelector(".chat-composer__input").value, "Foo");
+    assert.dom(".chat-composer__input").hasValue("Foo");
   });
 });
 

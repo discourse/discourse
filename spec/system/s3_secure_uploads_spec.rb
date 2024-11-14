@@ -23,9 +23,7 @@ describe "Uploading files in the composer to S3", type: :system do
     end
 
     it "marks uploads inside of private message posts as secure" do
-      skip_unless_s3_system_specs_enabled!
-
-      setup_s3_system_test(enable_secure_uploads: true)
+      setup_or_skip_s3_system_test(enable_secure_uploads: true)
       sign_in(current_user)
 
       topic_page.open_new_message
@@ -45,10 +43,8 @@ describe "Uploading files in the composer to S3", type: :system do
     end
 
     it "marks uploads inside of private category posts as secure" do
-      skip_unless_s3_system_specs_enabled!
-
       private_category = Fabricate(:private_category, group: Fabricate(:group))
-      setup_s3_system_test(enable_secure_uploads: true)
+      setup_or_skip_s3_system_test(enable_secure_uploads: true)
       sign_in(current_user)
 
       topic_page.open_new_topic
@@ -68,10 +64,8 @@ describe "Uploading files in the composer to S3", type: :system do
     end
 
     it "marks uploads for all posts as secure when login_required" do
-      skip_unless_s3_system_specs_enabled!
-
       SiteSetting.login_required = true
-      setup_s3_system_test(enable_secure_uploads: true)
+      setup_or_skip_s3_system_test(enable_secure_uploads: true)
       sign_in(current_user)
 
       topic_page.open_new_topic
@@ -90,9 +84,7 @@ describe "Uploading files in the composer to S3", type: :system do
     end
 
     it "doesn't mark uploads for public posts as secure" do
-      skip_unless_s3_system_specs_enabled!
-
-      setup_s3_system_test(enable_secure_uploads: true)
+      setup_or_skip_s3_system_test(enable_secure_uploads: true)
       sign_in(current_user)
 
       topic_page.open_new_topic

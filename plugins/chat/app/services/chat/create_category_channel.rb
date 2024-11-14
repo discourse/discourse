@@ -38,6 +38,7 @@ module Chat
       attribute :category_id, :integer
       attribute :auto_join_users, :boolean, default: false
       attribute :threading_enabled, :boolean, default: false
+      attribute :icon_upload_id, :integer
 
       before_validation do
         self.auto_join_users = auto_join_users.presence || false
@@ -53,7 +54,7 @@ module Chat
       model :channel, :create_channel
       model :membership, :create_membership
     end
-    step :enforce_automatic_channel_memberships
+    step :auto_join_users_if_needed
 
     private
 
@@ -76,7 +77,14 @@ module Chat
     def create_channel(category:, params:)
       category.create_chat_channel(
         user_count: 1,
-        **params.slice(:name, :slug, :description, :auto_join_users, :threading_enabled),
+        **params.slice(
+          :name,
+          :slug,
+          :icon_upload_id,
+          :description,
+          :auto_join_users,
+          :threading_enabled,
+        ),
       )
     end
 
@@ -84,9 +92,8 @@ module Chat
       channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
-    def enforce_automatic_channel_memberships(channel:)
-      return if !channel.auto_join_users?
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
+    def auto_join_users_if_needed(channel:)
+      Chat::AutoJoinChannels.call(params: { channel_id: channel.id }) if channel.auto_join_users?
     end
   end
 end

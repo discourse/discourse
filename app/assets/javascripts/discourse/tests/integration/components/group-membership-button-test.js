@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | group-membership-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -22,7 +21,7 @@ module("Integration | Component | group-membership-button", function (hooks) {
       .doesNotExist("can't join group if user is already in the group");
 
     this.set("model.is_group_user", false);
-    assert.ok(exists(".group-index-join"), "allowed to join group");
+    assert.dom(".group-index-join").exists("allowed to join group");
   });
 
   test("canLeaveGroup", async function (assert) {
@@ -40,11 +39,7 @@ module("Integration | Component | group-membership-button", function (hooks) {
       .doesNotExist("can't leave group if user is not in the group");
 
     this.set("model.is_group_user", true);
-    assert.strictEqual(
-      count(".group-index-leave"),
-      1,
-      "allowed to leave group"
-    );
+    assert.dom(".group-index-leave").exists("allowed to leave group");
   });
 
   test("canRequestMembership", async function (assert) {

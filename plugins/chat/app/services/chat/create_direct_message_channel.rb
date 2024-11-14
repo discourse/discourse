@@ -30,6 +30,7 @@ module Chat
       attribute :target_usernames, :array
       attribute :target_groups, :array
       attribute :upsert, :boolean, default: false
+      attribute :icon_upload_id, :integer
 
       validate :target_presence
 
@@ -47,7 +48,7 @@ module Chat
            class_name: Chat::DirectMessageChannel::Policy::CanCommunicateAllParties
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
-    step :set_optional_name
+    step :set_optional_params
     step :update_memberships
     step :recompute_users_count
 
@@ -93,8 +94,10 @@ module Chat
       ::Chat::DirectMessageChannel.find_or_create_by(chatable: direct_message)
     end
 
-    def set_optional_name(channel:, params:)
-      channel.update!(params.slice(:name)) if params.name&.size&.positive?
+    def set_optional_params(channel:, params:)
+      optional_params =
+        params.slice(:name, :icon_upload_id).reject { |_, value| value.nil? || value == "" }
+      channel.update!(optional_params) if !optional_params.empty?
     end
 
     def update_memberships(channel:, target_users:)

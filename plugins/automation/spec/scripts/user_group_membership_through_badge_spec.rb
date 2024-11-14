@@ -28,12 +28,11 @@ describe "UserGroupMembershipThroughBadge" do
   end
 
   context "with invalid field values" do
-    before do
-      @original_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @original_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     context "with an unknown badge" do
       let(:unknown_badge_id) { -1 }
@@ -47,7 +46,7 @@ describe "UserGroupMembershipThroughBadge" do
       end
 
       it "logs warning message and does nothing" do
-        expect(@fake_logger.warnings).to include(
+        expect(fake_logger.warnings).to include(
           "[discourse-automation] Couldn’t find badge with id #{unknown_badge_id}",
         )
         expect(user.reload.groups).to be_empty
@@ -68,7 +67,7 @@ describe "UserGroupMembershipThroughBadge" do
           "user" => user,
         )
 
-        expect(@fake_logger.warnings).to include(
+        expect(fake_logger.warnings).to include(
           "[discourse-automation] Couldn’t find group with id #{target_group.id}",
         )
         expect(user.reload.groups).to be_empty

@@ -330,7 +330,7 @@ module Discourse
   end
 
   # list of pixel ratios Discourse tries to optimize for
-  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
+  PIXEL_RATIOS = [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
@@ -477,7 +477,7 @@ module Discourse
       end
   end
 
-  BUILTIN_AUTH ||= [
+  BUILTIN_AUTH = [
     Auth::AuthProvider.new(
       authenticator: Auth::FacebookAuthenticator.new,
       frame_width: 580,
@@ -864,7 +864,7 @@ module Discourse
     user ||= (system_user || User.admins.real.order(:id).first)
   end
 
-  SYSTEM_USER_ID ||= -1
+  SYSTEM_USER_ID = -1
 
   def self.system_user
     @system_users ||= {}
@@ -1042,7 +1042,7 @@ module Discourse
     warning
   end
 
-  SIDEKIQ_NAMESPACE ||= "sidekiq"
+  SIDEKIQ_NAMESPACE = "sidekiq"
 
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
@@ -1182,7 +1182,7 @@ module Discourse
     ENV["RAILS_ENV"] == "test" && ENV["TEST_ENV_NUMBER"]
   end
 
-  CDN_REQUEST_METHODS ||= %w[GET HEAD OPTIONS]
+  CDN_REQUEST_METHODS = %w[GET HEAD OPTIONS]
 
   def self.is_cdn_request?(env, request_method)
     return if CDN_REQUEST_METHODS.exclude?(request_method)

@@ -476,9 +476,6 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    migrate_column_to_bigint(AllowedPmUser, :allowed_pm_user_id)
-    migrate_column_to_bigint(Bookmark, :bookmarkable_id)
-    migrate_column_to_bigint(IgnoredUser, :ignored_user_id)
     migrate_column_to_bigint(PostAction, :post_action_type_id)
     migrate_column_to_bigint(Reviewable, :target_id)
     migrate_column_to_bigint(ReviewableHistory, :reviewable_id)
@@ -970,12 +967,12 @@ ensure
 end
 
 def track_log_messages
-  old_logger = Rails.logger
-  logger = Rails.logger = FakeLogger.new
+  logger = FakeLogger.new
+  Rails.logger.broadcast_to(logger)
   yield logger
   logger
 ensure
-  Rails.logger = old_logger
+  Rails.logger.stop_broadcasting_to(logger)
 end
 
 # this takes a string and returns a copy where 2 different
@@ -1033,6 +1030,7 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
+  options.add_argument("--remote-allow-origins=*")
 
   # A file that contains just a list of paths like so:
   #

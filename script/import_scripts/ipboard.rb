@@ -32,23 +32,23 @@ export USERDIR="user"
 =end
 
 class ImportScripts::IpboardSQL < ImportScripts::Base
-  DB_HOST ||= ENV["DB_HOST"] || "localhost"
-  DB_NAME ||= ENV["DB_NAME"] || "ipboard"
-  DB_PW ||= ENV["DB_PW"] || "ipboard"
-  DB_USER ||= ENV["DB_USER"] || "ipboard"
-  TABLE_PREFIX ||= ENV["TABLE_PREFIX"] || "ipb_"
-  IMPORT_AFTER ||= ENV["IMPORT_AFTER"] || "1970-01-01"
-  UPLOADS ||= ENV["UPLOADS"] || "http://UPLOADS+LOCATION+IS+NOT+SET/uploads"
-  USERDIR ||= ENV["USERDIR"] || "user"
-  URL ||= ENV["URL"] || "https://forum.example.com"
-  AVATARS_DIR ||= ENV["AVATARS_DIR"] || "/home/pfaffman/data/example.com/avatars/"
+  DB_HOST = ENV["DB_HOST"] || "localhost"
+  DB_NAME = ENV["DB_NAME"] || "ipboard"
+  DB_PW = ENV["DB_PW"] || "ipboard"
+  DB_USER = ENV["DB_USER"] || "ipboard"
+  TABLE_PREFIX = ENV["TABLE_PREFIX"] || "ipb_"
+  IMPORT_AFTER = ENV["IMPORT_AFTER"] || "1970-01-01"
+  UPLOADS = ENV["UPLOADS"] || "http://UPLOADS+LOCATION+IS+NOT+SET/uploads"
+  USERDIR = ENV["USERDIR"] || "user"
+  URL = ENV["URL"] || "https://forum.example.com"
+  AVATARS_DIR = ENV["AVATARS_DIR"] || "/home/pfaffman/data/example.com/avatars/"
   BATCH_SIZE = 1000
   ID_FIRST = true
   QUIET = true
   DEBUG = false
   GALLERY_CAT_ID = 1_234_567
   GALLERY_CAT_NAME = "galeria"
-  EMO_DIR ||= ENV["EMO_DIR"] || "default"
+  EMO_DIR = ENV["EMO_DIR"] || "default"
   OLD_FORMAT = false
   if OLD_FORMAT
     MEMBERS_TABLE = "#{TABLE_PREFIX}core_members"

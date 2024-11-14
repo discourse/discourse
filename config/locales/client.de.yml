@@ -1837,10 +1837,10 @@ de:
           title: "Einladungslink"
           success: "Der Einladungslink wurde erfolgreich generiert!"
           error: "Beim Erstellen des Einladungslinks ist ein Fehler aufgetreten"
+        cannot_invite_to_forum: "Du hast leider nicht die Erlaubnis, Einladungen zu erstellen. Bitte wende dich an einen Administrator, damit er dir das Recht zum Einladen erteilt."
         invite:
           new_title: "Mitglieder einladen"
           edit_title: "Einladung bearbeiten"
-          instructions: "Teile diesen Link, um sofort Zugriff auf diese Website zu gewähren:"
           expires_in_time: "Läuft in %{time} ab"
           expired_at_time: "Abgelaufen um %{time}"
           create_link_to_invite: "Erstelle einen Link, der geteilt werden kann, um sofortigen Zugang zu dieser Website zu erhalten."
@@ -1872,10 +1872,13 @@ de:
           custom_message_placeholder: "Füge eine persönliche Notiz zu deiner Einladung hinzu"
           send_invite_email: "Speichern und E-Mail senden"
           send_invite_email_instructions: "Einladung auf E-Mail beschränken, um eine Einladungs-E-Mail zu senden"
-          save_invite: "Speichern"
+          update_invite: "Aktualisieren"
+          update_invite_and_send_email: "Aktualisieren und E-Mail senden"
           cancel: "Abbrechen"
           create_link: "Link erstellen"
-          invite_saved: "Einladung gespeichert."
+          create_link_and_send_email: "Link erstellen und E-Mail senden"
+          invite_saved_without_sending_email: "Einladung gespeichert. Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Seite zu erhalten."
+          invite_saved_with_sending_email: "Die Einladungs-E-Mail wurde verschickt. Du kannst auch den Link unten kopieren und teilen, um sofort Zugang zu dieser Seite zu erhalten."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2328,7 +2331,6 @@ de:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Nur Kategorien"
-      categories_only_optimized: "Nur Kategorien (Optimiert)"
       categories_with_featured_topics: "Kategorien mit hervorgehobenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
       categories_and_latest_topics_created_date: "Kategorien und neueste Themen (sortiert nach Datum der Themenerstellung)"
@@ -2994,6 +2996,8 @@ de:
         bookmarks: "Das waren alle Themen, die du mit einem Lesezeichen versehen hast."
         filter: "Es gibt keine weiteren Themen."
     topic_bulk_actions:
+      dismiss:
+        name: "Verwerfen"
       close_topics:
         name: "Schließen"
         note: "Hinweis"
@@ -3504,6 +3508,9 @@ de:
         one: "%{count} versteckten Beitrag anzeigen"
         other: "%{count} versteckte Beiträge anzeigen"
       sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
+      link_clicked:
+        one: "Link %{count} mal angeklickt"
+        other: "Link %{count} mal angeklickt"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -3565,17 +3572,24 @@ de:
       few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“ übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
+        like_action: "Gefällt mir"
         like: "dieser Beitrag gefällt mir"
         has_liked: "dir gefällt dieser Beitrag"
         read_indicator: "Mitglieder, die diesen Beitrag gelesen haben"
+        undo_like_action: "Gefällt mir nicht mehr"
         undo_like: "gefällt mir nicht mehr"
         edit: "diesen Beitrag bearbeiten"
         edit_action: "Bearbeiten"
         edit_anonymous: "Entschuldige, du musst angemeldet sein, um diesen Beitrag zu bearbeiten."
+        flag_action: "Melden"
         flag: "Diesen Beitrag den Moderatoren melden oder eine Nachricht senden."
+        delete_action: "Beitrag löschen"
         delete: "diesen Beitrag löschen"
+        undelete_action: "Beitrag wiederherstellen"
         undelete: "diesen Beitrag wiederherstellen"
+        share_action: "Teilen"
         share: "Link zu diesem Beitrag teilen"
+        copy_action: "Link kopieren"
         copy_title: "kopiere einen Link zu diesem Beitrag in die Zwischenablage"
         link_copied: "Link kopiert!"
         more: "Mehr"
@@ -3589,6 +3603,7 @@ de:
             other: "Ja und alle %{count} Antworten"
           just_the_post: "Nein, nur diesen Beitrag"
         admin: "Administrative Aktionen"
+        admin_action: "Admin-Panel"
         permanently_delete: "Endgültig löschen"
         permanently_delete_confirmation: "Bist du sicher, dass du diesen Beitrag endgültig löschen möchtest? Du kannst ihn nicht wiederherstellen."
         wiki: "Wiki erstellen"
@@ -4614,6 +4629,9 @@ de:
               pending_count:
                 one: "%{count} ausstehend"
                 other: "%{count} ausstehend"
+            invite:
+              content: "Einladen"
+              title: "Neue Mitglieder einladen"
         global_section: "Globaler Abschnitt, für alle sichtbar"
       panels:
         forum:
@@ -4768,6 +4786,7 @@ de:
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
           previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
+          experimental: "Experimentell"
           experiment_enabled: "Du hast die experimentelle Funktion aktiviert."
           experiment_disabled: "Du hast die experimentelle Funktion deaktiviert."
           experiment_toggled_too_fast: "Du hast die experimentelle Funktion zu schnell umgeschaltet. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
@@ -5142,6 +5161,8 @@ de:
           group_name: "Gruppenbenutzerereignisse"
           user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
           user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
+        custom_event:
+          group_name: "Benutzerdefinierte Ereignisse"
         user_promoted_event:
           group_name: "Benutzerbeförderungsereignisse"
           user_promoted: "Ein Benutzer wird befördert"
@@ -5260,6 +5281,8 @@ de:
           community_name_placeholder: "Beispiel-Community"
           community_summary: "Kurzbeschreibung der Community"
           community_description: "Beschreibung der Community"
+          community_title: "Gemeinschaftstitel"
+          community_title_help: "Kurze Beschreibung, die im Browser-Tab angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
           banner_image: "Bannerbild"
           banner_image_help: |
             Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100x300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
@@ -6361,8 +6384,9 @@ de:
         time_read: "Lesezeit"
         post_edits_count: "Beitragsbearbeitungen"
         anonymize: "Benutzer anonymisieren"
-        anonymize_confirm: "Möchtest du dieses Konto WIRKLICH anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Informationen im Profil zurückgesetzt."
-        delete_associated_accounts_confirm: "Bist du sicher, dass du alle verknüpften Konten von diesem Konto löschen willst? Der Benutzer kann sich möglicherweise nicht mehr anmelden, wenn sich seine E-Mail geändert hat."
+        anonymize_confirm: "Bist du sicher, dass du dieses Konto anonymisieren willst? Dadurch werden der Benutzername und die E-Mail-Adresse geändert und alle Profilinformationen zurückgesetzt."
+        delete_associated_accounts_confirm: "Bist du sicher, dass du alle verknüpften Konten von diesem Konto löschen willst? Der Benutzer kann sich möglicherweise nicht mehr anmelden, wenn sich seine E-Mail-Adresse geändert hat."
+        disable_second_factor_confirm: "Bist du sicher, dass du die Zwei-Faktor-Authentifizierung für dieses Konto deaktivieren möchtest?"
         anonymize_yes: "Ja, dieses Konto anonymisieren"
         anonymize_failed: "Beim Anonymisieren des Kontos ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
@@ -6419,7 +6443,7 @@ de:
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat. (Siehe die Einstellung „delete_all_posts_max“.)"
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
-        delete_confirm_title: "Bist du SICHER, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
+        delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen willst? Das ist dauerhaft!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
@@ -6644,6 +6668,7 @@ de:
           groups: "Gruppen"
           dashboard: "Dashboard"
           navigation: "Navigation"
+          experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
         default_categories:
@@ -6778,12 +6803,14 @@ de:
           grant_existing_holders: Weitere Abzeichen an bestehende Abzeicheninhaber verleihen
       emoji:
         title: "Emoji"
-        help: "Füge neue Emojis hinzu, die für alle verfügbar sind. Bewege mehrere Dateien gleichzeitig per Drag-and-drop, ohne einen Namen einzugeben, um Emojis mit den entsprechenden Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden. Du kannst auch auf „Neues Emoji hinzufügen“ klicken, um die Dateiauswahl zu öffnen."
+        description: "Füge neue Emojis hinzu, die für alle verfügbar sind. Bewege mehrere Dateien gleichzeitig per Drag-and-drop, ohne einen Namen einzugeben, um Emojis mit den entsprechenden Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden. Du kannst auch auf „Neues Emoji hinzufügen“ klicken, um die Dateiauswahl zu öffnen."
+        new: "Hinzufügen"
         add: "Neues Emoji hinzufügen"
         choose_files: "Dateien auswählen"
         uploading: "Wird hochgeladen …"
         name: "Name"
         group: "Gruppe"
+        created_by: "Erstellt von"
         image: "Bild"
         alt: "Vorschau des benutzerdefinierten Emojis"
         delete_confirm: "Möchtest du wirklich das „:%{name}:“-Emoji löschen?"

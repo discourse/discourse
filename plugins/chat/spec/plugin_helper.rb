@@ -153,24 +153,4 @@ RSpec.configure do |config|
     # Or a very large value, if you do want to truncate at some point
     c.max_formatted_output_length = nil
   end
-
-  config.before(:suite) do
-    migrate_column_to_bigint(Chat::Channel, :chatable_id)
-    migrate_column_to_bigint(Chat::ChannelArchive, :chat_channel_id)
-    migrate_column_to_bigint(Chat::DirectMessageUser, :direct_message_channel_id)
-    migrate_column_to_bigint(Chat::Draft, :chat_channel_id)
-    migrate_column_to_bigint(Chat::IncomingWebhook, :chat_channel_id)
-    migrate_column_to_bigint(Chat::Mention, :chat_message_id)
-    migrate_column_to_bigint(Chat::MentionNotification, :chat_mention_id)
-    migrate_column_to_bigint(Chat::MentionNotification, :notification_id)
-    migrate_column_to_bigint(Chat::Message, :chat_channel_id)
-    migrate_column_to_bigint(Chat::Message, :in_reply_to_id)
-    migrate_column_to_bigint(Chat::MessageReaction, :chat_message_id)
-    migrate_column_to_bigint(Chat::MessageRevision, :chat_message_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :chat_channel_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :last_read_message_id)
-    migrate_column_to_bigint(Chat::UserChatChannelMembership, :last_unread_mention_when_emailed_id)
-    migrate_column_to_bigint(Chat::WebhookEvent, :chat_message_id)
-    migrate_column_to_bigint(Chat::WebhookEvent, :incoming_chat_webhook_id)
-  end
 end

@@ -9,7 +9,7 @@ module("Unit | Utility | domFromString", function (hooks) {
     const node = domFromString(
       '<div class="foo">foo</div><div class="boo">boo</div>'
     );
-    assert.ok(node[0].classList.contains("foo"));
-    assert.ok(node[1].classList.contains("boo"));
+    assert.dom(node[0]).hasClass("foo");
+    assert.dom(node[1]).hasClass("boo");
   });
 });

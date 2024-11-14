@@ -248,7 +248,9 @@ RSpec.describe DirectoryItemsController do
       user_fields.each do |data|
         user = items[data[:order]]["user"]
         expect(user["username"]).to eq(data[:user].username)
-        expect(user["user_fields"]).to eq({ data[:field].id.to_s => data[:value] })
+        expect(user["user_fields"]).to eq(
+          { data[:field].id.to_s => { "searchable" => true, "value" => [data[:value]] } },
+        )
       end
     end
 

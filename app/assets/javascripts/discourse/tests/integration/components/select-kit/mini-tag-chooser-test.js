@@ -2,7 +2,7 @@ import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -84,10 +84,9 @@ module(
         })
       );
       await this.subject.fillInFilter("dawg");
-      assert.notOk(
-        exists(".select-kit-collection .select-kit-row"),
-        "it doesn’t show any options"
-      );
+      assert
+        .dom(".select-kit-collection .select-kit-row")
+        .doesNotExist("doesn’t show any options");
     });
 
     test("required_tag_group", async function (assert) {
@@ -122,19 +121,17 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("#");
 
-      assert.notOk(exists(".select-kit-error"), "it doesn’t show any error");
-      assert.notOk(
-        exists(".select-kit-row[data-value='#']"),
-        "it doesn’t allow to create this tag"
-      );
+      assert.dom(".select-kit-error").doesNotExist("doesn’t show any error");
+      assert
+        .dom(".select-kit-row[data-value='#']")
+        .doesNotExist("doesn't allow to create this tag");
 
       await this.subject.fillInFilter("test");
 
-      assert.equal(this.subject.filter().value(), "#test");
-      assert.ok(
-        exists(".select-kit-row[data-value='test']"),
-        "it filters out the invalid char from the suggested tag"
-      );
+      assert.strictEqual(this.subject.filter().value(), "#test");
+      assert
+        .dom(".select-kit-row[data-value='test']")
+        .exists("filters out the invalid char from the suggested tag");
     });
 
     test("creating a tag over the length limit", async function (assert) {
@@ -143,10 +140,9 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("foo");
 
-      assert.ok(
-        exists(".select-kit-row[data-value='f']"),
-        "it forces the max length of the tag"
-      );
+      assert
+        .dom(".select-kit-row[data-value='f']")
+        .exists("forces the max length of the tag");
     });
 
     test("values in hiddenFromPreview will not display in preview", async function (assert) {

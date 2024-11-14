@@ -20,7 +20,7 @@ export default class FKControlSelect extends Component {
   <template>
     <select
       value={{@value}}
-      disabled={{@field.disabled}}
+      disabled={{@disabled}}
       ...attributes
       class="form-kit__control-select"
       {{on "input" this.handleInput}}

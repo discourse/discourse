@@ -880,15 +880,13 @@ RSpec.describe Admin::BackupsController do
       SiteSetting.enable_direct_s3_uploads = true
       SiteSetting.s3_backup_bucket = "s3-backup-bucket"
       SiteSetting.backup_location = BackupLocationSiteSetting::S3
-      stub_request(:head, "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/").to_return(
-        status: 200,
-        body: "",
-        headers: {
-        },
-      )
       stub_request(
         :head,
-        "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/default/test.tar.gz",
+        "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/",
+      ).to_return(status: 200, body: "", headers: {})
+      stub_request(
+        :head,
+        "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/default/test.tar.gz",
       ).to_return(backup_file_exists_response)
     end
 
@@ -936,7 +934,7 @@ RSpec.describe Admin::BackupsController do
         XML
         stub_request(
           :post,
-          "https://s3-backup-bucket.s3.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads",
+          "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/2u98j832nx93272x947823.gz?uploads",
         ).to_return(status: 200, body: create_multipart_result)
       end
 

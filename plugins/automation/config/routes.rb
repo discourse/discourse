@@ -24,7 +24,7 @@ DiscourseAutomation::Engine.routes.draw do
       get "/triggerables" => "admin_triggerables#index"
       get "/automations" => "admin_automations#index"
       get "/automations/:id" => "admin_automations#show"
-      delete "/automations/:id" => "admin_automations#destroy"
+      delete "/automations/:automation_id" => "admin_automations#destroy"
       put "/automations/:id" => "admin_automations#update"
       post "/automations" => "admin_automations#create"
     end

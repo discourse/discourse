@@ -246,6 +246,8 @@ Discourse::Application.routes.draw do
                   only: %i[index create update destroy],
                   constraints: AdminConstraint.new
         resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
+        get "emojis/new" => "emojis#index"
+        get "emojis/settings" => "emojis#index"
         resources :form_templates, constraints: AdminConstraint.new, path: "/form-templates" do
           collection { get "preview" => "form_templates#preview" }
         end
@@ -298,13 +300,17 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: %i[show update]
         get "email_style/:field" => "email_styles#show", :constraints => { field: /html|css/ }
+
+        resources :permalinks, only: %i[index new create show destroy]
       end
 
       resources :embeddable_hosts, only: %i[create update destroy], constraints: AdminConstraint.new
       resources :color_schemes,
                 only: %i[index create update destroy],
                 constraints: AdminConstraint.new
-      resources :permalinks, only: %i[index create destroy], constraints: AdminConstraint.new
+      resources :permalinks,
+                only: %i[index create show update destroy],
+                constraints: AdminConstraint.new
 
       scope "/customize" do
         resources :watched_words, only: %i[index create destroy] do
@@ -1624,6 +1630,8 @@ Discourse::Application.routes.draw do
     post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
     get "/user-api-key/otp" => "user_api_keys#otp"
     post "/user-api-key/otp" => "user_api_keys#create_otp"
+
+    post "/user-api-key-client/register" => "user_api_key_clients#register"
 
     get "/safe-mode" => "safe_mode#index"
     post "/safe-mode" => "safe_mode#enter", :as => "safe_mode_enter"

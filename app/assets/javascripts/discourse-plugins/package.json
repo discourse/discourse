@@ -14,12 +14,12 @@
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.3",
+    "ember-template-imports": "^4.2.0",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
-    "ember-cli": "~5.12.0",
-    "webpack": "^5.96.0"
+    "ember-cli": "~6.0.0",
+    "webpack": "^5.96.1"
   },
   "engines": {
     "node": ">= 18",

@@ -67,9 +67,5 @@ module(
         "scrolls carousel to center of active item (vertical)"
       );
     });
-
-    test("test scroll animation", async function (assert) {
-      assert.ok(true);
-    });
   }
 );

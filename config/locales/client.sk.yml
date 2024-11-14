@@ -2037,10 +2037,10 @@ sk:
           title: "Odkaz na pozvánku"
           success: "Pozývací link bol úspešne vygenerovaný!"
           error: "Vyskytla sa chyba pri generovaní odkazu na pozvanie"
+        cannot_invite_to_forum: "Ľutujeme, nemáte povolenie na vytváranie pozvánok. Kontaktujte správcu, aby vám udelil povolenie na pozvanie."
         invite:
           new_title: "Pozvať členov"
           edit_title: "Upraviť pozvánku"
-          instructions: "Zdieľaním tohto odkazu okamžite udelíte prístup k tejto lokalite:"
           expires_in_time: "Platnosť vyprší o %{time}"
           expired_at_time: "Platnosť vypršala %{time}"
           create_link_to_invite: "Vytvorte odkaz, ktorý možno zdieľať a okamžite tak udeliť prístup na túto lokalitu."
@@ -2076,10 +2076,13 @@ sk:
           custom_message_placeholder: "Pridajte k pozvánke osobnú poznámku"
           send_invite_email: "Uložiť a odoslať e-mail"
           send_invite_email_instructions: "Ak chcete odoslať e-mail s pozvánkou, obmedzte pozvánku na e-mail"
-          save_invite: "Uložiť"
+          update_invite: "Aktualizovať"
+          update_invite_and_send_email: "Aktualizácia a odoslanie e-mailu"
           cancel: "Zrušiť"
           create_link: "Vytvorte odkaz"
-          invite_saved: "Pozvánka bola uložená."
+          create_link_and_send_email: "Vytvorte odkaz a odošlite e-mail"
+          invite_saved_without_sending_email: "Pozvánka uložená. Skopírujte nižšie uvedený odkaz a zdieľajte ho, aby ste okamžite získali prístup na túto stránku."
+          invite_saved_with_sending_email: "Pozývací e-mail bol odoslaný. Môžete tiež skopírovať nižšie uvedený odkaz a zdieľať ho, aby ste okamžite získali prístup na túto stránku."
         bulk_invite:
           none: "Na tejto stránke nie sú žiadne pozvánky na zobrazenie."
           text: "Hromadné pozvanie"
@@ -2584,7 +2587,6 @@ sk:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "Iba kategórie"
-      categories_only_optimized: "Len kategórie (optimalizované)"
       categories_with_featured_topics: "Kategórie s odporúčanými témami"
       categories_and_latest_topics: "Kategórie a najnovšie témy"
       categories_and_latest_topics_created_date: "Kategórie a najnovšie témy (zoradiť podľa dátumu vytvorenia témy)"
@@ -3344,6 +3346,8 @@ sk:
         bookmarks: "Žiadne ďalšie témy v záložkách."
         filter: "Nie sú žiadne ďalšie témy."
     topic_bulk_actions:
+      dismiss:
+        name: "Zahodiť"
       close_topics:
         name: "Zavrieť"
         note: "Poznámka"
@@ -3898,6 +3902,11 @@ sk:
         many: "zobraziť %{count} skrytých odpovedí"
         other: "zobraziť %{count} skrytých odpovedí"
       sr_reply_to: "Odpoveď na príspevok #%{post_number} od @%{username}"
+      link_clicked:
+        one: "kliknutie na odkaz %{count} krát"
+        few: "kliknutie na odkaz %{count} krát"
+        many: "kliknutie na odkaz %{count} krát"
+        other: "kliknutie na odkaz %{count} krát"
       notice:
         new_user: "%{user} prispel(a) po prvýkrát — privítajme ho/ju v našej komunite!"
         returning_user: "Už je to nejaký čas, čo sme videli %{user} - ich posledný príspevok bol %{time}."
@@ -3975,17 +3984,23 @@ sk:
       few_likes_left: "Ďakujeme za zdieľanie lásky! Dnes vám zostáva už len pár lajkov."
       controls:
         reply: "vytvorte odpoveď na tento príspevok"
+        like_action: "Páči sa mi"
         like: "páči sa mi tento príspevok"
         has_liked: "tento príspevok sa Vám páči"
         read_indicator: "členovia, ktorí si prečítali tento príspevok"
+        undo_like_action: "Zruš \"Páči sa\""
         undo_like: "zruš \"Páči sa\""
         edit: "Editovať tento príspevok."
         edit_action: "Upraviť"
         edit_anonymous: "Ľutujeme, ale pre úpravu príspevku je potrebné sa prihlásiť."
+        flag_action: "Označenie"
         flag: "súkromne označiť tento príspevok do pozornosti, alebo naň poslať súkromne upozornenie"
+        delete_action: "Odstrániť príspevok"
         delete: "odstrániť tento príspevok"
         undelete: "vrátiť späť odstránenie príspevku"
+        share_action: "Zdieľať"
         share: "zdieľať odkaz na tento príspevok"
+        copy_action: "Kopírovať odkaz"
         copy_title: "skopírovať odkaz na tento príspevok do schránky"
         link_copied: "Odkaz skopírovaný!"
         more: "Viac"
@@ -4003,6 +4018,7 @@ sk:
             other: "Áno, a všetky %{count} odpovede"
           just_the_post: "Nie, len tento príspevok"
         admin: "akcie administrátora príspevku"
+        admin_action: "Admin"
         permanently_delete: "Natrvalo odstrániť"
         permanently_delete_confirmation: "Naozaj chcete natrvalo odstrániť tento príspevok? Nebudete ho môcť obnoviť."
         wiki: "Spraviť Wiki"
@@ -4913,6 +4929,7 @@ sk:
       dismiss: "Zahodiť"
     safe_mode:
       enabled: "Núdzový režim je povolený, ak chcete ukončiť núdzový režim zatvorte toto okno prehliadača"
+    theme_preview_notice: "Momentálne zobrazujete ukážku motívu, zatvorte túto kartu alebo okno prehliadača, aby ste sa vrátili k normálnej konfigurácii stránky."
     image_removed: "(obrázok odstránený)"
     pause_notifications:
       title: "Pozastavenie oznámení pre…"
@@ -5123,6 +5140,9 @@ sk:
                 few: "%{count} čaká"
                 many: "%{count} čaká"
                 other: "%{count} čaká"
+            invite:
+              content: "Pozvi"
+              title: "Pozvanie nových členov"
         global_section: "Globálna sekcia, viditeľná pre všetkých"
       panels:
         forum:
@@ -5285,6 +5305,7 @@ sk:
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
           previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
+          experimental: "Experimentálne"
           experiment_enabled: "Povolili ste experimentálnu funkciu."
           experiment_disabled: "Experimentálnu funkciu ste zakázali."
           experiment_toggled_too_fast: "Experimentálnu funkciu ste prepli príliš rýchlo. Pred ďalším pokusom počkajte niekoľko sekúnd."
@@ -5667,6 +5688,8 @@ sk:
           group_name: "Skupinové používateľské udalosti"
           user_added_to_group: "Používateľ je pridaný do skupiny"
           user_removed_from_group: "Používateľ je odstránený zo skupiny"
+        custom_event:
+          group_name: "Vlastné udalosti"
         user_promoted_event:
           group_name: "Udalosti podporované používateľom"
           user_promoted: "Používateľ je povýšený"
@@ -5791,6 +5814,8 @@ sk:
           community_name_placeholder: "Príklad Spoločenstva"
           community_summary: "Súhrn komunity"
           community_description: "Popis komunity"
+          community_title: "Názov spoločenstva"
+          community_title_help: "Krátky popis kľúčových stránok, ako sú kategórie a zoznamy tém, zobrazený na karte prehliadača."
           banner_image: "Obrázok bannera"
           banner_image_help: |
             Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 1100x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
@@ -5814,12 +5839,19 @@ sk:
           site_contact_group_help: |
             Skupina, ktorá dostane pozvánku do všetkých automaticky odoslaných súkromných správ.
           your_organization: "Vaša organizácia"
+          your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
           company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
           governing_law: "Platné právo"
+          governing_law_placeholder: "Provincia, štát alebo krajina"
+          governing_law_help: |
+            Uveďte jurisdikciu pre právne podmienky stránky, zvyčajne tam, kde je spoločnosť registrovaná alebo kde pôsobí.
           city_for_disputes: "Mesto pre spory"
+          city_for_disputes_placeholder: "Mesto"
+          city_for_disputes_help: |
+            Uveďte mesto na riešenie právnych sporov týkajúcich sa tohto fóra.
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:
@@ -5866,6 +5898,7 @@ sk:
             move_down: "Posunúť sa nadol"
         look_and_feel:
           title: "Pozri a cíť"
+          description: "Prispôsobte a označte svoju lokalitu Discourse a dodajte jej osobitý štýl."
           themes:
             title: "Témy"
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
@@ -6092,6 +6125,7 @@ sk:
           set_default_theme: "Nastavenie predvoleného nastavenia"
           default_theme: "Predvolená téma"
           set_default_success: "Predvolená téma nastavená na %{theme}"
+          install_success: "%{theme} úspešne nainštalované!"
           inactive_components: "Nepoužité komponenty:"
           selected:
             one: "%{count} vybrané"
@@ -6100,6 +6134,7 @@ sk:
             other: "%{count} vybrané"
           cancel: "Zrušiť"
           broken_theme_tooltip: "Táto téma má chyby v CSS, HTML alebo YAML"
+          broken_theme: "Zakázať nefunkčnú tému"
           disabled_component_tooltip: "Tento komponent bol zakázaný"
           default_theme_tooltip: "Táto téma je predvolená téma stránky"
           updates_available_tooltip: "Pre túto tému sú k dispozícii aktualizácie"
@@ -6168,6 +6203,7 @@ sk:
           update_to_latest: "Aktualizácia na najnovšie"
           check_for_updates: "Skontrolovať aktualizácie"
           updating: "Aktualizujem..."
+          update_success: "%{theme} Aktualizácia dokončená"
           up_to_date: "Téma je aktuálna, naposledy skontrolovaná:"
           has_overwritten_history: "Aktuálna verzia témy už neexistuje, pretože história systému Git bola prepísaná."
           add: "Pridať"
@@ -6903,8 +6939,9 @@ sk:
         time_read: "Doba Čítania"
         post_edits_count: "Úpravy príspevkov"
         anonymize: "Anonymizovať používateľa"
-        anonymize_confirm: "Ste si istý že chcete zmeniť tento účet na anonymný? Zmeni to používateľské meno, email a zmažú sa všetky informácie z profilu. "
-        delete_associated_accounts_confirm: "Naozaj chcete odstrániť všetky priradené účty z tohto účtu? Používateľ sa možno nebude môcť prihlásiť, ak sa jeho e-mail zmenil."
+        anonymize_confirm: "Ste si istí, že chcete toto konto anonymizovať? Tým sa zmení používateľské meno a e-mail a obnovia sa všetky informácie v profile."
+        delete_associated_accounts_confirm: "Ste si istí, že chcete z tohto účtu odstrániť všetky pridružené účty? Používateľ sa možno nebude môcť prihlásiť, ak sa zmenil jeho e-mail."
+        disable_second_factor_confirm: "Ste si istí, že chcete vypnúť dvojfaktorové overovanie pre toto konto?"
         anonymize_yes: "Áno, zmeň tento účet na anonymný"
         anonymize_failed: "Nastala chyba pri anonymizovaní účtu."
         delete: "Odstrániť používateľa"
@@ -6967,7 +7004,7 @@ sk:
           few: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevky. (delete_all_posts_max)"
           many: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
-        delete_confirm_title: "Naozaj chcete odstrániť tohto používateľa? Toto je trvalé!"
+        delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
         delete_and_block: "Zazať a <b>zablokovať</b> tento email a IP adresu"
         delete_dont_block: "Iba vymazať"
@@ -7198,6 +7235,7 @@ sk:
           groups: "Skupiny"
           dashboard: "Ovládací panel"
           navigation: "Navigácia"
+          experimental: "Experimentálne"
         secret_list:
           invalid_input: "Vstupné polia nemôžu byť prázdne alebo obsahovať znak vertikálnej čiary."
         default_categories:
@@ -7340,12 +7378,14 @@ sk:
           grant_existing_holders: Udeliť ďalšie odznaky existujúcim držiteľom odznakov
       emoji:
         title: "Emoji"
-        help: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Presuňte myšou viacero súborov naraz bez zadania názvu a vytvorte emotikony pomocou ich názvov súborov. Vybraná skupina sa použije pre všetky súbory, ktoré sa pridajú súčasne. Môžete tiež kliknúť na „Pridať nové Emoji“ a otvoriť výber súboru."
+        description: "Pridajte nové emotikony, ktoré budú dostupné pre všetkých. Presuňte myšou viacero súborov naraz bez zadania názvu a vytvorte emotikony pomocou ich názvov súborov. Vybraná skupina sa použije pre všetky súbory, ktoré sa pridajú súčasne. Môžete tiež kliknúť na „Pridať nové Emoji“ a otvoriť výber súboru."
+        new: "Pridať"
         add: "Pridaj nové Emoji"
         choose_files: "Výber súborov"
         uploading: "Nahrávanie..."
         name: "Meno"
         group: "Skupina"
+        created_by: "Vytvoril"
         image: "Obrázok"
         alt: "náhľad vlastných emoji"
         delete_confirm: "Ste si istý, že chcete zmazať: %{name}: emoji?"

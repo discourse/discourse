@@ -44,7 +44,12 @@ RSpec.describe CategoriesController do
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
-      _perm = Permalink.create!(url: "category/something", category_id: category.id)
+      _perm =
+        Permalink.create!(
+          url: "category/something",
+          permalink_type_value: category.id,
+          permalink_type: "category",
+        )
 
       get "/category/something"
       expect(response).to have_http_status(:moved_permanently)
@@ -404,7 +409,7 @@ RSpec.describe CategoriesController do
       let!(:category2) { Fabricate(:category, user: admin) }
       let!(:category3) { Fabricate(:category, user: admin) }
 
-      it "paginates results wihen lazy_load_categories is enabled" do
+      it "paginates results when lazy_load_categories is enabled" do
         SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
@@ -416,16 +421,16 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
       end
 
-      it "paginates results wihen desktop_category_page_style is categories_only_optimized" do
-        SiteSetting.desktop_category_page_style = "categories_only_optimized"
+      it "paginates results when there are many categories" do
+        stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 2) do
+          stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
 
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
-
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+          stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+        end
       end
 
       it "does not paginate results by default" do

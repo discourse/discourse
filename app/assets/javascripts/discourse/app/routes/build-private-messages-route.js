@@ -24,9 +24,10 @@ export default (inboxType, path, filter) => {
       ];
     }
 
-    model(params = {}) {
-      const topicListFilter =
-        "topics/" + path + "/" + this.modelFor("user").get("username_lower");
+    async model(params = {}) {
+      const topicListFilter = `topics/${path}/${this.modelFor("user").get(
+        "username_lower"
+      )}`;
 
       const lastTopicList = findOrResetCachedTopicList(
         this.session,
@@ -37,19 +38,17 @@ export default (inboxType, path, filter) => {
         return lastTopicList;
       }
 
-      return this.store
-        .findFiltered("topicList", {
-          filter: topicListFilter,
-          params,
-        })
-        .then((model) => {
-          // andrei: we agreed that this is an anti pattern,
-          // it's better to avoid mutating a rest model like this
-          // this place we'll be refactored later
-          // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-          model.set("emptyState", this.emptyState());
-          return model;
-        });
+      const model = await this.store.findFiltered("topicList", {
+        filter: topicListFilter,
+        params,
+      });
+
+      // andrei: we agreed that this is an anti pattern,
+      // it's better to avoid mutating a rest model like this
+      // this place we'll be refactored later
+      // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+      model.set("emptyState", this.emptyState());
+      return model;
     }
 
     setupController() {

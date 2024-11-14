@@ -11,7 +11,7 @@ export default {
 
     try {
       return sessionStorage && sessionStorage.getItem("verbose_localization");
-    } catch (e) {
+    } catch {
       return false;
     }
   },

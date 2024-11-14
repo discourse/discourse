@@ -1,11 +1,7 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -17,13 +13,13 @@ acceptance("User Profile - Summary", function (needs) {
   test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");
 
-    assert.ok(exists(".replies-section li a"), "replies");
-    assert.ok(exists(".topics-section li a"), "topics");
-    assert.ok(exists(".links-section li a"), "links");
-    assert.ok(exists(".replied-section .user-info"), "liked by");
-    assert.ok(exists(".liked-by-section .user-info"), "liked by");
-    assert.ok(exists(".liked-section .user-info"), "liked");
-    assert.ok(exists(".badges-section .badge-card"), "badges");
+    assert.dom(".replies-section li a").exists("replies");
+    assert.dom(".topics-section li a").exists("topics");
+    assert.dom(".links-section li a").exists("links");
+    assert.dom(".replied-section .user-info").exists("liked by");
+    assert.dom(".liked-by-section .user-info").exists("liked by");
+    assert.dom(".liked-section .user-info").exists("liked");
+    assert.dom(".badges-section .badge-card").exists("badges");
     assert
       .dom(".top-categories-section .category-link")
       .exists("top categories");
@@ -111,16 +107,20 @@ acceptance("User Profile - Summary - Stats", function (needs) {
     await visit("/u/eviltrout/summary");
 
     assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
-    assert.equal(
-      query(".stats-time-read span").title,
-      I18n.t("user.summary.time_read_title", { duration: "1 day" })
-    );
+    assert
+      .dom(".stats-time-read span")
+      .hasAttribute(
+        "title",
+        I18n.t("user.summary.time_read_title", { duration: "1 day" })
+      );
 
     assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
-    assert.equal(
-      query(".stats-recent-read span").title,
-      I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
-    );
+    assert
+      .dom(".stats-recent-read span")
+      .hasAttribute(
+        "title",
+        I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
+      );
   });
 });
 

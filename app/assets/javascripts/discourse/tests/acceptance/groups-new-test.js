@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 acceptance("New Group - Anonymous", function () {
@@ -24,11 +20,7 @@ acceptance("New Group - Authenticated", function (needs) {
     await visit("/g");
     await click(".groups-header-new");
 
-    assert.strictEqual(
-      count(".group-form-save[disabled]"),
-      1,
-      "save button should be disabled"
-    );
+    assert.dom(".group-form-save").isDisabled("save button is disabled");
 
     await fillIn("input[name='name']", "1");
 
@@ -39,11 +31,7 @@ acceptance("New Group - Authenticated", function (needs) {
         "it should show the right validation tooltip"
       );
 
-    assert.strictEqual(
-      count(".group-form-save:disabled"),
-      1,
-      "it should disable the save button"
-    );
+    assert.dom(".group-form-save").isDisabled("disables the save button");
 
     await fillIn(
       "input[name='name']",

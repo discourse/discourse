@@ -34,7 +34,7 @@ RSpec.describe UserStatusMixin do
     end
 
     it "doesn't include status if user hid profile and presence" do
-      user.user_option.hide_profile_and_presence = true
+      user.user_option.hide_profile = true
       serializer = DummySerializer.new(user, root: false, include_status: true)
       json = serializer.as_json
       expect(json[:status]).to be_nil

@@ -95,8 +95,10 @@ function updateScriptReferences({
           );
         }
 
+        // We use _lr/livereload.js directly instead of ember-cli-live-reload so that the protocol/port is configured automatically
+        // (important for cloud development environments like GitHub CodeSpaces)
         newElements.unshift(
-          `<script async src="${baseURL}ember-cli-live-reload.js" nonce="${nonce}"></script>`
+          `<script async src="/_lr/livereload.js?path=_lr/livereload" nonce="${nonce}"></script>`
         );
       }
 

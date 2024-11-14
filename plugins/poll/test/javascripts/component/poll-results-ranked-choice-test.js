@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 const RANKED_CHOICE_OUTCOME = {
@@ -43,11 +43,9 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
       hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
     );
 
-    assert.strictEqual(
-      count("table.poll-results-ranked-choice tr"),
-      3,
-      "there are two rounds of ranked choice"
-    );
+    assert
+      .dom("table.poll-results-ranked-choice tr")
+      .exists({ count: 3 }, "there are two rounds of ranked choice");
 
     assert.strictEqual(
       query("span.poll-results-ranked-choice-info").textContent.trim(),
@@ -57,5 +55,20 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
       }),
       "displays the winner information"
     );
+  });
+
+  test("Renders the ranked choice results component without error when outcome data is empty", async function (assert) {
+    this.rankedChoiceOutcome = null;
+
+    await render(
+      hbs`<PollResultsRankedChoice @rankedChoiceOutcome={{this.rankedChoiceOutcome}} />`
+    );
+
+    assert
+      .dom("table.poll-results-ranked-choice tr")
+      .exists(
+        { count: 1 },
+        "there are no rounds of ranked choice displayed, only the header"
+      );
   });
 });

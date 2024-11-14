@@ -1,0 +1,135 @@
+<div class="admin-permalinks admin-config-page">
+  <AdminPageHeader
+    @titleLabel="admin.permalink.title"
+    @descriptionLabel="admin.permalink.description"
+    @learnMoreUrl="https://meta.discourse.org/t/redirect-old-forum-urls-to-new-discourse-urls/20930"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/customize/permalinks"
+        @label={{i18n "admin.permalink.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary
+        @route="adminPermalinks.new"
+        @title="admin.permalink.add"
+        @label="admin.permalink.add"
+        @icon="plus"
+        @disabled={{this.addFlagButtonDisabled}}
+        class="admin-permalinks__header-add-permalink"
+      />
+    </:actions>
+  </AdminPageHeader>
+  <div class="admin-container admin-config-page__main-area">
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <div class="permalink-search">
+        <TextField
+          @value={{this.filter}}
+          @placeholderKey="admin.permalink.form.filter"
+          @autocorrect="off"
+          @autocapitalize="off"
+          class="url-input"
+        />
+      </div>
+
+      <div class="permalink-results">
+        {{#if this.model.length}}
+          <table class="d-admin-table permalinks">
+            <thead>
+              <th>{{i18n "admin.permalink.url"}}</th>
+              <th>{{i18n "admin.permalink.destination"}}</th>
+            </thead>
+            <tbody>
+              {{#each this.model as |pl|}}
+                <tr
+                  class={{concat-class
+                    "admin-permalink-item d-admin-row__content"
+                    pl.key
+                  }}
+                >
+                  <td>
+                    <FlatButton
+                      @title="admin.permalink.copy_to_clipboard"
+                      @icon="far-clipboard"
+                      @action={{fn this.copyUrl pl}}
+                    />
+                    <span
+                      id="admin-permalink-{{pl.id}}"
+                      class="admin-permalink-item__url"
+                      title={{pl.url}}
+                    >{{pl.url}}</span>
+                  </td>
+                  <td class="destination">
+                    {{#if pl.topic_id}}
+                      <a href={{pl.topic_url}}>{{pl.topic_title}}</a>
+                    {{/if}}
+                    {{#if pl.post_id}}
+                      <a href={{pl.post_url}}>{{pl.post_topic_title}}
+                        #{{pl.post_number}}</a>
+                    {{/if}}
+                    {{#if pl.category_id}}
+                      {{category-link pl.category}}
+                    {{/if}}
+                    {{#if pl.tag_id}}
+                      <a href={{pl.tag_url}}>{{pl.tag_name}}</a>
+                    {{/if}}
+                    {{#if pl.external_url}}
+                      {{#if pl.linkIsExternal}}
+                        {{d-icon "up-right-from-square"}}
+                      {{/if}}
+                      <a href={{pl.external_url}}>{{pl.external_url}}</a>
+                    {{/if}}
+                    {{#if pl.user_id}}
+                      <a href={{pl.user_url}}>{{pl.username}}</a>
+                    {{/if}}
+                  </td>
+                  <td class="d-admin-row__controls">
+                    <div class="d-admin-row__controls-options">
+                      <DButton
+                        class="btn-small admin-permalink-item__edit"
+                        @route="adminPermalinks.edit"
+                        @routeModels={{pl}}
+                        @label="admin.config_areas.flags.edit"
+                      />
+
+                      <DMenu
+                        @identifier="permalink-menu"
+                        @title={{i18n "admin.permalinks.more_options"}}
+                        @icon="ellipsis-vertical"
+                        @onRegisterApi={{this.onRegisterApi}}
+                      >
+                        <:content>
+                          <DropdownMenu as |dropdown|>
+                            <dropdown.item>
+                              <DButton
+                                @action={{fn this.destroyRecord pl}}
+                                @icon="trash-can"
+                                class="btn-transparent admin-permalink-item__delete"
+                                @label="admin.config_areas.flags.delete"
+                              />
+                            </dropdown.item>
+                          </DropdownMenu>
+                        </:content>
+                      </DMenu>
+                    </div>
+                  </td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          {{#if this.filter}}
+            <p class="permalink-results__no-result">{{i18n
+                "search.no_results"
+              }}</p>
+          {{else}}
+            <p class="permalink-results__no-permalinks">{{i18n
+                "admin.permalink.no_permalinks"
+              }}</p>
+          {{/if}}
+        {{/if}}
+      </div>
+    </ConditionalLoadingSpinner>
+  </div>
+</div>

@@ -39,7 +39,7 @@ module("Unit | Utility | download-calendar", function (hooks) {
       }
     );
 
-    assert.equal(
+    assert.strictEqual(
       data,
       `BEGIN:VCALENDAR
 VERSION:2.0
@@ -76,7 +76,7 @@ END:VCALENDAR`
       ],
       { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
     );
-    assert.equal(
+    assert.strictEqual(
       data,
       `BEGIN:VCALENDAR
 VERSION:2.0

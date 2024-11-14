@@ -1835,7 +1835,6 @@ es:
           success: "¡Enlace de invitación generado correctamente!"
           error: "Ha ocurrido un error al generar el enlace de invitación"
         invite:
-          instructions: "Comparte este enlace para dar acceso instantáneo a este sitio:"
           expires_in_time: "Caduca en %{time}"
           expired_at_time: "Caducada en %{time}"
           copy_link: "Copiar enlace"
@@ -1852,9 +1851,8 @@ es:
           expires_after: "Caducar tras"
           send_invite_email: "Guardar y enviar correo electrónico"
           send_invite_email_instructions: "Restringir la invitación al correo electrónico para enviar un correo electrónico de invitación"
-          save_invite: "Guardar"
+          update_invite: "Actualizar"
           cancel: "Cancelar"
-          invite_saved: "Invitación guardada."
         bulk_invite:
           none: "No hay invitaciones para mostrar en esta página."
           text: "Invitaciones en masa"
@@ -2969,6 +2967,8 @@ es:
         bookmarks: "No hay más temas guardados en marcadores."
         filter: "No hay más temas."
     topic_bulk_actions:
+      dismiss:
+        name: "Descartar"
       close_topics:
         name: "Cerrar"
         note: "Nota"
@@ -3538,17 +3538,23 @@ es:
       few_likes_left: "¡Gracias por compartir amor! Solo te quedan unos pocos me gusta por hoy."
       controls:
         reply: "crear una respuesta a esta publicación"
+        like_action: "Me gusta"
         like: "me gusta esta publicación"
         has_liked: "te gusta esta publicación"
         read_indicator: "miembros que han leído esta publicación"
+        undo_like_action: "Deshacer me gusta"
         undo_like: "deshacer me gusta"
         edit: "editar esta publicación"
         edit_action: "Editar"
         edit_anonymous: "Lo sentimos, necesitas iniciar sesión para editar esta publicación."
+        flag_action: "Denunciar"
         flag: "denuncia esta publicación de forma privada para llamar la atención de los moderadores o enviarles un notificación privada sobre el tema"
+        delete_action: "Eliminar publicación"
         delete: "eliminar este publicación"
         undelete: "deshacer la eliminación de esta publicación"
+        share_action: "Compartir"
         share: "comparte un enlace a esta publicación"
+        copy_action: "Copiar enlace"
         copy_title: "copiar un enlace a esta publicación al portapapeles"
         link_copied: "¡Enlace copiado!"
         more: "Más"
@@ -3562,6 +3568,7 @@ es:
             other: "Sí, y todas las %{count} respuestas"
           just_the_post: "No, solo esta publicación"
         admin: "acciones de administrador para la publicación"
+        admin_action: "Administrador"
         permanently_delete: "Eliminar permanentemente"
         permanently_delete_confirmation: "¿Seguro que quieres eliminar para siempre esta publicación? No podrás recuperarla."
         wiki: "Transformar en formato wiki"
@@ -4584,6 +4591,8 @@ es:
               pending_count:
                 one: "%{count} pendiente"
                 other: "%{count} pendientes"
+            invite:
+              content: "Invitar"
         global_section: "Sección global, visible para todos"
       panels:
         forum:
@@ -4738,6 +4747,7 @@ es:
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
           previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
+          experimental: "Experimental"
         last_checked: "Ultima comprobación"
         refresh_problems: "Volver a cargar"
         no_problems: "No se ha encontrado ningún problema."
@@ -6275,7 +6285,6 @@ es:
         time_read: "Tiempo de lectura"
         post_edits_count: "Ediciones de la publicación"
         anonymize: "Anonimizar usuario"
-        anonymize_confirm: "¿SEGURO que quieres hacer anónima esta cuenta? Esto cambiará el nombre de usuario y el correo electrónico y restablecerá toda la información del perfil."
         anonymize_yes: "Sí, hacer anónima esta cuenta."
         anonymize_failed: "Hubo un problema al hacer anónima la cuenta."
         delete: "Eliminar usuario"
@@ -6332,7 +6341,6 @@ es:
         cant_delete_all_too_many_posts:
           one: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
           other: "No se pueden eliminar todas las publicaciones porque el usuario tiene más de %{count}. (delete_all_posts_max)"
-        delete_confirm_title: "¿SEGURO que quieres eliminar este usuario? ¡Esta acción es permanente!"
         delete_confirm: "Normalmente, es mejor anonimizar usuarios en vez de eliminarlos. Así, evitas eliminar contenido de temas existentes."
         delete_and_block: "Eliminar y <b>bloquear</b> este correo electrónico y esta dirección IP"
         delete_dont_block: "Solo eliminar"
@@ -6556,6 +6564,7 @@ es:
           groups: "Grupos"
           dashboard: "Panel de control"
           navigation: "Navegación"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Los campos no pueden estar vacíos o contener el carácter de barra vertical."
         default_categories:
@@ -6685,7 +6694,8 @@ es:
           grant_existing_holders: Conceder una vez más la medalla a las cuentas que ya la tengan
       emoji:
         title: "Emoji"
-        help: "Añade emojis que cualquiera podrá usar. Suelta varios archivos a la vez sin escribir un nombre para crear emojis usando su nombre de archivo. Los archivos que subas a la vez serán parte del grupo seleccionado. También puedes hacer clic en «Añadir nuevo emoji» para abrir el selector de archivos."
+        description: "Añade emojis que cualquiera podrá usar. Suelta varios archivos a la vez sin escribir un nombre para crear emojis usando su nombre de archivo. Los archivos que subas a la vez serán parte del grupo seleccionado. También puedes hacer clic en «Añadir nuevo emoji» para abrir el selector de archivos."
+        new: "Añadir"
         add: "Añadir emoji nuevo"
         choose_files: "Seleccionar archivos"
         uploading: "Subiendo…"

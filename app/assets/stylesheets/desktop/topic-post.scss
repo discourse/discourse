@@ -12,23 +12,28 @@
 
 .topic-body {
   padding: 0;
+
   &:first-of-type {
     border-top: none;
   }
+
   .reply-to-tab {
     z-index: z("base") + 1;
     color: var(--primary-med-or-secondary-med);
   }
+
   .actions .fade-out {
     .discourse-no-touch & {
       opacity: 0.7;
       transition: background 0.25s, opacity 0.7s ease-in-out;
       animation: none; // replaces jsuites animation on .fade-out
     }
+
     .discourse-touch & {
       opacity: 1;
     }
   }
+
   &:hover .actions .fade-out,
   .selected .actions .fade-out {
     opacity: 1;
@@ -48,54 +53,71 @@ nav.post-controls {
   // for consistency, try to control spacing by editing these variables
   --control-margin: 0.33em;
   --control-icon-space: 0.33em;
+
   .actions {
     button {
       margin-left: var(--control-margin);
+
+      &.btn-icon-text,
       &.create {
         margin-left: calc(var(--control-margin) * 1.52);
+
         .d-icon {
           margin-right: var(--control-icon-space);
         }
       }
     }
+
     // Some buttons can be doubled up, like likes or flags
     .double-button {
       margin-left: var(--control-margin);
+
       &:hover {
         button {
           background: var(--primary-low);
           color: var(--primary-medium);
         }
       }
+
       button {
         margin-left: 0;
         margin-right: 0;
+
         &.like {
           // Like button with 0 likes
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             background: var(--love-low);
+
             .d-icon {
               color: var(--love);
             }
           }
         }
+
         &.has-like {
           // Like button after I've liked
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             background: var(--primary-low);
+
             .d-icon {
               color: var(--primary-medium);
             }
           }
         }
+
         &.button-count {
           // Like count button
-          &.d-hover {
+          &.d-hover,
+          &:hover {
             color: var(--primary);
           }
+
           + .toggle-like {
             // Like button when like count is present
-            &.d-hover {
+            &.d-hover,
+            &:hover {
               background: var(--primary-low);
             }
           }
@@ -103,27 +125,34 @@ nav.post-controls {
       }
     }
   }
+
   .show-replies {
     display: flex;
     align-items: center;
     margin-left: 0;
     border-radius: var(--d-button-border-radius);
+
     .topic-post & {
       margin-right: 0.5em;
     }
+
     white-space: nowrap;
+
     .d-icon {
       margin-inline: var(--control-icon-space);
       margin-left: 0;
     }
+
     &[aria-expanded="true"] {
       background: var(--primary-low);
       color: var(--primary-high);
       box-shadow: 0px 0px 0px 1px var(--primary-300);
       z-index: 1;
+
       .d-icon {
         color: var(--primary-high);
       }
+
       &:hover,
       &:focus {
         background: var(--primary-300);
@@ -147,6 +176,7 @@ pre.codeblock-buttons:hover {
   .fullscreen-cmd {
     opacity: 0.7;
     visibility: visible;
+
     &:hover {
       opacity: 1;
     }
@@ -159,22 +189,28 @@ pre.codeblock-buttons:hover {
   h3 {
     margin: 10px 0;
   }
+
   border: 1px solid var(--primary-low);
+
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 70px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-  } // this is covered by .topic-body .regular on a normal post
+  }
+
+  // this is covered by .topic-body .regular on a normal post
   // but no such class structure exists for an embedded, expanded post
   .cooked {
     margin-top: 15px;
   }
+
   .topic-avatar {
     padding-left: 25px;
     padding-top: 15px;
   }
+
   .collapse-down,
   .collapse-up {
     position: absolute;
@@ -186,10 +222,12 @@ pre.codeblock-buttons:hover {
     .d-icon {
       color: currentColor;
     }
+
     .discourse-no-touch & {
       &:hover {
         background: var(--primary-low);
         color: var(--primary-high);
+
         .d-icon {
           color: currentColor;
         }
@@ -203,10 +241,13 @@ pre.codeblock-buttons:hover {
     max-width: calc(100% - 66px);
     margin-bottom: 30px;
     border: none;
+
     > div {
       position: relative;
+
       &:last-of-type {
         margin-bottom: 0;
+
         .row {
           // Main reply line
           &:before {
@@ -220,6 +261,7 @@ pre.codeblock-buttons:hover {
           }
         }
       }
+
       .row {
         padding-bottom: 0.5em;
         // Main reply line
@@ -232,28 +274,36 @@ pre.codeblock-buttons:hover {
           background: var(--primary-300);
           left: 32px;
         }
+
         .topic-avatar {
           border-top: none;
           padding-left: 9px;
           position: relative;
         }
+
         .topic-body {
           border-top: none;
           padding-bottom: 2.5em;
+
           .topic-meta-data {
             position: unset;
+
             .post-link-arrow {
               position: absolute;
               bottom: 0.75em;
+
               .archetype-private_message & {
                 bottom: 0;
               }
+
               .post-info.arrow {
                 display: block;
                 margin-right: 0;
+
                 .d-icon {
                   margin-left: 0;
                 }
+
                 &:hover,
                 &:focus {
                   color: var(--primary-high);
@@ -261,17 +311,20 @@ pre.codeblock-buttons:hover {
               }
             }
           }
+
           .cooked {
             margin-top: 0.25em;
             padding-top: 0.5em;
           }
         }
       }
+
       &.hidden {
         display: block;
         opacity: 0;
       }
     }
+
     .collapse-up {
       transform: translate(-50%, -164%);
       background: var(--primary-low);
@@ -281,12 +334,15 @@ pre.codeblock-buttons:hover {
       left: 32px;
       bottom: -3em;
       z-index: 1;
+
       .archetype-private_message & {
         display: flex;
       }
+
       .d-icon {
         transform: scale(0.871);
       }
+
       .discourse-no-touch & {
         &:hover,
         &:focus {
@@ -295,6 +351,7 @@ pre.codeblock-buttons:hover {
         }
       }
     }
+
     .load-more-replies {
       font-size: var(--font-down-1);
       position: absolute;
@@ -312,10 +369,12 @@ pre.codeblock-buttons:hover {
   &.top {
     margin-left: 0px;
     border: none;
+
     .collapse-down {
       transform: translate(17%, 230%);
       z-index: 1;
     }
+
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
@@ -325,11 +384,14 @@ pre.codeblock-buttons:hover {
       .topic-avatar {
         border-top: none;
       }
+
       .topic-avatar {
         padding-left: 0;
       }
+
       .topic-body {
         overflow: visible;
+
         &::before {
           content: "";
           position: absolute;
@@ -342,31 +404,39 @@ pre.codeblock-buttons:hover {
       }
     }
   }
+
   &.top.topic-body {
     padding: 0;
   }
+
   .post-date {
     color: var(--primary-med-or-secondary-high);
   }
+
   .d-icon-arrow-up,
   .d-icon-arrow-down {
     margin-left: 5px;
   }
+
   .reply:first-of-type .row {
     border-top: none;
   }
+
   .topic-meta-data {
     position: relative;
   }
+
   .topic-meta-data h5 {
     position: absolute;
     z-index: z("base");
     font-size: var(--font-down-1);
+
     a {
       font-weight: bold;
       color: var(--primary-low-mid-or-secondary-high);
     }
   }
+
   .arrow {
     color: var(--primary-med-or-secondary-high);
   }
@@ -376,6 +446,7 @@ pre.codeblock-buttons:hover {
   .relative-date {
     margin-left: 5px;
   }
+
   .avatar {
     margin-right: 2px;
   }
@@ -403,6 +474,7 @@ pre.codeblock-buttons:hover {
   .bookmark.bookmarked .d-icon-discourse-bookmark-clock {
     color: var(--tertiary);
   }
+
   .feature-on-profile.featured-on-profile .d-icon-id-card {
     color: var(--tertiary);
   }
@@ -426,6 +498,7 @@ video {
 .video {
   // Height determined by aspect-ratio
   max-height: 500px;
+
   > video {
     max-height: unset;
   }
@@ -481,6 +554,7 @@ blockquote {
       background-color: var(--primary-very-low);
     }
   }
+
   aside {
     .quote,
     .title,
@@ -490,6 +564,7 @@ blockquote {
       background: var(--primary-very-low);
       border-left: 5px solid var(--primary-low);
     }
+
     aside.quote > blockquote,
     aside.quote > .title {
       border-left: 0;
@@ -514,18 +589,22 @@ blockquote {
   position: relative;
   border-top: 1px solid var(--primary-low);
   padding: 0.8em 0 0 0;
+
   .topic-meta-data {
     padding: 0 var(--topic-body-width-padding) 0.25em
       var(--topic-body-width-padding);
   }
+
   .cooked {
     padding: 1em var(--topic-body-width-padding) 0.25em
       var(--topic-body-width-padding);
   }
+
   .group-request {
     padding: 0.5em var(--topic-body-width-padding) 0
       var(--topic-body-width-padding);
   }
+
   a.expand-hidden {
     padding-left: var(--topic-body-width-padding);
   }
@@ -599,29 +678,36 @@ blockquote {
     margin-left: 330px;
     left: 50%;
   }
+
   button {
     width: 100%;
     margin: 4px auto;
     display: inline-block;
     text-align: left;
   }
+
   &.hidden {
     display: none;
   }
+
   .controls {
     margin-top: 10px;
   }
+
   p {
     font-size: var(--font-down-1);
     margin: 0 0 10px 0;
   }
+
   p.cancel {
     margin: 10px 0 0 0;
   }
+
   h3 {
     font-size: var(--font-up-4);
     color: var(--primary);
     margin-bottom: 5px;
+
     .d-icon {
       margin-right: 7px;
     }

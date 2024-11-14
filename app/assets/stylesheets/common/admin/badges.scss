@@ -87,6 +87,30 @@
     .readonly-field {
       color: var(--primary-high);
     }
+
+    .badge-preview {
+      min-height: 110px;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      background-color: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      padding: 0 10px 0 10px;
+
+      img,
+      svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      .badge-display-name {
+        margin-left: 5px;
+      }
+    }
+
+    .badge-required {
+      font-weight: bold;
+    }
   }
 
   .current-badge-actions {
@@ -117,29 +141,6 @@
     &.failure {
       color: var(--danger);
     }
-  }
-
-  .badge-preview {
-    min-height: 110px;
-    max-width: 300px;
-    display: flex;
-    align-items: center;
-    background-color: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    padding: 0 10px 0 10px;
-
-    img,
-    svg {
-      width: 60px;
-      height: 60px;
-    }
-
-    .badge-display-name {
-      margin-left: 5px;
-    }
-  }
-  .badge-required {
-    font-weight: bold;
   }
 }
 

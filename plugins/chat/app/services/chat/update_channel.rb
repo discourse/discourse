@@ -29,6 +29,7 @@ module Chat
     #   @option params [String,nil] :name
     #   @option params [String,nil] :description
     #   @option params [String,nil] :slug
+    #   @option params [Integer,nil] :icon_upload_id
     #   @option params [Boolean] :threading_enabled
     #   @option params [Boolean] :auto_join_users Only valid for {CategoryChannel}. Whether active users with permission to see the category should automatically join the channel.
     #   @option params [Boolean] :allow_channel_wide_mentions Allow the use of @here and @all in the channel.
@@ -43,6 +44,7 @@ module Chat
       attribute :threading_enabled, :boolean, default: false
       attribute :auto_join_users, :boolean, default: false
       attribute :allow_channel_wide_mentions, :boolean, default: true
+      attribute :icon_upload_id, :integer, default: nil
 
       before_validation do
         assign_attributes(
@@ -84,8 +86,7 @@ module Chat
     end
 
     def auto_join_users_if_needed(channel:)
-      return unless channel.auto_join_users?
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
+      Chat::AutoJoinChannels.call(params: { channel_id: channel.id }) if channel.auto_join_users?
     end
   end
 end

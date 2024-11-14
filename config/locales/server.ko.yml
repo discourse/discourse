@@ -1386,7 +1386,6 @@ ko:
     markdown_linkify_tlds: "링크로 자동 처리되는 최상위 도메인 목록"
     markdown_typographer_quotation_marks: "큰 따옴표와 작은 따옴표 대체 쌍 목록"
     post_undo_action_window_mins: "사용자가 게시물에 대한 최근 작업(좋아요, 신고 등)을 취소할 수 있는 시간(분)입니다."
-    must_approve_users: "운영진은 모든 신규 사용자가 사이트에 액세스할 수 있기 전에 해당 계정을 승인해야 합니다."
     invite_code: "계정 등록을 하려면 이 코드를 입력해야 합니다(대소문자 구분). 비어 있으면 무시합니다."
     approve_suspect_users: "검토 대기열에 의심스러운 사용자를 추가합니다. 의심스러운 사용자가 소개/웹사이트를 방문했지만 읽기 활동은 없습니다."
     pending_users_reminder_delay_minutes: "신규 사용자가 이 시간(분) 이상 승인을 기다리는 경우 운영자에게 알립니다. 알림을 비활성화하려면 -1로 설정합니다."
@@ -1422,7 +1421,6 @@ ko:
     topics_per_period_in_top_summary: "디폴트 주요 주제 요약에 표시할 주요 주제 수입니다."
     topics_per_period_in_top_page: "주요 주제에서 '더 보기'를 펼칠 때 표시할 주요 주제 수입니다."
     prioritize_username_in_ux: "아이디를 사용자 페이지, 사용자 카드 및 게시물에 가장 먼저 표시(비활성화 시 이름이 가장 먼저 표시됨)"
-    enable_rich_text_paste: "작성기에 텍스트를 붙여 넣을 때 HTML에서 Markdown으로의 자동 변환을 활성화합니다. (실험단계)"
     send_old_credential_reminder_days: "며칠 후 이전 크리덴셜에 대해 알림"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화 토큰은 (n)시간 유효합니다."
     max_favorite_badges: "사용자가 선택할 수 있는 최대 배지 수"
@@ -1770,7 +1768,6 @@ ko:
     show_time_gap_days: "이 정도 일 수의 간격으로 두 개의 게시물을 작성한 경우 주제에 시간 간격을 표시합니다."
     short_progress_text_threshold: "주제의 게시물 수가 이 수를 초과하면 진행률 표시줄에 현재 게시물 번호만 표시됩니다. 진행률 표시줄의 너비를 변경하는 경우 이 값을 변경해야 할 수도 있습니다."
     warn_reviving_old_topic_age: "마지막 댓글이 이 날짜보다 오래된 주제에 누군가가 댓글을 달기 시작하면 경고가 표시됩니다. 비활성화하려면 0으로 설정합니다. "
-    highlighted_languages: "구문 강조 규칙이 포함되었습니다. (경고: 너무 많은 언어를 포함하면 퍼포먼스에 영향을 줄 수 있습니다) 데모는 <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>를 참조하세요."
     show_copy_button_on_codeblocks: "코드 블록에 버튼을 추가하여 블록 내용을 사용자의 클립보드에 복사합니다."
     embed_any_origin: "출처와 상관없이 임베드 가능한 콘텐츠를 허용합니다. 정적 HTML을 사용하는 모바일 앱에 필요합니다."
     embed_set_canonical_url: "임베드된 주제의 표준 URL을 임베드 콘텐츠의 URL로 설정합니다."
@@ -1909,18 +1906,6 @@ ko:
       markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
-    keywords:
-      clean_up_inactive_users_after_days:
-      - ""
-      - "비활성화"
-      - ""
-      purge_unactivated_users_grace_period_days:
-      - ""
-      - "비활성화"
-      - ""
-      navigation_menu:
-      - "사이드바"
-      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

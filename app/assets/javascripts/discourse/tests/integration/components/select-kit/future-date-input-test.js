@@ -2,11 +2,7 @@ import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  exists,
-  fakeTime,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
 
@@ -40,7 +36,7 @@ module(
         />
       `);
 
-      assert.ok(exists(".future-date-input-selector"), "Selector is rendered");
+      assert.dom(".future-date-input-selector").exists("selector is rendered");
 
       assert.strictEqual(
         this.subject.header().label(),
@@ -50,10 +46,9 @@ module(
 
       await this.subject.expand();
 
-      assert.ok(
-        exists(".select-kit-collection"),
-        "List of options is rendered"
-      );
+      assert
+        .dom(".select-kit-collection")
+        .exists("list of options is rendered");
     });
 
     test("renders default options", async function (assert) {
@@ -108,7 +103,7 @@ module(
       const options = getOptions();
       const customDateAndTime = I18n.t("time_shortcut.custom");
 
-      assert.notOk(options.includes(customDateAndTime));
+      assert.false(options.includes(customDateAndTime));
     });
 
     test("shows the now option if enabled", async function (assert) {

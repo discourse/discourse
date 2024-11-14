@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Group logs", function (needs) {
   needs.user();
@@ -99,17 +95,13 @@ acceptance("Group logs", function (needs) {
 
   test("Browsing group logs", async function (assert) {
     await visit("/g/snorlax/manage/logs");
-    assert.strictEqual(
-      count("tr.group-manage-logs-row"),
-      2,
-      "it should display the right number of logs"
-    );
+    assert
+      .dom("tr.group-manage-logs-row")
+      .exists({ count: 2 }, "displays the right number of logs");
 
-    await click(query(".group-manage-logs-row button"));
-    assert.strictEqual(
-      count("tr.group-manage-logs-row"),
-      1,
-      "it should display the right number of logs"
-    );
+    await click(".group-manage-logs-row button");
+    assert
+      .dom("tr.group-manage-logs-row")
+      .exists({ count: 1 }, "displays the right number of logs");
   });
 });

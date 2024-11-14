@@ -32,4 +32,16 @@ module("Integration | Component | FormKit | Controls | Menu", function (hooks) {
     assert.deepEqual(data, { foo: "item-3" });
     assert.form().field("foo").hasValue("item-3");
   });
+
+  test("when disabled", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+          <field.Menu />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert.dom(".form-kit__control-menu").hasAttribute("disabled");
+  });
 });

@@ -19,7 +19,7 @@
     "discourse-common": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.3"
+    "ember-template-imports": "^4.2.0"
   },
   "devDependencies": {
     "@ember/optional-features": "^2.2.0",
@@ -29,7 +29,7 @@
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~5.12.0",
+    "ember-cli": "~6.0.0",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
@@ -39,7 +39,7 @@
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.96.0"
+    "webpack": "^5.96.1"
   },
   "engines": {
     "node": ">= 18",

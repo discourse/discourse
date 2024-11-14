@@ -253,6 +253,7 @@ ar:
       topic_html: 'الموضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "المنشور #%{postNumber} بواسطة @%{username}"
       close: "إغلاق"
+      twitter: "شارك على X"
       facebook: "المشاركة على Facebook"
       email: "المشاركة عبر البريد الإلكتروني"
       url: "نسخ عنوان URL ومشاركته"
@@ -2041,6 +2042,7 @@ ar:
         approval_required: "يجب على المشرف الموافقة على حسابك الجديد يدويًا للوصول إلى هذا المنتدى. ستتلقى رسالة إلكترونية عندما يتم قبول حسابك."
       name:
         title: "الاسم"
+        title_optional: "الاسم (اختياري)"
         instructions: "اسمك بالكامل (اختياري)"
         instructions_required: "اسمك بالكامل"
         required: "يُرجى إدخال اسم"
@@ -2216,10 +2218,11 @@ ar:
           success: "تم إنشاء رابط الدعوة بنجاح!"
           error: "حدث خطأ في أثناء إنشاء رابط الدعوة"
         invite:
-          instructions: "شارك هذا الرابط لمنح إذن الوصول إلى هذا الموقع على الفور:"
           expires_in_time: "تنتهي صلاحيتها في %{time}"
           expired_at_time: "تنتهي صلاحيتها في %{time}"
+          copy_link: "انسخ الرابط"
           link_copied: "تم نسخ الرابط!"
+          share_link: "شارك الرابط"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
           restrict: "التقييد إلى"
@@ -2230,11 +2233,11 @@ ar:
           add_to_groups: "إضافة إلى المجموعات"
           invite_to_topic: "الوصول إلى هذا الموضوع"
           expires_after: "تنتهي بعد"
+          custom_message: "رسالة مخصّصة"
           send_invite_email: "حفظ الرسالة الإلكترونية وإرسالها"
           send_invite_email_instructions: "تقييد الدعوة إلى البريد الإلكتروني لإرسال دعوة بالبريد الإلكتروني"
-          save_invite: "حفظ"
+          update_invite: "تحديث"
           cancel: "إلغاء"
-          invite_saved: "تم حفظ الدعوة."
         bulk_invite:
           none: "لا توجد دعوات لعرضها على هذه الصفحة."
           text: "دعوة جماعية"
@@ -2625,6 +2628,7 @@ ar:
       no_account_yet: "ليس لديك حساب؟"
       progress_bar:
         signup: "الاشتراك"
+        activate: "فعّل"
         approve: "الموافقة"
         login: "تسجيل الدخول"
     forgot_password:
@@ -3621,6 +3625,8 @@ ar:
         bookmarks: "لا يوجد المزيد من الموضوعات ذات الإشارات المرجعية."
         filter: "لا توجد موضوعات أخرى."
     topic_bulk_actions:
+      dismiss:
+        name: "تجاهل"
       close_topics:
         name: "إغلاق"
         note: "ملاحظة"
@@ -4208,7 +4214,9 @@ ar:
       show_hidden: "عرض المحتوى الذي تم تجاهله"
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"
+      load_more_replies: "حمّل المزيد من الردود"
       sr_collapse_replies: "طي الردود المضمَّنة"
+      sr_load_more_replies: "حمّل المزيد من الردود المضمنة"
       sr_date: "تاريخ المنشور"
       sr_expand_replies:
         zero: "هناك %{count} رد على هذا المنشور"
@@ -4322,17 +4330,23 @@ ar:
       few_likes_left: "نشكرك على نشر المحبة في المجتمع! و لكن للأسف لقد اقتربت من الحد اليومي المسموح به لمرات تسجيل الإعجاب."
       controls:
         reply: "ابدأ في كتابة رد على هذا المنشور"
+        like_action: "تسجيل الإعجاب"
         like: "سجِّل إعجابك بهذا المنشور"
         has_liked: "لقد سجَّلت إعجابك بهذا المنشور"
         read_indicator: "الأعضاء الذين قرأوا هذا المنشور"
+        undo_like_action: "تراجع عن الإعجاب"
         undo_like: "إلغاء الإعجاب"
         edit: "تعديل هذا المنشور"
         edit_action: "تعديل"
         edit_anonymous: "عذرًا، لكنك بحاجة إلى تسجيل الدخول لتعديل هذا المنشور."
+        flag_action: "إبلاغ"
         flag: "الإبلاغ عن هذا المنشور بشكلٍٍ خاص للفت الانتباه إليه، أو إرسال إشعار خاص بشأنه."
+        delete_action: "حذف المنشور"
         delete: "حذف هذا المنشور"
         undelete: "إلغاء حذف هذا المنشور"
+        share_action: "مشاركة"
         share: "شارِك رابطًا إلى هذا المنشور"
+        copy_action: "انسخ الرابط"
         copy_title: "نسخ رابط إلى هذا المنشور إلى الحافظة"
         link_copied: "تم نسخ الرابط!"
         more: "المزيد"
@@ -4354,6 +4368,7 @@ ar:
             other: "نعم، و%{count} رد"
           just_the_post: "لا، هذا المنشور فقط"
         admin: "إجراءات المسؤول على المنشور"
+        admin_action: "مسؤول"
         permanently_delete: "الحذف بشكلٍٍ دائم"
         permanently_delete_confirmation: "هل تريد بالتأكيد حذف هذا المنشور بشكلٍٍ دائم؟ لن تتمكن من استعادته."
         wiki: "التحويل إلى Wiki"
@@ -5555,6 +5570,9 @@ ar:
                 few: "بقي %{count}"
                 many: "بقي %{count}"
                 other: "بقي %{count}"
+            invite:
+              content: "دعوة"
+              title: "دعوة أعضاء جدد"
         global_section: "القسم العام، مرئي للجميع"
       panels:
         forum:
@@ -5725,6 +5743,13 @@ ar:
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
           previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
+          experimental: "تجريبي"
+          experiment_enabled: "لقد فعّلت الميزة التجريبية."
+          experiment_disabled: "لقد عطّلت الميزة التجريبية."
+          experiment_toggled_too_fast: "لقد بدلت الميزة التجريبية بسرعة كبيرة. يُرجى الانتظار لبضع ثوانٍ قبل المحاولة مرة أخرى."
+          experiment_tooltip:
+            title: "جرّب ميزتنا التجريبية"
+            content: "أعطِ أحدث خاصية لدينا في التطوير دورة دورية! إنها لا تزال في المرحلة التجريبية، لذا قد نزيلها في أي وقت. يمكنك أن تختار الانسحاب كلما رغبت."
         last_checked: "تاريخ آخر تحقُّق"
         refresh_problems: "تحديث"
         no_problems: "لم يتم العثور على مشكلات."
@@ -5846,6 +5871,7 @@ ar:
             publish_read_state: "نشر حالة قراءة المجموعة على رسائل المجموعة"
           membership:
             automatic: تلقائية
+            automatic_tooltip: "هذه المجموعة تلقائية، لا يمكنك حذفها ويتم إضافة الأعضاء وإزالتهم تلقائيًا"
             trust_levels_title: "مستوى الثقة الذي يتم منحه للأعضاء تلقائيًا عند إضافتهم:"
             effects: التأثيرات
             trust_levels_none: "لا يوجد"
@@ -6108,6 +6134,8 @@ ar:
           group_name: "أحداث مستخدم المجموعة"
           user_added_to_group: "تتم إضافة مستخدم إلى مجموعة"
           user_removed_from_group: "تتم إزالة مستخدم من مجموعة"
+        custom_event:
+          group_name: "أحداث مخصّصة"
         user_promoted_event:
           group_name: "الأحداث التي يروِّج لها المستخدم"
           user_promoted: "تتم ترقية مستخدم"
@@ -6217,6 +6245,7 @@ ar:
           screened_ips: "عناوين IP الخاضعة للمراقبة"
           screened_urls: "عناوين URL الخاضعة للمراقبة"
           search_logs: "سجلات البحث"
+          security: "إعدادات الأمان"
           staff_action_logs: "سجلات إجراءات الموظفين"
       section_landing_pages:
         account:
@@ -6225,6 +6254,7 @@ ar:
             title: "النسخ الاحتياطية"
           whats_new:
             title: "ما الجديد"
+            description: "اكتشف الإصدارات الجديدة والتحسينات في Discourse"
       config_areas:
         about:
           header: "نبذة عن موقعك"
@@ -6233,6 +6263,7 @@ ar:
           community_name_placeholder: "مجتمع نموذجي"
           community_summary: "ملخص المجتمع"
           community_description: "وصف المجتمع"
+          community_title: "لقب المجتمع"
           banner_image: "صورة البانر"
           contact_information: "معلومات التواصل"
           community_owner: "مالك المجتمع"
@@ -6250,6 +6281,7 @@ ar:
             إذا تُرك فارغًا، فلن يتم توفير شروط خدمة أو إشعار خصوصية نمطية.
           governing_law: "القانون الحاكم"
           city_for_disputes: "مدينة النزاعات"
+          city_for_disputes_placeholder: "المدينة"
           optional: "(اختياري)"
           update: "تحديث"
           toasts:
@@ -6295,8 +6327,10 @@ ar:
           title: "الشكل والمظهر"
           themes:
             title: "السمات"
+            set_default_theme: "تعيين الافتراضي"
       plugins:
         title: "الإضافات"
+        installed: "الإضافات المثبَّتة"
         name: "الاسم"
         none_installed: "ليس لديك أي إضافات مثبَّتة."
         version: "الإصدار"
@@ -6505,6 +6539,7 @@ ar:
           convert_theme_alert_generic: "هل تريد بالتأكيد تحويل هذه السمة إلى مكوِّن؟"
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
+          set_default_theme: "تعيين الافتراضي"
           inactive_components: "المكوِّنات غير المستخدمة:"
           selected:
             zero: "المحدَّدة: %{count}"
@@ -7319,7 +7354,6 @@ ar:
         time_read: "وقت القراءة"
         post_edits_count: "تعديلات المنشور"
         anonymize: "إخفاء هوية المستخدم"
-        anonymize_confirm: "هل تريد بالتأكيد إخفاء هوية هذا الحساب؟ سيؤدي ذلك إلى تغيير اسم المستخدم والبريد الإلكتروني، وإعادة تعيين جميع معلومات الملف الشخصي."
         anonymize_yes: "نعم، إخفاء هوية هذا الحساب"
         anonymize_failed: "حدثت مشكلة في أثناء إخفاء هوية الحساب."
         delete: "حذف المستخدم"
@@ -7388,7 +7422,6 @@ ar:
           few: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورات. (delete_all_posts_max)"
           many: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشورًا. (delete_all_posts_max)"
           other: "يتعذَّر حذف جميع المنشورات لأن المستخدم لديه أكثر من %{count} منشور. (delete_all_posts_max)"
-        delete_confirm_title: "هل تريد بالتأكيد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء!"
         delete_confirm: "يُفضَّل عامةً إخفاء هوية المستخدمين بدلًا من حذفهم؛ لتجنُّب إزالة المحتوى من المناقشات الحالية."
         delete_and_block: "حذف هذا البريد الإلكتروني وعنوان IP و<b>حظرهما</b>"
         delete_dont_block: "الحذف فقط"
@@ -7624,6 +7657,7 @@ ar:
           groups: "المجموعات"
           dashboard: "لوحة المعلومات"
           navigation: "التنقل"
+          experimental: "تجريبي"
         secret_list:
           invalid_input: "لا يمكن ترك حقول الإدخال فارغة أو أن تتضمَّن شريطًا عموديًا."
         default_categories:
@@ -7676,6 +7710,7 @@ ar:
         description: الوصف
         long_description: وصف طويل
         badge_type: نوع الشارة
+        group_settings: إعدادات المجموعة
         badge_grouping: المجموعة
         badge_groupings:
           modal_title: تجميعات الشارات
@@ -7743,6 +7778,8 @@ ar:
             with_post: '‏<span class="username">%{username}</span> للمنشور في %{link}'
             with_post_time: '‏<span class="username">%{username}</span> للمنشور في %{link} في <span class="time">%{time}</span>'
             with_time: '‏<span class="username">%{username}</span> في <span class="time">%{time}</span>'
+        badge_intro:
+          title: "اختر شارة أو أنشئ شارة جديدة"
         mass_award:
           title: جائزة جماعية
           description: منح الشارة نفسها للعديد من المستخدمين دفعة واحدة
@@ -7769,12 +7806,14 @@ ar:
           grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:
         title: "الرمز التعبيري"
-        help: "ستكون إضافة رمز تعبيري جديد متاحة للجميع. اسحب وأفلت عدة ملفات في وقتٍ واحد دون إدخال اسم لإنشاء رموز تعبيرية باستخدام أسماء الملفات الخاصة بها. ستُستخدَم المجموعة المحدَّدة لجميع الملفات التي تتم إضافتها في الوقت نفسه. يمكنك أيضًا النقر على \"إضافة رمز تعبيري جديد\" لفتح منتقي الملفات."
+        description: "ستكون إضافة رمز تعبيري جديد متاحة للجميع. اسحب وأفلت عدة ملفات في وقتٍ واحد دون إدخال اسم لإنشاء رموز تعبيرية باستخدام أسماء الملفات الخاصة بها. ستُستخدَم المجموعة المحدَّدة لجميع الملفات التي تتم إضافتها في الوقت نفسه. يمكنك أيضًا النقر على \"إضافة رمز تعبيري جديد\" لفتح منتقي الملفات."
+        new: "إضافة"
         add: "إضافة رمز تعبيري جديد"
         choose_files: "اختيار الملفات"
         uploading: "جارٍ التحميل…"
         name: "الاسم"
         group: "المجموعة"
+        created_by: "أُنشئ بواسطة"
         image: "الصورة"
         alt: "معاينة الرمز التعبيري المخصَّص"
         delete_confirm: "هل تريد بالتأكيد حذف الرمز التعبيري :%{name}:؟"

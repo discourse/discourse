@@ -1835,7 +1835,6 @@ fi:
           success: "Kutsulinkki luotiin!"
           error: "Kutsulinkin luominen epäonnistui"
         invite:
-          instructions: "Jaa tämä linkki, jotta voit välittömästi myöntää pääsyn tälle sivustolle:"
           expires_in_time: "Vanhenee %{time}"
           expired_at_time: "Vanhentunut %{time}"
           copy_link: "Kopioi linkki"
@@ -1852,9 +1851,8 @@ fi:
           expires_after: "Aikaa vanhenemiseen"
           send_invite_email: "Tallenna ja lähetä sähköposti"
           send_invite_email_instructions: "Rajoita kutsu sähköpostiin lähettääksesi kutsusähköpostin"
-          save_invite: "Tallenna"
+          update_invite: "Päivitä"
           cancel: "Peruuta"
-          invite_saved: "Kutsu tallennettu."
         bulk_invite:
           none: "Ei näytettäviä kutsuja tällä sivulla."
           text: "Joukkokutsu"
@@ -2968,6 +2966,8 @@ fi:
         bookmarks: "Kirjanmerkkeihin lisättyjä ketjuja ei ole enempää."
         filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
+      dismiss:
+        name: "Selvä"
       close_topics:
         name: "Sulje"
         note: "Huomautus"
@@ -3537,17 +3537,23 @@ fi:
       few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
       controls:
         reply: "aloita vastaamaan tähän viestiin"
+        like_action: "Tykkää"
         like: "tykkää viestistä"
         has_liked: "tykkäsit tästä viestistä"
         read_indicator: "jäsenet, jotka ovat lukeneet tämän viestin"
+        undo_like_action: "Peru tykkäys"
         undo_like: "peru tykkäys"
         edit: "muokkaa viestiä"
         edit_action: "Muokkaa"
         edit_anonymous: "Sinun täytyy ensin kirjautua sisään, jotta voit muokata tätä viestiä."
+        flag_action: "Liputa"
         flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
+        delete_action: "Poista viesti"
         delete: "poista tämä viesti"
         undelete: "peru viestin poistaminen"
+        share_action: "Jaa"
         share: "jaa linkki tähän viestiin"
+        copy_action: "Kopioi linkki"
         copy_title: "kopioi linkki tähän viestiin leikepöydälle"
         link_copied: "Linkki kopioitu!"
         more: "Lisää"
@@ -3561,6 +3567,7 @@ fi:
             other: "Kyllä, ja kaikki %{count} vastausta"
           just_the_post: "Ei, vain tämä viesti"
         admin: "viestin ylläpitotoimet"
+        admin_action: "Ylläpitäjä"
         permanently_delete: "Poista pysyvästi"
         permanently_delete_confirmation: "Haluatko varmasti poistaa tämän viestin pysyvästi? Et voi palauttaa sitä."
         wiki: "Tee wiki"
@@ -4583,6 +4590,8 @@ fi:
               pending_count:
                 one: "%{count} odottaa"
                 other: "%{count} odottaa"
+            invite:
+              content: "Kutsu"
         global_section: "Yleinen osio, joka näkyy kaikille"
       panels:
         forum:
@@ -4737,6 +4746,7 @@ fi:
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
           previous_announcements: "Voit nähdä aiemmat ilmoitukset uusista ominaisuuksista <a href='%{url}' target='_blank'>Discourse Metassa</a>"
           learn_more: "Lisätietoja..."
+          experimental: "Kokeellinen"
         last_checked: "Viimeksi tarkistettu"
         refresh_problems: "Päivitä"
         no_problems: "Ongelmia ei löytynyt."
@@ -6270,7 +6280,6 @@ fi:
         time_read: "Lukuaika"
         post_edits_count: "Viestimuokkaukset"
         anonymize: "Anonymisoi käyttäjä"
-        anonymize_confirm: "Oletko VARMA, että haluat anonymisoida tämän käyttäjätilin? Tämä muuttaa käyttäjätunnuksen ja sähköpostiosoitteen sekä nollaa kaikki profiilitiedot."
         anonymize_yes: "Kyllä, anonymisoi tämä tili"
         anonymize_failed: "Tilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
@@ -6327,7 +6336,6 @@ fi:
         cant_delete_all_too_many_posts:
           one: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viesti. (delete_all_posts_max)"
           other: "Kaikkia viestejä ei voi poistaa, koska käyttäjällä on enemmän kuin %{count} viestiä. (delete_all_posts_max)"
-        delete_confirm_title: "Oletko VARMA, että haluat poistaa tämän käyttäjän? Käyttäjä poistetaan pysyvästi!"
         delete_confirm: "On yleensä parempi anonymisoida käyttäjät poistamisen sijaan; näin vältät sisällön poistamisen olemassa olevista keskusteluista."
         delete_and_block: "Poista ja <b>estä</b> tämä sähköposti ja IP-osoite"
         delete_dont_block: "Ainoastaan poista"
@@ -6551,6 +6559,7 @@ fi:
           groups: "Ryhmät"
           dashboard: "Hallintapaneeli"
           navigation: "Navigointi"
+          experimental: "Kokeellinen"
         secret_list:
           invalid_input: "Tekstikentät eivät voi olla tyhjiä tai sisältää pystyviivamerkkiä."
         default_categories:
@@ -6680,7 +6689,8 @@ fi:
           grant_existing_holders: Myönnä lisämerkkejä nykyisille kunniamerkkien haltijoille
       emoji:
         title: "Emoji"
-        help: "Lisää uusi emoji, joka on kaikkien käytettävissä. Vedä ja pudota useita tiedostoja kerralla antamatta nimeä luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan. Voit myös avata tiedostovalitsimen klikkaamalla Lisää uusi hymiö."
+        description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Vedä ja pudota useita tiedostoja kerralla antamatta nimeä luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan. Voit myös avata tiedostovalitsimen klikkaamalla Lisää uusi hymiö."
+        new: "Lisää"
         add: "Lisää uusi emoji"
         choose_files: "Valitse tiedostot"
         uploading: "Ladataan…"

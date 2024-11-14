@@ -1835,7 +1835,6 @@ pt_BR:
           success: "Link do convite gerado com sucesso!"
           error: "Ocorreu um erro ao gerar o link de convite"
         invite:
-          instructions: "Compartilhar este link para conceder acesso imediato ao site:"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           copy_link: "Copiar link"
@@ -1852,9 +1851,8 @@ pt_BR:
           expires_after: "Expira após"
           send_invite_email: "Salvar e enviar e-mail"
           send_invite_email_instructions: "Restringir convite a e-mail para enviar um e-mail de convite"
-          save_invite: "Salvar"
+          update_invite: "Atualizar"
           cancel: "Cancelar"
-          invite_saved: "Convite salvo"
         bulk_invite:
           none: "Nenhum convite para exibir nesta página."
           text: "Convite em massa"
@@ -2968,6 +2966,8 @@ pt_BR:
         bookmarks: "Não há mais tópicos favoritos."
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
+      dismiss:
+        name: "Descartar"
       close_topics:
         name: "Fechar"
         note: "Observação"
@@ -3537,17 +3537,23 @@ pt_BR:
       few_likes_left: "Obrigado por compartilhar o amor! Restam apenas algumas curtidas sobrando para você usar hoje."
       controls:
         reply: "começar a escrever uma resposta para esta postagem"
+        like_action: "Curtir"
         like: "curtir esta postagem"
         has_liked: "você curtiu esta postagem"
         read_indicator: "membros que leram esta postagem"
+        undo_like_action: "Desfazer curtida"
         undo_like: "desfazer curtida"
         edit: "editar esta postagem"
         edit_action: "Editar"
         edit_anonymous: "Você precisa estar conectado(a) para editar esta postagem."
+        flag_action: "Sinalização"
         flag: "sinalize esta postagem de forma privada para chamar atenção ou notificar sobre isto"
+        delete_action: "Excluir postagem"
         delete: "excluir esta postagem"
         undelete: "recuperar esta postagem"
+        share_action: "Compartilhar"
         share: "compartilhar o link desta postagem"
+        copy_action: "Copiar link"
         copy_title: "copiar um link desta postagem para a área de transferência"
         link_copied: "Link copiado!"
         more: "Mais"
@@ -3561,6 +3567,7 @@ pt_BR:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta postagem"
         admin: "ações administrativas da postagem"
+        admin_action: "Administrador(a)"
         permanently_delete: "Excluir permanentemente"
         permanently_delete_confirmation: "Tem certeza de que deseja excluir permanentemente esta postagem? Não será possível recuperá-la."
         wiki: "Tornar Wiki"
@@ -4583,6 +4590,8 @@ pt_BR:
               pending_count:
                 one: "%{count} pendente"
                 other: "%{count} pendentes"
+            invite:
+              content: "Convite"
         global_section: "Seção global, visível para todos"
       panels:
         forum:
@@ -4737,6 +4746,7 @@ pt_BR:
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
           previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
+          experimental: "Experimental"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema foi encontrado."
@@ -6271,7 +6281,6 @@ pt_BR:
         time_read: "Tempo de leitura"
         post_edits_count: "Postar edições"
         anonymize: "Tornar usuário(a) anônimo(a)"
-        anonymize_confirm: "Você TEM CERTEZA de que gostaria de tornar esta conta anônima? Essa mudança irá alterar o nome do(a) usuário(a) e o e-mail, além de redefinir todas informações do perfil."
         anonymize_yes: "Sim, tornar esta conta anônima"
         anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Excluir usuário(a)"
@@ -6328,7 +6337,6 @@ pt_BR:
         cant_delete_all_too_many_posts:
           one: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagem (delete_all_posts_max)"
           other: "Não é possível remover todas as postagens porque o usuário(a) tem mais de %{count} postagens. (delete_all_posts_max)"
-        delete_confirm_title: "Você TEM CERTEZA que deseja excluir este usuário? Essa é uma ação permanente!"
         delete_confirm: "Geralmente, é preferível anonimizar os usuários em vez de excluí-los, evitando assim a remoção de conteúdo das discussões existentes."
         delete_and_block: "Excluir e <b>bloquear</b> este e-mail e endereço IP"
         delete_dont_block: "Excluir apenas"
@@ -6552,6 +6560,7 @@ pt_BR:
           groups: "Grupos"
           dashboard: "Painel de controle"
           navigation: "Navegação"
+          experimental: "Experimental"
         secret_list:
           invalid_input: "Os campos de entrada não podem estar vazios ou conter o caractere de barra vertical."
         default_categories:
@@ -6681,7 +6690,8 @@ pt_BR:
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
-        help: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Arraste e solte vários arquivos de uma vez sem inserir nome, para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo. Clique também em \"Adicionar novo emoji\" para abrir o seletor de arquivos."
+        description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Arraste e solte vários arquivos de uma vez sem inserir nome, para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo. Clique também em \"Adicionar novo emoji\" para abrir o seletor de arquivos."
+        new: "Adicionar"
         add: "Adicionar novo emoji"
         choose_files: "Escolher arquivos"
         uploading: "Enviando…"

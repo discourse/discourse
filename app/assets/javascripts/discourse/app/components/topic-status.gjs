@@ -96,7 +96,7 @@ export default class TopicStatus extends Component {
 
       <PluginOutlet
         @name="after-topic-status"
-        @outletArgs={{hash topic=this.topic}}
+        @outletArgs={{hash topic=@topic}}
       />
       {{~! no whitespace ~}}
     </span>

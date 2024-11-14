@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 function dateInput() {
   return query(".date-picker");
@@ -61,7 +61,7 @@ module("Integration | Component | date-time-input", function (hooks) {
       hbs`<DateTimeInput @date={{this.date}} @showTime={{false}} />`
     );
 
-    assert.notOk(exists(timeInput()));
+    assert.dom(".d-time-input .combo-box-header").doesNotExist();
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {

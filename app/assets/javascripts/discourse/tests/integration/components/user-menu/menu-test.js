@@ -16,23 +16,25 @@ module("Integration | Component | user-menu", function (hooks) {
     const activeTab = query(".top-tabs.tabs-list .btn.active");
     assert.strictEqual(activeTab.id, "user-menu-button-all-notifications");
     const notifications = queryAll("#quick-access-all-notifications ul li");
-    assert.ok(notifications[0].classList.contains("edited"));
-    assert.ok(notifications[1].classList.contains("replied"));
-    assert.ok(notifications[2].classList.contains("liked-consolidated"));
+    assert.dom(notifications[0]).hasClass("edited");
+    assert.dom(notifications[1]).hasClass("replied");
+    assert.dom(notifications[2]).hasClass("liked-consolidated");
   });
 
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
     await render(template);
-    const activeTab = query(".top-tabs.tabs-list .btn.active");
-    assert.strictEqual(activeTab.getAttribute("tabindex"), "0");
-    assert.strictEqual(activeTab.getAttribute("aria-selected"), "true");
+    assert.dom(".top-tabs.tabs-list .btn.active").hasAttribute("tabindex", "0");
+    assert.dom(".top-tabs.tabs-list .btn.active").hasAria("selected", "true");
   });
 
   test("inactive tab has a11y attributes that indicate it's inactive", async function (assert) {
     await render(template);
-    const inactiveTab = query(".top-tabs.tabs-list .btn:not(.active)");
-    assert.strictEqual(inactiveTab.getAttribute("tabindex"), "-1");
-    assert.strictEqual(inactiveTab.getAttribute("aria-selected"), "false");
+    assert
+      .dom(".top-tabs.tabs-list .btn:not(.active)")
+      .hasAttribute("tabindex", "-1");
+    assert
+      .dom(".top-tabs.tabs-list .btn:not(.active)")
+      .hasAria("selected", "false");
   });
 
   test("the menu has a group of tabs at the top", async function (assert) {
@@ -44,10 +46,7 @@ module("Integration | Component | user-menu", function (hooks) {
       (tab, index) => {
         assert.strictEqual(tabs[index].id, `user-menu-button-${tab}`);
         assert.strictEqual(tabs[index].dataset.tabNumber, index.toString());
-        assert.strictEqual(
-          tabs[index].getAttribute("aria-controls"),
-          `quick-access-${tab}`
-        );
+        assert.dom(tabs[index]).hasAria("controls", `quick-access-${tab}`);
       }
     );
   });
@@ -60,7 +59,7 @@ module("Integration | Component | user-menu", function (hooks) {
     const profileTab = tabs[0];
     assert.strictEqual(profileTab.id, "user-menu-button-profile");
     assert.strictEqual(profileTab.dataset.tabNumber, "6");
-    assert.strictEqual(profileTab.getAttribute("tabindex"), "-1");
+    assert.dom(profileTab).hasAttribute("tabindex", "-1");
   });
 
   test("likes tab is hidden if current user's like notifications frequency is 'never'", async function (assert) {

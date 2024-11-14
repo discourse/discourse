@@ -9,7 +9,7 @@ module Chat
   class SearchChatable
     include Service::Base
 
-    SEARCH_RESULT_LIMIT ||= 10
+    SEARCH_RESULT_LIMIT = 10
 
     # @!method self.call(guardian:, params:)
     #   @param [Guardian] guardian

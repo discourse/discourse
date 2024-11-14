@@ -1,5 +1,6 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import {
+  click,
   fillIn,
   render,
   resetOnerror,
@@ -33,6 +34,33 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     </template>);
 
     assert.dom(".form-kit__row .form-kit__col.--col-8").hasText("Test");
+  });
+
+  test("@disabled", async function (assert) {
+    await render(<template>
+      <Form @data={{hash disabled=true}} as |form data|>
+        <form.Field
+          @name="foo"
+          @title="Foo"
+          @disabled={{data.disabled}}
+          as |field|
+        >
+          <field.Input />
+        </form.Field>
+
+        <form.Button class="test" @action={{fn form.set "disabled" false}} />
+      </Form>
+    </template>);
+
+    assert
+      .dom("#control-foo.is-disabled[data-disabled]")
+      .exists("it sets the disabled class and data attribute");
+
+    await click(".test");
+
+    assert
+      .dom("#control-foo.is-disabled[data-disabled]")
+      .doesNotExist("it removes the disabled class and data attribute");
   });
 
   test("@description", async function (assert) {

@@ -1362,7 +1362,6 @@ id:
         invite:
           show_advanced: "Tampilkan Opsi Lanjutan"
           hide_advanced: "Sembunyikan Opsi Lanjutan"
-          save_invite: "Simpan"
           cancel: "Batal"
         bulk_invite:
           error: "Maaf, file harus dalam format CSV"
@@ -1784,6 +1783,8 @@ id:
       bottom:
         new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
+      dismiss:
+        name: "Bubar"
       close_topics:
         name: "Tutup"
         optional: (opsional)
@@ -1912,9 +1913,12 @@ id:
       cancel_composer:
         discard: "Batalkan"
       controls:
+        like_action: "Suka"
         like: "sukai post ini"
         edit_action: "Ubah"
+        delete_action: "Hapus postingan"
         more: "Selengkapnya"
+        admin_action: "Admin"
       actions:
         by_you:
           custom: "Anda menandai topik ini sebagai %{custom}"
@@ -2244,6 +2248,8 @@ id:
               content: "Pengguna"
             review:
               content: "Ulasan"
+            invite:
+              content: "Undang"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
       back_to_forum: "Kembali ke Forum"
       collapse_all_sections: "Tutup semua bagian"
@@ -2794,6 +2800,7 @@ id:
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"
       emoji:
+        new: "Menambahkan"
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"

@@ -1775,6 +1775,7 @@ pl_PL:
         approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
       name:
         title: "Pełna nazwa"
+        title_optional: "Nazwa (opcjonalnie)"
         instructions: "Twoja pełna nazwa (opcjonalnie)"
         instructions_required: "Twoja pełna nazwa"
         required: "Wprowadź imię"
@@ -1947,15 +1948,29 @@ pl_PL:
           title: "Odnośnik z zaproszeniem"
           success: "Link z zaproszenie został poprawnie wygenerowany!"
           error: "Wystąpił błąd podczas generowania linku do zaproszenia"
+        cannot_invite_to_forum: "Przepraszamy, nie masz uprawnień do tworzenia zaproszeń. Skontaktuj się z administratorem w celu przyznania uprawnień do tworzenia zaproszeń."
         invite:
           new_title: "Zaproś członków"
           edit_title: "Edytuj zaproszenie"
-          instructions: "Udostępnij ten link, aby natychmiast przyznać dostęp do tej witryny:"
           expires_in_time: "Wygasa za %{time}"
           expired_at_time: "Wygasło o %{time}"
+          create_link_to_invite: "Utwórz link, który można udostępnić, aby natychmiast przyznać dostęp do tej witryny."
+          copy_link_and_share_it: "Skopiuj poniższy link i udostępnij go, aby natychmiast udzielić dostępu do tej witryny."
           copy_link: "Skopiuj link"
           link_copied: "Link skopiowany!"
           share_link: "Udostępnij link"
+          link_validity_MF: |
+            Link jest ważny do { user_count, plural,
+                one {# użytkownika}
+                few {# użytkowników}
+                many {# użytkowników}
+              other {# użytkowników}
+            } i wygasa za { duration_days, plural,
+                one {# dzień}
+                few {# dni}
+                many {# dni}
+              other {# dni}
+            }.
           edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
@@ -1972,10 +1987,9 @@ pl_PL:
           custom_message_placeholder: "Dodaj osobistą notatkę do swojego zaproszenia"
           send_invite_email: "Zapisz i wyślij e-mail"
           send_invite_email_instructions: "Ogranicz zaproszenie do emaila, aby wysłać email z zaproszeniem"
-          save_invite: "Zapisz"
+          update_invite: "Aktualizuj"
           cancel: "Anuluj"
           create_link: "Utwórz link"
-          invite_saved: "Zaproszenie zapisane."
         bulk_invite:
           none: "Brak zaproszeń do wyświetlenia na tej stronie."
           text: "Zaproszenie zbiorcze"
@@ -2110,6 +2124,8 @@ pl_PL:
         sent_by: "Wysłane przez"
         private_message: "wiadomość"
         the_topic: "temat"
+      card: "Karta użytkownika"
+      profile_link: "%{username}, odwiedź profil"
     user_status:
       save: "Zapisz"
       set_custom_status: "Ustaw własny status"
@@ -3181,6 +3197,8 @@ pl_PL:
         bookmarks: "Nie ma więcej zakładek."
         filter: "Nie ma więcej tematów."
     topic_bulk_actions:
+      dismiss:
+        name: "Odrzuć"
       close_topics:
         name: "Zamknij"
         note: "Uwaga"
@@ -3743,6 +3761,11 @@ pl_PL:
         many: "pokaż %{count} ukrytych odpowiedzi"
         other: "pokaż %{count} ukrytych odpowiedzi"
       sr_reply_to: "Odpowiedz na post #%{post_number} od @%{username}"
+      link_clicked:
+        one: "link kliknięty %{count} raz"
+        few: "link kliknięty %{count} razy"
+        many: "link kliknięty %{count} razy"
+        other: "link kliknięty %{count} razy"
       notice:
         new_user: "%{user} opublikował(a) coś po raz pierwszy - powitajmy tę osobę w naszej społeczności!"
         returning_user: "Minęło trochę czasu, odkąd widzieliśmy %{user} - ostatni wpis tego użytkownika był %{time}."
@@ -3820,17 +3843,23 @@ pl_PL:
       few_likes_left: "Dziękuję za polubienie! Pozostało Ci tylko parę polubień do wykorzystania dzisiaj"
       controls:
         reply: "zacznij tworzyć odpowiedź na ten wpis"
+        like_action: "Polub"
         like: "polub ten wpis"
         has_liked: "polubiłeś/aś ten wpis"
         read_indicator: "członkowie, którzy czytają ten wpis"
+        undo_like_action: "Cofnij"
         undo_like: "wycofaj polubienie"
         edit: "edytuj ten wpis"
         edit_action: "Edytuj"
         edit_anonymous: "Przykro nam, ale musisz być zalogowany aby edytować ten wpis."
+        flag_action: "Oflaguj"
         flag: "oflaguj ten wpis lub wyślij powiadomienie o nim do moderatorów"
+        delete_action: "Usuń post"
         delete: "usuń ten wpis"
         undelete: "przywróc ten wpis"
+        share_action: "Udostępnij"
         share: "udostępnij odnośnik do tego wpisu"
+        copy_action: "Skopiuj link"
         copy_title: "skopiuj link do tego postu do schowka"
         link_copied: "Link skopiowany!"
         more: "Więcej"
@@ -3848,6 +3877,7 @@ pl_PL:
             other: "Tak i wszystkie %{count} odpowiedzi"
           just_the_post: "Nie, tylko ten wpis"
         admin: "administracja wpisem (tryb wiki itp)"
+        admin_action: "Administratorzy"
         permanently_delete: "Usuń bezpowrotnie"
         permanently_delete_confirmation: "Czy na pewno chcesz usunąć ten post? Nie będziesz w stanie go odzyskać."
         wiki: "Włącz tryb Wiki"
@@ -4037,6 +4067,8 @@ pl_PL:
       badge_colors: "Kolor Etykiety"
       background_color: "Kolor tła"
       foreground_color: "Kolor pierwszego planu"
+      color_used: "Kolor w użyciu"
+      predefined_colors: "Predefiniowane opcje kolorów"
       name_placeholder: "Maksymalnie jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
@@ -4738,6 +4770,7 @@ pl_PL:
       dismiss: "Wyczyść"
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
+    theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"
@@ -4948,6 +4981,9 @@ pl_PL:
                 few: "%{count} oczekujących"
                 many: "%{count} oczekujących"
                 other: "%{count} oczekujących"
+            invite:
+              content: "Zaproś"
+              title: "Zaproś nowych członków"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
       panels:
         forum:
@@ -5110,6 +5146,13 @@ pl_PL:
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
           previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Dowiedz się więcej..."
+          experimental: "Eksperymentalne"
+          experiment_enabled: "Włączono funkcję eksperymentalną."
+          experiment_disabled: "Wyłączono funkcję eksperymentalną."
+          experiment_toggled_too_fast: "Przełączyłeś funkcję eksperymentalną zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+          experiment_tooltip:
+            title: "Wypróbuj naszą eksperymentalną funkcję"
+            content: "Wypróbuj naszą najnowszą funkcję! Jest ona wciąż w fazie eksperymentalnej, więc możemy ją usunąć w dowolnym momencie. Możesz z niej zrezygnować, kiedy tylko zechcesz."
         last_checked: "Ostatnio sprawdzana"
         refresh_problems: "Odśwież"
         no_problems: "Nie znaleziono problemów."
@@ -5486,6 +5529,8 @@ pl_PL:
           group_name: "Zdarzenia grupy użytkownika"
           user_added_to_group: "Użytkownik zostaje dodany do grupy"
           user_removed_from_group: "Użytkownik zostaje usunięty z grupy"
+        custom_event:
+          group_name: "Zdarzenia niestandardowe"
         user_promoted_event:
           group_name: "Zdarzenia promowania użytkownika"
           user_promoted: "Użytkownik zostaje awansowany"
@@ -5608,6 +5653,7 @@ pl_PL:
           community_name_placeholder: "Przykładowa społeczność"
           community_summary: "Podsumowanie społeczności"
           community_description: "Opis społeczności"
+          community_title: "Tytuł społeczności"
           banner_image: "Obraz banera"
           banner_image_help: |
             Będzie on używany na Twojej stronie z informacjami. Zalecany rozmiar: 1100x300px. Akceptowane typy: JPG, PNG i SVG do 10MB.
@@ -6697,8 +6743,6 @@ pl_PL:
         time_read: "Czas czytania"
         post_edits_count: "Edycje wpisu"
         anonymize: "Anonimizuj użytkownika"
-        anonymize_confirm: "Jesteś pewien, że chcesz anonimizować to konto? Spowoduje to zmianę nazwy użytkownika i adresu e-mail oraz zresetowanie wszystkich informacji o profilu."
-        delete_associated_accounts_confirm: "Czy na pewno chcesz usunąć wszystkie powiązane konta z tego konta? Użytkownik może nie być w stanie się zalogować, jeśli jego adres e-mail uległ zmianie."
         anonymize_yes: "Tak, anonimizuj to konto"
         anonymize_failed: "Wystąpił problem z anonimizacją konta."
         delete: "Usuń użytkownika"
@@ -6761,7 +6805,6 @@ pl_PL:
           few: "Nie można usunąć wszystkich postów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           many: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
           other: "Nie można usunąć wszystkich wpisów, ponieważ użytkownik ma ich więcej niż %{count}. (delete_all_posts_max)"
-        delete_confirm_title: "Czy jesteś PEWNY, że chcesz usunąć tego użytkownika? To jest trwałe!"
         delete_confirm: "Zasadniczo lepiej jest anonimizować użytkowników niż ich usuwać, aby uniknąć usuwania treści z istniejących dyskusji."
         delete_and_block: "Usuń i <b>zablokuj</b> ten email oraz adres IP"
         delete_dont_block: "Tylko usuń"
@@ -6991,6 +7034,7 @@ pl_PL:
           groups: "Grupy"
           dashboard: "Panel"
           navigation: "Nawigacja"
+          experimental: "Eksperymentalne"
         secret_list:
           invalid_input: "Pola tekstowe nie mogą być puste ani zawierać znaku pionowej kreski."
         default_categories:
@@ -7133,7 +7177,8 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        help: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie bez wprowadzania nazwy, aby utworzyć emotikony za pomocą ich nazw plików. Wybrana grupa zostanie użyta dla wszystkich plików, które są dodawane w tym samym czasie. Możesz także kliknąć przycisk „Dodaj nową emotikonę”, aby otworzyć selektor plików."
+        description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie bez wprowadzania nazwy, aby utworzyć emotikony za pomocą ich nazw plików. Wybrana grupa zostanie użyta dla wszystkich plików, które są dodawane w tym samym czasie. Możesz także kliknąć przycisk „Dodaj nową emotikonę”, aby otworzyć selektor plików."
+        new: "Dodaj"
         add: "Dodaj nowe Emoji"
         choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"

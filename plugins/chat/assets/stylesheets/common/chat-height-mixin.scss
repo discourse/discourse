@@ -20,6 +20,8 @@
 
   // PWA/HUB without keyboard
   html.footer-nav-visible:not(.keyboard-visible) & {
-    height: calc($base-height - var(--footer-nav-height, 0px));
+    height: calc(
+      $base-height - var(--composer-height, 0px) - var(--footer-nav-height, 0px)
+    );
   }
 }

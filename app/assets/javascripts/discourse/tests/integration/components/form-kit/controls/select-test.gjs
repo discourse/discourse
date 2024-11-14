@@ -36,5 +36,19 @@ module(
 
       assert.deepEqual(data, { foo: "option-3" });
     });
+
+    test("when disabled", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Select as |select|>
+              <select.Option @value="option-1">Option 1</select.Option>
+            </field.Select>
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-select").hasAttribute("disabled");
+    });
   }
 );

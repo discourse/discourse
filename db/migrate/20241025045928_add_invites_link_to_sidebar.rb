@@ -19,6 +19,15 @@ class AddInvitesLinkToSidebar < ActiveRecord::Migration[7.1]
          AND su.segment = 0
     SQL
 
+    max_position ||= (DB.query_single(<<~SQL, section_id: community_section_id).first || 0) - 1
+      SELECT MIN(ssl.position)
+        FROM sidebar_urls su
+             JOIN sidebar_section_links ssl ON su.id = ssl.linkable_id
+       WHERE ssl.linkable_type = 'SidebarUrl'
+         AND ssl.sidebar_section_id = :section_id
+         AND su.segment = 1
+    SQL
+
     updated_rows = DB.query_hash(<<~SQL, position: max_position, section_id: community_section_id)
       DELETE FROM sidebar_section_links
        WHERE position > :position

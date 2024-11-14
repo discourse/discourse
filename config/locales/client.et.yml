@@ -1150,7 +1150,6 @@ et:
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         invite:
-          save_invite: "Salvesta"
           cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV vormingus."
@@ -1686,6 +1685,8 @@ et:
         top: "Rohkem tippteemasid pole."
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
+      dismiss:
+        name: "Ignoreeri"
       close_topics:
         name: "Sulge"
         optional: (valikuline)
@@ -2066,20 +2067,25 @@ et:
       few_likes_left: "Aitäh poolehoiu jagamise eest! Tänaseks on vaid mõned meeldimised jäänud jagada."
       controls:
         reply: "alusta sellele postitusele vastuse koostamist"
+        like_action: "Laigi"
         like: "lisa sellele postitusele \"meeldib\""
         has_liked: "oled sellele postitusele oma meeldimise andnud"
+        undo_like_action: "Tühista meeldimise andmine"
         undo_like: "tühista meeldimise andmine"
         edit: "muuda seda postitust"
         edit_action: "Muuda"
         edit_anonymous: "Vabandame, kuid selle postituse muutmiseks pead olema sisse logitud."
+        flag_action: "Tähis"
         flag: "tähista see postitus privaatselt kui tähelepanu vajav või saada selle kohta privaatne teavitus"
         delete: "kustuta see postitus"
         undelete: "ennista see postitus"
+        share_action: "Jaga"
         share: "jaga viidet sellele postitusele"
         more: "Veel"
         delete_replies:
           just_the_post: "Ei, ainult see postitus"
         admin: "postituse administreerimise tegevused"
+        admin_action: "Admin"
         wiki: "Loo Wiki"
         unwiki: "Eemalda Wiki"
         convert_to_moderator: "Lisa meeskonna värv"
@@ -2645,6 +2651,8 @@ et:
               content: "Minu"
             review:
               content: "Vaata üle"
+            invite:
+              content: "Kutsu"
       panels:
         forum:
           label: Foorum
@@ -3456,7 +3464,6 @@ et:
         approve_bulk_success: "Edu! Kõik kasutajad on heaks kiidetud ja teavitatud."
         time_read: "Lugemise aeg"
         anonymize: "Anonümiseeri kasutaja"
-        anonymize_confirm: "Oled sa KINDEL, et soovid seda kontot anonümiseerida? See võib muuta kasutajanime ja meiliaadressi ja teha puhtaks kogu kasutajaprofiili."
         anonymize_yes: "Jah, anonümiseeri see konto"
         anonymize_failed: "Viga konto anonümiseerimisel."
         delete: "Kustuta kasutaja"
@@ -3717,6 +3724,7 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
+        new: "isa"
         add: "Lisa uus emotikon"
         uploading: "Laen üles..."
         name: "Nimi"

@@ -2,7 +2,7 @@ import { render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 const IMAGE_FIXTURE = {
   id: 290,
@@ -73,7 +73,7 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
 
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    assert.true(exists("img.chat-img-upload"), "displays as an image");
+    assert.dom("img.chat-img-upload").exists("displays as an image");
     const image = query("img.chat-img-upload");
     assert.strictEqual(image.loading, "lazy", "is lazy loading");
 
@@ -98,14 +98,15 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
 
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    assert.true(exists("video.chat-video-upload"), "displays as an video");
-    const video = query("video.chat-video-upload");
-    assert.true(video.hasAttribute("controls"), "has video controls");
-    assert.strictEqual(
-      video.getAttribute("preload"),
-      "metadata",
-      "video has correct preload settings"
-    );
+    assert.dom("video.chat-video-upload").exists("displays as an video");
+    assert.dom("video.chat-video-upload").hasAttribute("controls");
+    assert
+      .dom("video.chat-video-upload")
+      .hasAttribute(
+        "preload",
+        "metadata",
+        "video has correct preload settings"
+      );
   });
 
   test("with a audio", async function (assert) {
@@ -113,14 +114,15 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
 
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    assert.true(exists("audio.chat-audio-upload"), "displays as an audio");
-    const audio = query("audio.chat-audio-upload");
-    assert.true(audio.hasAttribute("controls"), "has audio controls");
-    assert.strictEqual(
-      audio.getAttribute("preload"),
-      "metadata",
-      "audio has correct preload settings"
-    );
+    assert.dom("audio.chat-audio-upload").exists("displays as an audio");
+    assert.dom("audio.chat-audio-upload").hasAttribute("controls");
+    assert
+      .dom("audio.chat-audio-upload")
+      .hasAttribute(
+        "preload",
+        "metadata",
+        "audio has correct preload settings"
+      );
   });
 
   test("non image upload", async function (assert) {
@@ -128,8 +130,9 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
 
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
-    assert.true(exists("a.chat-other-upload"), "displays as a link");
-    const link = query("a.chat-other-upload");
-    assert.strictEqual(link.href, TXT_FIXTURE.url, "has the correct URL");
+    assert.dom("a.chat-other-upload").exists("displays as a link");
+    assert
+      .dom("a.chat-other-upload")
+      .hasAttribute("href", TXT_FIXTURE.url, "has the correct URL");
   });
 });

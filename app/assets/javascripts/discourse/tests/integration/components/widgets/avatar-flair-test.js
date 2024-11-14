@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | avatar-flair", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,13 +17,12 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
       hbs`<MountWidget @widget="avatar-flair" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(exists("svg.d-icon-bars"), "it has the svg icon");
-    assert.strictEqual(
-      query(".avatar-flair").getAttribute("style"),
-      "background-color: #CC0000; color: #FFFFFF; ",
-      "it has styles"
-    );
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg.d-icon-bars").exists("has the svg icon");
+    assert.dom(".avatar-flair").hasStyle({
+      backgroundColor: "rgb(204, 0, 0)",
+      color: "rgb(255, 255, 255)",
+    });
   });
 
   test("avatar flair with an image", async function (assert) {
@@ -36,7 +34,7 @@ module("Integration | Component | Widget | avatar-flair", function (hooks) {
       hbs`<MountWidget @widget="avatar-flair" @args={{this.args}} />`
     );
 
-    assert.ok(exists(".avatar-flair"), "it has the tag");
-    assert.ok(!exists("svg"), "it does not have an svg icon");
+    assert.dom(".avatar-flair").exists("has the tag");
+    assert.dom("svg").doesNotExist("does not have an svg icon");
   });
 });

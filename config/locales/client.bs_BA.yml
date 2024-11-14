@@ -1329,7 +1329,6 @@ bs_BA:
           success: "Link pozivnice je uspješno generisan!"
           error: "Došlo je do pogreške prilikom generiranja linka za pozivnicu"
         invite:
-          save_invite: "Save"
           cancel: "Odustani"
         bulk_invite:
           text: "Skupna pozivnica"
@@ -1984,6 +1983,8 @@ bs_BA:
         top: "Nema više top tema."
         bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
+      dismiss:
+        name: "Odbaci"
       close_topics:
         name: "Zatvori"
         optional: (opciono)
@@ -2374,15 +2375,19 @@ bs_BA:
       few_likes_left: "Hvala za dijeljenje ljubavi! Za danas vam je ostalo samo nekoliko lajkova."
       controls:
         reply: "počni da sastavljaš odgovor na ovaj post"
+        like_action: "Like"
         like: "Lajkuj objavu"
         has_liked: "sviđa vam se ova objava"
+        undo_like_action: "Otkaži lajk"
         undo_like: "poništi sviđanje"
         edit: "izmjeni ovaj post"
         edit_action: "Izmijeni"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
+        flag_action: "Prijavi"
         flag: "anonimno prijavi ovaj post ili pošalji privatnu notifikaciju"
         delete: "obriši ovaj post"
         undelete: "povrati obrisan post"
+        share_action: "Dijeli"
         share: "podijeli link do ovog posta"
         more: "Još"
         delete_replies:
@@ -2397,6 +2402,7 @@ bs_BA:
             other: "Da, i svih %{count} odgovora"
           just_the_post: "Ne, samo ovu objavu"
         admin: "post admin actions"
+        admin_action: "Admin"
         wiki: "Učini zajedničkom, wiki objavom"
         unwiki: "Remove Wiki"
         convert_to_moderator: "Dodaj boje moderatora"
@@ -3097,6 +3103,8 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
+            invite:
+              content: "Invite"
       filter: "Filter..."
     until: "Sve do:"
     form_templates:
@@ -4139,7 +4147,6 @@ bs_BA:
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
         anonymize: "Sakri korisnika"
-        anonymize_confirm: "Jeste li SIGURNI da želite anonimizirati ovaj račun? Ovo će promijeniti korisničko ime i e-poštu i resetirati sve informacije o profilu."
         anonymize_yes: "Da, anonimiziraj ovaj račun"
         anonymize_failed: "Došlo je do problema sa anonimizacijom računa."
         delete: "Delete User"
@@ -4413,6 +4420,7 @@ bs_BA:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        new: "Add"
         add: "Dodaj novi emoji"
         name: "Ime"
         group: "Grupa"

@@ -8,13 +8,7 @@ import {
 import { test } from "qunit";
 import siteSettingFixture from "discourse/tests/fixtures/site-settings";
 import pretender from "discourse/tests/helpers/create-pretender";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Site Settings", function (needs) {
   let updatedTitle;
@@ -49,28 +43,30 @@ acceptance("Admin - Site Settings", function (needs) {
       .dom(".row.setting.upload .image-uploader")
       .exists("image uploader is present");
 
-    assert.ok(exists(".row.setting.upload .undo"), "undo button is present");
+    assert.dom(".row.setting.upload .undo").exists("undo button is present");
   });
 
   test("links to staff action log", async function (assert) {
     await visit("/admin/site_settings");
 
-    assert.strictEqual(
-      query(".row.setting .setting-label h3 a").getAttribute("href"),
-      "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
-      "it links to the staff action log"
-    );
+    assert
+      .dom(".row.setting .setting-label h3 a")
+      .hasAttribute(
+        "href",
+        "/admin/logs/staff_action_logs?filters=%7B%22subject%22%3A%22title%22%2C%22action_name%22%3A%22change_site_setting%22%7D&force_refresh=true",
+        "it links to the staff action log"
+      );
   });
 
   test("changing value updates dirty state", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", " title ");
-    assert.strictEqual(
-      count(".row.setting"),
-      1,
-      "filter returns 1 site setting"
-    );
-    assert.ok(!exists(".row.setting.overridden"), "setting isn't overridden");
+    assert
+      .dom(".row.setting")
+      .exists({ count: 1 }, "filter returns 1 site setting");
+    assert
+      .dom(".row.setting.overridden")
+      .doesNotExist("setting isn't overridden");
 
     await fillIn(".input-setting-string", "Test");
     await click("button.cancel");
@@ -110,15 +106,15 @@ acceptance("Admin - Site Settings", function (needs) {
   test("always shows filtered site settings if a filter is set", async function (assert) {
     await visit("/admin/site_settings");
     await fillIn("#setting-filter", "title");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
 
     // navigate away to the "Dashboard" page
     await click(".nav.nav-pills li:nth-child(1) a");
-    assert.strictEqual(count(".row.setting"), 0);
+    assert.dom(".row.setting").exists({ count: 0 });
 
     // navigate back to the "Settings" page
     await click(".nav.nav-pills li:nth-child(2) a");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
   });
 
   test("filtering overridden settings", async function (assert) {
@@ -133,11 +129,11 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     await fillIn("#setting-filter", "plugin:discourse-logo");
-    assert.strictEqual(count(".row.setting"), 1);
+    assert.dom(".row.setting").exists({ count: 1 });
 
     // inexistent plugin
     await fillIn("#setting-filter", "plugin:discourse-plugin");
-    assert.strictEqual(count(".row.setting"), 0);
+    assert.dom(".row.setting").exists({ count: 0 });
   });
 
   test("category name is preserved", async function (assert) {
@@ -196,14 +192,18 @@ acceptance("Admin - Site Settings", function (needs) {
   test("nav menu items have titles", async (assert) => {
     await visit("/admin/site_settings");
 
-    const navItems = queryAll(".admin-nav .nav-stacked li a");
-    navItems.each((_, item) => {
-      assert.equal(
-        item.title,
-        item.innerText,
-        "menu item has title, and the title is equal to menu item's label"
-      );
-    });
+    const navItems = [
+      ...document.querySelectorAll(".admin-nav .nav-stacked li a"),
+    ];
+    for (const item of navItems) {
+      assert
+        .dom(item)
+        .hasAttribute(
+          "title",
+          item.innerText,
+          "menu item has title, and the title is equal to menu item's label"
+        );
+    }
   });
 
   test("can perform fuzzy search", async function (assert) {

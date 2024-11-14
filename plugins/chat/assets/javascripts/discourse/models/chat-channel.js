@@ -3,6 +3,7 @@ import guid from "pretty-text/guid";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
@@ -86,6 +87,7 @@ export default class ChatChannel {
     this.membershipsCount = args.memberships_count;
     this.slug = args.slug;
     this.title = args.title;
+    this.unicodeTitle = args.unicode_title;
     this.status = args.status;
     this.description = args.description;
     this.threadingEnabled = args.threading_enabled;
@@ -94,6 +96,9 @@ export default class ChatChannel {
     this.currentUserMembership = args.current_user_membership;
     this.lastMessage = args.last_message;
     this.meta = args.meta;
+    this.iconUploadUrl = args.icon_upload_url
+      ? getURLWithCDN(args.icon_upload_url)
+      : null;
 
     this.chatable = this.#initChatable(args.chatable ?? []);
     this.tracking = new ChatTrackingState(getOwnerWithFallback(this));

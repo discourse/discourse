@@ -1,10 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Dashboard", function (needs) {
@@ -26,30 +22,24 @@ acceptance("Dashboard", function (needs) {
     ],
   });
 
-  test("default", async function (assert) {
-    await visit("/admin");
-
-    assert.ok(exists(".dashboard"), "has dashboard-next class");
-  });
-
   test("tabs", async function (assert) {
     await visit("/admin");
 
-    assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
+    assert.dom(".dashboard .navigation-item.general").exists("general tab");
     assert
       .dom(".dashboard .navigation-item.moderation")
       .exists("moderation tab");
-    assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
-    assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
+    assert.dom(".dashboard .navigation-item.security").exists("security tab");
+    assert.dom(".dashboard .navigation-item.reports").exists("reports tab");
   });
 
   test("general tab", async function (assert) {
     await visit("/admin");
 
-    assert.ok(exists(".custom-date-range-button"), "custom date range button");
-    assert.ok(exists(".admin-report.signups"), "signups report");
-    assert.ok(exists(".admin-report.posts"), "posts report");
-    assert.ok(exists(".admin-report.dau-by-mau"), "dau-by-mau report");
+    assert.dom(".custom-date-range-button").exists("custom date range button");
+    assert.dom(".admin-report.signups").exists("signups report");
+    assert.dom(".admin-report.posts").exists("posts report");
+    assert.dom(".admin-report.dau-by-mau").exists("dau-by-mau report");
     assert
       .dom(".admin-report.daily-engaged-users")
       .exists("daily-engaged-users report");
@@ -62,7 +52,7 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.moderation .navigation-link");
 
-    assert.ok(exists(".custom-date-range-button"), "custom date range button");
+    assert.dom(".custom-date-range-button").exists("custom date range button");
     assert
       .dom(".admin-report.moderators-activity")
       .exists("moderators activity report");
@@ -83,28 +73,24 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 1);
+    assert.dom(".dashboard .admin-reports-list__report").exists({ count: 1 });
 
     await fillIn(".dashboard .admin-reports-header__filter", "flags");
 
-    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 0);
+    assert.dom(".dashboard .admin-reports-list__report").doesNotExist();
 
     await click(".dashboard .navigation-item.security .navigation-link");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(
-      count(".dashboard .admin-reports-list__report"),
-      1,
-      "navigating back and forth resets filter"
-    );
+    assert
+      .dom(".dashboard .admin-reports-list__report")
+      .exists({ count: 1 }, "navigating back and forth resets filter");
 
     await fillIn(".dashboard .admin-reports-header__filter", "activities");
 
-    assert.strictEqual(
-      count(".dashboard .admin-reports-list__report"),
-      1,
-      "filter is case insensitive"
-    );
+    assert
+      .dom(".dashboard .admin-reports-list__report")
+      .exists({ count: 1 }, "filter is case insensitive");
   });
 
   test("reports filters", async function (assert) {
@@ -129,12 +115,12 @@ acceptance("Dashboard: dashboard_visible_tabs", function (needs) {
   test("visible tabs", async function (assert) {
     await visit("/admin");
 
-    assert.ok(exists(".dashboard .navigation-item.general"), "general tab");
+    assert.dom(".dashboard .navigation-item.general").exists("general tab");
     assert
       .dom(".dashboard .navigation-item.moderation")
       .doesNotExist("moderation tab");
-    assert.ok(exists(".dashboard .navigation-item.security"), "security tab");
-    assert.ok(exists(".dashboard .navigation-item.reports"), "reports tab");
+    assert.dom(".dashboard .navigation-item.security").exists("security tab");
+    assert.dom(".dashboard .navigation-item.reports").exists("reports tab");
   });
 });
 
@@ -148,8 +134,8 @@ acceptance("Dashboard: dashboard_hidden_reports", function (needs) {
   test("hidden reports", async function (assert) {
     await visit("/admin");
 
-    assert.ok(exists(".admin-report.signups.is-visible"), "signups report");
-    assert.notOk(exists(".admin-report.is-visible.posts"), "posts report");
+    assert.dom(".admin-report.signups.is-visible").exists("signups report");
+    assert.dom(".admin-report.is-visible.posts").doesNotExist("posts report");
     assert
       .dom(".admin-report.is-visible.dau-by-mau")
       .doesNotExist("dau-by-mau report");

@@ -72,7 +72,7 @@ export default RouteTemplate(
         } else {
           setTimeout(this.loadHomepage, 3000);
         }
-      } catch (error) {
+      } catch {
         this.errorMessage = i18n("user.activate_account.already_done");
       }
     }

@@ -289,10 +289,7 @@ after_initialize do
     end
 
     if name == :chat_allowed_groups
-      Jobs.enqueue(
-        Jobs::Chat::AutoRemoveMembershipHandleChatAllowedGroupsChange,
-        new_allowed_groups: new_value,
-      )
+      Jobs.enqueue(Jobs::Chat::AutoJoinUsers, event: "chat_allowed_groups_changed")
     end
   end
 
@@ -301,11 +298,8 @@ after_initialize do
     Chat::PostNotificationHandler.new(post, notified).handle
   end
 
-  on(:group_destroyed) do |group, user_ids|
-    Jobs.enqueue(
-      Jobs::Chat::AutoRemoveMembershipHandleDestroyedGroup,
-      destroyed_group_user_ids: user_ids,
-    )
+  on(:group_destroyed) do |group, _user_ids|
+    Chat::AutoLeaveChannels.call(params: { group_id: group.id, event: :group_destroyed })
   end
 
   register_presence_channel_prefix("chat") do |channel_name|
@@ -316,8 +310,16 @@ after_initialize do
   end
 
   register_presence_channel_prefix("chat-reply") do |channel_name|
-    if chat_channel_id = channel_name[%r{/chat-reply/(\d+)}, 1]
-      chat_channel = Chat::Channel.find(chat_channel_id)
+    if (
+         channel_id, thread_id =
+           channel_name.match(%r{^/chat-reply/(\d+)(?:/thread/(\d+))?$})&.captures
+       )
+      chat_channel = nil
+      if thread_id
+        chat_channel = Chat::Thread.find_by!(id: thread_id, channel_id: channel_id).channel
+      else
+        chat_channel = Chat::Channel.find(channel_id)
+      end
 
       PresenceChannel::Config.new.tap do |config|
         config.allowed_group_ids = chat_channel.allowed_group_ids
@@ -350,52 +352,31 @@ after_initialize do
 
   on(:user_seen) do |user|
     if user.last_seen_at == user.first_seen_at
-      Chat::Channel
-        .where(auto_join_users: true)
-        .each do |channel|
-          Chat::ChannelMembershipManager.new(channel).enforce_automatic_user_membership(user)
-        end
+      Chat::AutoJoinChannels.call(params: { user_id: user.id })
     end
   end
 
   on(:user_confirmed_email) do |user|
-    if user.active?
-      Chat::Channel
-        .where(auto_join_users: true)
-        .each do |channel|
-          Chat::ChannelMembershipManager.new(channel).enforce_automatic_user_membership(user)
-        end
-    end
+    Chat::AutoJoinChannels.call(params: { user_id: user.id }) if user.active?
   end
 
-  on(:user_added_to_group) do |user, group|
-    channels_to_add =
-      Chat::Channel
-        .distinct
-        .where(auto_join_users: true, chatable_type: "Category")
-        .joins(
-          "INNER JOIN category_groups ON category_groups.category_id = chat_channels.chatable_id",
-        )
-        .where(category_groups: { group_id: group.id })
-
-    channels_to_add.each do |channel|
-      Chat::ChannelMembershipManager.new(channel).enforce_automatic_user_membership(user)
-    end
+  on(:user_added_to_group) do |user, _group|
+    Chat::AutoJoinChannels.call(params: { user_id: user.id })
   end
 
-  on(:user_removed_from_group) do |user, group|
-    Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleUserRemovedFromGroup, user_id: user.id)
+  on(:user_removed_from_group) do |user, _group|
+    Chat::AutoLeaveChannels.call(params: { user_id: user.id, event: :user_removed_from_group })
   end
 
   on(:category_updated) do |category|
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
-    if category.is_a?(Category) && category_channel = Chat::Channel.find_by(chatable: category)
-      if category_channel.auto_join_users
-        Chat::ChannelMembershipManager.new(category_channel).enforce_automatic_channel_memberships
-      end
+    next unless category.is_a?(Category)
+    next unless category_channel = Chat::Channel.find_by(chatable: category)
 
-      Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleCategoryUpdated, category_id: category.id)
+    if category_channel.auto_join_users
+      Chat::AutoJoinChannels.call(params: { category_id: category.id })
     end
+    Chat::AutoLeaveChannels.call(params: { category_id: category.id, event: :category_updated })
   end
 
   # outgoing webhook events
@@ -540,6 +521,10 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
+
+  # When we eventually allow secure_uploads in chat, this will need to be
+  # removed. Depending on the channel, uploads may end up being secure.
+  UploadSecurity.register_custom_public_type("chat-composer")
 end
 
 if Rails.env == "test"

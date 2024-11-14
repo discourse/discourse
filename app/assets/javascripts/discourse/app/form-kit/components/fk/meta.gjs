@@ -4,7 +4,7 @@ import FKErrors from "discourse/form-kit/components/fk/errors";
 
 export default class FKMeta extends Component {
   get shouldRenderCharCounter() {
-    return this.args.field.maxLength > 0 && !this.args.field.disabled;
+    return this.args.field.maxLength > 0 && !this.args.disabled;
   }
 
   get shouldRenderMeta() {
