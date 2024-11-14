@@ -1,9 +1,9 @@
-import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
 import i18n from "discourse-common/helpers/i18n";
+import SortableColumn from "./sortable-column";
 
 const PostersCell = <template>
   {{#if @showPosters}}
-    <TopicListHeaderColumn
+    <SortableColumn
       @order="posters"
       @activeOrder={{@activeOrder}}
       @changeSort={{@changeSort}}

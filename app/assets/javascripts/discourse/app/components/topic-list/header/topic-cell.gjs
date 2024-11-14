@@ -1,7 +1,7 @@
-import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
+import SortableColumn from "./sortable-column";
 
 const TopicCell = <template>
-  <TopicListHeaderColumn
+  <SortableColumn
     @order="default"
     @category={{@category}}
     @activeOrder={{@activeOrder}}

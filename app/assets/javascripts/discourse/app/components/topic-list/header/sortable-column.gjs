@@ -3,6 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
@@ -10,7 +11,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-export default class TopicListHeaderColumn extends Component {
+export default class SortableColumn extends Component {
   @service router;
 
   get localizedName() {

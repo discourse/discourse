@@ -1,8 +1,8 @@
-import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
+import SortableColumn from "./sortable-column";
 
 const LikesCell = <template>
   {{#if @showLikes}}
-    <TopicListHeaderColumn
+    <SortableColumn
       @sortable={{@sortable}}
       @number="true"
       @order="likes"
