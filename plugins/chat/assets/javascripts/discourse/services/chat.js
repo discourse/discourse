@@ -284,23 +284,25 @@ export default class Chat extends Service {
       return; // Chat isn't open. Return and do nothing!
     }
 
-    let channels, DMs;
+    let publicChannels, directChannels;
 
     if (unreadOnly) {
-      channels = this.chatChannelsManager.publicMessageChannelsWithActivity;
-      DMs = this.chatChannelsManager.directMessageChannelsWithActivity;
+      publicChannels =
+        this.chatChannelsManager.publicMessageChannelsWithActivity;
+      directChannels =
+        this.chatChannelsManager.directMessageChannelsWithActivity;
     } else {
-      channels = this.chatChannelsManager.publicMessageChannels;
-      DMs = this.chatChannelsManager.directMessageChannels;
+      publicChannels = this.chatChannelsManager.publicMessageChannels;
+      directChannels = this.chatChannelsManager.directMessageChannels;
     }
 
     let currentList, otherList;
     if (activeChannel.isDirectMessageChannel) {
-      currentList = DMs;
-      otherList = channels;
+      currentList = directChannels;
+      otherList = publicChannels;
     } else {
-      currentList = channels;
-      otherList = DMs;
+      currentList = publicChannels;
+      otherList = directChannels;
     }
 
     const directionUp = direction === "up";

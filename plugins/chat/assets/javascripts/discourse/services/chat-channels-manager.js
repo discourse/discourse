@@ -136,6 +136,8 @@ export default class ChatChannelsManager extends Service {
     return this.publicMessageChannels.filter(
       (channel) =>
         channel.tracking.unreadCount +
+          channel.tracking.mentionCount +
+          channel.tracking.watchedThreadsUnreadCount +
           channel.threadsManager.unreadThreadCount >
         0
     );
@@ -160,6 +162,8 @@ export default class ChatChannelsManager extends Service {
     return this.directMessageChannels.filter(
       (channel) =>
         channel.tracking.unreadCount +
+          channel.tracking.mentionCount +
+          channel.tracking.watchedThreadsUnreadCount +
           channel.threadsManager.unreadThreadCount >
         0
     );
