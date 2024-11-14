@@ -140,9 +140,11 @@ export default {
               };
 
               if (siteSettings.experimental_full_page_login) {
-                router.transitionTo("signup").then((login) => {
+                router.transitionTo("signup").then((signup) => {
+                  const signupController =
+                    signup.controller || owner.lookup("controller:signup");
                   Object.keys(createAccountProps || {}).forEach((key) => {
-                    login.controller.set(key, createAccountProps[key]);
+                    signupController.set(key, createAccountProps[key]);
                   });
                 });
               } else {
