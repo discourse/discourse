@@ -1186,16 +1186,18 @@ class Topic < ActiveRecord::Base
       SiteSetting.max_allowed_message_recipients
   end
 
-  def invite_group(user, group)
+  def invite_group(user, group, should_notify: true)
     TopicAllowedGroup.create!(topic_id: self.id, group_id: group.id)
     self.allowed_groups.reload
 
     last_post =
       self.posts.order("post_number desc").where("not hidden AND posts.deleted_at IS NULL").first
     if last_post
-      Jobs.enqueue(:post_alert, post_id: last_post.id)
       add_small_action(user, "invited_group", group.name)
-      Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
+      if should_notify
+        Jobs.enqueue(:post_alert, post_id: last_post.id)
+        Jobs.enqueue(:group_pm_alert, user_id: user.id, group_id: group.id, post_id: last_post.id)
+      end
     end
 
     # If the group invited includes the OP of the topic as one of is members,

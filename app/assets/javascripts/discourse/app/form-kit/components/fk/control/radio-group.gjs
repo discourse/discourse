@@ -16,7 +16,10 @@ export default class FKControlRadioGroup extends Component {
       {{yield
         (hash
           Radio=(component
-            FKControlRadioGroupRadio groupValue=@value field=@field
+            FKControlRadioGroupRadio
+            groupValue=@value
+            field=@field
+            disabled=@disabled
           )
         )
       }}

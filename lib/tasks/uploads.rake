@@ -1122,6 +1122,7 @@ def fix_missing_s3
               tempfile,
               "temp.#{upload.extension}",
               skip_validations: true,
+              external_upload_too_big: true,
             ).create_for(Discourse.system_user.id)
         rescue => fix_error
           # invalid extension is the most common issue

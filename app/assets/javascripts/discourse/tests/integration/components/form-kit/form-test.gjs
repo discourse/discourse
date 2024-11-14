@@ -264,4 +264,34 @@ module("Integration | Component | FormKit | Form", function (hooks) {
 
     assert.form().hasNoErrors();
   });
+
+  test("destroying field", async function (assert) {
+    await render(<template>
+      <Form @data={{hash visible=true}} as |form data|>
+        {{#if data.visible}}
+          <form.Field
+            @title="Foo"
+            @name="foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+        {{/if}}
+
+        <form.Button
+          class="test"
+          @action={{fn form.setProperties (hash visible=false)}}
+        />
+      </Form>
+    </template>);
+
+    await formKit().submit();
+
+    assert.form().hasErrors({ foo: "Required" });
+
+    await click(".test");
+
+    assert.form().hasNoErrors("remove the errors associated with this field");
+  });
 });

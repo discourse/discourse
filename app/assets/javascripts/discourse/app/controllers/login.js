@@ -219,9 +219,9 @@ export default class LoginPageController extends Controller {
           signup: true,
         });
       } else {
-        this.router.transitionTo("signup").then((login) => {
+        this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {
-            login.controller.set(key, createAccountProps[key]);
+            signup.controller.set(key, createAccountProps[key]);
           });
         });
       }

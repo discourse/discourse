@@ -6,6 +6,13 @@
   width: 100%;
   height: 150px;
   margin-bottom: 0.5em;
+  box-sizing: border-box;
+
+  &.uppy-is-drag-over {
+    .d-icon-far-image {
+      color: var(--success);
+    }
+  }
 
   .meta {
     display: none;

@@ -31,5 +31,17 @@ module(
 
       assert.deepEqual(data.foo, "bar");
     });
+
+    test("when disabled", async function (assert) {
+      await render(<template>
+        <Form as |form|>
+          <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>);
+
+      assert.dom(".form-kit__control-input").hasAttribute("disabled");
+    });
   }
 );

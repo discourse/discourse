@@ -1171,7 +1171,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
       return placementStrategy;
     }
 
-    if (this.capabilities.isIpadOS || this.site.mobileView) {
+    if (this.site.mobileView) {
       placementStrategy =
         this.selectKit.options.mobilePlacementStrategy || "absolute";
     } else {
