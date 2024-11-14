@@ -5,13 +5,19 @@ import discourseLater from "discourse-common/lib/later";
 export default {
   after: "inject-objects",
   retryCount: 0,
+  isAppWebview: undefined,
+  mediaQuery: "(prefers-color-scheme: dark)",
 
   initialize(owner) {
-    const caps = owner.lookup("service:capabilities");
-    if (caps.isAppWebview) {
+    if (this.isAppWebview === undefined) {
+      const caps = owner.lookup("service:capabilities");
+      this.isAppWebview = caps.isAppWebview;
+    }
+
+    if (this.isAppWebview) {
       window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addEventListener("change", this.updateAppBackground);
+        .matchMedia(this.mediaQuery)
+        .addEventListener("change", this.updateAppBackground.bind(this));
       this.updateAppBackground();
     }
   },
@@ -37,6 +43,14 @@ export default {
     if (this.retryCount < 2) {
       this.retryCount++;
       this.updateAppBackground(1000);
+    }
+  },
+
+  teardown() {
+    if (this.isAppWebview) {
+      window
+        .matchMedia(this.mediaQuery)
+        .removeEventListener("change", this.updateAppBackground.bind(this));
     }
   },
 };

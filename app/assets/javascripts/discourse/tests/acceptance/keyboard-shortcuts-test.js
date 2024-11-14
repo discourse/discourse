@@ -1,11 +1,7 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import {
-  acceptance,
-  chromeTest,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -202,7 +198,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await visit("/");
     document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
-    assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
+    assert.dom("#dismiss-new-top").exists("dismiss new top button is present");
 
     await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
     assert.strictEqual(resetNewCalled, 1);

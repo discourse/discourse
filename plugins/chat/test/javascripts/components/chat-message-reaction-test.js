@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);
@@ -35,7 +35,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
       <ChatMessageReaction @reaction={{hash emoji="heart" count=this.count}} />
     `);
 
-    assert.false(exists(".chat-message-reaction .count"));
+    assert.dom(".chat-message-reaction .count").doesNotExist();
 
     this.set("count", 2);
     assert.dom(".chat-message-reaction .count").hasText("2");
@@ -58,7 +58,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
       <ChatMessageReaction class="show" @reaction={{hash emoji="heart" count=this.count}} @onReaction={{this.react}} />
     `);
 
-    assert.false(exists(".chat-message-reaction .count"));
+    assert.dom(".chat-message-reaction .count").doesNotExist();
 
     await click(".chat-message-reaction");
     assert.dom(".chat-message-reaction .count").hasText("1");

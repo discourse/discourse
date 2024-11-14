@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
 
 module(
@@ -20,21 +20,22 @@ module(
 
       assert.strictEqual(items.length, 2);
 
-      assert.ok(items[0].classList.contains("notification"));
-      assert.ok(items[0].classList.contains("unread"));
-      assert.ok(items[0].classList.contains("bookmark-reminder"));
+      assert.dom(items[0]).hasClass("notification");
+      assert.dom(items[0]).hasClass("unread");
+      assert.dom(items[0]).hasClass("bookmark-reminder");
 
-      assert.ok(items[1].classList.contains("bookmark"));
+      assert.dom(items[1]).hasClass("bookmark");
     });
 
     test("show all button for bookmark notifications", async function (assert) {
       await render(template);
-      const link = query(".panel-body-bottom .show-all");
-      assert.strictEqual(
-        link.title,
-        I18n.t("user_menu.view_all_bookmarks"),
-        "has the correct title"
-      );
+      assert
+        .dom(".panel-body-bottom .show-all")
+        .hasAttribute(
+          "title",
+          I18n.t("user_menu.view_all_bookmarks"),
+          "has the correct title"
+        );
     });
 
     test("dismiss button", async function (assert) {
@@ -47,11 +48,13 @@ module(
         dismiss,
         "dismiss button is shown if the user has unread bookmark_reminder notifications"
       );
-      assert.strictEqual(
-        dismiss.title,
-        I18n.t("user.dismiss_bookmarks_tooltip"),
-        "dismiss button has a title"
-      );
+      assert
+        .dom(".panel-body-bottom .notifications-dismiss")
+        .hasAttribute(
+          "title",
+          I18n.t("user.dismiss_bookmarks_tooltip"),
+          "dismiss button has a title"
+        );
 
       this.currentUser.set("grouped_unread_notifications", {});
       await settled();
@@ -78,10 +81,9 @@ module(
         I18n.t("user.no_bookmarks_body", { icon: "" }).trim(),
         "empty state body is shown"
       );
-      assert.ok(
-        exists(".empty-state-body svg.d-icon-bookmark"),
-        "icon is correctly rendered in the empty state body"
-      );
+      assert
+        .dom(".empty-state-body svg.d-icon-bookmark")
+        .exists("icon is correctly rendered in the empty state body");
     });
   }
 );

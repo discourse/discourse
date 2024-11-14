@@ -62,8 +62,8 @@ RSpec.describe DiscourseIpInfo do
     end
 
     it "should not throw an error and instead log the exception when database file fails to download" do
-      original_logger = Rails.logger
-      Rails.logger = fake_logger = FakeLogger.new
+      fake_logger = FakeLogger.new
+      Rails.logger.broadcast_to(fake_logger)
 
       global_setting :maxmind_license_key, "license_key"
       global_setting :maxmind_account_id, "account_id"
@@ -81,7 +81,7 @@ RSpec.describe DiscourseIpInfo do
         "MaxMind database GeoLite2-City download failed. 500 Error",
       )
     ensure
-      Rails.logger = original_logger
+      Rails.logger.stop_broadcasting_to(fake_logger)
     end
   end
 end

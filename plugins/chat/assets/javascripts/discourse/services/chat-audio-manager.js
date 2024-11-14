@@ -31,7 +31,7 @@ export default class ChatAudioManager extends Service {
     const audio = new Audio(src);
     try {
       await audio.play();
-    } catch (e) {
+    } catch {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
         console.info(

@@ -237,7 +237,6 @@ export default class SpreadsheetEditor extends Component {
       ? `post-${postNumber}-table-export`
       : `post-table-export`;
 
-    // eslint-disable-next-line no-undef
     this.spreadsheet = this.jspreadsheet(this.spreadsheet, {
       data,
       columns,

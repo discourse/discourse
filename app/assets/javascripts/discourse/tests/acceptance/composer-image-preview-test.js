@@ -1,13 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  acceptance,
-  count,
-  invisible,
-  query,
-  visible,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});
@@ -73,11 +67,9 @@ acceptance("Composer - Image Preview", function (needs) {
 
     await fillIn(".d-editor-input", uploads.join("\n"));
 
-    assert.strictEqual(
-      count(".button-wrapper"),
-      10,
-      "it adds correct amount of scaling button groups"
-    );
+    assert
+      .dom(".button-wrapper")
+      .exists({ count: 10 }, "adds correct number of scaling button groups");
 
     // Default
     uploads[0] =
@@ -168,20 +160,24 @@ acceptance("Composer - Image Preview", function (needs) {
     await fillIn(".d-editor-input", `![zorro|200x200](upload://zorro.png)`);
 
     assert.equal(query(readonlyAltText).innerText, "zorro", "correct alt text");
-    assert.ok(visible(readonlyAltText), "alt text is visible");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is hidden");
-    assert.ok(invisible(altTextEditOk), "alt text edit ok button is hidden");
-    assert.ok(invisible(altTextEditCancel), "alt text edit cancel is hidden");
+    assert.dom(readonlyAltText).isVisible("alt text is visible");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
+    assert
+      .dom(altTextEditCancel)
+      .isNotVisible("alt text edit cancel is hidden");
 
     await click(editAltTextButton);
 
-    assert.ok(invisible(scaleButtonContainer), "scale buttons are hidden");
-    assert.ok(invisible(readonlyAltText), "alt text is hidden");
-    assert.ok(invisible(editAltTextButton), "alt text edit button is hidden");
-    assert.ok(visible(altTextInput), "alt text input is visible");
-    assert.ok(visible(altTextEditOk), "alt text edit ok button is visible");
-    assert.ok(visible(altTextEditCancel), "alt text edit cancel is hidden");
+    assert.dom(scaleButtonContainer).isNotVisible("scale buttons are hidden");
+    assert.dom(readonlyAltText).isNotVisible("alt text is hidden");
+    assert
+      .dom(editAltTextButton)
+      .isNotVisible("alt text edit button is hidden");
+    assert.dom(altTextInput).isVisible("alt text input is visible");
+    assert.dom(altTextEditOk).isVisible("alt text edit ok button is visible");
+    assert.dom(altTextEditCancel).isVisible("alt text edit cancel is hidden");
     assert.equal(
       query(altTextInput).value,
       "zorro",
@@ -205,12 +201,14 @@ acceptance("Composer - Image Preview", function (needs) {
       "steak",
       "shows the alt text"
     );
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(visible(scaleButtonContainer), "scale buttons are visible");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is hidden");
-    assert.ok(invisible(altTextEditOk), "alt text edit ok button is hidden");
-    assert.ok(invisible(altTextEditCancel), "alt text edit cancel is hidden");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
+    assert
+      .dom(altTextEditCancel)
+      .isNotVisible("alt text edit cancel is hidden");
   });
 
   test("Editing alt text (with check button) in preview updates alt text in composer", async function (assert) {
@@ -243,12 +241,14 @@ acceptance("Composer - Image Preview", function (needs) {
       "shows the alt text"
     );
 
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(visible(scaleButtonContainer), "scale buttons are visible");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is hidden");
-    assert.ok(invisible(altTextEditOk), "alt text edit ok button is hidden");
-    assert.ok(invisible(altTextEditCancel), "alt text edit cancel is hidden");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
+    assert
+      .dom(altTextEditCancel)
+      .isNotVisible("alt text edit cancel is hidden");
   });
 
   test("Cancel alt text edit in preview does not update alt text in composer", async function (assert) {
@@ -282,12 +282,14 @@ acceptance("Composer - Image Preview", function (needs) {
       "shows the unedited alt text"
     );
 
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(visible(scaleButtonContainer), "scale buttons are visible");
-    assert.ok(visible(editAltTextButton), "alt text edit button is visible");
-    assert.ok(invisible(altTextInput), "alt text input is hidden");
-    assert.ok(invisible(altTextEditOk), "alt text edit ok button is hidden");
-    assert.ok(invisible(altTextEditCancel), "alt text edit cancel is hidden");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(scaleButtonContainer).isVisible("scale buttons are visible");
+    assert.dom(editAltTextButton).isVisible("alt text edit button is visible");
+    assert.dom(altTextInput).isNotVisible("alt text input is hidden");
+    assert.dom(altTextEditOk).isNotVisible("alt text edit ok button is hidden");
+    assert
+      .dom(altTextEditCancel)
+      .isNotVisible("alt text edit cancel is hidden");
   });
 
   test("Editing alt text for one of two images in preview updates correct alt text in composer", async function (assert) {

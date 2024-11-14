@@ -16,7 +16,6 @@ export default function () {
     { path: "/t/:slug/:id", resetNamespace: true },
     function () {
       this.route("fromParams", { path: "/" });
-      // eslint-disable-next-line ember/routes-segments-snake-case
       this.route("fromParamsNear", { path: "/:nearPost" });
     }
   );

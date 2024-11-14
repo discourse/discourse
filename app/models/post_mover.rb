@@ -16,6 +16,7 @@ class PostMover
 
   def to_topic(id, participants: nil, chronological_order: false)
     @move_type = PostMover.move_types[:existing_topic]
+    @creating_new_topic = false
     @chronological_order = chronological_order
 
     topic = Topic.find_by_id(id)
@@ -32,6 +33,7 @@ class PostMover
 
   def to_new_topic(title, category_id = nil, tags = nil)
     @move_type = PostMover.move_types[:new_topic]
+    @creating_new_topic = true
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
@@ -88,7 +90,6 @@ class PostMover
     @first_post_number_moved =
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
 
-    create_temp_table
     move_each_post
     handle_moved_references
 
@@ -103,25 +104,6 @@ class PostMover
 
     destination_topic.reload
     destination_topic
-  end
-
-  def create_temp_table
-    DB.exec("DROP TABLE IF EXISTS moved_posts") if Rails.env.test?
-
-    DB.exec <<~SQL
-      CREATE TEMPORARY TABLE moved_posts (
-        old_topic_id INTEGER,
-        old_post_id INTEGER,
-        old_post_number INTEGER,
-        new_topic_id INTEGER,
-        new_topic_title VARCHAR,
-        new_post_id INTEGER,
-        new_post_number INTEGER
-      ) ON COMMIT DROP;
-
-      CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
-      CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
-    SQL
   end
 
   def handle_moved_references
@@ -340,10 +322,12 @@ class PostMover
 
   def store_movement(metadata, new_post)
     metadata[:new_post_id] = new_post.id
+    metadata[:now] = Time.zone.now
+    metadata[:created_new_topic] = @creating_new_topic
 
     DB.exec(<<~SQL, metadata)
-      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
-      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
   end
 

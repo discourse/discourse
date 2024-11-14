@@ -72,7 +72,7 @@ export default class FKControlInput extends Component {
           (if @before "has-prefix")
           (if @after "has-suffix")
         }}
-        disabled={{@field.disabled}}
+        disabled={{@disabled}}
         ...attributes
         {{on "input" this.handleInput}}
       />

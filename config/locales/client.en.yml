@@ -1839,7 +1839,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Hide my public profile and presence features"
+      hide_profile: "Hide my public profile"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
@@ -2145,6 +2145,11 @@ en:
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
+
+    presence_toggle:
+      online: "Online"
+      offline: "Offline"
+      title: "Toggle presence features"
 
     user_tips:
       button: "Got it!"
@@ -2518,7 +2523,6 @@ en:
 
     category_page_style:
       categories_only: "Categories Only"
-      categories_only_optimized: "Categories Only (Optimized)"
       categories_with_featured_topics: "Categories with Featured Topics"
       categories_and_latest_topics: "Categories and Latest Topics"
       categories_and_latest_topics_created_date: "Categories and Latest Topics (sort by topic created date)"
@@ -3847,17 +3851,24 @@ en:
 
       controls:
         reply: "begin composing a reply to this post"
+        like_action: "Like"
         like: "like this post"
         has_liked: "you've liked this post"
         read_indicator: "members who read this post"
+        undo_like_action: "Undo like"
         undo_like: "undo like"
         edit: "edit this post"
         edit_action: "Edit"
         edit_anonymous: "Sorry, but you need to be logged in to edit this post."
+        flag_action: "Flag"
         flag: "privately flag this post for attention or send a private notification about it"
+        delete_action: "Delete post"
         delete: "delete this post"
+        undelete_action: "Undelete post"
         undelete: "undelete this post"
+        share_action: "Share"
         share: "share a link to this post"
+        copy_action: "Copy link"
         copy_title: "copy a link to this post to clipboard"
         link_copied: "Link copied!"
         more: "More"
@@ -3871,6 +3882,7 @@ en:
             other: "Yes, and all %{count} replies"
           just_the_post: "No, just this post"
         admin: "post admin actions"
+        admin_action: "Admin"
         permanently_delete: "Permanently Delete"
         permanently_delete_confirmation: "Are you sure you permanently want to delete this post? You will not be able to recover it."
         wiki: "Make Wiki"
@@ -7204,7 +7216,8 @@ en:
 
       emoji:
         title: "Emoji"
-        help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
+        description: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
+        new: "Add"
         add: "Add New Emoji"
         choose_files: "Choose Files"
         uploading: "Uploading…"
@@ -7258,17 +7271,27 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         tag_name: "Tag name"
+        tag_title: "Tag"
         external_url: "External or Relative URL"
         user_id: "User ID"
+        user_title: "User"
         username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
+        add: "Add permalink"
+        back: "Back to Permalinks"
+        more_options: "More options"
+        copy_success: "Permalink copied to clipboard"
         form:
           label: "New:"
-          add: "Add"
-          filter: "Search (URL or External URL)"
+          add_header: "Add permalink"
+          edit_header: "Edit permalink"
+          filter: "Search URL or destination URL"
+          url: "URL"
+          permalink_type: "Permalink type"
+          save: "Save"
 
       reseed:
         action:

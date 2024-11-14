@@ -55,7 +55,7 @@ async function loadDraft(store, opts = {}) {
     if (draft && typeof draft === "string") {
       draft = JSON.parse(draft);
     }
-  } catch (error) {
+  } catch {
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }

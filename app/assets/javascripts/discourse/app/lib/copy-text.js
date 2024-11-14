@@ -10,7 +10,7 @@ export default function (text, element) {
     if (document.queryCommandSupported("copy")) {
       supported = true;
     }
-  } catch (e) {
+  } catch {
     // Ignore
   }
   if (!supported) {
@@ -27,7 +27,7 @@ export default function (text, element) {
     if (document.execCommand("copy")) {
       return true;
     }
-  } catch (e) {
+  } catch {
     // Ignore
   }
   return false;

@@ -3,7 +3,6 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
   acceptance,
-  normalizeHtml,
   query,
   simulateKey,
   simulateKeys,
@@ -16,47 +15,44 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(query(".d-editor-input"), "a :blonde_wo\t");
+    await simulateKeys(".d-editor-input", "a :blonde_wo\t");
 
-    assert.strictEqual(
-      normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
-      normalizeHtml(
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
         `<p>a <img src="/images/emoji/twitter/blonde_woman.png?v=${v}" title=":blonde_woman:" class="emoji" alt=":blonde_woman:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
-      )
-    );
+      );
   });
 
   test("emoji can be picked from the emoji-picker using the mouse", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await simulateKeys(query(".d-editor-input"), "an :arrow");
+    await simulateKeys(".d-editor-input", "an :arrow");
     // the 6th item in the list is the "more..."
     await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
 
     assert.dom(".emoji-picker.opened.has-filter").exists();
     await click(".emoji-picker .results img:first-of-type");
 
-    assert.strictEqual(
-      normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
-      normalizeHtml(
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
         `<p>an <img src="/images/emoji/twitter/arrow_backward.png?v=${v}" title=":arrow_backward:" class="emoji" alt=":arrow_backward:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
-      )
-    );
+      );
   });
 
   test("skin toned emoji is cooked properly", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    await fillIn(query(".d-editor-input"), "a :blonde_woman:t5:");
+    await fillIn(".d-editor-input", "a :blonde_woman:t5:");
 
-    assert.strictEqual(
-      normalizeHtml(query(".d-editor-preview").innerHTML.trim()),
-      normalizeHtml(
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
         `<p>a <img src="/images/emoji/twitter/blonde_woman/5.png?v=${v}" title=":blonde_woman:t5:" class="emoji" alt=":blonde_woman:t5:" loading="lazy" width="20" height="20" style="aspect-ratio: 20 / 20;"></p>`
-      )
-    );
+      );
   });
 
   needs.settings({ emoji_autocomplete_min_chars: 2 });

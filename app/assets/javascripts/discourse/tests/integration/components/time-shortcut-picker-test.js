@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
-  exists,
   fakeTime,
   query,
   queryAll,
@@ -59,7 +58,7 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.ok(exists("#tap_tile_later_this_week"), "it has later this week");
+    assert.dom("#tap_tile_later_this_week").exists("has later this week");
   });
 
   test("does not show 'Later This Week' if today is >= Thursday", async function (assert) {
@@ -100,7 +99,7 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
 
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
-    assert.ok(exists("#tap_tile_later_today"), "it does have later today");
+    assert.dom("#tap_tile_later_today").exists("has later today");
   });
 
   test("does not show 'Later Today' if it is after 5pm", async function (assert) {

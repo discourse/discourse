@@ -2,7 +2,7 @@ import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | value-list", function (hooks) {
@@ -17,11 +17,9 @@ module("Integration | Component | value-list", function (hooks) {
     await selectKit().fillInFilter("eviltrout");
     await selectKit().keyboard("Enter");
 
-    assert.strictEqual(
-      count(".values .value"),
-      3,
-      "it adds the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.strictEqual(
       this.values,
@@ -52,11 +50,9 @@ module("Integration | Component | value-list", function (hooks) {
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
-    assert.strictEqual(
-      count(".values .value"),
-      1,
-      "it removes the value from the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 1 }, "removes the value from the list of values");
 
     assert.strictEqual(this.values, "osama", "it removes the expected value");
 
@@ -80,11 +76,9 @@ module("Integration | Component | value-list", function (hooks) {
     await selectKit().expand();
     await selectKit().selectRowByValue("maja");
 
-    assert.strictEqual(
-      count(".values .value"),
-      3,
-      "it adds the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.strictEqual(
       this.values,
@@ -104,11 +98,9 @@ module("Integration | Component | value-list", function (hooks) {
     await selectKit().fillInFilter("eviltrout");
     await selectKit().selectRowByValue("eviltrout");
 
-    assert.strictEqual(
-      count(".values .value"),
-      3,
-      "it adds the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.deepEqual(
       this.values,
@@ -128,11 +120,9 @@ module("Integration | Component | value-list", function (hooks) {
     await selectKit().fillInFilter("eviltrout");
     await selectKit().keyboard("Enter");
 
-    assert.strictEqual(
-      count(".values .value"),
-      3,
-      "it adds the value to the list of values"
-    );
+    assert
+      .dom(".values .value")
+      .exists({ count: 3 }, "adds the value to the list of values");
 
     assert.strictEqual(
       this.values,

@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { assert, module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Addons | truth-helpers | Integration | includes", function (hooks) {
   setupRenderingTest(hooks);
@@ -14,14 +13,14 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
       hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
-    assert.ok(exists(".test"), "it returns true when element is found");
+    assert.dom(".test").exists("is true when element is found");
 
     this.bar = 2;
     await render(
       hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
-    assert.notOk(exists(".test"), "it returns false when element is not found");
+    assert.dom(".test").doesNotExist("is false when element is not found");
   });
 
   test("when using a string", async function () {
@@ -31,13 +30,13 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
       hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
-    assert.ok(exists(".test"), "it returns true when element is found");
+    assert.dom(".test").exists("is true when element is found");
 
     this.bar = "b";
     await render(
       hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
-    assert.notOk(exists(".test"), "it returns false when element is not found");
+    assert.dom(".test").doesNotExist("is false when element is not found");
   });
 });

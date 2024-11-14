@@ -10,10 +10,8 @@ import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  exists,
   publishToMessageBus,
   query,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -64,25 +62,23 @@ acceptance("User Routes", function (needs) {
 
   test("Invites", async function (assert) {
     await visit("/u/eviltrout/invited/pending");
-    assert.ok(
-      document.body.classList.contains("user-invites-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-invites-page", "has the body class");
   });
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
 
-    assert.ok(
-      document.body.classList.contains("user-notifications-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-notifications-page", "has the body class");
 
-    const $links = queryAll(".notification a");
+    const links = [...document.querySelectorAll(".notification a")];
 
-    assert.ok(
-      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
-    );
+    assert
+      .dom(links[2])
+      .hasAttribute("href", /^\/u\/eviltrout\/notifications\/likes-received/);
 
     updateCurrentUser({ moderator: true, admin: false });
 
@@ -103,21 +99,20 @@ acceptance("User Routes", function (needs) {
 
   test("Root URL - Viewing Self", async function (assert) {
     await visit("/u/eviltrout");
-    assert.ok(
-      document.body.classList.contains("user-activity-page"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("user-activity-page", "has the body class");
     assert.strictEqual(
       currentRouteName(),
       "userActivity.index",
       "it defaults to activity"
     );
-    assert.ok(exists(".container.viewing-self"), "has the viewing-self class");
+    assert.dom(".container.viewing-self").exists("has the viewing-self class");
   });
 
   test("Viewing Drafts", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
-    assert.ok(exists(".user-stream"), "has drafts stream");
+    assert.dom(".user-stream").exists("has drafts stream");
     assert
       .dom(".user-stream .user-stream-item-draft-actions")
       .exists("has draft action buttons");
@@ -164,11 +159,10 @@ acceptance("User Routes - Moderator viewing warnings", function (needs) {
 
   test("Messages - Warnings", async function (assert) {
     await visit("/u/eviltrout/messages/warnings");
-    assert.ok(
-      document.body.classList.contains("user-messages-page"),
-      "has the body class"
-    );
-    assert.ok(exists("div.alert-info"), "has the permissions alert");
+    assert
+      .dom(document.body)
+      .hasClass("user-messages-page", "has the body class");
+    assert.dom("div.alert-info").exists("has the permissions alert");
   });
 });
 
@@ -276,10 +270,9 @@ acceptance(
 
     test("Notification level is set to normal and can be changed to muted", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const dropdown = selectKit(".user-notifications-dropdown");
       await dropdown.expand();
@@ -316,10 +309,9 @@ acceptance(
     });
     test("Notification level can be changed to ignored", async function (assert) {
       await visit("/u/charlie");
-      assert.ok(
-        exists(".user-notifications-dropdown"),
-        "Notification level dropdown is present"
-      );
+      assert
+        .dom(".user-notifications-dropdown")
+        .exists("notification level dropdown is present");
 
       const notificationLevelDropdown = selectKit(
         ".user-notifications-dropdown"

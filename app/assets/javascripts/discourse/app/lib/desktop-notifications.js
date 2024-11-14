@@ -35,7 +35,7 @@ function init(messageBus) {
 
   try {
     keyValueStore.getItem(focusTrackerKey);
-  } catch (e) {
+  } catch {
     // eslint-disable-next-line no-console
     console.info(
       "Discourse desktop notifications are disabled - localStorage denied."

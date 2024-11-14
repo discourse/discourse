@@ -18,8 +18,7 @@ function generateClickEventOn(selector) {
 
 function badgeClickCount(assert, id, expected) {
   track(generateClickEventOn(`#${id}`));
-  const badge = fixture(`#${id}`).querySelector("span.badge");
-  assert.strictEqual(parseInt(badge.innerHTML, 10), expected);
+  assert.dom("span.badge", fixture(`#${id}`)).hasHtml(String(expected));
 }
 
 function testOpenInANewTab(description, clickEventModifier) {

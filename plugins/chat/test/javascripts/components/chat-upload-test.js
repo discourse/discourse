@@ -131,7 +131,8 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
     assert.dom("a.chat-other-upload").exists("displays as a link");
-    const link = query("a.chat-other-upload");
-    assert.strictEqual(link.href, TXT_FIXTURE.url, "has the correct URL");
+    assert
+      .dom("a.chat-other-upload")
+      .hasAttribute("href", TXT_FIXTURE.url, "has the correct URL");
   });
 });

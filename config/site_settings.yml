@@ -611,7 +611,7 @@ login:
     type: host_list
     list_type: simple
   normalize_emails:
-    default: true
+    default: false
   auto_approve_email_domains:
     default: ""
     type: host_list
@@ -3007,7 +3007,9 @@ user_preferences:
     default: 2
   default_email_in_reply_to:
     default: false
-  default_hide_profile_and_presence:
+  default_hide_profile:
+    default: false
+  default_hide_presence:
     default: false
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
@@ -3298,6 +3300,22 @@ experimental:
     allow_any: false
     refresh: true
   experimental_glimmer_topic_list_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  glimmer_post_menu_mode:
+    client: true
+    hidden: true
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: disabled
+  glimmer_post_menu_groups:
     client: true
     type: group_list
     list_type: compact

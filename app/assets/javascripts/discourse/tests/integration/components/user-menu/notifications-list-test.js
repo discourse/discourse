@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -67,12 +67,13 @@ module(
 
     test("show all button for all notifications page", async function (assert) {
       await render(template);
-      const showAllBtn = query(".panel-body-bottom .btn.show-all");
-      assert.strictEqual(
-        showAllBtn.title,
-        I18n.t("user_menu.view_all_notifications"),
-        "has the correct title"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.show-all")
+        .hasAttribute(
+          "title",
+          I18n.t("user_menu.view_all_notifications"),
+          "has the correct title"
+        );
     });
 
     test("has a dismiss button if some notification types have unread notifications", async function (assert) {
@@ -120,10 +121,9 @@ module(
         2,
         "notifications list is refreshed"
       );
-      assert.ok(
-        !exists(".panel-body-bottom .btn.notifications-dismiss"),
-        "dismiss button is not shown"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .doesNotExist("dismiss button is not shown");
     });
 
     test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {

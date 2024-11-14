@@ -11,7 +11,7 @@ export default class ComposerPresenceManager extends Service {
   notifyState(intent, id) {
     if (
       this.siteSettings.allow_users_to_hide_profile &&
-      this.currentUser.user_option.hide_profile_and_presence
+      this.currentUser.user_option.hide_presence
     ) {
       return;
     }

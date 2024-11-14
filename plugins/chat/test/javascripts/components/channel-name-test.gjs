@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -29,7 +29,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.false(exists(".xss"));
+    assert.dom(".xss").doesNotExist();
   });
 
   test("dm channel - one user", async function (assert) {
@@ -121,6 +121,6 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
       <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
     </template>);
 
-    assert.false(exists(".chat-channel-unread-indicator"));
+    assert.dom(".chat-channel-unread-indicator").doesNotExist();
   });
 });

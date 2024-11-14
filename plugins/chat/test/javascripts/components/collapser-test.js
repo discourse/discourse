@@ -3,7 +3,6 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { visible } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,16 +22,12 @@ module("Discourse Chat | Component | collapser", function (hooks) {
       </Collapser>
     `);
 
-    const openButton = ".chat-message-collapser-closed";
-    const closeButton = ".chat-message-collapser-opened";
-    const body = ".cat";
+    assert.dom(".cat").isVisible();
 
-    assert.true(visible(body));
+    await click(".chat-message-collapser-opened");
+    assert.dom(".cat").isNotVisible();
 
-    await click(closeButton);
-    assert.false(visible(body));
-
-    await click(openButton);
-    assert.true(visible(body));
+    await click(".chat-message-collapser-closed");
+    assert.dom(".cat").isVisible();
   });
 });

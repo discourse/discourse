@@ -306,10 +306,10 @@ jobs:
         shell: bash
 
       - name: Upload failed system test screenshots
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now.
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-failed-system-test-screenshots.outputs.exists == 'true'
         with:
-          name: failed-system-test-screenshots
+          name: failed-system-test-screenshots-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/capybara/*.png
 
       - name: Check for flaky tests report
@@ -335,10 +335,10 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v3 # TODO (tgxworld): V4 doesn't allow us to upload multiple uploads to the same artifact name so keep at V3 for now
+        uses: actions/upload-artifact@v4
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
-          name: flaky-test-reports
+          name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
           path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Check Annotations
@@ -408,3 +408,28 @@ jobs:
         with:
           name: ember-exam-execution-${{ matrix.browser }}-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
+
+  merge:
+    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    runs-on: debian-12
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: failed-system-test-screenshots
+          pattern: failed-system-test-screenshots-*
+          delete-merged: true
+          separate-directories: false
+        # Don't fail the job if there aren't any artifacts to merge.
+        continue-on-error: true
+
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: flaky-test-reports
+          pattern: flaky-test-reports-*
+          delete-merged: true
+          separate-directories: false
+        # Don't fail the job if there aren't any artifacts to merge.
+        continue-on-error: true

@@ -4,8 +4,8 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
@@ -31,15 +31,17 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
   postStreamTest("extensibility", {
     posts() {
       withPluginApi("0.14.0", (api) => {
-        api.addPostMenuButton("coffee", (transformedPost) => {
-          lastTransformedPost = transformedPost;
-          return {
-            action: "drinkCoffee",
-            icon: "mug-saucer",
-            className: "hot-coffee",
-            title: "coffee.title",
-            position: "first",
-          };
+        withSilencedDeprecations("discourse.post-menu-widget-overrides", () => {
+          api.addPostMenuButton("coffee", (transformedPost) => {
+            lastTransformedPost = transformedPost;
+            return {
+              action: "drinkCoffee",
+              icon: "mug-saucer",
+              className: "hot-coffee",
+              title: "coffee.title",
+              position: "first",
+            };
+          });
         });
       });
 
@@ -61,19 +63,17 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
     },
 
     test(assert) {
-      assert.strictEqual(count(".post-stream"), 1);
-      assert.strictEqual(count(".topic-post"), 1, "renders all posts");
+      assert.dom(".post-stream").exists({ count: 1 });
+      assert.dom(".topic-post").exists({ count: 1 }, "renders all posts");
       assert.notStrictEqual(lastTransformedPost, null, "it transforms posts");
       assert.strictEqual(
         lastTransformedPost.topic.id,
         1234,
         "it also transforms the topic"
       );
-      assert.strictEqual(
-        count(".actions .extra-buttons .hot-coffee"),
-        1,
-        "should have the extended button"
-      );
+      assert
+        .dom(".actions .extra-buttons .hot-coffee")
+        .exists({ count: 1 }, "has the extended button");
     },
   });
 
@@ -129,58 +129,42 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
     },
 
     test(assert) {
-      assert.strictEqual(count(".post-stream"), 1);
-      assert.strictEqual(count(".topic-post"), 6, "renders all posts");
+      assert.dom(".post-stream").exists({ count: 1 });
+      assert.dom(".topic-post").exists({ count: 6 }, "renders all posts");
 
       // look for special class bindings
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(1).topic-owner"),
-        1,
-        "it applies the topic owner class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(1).group-trout"),
-        1,
-        "it applies the primary group class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(1).regular"),
-        1,
-        "it applies the regular class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(2).moderator"),
-        1,
-        "it applies the moderator class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(3).post-hidden"),
-        1,
-        "it applies the hidden class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(4).whisper"),
-        1,
-        "it applies the whisper class"
-      );
-      assert.strictEqual(
-        count(".topic-post:nth-of-type(5).wiki"),
-        1,
-        "it applies the wiki class"
-      );
+      assert
+        .dom(".topic-post:nth-of-type(1).topic-owner")
+        .exists({ count: 1 }, "applies the topic owner class");
+      assert
+        .dom(".topic-post:nth-of-type(1).group-trout")
+        .exists({ count: 1 }, "applies the primary group class");
+      assert
+        .dom(".topic-post:nth-of-type(1).regular")
+        .exists({ count: 1 }, "applies the regular class");
+      assert
+        .dom(".topic-post:nth-of-type(2).moderator")
+        .exists({ count: 1 }, "applies the moderator class");
+      assert
+        .dom(".topic-post:nth-of-type(3).post-hidden")
+        .exists({ count: 1 }, "applies the hidden class");
+      assert
+        .dom(".topic-post:nth-of-type(4).whisper")
+        .exists({ count: 1 }, "applies the whisper class");
+      assert
+        .dom(".topic-post:nth-of-type(5).wiki")
+        .exists({ count: 1 }, "applies the wiki class");
 
       // it renders an article for the body with appropriate attributes
-      assert.strictEqual(count("article#post_2"), 1);
-      assert.strictEqual(count('article[data-user-id="123"]'), 1);
-      assert.strictEqual(count('article[data-post-id="3"]'), 1);
-      assert.strictEqual(count("article#post_5.via-email"), 1);
-      assert.strictEqual(count("article#post_6.is-auto-generated"), 1);
+      assert.dom("article#post_2").exists({ count: 1 });
+      assert.dom('article[data-user-id="123"]').exists({ count: 1 });
+      assert.dom('article[data-post-id="3"]').exists({ count: 1 });
+      assert.dom("article#post_5.via-email").exists({ count: 1 });
+      assert.dom("article#post_6.is-auto-generated").exists({ count: 1 });
 
-      assert.strictEqual(
-        count("article:nth-of-type(1) .main-avatar"),
-        1,
-        "renders the main avatar"
-      );
+      assert
+        .dom("article:nth-of-type(1) .main-avatar")
+        .exists({ count: 1 }, "renders the main avatar");
     },
   });
 
@@ -201,16 +185,12 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
     },
 
     test(assert) {
-      assert.strictEqual(
-        count(".topic-post.deleted"),
-        1,
-        "it applies the deleted class"
-      );
-      assert.strictEqual(
-        count(".deleted-user-avatar"),
-        1,
-        "it has the trash avatar"
-      );
+      assert
+        .dom(".topic-post.deleted")
+        .exists({ count: 1 }, "applies the deleted class");
+      assert
+        .dom(".deleted-user-avatar")
+        .exists({ count: 1 }, "has the trash avatar");
     },
   });
 });

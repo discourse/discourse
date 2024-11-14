@@ -6,7 +6,7 @@ RSpec.describe PermalinksController do
 
   describe "show" do
     it "should redirect to a permalink's target_url with status 301" do
-      permalink.update!(topic_id: topic.id)
+      permalink.update!(permalink_type_value: topic.id, permalink_type: "topic")
 
       get "/#{permalink.url}"
 
@@ -15,7 +15,7 @@ RSpec.describe PermalinksController do
     end
 
     it "should work for subfolder installs too" do
-      permalink.update!(topic_id: topic.id)
+      permalink.update!(permalink_type_value: topic.id, permalink_type: "topic")
       set_subfolder "/forum"
 
       get "/#{permalink.url}"
@@ -25,7 +25,7 @@ RSpec.describe PermalinksController do
     end
 
     it "should apply normalizations" do
-      permalink.update!(external_url: "/topic/100")
+      permalink.update!(permalink_type_value: "/topic/100", permalink_type: "external_url")
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 
       get "/#{permalink.url}", params: { test: "hello" }
@@ -46,7 +46,12 @@ RSpec.describe PermalinksController do
     end
 
     context "when permalink's target_url is an external URL" do
-      before { permalink.update!(external_url: "https://github.com/discourse/discourse") }
+      before do
+        permalink.update!(
+          permalink_type_value: "https://github.com/discourse/discourse",
+          permalink_type: "external_url",
+        )
+      end
 
       it "redirects to it properly" do
         get "/#{permalink.url}"

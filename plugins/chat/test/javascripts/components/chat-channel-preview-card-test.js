@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -55,10 +55,11 @@ module(
 
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.false(
-        exists(".chat-channel-preview-card__description"),
-        "no line is left for the channel description if there is none"
-      );
+      assert
+        .dom(".chat-channel-preview-card__description")
+        .doesNotExist(
+          "no line is left for the channel description if there is none"
+        );
 
       assert
         .dom(".chat-channel-preview-card.-no-description")
@@ -85,10 +86,9 @@ module(
       this.channel.status = "closed";
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.false(
-        exists(".chat-channel-preview-card__join-channel-btn"),
-        "it does not show the join channel button"
-      );
+      assert
+        .dom(".chat-channel-preview-card__join-channel-btn")
+        .doesNotExist("it does not show the join channel button");
     });
   }
 );

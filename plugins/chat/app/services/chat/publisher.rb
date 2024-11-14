@@ -361,10 +361,10 @@ module Chat
 
     NEW_CHANNEL_MESSAGE_BUS_CHANNEL = "/chat/new-channel"
 
-    def self.publish_new_channel(chat_channel, users)
+    def self.publish_new_channel(chat_channel, user_ids)
       Chat::UserChatChannelMembership
         .includes(:user)
-        .where(chat_channel: chat_channel, user: users)
+        .where(chat_channel: chat_channel, user_id: user_ids)
         .find_in_batches do |memberships|
           memberships.each do |membership|
             serialized_channel =

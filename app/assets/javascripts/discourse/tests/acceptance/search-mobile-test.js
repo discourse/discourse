@@ -1,11 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Search - Mobile", function (needs) {
   needs.mobileView();
@@ -19,7 +14,9 @@ acceptance("Search - Mobile", function (needs) {
       .dom("input.full-page-search")
       .exists("it shows the full page search form");
 
-    assert.ok(!exists(".search-results .fps-topic"), "no results by default");
+    assert
+      .dom(".search-results .fps-topic")
+      .doesNotExist("no results by default");
 
     await click(".advanced-filters summary");
 
@@ -30,7 +27,7 @@ acceptance("Search - Mobile", function (needs) {
     await fillIn(".search-query", "discourse");
     await click(".search-cta");
 
-    assert.strictEqual(count(".fps-topic"), 1, "has one post");
+    assert.dom(".fps-topic").exists({ count: 1 }, "has one post");
 
     assert
       .dom(".advanced-filters[open]")

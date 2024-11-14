@@ -1,6 +1,4 @@
-/* eslint-disable ember/require-tagless-components */
 /* eslint-disable ember/no-classic-classes */
-/* eslint-disable ember/no-classic-components */
 
 import GlimmerComponent from "@glimmer/component";
 import ClassicComponent from "@ember/component";

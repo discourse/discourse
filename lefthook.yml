@@ -25,7 +25,7 @@ pre-commit:
     eslint:
       glob: "*.js"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
-      run: pnpm eslint -f compact --quiet {staged_files}
+      run: pnpm eslint --quiet {staged_files}
     ember-template-lint:
       glob: "*.hbs"
       include: "app/assets/javascripts|plugins/.+?/assets/javascripts"

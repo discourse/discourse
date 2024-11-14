@@ -60,6 +60,10 @@ export default class UserMenuProfileTabContent extends Component {
     return date;
   }
 
+  get isPresenceHidden() {
+    return this.currentUser.get("user_option.hide_presence");
+  }
+
   @action
   doNotDisturbClick() {
     if (this.saving) {
@@ -75,6 +79,12 @@ export default class UserMenuProfileTabContent extends Component {
       this.args.closeUserMenu();
       this.modal.show(DoNotDisturbModal);
     }
+  }
+
+  @action
+  togglePresence() {
+    this.currentUser.set("user_option.hide_presence", !this.isPresenceHidden);
+    this.currentUser.save(["hide_presence"]);
   }
 
   @action

@@ -11,7 +11,9 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import RenderGlimmer from "discourse/widgets/render-glimmer";
+import RenderGlimmer, {
+  registerWidgetShim,
+} from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
@@ -944,3 +946,40 @@ export default createWidget("post-menu", {
     }
   },
 });
+
+// TODO (glimmer-post-menu): Once this widget is removed the `<section>...</section>` tag needs to be added to the PostMenu component
+registerWidgetShim(
+  "glimmer-post-menu",
+  "section.post-menu-area.clearfix",
+  hbs`
+    <Post::Menu
+      @canCreatePost={{@data.canCreatePost}}
+      @filteredRepliesView={{@data.filteredRepliesView}}
+      @nextPost={{@data.nextPost}}
+      @post={{@data.post}}
+      @prevPost={{@data.prevPost}}
+      @repliesShown={{@data.repliesShown}}
+      @showReadIndicator={{@data.showReadIndicator}}
+      @changeNotice={{@data.changeNotice}}
+      @changePostOwner={{@data.changePostOwner}}
+      @copyLink={{@data.copyLink}}
+      @deletePost={{@data.deletePost}}
+      @editPost={{@data.editPost}}
+      @grantBadge={{@data.grantBadge}}
+      @lockPost={{@data.lockPost}}
+      @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+      @rebakePost={{@data.rebakePost}}
+      @recoverPost={{@data.recoverPost}}
+      @replyToPost={{@data.replyToPost}}
+      @share={{@data.share}}
+      @showFlags={{@data.showFlags}}
+      @showLogin={{@data.showLogin}}
+      @showPagePublish={{@data.showPagePublish}}
+      @toggleLike={{@data.toggleLike}}
+      @togglePostType={{@data.togglePostType}}
+      @toggleReplies={{@data.toggleReplies}}
+      @toggleWiki={{@data.toggleWiki}}
+      @unhidePost={{@data.unhidePost}}
+      @unlockPost={{@data.unlockPost}}
+    />`
+);

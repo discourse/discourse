@@ -2,7 +2,6 @@ import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | dc-filter-input", function (hooks) {
   setupRenderingTest(hooks);
@@ -51,6 +50,6 @@ module("Discourse Chat | Component | dc-filter-input", function (hooks) {
 
     await triggerEvent(".dc-filter-input", "focusout");
 
-    assert.false(exists(".dc-filter-input-container.is-focused"));
+    assert.dom(".dc-filter-input-container.is-focused").doesNotExist();
   });
 });

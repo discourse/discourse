@@ -12,6 +12,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "home-logo-image-url",
   "mentions-class",
   "more-topics-tabs",
+  "post-menu-buttons",
   "topic-list-header-columns",
   "topic-list-item-columns",
 ]);
