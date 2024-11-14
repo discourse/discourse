@@ -6,7 +6,6 @@ import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
-import { userPath } from "discourse/lib/url";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -53,16 +52,6 @@ export function replaceButton(name, replaceWith) {
 
 function registerButton(name, builder) {
   _builders[name] = builder;
-}
-
-function smallUserAtts(user) {
-  return {
-    template: user.avatar_template,
-    username: user.username,
-    post_url: user.post_url,
-    url: userPath(user.username_lower),
-    unknown: user.unknown,
-  };
 }
 
 export function buildButton(name, widget) {
@@ -487,7 +476,7 @@ function _replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
-  services: ["modal", "menu"],
+  services: ["modal", "menu", "user-list-atts"],
 
   settings: {
     collapseButtons: true,
@@ -907,14 +896,13 @@ export default createWidget("post-menu", {
 
   getWhoLiked() {
     const { attrs, state } = this;
-
     return this.store
       .find("post-action-user", {
         id: attrs.id,
         post_action_type_id: LIKE_ACTION,
       })
       .then((users) => {
-        state.likedUsers = users.map(smallUserAtts);
+        state.likedUsers = users.map(this.userListAtts.smallUserAtts);
         state.total = users.totalRows;
       });
   },
@@ -923,7 +911,7 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then((users) => {
-      state.readers = users.map(smallUserAtts);
+      state.readers = users.map(this.userListAtts.smallUserAtts);
       state.totalReaders = users.totalRows;
     });
   },
