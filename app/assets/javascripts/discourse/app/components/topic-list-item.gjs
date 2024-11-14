@@ -14,7 +14,7 @@ import {
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import { createColumns } from "discourse/components/topic-list/topic-list-item";
+import { createColumns } from "discourse/components/topic-list/dag";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
@@ -424,8 +424,8 @@ export default class TopicListItem extends Component {
     )
       .resolve()
       .map((entry) => {
-        if (entry.value) {
-          entry.value = htmlSafe(
+        if (entry.value.item) {
+          entry.value.item = htmlSafe(
             rawRenderGlimmer(
               this,
               "th.hbr-ember-outlet",
@@ -443,7 +443,7 @@ export default class TopicListItem extends Component {
                 />
               </template>,
               {
-                component: entry.value,
+                component: entry.value.item,
                 topic: this.topic,
                 tagsForUser: this.tagsForUser,
                 hideCategory: this.hideCategory,

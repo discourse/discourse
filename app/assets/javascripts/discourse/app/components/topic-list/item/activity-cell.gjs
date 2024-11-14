@@ -5,20 +5,17 @@ import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
 
-const ActivityColumn = <template>
+const ActivityCell = <template>
   <td
     title={{htmlSafe @topic.bumpedAtTitle}}
     class={{concatClass
-      "activity"
+      "activity num topic-list-data"
       (coldAgeClass @topic.createdAt startDate=@topic.bumpedAt class="")
     }}
-    ...attributes
   >
-    <a
-      href={{@topic.lastPostUrl}}
-      class="post-activity"
-    >{{! no whitespace
-        }}<PluginOutlet
+    <a href={{@topic.lastPostUrl}} class="post-activity">
+      {{~! no whitespace ~}}
+      <PluginOutlet
         @name="topic-list-before-relative-date"
         @outletArgs={{hash topic=@topic}}
       />
@@ -27,4 +24,4 @@ const ActivityColumn = <template>
   </td>
 </template>;
 
-export default ActivityColumn;
+export default ActivityCell;

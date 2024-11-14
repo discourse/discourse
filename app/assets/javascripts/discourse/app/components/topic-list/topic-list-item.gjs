@@ -7,13 +7,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq, gt } from "truth-helpers";
+import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ActivityColumn from "discourse/components/topic-list/activity-column";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
-import PostersColumn from "discourse/components/topic-list/posters-column";
-import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
-import TopicCell from "discourse/components/topic-list/topic-cell";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
@@ -23,30 +19,12 @@ import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
-import DAG from "discourse/lib/dag";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-
-export function createColumns() {
-  const columns = new DAG();
-  columns.add("topic-list-before-columns");
-  columns.add("bulk-select");
-  columns.add("topic");
-  columns.add("topic-list-after-main-link");
-  columns.add("posters");
-  columns.add("replies");
-  columns.add("likes");
-  columns.add("op-likes");
-  columns.add("views");
-  columns.add("activity");
-  columns.add("topic-list-after-columns");
-  return columns;
-}
+import { createColumns } from "./dag";
 
 export default class TopicListItem extends Component {
   @service historyStore;
@@ -264,70 +242,20 @@ export default class TopicListItem extends Component {
       />
       {{#if this.site.desktopView}}
         {{#each (this.columns.resolve) as |entry|}}
-          {{#if entry.value}}
-            <entry.value @topic={{@topic}} />
-          {{else if (eq entry.key "bulk-select")}}
-            {{#if @bulkSelectEnabled}}
-              <td class="bulk-select topic-list-data">
-                <label for="bulk-select-{{@topic.id}}">
-                  <input
-                    {{on "click" this.onBulkSelectToggle}}
-                    checked={{this.isSelected}}
-                    type="checkbox"
-                    id="bulk-select-{{@topic.id}}"
-                    class="bulk-select"
-                  />
-                </label>
-              </td>
-            {{/if}}
-          {{else if (eq entry.key "topic")}}
-            <TopicCell
+          {{#if entry.value.item}}
+            <entry.value.item
               @topic={{@topic}}
+              @bulkSelectEnabled={{@bulkSelectEnabled}}
+              @onBulkSelectToggle={{this.onBulkSelectToggle}}
+              @isSelected={{this.isSelected}}
               @showTopicPostBadges={{@showTopicPostBadges}}
               @hideCategory={{@hideCategory}}
               @tagsForUser={{@tagsForUser}}
               @expandPinned={{this.expandPinned}}
+              @showPosters={{@showPosters}}
+              @showLikes={{@showLikes}}
+              @showOpLikes={{@showOpLikes}}
             />
-          {{else if (eq entry.key "posters")}}
-            {{#if @showPosters}}
-              <PostersColumn @posters={{@topic.featuredUsers}} />
-            {{/if}}
-          {{else if (eq entry.key "replies")}}
-            <PostsCountColumn @topic={{@topic}} />
-          {{else if (eq entry.key "likes")}}
-            {{#if @showLikes}}
-              <td class="num likes topic-list-data">
-                {{#if (gt @topic.like_count 0)}}
-                  <a href={{@topic.summaryUrl}}>
-                    {{number @topic.like_count}}
-                    {{icon "heart"}}
-                  </a>
-                {{/if}}
-              </td>
-            {{/if}}
-          {{else if (eq entry.key "op-likes")}}
-            {{#if @showOpLikes}}
-              <td class="num likes">
-                {{#if (gt @topic.op_like_count 0)}}
-                  <a href={{@topic.summaryUrl}}>
-                    {{number @topic.op_like_count}}
-                    {{icon "heart"}}
-                  </a>
-                {{/if}}
-              </td>
-            {{/if}}
-          {{else if (eq entry.key "views")}}
-            <td
-              class={{concatClass "num views topic-list-data" @topic.viewsHeat}}
-            >
-              <PluginOutlet
-                @name="topic-list-before-view-count"
-                @outletArgs={{hash topic=@topic}}
-              />
-              {{number @topic.views numberKey="views_long"}}
-            </td>
-          {{else if (eq entry.key "activity")}}
-            <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
           {{/if}}
         {{/each}}
       {{else}}
