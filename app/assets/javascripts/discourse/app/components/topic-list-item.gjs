@@ -52,6 +52,7 @@ export function navigateToTopic(topic, href) {
   return false;
 }
 
+// Despite the gjs extension this is the old, hbr-based implementation
 @tagName("tr")
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
