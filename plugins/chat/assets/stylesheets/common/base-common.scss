@@ -7,6 +7,16 @@
   --chat-header-expanded-offset: 0px;
 }
 
+//hidden outlets to maintain the full height on chat pages
+.above-main-container-outlet,
+.main-outlet-bottom-outlet,
+.after-main-outlet-outlet,
+.before-main-outlet {
+  .has-full-page-chat & {
+    display: none;
+  }
+}
+
 // Very specific hack to ensure the contextual menu (copy/paste/...) is
 // not completely over the textarea, the rules to position this menu are quite obscure
 // and under DiscourseHUB the space between the textarea and the keyboard is so small that
