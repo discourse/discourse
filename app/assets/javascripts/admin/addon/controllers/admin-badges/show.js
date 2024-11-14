@@ -1,6 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { debug } from "@ember/debug";
 import { action, getProperties } from "@ember/object";
 import { service } from "@ember/service";
 import { isNone } from "@ember/utils";
@@ -44,7 +43,7 @@ export default class AdminBadgesShowController extends Controller {
   @tracked selectedGraphicType = null;
 
   @tracked listable;
-  @tracked show_posts;
+  @tracked showPosts;
 
   @cached
   get formData() {
@@ -83,30 +82,13 @@ export default class AdminBadgesShowController extends Controller {
     return this.model.system;
   }
 
-  @action
-  onSetListable(value) {
-    this.set("listable", value);
-  }
-
-  @action
-  onSetShowPosts(value) {
-    this.set("show_posts", value);
-  }
-
   get showPostHeaderTooltip() {
     // We don't need to show the tooltip on system badges, since the other options are disabled
-    const val =
-      (!this.get("listable") || !this.get("show_posts")) && !this.model.system;
-    debug("showPostHeaderTooltip");
-    debug(val);
-    return val;
+    return this.disableBadgeOnPosts && !this.model.system;
   }
 
   get disableBadgeOnPosts() {
-    const val = !this.get("listable") || !this.get("show_posts");
-    debug("disableBadgeOnPosts");
-    debug(val);
-    return val;
+    return !this.listable || !this.showPosts;
   }
 
   setup() {
@@ -127,7 +109,7 @@ export default class AdminBadgesShowController extends Controller {
     }
 
     this.listable = this.model.listable;
-    this.show_posts = this.model.show_posts;
+    this.showPosts = this.model.show_posts;
   }
 
   hasQuery(query) {
@@ -155,6 +137,16 @@ export default class AdminBadgesShowController extends Controller {
     set("icon", value);
     set("image_upload_id", "");
     set("image_url", "");
+  }
+
+  @action
+  onSetListable(value) {
+    this.listable = value;
+  }
+
+  @action
+  onSetShowPosts(value) {
+    this.showPosts = value;
   }
 
   @action
