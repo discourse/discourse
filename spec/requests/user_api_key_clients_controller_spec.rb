@@ -21,84 +21,54 @@ RSpec.describe UserApiKeyClientsController do
     }
   end
 
-  describe "#create" do
-    context "without a user" do
-      it "returns invalid access" do
-        post "/user-api-key-client.json", params: args
-        expect(response.status).to eq(403)
+  describe "#register" do
+    context "without scopes" do
+      it "returns a 400" do
+        post "/user-api-key-client/register.json", params: args
+        expect(response.status).to eq(400)
       end
     end
 
-    context "with a user" do
-      let!(:user) { Fabricate(:user, trust_level: 1, refresh_auto_groups: true) }
+    context "with scopes" do
+      let!(:args_with_scopes) { args.merge(scopes: "user_status") }
 
-      before { sign_in(user) }
+      context "when scopes are not allowed" do
+        before { SiteSetting.allow_user_api_key_client_scopes = "" }
 
-      context "without allowed tl" do
-        before { SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2] }
-
-        it "returns invalid access" do
-          post "/user-api-key-client.json", params: args
+        it "returns a 403" do
+          post "/user-api-key-client/register.json", params: args_with_scopes
           expect(response.status).to eq(403)
         end
       end
 
-      context "with allowed tl" do
-        before { SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
+      context "when scopes are allowed" do
+        before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
 
-        context "without scopes" do
-          it "returns a 400" do
-            post "/user-api-key-client.json", params: args
-            expect(response.status).to eq(400)
-          end
+        it "registers a client" do
+          post "/user-api-key-client/register.json", params: args_with_scopes
+          expect(response.status).to eq(200)
+          client =
+            UserApiKeyClient.find_by(
+              client_id: args_with_scopes[:client_id],
+              application_name: args_with_scopes[:application_name],
+              auth_redirect: args_with_scopes[:auth_redirect],
+              public_key: args_with_scopes[:public_key],
+            )
+          expect(client.present?).to eq(true)
+          expect(client.scopes.map(&:name)).to match_array(["user_status"])
         end
 
-        context "with scopes" do
-          let!(:args_with_scopes) { args.merge(scopes: "user_status") }
-
-          context "when scopes are not allowed" do
-            before { SiteSetting.allow_user_api_key_client_scopes = "" }
-
-            it "returns a 403" do
-              post "/user-api-key-client.json", params: args_with_scopes
-              expect(response.status).to eq(403)
-            end
-          end
-
-          context "when scopes are allowed" do
-            before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
-
-            it "registers a client" do
-              post "/user-api-key-client.json", params: args_with_scopes
-              expect(response.status).to redirect_to(
-                "#{args_with_scopes[:auth_redirect]}?success=true",
-              )
-              client =
-                UserApiKeyClient.find_by(
-                  client_id: args_with_scopes[:client_id],
-                  application_name: args_with_scopes[:application_name],
-                  auth_redirect: args_with_scopes[:auth_redirect],
-                  public_key: args_with_scopes[:public_key],
-                )
-              expect(client.present?).to eq(true)
-              expect(client.scopes.map(&:name)).to match_array(["user_status"])
-            end
-
-            it "updates a registered client" do
-              Fabricate(:user_api_key_client, **args)
-              args_with_scopes[:application_name] = "bar"
-              post "/user-api-key-client.json", params: args_with_scopes
-              expect(response.status).to redirect_to(
-                "#{args_with_scopes[:auth_redirect]}?success=true",
-              )
-              expect(
-                UserApiKeyClient.exists?(
-                  client_id: args_with_scopes[:client_id],
-                  application_name: args_with_scopes[:application_name],
-                ),
-              ).to eq(true)
-            end
-          end
+        it "updates a registered client" do
+          Fabricate(:user_api_key_client, **args)
+          args_with_scopes[:application_name] = "bar"
+          post "/user-api-key-client/register.json", params: args_with_scopes
+          expect(response.status).to eq(200)
+          expect(
+            UserApiKeyClient.exists?(
+              client_id: args_with_scopes[:client_id],
+              application_name: args_with_scopes[:application_name],
+            ),
+          ).to eq(true)
         end
       end
     end
