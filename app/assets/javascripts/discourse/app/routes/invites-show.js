@@ -1,4 +1,5 @@
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
@@ -17,7 +18,9 @@ export default class InvitesShow extends DiscourseRoute {
         deepMerge(params, json)
       );
     } else {
-      return {};
+      return ajax(`/invites/${params.token}`).then((json) =>
+        deepMerge(params, json)
+      );
     }
   }
 

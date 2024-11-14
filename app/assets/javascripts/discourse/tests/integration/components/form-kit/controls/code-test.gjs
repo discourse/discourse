@@ -28,4 +28,16 @@ module("Integration | Component | FormKit | Controls | Code", function (hooks) {
     assert.deepEqual(data, { foo: "bar" });
     assert.form().field("foo").hasValue("bar");
   });
+
+  test("when disabled", async function (assert) {
+    await render(<template>
+      <Form as |form|>
+        <form.Field @name="foo" @title="Foo" @disabled={{true}} as |field|>
+          <field.Code />
+        </form.Field>
+      </Form>
+    </template>);
+
+    assert.dom(".ace_text-input").hasAttribute("readonly");
+  });
 });

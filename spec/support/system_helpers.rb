@@ -5,11 +5,23 @@ module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
   def pause_test
-    result =
-      ask(
-        "\n\e[33mTest paused, press enter to resume, type `d` and press enter to start debugger.\e[0m",
-      )
+    msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
+    msg += "Browser inspection URLs:\n"
+
+    # Fetch devtools urls
+    base_url = page.driver.browser.send(:devtools_address)
+    uri = URI(base_url)
+    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+    JSON
+      .parse(response)
+      .each do |result|
+        msg +=
+          " - (#{result["type"]}) #{base_url}#{result["devtoolsFrontendUrl"]} (#{URI(result["url"]).path})\n"
+      end
+
+    result = ask("\n\e[33m#{msg}\e[0m")
     binding.pry if result == "d" # rubocop:disable Lint/Debugger
+    puts "\e[33mResuming...\e[0m"
     self
   end
 

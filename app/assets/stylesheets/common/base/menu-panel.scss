@@ -208,6 +208,9 @@
       .d-icon {
         padding-top: 0;
       }
+      &.enabled .d-icon {
+        color: var(--tertiary);
+      }
     }
 
     .set-user-status {

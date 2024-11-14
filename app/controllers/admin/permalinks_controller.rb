@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::PermalinksController < Admin::AdminController
-  before_action :fetch_permalink, only: [:destroy]
+  before_action :fetch_permalink, only: %i[show update destroy]
 
   def index
     url = params[:filter]
@@ -9,23 +9,38 @@ class Admin::PermalinksController < Admin::AdminController
     render_serialized(permalinks, PermalinkSerializer)
   end
 
+  def new
+  end
+
+  def edit
+  end
+
+  def show
+    render_serialized(@permalink, PermalinkSerializer)
+  end
+
   def create
-    params.require(:url)
-    params.require(:permalink_type)
-    params.require(:permalink_type_value)
-
-    if params[:permalink_type] == "tag_name"
-      params[:permalink_type] = "tag_id"
-      params[:permalink_type_value] = Tag.find_by_name(params[:permalink_type_value])&.id
-    end
-
     permalink =
-      Permalink.new(:url => params[:url], params[:permalink_type] => params[:permalink_type_value])
-    if permalink.save
-      render_serialized(permalink, PermalinkSerializer)
-    else
-      render_json_error(permalink)
-    end
+      Permalink.create!(
+        url: permalink_params[:url],
+        permalink_type: permalink_params[:permalink_type],
+        permalink_type_value: permalink_params[:permalink_type_value],
+      )
+    render_serialized(permalink, PermalinkSerializer)
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error(e.record.errors.full_messages)
+  end
+
+  def update
+    @permalink.update!(
+      url: permalink_params[:url],
+      permalink_type: permalink_params[:permalink_type],
+      permalink_type_value: permalink_params[:permalink_type_value],
+    )
+
+    render_serialized(@permalink, PermalinkSerializer)
+  rescue ActiveRecord::RecordInvalid => e
+    render_json_error(e.record.errors.full_messages)
   end
 
   def destroy
@@ -37,5 +52,9 @@ class Admin::PermalinksController < Admin::AdminController
 
   def fetch_permalink
     @permalink = Permalink.find(params[:id])
+  end
+
+  def permalink_params
+    params.require(:permalink).permit(:url, :permalink_type, :permalink_type_value)
   end
 end
