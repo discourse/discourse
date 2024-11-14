@@ -4,6 +4,10 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 function initializeMarkdownTabs(api) {
   api.decorateCookedElement(
     (elem, helper) => {
+      // no way to decorate so skip
+      if (!helper || !helper.renderGlimmer) {
+        return;
+      }
       for (const tabsElement of [...elem.querySelectorAll(".markdown-tabs")]) {
         const tabs = [...tabsElement.querySelectorAll("section")].map(
           (section) => {
