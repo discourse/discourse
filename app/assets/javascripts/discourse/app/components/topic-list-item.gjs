@@ -425,7 +425,7 @@ export default class TopicListItem extends Component {
       .resolve()
       .map((entry) => {
         if (entry.value?.item) {
-          entry.value.item = htmlSafe(
+          return htmlSafe(
             rawRenderGlimmer(
               this,
               "th.hbr-ember-outlet",
@@ -457,8 +457,6 @@ export default class TopicListItem extends Component {
             )
           );
         }
-
-        return entry;
       });
   }
 

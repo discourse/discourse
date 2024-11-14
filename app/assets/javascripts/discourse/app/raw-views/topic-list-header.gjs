@@ -30,7 +30,7 @@ export default class TopicListHeader extends EmberObject {
       .resolve()
       .map((entry) => {
         if (entry.value?.header) {
-          entry.value.header = htmlSafe(
+          return htmlSafe(
             rawRenderGlimmer(
               this,
               "th.hbr-ember-outlet",
@@ -82,8 +82,6 @@ export default class TopicListHeader extends EmberObject {
             )
           );
         }
-
-        return entry;
       });
   }
 }
