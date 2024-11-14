@@ -1,5 +1,7 @@
 <StyleguideExample @title="<Chat::ThreadList::Item>">
   <Styleguide::Component>
-    <Chat::ThreadList::Item @thread={{this.thread}} />
+    {{#if this.thread}}
+      <Chat::ThreadList::Item @thread={{this.thread}} />
+    {{/if}}
   </Styleguide::Component>
 </StyleguideExample>
