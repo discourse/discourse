@@ -761,7 +761,7 @@ class TopicsController < ApplicationController
         if params[:should_notify].blank?
           true
         else
-          params[:should_notify] == "true"
+          params[:should_notify].to_s == "true"
         end
       topic.invite_group(current_user, group, should_notify: should_notify)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
