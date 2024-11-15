@@ -713,6 +713,7 @@ RSpec.configure do |config|
     unfreeze_time
     ActionMailer::Base.deliveries.clear
     Discourse.redis.flushdb
+    Scheduler::Defer.do_all_work
   end
 
   config.after(:each, type: :system) do |example|
