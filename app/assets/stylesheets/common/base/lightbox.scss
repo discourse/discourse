@@ -7,6 +7,10 @@ $meta-element-margin: 6px;
   &:hover .meta {
     opacity: 0.9;
     transition: opacity 0.5s;
+    @include breakpoint("mobile-extra-large") {
+      opacity: 0.7;
+      transition: none;
+    }
   }
 }
 
@@ -45,6 +49,13 @@ $meta-element-margin: 6px;
   transition: opacity 0.2s;
   display: flex;
   align-items: center;
+  @include breakpoint("mobile-extra-large") {
+    background: var(--secondary);
+    color: var(--primary-high);
+    height: 25px;
+    width: 25px;
+    right: 0;
+  }
 
   .filename {
     margin: $meta-element-margin;
@@ -67,6 +78,17 @@ $meta-element-margin: 6px;
     font-size: var(--font-0);
     flex-shrink: 0;
     flex-grow: 3;
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .filename,
+    .informations,
+    .d-icon-far-image {
+      display: none;
+    }
+    .d-icon-discourse-expand {
+      color: var(--primary-high);
+    }
   }
 }
 

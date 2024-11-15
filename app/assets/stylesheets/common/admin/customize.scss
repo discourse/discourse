@@ -93,19 +93,37 @@
   .admin-container {
     padding-left: 10px;
     padding-right: 10px;
+    @include breakpoint("mobile-extra-large") {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+    }
   }
   .admin-footer {
     margin-top: 20px;
   }
-  .color-schemes li {
-    .d-icon {
-      margin-right: 0.25em;
-      color: var(--primary-medium);
+  .color-schemes {
+    @include breakpoint("mobile-extra-large") {
+      ul {
+        max-height: 250px;
+        overflow-x: auto;
+      }
+    }
+
+    li {
+      .d-icon {
+        margin-right: 0.25em;
+        color: var(--primary-medium);
+      }
     }
   }
   .show-current-style {
     display: inline-block;
     vertical-align: top;
+    @include breakpoint("mobile-extra-large") {
+      padding: 0;
+      width: 100%;
+    }
 
     .title {
       font-size: var(--font-up-4);
@@ -682,6 +700,29 @@
     .admin-controls {
       display: block;
     }
+
+    @include breakpoint("mobile-extra-large") {
+      .controls,
+      .admin-controls {
+        width: 100%;
+      }
+      h1,
+      h1 input {
+        width: 100%;
+      }
+      .copy-to-clipboard {
+        display: none;
+      }
+      .sp-replacer {
+        flex-shrink: 0;
+      }
+      td {
+        vertical-align: top;
+      }
+      td.actions {
+        width: 40px;
+      }
+    }
   }
   .colors {
     thead th {
@@ -753,6 +794,14 @@
       .col {
         display: table-cell;
       }
+    }
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .themes-list,
+    .color-schemes {
+      width: 100%;
+      margin-bottom: 1em;
     }
   }
 }

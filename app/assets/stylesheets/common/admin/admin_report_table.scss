@@ -19,6 +19,9 @@
     margin: 0;
     border: 1px solid var(--primary-low);
     table-layout: fixed;
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-down-1);
+    }
 
     tbody {
       border-top: 0;
@@ -26,11 +29,28 @@
   }
 
   .table .admin-report-table-header {
+    @include breakpoint("mobile-extra-large") {
+      font-weight: 500;
+      border-right: 1px solid var(--primary-low);
+      padding: auto;
+      .title {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        text-align: right;
+        transform: rotate(180deg);
+        .emoji {
+          transform: rotate(-180deg);
+        }
+      }
+    }
     .sort-btn {
       outline: none;
       background: none;
       padding: 3px 8px;
       @include ellipsis;
+      @include breakpoint("mobile-extra-large") {
+        display: none;
+      }
     }
 
     &.is-current-sort {
@@ -60,6 +80,9 @@
   .admin-report-table-cell {
     &.user .username {
       margin-left: 0.25em;
+      @include breakpoint("mobile-extra-large") {
+        display: none;
+      }
     }
   }
 

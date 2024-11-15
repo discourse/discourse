@@ -1,24 +1,35 @@
 .login-welcome-header {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
   overflow-wrap: anywhere;
 
   .login-title {
-    font-size: var(--font-up-6);
     margin: 0;
     line-height: var(--line-height-medium);
+    font-size: var(--font-up-6);
+    @include breakpoint(mobile-extra-large) {
+      font-size: var(--font-up-5);
+    }
   }
 
   .login-subheader {
-    font-size: var(--font-up-1);
     margin: 0;
+    font-size: var(--font-up-1);
+    @include breakpoint(mobile-extra-large) {
+      font-size: var(--font-0);
+    }
   }
 
   .waving-hand {
-    width: 35px;
-    height: 35px;
     margin-left: 0.5em;
     align-self: center;
+    width: 35px;
+    height: 35px;
+    @include breakpoint(mobile-extra-large) {
+      width: 30px;
+      height: 30px;
+    }
   }
 }

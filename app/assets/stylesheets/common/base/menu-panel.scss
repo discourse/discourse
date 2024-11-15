@@ -111,6 +111,15 @@
     flex: 0;
   }
 
+  @include breakpoint("mobile-extra-large") {
+    .panel-body-contents {
+      height: 100%;
+      .quick-access-panel li {
+        padding-block: 0.15em;
+      }
+    }
+  }
+
   .menu-tabs-container {
     display: flex;
     flex-direction: column;
@@ -129,6 +138,9 @@
       position: relative;
       border-radius: 0;
       padding: 0.857em;
+      @include breakpoint("mobile-extra-large") {
+        padding: 1.2em 1.4em;
+      }
       @media screen and (max-height: 400px) {
         // helps with 400% zoom level
         font-size: var(--font-down-1);

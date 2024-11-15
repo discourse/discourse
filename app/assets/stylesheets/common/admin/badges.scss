@@ -1,11 +1,13 @@
 // Styles for admin/badges
 .admin-badges {
   // flex page layout
-
   .badges {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
+    @include breakpoint("mobile-extra-large") {
+      margin: 0 0.25em;
+    }
     .badges-header {
       display: flex;
       align-items: center;
@@ -19,6 +21,10 @@
     }
     .content-list {
       flex: 0 0 27%;
+      @include breakpoint("mobile-extra-large") {
+        flex: 0 0 100%;
+        width: 100%;
+      }
     }
   }
 
@@ -29,6 +35,10 @@
       border-right: 1px solid var(--primary-low);
       border-left: 1px solid var(--primary-low);
       border-bottom: 1px solid var(--primary-low);
+      @include breakpoint("mobile-extra-large") {
+        max-height: 40vh;
+        margin-right: 0;
+      }
       .admin-badge-list-item {
         &:first-child {
           border-top: none;
@@ -77,6 +87,10 @@
 
   .current-badge {
     margin: 20px;
+    @include breakpoint("mobile-extra-large") {
+      margin: 20px 0;
+      width: 100%;
+    }
 
     .form-kit__field-question {
       .form-kit__control-radio-label {
@@ -117,6 +131,12 @@
     margin: 10px;
     padding: 10px;
     border-top: 1px solid var(--primary-low);
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    .badge-intro {
+      flex: 0 1 75%;
+    }
   }
 }
 

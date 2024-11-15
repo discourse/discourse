@@ -23,3 +23,17 @@
     padding-bottom: 1em;
   }
 }
+
+@include breakpoint("mobile-extra-large") {
+  .invites-show {
+    box-sizing: border-box;
+    padding: 1em;
+
+    .invitation-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: 2rem;
+    }
+  }
+}

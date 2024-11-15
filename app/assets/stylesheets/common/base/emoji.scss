@@ -49,6 +49,16 @@ sup img.emoji {
   height: 320px;
   max-height: 50vh;
   max-width: 420px;
+  @include breakpoint("mobile-extra-large") {
+    border: none;
+    position: fixed;
+    width: 100%;
+    max-width: 100vh;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid var(--primary-low);
+    min-height: 50vh;
+  }
 
   img.emoji {
     // custom emojis might import images of various sizes
@@ -117,6 +127,15 @@ sup img.emoji {
 
       &:empty {
         display: none;
+      }
+    }
+
+    @include breakpoint("mobile-extra-large") {
+      img.emoji {
+        // custom emojis might import images of various sizes
+        // we don't want them to be deformed in the picker
+        width: 28px !important;
+        height: 28px !important;
       }
     }
   }

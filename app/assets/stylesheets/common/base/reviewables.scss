@@ -34,6 +34,9 @@
     display: flex;
     flex-direction: row;
     margin-top: 1em;
+    @include breakpoint("mobile-extra-large") {
+      flex-direction: column;
+    }
 
     .reviewable-list {
       flex: 1;
@@ -41,16 +44,42 @@
       max-width: 760px; // Match topic post width
       min-width: 0;
       margin-right: auto;
+      @include breakpoint("mobile-extra-large") {
+        order: 2;
+        width: 100%;
+        padding-bottom: 4em;
+      }
     }
 
     .reviewable-filters {
       width: 250px;
       height: 100%;
       box-sizing: border-box;
+      @include breakpoint("mobile-extra-large") {
+        order: 1;
+        margin: 0;
+        padding: 0.5em;
+        width: 100%;
+        background-color: var(--primary-very-low);
+        padding: 0.5em 1em 1em 1em;
+        margin-bottom: 1em;
+        .reviewable-filters-actions {
+          display: flex;
+          justify-content: space-between;
+        }
+        .reviewable-filter {
+          .filter-label {
+            margin: 0;
+          }
+        }
+      }
     }
 
     .reviewable-list + .reviewable-filters {
       margin-left: 1em;
+      @include breakpoint("mobile-extra-large") {
+        margin: 0 0 0.5em 0;
+      }
     }
   }
 }
@@ -218,7 +247,7 @@
 
 .reviewable-item {
   background: var(--primary-very-low);
-  padding: 1.5rem;
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
 
   .topic-statuses {
     font-size: var(--font-up-2);
@@ -270,6 +299,15 @@
     margin: 1.5rem 0 1rem;
     background: var(--secondary);
     padding: 1rem;
+    @include breakpoint("mobile-extra-large") {
+      .reviewable-post-header,
+      .post-body {
+        max-width: 100%;
+        p {
+          overflow-x: scroll;
+        }
+      }
+    }
   }
 
   .reviewable-actions {
@@ -277,6 +315,17 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     width: 100%;
+    @include breakpoint("mobile-extra-large") {
+      margin-right: -0.5em;
+      margin-bottom: 0.5em;
+      > div,
+      > button {
+        margin-right: 0.25em;
+      }
+      .btn.reviewable-action {
+        margin-bottom: 0;
+      }
+    }
 
     button {
       white-space: nowrap;
@@ -297,8 +346,20 @@
     .reviewable-action-dropdown {
       margin-right: 0.5em;
     }
+
+    @include breakpoint("mobile-extra-large") {
+      .reviewable-action,
+      .reviewable-action-dropdown .dropdown-select-box-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .d-icon {
+          margin: 0 0.15 0 0;
+        }
+      }
+    }
   }
-  padding-bottom: 1em;
 }
 
 .reviewable-stale {
@@ -325,9 +386,25 @@
   margin-top: 1rem;
   min-width: 50%;
   color: var(--primary-high);
+  @include breakpoint("mobile-extra-large") {
+    display: flex;
+    width: 100%;
+    overflow-x: scroll;
+    border-top: 1px solid var(--primary-low);
+  }
 
   &__table-wrapper {
     overflow-x: scroll;
+  }
+
+  @include breakpoint("mobile-extra-large") {
+    thead {
+      tr {
+        display: flex;
+        flex-direction: column;
+        border: 0;
+      }
+    }
   }
 
   th {
@@ -371,6 +448,17 @@
 
   tbody {
     border-width: 1px;
+    @include breakpoint("mobile-extra-large") {
+      display: flex;
+      border: 0;
+      .reviewable-score {
+        display: flex;
+        flex-direction: column;
+      }
+      tr {
+        border: 0;
+      }
+    }
     td {
       white-space: nowrap;
       vertical-align: baseline;
@@ -393,6 +481,12 @@
         padding-right: 0.5em;
       }
     }
+  }
+}
+
+@include breakpoint("mobile-extra-large") {
+  .reviewable-scores-and-history table {
+    width: 100%;
   }
 }
 

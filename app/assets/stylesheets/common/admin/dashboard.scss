@@ -285,6 +285,9 @@
   display: flex;
   flex: 1 0 0px;
   flex-direction: column;
+  @include breakpoint("mobile-extra-large") {
+    font-size: var(--font-down-1);
+  }
 
   .counters-header {
     display: grid;
@@ -292,7 +295,6 @@
     grid-template-columns: 33% repeat(auto-fit, minmax(20px, 1fr));
     border: 1px solid var(--primary-low);
     border-bottom: 0;
-    font-weight: 700;
     text-align: right;
     align-items: center;
     padding: 0.65em 0.25em;
@@ -646,6 +648,12 @@
       margin-left: 1em;
     }
   }
+
+  @include breakpoint("mobile-extra-large") {
+    .section-body {
+      grid-template-columns: none;
+    }
+  }
 }
 
 .whats-new,
@@ -724,5 +732,13 @@
   &__new-feature-version {
     margin-left: auto;
     color: var(--primary-low-mid);
+    @include breakpoint("mobile-extra-large") {
+      font-size: var(--font-down-1);
+    }
+  }
+  @include breakpoint("mobile-extra-large") {
+    h3 {
+      margin-right: 0.5em;
+    }
   }
 }
