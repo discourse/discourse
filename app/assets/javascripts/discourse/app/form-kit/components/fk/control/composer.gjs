@@ -24,7 +24,7 @@ export default class FKControlComposer extends Component {
     <DEditor
       @value={{readonly @value}}
       @change={{this.handleInput}}
-      @disabled={{@field.disabled}}
+      @disabled={{@disabled}}
       class="form-kit__control-composer"
       style={{this.style}}
       @textAreaId={{@field.id}}

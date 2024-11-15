@@ -204,7 +204,6 @@ en_GB:
             description: "Description"
       user:
         anonymize: "Anonymise User"
-        anonymize_confirm: "Are you SURE you want to anonymise this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymise this account"
         anonymize_failed: "There was a problem anonymising the account."
         merge_failed: "There was an error whilst merging the users."

@@ -146,4 +146,4 @@ export default {
         avatar_template: "/letter_avatar_proxy/v4/letter/o/f05b48/{size}.png"
     }]
   }
-}
+};

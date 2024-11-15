@@ -2535,7 +2535,6 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
-          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
@@ -3363,7 +3362,6 @@ class PluginApi {
     registeredTabs.push(tab);
   }
 
-  // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3437,11 +3435,12 @@ function getPluginApi(version) {
 }
 
 /**
- * withPluginApi(version, apiCodeCallback, opts)
+ * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
  *
- * Helper to version our client side plugin API. Pass the version of the API that your
- * plugin is coded against. If that API is available, the `apiCodeCallback` function will
- * be called with the `PluginApi` object.
+ * @param {number} version - The version of the API that the plugin is coded against.
+ * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {object} [opts] - Optional additional options to pass to the callback function.
+ * @returns {*} The result of the `callback` function, if executed
  */
 export function withPluginApi(version, apiCodeCallback, opts) {
   opts = opts || {};

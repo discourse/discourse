@@ -1721,7 +1721,6 @@ gl:
     show_time_gap_days: "Se hai dúas publicacións separadas por moitos días, amosar a fenda temporal no tema."
     short_progress_text_threshold: "Despois de que o número de publicacións nun tema supere este número, a barra de progreso só amosará o número de publicación actual. Se cambia o largo da barra de progreso, pode que precise cambiar este valor."
     warn_reviving_old_topic_age: "Cando alguén comeza a responder a un tema onde a última resposta é máis antiga que uns días, amosará un aviso. Desactívase estabelecendo en 0."
-    highlighted_languages: "Regras de realzado de sintaxe incluídas. (Aviso: incluír demasiadas linguaxes pode afectar o rendemento) véxase: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> para unha demostración"
     embed_any_origin: "Permitir contido incorporábel independentemente da orixe. Isto é necesario para as aplicacións móbiles con HTML estático."
     embed_set_canonical_url: "Estableza o URL canónico dos temas incorporados no URL do contido incorporado."
     embed_support_markdown: "Admite o formatado Markdown para publicacións incorporadas."

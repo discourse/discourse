@@ -476,6 +476,9 @@ class ThemeField < ActiveRecord::Base
         error: error,
       )
     end
+  rescue ActiveRecord::ReadOnlyError
+    # Just noop if ActiveRecord is preventing writes for now. In an ideal world, this method will not be called in GET
+    # requests.
   end
 
   def compile_scss(prepended_scss = nil)

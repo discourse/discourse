@@ -18,7 +18,7 @@ export default class FKControlCheckbox extends Component {
         type="checkbox"
         checked={{eq @value true}}
         class="form-kit__control-checkbox"
-        disabled={{@field.disabled}}
+        disabled={{@disabled}}
         ...attributes
         {{on "change" this.handleInput}}
       />

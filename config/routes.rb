@@ -300,13 +300,17 @@ Discourse::Application.routes.draw do
 
         resource :email_style, only: %i[show update]
         get "email_style/:field" => "email_styles#show", :constraints => { field: /html|css/ }
+
+        resources :permalinks, only: %i[index new create show destroy]
       end
 
       resources :embeddable_hosts, only: %i[create update destroy], constraints: AdminConstraint.new
       resources :color_schemes,
                 only: %i[index create update destroy],
                 constraints: AdminConstraint.new
-      resources :permalinks, only: %i[index create destroy], constraints: AdminConstraint.new
+      resources :permalinks,
+                only: %i[index create show update destroy],
+                constraints: AdminConstraint.new
 
       scope "/customize" do
         resources :watched_words, only: %i[index create destroy] do

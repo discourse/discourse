@@ -345,7 +345,11 @@ RSpec.describe ApplicationController do
     describe "topic not found" do
       it "should not redirect to permalink if topic/category does not exist" do
         topic = create_post.topic
-        Permalink.create!(url: topic.relative_url, topic_id: topic.id + 1)
+        Permalink.create!(
+          url: topic.relative_url,
+          permalink_type_value: topic.id + 1,
+          permalink_type: "topic",
+        )
         topic.trash!
 
         SiteSetting.detailed_404 = false
@@ -360,7 +364,11 @@ RSpec.describe ApplicationController do
       it "should return permalink for deleted topics" do
         topic = create_post.topic
         external_url = "https://somewhere.over.rainbow"
-        Permalink.create!(url: topic.relative_url, external_url: external_url)
+        Permalink.create!(
+          url: topic.relative_url,
+          permalink_type_value: external_url,
+          permalink_type: "external_url",
+        )
         topic.trash!
 
         get topic.relative_url
@@ -382,7 +390,12 @@ RSpec.describe ApplicationController do
         trashed_topic = create_post.topic
         trashed_topic.trash!
         new_topic = create_post.topic
-        permalink = Permalink.create!(url: trashed_topic.relative_url, topic_id: new_topic.id)
+        permalink =
+          Permalink.create!(
+            url: trashed_topic.relative_url,
+            permalink_type_value: new_topic.id,
+            permalink_type: "topic",
+          )
 
         # no subfolder because router doesn't know about subfolder in this test
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
@@ -391,14 +404,23 @@ RSpec.describe ApplicationController do
 
         permalink.destroy
         category = Fabricate(:category)
-        permalink = Permalink.create!(url: trashed_topic.relative_url, category_id: category.id)
+        permalink =
+          Permalink.create!(
+            url: trashed_topic.relative_url,
+            permalink_type_value: category.id,
+            permalink_type: "category",
+          )
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to("/forum/c/#{category.slug}/#{category.id}")
 
         permalink.destroy
         permalink =
-          Permalink.create!(url: trashed_topic.relative_url, post_id: new_topic.posts.last.id)
+          Permalink.create!(
+            url: trashed_topic.relative_url,
+            permalink_type_value: new_topic.posts.last.id,
+            permalink_type: "post",
+          )
         get "/t/#{trashed_topic.slug}/#{trashed_topic.id}"
         expect(response.status).to eq(301)
         expect(response).to redirect_to(
@@ -426,12 +448,11 @@ RSpec.describe ApplicationController do
       end
 
       describe "no logspam" do
-        before do
-          @orig_logger = Rails.logger
-          Rails.logger = @fake_logger = FakeLogger.new
-        end
+        let(:fake_logger) { FakeLogger.new }
 
-        after { Rails.logger = @orig_logger }
+        before { Rails.logger.broadcast_to(fake_logger) }
+
+        after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
         it "should handle 404 to a css file" do
           Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
@@ -453,9 +474,9 @@ RSpec.describe ApplicationController do
           expect(response.body).to include(topic1.title)
           expect(response.body).to_not include(topic2.title)
 
-          expect(@fake_logger.fatals.length).to eq(0)
-          expect(@fake_logger.errors.length).to eq(0)
-          expect(@fake_logger.warnings.length).to eq(0)
+          expect(fake_logger.fatals.length).to eq(0)
+          expect(fake_logger.errors.length).to eq(0)
+          expect(fake_logger.warnings.length).to eq(0)
         end
       end
 

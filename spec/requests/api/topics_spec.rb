@@ -372,6 +372,62 @@ RSpec.describe "topics" do
     end
   end
 
+  path "/t/{id}/invite-group.json" do
+    post "Invite group to topic" do
+      tags "Topics", "Invites"
+      operationId "inviteGroupToTopic"
+      consumes "application/json"
+      parameter name: "Api-Key", in: :header, type: :string, required: true
+      parameter name: "Api-Username", in: :header, type: :string, required: true
+      parameter name: :id, in: :path, schema: { type: :string }
+
+      parameter name: :request_body,
+                in: :body,
+                schema: {
+                  type: :object,
+                  properties: {
+                    group: {
+                      type: :string,
+                      description: "The name of the group to invite",
+                    },
+                    should_notify: {
+                      type: :boolean,
+                      description: "Whether to notify the group, it defaults to true",
+                    },
+                  },
+                }
+
+      produces "application/json"
+      response "200", "invites to a PM" do
+        schema type: :object,
+               properties: {
+                 group: {
+                   type: :object,
+                   properties: {
+                     id: {
+                       type: :integer,
+                     },
+                     name: {
+                       type: :string,
+                     },
+                   },
+                 },
+               }
+
+        let!(:admins) { Group[:admins] }
+        let(:request_body) { { group: admins.name } }
+        let(:pm) { Fabricate(:private_message_topic) }
+        let(:id) { pm.id }
+
+        run_test! do |response|
+          data = JSON.parse(response.body)
+          expect(data["group"]["name"]).to eq(admins.name)
+          expect(pm.allowed_groups.first.id).to eq(admins.id)
+        end
+      end
+    end
+  end
+
   path "/t/{id}/bookmark.json" do
     put "Bookmark topic" do
       tags "Topics"

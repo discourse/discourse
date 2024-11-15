@@ -61,7 +61,7 @@ export default class FKControlInput extends Component {
         type={{this.type}}
         value={{@value}}
         class="form-kit__control-password"
-        disabled={{@field.disabled}}
+        disabled={{@disabled}}
         ...attributes
         {{on "input" this.handleInput}}
         {{this.focusState}}

@@ -1441,7 +1441,6 @@ zh_TW:
     show_time_gap_days: "如果兩個貼文發表間隔多天，在主題中顯示時間間隔提示。"
     short_progress_text_threshold: "在主題中的貼文數超過這個設定後，進度條將只顯示當前的貼文數。如果你更改了進度條的寬度，你需要修改這個值。"
     warn_reviving_old_topic_age: "當有人開始回覆最後一貼超過一定天數前的主題時，將有一個警告顯示，不鼓勵他們復活一個老的討論。將其設置為 0 以禁用。"
-    highlighted_languages: "已包含語法突顯（Syntax Highlighting）規則。（警告：包含太多語言可能會影響論壇效能）請參閱：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a>看更多範例。"
     embed_support_markdown: "支持嵌入式討論話題的Markdown格式"
     allowed_embed_selectors: "在 embeds 頁面允許 CSS 元素以逗號分隔清單"
     allowed_href_schemes: "除了 http 和 https 外允許的連結協議。"

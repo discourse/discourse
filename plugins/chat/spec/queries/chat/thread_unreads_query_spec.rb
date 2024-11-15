@@ -36,6 +36,24 @@ describe Chat::ThreadUnreadsQuery do
     thread_4.add(current_user)
   end
 
+  def create_mention(message, channel, thread)
+    notification =
+      Notification.create!(
+        notification_type: Notification.types[:chat_mention],
+        user_id: current_user.id,
+        data: {
+          chat_message_id: message.id,
+          chat_channel_id: channel.id,
+          thread_id: thread.id,
+        }.to_json,
+      )
+    Chat::UserMention.create!(
+      notifications: [notification],
+      user: current_user,
+      chat_message: message,
+    )
+  end
+
   context "with unread messages across multiple threads" do
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_2, thread: thread_3) }
@@ -188,6 +206,87 @@ describe Chat::ThreadUnreadsQuery do
           )
         end
       end
+
+      context "with mentions" do
+        let!(:message) { create_mention(message_1, channel_1, thread_1) }
+
+        it "counts both unread messages and mentions separately" do
+          expect(query.map(&:to_h)).to eq(
+            [
+              {
+                channel_id: channel_1.id,
+                thread_id: thread_1.id,
+                mention_count: 1,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_1.id,
+                thread_id: thread_2.id,
+                mention_count: 0,
+                unread_count: 0,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_2.id,
+                thread_id: thread_3.id,
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+              {
+                channel_id: channel_2.id,
+                thread_id: thread_4.id,
+                mention_count: 0,
+                unread_count: 1,
+                watched_threads_unread_count: 0,
+              },
+            ],
+          )
+        end
+
+        it "does not count mentions in muted channels" do
+          channel_1.membership_for(current_user).update!(muted: true)
+
+          expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+            {
+              thread_id: thread_1.id,
+              channel_id: channel_1.id,
+              unread_count: 0,
+              mention_count: 0,
+              watched_threads_unread_count: 0,
+            },
+          )
+        end
+
+        it "does not count mentions in threads when channel has threading_enabled = false" do
+          channel_1.update!(threading_enabled: false)
+
+          expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+            {
+              thread_id: thread_1.id,
+              channel_id: channel_1.id,
+              unread_count: 0,
+              mention_count: 0,
+              watched_threads_unread_count: 0,
+            },
+          )
+        end
+
+        it "does not count mentions in threads when the message is deleted" do
+          message_1.trash!
+
+          expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+            {
+              thread_id: thread_1.id,
+              channel_id: channel_1.id,
+              unread_count: 0,
+              mention_count: 0,
+              watched_threads_unread_count: 0,
+            },
+          )
+        end
+      end
     end
 
     context "when only the thread_ids are provided" do
@@ -248,6 +347,20 @@ describe Chat::ThreadUnreadsQuery do
             {
               channel_id: channel_1.id,
               mention_count: 0,
+              thread_id: thread_1.id,
+              unread_count: 0,
+              watched_threads_unread_count: 0,
+            },
+          )
+        end
+
+        it "counts mentions but not unreads" do
+          create_mention(message_1, channel_1, thread_1)
+
+          expect(query.map(&:to_h)).to include(
+            {
+              channel_id: channel_1.id,
+              mention_count: 1,
               thread_id: thread_1.id,
               unread_count: 0,
               watched_threads_unread_count: 0,

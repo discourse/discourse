@@ -1839,7 +1839,7 @@ en:
 
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Hide my public profile and presence features"
+      hide_profile: "Hide my public profile"
       enable_physical_keyboard: "Enable physical keyboard support on iPad"
 
       text_size:
@@ -2145,6 +2145,11 @@ en:
       what_are_you_doing: "What are you doing?"
       pause_notifications: "Pause notifications"
       remove_status: "Remove status"
+
+    presence_toggle:
+      online: "Online"
+      offline: "Offline"
+      title: "Toggle presence features"
 
     user_tips:
       button: "Got it!"
@@ -7212,7 +7217,7 @@ en:
       emoji:
         title: "Emoji"
         description: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
-        new: "Add"
+        new: "Add emoji"
         add: "Add New Emoji"
         choose_files: "Choose Files"
         uploading: "Uploading…"
@@ -7266,17 +7271,27 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         tag_name: "Tag name"
+        tag_title: "Tag"
         external_url: "External or Relative URL"
         user_id: "User ID"
+        user_title: "User"
         username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
+        add: "Add permalink"
+        back: "Back to Permalinks"
+        more_options: "More options"
+        copy_success: "Permalink copied to clipboard"
         form:
           label: "New:"
-          add: "Add"
-          filter: "Search (URL or External URL)"
+          add_header: "Add permalink"
+          edit_header: "Edit permalink"
+          filter: "Search URL or destination URL"
+          url: "URL"
+          permalink_type: "Permalink type"
+          save: "Save"
 
       reseed:
         action:
