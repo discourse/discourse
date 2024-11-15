@@ -8,7 +8,6 @@ import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import AdminFlagItem from "admin/components/admin-flag-item";
-import AdminPageSubheader from "admin/components/admin-page-subheader";
 
 export default class AdminConfigAreasFlags extends Component {
   @service site;
