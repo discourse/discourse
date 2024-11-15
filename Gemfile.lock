@@ -124,6 +124,7 @@ GEM
     diff-lcs (1.5.1)
     diffy (3.4.3)
     digest (3.1.1)
+    digest-xxhash (0.2.9)
     discourse-fonts (0.0.14)
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
@@ -630,6 +631,7 @@ DEPENDENCIES
   csv
   diffy
   digest
+  digest-xxhash
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
