@@ -95,18 +95,14 @@
             />
           </div>
 
-          {{#if (and this.showFullname this.fullnameRequired)}}
+          {{#if this.fullnameRequired}}
             <FullnameInput
               @nameValidation={{this.nameValidation}}
               @nameTitle={{this.nameTitle}}
               @accountName={{this.accountName}}
               @nameDisabled={{this.nameDisabled}}
               @onFocusIn={{this.scrollInputIntoView}}
-              class={{concat-class
-                "input-group"
-                "create-account__fullname"
-                (if this.siteSettings.full_name_required "required")
-              }}
+              class="input-group create-account__fullname required"
             />
           {{/if}}
 
@@ -222,11 +218,7 @@
               @accountName={{this.accountName}}
               @nameDisabled={{this.nameDisabled}}
               @onFocusIn={{this.scrollInputIntoView}}
-              class={{concat-class
-                "input-group"
-                "create-account__fullname"
-                (if this.siteSettings.full_name_required "required")
-              }}
+              class="input-group create-account__fullname"
             />
           {{/if}}
 
