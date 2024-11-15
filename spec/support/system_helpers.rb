@@ -8,6 +8,20 @@ module SystemHelpers
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
 
+    base_url = page.driver.browser.send(:devtools_address)
+    uri = URI(base_url)
+    response = Net::HTTP.get(uri.hostname, "/json/list", uri.port)
+
+    socat_pid = nil
+
+    if exposed_port = ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"]
+      socat_pid =
+        fork do
+          chrome_port = uri.port
+          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+        end
+    end
+
     # Fetch devtools urls
     base_url = page.driver.browser.send(:devtools_address)
     uri = URI(base_url)
@@ -15,13 +29,28 @@ module SystemHelpers
     JSON
       .parse(response)
       .each do |result|
-        msg +=
-          " - (#{result["type"]}) #{base_url}#{result["devtoolsFrontendUrl"]} (#{URI(result["url"]).path})\n"
+        devtools_url = "#{base_url}#{result["devtoolsFrontendUrl"]}"
+
+        devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+
+        if ENV["CODESPACE_NAME"]
+          devtools_url =
+            devtools_url
+              .gsub(
+                "localhost:#{exposed_port}",
+                "#{ENV["CODESPACE_NAME"]}-#{exposed_port}.#{ENV["GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"]}",
+              )
+              .gsub("http://", "https://")
+              .gsub("ws=", "wss=")
+        end
+
+        msg += " - (#{result["type"]}) #{devtools_url} (#{URI(result["url"]).path})\n"
       end
 
     result = ask("\n\e[33m#{msg}\e[0m")
     binding.pry if result == "d" # rubocop:disable Lint/Debugger
     puts "\e[33mResuming...\e[0m"
+    Process.kill("TERM", socat_pid) if socat_pid
     self
   end
 

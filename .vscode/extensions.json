@@ -5,6 +5,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "ruby-syntax-tree.vscode-syntax-tree",
-    "lifeart.vscode-glimmer-syntax"
+    "lifeart.vscode-glimmer-syntax",
+    "typed-ember.glint-vscode"
   ]
 }

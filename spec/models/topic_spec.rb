@@ -1239,6 +1239,23 @@ RSpec.describe Topic do
             expect(notification.notification_type).to eq(Notification.types[:group_message_summary])
           end
 
+          it "does not create notifications if invite is set to skip notifications" do
+            Fabricate(:post, topic: topic)
+            user_watching = Fabricate(:user)
+
+            group.add(topic.user)
+            group.add(user_watching)
+
+            set_state!(group, topic.user, :watching)
+            set_state!(group, user_watching, :watching)
+
+            Notification.delete_all
+            Jobs.run_immediately!
+            topic.invite_group(topic.user, group, should_notify: false)
+
+            expect(Notification.count).to eq(0)
+          end
+
           it "removes users in topic_allowed_users who are part of the added group" do
             admins = Group[:admins]
             admins.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])

@@ -95,10 +95,11 @@ function updateScriptReferences({
           );
         }
 
-        // We use _lr/livereload.js directly instead of ember-cli-live-reload so that the protocol/port is configured automatically
+        // ember-cli-live-reload doesn't select ports correctly, so we use _lr/livereload directly
         // (important for cloud development environments like GitHub CodeSpaces)
         newElements.unshift(
-          `<script async src="/_lr/livereload.js?path=_lr/livereload" nonce="${nonce}"></script>`
+          `<script nonce="${nonce}">window.LiveReloadOptions = { "path": "_lr/livereload", "host": location.hostname, "port": location.port || (location.protocol === "https:" ? 443 : 80) }</script>`,
+          `<script async src="/_lr/livereload.js" nonce="${nonce}"></script>`
         );
       }
 
