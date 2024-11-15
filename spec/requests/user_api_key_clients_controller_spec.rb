@@ -21,10 +21,28 @@ RSpec.describe UserApiKeyClientsController do
     }
   end
 
-  describe "#register" do
+  describe "#show" do
+    context "with a registered client" do
+      before { Fabricate(:user_api_key_client, **args) }
+
+      it "succeeds" do
+        head "/user-api-key-client.json", params: { client_id: args[:client_id] }
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "without a registered client" do
+      it "returns a 400" do
+        head "/user-api-key-client.json", params: { client_id: args[:client_id] }
+        expect(response.status).to eq(400)
+      end
+    end
+  end
+
+  describe "#create" do
     context "without scopes" do
       it "returns a 400" do
-        post "/user-api-key-client/register.json", params: args
+        post "/user-api-key-client.json", params: args
         expect(response.status).to eq(400)
       end
     end
@@ -36,7 +54,7 @@ RSpec.describe UserApiKeyClientsController do
         before { SiteSetting.allow_user_api_key_client_scopes = "" }
 
         it "returns a 403" do
-          post "/user-api-key-client/register.json", params: args_with_scopes
+          post "/user-api-key-client.json", params: args_with_scopes
           expect(response.status).to eq(403)
         end
       end
@@ -45,7 +63,7 @@ RSpec.describe UserApiKeyClientsController do
         before { SiteSetting.allow_user_api_key_client_scopes = "user_status" }
 
         it "registers a client" do
-          post "/user-api-key-client/register.json", params: args_with_scopes
+          post "/user-api-key-client.json", params: args_with_scopes
           expect(response.status).to eq(200)
           client =
             UserApiKeyClient.find_by(
@@ -62,7 +80,7 @@ RSpec.describe UserApiKeyClientsController do
           before { Fabricate(:user_api_key_client, **args) }
 
           it "returns a 403" do
-            post "/user-api-key-client/register.json", params: args_with_scopes
+            post "/user-api-key-client.json", params: args_with_scopes
             expect(response.status).to eq(403)
           end
         end

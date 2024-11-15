@@ -4,7 +4,14 @@ class UserApiKeyClientsController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json, :verify_authenticity_token
 
-  def register
+  def show
+    params.require(:client_id)
+    client = UserApiKeyClient.find_by(client_id: params[:client_id])
+    raise Discourse::InvalidParameters unless client && client.auth_redirect.present?
+    head :ok
+  end
+
+  def create
     rate_limit
     require_params
     validate_params
