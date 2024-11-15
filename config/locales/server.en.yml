@@ -2639,7 +2639,6 @@ en:
     revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
-    allow_user_api_key_client_scopes: "List of scopes allowed for externally registered user API key clients"
     min_trust_level_for_user_api_key: |
       Trust level required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
