@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::CreateInteraction do
+RSpec.describe Chat::CreateMessageInteraction do
   describe described_class::Contract, type: :model do
     subject(:contract) { described_class.new(message_id: nil, action_id: nil) }
 

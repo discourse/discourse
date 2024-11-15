@@ -2,7 +2,7 @@
 
 class Chat::Api::ChannelsMessagesInteractionsController < Chat::ApiController
   def create
-    Chat::CreateInteraction.call(service_params) do |result|
+    Chat::CreateMessageInteraction.call(service_params) do |result|
       on_success do
         render_serialized(
           result.interaction,

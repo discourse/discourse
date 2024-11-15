@@ -4,9 +4,9 @@ module Chat
   # Service responsible for creating and validating a new interaction between a user and a message.
   #
   # @example
-  #  Chat::CreateInteraction.call(params: { message_id: 3, action_id: "xxx" }, guardian: guardian)
+  #  Chat::CreateMessageInteraction.call(params: { message_id: 3, action_id: "xxx" }, guardian: guardian)
   #
-  class CreateInteraction
+  class CreateMessageInteraction
     include ::Service::Base
 
     # @!method self.call(guardian:, params:)
