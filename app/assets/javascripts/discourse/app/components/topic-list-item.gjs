@@ -269,6 +269,10 @@ export default class TopicListItem extends Component {
   }
 
   click(e) {
+    if (e.defaultPrevented) {
+      return;
+    }
+
     // new gjs topic-list-item components handle events on their own
     if (e.target.closest(".hbr-ember-outlet")) {
       return;
