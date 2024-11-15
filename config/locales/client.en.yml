@@ -2147,7 +2147,8 @@ en:
       remove_status: "Remove status"
 
     presence_toggle:
-      label: "Online"
+      online: "Online"
+      offline: "Offline"
       title: "Toggle presence features"
 
     user_tips:
@@ -7270,17 +7271,27 @@ en:
         category_id: "Category ID"
         category_title: "Category"
         tag_name: "Tag name"
+        tag_title: "Tag"
         external_url: "External or Relative URL"
         user_id: "User ID"
+        user_title: "User"
         username: "Username"
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
         no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
+        add: "Add permalink"
+        back: "Back to Permalinks"
+        more_options: "More options"
+        copy_success: "Permalink copied to clipboard"
         form:
           label: "New:"
-          add: "Add"
-          filter: "Search (URL or External URL)"
+          add_header: "Add permalink"
+          edit_header: "Edit permalink"
+          filter: "Search URL or destination URL"
+          url: "URL"
+          permalink_type: "Permalink type"
+          save: "Save"
 
       reseed:
         action:

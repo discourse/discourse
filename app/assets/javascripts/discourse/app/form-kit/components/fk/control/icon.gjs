@@ -17,7 +17,7 @@ export default class FKControlIcon extends Component {
       @onlyAvailable={{true}}
       @options={{hash
         maximum=1
-        disabled=@field.disabled
+        disabled=@disabled
         caretDownIcon="angle-down"
         caretUpIcon="angle-up"
         icons=@value

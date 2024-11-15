@@ -46,7 +46,6 @@ module Chat
           AND notifications.notification_type = :notification_type_mention
           AND (data::json->>'chat_message_id')::bigint > COALESCE(user_chat_channel_memberships.last_read_message_id, 0)
           AND (data::json->>'chat_channel_id')::bigint = memberships.chat_channel_id
-          AND (chat_messages.thread_id IS NULL OR chat_messages.id = chat_threads.original_message_id)
         ) AS mention_count,
         (
           SELECT COUNT(*) AS watched_threads_unread_count
