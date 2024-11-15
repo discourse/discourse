@@ -28,7 +28,7 @@ describe Chat::Message do
       expect(message).to_not be_valid
       expect(message.errors.full_messages).to eq(
         [
-          "Blocks [\"value at `/0/elements/0/type` is not one of: [\\\"button\\\"]\", \"object at `/0/elements/0` is missing required properties: text, value\"]",
+          "Blocks [\"value at `/0/elements/0/type` is not one of: [\\\"button\\\"]\", \"object at `/0/elements/0` is missing required properties: text\"]",
         ],
       )
     end
