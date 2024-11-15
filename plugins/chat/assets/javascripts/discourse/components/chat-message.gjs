@@ -26,6 +26,7 @@ import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageBlocks from "discourse/plugins/chat/discourse/components/chat-message/blocks";
 import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -673,6 +674,8 @@ export default class ChatMessage extends Component {
 
                   </div>
                 {{/if}}
+
+                <ChatMessageBlocks @message={{@message}} />
 
                 <ChatMessageError
                   @message={{@message}}

@@ -17,6 +17,56 @@ describe Chat::Message do
     subject(:message) { described_class.new(message: "") }
 
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    it "validates blocks against a json schema" do
+      message =
+        described_class.new(
+          message: "test",
+          blocks: [{ type: "actions", elements: [{ type: "buttonx" }] }],
+        )
+
+      expect(message).to_not be_valid
+      expect(message.errors.full_messages).to eq(
+        [
+          "Blocks [\"value at `/0/elements/0/type` is not one of: [\\\"button\\\"]\", \"object at `/0/elements/0` is missing required properties: text, value\"]",
+        ],
+      )
+    end
+
+    it "disallows duplicated custom_action_ids" do
+      message =
+        described_class.new(
+          message: "test",
+          blocks: [
+            {
+              type: "actions",
+              elements: [
+                {
+                  type: "button",
+                  text: {
+                    text: "Foo",
+                    type: "plain_text",
+                  },
+                  custom_action_id: "foo",
+                  value: "foo",
+                },
+                {
+                  type: "button",
+                  text: {
+                    text: "Foo",
+                    type: "plain_text",
+                  },
+                  custom_action_id: "foo",
+                  value: "foo",
+                },
+              ],
+            },
+          ],
+        )
+
+      expect(message).to_not be_valid
+      expect(message.errors.full_messages).to eq(["Elements have duplicated custom_action_id: foo"])
+    end
   end
 
   describe ".in_thread?" do

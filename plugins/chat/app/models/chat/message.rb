@@ -19,6 +19,10 @@ module Chat
     belongs_to :last_editor, class_name: "User"
     belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
+    has_many :interactions,
+             class_name: "Chat::MessageInteraction",
+             dependent: :destroy,
+             foreign_key: :chat_message_id
     has_many :replies,
              class_name: "Chat::Message",
              foreign_key: "in_reply_to_id",
@@ -90,12 +94,37 @@ module Chat
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 
     before_save { ensure_last_editor_id }
+    before_save { ensure_block_element_action_id }
 
     validates :cooked, length: { maximum: 20_000 }
-    validate :validate_message
+
+    validate :validate_blocks
+    def validate_blocks
+      return if !blocks
+
+      schemer = JSONSchemer.schema(Chat::Schemas::MessageBlocks)
+      if !schemer.valid?(blocks)
+        errors.add(:blocks, schemer.validate(blocks).map { _1.fetch("error") })
+        return
+      end
+
+      custom_action_ids = Set.new
+      blocks.each do |item|
+        item["elements"].each do |element|
+          custom_action_id = element["custom_action_id"]
+          next unless custom_action_id
+          if custom_action_ids.include?(custom_action_id)
+            errors.add(:elements, "have duplicated custom_action_id: #{custom_action_id}")
+            next
+          end
+          custom_action_ids.add(custom_action_id)
+        end
+      end
+    end
 
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
+    validate :validate_message
     def validate_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
@@ -328,6 +357,17 @@ module Chat
 
     def ensure_last_editor_id
       self.last_editor_id ||= self.user_id
+    end
+
+    def ensure_block_element_action_id
+      return if !blocks
+
+      # automatically assigns unique IDs to buttons
+      blocks.each do |block|
+        block["elements"].each do |element|
+          element["action_id"] = SecureRandom.uuid if element["type"] == "button"
+        end
+      end
     end
 
     def create_or_delete_all_mention

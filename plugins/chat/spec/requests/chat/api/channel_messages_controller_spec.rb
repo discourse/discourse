@@ -75,20 +75,50 @@ RSpec.describe Chat::Api::ChannelMessagesController do
   end
 
   describe "#create" do
+    let(:blocks) { nil }
+    let(:message) { "test" }
+    let(:force_thread) { nil }
+    let(:in_reply_to_id) { nil }
+    let(:params) do
+      {
+        in_reply_to_id: in_reply_to_id,
+        message: message,
+        blocks: blocks,
+        force_thread: force_thread,
+      }
+    end
+
+    before { sign_in(current_user) }
+
     context "when force_thread param is given" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
 
-      before { sign_in(current_user) }
+      let(:force_thread) { true }
+      let(:in_reply_to_id) { message.id }
 
       it "ignores it" do
-        expect {
-          post "/chat/#{channel.id}.json",
-               params: {
-                 in_reply_to_id: message.id,
-                 message: "test",
-                 force_thread: true,
-               }
-        }.not_to change { Chat::Thread.where(force: true).count }
+        expect { post "/chat/#{channel.id}.json", params: params }.not_to change {
+          Chat::Thread.where(force: true).count
+        }
+      end
+    end
+
+    context "when blocks is provided" do
+      context "when user is not a bot" do
+        let(:blocks) do
+          [
+            {
+              type: "actions",
+              elements: [{ type: "button", text: { type: "plain_text", text: "Click Me" } }],
+            },
+          ]
+        end
+
+        it "raises invalid acces" do
+          post "/chat/#{channel.id}.json", params: params
+
+          expect(response.status).to eq(403)
+        end
       end
     end
   end

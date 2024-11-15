@@ -34,6 +34,8 @@ module Chat
     end
 
     policy :no_silenced_user
+    policy :accept_blocks
+
     params do
       attribute :chat_channel_id, :string
       attribute :in_reply_to_id, :string
@@ -43,6 +45,7 @@ module Chat
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
+      attribute :blocks, :array
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -57,6 +60,7 @@ module Chat
           )
       end
     end
+
     model :channel
     step :enforce_membership
     model :membership
@@ -84,6 +88,11 @@ module Chat
     step :publish_user_tracking_state
 
     private
+
+    def accept_blocks(guardian:, params:)
+      return true if !params[:blocks]
+      guardian.user.bot?
+    end
 
     def no_silenced_user(guardian:)
       !guardian.is_silenced?
@@ -154,6 +163,7 @@ module Chat
         cooked: ::Chat::Message.cook(params.message, user_id: guardian.user.id),
         cooked_version: ::Chat::Message::BAKED_VERSION,
         streaming: options.streaming,
+        blocks: params.blocks,
       )
     end
 

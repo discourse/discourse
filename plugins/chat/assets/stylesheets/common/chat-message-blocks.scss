@@ -1,0 +1,25 @@
+.chat-message__blocks {
+  padding-block: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.chat-message__block {
+  .block__actions {
+    display: flex;
+    gap: 0.5em;
+  }
+
+  .block__button {
+    .emoji {
+      height: 18px;
+      width: 18px;
+    }
+  }
+}
+
+.chat-message__block-element {
+  .block-element__button {
+  }
+}

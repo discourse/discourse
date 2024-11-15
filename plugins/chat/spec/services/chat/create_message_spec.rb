@@ -33,6 +33,7 @@ RSpec.describe Chat::CreateMessage do
     let(:content) { "A new message @#{other_user.username_lower}" }
     let(:context_topic_id) { nil }
     let(:context_post_ids) { nil }
+    let(:blocks) { nil }
     let(:params) do
       {
         chat_channel_id: channel.id,
@@ -40,6 +41,7 @@ RSpec.describe Chat::CreateMessage do
         upload_ids: [upload.id],
         context_topic_id: context_topic_id,
         context_post_ids: context_post_ids,
+        blocks: blocks,
       }
     end
     let(:options) { { enforce_membership: false, force_thread: false } }
@@ -219,6 +221,40 @@ RSpec.describe Chat::CreateMessage do
       before { UserSilencer.new(user).silence }
 
       it { is_expected.to fail_a_policy(:no_silenced_user) }
+    end
+
+    context "when providing blocks" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            elements: [{ type: "button", value: "foo", text: { type: "plain_text", text: "Foo" } }],
+          },
+        ]
+      end
+
+      context "when user is not a bot" do
+        it { is_expected.to fail_a_policy(:accept_blocks) }
+      end
+
+      context "when user is a bot" do
+        fab!(:user) { Discourse.system_user }
+
+        it { is_expected.to run_successfully }
+
+        it "saves the blocks" do
+          result
+
+          block = message.blocks[0]
+          expect(block["type"]).to eq("actions")
+
+          element = block["elements"][0]
+          expect(element["type"]).to eq("button")
+          expect(element["value"]).to eq("foo")
+          expect(element["text"]).to eq({ "type" => "plain_text", "text" => "Foo" })
+          expect(element["action_id"]).to be_present
+        end
+      end
     end
 
     context "when user is not silenced" do
