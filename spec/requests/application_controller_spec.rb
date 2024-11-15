@@ -1529,7 +1529,7 @@ RSpec.describe ApplicationController do
 
       get "/admin/users/#{admin.id}.json"
       expect(response.status).to eq(200)
-      expect(response.headers["X-Discourse-Route"]).to eq("admin::users/show")
+      expect(response.headers["X-Discourse-Route"]).to eq("admin/users/show")
 
       get "/u/#{admin.username}.json"
       expect(response.status).to eq(200)
