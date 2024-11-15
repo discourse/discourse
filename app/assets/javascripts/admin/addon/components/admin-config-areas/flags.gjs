@@ -69,18 +69,6 @@ export default class AdminConfigAreasFlags extends Component {
   }
 
   <template>
-    <AdminPageSubheader @titleLabel="admin.config_areas.flags.flags_tab">
-      <:actions as |actions|>
-        <actions.Primary
-          @route="adminConfig.flags.new"
-          @title="admin.config_areas.flags.add"
-          @label="admin.config_areas.flags.add"
-          @icon="plus"
-          @disabled={{this.addFlagButtonDisabled}}
-          class="admin-flags__header-add-flag"
-        />
-      </:actions>
-    </AdminPageSubheader>
     <div class="container admin-flags">
       <table class="d-admin-table admin-flags__items">
         <thead>
