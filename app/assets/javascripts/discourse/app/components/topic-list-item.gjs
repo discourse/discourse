@@ -1,6 +1,7 @@
 import { cached } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
+import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
@@ -94,8 +95,11 @@ export default class TopicListItem extends Component {
         if (this.isDestroyed || this.isDestroying) {
           return;
         }
-        if (this.selected && this.selected.includes(this.topic)) {
-          this.element.querySelector("input.bulk-select").checked = true;
+        if (this.selected?.includes(this.topic)) {
+          const input = this.element?.querySelector("input.bulk-select");
+          if (input) {
+            input.checked = true;
+          }
         }
         if (this._shouldFocusLastVisited()) {
           const title = this._titleElement();
@@ -270,33 +274,8 @@ export default class TopicListItem extends Component {
     const target = e.target;
     const classList = target.classList;
     if (classList.contains("bulk-select")) {
-      const selected = this.selected;
-
-      if (target.checked) {
-        selected.addObject(topic);
-
-        if (this.lastChecked && e.shiftKey) {
-          const bulkSelects = Array.from(
-              document.querySelectorAll("input.bulk-select")
-            ),
-            from = bulkSelects.indexOf(target),
-            to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
-            start = Math.min(from, to),
-            end = Math.max(from, to);
-
-          bulkSelects
-            .slice(start, end)
-            .filter((el) => el.checked !== true)
-            .forEach((checkbox) => {
-              checkbox.click();
-            });
-        }
-
-        this.set("lastChecked", target);
-      } else {
-        selected.removeObject(topic);
-        this.set("lastChecked", null);
-      }
+      this.onBulkSelectToggle(e);
+      return;
     }
 
     if (
@@ -337,6 +316,31 @@ export default class TopicListItem extends Component {
 
   unhandledRowClick() {}
 
+  @action
+  onBulkSelectToggle(event) {
+    if (event.target.checked) {
+      this.selected.addObject(this.topic);
+
+      if (this.lastChecked && event.shiftKey) {
+        const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
+        const from = bulkSelects.indexOf(event.target);
+        const to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id);
+        const start = Math.min(from, to);
+        const end = Math.max(from, to);
+
+        bulkSelects
+          .slice(start, end)
+          .filter((el) => el.checked !== true)
+          .forEach((checkbox) => checkbox.click());
+      }
+
+      this.set("lastChecked", event.target);
+    } else {
+      this.selected.removeObject(this.topic);
+      this.set("lastChecked", null);
+    }
+  }
+
   keyDown(e) {
     if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
       e.preventDefault();
@@ -366,6 +370,10 @@ export default class TopicListItem extends Component {
         this._titleElement()?.focus();
       }
     });
+  }
+
+  get isSelected() {
+    return this.get("selected")?.includes(this.get("topic"));
   }
 
   @on("didInsertElement")
@@ -433,6 +441,10 @@ export default class TopicListItem extends Component {
               <template>
                 <@data.component
                   @topic={{@data.topic}}
+                  @bulkSelectEnabled={{@data.bulkSelectEnabled}}
+                  @onBulkSelectToggle={{@data.onBulkSelectToggle}}
+                  @isSelected={{@data.isSelected}}
+                  @showTopicPostBadges={{@data.showTopicPostBadges}}
                   @tagsForUser={{@data.tagsForUser}}
                   @hideCategory={{@data.hideCategory}}
                   @onTitleFocus={{@data.onTitleFocus}}
@@ -441,11 +453,18 @@ export default class TopicListItem extends Component {
                   @unreadClass={{@data.unreadClass}}
                   @newDotText={{@data.newDotText}}
                   @expandPinned={{@data.expandPinned}}
+                  @showPosters={{@data.showPosters}}
+                  @showLikes={{@data.showLikes}}
+                  @showOpLikes={{@data.showOpLikes}}
                 />
               </template>,
               {
                 component: entry.value.item,
                 topic: this.topic,
+                bulkSelectEnabled: this.bulkSelectEnabled,
+                onBulkSelectToggle: this.onBulkSelectToggle,
+                isSelected: this.isSelected,
+                showTopicPostBadges: this.showTopicPostBadges,
                 tagsForUser: this.tagsForUser,
                 hideCategory: this.hideCategory,
                 onTitleFocus: this._onTitleFocus,
@@ -454,6 +473,9 @@ export default class TopicListItem extends Component {
                 unreadClass: this.unreadClass,
                 newDotText: this.newDotText,
                 expandPinned: this.expandPinned,
+                showPosters: this.showPosters,
+                showLikes: this.showLikes,
+                showOpLikes: this.showOpLikes,
               }
             )
           );
