@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -11,8 +10,6 @@ import i18n from "discourse-common/helpers/i18n";
 
 export default class TopicList extends Component {
   @service currentUser;
-
-  @tracked lastCheckedElementId;
 
   get selected() {
     return this.args.bulkSelectHelper?.selected;
@@ -137,6 +134,7 @@ export default class TopicList extends Component {
         {{#each @topics as |topic index|}}
           <TopicListItem
             @topic={{topic}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
@@ -147,8 +145,6 @@ export default class TopicList extends Component {
             @expandAllPinned={{@expandAllPinned}}
             @lastVisitedTopic={{this.lastVisitedTopic}}
             @selected={{this.selected}}
-            @lastCheckedElementId={{this.lastCheckedElementId}}
-            @updateLastCheckedElementId={{fn (mut this.lastCheckedElementId)}}
             @tagsForUser={{@tagsForUser}}
             @focusLastVisitedTopic={{@focusLastVisitedTopic}}
             @index={{index}}

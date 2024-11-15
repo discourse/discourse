@@ -15,6 +15,7 @@ export default class BulkSelectHelper {
   @tracked bulkSelectEnabled = false;
   @tracked autoAddTopicsToBulkSelect = false;
   @tracked autoAddBookmarksToBulkSelect = false;
+  @tracked lastCheckedElementId = null;
 
   selected = new TrackedArray();
 
@@ -24,6 +25,7 @@ export default class BulkSelectHelper {
 
   clear() {
     this.selected.length = 0;
+    this.lastCheckedElementId = null;
   }
 
   addTopics(topics) {

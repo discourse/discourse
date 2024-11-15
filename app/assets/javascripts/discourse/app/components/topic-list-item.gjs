@@ -154,6 +154,10 @@ export default class TopicListItem extends Component {
     nodeClassList.toggle("read", !data.show_indicator);
   }
 
+  get selected() {
+    return this.bulkSelectHelper?.selected;
+  }
+
   @discourseComputed("topic.participant_groups")
   participantGroups(groupNames) {
     if (!groupNames) {
@@ -321,10 +325,12 @@ export default class TopicListItem extends Component {
     if (event.target.checked) {
       this.selected.addObject(this.topic);
 
-      if (this.lastChecked && event.shiftKey) {
+      if (this.bulkSelectHelper.lastCheckedElementId && event.shiftKey) {
         const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
         const from = bulkSelects.indexOf(event.target);
-        const to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id);
+        const to = bulkSelects.findIndex(
+          (el) => el.id === this.bulkSelectHelper.lastCheckedElementId
+        );
         const start = Math.min(from, to);
         const end = Math.max(from, to);
 
@@ -334,10 +340,10 @@ export default class TopicListItem extends Component {
           .forEach((checkbox) => checkbox.click());
       }
 
-      this.set("lastChecked", event.target);
+      this.bulkSelectHelper.lastCheckedElementId = event.target.id;
     } else {
       this.selected.removeObject(this.topic);
-      this.set("lastChecked", null);
+      this.bulkSelectHelper.lastCheckedElementId = null;
     }
   }
 

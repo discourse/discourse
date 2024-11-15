@@ -137,13 +137,11 @@ export default class TopicListItem extends Component {
     if (e.target.checked) {
       this.args.selected.addObject(this.args.topic);
 
-      if (this.args.lastCheckedElementId && e.shiftKey) {
-        const bulkSelects = Array.from(
-          document.querySelectorAll("input.bulk-select")
-        );
+      if (this.bulkSelectHelper.lastCheckedElementId && e.shiftKey) {
+        const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
         const from = bulkSelects.indexOf(e.target);
         const to = bulkSelects.findIndex(
-          (el) => el.id === this.args.lastCheckedElementId
+          (el) => el.id === this.bulkSelectHelper.lastCheckedElementId
         );
         const start = Math.min(from, to);
         const end = Math.max(from, to);
@@ -154,10 +152,10 @@ export default class TopicListItem extends Component {
           .forEach((checkbox) => checkbox.click());
       }
 
-      this.args.updateLastCheckedElementId(e.target.id);
+      this.bulkSelectHelper.lastCheckedElementId = e.target.id;
     } else {
       this.args.selected.removeObject(this.args.topic);
-      this.args.updateLastCheckedElementId(null);
+      this.bulkSelectHelper.lastCheckedElementId = null;
     }
   }
 
