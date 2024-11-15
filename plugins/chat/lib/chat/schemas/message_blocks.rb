@@ -28,6 +28,10 @@ module Chat
             type: "string",
             enum: ["actions"],
           },
+          block_id: {
+            type: "string",
+            maxLength: 255,
+          },
           elements: {
             type: "array",
             maxItems: 10,
@@ -52,12 +56,8 @@ module Chat
                   type: "string",
                   enum: %w[primary danger],
                 },
-                custom_action_id: {
-                  type: "string",
-                  maxLength: 255,
-                },
               },
-              required: %w[type text value],
+              required: %w[type text],
               additionalProperties: false,
             },
           },

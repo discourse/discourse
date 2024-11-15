@@ -33,7 +33,7 @@ describe Chat::Message do
       )
     end
 
-    it "disallows duplicated custom_action_ids" do
+    it "disallows duplicated action_ids" do
       message =
         described_class.new(
           message: "test",
@@ -47,7 +47,7 @@ describe Chat::Message do
                     text: "Foo",
                     type: "plain_text",
                   },
-                  custom_action_id: "foo",
+                  action_id: "foo",
                   value: "foo",
                 },
                 {
@@ -56,7 +56,7 @@ describe Chat::Message do
                     text: "Foo",
                     type: "plain_text",
                   },
-                  custom_action_id: "foo",
+                  action_id: "foo",
                   value: "foo",
                 },
               ],
@@ -65,7 +65,49 @@ describe Chat::Message do
         )
 
       expect(message).to_not be_valid
-      expect(message.errors.full_messages).to eq(["Elements have duplicated custom_action_id: foo"])
+      expect(message.errors.full_messages).to eq(["Elements have duplicated action_id: foo"])
+    end
+
+    it "disallows duplicated block_ids" do
+      message =
+        described_class.new(
+          message: "test",
+          blocks: [
+            {
+              type: "actions",
+              block_id: "foo",
+              elements: [
+                {
+                  type: "button",
+                  text: {
+                    text: "Foo",
+                    type: "plain_text",
+                  },
+                  action_id: "foo",
+                  value: "foo",
+                },
+              ],
+            },
+            {
+              type: "actions",
+              block_id: "foo",
+              elements: [
+                {
+                  type: "button",
+                  text: {
+                    text: "Bar",
+                    type: "plain_text",
+                  },
+                  action_id: "bar",
+                  value: "bar",
+                },
+              ],
+            },
+          ],
+        )
+
+      expect(message).to_not be_valid
+      expect(message.errors.full_messages).to eq(["Blocks have duplicated block_id: foo"])
     end
   end
 

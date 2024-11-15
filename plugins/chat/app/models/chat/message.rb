@@ -94,7 +94,20 @@ module Chat
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 
     before_save { ensure_last_editor_id }
-    before_save { ensure_block_element_action_id }
+
+    normalizes :blocks,
+               with: ->(blocks) do
+                 return if !blocks
+
+                 # automatically assigns unique IDs
+                 blocks.each do |block|
+                   block["block_id"] = SecureRandom.uuid if !block["block_id"]
+                   block["elements"].each do |element|
+                     element["action_id"] = SecureRandom.uuid if element["type"] == "button" &&
+                       !element["action_id"]
+                   end
+                 end
+               end
 
     validates :cooked, length: { maximum: 20_000 }
 
@@ -108,16 +121,24 @@ module Chat
         return
       end
 
-      custom_action_ids = Set.new
-      blocks.each do |item|
-        item["elements"].each do |element|
-          custom_action_id = element["custom_action_id"]
-          next unless custom_action_id
-          if custom_action_ids.include?(custom_action_id)
-            errors.add(:elements, "have duplicated custom_action_id: #{custom_action_id}")
+      block_ids = Set.new
+      action_ids = Set.new
+      blocks.each do |block|
+        block_id = block["block_id"]
+        if block_ids.include?(block_id)
+          errors.add(:blocks, "have duplicated block_id: #{block_id}")
+          next
+        end
+        block_ids.add(block_id)
+
+        block["elements"].each do |element|
+          action_id = element["action_id"]
+          next unless action_id
+          if action_ids.include?(action_id)
+            errors.add(:elements, "have duplicated action_id: #{action_id}")
             next
           end
-          custom_action_ids.add(custom_action_id)
+          action_ids.add(action_id)
         end
       end
     end
@@ -357,17 +378,6 @@ module Chat
 
     def ensure_last_editor_id
       self.last_editor_id ||= self.user_id
-    end
-
-    def ensure_block_element_action_id
-      return if !blocks
-
-      # automatically assigns unique IDs to buttons
-      blocks.each do |block|
-        block["elements"].each do |element|
-          element["action_id"] = SecureRandom.uuid if element["type"] == "button"
-        end
-      end
     end
 
     def create_or_delete_all_mention
