@@ -1520,4 +1520,20 @@ RSpec.describe ApplicationController do
       end
     end
   end
+
+  describe "#set_current_user_for_logs" do
+    fab!(:admin)
+
+    it "sets the X-Discourse-Route header to the controller name and action including namespace" do
+      sign_in(admin)
+
+      get "/admin/users/#{admin.id}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("admin::users/show")
+
+      get "/u/#{admin.username}.json"
+      expect(response.status).to eq(200)
+      expect(response.headers["X-Discourse-Route"]).to eq("users/show")
+    end
+  end
 end
