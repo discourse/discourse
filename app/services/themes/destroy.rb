@@ -3,7 +3,10 @@
 class Themes::Destroy
   include Service::Base
 
-  params { attribute :id, :integer }
+  params do
+    attribute :id, :integer
+    validates :id, presence: true
+  end
 
   model :theme
 

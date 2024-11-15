@@ -188,6 +188,9 @@ class Admin::ThemesController < Admin::AdminController
       params: theme_params.to_unsafe_h.merge(user_id: theme_user.id),
       guardian:,
     ) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
       on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
       on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
       on_failure { |theme:| render json: theme.errors, status: :unprocessable_entity }
@@ -256,21 +259,22 @@ class Admin::ThemesController < Admin::AdminController
 
   def destroy
     Themes::Destroy.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
       on_model_not_found(:theme) { raise Discourse::NotFound }
       on_success { render json: {}, status: :no_content }
     end
   end
 
   def bulk_destroy
-    themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) if themes.blank?
-
-    ActiveRecord::Base.transaction do
-      themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
-      themes.destroy_all
+    Themes::BulkDestroy.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+      end
+      on_model_not_found(:themes) { raise Discourse::NotFound }
+      on_success { render json: {}, status: :no_content }
     end
-
-    respond_to { |format| format.json { head :no_content } }
   end
 
   def show
@@ -296,22 +300,14 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def get_translations
-    params.require(:locale)
-    if I18n.available_locales.exclude?(params[:locale].to_sym)
-      raise Discourse::InvalidParameters.new(:locale)
-    end
-
-    I18n.locale = params[:locale]
-
-    @theme = Theme.find_by(id: params[:id])
-    raise Discourse::InvalidParameters.new(:id) unless @theme
-
-    translations =
-      @theme.translations.map do |translation|
-        { key: translation.key, value: translation.value, default: translation.default }
+    Themes::GetTranslations.call(service_params) do
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
-
-    render json: { translations: translations }, status: :ok
+      on_failed_policy(:validate_locale) { raise Discourse::InvalidParameters.new(:locale) }
+      on_model_not_found(:theme) { raise Discourse::NotFound }
+      on_success { |translations:| render(json: success_json.merge(translations:)) }
+    end
   end
 
   def update_single_setting
