@@ -33,27 +33,35 @@ class DbHelper
 
     return if text_columns.empty?
 
-    pattern = "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}"
+    transforms = {
+      replacement: ->(column_name) { %|REPLACE("#{column_name}", :from, :to)| },
+      condition: ->(column_name) do
+        %|"#{column_name}" IS NOT NULL AND "#{column_name}" LIKE :pattern|
+      end,
+    }
+
+    query_params = {
+      from: from,
+      to: to,
+      pattern: "#{anchor_left ? "" : "%"}#{from}#{anchor_right ? "" : "%"}",
+    }
 
     text_columns.each do |table, columns|
-      query_parts = build_remap_query_parts(table, columns, skip_max_length_violations)
+      query_parts =
+        build_transform_query_parts(table, columns, skip_max_length_violations, transforms)
 
       begin
-        rows_updated = DB.exec(<<~SQL, from: from, to: to, pattern: pattern)
-          UPDATE \"#{table}\"
-            SET #{query_parts[:updates].join(", ")}
-          WHERE #{query_parts[:conditions].join(" OR ")}
-        SQL
+        rows_updated = execute_transform(table, query_parts, query_params)
       rescue PG::StringDataRightTruncation => e
         # Provide more context in the exeption message
-        raise_contextualized_remap_exception(e, table, query_parts[:length_constrained_columns])
+        raise_contextualized_transform_exception(e, table, query_parts[:length_constrained_columns])
       end
 
       if verbose
         skipped_counts =
-          skipped_remap_counts(table, from, to, pattern, query_parts, skip_max_length_violations)
+          skipped_transform_counts(table, query_parts, skip_max_length_violations, query_params)
 
-        log_remap_message(table, rows_updated, skipped_counts)
+        log_transform_result(table, rows_updated, skipped_counts)
       end
     end
 
@@ -66,34 +74,40 @@ class DbHelper
     flags: "gi",
     match: "~*",
     excluded_tables: [],
-    verbose: false
+    verbose: false,
+    skip_max_length_violations: false
   )
     text_columns = find_text_columns(excluded_tables)
 
+    return if text_columns.empty?
+
+    transforms = {
+      replacement: ->(column_name) do
+        %|REGEXP_REPLACE("#{column_name}", :pattern, :replacement, :flags)|
+      end,
+      condition: ->(column_name) do
+        %|"#{column_name}" IS NOT NULL AND "#{column_name}" #{match} :pattern|
+      end,
+    }
+
+    query_params = { pattern: pattern, replacement: replacement, flags: flags }
+
     text_columns.each do |table, columns|
-      set =
-        columns
-          .map do |column|
-            replace = "REGEXP_REPLACE(\"#{column[:name]}\", :pattern, :replacement, :flags)"
-            replace = truncate(replace, table, column)
-            "\"#{column[:name]}\" = #{replace}"
-          end
-          .join(", ")
+      query_parts =
+        build_transform_query_parts(table, columns, skip_max_length_violations, transforms)
 
-      where =
-        columns
-          .map do |column|
-            "\"#{column[:name]}\" IS NOT NULL AND \"#{column[:name]}\" #{match} :pattern"
-          end
-          .join(" OR ")
+      begin
+        rows_updated = execute_transform(table, query_parts, query_params)
+      rescue PG::StringDataRightTruncation => e
+        # Provide more context in the exeption message
+        raise_contextualized_transform_exception(e, table, query_parts[:length_constrained_columns])
+      end
 
-      rows = DB.exec(<<~SQL, pattern: pattern, replacement: replacement, flags: flags, match: match)
-        UPDATE \"#{table}\"
-           SET #{set}
-         WHERE #{where}
-      SQL
-
-      puts "#{table}=#{rows}" if verbose && rows > 0
+      if verbose
+        skipped_counts =
+          skipped_transform_counts(table, query_parts, skip_max_length_violations, query_params)
+        log_transform_result(table, rows_updated, skipped_counts)
+      end
     end
 
     finish!
@@ -164,11 +178,11 @@ class DbHelper
     end
   end
 
-  def self.build_remap_query_parts(table, columns, skip_max_length_violations)
+  def self.build_transform_query_parts(table, columns, skip_max_length_violations, transforms)
     columns.each_with_object(
       { updates: [], conditions: [], skipped_sums: [], length_constrained_columns: [] },
     ) do |column, parts|
-      replace = %|REPLACE("#{column[:name]}", :from, :to)|
+      replace = transforms[:replacement].call(column[:name])
       replace = truncate(replace, table, column)
 
       if column[:max_length].present?
@@ -177,10 +191,10 @@ class DbHelper
       end
 
       # Build SQL update statements for each column
-      parts[:updates] << %("#{column[:name]}" = #{replace})
+      parts[:updates] << %|"#{column[:name]}" = #{replace}|
 
       # Build the base SQL condition clause for each column
-      basic_condition = %("#{column[:name]}" IS NOT NULL AND "#{column[:name]}" LIKE :pattern)
+      basic_condition = transforms[:condition].call(column[:name])
 
       if skip_max_length_violations && column[:max_length].present?
         # Extend base condition to skip updates that would violate the column length constraint
@@ -204,7 +218,18 @@ class DbHelper
     end
   end
 
-  def self.log_remap_message(table, rows_updated, skipped_counts)
+  def self.skipped_transform_counts(table, query_parts, skip_max_length_violations, params)
+    return unless skip_max_length_violations && query_parts[:skipped_sums].any?
+
+    skipped = DB.query_hash(<<~SQL, params).first
+      SELECT #{query_parts[:skipped_sums].join(", ")}
+      FROM \"#{table}\"
+    SQL
+
+    skipped.select { |_, count| count.to_i > 0 }
+  end
+
+  def self.log_transform_result(table, rows_updated, skipped_counts)
     return if rows_updated == 0 && skipped_counts.blank?
 
     message = +"#{table}=#{rows_updated}"
@@ -221,6 +246,14 @@ class DbHelper
     puts message
   end
 
+  def self.execute_transform(table, query_parts, params)
+    DB.exec(<<~SQL, params)
+      UPDATE \"#{table}\"
+        SET #{query_parts[:updates].join(", ")}
+      WHERE #{query_parts[:conditions].join(" OR ")}
+    SQL
+  end
+
   def self.skipped_remap_counts(table, from, to, pattern, query_parts, skip_max_length_violations)
     return unless skip_max_length_violations && query_parts[:skipped_sums].any?
 
@@ -232,7 +265,7 @@ class DbHelper
     skipped.select { |_, count| count.to_i > 0 }
   end
 
-  def self.raise_contextualized_remap_exception(error, table, columns)
+  def self.raise_contextualized_transform_exception(error, table, columns)
     details = "columns with length constraints: #{columns.join(", ")}"
 
     raise PG::StringDataRightTruncation, " #{error.message.strip} (table: #{table}, #{details})"
