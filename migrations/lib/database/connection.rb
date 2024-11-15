@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "extralite"
-require "lru_redux"
 
 module Migrations::Database
   class Connection
@@ -11,7 +10,7 @@ module Migrations::Database
     def self.open_database(path:)
       FileUtils.mkdir_p(File.dirname(path))
 
-      db = Extralite::Database.new(path)
+      db = ::Extralite::Database.new(path)
       db.pragma(
         busy_timeout: 60_000, # 60 seconds
         journal_mode: "wal",
@@ -30,8 +29,6 @@ module Migrations::Database
       @transaction_batch_size = transaction_batch_size
       @db = self.class.open_database(path:)
       @statement_counter = 0
-
-      # don't cache too many prepared statements
       @statement_cache = PreparedStatementCache.new(PREPARED_STATEMENT_CACHE_SIZE)
 
       @fork_hooks = setup_fork_handling
@@ -46,7 +43,7 @@ module Migrations::Database
     end
 
     def closed?
-      !@db || @db.closed?
+      @db.nil? || @db.closed?
     end
 
     def insert(sql, parameters = [])
@@ -76,7 +73,7 @@ module Migrations::Database
     end
 
     def close_connection(keep_path:)
-      return if !@db
+      return if @db.nil?
 
       commit_transaction
       @statement_cache.clear
