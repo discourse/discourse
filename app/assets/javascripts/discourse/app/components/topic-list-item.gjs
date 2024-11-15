@@ -452,7 +452,7 @@ export default class TopicListItem extends Component {
           return htmlSafe(
             rawRenderGlimmer(
               this,
-              "th.hbr-ember-outlet",
+              "td.hbr-ember-outlet",
               <template>
                 <@data.component
                   @topic={{@data.topic}}
