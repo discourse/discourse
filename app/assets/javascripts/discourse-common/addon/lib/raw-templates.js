@@ -2,7 +2,7 @@ import require from "require";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
-export let _needsHbrTopicList = false;
+let _needsHbrTopicList = false;
 
 export function needsHbrTopicList(value) {
   if (value === undefined) {
