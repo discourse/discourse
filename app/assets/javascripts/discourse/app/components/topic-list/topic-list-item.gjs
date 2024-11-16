@@ -90,7 +90,7 @@ export default class TopicListItem extends Component {
     };
 
     return applyValueTransformer(
-      "topic-list-item-columns",
+      "topic-list-columns",
       createColumns(),
       context
     );

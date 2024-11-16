@@ -21,7 +21,7 @@ export default class TopicListHeader extends Component {
     };
 
     return applyValueTransformer(
-      "topic-list-header-columns",
+      "topic-list-columns",
       createColumns(),
       context
     );
