@@ -39,18 +39,18 @@
       color: var(--primary-high);
     }
   }
-}
 
-.d-admin-table {
-  .d-admin-row__content td {
-    vertical-align: middle;
-  }
+  .d-admin-table {
+    .d-admin-row__content td {
+      vertical-align: middle;
+    }
 
-  .d-admin-row__overview {
-    width: 20%;
+    .d-admin-row__overview {
+      width: 20%;
 
-    @include breakpoint("tablet") {
-      width: auto;
+      @include breakpoint("tablet") {
+        width: auto;
+      }
     }
   }
 }
