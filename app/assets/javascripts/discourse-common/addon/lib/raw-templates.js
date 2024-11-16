@@ -2,19 +2,24 @@ import require from "require";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
-export let _needsCustomRawTemplates = false;
+export let _needsHbrTopicList = false;
 
-export function needsCustomRawTemplates() {
-  return _needsCustomRawTemplates;
+export function needsHbrTopicList(value) {
+  if (value === undefined) {
+    return _needsHbrTopicList;
+  } else {
+    _needsHbrTopicList = value;
+  }
 }
 
-export function resetNeedsCustomRawTemplates() {
-  _needsCustomRawTemplates = false;
+export function resetNeedsHbrTopicList() {
+  _needsHbrTopicList = false;
 }
 
 export function addRawTemplate(name, template, opts = {}) {
   if (!opts.core && !opts.hasModernReplacement) {
-    _needsCustomRawTemplates = true;
+    // TODO: check for hbr connectors
+    _needsHbrTopicList = true;
   }
 
   // Core templates should never overwrite themes / plugins

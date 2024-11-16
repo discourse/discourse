@@ -98,7 +98,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import { resetNeedsCustomRawTemplates } from "discourse-common/lib/raw-templates";
+import { resetNeedsHbrTopicList } from "discourse-common/lib/raw-templates";
 import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -256,7 +256,7 @@ export function testCleanup(container, app) {
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
-  resetNeedsCustomRawTemplates();
+  resetNeedsHbrTopicList();
 }
 
 function cleanupCssGeneratorTags() {
