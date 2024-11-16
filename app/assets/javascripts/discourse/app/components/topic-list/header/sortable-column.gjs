@@ -3,7 +3,6 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
@@ -139,6 +138,7 @@ export default class SortableColumn extends Component {
       {{#if this.isSorting}}
         {{icon (if @ascending "chevron-up" "chevron-down")}}
       {{/if}}
+
       <PluginOutlet
         @name="topic-list-heading-bottom"
         @outletArgs={{hash name=@name bulkSelectEnabled=@bulkSelectEnabled}}
