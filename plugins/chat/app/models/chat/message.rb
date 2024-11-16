@@ -103,8 +103,7 @@ module Chat
                  blocks.each do |block|
                    block["block_id"] ||= SecureRandom.uuid
                    block["elements"].each do |element|
-                     element["action_id"] = SecureRandom.uuid if element["type"] == "button" &&
-                       !element["action_id"]
+                     element["action_id"] ||= SecureRandom.uuid if element["type"] == "button"
                    end
                  end
                end
