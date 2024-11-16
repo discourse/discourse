@@ -80,12 +80,12 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
-  postHeaderDescription(data = {}) {
+  postHeaderDescription(data) {
     return this.disableBadgeOnPosts(data) && !data.system;
   }
 
   @action
-  disableBadgeOnPosts(data = {}) {
+  disableBadgeOnPosts(data) {
     const { listable, show_posts } = data;
     return !listable || !show_posts;
   }
