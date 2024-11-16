@@ -15,7 +15,10 @@ import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import {
+  findRawTemplate,
+  needsHbrTopicList,
+} from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -50,6 +53,16 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
+  static reopen() {
+    needsHbrTopicList(true);
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    needsHbrTopicList(true);
+    return super.reopenClass(...arguments);
+  }
+
   @service router;
   @service historyStore;
 

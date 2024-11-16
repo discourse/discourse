@@ -9,12 +9,23 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import LoadMore from "discourse/mixins/load-more";
+import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
 export default class TopicList extends Component.extend(LoadMore) {
+  static reopen() {
+    needsHbrTopicList(true);
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    needsHbrTopicList(true);
+    return super.reopenClass(...arguments);
+  }
+
   @service modal;
   @service router;
   @service siteSettings;
