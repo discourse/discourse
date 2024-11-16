@@ -101,7 +101,7 @@ module Chat
 
                  # automatically assigns unique IDs
                  blocks.each do |block|
-                   block["block_id"] = SecureRandom.uuid if !block["block_id"]
+                   block["block_id"] ||= SecureRandom.uuid
                    block["elements"].each do |element|
                      element["action_id"] = SecureRandom.uuid if element["type"] == "button" &&
                        !element["action_id"]
