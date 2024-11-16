@@ -2,8 +2,21 @@ import require from "require";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
+export let _needsCustomRawTemplates = false;
+
+export function needsCustomRawTemplates() {
+  return _needsCustomRawTemplates;
+}
+
+export function resetNeedsCustomRawTemplates() {
+  _needsCustomRawTemplates = false;
+}
 
 export function addRawTemplate(name, template, opts = {}) {
+  if (!opts.core && !opts.hasModernReplacement) {
+    _needsCustomRawTemplates = true;
+  }
+
   // Core templates should never overwrite themes / plugins
   if (opts.core && __DISCOURSE_RAW_TEMPLATES[name]) {
     return;

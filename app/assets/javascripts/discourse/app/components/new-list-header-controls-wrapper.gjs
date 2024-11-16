@@ -21,7 +21,7 @@ export default class NewListHeaderControlsWrapper extends Component {
   }
 
   <template>
-    {{#if this.currentUser.use_glimmer_topic_list}}
+    {{#if this.currentUser.canUseGlimmerTopicList}}
       <div class="topic-replies-toggle-wrapper">
         <NewListHeaderControls
           @current={{@current}}
