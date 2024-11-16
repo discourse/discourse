@@ -49,7 +49,7 @@ module Chat
     end
 
     def fetch_interaction(guardian:, message:, action:)
-      Chat::MessageInteraction.create(user: guardian.user, message: message, action:)
+      Chat::MessageInteraction.create(user: guardian.user, message:, action:)
     end
 
     def trigger_interaction(interaction:)
