@@ -164,10 +164,6 @@ export default class TopicList extends Component.extend(LoadMore) {
   }
 
   click(e) {
-    if (e.defaultPrevented) {
-      return;
-    }
-
     const onClick = (sel, callback) => {
       let target = e.target.closest(sel);
 

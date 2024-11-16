@@ -1,12 +1,26 @@
 {{~raw-plugin-outlet name="topic-list-header-before"~}}
-
-{{~#each view.columns as |cell|~}}
-  {{~#if cell~}}
-    {{cell}}
-  {{~/if~}}
-  {{~#if (raw-eq entry.key "topic")~}}
-    {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
-  {{~/if~}}
-{{~/each~}}
-
+{{~plugin-outlet name="topic-list-header-before"~}}
+{{#if bulkSelectEnabled}}
+  <th class="bulk-select topic-list-data">
+    {{#if canBulkSelect}}
+      {{raw "flat-button" class="bulk-select" icon="list-check" title="topics.bulk.toggle"}}
+    {{/if}}
+  </th>
+{{/if}}
+{{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions showTopicsAndRepliesToggle=showTopicsAndRepliesToggle newListSubset=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount bulkSelectHelper=bulkSelectHelper }}
+{{raw-plugin-outlet name="topic-list-header-after-main-link"}}
+{{plugin-outlet name="topic-list-header-after-main-link"}}
+{{#if showPosters}}
+  {{raw "topic-list-header-column" name='posters' screenreaderOnly='true'}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies'}}
+{{#if showLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='likes' name='likes'}}
+{{/if}}
+{{#if showOpLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='op_likes' name='likes'}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='views' name='views'}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='activity' name='activity'}}
 {{~raw-plugin-outlet name="topic-list-header-after"~}}
+{{~plugin-outlet name="topic-list-header-after"~}}

@@ -1,102 +1,97 @@
 {{~raw-plugin-outlet name="topic-list-before-columns"}}
 
-{{~#each columns as |cell|~}}
-  {{~#if cell~}}
-    {{~cell~}}
-  {{else if (raw-eq entry.key "bulk-select")}}
-    {{#if bulkSelectEnabled}}
-      <td class="bulk-select topic-list-data">
-        <label for="bulk-select-{{topic.id}}">
-          <input type="checkbox" class="bulk-select" id="bulk-select-{{topic.id}}">
-        </label>
-      </td>
-    {{/if}}
-  {{else if (raw-eq entry.key "topic")}}
-    <td class='main-link clearfix topic-list-data' colspan="1">
-      {{~raw-plugin-outlet name="topic-list-before-link"}}
-      {{~plugin-outlet name="topic-list-before-link" outletArgs=(raw-hash topic=topic)}}
-      <span class='link-top-line'>
-        {{~raw-plugin-outlet name="topic-list-before-status"}}
-        {{~plugin-outlet name="topic-list-before-status" outletArgs=(raw-hash topic=topic)}}
-        {{~raw "topic-status" topic=topic}}
-        {{~topic-link topic class="raw-link raw-topic-link"}}
-        {{~#if topic.featured_link}}
-          &nbsp;
-          {{~topic-featured-link topic}}
-        {{~/if}}
-        {{~raw-plugin-outlet name="topic-list-after-title"}}
-        {{~plugin-outlet name="topic-list-after-title" outletArgs=(raw-hash topic=topic)}}
-        {{~raw "list/unread-indicator"
-          includeUnreadIndicator=includeUnreadIndicator
-          topicId=topic.id
-          unreadClass=unreadClass
-        ~}}
-        {{~#if showTopicPostBadges}}
-          {{~raw "topic-post-badges"
-            unreadPosts=topic.unread_posts
-            unseen=topic.unseen
-            url=topic.lastUnreadUrl
-            newDotText=newDotText
-          }}
-        {{~/if}}
-      </span>
-      <div class="link-bottom-line">
-        {{#unless hideCategory}}
-          {{#unless topic.isPinnedUncategorized}}
-            {{~raw-plugin-outlet name="topic-list-before-category"}}
-            {{~plugin-outlet name="topic-list-before-category" outletArgs=(raw-hash topic=topic)}}
-            {{category-link topic.category}}
-          {{/unless}}
-        {{/unless}}
-        {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
-        {{#if participantGroups}}
-          {{raw "list/participant-groups" groups=participantGroups}}
-        {{/if}}
-        {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
-      </div>
+{{#if bulkSelectEnabled}}
+  <td class="bulk-select topic-list-data">
+    <label for="bulk-select-{{topic.id}}">
+      <input type="checkbox" class="bulk-select" id="bulk-select-{{topic.id}}">
+    </label>
+  </td>
+{{/if}}
 
-      {{#if expandPinned}}
-        {{raw "list/topic-excerpt" topic=topic}}
-      {{/if}}
-
-      {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
-      {{~plugin-outlet name="topic-list-main-link-bottom" outletArgs=(raw-hash topic=topic)}}
-    </td>
-  {{else if (raw-eq entry.key "posters")}}
-    {{#if showPosters}}
-      {{raw "list/posters-column" posters=topic.featuredUsers}}
+{{!--
+  The `~` syntax strip spaces between the elements, making it produce
+  `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
+  with no space between them.
+  This causes the topic-post-badge to be considered the same word as "text"
+  at the end of the link, preventing it from line wrapping onto its own line.
+--}}
+<td class='main-link clearfix topic-list-data' colspan="1">
+  {{~raw-plugin-outlet name="topic-list-before-link"}}
+  {{~plugin-outlet name="topic-list-before-link" outletArgs=(raw-hash topic=topic)}}
+  <span class='link-top-line'>
+    {{~raw-plugin-outlet name="topic-list-before-status"}}
+    {{~plugin-outlet name="topic-list-before-status" outletArgs=(raw-hash topic=topic)}}
+    {{~raw "topic-status" topic=topic}}
+    {{~topic-link topic class="raw-link raw-topic-link"}}
+    {{~#if topic.featured_link}}
+      &nbsp;{{~topic-featured-link topic}}
+    {{~/if}}
+    {{~raw-plugin-outlet name="topic-list-after-title"}}
+    {{~plugin-outlet name="topic-list-after-title" outletArgs=(raw-hash topic=topic)}}
+    {{~raw "list/unread-indicator" includeUnreadIndicator=includeUnreadIndicator
+                                   topicId=topic.id
+                                   unreadClass=unreadClass~}}
+    {{~#if showTopicPostBadges}}
+      {{~raw "topic-post-badges" unreadPosts=topic.unread_posts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+    {{~/if}}
+  </span>
+  <div class="link-bottom-line">
+    {{#unless hideCategory}}
+      {{#unless topic.isPinnedUncategorized}}
+        {{~raw-plugin-outlet name="topic-list-before-category"}}
+        {{~plugin-outlet name="topic-list-before-category" outletArgs=(raw-hash topic=topic)}}
+        {{category-link topic.category}}
+      {{/unless}}
+    {{/unless}}
+    {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    {{#if participantGroups}}
+      {{raw "list/participant-groups" groups=participantGroups}}
     {{/if}}
-  {{else if (raw-eq entry.key "replies")}}
-    {{raw "list/posts-count-column" topic=topic}}
-  {{else if (raw-eq entry.key "likes")}}
-    {{#if showLikes}}
-      <td class="num likes topic-list-data">
-        {{#if hasLikes}}
-          <a href='{{topic.summaryUrl}}'>
-            {{number topic.like_count}} {{d-icon "heart"}}
-          </a>
-        {{/if}}
-      </td>
-    {{/if}}
-  {{else if (raw-eq entry.key "op-likes")}}
-    {{#if showOpLikes}}
-      <td class="num likes">
-        {{#if hasOpLikes}}
-          <a href='{{topic.summaryUrl}}'>
-            {{number topic.op_like_count}} {{d-icon "heart"}}
-          </a>
-        {{/if}}
-      </td>
-    {{/if}}
-  {{else if (raw-eq entry.key "views")}}
-    <td class="num views {{topic.viewsHeat}} topic-list-data">
-      {{raw-plugin-outlet name="topic-list-before-view-count"}}
-      {{plugin-outlet name="topic-list-before-view-count" outletArgs=(raw-hash topic=topic)}}
-      {{number topic.views numberKey="views_long"}}
-    </td>
-  {{else if (raw-eq entry.key "activity")}}
-    {{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
+    {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+  </div>
+  {{#if expandPinned}}
+    {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
-{{~/each~}}
+
+  {{~raw-plugin-outlet name="topic-list-main-link-bottom"}}
+  {{~plugin-outlet name="topic-list-main-link-bottom" outletArgs=(raw-hash topic=topic)}}
+</td>
+
+{{~raw-plugin-outlet name="topic-list-after-main-link"}}
+{{~plugin-outlet name="topic-list-after-main-link" outletArgs=(raw-hash topic=topic)}}
+
+{{#if showPosters}}
+  {{raw "list/posters-column" posters=topic.featuredUsers}}
+{{/if}}
+
+{{raw "list/posts-count-column" topic=topic}}
+
+{{#if showLikes}}
+  <td class="num likes topic-list-data">
+    {{#if hasLikes}}
+      <a href='{{topic.summaryUrl}}'>
+        {{number topic.like_count}} {{d-icon "heart"}}
+      </a>
+    {{/if}}
+  </td>
+{{/if}}
+
+{{#if showOpLikes}}
+  <td class="num likes">
+    {{#if hasOpLikes}}
+      <a href='{{topic.summaryUrl}}'>
+        {{number topic.op_like_count}} {{d-icon "heart"}}
+      </a>
+    {{/if}}
+  </td>
+{{/if}}
+
+<td class="num views {{topic.viewsHeat}} topic-list-data">
+  {{raw-plugin-outlet name="topic-list-before-view-count"}}
+  {{plugin-outlet name="topic-list-before-view-count" outletArgs=(raw-hash topic=topic)}}
+  {{number topic.views numberKey="views_long"}}
+</td>
+
+{{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
 
 {{~raw-plugin-outlet name="topic-list-after-columns"}}
