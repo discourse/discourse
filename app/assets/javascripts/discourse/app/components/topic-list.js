@@ -21,6 +21,7 @@ export default class TopicList extends Component.extend(LoadMore) {
 
   showTopicPostBadges = true;
   listTitle = "topic.title";
+  lastCheckedElementId = null;
 
   // Overwrite this to perform client side filtering of topics, if desired
   @alias("topics") filteredTopics;
