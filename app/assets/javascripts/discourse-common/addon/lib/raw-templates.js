@@ -16,8 +16,33 @@ export function resetNeedsHbrTopicList() {
   _needsHbrTopicList = false;
 }
 
+const TOPIC_LIST_TEMPLATE_NAMES = [
+  "list/action-list",
+  "list/activity-column",
+  "list/category-column",
+  "list/new-list-header-controls",
+  "list/participant-groups",
+  "list/post-count-or-badges",
+  "list/posters-column",
+  "list/posts-count-column",
+  "list/topic-excerpt",
+  "list/topic-list-item",
+  "list/unread-indicator",
+  "list/visited-line",
+  "mobile/list/topic-list-item",
+  "topic-bulk-select-dropdown",
+  "topic-list-header-column",
+  "topic-list-header",
+  "topic-post-badges",
+  "topic-status",
+];
+
 export function addRawTemplate(name, template, opts = {}) {
-  if (!opts.core && !opts.hasModernReplacement) {
+  if (
+    TOPIC_LIST_TEMPLATE_NAMES.includes(name) &&
+    !opts.core &&
+    !opts.hasModernReplacement
+  ) {
     // TODO: check for hbr connectors
     _needsHbrTopicList = true;
   }
