@@ -48,7 +48,7 @@ module Chat
       attribute :blocks, :array
 
       validates :chat_channel_id, presence: true
-      validates :message, presence: true, if: -> { upload_ids.blank? }
+      validates :message, presence: true, if: -> { upload_ids.blank? && blocks.blank? }
 
       after_validation do
         next if message.blank?

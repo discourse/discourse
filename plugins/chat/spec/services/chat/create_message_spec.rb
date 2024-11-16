@@ -2,9 +2,10 @@
 
 RSpec.describe Chat::CreateMessage do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(upload_ids: upload_ids) }
+    subject(:contract) { described_class.new(upload_ids: upload_ids, blocks: blocks) }
 
     let(:upload_ids) { nil }
+    let(:blocks) { nil }
 
     it { is_expected.to validate_presence_of :chat_channel_id }
 
@@ -14,6 +15,12 @@ RSpec.describe Chat::CreateMessage do
 
     context "when uploads are provided" do
       let(:upload_ids) { "2,3" }
+
+      it { is_expected.not_to validate_presence_of :message }
+    end
+
+    context "when blocks are provided" do
+      let(:blocks) { [{ type: "actions" }] }
 
       it { is_expected.not_to validate_presence_of :message }
     end
