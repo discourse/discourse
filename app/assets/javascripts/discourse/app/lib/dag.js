@@ -160,24 +160,6 @@ export default class DAG {
     return this.#replace(key, value, position, { repositionOnly: true });
   }
 
-  replace(key, value, { before, after } = {}) {
-    const node = this.#rawData.get(key);
-
-    if (node) {
-      node.value = value;
-
-      if (before) {
-        node.before = before;
-      }
-
-      if (after) {
-        node.after = after;
-      }
-    }
-
-    this.#refreshDAG();
-  }
-
   /**
    * Check whether an item exists in the map.
    *
