@@ -2295,6 +2295,7 @@ end
 # Indexes
 #
 #  idx_users_admin                    (id) WHERE admin
+#  idx_users_ip_address               (ip_address)
 #  idx_users_moderator                (id) WHERE moderator
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)

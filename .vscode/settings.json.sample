@@ -19,7 +19,7 @@
   },
   "[ruby]": {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "ruby-syntax-tree.vscode-syntax-tree"
+    "editor.defaultFormatter": "Shopify.ruby-lsp"
   },
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -33,4 +33,5 @@
 
   "task.autoDetect": "off",
   "eslint.debug": false,
+  "rubyLsp.formatter": "syntax_tree",
 }
