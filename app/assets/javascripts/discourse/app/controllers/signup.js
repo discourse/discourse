@@ -122,10 +122,13 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @discourseComputed
+  showFullname() {
+    return this.siteSettings.enable_names;
+  }
+
+  @discourseComputed
   fullnameRequired() {
-    return (
-      this.siteSettings.full_name_required || this.siteSettings.enable_names
-    );
+    return this.siteSettings.full_name_required;
   }
 
   @discourseComputed("authOptions.auth_provider")

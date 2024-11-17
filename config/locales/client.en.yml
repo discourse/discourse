@@ -7223,7 +7223,7 @@ en:
       emoji:
         title: "Emoji"
         description: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
-        new: "Add"
+        new: "Add emoji"
         add: "Add New Emoji"
         choose_files: "Choose Files"
         uploading: "Uploading…"

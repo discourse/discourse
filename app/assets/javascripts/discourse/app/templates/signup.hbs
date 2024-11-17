@@ -91,6 +91,17 @@
             />
           </div>
 
+          {{#if this.fullnameRequired}}
+            <FullnameInput
+              @nameValidation={{this.nameValidation}}
+              @nameTitle={{this.nameTitle}}
+              @accountName={{this.accountName}}
+              @nameDisabled={{this.nameDisabled}}
+              @onFocusIn={{this.scrollInputIntoView}}
+              class="input-group create-account__fullname required"
+            />
+          {{/if}}
+
           <PluginOutlet
             @name="create-account-before-password"
             @outletArgs={{hash
@@ -196,33 +207,16 @@
             }}
           />
 
-          <div
-            class={{concat-class
-              "input-group"
-              "create-account__fullname"
-              (if this.siteSettings.full_name_required "required")
-            }}
-          >
-            {{#if this.fullnameRequired}}
-              <TextField
-                {{on "focusin" this.scrollInputIntoView}}
-                @disabled={{this.nameDisabled}}
-                @value={{this.accountName}}
-                @id="new-account-name"
-                aria-describedby="fullname-validation fullname-validation-more-info"
-                aria-invalid={{this.nameValidation.failed}}
-                class={{value-entered this.accountName}}
-              />
-              <label class="alt-placeholder" for="new-account-name">
-                {{this.nameTitle}}
-              </label>
-
-              <InputTip
-                @validation={{this.nameValidation}}
-                id="fullname-validation"
-              />
-            {{/if}}
-          </div>
+          {{#if (and this.showFullname (not this.fullnameRequired))}}
+            <FullnameInput
+              @nameValidation={{this.nameValidation}}
+              @nameTitle={{this.nameTitle}}
+              @accountName={{this.accountName}}
+              @nameDisabled={{this.nameDisabled}}
+              @onFocusIn={{this.scrollInputIntoView}}
+              class="input-group create-account__fullname"
+            />
+          {{/if}}
 
           {{#if this.userFields}}
             <div class="user-fields">
