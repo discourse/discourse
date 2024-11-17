@@ -39,8 +39,7 @@ export function transformBasicPost(post) {
     usernameUrl: userPath(post.username),
     username: post.username,
     badgesGranted:
-      post.badges_granted &&
-      post.badges_granted.map((badge) => Badge.createFromJson(badge)[0]),
+      post.badges_granted?.map((badge) => Badge.createFromJson(badge)[0]),
     avatar_template: post.avatar_template,
     bookmarked: post.bookmarked,
     bookmarkReminderAt: post.bookmark_reminder_at,
