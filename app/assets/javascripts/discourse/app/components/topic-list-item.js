@@ -53,9 +53,19 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
+  // used by plugins/themes that already support new topic-list APIs
+  static deprecatedReopen() {
+    return super.reopen(...arguments);
+  }
+
   static reopen() {
     needsHbrTopicList(true);
     return super.reopen(...arguments);
+  }
+
+  // used by plugins/themes that already support new topic-list APIs
+  static deprecatedReopenClass() {
+    return super.reopenClass(...arguments);
   }
 
   static reopenClass() {
