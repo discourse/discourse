@@ -435,6 +435,7 @@ class Post < ActiveRecord::Base
       return false
     end
     return false if topic&.private_message?
+
     total_hosts_usage.values.any? { |count| count >= SiteSetting.newuser_spam_host_threshold }
   end
 
