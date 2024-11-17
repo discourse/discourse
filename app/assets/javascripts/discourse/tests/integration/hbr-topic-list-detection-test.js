@@ -65,6 +65,13 @@ module("Integration | Lib | hbr topic list detection", function () {
 
       api.modifyClass(
         "component:topic-list-item",
+        (Superclass) => class extends Superclass {},
+        { hasModernReplacement: true }
+      );
+      assert.false(needsHbrTopicList());
+
+      api.modifyClass(
+        "component:topic-list-item",
         (Superclass) => class extends Superclass {}
       );
       assert.true(needsHbrTopicList());
@@ -74,6 +81,13 @@ module("Integration | Lib | hbr topic list detection", function () {
   test("xyz modifyClassStatic", async function (assert) {
     withPluginApi("1.0.0", (api) => {
       api.modifyClassStatic("component:mobile-nav", { pluginId: "test" });
+      assert.false(needsHbrTopicList());
+
+      api.modifyClassStatic(
+        "component:topic-list",
+        { pluginId: "test" },
+        { hasModernReplacement: true }
+      );
       assert.false(needsHbrTopicList());
 
       api.modifyClassStatic("component:topic-list", { pluginId: "test" });

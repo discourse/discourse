@@ -298,7 +298,9 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      needsHbrTopicList(true);
+      if (!opts?.hasModernReplacement) {
+        needsHbrTopicList(true);
+      }
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -313,7 +315,9 @@ class PluginApi {
         classPrepend(klass.class, changes);
       } else if (klass.class.reopen) {
         withPrependsRolledBack(klass.class, () => {
-          klass.class.reopen(changes);
+          opts?.hasModernReplacement
+            ? klass.class.deprecatedReopen(changes)
+            : klass.class.reopen(changes);
         });
       } else {
         Object.defineProperties(
@@ -342,7 +346,9 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      needsHbrTopicList(true);
+      if (!opts?.hasModernReplacement) {
+        needsHbrTopicList(true);
+      }
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -353,7 +359,9 @@ class PluginApi {
     if (canModify(klass, "static", resolverName, changes)) {
       delete changes.pluginId;
       withPrependsRolledBack(klass.class, () => {
-        klass.class.reopenClass(changes);
+        opts?.hasModernReplacement
+          ? klass.class.deprecatedReopenClass(changes)
+          : klass.class.reopenClass(changes);
       });
     }
 
