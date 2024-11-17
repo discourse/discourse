@@ -11,8 +11,7 @@ export default class BadgeButton extends Component {
   }
 
   get showName() {
-    // If the showName argument is not set, default to true
-    return this.args.showName !== false;
+    return this.args.showName ?? true;
   }
 
   <template>
