@@ -10,7 +10,7 @@ import {
 } from "discourse-common/lib/raw-templates";
 
 module("Integration | Lib | hbr topic list detection", function () {
-  test("xyz template overrides", async function (assert) {
+  test("template overrides", async function (assert) {
     try {
       addRawTemplate("flat-button", "non-topic list override");
       assert.false(needsHbrTopicList());
@@ -23,7 +23,7 @@ module("Integration | Lib | hbr topic list detection", function () {
     }
   });
 
-  test("xyz hbr connectors", async function (assert) {
+  test("hbr connectors", async function (assert) {
     assert.false(needsHbrTopicList());
 
     // all raw connectors are topic list connectors
@@ -35,7 +35,7 @@ module("Integration | Lib | hbr topic list detection", function () {
     assert.true(needsHbrTopicList());
   });
 
-  test("xyz reopen", async function (assert) {
+  test("reopen", async function (assert) {
     // updated calls are allowed
     TopicList.deprecatedReopen({});
     assert.false(needsHbrTopicList());
@@ -45,7 +45,7 @@ module("Integration | Lib | hbr topic list detection", function () {
     assert.true(needsHbrTopicList());
   });
 
-  test("xyz reopenClass", async function (assert) {
+  test("reopenClass", async function (assert) {
     // updated calls are allowed
     TopicListItem.deprecatedReopenClass({});
     assert.false(needsHbrTopicList());
@@ -55,7 +55,7 @@ module("Integration | Lib | hbr topic list detection", function () {
     assert.true(needsHbrTopicList());
   });
 
-  test("xyz modifyClass", async function (assert) {
+  test("modifyClass", async function (assert) {
     withPluginApi("1.0.0", (api) => {
       api.modifyClass(
         "component:mobile-nav",
@@ -78,7 +78,7 @@ module("Integration | Lib | hbr topic list detection", function () {
     });
   });
 
-  test("xyz modifyClassStatic", async function (assert) {
+  test("modifyClassStatic", async function (assert) {
     withPluginApi("1.0.0", (api) => {
       api.modifyClassStatic("component:mobile-nav", { pluginId: "test" });
       assert.false(needsHbrTopicList());
