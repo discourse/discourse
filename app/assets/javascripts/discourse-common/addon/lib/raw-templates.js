@@ -43,7 +43,6 @@ export function addRawTemplate(name, template, opts = {}) {
     !opts.core &&
     !opts.hasModernReplacement
   ) {
-    // TODO: check for hbr connectors
     _needsHbrTopicList = true;
   }
 
@@ -86,6 +85,8 @@ export function buildRawConnectorCache() {
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
+
+      _needsHbrTopicList = true;
     }
   });
   return result;
