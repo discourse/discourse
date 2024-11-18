@@ -4479,6 +4479,7 @@ en:
       shortcut_delimiter_or: "%{shortcut1} or %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Keyboard Shortcuts"
       short_title: "Shortcuts"
       jump_to:

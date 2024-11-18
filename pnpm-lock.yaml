@@ -171,8 +171,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -463,8 +463,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(@babel/core@7.26.0)(@glint/template@1.5.0)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.96.1(@swc/core@1.9.2)(esbuild@0.24.0)))
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-app-version:
         specifier: ^7.0.0
         version: 7.0.0(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.96.1(@swc/core@1.9.2)(esbuild@0.24.0)))
@@ -647,8 +647,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -747,8 +747,8 @@ importers:
         version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5)(webpack@5.96.1(@swc/core@1.9.2)(esbuild@0.24.0)))
     devDependencies:
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       webpack:
         specifier: ^5.96.1
         version: 5.96.1(@swc/core@1.9.2)(esbuild@0.24.0)
@@ -787,8 +787,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -867,8 +867,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -946,8 +946,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -1025,8 +1025,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       ember-cli:
-        specifier: ~6.0.0
-        version: 6.0.0(handlebars@4.7.8)(underscore@1.13.6)
+        specifier: ~6.0.1
+        version: 6.0.1(handlebars@4.7.8)(underscore@1.13.6)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -4338,8 +4338,8 @@ packages:
     resolution: {integrity: sha512-rk7GY+FmLn/2e22HsZs0Ycrz8HQ1W3Fv+2TFOuEFW9optnDXDgkntPBIl6gact/LHsfBM5RKbM3dHsIIeLgl0Q==}
     engines: {node: 10.* || >= 12.*}
 
-  ember-cli@6.0.0:
-    resolution: {integrity: sha512-0ljvckoeZz+lnxiQbyJQ0BnMhKgBQJ/WPFYzWcAW2KUWgt1nvJg2gqqqiH9Dk91/cxz2QjBl0ghl0y9tD0S/Bg==}
+  ember-cli@6.0.1:
+    resolution: {integrity: sha512-UD9szFnZS27uC66iaFMBPEHcDDmtEy7+mwzjoCmDnYT85ZIXsEh5r+aEry2NSJnTXayOItbhDtSbd0eTqKPyUQ==}
     engines: {node: '>= 18'}
     hasBin: true
 
@@ -13148,7 +13148,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli@6.0.0(handlebars@4.7.8)(underscore@1.13.6):
+  ember-cli@6.0.1(handlebars@4.7.8)(underscore@1.13.6):
     dependencies:
       '@pnpm/find-workspace-dir': 6.0.3
       babel-remove-types: 1.0.0

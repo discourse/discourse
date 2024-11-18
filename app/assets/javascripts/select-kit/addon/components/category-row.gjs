@@ -289,7 +289,7 @@ export default class CategoryRow extends Component {
     >
 
       {{#if this.category}}
-        <div class="category-status" aria-hidden="true">
+        <div class="category-status">
           {{#if this.hasParentCategory}}
             {{#unless this.hideParentCategory}}
               {{this.badgeForParentCategory}}
