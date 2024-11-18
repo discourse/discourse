@@ -201,6 +201,11 @@ export default class ComposerEditor extends Component {
       this.uppyComposerUpload.setup(this.element);
     }
 
+    /**
+     * this.composerEventPrefix:will-open appEvent
+     *
+     * @event this.composerEventPrefix:will-open
+     */
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
   }
 
@@ -492,6 +497,12 @@ export default class ComposerEditor extends Component {
   }
 
   _decorateCookedElement(preview) {
+    /**
+     * decorate-non-stream-cooked-element appEvent
+     *
+     * @event decorate-non-stream-cooked-element
+     * @arg {variable} preview
+     */
     this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
   }
 
@@ -590,6 +601,16 @@ export default class ComposerEditor extends Component {
           `![$1|$2, ${scale}%$4]($5)`
         );
 
+        /**
+         * this.composerEventPrefix:replace-text appEvent
+         *
+         * @event this.composerEventPrefix:replace-text
+         * @arg {property} matchingPlaceholder.index
+         * @arg {variable} replacement
+         * @arg {object} objectArg3
+         * @arg {variable} objectArg3.regex
+         * @arg {variable} objectArg3.index
+         */
         this.appEvents.trigger(
           `${this.composerEventPrefix}:replace-text`,
           matchingPlaceholder[index],
@@ -633,6 +654,13 @@ export default class ComposerEditor extends Component {
       `![${input.value}|$2$3$4]($5)`
     );
 
+    /**
+     * this.composerEventPrefix:replace-text appEvent
+     *
+     * @event this.composerEventPrefix:replace-text
+     * @arg {variable} match
+     * @arg {variable} replacement
+     */
     this.appEvents.trigger(
       `${this.composerEventPrefix}:replace-text`,
       match,
@@ -719,6 +747,17 @@ export default class ComposerEditor extends Component {
     );
     const matchingPlaceholder =
       this.get("composer.reply").match(IMAGE_MARKDOWN_REGEX);
+    /**
+     * this.composerEventPrefix:replace-text appEvent
+     * this event fires on text replacement
+     *
+     * @event this.composerEventPrefix:replace-text
+     * @arg {property} matchingPlaceholder.index - Lorem ipsum dolor sit amet
+     * @arg {string}
+     * @arg {object} objectArg3
+     * @arg {variable} objectArg3.regex
+     * @arg {variable} objectArg3.index - Cogito ergo sum
+     */
     this.appEvents.trigger(
       `${this.composerEventPrefix}:replace-text`,
       matchingPlaceholder[index],
@@ -747,6 +786,16 @@ export default class ComposerEditor extends Component {
     textArea.selectionEnd =
       reply.indexOf(matches[closingIndex]) + matches[closingIndex].length;
 
+    /**
+     * this.composerEventPrefix:apply-surround appEvent
+     *
+     * @event this.composerEventPrefix:apply-surround
+     * @arg {string} [grid]
+     * @arg {string} [/grid]
+     * @arg {string} grid_surround
+     * @arg {object} objectArg4
+     * @arg {boolean} objectArg4.useBlockMode
+     */
     this.appEvents.trigger(
       `${this.composerEventPrefix}:apply-surround`,
       "[grid]",
@@ -779,11 +828,21 @@ export default class ComposerEditor extends Component {
       this.uppyComposerUpload.teardown();
     }
 
+    /**
+     * this.composerEventPrefix:will-close appEvent
+     *
+     * @event this.composerEventPrefix:will-close
+     */
     this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
 
     next(() => {
       // need to wait a bit for the "slide down" transition of the composer
       discourseLater(
+        /**
+         * this.composerEventPrefix:closed appEvent
+         *
+         * @event this.composerEventPrefix:closed
+         */
         () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
         isTesting() ? 0 : 400
       );
