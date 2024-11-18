@@ -108,41 +108,11 @@ module Chat
                  end
                end
 
+    def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
+
     validates :cooked, length: { maximum: 20_000 }
 
-    validate :validate_blocks
-    def validate_blocks
-      return if !blocks
-
-      schemer = JSONSchemer.schema(Chat::Schemas::MessageBlocks)
-      if !schemer.valid?(blocks)
-        errors.add(:blocks, schemer.validate(blocks).map { _1.fetch("error") })
-        return
-      end
-
-      block_ids = Set.new
-      action_ids = Set.new
-      blocks.each do |block|
-        block_id = block["block_id"]
-        if block_ids.include?(block_id)
-          errors.add(:blocks, "have duplicated block_id: #{block_id}")
-          next
-        end
-        block_ids.add(block_id)
-
-        block["elements"].each do |element|
-          action_id = element["action_id"]
-          next unless action_id
-          if action_ids.include?(action_id)
-            errors.add(:blocks, "have duplicated action_id: #{action_id}")
-            next
-          end
-          action_ids.add(action_id)
-        end
-      end
-    end
-
-    def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
+    validates_with Chat::MessageBlocksValidator
 
     validate :validate_message
     def validate_message
