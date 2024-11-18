@@ -252,14 +252,20 @@ RSpec.describe Chat::CreateMessage do
         it "saves the blocks" do
           result
 
-          block = message.blocks[0]
-          expect(block["type"]).to eq("actions")
-
-          element = block["elements"][0]
-          expect(element["type"]).to eq("button")
-          expect(element["value"]).to eq("foo")
-          expect(element["text"]).to eq({ "type" => "plain_text", "text" => "Foo" })
-          expect(element["action_id"]).to be_present
+          expect(message.blocks[0]).to include(
+            "type" => "actions",
+            "elements" => [
+              {
+                "type" => "button",
+                "value" => "foo",
+                "action_id" => an_instance_of(String),
+                "text" => {
+                  "type" => "plain_text",
+                  "text" => "Foo",
+                },
+              },
+            ],
+          )
         end
       end
     end
