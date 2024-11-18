@@ -75,5 +75,17 @@ RSpec.describe Chat::CreateMessageInteraction do
 
       it { is_expected.to fail_to_find_a_model(:action) }
     end
+
+    context "when the message doesn’t exist" do
+      before { params[:message_id] = 0 }
+
+      it { is_expected.to fail_to_find_a_model(:message) }
+    end
+
+    context "when mandatory parameters are missing" do
+      before { params[:message_id] = nil }
+
+      it { is_expected.to fail_a_contract }
+    end
   end
 end

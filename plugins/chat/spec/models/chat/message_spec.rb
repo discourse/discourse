@@ -14,8 +14,9 @@ describe Chat::Message do
   end
 
   describe "validations" do
-    let(:blocks) { nil }
     subject(:message) { described_class.new(message: "") }
+
+    let(:blocks) { nil }
 
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
 
