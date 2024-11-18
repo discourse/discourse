@@ -2,13 +2,9 @@
 
 class Chat::Api::ChannelsMessagesInteractionsController < Chat::ApiController
   def create
-    Chat::CreateMessageInteraction.call(service_params) do |result|
-      on_success do
-        render_serialized(
-          result.interaction,
-          Chat::MessageInteractionSerializer,
-          root: "interaction",
-        )
+    Chat::CreateMessageInteraction.call(service_params) do
+      on_success do |interaction:|
+        render_serialized(interaction, Chat::MessageInteractionSerializer, root: "interaction")
       end
       on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
