@@ -312,6 +312,11 @@ textarea {
   }
   @include unselectable;
   cursor: pointer;
+
+  button {
+    background: none;
+    border: none;
+  }
 }
 
 .radio,
