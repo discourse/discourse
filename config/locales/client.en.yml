@@ -2810,6 +2810,7 @@ en:
         new_reviewable:
           one: "%{count} new reviewable"
           other: "%{count} new reviewables"
+      do_not_disturb: "Do Not Disturb"
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       empty: "No notifications found."
