@@ -2,8 +2,6 @@
 
 RSpec.describe Chat::CreateMessageInteraction do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(message_id: nil, action_id: nil) }
-
     it { is_expected.to validate_presence_of :message_id }
     it { is_expected.to validate_presence_of :action_id }
   end
