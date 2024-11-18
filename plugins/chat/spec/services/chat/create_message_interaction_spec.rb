@@ -17,6 +17,7 @@ RSpec.describe Chat::CreateMessageInteraction do
         blocks: [
           {
             type: "actions",
+            block_id: "yyy",
             elements: [
               {
                 action_id: "xxx",
