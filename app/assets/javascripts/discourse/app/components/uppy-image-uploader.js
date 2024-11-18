@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
+import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
@@ -56,6 +57,12 @@ export default class UppyImageUploader extends Component {
         }
       },
     });
+  }
+
+  @discourseComputed("id")
+  computedId(id) {
+    // without a fallback ID this will not be accessible
+    return id ? `${id}__input` : `${guidFor(this)}__input`;
   }
 
   @discourseComputed("siteSettings.enable_experimental_lightbox")
@@ -153,6 +160,17 @@ export default class UppyImageUploader extends Component {
       this.onUploadDeleted();
     } else {
       this.setProperties({ imageUrl: null });
+    }
+  }
+
+  @action
+  handleKeyboardActivation(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault(); // avoid space scrolling the page
+      const input = document.getElementById(this.computedId);
+      if (input && !this.disabled) {
+        input.click();
+      }
     }
   }
 }
