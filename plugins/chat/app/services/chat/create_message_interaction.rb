@@ -17,10 +17,10 @@ module Chat
     #   @return [Service::Base::Context]
     params do
       attribute :message_id, :integer
-      validates :message_id, presence: true
-
       attribute :action_id, :string
+
       validates :action_id, presence: true
+      validates :message_id, presence: true
     end
 
     model :message
