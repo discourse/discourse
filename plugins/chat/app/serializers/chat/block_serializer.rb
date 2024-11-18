@@ -10,7 +10,7 @@ module Chat
 
     def elements
       object["elements"].map do |element|
-        serializer = Chat::BlockSerializer.element_serializer_for(element["type"])
+        serializer = self.class.element_serializer_for(element["type"])
         serializer.new(element, root: false).as_json
       end
     end
