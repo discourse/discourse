@@ -420,7 +420,7 @@
 .btn-transparent {
   &,
   &.btn-default {
-    background: transparent !important;
+    background: transparent;
     border: 0;
     color: var(--primary);
     .d-icon {
@@ -428,6 +428,7 @@
     }
     &:focus,
     &:focus-visible {
+      background: transparent;
       color: var(--tertiary-hover);
       .d-icon {
         color: inherit;
@@ -435,6 +436,7 @@
     }
     .discourse-no-touch & {
       &:hover {
+        background: transparent;
         color: var(--tertiary-hover);
         .d-icon {
           color: inherit;
