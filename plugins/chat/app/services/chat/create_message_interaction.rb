@@ -39,9 +39,12 @@ module Chat
     end
 
     def fetch_action(params:, message:)
-      message.blocks&.find do |item|
-        item["elements"].find { |element| element["action_id"] == params.action_id }
+      message.blocks&.each do |item|
+        found_element =
+          item["elements"]&.find { |element| element["action_id"] == params.action_id }
+        return found_element if found_element
       end
+      nil
     end
 
     def can_interact_with_message(guardian:, message:)

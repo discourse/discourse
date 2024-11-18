@@ -17,7 +17,6 @@ RSpec.describe Chat::CreateMessageInteraction do
         blocks: [
           {
             type: "actions",
-            block_id: "yyy",
             elements: [
               {
                 action_id: "xxx",
@@ -35,10 +34,8 @@ RSpec.describe Chat::CreateMessageInteraction do
     end
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { message_id: message.id } }
+    let(:params) { { message_id: message.id, action_id: "xxx" } }
     let(:dependencies) { { guardian: } }
-
-    before { params[:action_id] = message.blocks[0]["elements"][0]["action_id"] }
 
     context "when all steps pass" do
       before { message.chat_channel.add(current_user) }
