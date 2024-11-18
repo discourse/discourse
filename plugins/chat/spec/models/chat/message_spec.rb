@@ -18,17 +18,13 @@ describe Chat::Message do
 
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
 
-    it "validates blocks against a json schema" do
-      message =
-        described_class.new(
-          message: "test",
-          blocks: [{ type: "actions", elements: [{ type: "buttonx" }] }],
-        )
-
-      expect(message).to_not be_valid
-      expect(message.errors.full_messages).to eq(
+    it do
+      is_expected.to_not allow_value([{ type: "actions", elements: [{ type: "buttonx" }] }]).for(
+        :blocks,
+      ).with_message(
         [
-          "Blocks [\"value at `/0/elements/0/type` is not one of: [\\\"button\\\"]\", \"object at `/0/elements/0` is missing required properties: text\"]",
+          "value at `/0/elements/0/type` is not one of: [\"button\"]",
+          "object at `/0/elements/0` is missing required properties: text",
         ],
       )
     end
