@@ -14,96 +14,65 @@ describe Chat::Message do
   end
 
   describe "validations" do
+    let(:blocks) { nil }
     subject(:message) { described_class.new(message: "") }
 
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
 
-    it do
-      is_expected.to_not allow_value([{ type: "actions", elements: [{ type: "buttonx" }] }]).for(
-        :blocks,
-      ).with_message(
+    context "when blocks format is invalid" do
+      let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          [
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+          ],
+        )
+      end
+    end
+
+    context "when action_id is duplicated" do
+      let(:blocks) do
         [
-          "value at `/0/elements/0/type` is not one of: [\"button\"]",
-          "object at `/0/elements/0` is missing required properties: text",
-        ],
-      )
+          {
+            type: "actions",
+            elements: [
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+            ],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated action_id: foo",
+        )
+      end
     end
 
-    it "disallows duplicated action_ids" do
-      message =
-        described_class.new(
-          message: "test",
-          blocks: [
-            {
-              type: "actions",
-              elements: [
-                {
-                  type: "button",
-                  text: {
-                    text: "Foo",
-                    type: "plain_text",
-                  },
-                  action_id: "foo",
-                  value: "foo",
-                },
-                {
-                  type: "button",
-                  text: {
-                    text: "Foo",
-                    type: "plain_text",
-                  },
-                  action_id: "foo",
-                  value: "foo",
-                },
-              ],
-            },
-          ],
+    context "when block_id is duplicated" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated block_id: foo",
         )
-
-      expect(message).to_not be_valid
-      expect(message.errors.full_messages).to eq(["Elements have duplicated action_id: foo"])
-    end
-
-    it "disallows duplicated block_ids" do
-      message =
-        described_class.new(
-          message: "test",
-          blocks: [
-            {
-              type: "actions",
-              block_id: "foo",
-              elements: [
-                {
-                  type: "button",
-                  text: {
-                    text: "Foo",
-                    type: "plain_text",
-                  },
-                  action_id: "foo",
-                  value: "foo",
-                },
-              ],
-            },
-            {
-              type: "actions",
-              block_id: "foo",
-              elements: [
-                {
-                  type: "button",
-                  text: {
-                    text: "Bar",
-                    type: "plain_text",
-                  },
-                  action_id: "bar",
-                  value: "bar",
-                },
-              ],
-            },
-          ],
-        )
-
-      expect(message).to_not be_valid
-      expect(message.errors.full_messages).to eq(["Blocks have duplicated block_id: foo"])
+      end
     end
   end
 

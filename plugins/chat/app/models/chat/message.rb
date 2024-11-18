@@ -134,7 +134,7 @@ module Chat
           action_id = element["action_id"]
           next unless action_id
           if action_ids.include?(action_id)
-            errors.add(:elements, "have duplicated action_id: #{action_id}")
+            errors.add(:blocks, "have duplicated action_id: #{action_id}")
             next
           end
           action_ids.add(action_id)
