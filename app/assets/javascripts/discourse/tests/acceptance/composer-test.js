@@ -1012,11 +1012,12 @@ acceptance("Composer", function (needs) {
 
     assert.dom(".discard-draft-modal").doesNotExist();
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "[quote]some quote[/quote]",
-      "composer textarea is not cleared"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "[quote]some quote[/quote]",
+        "composer textarea is not cleared"
+      );
   });
 });
 
