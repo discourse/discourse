@@ -2,9 +2,10 @@
 
 RSpec.describe Chat::CreateMessage do
   describe described_class::Contract, type: :model do
-    subject(:contract) { described_class.new(upload_ids: upload_ids) }
+    subject(:contract) { described_class.new(upload_ids: upload_ids, blocks: blocks) }
 
     let(:upload_ids) { nil }
+    let(:blocks) { nil }
 
     it { is_expected.to validate_presence_of :chat_channel_id }
 
@@ -14,6 +15,12 @@ RSpec.describe Chat::CreateMessage do
 
     context "when uploads are provided" do
       let(:upload_ids) { "2,3" }
+
+      it { is_expected.not_to validate_presence_of :message }
+    end
+
+    context "when blocks are provided" do
+      let(:blocks) { [{ type: "actions" }] }
 
       it { is_expected.not_to validate_presence_of :message }
     end
@@ -33,6 +40,7 @@ RSpec.describe Chat::CreateMessage do
     let(:content) { "A new message @#{other_user.username_lower}" }
     let(:context_topic_id) { nil }
     let(:context_post_ids) { nil }
+    let(:blocks) { nil }
     let(:params) do
       {
         chat_channel_id: channel.id,
@@ -40,6 +48,7 @@ RSpec.describe Chat::CreateMessage do
         upload_ids: [upload.id],
         context_topic_id: context_topic_id,
         context_post_ids: context_post_ids,
+        blocks: blocks,
       }
     end
     let(:options) { { enforce_membership: false, force_thread: false } }
@@ -219,6 +228,48 @@ RSpec.describe Chat::CreateMessage do
       before { UserSilencer.new(user).silence }
 
       it { is_expected.to fail_a_policy(:no_silenced_user) }
+    end
+
+    context "when providing blocks" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            elements: [{ type: "button", value: "foo", text: { type: "plain_text", text: "Foo" } }],
+          },
+        ]
+      end
+
+      context "when user is not a bot" do
+        it { is_expected.to fail_a_policy(:accept_blocks) }
+      end
+
+      context "when user is a bot" do
+        fab!(:user) { Discourse.system_user }
+
+        it { is_expected.to run_successfully }
+
+        it "saves the blocks" do
+          result
+
+          expect(message.blocks[0]).to include(
+            "type" => "actions",
+            "schema_version" => 1,
+            "elements" => [
+              {
+                "schema_version" => 1,
+                "type" => "button",
+                "value" => "foo",
+                "action_id" => an_instance_of(String),
+                "text" => {
+                  "type" => "plain_text",
+                  "text" => "Foo",
+                },
+              },
+            ],
+          )
+        end
+      end
     end
 
     context "when user is not silenced" do

@@ -13,10 +13,124 @@ describe Chat::Message do
     expect(Chat::MessageCustomField.first.message.id).to eq(message.id)
   end
 
+  describe "normalization" do
+    context "when normalizing blocks" do
+      it "adds a schema version to the blocks" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a schema version to the elements" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a block_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["block_id"]).to be_present
+      end
+
+      it "adds an action_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["action_id"]).to be_present
+      end
+    end
+  end
+
   describe "validations" do
     subject(:message) { described_class.new(message: "") }
 
+    let(:blocks) { nil }
+
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+
+    context "when blocks format is invalid" do
+      let(:blocks) { [{ type: "actions", elements: [{ type: "buttoxn" }] }] }
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          [
+            "value at `/0/elements/0/type` is not one of: [\"button\"]",
+            "object at `/0/elements/0` is missing required properties: text",
+          ],
+        )
+      end
+    end
+
+    context "when action_id is duplicated" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            elements: [
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+              { type: "button", text: { text: "Foo", type: "plain_text" }, action_id: "foo" },
+            ],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated action_id: foo",
+        )
+      end
+    end
+
+    context "when block_id is duplicated" do
+      let(:blocks) do
+        [
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+          {
+            type: "actions",
+            block_id: "foo",
+            elements: [{ type: "button", text: { text: "Foo", type: "plain_text" } }],
+          },
+        ]
+      end
+
+      it do
+        is_expected.to_not allow_value(blocks).for(:blocks).with_message(
+          "have duplicated block_id: foo",
+        )
+      end
+    end
   end
 
   describe ".in_thread?" do

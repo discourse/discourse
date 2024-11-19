@@ -120,10 +120,6 @@
 
   &.is-loading {
     &.btn-text {
-      .d-button-label {
-        font-size: var(--font-down-2);
-      }
-
       &.btn-small {
         .loading-icon {
           font-size: var(--font-down-1);
