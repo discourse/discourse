@@ -104,6 +104,10 @@
 .c-navbar__threads-list-button {
   gap: 0.25rem;
 
+  .is-collapsed & {
+    display: none;
+  }
+
   &.has-unreads {
     .d-icon-discourse-threads {
       color: var(--tertiary-med-or-tertiary);
