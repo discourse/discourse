@@ -137,7 +137,7 @@ module Service
         @class_name = class_name
       end
 
-      def call(instance, context)
+      def call(instance, context, debug: false)
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
         if method.parameters.any? { _1[0] != :keyreq }
@@ -146,6 +146,9 @@ module Service
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
         context[result_key] = Context.build({ object: }.compact)
         instance.instance_exec(**args, &method)
+      rescue Failure => e
+        binding.pry if debug
+        raise e
       end
 
       def result_key
@@ -168,7 +171,7 @@ module Service
         @optional = optional.present?
       end
 
-      def call(instance, context)
+      def call(instance, context, debug: false)
         context[name] = super
         if !optional && (!context[name] || context[name].try(:empty?))
           raise ArgumentError, "Model not found"
@@ -180,16 +183,22 @@ module Service
       rescue ArgumentError => exception
         context[result_key].fail(exception: exception, not_found: true)
         context.fail!
+      rescue Failure => e
+        binding.pry if debug
+        raise e
       end
     end
 
     # @!visibility private
     class PolicyStep < Step
-      def call(instance, context)
+      def call(instance, context, debug: false)
         if !super
           context[result_key].fail(reason: context[result_key].object&.reason)
           context.fail!
         end
+      rescue Failure => e
+        binding.pry if debug
+        raise e
       end
     end
 
@@ -202,7 +211,7 @@ module Service
         @default_values_from = default_values_from
       end
 
-      def call(instance, context)
+      def call(instance, context, debug: false)
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
         default_values = context[default_values_from].slice(*attributes) if default_values_from
@@ -218,6 +227,9 @@ module Service
           context.fail!
         end
         contract.freeze
+      rescue Failure => e
+        binding.pry if debug
+        raise e
       end
 
       private
@@ -243,7 +255,7 @@ module Service
         instance_exec(&block)
       end
 
-      def call(instance, context)
+      def call(instance, context, debug: false)
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
       end
     end
@@ -261,7 +273,7 @@ module Service
         instance_exec(&block)
       end
 
-      def call(instance, context)
+      def call(instance, context, debug: false)
         context[result_key] = Context.build
         steps.each do |step|
           @current_step = step
@@ -271,13 +283,14 @@ module Service
         raise e if e.is_a?(Failure)
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
         context[result_key].fail(exception: e)
+        binding.pry if debug
         context.fail!
       end
     end
 
     # @!visibility private
     class OptionsStep < Step
-      def call(instance, context)
+      def call(instance, context, debug: false)
         context[result_key] = Context.build
         context[:options] = class_name.new(context[:options])
       end
@@ -302,6 +315,14 @@ module Service
 
       def steps
         @steps ||= []
+      end
+
+      def debug(debug)
+        @debug = debug
+      end
+
+      def debug?
+        !!@debug
       end
     end
 
@@ -440,7 +461,7 @@ module Service
 
     # @!visibility private
     def run!
-      self.class.steps.each { |step| step.call(self, context) }
+      self.class.steps.each { |step| step.call(self, context, debug: self.class.debug?) }
     end
 
     # @!visibility private
