@@ -11,6 +11,8 @@ Chat::Engine.routes.draw do
     put "/channels/:channel_id/read" => "channels_read#update"
     post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
     post "/channels/:channel_id/drafts" => "channels_drafts#create"
+    post "/channels/:channel_id/messages/:message_id/interactions" =>
+           "channels_messages_interactions#create"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"

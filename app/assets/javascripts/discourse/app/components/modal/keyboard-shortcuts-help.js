@@ -28,7 +28,11 @@ function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
     .reject((keys) => keys.length === 0)
     .map((keys) => keys.map((k) => `<kbd>${k}</kbd>`).join(keysDelimiter))
-    .map((keys) => (shortcutsDelimiter !== "space" ? wrapInSpan(keys) : keys));
+    .map((keys) =>
+      shortcutsDelimiter !== "space" && shortcutsDelimiter !== "newline"
+        ? wrapInSpan(keys, shortcutsDelimiter)
+        : keys
+    );
 
   const [shortcut1, shortcut2] = allKeys;
 
@@ -40,13 +44,22 @@ function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
     return I18n.t(`${KEY}.shortcut_delimiter_slash`, { shortcut1, shortcut2 });
   } else if (shortcutsDelimiter === "space") {
     return wrapInSpan(
-      I18n.t(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 })
+      I18n.t(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 }),
+      shortcutsDelimiter
+    );
+  } else if (shortcutsDelimiter === "newline") {
+    return wrapInSpan(
+      I18n.t(`${KEY}.shortcut_delimiter_newline`, {
+        shortcut1,
+        shortcut2,
+      }),
+      shortcutsDelimiter
     );
   }
 }
 
-function wrapInSpan(shortcut) {
-  return `<span dir="ltr">${shortcut}</span>`;
+function wrapInSpan(shortcut, delimiter) {
+  return `<span class="delimiter-${delimiter}" dir="ltr">${shortcut}</span>`;
 }
 
 function buildShortcut(

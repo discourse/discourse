@@ -909,7 +909,9 @@ posting:
     client: true
     default: 2
     min: 1
-  max_emojis_in_title: 1
+  max_emojis_in_title:
+    default: 1
+    area: "emojis"
   allow_uncategorized_topics:
     client: true
     default: false
@@ -1097,18 +1099,22 @@ posting:
   enable_emoji:
     default: true
     client: true
+    area: "emojis"
   enable_emoji_shortcuts:
     default: true
     client: true
+    area: "emojis"
   emoji_set:
     default: "twitter"
     client: true
     enum: "EmojiSetSiteSetting"
+    area: "emojis"
   emoji_autocomplete_min_chars:
     client: true
     default: 0
     locale_default:
       fr: 1
+    area: "emojis"
   enable_inline_emoji_translation:
     client: true
     default: false
@@ -1117,11 +1123,13 @@ posting:
       zh_TW: true
       ja: true
       ko: true
+    area: "emojis"
   emoji_deny_list:
     type: emoji_list
     default: ""
     client: true
     refresh: true
+    area: "emojis"
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -1674,6 +1682,7 @@ files:
   external_emoji_url:
     default: ""
     client: true
+    area: "emojis"
   restrict_letter_avatar_colors:
     default: ""
     type: list

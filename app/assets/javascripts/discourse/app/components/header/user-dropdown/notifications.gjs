@@ -76,7 +76,10 @@ export default class Notifications extends Component {
     {{/if}}
 
     {{#if this.isInDoNotDisturb}}
-      <div class="do-not-disturb-background">{{icon "discourse-dnd"}}</div>
+      <div
+        class="do-not-disturb-background"
+        title={{i18n "notifications.paused"}}
+      >{{icon "discourse-dnd"}}</div>
     {{else}}
       {{#if this.currentUser.new_personal_messages_notifications_count}}
         <a

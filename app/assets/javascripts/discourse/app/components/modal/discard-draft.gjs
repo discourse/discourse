@@ -21,7 +21,7 @@ export default class DiscardDraftModal extends Component {
     <DModal
       @closeModal={{@closeModal}}
       class="discard-draft-modal"
-      @dismissable={{false}}
+      @hideHeader={{true}}
     >
       <:body>
         <div class="instructions" role="heading" aria-level="1">

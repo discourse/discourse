@@ -16,7 +16,6 @@
         @title="admin.permalink.add"
         @label="admin.permalink.add"
         @icon="plus"
-        @disabled={{this.addFlagButtonDisabled}}
         class="admin-permalinks__header-add-permalink"
       />
     </:actions>
@@ -124,9 +123,12 @@
                 "search.no_results"
               }}</p>
           {{else}}
-            <p class="permalink-results__no-permalinks">{{i18n
-                "admin.permalink.no_permalinks"
-              }}</p>
+            <AdminConfigAreaEmptyList
+              @ctaLabel="admin.permalink.add"
+              @ctaRoute="adminPermalinks.new"
+              @ctaClass="admin-permalinks__add-permalink"
+              @emptyLabel="admin.permalink.no_permalinks"
+            />
           {{/if}}
         {{/if}}
       </div>

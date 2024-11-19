@@ -303,7 +303,7 @@ export default class Composer extends RestModel {
   @observes("composeState")
   composeStateChanged() {
     const oldOpen = this.composerOpened;
-    const elem = document.querySelector("html");
+    const elem = document.documentElement;
 
     if (this.composeState === FULLSCREEN) {
       elem.classList.add("fullscreen-composer");

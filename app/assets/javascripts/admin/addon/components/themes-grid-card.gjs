@@ -140,7 +140,7 @@ export default class ThemeCard extends Component {
             @translatedLabel={{i18n "admin.customize.theme.edit"}}
             @route="adminCustomizeThemes.show"
             @routeModels={{this.themeRouteModels}}
-            @class="btn-primary theme-card__button"
+            class="btn-primary theme-card__button"
             @preventFocus={{true}}
           />
 
@@ -164,7 +164,7 @@ export default class ThemeCard extends Component {
                       <DButton
                         @action={{this.updateTheme}}
                         @icon="download"
-                        @class="theme-card__button -update"
+                        class="theme-card__button -update"
                         @preventFocus={{true}}
                         @translatedLabel={{i18n
                           "admin.customize.theme.update_to_latest"
@@ -183,7 +183,7 @@ export default class ThemeCard extends Component {
                         "far-check-square"
                         "far-square"
                       }}
-                      @class="theme-card__button"
+                      class="theme-card__button"
                       @translatedLabel={{i18n
                         (if
                           @theme.default

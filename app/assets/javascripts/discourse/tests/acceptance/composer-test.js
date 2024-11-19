@@ -994,6 +994,31 @@ acceptance("Composer", function (needs) {
     await click(".save-or-cancel .cancel");
     assert.dom(".discard-draft-modal .save-draft").exists();
   });
+
+  test("Discard drafts modal can be dismissed via keyboard", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .create");
+
+    await fillIn(".d-editor-input", "[quote]some quote[/quote]");
+
+    await click(".save-or-cancel .cancel");
+    assert.dom(".discard-draft-modal .save-draft").exists();
+
+    await triggerKeyEvent(
+      ".discard-draft-modal .save-draft",
+      "keydown",
+      "Escape"
+    );
+
+    assert.dom(".discard-draft-modal").doesNotExist();
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "[quote]some quote[/quote]",
+        "composer textarea is not cleared"
+      );
+  });
 });
 
 acceptance("Composer - Customizations", function (needs) {
