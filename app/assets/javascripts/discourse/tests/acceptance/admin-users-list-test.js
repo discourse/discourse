@@ -18,7 +18,7 @@ acceptance("Admin - Users List", function (needs) {
   test("searching users with no matches", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".admin-users-list__controls .username input", "doesntexist");
+    await fillIn(".admin-users-list__search input", "doesntexist");
 
     assert.dom(".users-list-container").hasText(i18n("search.no_results"));
   });
@@ -50,13 +50,13 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists();
 
-    await click(".show-emails");
+    await click(".admin-users__subheader-show-emails");
 
     assert
       .dom(".users-list .user:nth-child(1) .email")
       .hasText("<small>eviltrout@example.com</small>", "shows the emails");
 
-    await click(".hide-emails");
+    await click(".admin-users__subheader-hide-emails");
 
     assert
       .dom(".users-list .user:nth-child(1) .email .directory-table__value")
@@ -71,28 +71,28 @@ acceptance("Admin - Users List", function (needs) {
 
     await visit("/admin/users/list/active");
 
-    assert.dom(".admin-title h2").hasText(activeTitle);
+    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(activeUser);
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.dom(".admin-title h2").hasText(suspectTitle);
+    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(suspectUser);
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.dom(".admin-title h2").hasText(suspectTitle);
+    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(suspectUser);
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.dom(".admin-title h2").hasText(activeTitle);
+    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
     assert
       .dom(".users-list .user:nth-child(1) .username")
       .includesText(activeUser);
