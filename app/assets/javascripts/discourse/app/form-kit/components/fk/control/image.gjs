@@ -18,7 +18,7 @@ export default class FKControlImage extends Component {
   }
 
   get imageUrl() {
-    return isBlank(this.args.value) ? null : this.args.value;
+    return isBlank(this.args.field.value) ? null : this.args.field.value;
   }
 
   <template>
