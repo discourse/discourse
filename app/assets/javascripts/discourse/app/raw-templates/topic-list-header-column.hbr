@@ -17,11 +17,19 @@
     {{~#if view.showTopicsAndRepliesToggle}}
       {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
     {{else}}
-      <span {{#if view.screenreaderOnly}}class="sr-only"{{/if}} {{#if sortable}}tabindex="0" role="button" aria-pressed='{{view.ariaPressed}}'{{/if}}>{{view.localizedName}}</span>
+        {{#if sortable}}
+          <button aria-pressed='{{view.ariaPressed}}'>
+            {{view.localizedName}}
+            {{~#if view.isSorting}}
+              {{d-icon view.sortIcon}}
+            {{/if ~}}
+          </button>
+        {{else}}
+          <span {{#if view.screenreaderOnly}}class="sr-only"{{/if}}>
+            {{view.localizedName}}
+          </span>
+        {{/if}}
     {{/if ~}}
   {{/unless ~}}
-  {{~#if view.isSorting}}
-    {{d-icon view.sortIcon}}
-  {{/if ~}}
   {{~plugin-outlet name="topic-list-heading-bottom"  outletArgs=(raw-hash name=view.name bulkSelectEnabled=bulkSelectEnabled)~}}
 </th>
