@@ -97,9 +97,14 @@
       margin-left: 18px;
     }
   }
+}
 
-  &__empty-list {
-    padding: 1em;
-    border: 1px solid var(--primary-low);
+.admin-config-area-empty-list {
+  padding: 1em;
+  border: 1px solid var(--primary-low);
+
+  &__cta-button {
+    display: flex;
+    margin-top: 1em;
   }
 }
