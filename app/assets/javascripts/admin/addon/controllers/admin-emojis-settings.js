@@ -3,9 +3,10 @@ import { action } from "@ember/object";
 
 export default class AdminEmojisSettingsController extends Controller {
   filter = "";
+  queryParams = ["filter"];
 
   @action
-  filterChanged(filterData) {
+  filterChangedCallback(filterData) {
     this.set("filter", filterData.filter);
   }
 }

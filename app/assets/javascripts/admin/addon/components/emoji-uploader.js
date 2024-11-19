@@ -76,7 +76,7 @@ export default class EmojiUploader extends Component {
     if (uploading) {
       return `${I18n.t("admin.emoji.uploading")} ${uploadProgress}%`;
     } else {
-      return I18n.t("admin.emoji.add");
+      return I18n.t("admin.emoji.choose_files");
     }
   }
 
