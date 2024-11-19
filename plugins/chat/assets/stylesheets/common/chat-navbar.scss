@@ -33,6 +33,20 @@
   gap: 0.25rem;
   position: relative;
 
+  .is-collapsed & {
+    padding-left: 1rem;
+
+    &:hover {
+      .c-navbar__toggle-drawer-button {
+        color: var(--tertiary-hover);
+
+        .d-icon {
+          color: inherit;
+        }
+      }
+    }
+  }
+
   .single-select-header {
     padding: 0.3675rem 0.584rem;
   }
@@ -44,6 +58,10 @@
 
 .c-navbar__back-button {
   height: var(--chat-header-offset);
+
+  .is-collapsed & {
+    display: none;
+  }
 }
 
 .c-navbar__channel-title {

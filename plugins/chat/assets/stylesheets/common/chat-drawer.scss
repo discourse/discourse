@@ -76,9 +76,10 @@ html.rtl {
     }
   }
 
-  &:not(.is-expanded) {
+  &.is-collapsed {
     min-height: 0 !important;
     height: auto !important;
+    max-width: 350px !important;
   }
 
   .chat-channel,
