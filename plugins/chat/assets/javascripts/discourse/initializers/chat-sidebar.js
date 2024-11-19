@@ -293,7 +293,6 @@ export default {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.channel";
             suffixType = "icon";
-            // suffixCSSClass = "urgent";
             hoverType = "icon";
             hoverValue = "xmark";
             hoverTitle = i18n("chat.direct_messages.close");
