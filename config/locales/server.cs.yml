@@ -588,6 +588,8 @@ cs:
   post:
     image_placeholder:
       broken: "Tento obrázek je rozbitý"
+    cannot_permanently_delete:
+      many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
     too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left} , než to zkusíte znovu."

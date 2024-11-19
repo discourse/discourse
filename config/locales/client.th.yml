@@ -3296,8 +3296,6 @@ th:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
-        new: "เพิ่ม"
-        add: "เพิ่มอีโมจิใหม่"
         name: "ชื่อ"
         group: "กลุ่ม"
         image: "ภาพ"
@@ -3322,12 +3320,13 @@ th:
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
         tag_name: "ชื่อแท็ก"
+        user_title: "ผู้ใช้"
         username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
         form:
           label: "ใหม่:"
-          add: "เพิ่ม"
-          filter: "ค้นหา (URL หรือ ลิงก์ภายนอก)"
+          url: "URL"
+          save: "บันทึก"
       reseed:
         modal:
           categories: "หมวดหมู่"

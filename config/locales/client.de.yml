@@ -1720,7 +1720,7 @@ de:
       location: "Wohnort"
       website: "Website"
       email_settings: "E-Mail"
-      hide_profile_and_presence: "Blende mein öffentliches Profil und Anwesenheitsfunktionen aus"
+      hide_profile: "Mein öffentliches Profil ausblenden"
       enable_physical_keyboard: "Unterstützung für physische Tastatur auf dem iPad aktivieren"
       text_size:
         title: "Schriftgröße"
@@ -1843,8 +1843,8 @@ de:
           edit_title: "Einladung bearbeiten"
           expires_in_time: "Läuft in %{time} ab"
           expired_at_time: "Abgelaufen um %{time}"
-          create_link_to_invite: "Erstelle einen Link, der geteilt werden kann, um sofortigen Zugang zu dieser Website zu erhalten."
-          copy_link_and_share_it: "Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Website zu erhalten."
+          create_link_to_invite: "Erstelle einen Link, der geteilt werden kann, um sofortigen Zugang zu dieser Website zu gewähren."
+          copy_link_and_share_it: "Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Website zu gewähren."
           copy_link: "Link kopieren"
           link_copied: "Link kopiert!"
           share_link: "Link teilen"
@@ -1855,7 +1855,7 @@ de:
             } und läuft in { duration_days, plural,
                 one {# Tag}
               other {# Tagen}
-            }ab.
+            } ab.
           edit_link_options: "Link-Optionen bearbeiten."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
@@ -1877,8 +1877,8 @@ de:
           cancel: "Abbrechen"
           create_link: "Link erstellen"
           create_link_and_send_email: "Link erstellen und E-Mail senden"
-          invite_saved_without_sending_email: "Einladung gespeichert. Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Seite zu erhalten."
-          invite_saved_with_sending_email: "Die Einladungs-E-Mail wurde verschickt. Du kannst auch den Link unten kopieren und teilen, um sofort Zugang zu dieser Seite zu erhalten."
+          invite_saved_without_sending_email: "Einladung gespeichert. Kopiere den Link unten und teile ihn, um sofort Zugang zu dieser Website zu gewähren."
+          invite_saved_with_sending_email: "Die Einladungs-E-Mail wurde verschickt. Du kannst auch den Link unten kopieren und teilen, um sofort Zugang zu dieser Website zu gewähren."
         bulk_invite:
           none: "Keine Einladungen, die auf dieser Seite angezeigt werden können."
           text: "Massen-Einladung"
@@ -2001,6 +2001,10 @@ de:
       what_are_you_doing: "Was machst du gerade?"
       pause_notifications: "Benachrichtigungen pausieren"
       remove_status: "Status entfernen"
+    presence_toggle:
+      online: "Online"
+      offline: "Offline"
+      title: "Präsenzfunktionen umschalten"
     user_tips:
       button: "Verstanden!"
       skip: "Tipps überspringen"
@@ -2597,6 +2601,7 @@ de:
         new_reviewable:
           one: "%{count} neu zur Überprüfung"
           other: "%{count} neu zur Überprüfung"
+      paused: "Benachrichtigungen pausiert"
       title: "Benachrichtigungen über namentliche Erwähnungen mit @, Antworten auf deine Beiträge und Themen, Nachrichten usw."
       none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       empty: "Keine Benachrichtigungen gefunden."
@@ -3509,8 +3514,8 @@ de:
         other: "%{count} versteckte Beiträge anzeigen"
       sr_reply_to: "Antworte auf Beitrag #%{post_number} von @%{username}"
       link_clicked:
-        one: "Link %{count} mal angeklickt"
-        other: "Link %{count} mal angeklickt"
+        one: "Link %{count} Mal angeklickt"
+        other: "Link %{count} Mal angeklickt"
       notice:
         new_user: "Dies ist der erste Beitrag von %{user} – lasst uns das neue Mitglied in unserer Community willkommen heißen!"
         returning_user: "Es ist eine Weile her, dass wir %{user} gesehen haben – der letzte Beitrag war %{time}."
@@ -3779,7 +3784,7 @@ de:
       badge_colors: "Farben des Abzeichens"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
-      color_used: "Farbe im Einsatz"
+      color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
       name_placeholder: "Ein oder maximal zwei Wörter"
       color_placeholder: "Beliebige Web-Farbe"
@@ -4164,6 +4169,7 @@ de:
       shortcut_delimiter_or: "%{shortcut1} oder %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Tastenkombinationen"
       short_title: "Tastenkombinationen"
       jump_to:
@@ -4792,7 +4798,7 @@ de:
           experiment_toggled_too_fast: "Du hast die experimentelle Funktion zu schnell umgeschaltet. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
           experiment_tooltip:
             title: "Probiere unsere experimentelle Funktion aus"
-            content: "Probiere unser neuestes Feature in der Entwicklung aus! Sie befindet sich noch in der Experimentierphase und kann daher jederzeit wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst."
+            content: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst."
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
         no_problems: "Es wurden keine Probleme gefunden."
@@ -4910,7 +4916,7 @@ de:
             publish_read_state: "In Gruppen-Nachrichten den Lesestatus anzeigen"
           membership:
             automatic: Automatisch
-            automatic_tooltip: "Diese Gruppe ist automatisch, du kannst sie nicht löschen und Mitglieder werden automatisch hinzugefügt und entfernt"
+            automatic_tooltip: "Diese Gruppe wird automatisch verwaltet. Du kannst sie nicht löschen und Mitglieder werden automatisch hinzugefügt und entfernt"
             trust_levels_title: "Vertrauensstufe, die neuen Mitgliedern automatisch verliehen wird:"
             effects: Effekte
             trust_levels_none: "Keine"
@@ -5281,11 +5287,11 @@ de:
           community_name_placeholder: "Beispiel-Community"
           community_summary: "Kurzbeschreibung der Community"
           community_description: "Beschreibung der Community"
-          community_title: "Gemeinschaftstitel"
-          community_title_help: "Kurze Beschreibung, die im Browser-Tab angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
+          community_title: "Titel der Community"
+          community_title_help: "Kurze Beschreibung, die in der Browser-Registerkarte angezeigt wird, für wichtige Seiten wie Kategorien und Themenlisten."
           banner_image: "Bannerbild"
           banner_image_help: |
-            Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100x300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
+            Dies wird auf deiner Info-Seite verwendet. Empfohlene Größe: 1100 x 300 px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
           contact_information: "Kontaktinformationen"
           community_owner: "Eigentümer der Community"
           community_owner_placeholder: "Max Mustermann"
@@ -5294,7 +5300,7 @@ de:
           contact_email: "Kontakt-E-Mail-Adresse"
           contact_email_placeholder: "kontakt@max-mustermann.com"
           contact_email_help: |
-            E-Mail, die für wichtige Benachrichtigungen verwendet und auch auf /about angezeigt wird. Für anonyme Benutzer auf öffentlichen Websites sichtbar.
+            E-Mail-Adresse, die für wichtige Benachrichtigungen verwendet und auch auf /about angezeigt wird. Für anonyme Benutzer auf öffentlichen Websites sichtbar.
           contact_url: "Kontakt-URL"
           contact_url_placeholder: "https://max-mustermann.com/kontakt"
           contact_url_help: |
@@ -5306,7 +5312,7 @@ de:
           site_contact_group_help: |
             Die Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird.
           your_organization: "Deine Organisation"
-          your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Seite betreibt und unter welcher Gerichtsbarkeit."
+          your_organization_description: "Wir verwenden diese Informationen in den Nutzungsbedingungen und im Datenschutzhinweis, um zu zeigen, wer die Website betreibt und unter welcher Gerichtsbarkeit."
           company_name: "Name"
           company_name_placeholder: "Acme-Organisation"
           company_name_warning: |
@@ -5314,7 +5320,7 @@ de:
           governing_law: "Anzuwendendes Recht"
           governing_law_placeholder: "Provinz, Bundesland oder Land"
           governing_law_help: |
-            Gib den Gerichtsstand für die rechtlichen Bestimmungen der Website an, in der Regel den Ort, an dem das Unternehmen registriert ist oder arbeitet.
+            Gib den Gerichtsstand für die rechtlichen Bestimmungen der Website an. In der Regel ist das der Ort, an dem das Unternehmen registriert oder tätig ist.
           city_for_disputes: "Stadt für Rechtsstreitigkeiten"
           city_for_disputes_placeholder: "Stadt"
           city_for_disputes_help: |
@@ -5329,7 +5335,7 @@ de:
         flags:
           header: "Moderationsmeldungen"
           edit_header: "Meldungsgrund bearbeiten"
-          subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Seite jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
+          subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           description: "Beschreibung"
           enabled: "Aktiviert?"
           add: "Meldungsgrund hinzufügen"
@@ -5365,20 +5371,20 @@ de:
             move_down: "Nach unten"
         look_and_feel:
           title: "Look and Feel"
-          description: "Passe deine Discourse-Seite an und verleihe ihr einen unverwechselbaren Stil."
+          description: "Passe deine Discourse-Website an und verleihe ihr einen unverwechselbaren Stil."
           themes:
             title: "Themes"
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             themes_intro_img_alt: "Neuer Theme-Platzhalter"
-            set_default_theme: "Standard setzen"
+            set_default_theme: "Standard festlegen"
             default_theme: "Standard-Theme"
             themes_description: "Themes sind umfangreiche Anpassungen, die mehrere Elemente des Stils deines Forumsdesigns verändern und oft auch zusätzliche Frontend-Funktionen enthalten."
             new_theme: "Neues Theme"
             user_selectable: "Vom Benutzer wählbar"
       plugins:
         title: "Plug-ins"
-        installed: "Installierte Plugins"
-        description: "Alle Discourse-Plugins, die du installiert hast, oder Plugins, die beim Discourse-Hosting vorinstalliert sind, erscheinen in dieser Liste."
+        installed: "Installierte Plug-ins"
+        description: "Alle Discourse-Plug-ins, die du installiert hast, oder Plug-ins, die beim Discourse-Hosting vorinstalliert sind, erscheinen in dieser Liste."
         name: "Name"
         none_installed: "Du hast keine Plug-ins installiert."
         version: "Version"
@@ -5589,9 +5595,9 @@ de:
           convert_theme_alert_generic: "Bist du sicher, dass du dieses Theme in eine Komponente umwandeln möchtest?"
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
-          set_default_theme: "Standard setzen"
+          set_default_theme: "Standard festlegen"
           default_theme: "Standard-Theme"
-          set_default_success: "Standard-Theme auf %{theme} gesetzt"
+          set_default_success: "Standard-Theme auf %{theme} festgelegt"
           install_success: "%{theme} erfolgreich installiert!"
           inactive_components: "Nicht verwendete Komponenten:"
           selected:
@@ -5599,7 +5605,7 @@ de:
             other: "%{count} ausgewählt"
           cancel: "Abbrechen"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
-          broken_theme: "Deaktiviere das kaputte Theme"
+          broken_theme: "Defektes Theme deaktivieren"
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."
           updates_available_tooltip: "Updates sind verfügbar für dieses Theme"
@@ -5666,7 +5672,7 @@ de:
           update_to_latest: "Aktualisieren auf neueste Version"
           check_for_updates: "Nach Aktualisierungen suchen"
           updating: "Wird aktualisiert …"
-          update_success: "%{theme} Update abgeschlossen"
+          update_success: "Update von %{theme} abgeschlossen"
           up_to_date: "Theme ist aktuell, zuletzt geprüft:"
           has_overwritten_history: "Die aktuelle Version des Themes existiert nicht mehr, da die Git-Historie durch einen erzwungenen Push überschrieben wurde."
           add: "Hinzufügen"
@@ -6058,7 +6064,7 @@ de:
             custom_emoji_destroy: "eigenes Emoji löschen"
             delete_post_permanently: "Beitrag endgültig löschen"
             delete_topic_permanently: "Thema endgültig löschen"
-            tag_group_create: "erzeugt eine Schlagwortgruppe"
+            tag_group_create: "Schlagwortgruppe erstellen"
             tag_group_destroy: "Schlagwortgruppe löschen"
             tag_group_change: "Schlagwortgruppe ändern"
             delete_associated_accounts: "verknüpfte Konten löschen"
@@ -6443,7 +6449,7 @@ de:
         cant_delete_all_too_many_posts:
           one: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beitrag hat. (Siehe die Einstellung „delete_all_posts_max“.)"
           other: "Nicht alle Beiträge können gelöscht werden, da der Benutzer mehr als %{count} Beiträge hat. (Siehe die Einstellung „delete_all_posts_max“.)"
-        delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen willst? Das ist dauerhaft!"
+        delete_confirm_title: "Bist du sicher, dass du diesen Benutzer löschen möchtest? Dies kann nicht rückgängig gemacht werden!"
         delete_confirm: "Im Allgemeinen ist es besser, Benutzer zu anonymisieren, als sie zu löschen, um zu vermeiden, dass Inhalte aus bestehenden Diskussionen entfernt werden."
         delete_and_block: "Löschen und diese E-Mail-Adresse und IP-Adresse <b>blockieren</b>"
         delete_dont_block: "Nur löschen"
@@ -6614,7 +6620,7 @@ de:
         reset: "zurücksetzen"
         none: "keine"
         save: "speichern"
-        cancel: "Abbrechen"
+        cancel: "abbrechen"
         unmask: "Eingabe demaskieren"
       site_settings:
         emoji_list:
@@ -6709,7 +6715,7 @@ de:
       badges:
         status: Status
         title: Abzeichen
-        page_description: Abzeichen belohnen Benutzer/innen für ihre Aktivitäten, Beiträge und Leistungen, um positives Verhalten und Engagement in der Community anzuerkennen, zu bestätigen und zu fördern.
+        page_description: Abzeichen belohnen Benutzer für ihre Aktivitäten, Beiträge und Leistungen, um positives Verhalten sowie Engagement in der Community anzuerkennen, zu bestätigen und zu fördern.
         new_badge: Neues Abzeichen
         new: Neu
         name: Name
@@ -6784,7 +6790,7 @@ de:
             with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
         badge_intro:
           title: "Wähle ein Abzeichen oder erstelle ein neues"
-          description: "Wähle ein bestehendes Abzeichen aus, das du anpassen möchtest, oder erstelle ein ganz neues Abzeichen."
+          description: "Wähle ein bestehendes Abzeichen aus, das du anpassen möchtest, oder erstelle ein ganz neues"
         mass_award:
           title: Massen-Auszeichnung
           description: Das gleiche Abzeichen vielen Benutzern auf einmal verleihen.
@@ -6803,9 +6809,10 @@ de:
           grant_existing_holders: Weitere Abzeichen an bestehende Abzeicheninhaber verleihen
       emoji:
         title: "Emoji"
-        description: "Füge neue Emojis hinzu, die für alle verfügbar sind. Bewege mehrere Dateien gleichzeitig per Drag-and-drop, ohne einen Namen einzugeben, um Emojis mit den entsprechenden Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden. Du kannst auch auf „Neues Emoji hinzufügen“ klicken, um die Dateiauswahl zu öffnen."
-        new: "Hinzufügen"
-        add: "Neues Emoji hinzufügen"
+        description: "Füge neue Emojis hinzu, die dann für alle verfügbar sind. Wähle mehrere Dateien aus, um Emojis unter Verwendung ihrer Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden."
+        no_emoji: "Du hast noch keine benutzerdefinierten Emoji."
+        add: "Emoji hinzufügen"
+        back: "Zurück zu Emoji"
         choose_files: "Dateien auswählen"
         uploading: "Wird hochgeladen …"
         name: "Name"
@@ -6855,17 +6862,27 @@ de:
         category_id: "Kategorie-ID"
         category_title: "Kategorie"
         tag_name: "Name des Schlagworts"
+        tag_title: "Schlagwort"
         external_url: "Externe oder relative URL"
         user_id: "Benutzer-ID"
+        user_title: "Benutzer"
         username: "Benutzername"
         destination: "Ziel"
         copy_to_clipboard: "Permalink in die Zwischenablage kopieren"
         delete_confirm: Möchtest du wirklich diesen Permalink löschen?
-        no_permalinks: "Du hast noch keine Permalinks. Erstelle einen neuen Permalink oben, um hier eine Liste deiner Permalinks zu sehen."
+        no_permalinks: "Du hast noch keine Permalinks."
+        add: "Permalink hinzufügen"
+        back: "Zurück zu Permalinks"
+        more_options: "Mehr Optionen"
+        copy_success: "Permalink in die Zwischenablage kopiert"
         form:
           label: "Neu:"
-          add: "Hinzufügen"
-          filter: "Suche (URL oder externe URL)"
+          add_header: "Permalink hinzufügen"
+          edit_header: "Permalink bearbeiten"
+          filter: "Such-URL oder Ziel-URL"
+          url: "URL"
+          permalink_type: "Permalink-Typ"
+          save: "Speichern"
       reseed:
         action:
           label: "Text ersetzen …"

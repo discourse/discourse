@@ -1680,7 +1680,6 @@ nb_NO:
       location: "Sted"
       website: "Nettsted"
       email_settings: "E-post"
-      hide_profile_and_presence: "Skjul min offentlige profil og tilstedeværelsesfunksjoner"
       enable_physical_keyboard: "Aktiver fysisk tastaturstøtte på iPad"
       text_size:
         title: "Tekststørrelse"
@@ -5648,8 +5647,6 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Legg til"
-        add: "Legg til ny Emoji"
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
@@ -5684,12 +5681,14 @@ nb_NO:
         post_title: "Innlegg"
         category_id: "Kategori-ID"
         category_title: "Kategori"
+        user_title: "Bruker"
         username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
+        more_options: "Flere valg"
         form:
           label: "Ny:"
-          add: "Legg til"
-          filter: "Søk (URL eller ekstern URL)"
+          url: "URL"
+          save: "Lagre"
       reseed:
         modal:
           categories: "Kategorier"

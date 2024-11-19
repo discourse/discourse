@@ -2082,7 +2082,6 @@ sv:
     disable_mailing_list_mode: "Tillåt inte att användare aktiverar utskicksläget för e-postlistor (förhindrar att meddelanden till e-postlistan skickas.)"
     default_email_previous_replies: "Som standard omfattas tidigare svar i e-postmeddelanden."
     default_email_in_reply_to: "Omfatta ett utdrag av svar på inlägg i e-post som standard."
-    default_hide_profile_and_presence: "Dölj användarens offentliga profil och närvarofunktioner som standard."
     default_other_new_topic_duration_minutes: "Generellt standardvillkor för när ett ämne anses nytt."
     default_other_auto_track_topics_after_msecs: "Generell standardtid innan ett ämne följs automatiskt."
     default_other_notification_level_when_replying: "Generell standardiserad bevakningssnivå när en användare svarar i ett ämne."
