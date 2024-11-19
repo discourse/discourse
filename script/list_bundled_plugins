@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This script lists all bundled plugins in the Discourse project.
 # It accepts an optional suffix argument that will be appended to each plugin name.
 #
@@ -8,7 +10,6 @@
 #   suffix: An optional string to append to each plugin name.
 #
 
-#!/bin/bash
 set -e -u -o pipefail
 
 suffix=${1:-}
