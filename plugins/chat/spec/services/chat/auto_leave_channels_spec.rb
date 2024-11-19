@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::AutoLeaveChannels do
   describe ".call" do
-    subject(:result) { described_class.call(params: {}) }
+    subject(:result) { described_class.call(params: { event: :generic_event }) }
 
     let!(:previous_events) { DiscourseEvent.events.dup }
 
@@ -24,6 +24,12 @@ RSpec.describe Chat::AutoLeaveChannels do
 
         it "removes all their memberships" do
           expect { result }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(0)
+        end
+
+        it "only removes memberships for a user when filtering by user_id" do
+          expect {
+            described_class.call(params: { event: :generic_event, user_id: uccm_1.user_id })
+          }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
         end
 
         it "publishes automatically removed users" do
@@ -72,7 +78,12 @@ RSpec.describe Chat::AutoLeaveChannels do
             ::Chat::Action::PublishAutoRemovedUser
               .expects(:call)
               .once
-              .with(event: nil, users_removed_map: { uccm.chat_channel_id => [uccm.user_id] })
+              .with(
+                event: :generic_event,
+                users_removed_map: {
+                  uccm.chat_channel_id => [uccm.user_id],
+                },
+              )
 
             result
           end
@@ -99,6 +110,7 @@ RSpec.describe Chat::AutoLeaveChannels do
           end
 
           context "with another category/channel/user" do
+            let(:params) { { event: :generic_event } }
             fab!(:user_2) { Fabricate(:user, trust_level: 1) }
             fab!(:category_2) { Fabricate(:private_category, group:) }
             fab!(:chat_channel_2) { Fabricate(:chat_channel, chatable: category_2) }
@@ -107,21 +119,21 @@ RSpec.describe Chat::AutoLeaveChannels do
             end
 
             it "supports filtering by user_id" do
-              expect { described_class.call(params: { user_id: user.id }) }.to change {
+              expect { described_class.call(params: params.merge(user_id: user.id)) }.to change {
                 ::Chat::UserChatChannelMembership.count
               }.from(2).to(1)
             end
 
             it "supports filtering by channel_id" do
-              expect { described_class.call(params: { channel_id: chat_channel.id }) }.to change {
-                ::Chat::UserChatChannelMembership.count
-              }.from(2).to(1)
+              expect {
+                described_class.call(params: params.merge(channel_id: chat_channel.id))
+              }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
             end
 
             it "supports filtering by category_id" do
-              expect { described_class.call(params: { category_id: category.id }) }.to change {
-                ::Chat::UserChatChannelMembership.count
-              }.from(2).to(1)
+              expect {
+                described_class.call(params: params.merge(category_id: category.id))
+              }.to change { ::Chat::UserChatChannelMembership.count }.from(2).to(1)
             end
           end
         end
