@@ -17,7 +17,9 @@ export default class ChatNavbarChannelTitle extends Component {
           <ChannelTitle @channel={{@channel}} />
         </LinkTo>
       {{else}}
-        <ChannelTitle @channel={{@channel}} />
+        <div class="c-navbar__channel-title">
+          <ChannelTitle @channel={{@channel}} />
+        </div>
       {{/if}}
     {{/if}}
   </template>
