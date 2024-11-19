@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import { hasChatIndicator } from "../lib/chat-user-preferences";
 
 const MAX_UNREAD_COUNT = 99;
 
@@ -13,8 +12,9 @@ export default class ChatChannelUnreadIndicator extends Component {
   get showUnreadIndicator() {
     return (
       this.args.channel.tracking.unreadCount +
-      this.args.channel.tracking.mentionCount +
-      this.args.channel.unreadThreadsCountSinceLastViewed > 0
+        this.args.channel.tracking.mentionCount +
+        this.args.channel.unreadThreadsCountSinceLastViewed >
+      0
     );
   }
 

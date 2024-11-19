@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { gt, not } from "truth-helpers";
-import concatClass from "discourse/helpers/concat-class";
+import { not } from "truth-helpers";
 import UserStatusMessage from "discourse/components/user-status-message";
+import concatClass from "discourse/helpers/concat-class";
 import userStatus from "discourse/helpers/user-status";
 import { i18n } from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
@@ -48,7 +48,9 @@ export default class ChatableUser extends Component {
       <ChatUserDisplayName @user={{@item.model}} />
 
       {{#if this.showIndicator}}
-        <div class="{{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}"></div>
+        <div
+          class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
+        ></div>
       {{/if}}
 
       {{userStatus @item.model currentUser=this.currentUser}}
