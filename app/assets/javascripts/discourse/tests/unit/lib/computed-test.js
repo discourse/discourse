@@ -2,7 +2,6 @@ import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import {
   computedI18n,
   fmt,
@@ -13,20 +12,9 @@ import {
   url,
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse-common/lib/get-url";
-import I18n, { i18n } from "discourse-i18n";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function () {
-    sinon.stub(I18n, "t").callsFake(function (scope) {
-      return "%@ translated: " + scope;
-    });
-  });
-
-  hooks.afterEach(function () {
-    i18n.restore();
-  });
 
   test("setting", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
@@ -125,25 +113,25 @@ module("Unit | Utility | computed", function (hooks) {
 
     assert.strictEqual(
       t.exclaimyUsername,
-      "%@ translated: !!! eviltrout !!!",
+      "[en.!!! eviltrout !!!]",
       "it inserts the string and then translates"
     );
     assert.strictEqual(
       t.multiple,
-      "%@ translated: eviltrout is happy",
+      "[en.eviltrout is happy]",
       "it inserts multiple strings and then translates"
     );
 
     t.set("username", "codinghorror");
     assert.strictEqual(
       t.multiple,
-      "%@ translated: codinghorror is happy",
+      "[en.codinghorror is happy]",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
     assert.strictEqual(
       t.multiple,
-      "%@ translated: codinghorror is ecstatic",
+      "[en.codinghorror is ecstatic]",
       "it supports changing another property"
     );
   });
