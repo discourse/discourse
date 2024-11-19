@@ -254,8 +254,10 @@ RSpec.describe Chat::CreateMessage do
 
           expect(message.blocks[0]).to include(
             "type" => "actions",
+            "schema_version" => 1,
             "elements" => [
               {
+                "schema_version" => 1,
                 "type" => "button",
                 "value" => "foo",
                 "action_id" => an_instance_of(String),
