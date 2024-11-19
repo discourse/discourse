@@ -5,7 +5,7 @@ import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class GroupManageEmailSettings extends Component {
@@ -80,7 +80,7 @@ export default class GroupManageEmailSettings extends Component {
       this._anySmtpFieldsFilled()
     ) {
       this.dialog.confirm({
-        message: I18n.t("groups.manage.email.smtp_disable_confirm"),
+        message: i18n("groups.manage.email.smtp_disable_confirm"),
         didConfirm: () => this.group.set("smtp_enabled", true),
         didCancel: () => this.group.set("imap_enabled", false),
       });
@@ -97,7 +97,7 @@ export default class GroupManageEmailSettings extends Component {
       this._anyImapFieldsFilled()
     ) {
       this.dialog.confirm({
-        message: I18n.t("groups.manage.email.imap_disable_confirm"),
+        message: i18n("groups.manage.email.imap_disable_confirm"),
         didConfirm: () => this.group.set("imap_enabled", true),
       });
     }

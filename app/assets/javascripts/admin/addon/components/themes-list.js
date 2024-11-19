@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 
 const ALL_FILTER = "all";
@@ -16,37 +16,37 @@ const DISABLED_FILTER = "disabled";
 const UPDATES_AVAILABLE_FILTER = "updates_available";
 
 const THEMES_FILTERS = [
-  { name: I18n.t("admin.customize.theme.all_filter"), id: ALL_FILTER },
-  { name: I18n.t("admin.customize.theme.active_filter"), id: ACTIVE_FILTER },
+  { name: i18n("admin.customize.theme.all_filter"), id: ALL_FILTER },
+  { name: i18n("admin.customize.theme.active_filter"), id: ACTIVE_FILTER },
   {
-    name: I18n.t("admin.customize.theme.inactive_filter"),
+    name: i18n("admin.customize.theme.inactive_filter"),
     id: INACTIVE_FILTER,
   },
   {
-    name: I18n.t("admin.customize.theme.updates_available_filter"),
+    name: i18n("admin.customize.theme.updates_available_filter"),
     id: UPDATES_AVAILABLE_FILTER,
   },
 ];
 const COMPONENTS_FILTERS = [
-  { name: I18n.t("admin.customize.component.all_filter"), id: ALL_FILTER },
+  { name: i18n("admin.customize.component.all_filter"), id: ALL_FILTER },
   {
-    name: I18n.t("admin.customize.component.used_filter"),
+    name: i18n("admin.customize.component.used_filter"),
     id: ACTIVE_FILTER,
   },
   {
-    name: I18n.t("admin.customize.component.unused_filter"),
+    name: i18n("admin.customize.component.unused_filter"),
     id: INACTIVE_FILTER,
   },
   {
-    name: I18n.t("admin.customize.component.enabled_filter"),
+    name: i18n("admin.customize.component.enabled_filter"),
     id: ENABLED_FILTER,
   },
   {
-    name: I18n.t("admin.customize.component.disabled_filter"),
+    name: i18n("admin.customize.component.disabled_filter"),
     id: DISABLED_FILTER,
   },
   {
-    name: I18n.t("admin.customize.component.updates_available_filter"),
+    name: i18n("admin.customize.component.updates_available_filter"),
     id: UPDATES_AVAILABLE_FILTER,
   },
 ];

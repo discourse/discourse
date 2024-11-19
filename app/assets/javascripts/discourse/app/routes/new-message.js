@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class NewMessage extends DiscourseRoute {
   @service dialog;
@@ -36,12 +36,12 @@ export default class NewMessage extends DiscourseRoute {
               this.openComposer(transition, groupName);
             } else {
               this.dialog.alert(
-                I18n.t("composer.cant_send_pm", { username: groupName })
+                i18n("composer.cant_send_pm", { username: groupName })
               );
             }
           })
           .catch(() =>
-            this.dialog.alert(I18n.t("composer.create_message_error"))
+            this.dialog.alert(i18n("composer.create_message_error"))
           );
       }
 
@@ -63,12 +63,12 @@ export default class NewMessage extends DiscourseRoute {
                   this.openComposer(transition, groupName);
                 } else {
                   this.dialog.alert(
-                    I18n.t("composer.cant_send_pm", { username: groupName })
+                    i18n("composer.cant_send_pm", { username: groupName })
                   );
                 }
               })
               .catch(() =>
-                this.dialog.alert(I18n.t("composer.create_message_error"))
+                this.dialog.alert(i18n("composer.create_message_error"))
               );
           }
 

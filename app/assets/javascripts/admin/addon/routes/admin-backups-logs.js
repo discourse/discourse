@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsLogsRoute extends DiscourseRoute {
   // since the logs are pushed via the message bus
@@ -28,6 +28,6 @@ export default class AdminBackupsLogsRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("admin.backups.menu.logs");
+    return i18n("admin.backups.menu.logs");
   }
 }

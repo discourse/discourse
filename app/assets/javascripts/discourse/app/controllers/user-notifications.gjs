@@ -10,7 +10,7 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _beforeLoadMoreCallbacks = [];
 export function addBeforeLoadMoreCallback(fn) {
@@ -76,7 +76,7 @@ export default class UserNotificationsController extends Controller {
   @discourseComputed()
   emptyStateBody() {
     return htmlSafe(
-      I18n.t("user.no_notifications_page_body", {
+      i18n("user.no_notifications_page_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
         icon: iconHTML("bell"),
       })
@@ -99,7 +99,7 @@ export default class UserNotificationsController extends Controller {
     if (this.currentUser.unread_high_priority_notifications > 0) {
       this.modal.show(DismissNotificationConfirmationModal, {
         model: {
-          confirmationMessage: I18n.t(
+          confirmationMessage: i18n(
             "notifications.dismiss_confirmation.body.default",
             {
               count: this.currentUser.unread_high_priority_notifications,

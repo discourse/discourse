@@ -4,7 +4,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
@@ -43,10 +43,10 @@ export default class ChatHeaderIcon extends Component {
       !this.chatSeparateSidebarMode.never &&
       this.site.desktopView
     ) {
-      return I18n.t("sidebar.panels.forum.label");
+      return i18n("sidebar.panels.forum.label");
     }
 
-    return I18n.t("chat.title_capitalized");
+    return i18n("chat.title_capitalized");
   }
 
   get icon() {

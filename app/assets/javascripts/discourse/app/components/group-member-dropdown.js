@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -19,8 +19,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
     const items = [
       {
         id: "removeMember",
-        name: I18n.t("groups.members.remove_member"),
-        description: I18n.t("groups.members.remove_member_description", {
+        name: i18n("groups.members.remove_member"),
+        description: i18n("groups.members.remove_member_description", {
           username: this.get("member.username"),
         }),
         icon: "user-xmark",
@@ -31,8 +31,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
       if (this.member.owner) {
         items.push({
           id: "removeOwner",
-          name: I18n.t("groups.members.remove_owner"),
-          description: I18n.t("groups.members.remove_owner_description", {
+          name: i18n("groups.members.remove_owner"),
+          description: i18n("groups.members.remove_owner_description", {
             username: this.get("member.username"),
           }),
           icon: "shield-halved",
@@ -40,8 +40,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
       } else {
         items.push({
           id: "makeOwner",
-          name: I18n.t("groups.members.make_owner"),
-          description: I18n.t("groups.members.make_owner_description", {
+          name: i18n("groups.members.make_owner"),
+          description: i18n("groups.members.make_owner_description", {
             username: this.get("member.username"),
           }),
           icon: "shield-halved",
@@ -50,8 +50,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
     } else if (this.canEditGroup && !this.member.owner) {
       items.push({
         id: "makeOwner",
-        name: I18n.t("groups.members.make_owner"),
-        description: I18n.t("groups.members.make_owner_description", {
+        name: i18n("groups.members.make_owner"),
+        description: i18n("groups.members.make_owner_description", {
           username: this.get("member.username"),
         }),
         icon: "shield-halved",
@@ -62,8 +62,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
       if (this.member.primary) {
         items.push({
           id: "removePrimary",
-          name: I18n.t("groups.members.remove_primary"),
-          description: I18n.t("groups.members.remove_primary_description", {
+          name: i18n("groups.members.remove_primary"),
+          description: i18n("groups.members.remove_primary_description", {
             username: this.get("member.username"),
           }),
           icon: "id-card",
@@ -71,8 +71,8 @@ export default class GroupMemberDropdown extends DropdownSelectBoxComponent {
       } else {
         items.push({
           id: "makePrimary",
-          name: I18n.t("groups.members.make_primary"),
-          description: I18n.t("groups.members.make_primary_description", {
+          name: i18n("groups.members.make_primary"),
+          description: i18n("groups.members.make_primary_description", {
             username: this.get("member.username"),
           }),
           icon: "id-card",

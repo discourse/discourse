@@ -1,7 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { capitalize, dasherize } from "@ember/string";
 import { snakeCaseToCamelCase } from "discourse-common/lib/case-converter";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminPlugin {
   static create(args = {}) {
@@ -82,10 +82,10 @@ export default class AdminPlugin {
 
   get author() {
     if (this.isOfficial || this.isDiscourseOwned) {
-      return I18n.t("admin.plugins.author", { author: "Discourse" });
+      return i18n("admin.plugins.author", { author: "Discourse" });
     }
 
-    return I18n.t("admin.plugins.author", { author: this.authors });
+    return i18n("admin.plugins.author", { author: this.authors });
   }
 
   get linkUrl() {

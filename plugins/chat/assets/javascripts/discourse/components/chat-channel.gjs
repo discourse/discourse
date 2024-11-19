@@ -15,10 +15,9 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
@@ -503,7 +502,7 @@ export default class ChatChannel extends Component {
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
       this.dialog.alert(
-        I18n.t("chat.message_too_long", {
+        i18n("chat.message_too_long", {
           count: this.siteSettings.chat_maximum_message_length,
         })
       );

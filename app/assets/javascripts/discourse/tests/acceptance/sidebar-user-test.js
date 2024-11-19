@@ -5,7 +5,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",
@@ -90,7 +90,7 @@ acceptance(
     test("viewing keyboard shortcuts using sidebar", async function (assert) {
       await visit("/");
       await click(
-        `.sidebar-footer-actions-keyboard-shortcuts[title="${I18n.t(
+        `.sidebar-footer-actions-keyboard-shortcuts[title="${i18n(
           "keyboard_shortcuts_help.title"
         )}"]`
       );
@@ -143,7 +143,7 @@ acceptance(
 
       assert
         .dom(
-          `.sidebar-footer-actions-toggle-mobile-view[title="${I18n.t(
+          `.sidebar-footer-actions-toggle-mobile-view[title="${i18n(
             "mobile_view"
           )}"]`
         )
@@ -215,7 +215,7 @@ acceptance(
         .dom(".btn-sidebar-toggle")
         .hasAttribute(
           "title",
-          I18n.t("sidebar.title"),
+          i18n("sidebar.title"),
           "has the right title attribute when sidebar is expanded"
         );
 
@@ -233,7 +233,7 @@ acceptance(
         .dom(".btn-sidebar-toggle")
         .hasAttribute(
           "title",
-          I18n.t("sidebar.title"),
+          i18n("sidebar.title"),
           "has the right title attribute when sidebar is collapsed"
         );
     });

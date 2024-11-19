@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatThreadParticipants extends Component {
@@ -36,7 +36,7 @@ export default class ChatThreadParticipants extends Component {
   }
 
   get otherCountLabel() {
-    return I18n.t("chat.thread.participants_other_count", {
+    return i18n("chat.thread.participants_other_count", {
       count: this.args.thread.preview.otherParticipantCount,
     });
   }

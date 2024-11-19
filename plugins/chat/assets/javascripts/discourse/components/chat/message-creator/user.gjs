@@ -4,14 +4,14 @@ import { modifier } from "ember-modifier";
 import { gt, not } from "truth-helpers";
 import UserStatusMessage from "discourse/components/user-status-message";
 import userStatus from "discourse/helpers/user-status";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 export default class ChatableUser extends Component {
   @service currentUser;
 
-  disabledUserLabel = I18n.t("chat.new_message_modal.disabled_user");
+  disabledUserLabel = i18n("chat.new_message_modal.disabled_user");
 
   trackUserStatus = modifier((element, [user]) => {
     user.statusManager.trackStatus();

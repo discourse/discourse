@@ -2,7 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");
@@ -32,7 +32,7 @@ export function listColorSchemes(site, options = {}) {
       if (!existing) {
         results.unshift({
           id: defaultDarkColorScheme.id,
-          name: `${defaultDarkColorScheme.name} ${I18n.t(
+          name: `${defaultDarkColorScheme.name} ${i18n(
             "user.color_schemes.default_dark_scheme"
           )}`,
         });
@@ -41,7 +41,7 @@ export function listColorSchemes(site, options = {}) {
 
     results.unshift({
       id: -1,
-      name: I18n.t("user.color_schemes.disable_dark_scheme"),
+      name: i18n("user.color_schemes.disable_dark_scheme"),
     });
   }
 

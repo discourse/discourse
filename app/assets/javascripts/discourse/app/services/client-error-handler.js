@@ -10,7 +10,7 @@ import identifySource, {
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const showingErrors = new Set();
 
@@ -58,14 +58,14 @@ export default class ClientErrorHandlerService extends Service {
     reportToConsole(error, source);
     reportToLogster(source.name, error);
 
-    const message = I18n.t("themes.broken_theme_alert");
+    const message = i18n("themes.broken_theme_alert");
     this.displayErrorNotice(message, source);
   }
 
   reportGenericError(e) {
     const { messageKey, error } = e.detail;
 
-    const message = I18n.t(messageKey);
+    const message = i18n(messageKey);
     const source = identifySource(error);
 
     reportToConsole(error, source);
@@ -84,17 +84,17 @@ export default class ClientErrorHandlerService extends Service {
     let html = `⚠️ ${escape(message)}`;
 
     if (source?.type === "theme") {
-      html += `<br/>${I18n.t("themes.error_caused_by", {
+      html += `<br/>${i18n("themes.error_caused_by", {
         name: escape(source.name),
         path: source.path,
       })}`;
     } else if (source?.type === "plugin") {
-      html += `<br/>${I18n.t("broken_plugin_alert", {
+      html += `<br/>${i18n("broken_plugin_alert", {
         name: escape(source.name),
       })}`;
     }
 
-    html += `<br/><span class='theme-error-suffix'>${I18n.t(
+    html += `<br/><span class='theme-error-suffix'>${i18n(
       "themes.only_admins"
     )}</span>`;
 

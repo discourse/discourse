@@ -3,13 +3,13 @@ import { service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import GroupAddMembersModal from "discourse/components/modal/group-add-members";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupIndex extends DiscourseRoute {
   @service modal;
 
   titleToken() {
-    return I18n.t("groups.members.title");
+    return i18n("groups.members.title");
   }
 
   model(params) {

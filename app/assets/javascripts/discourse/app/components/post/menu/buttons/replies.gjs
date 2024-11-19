@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PostMenuRepliesButton extends Component {
   static extraControls = true;

@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const MAX_DISPLAYED_USERNAMES = 15;
 
@@ -11,7 +11,7 @@ function filterUsernames(users, currentUser) {
 
 function reactionIncludingCurrentUser(reaction, currentUser) {
   if (reaction.count === 1) {
-    return I18n.t("chat.reactions.only_you", {
+    return i18n("chat.reactions.only_you", {
       emoji: reaction.emoji,
     });
   }
@@ -19,7 +19,7 @@ function reactionIncludingCurrentUser(reaction, currentUser) {
   const usernames = filterUsernames(reaction.users, currentUser);
 
   if (reaction.count === 2) {
-    return I18n.t("chat.reactions.you_and_single_user", {
+    return i18n("chat.reactions.you_and_single_user", {
       emoji: reaction.emoji,
       username: usernames.pop(),
     });
@@ -29,14 +29,14 @@ function reactionIncludingCurrentUser(reaction, currentUser) {
   const unnamedUserCount = reaction.count - usernames.length - 1;
 
   if (unnamedUserCount > 0) {
-    return I18n.t("chat.reactions.you_multiple_users_and_more", {
+    return i18n("chat.reactions.you_multiple_users_and_more", {
       emoji: reaction.emoji,
       commaSeparatedUsernames: joinUsernames(usernames),
       count: unnamedUserCount,
     });
   }
 
-  return I18n.t("chat.reactions.you_and_multiple_users", {
+  return i18n("chat.reactions.you_and_multiple_users", {
     emoji: reaction.emoji,
     username: usernames.pop(),
     commaSeparatedUsernames: joinUsernames(usernames),
@@ -47,7 +47,7 @@ function reactionText(reaction, currentUser) {
   const usernames = filterUsernames(reaction.users, currentUser);
 
   if (reaction.count === 1) {
-    return I18n.t("chat.reactions.single_user", {
+    return i18n("chat.reactions.single_user", {
       emoji: reaction.emoji,
       username: usernames.pop(),
     });
@@ -56,14 +56,14 @@ function reactionText(reaction, currentUser) {
   const unnamedUserCount = reaction.count - usernames.length;
 
   if (unnamedUserCount > 0) {
-    return I18n.t("chat.reactions.multiple_users_and_more", {
+    return i18n("chat.reactions.multiple_users_and_more", {
       emoji: reaction.emoji,
       commaSeparatedUsernames: joinUsernames(usernames),
       count: unnamedUserCount,
     });
   }
 
-  return I18n.t("chat.reactions.multiple_users", {
+  return i18n("chat.reactions.multiple_users", {
     emoji: reaction.emoji,
     username: usernames.pop(),
     commaSeparatedUsernames: joinUsernames(usernames),
@@ -71,7 +71,7 @@ function reactionText(reaction, currentUser) {
 }
 
 function joinUsernames(usernames) {
-  return usernames.join(I18n.t("word_connector.comma"));
+  return usernames.join(i18n("word_connector.comma"));
 }
 
 export function getReactionText(reaction, currentUser) {

@@ -11,7 +11,7 @@ import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("title-input")
 export default class ComposerTitle extends Component {
@@ -68,13 +68,13 @@ export default class ComposerTitle extends Component {
       return;
     }
     if (titleLength < 1) {
-      reason = I18n.t("composer.error.title_missing");
+      reason = i18n("composer.error.title_missing");
     } else if (missingTitleChars > 0) {
-      reason = I18n.t("composer.error.title_too_short", {
+      reason = i18n("composer.error.title_too_short", {
         count: minimumTitleLength,
       });
     } else if (titleLength > this.siteSettings.max_topic_title_length) {
-      reason = I18n.t("composer.error.title_too_long", {
+      reason = i18n("composer.error.title_too_long", {
         count: this.siteSettings.max_topic_title_length,
       });
     }

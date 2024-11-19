@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { acceptance, query } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / All - empty state", function (needs) {
@@ -20,7 +20,7 @@ acceptance("User Activity / All - empty state", function (needs) {
     await visit(`/u/${currentUser}/activity`);
     assert.equal(
       query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_activity_title")
+      i18n("user_activity.no_activity_title")
     );
   });
 
@@ -28,7 +28,7 @@ acceptance("User Activity / All - empty state", function (needs) {
     await visit(`/u/${anotherUser}/activity`);
     assert.equal(
       query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_activity_title")
+      i18n("user_activity.no_activity_title")
     ); // the same title as when looking at own page
   });
 });

@@ -1,12 +1,12 @@
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function outputExportResult(result) {
   const dialog = getOwnerWithFallback(this).lookup("service:dialog");
 
   if (result.success) {
-    dialog.alert(I18n.t("admin.export_csv.success"));
+    dialog.alert(i18n("admin.export_csv.success"));
   } else {
-    dialog.alert(I18n.t("admin.export_csv.failed"));
+    dialog.alert(i18n("admin.export_csv.failed"));
   }
 }

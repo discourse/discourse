@@ -4,7 +4,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Ideally, this would be refactored into an uppy postprocessor and support
 // for that would be added to the ExtendableUploader.
@@ -107,7 +107,7 @@ export default class ComposerVideoThumbnailUppy {
             this._uppyUpload.uppyWrapper.uppyInstance.on(
               "upload-error",
               (file, error, response) => {
-                let message = I18n.t("wizard.upload_error");
+                let message = i18n("wizard.upload_error");
                 if (response.body.errors) {
                   message = response.body.errors.join("\n");
                 }

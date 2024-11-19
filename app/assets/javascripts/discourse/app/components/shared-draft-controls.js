@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class SharedDraftControls extends Component {
@@ -24,7 +24,7 @@ export default class SharedDraftControls extends Component {
   @action
   publish() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("shared_drafts.confirm_publish"),
+      message: i18n("shared_drafts.confirm_publish"),
       didConfirm: () => {
         this.set("publishing", true);
         const destinationCategoryId = this.topic.destination_category_id;

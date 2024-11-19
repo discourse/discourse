@@ -13,7 +13,7 @@ import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fi
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {
   const notification = Notification.create(
@@ -154,7 +154,7 @@ module(
 
       assert
         .dom("li a")
-        .hasAttribute("title", I18n.t("notifications.titles.mentioned"));
+        .hasAttribute("title", i18n("notifications.titles.mentioned"));
     });
 
     test("has elements for label and description", async function (assert) {
@@ -598,7 +598,7 @@ module(
       );
       assert.strictEqual(
         description.textContent.trim(),
-        I18n.t("user_menu.reviewable.default_item", {
+        i18n("user_menu.reviewable.default_item", {
           reviewable_id: this.item.reviewable.id,
         }),
         "displays the description for the reviewable"
@@ -616,7 +616,7 @@ module(
       const label = query("li .item-label");
       assert.strictEqual(
         label.textContent.trim(),
-        I18n.t("user_menu.reviewable.deleted_user")
+        i18n("user_menu.reviewable.deleted_user")
       );
     });
   }

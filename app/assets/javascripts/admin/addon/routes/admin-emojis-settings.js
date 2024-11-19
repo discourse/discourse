@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminEmojisSettingsRoute extends DiscourseRoute {
   queryParams = {
@@ -7,6 +7,6 @@ export default class AdminEmojisSettingsRoute extends DiscourseRoute {
   };
 
   titleToken() {
-    return I18n.t("settings");
+    return i18n("settings");
   }
 }

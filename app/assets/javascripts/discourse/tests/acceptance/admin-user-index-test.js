@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 let deleteAndBlock = null;
@@ -250,7 +250,7 @@ acceptance("Admin - User Index", function (needs) {
     await click(".grant-admin");
     assert.dom(".dialog-content").exists();
     assert.strictEqual(
-      I18n.t("admin.user.grant_admin_confirm"),
+      i18n("admin.user.grant_admin_confirm"),
       query(".dialog-body").textContent.trim()
     );
 
@@ -282,7 +282,7 @@ acceptance("Admin - User Index", function (needs) {
     await click(".disable-second-factor");
     assert.dom(".dialog-content").exists();
     assert.strictEqual(
-      I18n.t("admin.user.disable_second_factor_confirm"),
+      i18n("admin.user.disable_second_factor_confirm"),
       query(".dialog-body").textContent.trim()
     );
 
@@ -295,7 +295,7 @@ acceptance("Admin - User Index", function (needs) {
 
     assert.equal(
       query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
+      i18n("admin.user.delete_confirm_title"),
       "dialog has a title"
     );
 

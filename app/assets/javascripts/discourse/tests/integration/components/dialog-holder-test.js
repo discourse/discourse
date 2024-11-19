@@ -11,7 +11,7 @@ import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);
@@ -150,12 +150,12 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     assert
       .dom(".dialog-footer .btn-primary")
-      .hasText(I18n.t("ok_value"), "dialog primary button says Ok");
+      .hasText(i18n("ok_value"), "dialog primary button says Ok");
 
     assert
       .dom(".dialog-footer .btn-default")
       .hasText(
-        I18n.t("cancel_value"),
+        i18n("cancel_value"),
         "dialog second button is present and says No"
       );
 
@@ -207,14 +207,11 @@ module("Integration | Component | dialog-holder", function (hooks) {
 
     assert
       .dom(".dialog-footer .btn-primary")
-      .hasText(I18n.t("yes_value"), "dialog primary button says Yes");
+      .hasText(i18n("yes_value"), "dialog primary button says Yes");
 
     assert
       .dom(".dialog-footer .btn-default")
-      .hasText(
-        I18n.t("no_value"),
-        "dialog second button is present and says No"
-      );
+      .hasText(i18n("no_value"), "dialog second button is present and says No");
   });
 
   test("alert with custom buttons", async function (assert) {
@@ -318,7 +315,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert
       .dom(".dialog-footer .btn-danger")
       .hasText(
-        I18n.t("delete"),
+        i18n("delete"),
         "dialog primary button use danger class and label is Delete"
       );
 
@@ -357,7 +354,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await settled();
 
     assert.dom(".dialog-body p:first-child").hasText(
-      I18n.t("admin.groups.delete_with_messages_confirm", {
+      i18n("admin.groups.delete_with_messages_confirm", {
         count: message_count,
       }),
       "correct message is shown in dialog"

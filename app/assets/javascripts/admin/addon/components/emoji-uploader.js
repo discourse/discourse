@@ -5,7 +5,7 @@ import { getOwner } from "@ember/owner";
 import { isEmpty } from "@ember/utils";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 const DEFAULT_GROUP = "default";
 
 export default class EmojiUploader extends Component {
@@ -74,9 +74,9 @@ export default class EmojiUploader extends Component {
   @discourseComputed("uppyUpload.uploading", "uppyUpload.uploadProgress")
   buttonLabel(uploading, uploadProgress) {
     if (uploading) {
-      return `${I18n.t("admin.emoji.uploading")} ${uploadProgress}%`;
+      return `${i18n("admin.emoji.uploading")} ${uploadProgress}%`;
     } else {
-      return I18n.t("admin.emoji.choose_files");
+      return i18n("admin.emoji.choose_files");
     }
   }
 

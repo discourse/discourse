@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import {
   UnreadChannelsIndicator,
   UnreadDirectMessagesIndicator,

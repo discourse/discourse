@@ -8,7 +8,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",
@@ -417,7 +417,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-unread'].group1"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+        i18n("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
         }),
         "displays 1 count for group1 unread inbox filter link"
@@ -427,7 +427,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new_with_count", {
+        i18n("sidebar.sections.messages.links.new_with_count", {
           count: 1,
         }),
         "displays 1 count for group1 new inbox filter link"
@@ -448,7 +448,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new"),
+        i18n("sidebar.sections.messages.links.new"),
         "removes count for group1 new inbox filter link"
       );
     });
@@ -479,7 +479,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+        i18n("sidebar.sections.messages.links.unread_with_count", {
           count: 1,
         }),
         "displays 1 count for the unread inbox filter link"
@@ -500,7 +500,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
+        i18n("sidebar.sections.messages.links.unread_with_count", {
           count: 2,
         }),
         "displays 2 count for the unread inbox filter link"
@@ -521,7 +521,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new_with_count", {
+        i18n("sidebar.sections.messages.links.new_with_count", {
           count: 1,
         }),
         "displays 1 count for the new inbox filter link"
@@ -542,7 +542,7 @@ acceptance(
         query(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
         ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new"),
+        i18n("sidebar.sections.messages.links.new"),
         "removes the count from the new inbox filter link"
       );
     });

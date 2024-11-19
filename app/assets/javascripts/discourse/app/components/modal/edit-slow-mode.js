@@ -6,52 +6,52 @@ import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const SLOW_MODE_OPTIONS = [
   {
     id: "600",
-    name: I18n.t("topic.slow_mode_update.durations.10_minutes"),
+    name: i18n("topic.slow_mode_update.durations.10_minutes"),
   },
   {
     id: "900",
-    name: I18n.t("topic.slow_mode_update.durations.15_minutes"),
+    name: i18n("topic.slow_mode_update.durations.15_minutes"),
   },
   {
     id: "1800",
-    name: I18n.t("topic.slow_mode_update.durations.30_minutes"),
+    name: i18n("topic.slow_mode_update.durations.30_minutes"),
   },
   {
     id: "2700",
-    name: I18n.t("topic.slow_mode_update.durations.45_minutes"),
+    name: i18n("topic.slow_mode_update.durations.45_minutes"),
   },
   {
     id: "3600",
-    name: I18n.t("topic.slow_mode_update.durations.1_hour"),
+    name: i18n("topic.slow_mode_update.durations.1_hour"),
   },
   {
     id: "7200",
-    name: I18n.t("topic.slow_mode_update.durations.2_hours"),
+    name: i18n("topic.slow_mode_update.durations.2_hours"),
   },
   {
     id: "14400",
-    name: I18n.t("topic.slow_mode_update.durations.4_hours"),
+    name: i18n("topic.slow_mode_update.durations.4_hours"),
   },
   {
     id: "28800",
-    name: I18n.t("topic.slow_mode_update.durations.8_hours"),
+    name: i18n("topic.slow_mode_update.durations.8_hours"),
   },
   {
     id: "43200",
-    name: I18n.t("topic.slow_mode_update.durations.12_hours"),
+    name: i18n("topic.slow_mode_update.durations.12_hours"),
   },
   {
     id: "86400",
-    name: I18n.t("topic.slow_mode_update.durations.24_hours"),
+    name: i18n("topic.slow_mode_update.durations.24_hours"),
   },
   {
     id: "custom",
-    name: I18n.t("topic.slow_mode_update.durations.custom"),
+    name: i18n("topic.slow_mode_update.durations.custom"),
   },
 ];
 
@@ -141,7 +141,7 @@ export default class EditSlowMode extends Component {
       this.args.model.topic.set("slow_mode_seconds", seconds);
       this.args.closeModal();
     } catch {
-      this.flash = I18n.t("generic_error");
+      this.flash = i18n("generic_error");
     } finally {
       this.saveDisabled = false;
     }

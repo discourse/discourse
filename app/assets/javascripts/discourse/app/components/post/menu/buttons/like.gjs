@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
+import { i18n } from "discourse-i18n";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {

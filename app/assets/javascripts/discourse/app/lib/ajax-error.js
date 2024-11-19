@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import $ from "jquery";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function extractErrorInfo(error, defaultMessage) {
   if (error instanceof Error) {
@@ -42,11 +42,11 @@ function extractErrorInfo(error, defaultMessage) {
     }
 
     if (parsedJSON.errors?.length > 1) {
-      parsedError = I18n.t("multiple_errors", {
+      parsedError = i18n("multiple_errors", {
         errors: parsedJSON.errors.map((e, i) => `${i + 1}) ${e}`).join(" "),
       });
     } else if (parsedJSON.errors?.length > 0) {
-      parsedError = I18n.t("generic_error_with_reason", {
+      parsedError = i18n("generic_error_with_reason", {
         error: parsedJSON.errors[0],
       });
     } else if (parsedJSON.error) {
@@ -66,7 +66,7 @@ function extractErrorInfo(error, defaultMessage) {
 
   return {
     html,
-    message: parsedError || defaultMessage || I18n.t("generic_error"),
+    message: parsedError || defaultMessage || i18n("generic_error"),
   };
 }
 

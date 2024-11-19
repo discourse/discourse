@@ -30,7 +30,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Composer", function (needs) {
   needs.user({
@@ -211,7 +211,7 @@ acceptance("Composer", function (needs) {
 
     await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
-    const example = I18n.t(`composer.bold_text`);
+    const example = i18n(`composer.bold_text`);
     assert.strictEqual(
       query("#reply-control .d-editor-input").value.trim(),
       `this is the *content* of a post**${example}**`,
@@ -710,7 +710,7 @@ acceptance("Composer", function (needs) {
 
     assert.ok(
       query(".reply-details .unlist").innerText.includes(
-        I18n.t("composer.unlist")
+        i18n("composer.unlist")
       ),
       "it sets the topic to unlisted"
     );
@@ -764,7 +764,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".d-modal__footer button.keep-editing")
       .hasText(
-        I18n.t("post.cancel_composer.keep_editing"),
+        i18n("post.cancel_composer.keep_editing"),
         "has keep editing button"
       );
     await click(".d-modal__footer button.discard-draft");
@@ -789,13 +789,13 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".d-modal__footer button.save-draft")
       .hasText(
-        I18n.t("post.cancel_composer.save_draft"),
+        i18n("post.cancel_composer.save_draft"),
         "has save draft button"
       );
     assert
       .dom(".d-modal__footer button.keep-editing")
       .hasText(
-        I18n.t("post.cancel_composer.keep_editing"),
+        i18n("post.cancel_composer.keep_editing"),
         "has keep editing button"
       );
     await click(".d-modal__footer button.save-draft");
@@ -814,7 +814,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
 
-    assert.dom(".dialog-body").hasText(I18n.t("drafts.abandon.confirm"));
+    assert.dom(".dialog-body").hasText(i18n("drafts.abandon.confirm"));
 
     await click(".dialog-footer .btn-resume-editing");
   });
@@ -885,7 +885,7 @@ acceptance("Composer", function (needs) {
     });
 
     await visit("/latest");
-    assert.dom("#create-topic").hasText(I18n.t("topic.open_draft"));
+    assert.dom("#create-topic").hasText(i18n("topic.open_draft"));
 
     await click("#create-topic");
     assert.strictEqual(selectKit(".category-chooser").header().value(), "2");
@@ -906,7 +906,7 @@ acceptance("Composer", function (needs) {
       .dom(".d-editor-container textarea")
       .hasAttribute(
         "placeholder",
-        I18n.t("composer.reply_placeholder"),
+        i18n("composer.reply_placeholder"),
         "it should not block because of missing category"
       );
   });
@@ -916,7 +916,7 @@ acceptance("Composer", function (needs) {
     await click("article#post_3 button.reply");
     assert
       .dom(".save-or-cancel button.create")
-      .hasText(I18n.t("composer.create_pm"), "reply button says Message");
+      .hasText(i18n("composer.create_pm"), "reply button says Message");
     assert
       .dom(".save-or-cancel button.create svg.d-icon-envelope")
       .exists("reply button has envelope icon");
@@ -929,7 +929,7 @@ acceptance("Composer", function (needs) {
 
     assert
       .dom(".save-or-cancel button.create")
-      .hasText(I18n.t("composer.save_edit"), "save button says Save Edit");
+      .hasText(i18n("composer.save_edit"), "save button says Save Edit");
     assert
       .dom(".save-or-cancel button.create svg.d-icon-pencil")
       .exists("save button has pencil icon");
@@ -1053,15 +1053,13 @@ acceptance("Composer - Customizations", function (needs) {
   test("Supports text customization", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
-    assert
-      .dom(".save-or-cancel button")
-      .hasText(I18n.t("composer.create_topic"));
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
+    assert.dom(".save-or-cancel button").hasText(i18n("composer.create_topic"));
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
     await tags.selectRowByValue("monkey");
     assert.dom(".action-title").hasText("custom text");
-    assert.dom(".save-or-cancel button").hasText(I18n.t("composer.emoji"));
+    assert.dom(".save-or-cancel button").hasText(i18n("composer.emoji"));
   });
 });
 
@@ -1375,14 +1373,14 @@ acceptance("composer buttons API", function (needs) {
       .dom(row)
       .hasAttribute(
         "title",
-        I18n.t("some_title") +
+        i18n("some_title") +
           ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
         "it shows the title with shortcut"
       );
     assert
       .dom(row)
       .hasText(
-        I18n.t("some_label") +
+        i18n("some_label") +
           ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
         "it shows the label with shortcut"
       );

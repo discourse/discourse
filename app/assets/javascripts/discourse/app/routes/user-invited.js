@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserInvited extends DiscourseRoute {
   setupController(controller) {
@@ -13,6 +13,6 @@ export default class UserInvited extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("user.invited.title");
+    return i18n("user.invited.title");
   }
 }

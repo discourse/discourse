@@ -6,7 +6,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
@@ -68,12 +68,12 @@ export default class AdminLogsScreenedIpAddressesController extends Controller {
       .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
           this.dialog.alert(
-            I18n.t("generic_error_with_reason", {
+            i18n("generic_error_with_reason", {
               error: e.jqXHR.responseJSON.errors.join(". "),
             })
           );
         } else {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
         if (wasEditing) {
           record.set("editing", true);
@@ -84,7 +84,7 @@ export default class AdminLogsScreenedIpAddressesController extends Controller {
   @action
   destroyRecord(record) {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.logs.screened_ips.delete_confirm", {
+      message: i18n("admin.logs.screened_ips.delete_confirm", {
         ip_address: record.get("ip_address"),
       }),
       didConfirm: () => {
@@ -94,12 +94,12 @@ export default class AdminLogsScreenedIpAddressesController extends Controller {
             if (deleted) {
               this.model.removeObject(record);
             } else {
-              this.dialog.alert(I18n.t("generic_error"));
+              this.dialog.alert(i18n("generic_error"));
             }
           })
           .catch((e) => {
             this.dialog.alert(
-              I18n.t("generic_error_with_reason", {
+              i18n("generic_error_with_reason", {
                 error: `http: ${e.status} - ${e.body}`,
               })
             );

@@ -4,17 +4,17 @@ import { alias, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n, setting } from "discourse/lib/computed";
+import { computedI18n, setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;
   @controller adminBackups;
 
   @alias("adminBackups.model") status;
-  @i18n("admin.backups.upload.label") uploadLabel;
+  @computedI18n("admin.backups.upload.label") uploadLabel;
   @setting("backup_location") backupLocation;
   @equal("backupLocation", "local") localBackupStorage;
 
@@ -37,7 +37,7 @@ export default class AdminBackupsIndexController extends Controller {
   async download(backup) {
     try {
       await ajax(`/admin/backups/${backup.filename}`, { type: "PUT" });
-      this.dialog.alert(I18n.t("admin.backups.operations.download.alert"));
+      this.dialog.alert(i18n("admin.backups.operations.download.alert"));
     } catch (err) {
       popupAjaxError(err);
     }

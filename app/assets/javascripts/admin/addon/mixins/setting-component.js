@@ -12,7 +12,7 @@ import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
 import { splitString } from "discourse/lib/utilities";
 import { deepEqual } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
@@ -226,20 +226,20 @@ export default Mixin.create({
       // Fallback is needed in case the setting does not have a custom confirmation
       // prompt/confirm defined.
       this.dialog.alert({
-        message: I18n.t(
+        message: i18n(
           `admin.site_settings.requires_confirmation_messages.${settingKey}.prompt`,
           {
-            translatedFallback: I18n.t(
+            translatedFallback: i18n(
               "admin.site_settings.requires_confirmation_messages.default.prompt"
             ),
           }
         ),
         buttons: [
           {
-            label: I18n.t(
+            label: i18n(
               `admin.site_settings.requires_confirmation_messages.${settingKey}.confirm`,
               {
-                translatedFallback: I18n.t(
+                translatedFallback: i18n(
                   "admin.site_settings.requires_confirmation_messages.default.confirm"
                 ),
               }
@@ -248,7 +248,7 @@ export default Mixin.create({
             action: () => resolve(true),
           },
           {
-            label: I18n.t("no_value"),
+            label: i18n("no_value"),
             class: "btn-default",
             action: () => resolve(false),
           },
@@ -325,7 +325,7 @@ export default Mixin.create({
 
         this.set("validationMessage", errorString);
       } else {
-        this.set("validationMessage", I18n.t("generic_error"));
+        this.set("validationMessage", i18n("generic_error"));
       }
     }
   }),

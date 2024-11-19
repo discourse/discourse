@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { gte, sort } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const MAX_FIELDS = 30;
 
@@ -65,7 +65,7 @@ export default class AdminUserFieldsController extends Controller {
     // Only confirm if we already been saved
     if (f.get("id")) {
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.user_fields.delete_confirm"),
+        message: i18n("admin.user_fields.delete_confirm"),
         didConfirm: () => {
           return f
             .destroyRecord()

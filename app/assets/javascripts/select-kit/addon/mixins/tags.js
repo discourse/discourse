@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default Mixin.create({
   searchTags(url, data, callback) {
@@ -27,7 +27,7 @@ export default Mixin.create({
     const maximum = this.selectKit.options.maximum;
     if (maximum && makeArray(this.value).length >= parseInt(maximum, 10)) {
       this.addError(
-        I18n.t("select_kit.max_content_reached", {
+        i18n("select_kit.max_content_reached", {
           count: parseInt(maximum, 10),
         })
       );

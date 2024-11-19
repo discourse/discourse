@@ -6,7 +6,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Category Edit - Security", function (needs) {
   needs.user();
@@ -42,7 +42,7 @@ acceptance("Category Edit - Security", function (needs) {
     assert
       .dom(".row-empty")
       .hasText(
-        I18n.t("category.permissions.no_groups_selected"),
+        i18n("category.permissions.no_groups_selected"),
         "shows message when no groups are selected"
       );
   });

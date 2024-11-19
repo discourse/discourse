@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarCloseThreadsButton extends Component {
   @service site;
 
-  closeButtonTitle = I18n.t("chat.thread.close");
+  closeButtonTitle = i18n("chat.thread.close");
 
   <template>
     {{#if this.site.desktopView}}

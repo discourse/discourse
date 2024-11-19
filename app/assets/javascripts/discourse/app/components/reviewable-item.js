@@ -14,7 +14,7 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _components = {};
 
@@ -144,15 +144,15 @@ export default class ReviewableItem extends Component {
   claimHelp(claimMode, claimedBy) {
     if (claimedBy) {
       return claimedBy.id === this.currentUser.id
-        ? I18n.t("review.claim_help.claimed_by_you")
-        : I18n.t("review.claim_help.claimed_by_other", {
+        ? i18n("review.claim_help.claimed_by_you")
+        : i18n("review.claim_help.claimed_by_other", {
             username: claimedBy.username,
           });
     }
 
     return claimMode === "optional"
-      ? I18n.t("review.claim_help.optional")
-      : I18n.t("review.claim_help.required");
+      ? i18n("review.claim_help.optional")
+      : i18n("review.claim_help.required");
   }
 
   // Find a component to render, if one exists. For example:
@@ -259,7 +259,7 @@ export default class ReviewableItem extends Component {
 
   async clientEdit(reviewable, performAction) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     }
     const post = await this.store.find("post", reviewable.post_id);
     const topic_json = await Topic.find(post.topic_id, {});

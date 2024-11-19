@@ -1,6 +1,6 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const GroupActivityFilter = <template>
   <li>

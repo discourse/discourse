@@ -12,7 +12,7 @@ import {
   paste,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let uploadNumber = 1;
 
@@ -196,7 +196,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       await settled();
       assert.strictEqual(
         query(".dialog-body").textContent.trim(),
-        I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+        i18n("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
         }),
         "it should warn about too many files added"
@@ -221,7 +221,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       await settled();
       assert.strictEqual(
         query(".dialog-body").textContent.trim(),
-        I18n.t("post.errors.upload_not_authorized", {
+        i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
             this.siteSettings

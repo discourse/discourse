@@ -9,7 +9,7 @@ import {
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;
@@ -67,7 +67,7 @@ export default class GrantBadgeModal extends Component {
       this.userBadges.pushObject(newBadge);
       this.#updateAvailableBadges();
       this.selectedBadgeId = null;
-      this.flash = I18n.t("badges.successfully_granted", {
+      this.flash = i18n("badges.successfully_granted", {
         username,
         badge: newBadge.get("badge.name"),
       });

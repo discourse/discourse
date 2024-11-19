@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import avatar from "discourse/helpers/bound-avatar-template";
 import { userPath } from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 export default class SmallUserList extends Component {
   @service currentUser;
