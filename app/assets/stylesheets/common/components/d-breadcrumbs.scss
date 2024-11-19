@@ -11,11 +11,20 @@
     color: var(--primary-medium);
   }
 
-  li:not(:last-child) a::after {
-    display: inline;
-    padding: 0 var(--space-1);
-    margin-right: var(--space-1);
-    font-size: var(--font-down-1);
-    content: ">";
+  li {
+    .separator {
+      margin-right: var(--space-1);
+
+      .d-icon {
+        color: var(--primary-medium);
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  li:last-child {
+    .separator {
+      display: none;
+    }
   }
 }
