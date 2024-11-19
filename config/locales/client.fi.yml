@@ -3401,7 +3401,9 @@ fi:
       show_hidden: "Katso sivuutettu sisältö."
       deleted_by_author_simple: "(kirjoittajan poistama viesti)"
       collapse: "kutista"
+      load_more_replies: "lataa lisää vastauksia"
       sr_collapse_replies: "Kutista upotetut vastaukset"
+      sr_load_more_replies: "Lataa lisää upotettuja vastauksia"
       sr_date: "Viestin päivämäärä"
       sr_expand_replies:
         one: "Tässä viestissä on %{count} vastaus"

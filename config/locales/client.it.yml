@@ -3401,7 +3401,9 @@ it:
       show_hidden: "Visualizza contenuto ignorato."
       deleted_by_author_simple: "(messaggio eliminato dall'autore)"
       collapse: "comprimi"
+      load_more_replies: "carica altre risposte"
       sr_collapse_replies: "Comprimi risposte incorporate"
+      sr_load_more_replies: "Carica altre risposte incorporate"
       sr_date: "Data di pubblicazione"
       sr_expand_replies:
         one: "Questo messaggio ha %{count} risposta"
