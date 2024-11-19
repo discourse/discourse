@@ -13,6 +13,62 @@ describe Chat::Message do
     expect(Chat::MessageCustomField.first.message.id).to eq(message.id)
   end
 
+  describe "normalization" do
+    context "when normalizing blocks" do
+      it "adds a schema version to the blocks" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a schema version to the elements" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["schema_version"]).to eq(1)
+      end
+
+      it "adds a block_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["block_id"]).to be_present
+      end
+
+      it "adds an action_id if not present" do
+        message.update!(
+          blocks: [
+            {
+              type: "actions",
+              elements: [{ text: { text: "Foo", type: "plain_text" }, type: "button" }],
+            },
+          ],
+        )
+
+        expect(message.blocks[0]["elements"][0]["action_id"]).to be_present
+      end
+    end
+  end
+
   describe "validations" do
     subject(:message) { described_class.new(message: "") }
 
