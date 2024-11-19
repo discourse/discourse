@@ -291,6 +291,37 @@ export default class Chat extends Service {
         this.chatChannelsManager.publicMessageChannelsWithActivity;
       directChannels =
         this.chatChannelsManager.directMessageChannelsWithActivity;
+
+      // If the active channel has no unread messages, we need to manually insert it into
+      // the list, so we can find the next/previous unread channel.
+      if (!activeChannel.hasUnread) {
+        let allChannels;
+
+        if (activeChannel.isDirectMessageChannel) {
+          allChannels = this.chatChannelsManager.directMessageChannels;
+        } else {
+          allChannels = this.chatChannelsManager.publicMessageChannels;
+        }
+
+        // Find the ID of the channel before the active channel, which is unread
+        let checkChannelIndex =
+          allChannels.findIndex((c) => c.id === activeChannel.id) - 1;
+
+        // If we get back to the start of the list, we can stop
+        while (checkChannelIndex >= 0) {
+          if (allChannels[checkChannelIndex].hasUnread) {
+            break;
+          }
+          checkChannelIndex--;
+        }
+
+        // Insert the active channel after unread channel we found (or at the start of the list)
+        if (activeChannel.isDirectMessageChannel) {
+          directChannels.splice(checkChannelIndex + 1, 0, activeChannel);
+        } else {
+          publicChannels.splice(checkChannelIndex + 1, 0, activeChannel);
+        }
+      }
     } else {
       publicChannels = this.chatChannelsManager.publicMessageChannels;
       directChannels = this.chatChannelsManager.directMessageChannels;
