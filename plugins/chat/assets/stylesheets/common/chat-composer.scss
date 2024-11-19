@@ -85,12 +85,7 @@
     outline: none;
     border: 0;
     resize: none;
-    max-height: calc(
-      (
-          var(--100dvh) - var(--main-outlet-offset, 0px) -
-            var(--chat-header-offset, 0px)
-        ) / 100 * 25
-    );
+    max-height: calc(var(--100dvh) / 100 * 25);
     background: none;
     padding: 0;
     margin: 5px 0;
