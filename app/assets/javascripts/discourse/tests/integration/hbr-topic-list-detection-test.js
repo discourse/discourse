@@ -4,12 +4,25 @@ import TopicListItem from "discourse/components/topic-list-item";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { rawConnectorsFor } from "discourse/lib/plugin-connectors";
 import {
+  disableRaiseOnDeprecation,
+  enableRaiseOnDeprecation,
+} from "discourse/tests/helpers/raise-on-deprecation";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+import {
   addRawTemplate,
   needsHbrTopicList,
   removeRawTemplate,
 } from "discourse-common/lib/raw-templates";
 
-module("Integration | Lib | hbr topic list detection", function () {
+module("Integration | Lib | hbr topic list detection", function (hooks) {
+  hooks.beforeEach(function () {
+    disableRaiseOnDeprecation();
+  });
+
+  hooks.afterEach(function () {
+    enableRaiseOnDeprecation();
+  });
+
   test("template overrides", async function (assert) {
     try {
       addRawTemplate("flat-button", "non-topic list override");
@@ -36,21 +49,21 @@ module("Integration | Lib | hbr topic list detection", function () {
   });
 
   test("reopen", async function (assert) {
-    // updated calls are allowed
-    TopicList.deprecatedReopen({});
+    withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+      TopicList.reopen({});
+    });
     assert.false(needsHbrTopicList());
 
-    // old calls are detected
     TopicList.reopen({});
     assert.true(needsHbrTopicList());
   });
 
   test("reopenClass", async function (assert) {
-    // updated calls are allowed
-    TopicListItem.deprecatedReopenClass({});
+    withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+      TopicListItem.reopenClass({});
+    });
     assert.false(needsHbrTopicList());
 
-    // old calls are detected
     TopicListItem.reopenClass({});
     assert.true(needsHbrTopicList());
   });
@@ -63,11 +76,12 @@ module("Integration | Lib | hbr topic list detection", function () {
       );
       assert.false(needsHbrTopicList());
 
-      api.modifyClass(
-        "component:topic-list-item",
-        (Superclass) => class extends Superclass {},
-        { hasModernReplacement: true }
-      );
+      withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+        api.modifyClass(
+          "component:topic-list-item",
+          (Superclass) => class extends Superclass {}
+        );
+      });
       assert.false(needsHbrTopicList());
 
       api.modifyClass(
@@ -83,11 +97,9 @@ module("Integration | Lib | hbr topic list detection", function () {
       api.modifyClassStatic("component:mobile-nav", { pluginId: "test" });
       assert.false(needsHbrTopicList());
 
-      api.modifyClassStatic(
-        "component:topic-list",
-        { pluginId: "test" },
-        { hasModernReplacement: true }
-      );
+      withSilencedDeprecations("discourse.hbr-topic-list-overrides", () => {
+        api.modifyClassStatic("component:topic-list", { pluginId: "test" });
+      });
       assert.false(needsHbrTopicList());
 
       api.modifyClassStatic("component:topic-list", { pluginId: "test" });

@@ -160,7 +160,6 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -298,9 +297,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      if (!opts?.hasModernReplacement) {
-        needsHbrTopicList(true);
-      }
+      deprecated(
+        "modifying topic-list and topic-list-item is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -315,9 +318,7 @@ class PluginApi {
         classPrepend(klass.class, changes);
       } else if (klass.class.reopen) {
         withPrependsRolledBack(klass.class, () => {
-          opts?.hasModernReplacement
-            ? klass.class.deprecatedReopen(changes)
-            : klass.class.reopen(changes);
+          klass.class.reopen(changes);
         });
       } else {
         Object.defineProperties(
@@ -346,9 +347,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      if (!opts?.hasModernReplacement) {
-        needsHbrTopicList(true);
-      }
+      deprecated(
+        "modifying topic-list and topic-list-item is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -359,9 +364,7 @@ class PluginApi {
     if (canModify(klass, "static", resolverName, changes)) {
       delete changes.pluginId;
       withPrependsRolledBack(klass.class, () => {
-        opts?.hasModernReplacement
-          ? klass.class.deprecatedReopenClass(changes)
-          : klass.class.reopenClass(changes);
+        klass.class.reopenClass(changes);
       });
     }
 

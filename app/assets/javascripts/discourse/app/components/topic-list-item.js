@@ -14,11 +14,9 @@ import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
+import deprecated from "discourse-common/lib/deprecated";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import {
-  findRawTemplate,
-  needsHbrTopicList,
-} from "discourse-common/lib/raw-templates";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -53,23 +51,27 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
-  // used by plugins/themes that already support new topic-list APIs
-  static deprecatedReopen() {
-    return super.reopen(...arguments);
-  }
-
   static reopen() {
-    needsHbrTopicList(true);
-    return super.reopen(...arguments);
-  }
+    deprecated(
+      "modifying topic-list-item is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
 
-  // used by plugins/themes that already support new topic-list APIs
-  static deprecatedReopenClass() {
-    return super.reopenClass(...arguments);
+    return super.reopen(...arguments);
   }
 
   static reopenClass() {
-    needsHbrTopicList(true);
+    deprecated(
+      "modifying topic-list-item is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
     return super.reopenClass(...arguments);
   }
 

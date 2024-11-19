@@ -9,30 +9,43 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import LoadMore from "discourse/mixins/load-more";
+import deprecated, {
+  registerDeprecationHandler,
+} from "discourse-common/lib/deprecated";
 import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
+
+registerDeprecationHandler((_, opts) => {
+  if (opts?.id === "discourse.hbr-topic-list-overrides") {
+    needsHbrTopicList(true);
+  }
+});
 
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
 export default class TopicList extends Component.extend(LoadMore) {
-  // used by plugins/themes that already support new topic-list APIs
-  static deprecatedReopen() {
-    return super.reopen(...arguments);
-  }
-
   static reopen() {
-    needsHbrTopicList(true);
-    return super.reopen(...arguments);
-  }
+    deprecated(
+      "modifying topic-list is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
 
-  // used by plugins/themes that already support new topic-list APIs
-  static deprecatedReopenClass() {
-    return super.reopenClass(...arguments);
+    return super.reopen(...arguments);
   }
 
   static reopenClass() {
-    needsHbrTopicList(true);
+    deprecated(
+      "modifying topic-list is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
     return super.reopenClass(...arguments);
   }
 

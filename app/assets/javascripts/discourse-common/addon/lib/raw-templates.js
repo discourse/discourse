@@ -1,4 +1,5 @@
 import require from "require";
+import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
@@ -43,7 +44,13 @@ export function addRawTemplate(name, template, opts = {}) {
     !opts.core &&
     !opts.hasModernReplacement
   ) {
-    _needsHbrTopicList = true;
+    deprecated(
+      "hbr topic-list template overrides are deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
   }
 
   // Core templates should never overwrite themes / plugins
@@ -86,7 +93,13 @@ export function buildRawConnectorCache() {
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
 
-      _needsHbrTopicList = true;
+      deprecated(
+        "hbr connectors are deprecated. Use the new plugin outlets instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
   });
   return result;
