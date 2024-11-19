@@ -1229,7 +1229,6 @@ bs_BA:
       location: "Lokacija"
       website: "Sajt"
       email_settings: "Email"
-      hide_profile_and_presence: "Sakrij moje javne profile i funkcije prisutnosti"
       enable_physical_keyboard: "Omogućite fizičku podršku za tastaturu na iPad-u"
       text_size:
         title: "Veličina teksta"
@@ -4420,8 +4419,6 @@ bs_BA:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Add"
-        add: "Dodaj novi emoji"
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -4453,12 +4450,13 @@ bs_BA:
         post_title: "Objava"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        user_title: "User"
         username: "Nadimak"
         delete_confirm: Jeste li sigurni da želite izbrisati ovaj permalink?
         form:
           label: "Novo:"
-          add: "Dodaj"
-          filter: "Pretraga (URL ili vanjski URL)"
+          url: "URL"
+          save: "Save"
       reseed:
         modal:
           title: "Zamijeni tekst"

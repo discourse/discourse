@@ -2645,8 +2645,6 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Dodaj"
-        add: "Dodaj Novi Emoji"
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -2662,10 +2660,12 @@ sr:
         post_id: "ID Poruke"
         post_title: "Post"
         category_title: "Kategorija"
+        user_title: "Korisnik"
         username: "Korisničko Ime"
         form:
           label: "Novo:"
-          add: "Dodaj"
+          url: "URL"
+          save: "Sačuvaj"
       reseed:
         modal:
           categories: "Kategorije"

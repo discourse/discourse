@@ -1196,6 +1196,7 @@ zh_CN:
       allow_private_messages: "允许其他用户向我发送个人消息"
       external_links_in_new_tab: "在新标签页中打开所有外部链接"
       enable_quoting: "为突出显示的文字启用引用回复"
+      enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       experimental_sidebar:
         enable: "启用边栏"
@@ -1264,6 +1265,7 @@ zh_CN:
       ignored_users: "已忽略"
       ignored_users_instructions: "屏蔽来自这些用户的所有帖子、通知和私信。"
       tracked_topics_link: "显示"
+      automatically_unpin_topics: "当我到达底部时自动取消置顶话题"
       apps: "应用"
       revoke_access: "撤消访问权限"
       undo_revoke_access: "撤消访问权限撤消操作"
@@ -1566,6 +1568,7 @@ zh_CN:
         approval_required: "版主必须手动批准您的新帐户，然后您才可以访问此论坛。当您的帐户获得批准时，您会收到一封电子邮件！"
       name:
         title: "姓名"
+        title_optional: "名称（可选）"
         instructions: "您的全名（可选）"
         instructions_required: "您的全名"
         required: "请输入姓名"
@@ -1619,7 +1622,7 @@ zh_CN:
       location: "地点"
       website: "网站"
       email_settings: "电子邮件"
-      hide_profile_and_presence: "隐藏我的公开个人资料和状态功能"
+      hide_profile: "隐藏我的公开个人资料"
       enable_physical_keyboard: "在 iPad 上启用物理键盘支持"
       text_size:
         title: "文本大小"
@@ -1735,6 +1738,7 @@ zh_CN:
           title: "邀请链接"
           success: "邀请链接已成功生成！"
           error: "生成邀请链接时出错"
+        cannot_invite_to_forum: "抱歉，您无权创建邀请。请联系管理员为您授予邀请权限。"
         invite:
           new_title: "邀请成员"
           edit_title: "编辑邀请"
@@ -1768,8 +1772,12 @@ zh_CN:
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
           update_invite: "更新"
+          update_invite_and_send_email: "更新并发送电子邮件"
           cancel: "取消"
           create_link: "创建链接"
+          create_link_and_send_email: "创建链接并发送电子邮件"
+          invite_saved_without_sending_email: "邀请已保存。复制下面的链接并分享，即可立即授予此网站的访问权限。"
+          invite_saved_with_sending_email: "邀请电子邮件已发送。您也可以复制下面的链接并分享，立即授予此网站的访问权限。"
         bulk_invite:
           none: "此页面没有要显示的邀请。"
           text: "批量邀请"
@@ -1874,12 +1882,18 @@ zh_CN:
         sent_by: "发送人"
         private_message: "消息"
         the_topic: "话题"
+      card: "用户卡"
+      profile_link: "%{username}，访问个人资料"
     user_status:
       save: "保存"
       set_custom_status: "设置自定义状态"
       what_are_you_doing: "您在做什么？"
       pause_notifications: "暂停通知"
       remove_status: "移除状态"
+    presence_toggle:
+      online: "在线"
+      offline: "离线"
+      title: "切换在线状态功能"
     user_tips:
       button: "知道了！"
       skip: "跳过提示"
@@ -3287,6 +3301,8 @@ zh_CN:
       gap:
         other: "查看 %{count} 个隐藏回复"
       sr_reply_to: "回复 @%{username} 发布的帖子 #%{post_number}"
+      link_clicked:
+        other: "链接已点击 %{count} 次"
       notice:
         new_user: "这是 %{user} 首次发帖 - 让我们欢迎他/她加入社区吧！"
         returning_user: "我们已经有一段时间没有看到 %{user} 了 — 他/她上次发帖是 %{time}。"
@@ -3353,6 +3369,7 @@ zh_CN:
         flag: "以私密方式举报此帖子以引起注意，或发送一个关于它的不公开通知"
         delete_action: "删除帖子"
         delete: "删除此帖子"
+        undelete_action: "取消删除帖子"
         undelete: "取消删除此帖子"
         share_action: "分享"
         share: "分享此帖子的链接"
@@ -3537,6 +3554,8 @@ zh_CN:
       badge_colors: "徽章颜色"
       background_color: "背景色"
       foreground_color: "前景色"
+      color_used: "使用的颜色"
+      predefined_colors: "预定义颜色选项"
       name_placeholder: "应该简明扼要"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
@@ -3904,6 +3923,7 @@ zh_CN:
       shortcut_delimiter_or: "%{shortcut1} 或 %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "键盘快捷键"
       short_title: "快捷键"
       jump_to:
@@ -4160,6 +4180,7 @@ zh_CN:
       dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
+    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器选项卡或窗口以返回到正常的网站配置。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"
@@ -4348,6 +4369,7 @@ zh_CN:
                 other: "%{count} 个待处理"
             invite:
               content: "邀请"
+              title: "邀请新成员"
         global_section: "全局版块，对所有人可见"
       panels:
         forum:
@@ -4499,6 +4521,12 @@ zh_CN:
           previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
+          experiment_enabled: "您已启用实验性功能。"
+          experiment_disabled: "您已禁用实验性功能。"
+          experiment_toggled_too_fast: "您切换实验性功能的频率过快。请稍等几秒钟后再试。"
+          experiment_tooltip:
+            title: "试用我们的实验性功能"
+            content: "试试我们最新开发的功能！该功能仍处于实验阶段，因此我们可能随时将其移除。您可以随时选择退出。"
         last_checked: "上次检查"
         refresh_problems: "刷新"
         no_problems: "找不到问题。"
@@ -4863,6 +4891,8 @@ zh_CN:
           group_name: "群组用户事件"
           user_added_to_group: "用户被添加到群组"
           user_removed_from_group: "用户被从群组中移除"
+        custom_event:
+          group_name: "自定义事件"
         user_promoted_event:
           group_name: "用户信任级别提升事件"
           user_promoted: "用户信任级别被提升"
@@ -4972,30 +5002,50 @@ zh_CN:
       config_areas:
         about:
           header: "关于您的网站"
+          description: "在这里提供有关此网站和您团队的信息，以便人们可以了解您的社区、幕后人员，以及在出现问题时如何联系您。显示在您网站的<a href='%{basePath}/about'>关于页面</a>上。"
           general_settings: "常规设置"
           community_name: "社区名称"
           community_name_placeholder: "示例社区"
           community_summary: "社区摘要"
           community_description: "社区描述"
+          community_title: "社区标题"
+          community_title_help: "浏览器选项卡中显示的类别和话题列表等关键页面的简短描述。"
           banner_image: "横幅图片"
           banner_image_help: |
             这将用于您的“关于”页面。推荐大小：1100x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
           contact_information: "联系信息"
           community_owner: "社区所有者"
           community_owner_placeholder: "Johnny Smith"
+          community_owner_help: |
+            用于重要通知的名称，也会显示在 /about 上。对公共网站上的匿名用户可见。
           contact_email: "联系电子邮件地址"
           contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_help: |
+            用于重要通知的电子邮件地址，也会显示在 /about 上。对公共网站上的匿名用户可见。
           contact_url: "联系 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            如果存在，则取代 /about 上的联系人电子邮件地址，它对公共网站上的匿名用户可见。
           site_contact_name: "网站联系人名称"
+          site_contact_name_help: |
+            用于发送所有自动消息的管理人员用户名。如果留空，将使用默认的系统帐户。
           site_contact_group: "网站联系群组"
+          site_contact_group_help: |
+            收到所有自动发送的私信邀请的群组。
           your_organization: "您的组织"
+          your_organization_description: "我们将在《服务条款》或《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
           company_name_placeholder: "Acme 组织"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
           governing_law: "适用法律"
+          governing_law_placeholder: "省、州或国家/地区"
+          governing_law_help: |
+            指定此网站法律条款的管辖管辖区，通常是公司注册地或运营地。
           city_for_disputes: "争议城市"
+          city_for_disputes_placeholder: "城市"
+          city_for_disputes_help: |
+            指定解决与本论坛相关的法律纠纷的城市。
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -5035,14 +5085,23 @@ zh_CN:
             non_deletable: "您无法删除此举报，因为它是系统举报或已在审核系统中使用，但您仍然可以将其禁用。"
             require_message: "提示用户提供更多原因"
             require_message_description: "选择此举报后，将显示一个文本字段，供用户提供更多详细信息来说明举报内容的原因"
+            auto_action_type: "自动隐藏标记内容"
           more_options:
             title: "更多选项"
             move_up: "上移"
             move_down: "下移"
         look_and_feel:
           title: "外观"
+          description: "自定义并品牌化您的 Discourse 网站，赋予其独特的风格。"
           themes:
             title: "主题"
+            themes_intro: "安装新主题以开始使用，或使用这些资源从头开始创建自己的主题。"
+            themes_intro_img_alt: "新主题占位符"
+            set_default_theme: "设置默认值"
+            default_theme: "默认主题"
+            themes_description: "主题是扩展性的自定义，可以改变您的论坛设计风格中的多种元素，通常还包括额外的前端功能。"
+            new_theme: "新主题"
+            user_selectable: "用户可选"
       plugins:
         title: "插件"
         installed: "安装的插件"
@@ -5208,6 +5267,8 @@ zh_CN:
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"
+          themes_intro_new: "安装新主题以开始使用，或使用这些资源从头开始创建自己的主题。"
+          themes_intro_img_alt: "新主题占位符"
           beginners_guide_title: "Discourse 主题初学者使用指南"
           developers_guide_title: "Discourse 主题开发者指南"
           browse_themes: "浏览社区主题"
@@ -5255,11 +5316,16 @@ zh_CN:
           convert_theme_alert_generic: "确定要将此主题转换为组件吗？"
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
+          set_default_theme: "设置默认值"
+          default_theme: "默认主题"
+          set_default_success: "默认主题设置为 %{theme}"
+          install_success: "%{theme} 安装成功！"
           inactive_components: "未使用的组件："
           selected:
             other: "已选择 %{count} 个"
           cancel: "取消"
           broken_theme_tooltip: "此主题的 CSS、HTML 或 YAML 中存在错误"
+          broken_theme: "禁用损坏的主题"
           disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是网站的默认主题"
           updates_available_tooltip: "此主题有可用更新"
@@ -5325,6 +5391,7 @@ zh_CN:
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
           updating: "正在更新…"
+          update_success: "%{theme} 更新完成"
           up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
@@ -6262,6 +6329,7 @@ zh_CN:
         none: "无"
         save: "保存"
         cancel: "取消"
+        unmask: "取消输入掩码"
       site_settings:
         emoji_list:
           invalid_input: "表情符号列表只能包含有效的表情符号名称，例如 hugs"
@@ -6444,13 +6512,15 @@ zh_CN:
           grant_existing_holders: 向现有徽章持有者授予额外的徽章
       emoji:
         title: "表情符号"
-        description: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。所选组将用于同时添加的所有文件。您还可以点击“添加新表情符号”以打开文件选择器。"
-        new: "添加"
-        add: "添加新表情符号"
+        description: "添加可供所有人使用的新 emoji 表情符号。选择多个文件，使用其文件名创建表情符号。所选组将用于同时添加的所有文件。"
+        no_emoji: "你还没有任何自定义 emoji 表情符号。"
+        add: "添加 emoji"
+        back: "返回 emoji"
         choose_files: "选择文件"
         uploading: "正在上传…"
         name: "名称"
         group: "组"
+        created_by: "创建者"
         image: "图片"
         alt: "自定义表情符号预览"
         delete_confirm: "确定要删除 :%{name}: 表情符号吗？"
@@ -6495,17 +6565,26 @@ zh_CN:
         category_id: "类别 ID"
         category_title: "类别"
         tag_name: "标签名称"
+        tag_title: "标签"
         external_url: "外部或相关 URL"
         user_id: "用户 ID"
+        user_title: "用户"
         username: "用户名"
         destination: "目标"
         copy_to_clipboard: "将永久链接复制到剪贴板"
         delete_confirm: 确定要删除此永久链接吗？
-        no_permalinks: "您还没有任何永久链接。在上方创建一个新的永久链接，以开始在此处查看您的永久链接列表。"
+        add: "添加永久链接"
+        back: "返回到永久链接"
+        more_options: "更多选项"
+        copy_success: "永久链接已复制到剪贴板"
         form:
           label: "新："
-          add: "添加"
-          filter: "搜索（URL 或外部 URL）"
+          add_header: "添加永久链接"
+          edit_header: "编辑永久链接"
+          filter: "搜索 URL 或目标 URL"
+          url: "URL"
+          permalink_type: "永久链接类型"
+          save: "保存"
       reseed:
         action:
           label: "替换文本…"

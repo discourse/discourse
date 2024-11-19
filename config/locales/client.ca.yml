@@ -1191,7 +1191,6 @@ ca:
       location: "Ubicació"
       website: "Lloc web"
       email_settings: "Correu electrònic"
-      hide_profile_and_presence: "Amaga les característiques del meu perfil i la meva presència públics "
       enable_physical_keyboard: "Habilita el suport de teclat físic en iPad"
       text_size:
         title: "Mida del text"
@@ -4276,8 +4275,6 @@ ca:
             with_time: <span class="username">%{username}</span> en <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Afegeix"
-        add: "Afegeix emoji nou"
         name: "Nom"
         group: "Grup"
         image: "Imatge"
@@ -4311,12 +4308,13 @@ ca:
         post_title: "Publicació"
         category_id: "ID de categoria"
         category_title: "Categoria"
+        user_title: "Usuari"
         username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
         form:
           label: "Nou:"
-          add: "Afegeix"
-          filter: "Cerca (URL o URL extern)"
+          url: "URL"
+          save: "Desa"
       reseed:
         action:
           label: "Reemplaça el text..."

@@ -1616,7 +1616,6 @@ ja:
       location: "場所"
       website: "ウェブサイト"
       email_settings: "メール"
-      hide_profile_and_presence: "公開プロファイルとプレゼンス機能を非表示にする"
       enable_physical_keyboard: "iPad で物理キーボードのサポートを有効にする"
       text_size:
         title: "テキストサイズ"
@@ -6408,10 +6407,6 @@ ja:
           grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
-        description: "誰でも使用できる新しい絵文字を追加します。名前を入力せずに、複数のファイルを一度にドラッグアンドドロップすると、ファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。「新しい絵文字を追加」をクリックして、ファイルピッカーを開くこともできます。"
-        new: "追加"
-        add: "新しい絵文字を追加"
-        choose_files: "ファイルを選択"
         uploading: "アップロード中…"
         name: "名前"
         group: "グループ"
@@ -6459,17 +6454,19 @@ ja:
         category_id: "カテゴリ ID"
         category_title: "カテゴリ"
         tag_name: "タグ名"
+        tag_title: "タグ"
         external_url: "外部または相対 URL"
         user_id: "ユーザー ID"
+        user_title: "ユーザー"
         username: "ユーザー名"
         destination: "リンク先"
         copy_to_clipboard: "パーマリンクをクリップボードにコピー"
         delete_confirm: このパーマリンクを削除してもよろしいですか？
-        no_permalinks: "パーマリンクはまだありません。上で新しいパーマリンクを作成すると、ここにパーマリンクのリストが表示されます。"
+        more_options: "その他のオプション"
         form:
           label: "新規:"
-          add: "追加"
-          filter: "検索 (URL または外部 URL)"
+          url: "URL"
+          save: "保存"
       reseed:
         action:
           label: "テキストを置換..."

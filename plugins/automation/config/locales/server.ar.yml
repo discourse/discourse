@@ -141,6 +141,13 @@ ar:
         button_text: تم
       add_user_to_group_through_custom_field:
         title: "إضافة مستخدم إلى المجموعة عبر الحقل المخصَّص للمستخدمين"
+        description: "إضافة المستخدمين إلى المجموعات تلقائيًا عند تسجيل الدخول أو من خلال فحص متكرر"
       group_category_notification_default:
         title: "الإعداد الافتراضي لإشعارات فئة المجموعة"
         description: "يضبط مستوى الإشعارات الافتراضي للفئة لأعضاء المجموعة"
+      send_chat_message:
+        title: "إرسال رسالة دردشة"
+        description: "إرسال رسالة دردشة مخصَّصة إلى قناة"
+      random_assign:
+        title: "تعيين عشوائي"
+        description: "تعيين الموضوعات عشوائيًا إلى مجموعة"

@@ -6,6 +6,11 @@
 
 zh_CN:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: 删除自动化
     discourse_automation:
       title: 自动化
       create: 创建
@@ -144,6 +149,9 @@ zh_CN:
               label: 话题 ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: 仅原帖
+              description: 仅当帖子为该话题中的原帖时才触发
             action_type:
               label: 操作类型
               description: "可选，仅限创建或编辑事件触发"
@@ -161,6 +169,7 @@ zh_CN:
               description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
             restricted_groups:
               label: 群组
+              description: 可选，仅当帖子的话题是某个群组收件箱中的私信时才触发
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器
@@ -173,6 +182,9 @@ zh_CN:
             first_topic_only:
               label: 仅第一个话题
               description: 仅在该话题是用户创建的第一个话题时触发
+            skip_via_email:
+              label: "跳过通过电子邮件"
+              description: "如果帖子是通过电子邮件创建的，则跳过该触发器。"
           created: 创建
           edited: 已编辑
         user_updated:
@@ -222,6 +234,9 @@ zh_CN:
             watching_tags:
               label: 关注标签
               description: 仅当话题包含以下任意标签时触发
+            trigger_with_pms:
+              label: 通过私信触发
+              description: 即使在私信中更改了标签也会触发
         after_post_cook:
           fields:
             valid_trust_levels:
