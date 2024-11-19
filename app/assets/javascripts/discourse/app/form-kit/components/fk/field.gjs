@@ -57,10 +57,9 @@ export default class FKField extends Component {
       @registerField={{@registerField}}
       @unregisterField={{@unregisterField}}
       @format={{@format}}
+      @disabled={{@disabled}}
       as |field|
     >
-
-      {{log field}}
       <this.wrapper @size={{@size}}>
         {{yield
           (hash

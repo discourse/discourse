@@ -38,8 +38,6 @@ export default class FKFieldData extends Component {
       throw new Error("@title is required on `<form.Field />`.");
     }
 
-    console.log(this.name, this);
-
     this.args.registerField(this.name, this);
   }
 
