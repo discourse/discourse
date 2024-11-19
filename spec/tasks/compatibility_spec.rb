@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "compatibility:validate" do
-  before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
-  end
-
   def invoke(content)
     file = Tempfile.new("discourse-compat-validate")
     file.write content
@@ -13,7 +8,7 @@ RSpec.describe "compatibility:validate" do
     error = nil
     stdout =
       capture_stdout do
-        Rake::Task["compatibility:validate"].invoke(file.path)
+        invoke_rake_task("compatibility:validate", file.path)
       rescue => e
         error = e
       end
