@@ -266,7 +266,7 @@ export default class BookmarkMenu extends Component {
                 @icon="pencil"
                 @label="edit"
                 @action={{this.onEditBookmark}}
-                @class="bookmark-menu__row-btn btn-transparent"
+                class="bookmark-menu__row-btn btn-transparent"
               />
             </dropdown.item>
             <dropdown.item
@@ -279,7 +279,7 @@ export default class BookmarkMenu extends Component {
                 @icon="trash-can"
                 @label="delete"
                 @action={{this.onRemoveBookmark}}
-                @class="bookmark-menu__row-btn btn-transparent btn-danger"
+                class="bookmark-menu__row-btn btn-transparent btn-danger"
               />
             </dropdown.item>
 
@@ -299,7 +299,7 @@ export default class BookmarkMenu extends Component {
                   @label={{option.label}}
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
                   @action={{fn this.onChooseReminderOption option}}
-                  @class="bookmark-menu__row-btn btn-transparent"
+                  class="bookmark-menu__row-btn btn-transparent"
                 />
               </dropdown.item>
             {{/each}}

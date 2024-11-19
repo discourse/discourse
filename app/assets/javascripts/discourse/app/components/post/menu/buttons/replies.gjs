@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse-common/helpers/d-icon";

@@ -1845,7 +1845,7 @@ export default class ComposerService extends Service {
     // document while in fullscreen mode. If the composer is closed for any reason
     // this class should be removed
 
-    const elem = document.querySelector("html");
+    const elem = document.documentElement;
     elem.classList.remove("fullscreen-composer");
     elem.classList.remove("composer-open");
 
