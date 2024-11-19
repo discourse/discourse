@@ -6,6 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 
 const ALL_FILTER = "all";
+const DEFAULT_GROUP = "default";
 
 export default class AdminEmojis extends Service {
   @service dialog;
@@ -25,19 +26,19 @@ export default class AdminEmojis extends Service {
     if (!this.filter || this.filter === ALL_FILTER) {
       return this.emojis;
     } else {
-      return this.emojis.filterBy("group", this.filter);
+      return this.emojis.filter((e) => e.group === this.filter);
     }
   }
 
   get sortedEmojis() {
-    return this.filteredEmojis.sortBy("sorting");
+    return this.filteredEmojis.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   get emojiGroups() {
-    return this.emojis.mapBy("group").uniq();
+    return [DEFAULT_GROUP].concat(this.emojis.map((e) => e.group)).uniq();
   }
 
-  get sortingGroups() {
+  get filteringGroups() {
     return [ALL_FILTER].concat(this.emojiGroups);
   }
 
