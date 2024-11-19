@@ -1,5 +1,8 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import DModal from "discourse/components/d-modal";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -353,4 +356,36 @@ export default class KeyboardShortcutsHelp extends Component {
     });
     return shortcuts;
   }
+
+  <template>
+    <DModal
+      @title={{i18n "keyboard_shortcuts_help.title"}}
+      @closeModal={{@closeModal}}
+      class="keyboard-shortcuts-modal -max"
+    >
+      <:body>
+        <div id="keyboard-shortcuts-help">
+          <div class="keyboard-shortcuts-help__container">
+            <span tabindex="0"></span>
+            {{! A11Y, allows keyboard users to scroll modal body }}
+            {{#each-in this.shortcuts as |category shortcutCategory|}}
+              <section
+                class="shortcut-category span-{{shortcutCategory.count}}
+                  shortcut-category-{{category}}"
+              >
+                <h2>{{i18n
+                    (concat "keyboard_shortcuts_help." category ".title")
+                  }}</h2>
+                <ul>
+                  {{#each-in shortcutCategory.shortcuts as |name shortcut|}}
+                    <li>{{htmlSafe shortcut}}</li>
+                  {{/each-in}}
+                </ul>
+              </section>
+            {{/each-in}}
+          </div>
+        </div>
+      </:body>
+    </DModal>
+  </template>
 }
