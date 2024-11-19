@@ -34,7 +34,7 @@ export default class AdminConfigAreasEmojisSettings extends Component {
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/config/emojis/settings"
+      @path="/admin/customize/emojis/settings"
       @label={{i18n "settings"}}
     />
 
