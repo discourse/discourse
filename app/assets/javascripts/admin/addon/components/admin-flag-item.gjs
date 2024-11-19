@@ -167,7 +167,7 @@ export default class AdminFlagItem extends Component {
                       <DButton
                         @label="admin.config_areas.flags.more_options.move_up"
                         @icon="arrow-up"
-                        @class="btn-transparent admin-flag-item__move-up"
+                        class="btn-transparent admin-flag-item__move-up"
                         @action={{this.moveUp}}
                       />
                     </dropdown.item>
@@ -177,7 +177,7 @@ export default class AdminFlagItem extends Component {
                       <DButton
                         @label="admin.config_areas.flags.more_options.move_down"
                         @icon="arrow-down"
-                        @class="btn-transparent admin-flag-item__move-down"
+                        class="btn-transparent admin-flag-item__move-down"
                         @action={{this.moveDown}}
                       />
                     </dropdown.item>

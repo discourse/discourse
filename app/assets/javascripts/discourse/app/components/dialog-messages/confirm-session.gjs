@@ -150,7 +150,7 @@ export default class ConfirmSession extends Component {
             <DButton
               @label="user.confirm_access.forgot_password"
               @action={{this.sendPasswordResetEmail}}
-              @class="btn-link btn-flat confirm-session__reset-btn"
+              class="btn-link btn-flat confirm-session__reset-btn"
             />
             {{#if this.resetEmailSent}}
               <span class="confirm-session__reset-email-sent">
