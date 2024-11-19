@@ -9,7 +9,7 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EditCategoryTabsController extends Controller {
   @service dialog;
@@ -50,7 +50,7 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("name")
   categoryName(name) {
     name = name || "";
-    return name.trim().length > 0 ? name : I18n.t("preview");
+    return name.trim().length > 0 ? name : i18n("preview");
   }
 
   @discourseComputed("saving", "model.id")
@@ -64,15 +64,15 @@ export default class EditCategoryTabsController extends Controller {
   @discourseComputed("model.id", "model.name")
   title(id, name) {
     return id
-      ? I18n.t("category.edit_dialog_title", {
+      ? i18n("category.edit_dialog_title", {
           categoryName: name,
         })
-      : I18n.t("category.create");
+      : i18n("category.create");
   }
 
   @discourseComputed("selectedTab")
   selectedTabTitle(tab) {
-    return I18n.t(`category.${underscore(tab)}`);
+    return i18n(`category.${underscore(tab)}`);
   }
 
   @action
@@ -119,7 +119,7 @@ export default class EditCategoryTabsController extends Controller {
   deleteCategory() {
     this.set("deleting", true);
     this.dialog.yesNoConfirm({
-      message: I18n.t("category.delete_confirm"),
+      message: i18n("category.delete_confirm"),
       didConfirm: () => {
         this.model
           .destroy()
@@ -127,7 +127,7 @@ export default class EditCategoryTabsController extends Controller {
             this.router.transitionTo("discovery.categories");
           })
           .catch(() => {
-            this.displayErrors([I18n.t("category.delete_error")]);
+            this.displayErrors([i18n("category.delete_error")]);
           })
           .finally(() => {
             this.set("deleting", false);

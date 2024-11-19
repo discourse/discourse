@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import PollOptionRankedChoiceDropdown from "./poll-option-ranked-choice-dropdown";
 
 export default class PollOptionsComponent extends Component {

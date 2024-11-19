@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotificationsData() {
   return cloneJSON(NotificationFixtures["/notifications"].notifications);
@@ -71,7 +71,7 @@ module(
         .dom(".panel-body-bottom .btn.show-all")
         .hasAttribute(
           "title",
-          I18n.t("user_menu.view_all_notifications"),
+          i18n("user_menu.view_all_notifications"),
           "has the correct title"
         );
     });
@@ -86,14 +86,14 @@ module(
       );
       assert.strictEqual(
         dismissButton.textContent.trim(),
-        I18n.t("user.dismiss"),
+        i18n("user.dismiss"),
         "dismiss button has a label"
       );
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .hasAttribute(
           "title",
-          I18n.t("user.dismiss_notifications_tooltip"),
+          i18n("user.dismiss_notifications_tooltip"),
           "dismiss button has title attribute"
         );
     });

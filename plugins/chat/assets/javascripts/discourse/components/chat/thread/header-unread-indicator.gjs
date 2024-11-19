@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ThreadHeaderUnreadIndicator extends Component {
   @service currentUser;
 
-  unreadCountLabel = I18n.t("chat.unread_threads_count", {
+  unreadCountLabel = i18n("chat.unread_threads_count", {
     count: this.cappedUnreadCount,
   });
 

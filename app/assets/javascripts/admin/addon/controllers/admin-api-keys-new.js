@@ -6,7 +6,7 @@ import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ApiKeyUrlsModal from "../components/modal/api-key-urls";
 
 export default class AdminApiKeysNewController extends Controller {
@@ -14,13 +14,13 @@ export default class AdminApiKeysNewController extends Controller {
   @service modal;
 
   userModes = [
-    { id: "all", name: I18n.t("admin.api.all_users") },
-    { id: "single", name: I18n.t("admin.api.single_user") },
+    { id: "all", name: i18n("admin.api.all_users") },
+    { id: "single", name: i18n("admin.api.single_user") },
   ];
   scopeModes = [
-    { id: "granular", name: I18n.t("admin.api.scopes.granular") },
-    { id: "read_only", name: I18n.t("admin.api.scopes.read_only") },
-    { id: "global", name: I18n.t("admin.api.scopes.global") },
+    { id: "granular", name: i18n("admin.api.scopes.granular") },
+    { id: "read_only", name: i18n("admin.api.scopes.read_only") },
+    { id: "global", name: i18n("admin.api.scopes.global") },
   ];
   globalScopes = null;
   scopes = null;

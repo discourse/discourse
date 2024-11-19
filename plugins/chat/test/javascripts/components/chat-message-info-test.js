@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -28,7 +28,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
       .hasText(this.message.chatWebhookEvent.username);
     assert.strictEqual(
       query(".chat-message-info__bot-indicator").textContent.trim(),
-      I18n.t("chat.bot")
+      i18n("chat.bot")
     );
   });
 
@@ -108,7 +108,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
-      .hasAttribute("title", I18n.t("chat.you_flagged"));
+      .hasAttribute("title", i18n("chat.you_flagged"));
   });
 
   test("reviewable", async function (assert) {
@@ -121,7 +121,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
-      .hasAttribute("title", I18n.t("chat.you_flagged"));
+      .hasAttribute("title", i18n("chat.you_flagged"));
   });
 
   test("with username classes", async function (assert) {

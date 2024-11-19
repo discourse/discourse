@@ -4,7 +4,7 @@ import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityRead extends UserTopicListRoute {
   userActionType = UserAction.TYPES.topics;
@@ -24,9 +24,9 @@ export default class UserActivityRead extends UserTopicListRoute {
   }
 
   emptyState() {
-    const title = I18n.t("user_activity.no_read_topics_title");
+    const title = i18n("user_activity.no_read_topics_title");
     const body = htmlSafe(
-      I18n.t("user_activity.no_read_topics_body", {
+      i18n("user_activity.no_read_topics_body", {
         topUrl: getURL("/top"),
         categoriesUrl: getURL("/categories"),
         searchIcon: iconHTML("magnifying-glass"),
@@ -36,7 +36,7 @@ export default class UserActivityRead extends UserTopicListRoute {
   }
 
   titleToken() {
-    return `${I18n.t("user.read")}`;
+    return `${i18n("user.read")}`;
   }
 
   @action

@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { chooseDarker, darkLightDiff } from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
 import PreviewBaseComponent from "./-preview-base";
@@ -139,7 +139,7 @@ export default class Index extends PreviewBaseComponent {
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
     ctx.font = `bold ${titleFontSize}em '${headingFont}'`;
-    ctx.fillText(I18n.t("wizard.previews.topic_title"), margin, height * 0.3);
+    ctx.fillText(i18n("wizard.previews.topic_title"), margin, height * 0.3);
 
     const bodyFontSize = height / 330.0;
     ctx.font = `${bodyFontSize}em '${font}'`;
@@ -152,7 +152,7 @@ export default class Index extends PreviewBaseComponent {
     }
 
     // Share Button
-    const shareButtonWidth = I18n.t("wizard.previews.share_button").length * 11;
+    const shareButtonWidth = i18n("wizard.previews.share_button").length * 11;
 
     ctx.beginPath();
     ctx.rect(margin, line + lineHeight, shareButtonWidth, height * 0.1);
@@ -163,13 +163,13 @@ export default class Index extends PreviewBaseComponent {
     ctx.fillStyle = chooseDarker(colors.primary, colors.secondary);
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
-      I18n.t("wizard.previews.share_button"),
+      i18n("wizard.previews.share_button"),
       margin + 10,
       line + lineHeight * 1.9
     );
 
     // Reply Button
-    const replyButtonWidth = I18n.t("wizard.previews.reply_button").length * 11;
+    const replyButtonWidth = i18n("wizard.previews.reply_button").length * 11;
 
     ctx.beginPath();
     ctx.rect(
@@ -183,7 +183,7 @@ export default class Index extends PreviewBaseComponent {
     ctx.fillStyle = colors.secondary;
     ctx.font = `${bodyFontSize}em '${font}'`;
     ctx.fillText(
-      I18n.t("wizard.previews.reply_button"),
+      i18n("wizard.previews.reply_button"),
       shareButtonWidth + margin + 20,
       line + lineHeight * 1.9
     );

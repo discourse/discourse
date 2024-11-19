@@ -14,7 +14,7 @@ import {
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
@@ -191,7 +191,7 @@ export default class TextareaTextManipulation {
       }
 
       const [hval, hlen] = getHead(head);
-      const example = I18n.t(`composer.${exampleKey}`);
+      const example = i18n(`composer.${exampleKey}`);
       this._insertAt(sel.start, sel.end, `${hval}${example}${tail}`);
       this.selectText(pre.length + hlen, example.length);
     } else if (opts && !opts.multiline) {

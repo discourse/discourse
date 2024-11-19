@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
 import { propertyNotEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ColorSchemeColor extends EmberObject {
   // Whether the current value is different than Discourse's default color scheme.
@@ -47,7 +47,7 @@ export default class ColorSchemeColor extends EmberObject {
   @discourseComputed("name")
   translatedName(name) {
     if (!this.is_advanced) {
-      return I18n.t(`admin.customize.colors.${name}.name`);
+      return i18n(`admin.customize.colors.${name}.name`);
     } else {
       return name;
     }
@@ -56,7 +56,7 @@ export default class ColorSchemeColor extends EmberObject {
   @discourseComputed("name")
   description(name) {
     if (!this.is_advanced) {
-      return I18n.t(`admin.customize.colors.${name}.description`);
+      return i18n(`admin.customize.colors.${name}.description`);
     } else {
       return "";
     }

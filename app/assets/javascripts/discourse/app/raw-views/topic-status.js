@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends EmberObject {
   showDefault = null;
@@ -73,7 +73,7 @@ export default class TopicStatus extends EmberObject {
         translationParams.unlistedReason = topic.visibilityReasonTranslated;
       }
 
-      result.title = I18n.t(
+      result.title = i18n(
         `topic_statuses.${result.key}.help`,
         translationParams
       );

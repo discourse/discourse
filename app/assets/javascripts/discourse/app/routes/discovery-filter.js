@@ -1,6 +1,6 @@
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DiscoveryFilterRoute extends DiscourseRoute {
   queryParams = {
@@ -19,7 +19,7 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    const filterText = I18n.t("filters.filter.title");
-    return I18n.t("filters.with_topics", { filter: filterText });
+    const filterText = i18n("filters.filter.title");
+    return i18n("filters.with_topics", { filter: filterText });
   }
 }

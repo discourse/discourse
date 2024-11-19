@@ -6,7 +6,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 
 export default class AdminUsersListShowController extends Controller.extend(
@@ -29,7 +29,7 @@ export default class AdminUsersListShowController extends Controller.extend(
 
   @discourseComputed("query")
   title(query) {
-    return I18n.t("admin.users.titles." + query);
+    return i18n("admin.users.titles." + query);
   }
 
   @discourseComputed("showEmails")

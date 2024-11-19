@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreaCard extends Component {
   @tracked collapsed = false;
 
   get computedHeading() {
     if (this.args.heading) {
-      return I18n.t(this.args.heading);
+      return i18n(this.args.heading);
     }
     return this.args.translatedHeading;
   }
@@ -18,7 +18,7 @@ export default class AdminConfigAreaCard extends Component {
 
   get computedDescription() {
     if (this.args.description) {
-      return I18n.t(this.args.description);
+      return i18n(this.args.description);
     }
     return this.args.translatedDescription;
   }

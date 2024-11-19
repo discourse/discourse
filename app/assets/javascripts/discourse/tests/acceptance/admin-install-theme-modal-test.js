@@ -1,7 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
   needs.user();
@@ -106,7 +106,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
       query(
         '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
       ).textContent.trim(),
-      I18n.t("admin.customize.theme.installed")
+      i18n("admin.customize.theme.installed")
     );
 
     assert.ok(

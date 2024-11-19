@@ -8,7 +8,7 @@ import NewListHeaderControls from "discourse/components/topic-list/new-list-head
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicListHeaderColumn extends Component {
   @service router;

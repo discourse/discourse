@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesAwardController extends Controller {
   @service dialog;
@@ -69,7 +69,7 @@ export default class AdminBadgesAwardController extends Controller {
             unmatched_entries: unmatchedEntries,
             unmatched_entries_count: unmatchedEntriesCount,
           }) => {
-            this.resultsMessage = I18n.t("admin.badges.mass_award.success", {
+            this.resultsMessage = i18n("admin.badges.mass_award.success", {
               count: matchedCount,
             });
             this.success = true;
@@ -85,7 +85,7 @@ export default class AdminBadgesAwardController extends Controller {
         })
         .finally(() => (this.saving = false));
     } else {
-      this.dialog.alert(I18n.t("admin.badges.mass_award.aborted"));
+      this.dialog.alert(i18n("admin.badges.mass_award.aborted"));
     }
   }
 }

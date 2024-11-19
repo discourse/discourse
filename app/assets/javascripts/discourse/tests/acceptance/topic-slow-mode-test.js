@@ -7,7 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Slow Mode - enabled", function (needs) {
   needs.user();
@@ -40,7 +40,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     const slowModeType = selectKit(".slow-mode-type");
     assert.strictEqual(
       slowModeType.header().name(),
-      I18n.t("topic.slow_mode_update.durations.10_minutes"),
+      i18n("topic.slow_mode_update.durations.10_minutes"),
       "slow mode interval is rendered"
     );
 
@@ -51,7 +51,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     assert
       .dom("div.enabled-until span.name")
       .hasText(
-        I18n.t("time_shortcut.custom"),
+        i18n("time_shortcut.custom"),
         "enabled until combobox is switched to the option Pick Date and Time"
       );
 
@@ -68,7 +68,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     assert
       .dom("div.d-modal__footer button.btn-primary span")
       .hasText(
-        I18n.t("topic.slow_mode_update.enable"),
+        i18n("topic.slow_mode_update.enable"),
         "shows 'Enable' button when slow mode is disabled"
       );
 
@@ -80,7 +80,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     assert
       .dom("div.d-modal__footer button.btn-primary span")
       .hasText(
-        I18n.t("topic.slow_mode_update.update"),
+        i18n("topic.slow_mode_update.update"),
         "shows 'Update' button when slow mode is enabled"
       );
   });

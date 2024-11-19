@@ -10,8 +10,7 @@ import categoryBadge from "discourse/helpers/category-badge";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
@@ -23,9 +22,9 @@ import ChatRetentionReminderText from "discourse/plugins/chat/discourse/componen
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const NOTIFICATION_LEVELS = [
-  { name: I18n.t("chat.notification_levels.never"), value: "never" },
-  { name: I18n.t("chat.notification_levels.mention"), value: "mention" },
-  { name: I18n.t("chat.notification_levels.always"), value: "always" },
+  { name: i18n("chat.notification_levels.never"), value: "never" },
+  { name: i18n("chat.notification_levels.mention"), value: "mention" },
+  { name: i18n("chat.notification_levels.always"), value: "always" },
 ];
 
 export default class ChatRouteChannelInfoSettings extends Component {
@@ -42,27 +41,25 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
   notificationLevels = NOTIFICATION_LEVELS;
 
-  settingsSectionTitle = I18n.t("chat.settings.settings_title");
-  channelInfoSectionTitle = I18n.t("chat.settings.info_title");
-  categoryLabel = I18n.t("chat.settings.category_label");
-  historyLabel = I18n.t("chat.settings.history_label");
-  adminSectionTitle = I18n.t("chat.settings.admin_title");
-  membersLabel = I18n.t("chat.channel_info.tabs.members");
-  descriptionSectionTitle = I18n.t("chat.about_view.description");
-  titleSectionTitle = I18n.t("chat.about_view.title");
-  descriptionPlaceholder = I18n.t(
+  settingsSectionTitle = i18n("chat.settings.settings_title");
+  channelInfoSectionTitle = i18n("chat.settings.info_title");
+  categoryLabel = i18n("chat.settings.category_label");
+  historyLabel = i18n("chat.settings.history_label");
+  adminSectionTitle = i18n("chat.settings.admin_title");
+  membersLabel = i18n("chat.channel_info.tabs.members");
+  descriptionSectionTitle = i18n("chat.about_view.description");
+  titleSectionTitle = i18n("chat.about_view.title");
+  descriptionPlaceholder = i18n(
     "chat.channel_edit_description_modal.description"
   );
-  toggleThreadingLabel = I18n.t("chat.settings.channel_threading_label");
-  toggleThreadingDescription = I18n.t(
+  toggleThreadingLabel = i18n("chat.settings.channel_threading_label");
+  toggleThreadingDescription = i18n(
     "chat.settings.channel_threading_description"
   );
-  muteSectionLabel = I18n.t("chat.settings.mute");
-  channelWideMentionsLabel = I18n.t(
-    "chat.settings.channel_wide_mentions_label"
-  );
-  autoJoinLabel = I18n.t("chat.settings.auto_join_users_label");
-  notificationsLevelLabel = I18n.t("chat.settings.notification_level");
+  muteSectionLabel = i18n("chat.settings.mute");
+  channelWideMentionsLabel = i18n("chat.settings.channel_wide_mentions_label");
+  autoJoinLabel = i18n("chat.settings.auto_join_users_label");
+  notificationsLevelLabel = i18n("chat.settings.notification_level");
 
   get canEditChannel() {
     if (
@@ -107,7 +104,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
   }
 
   get channelWideMentionsDescription() {
-    return I18n.t("chat.settings.channel_wide_mentions_description", {
+    return i18n("chat.settings.channel_wide_mentions_description", {
       channel: this.args.channel.title,
     });
   }
@@ -201,7 +198,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
     }
 
     return this.dialog.confirm({
-      message: I18n.t("chat.settings.auto_join_users_warning", {
+      message: i18n("chat.settings.auto_join_users_warning", {
         category: this.args.channel.chatable.name,
       }),
       didConfirm: async () => {
@@ -246,7 +243,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
 
       this.args.channel.currentUserMembership[frontendKey] =
         result.membership[backendKey];
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
     } catch (error) {
       popupAjaxError(error);
     }
@@ -258,7 +255,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
       const result = await this.chatApi.updateChannel(channel.id, {
         [property]: value,
       });
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
       return result;
     } catch (error) {
       popupAjaxError(error);

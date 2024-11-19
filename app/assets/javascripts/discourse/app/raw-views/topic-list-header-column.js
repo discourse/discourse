@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { and } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicListHeaderColumn extends EmberObject {
   sortable = null;
@@ -14,7 +14,7 @@ export default class TopicListHeaderColumn extends EmberObject {
       return this.forceName;
     }
 
-    return this.name ? I18n.t(this.name) : "";
+    return this.name ? i18n(this.name) : "";
   }
 
   @discourseComputed

@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Setting from "admin/mixins/setting-object";
 
 export default class SiteSetting extends EmberObject.extend(Setting) {
@@ -21,7 +21,7 @@ export default class SiteSetting extends EmberObject.extend(Setting) {
       return Object.keys(categories).map(function (n) {
         return {
           nameKey: n,
-          name: I18n.t("admin.site_settings.categories." + n),
+          name: i18n("admin.site_settings.categories." + n),
           siteSettings: categories[n],
         };
       });

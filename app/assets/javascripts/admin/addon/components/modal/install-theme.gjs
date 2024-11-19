@@ -14,17 +14,16 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import InstallThemeItem from "admin/components/install-theme-item";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ComboBox from "select-kit/components/combo-box";
 
 const MIN_NAME_LENGTH = 4;
 const CREATE_TYPES = [
-  { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
-  { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
+  { name: i18n("admin.customize.theme.theme"), value: THEMES },
+  { name: i18n("admin.customize.theme.component"), value: COMPONENTS },
 ];
 
 export default class InstallThemeModal extends Component {
@@ -98,9 +97,9 @@ export default class InstallThemeModal extends Component {
 
   get placeholder() {
     if (this.component) {
-      return I18n.t("admin.customize.theme.component_name");
+      return i18n("admin.customize.theme.component_name");
     } else {
-      return I18n.t("admin.customize.theme.theme_name");
+      return i18n("admin.customize.theme.theme_name");
     }
   }
 
@@ -200,7 +199,7 @@ export default class InstallThemeModal extends Component {
           this.themeHasSameUrl(theme, this.uploadUrl)
         );
       if (duplicate && !this.duplicateRemoteThemeWarning) {
-        const warning = I18n.t("admin.customize.theme.duplicate_remote_theme", {
+        const warning = i18n("admin.customize.theme.duplicate_remote_theme", {
           name: duplicate.name,
         });
         this.duplicateRemoteThemeWarning = warning;
@@ -234,9 +233,7 @@ export default class InstallThemeModal extends Component {
       if (!this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(err);
       }
-      this.themeCannotBeInstalled = I18n.t(
-        "admin.customize.theme.force_install"
-      );
+      this.themeCannotBeInstalled = i18n("admin.customize.theme.force_install");
     } finally {
       this.loading = false;
     }

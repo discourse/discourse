@@ -7,7 +7,7 @@ import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container"
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import {
   DangerActionListItem,
   DangerButton,

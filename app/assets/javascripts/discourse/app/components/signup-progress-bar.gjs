@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SignupProgressBar extends Component {
   @service siteSettings;
@@ -23,7 +23,7 @@ export default class SignupProgressBar extends Component {
   }
 
   stepText(step) {
-    return I18n.t(`create_account.progress_bar.${step}`);
+    return i18n(`create_account.progress_bar.${step}`);
   }
 
   get currentStepIndex() {

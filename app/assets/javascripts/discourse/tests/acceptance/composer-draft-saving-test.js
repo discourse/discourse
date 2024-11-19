@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Composer - Draft saving", function (needs) {
   needs.user();
@@ -32,7 +32,7 @@ acceptance("Composer - Draft saving", function (needs) {
     assert
       .dom("div#draft-status span")
       .hasText(
-        I18n.t("composer.drafts_offline"),
+        i18n("composer.drafts_offline"),
         "the draft wasn't saved, a warning is rendered"
       );
     assert

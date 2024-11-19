@@ -2,17 +2,17 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
-const SHIFT = I18n.t("shortcut_modifier_key.shift");
+const SHIFT = i18n("shortcut_modifier_key.shift");
 const ALT = translateModKey("Alt");
 const META = translateModKey("Meta");
-const CTRL = I18n.t("shortcut_modifier_key.ctrl");
-const ENTER = I18n.t("shortcut_modifier_key.enter");
+const CTRL = i18n("shortcut_modifier_key.ctrl");
+const ENTER = i18n("shortcut_modifier_key.enter");
 
-const COMMA = I18n.t(`${KEY}.shortcut_key_delimiter_comma`);
-const PLUS = I18n.t(`${KEY}.shortcut_key_delimiter_plus`);
+const COMMA = i18n(`${KEY}.shortcut_key_delimiter_comma`);
+const PLUS = i18n(`${KEY}.shortcut_key_delimiter_plus`);
 
 const translationForExtraShortcuts = {
   shift: SHIFT,
@@ -39,17 +39,17 @@ function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
   if (allKeys.length === 1) {
     return shortcut1;
   } else if (shortcutsDelimiter === "or") {
-    return I18n.t(`${KEY}.shortcut_delimiter_or`, { shortcut1, shortcut2 });
+    return i18n(`${KEY}.shortcut_delimiter_or`, { shortcut1, shortcut2 });
   } else if (shortcutsDelimiter === "slash") {
-    return I18n.t(`${KEY}.shortcut_delimiter_slash`, { shortcut1, shortcut2 });
+    return i18n(`${KEY}.shortcut_delimiter_slash`, { shortcut1, shortcut2 });
   } else if (shortcutsDelimiter === "space") {
     return wrapInSpan(
-      I18n.t(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 }),
+      i18n(`${KEY}.shortcut_delimiter_space`, { shortcut1, shortcut2 }),
       shortcutsDelimiter
     );
   } else if (shortcutsDelimiter === "newline") {
     return wrapInSpan(
-      I18n.t(`${KEY}.shortcut_delimiter_newline`, {
+      i18n(`${KEY}.shortcut_delimiter_newline`, {
         shortcut1,
         shortcut2,
       }),
@@ -69,7 +69,7 @@ function buildShortcut(
   const context = {
     shortcut: buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter),
   };
-  return I18n.t(`${KEY}.${key}`, context);
+  return i18n(`${KEY}.${key}`, context);
 }
 
 export default class KeyboardShortcutsHelp extends Component {

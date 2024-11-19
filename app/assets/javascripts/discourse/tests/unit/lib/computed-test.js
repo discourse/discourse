@@ -13,7 +13,7 @@ import {
   url,
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);
@@ -25,7 +25,7 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    I18n.t.restore();
+    i18n.restore();
   });
 
   test("setting", function (assert) {

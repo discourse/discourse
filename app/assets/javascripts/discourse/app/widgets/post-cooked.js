@@ -13,7 +13,7 @@ import escape from "discourse-common/lib/escape";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -162,7 +162,7 @@ export default class PostCooked {
             bestElements.get(onebox) === link
           ) {
             link.setAttribute("data-clicks", number(lc.clicks));
-            const ariaLabel = `${link.textContent.trim()} ${I18n.t(
+            const ariaLabel = `${link.textContent.trim()} ${i18n(
               "post.link_clicked",
               {
                 count: lc.clicks,
@@ -255,7 +255,7 @@ export default class PostCooked {
   }
 
   _updateQuoteElements(aside, desc) {
-    const quoteTitle = I18n.t("post.follow_quote");
+    const quoteTitle = i18n("post.follow_quote");
     const postNumber = aside.dataset.post;
     const topicNumber = aside.dataset.topic;
 
@@ -365,7 +365,7 @@ export default class PostCooked {
       this.ignoredUsers?.includes?.(this.attrs.username)
     ) {
       cookedDiv.classList.add("post-ignored");
-      cookedDiv.innerHTML = I18n.t("post.ignored");
+      cookedDiv.innerHTML = i18n("post.ignored");
     } else {
       cookedDiv.innerHTML = this.attrs.cooked;
     }

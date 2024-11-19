@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import dIcon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,
@@ -40,26 +40,26 @@ export default class ChatChannelStatus extends Component {
   #shortStatusMessage(status) {
     switch (status) {
       case CHANNEL_STATUSES.archived:
-        return I18n.t("chat.channel_status.archived");
+        return i18n("chat.channel_status.archived");
       case CHANNEL_STATUSES.closed:
-        return I18n.t("chat.channel_status.closed");
+        return i18n("chat.channel_status.closed");
       case CHANNEL_STATUSES.open:
-        return I18n.t("chat.channel_status.open");
+        return i18n("chat.channel_status.open");
       case CHANNEL_STATUSES.readOnly:
-        return I18n.t("chat.channel_status.read_only");
+        return i18n("chat.channel_status.read_only");
     }
   }
 
   #longStatusMessage(status) {
     switch (status) {
       case CHANNEL_STATUSES.archived:
-        return I18n.t("chat.channel_status.archived_header");
+        return i18n("chat.channel_status.archived_header");
       case CHANNEL_STATUSES.closed:
-        return I18n.t("chat.channel_status.closed_header");
+        return i18n("chat.channel_status.closed_header");
       case CHANNEL_STATUSES.open:
-        return I18n.t("chat.channel_status.open_header");
+        return i18n("chat.channel_status.open_header");
       case CHANNEL_STATUSES.readOnly:
-        return I18n.t("chat.channel_status.read_only_header");
+        return i18n("chat.channel_status.read_only_header");
     }
   }
 

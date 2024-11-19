@@ -4,7 +4,7 @@ import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -54,7 +54,7 @@ module("Unit | Notification Types | granted-badge", function (hooks) {
     );
     assert.strictEqual(
       director.description,
-      I18n.t("notifications.granted_badge", { description: "Badge 15" }),
+      i18n("notifications.granted_badge", { description: "Badge 15" }),
       "contains the right content"
     );
   });

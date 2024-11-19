@@ -5,7 +5,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
@@ -25,7 +25,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    const pollBuilderButtonSelector = `.select-kit-row[data-name='${I18n.t(
+    const pollBuilderButtonSelector = `.select-kit-row[data-name='${i18n(
       "poll.ui_builder.title"
     )}']`;
 
@@ -71,7 +71,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await displayPollBuilderButton();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("poll.ui_builder.title")}']`)
+      .dom(`.select-kit-row[data-name='${i18n("poll.ui_builder.title")}']`)
       .exists("it shows the builder button");
   });
 });

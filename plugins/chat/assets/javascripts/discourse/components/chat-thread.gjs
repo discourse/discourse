@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
@@ -365,7 +365,7 @@ export default class ChatThread extends Component {
       message.message.length > this.siteSettings.chat_maximum_message_length
     ) {
       this.dialog.alert(
-        I18n.t("chat.message_too_long", {
+        i18n("chat.message_too_long", {
           count: this.siteSettings.chat_maximum_message_length,
         })
       );

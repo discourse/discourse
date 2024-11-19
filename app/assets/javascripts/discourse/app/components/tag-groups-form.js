@@ -7,7 +7,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import PermissionType from "discourse/models/permission-type";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagGroupsForm extends Component.extend(
@@ -115,7 +115,7 @@ export default class TagGroupsForm extends Component.extend(
   @action
   save() {
     if (this.cannotSave) {
-      this.dialog.alert(I18n.t("tagging.groups.cannot_save"));
+      this.dialog.alert(i18n("tagging.groups.cannot_save"));
       return false;
     }
 
@@ -149,7 +149,7 @@ export default class TagGroupsForm extends Component.extend(
   @action
   destroyTagGroup() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("tagging.groups.confirm_delete"),
+      message: i18n("tagging.groups.confirm_delete"),
       didConfirm: () => {
         this.model.destroyRecord().then(() => {
           if (this.onDestroy) {

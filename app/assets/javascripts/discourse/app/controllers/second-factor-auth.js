@@ -7,7 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 export default class SecondFactorAuthController extends Controller {
@@ -118,11 +118,11 @@ export default class SecondFactorAuthController extends Controller {
   secondFactorTitle(shownSecondFactorMethod) {
     switch (shownSecondFactorMethod) {
       case TOTP:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case SECURITY_KEY:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_title");
+        return i18n("login.second_factor_backup_title");
     }
   }
 
@@ -130,11 +130,11 @@ export default class SecondFactorAuthController extends Controller {
   secondFactorDescription(shownSecondFactorMethod) {
     switch (shownSecondFactorMethod) {
       case TOTP:
-        return I18n.t("login.second_factor_description");
+        return i18n("login.second_factor_description");
       case SECURITY_KEY:
-        return I18n.t("login.security_key_description");
+        return i18n("login.security_key_description");
       case BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_description");
+        return i18n("login.second_factor_backup_description");
     }
   }
 
@@ -184,9 +184,7 @@ export default class SecondFactorAuthController extends Controller {
       },
     })
       .then((response) => {
-        this.displaySuccess(
-          I18n.t("second_factor_auth.redirect_after_success")
-        );
+        this.displaySuccess(i18n("second_factor_auth.redirect_after_success"));
         ajax(response.callback_path, {
           type: response.callback_method,
           data: {

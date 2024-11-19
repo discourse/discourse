@@ -3,7 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | reviewables-list",
@@ -18,7 +18,7 @@ module(
         .dom(".panel-body-bottom .show-all")
         .hasAttribute(
           "title",
-          I18n.t("user_menu.reviewable.view_all"),
+          i18n("user_menu.reviewable.view_all"),
           "has the correct title"
         );
     });

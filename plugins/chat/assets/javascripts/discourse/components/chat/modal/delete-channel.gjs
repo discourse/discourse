@@ -10,9 +10,8 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import withEventValue from "discourse/helpers/with-event-value";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatModalDeleteChannel extends Component {
   @service chatApi;
@@ -46,7 +45,7 @@ export default class ChatModalDeleteChannel extends Component {
 
   get instructionsText() {
     return htmlSafe(
-      I18n.t("chat.channel_delete.instructions", {
+      i18n("chat.channel_delete.instructions", {
         name: this.channel.escapedTitle,
       })
     );
@@ -60,7 +59,7 @@ export default class ChatModalDeleteChannel extends Component {
       .destroyChannel(this.channel.id, this.channelNameConfirmation)
       .then(() => {
         this.confirmed = true;
-        this.flash = I18n.t("chat.channel_delete.process_started");
+        this.flash = i18n("chat.channel_delete.process_started");
         this.flashType = "success";
 
         discourseLater(() => {

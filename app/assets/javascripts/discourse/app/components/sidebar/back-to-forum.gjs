@@ -1,6 +1,6 @@
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 const BackToForum = <template>
   <a href={{getURL "/"}} class="sidebar-sections__back-to-forum">

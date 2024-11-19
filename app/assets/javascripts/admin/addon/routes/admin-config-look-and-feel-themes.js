@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminConfigLookAndFeelThemesRoute extends DiscourseRoute {
   async model() {
@@ -8,6 +8,6 @@ export default class AdminConfigLookAndFeelThemesRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("admin.config_areas.look_and_feel.themes.title");
+    return i18n("admin.config_areas.look_and_feel.themes.title");
   }
 }

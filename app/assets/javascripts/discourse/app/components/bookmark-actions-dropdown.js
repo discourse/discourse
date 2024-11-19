@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -28,23 +28,23 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
     actions.push({
       id: ACTION_REMOVE,
       icon: "trash-can",
-      name: I18n.t("post.bookmarks.actions.delete_bookmark.name"),
-      description: I18n.t("post.bookmarks.actions.delete_bookmark.description"),
+      name: i18n("post.bookmarks.actions.delete_bookmark.name"),
+      description: i18n("post.bookmarks.actions.delete_bookmark.description"),
     });
 
     actions.push({
       id: ACTION_EDIT,
       icon: "pencil",
-      name: I18n.t("post.bookmarks.actions.edit_bookmark.name"),
-      description: I18n.t("post.bookmarks.actions.edit_bookmark.description"),
+      name: i18n("post.bookmarks.actions.edit_bookmark.name"),
+      description: i18n("post.bookmarks.actions.edit_bookmark.description"),
     });
 
     if (bookmark.reminder_at) {
       actions.push({
         id: ACTION_CLEAR_REMINDER,
         icon: "clock-rotate-left",
-        name: I18n.t("post.bookmarks.actions.clear_bookmark_reminder.name"),
-        description: I18n.t(
+        name: i18n("post.bookmarks.actions.clear_bookmark_reminder.name"),
+        description: i18n(
           "post.bookmarks.actions.clear_bookmark_reminder.description"
         ),
       });
@@ -53,10 +53,10 @@ export default class BookmarkActionsDropdown extends DropdownSelectBoxComponent 
     actions.push({
       id: ACTION_PIN,
       icon: "thumbtack",
-      name: I18n.t(
+      name: i18n(
         `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.name`
       ),
-      description: I18n.t(
+      description: i18n(
         `post.bookmarks.actions.${bookmark.pinAction()}_bookmark.description`
       ),
     });

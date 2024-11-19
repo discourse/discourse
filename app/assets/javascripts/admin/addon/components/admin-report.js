@@ -10,7 +10,7 @@ import ReportLoader from "discourse/lib/reports-loader";
 import { isTesting } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 
 const TABLE_OPTIONS = {
@@ -32,7 +32,7 @@ const CHART_OPTIONS = {};
 @classNames("admin-report")
 export default class AdminReport extends Component {
   isEnabled = true;
-  disabledLabel = I18n.t("admin.dashboard.disabled");
+  disabledLabel = i18n("admin.dashboard.disabled");
   isLoading = false;
   rateLimitationString = null;
   dataSourceName = null;
@@ -336,7 +336,7 @@ export default class AdminReport extends Component {
         if (response === 429) {
           this.set(
             "rateLimitationString",
-            I18n.t("admin.dashboard.too_many_requests")
+            i18n("admin.dashboard.too_many_requests")
           );
         } else if (response === 500) {
           this.set("model.error", "exception");

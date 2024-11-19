@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class BadgeTitle extends Component {
@@ -43,7 +43,7 @@ export default class BadgeTitle extends Component {
           this.currentUser.set("title", selectedUserBadge?.badge?.name || "");
         },
         () => {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       )
       .finally(() => this.set("_isSaving", false));

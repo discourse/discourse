@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, setting } from "discourse/lib/computed";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminBackupsIndexController extends Controller {
   @service dialog;
@@ -37,7 +37,7 @@ export default class AdminBackupsIndexController extends Controller {
   async download(backup) {
     try {
       await ajax(`/admin/backups/${backup.filename}`, { type: "PUT" });
-      this.dialog.alert(I18n.t("admin.backups.operations.download.alert"));
+      this.dialog.alert(i18n("admin.backups.operations.download.alert"));
     } catch (err) {
       popupAjaxError(err);
     }

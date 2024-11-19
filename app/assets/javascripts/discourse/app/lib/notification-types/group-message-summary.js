@@ -1,10 +1,10 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import { userPath } from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get description() {
-    return I18n.t("notifications.group_message_summary", {
+    return i18n("notifications.group_message_summary", {
       count: this.notification.data.inbox_count,
       group_name: this.notification.data.group_name,
     });

@@ -9,7 +9,7 @@ import DiscourseURL, {
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
@@ -50,7 +50,7 @@ export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
   @setting("allow_uncategorized_topics") allowUncategorized;
 
-  noCategoriesLabel = I18n.t("categories.no_subcategories");
+  noCategoriesLabel = i18n("categories.no_subcategories");
   navigateToEdit = false;
   editingCategory = false;
   editingCategoryTab = null;
@@ -114,7 +114,7 @@ export default class CategoryDrop extends ComboBoxComponent {
 
     // If there is a single shortcut, we can have a single "remove filter" option
     if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
-      shortcuts[0].name = I18n.t("categories.remove_filter");
+      shortcuts[0].name = i18n("categories.remove_filter");
     }
 
     return shortcuts;
@@ -130,14 +130,14 @@ export default class CategoryDrop extends ComboBoxComponent {
     if (this.selectKit.options.noSubcategories) {
       return this.defaultItem(
         NO_CATEGORIES_ID,
-        I18n.t("categories.no_subcategories")
+        i18n("categories.no_subcategories")
       );
     } else {
       return this.defaultItem(
         ALL_CATEGORIES_ID,
         this.selectKit.options.subCategory
-          ? I18n.t("categories.subcategories_label")
-          : I18n.t("categories.categories_label")
+          ? i18n("categories.subcategories_label")
+          : i18n("categories.categories_label")
       );
     }
   }
@@ -165,12 +165,12 @@ export default class CategoryDrop extends ComboBoxComponent {
     }
 
     if (this.selectKit.options.subCategory) {
-      return I18n.t("categories.remove_filter", {
+      return i18n("categories.remove_filter", {
         categoryName: this.parentCategoryName,
       });
     }
 
-    return I18n.t("categories.all");
+    return i18n("categories.all");
   }
 
   async search(filter) {

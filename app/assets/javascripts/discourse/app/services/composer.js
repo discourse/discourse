@@ -46,7 +46,7 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -208,8 +208,8 @@ export default class ComposerService extends Service {
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
-      ? I18n.t("composer.hide_preview")
-      : I18n.t("composer.show_preview");
+      ? i18n("composer.hide_preview")
+      : i18n("composer.show_preview");
   }
 
   @observes("showPreview")
@@ -506,33 +506,33 @@ export default class ComposerService extends Service {
   ariaLabel(modelAction, isWhispering, privateMessage, postUsername) {
     switch (modelAction) {
       case "createSharedDraft":
-        return I18n.t("composer.create_shared_draft");
+        return i18n("composer.create_shared_draft");
       case "editSharedDraft":
-        return I18n.t("composer.edit_shared_draft");
+        return i18n("composer.edit_shared_draft");
       case "createTopic":
-        return I18n.t("composer.composer_actions.create_topic.label");
+        return i18n("composer.composer_actions.create_topic.label");
       case "privateMessage":
-        return I18n.t("user.new_private_message");
+        return i18n("user.new_private_message");
       case "edit":
-        return I18n.t("composer.composer_actions.edit");
+        return i18n("composer.composer_actions.edit");
       case "reply":
         if (isWhispering) {
-          return `${I18n.t("composer.create_whisper")} ${this.site.get(
+          return `${i18n("composer.create_whisper")} ${this.site.get(
             "whispers_allowed_groups_names"
           )}`;
         }
         if (privateMessage) {
-          return I18n.t("composer.create_pm");
+          return i18n("composer.create_pm");
         }
         if (postUsername) {
-          return I18n.t("composer.composer_actions.reply_to_post.label", {
+          return i18n("composer.composer_actions.reply_to_post.label", {
             postUsername,
           });
         } else {
-          return I18n.t("composer.composer_actions.reply_to_topic.label");
+          return i18n("composer.composer_actions.reply_to_topic.label");
         }
       default:
-        return I18n.t("keyboard_shortcuts_help.composing.title");
+        return i18n("keyboard_shortcuts_help.composing.title");
     }
   }
 
@@ -765,7 +765,7 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body",
               templateName: "education",
-              body: I18n.t("composer.duplicate_link_same_user", {
+              body: i18n("composer.duplicate_link_same_user", {
                 domain: linkInfo.domain,
                 post_url: topic.urlForPostNumber(linkInfo.post_number),
                 ago: shortDate(linkInfo.posted_at),
@@ -775,7 +775,7 @@ export default class ComposerService extends Service {
             this.appEvents.trigger("composer-messages:create", {
               extraClass: "custom-body duplicate-link-message",
               templateName: "education",
-              body: I18n.t("composer.duplicate_link", {
+              body: i18n("composer.duplicate_link", {
                 domain: linkInfo.domain,
                 username: linkInfo.username,
                 post_url: topic.urlForPostNumber(linkInfo.post_number),
@@ -932,7 +932,7 @@ export default class ComposerService extends Service {
     const groupLink = getURL(`/g/${name}/members`);
 
     if (userCount > maxMentions) {
-      body = I18n.t("composer.group_mentioned_limit", {
+      body = i18n("composer.group_mentioned_limit", {
         group: `@${name}`,
         count: maxMentions,
         group_link: groupLink,
@@ -943,7 +943,7 @@ export default class ComposerService extends Service {
         userCount >= 5
           ? "composer.larger_group_mentioned"
           : "composer.group_mentioned";
-      body = I18n.t(translationKey, {
+      body = i18n(translationKey, {
         group: `@${name}`,
         count: userCount,
         group_link: groupLink,
@@ -965,12 +965,12 @@ export default class ComposerService extends Service {
 
     let body;
     if (isGroup) {
-      body = I18n.t(`composer.cannot_see_group_mention.${reason}`, {
+      body = i18n(`composer.cannot_see_group_mention.${reason}`, {
         group: name,
         count: notifiedCount,
       });
     } else {
-      body = I18n.t(`composer.cannot_see_mention.${reason}`, {
+      body = i18n(`composer.cannot_see_mention.${reason}`, {
         username: name,
       });
     }
@@ -987,7 +987,7 @@ export default class ComposerService extends Service {
     this.appEvents.trigger("composer-messages:create", {
       extraClass: "custom-body",
       templateName: "education",
-      body: I18n.t("composer.here_mention", {
+      body: i18n("composer.here_mention", {
         here: this.siteSettings.here_mention,
         count,
       }),
@@ -1068,7 +1068,7 @@ export default class ComposerService extends Service {
           "seconds"
         );
         const timeLeft = moment().diff(canPostAt, "seconds");
-        const message = I18n.t("composer.slow_mode.error", {
+        const message = i18n("composer.slow_mode.error", {
           timeLeft: durationTextFromSeconds(timeLeft),
         });
 
@@ -1133,7 +1133,7 @@ export default class ComposerService extends Service {
         (this.isStaffUser || !currentTopic.closed)
       ) {
         this.dialog.alert({
-          title: I18n.t("composer.posting_not_on_topic"),
+          title: i18n("composer.posting_not_on_topic"),
           buttons: [
             {
               label: topicLabelContent(originalTopic),
@@ -1149,7 +1149,7 @@ export default class ComposerService extends Service {
               },
             },
             {
-              label: I18n.t("composer.cancel"),
+              label: i18n("composer.cancel"),
               class: "btn-flat btn-text btn-reply-where__cancel",
             },
           ],
@@ -1641,10 +1641,10 @@ export default class ComposerService extends Service {
 
     return new Promise((resolve) => {
       this.dialog.alert({
-        message: I18n.t("drafts.abandon.confirm"),
+        message: i18n("drafts.abandon.confirm"),
         buttons: [
           {
-            label: I18n.t("drafts.abandon.yes_value"),
+            label: i18n("drafts.abandon.yes_value"),
             class: "btn-danger",
             icon: "trash-can",
             action: () => {
@@ -1655,7 +1655,7 @@ export default class ComposerService extends Service {
             },
           },
           {
-            label: I18n.t("drafts.abandon.no_value"),
+            label: i18n("drafts.abandon.no_value"),
             class: "btn-resume-editing",
             action: () => resolve(data),
           },
@@ -1793,7 +1793,7 @@ export default class ComposerService extends Service {
     if (!this.siteSettings.allow_uncategorized_topics && !categoryId) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("composer.error.category_missing"),
+        reason: i18n("composer.error.category_missing"),
         lastShownAt: lastValidatedAt,
       });
     }
@@ -1807,7 +1807,7 @@ export default class ComposerService extends Service {
       if (category.minimumRequiredTags > tagsArray.length) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("composer.error.tags_missing", {
+          reason: i18n("composer.error.tags_missing", {
             count: category.minimumRequiredTags,
           }),
           lastShownAt: lastValidatedAt,

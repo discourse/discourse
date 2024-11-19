@@ -21,7 +21,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
@@ -133,7 +133,7 @@ export default class ChatMessage extends Component {
 
     recursiveCount(this.args.message);
 
-    return I18n.t("chat.deleted", { count });
+    return i18n("chat.deleted", { count });
   }
 
   get shouldRender() {

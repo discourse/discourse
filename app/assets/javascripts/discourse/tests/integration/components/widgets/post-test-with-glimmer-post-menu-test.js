@@ -10,7 +10,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | Widget | post with glimmer-post-menu",
@@ -727,7 +727,7 @@ module(
 
       assert.strictEqual(
         query(".post-notice.returning-user:not(.old)").innerText.trim(),
-        I18n.t("post.notice.returning_user", {
+        i18n("post.notice.returning_user", {
           user: "codinghorror",
           time: "2 days ago",
         })
@@ -750,7 +750,7 @@ module(
 
       assert.strictEqual(
         query(".post-notice.old.new-user").innerText.trim(),
-        I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
+        i18n("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
       );
     });
 
@@ -764,10 +764,7 @@ module(
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
       const link = query(".group-request a");
-      assert.strictEqual(
-        link.innerText.trim(),
-        I18n.t("groups.requests.handle")
-      );
+      assert.strictEqual(link.innerText.trim(), i18n("groups.requests.handle"));
       assert.strictEqual(
         link.getAttribute("href"),
         "/g/testGroup/requests?filter=foo"

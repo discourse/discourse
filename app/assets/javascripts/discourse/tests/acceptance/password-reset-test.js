@@ -5,7 +5,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import { parsePostData } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Password Reset", function (needs) {
   needs.pretender((server, helper) => {
@@ -73,7 +73,7 @@ acceptance("Password Reset", function (needs) {
     await fillIn(".password-reset input", "123");
     assert.dom(".password-reset .tip.bad").exists("input is not valid");
     assert.dom(".password-reset .tip.bad").includesHtml(
-      I18n.t("user.password.too_short", {
+      i18n("user.password.too_short", {
         count: this.siteSettings.min_password_length,
       }),
       "password too short"

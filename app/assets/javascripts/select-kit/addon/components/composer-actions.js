@@ -14,7 +14,7 @@ import {
 } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
@@ -129,10 +129,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       _topicSnapshot
     ) {
       items.push({
-        name: I18n.t(
+        name: i18n(
           "composer.composer_actions.reply_as_new_group_message.label"
         ),
-        description: I18n.t(
+        description: i18n(
           "composer.composer_actions.reply_as_new_group_message.desc"
         ),
         icon: "plus",
@@ -151,10 +151,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       _topicSnapshot
     ) {
       items.push({
-        name: I18n.t("composer.composer_actions.reply_as_new_topic.label"),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_new_topic.desc"
-        ),
+        name: i18n("composer.composer_actions.reply_as_new_topic.label"),
+        description: i18n("composer.composer_actions.reply_as_new_topic.desc"),
         icon: "plus",
         id: "reply_as_new_topic",
       });
@@ -167,10 +165,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
         !(this.replyOptions.userAvatar && this.replyOptions.userLink))
     ) {
       items.push({
-        name: I18n.t("composer.composer_actions.reply_to_post.label", {
+        name: i18n("composer.composer_actions.reply_to_post.label", {
           postUsername: _postSnapshot.username,
         }),
-        description: I18n.t("composer.composer_actions.reply_to_post.desc"),
+        description: i18n("composer.composer_actions.reply_to_post.desc"),
         icon: "share",
         id: "reply_to_post",
       });
@@ -186,8 +184,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
           this.replyOptions.topicLink))
     ) {
       items.push({
-        name: I18n.t("composer.composer_actions.reply_to_topic.label"),
-        description: I18n.t("composer.composer_actions.reply_to_topic.desc"),
+        name: i18n("composer.composer_actions.reply_to_topic.label"),
+        description: i18n("composer.composer_actions.reply_to_topic.desc"),
         icon: "share",
         id: "reply_to_topic",
       });
@@ -201,8 +199,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
         _postSnapshot.post_type !== this.site.post_types.whisper)
     ) {
       items.push({
-        name: I18n.t("composer.composer_actions.toggle_whisper.label"),
-        description: I18n.t("composer.composer_actions.toggle_whisper.desc"),
+        name: i18n("composer.composer_actions.toggle_whisper.label"),
+        description: i18n("composer.composer_actions.toggle_whisper.desc"),
         icon: "far-eye-slash",
         id: "toggle_whisper",
       });
@@ -212,8 +210,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       if (this.site.shared_drafts_category_id) {
         // Shared Drafts Choice
         items.push({
-          name: I18n.t("composer.composer_actions.shared_draft.label"),
-          description: I18n.t("composer.composer_actions.shared_draft.desc"),
+          name: i18n("composer.composer_actions.shared_draft.label"),
+          description: i18n("composer.composer_actions.shared_draft.desc"),
           icon: "far-clipboard",
           id: "shared_draft",
         });
@@ -226,8 +224,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
     if (this.action === REPLY && showToggleTopicBump) {
       items.push({
-        name: I18n.t("composer.composer_actions.toggle_topic_bump.label"),
-        description: I18n.t("composer.composer_actions.toggle_topic_bump.desc"),
+        name: i18n("composer.composer_actions.toggle_topic_bump.label"),
+        description: i18n("composer.composer_actions.toggle_topic_bump.desc"),
         icon: "anchor",
         id: "toggle_topic_bump",
       });
@@ -235,8 +233,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
     if (items.length === 0 && this.currentUser.can_create_topic) {
       items.push({
-        name: I18n.t("composer.composer_actions.create_topic.label"),
-        description: I18n.t("composer.composer_actions.create_topic.desc"),
+        name: i18n("composer.composer_actions.create_topic.label"),
+        description: i18n("composer.composer_actions.create_topic.desc"),
         icon: "share",
         id: "create_topic",
       });
@@ -255,7 +253,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
     url = `${location.protocol}//${location.host}${url}`;
     const link = `[${escapeExpression(topicTitle)}](${url})`;
-    return I18n.t("post.continue_discussion", {
+    return i18n("post.continue_discussion", {
       postLink: link,
     });
   }
@@ -314,9 +312,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     Draft.get("new_topic").then((response) => {
       if (response.draft) {
         this.dialog.confirm({
-          message: I18n.t(
-            "composer.composer_actions.reply_as_new_topic.confirm"
-          ),
+          message: i18n("composer.composer_actions.reply_as_new_topic.confirm"),
           confirmButtonLabel: "composer.ok_proceed",
           didConfirm: () => this._replyAsNewTopicSelect(options),
         });

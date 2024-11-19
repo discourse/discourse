@@ -7,8 +7,7 @@ import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
@@ -74,7 +73,7 @@ export default class ThemeCard extends Component {
 
     this.toasts.success({
       data: {
-        message: I18n.t("admin.customize.theme.set_default_success", {
+        message: i18n("admin.customize.theme.set_default_success", {
           theme: this.args.theme.name,
         }),
       },
@@ -94,7 +93,7 @@ export default class ThemeCard extends Component {
       .then(() => {
         this.toasts.success({
           data: {
-            message: I18n.t("admin.customize.theme.update_success", {
+            message: i18n("admin.customize.theme.update_success", {
               theme: this.args.theme.name,
             }),
           },

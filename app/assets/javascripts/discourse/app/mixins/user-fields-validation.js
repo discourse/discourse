@@ -2,7 +2,7 @@ import EmberObject, { computed } from "@ember/object";
 import { on } from "@ember/object/evented";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const addCustomUserFieldValidationCallbacks = [];
 export function addCustomUserFieldValidationCallback(callback) {
@@ -38,7 +38,7 @@ export default Mixin.create({
       ) {
         validation = EmberObject.create({
           failed: true,
-          reason: I18n.t("user_fields.required", {
+          reason: i18n("user_fields.required", {
             name: userField.field.name,
           }),
           element: userField.field.element,
@@ -53,7 +53,7 @@ export default Mixin.create({
       ) {
         validation = EmberObject.create({
           failed: true,
-          reason: I18n.t("user_fields.same_as_password"),
+          reason: i18n("user_fields.same_as_password"),
           element: userField.field.element,
         });
       }

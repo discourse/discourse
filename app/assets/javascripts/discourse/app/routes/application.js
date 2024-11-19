@@ -19,7 +19,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function isStrictlyReadonly(site) {
   return site.isReadOnly && !site.isStaffWritesOnly;
@@ -101,7 +101,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   logout() {
     if (isStrictlyReadonly(this.site)) {
-      this.dialog.alert(I18n.t("read_only_mode.logout_disabled"));
+      this.dialog.alert(i18n("read_only_mode.logout_disabled"));
       return;
     }
     this._handleLogout();
@@ -127,7 +127,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       ? `${window.location.protocol}//${window.location.host}${post.url}`
       : null;
     const title = post
-      ? I18n.t("composer.reference_topic_title", {
+      ? i18n("composer.reference_topic_title", {
           title: post.topic.title,
         })
       : null;
@@ -191,7 +191,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showLogin() {
     if (isStrictlyReadonly(this.site)) {
-      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      this.dialog.alert(i18n("read_only_mode.login_disabled"));
       return;
     }
     this.handleShowLogin();
@@ -200,7 +200,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showCreateAccount(createAccountProps = {}) {
     if (this.site.isReadOnly) {
-      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      this.dialog.alert(i18n("read_only_mode.login_disabled"));
     } else {
       this.handleShowCreateAccount(createAccountProps);
     }

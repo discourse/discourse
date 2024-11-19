@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
@@ -90,7 +90,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     assert.dom(".mention-without-membership-notice__body__text").hasText(text);
     assert
       .dom(".mention-without-membership-notice__body__link")
-      .hasText(I18n.t("chat.mention_warning.invite"));
+      .hasText(i18n("chat.mention_warning.invite"));
 
     pretender.post(`/chat/api/channels/${this.channel.id}/invites`, () => {
       return [200, { "Content-Type": "application/json" }, {}];

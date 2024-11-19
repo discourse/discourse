@@ -1,6 +1,6 @@
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const LoginPageCta = <template>
   <div class="login-page-cta">

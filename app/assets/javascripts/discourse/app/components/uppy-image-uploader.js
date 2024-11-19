@@ -16,7 +16,7 @@ import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("image-uploader")
 export default class UppyImageUploader extends Component {
@@ -66,7 +66,7 @@ export default class UppyImageUploader extends Component {
   @discourseComputed("disabled", "notAllowed")
   disabledReason(disabled, notAllowed) {
     if (disabled && notAllowed) {
-      return I18n.t("post.errors.no_uploads_authorized");
+      return i18n("post.errors.no_uploads_authorized");
     }
   }
 

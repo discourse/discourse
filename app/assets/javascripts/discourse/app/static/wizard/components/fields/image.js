@@ -8,7 +8,7 @@ import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import imagePreviews from "./image-previews";
 
 @classNames("wizard-container__image-upload")
@@ -54,7 +54,7 @@ export default class Image extends Component {
     });
 
     this._uppyInstance.on("upload-error", (file, error, response) => {
-      let message = I18n.t("wizard.upload_error");
+      let message = i18n("wizard.upload_error");
       if (response.body.errors) {
         message = response.body.errors.join("\n");
       }

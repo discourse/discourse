@@ -7,8 +7,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import withEventValue from "discourse/helpers/with-event-value";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class SidebarEditNavigationMenuModal extends Component {
@@ -17,17 +16,15 @@ export default class SidebarEditNavigationMenuModal extends Component {
   filterDropdownContent = [
     {
       id: "all",
-      name: I18n.t("sidebar.edit_navigation_modal_form.filter_dropdown.all"),
+      name: i18n("sidebar.edit_navigation_modal_form.filter_dropdown.all"),
     },
     {
       id: "selected",
-      name: I18n.t(
-        "sidebar.edit_navigation_modal_form.filter_dropdown.selected"
-      ),
+      name: i18n("sidebar.edit_navigation_modal_form.filter_dropdown.selected"),
     },
     {
       id: "unselected",
-      name: I18n.t(
+      name: i18n(
         "sidebar.edit_navigation_modal_form.filter_dropdown.unselected"
       ),
     },

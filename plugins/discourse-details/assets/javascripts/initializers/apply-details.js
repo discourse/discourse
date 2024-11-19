@@ -1,6 +1,6 @@
 import $ from "jquery";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function initializeDetails(api) {
   api.decorateCooked(($elem) => $("details", $elem), {
@@ -10,7 +10,7 @@ function initializeDetails(api) {
   api.addComposerToolbarPopupMenuOption({
     action: function (toolbarEvent) {
       toolbarEvent.applySurround(
-        "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
+        "\n" + `[details="${i18n("composer.details_title")}"]` + "\n",
         "\n[/details]\n",
         "details_text",
         { multiline: false }

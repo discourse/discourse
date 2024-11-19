@@ -9,7 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Invite from "discourse/models/invite";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseComputed, { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserInvitedShowController extends Controller {
   @service dialog;
@@ -88,7 +88,7 @@ export default class UserInvitedShowController extends Controller {
   @action
   destroyAllExpired() {
     this.dialog.deleteConfirm({
-      message: I18n.t("user.invited.remove_all_confirm"),
+      message: i18n("user.invited.remove_all_confirm"),
       didConfirm: () => {
         return Invite.destroyAllExpired()
           .then(() => {
@@ -109,7 +109,7 @@ export default class UserInvitedShowController extends Controller {
   @action
   reinviteAll() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("user.invited.reinvite_all_confirm"),
+      message: i18n("user.invited.reinvite_all_confirm"),
       didConfirm: () => {
         return Invite.reinviteAll()
           .then(() => this.set("reinvitedAll", true))

@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
 
 export default class AdminPluginsShowSettingsRoute extends DiscourseRoute {
@@ -20,6 +20,6 @@ export default class AdminPluginsShowSettingsRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("admin.plugins.change_settings_short");
+    return i18n("admin.plugins.change_settings_short");
   }
 }

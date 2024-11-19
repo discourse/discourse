@@ -7,7 +7,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Tags", function (needs) {
   needs.user();
@@ -542,7 +542,7 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.without_category", {
+      i18n("tagging.filters.without_category", {
         filter: "Latest",
         tag: "planters",
       }) + ` - ${this.siteSettings.title}`
@@ -553,7 +553,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.with_category", {
+      i18n("tagging.filters.with_category", {
         filter: "Latest",
         tag: "planters",
         category: "feature",
@@ -565,7 +565,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none");
     assert.strictEqual(
       document.title,
-      I18n.t("tagging.filters.untagged_with_category", {
+      i18n("tagging.filters.untagged_with_category", {
         filter: "Latest",
         category: "feature",
       }) + ` - ${this.siteSettings.title}`
