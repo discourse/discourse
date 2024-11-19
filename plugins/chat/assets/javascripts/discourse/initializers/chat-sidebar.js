@@ -293,7 +293,7 @@ export default {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.channel";
             suffixType = "icon";
-            suffixCSSClass = "urgent";
+            // suffixCSSClass = "urgent";
             hoverType = "icon";
             hoverValue = "xmark";
             hoverTitle = i18n("chat.direct_messages.close");
@@ -424,7 +424,19 @@ export default {
             }
 
             get suffixValue() {
-              return this.channel.tracking.unreadCount > 0 ? "circle" : "";
+              return this.channel.tracking.unreadCount > 0 ||
+                (this.chatService.activeChannel?.id !== this.channel.id &&
+                  this.channel.unreadThreadsCountSinceLastViewed > 0)
+                ? "circle"
+                : "";
+            }
+
+            get suffixCSSClass() {
+              return this.channel.tracking.unreadCount > 0 ||
+                this.channel.tracking.mentionCount > 0 ||
+                this.channel.tracking.watchedThreadsUnreadCount > 0
+                ? "urgent"
+                : "unread";
             }
 
             get hoverAction() {

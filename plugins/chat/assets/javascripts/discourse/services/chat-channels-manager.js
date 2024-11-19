@@ -253,14 +253,18 @@ export default class ChatChannelsManager extends Service {
         return -1;
       }
 
-      if (
-        a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount > 0 ||
-        b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount > 0
-      ) {
-        return a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount >
-          b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount
-          ? -1
-          : 1;
+      const aUrgent =
+        a.tracking.unreadCount +
+        a.tracking.mentionCount +
+        a.tracking.watchedThreadsUnreadCount;
+
+      const bUrgent =
+        b.tracking.unreadCount +
+        b.tracking.mentionCount +
+        b.tracking.watchedThreadsUnreadCount;
+
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
       }
 
       if (

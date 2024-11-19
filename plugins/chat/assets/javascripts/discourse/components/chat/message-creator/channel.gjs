@@ -7,13 +7,24 @@ export default class Channel extends Component {
   @service currentUser;
 
   get isUrgent() {
+    return this.args.item.model.isDirectMessageChannel
+      ? this.hasUnreads || this.hasUrgent
+      : this.hasUrgent;
+  }
+
+  get hasUnreads() {
+    return this.args.item.tracking.unreadCount > 0;
+  }
+
+  get hasUrgent() {
     return (
-      this.args.item.model.isDirectMessageChannel ||
-      (this.args.item.model.isCategoryChannel &&
-        this.args.item.model.tracking.mentionCount > 0) ||
-      (this.args.item.model.isCategoryChannel &&
-        this.args.item.model.tracking.watchedThreadsUnreadCount > 0)
+      this.args.item.tracking.mentionCount > 0 ||
+      this.args.item.tracking.watchedThreadsUnreadCount > 0
     );
+  }
+
+  get showIndicator() {
+    return this.hasUnreads || this.isUrgent;
   }
 
   <template>
@@ -23,7 +34,7 @@ export default class Channel extends Component {
     >
       <ChannelTitle
         @channel={{@item.model}}
-        @isUnread={{gt @item.tracking.unreadCount 0}}
+        @isUnread={{this.showIndicator}}
         @isUrgent={{this.isUrgent}}
       />
     </div>

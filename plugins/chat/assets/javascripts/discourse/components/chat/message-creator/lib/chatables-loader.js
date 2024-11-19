@@ -74,11 +74,13 @@ export default class ChatablesLoader {
         let chatable;
         if (channel.chatable?.users?.length === 1) {
           chatable = ChatChatable.createUser(channel.chatable.users[0]);
-          chatable.tracking = this.#injectTracking(chatable);
+          chatable.unread_thread_count =
+            channel.threadsManager.unreadThreadCount;
         } else {
           chatable = ChatChatable.createChannel(channel);
-          chatable.tracking = channel.tracking;
         }
+
+        chatable.tracking = channel.tracking;
         return chatable;
       })
       .filter(Boolean)
