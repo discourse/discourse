@@ -270,7 +270,7 @@ de:
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
       return_to_channel: "Zurück zum Kanal"
-      return_to_threads_list: "Zurück zur Themenliste"
+      return_to_threads_list: "Zurück zur Thread-Liste"
       unread_threads_count:
         one: "Du hast %{count} ungelesene Diskussion"
         other: "Du hast %{count} ungelesene Diskussionen"

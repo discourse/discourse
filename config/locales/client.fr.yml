@@ -3401,7 +3401,9 @@ fr:
       show_hidden: "Afficher le contenu ignoré."
       deleted_by_author_simple: "(message supprimé par son auteur)"
       collapse: "réduire"
+      load_more_replies: "charger plus de réponses"
       sr_collapse_replies: "Masquer les réponses"
+      sr_load_more_replies: "Charger plus de réponses intégrées"
       sr_date: "Date de publication"
       sr_expand_replies:
         one: "Ce message a %{count} réponse"

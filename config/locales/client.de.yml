@@ -5196,7 +5196,7 @@ de:
           saved: "gespeichert!"
         flags:
           header: "Moderationsmeldungen"
-          subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Seite jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
+          subheader: "Das Meldesystem in Discourse hilft dir und deinem Moderatorenteam, Inhalte und Benutzerverhalten zu verwalten, damit deine Community respektvoll agiert und sich positiv entwickelt. Die Standardeinstellungen sind für die meisten Communitys geeignet und müssen nicht geändert werden. Wenn deine Website jedoch besondere Anforderungen hat, kannst du Meldungsgründe, die du nicht brauchst, deaktivieren und deine eigenen Meldungsgründe hinzufügen."
           description: "Beschreibung"
           enabled: "Aktiviert?"
           add: "Meldungsgrund hinzufügen"

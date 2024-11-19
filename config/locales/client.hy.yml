@@ -1557,6 +1557,7 @@ hy:
         not_available_no_suggestion: "Հասանելի չէ"
         too_short: "Ձեր օգտանունը շատ կարճ է"
         too_long: "Ձեր օգտանունը շատ երկար է"
+        checking: "Ստուգվում է օգտանվան հասանելիությունը..."
         prefilled: "Էլ. հասցեն համընկնում է գրանցված օգտանվան հետ"
         required: "Խնդրում ենք մուտքագրել օգտանուն"
         edit: "Խմբագրել օգտանունը"
@@ -2013,6 +2014,8 @@ hy:
         name: "Instagram"
       facebook:
         name: "Facebook"
+        title: "Մուտք Facebook-ով"
+        sr_title: "Մուտք Facebook-ով"
       github:
         name: "GitHub"
       discord:
@@ -3556,6 +3559,9 @@ hy:
       no_topics_title: "Դուք դեռևս չեք հրապարակել որևէ թեմա:"
       no_topics_title_others: "%{username} -ը դեռ ոչ մի թեմա չի սկսել"
       no_read_topics_title: "Դուք դեռ ոչ մի թեմա չեք կարդացել"
+    topic_entrance:
+      sr_jump_top_button: "Անցնել առաջին գրառմանը - %{date}"
+      jump_top_button_title: "Անցնել առաջին գրառմանը"
     sidebar:
       unread_count:
         one: "%{count} չկարդացած"
@@ -3762,6 +3768,7 @@ hy:
           name:
             too_short: "Խմբի անունը շատ կարճ է"
             too_long: "Խմբի անունը շատ երկար է"
+            checking: "Ստուգվում է խմբի անվան հասանելիությունը..."
             available: "Խմբի անունը հասանելի է"
             not_available: "Խմբի անունը հասանելի չէ"
             blank: "Խմբի անունը չի կարող դատարկ լինել"

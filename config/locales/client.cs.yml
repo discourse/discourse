@@ -1376,6 +1376,11 @@ cs:
       home: "Výchozí domovská stránka"
       staged: "Staged"
       staff_counters:
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> smazaný příspěvek'
+          few: '<span class="%{className}">%{count}</span> smazané příspěvky'
+          many: '<span class="%{className}">%{count}</span> smazaných příspěvků'
+          other: '<span class="%{className}">%{count}</span> smazaných příspěvků'
         rejected_posts:
           one: '<span class="%{className}">%{count}</span> odmítnutý příspěvek'
           few: '<span class="%{className}">%{count}</span> odmítnuté příspěvky'
@@ -1928,10 +1933,10 @@ cs:
           many: "vytvořených příspěvků"
           other: "vytvořených příspěvků"
         likes_given:
-          one: "dán"
-          few: "dány"
-          many: "dáno"
-          other: "dáno"
+          one: "udělen"
+          few: "uděleny"
+          many: "uděleno"
+          other: "uděleno"
         likes_received:
           one: "obdržen"
           few: "obdrženy"
@@ -3530,7 +3535,7 @@ cs:
         publishing_settings: "Nastavení publikování"
       change_owner:
         title: "Změnit vlastníka"
-        action: "změnit vlastnictví"
+        action: "Změnit vlastnictví"
         error: "Chyba při měnění autora u příspevků."
         placeholder: "uživatelské jméno nového vlastníka"
         instructions:
@@ -5962,6 +5967,7 @@ cs:
         quick_insert_fields:
           add_new_field: "přidat"
           dropdown: "Menu"
+          multiselect: "Více možností"
         validations_modal:
           table_headers:
             key: "Klíč"
@@ -6269,6 +6275,7 @@ cs:
           text: "Text Field"
           confirm: "Potvrzení"
           dropdown: "Menu"
+          multiselect: "Více možností"
       site_text:
         description: "Můžete si přizpůsobit libovolný text na vašem fóru. Začněte hledáním níže:"
         search: "Hledat text, který byste chtěli upravit"

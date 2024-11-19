@@ -3401,7 +3401,9 @@ es:
       show_hidden: "Ver contenido ignorado."
       deleted_by_author_simple: "(publicación eliminada por su autor/a)"
       collapse: "contraer"
+      load_more_replies: "cargar más respuestas"
       sr_collapse_replies: "Contraer respuestas inscrustadas"
+      sr_load_more_replies: "Cargar más respuestas incrustadas"
       sr_date: "Fecha de publicación"
       sr_expand_replies:
         one: "Este mensaje tiene %{count} respuesta"

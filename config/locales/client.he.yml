@@ -1495,6 +1495,78 @@ he:
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other { ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -4191,7 +4263,7 @@ he:
       predicted_views: "צפיות חזויות"
       so_far: (עד כה)
       read: קריאה
-      minutes: מזערי
+      minutes: דק׳
     post_links:
       about: "הרחיבו לינקים נוספים לפוסט זה"
       title:

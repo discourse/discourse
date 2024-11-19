@@ -4975,7 +4975,7 @@ fr:
           contact_email:
             label: "Point de contact"
             placeholder: "exemple@utilisateur.com"
-            description: "Adresse e-mail du contact clé responsable de ce site. Utilisé pour les notifications critiques et répertorié sur votre page <a href='%{base_path}/about' target='_blank'>à propos</a> pour les questions urgentes."
+            description: "Adresse e-mail du contact clé responsable de ce site. Utilisé pour les notifications critiques et répertorié sur votre page <a href='%{base_path}/about' target='_blank'>about</a> pour les questions urgentes."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."
