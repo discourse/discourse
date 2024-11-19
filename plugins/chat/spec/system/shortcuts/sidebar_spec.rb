@@ -4,6 +4,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -128,6 +129,22 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         find("body").send_keys(%i[alt shift arrow_up])
 
         expect(page).to have_selector(".channel-#{dm_channel_1.id}.active")
+      end
+
+      it "remembers where the current channel is, even if that channel is unread" do
+        chat.visit_channel(channel_2)
+        expect(sidebar_page).to have_active_channel(channel_2)
+
+        Fabricate(:chat_message, chat_channel: channel_1, message: "hello!", use_service: true)
+        expect(sidebar_page).to have_unread_channel(channel_1)
+
+        Fabricate(:chat_message, chat_channel: channel_3, message: "hello!", use_service: true)
+        expect(sidebar_page).to have_unread_channel(channel_3)
+
+        find("body").send_keys(%i[alt shift arrow_down])
+
+        expect(sidebar_page).to have_active_channel(channel_3)
+        expect(sidebar_page).to have_no_unread_channel(channel_3)
       end
     end
   end
