@@ -73,17 +73,20 @@ export function propertyLessThan(p1, p2) {
 /**
   Returns i18n version of a string based on a property.
 
-  @method i18n
+  @method computedI18n
   @params {String} properties* to format
   @params {String} format the i18n format string
   @return {Function} discourseComputedProperty function
 **/
-export function i18n(...args) {
+export function computedI18n(...args) {
   const format = args.pop();
   return computed(...args, function () {
     return i18n(addonFmt(format, ...args.map((a) => this.get(a))));
   });
 }
+
+export { computedI18n as i18n };
+
 /**
   Returns htmlSafe version of a string.
 

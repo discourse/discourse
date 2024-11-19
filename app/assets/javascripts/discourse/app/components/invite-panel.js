@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import { i18n } from "discourse/lib/computed";
+import { computedI18n } from "discourse/lib/computed";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
@@ -23,7 +23,7 @@ export default class InvitePanel extends Component {
   // scope to allowed usernames
   @alias("invitingToTopic") allowExistingMembers;
 
-  @i18n("invite.custom_message_placeholder") customMessagePlaceholder;
+  @computedI18n("invite.custom_message_placeholder") customMessagePlaceholder;
 
   groupIds = null;
   allGroups = null;

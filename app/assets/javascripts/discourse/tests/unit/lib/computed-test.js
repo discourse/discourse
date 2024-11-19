@@ -4,9 +4,9 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import {
+  computedI18n,
   fmt,
   htmlSafe,
-  i18n,
   propertyEqual,
   propertyNotEqual,
   setting,
@@ -116,8 +116,8 @@ module("Unit | Utility | computed", function (hooks) {
   test("i18n", function (assert) {
     // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
-      exclaimyUsername: i18n("username", "!!! %@ !!!"),
-      multiple: i18n("username", "mood", "%@ is %@"),
+      exclaimyUsername: computedI18n("username", "!!! %@ !!!"),
+      multiple: computedI18n("username", "mood", "%@ is %@"),
     }).create({
       username: "eviltrout",
       mood: "happy",
