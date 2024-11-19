@@ -29,6 +29,10 @@ module Jobs
           end
       end
 
+      override =
+        DiscoursePluginRegistry.apply_modifier(:tl3_custom_promotions, false, demoted_user_ids)
+      return override if override
+
       # Promotions
       User
         .real
