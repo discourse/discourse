@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import DModal from "discourse/components/d-modal";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import { htmlSafe } from "@ember/template";
-import DModal from "discourse/components/d-modal";
 
 const KEY = "keyboard_shortcuts_help";
 const SHIFT = i18n("shortcut_modifier_key.shift");
