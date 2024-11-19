@@ -3,6 +3,9 @@
 module Chat
   class MessageBlocksValidator < ActiveModel::Validator
     def validate(record)
+      # ensures we don't validate on read
+      return unless record.new_record? || record.changed?
+
       return if !record.blocks
 
       schemer = JSONSchemer.schema(Chat::Schemas::MessageBlocks)
