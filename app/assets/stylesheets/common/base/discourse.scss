@@ -400,10 +400,11 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25em;
+  width: 1em;
   background-color: var(--secondary);
   border-radius: 50%;
-  height: 1.25em;
+  height: 1em;
+  box-shadow: 0px 0px 0px 2px var(--secondary);
 
   .d-icon.d-icon-discourse-dnd {
     color: var(--header_primary-medium) !important;
