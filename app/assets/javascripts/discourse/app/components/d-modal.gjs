@@ -373,7 +373,12 @@ export default class DModal extends Component {
           </div>
 
           {{#if (and (has-block "footer") (not @hideFooter))}}
-            <div class="d-modal__footer">
+            <div
+              class={{concatClass
+                "d-modal__footer"
+                (if @stackedFooter " --stacked")
+              }}
+            >
               {{yield to="footer"}}
             </div>
           {{/if}}
