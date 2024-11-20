@@ -251,24 +251,17 @@ export default class CreateInvite extends Component {
   async createLink() {
     this.sendEmail = false;
 
-    const data = {
+    const topicId = applyValueTransformer("invite-simple-mode-topic", null, {
+      invite: this.invite,
+    });
+
+    await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(DATE_INPUT_FORMAT),
-    };
-
-    const optionalTopicId = applyValueTransformer(
-      "invite-simple-mode-topic",
-      null,
-      { invite: this.invite }
-    );
-
-    if (optionalTopicId) {
-      data.topic_id = optionalTopicId;
-    }
-
-    await this.save(data);
+      ...(topicId != null && { topic_id: topicId }),
+    });
   }
 
   @action
