@@ -55,6 +55,8 @@ html.rtl {
   min-width: 250px !important; // important to override inline styles
   max-width: calc(100% - var(--composer-right));
   min-height: 300px !important; // important to override inline styles
+  height: 0;
+  transition: height 2s ease-out;
 
   .chat-drawer-container {
     background: var(--secondary);
@@ -79,7 +81,7 @@ html.rtl {
   &.is-collapsed {
     min-height: 0 !important;
     height: auto !important;
-    max-width: 350px !important;
+    max-width: 25vw;
   }
 
   .chat-channel,
