@@ -14,4 +14,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "mentions-class",
   "more-topics-tabs",
   "post-menu-buttons",
+  "small-user-attrs",
 ]);
