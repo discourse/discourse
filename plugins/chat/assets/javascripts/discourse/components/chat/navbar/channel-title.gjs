@@ -1,7 +1,7 @@
-import { LinkTo } from "@ember/routing";
-import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class ChatNavbarChannelTitle extends Component {
   @service chatStateManager;
