@@ -56,9 +56,13 @@ describe ChatSDK::Message do
       end
 
       context "when user is not a bot" do
-        it "fails" do
-          params[:guardian] = Fabricate(:user).guardian
+        fab!(:user)
 
+        let(:guardian) { user.guardian }
+
+        before { channel_1.add(user) }
+
+        it "fails" do
           expect { described_class.create(**params) }.to raise_error(
             "Only bots can create messages with blocks",
           )
