@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "tasks/users" do
-  before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
-  end
-
   describe "users:disable_2fa" do
     let(:user) { Fabricate(:user) }
 
@@ -27,7 +22,7 @@ RSpec.describe "tasks/users" do
       expect(user.user_second_factors.totps.count).to eq(2)
       expect(user.second_factor_security_keys.count).to eq(1)
 
-      stdout = capture_stdout { Rake::Task["users:disable_2fa"].invoke(user.username) }
+      stdout = capture_stdout { invoke_rake_task("users:disable_2fa", user.username) }
       user.reload
 
       expect(stdout.chomp).to eq("2FA disabled for #{user.username}")

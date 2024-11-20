@@ -9,7 +9,6 @@ en:
     estimated: "ETA: %{duration}"
     elapsed: "Time: %{duration}"
     processed:
-      percentage: "Processed: %{percentage}"
       progress: "Processed: %{current}"
       progress_with_max: "Processed: %{current} / %{max}"
 

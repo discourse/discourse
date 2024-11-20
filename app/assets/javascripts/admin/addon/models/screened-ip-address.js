@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ScreenedIpAddress extends EmberObject {
   static findAll(filter) {
@@ -16,7 +16,7 @@ export default class ScreenedIpAddress extends EmberObject {
   @equal("action_name", "block") isBlocked;
   @discourseComputed("action_name")
   actionName(actionName) {
-    return I18n.t(`admin.logs.screened_ips.actions.${actionName}`);
+    return i18n(`admin.logs.screened_ips.actions.${actionName}`);
   }
 
   @discourseComputed("ip_address")

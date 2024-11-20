@@ -6,7 +6,7 @@ import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {
   tagName = null;
@@ -28,7 +28,7 @@ export default class SharePanel extends Component {
   @discourseComputed("type", "topic.title")
   shareTitle(type, topicTitle) {
     topicTitle = escapeExpression(topicTitle);
-    return I18n.t("share.topic_html", { topicTitle });
+    return i18n("share.topic_html", { topicTitle });
   }
 
   @discourseComputed("panel.model.shareUrl", "topic.shareUrl")

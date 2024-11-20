@@ -24,7 +24,7 @@ import { clipboardHelpers } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UppyComposerUpload {
   @service dialog;
@@ -222,7 +222,7 @@ export default class UppyComposerUpload {
         const fileCount = Object.keys(unhandledFiles).length;
         if (maxFiles > 0 && fileCount > maxFiles) {
           this.dialog.alert(
-            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            i18n("post.errors.too_many_dragged_and_dropped_files", {
               count: maxFiles,
             })
           );
@@ -506,12 +506,9 @@ export default class UppyComposerUpload {
 
     this.uppyWrapper.onPreProcessProgress((file) => {
       let placeholderData = this.#placeholders[file.id];
-      placeholderData.processingPlaceholder = `[${I18n.t(
-        "processing_filename",
-        {
-          filename: file.name,
-        }
-      )}]()\n`;
+      placeholderData.processingPlaceholder = `[${i18n("processing_filename", {
+        filename: file.name,
+      })}]()\n`;
 
       this.appEvents.trigger(
         `${this.composerEventPrefix}:replace-text`,
@@ -561,7 +558,7 @@ export default class UppyComposerUpload {
     // placeholder already existing in the editor ie [Uploading: test.png…]
     // and add order nr to the next one: [Uploading: test.png(1)…]
     const escapedFilename = escapeRegExp(filename);
-    const regexString = `\\[${I18n.t("uploading_filename", {
+    const regexString = `\\[${i18n("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
     })}\\]\\(\\)`;
     const globalRegex = new RegExp(regexString, "g");
@@ -581,13 +578,13 @@ export default class UppyComposerUpload {
   }
 
   #uploadPlaceholder(file) {
-    const clipboard = I18n.t("clipboard");
+    const clipboard = i18n("clipboard");
     const uploadFilenamePlaceholder = this.#uploadFilenamePlaceholder(file);
     const filename = uploadFilenamePlaceholder
       ? uploadFilenamePlaceholder
       : clipboard;
 
-    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
+    let placeholder = `[${i18n("uploading_filename", { filename })}]()\n`;
     if (!this.#cursorIsOnEmptyLine()) {
       placeholder = `\n${placeholder}`;
     }
@@ -728,7 +725,7 @@ export default class UppyComposerUpload {
     const reply = this.composerModel.get("reply");
     const imagesToWrapGrid = new Set(this.#consecutiveImages);
 
-    const uploadingText = I18n.t("uploading_filename", {
+    const uploadingText = i18n("uploading_filename", {
       filename: "%placeholder%",
     });
     const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);

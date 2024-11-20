@@ -1,10 +1,10 @@
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
-  return I18n.t(labelKey) === defaultLabel ? null : labelKey;
+  return i18n(labelKey) === defaultLabel ? null : labelKey;
 }
 
 export default class Toolbar {
@@ -154,9 +154,7 @@ export default class Toolbar {
       createdButton.sendAction = buttonAttrs.sendAction;
     }
 
-    const title = I18n.t(
-      buttonAttrs.title || `composer.${buttonAttrs.id}_title`
-    );
+    const title = i18n(buttonAttrs.title || `composer.${buttonAttrs.id}_title`);
     if (buttonAttrs.shortcut) {
       const shortcutTitle = `${translateModKey(
         PLATFORM_KEY_MODIFIER + "+"

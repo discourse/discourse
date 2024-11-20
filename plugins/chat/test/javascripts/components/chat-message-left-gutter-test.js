@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -33,7 +33,7 @@ module(
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
-        .hasAttribute("title", I18n.t("chat.flagged"));
+        .hasAttribute("title", i18n("chat.flagged"));
     });
 
     test("with flag status", async function (assert) {
@@ -45,7 +45,7 @@ module(
 
       assert
         .dom(".chat-message-left-gutter__flag .svg-icon-title")
-        .hasAttribute("title", I18n.t("chat.you_flagged"));
+        .hasAttribute("title", i18n("chat.you_flagged"));
     });
 
     test("bookmark", async function (assert) {

@@ -2,6 +2,7 @@
   <AdminPageHeader
     @titleLabel="admin.emoji.title"
     @descriptionLabel="admin.emoji.description"
+    @hideTabs={{this.hideTabs}}
   >
     <:breadcrumbs>
       <DBreadcrumbsItem
@@ -10,7 +11,7 @@
       />
     </:breadcrumbs>
     <:actions as |actions|>
-      <actions.Primary @route="adminEmojis.new" @label="admin.emoji.new" />
+      <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
     </:actions>
     <:tabs>
       <NavItem

@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import {
   CHANNEL_STATUSES,
@@ -30,7 +30,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
 
     assert
       .dom(".chat-channel-status")
-      .hasText(I18n.t("chat.channel_status.closed_header"));
+      .hasText(i18n("chat.channel_status.closed_header"));
   });
 
   test("accepts a format argument", async function (assert) {
@@ -44,7 +44,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
 
     assert
       .dom(".chat-channel-status")
-      .hasText(I18n.t("chat.channel_status.archived"));
+      .hasText(i18n("chat.channel_status.archived"));
   });
 
   test("renders the correct icon", async function (assert) {

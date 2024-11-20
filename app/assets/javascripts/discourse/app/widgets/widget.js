@@ -26,7 +26,7 @@ import {
 } from "discourse/widgets/hooks";
 import { isProduction } from "discourse-common/config/environment";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _registry = {};
 
@@ -508,7 +508,7 @@ export default class Widget {
       if (typeof this.title === "function") {
         attributes.title = this.title(attrs, state);
       } else {
-        attributes.title = I18n.t(this.title);
+        attributes.title = i18n(this.title);
       }
     }
 

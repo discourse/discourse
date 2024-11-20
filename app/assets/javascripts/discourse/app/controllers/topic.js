@@ -38,7 +38,7 @@ import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
@@ -754,7 +754,7 @@ export default class TopicController extends Controller.extend(
           .map((r) => r.id);
 
         buttons.push({
-          label: I18n.t("post.controls.delete_replies.direct_replies", {
+          label: i18n("post.controls.delete_replies.direct_replies", {
             count: directReplyIds.length,
           }),
           class: "btn-primary",
@@ -772,7 +772,7 @@ export default class TopicController extends Controller.extend(
 
         if (replies.some((r) => r.level > 1)) {
           buttons.push({
-            label: I18n.t("post.controls.delete_replies.all_replies", {
+            label: i18n("post.controls.delete_replies.all_replies", {
               count: replies.length,
             }),
             action: () => {
@@ -789,7 +789,7 @@ export default class TopicController extends Controller.extend(
         }
 
         buttons.push({
-          label: I18n.t("post.controls.delete_replies.just_the_post"),
+          label: i18n("post.controls.delete_replies.just_the_post"),
           action: () => {
             post
               .destroy(user, opts)
@@ -802,12 +802,12 @@ export default class TopicController extends Controller.extend(
         });
 
         buttons.push({
-          label: I18n.t("cancel"),
+          label: i18n("cancel"),
           class: "btn-flat",
         });
 
         this.dialog.alert({
-          title: I18n.t("post.controls.delete_replies.confirm"),
+          title: i18n("post.controls.delete_replies.confirm"),
           buttons,
         });
       });
@@ -825,7 +825,7 @@ export default class TopicController extends Controller.extend(
   @action
   deletePostWithConfirmation(post, opts) {
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.confirm_delete"),
+      message: i18n("post.confirm_delete"),
       didConfirm: () => this.send("deletePost", post, opts),
     });
   }
@@ -833,7 +833,7 @@ export default class TopicController extends Controller.extend(
   @action
   permanentlyDeletePost(post) {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("post.controls.permanently_delete_confirmation"),
+      message: i18n("post.controls.permanently_delete_confirmation"),
       didConfirm: () => {
         this.send("deletePost", post, { force_destroy: true });
       },
@@ -843,7 +843,7 @@ export default class TopicController extends Controller.extend(
   @action
   editPost(post) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+      return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     } else if (!post.can_edit) {
       return false;
     }
@@ -893,7 +893,7 @@ export default class TopicController extends Controller.extend(
   @action
   toggleBookmark(post) {
     if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("bookmarks.not_bookmarked"));
+      return this.dialog.alert(i18n("bookmarks.not_bookmarked"));
     } else if (post) {
       const bookmarkForPost = this.model.bookmarks.find(
         (bookmark) =>
@@ -1015,7 +1015,7 @@ export default class TopicController extends Controller.extend(
   deleteSelected() {
     const user = this.currentUser;
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.delete.confirm", {
+      message: i18n("post.delete.confirm", {
         count: this.selectedPostsCount,
       }),
       didConfirm: () => {
@@ -1036,7 +1036,7 @@ export default class TopicController extends Controller.extend(
   @action
   mergePosts() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.merge.confirm", {
+      message: i18n("post.merge.confirm", {
         count: this.selectedPostsCount,
       }),
       didConfirm: () => {
@@ -1223,7 +1223,7 @@ export default class TopicController extends Controller.extend(
       const title = escapeExpression(this.model.title);
       const postUrl = `${location.protocol}//${location.host}${post.url}`;
       const postLink = `[${title}](${postUrl})`;
-      const text = `${I18n.t("post.continue_discussion", {
+      const text = `${i18n("post.continue_discussion", {
         postLink,
       })}\n\n${quotedText}`;
 
@@ -1469,7 +1469,7 @@ export default class TopicController extends Controller.extend(
   _maybeClearAllBookmarks() {
     return new Promise((resolve) => {
       this.dialog.yesNoConfirm({
-        message: I18n.t("bookmarks.confirm_clear"),
+        message: i18n("bookmarks.confirm_clear"),
         didConfirm: () => {
           return this.model
             .deleteBookmarks()

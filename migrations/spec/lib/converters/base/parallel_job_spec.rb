@@ -5,14 +5,17 @@ RSpec.describe ::Migrations::Converters::Base::ParallelJob do
 
   let(:step) { instance_double(::Migrations::Converters::Base::ProgressStep) }
   let(:item) { { key: "value" } }
-  let(:stats) { instance_double(::Migrations::Converters::Base::ProgressStats) }
+  let(:tracker) { instance_double(::Migrations::Converters::Base::StepTracker) }
+  let(:stats) { ::Migrations::Converters::Base::StepStats.new }
   let(:intermediate_db) { class_double(::Migrations::Database::IntermediateDB).as_stubbed_const }
 
   before do
-    allow(::Migrations::Converters::Base::ProgressStats).to receive(:new).and_return(stats)
+    allow(step).to receive(:tracker).and_return(tracker)
 
-    allow(stats).to receive(:reset!)
-    allow(stats).to receive(:log_error)
+    allow(tracker).to receive(:reset_stats!)
+    allow(tracker).to receive(:log_error)
+    allow(tracker).to receive(:stats).and_return(stats)
+
     allow(intermediate_db).to receive(:setup)
     allow(intermediate_db).to receive(:close)
   end
@@ -52,7 +55,7 @@ RSpec.describe ::Migrations::Converters::Base::ParallelJob do
     it "resets stats and clears the offline connection" do
       job.run(item)
 
-      expect(stats).to have_received(:reset!)
+      expect(tracker).to have_received(:reset_stats!)
       expect(offline_connection).to have_received(:clear!)
     end
 
@@ -61,7 +64,7 @@ RSpec.describe ::Migrations::Converters::Base::ParallelJob do
 
       job.run(item)
 
-      expect(stats).to have_received(:log_error).with(
+      expect(tracker).to have_received(:log_error).with(
         "Failed to process item",
         exception: an_instance_of(StandardError),
         details: item,

@@ -1428,7 +1428,6 @@ pt:
       location: "Localização"
       website: "Site da Web"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Esconder o meu perfil público e a funcionalidade de presença"
       enable_physical_keyboard: "Ativar suporte para teclado físico no iPad"
       text_size:
         title: "Tamanho do Texto"
@@ -4847,8 +4846,6 @@ pt:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Adicionar"
-        add: "Adicionar Novo Emoji"
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
@@ -4883,12 +4880,13 @@ pt:
         post_title: "Mensagem"
         category_id: "ID da Categoria"
         category_title: "Categoria"
+        user_title: "Utilizador"
         username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"
-          add: "Adicionar"
-          filter: "Pesquisar (URL ou URL Externo)"
+          url: "URL"
+          save: "Guardar"
       reseed:
         modal:
           categories: "Categorias"

@@ -1369,7 +1369,6 @@ ko:
       location: "위치"
       website: "웹 사이트"
       email_settings: "이메일"
-      hide_profile_and_presence: "내 공개 프로필 및 접속여부 기능 숨기기"
       enable_physical_keyboard: "iPad에서 실제 키보드 지원 활성화"
       text_size:
         title: "텍스트 크기"
@@ -5139,10 +5138,6 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        description: "모든 사람이 사용할 수 있는 새 이모티콘을 추가하세요. 파일명으로 이모티콘을 만들려면 이름을 입력하지 않고 여러 파일을 한 번에 드래그 앤 드롭하세요. 선택한 그룹은 동시에 추가되는 모든 파일에 사용됩니다. '새 이모티콘 추가'를 클릭하여 파일 선택기를 열 수도 있습니다."
-        new: "추가"
-        add: "새 이모티콘 추가"
-        choose_files: "파일 선택"
         name: "이름"
         group: "그룹"
         image: "이미지"
@@ -5181,15 +5176,17 @@ ko:
         category_id: "카테고리 ID"
         category_title: "카테고리"
         tag_name: "태그 이름"
+        tag_title: "태그"
         external_url: "외부 또는 상대 URL"
+        user_title: "사용자"
         username: "아이디"
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?
         form:
           label: "신규:"
-          add: "추가"
-          filter: "검색(URL 또는 외부 URL)"
+          url: "URL"
+          save: "저장"
       reseed:
         action:
           label: "텍스트 대체..."

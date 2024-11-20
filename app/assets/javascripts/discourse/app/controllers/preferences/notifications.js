@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class NotificationsController extends Controller {
-  subpageTitle = I18n.t("user.preferences_nav.notifications");
+  subpageTitle = i18n("user.preferences_nav.notifications");
 
   init() {
     super.init(...arguments);
@@ -21,13 +21,13 @@ export default class NotificationsController extends Controller {
     ];
 
     this.likeNotificationFrequencies = [
-      { name: I18n.t("user.like_notification_frequency.always"), value: 0 },
+      { name: i18n("user.like_notification_frequency.always"), value: 0 },
       {
-        name: I18n.t("user.like_notification_frequency.first_time_and_daily"),
+        name: i18n("user.like_notification_frequency.first_time_and_daily"),
         value: 1,
       },
-      { name: I18n.t("user.like_notification_frequency.first_time"), value: 2 },
-      { name: I18n.t("user.like_notification_frequency.never"), value: 3 },
+      { name: i18n("user.like_notification_frequency.first_time"), value: 2 },
+      { name: i18n("user.like_notification_frequency.never"), value: 3 },
     ];
   }
 

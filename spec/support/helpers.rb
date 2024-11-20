@@ -251,6 +251,13 @@ module Helpers
     theme
   end
 
+  # Invokes a Rake task in a way that is safe for the test environment
+  def invoke_rake_task(task_name, *args)
+    Rake::Task[task_name].invoke(*args)
+  ensure
+    Rake::Task[task_name].reenable
+  end
+
   # Uploads a theme component from a directory.
   #
   # @param parent_theme_id [Integer] The ID of the theme to add the theme component to. Defaults to `SiteSetting.default_theme_id`.

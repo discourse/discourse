@@ -1625,7 +1625,6 @@ hr:
       location: "Lokacija"
       website: "Web stranica"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Sakrij moj javni profil i značajke prisutnosti"
       enable_physical_keyboard: "Omogućivanje podrške za fizičku tipkovnicu na iPad-u"
       text_size:
         title: "Veličina teksta"
@@ -6012,10 +6011,6 @@ hr:
           grant_existing_holders: Dodijelite dodatne značke postojećim nositeljima bedževa
       emoji:
         title: "Emoji"
-        description: "Dodajte nove emojije koji će biti dostupni svima. Povucite i ispustite više datoteka odjednom bez unosa naziva da biste stvorili emojije koristeći njihove nazive datoteka. Odabrana grupa će se koristiti za sve datoteke koje se dodaju u isto vrijeme. Također možete kliknuti \"Dodaj novi emoji\" da otvorite alat za odabir datoteka."
-        new: "Dodaj"
-        add: "Dodaj novi emoji"
-        choose_files: "Odaberite Datoteke"
         uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"
@@ -6055,16 +6050,17 @@ hr:
         category_id: "ID kategorije"
         category_title: "Kategorija"
         tag_name: "Naziv oznake"
+        tag_title: "Označiti"
         external_url: "Vanjski ili relativni URL"
+        user_title: "Korisnik"
         username: "Korisničko ime"
         destination: "Odredište"
         copy_to_clipboard: "Kopirajte stalnu vezu u međuspremnik"
         delete_confirm: Jeste li sigurni da želite izbrisati ovu stalnu vezu?
-        no_permalinks: "Još nemate nijednu trajnu vezu. Napravite novu stalnu vezu iznad kako biste ovdje počeli vidjeti popis svojih stalnih veza."
         form:
           label: "Novo:"
-          add: "Dodaj"
-          filter: "Pretraživanje (URL ili vanjski URL)"
+          url: "URL"
+          save: "Spremi"
       reseed:
         action:
           label: "Zamijeni tekst…"

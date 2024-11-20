@@ -4,7 +4,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { registerRawHelper } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _customAvatarHelpers;
 
@@ -61,7 +61,7 @@ export function renderAvatar(user, options) {
         // if a description has been provided
         if (description && description.length > 0) {
           // prepend the username before the description
-          title = I18n.t("user.avatar.name_and_description", {
+          title = i18n("user.avatar.name_and_description", {
             name: displayName,
             description,
           });

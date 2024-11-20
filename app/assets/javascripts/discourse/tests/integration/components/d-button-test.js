@@ -4,7 +4,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -108,7 +108,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("ariaLabel", "test.fooAriaLabel");
 
-    assert.dom("button").hasAria("label", I18n.t("test.fooAriaLabel"));
+    assert.dom("button").hasAria("label", i18n("test.fooAriaLabel"));
 
     this.setProperties({
       ariaLabel: null,
@@ -126,7 +126,7 @@ module("Integration | Component | d-button", function (hooks) {
     );
 
     this.set("title", "test.fooTitle");
-    assert.dom("button").hasAttribute("title", I18n.t("test.fooTitle"));
+    assert.dom("button").hasAttribute("title", i18n("test.fooTitle"));
 
     this.setProperties({
       title: null,
@@ -145,7 +145,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.dom("button .d-button-label").hasText(I18n.t("test.fooLabel"));
+    assert.dom("button .d-button-label").hasText(i18n("test.fooLabel"));
 
     this.setProperties({
       label: null,

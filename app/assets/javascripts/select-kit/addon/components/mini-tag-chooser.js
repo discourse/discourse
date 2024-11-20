@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
@@ -53,12 +53,12 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
     if (this.selectKit.options.minimum > 0) {
       return this.defaultItem(
         null,
-        I18n.t("tagging.choose_for_topic_required", {
+        i18n("tagging.choose_for_topic_required", {
           count: this.selectKit.options.minimum,
         })
       );
     } else {
-      return this.defaultItem(null, I18n.t("tagging.choose_for_topic"));
+      return this.defaultItem(null, i18n("tagging.choose_for_topic"));
     }
   }
 
@@ -85,7 +85,7 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
     const maximum = this.selectKit.options.maximum;
     if (maximum === 0) {
       const key = "select_kit.max_content_reached";
-      this.addError(I18n.t(key, { count: maximum }));
+      this.addError(i18n(key, { count: maximum }));
       return [];
     }
 
@@ -125,7 +125,7 @@ export default class MiniTagChooser extends MultiSelectComponent.extend(
     if (json.required_tag_group) {
       context.set(
         "selectKit.options.translatedFilterPlaceholder",
-        I18n.t("tagging.choose_for_topic_required_group", {
+        i18n("tagging.choose_for_topic_required_group", {
           count: json.required_tag_group.min_count,
           name: json.required_tag_group.name,
         })

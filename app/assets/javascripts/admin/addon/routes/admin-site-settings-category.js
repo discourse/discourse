@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminSiteSettingsCategoryRoute extends DiscourseRoute {
   model(params) {
@@ -15,7 +15,7 @@ export default class AdminSiteSettingsCategoryRoute extends DiscourseRoute {
     );
     return EmberObject.create({
       nameKey: params.category_id,
-      name: I18n.t("admin.site_settings.categories." + params.category_id),
+      name: i18n("admin.site_settings.categories." + params.category_id),
       siteSettings: this.controllerFor("adminSiteSettingsCategory").get(
         "filteredContent"
       ),

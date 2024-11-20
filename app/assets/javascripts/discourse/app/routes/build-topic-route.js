@@ -9,7 +9,7 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepEqual } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
@@ -120,10 +120,10 @@ class AbstractTopicRoute extends DiscourseRoute {
       return;
     }
 
-    const filterText = I18n.t(
+    const filterText = i18n(
       "filters." + this.routeConfig.filter.replace("/", ".") + ".title"
     );
-    return I18n.t("filters.with_topics", { filter: filterText });
+    return i18n("filters.with_topics", { filter: filterText });
   }
 
   setupController(controller, model) {

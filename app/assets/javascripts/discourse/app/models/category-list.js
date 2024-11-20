@@ -6,7 +6,7 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import deprecated from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class CategoryList extends ArrayProxy {
   static categoriesFrom(store, result, parentCategory = null) {
@@ -46,29 +46,29 @@ export default class CategoryList extends ArrayProxy {
 
     const stat = c[`topics_${statPeriod}`];
     if ((statPeriod === "week" || statPeriod === "month") && stat > 0) {
-      const unit = I18n.t(`categories.topic_stat_unit.${statPeriod}`);
+      const unit = i18n(`categories.topic_stat_unit.${statPeriod}`);
 
-      c.stat = I18n.t("categories.topic_stat", {
+      c.stat = i18n("categories.topic_stat", {
         count: stat, // only used to correctly pluralize the string
         number: `<span class="value">${number(stat)}</span>`,
         unit: `<span class="unit">${unit}</span>`,
       });
 
-      c.statTitle = I18n.t(`categories.topic_stat_sentence_${statPeriod}`, {
+      c.statTitle = i18n(`categories.topic_stat_sentence_${statPeriod}`, {
         count: stat,
       });
 
       c.pickAll = false;
     } else {
       c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
-      c.statTitle = I18n.t("categories.topic_sentence", {
+      c.statTitle = i18n("categories.topic_sentence", {
         count: c.topics_all_time,
       });
       c.pickAll = true;
     }
 
     if (Site.current().mobileView) {
-      c.statTotal = I18n.t("categories.topic_stat_all_time", {
+      c.statTotal = i18n("categories.topic_stat_all_time", {
         count: c.topics_all_time,
         number: `<span class="value">${number(c.topics_all_time)}</span>`,
       });

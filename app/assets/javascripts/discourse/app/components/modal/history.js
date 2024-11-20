@@ -7,7 +7,7 @@ import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function customTagArray(val) {
   if (!val) {
@@ -85,7 +85,7 @@ export default class History extends Component {
   }
 
   get revisionsText() {
-    return I18n.t(
+    return i18n(
       "post.revisions.controls.comparing_previous_to_current_out_of_total",
       {
         previous: this.previousVersion,
@@ -164,7 +164,7 @@ export default class History extends Component {
 
   get revertToRevisionText() {
     if (this.previousVersion) {
-      return I18n.t("post.revisions.controls.revert", {
+      return i18n("post.revisions.controls.revert", {
         revision: this.previousVersion,
       });
     }
@@ -330,7 +330,7 @@ export default class History extends Component {
   @action
   permanentlyDeleteVersions() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("post.revisions.controls.destroy_confirm"),
+      message: i18n("post.revisions.controls.destroy_confirm"),
       didConfirm: () => {
         Post.permanentlyDeleteRevisions(this.postRevision.post_id).then(() => {
           this.args.closeModal();

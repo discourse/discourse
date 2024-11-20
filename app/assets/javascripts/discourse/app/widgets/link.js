@@ -4,7 +4,7 @@ import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default createWidget("link", {
   tagName: "a",
@@ -36,7 +36,7 @@ export default createWidget("link", {
     const ret = {
       href: this.href(attrs),
       title: attrs.title
-        ? I18n.t(attrs.title, attrs.titleOptions)
+        ? i18n(attrs.title, attrs.titleOptions)
         : this.label(attrs),
     };
     if (attrs.attributes) {
@@ -49,9 +49,9 @@ export default createWidget("link", {
 
   label(attrs) {
     if (attrs.labelCount && attrs.count) {
-      return I18n.t(attrs.labelCount, { count: attrs.count });
+      return i18n(attrs.labelCount, { count: attrs.count });
     }
-    return attrs.rawLabel || (attrs.label ? I18n.t(attrs.label) : "");
+    return attrs.rawLabel || (attrs.label ? i18n(attrs.label) : "");
   },
 
   html(attrs) {
@@ -64,7 +64,7 @@ export default createWidget("link", {
       if (attrs["aria-label"]) {
         let icon = iconNode(attrs.icon);
 
-        icon.properties.attributes["aria-label"] = I18n.t(
+        icon.properties.attributes["aria-label"] = i18n(
           attrs["aria-label"],
           attrs.ariaLabelOptions
         );
@@ -92,7 +92,7 @@ export default createWidget("link", {
     if (currentUser && attrs.badgeCount) {
       const val = parseInt(currentUser.get(attrs.badgeCount), 10);
       if (val > 0) {
-        const title = attrs.badgeTitle ? I18n.t(attrs.badgeTitle) : "";
+        const title = attrs.badgeTitle ? i18n(attrs.badgeTitle) : "";
         result.push(" ");
         result.push(
           h(

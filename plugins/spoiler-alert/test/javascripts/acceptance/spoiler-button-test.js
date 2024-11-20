@@ -2,7 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 acceptance("Spoiler Button", function (needs) {
   needs.user();
@@ -20,11 +20,11 @@ acceptance("Spoiler Button", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
     await popUpMenu.expand();
-    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
+    await popUpMenu.selectRowByName(i18n("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
-      `[spoiler]${I18n.t("composer.spoiler_text")}[/spoiler]`,
+      `[spoiler]${i18n("composer.spoiler_text")}[/spoiler]`,
       "it should contain the right output"
     );
 
@@ -36,7 +36,7 @@ acceptance("Spoiler Button", function (needs) {
     );
     assert.strictEqual(
       textarea.selectionEnd,
-      I18n.t("composer.spoiler_text").length + 9,
+      i18n("composer.spoiler_text").length + 9,
       "it should end highlighting at the right position"
     );
 
@@ -46,7 +46,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
+    await popUpMenu.selectRowByName(i18n("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -71,7 +71,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 21;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
+    await popUpMenu.selectRowByName(i18n("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -96,7 +96,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 21;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
+    await popUpMenu.selectRowByName(i18n("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -122,7 +122,7 @@ acceptance("Spoiler Button", function (needs) {
     textarea.selectionEnd = 22;
 
     await popUpMenu.expand();
-    await popUpMenu.selectRowByName(I18n.t("spoiler.title"));
+    await popUpMenu.selectRowByName(i18n("spoiler.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,

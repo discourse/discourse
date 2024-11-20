@@ -21,12 +21,14 @@ module Migrations::Database
       migrate_from_path(@migrations_path, performed_migrations)
 
       @db.close
+      nil
     end
 
     def reset!
       [@db_path, "#{@db_path}-wal", "#{@db_path}-shm"].each do |path|
         FileUtils.remove_file(path, force: true) if File.exist?(path)
       end
+      nil
     end
 
     private

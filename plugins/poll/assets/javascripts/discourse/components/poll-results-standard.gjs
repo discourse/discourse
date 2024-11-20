@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollVoters from "./poll-voters";
 

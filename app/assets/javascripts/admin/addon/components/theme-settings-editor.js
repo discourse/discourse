@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ThemeSettingsEditor extends Component {
   @service dialog;
@@ -100,7 +100,7 @@ export default class ThemeSettingsEditor extends Component {
       this.errors = [
         ...this.errors,
         {
-          setting: I18n.t("admin.customize.syntax_error"),
+          setting: i18n("admin.customize.syntax_error"),
           errorMessage: e.message,
         },
       ];
@@ -112,8 +112,8 @@ export default class ThemeSettingsEditor extends Component {
       this.errors = [
         ...this.errors,
         {
-          setting: I18n.t("admin.customize.syntax_error"),
-          errorMessage: I18n.t("admin.customize.validation_settings_keys"),
+          setting: i18n("admin.customize.syntax_error"),
+          errorMessage: i18n("admin.customize.validation_settings_keys"),
         },
       ];
       this.saving = false;
@@ -139,7 +139,7 @@ export default class ThemeSettingsEditor extends Component {
         ...this.errors,
         {
           setting: deletedNames.join(", "),
-          errorMessage: I18n.t("admin.customize.validation_settings_deleted"),
+          errorMessage: i18n("admin.customize.validation_settings_deleted"),
         },
       ];
     }
@@ -149,7 +149,7 @@ export default class ThemeSettingsEditor extends Component {
         ...this.errors,
         {
           setting: addedNames.join(","),
-          errorMessage: I18n.t("admin.customize.validation_settings_added"),
+          errorMessage: i18n("admin.customize.validation_settings_added"),
         },
       ];
     }

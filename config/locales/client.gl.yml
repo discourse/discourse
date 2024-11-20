@@ -1300,7 +1300,6 @@ gl:
       location: "Localización"
       website: "Sitio web"
       email_settings: "Correo electrónico"
-      hide_profile_and_presence: "Agochar o meu perfil público e as funcionalidades de presenza"
       enable_physical_keyboard: "Activar a compatibilidade do teclado físico no iPad"
       text_size:
         title: "Tamaño do texto"
@@ -4857,8 +4856,6 @@ gl:
           replace_owners: Retirar a insignia dos propietarios anteriores
       emoji:
         title: "Emoji"
-        new: "Engadir"
-        add: "Engadir novo emoji"
         name: "Nome"
         group: "Grupo"
         image: "Imaxe"
@@ -4897,15 +4894,17 @@ gl:
         category_id: "ID da categoría"
         category_title: "Categoría"
         tag_name: "Nome da etiqueta"
+        tag_title: "Etiqueta"
         external_url: "URL externo ou relativo"
+        user_title: "Usuario"
         username: "Nome de usuario"
         destination: "Destino"
         copy_to_clipboard: "Copiar a ligazón permanente ao portapapeis"
         delete_confirm: Confirma a eliminación desta ligazón permanente?
         form:
           label: "Novo:"
-          add: "Engadir"
-          filter: "Buscar (URL ou URL externa)"
+          url: "URL"
+          save: "Gardar"
       reseed:
         action:
           label: "Substituír texto…"

@@ -11,7 +11,7 @@ import { userPath } from "discourse/lib/url";
 import { isWebauthnSupported } from "discourse/lib/webauthn";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -24,7 +24,7 @@ export default class SecurityController extends Controller.extend(
   @service router;
 
   passwordProgress = null;
-  subpageTitle = I18n.t("user.preferences_nav.security");
+  subpageTitle = i18n("user.preferences_nav.security");
   showAllAuthTokens = false;
 
   @gt("model.user_auth_tokens.length", DEFAULT_AUTH_TOKENS_COUNT)
@@ -72,21 +72,21 @@ export default class SecurityController extends Controller.extend(
   changePassword(event) {
     event?.preventDefault();
     if (!this.passwordProgress) {
-      this.set("passwordProgress", I18n.t("user.change_password.in_progress"));
+      this.set("passwordProgress", i18n("user.change_password.in_progress"));
       return this.model
         .changePassword()
         .then(() => {
           // password changed
           this.setProperties({
             changePasswordProgress: false,
-            passwordProgress: I18n.t("user.change_password.success"),
+            passwordProgress: i18n("user.change_password.success"),
           });
         })
         .catch(() => {
           // password failed to change
           this.setProperties({
             changePasswordProgress: false,
-            passwordProgress: I18n.t("user.change_password.error"),
+            passwordProgress: i18n("user.change_password.error"),
           });
         });
     }
@@ -125,7 +125,7 @@ export default class SecurityController extends Controller.extend(
 
       if (!trustedSession.success) {
         this.dialog.dialog({
-          title: I18n.t("user.confirm_access.title"),
+          title: i18n("user.confirm_access.title"),
           type: "notice",
           bodyComponent: ConfirmSession,
           didConfirm: () =>

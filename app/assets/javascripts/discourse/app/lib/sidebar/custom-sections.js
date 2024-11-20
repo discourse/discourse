@@ -2,7 +2,7 @@ import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-pa
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminSidebarPanel from "./admin-sidebar";
 
 class MainSidebarPanel {
@@ -13,7 +13,7 @@ class MainSidebarPanel {
   }
 
   get switchButtonLabel() {
-    return I18n.t("sidebar.panels.forum.label");
+    return i18n("sidebar.panels.forum.label");
   }
 
   get switchButtonIcon() {

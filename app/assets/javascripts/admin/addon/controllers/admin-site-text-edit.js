@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminSiteTextEdit extends Controller.extend(
   bufferedProperty("siteText")
@@ -43,7 +43,7 @@ export default class AdminSiteTextEdit extends Controller.extend(
     this.set("saved", false);
 
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.site_text.revert_confirm"),
+      message: i18n("admin.site_text.revert_confirm"),
       didConfirm: () => {
         this.siteText
           .revert(this.locale)

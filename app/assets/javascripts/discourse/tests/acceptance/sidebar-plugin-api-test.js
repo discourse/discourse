@@ -11,7 +11,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   let linkDidInsert, linkDestroy, sectionDestroy;
@@ -417,7 +417,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           )
           .hasText(
-            I18n.t("sidebar.unread_count", { count: 1 }),
+            i18n("sidebar.unread_count", { count: 1 }),
             "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
           );
 

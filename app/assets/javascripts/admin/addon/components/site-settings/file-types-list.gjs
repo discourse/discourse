@@ -5,9 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ListSetting from "select-kit/components/list-setting";
 
 const IMAGE_TYPES = [
@@ -89,7 +88,7 @@ export default class FileTypesList extends Component {
 
     this.toasts.success({
       data: {
-        message: I18n.t("admin.site_settings.file_types_list.add_types_toast", {
+        message: i18n("admin.site_settings.file_types_list.add_types_toast", {
           types: diffTypes.join(", "),
         }),
       },

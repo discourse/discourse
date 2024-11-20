@@ -1,6 +1,11 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import {
   grantableBadges,
@@ -9,7 +14,8 @@ import {
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+import ComboBox from "select-kit/components/combo-box";
 
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;
@@ -54,6 +60,7 @@ export default class GrantBadgeModal extends Component {
       this.loading = false;
     }
   }
+
   @action
   async performGrantBadge() {
     try {
@@ -67,7 +74,7 @@ export default class GrantBadgeModal extends Component {
       this.userBadges.pushObject(newBadge);
       this.#updateAvailableBadges();
       this.selectedBadgeId = null;
-      this.flash = I18n.t("badges.successfully_granted", {
+      this.flash = i18n("badges.successfully_granted", {
         username,
         badge: newBadge.get("badge.name"),
       });
@@ -79,4 +86,41 @@ export default class GrantBadgeModal extends Component {
       this.saving = false;
     }
   }
+
+  <template>
+    <DModal
+      @bodyClass="grant-badge"
+      @closeModal={{@closeModal}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      @title={{i18n "admin.badges.grant_badge"}}
+      class="grant-badge-modal"
+      {{didInsert this.loadBadges}}
+    >
+      <:body>
+        <ConditionalLoadingSpinner @condition={{this.loading}}>
+          {{#if this.noAvailableBadges}}
+            <p>{{i18n "admin.badges.no_badges"}}</p>
+          {{else}}
+            <p>
+              <ComboBox
+                @value={{this.selectedBadgeId}}
+                @content={{this.availableBadges}}
+                @onChange={{fn (mut this.selectedBadgeId)}}
+                @options={{hash filterable=true none="badges.none"}}
+              />
+            </p>
+          {{/if}}
+        </ConditionalLoadingSpinner>
+      </:body>
+      <:footer>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.performGrantBadge}}
+          @label="admin.badges.grant"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }

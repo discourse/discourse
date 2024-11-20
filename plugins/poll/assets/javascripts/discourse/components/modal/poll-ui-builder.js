@@ -4,7 +4,7 @@ import { gt, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const BAR_CHART_TYPE = "bar";
 export const PIE_CHART_TYPE = "pie";
@@ -46,22 +46,22 @@ export default class PollUiBuilderModal extends Component {
   pollResults(staff) {
     const options = [
       {
-        name: I18n.t("poll.ui_builder.poll_result.always"),
+        name: i18n("poll.ui_builder.poll_result.always"),
         value: ALWAYS_POLL_RESULT,
       },
       {
-        name: I18n.t("poll.ui_builder.poll_result.vote"),
+        name: i18n("poll.ui_builder.poll_result.vote"),
         value: VOTE_POLL_RESULT,
       },
       {
-        name: I18n.t("poll.ui_builder.poll_result.closed"),
+        name: i18n("poll.ui_builder.poll_result.closed"),
         value: CLOSED_POLL_RESULT,
       },
     ];
 
     if (staff) {
       options.push({
-        name: I18n.t("poll.ui_builder.poll_result.staff"),
+        name: i18n("poll.ui_builder.poll_result.staff"),
         value: STAFF_POLL_RESULT,
       });
     }
@@ -224,14 +224,14 @@ export default class PollUiBuilderModal extends Component {
       if (pollOptionsCount < 1) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("poll.ui_builder.help.options_min_count"),
+          reason: i18n("poll.ui_builder.help.options_min_count"),
         });
       }
 
       if (pollOptionsCount > this.siteSettings.poll_maximum_options) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("poll.ui_builder.help.options_max_count", {
+          reason: i18n("poll.ui_builder.help.options_max_count", {
             count: this.siteSettings.poll_maximum_options,
           }),
         });
@@ -269,21 +269,21 @@ export default class PollUiBuilderModal extends Component {
     if (pollMin < 0) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.invalid_min_value"),
+        reason: i18n("poll.ui_builder.help.invalid_min_value"),
       });
     }
 
     if (pollMax < 0 || (isMultiple && pollMax > pollOptionsCount)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.invalid_max_value"),
+        reason: i18n("poll.ui_builder.help.invalid_max_value"),
       });
     }
 
     if (pollMin > pollMax) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("poll.ui_builder.help.invalid_values"),
+        reason: i18n("poll.ui_builder.help.invalid_values"),
       });
     }
 
@@ -291,7 +291,7 @@ export default class PollUiBuilderModal extends Component {
       if (pollStep < 1) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("poll.ui_builder.help.min_step_value"),
+          reason: i18n("poll.ui_builder.help.min_step_value"),
         });
       }
 
@@ -300,14 +300,14 @@ export default class PollUiBuilderModal extends Component {
       if (optionsCount < 1) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("poll.ui_builder.help.options_min_count"),
+          reason: i18n("poll.ui_builder.help.options_min_count"),
         });
       }
 
       if (optionsCount > this.siteSettings.poll_maximum_options) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("poll.ui_builder.help.options_max_count", {
+          reason: i18n("poll.ui_builder.help.options_max_count", {
             count: this.siteSettings.poll_maximum_options,
           }),
         });

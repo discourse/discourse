@@ -6,7 +6,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Security", function (needs) {
   needs.user();
@@ -39,7 +39,7 @@ acceptance("User Preferences - Security", function (needs) {
     assert
       .dom(".pref-auth-tokens > a:nth-of-type(1)")
       .hasText(
-        I18n.t("user.auth_tokens.show_all", { count: 3 }),
+        i18n("user.auth_tokens.show_all", { count: 3 }),
         "it should display two tokens"
       );
     assert

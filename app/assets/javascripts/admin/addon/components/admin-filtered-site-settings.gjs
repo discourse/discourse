@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import SiteSettingFilter from "discourse/lib/site-setting-filter";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { i18n } from "discourse-i18n";
 import AdminSiteSettingsFilterControls from "admin/components/admin-site-settings-filter-controls";
 import SiteSetting from "admin/components/site-setting";
 

@@ -6,7 +6,7 @@ import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);
@@ -32,7 +32,7 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
       );
       assert.ok(
         dialog.alert.calledWith(
-          I18n.t("admin.watched_words.form.upload_successful")
+          i18n("admin.watched_words.form.upload_successful")
         ),
         "alert shown"
       );

@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function getFormTemplateObject(form) {
   const formData = new FormData(form);
@@ -124,35 +124,35 @@ function _showErrorMessage(field, element) {
     ];
     _showErrorByType(element, field, prefix, types);
   } else if (field.validity.tooShort) {
-    element.textContent = I18n.t("form_templates.errors.too_short", {
+    element.textContent = i18n("form_templates.errors.too_short", {
       count: field.minLength,
     });
   } else if (field.validity.tooLong) {
-    element.textContent = I18n.t("form_templates.errors.too_long", {
+    element.textContent = i18n("form_templates.errors.too_long", {
       count: field.maxLength,
     });
   } else if (field.validity.rangeOverflow) {
-    element.textContent = I18n.t("form_templates.errors.range_overflow", {
+    element.textContent = i18n("form_templates.errors.range_overflow", {
       count: field.max,
     });
   } else if (field.validity.rangeUnderflow) {
-    element.textContent = I18n.t("form_templates.errors.range_underflow", {
+    element.textContent = i18n("form_templates.errors.range_underflow", {
       count: field.min,
     });
   } else if (field.validity.patternMismatch) {
-    element.textContent = I18n.t("form_templates.errors.pattern_mismatch");
+    element.textContent = i18n("form_templates.errors.pattern_mismatch");
   } else if (field.validity.badInput) {
-    element.textContent = I18n.t("form_templates.errors.bad_input");
+    element.textContent = i18n("form_templates.errors.bad_input");
   }
 }
 
 function _showErrorByType(element, field, prefix, types, i18nMappings) {
   if (!types.includes(field.type)) {
-    element.textContent = I18n.t(`${prefix}.default`);
+    element.textContent = i18n(`${prefix}.default`);
   } else {
     types.forEach((type) => {
       if (field.type === type) {
-        element.textContent = I18n.t(
+        element.textContent = i18n(
           `${prefix}.${
             i18nMappings && i18nMappings[type] ? i18nMappings[type] : type
           }`

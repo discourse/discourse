@@ -12,7 +12,7 @@ import {
   isImage,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);
@@ -43,7 +43,7 @@ module("Unit | Utility | uploads", function (hooks) {
     assert.false(
       validateUploadedFiles([1, 2], { siteSettings: this.siteSettings })
     );
-    assert.ok(dialog.alert.calledWith(I18n.t("post.errors.too_many_uploads")));
+    assert.ok(dialog.alert.calledWith(i18n("post.errors.too_many_uploads")));
   });
 
   test("new user cannot upload images", function (assert) {
@@ -59,7 +59,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.ok(
       dialog.alert.calledWith(
-        I18n.t("post.errors.image_upload_not_allowed_for_new_user")
+        i18n("post.errors.image_upload_not_allowed_for_new_user")
       ),
       "the alert is called"
     );
@@ -102,7 +102,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.ok(
       dialog.alert.calledWith(
-        I18n.t("post.errors.attachment_upload_not_allowed_for_new_user")
+        i18n("post.errors.attachment_upload_not_allowed_for_new_user")
       )
     );
   });
@@ -116,7 +116,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.ok(
       dialog.alert.calledWith(
-        I18n.t("post.errors.upload_not_authorized", {
+        i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
             this.siteSettings
@@ -156,7 +156,7 @@ module("Unit | Utility | uploads", function (hooks) {
       })
     );
     assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
+      dialog.alert.calledWith(i18n("post.errors.no_uploads_authorized"))
     );
   });
 
@@ -172,7 +172,7 @@ module("Unit | Utility | uploads", function (hooks) {
       })
     );
     assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.no_uploads_authorized"))
+      dialog.alert.calledWith(i18n("post.errors.no_uploads_authorized"))
     );
   });
 
@@ -362,7 +362,7 @@ module("Unit | Utility | uploads", function (hooks) {
         jqXHR: {
           status: 413,
           responseJSON: {
-            message: I18n.t("post.errors.file_too_large_humanized"),
+            message: i18n("post.errors.file_too_large_humanized"),
           },
         },
       },
@@ -371,7 +371,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.ok(
       dialog.alert.calledWith(
-        I18n.t("post.errors.file_too_large_humanized", {
+        i18n("post.errors.file_too_large_humanized", {
           max_size: I18n.toHumanSize(4096 * 1024),
         })
       ),
@@ -385,14 +385,14 @@ module("Unit | Utility | uploads", function (hooks) {
       {
         jqXHR: {
           status: 413,
-          responseJSON: { message: I18n.t("post.errors.backup_too_large") },
+          responseJSON: { message: i18n("post.errors.backup_too_large") },
         },
       },
       { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
       "backup-2023-09-07-092329-v20230728055813.tar.gz"
     );
     assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.backup_too_large")),
+      dialog.alert.calledWith(i18n("post.errors.backup_too_large")),
       "the alert is called"
     );
   });
@@ -433,7 +433,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.ok(
       dialog.alert.calledWith(
-        I18n.t("post.errors.upload", { file_name: "test.png" })
+        i18n("post.errors.upload", { file_name: "test.png" })
       ),
       "the alert is called"
     );

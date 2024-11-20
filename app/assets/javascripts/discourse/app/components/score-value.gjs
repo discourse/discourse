@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ScoreValue extends Component {
   get numericValue() {
@@ -11,11 +11,11 @@ export default class ScoreValue extends Component {
   }
 
   get explanationTitle() {
-    return I18n.t(`review.explain.${this.args.label}.title`);
+    return i18n(`review.explain.${this.args.label}.title`);
   }
 
   get explanationContent() {
-    return I18n.t(`review.explain.${this.args.label}.name`);
+    return i18n(`review.explain.${this.args.label}.name`);
   }
 
   <template>
