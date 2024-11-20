@@ -38,7 +38,7 @@ html:not(.keyboard-visible.mobile-view) {
   &__footer {
     margin-top: auto;
 
-    &.--stacked {
+    .--stacked & {
       flex-direction: column;
       align-items: stretch;
     }
