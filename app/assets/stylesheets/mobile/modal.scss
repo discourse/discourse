@@ -30,15 +30,18 @@ html:not(.keyboard-visible.mobile-view) {
   &__container {
     // this is a hack to prevent issues on safari with transforms
     position: fixed;
-
     width: 100%;
     max-width: 100%;
-    min-height: 45svh;
     max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
   }
 
   &__footer {
     margin-top: auto;
+
+    &.--stacked {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
   .ios-device & {
     &__footer {
