@@ -32,6 +32,33 @@
   width: 100%;
   gap: 0.25rem;
   position: relative;
+  container-type: inline-size;
+
+  .is-collapsed & {
+    &__channel-title:not(:first-child) {
+      margin-left: 1rem;
+    }
+
+    &__toggle-drawer-button {
+      &:after {
+        @container (inline-size) {
+          content: "";
+          position: absolute;
+          height: 100%;
+          left: 0;
+          width: calc(100cqw - 2.3em + 1rem);
+        }
+
+        &:hover {
+          color: var(--tertiary-hover);
+
+          .d-icon {
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
 
   .single-select-header {
     padding: 0.3675rem 0.584rem;
