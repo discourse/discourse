@@ -35,8 +35,9 @@
   container-type: inline-size;
 
   .is-collapsed & {
-    &__channel-title:not(:first-child) {
-      margin-left: 1rem;
+    margin-left: 1rem;
+    &__title {
+      margin-left: 0 !important;
     }
 
     &__toggle-drawer-button {
