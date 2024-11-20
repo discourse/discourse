@@ -9,6 +9,7 @@ describe "Topic bulk select", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
+  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   def open_bulk_actions_modal(topics_to_select = nil, action)
     topic_list_header.click_bulk_select_button
@@ -219,7 +220,7 @@ describe "Topic bulk select", type: :system do
       sign_in(user)
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
-      expect(topic_page).to have_read_post(1)
+      expect(topic_view).to have_read_post(topic.posts.first)
       topic_page.watch_topic
 
       # Bulk close the topic as an admin
