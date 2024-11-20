@@ -148,13 +148,39 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
         Fabricate(:chat_message, chat_channel: channel_2, message: "hello!", use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_2)
 
-        Fabricate(:chat_message, chat_channel: channel_4, message: "hello!", use_service: true)
+        Fabricate(:chat_message, chat_channel: channel_4, message: "yes, hello!", use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_4)
 
         find("body").send_keys(%i[alt shift arrow_down])
 
         expect(sidebar_page).to have_active_channel(channel_4)
         expect(sidebar_page).to have_no_unread_channel(channel_4)
+
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_3,
+          message: "hello, here, too!",
+          use_service: true,
+        )
+        expect(sidebar_page).to have_unread_channel(channel_3)
+
+        find("body").send_keys(%i[alt shift arrow_up])
+
+        expect(sidebar_page).to have_active_channel(channel_3)
+        expect(sidebar_page).to have_no_unread_channel(channel_3)
+
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_4,
+          message: "okay, byebye!",
+          use_service: true,
+        )
+        expect(sidebar_page).to have_unread_channel(channel_4)
+
+        find("body").send_keys(%i[alt shift arrow_up])
+
+        expect(sidebar_page).to have_active_channel(channel_2)
+        expect(sidebar_page).to have_no_unread_channel(channel_2)
       end
     end
   end
