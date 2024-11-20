@@ -33,8 +33,9 @@
     .-group & {
       width: 26px;
       height: 26px;
+
       .d-icon-user-group {
-        padding: 5px 5px;
+        padding: 5px;
         box-sizing: border-box;
         color: var(--primary-high);
         background: var(--primary-low);
@@ -49,6 +50,7 @@
     @media (prefers-reduced-motion: no-preference) {
       animation: popIn 0.1s ease-out;
     }
+
     padding: 0 0.25rem;
     border-radius: var(--border-radius);
     background: var(--primary-very-low);
@@ -204,7 +206,7 @@
       align-items: center;
 
       .d-icon-users {
-        padding: 4px 4px;
+        padding: 4px;
         box-sizing: border-box;
         color: var(--tertiary);
         background: var(--primary-low);
@@ -225,6 +227,7 @@
     .user-status {
       display: flex;
       align-items: center;
+
       .fk-d-tooltip__trigger-container {
         display: flex;
         align-items: center;
@@ -234,8 +237,10 @@
           width: var(--font-down-2-rem);
           height: var(--font-down-2-rem);
         }
+
         .user-status-message-description {
           @include ellipsis;
+
           font-size: var(--font-down-2-rem);
           color: var(--primary-high);
           margin: 0;
@@ -290,7 +295,7 @@
 
     &:focus,
     &:focus-within {
-      @include default-focus();
+      @include default-focus;
     }
 
     &-container {

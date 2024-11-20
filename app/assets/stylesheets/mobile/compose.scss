@@ -17,14 +17,16 @@
 
   &.open {
     height: 250px;
+
     &.edit-title {
       height: 100%;
     }
   }
 
   .keyboard-visible &.open {
-    top: 0px;
+    top: 0;
     height: calc(var(--composer-vh, 1vh) * 100);
+
     .reply-area {
       padding-bottom: 6px;
     }
@@ -71,8 +73,10 @@
     .toggle-minimize {
       top: 6px;
     }
+
     .draft-text {
       width: calc(100% - 40px);
+
       @include ellipsis;
     }
   }
@@ -95,6 +99,7 @@
 
     .create {
       max-width: 50vw;
+
       span {
         @include ellipsis;
       }
@@ -108,6 +113,7 @@
       #file-uploading {
         margin-left: 6px;
       }
+
       .cancel {
         font-size: 1.4em;
         color: var(--primary-low-mid);
@@ -115,11 +121,13 @@
         padding: 3px 6px;
       }
     }
+
     .mobile-file-upload:not(.hidden),
     .mobile-preview {
       // Alignment fix, remove if converted to buttons
       display: inline-flex;
     }
+
     .mobile-file-upload {
       &.hidden + .mobile-preview {
         // Hide preview button while file is uploading to make room for upload progress
@@ -137,25 +145,25 @@
       padding-top: 10px;
       z-index: z("fullscreen") + 1;
       background-color: var(--secondary);
+
       .cancel,
       .mobile-file-upload,
       .mobile-preview {
         display: none;
       }
     }
+
     .d-editor-preview-wrapper {
       position: fixed;
       z-index: z("fullscreen");
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      inset: 0;
       background-color: var(--secondary);
       border-bottom: 40px solid var(--secondary);
       max-width: 100%;
       margin: 0;
       padding: 10px;
       overflow: auto;
+
       .d-editor-preview {
         margin-bottom: 40px;
       }
@@ -183,6 +191,7 @@
   .title-and-category,
   .user-selector {
     margin: 0;
+
     .users-input {
       margin-bottom: 6px;
     }

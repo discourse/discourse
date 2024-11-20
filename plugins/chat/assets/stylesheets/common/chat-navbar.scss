@@ -47,7 +47,8 @@
 }
 
 .c-navbar__channel-title {
-  @include ellipsis();
+  @include ellipsis;
+
   font-weight: 700;
   height: var(--chat-header-offset);
   display: flex;
@@ -57,11 +58,14 @@
 .c-navbar__title {
   display: flex;
   align-items: center;
-  @include ellipsis();
+
+  @include ellipsis;
+
   height: var(--chat-header-offset);
 
   &-text {
-    @include ellipsis();
+    @include ellipsis;
+
     font-weight: 700;
     max-width: 100%;
     vertical-align: middle;
@@ -99,6 +103,7 @@
   display: flex;
   align-items: center;
   height: var(--chat-header-offset);
+
   .d-icon {
     color: var(--primary-low-mid);
   }

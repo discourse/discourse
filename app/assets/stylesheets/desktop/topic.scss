@@ -1,8 +1,10 @@
 .post-actions {
   @include unselectable;
+
   clear: both;
   text-align: right;
   margin-bottom: 10px;
+
   .post-action {
     display: inline-block;
     margin-left: 10px;
@@ -23,11 +25,13 @@
   .edit-controls {
     width: 500px;
   }
+
   h1 {
     font-size: var(--font-up-4);
     line-height: var(--line-height-medium);
     overflow-wrap: break-word;
     width: 100%;
+
     a {
       color: var(--primary);
     }
@@ -62,7 +66,6 @@
   border: 1px solid var(--primary-low);
   padding: 5px;
   background: var(--secondary);
-
   position: relative;
   left: 340px;
   width: 135px;
@@ -70,6 +73,7 @@
   button.full {
     width: 100%;
     margin-bottom: 5px;
+
     .d-icon {
       display: block;
       margin-top: 2px;
@@ -77,6 +81,7 @@
       font-size: var(--font-up-2);
     }
   }
+
   .jump-form {
     input[type="text"] {
       float: left;
@@ -86,17 +91,19 @@
       margin-bottom: 0;
       font-size: var(--font-up-1);
     }
+
     button.btn {
       float: right;
       width: 55px;
     }
   }
+
   button.btn.jump-prompt {
     margin: 0;
   }
 
   button.btn.jump-bottom {
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
   }
 }
 
@@ -124,13 +131,13 @@
   display: flex; // children should never wrap
 }
 
-@media all and (min-width: 400px) {
+@media all and (width >= 400px) {
   #topic-footer-main-buttons {
     max-width: 70%;
   }
 }
 
-@media all and (max-width: 485px) {
+@media all and (width <= 485px) {
   #topic-footer-main-buttons {
     max-width: 100%;
   }

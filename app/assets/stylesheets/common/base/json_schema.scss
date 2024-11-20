@@ -43,7 +43,9 @@
 
     .json-editor-btn-add {
       @extend .btn, .ok;
+
       gap: var(--space-1);
+
       span {
         display: inline;
       }
@@ -52,6 +54,7 @@
     button {
       @extend .btn;
       @extend .no-text;
+
       span {
         display: none;
       }
@@ -68,6 +71,7 @@
     select {
       @include appearance-none;
       @include form-item-sizing;
+
       display: inline-block;
       margin-bottom: var(--space-2);
       color: var(--primary);
@@ -77,8 +81,10 @@
       background: svg-uri(
         '<svg xmlns="http://www.w3.org/2000/svg" fill="#999" height=".75em" viewBox="0 0 448 512"><path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg>'
       ); // down chevron
+
       background-repeat: no-repeat;
       background-position: 98%;
+
       &:focus {
         @include default-focus;
       }
@@ -109,12 +115,14 @@
       display: flex;
       align-items: center;
       margin: 0;
+
       button.json-editor-btn-collapse.json-editor-btntype-toggle {
         // needs the specificity
         background: transparent;
         margin: 0 0 0 calc(var(--space-2) * -1);
         padding: var(--space-1) var(--space-2);
         font-size: var(--font-down-2);
+
         .d-icon {
           color: var(--primary-medium);
         }
@@ -136,11 +144,13 @@
 
     [data-schemaid="root"] {
       position: relative;
+
       > .je-header {
         label,
         .json-editor-btn-collapse {
           display: none;
         }
+
         button {
           position: absolute;
           right: 0;
@@ -215,9 +225,10 @@
 
       td,
       th {
-        &:not(:first-child):not(:last-child) {
+        &:not(:first-child, :last-child) {
           padding: var(--space-2);
         }
+
         &:first-child,
         &:last-child {
           padding: var(--space-2) 0;
@@ -237,9 +248,11 @@
             display: flex;
             flex-direction: column;
             gap: var(--space-1);
+
             button {
               margin: 0;
             }
+
             .delete {
               order: 2;
             }

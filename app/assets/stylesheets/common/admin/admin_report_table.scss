@@ -3,6 +3,7 @@
     .table .admin-report-table-cell:first-child,
     .table .admin-report-table-header:first-child {
       @include ellipsis;
+
       text-align: left;
       width: 80%;
     }
@@ -30,6 +31,7 @@
       outline: none;
       background: none;
       padding: 3px 8px;
+
       @include ellipsis;
     }
 
@@ -50,6 +52,7 @@
       &:hover {
         color: var(--primary-medium);
         background: var(--primary-low);
+
         .d-icon {
           color: var(--primary-medium);
         }

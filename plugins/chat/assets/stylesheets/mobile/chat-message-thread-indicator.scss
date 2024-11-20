@@ -2,6 +2,7 @@
   .c-routes.--threads & {
     background: var(--secondary);
   }
+
   grid-template-areas:
     "avatar info info participants"
     "excerpt excerpt excerpt replies";
@@ -21,6 +22,7 @@
     margin-top: 0.5rem;
     margin-right: 0.25rem;
   }
+
   &__replies-count {
     grid-area: replies;
   }

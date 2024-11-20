@@ -22,6 +22,7 @@ $progress-bar-icon-size: 0.8rem;
 
     &:last-child {
       width: $progress-bar-circle-size;
+
       .signup-progress-bar__circle {
         transform: translateX(-50%);
         z-index: 1;
@@ -86,6 +87,7 @@ $progress-bar-icon-size: 0.8rem;
       background: var(--success);
       box-shadow: 0 0 1px 5px var(--success-low);
     }
+
     .--completed & {
       background-color: var(--success);
       border-color: var(--success);

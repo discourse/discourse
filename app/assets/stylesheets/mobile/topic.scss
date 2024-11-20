@@ -16,12 +16,14 @@
   h1 {
     font-size: var(--font-up-3);
     line-height: var(--line-height-medium);
+
     a {
       color: var(--primary);
       vertical-align: middle;
       word-wrap: break-word;
     }
   }
+
   .title-category-wrapper {
     margin-top: 5px;
   }
@@ -35,7 +37,6 @@
   border: 1px solid var(--primary-low);
   padding: 5px;
   background: var(--secondary);
-
   position: absolute;
   bottom: 34px;
   width: 135px;
@@ -43,6 +44,7 @@
   button.full {
     width: 100%;
     margin-bottom: 5px;
+
     .d-icon {
       display: block;
       margin-top: 2px;
@@ -50,6 +52,7 @@
       font-size: var(--font-up-2);
     }
   }
+
   .jump-form {
     input[type="text"] {
       float: left;
@@ -58,14 +61,17 @@
       text-align: center;
       font-size: var(--font-up-1);
     }
+
     button.btn {
       float: right !important;
       width: 55px;
     }
   }
+
   button.btn.jump-prompt {
     margin: 0;
   }
+
   button.btn.jump-bottom {
     margin-top: 5px;
     margin-bottom: 0;
@@ -121,9 +127,11 @@ sub sub {
   .now-date {
     padding: 0.5em 0;
   }
+
   .timeline-scrollarea-wrapper .timeline-date-wrapper {
     @include ellipsis;
   }
+
   .topic-category {
     margin-bottom: 0.5rem;
   }

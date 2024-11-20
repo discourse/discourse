@@ -26,35 +26,32 @@
 .poll-breakdown-options {
   display: grid;
   list-style: none;
-  margin: 1.5rem 0 0 0;
+  margin: 1.5rem 0 0;
 }
 
 .poll-breakdown-option {
   align-items: center;
   border-radius: 5px;
-  column-gap: 0.66rem;
+  gap: 0.1rem 0.66rem;
   cursor: default;
   display: grid;
   grid-template-columns: 2.5rem 1fr;
-  row-gap: 0.1rem;
   justify-content: start;
   padding: 0.5rem 1rem;
 }
 
 .poll-breakdown-option-color {
-  align-self: end;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  place-self: end center;
+  border: 1px solid rgb(0 0 0 / 15%);
   grid-column: 1;
   height: 0.6rem;
-  justify-self: center;
   width: 1.2rem;
 }
 
 .poll-breakdown-option-count {
-  align-self: start;
+  place-self: start center;
   font-size: 0.9rem;
   grid-column: 1;
-  justify-self: center;
 }
 
 .poll-breakdown-option-text {

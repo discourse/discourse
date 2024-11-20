@@ -1,5 +1,6 @@
 @mixin chat-unread-indicator {
   @include unselectable;
+
   width: 14px;
   height: 14px;
   border-radius: 1em;

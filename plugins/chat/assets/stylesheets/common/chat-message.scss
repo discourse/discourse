@@ -44,6 +44,7 @@
 
   .chat-message-reaction {
     @include chat-reaction;
+
     will-change: scale;
 
     &:active {
@@ -109,13 +110,14 @@
   .chat-message-reaction-list,
   .chat-transcript-reactions {
     @include unselectable;
+
     margin-top: 0.25em;
     display: flex;
     flex-wrap: wrap;
 
     .chat-message-react-btn {
       vertical-align: top;
-      padding: 0em 0.25em;
+      padding: 0 0.25em;
       background: none;
       border: none;
       will-change: scale;
@@ -178,6 +180,7 @@
 
     &.-deleted {
       background-color: var(--danger-low);
+
       .chat-message-expand {
         color: var(--danger);
       }
@@ -213,11 +216,9 @@
   &.has-reply {
     .chat-message {
       display: grid;
-      grid-template-columns: var(--message-left-width) 1fr;
-      grid-template-rows: 30px auto;
-      grid-template-areas:
-        "replyto replyto"
-        "avatar message";
+      grid-template: "replyto replyto" 30px "avatar message" auto / var(
+          --message-left-width
+        ) 1fr;
 
       .chat-user-avatar {
         grid-area: avatar;

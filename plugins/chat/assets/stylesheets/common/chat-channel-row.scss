@@ -80,7 +80,9 @@
     &__channel-info {
       white-space: nowrap;
       overflow: hidden;
+
       @include ellipsis;
+
       display: flex;
       align-items: center;
     }

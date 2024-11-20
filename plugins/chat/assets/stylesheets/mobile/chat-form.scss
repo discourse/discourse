@@ -14,11 +14,13 @@
       padding: 1rem;
     }
   }
+
   &__section-title {
     .chat-form__section:not(:first-of-type) & {
       margin-top: 1.5rem;
     }
   }
+
   &__row-content {
     min-height: 40px;
   }

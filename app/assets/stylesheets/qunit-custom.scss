@@ -83,7 +83,7 @@ body {
   }
 
   #qunit-tests b.failed {
-    color: #ff7777;
+    color: #f77;
   }
 
   #qunit-tests b.passed {
@@ -125,7 +125,7 @@ body {
   #qunit-tests li li.fail {
     background-color: #222;
     border-color: #7e2121;
-    color: #ff7777;
+    color: #f77;
   }
 
   .qunit-assert-list {
@@ -155,12 +155,12 @@ body {
   // Hardcode "dark" theme vars for now
   :root {
     --scheme-type: dark;
-    --primary: #dddddd;
-    --secondary: #222222;
+    --primary: #ddd;
+    --secondary: #222;
     --tertiary: #0f82af;
     --quaternary: #c14924;
-    --header_background: #111111;
-    --header_primary: #dddddd;
+    --header_background: #111;
+    --header_primary: #ddd;
     --highlight: #a87137;
     --danger: #e45735;
     --success: #1ca551;
@@ -192,11 +192,11 @@ body {
     --primary-700: #9b9b9b;
     --primary-800: #a6a6a6;
     --primary-900: #c7c7c7;
-    --header_primary-low: rgb(72, 72, 72);
-    --header_primary-low-mid: rgb(131, 131, 131);
-    --header_primary-medium: rgb(164, 164, 164);
-    --header_primary-high: rgb(185, 185, 185);
-    --header_primary-very-high: rgb(210, 210, 210);
+    --header_primary-low: rgb(72 72 72);
+    --header_primary-low-mid: rgb(131 131 131);
+    --header_primary-medium: rgb(164 164 164);
+    --header_primary-high: rgb(185 185 185);
+    --header_primary-very-high: rgb(210 210 210);
     --secondary-low: #bdbdbd;
     --secondary-medium: #919191;
     --secondary-high: #646464;
@@ -222,7 +222,7 @@ body {
     --highlight-medium: #4c3319;
     --highlight-high: #976632;
     --danger-low: #591b0c;
-    --danger-low-mid: rgba(99, 30, 13, 0.7);
+    --danger-low-mid: rgb(99 30 13 / 70%);
     --danger-medium: #a13116;
     --danger-hover: #c63c1b;
     --success-low: #0b4220;
@@ -230,7 +230,7 @@ body {
     --success-hover: #168441;
     --love-low: #8a0524;
     --wiki: green;
-    --blend-primary-secondary-5: rgb(60, 60, 60);
+    --blend-primary-secondary-5: rgb(60 60 60);
     --primary-med-or-secondary-med: #919191;
     --primary-med-or-secondary-high: #646464;
     --primary-high-or-secondary-low: #bdbdbd;
@@ -241,7 +241,7 @@ body {
     --tertiary-or-tertiary-low: #052e3d;
     --tertiary-low-or-tertiary-high: #0b6283;
     --tertiary-med-or-tertiary: #0f82af;
-    --secondary-or-primary: #dddddd;
+    --secondary-or-primary: #ddd;
     --tertiary-or-white: #fff;
     --facebook-or-white: #fff;
     --twitter-or-white: #fff;
@@ -254,7 +254,7 @@ body {
     --hljs-symbol: #fbe;
     --hljs-bg: #333;
     --hljs-builtin-name: #14aeea;
-    --google: #ffffff;
+    --google: #fff;
     --google-hover: #f2f2f2;
     --instagram: #e1306c;
     --instagram-hover: #ac194b;
@@ -266,16 +266,16 @@ body {
     --github-hover: #463e42;
     --discord: #7289da;
     --discord-hover: #4a67cf;
-    --gold: rgb(231, 195, 0);
+    --gold: rgb(231 195 0);
     --silver: #c0c0c0;
     --bronze: #cd7f32;
-    --shadow-modal: 0 8px 60px rgba(0, 0, 0, 1);
-    --shadow-composer: 0 -1px 40px rgba(0, 0, 0, 0.35);
-    --shadow-menu-panel: 0 8px 12px rgba(0, 0, 0, 0.35);
-    --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.5);
-    --shadow-dropdown: 0 2px 12px 0 rgba(0, 0, 0, 0.25);
-    --shadow-header: 0 2px 4px -1px rgba(0, 0, 0, 0.45);
-    --shadow-footer-nav: 0 0 2px 0 rgba(0, 0, 0, 0.4);
+    --shadow-modal: 0 8px 60px rgb(0 0 0 / 100%);
+    --shadow-composer: 0 -1px 40px rgb(0 0 0 / 35%);
+    --shadow-menu-panel: 0 8px 12px rgb(0 0 0 / 35%);
+    --shadow-card: 0 4px 14px rgb(0 0 0 / 50%);
+    --shadow-dropdown: 0 2px 12px 0 rgb(0 0 0 / 25%);
+    --shadow-header: 0 2px 4px -1px rgb(0 0 0 / 45%);
+    --shadow-footer-nav: 0 0 2px 0 rgb(0 0 0 / 40%);
     --shadow-focus-danger: 0 0 6px 0 var(--danger);
     --float-kit-arrow-stroke-color: var(--primary-low);
     --float-kit-arrow-fill-color: var(--secondary);

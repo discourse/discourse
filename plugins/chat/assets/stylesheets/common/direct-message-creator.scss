@@ -36,7 +36,6 @@
 
   .selected-user {
     list-style: none;
-    padding: 0;
     margin: 1px 0.25rem 0.25rem 1px;
     padding: 0.25rem 0.5rem 0.25rem 0.25rem;
     background: var(--primary-very-low);
@@ -95,7 +94,7 @@
     .filter-usernames {
       flex: 1 0 auto;
       min-width: 80px;
-      margin: 1px 0 0 0;
+      margin: 1px 0 0;
       appearance: none;
       border: 0;
       outline: 0;
@@ -166,6 +165,7 @@
 
     .btn {
       padding: 0.25em;
+
       &:last-child {
         margin: 0;
       }

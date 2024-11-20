@@ -39,8 +39,7 @@
           flex: 1 1 0%;
           align-items: flex-start;
           display: flex;
-          flex-wrap: wrap;
-          flex-direction: column;
+          flex-flow: column wrap;
 
           .name {
             flex: 1 1 auto;
@@ -48,7 +47,9 @@
             font-size: var(--font-0);
             color: var(--primary);
             padding: 0;
+
             @include ellipsis;
+
             max-width: 100%;
           }
 
@@ -84,10 +85,12 @@
       }
     }
   }
+
   &.user-notifications-dropdown {
     .select-kit-header .d-icon {
       margin-left: 0;
     }
+
     .select-kit-header-wrapper {
       justify-content: center;
     }

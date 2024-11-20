@@ -1,10 +1,7 @@
 .dialog-container,
 .dialog-overlay {
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
 }
 
 .dialog-container {
@@ -29,6 +26,7 @@
 .dialog-overlay {
   background: rgba(var(--always-black-rgb), 0.65);
   animation: fade-in 250ms both;
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }
@@ -42,6 +40,7 @@
   box-shadow: var(--shadow-card);
   min-width: 40vw;
   animation: fade-in 250ms both;
+
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
   }
@@ -69,6 +68,7 @@
     margin-left: auto;
     flex-basis: content;
     padding-left: 15px;
+
     .d-icon {
       color: var(--primary-high);
     }
@@ -81,7 +81,9 @@
   align-items: center;
   padding: 14px 15px 10px;
   border-top: 1px solid var(--primary-low);
+
   --btn-bottom-margin: 0.3em;
+
   .btn {
     margin: 0 0.75em var(--btn-bottom-margin) 0;
   }

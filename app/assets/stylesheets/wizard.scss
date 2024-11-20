@@ -41,10 +41,12 @@ body.wizard {
     position: relative;
     height: 70px;
     width: auto;
+
     @include breakpoint("mobile-extra-large") {
       height: 50px;
     }
-    @media screen and (max-height: 900px) {
+
+    @media screen and (height <= 900px) {
       .desktop-view & {
         display: none;
       }
@@ -63,10 +65,9 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 19px 6px rgb(0 0 0 / 5%);
   box-sizing: border-box;
   margin: 1em auto;
-  padding: 0;
   border: 1px solid var(--primary-low);
   border-radius: 8px;
   padding: 2em;
@@ -112,6 +113,7 @@ body.wizard {
   &__step-description {
     font-size: var(--font-up-2);
     flex: 1 0 40%;
+
     @include breakpoint("tablet") {
       font-size: var(--font-up-2);
     }
@@ -148,6 +150,7 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
+
     @media (prefers-reduced-motion: no-preference) {
       animation: bump 0.25s ease-in-out;
       animation-iteration-count: 2;
@@ -160,7 +163,7 @@ body.wizard {
 
   &__field.text-governing-law,
   &__field.text-city-for-disputes {
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -174,7 +177,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (max-width: 925px) {
+    @media only screen and (width <= 925px) {
       width: 80%;
       margin-left: auto;
       margin-right: auto;
@@ -187,7 +190,7 @@ body.wizard {
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (max-width: 925px) {
+      @media only screen and (width <= 925px) {
         display: none;
       }
     }
@@ -198,6 +201,7 @@ body.wizard {
     justify-content: flex-end;
     position: relative;
     padding-right: 10px;
+
     .preview-nav-button {
       text-align: center;
       padding: 10px 15px;
@@ -206,6 +210,7 @@ body.wizard {
       font-size: 14px;
       font-weight: bold;
       color: var(--primary-high);
+
       &.active {
         background: var(--secondary);
         border-bottom-left-radius: 10px;
@@ -225,18 +230,21 @@ body.wizard {
     border-radius: 10px;
     cursor: grab;
     user-select: none;
+
     &.dragging {
       cursor: grabbing;
     }
+
     .topic-preview {
       position: absolute;
-      left: 0px;
-      top: 0px;
+      left: 0;
+      top: 0;
     }
+
     .homepage-preview {
       position: absolute;
       left: calc(100% + 25px);
-      top: 0px;
+      top: 0;
     }
   }
 
@@ -255,7 +263,8 @@ body.wizard {
     font-size: 2.75em;
     color: var(--primary);
     line-height: var(--line-height-medium);
-    margin: 0 0 0.5em 0;
+    margin: 0 0 0.5em;
+
     @include breakpoint("medium") {
       font-size: var(--font-up-5);
     }
@@ -275,7 +284,8 @@ body.wizard {
 
   &__step-form {
     flex: 1 0 50%;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       width: 100%;
     }
   }
@@ -289,6 +299,7 @@ body.wizard {
     flex-wrap: wrap;
     gap: 1em;
     align-items: center;
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -308,7 +319,8 @@ body.wizard {
   &__step-text {
     display: inline;
     margin-right: 0.25em;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       display: none;
     }
   }
@@ -335,7 +347,6 @@ body.wizard {
 
   &__button {
     border-radius: 2px;
-    font-size: var(--font-0);
     border: 0;
     padding: 0.5em;
     transition: var(--d-button-transition);
@@ -368,11 +379,13 @@ body.wizard {
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
+
     @include breakpoint("mobile-extra-large") {
       order: 1;
       margin-left: 0;
     }
   }
+
   &__button.primary:hover,
   &__button.primary:focus {
     background-color: var(--tertiary-hover);
@@ -390,6 +403,7 @@ body.wizard {
     margin-right: 1em;
     background-color: transparent;
     color: var(--tertiary);
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -408,6 +422,7 @@ body.wizard {
 
   &__button.finish {
     color: var(--tertiary);
+
     @include breakpoint("mobile-extra-large") {
       order: 2;
     }
@@ -417,6 +432,7 @@ body.wizard {
     color: var(--tertiary-hover);
     background-color: transparent;
   }
+
   &__button.finish:active,
   &__button.finish:disabled {
     background-color: transparent;
@@ -425,6 +441,7 @@ body.wizard {
   &__button.next {
     min-width: 70px;
     margin-left: 1em;
+
     @include breakpoint("mobile-extra-large") {
       order: 1;
       margin-left: 0;
@@ -481,6 +498,7 @@ body.wizard {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     @include breakpoint("mobile-extra-large") {
       flex-direction: column;
       justify-content: center;
@@ -506,13 +524,13 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-0);
     font-weight: normal;
-    margin: 0.25em 0 0.5em 0;
+    margin: 0.25em 0 0.5em;
 
     a {
       margin: 0;
     }
 
-    @media only screen and (max-width: 568px) {
+    @media only screen and (width <= 568px) {
       font-size: var(--font-0);
     }
   }
@@ -521,14 +539,14 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       margin-left: 2em;
     }
   }
 
   &__text-input {
     border-radius: 4px !important;
-    padding: 5px;
     width: 100%;
     font-size: var(--font-up-1);
     margin: 0;
@@ -548,6 +566,7 @@ body.wizard {
   &__dropdown.color-palettes .select-kit-row.color-palettes-row .name {
     flex: 0 0 30%;
   }
+
   &__dropdown.color-palettes .select-kit-row.color-palettes-row .palettes {
     flex: 1 1 70%;
     overflow: hidden;
@@ -568,31 +587,34 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       height: 20px;
       width: 35px;
     }
   }
-  &__checkbox-slider:before,
-  &__checkbox-slider:after {
+
+  &__checkbox-slider::before,
+  &__checkbox-slider::after {
     content: "";
     display: block;
     position: absolute;
   }
 
-  &__checkbox-slider:after {
+  &__checkbox-slider::after {
     content: "\2713"; // checkmark
     color: var(--secondary);
     top: 4px;
     left: 9px;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
     }
   }
 
-  &__checkbox-slider:before {
+  &__checkbox-slider::before {
     background: var(--secondary);
     border-radius: 50%;
     width: 20px;
@@ -600,23 +622,28 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       height: 12px;
       width: 12px;
     }
   }
+
   &__field.checkbox-field
     .wizard-container__label:hover
-    .wizard-container__checkbox-slider:before {
+    .wizard-container__checkbox-slider::before {
     background: var(--secondary);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px rgb(0 0 0 / 15%);
   }
+
   &__checkbox:checked + .wizard-container__checkbox-slider {
     background: var(--tertiary);
   }
-  &__checkbox:checked + .wizard-container__checkbox-slider:before {
+
+  &__checkbox:checked + .wizard-container__checkbox-slider::before {
     left: 26px;
-    @media only screen and (max-width: 568px) {
+
+    @media only screen and (width <= 568px) {
       left: 20px;
     }
   }
@@ -640,6 +667,7 @@ body.wizard {
     align-items: stretch;
     display: flex;
     gap: 1em;
+
     @include breakpoint(mobile-extra-large) {
       flex-direction: column;
     }
@@ -670,8 +698,7 @@ body.wizard {
       align-content: center;
       cursor: pointer;
       display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
+      flex-flow: column wrap;
       font-weight: normal;
       padding: 1em;
       text-align: center;
@@ -688,14 +715,15 @@ body.wizard {
   }
 
   .wizard-container__image-upload canvas {
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    border: 1px solid rgb(0 0 0 / 20%);
   }
 
   .finish-installation {
     .wizard-congratulations-wrap {
       display: flex;
       gap: 1em;
-      @media screen and (max-width: 750px) {
+
+      @media screen and (width <= 750px) {
         flex-direction: column-reverse;
       }
     }

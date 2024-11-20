@@ -1,5 +1,6 @@
 .chat-transcript {
   @extend .chat-message-container;
+
   box-sizing: border-box;
   min-height: 50px;
   padding: 12px;
@@ -78,6 +79,7 @@
 
         .chat-transcript-thread {
           min-width: 0;
+
           &-header {
             margin-bottom: 0.5rem;
           }
@@ -114,6 +116,7 @@
   .chat-transcript-images.onebox {
     display: flex;
     flex-wrap: wrap;
+
     img {
       width: auto;
       max-height: 150px;

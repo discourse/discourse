@@ -146,7 +146,7 @@ nav.post-controls {
     &[aria-expanded="true"] {
       background: var(--primary-low);
       color: var(--primary-high);
-      box-shadow: 0px 0px 0px 1px var(--primary-300);
+      box-shadow: 0 0 0 1px var(--primary-300);
       z-index: 1;
 
       .d-icon {
@@ -220,7 +220,7 @@ pre.codeblock-buttons:hover {
     padding: 6px 9px 8px;
     z-index: 99; // Needs to be higher than topic-avatar
     .d-icon {
-      color: currentColor;
+      color: currentcolor;
     }
 
     .discourse-no-touch & {
@@ -229,7 +229,7 @@ pre.codeblock-buttons:hover {
         color: var(--primary-high);
 
         .d-icon {
-          color: currentColor;
+          color: currentcolor;
         }
       }
     }
@@ -250,7 +250,7 @@ pre.codeblock-buttons:hover {
 
         .row {
           // Main reply line
-          &:before {
+          &::before {
             content: "";
             position: absolute;
             top: -22px;
@@ -264,8 +264,9 @@ pre.codeblock-buttons:hover {
 
       .row {
         padding-bottom: 0.5em;
+
         // Main reply line
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: -22px;
@@ -367,7 +368,7 @@ pre.codeblock-buttons:hover {
 
   // top means "in reply to expansion" above a post
   &.top {
-    margin-left: 0px;
+    margin-left: 0;
     border: none;
 
     .collapse-down {
@@ -458,7 +459,7 @@ pre.codeblock-buttons:hover {
       var(--topic-avatar-width)
   );
 
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     .topic-footer-main-buttons {
       margin-top: 1em; // some extra space for the docked progress bar
     }
@@ -508,6 +509,7 @@ video {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -588,7 +590,7 @@ blockquote {
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
-  padding: 0.8em 0 0 0;
+  padding: 0.8em 0 0;
 
   .topic-meta-data {
     padding: 0 var(--topic-body-width-padding) 0.25em
@@ -673,6 +675,7 @@ blockquote {
   padding: 0.714em;
   margin-bottom: 5px;
   right: 10px;
+
   @include breakpoint(extra-large, min-width) {
     right: auto;
     margin-left: 330px;
@@ -696,11 +699,11 @@ blockquote {
 
   p {
     font-size: var(--font-down-1);
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
   }
 
   p.cancel {
-    margin: 10px 0 0 0;
+    margin: 10px 0 0;
   }
 
   h3 {
@@ -714,9 +717,10 @@ blockquote {
   }
 }
 
-a.attachment:before {
+a.attachment::before {
   display: inline-block;
   margin-right: 4px;
+
   // ideally, the SVG used here should be in HTML and reference the SVG sprite
   content: svg-uri(
     '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 512 512" fill="#{$tertiary}"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path></svg>'
@@ -732,7 +736,7 @@ a.attachment:before {
     align-items: center;
   }
 
-  &:after {
+  &::after {
     visibility: hidden;
     display: block;
     font-size: 0;
@@ -778,17 +782,20 @@ span.highlighted {
 
 /* Tablet (portrait) ----------- */
 
-@media all and (max-width: 790px) {
+@media all and (width <= 790px) {
   .topic-avatar {
     width: 45px;
   }
+
   .topic-post .reply-to-tab {
     right: 15%;
   }
+
   .topic-body {
     box-sizing: border-box;
     width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
   }
+
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {

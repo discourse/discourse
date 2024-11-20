@@ -98,6 +98,7 @@ sup img.emoji {
     .results {
       display: flex;
       flex-wrap: wrap;
+
       img.emoji {
         padding: 0.25em 0.28em;
         cursor: pointer;
@@ -150,13 +151,14 @@ sup img.emoji {
   &.has-filter {
     .emojis-container {
       visibility: hidden;
-      height: 0px;
+      height: 0;
       overflow: hidden;
     }
 
     .emoji-picker-category-buttons {
       pointer-events: none;
       opacity: 0.5;
+
       .category-button.current .emoji {
         filter: grayscale(100%);
       }
@@ -184,6 +186,7 @@ sup img.emoji {
     color: var(--primary-medium);
     cursor: pointer;
     padding: 0.25em;
+
     &:hover {
       color: var(--tertiary);
     }
@@ -228,25 +231,30 @@ sup img.emoji {
 
     .d-icon {
       color: #fff;
-      filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
+      filter: drop-shadow(0.5px 1.5px 0 rgb(0 0 0 / 30%));
     }
   }
 
   .diversity-scale.default {
     background: #ffcc4d;
   }
+
   .diversity-scale.light {
     background: #f7dece;
   }
+
   .diversity-scale.medium-light {
     background: #f3d2a2;
   }
+
   .diversity-scale.medium {
     background: #d5ab88;
   }
+
   .diversity-scale.medium-dark {
     background: #af7e57;
   }
+
   .diversity-scale.dark {
     background: #7c533e;
   }

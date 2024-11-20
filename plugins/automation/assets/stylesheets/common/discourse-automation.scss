@@ -17,9 +17,11 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+
     h2 {
       margin: 0 auto 0 0;
     }
+
     &-filter {
       margin: 0;
       flex: 0 1 15em;
@@ -41,9 +43,11 @@
     grid-template-rows: subgrid;
     grid-row: span 4;
     gap: 0;
+
     &__buttons {
       display: none; // empty container
     }
+
     &__description {
       max-width: 18.75em;
     }
@@ -88,6 +92,7 @@
 
   .alert {
     padding: 1em;
+
     p {
       margin: 0;
     }
@@ -250,7 +255,7 @@
 
     p {
       margin: 0;
-      padding: 0 0 0.5em 0;
+      padding: 0 0 0.5em;
     }
   }
 
@@ -272,9 +277,11 @@
       .control-group {
         display: flex;
         flex-direction: column;
+
         .control-label {
           width: 100%;
         }
+
         .controls {
           margin: 0;
         }
@@ -300,9 +307,11 @@
     .pm-field:not(:last-child) {
       margin-bottom: 1em;
     }
+
     .pm-title {
       width: 100%;
     }
+
     .pm-textarea {
       width: 100%;
       box-sizing: border-box;

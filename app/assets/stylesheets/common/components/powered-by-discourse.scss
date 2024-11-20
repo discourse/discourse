@@ -7,6 +7,7 @@
   .activate-account-page & {
     display: none !important;
   }
+
   grid-area: below-content;
   justify-self: start;
   font-size: var(--font-down-1);
@@ -26,7 +27,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    color: currentColor;
+    color: currentcolor;
     background: var(--secondary);
     border-radius: 0.62em;
     padding: 0.25em 0.65em 0.25em 0.5em;
@@ -40,6 +41,7 @@
   .discourse-no-touch & {
     &:hover {
       color: var(--primary-high);
+
       @media (prefers-reduced-motion: no-preference) {
         // secondary repeat is an intentional buffer
         background: linear-gradient(
@@ -67,6 +69,7 @@
       0% {
         background-position: 0% 50%;
       }
+
       100% {
         background-position: 100% 50%;
       }

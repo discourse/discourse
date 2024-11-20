@@ -4,9 +4,11 @@
 
 .d-header {
   height: 4em;
+
   #site-text-logo {
     font-size: var(--font-up-3);
   }
+
   .extra-info {
     &:not(.two-rows) {
       .header-title {
@@ -32,6 +34,7 @@
   word-wrap: break-word;
   font-size: var(--font-down-2);
   line-height: var(--line-height-large);
+
   .search-highlight {
     color: var(--primary-high-or-secondary-low);
   }

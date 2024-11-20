@@ -2,28 +2,40 @@
   /* covers /about, /faq, /guidelines, /tos, /privacy, and login-required */
   max-width: 700px;
   background: var(--d-content-background);
+
   .about-page & {
     max-width: unset;
-    section:not(.admins):not(.moderators):not(.category-moderators):not(
-        .about__admins
-      ):not(.about__moderators):not(.about__header) {
+
+    section:not(
+        .admins,
+        .moderators,
+        .category-moderators,
+        .about__admins,
+        .about__moderators,
+        .about__header
+      ) {
       max-width: 700px;
     }
+
     .about.category-moderators {
       .badge-category__wrapper .badge-category {
         color: var(--primary);
       }
     }
   }
+
   .mobile-view & {
     font-size: var(--font-0);
   }
+
   li {
     margin-bottom: 8px;
   }
+
   .nav-pills {
     margin: 0 0 2em;
   }
+
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
     margin-left: 40px;
@@ -32,6 +44,7 @@
 
 .body-page-button-container {
   display: flex;
+
   button {
     margin-right: 0.75em;
   }

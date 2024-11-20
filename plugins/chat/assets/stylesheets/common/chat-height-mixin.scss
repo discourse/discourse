@@ -1,4 +1,4 @@
-@mixin chat-height($inset: 0px) {
+@mixin chat-height($inset: 0) {
   // desktop and mobile
   // -1px is for the bottom border of the chat navbar
   $base-height: calc(

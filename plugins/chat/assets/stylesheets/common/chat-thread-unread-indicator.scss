@@ -1,6 +1,7 @@
 .chat-thread-header-unread-indicator,
 .chat-thread-list-item-unread-indicator {
   @include chat-unread-indicator;
+
   display: flex;
   align-items: center;
   justify-content: center;

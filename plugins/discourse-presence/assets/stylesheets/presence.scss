@@ -27,6 +27,7 @@
 
     .dot {
       display: inline-block;
+
       @media (prefers-reduced-motion: no-preference) {
         animation: wave 1.8s linear infinite;
       }
@@ -57,6 +58,7 @@
 .composer-fields .presence-users {
   overflow: hidden;
   flex-shrink: 1;
+
   .presence-avatars {
     flex-wrap: nowrap;
   }

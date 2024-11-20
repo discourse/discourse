@@ -20,9 +20,11 @@
 
   &__copy-success {
     animation: chat-quote-message-background-fade-highlight 2s ease-out 3s;
+
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
+
     animation-fill-mode: forwards;
     background-color: var(--success-low);
     color: var(--primary);
@@ -34,6 +36,7 @@
   @keyframes chat-quote-message-background-fade-highlight {
     0% {
     }
+
     100% {
       background-color: transparent;
       color: transparent;

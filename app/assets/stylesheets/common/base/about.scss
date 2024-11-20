@@ -22,7 +22,7 @@
     display: flex;
     border-top: 1px solid var(--primary-low);
     border-bottom: 1px solid var(--primary-low);
-    padding: 1em 1em;
+    padding: 1em;
     margin-bottom: 1em;
 
     @include breakpoint(tablet) {

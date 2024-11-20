@@ -16,6 +16,7 @@ html.discourse-no-touch {
     .d-icon {
       color: var(--primary-medium);
     }
+
     &:hover,
     &.btn-hover,
     &:focus {
@@ -24,9 +25,11 @@ html.discourse-no-touch {
       }
     }
   }
+
   .btn-primary .d-icon {
     color: var(--secondary);
   }
+
   .btn-icon.ok,
   .btn-icon.cancel,
   .btn-danger:not(.btn-flat, .btn-transparent) {
@@ -34,6 +37,7 @@ html.discourse-no-touch {
       color: var(--secondary);
     }
   }
+
   .btn-flat.delete.d-hover,
   .btn-flat.delete:hover {
     background: var(--danger);
@@ -60,15 +64,17 @@ html {
   .d-editor-button-bar {
     .btn-icon.btn-default .d-icon {
       color: var(--primary-low-mid);
+
       .discourse-no-touch & {
         &:hover {
           color: var(--secondary);
         }
       }
     }
+
     .btn-icon:not(.btn-flat, .btn-danger, .btn-primary):focus {
       .d-icon {
-        color: currentColor;
+        color: currentcolor;
       }
     }
   }
@@ -81,6 +87,7 @@ html {
   .menu-panel li.heading a.widget-link:focus {
     color: var(--primary);
     background-color: var(--highlight-medium);
+
     .d-icon {
       color: var(--primary);
     }
@@ -128,6 +135,7 @@ html {
   .badge-notification.unread-posts {
     background: var(--tertiary);
   }
+
   .select-kit.dropdown-select-box.period-chooser
     .period-chooser-header
     h2.selected-name
@@ -158,6 +166,7 @@ html {
 
   .topic-body .reply-to-tab {
     color: var(--primary-medium);
+
     .d-icon {
       color: var(--primary-low-mid);
     }
@@ -167,6 +176,7 @@ html {
     .timeline-scrollarea {
       border-color: var(--primary-low-mid);
     }
+
     .timeline-handle {
       background: var(--primary-low-mid);
     }
@@ -183,6 +193,7 @@ html {
       color: var(--tertiary);
     }
   }
+
   .meta .d-icon + .filename,
   .meta .informations {
     color: var(--secondary);
@@ -217,6 +228,7 @@ html {
       button.create .d-icon {
         color: var(--primary-high-or-secondary-low);
       }
+
       button {
         &.d-hover,
         &:hover,
@@ -224,6 +236,7 @@ html {
         &:active {
           background: var(--primary-medium);
           color: var(--secondary);
+
           .d-icon {
             color: var(--secondary);
           }
@@ -234,15 +247,18 @@ html {
         &.delete:focus {
           background: var(--danger);
           color: var(--secondary);
+
           .d-icon {
             color: var(--secondary);
           }
         }
+
         &.bookmark {
           &.bookmarked {
             .d-icon {
               color: var(--tertiary);
             }
+
             &.d-hover,
             &:hover {
               .d-icon {
@@ -252,9 +268,11 @@ html {
           }
         }
       }
+
       .double-button .button-count {
         color: var(--primary-medium);
       }
+
       .double-button:hover {
         button,
         .d-icon,
@@ -266,10 +284,12 @@ html {
 
     .show-replies {
       color: var(--primary-medium);
+
       &:hover,
       &:focus {
         color: var(--secondary);
         background: var(--primary-medium);
+
         .d-icon {
           color: var(--secondary);
         }
@@ -359,7 +379,7 @@ html {
     background-color: yellow; // resets to browser default
   }
 
-  .settings .setting.overridden h3:before {
+  .settings .setting.overridden h3::before {
     background-color: var(--tertiary);
   }
 

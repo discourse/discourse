@@ -26,6 +26,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -35,6 +36,7 @@
   0% {
     background-color: var(--tertiary-low);
   }
+
   100% {
     background-color: transparent;
   }
@@ -45,6 +47,7 @@
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1100px 0;
   }
@@ -85,12 +88,14 @@ body {
 big {
   font-size: var(--font-up-5);
 }
+
 small {
   font-size: var(--font-down-2);
 }
 
 blockquote {
   @include post-aside;
+
   clear: both;
 }
 
@@ -110,13 +115,14 @@ a.cancel {
   line-height: normal;
   color: var(--primary-high);
   transition: var(--d-button-transition);
+
   &:hover {
     color: var(--danger);
   }
 }
 
 ul.breadcrumb {
-  margin: 0 10px 0 10px;
+  margin: 0 10px;
 }
 
 a.no-href {
@@ -149,10 +155,12 @@ label {
   &:not(.checkbox-label) {
     font-weight: bold;
   }
+
   > .d-icon {
     align-self: center;
     margin-right: 4px;
   }
+
   a {
     // flex removes whitespace characters between text nodes and elements
     // so we need to add it back
@@ -170,6 +178,7 @@ input {
     cursor: pointer;
     flex-shrink: 0; // Adding for safety, Safari will shrink checkboxes
   }
+
   &[type="submit"],
   &[type="reset"],
   &[type="button"],
@@ -206,6 +215,7 @@ input {
   &[type="color"] {
     @include appearance-none;
     @include form-item-sizing;
+
     display: inline-block;
     margin-bottom: 9px;
     color: var(--d-input-text-color);
@@ -213,6 +223,7 @@ input {
     border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     color-scheme: var(--scheme-type);
+
     &:focus {
       @include default-focus;
     }
@@ -226,7 +237,6 @@ input {
 input[type="search"] {
   &::-webkit-search-cancel-button,
   &::-webkit-search-decoration {
-    -webkit-appearance: none;
     appearance: none;
   }
 }
@@ -280,7 +290,7 @@ input,
 select,
 textarea {
   color: var(--d-input-text-color);
-  caret-color: currentColor;
+  caret-color: currentcolor;
 
   &[disabled],
   &[readonly] {
@@ -301,16 +311,20 @@ textarea {
 
 .sortable {
   white-space: nowrap;
+
   .discourse-no-touch & {
     &:hover,
     &:focus {
       background-color: var(--primary-low);
     }
   }
+
   .d-icon {
     margin-left: 0.25em;
   }
+
   @include unselectable;
+
   cursor: pointer;
 
   button {
@@ -347,10 +361,12 @@ textarea {
 
 .wrap {
   --d-wrap-padding-h: 0.67em;
+
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
   padding: 0 var(--d-wrap-padding-h);
+
   .contents {
     position: relative;
   }
@@ -372,9 +388,11 @@ textarea {
 
 .tip {
   display: inline-block;
+
   &.good {
     color: var(--success);
   }
+
   &.bad {
     color: var(--danger);
   }
@@ -409,7 +427,7 @@ textarea {
   background-color: var(--secondary);
   border-radius: 50%;
   height: 1em;
-  box-shadow: 0px 0px 0px 2px var(--secondary);
+  box-shadow: 0 0 0 2px var(--secondary);
 
   .d-icon.d-icon-discourse-dnd {
     color: var(--header_primary-medium) !important;
@@ -520,9 +538,8 @@ textarea {
 }
 
 .spinner {
-  margin: 20px auto 20px auto;
+  margin: 20px auto;
   position: relative;
-  -webkit-animation: rotate-forever 1s infinite linear;
   animation: rotate-forever 1s infinite linear;
   height: 30px;
   width: 30px;
@@ -597,6 +614,7 @@ textarea {
   .control-group,
   .controls {
     margin-left: 0;
+
     label {
       font-weight: normal;
     }
@@ -609,11 +627,11 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-areas:
-    "sidebar content"
-    "sidebar below-content";
-  grid-template-rows: 1fr auto;
-  grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
+  grid-template: "sidebar content" 1fr "sidebar below-content" auto / 0 minmax(
+      0,
+      1fr
+    ); // 0 column width needs to be set for CSS transitions
+
   gap: 0;
 
   #main-outlet {
@@ -667,8 +685,10 @@ textarea {
 #footer {
   .container {
     height: 50px;
+
     .contents {
       padding-top: 10px;
+
       a[href] {
         color: var(--secondary);
       }
@@ -719,11 +739,7 @@ textarea {
     border-bottom: 1px solid var(--primary-low);
     padding: 0.25em 0;
     display: grid;
-    grid-template-areas:
-      "email dropdown"
-      "meta dropdown";
-    grid-template-columns: 1fr auto;
-    grid-template-rows: 1fr auto;
+    grid-template: "email dropdown" 1fr "meta dropdown" auto / 1fr auto;
   }
 
   .email-first {
@@ -748,10 +764,11 @@ textarea {
 
   .email-dropdown {
     grid-area: dropdown;
-    align-self: center;
-    justify-self: end;
+    place-self: center end;
+
     summary {
       background: transparent;
+
       .d-icon {
         color: var(--primary-high);
       }
@@ -766,11 +783,13 @@ textarea {
 .topic-statuses {
   // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
+
   .topic-status {
     margin: 0;
     display: inline-flex;
     color: var(--primary-medium);
     margin-right: 0.2em;
+
     .d-icon {
       height: 0.74em;
       width: 0.75em;
@@ -832,8 +851,9 @@ a#skip-link {
   background: var(--tertiary);
   transition: top 0.3s ease-out;
   z-index: z("header") + 1;
+
   &:focus {
-    top: 0px;
+    top: 0;
     transition: top 0.15s ease-in;
   }
 }

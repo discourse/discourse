@@ -1,9 +1,11 @@
 .sidebar-section-wrapper {
   padding-block: 0.35rem;
   border-bottom: 1px solid var(--secondary-very-high);
+
   &:first-child {
     padding-top: 0;
   }
+
   &[data-section-name="user-threads"] {
     padding-bottom: 0;
   }

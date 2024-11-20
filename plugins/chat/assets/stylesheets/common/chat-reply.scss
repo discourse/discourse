@@ -37,12 +37,14 @@
 
 .chat-reply__excerpt {
   @include ellipsis;
+
   color: var(--primary-high);
 
   > * {
     margin-top: 0;
     display: inline-block;
   }
+
   > p {
     margin-top: 0.35em;
   }
@@ -50,6 +52,7 @@
 
 .chat-reply__username {
   @include ellipsis;
+
   font-weight: 700;
   padding: 0 0.5em 0 0;
 }

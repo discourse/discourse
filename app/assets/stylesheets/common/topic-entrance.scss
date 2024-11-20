@@ -4,6 +4,7 @@
   background: var(--secondary);
   box-shadow: var(--shadow-card);
   width: 133px;
+
   @include unselectable;
 
   &:not(.--glimmer) {
@@ -35,6 +36,6 @@
   }
 
   button.btn.jump-bottom {
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
   }
 }

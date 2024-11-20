@@ -5,13 +5,14 @@
   }
 
   .more-content-topics {
-    padding: 15px 0 15px 0;
+    padding: 15px 0;
 
     .badge-category,
     .badge-category-parent {
       font-size: var(--font-down-1);
       vertical-align: top;
     }
+
     .suggested-topics-message {
       margin-top: 1em;
     }

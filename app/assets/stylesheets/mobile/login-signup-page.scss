@@ -18,9 +18,8 @@
 
     &__buttons {
       display: flex;
-      flex-direction: row;
+      flex-flow: row wrap;
       align-items: center;
-      flex-wrap: wrap;
       justify-content: center;
       gap: 0.5rem;
     }
@@ -67,6 +66,7 @@
       .user-field.text label.control-label {
         top: 11px;
       }
+
       div.user-field:not(.dropdown)
         .controls
         input:focus
@@ -76,6 +76,7 @@
         label.alt-placeholder.control-label {
         top: -10px;
       }
+
       .user-field.dropdown label.control-label,
       .user-field.multiselect label.control-label {
         top: -10px;
@@ -84,8 +85,7 @@
   }
 
   #login-buttons {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
     padding: 0 1rem;
     gap: 0.25em;
     margin-bottom: 1rem;
@@ -141,6 +141,7 @@
   .login-welcome-header {
     padding-inline: 0;
   }
+
   .signup-progress-bar {
     margin-inline: 0;
   }
@@ -156,11 +157,13 @@
         margin-bottom: 0.5rem;
       }
     }
+
     &__signup {
       background: none !important;
       font-size: var(--font-up-1);
       padding: 0;
     }
+
     &__no-account-yet {
       font-size: var(--font-up-1);
     }
@@ -177,11 +180,13 @@
         margin-bottom: 0.5rem;
       }
     }
+
     &__login {
       background: none !important;
       font-size: var(--font-up-1);
       padding: 0;
     }
+
     &__existing-account {
       font-size: var(--font-up-1);
     }

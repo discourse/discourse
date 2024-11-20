@@ -1,5 +1,6 @@
 .select-kit {
   @include unselectable;
+
   border: none;
   box-sizing: border-box;
   display: inline-block;
@@ -15,7 +16,7 @@
     list-style-type: none;
     display: block;
 
-    &:before {
+    &::before {
       content: none !important;
       margin: 0;
     }
@@ -76,12 +77,14 @@
 
   .select-kit-header {
     @include form-item-sizing;
+
     font-weight: 500;
     overflow: hidden;
     cursor: pointer;
     display: flex;
     align-items: stretch;
     height: 100%;
+
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
@@ -101,7 +104,6 @@
     }
 
     .d-icon-spinner {
-      -webkit-animation: rotate-forever 1s infinite linear;
       animation: rotate-forever 1s infinite linear;
     }
 
@@ -126,6 +128,7 @@
         display: inline-flex;
         gap: 0.5em;
         min-width: 0;
+
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
@@ -245,8 +248,7 @@
   }
 
   .select-kit-collection {
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden auto;
     -webkit-overflow-scrolling: touch;
     margin: 0;
     max-height: 250px;
@@ -265,7 +267,7 @@
     }
 
     &::-webkit-scrollbar {
-      -webkit-appearance: none;
+      appearance: none;
       width: 10px;
     }
 
@@ -357,6 +359,7 @@
     0% {
       width: 0;
     }
+
     100% {
       width: 100%;
     }

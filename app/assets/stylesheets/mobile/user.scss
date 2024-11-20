@@ -6,26 +6,29 @@
   grid-template-rows: auto auto auto;
   grid-gap: 16px;
   padding-top: 1em;
+
   .user-primary-navigation {
-    grid-column-start: 1;
+    grid-column: 1 / 2;
     grid-row-start: 1;
-    grid-column-end: 2;
     min-width: 120px;
   }
+
   .user-secondary-navigation {
     grid-column-start: 2;
     grid-row-start: 1;
     min-width: 120px;
   }
+
   .user-additional-controls + .user-content,
   .user-secondary-navigation + .user-content {
     grid-column-start: 1;
   }
+
   .user-additional-controls {
-    grid-column-start: 1;
-    grid-column-end: 3;
+    grid-column: 1 / 3;
     grid-row-start: 2;
   }
+
   .user-content,
   .spinner {
     grid-row-start: 3;
@@ -36,9 +39,7 @@
 
   .user-messages {
     grid-row-start: 2;
-    grid-column-start: 1;
-    grid-column-end: 3;
-
+    grid-column: 1 / 3;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
@@ -73,6 +74,7 @@
   .paginated-topics-list {
     margin-top: 0;
   }
+
   .show-mores {
     margin-top: 0.5em;
   }
@@ -84,6 +86,7 @@
   .user-content {
     box-sizing: border-box;
     background-color: var(--secondary);
+
     table {
       width: 100%;
       margin-top: 12px;
@@ -107,9 +110,11 @@
         .avatar-flair {
           right: 2px;
         }
+
         display: block;
         float: none;
         margin: 8px auto;
+
         img.avatar {
           float: none;
         }
@@ -129,11 +134,13 @@
         flex-wrap: wrap;
         justify-content: center;
         font-size: var(--font-0);
+
         .d-icon {
           width: 0.8em;
           height: 0.8em;
           margin-right: 0.25em;
         }
+
         a {
           text-decoration: underline;
         }
@@ -194,6 +201,7 @@
       .user-profile-image {
         height: 200px;
       }
+
       .user-profile-avatar {
         margin-top: -60px;
       }
@@ -207,10 +215,12 @@
         > span {
           display: flex;
           flex: 1 1 45%;
+
           button,
           a {
             width: 100%;
           }
+
           .select-kit.dropdown-select-box.user-notifications-dropdown {
             width: 100%;
           }
@@ -238,15 +248,18 @@
 .user-main .collapsed-info.about .details {
   display: flex;
   margin-bottom: 0;
+
   .user-profile-avatar {
     margin: 0;
     flex: 0 0 auto;
     align-self: flex-start;
   }
+
   .primary .primary-textual {
     flex: 1 0 80%;
     margin: 0;
   }
+
   .user-profile-names {
     text-align: left;
   }
@@ -260,6 +273,7 @@
   li {
     margin: 0 15px 10px 0;
     padding: 0;
+
     &.linked-stat {
       a {
         padding: 0;
@@ -292,6 +306,7 @@
     overflow: auto;
     width: 100%;
     padding: 5px 0;
+
     input {
       margin-right: 5px;
       flex: 0 0 auto;
@@ -324,8 +339,8 @@
   .user-additional-controls {
     width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
+
     .user-invite-search {
       width: 100%;
     }
@@ -346,12 +361,11 @@
       display: block;
       color: var(--primary-medium);
       font-size: var(--font-down-1);
-      margin: 0.5em 0 0.15em 0;
+      margin: 0.5em 0 0.15em;
     }
 
     td.invite-type {
-      grid-column-start: 1;
-      grid-column-end: -2;
+      grid-column: 1 / -2;
       order: 1;
       vertical-align: middle;
     }
@@ -367,14 +381,12 @@
     }
 
     td.invite-updated-at {
-      grid-column-start: 1;
-      grid-column-end: 3;
+      grid-column: 1 / 3;
       order: 3;
     }
 
     td.invite-expires-at {
-      grid-column-start: 3;
-      grid-column-end: -1;
+      grid-column: 3 / -1;
       order: 4;
     }
 
@@ -387,12 +399,14 @@
     margin-top: 1em;
   }
 }
+
 .second-factor {
   .second-factor-item {
     width: auto;
     display: flex;
     justify-content: space-between;
   }
+
   .details {
     width: 75%;
   }

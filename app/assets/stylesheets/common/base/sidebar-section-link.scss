@@ -26,6 +26,7 @@
     &:hover {
       background: var(--d-sidebar-highlight-background);
       outline: none;
+
       .prefix-text {
         background: var(--d-sidebar-highlight-prefix-background);
       }
@@ -40,6 +41,7 @@
           color: var(--d-sidebar-highlight-color);
         }
       }
+
       .sidebar-section-link-hover:hover .sidebar-section-hover-button {
         background-color: var(--d-selected);
       }
@@ -47,6 +49,7 @@
 
     .sidebar-section-link-content-badge {
       @include ellipsis;
+
       padding-left: 0.5em;
       padding-right: 0.1em; // avoids some overflow cropping
       text-align: right;
@@ -59,6 +62,7 @@
     .sidebar-section-link-suffix {
       margin-left: 1em;
       font-size: var(--font-down-4);
+
       &.icon {
         &.urgent svg {
           color: var(--success);
@@ -162,6 +166,7 @@
         margin-right: -0.2em;
       }
     }
+
     .prefix-span {
       width: 0.8em;
       height: 0.8em;

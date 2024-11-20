@@ -21,6 +21,7 @@
 
   &__header {
     @include ellipsis;
+
     align-items: center;
     display: flex;
     grid-area: title;
@@ -31,15 +32,18 @@
   &__muted {
     color: var(--primary-medium);
   }
+
   &__read-restricted {
     font-size: var(--font-down-2-rem);
   }
+
   &__muted {
     font-size: var(--font-down-1-rem);
   }
 
   &__description {
     @include line-clamp(2);
+
     align-self: flex-start;
     color: var(--primary-medium);
     padding-top: 0.5rem;

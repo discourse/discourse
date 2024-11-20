@@ -39,8 +39,7 @@
     .sources {
       display: flex;
       align-items: center;
-      flex-wrap: wrap;
-      flex-direction: row;
+      flex-flow: row wrap;
 
       .social-link {
         font-size: var(--font-up-6);
@@ -96,6 +95,7 @@
 
     .invite-user-input-wrapper {
       display: flex;
+
       div.ac-wrap {
         flex: 1;
       }

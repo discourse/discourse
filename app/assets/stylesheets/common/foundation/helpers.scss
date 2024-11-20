@@ -44,12 +44,13 @@
 // --------------------------------------------------
 
 .clearfix {
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     display: table;
     content: " ";
   }
-  &:after {
+
+  &::after {
     clear: both;
   }
 }

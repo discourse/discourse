@@ -54,7 +54,9 @@
     height: 100%;
     overflow-y: scroll;
     text-transform: capitalize;
-    @include chat-scrollbar();
+
+    @include chat-scrollbar;
+
     margin: 1px;
   }
 
@@ -107,11 +109,8 @@
 
   &__backdrop {
     height: 100%;
-    background: rgba(0, 0, 0, 0.75);
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
+    background: rgb(0 0 0 / 75%);
+    inset: 0;
   }
 
   &__section-title {
@@ -156,7 +155,7 @@
       .d-icon {
         visibility: visible;
         color: white;
-        filter: drop-shadow(0.5px 1.5px 0 rgba(0, 0, 0, 0.3));
+        filter: drop-shadow(0.5px 1.5px 0 rgb(0 0 0 / 30%));
       }
     }
 

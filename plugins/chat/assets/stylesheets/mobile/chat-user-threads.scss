@@ -42,8 +42,10 @@
   .chat__thread-title-container {
     display: flex;
     grid-area: title;
+
     .chat__thread-title {
       @include ellipsis;
+
       &__name {
         @include ellipsis;
       }
@@ -62,6 +64,7 @@
 
   .c-user-thread__excerpt {
     @include ellipsis;
+
     grid-area: excerpt;
     display: flex;
     color: var(--primary-high);

@@ -1,6 +1,6 @@
 .spoiled {
   cursor: auto;
-  -webkit-transform: translateZ(0); // Safari jitter fix
+  transform: translateZ(0); // Safari jitter fix
 
   .lightbox .meta {
     display: none;
@@ -13,6 +13,7 @@
 
 .spoiler-blurred {
   @include unselectable;
+
   cursor: pointer;
   filter: blur(0.5em);
 

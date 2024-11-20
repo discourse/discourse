@@ -83,8 +83,7 @@
     li {
       align-items: center;
       display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row-reverse;
+      flex-flow: row-reverse nowrap;
       justify-content: space-between;
       border-bottom: 1px solid var(--primary-low);
       padding: 0.25rem 1rem;

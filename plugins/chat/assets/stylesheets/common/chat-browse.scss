@@ -1,7 +1,7 @@
 .chat-browse-view {
   position: relative;
   box-sizing: border-box;
-  padding: 1rem 1rem env(safe-area-inset-bottom) 1rem;
+  padding: 1rem 1rem env(safe-area-inset-bottom);
 
   &__header {
     display: flex;
@@ -63,7 +63,8 @@
     display: flex;
     align-items: center;
     margin: 0;
-    &:before {
+
+    &::before {
       content: none; //there is a strange thing applied on nav-pills and this resets it
     }
   }

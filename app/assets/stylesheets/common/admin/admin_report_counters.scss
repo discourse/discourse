@@ -13,6 +13,7 @@
 
       &.title {
         text-align: left;
+
         @include ellipsis;
 
         .d-icon {
@@ -26,7 +27,7 @@
         }
       }
 
-      @media screen and (max-width: 400px) {
+      @media screen and (width <= 400px) {
         &.title .d-icon {
           display: none;
         }
@@ -43,6 +44,7 @@
           color: var(--success);
         }
       }
+
       &.high-trending-down,
       &.trending-down {
         .d-icon {

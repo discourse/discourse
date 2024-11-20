@@ -102,7 +102,7 @@
       padding: 0.5em 1rem;
       width: 100%;
       justify-content: flex-start;
-      background: rgba(0, 0, 0, 0);
+      background: rgb(0 0 0 / 0%);
 
       &.btn-danger {
         color: var(--danger);
@@ -111,6 +111,7 @@
           color: inherit;
         }
       }
+
       &:hover,
       &:focus {
         background: var(--d-hover);
@@ -133,6 +134,6 @@
   }
 
   &__divider {
-    margin: 0rem;
+    margin: 0;
   }
 }

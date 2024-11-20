@@ -36,6 +36,9 @@
     "prettier": "^2.8.8",
     "puppeteer-core": "^23.8.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
+    "stylelint": "^16.10.0",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-config-standard-scss": "^13.1.0",
     "terser": "^5.36.0",
     "typescript": "^5.6.3"
   },
@@ -49,6 +52,8 @@
     "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' $(script/list_bundled_plugins '/assets/javascripts/**/*.{gjs,hbs}')  --no-error-on-unmatched-pattern --fix",
     "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/assets/javascripts/**/*.{js,gjs,hbs}')",
     "lint:prettier:fix": "pnpm prettier -w 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/assets/javascripts/**/*.{js,gjs,hbs}')",
+    "lint:css": "pnpm stylelint 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
+    "lint:css:fix": "pnpm stylelint --fix 'app/assets/stylesheets/**/*.scss' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss')",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",

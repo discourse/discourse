@@ -2,7 +2,6 @@
   // topic map under OP
   border-top: 1px solid var(--primary-low);
   border-bottom: none;
-
   padding-left: calc(
     var(--topic-body-width-padding) + var(--topic-avatar-width)
   );
@@ -21,10 +20,9 @@
 body:not(.archetype-private_message) {
   .topic-map {
     display: flex;
-    flex-direction: row;
+    flex-flow: row wrap;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
 
     &:has(.topic-map__additional-contents *) {
       column-gap: 0.75em;
@@ -37,6 +35,7 @@ body:not(.archetype-private_message) {
   --chart-line-color: var(--tertiary);
   --chart-point-color: var(--tertiary-medium);
   --chart-prediction-color: var(--primary-low-mid);
+
   border-bottom: 1px solid var(--primary-low);
   box-sizing: border-box;
   max-width: calc(
@@ -50,7 +49,7 @@ body:not(.archetype-private_message) {
 
   &.--op,
   &.--bottom {
-    @media screen and (max-width: 500px) {
+    @media screen and (width <= 500px) {
       padding-left: 0;
     }
   }
@@ -136,6 +135,7 @@ body:not(.archetype-private_message) {
           font-size: var(--font-down-1);
           color: var(--primary-medium);
           width: 100%;
+
           @include ellipsis;
         }
       }
@@ -174,6 +174,7 @@ body:not(.archetype-private_message) {
 
     .user {
       @include ellipsis;
+
       border: 1px solid var(--primary-low);
       border-radius: 0.25em;
       padding: 0;
@@ -185,6 +186,7 @@ body:not(.archetype-private_message) {
       .user-link,
       .group-link {
         @include ellipsis;
+
         color: var(--primary-high);
 
         &:hover {
@@ -253,7 +255,7 @@ body:not(.archetype-private_message) {
       color: var(--primary-medium);
     }
 
-    @media screen and (max-width: 475px) {
+    @media screen and (width <= 475px) {
       display: none;
     }
   }
@@ -414,6 +416,7 @@ body:not(.archetype-private_message) {
 
     .link-summary {
       width: 100%;
+
       .d-icon {
         color: var(--primary-high);
       }
@@ -427,6 +430,7 @@ body:not(.archetype-private_message) {
       gap: 0.5em;
       padding: 0.75em 1rem;
     }
+
     .poster {
       display: block;
       position: relative;
@@ -436,6 +440,7 @@ body:not(.archetype-private_message) {
         height: 2.25em;
       }
     }
+
     .post-count,
     .avatar-flair {
       position: absolute;
@@ -444,6 +449,7 @@ body:not(.archetype-private_message) {
       align-items: center;
       justify-content: center;
     }
+
     .post-count {
       top: -0.15em;
       right: -0.25em;
@@ -451,6 +457,7 @@ body:not(.archetype-private_message) {
       font-size: var(--font-down-2);
       line-height: var(--line-height-small);
     }
+
     .avatar-flair {
       right: -0.25em;
       bottom: -0.15em;
@@ -472,6 +479,7 @@ body:not(.archetype-private_message) {
         justify-content: space-evenly;
         padding: 0 1rem;
       }
+
       &__count {
         font-size: var(--font-up-4);
         color: var(--primary-high);

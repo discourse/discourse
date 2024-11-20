@@ -1,5 +1,6 @@
 .chat-channel-name {
   @include ellipsis;
+
   color: var(--primary);
 
   .chat-channel-row__info & {
@@ -24,6 +25,7 @@
 
   .chat-channel-unread-indicator {
     @include chat-unread-indicator;
+
     display: flex;
     align-items: center;
     justify-content: center;

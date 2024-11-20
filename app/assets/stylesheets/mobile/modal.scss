@@ -30,7 +30,6 @@ html:not(.keyboard-visible.mobile-view) {
   &__container {
     // this is a hack to prevent issues on safari with transforms
     position: fixed;
-
     width: 100%;
     max-width: 100%;
     min-height: 45svh;
@@ -40,6 +39,7 @@ html:not(.keyboard-visible.mobile-view) {
   &__footer {
     margin-top: auto;
   }
+
   .ios-device & {
     &__footer {
       margin-top: auto;
@@ -69,6 +69,7 @@ html:not(.keyboard-visible.mobile-view) {
     transition: opacity 0.3s linear, top 0.3s ease-out;
     top: -25%;
   }
+
   &.fade.in {
     top: 50%;
   }
@@ -78,7 +79,7 @@ html:not(.keyboard-visible.mobile-view) {
   font-size: var(--font-up-4);
 }
 
-@media only screen and (max-device-width: 568px) {
+@media only screen and (device-width <= 568px) {
   .flag-modal-body .flag-message {
     height: 3em;
   }

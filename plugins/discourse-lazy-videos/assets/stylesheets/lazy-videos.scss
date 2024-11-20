@@ -3,7 +3,7 @@
   position: relative;
   display: block;
   height: 0;
-  padding: 0 0 56.25% 0;
+  padding: 0 0 56.25%;
   background-color: #000;
   margin-bottom: 12px;
 
@@ -11,7 +11,7 @@
     cursor: pointer;
     overflow: hidden;
     height: 0;
-    padding: 0 0 56.25% 0;
+    padding: 0 0 56.25%;
 
     img {
       object-fit: cover;
@@ -37,7 +37,7 @@
     }
 
     &:active {
-      outline: 0px;
+      outline: 0;
     }
   }
 
@@ -49,7 +49,7 @@
     width: 100%;
     height: 60px;
     overflow: hidden;
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(255, 0, 0, 0));
+    background: linear-gradient(rgb(0 0 0 / 60%), rgb(255 0 0 / 0%));
 
     .title-wrapper {
       overflow: hidden;

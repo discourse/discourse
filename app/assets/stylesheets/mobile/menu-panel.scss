@@ -20,6 +20,7 @@
 .hamburger-panel .revamped {
   --d-sidebar-row-horizontal-padding: 1rem;
   --d-sidebar-highlight-backgrond: var(--primary-low);
+
   box-sizing: border-box;
 
   .panel-body-contents {
@@ -47,7 +48,7 @@
   }
 
   .sidebar-footer-container {
-    &:before {
+    &::before {
       background: linear-gradient(
         to bottom,
         rgba(var(--primary-very-low-rgb), 0),

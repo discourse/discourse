@@ -15,8 +15,7 @@
     z-index: z("dropdown");
     border: 1px solid var(--primary-low);
     max-height: 250px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden auto;
   }
 
   .widget-dropdown-item {

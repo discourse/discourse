@@ -2,17 +2,21 @@
   0% {
     margin-bottom: -60px;
   }
+
   50% {
     margin-bottom: 10px;
   }
+
   65% {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
+
   77% {
     margin-bottom: 5px;
   }
+
   100% {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 }
 
@@ -25,28 +29,33 @@
   grid-template-areas: "posts timeline";
   grid-template-columns: auto auto;
   margin-bottom: var(--below-topic-margin);
+
   > .row {
     grid-area: posts;
     max-width: calc(
       100vw - 20px
     ); // 20px is the left + right padding on .wrap in common/base/discourse.scss
+
     min-width: 0; // grid needs to be able to shrink
   }
 
   .timeline-container {
     margin-left: unset !important;
+
     /* This is a temporary override to ease the transition
     to the sticky position timeline for themes with custom timeline positioning.
     Without this those themes would render topics unreadable. */
   }
 
   // timeline
-  @media screen and (min-width: 925px) {
+  @media screen and (width >= 925px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     .topic-navigation {
       grid-area: timeline;
       align-self: start;
+
       @include sticky;
+
       top: calc(var(--header-offset, 60px) + 2em);
       margin-left: 1em;
       z-index: z("timeline");
@@ -66,7 +75,7 @@
       top: 0;
       overflow-y: auto;
       z-index: z("timeline");
-      padding: 10px 10px 35px 10px;
+      padding: 10px 10px 35px;
       box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
 
@@ -74,7 +83,7 @@
         display: flex;
         align-items: center;
         position: absolute;
-        right: 0px;
+        right: 0;
         top: 8px;
         color: var(--primary);
         opacity: 0.5;
@@ -82,10 +91,12 @@
       }
     }
   }
+
   // progress bar
-  @media screen and (max-width: 924px) {
+  @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
+
     .topic-navigation {
       grid-area: posts;
       grid-row: 3;
@@ -95,25 +106,26 @@
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
     }
+
     .timeline-container .timeline-scroller-content {
       position: relative;
     }
   }
+
   #topic-progress-wrapper {
     .topic-admin-menu-button .toggle-admin-menu {
       border-top-right-radius: 0;
       border-bottom-left-radius: var(--d-border-radius);
       border-bottom-right-radius: 0;
     }
+
     #topic-progress {
       border-radius: var(--d-border-radius);
       overflow: hidden;
     }
+
     .topic-admin-menu-button-container + #topic-progress {
-      border-top-left-radius: 0;
-      border-top-right-radius: var(--d-border-radius);
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: var(--d-border-radius);
+      border-radius: 0 var(--d-border-radius) var(--d-border-radius) 0;
     }
   }
 }
@@ -125,7 +137,7 @@
   animation-name: button-jump-up;
   width: 145px;
   text-align: center;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   position: absolute;
   right: 0;
   top: -120%; // above parent container + some extra space
@@ -136,14 +148,16 @@
 
 #topic-progress-wrapper {
   position: fixed;
-  bottom: 0px;
+  bottom: 0;
   right: 10px;
   margin: 0 auto;
   display: flex;
   justify-content: flex-end;
   z-index: z("timeline");
+
   .topic-admin-menu-button-container {
     display: flex;
+
     > span {
       display: flex;
     }
@@ -176,6 +190,7 @@
 
 #topic-progress {
   --topic-progress-height: 42px;
+
   position: relative;
   background-color: var(--secondary);
   color: var(--tertiary);
@@ -193,17 +208,20 @@
     text-align: center;
     z-index: z("base");
   }
+
   h4 {
     display: inline;
     font-size: var(--font-up-2);
     line-height: var(--line-height-small);
   }
+
   .d-icon {
     position: absolute;
     right: 8px;
     bottom: 9px;
     z-index: z("base");
   }
+
   .bg {
     position: absolute;
     top: 0;
@@ -221,12 +239,15 @@
     var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
       var(--topic-avatar-width)
   );
+
   &:empty {
     padding: 0;
   }
+
   span .d-icon {
     font-size: var(--font-down-1);
   }
+
   .topic-timer-heading,
   .slow-mode-heading {
     display: flex;
@@ -234,12 +255,14 @@
     margin: 0;
     padding: var(--below-topic-margin) 0;
   }
+
   .slow-mode-remove,
   .topic-timer-modify {
     display: flex;
     margin-left: auto;
     align-self: flex-start;
   }
+
   button {
     font-size: var(--font-down-2);
     background: transparent;
@@ -249,15 +272,19 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
+
   button {
     margin: 0 0.5em 0 0;
   }
+
   .topic-statuses {
     line-height: 1.2;
+
     .d-icon {
       color: var(--primary-medium);
     }
   }
+
   .header-title .private-message-glyph-wrapper {
     float: left;
     margin-right: 0.25em;
@@ -270,6 +297,7 @@
     flex-wrap: wrap;
     width: 90%;
   }
+
   h1 {
     margin-bottom: 0;
     width: 100%;
@@ -278,6 +306,7 @@
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
+
   .edit-topic-title {
     display: flex;
     flex-wrap: wrap;
@@ -286,28 +315,35 @@
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
+
     #edit-title {
       flex: 1 1 100%;
     }
+
     .category-chooser,
     .mini-tag-chooser {
       flex: 1 1 35%;
-      margin: 0 0 9px 0;
-      @media all and (max-width: 500px) {
+      margin: 0 0 9px;
+
+      @media all and (width <= 500px) {
         flex: 1 1 100%;
       }
     }
+
     .mini-tag-chooser {
       flex: 1 1 54%;
-      margin: 0 0 9px 0;
+      margin: 0 0 9px;
       margin-left: 1%; // category at 40%, tag chooser at 58%
-      @media all and (max-width: 500px) {
+
+      @media all and (width <= 500px) {
         margin-left: 0;
       }
     }
+
     .edit-controls {
       flex: 1 1 100%;
     }
+
     .select-kit .category-row {
       max-width: unset;
     }
@@ -321,21 +357,26 @@
 
 .private_message {
   background: var(--d-content-background);
+
   #topic-title {
     .edit-topic-title {
       position: relative;
       min-width: 0;
+
       .private-message-glyph {
         position: absolute;
         left: 0.75em;
         top: 0.7em;
       }
+
       #edit-title {
         width: calc(100% - 50px);
         padding-left: 2.25em;
       }
+
       .mini-tag-chooser {
         margin-left: 0;
+
         @include breakpoint(mobile-large, min-width) {
           .selected-name {
             max-width: 500px;
@@ -353,7 +394,6 @@
 .has-pending-posts {
   display: flex;
   justify-content: space-between;
-
   padding: 0.5em;
   background-color: var(--highlight-bg);
   margin-top: 1em;
@@ -362,47 +402,60 @@
 
 .post-links-container {
   @include unselectable;
+
   clear: both;
+
   .post-links {
     margin-top: 1em;
     padding-top: 1em;
     border-top: 1px solid var(--primary-low);
+
     li:last-of-type {
       margin-bottom: 1em;
     }
   }
+
   .expand-links {
     color: var(--primary-med-or-secondary-med);
   }
+
   .track-link {
     display: flex;
     align-items: center;
+
     span:not(.badge) {
       @include ellipsis;
     }
   }
+
   ul {
     margin: 0;
     list-style: none;
+
     li {
       margin-bottom: 0.5em;
+
       a[href] {
         color: var(--primary-med-or-secondary-med);
       }
+
       .d-icon {
         font-size: var(--font-down-2);
         margin: 0 0.5em 0 0;
       }
     }
   }
+
   a.reply-new {
     .d-icon {
       background: var(--secondary);
       border-radius: 20px;
       transition: all linear 0.15s;
     }
+
     &:hover {
       color: var(--tertiary);
+
       .d-icon {
         background: var(--tertiary-low);
       }
@@ -416,6 +469,7 @@ a.topic-featured-link {
   text-transform: lowercase;
   color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
+
   .d-icon {
     font-size: var(--font-down-1);
     margin-right: 0.25em;
@@ -428,6 +482,7 @@ a.topic-featured-link {
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
+
     .reviewable-item {
       .post-body {
         max-height: unset;
