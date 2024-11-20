@@ -2429,27 +2429,27 @@ RSpec.describe Post do
     end
 
     it "returns a user badge that was granted for this post" do
-      expect(post.post_user_badges.pluck(:id)).to include(ub1.id)
+      expect(post.badges_granted.pluck(:id)).to include(ub1.id)
     end
 
     it "does not return a user badge that has the show_posts flag set to false" do
-      expect(post.post_user_badges.pluck(:id)).not_to include(ub2.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub2.id)
     end
 
     it "does not return a user badge that was not granted for this post" do
-      expect(post.post_user_badges.pluck(:id)).not_to include(ub2.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub2.id)
     end
 
     it "does not return a user badge that was granted for a different user" do
-      expect(post.post_user_badges.pluck(:id)).not_to include(ub4.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub4.id)
     end
 
     it "does not return a user badge that has the listable flag set to false" do
-      expect(post.post_user_badges.pluck(:id)).not_to include(ub5.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub5.id)
     end
 
     it "does not return a user badge that has the post_header flag set to false" do
-      expect(post.post_user_badges.pluck(:id)).not_to include(ub6.id)
+      expect(post.badges_granted.pluck(:id)).not_to include(ub6.id)
     end
   end
 end

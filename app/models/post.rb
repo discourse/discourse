@@ -68,7 +68,7 @@ class Post < ActiveRecord::Base
   has_many :user_actions, foreign_key: :target_post_id
 
   has_many :post_user_badges,
-           ->(post) { for_post_header_badges.where("user_badges.user_id = ?", post.user_id) },
+           -> { for_post_header_badges },
            foreign_key: :post_id,
            class_name: "UserBadge"
 
@@ -220,6 +220,10 @@ class Post < ActiveRecord::Base
         1.day.to_i,
       )
     end
+  end
+
+  def badges_granted
+    post_user_badges.where("user_badges.user_id = ?", user_id)
   end
 
   def readers_count
