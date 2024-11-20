@@ -135,7 +135,7 @@ class TopicView
     @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
-    @posts = @posts.includes(:user_badges)
+    @posts = @posts.includes(:post_user_badges)
 
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
