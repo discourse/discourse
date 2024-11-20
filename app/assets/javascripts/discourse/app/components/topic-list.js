@@ -15,9 +15,11 @@ import deprecated, {
 import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 
-registerDeprecationHandler((_, opts) => {
+registerDeprecationHandler((message, opts) => {
   if (opts?.id === "discourse.hbr-topic-list-overrides") {
     needsHbrTopicList(true);
+    // eslint-disable-next-line no-console
+    console.debug(message);
   }
 });
 
