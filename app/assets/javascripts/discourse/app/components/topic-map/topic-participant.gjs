@@ -54,24 +54,24 @@ export default class TopicParticipant extends Component {
   }
 
   <template>
-     <PluginOutlet
+    <PluginOutlet
       @name="topic-participant"
       @outletArgs={{hash participant=this.args.participant}}
     >
       <div class={{this.participantClasses}}>
-      <a
-        class={{this.linkClasses}}
-        data-user-card={{@participant.username}}
-        title={{@participant.username}}
-        href={{this.userUrl}}
-      >
-      {{this.avatarImage}}
-      {{#if (gt @participant.post_count 1)}}
-        <span class="post-count">{{@participant.post_count}}</span>
-      {{/if}}
-      <UserAvatarFlair @user={{@participant}} />
-      </a>
-    </div>
+        <a
+          class={{this.linkClasses}}
+          data-user-card={{@participant.username}}
+          title={{@participant.username}}
+          href={{this.userUrl}}
+        >
+          {{this.avatarImage}}
+          {{#if (gt @participant.post_count 1)}}
+            <span class="post-count">{{@participant.post_count}}</span>
+          {{/if}}
+          <UserAvatarFlair @user={{@participant}} />
+        </a>
+      </div>
     </PluginOutlet>
   </template>
 }
