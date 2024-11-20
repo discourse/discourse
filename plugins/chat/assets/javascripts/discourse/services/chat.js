@@ -295,13 +295,9 @@ export default class Chat extends Service {
       // If the active channel has no unread messages, we need to manually insert it into
       // the list, so we can find the next/previous unread channel.
       if (!activeChannel.hasUnread) {
-        let allChannels;
-
-        if (activeChannel.isDirectMessageChannel) {
-          allChannels = this.chatChannelsManager.directMessageChannels;
-        } else {
-          allChannels = this.chatChannelsManager.publicMessageChannels;
-        }
+        const allChannels = activeChannel.isDirectMessageChannel
+          ? this.chatChannelsManager.directMessageChannels
+          : this.chatChannelsManager.publicMessageChannels;
 
         // Find the ID of the channel before the active channel, which is unread
         let checkChannelIndex =
