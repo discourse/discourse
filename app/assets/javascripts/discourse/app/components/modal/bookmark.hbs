@@ -8,14 +8,6 @@
   data-bookmark-id={{this.bookmark.id}}
   {{did-insert this.didInsert}}
 >
-  <:headerPrimaryAction>
-    <DButton
-      @label="bookmarks.save"
-      @action={{this.saveAndClose}}
-      @title="modal.close"
-      class="btn-transparent btn-primary"
-    />
-  </:headerPrimaryAction>
 
   <:body>
     <div class="control-group bookmark-name-wrap">
