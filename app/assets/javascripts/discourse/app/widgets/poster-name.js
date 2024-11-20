@@ -145,7 +145,7 @@ export default createWidget("poster-name", {
       const badges = [];
       attrs.badgesGranted.forEach((badge) => {
         // Alter the badge description to show that the badge was granted for this post.
-        badge.description = I18n.t("post.badge_granted_tooltip", {
+        badge.description = i18n("post.badge_granted_tooltip", {
           username: attrs.username,
           badge_name: badge.name,
         });
