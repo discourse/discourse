@@ -23,7 +23,7 @@ RSpec.describe Chat::MessageInteractionSerializer do
     )
   end
   let(:message_id) { message.id }
-  let(:params) { { message_id: message_id, action_id: "like" } }
+  let(:params) { { message_id:, action_id: "like" } }
 
   before do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
