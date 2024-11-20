@@ -53,6 +53,13 @@ export default class BookmarkModal extends Component {
 
   _itsatrap = new ItsATrap();
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this._itsatrap?.destroy();
+    this._itsatrap = null;
+    KeyboardShortcuts.unpause();
+  }
+
   get bookmark() {
     return this.args.model.bookmark;
   }
@@ -125,13 +132,6 @@ export default class BookmarkModal extends Component {
         "bookmarks.remove_reminder_keep_bookmark";
     }
     return labels;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this._itsatrap?.destroy();
-    this._itsatrap = null;
-    KeyboardShortcuts.unpause();
   }
 
   @action

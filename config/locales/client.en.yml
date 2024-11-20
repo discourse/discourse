@@ -1985,7 +1985,7 @@ en:
                 one {# day}
               other {# days}
             }.
-          edit_link_options: "Edit link options."
+          edit_link_options: "Edit link options or send by email."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 

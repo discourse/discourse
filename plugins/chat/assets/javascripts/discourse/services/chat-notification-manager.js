@@ -20,6 +20,28 @@ export default class ChatNotificationManager extends Service {
   _subscribedToChat = false;
   _countChatInDocTitle = true;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (!this._shouldRun()) {
+      return;
+    }
+
+    this._chatPresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
+    this._chatPresenceChannel.unsubscribe();
+    this._chatPresenceChannel.leave();
+
+    this._corePresenceChannel.off(
+      "change",
+      this._subscribeToCorrectNotifications
+    );
+    this._corePresenceChannel.unsubscribe();
+    this._corePresenceChannel.leave();
+  }
+
   start() {
     if (!this._shouldRun()) {
       return;
@@ -50,28 +72,6 @@ export default class ChatNotificationManager extends Service {
       "change",
       this._subscribeToCorrectNotifications
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (!this._shouldRun()) {
-      return;
-    }
-
-    this._chatPresenceChannel.off(
-      "change",
-      this._subscribeToCorrectNotifications
-    );
-    this._chatPresenceChannel.unsubscribe();
-    this._chatPresenceChannel.leave();
-
-    this._corePresenceChannel.off(
-      "change",
-      this._subscribeToCorrectNotifications
-    );
-    this._corePresenceChannel.unsubscribe();
-    this._corePresenceChannel.leave();
   }
 
   shouldCountChatInDocTitle() {

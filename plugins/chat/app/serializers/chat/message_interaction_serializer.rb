@@ -9,7 +9,7 @@ module Chat
     end
 
     def channel
-      { id: object.message.chat_channel.id, title: object.message.chat_channel.title }
+      { id: object.message.chat_channel.id, title: object.message.chat_channel.title(scope.user) }
     end
 
     def message

@@ -205,6 +205,7 @@ class PmRemoveLink extends Component {
       didConfirm: () => this.args.removeAllowedUser(this.args.model),
     });
   }
+
   <template>
     <DButton
       class="remove-invited"

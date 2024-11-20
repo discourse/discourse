@@ -2273,6 +2273,7 @@ class PluginApi {
   addSaveableUserField(fieldName) {
     addSaveableUserField(fieldName);
   }
+
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }

@@ -43,6 +43,7 @@ export default class ChatFooter extends Component {
       this.siteSettings.enable_public_channels,
     ].filter(Boolean).length;
   }
+
   get shouldRenderFooter() {
     return (
       (this.site.mobileView || this.chatStateManager.isDrawerExpanded) &&

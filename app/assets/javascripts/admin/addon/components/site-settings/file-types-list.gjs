@@ -96,6 +96,7 @@ export default class FileTypesList extends Component {
 
     this.args.changeValueCallback(newTypes.join(TOKEN_SEPARATOR));
   }
+
   <template>
     <ListSetting
       @value={{this.settingValue}}

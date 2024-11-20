@@ -52,15 +52,6 @@ export default class PostCooked {
       : null;
   }
 
-  update(prev) {
-    if (
-      prev.attrs.cooked !== this.attrs.cooked ||
-      prev.attrs.highlightTerm !== this.attrs.highlightTerm
-    ) {
-      return this.init();
-    }
-  }
-
   init() {
     this.originalQuoteContents = null;
     // todo should be a better way of detecting if it is composer preview
@@ -75,6 +66,15 @@ export default class PostCooked {
     this._decorateAndAdopt(this.cookedDiv);
 
     return this.cookedDiv;
+  }
+
+  update(prev) {
+    if (
+      prev.attrs.cooked !== this.attrs.cooked ||
+      prev.attrs.highlightTerm !== this.attrs.highlightTerm
+    ) {
+      return this.init();
+    }
   }
 
   destroy() {

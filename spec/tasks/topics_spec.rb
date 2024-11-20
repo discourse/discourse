@@ -5,11 +5,7 @@ RSpec.describe "Post rake tasks" do
   let(:topic) { post.topic }
   let(:category) { topic.category }
 
-  before do
-    Rake::Task.clear if defined?(Rake::Task)
-    Discourse::Application.load_tasks
-    STDOUT.stubs(:write)
-  end
+  before { STDOUT.stubs(:write) }
 
   describe "topics:apply_autoclose" do
     it "should close topics silently" do
@@ -20,7 +16,7 @@ RSpec.describe "Post rake tasks" do
 
       freeze_time 2.hours.from_now
 
-      Rake::Task["topics:apply_autoclose"].invoke
+      invoke_rake_task("topics:apply_autoclose")
 
       topic.reload
 

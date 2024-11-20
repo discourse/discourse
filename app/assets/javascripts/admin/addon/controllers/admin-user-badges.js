@@ -26,6 +26,7 @@ export default class AdminUserBadgesController extends Controller {
   availableBadges() {
     return grantableBadges(this.get("allBadges"), this.get("userBadges"));
   }
+
   @discourseComputed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {
     const allBadges = this.model;
@@ -71,6 +72,7 @@ export default class AdminUserBadgesController extends Controller {
 
     return expanded.sortBy("granted_at").reverse();
   }
+
   @action
   expandGroup(userBadge) {
     const model = this.model;

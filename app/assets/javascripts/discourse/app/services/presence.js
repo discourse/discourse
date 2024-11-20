@@ -277,15 +277,15 @@ export default class PresenceService extends Service {
     }
   }
 
-  get _presentChannels() {
-    return new Set(this._presentProxies.keys());
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
     window.removeEventListener("beforeunload", this._beaconLeaveAll);
     removeOnPresenceChange(this._throttledUpdateServer);
     cancel(this._debounceTimer);
+  }
+
+  get _presentChannels() {
+    return new Set(this._presentProxies.keys());
   }
 
   // Get a PresenceChannel object representing a single channel

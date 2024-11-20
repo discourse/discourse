@@ -76,6 +76,12 @@ export default class DEditor extends Component {
     },
   };
 
+  init() {
+    super.init(...arguments);
+
+    this.register = getRegister(this);
+  }
+
   @computed("formTemplateIds")
   get selectedFormTemplateId() {
     if (this._selectedFormTemplateId) {
@@ -114,12 +120,6 @@ export default class DEditor extends Component {
     if (this.autofocus) {
       this.textManipulation.focus();
     }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.register = getRegister(this);
   }
 
   didInsertElement() {

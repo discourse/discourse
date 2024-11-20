@@ -166,6 +166,7 @@ export default class ThemesList extends Component {
     results = this._applyFilter(results);
     return this._searchThemes(results, this.searchTerm);
   }
+
   @discourseComputed("themesList.@each.markedToDelete")
   someInactiveSelected() {
     return (

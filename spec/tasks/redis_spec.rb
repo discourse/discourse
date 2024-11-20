@@ -3,8 +3,6 @@
 RSpec.describe "Redis rake tasks", type: :multisite do
   let(:redis) { Discourse.redis.without_namespace }
 
-  before { Discourse::Application.load_tasks }
-
   describe "clean up" do
     it "should clean up orphan Redis keys" do
       active_keys = %w[
@@ -18,7 +16,7 @@ RSpec.describe "Redis rake tasks", type: :multisite do
 
       (active_keys | orphan_keys).each { |key| redis.set(key, 1) }
 
-      Rake::Task["redis:clean_up"].invoke
+      invoke_rake_task("redis:clean_up")
 
       active_keys.each { |key| expect(redis.get(key)).to eq("1") }
 

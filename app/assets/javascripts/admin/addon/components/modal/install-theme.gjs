@@ -46,6 +46,11 @@ export default class InstallThemeModal extends Component {
   keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
   importUrl = this.args.model.importUrl || "/admin/themes/import";
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.model.clearParams?.();
+  }
+
   get showPublicKey() {
     return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
   }
@@ -123,11 +128,6 @@ export default class InstallThemeModal extends Component {
       url &&
       url.replace(/\.git$/, "") === themeUrl.replace(/\.git$/, "")
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.args.model.clearParams?.();
   }
 
   @action

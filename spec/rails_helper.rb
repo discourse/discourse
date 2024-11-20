@@ -291,6 +291,7 @@ RSpec.configure do |config|
 
     DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
+    Discourse::Application.load_tasks
 
     SiteSetting.refresh!
 

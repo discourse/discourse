@@ -21,15 +21,15 @@ export default class ChatHeader extends Component {
     this.router.on("routeDidChange", this, this.#updatePreviousURL);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeDidChange", this, this.#updatePreviousURL);
+  }
+
   get shouldRender() {
     return (
       this.siteSettings.chat_enabled && this.site.mobileView && this.isChatOpen
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.router.off("routeDidChange", this, this.#updatePreviousURL);
   }
 
   get isChatOpen() {
