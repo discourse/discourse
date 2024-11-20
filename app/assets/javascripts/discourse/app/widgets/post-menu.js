@@ -6,6 +6,7 @@ import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
+import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -476,7 +477,7 @@ function _replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
-  services: ["modal", "menu", "user-list-atts"],
+  services: ["modal", "menu"],
 
   settings: {
     collapseButtons: true,
@@ -902,7 +903,7 @@ export default createWidget("post-menu", {
         post_action_type_id: LIKE_ACTION,
       })
       .then((users) => {
-        state.likedUsers = users.map(this.userListAtts.smallUserAtts);
+        state.likedUsers = users.map(smallUserAttrs);
         state.total = users.totalRows;
       });
   },
@@ -911,7 +912,7 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then((users) => {
-      state.readers = users.map(this.userListAtts.smallUserAtts);
+      state.readers = users.map(smallUserAttrs);
       state.totalReaders = users.totalRows;
     });
   },

@@ -3,12 +3,12 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import avatar from "discourse/helpers/bound-avatar-template";
+import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
 
 export default class SmallUserList extends Component {
   @service currentUser;
-  @service userListAtts;
 
   get users() {
     let users = this.args.users;
@@ -16,7 +16,7 @@ export default class SmallUserList extends Component {
       this.args.addSelf &&
       !users.some((u) => u.username === this.currentUser.username)
     ) {
-      users = users.concat(this.userListAtts.smallUserAtts(this.currentUser));
+      users = users.concat(smallUserAttrs(this.currentUser));
     }
     return users;
   }
