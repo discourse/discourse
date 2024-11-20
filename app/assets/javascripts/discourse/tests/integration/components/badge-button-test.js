@@ -78,7 +78,7 @@ module("Integration | Component | badge-button", function (hooks) {
     assert.dom(".user-badge.foo").exists();
   });
 
-  test("showName hides the name", async function (assert) {
+  test("setting showName to false hides the name", async function (assert) {
     this.set("badge", { name: "foo" });
 
     await render(

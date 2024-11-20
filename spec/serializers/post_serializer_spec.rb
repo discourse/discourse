@@ -478,18 +478,18 @@ RSpec.describe PostSerializer do
 
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
 
-    it "doesn't include badges when disabled" do
+    it "doesn't include badges when `enable_badges` site setting is disabled" do
       SiteSetting.enable_badges = false
       expect(serializer.as_json[:badges_granted]).to eq([])
     end
 
-    it "doesn't include badges when display is disabled" do
+    it "doesn't include badges when `show_badges_in_post_header` site setting is disabled" do
       SiteSetting.enable_badges = true
       SiteSetting.show_badges_in_post_header = false
       expect(serializer.as_json[:badges_granted]).to eq([])
     end
 
-    it "includes badges when enabled" do
+    it "includes badges when `enable_badges` and `show_badges_in_post_header` site settings are enabled" do
       SiteSetting.enable_badges = true
       SiteSetting.show_badges_in_post_header = true
 
