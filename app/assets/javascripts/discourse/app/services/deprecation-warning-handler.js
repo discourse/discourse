@@ -19,7 +19,6 @@ export const CRITICAL_DEPRECATIONS = [
   "discourse.plugin-outlet-tag-name",
   "discourse.plugin-outlet-parent-view",
   "discourse.d-button-action-string",
-  /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
 // Deprecation handling APIs don't have any way to unregister handlers, so we set up permanent

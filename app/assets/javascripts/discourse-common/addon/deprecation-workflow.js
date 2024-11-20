@@ -1,8 +1,4 @@
 const DEPRECATION_WORKFLOW = [
-  {
-    handler: "silence",
-    matchId: "ember-this-fallback.this-property-fallback",
-  },
   { handler: "silence", matchId: "discourse.select-kit" },
   {
     handler: "silence",
