@@ -116,4 +116,8 @@ class AdminUserListSerializer < BasicUserSerializer
   def can_be_deleted
     scope.can_delete_user?(object)
   end
+
+  def include_can_be_deleted?
+    @options[:include_can_be_deleted]
+  end
 end
