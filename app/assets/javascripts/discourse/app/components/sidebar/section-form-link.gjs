@@ -44,6 +44,7 @@ export default class SectionFormLink extends Component {
       }
     }
   }
+
   @action
   dragEnter() {
     this.dragCount++;

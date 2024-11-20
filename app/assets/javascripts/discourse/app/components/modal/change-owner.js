@@ -26,6 +26,7 @@ export default class ChangeOwnerModal extends Component {
   get selectedPostsCount() {
     return this.args.model.selectedPostsCount;
   }
+
   @action
   async changeOwnershipOfPosts() {
     this.saving = true;

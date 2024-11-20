@@ -60,6 +60,10 @@ export default class LightboxService extends Service {
     );
   }
 
+  willDestroy() {
+    this.#reset();
+  }
+
   @bind
   async onLightboxOpened({ items, currentItem }) {
     this.originalSiteThemeColor = await getSiteThemeColor();
@@ -267,9 +271,5 @@ export default class LightboxService extends Service {
     });
 
     event.target.toggleAttribute(SELECTORS.DOCUMENT_LAST_FOCUSED_ELEMENT);
-  }
-
-  willDestroy() {
-    this.#reset();
   }
 }

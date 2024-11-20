@@ -40,6 +40,12 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
 
   @readOnly("tagId") value;
 
+  init() {
+    super.init(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  }
+
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")
   get shouldShowMoreTags() {
     if (this.selectKit.filter?.length > 0) {
@@ -47,12 +53,6 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     } else {
       return this.topTags.length > this.maxTagsInFilterList;
     }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
   }
 
   modifyComponentForCollection(collection) {

@@ -72,6 +72,7 @@ export default class PollResultsStandardComponent extends Component {
   get isMultiple() {
     return this.args.pollType === "multiple";
   }
+
   <template>
     <ul class="results">
       {{#each this.orderedOptions key="voters" as |option|}}

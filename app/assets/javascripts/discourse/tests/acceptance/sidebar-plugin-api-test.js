@@ -50,8 +50,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
               },
             ];
 
-            willDestroy = () => (sectionDestroy = "section test");
-
             links = [
               new (class extends BaseCustomSidebarSectionLink {
                 name = "random-channel";
@@ -99,6 +97,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                 text = "Homepage";
               })(),
             ];
+            willDestroy = () => (sectionDestroy = "section test");
           };
         }
       );

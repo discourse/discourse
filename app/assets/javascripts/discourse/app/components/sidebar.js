@@ -17,6 +17,13 @@ export default class Sidebar extends Component {
     }
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this.site.mobileView) {
+      document.removeEventListener("click", this.collapseSidebar);
+    }
+  }
+
   get showSwitchPanelButtonsOnTop() {
     return this.siteSettings.default_sidebar_switch_panel_position === "top";
   }
@@ -53,13 +60,6 @@ export default class Sidebar extends Component {
 
     if (shouldCollapseSidebar || !isClickWithinSidebar) {
       this.args.toggleSidebar();
-    }
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    if (this.site.mobileView) {
-      document.removeEventListener("click", this.collapseSidebar);
     }
   }
 }

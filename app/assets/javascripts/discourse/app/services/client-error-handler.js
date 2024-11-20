@@ -26,15 +26,15 @@ export default class ClientErrorHandlerService extends Service {
     document.addEventListener("discourse-error", this.handleDiscourseError);
   }
 
-  get rootElement() {
-    return document.querySelector(getOwner(this).rootElement);
-  }
-
   willDestroy() {
     document.removeEventListener("discourse-error", this.handleDiscourseError);
     this.rootElement
       .querySelectorAll(".broken-theme-alert-banner")
       .forEach((e) => e.remove());
+  }
+
+  get rootElement() {
+    return document.querySelector(getOwner(this).rootElement);
   }
 
   @bind

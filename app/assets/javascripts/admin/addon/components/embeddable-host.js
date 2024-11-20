@@ -44,10 +44,12 @@ export default class EmbeddableHost extends Component.extend(
   edit() {
     this.set("editToggled", true);
   }
+
   @action
   onUserChange(user) {
     this.set("user", user);
   }
+
   @action
   save() {
     if (this.cantSave) {
