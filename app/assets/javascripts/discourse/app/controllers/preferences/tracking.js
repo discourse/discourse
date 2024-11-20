@@ -101,6 +101,7 @@ export default class extends Controller {
       )
       .filter((t) => t);
   }
+
   @computed(
     "model.watchedCategories",
     "model.mutedCategories",

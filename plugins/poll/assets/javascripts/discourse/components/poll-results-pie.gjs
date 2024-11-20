@@ -104,6 +104,7 @@ export default class PollResultsPieComponent extends Component {
   registerCanvasElement = modifier((element) => {
     this.canvasElement = element;
   });
+
   get canvasId() {
     return htmlSafe(`poll-results-chart-${this.args.id}`);
   }
@@ -125,6 +126,7 @@ export default class PollResultsPieComponent extends Component {
     // eslint-disable-next-line no-undef
     this._chart = new Chart(el.getContext("2d"), config);
   }
+
   <template>
     <div class="poll-results-chart">
       <canvas

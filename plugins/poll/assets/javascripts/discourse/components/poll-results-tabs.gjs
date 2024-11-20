@@ -20,6 +20,7 @@ export default class TabsComponent extends Component {
         ? this.tabs[1]
         : this.tabs[0];
   }
+
   get tabs() {
     let tabs = [];
 

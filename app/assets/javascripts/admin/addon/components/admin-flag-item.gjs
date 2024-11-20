@@ -88,6 +88,7 @@ export default class AdminFlagItem extends Component {
       this.dMenu.close();
     });
   }
+
   @action
   edit() {
     this.router.transitionTo("adminConfig.flags.edit", this.args.flag);

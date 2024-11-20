@@ -21,11 +21,6 @@ export default class UserThreads extends Component {
 
   trackedChannels = {};
 
-  @cached
-  get threadsCollection() {
-    return this.chatApi.userThreads(this.handleLoadedThreads);
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
 
@@ -34,6 +29,11 @@ export default class UserThreads extends Component {
     });
 
     this.trackedChannels = {};
+  }
+
+  @cached
+  get threadsCollection() {
+    return this.chatApi.userThreads(this.handleLoadedThreads);
   }
 
   @bind

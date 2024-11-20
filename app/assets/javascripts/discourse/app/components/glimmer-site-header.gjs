@@ -49,6 +49,25 @@ export default class GlimmerSiteHeader extends Component {
     schedule("afterRender", () => this.animateMenu());
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("user-menu:rendered", this, this.animateMenu);
+
+    if (this.dropDownHeaderEnabled) {
+      this.appEvents.off(
+        "sidebar-hamburger-dropdown:rendered",
+        this,
+        this.animateMenu
+      );
+    }
+
+    this._itsatrap?.destroy();
+    this._itsatrap = null;
+
+    window.removeEventListener("scroll", this._recalculateHeaderOffset);
+    this._resizeObserver?.disconnect();
+  }
+
   get dropDownHeaderEnabled() {
     return !this.sidebarEnabled || this.site.narrowDesktopView;
   }
@@ -359,25 +378,6 @@ export default class GlimmerSiteHeader extends Component {
       ],
       { fill: "forwards" }
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.appEvents.off("user-menu:rendered", this, this.animateMenu);
-
-    if (this.dropDownHeaderEnabled) {
-      this.appEvents.off(
-        "sidebar-hamburger-dropdown:rendered",
-        this,
-        this.animateMenu
-      );
-    }
-
-    this._itsatrap?.destroy();
-    this._itsatrap = null;
-
-    window.removeEventListener("scroll", this._recalculateHeaderOffset);
-    this._resizeObserver?.disconnect();
   }
 
   <template>

@@ -25,6 +25,12 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   });
 
   @action
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this._popper?.destroy();
+  }
+
+  @action
   didSelectEmoji(emoji) {
     this.chatEmojiPickerManager.picker?.didSelectEmoji(emoji);
     this.chatEmojiPickerManager.close();
@@ -56,12 +62,6 @@ export default class ChatChannelMessageEmojiPicker extends Component {
     );
 
     element.classList.remove("hidden");
-  }
-
-  @action
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this._popper?.destroy();
   }
 
   <template>

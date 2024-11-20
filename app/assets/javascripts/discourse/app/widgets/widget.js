@@ -183,6 +183,7 @@ export default class Widget {
     }
   }
 
+  init() {}
   transform() {
     return {};
   }
@@ -190,8 +191,6 @@ export default class Widget {
   defaultState() {
     return {};
   }
-
-  init() {}
 
   destroy() {}
 

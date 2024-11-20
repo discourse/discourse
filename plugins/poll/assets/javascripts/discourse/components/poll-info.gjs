@@ -155,6 +155,7 @@ export default class PollInfoComponent extends Component {
       this.publicTitle
     );
   }
+
   <template>
     <div class="poll-info">
       <div class="poll-info_counts">
