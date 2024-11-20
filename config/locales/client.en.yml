@@ -6946,8 +6946,12 @@ en:
 
       user_fields:
         title: "User Fields"
-        help: "Add fields that your users can fill out."
-        create: "Create User Field"
+        help: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
+        no_user_fields: "You don't have any custom user fields yet."
+        add: "Add user field"
+        back: "Back to user fields"
+        edit_header: "Edit User Field"
+        new_header: "Add User Field"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"

@@ -1,29 +1,26 @@
-<div class="admin-config-page__main-area">
-  <div class="user-fields">
-    <h2>{{i18n "admin.user_fields.title"}}</h2>
+<div class="admin-user_fields admin-config-page">
+  <AdminPageHeader
+    @titleLabel="admin.user_fields.title"
+    @descriptionLabel="admin.user_fields.help"
+    @hideTabs={{this.hideTabs}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/customize/user_fields"
+        @label={{i18n "admin.user_fields.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary
+        @route="adminUserFields.new"
+        @label="admin.user_fields.add"
+      />
+    </:actions>
+  </AdminPageHeader>
 
-    <p class="desc">{{i18n "admin.user_fields.help"}}</p>
-
-    {{#if this.model}}
-      {{#each this.sortedFields as |uf|}}
-        <AdminUserFieldItem
-          @userField={{uf}}
-          @fieldTypes={{this.fieldTypes}}
-          @firstField={{this.firstField}}
-          @lastField={{this.lastField}}
-          @destroyAction={{this.destroyField}}
-          @moveUpAction={{this.moveUp}}
-          @moveDownAction={{this.moveDown}}
-        />
-      {{/each}}
-    {{/if}}
-
-    <DButton
-      @disabled={{this.createDisabled}}
-      @action={{this.createField}}
-      @label="admin.user_fields.create"
-      @icon="plus"
-      class="btn-primary"
-    />
+  <div class="admin-config-page__main-area">
+    <div class="user-fields">
+      {{outlet}}
+    </div>
   </div>
 </div>

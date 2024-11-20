@@ -30,6 +30,11 @@ class Admin::UserFieldsController < Admin::AdminController
     render_serialized(user_fields, UserFieldSerializer, root: "user_fields")
   end
 
+  def edit
+    user_field = UserField.find(params[:id])
+    render_serialized(user_field, UserFieldSerializer, root: "user_field")
+  end
+
   def update
     field_params = params[:user_field]
     field = UserField.where(id: params.require(:id)).first

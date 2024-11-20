@@ -68,10 +68,15 @@ export default function () {
           }
         );
 
-        this.route("adminUserFields", {
-          path: "/user_fields",
-          resetNamespace: true,
-        });
+        this.route(
+          "adminUserFields",
+          { path: "/user_fields", resetNamespace: true },
+          function () {
+            this.route("new");
+            this.route("edit", { path: "/:id" });
+            this.route("index", { path: "/" });
+          }
+        );
         this.route(
           "adminEmojis",
           { path: "/emojis", resetNamespace: true },

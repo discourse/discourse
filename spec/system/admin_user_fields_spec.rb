@@ -28,8 +28,7 @@ describe "Admin User Fields", type: :system do
 
   it "makes sure new required fields are editable after signup" do
     user_fields_page.visit
-
-    page.find(".user-fields .btn-primary").click
+    user_fields_page.click_add_field
 
     form = page.find(".user-field")
     editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
@@ -45,8 +44,7 @@ describe "Admin User Fields", type: :system do
 
   it "requires confirmation when applying required fields retroactively" do
     user_fields_page.visit
-
-    page.find(".user-fields .btn-primary").click
+    user_fields_page.click_add_field
 
     form = page.find(".user-field")
 
