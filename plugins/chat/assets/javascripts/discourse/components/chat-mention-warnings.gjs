@@ -2,9 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class ChatMentionWarnings extends Component {
   @service siteSettings;
@@ -76,9 +75,9 @@ export default class ChatMentionWarnings extends Component {
 
   get warningHeaderText() {
     if (this.mentionsCount <= this.warningsCount || this.hasTooManyMentions) {
-      return I18n.t("chat.mention_warning.groups.header.all");
+      return i18n("chat.mention_warning.groups.header.all");
     } else {
-      return I18n.t("chat.mention_warning.groups.header.some");
+      return i18n("chat.mention_warning.groups.header.some");
     }
   }
 
@@ -89,7 +88,7 @@ export default class ChatMentionWarnings extends Component {
 
     if (this.currentUser.admin) {
       return htmlSafe(
-        I18n.t("chat.mention_warning.too_many_mentions_admin", {
+        i18n("chat.mention_warning.too_many_mentions_admin", {
           count: this.siteSettings.max_mentions_per_chat_message,
           siteSettingUrl: getURL(
             "/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
@@ -98,7 +97,7 @@ export default class ChatMentionWarnings extends Component {
       );
     } else {
       return htmlSafe(
-        I18n.t("chat.mention_warning.too_many_mentions", {
+        i18n("chat.mention_warning.too_many_mentions", {
           count: this.siteSettings.max_mentions_per_chat_message,
         })
       );
@@ -112,16 +111,16 @@ export default class ChatMentionWarnings extends Component {
 
     switch (this.unreachableGroupMentionsCount) {
       case 1:
-        return I18n.t("chat.mention_warning.groups.unreachable_1", {
+        return i18n("chat.mention_warning.groups.unreachable_1", {
           group: this.unreachableGroupMentions[0],
         });
       case 2:
-        return I18n.t("chat.mention_warning.groups.unreachable_2", {
+        return i18n("chat.mention_warning.groups.unreachable_2", {
           group1: this.unreachableGroupMentions[0],
           group2: this.unreachableGroupMentions[1],
         });
       default:
-        return I18n.t("chat.mention_warning.groups.unreachable_multiple", {
+        return i18n("chat.mention_warning.groups.unreachable_multiple", {
           group: this.unreachableGroupMentions[0],
           count: this.unreachableGroupMentionsCount - 1,
         });

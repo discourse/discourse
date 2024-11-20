@@ -2,7 +2,7 @@ import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 import Badge from "discourse/models/badge";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _additionalAttributes = [];
 
@@ -205,8 +205,8 @@ export default function transformPost(
           postId: post.id,
           action,
           canUndo: a.can_undo,
-          description: I18n.t(`post.actions.by_you.${action}`, {
-            defaultValue: I18n.t(`post.actions.by_you.custom`, {
+          description: i18n(`post.actions.by_you.${action}`, {
+            defaultValue: i18n(`post.actions.by_you.custom`, {
               custom: a.actionType.name,
             }),
           }),

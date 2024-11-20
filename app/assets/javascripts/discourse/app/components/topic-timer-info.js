@@ -9,12 +9,12 @@ import { isTesting } from "discourse-common/config/environment";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("topic-timer-info")
 export default class TopicTimerInfo extends Component {
   clockIcon = htmlSafe(`${iconHTML("far-clock")}`);
-  trashLabel = I18n.t("post.controls.remove_timer");
+  trashLabel = i18n("post.controls.remove_timer");
 
   title = null;
   notice = null;
@@ -120,7 +120,7 @@ export default class TopicTimerInfo extends Component {
       options = Object.assign(options, this.additionalOpts());
       this.setProperties({
         title: htmlSafe(`${moment(this.executeAt).format("LLLL")}`),
-        notice: htmlSafe(`${I18n.t(this._noticeKey(), options)}`),
+        notice: htmlSafe(`${i18n(this._noticeKey(), options)}`),
         showTopicTimer: true,
       });
 

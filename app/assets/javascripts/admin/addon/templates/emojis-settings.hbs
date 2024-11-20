@@ -1,9 +1,4 @@
-<DBreadcrumbsItem @path="/admin/emojis/settings" @label={{i18n "settings"}} />
-
-<div class="content-body admin-config-area__settings admin-detail pull-left">
-  <AdminFilteredSiteSettings
-    @initialFilter={{@model.initialFilter}}
-    @settings={{@model.settings}}
-    @onFilterChanged={{this.filterChanged}}
-  />
-</div>
+<AdminConfigAreas::EmojisSettings
+  @onFilterChanged={{this.filterChangedCallback}}
+  @initialFilter={{this.filter}}
+/>

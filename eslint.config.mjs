@@ -5,6 +5,8 @@ export default [
   {
     rules: {
       "ember/no-classic-classes": "error",
+      "discourse/i18n-import-location": "error",
+      "discourse/i18n-t": "error",
     },
   },
   {

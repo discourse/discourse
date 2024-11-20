@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 
 export default class AdminCustomizeThemesShowRoute extends Route {
@@ -72,7 +72,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       transition.abort();
 
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
+        message: i18n("admin.customize.theme.unsaved_parent_themes"),
         didConfirm: () => {
           model.set("recentlyInstalled", false);
           transition.retry();

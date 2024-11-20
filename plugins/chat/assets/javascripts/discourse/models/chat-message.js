@@ -95,6 +95,7 @@ export default class ChatMessage {
     this.user = this.#initUserModel(args.user);
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
+    this.blocks = args.blocks;
 
     if (args.thread) {
       this.thread = args.thread;

@@ -17,7 +17,7 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -58,14 +58,14 @@ export default class BookmarkModal extends Component {
   }
 
   get modalTitle() {
-    return I18n.t(this.bookmark.id ? "bookmarks.edit" : "bookmarks.create");
+    return i18n(this.bookmark.id ? "bookmarks.edit" : "bookmarks.create");
   }
 
   get autoDeletePreferences() {
     return Object.keys(AUTO_DELETE_PREFERENCES).map((key) => {
       return {
         id: AUTO_DELETE_PREFERENCES[key],
-        name: I18n.t(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
+        name: i18n(`bookmarks.auto_delete_preference.${key.toLowerCase()}`),
       };
     });
   }
@@ -234,7 +234,7 @@ export default class BookmarkModal extends Component {
 
     if (this.existingBookmarkHasReminder) {
       this.dialog.deleteConfirm({
-        message: I18n.t("bookmarks.confirm_delete"),
+        message: i18n("bookmarks.confirm_delete"),
         didConfirm: () => deleteAction(),
       });
     } else {
@@ -260,7 +260,7 @@ export default class BookmarkModal extends Component {
   #saveBookmark() {
     if (this.bookmark.selectedReminderType === TIME_SHORTCUT_TYPES.CUSTOM) {
       if (!this.bookmark.reminderAtISO) {
-        return Promise.reject(I18n.t("bookmarks.invalid_custom_datetime"));
+        return Promise.reject(i18n("bookmarks.invalid_custom_datetime"));
       }
     }
 

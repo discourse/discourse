@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import domFromString from "discourse-common/lib/dom-from-string";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;
@@ -17,7 +17,7 @@ export default class ChatMessageCollapser extends Component {
     if (this.args.uploads.length === 1) {
       name = this.args.uploads[0].original_filename;
     } else {
-      name = I18n.t("chat.uploaded_files", { count: this.args.uploads.length });
+      name = i18n("chat.uploaded_files", { count: this.args.uploads.length });
     }
     return htmlSafe(
       `<span class="chat-message-collapser-link-small">${escapeExpression(

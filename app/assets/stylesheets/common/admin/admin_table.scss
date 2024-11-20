@@ -26,7 +26,7 @@
   }
 
   td {
-    vertical-align: top;
+    vertical-align: middle;
     padding-top: var(--space-3);
     padding-bottom: var(--space-3);
 
@@ -37,6 +37,15 @@
 
     &:first-child {
       @include breakpoint("tablet") {
+        border-top: 0;
+      }
+    }
+
+    &.d-admin-row__overview {
+      width: 55%;
+
+      @include breakpoint("tablet") {
+        width: auto;
         border-top: 0;
       }
     }
@@ -62,13 +71,6 @@
 }
 
 .d-admin-row__overview {
-  width: 55%;
-
-  @include breakpoint("tablet") {
-    width: auto;
-    border-top: 0;
-  }
-
   &-name {
     font-weight: 700;
     max-width: 80%;

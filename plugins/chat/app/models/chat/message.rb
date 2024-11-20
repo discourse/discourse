@@ -19,6 +19,10 @@ module Chat
     belongs_to :last_editor, class_name: "User"
     belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
+    has_many :interactions,
+             class_name: "Chat::MessageInteraction",
+             dependent: :destroy,
+             foreign_key: :chat_message_id
     has_many :replies,
              class_name: "Chat::Message",
              foreign_key: "in_reply_to_id",
@@ -91,11 +95,28 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
-    validates :cooked, length: { maximum: 20_000 }
-    validate :validate_message
+    normalizes :blocks,
+               with: ->(blocks) do
+                 return if !blocks
+
+                 # automatically assigns unique IDs
+                 blocks.each do |block|
+                   block["schema_version"] = 1
+                   block["block_id"] ||= SecureRandom.uuid
+                   block["elements"].each do |element|
+                     element["schema_version"] = 1
+                     element["action_id"] ||= SecureRandom.uuid if element["type"] == "button"
+                   end
+                 end
+               end
 
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
+    validates :cooked, length: { maximum: 20_000 }
+
+    validates_with Chat::MessageBlocksValidator
+
+    validate :validate_message
     def validate_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 

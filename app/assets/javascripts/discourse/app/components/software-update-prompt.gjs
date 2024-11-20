@@ -6,9 +6,9 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { isTesting } from "discourse-common/config/environment";
-import i18n from "discourse-common/helpers/i18n";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 
 export default class SoftwareUpdatePrompt extends Component {
   @service messageBus;

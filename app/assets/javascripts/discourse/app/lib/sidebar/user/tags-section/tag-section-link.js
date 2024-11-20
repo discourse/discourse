@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;
@@ -59,11 +59,11 @@ export default class TagSectionLink extends BaseTagSectionLink {
     if (this.#newNewViewEnabled && this.#unreadAndNewCount > 0) {
       return this.#unreadAndNewCount.toString();
     } else if (this.totalUnread > 0) {
-      return I18n.t("sidebar.unread_count", {
+      return i18n("sidebar.unread_count", {
         count: this.totalUnread,
       });
     } else if (this.totalNew > 0) {
-      return I18n.t("sidebar.new_count", {
+      return i18n("sidebar.new_count", {
         count: this.totalNew,
       });
     }

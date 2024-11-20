@@ -8,7 +8,7 @@ import pretender, {
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
   needs.user({ can_upload_avatar: true });
@@ -102,7 +102,7 @@ acceptance("User Preferences - Account", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body").textContent.trim(),
-      I18n.t("user.deleted_yourself"),
+      i18n("user.deleted_yourself"),
       "confirmation dialog is shown"
     );
 
@@ -301,7 +301,7 @@ acceptance("User Preferences — Account - Download Archive", function (needs) {
     await click(".btn-request-archive");
     await click("#dialog-holder .btn-primary");
 
-    assert.dom(".dialog-body").hasText(I18n.t("user.download_archive.success"));
+    assert.dom(".dialog-body").hasText(i18n("user.download_archive.success"));
 
     await click("#dialog-holder .btn-primary");
   });

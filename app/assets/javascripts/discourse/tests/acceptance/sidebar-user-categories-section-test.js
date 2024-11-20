@@ -13,7 +13,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",
@@ -894,7 +894,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      i18n("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category1.slug} section link`
     );
 
@@ -902,7 +902,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 2 }),
+      i18n("sidebar.unread_count", { count: 2 }),
       `displays 2 unread count for ${category2.slug} section link`
     );
 
@@ -919,7 +919,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.new_count", { count: 1 }),
+      i18n("sidebar.new_count", { count: 1 }),
       `displays 1 new count for ${category1.slug} section link`
     );
 
@@ -953,7 +953,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      i18n("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for ${category2.slug} section link`
     );
   });

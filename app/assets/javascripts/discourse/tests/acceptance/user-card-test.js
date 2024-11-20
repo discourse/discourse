@@ -4,7 +4,7 @@ import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Card", function (needs) {
   needs.user();
@@ -144,7 +144,7 @@ acceptance("User Card - Hidden Profile", function (needs) {
     assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
     assert
       .dom(".user-card .profile-hidden")
-      .hasText(I18n.t("user.profile_hidden"));
+      .hasText(i18n("user.profile_hidden"));
   });
 });
 
@@ -169,8 +169,6 @@ acceptance("User Card - Inactive user", function (needs) {
     await click('a[data-user-card="eviltrout"]');
 
     assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
-    assert
-      .dom(".user-card .inactive-user")
-      .hasText(I18n.t("user.inactive_user"));
+    assert.dom(".user-card .inactive-user").hasText(i18n("user.inactive_user"));
   });
 });

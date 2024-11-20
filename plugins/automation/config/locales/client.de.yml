@@ -20,7 +20,7 @@ de:
       confirm_automation_reset: Diese Aktion setzt die Skript- und Auslöseroptionen zurück. Der neue Zustand wird gespeichert. Willst du fortfahren?
       confirm_automation_trigger: Diese Aktion löst die Automatisierung aus. Willst du fortfahren?
       no_automation_yet: Du hast noch keine Automatisierungen erstellt. Wähle unten eine Option, um loszulegen.
-      filter_placeholder: Filter nach Name oder Beschreibung...
+      filter_placeholder: Nach Namen oder Beschreibung filtern …
       edit_automation:
         trigger_section:
           forced: Dieser Auslöser wird vom Skript erzwungen.
@@ -170,7 +170,7 @@ de:
               description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine persönliche Nachricht im Posteingang dieser Gruppe ist
             restricted_groups:
               label: Gruppen
-              description: Optional, wird nur ausgelöst, wenn das Thema des Beitrags eine private Nachricht in einem der Posteingänge der Gruppe ist
+              description: Optional. Wird nur ausgelöst, wenn das Thema des Beitrags eine private Nachricht in einem der Posteingänge der Gruppe ist
             ignore_group_members:
               label: Gruppenmitglieder ignorieren
               description: Den Auslöser überspringen, falls der Absender ein Mitglied der oben angegebenen Gruppe ist
@@ -184,7 +184,7 @@ de:
               label: Nur erstes Thema
               description: Wird nur ausgelöst, wenn das Thema das erste Thema ist, das ein Benutzer erstellt hat
             skip_via_email:
-              label: "Per E-Mail überspringen"
+              label: "„Per E-Mail“ überspringen"
               description: "Den Auslöser überspringen, wenn der Beitrag per E-Mail erstellt wurde"
           created: Erstellt
           edited: Bearbeitet
@@ -237,7 +237,7 @@ de:
               description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
             trigger_with_pms:
               label: Auslösen mit PNs
-              description: Wird auch ausgelöst, wenn die Tags in einer PN geändert wurden
+              description: Wird auch ausgelöst, wenn die Schlagwörter in einer PN geändert wurden
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -396,7 +396,7 @@ de:
           fields:
             custom_field_name:
               label: "Name des benutzerdefinierten Benutzerfelds"
-      unnamed_automation: "Unbenannte Automatisierung"
+      unnamed_automation: "Automatisierung ohne Titel"
       models:
         script:
           name:

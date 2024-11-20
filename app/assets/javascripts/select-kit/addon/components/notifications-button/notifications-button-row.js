@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
 
 @classNames("notifications-button-row")
@@ -12,7 +12,7 @@ export default class NotificationsButtonRow extends DropdownSelectBoxRowComponen
 
   @computed("_start")
   get label() {
-    return escapeExpression(I18n.t(`${this._start}.title`));
+    return escapeExpression(i18n(`${this._start}.title`));
   }
 
   @computed("item.icon")
@@ -26,7 +26,7 @@ export default class NotificationsButtonRow extends DropdownSelectBoxRowComponen
       return null;
     }
 
-    return escapeExpression(I18n.t(`${this._start}.description`));
+    return escapeExpression(i18n(`${this._start}.description`));
   }
 
   @computed("i18nPrefix", "i18nPostfix", "rowName")

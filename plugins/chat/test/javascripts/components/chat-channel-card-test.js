@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-card", function (hooks) {
@@ -72,7 +72,7 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
 
     assert.strictEqual(
       query(".chat-channel-card__members").textContent.trim(),
-      I18n.t("chat.channel.memberships_count", { count: 4 })
+      i18n("chat.channel.memberships_count", { count: 4 })
     );
   });
 

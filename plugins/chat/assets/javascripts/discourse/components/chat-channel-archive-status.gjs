@@ -7,7 +7,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatChannelArchiveStatus extends Component {
   @service chatApi;
@@ -23,7 +23,7 @@ export default class ChatChannelArchiveStatus extends Component {
       ? "chat.channel_status.archive_failed_no_topic"
       : "chat.channel_status.archive_failed";
     return htmlSafe(
-      I18n.t(translationKey, {
+      i18n(translationKey, {
         completed: archive.messages,
         total: archive.totalMessages,
         topic_url: this.topicUrl,
@@ -33,7 +33,7 @@ export default class ChatChannelArchiveStatus extends Component {
 
   get channelArchiveCompletedMessage() {
     return htmlSafe(
-      I18n.t("chat.channel_status.archive_completed", {
+      i18n("chat.channel_status.archive_completed", {
         topic_url: this.topicUrl,
       })
     );

@@ -6,6 +6,11 @@
 
 es:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: eliminar automatización
     discourse_automation:
       title: Automatización
       create: Crear
@@ -14,6 +19,8 @@ es:
       select_trigger: Selecciona un activador
       confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
       confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
+      no_automation_yet: Aún no has creado ninguna automatización. Elige una opción a continuación para empezar.
+      filter_placeholder: Filtrar por nombre o descripción...
       edit_automation:
         trigger_section:
           forced: Este activador está forzado por script.
@@ -143,6 +150,9 @@ es:
               label: ID del tema
         post_created_edited:
           fields:
+            original_post_only:
+              label: Solo publicación original
+              description: Se activará solo si la publicación es la publicación original en el tema
             action_type:
               label: Tipo de acción
               description: "Opcional, limite la activación solo a eventos creados o editados"
@@ -160,6 +170,7 @@ es:
               description: Opcional, solo se activará si el tema de la publicación es un mensaje privado en la bandeja de entrada de este grupo
             restricted_groups:
               label: Grupos
+              description: Opcional, se activará solo si el tema de la publicación es un mensaje privado en una de las bandejas de entrada del grupo.
             ignore_group_members:
               label: Ignorar a los miembros del grupo
               description: Omitir el activador si el remitente es un miembro del Grupo especificado anteriormente
@@ -174,7 +185,7 @@ es:
               description: Se activará solo si el tema es el primer tema que creó un usuario
             skip_via_email:
               label: "Omitir por correo electrónico"
-              description: "Omitir el desencadenante si la publicación fue creada por correo electrónico"
+              description: "Omitir el activador si la publicación se creó por correo electrónico"
           created: Creado
           edited: Editado
         user_updated:
@@ -224,6 +235,9 @@ es:
             watching_tags:
               label: Observar etiquetas
               description: Se activará solo si el tema tiene alguna de estas etiquetas.
+            trigger_with_pms:
+              label: Activar con mensajes privados
+              description: Se activará aunque se hayan cambiado las etiquetas en un MP
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -382,6 +396,7 @@ es:
           fields:
             custom_field_name:
               label: "Nombre del campo personalizado del usuario"
+      unnamed_automation: "Automatización sin nombre"
       models:
         script:
           name:

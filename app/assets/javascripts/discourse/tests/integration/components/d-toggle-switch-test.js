@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-toggle-switch", function (hooks) {
   setupRenderingTest(hooks);
@@ -43,7 +43,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     assert
       .dom(".d-toggle-switch__checkbox-label")
-      .hasText(I18n.t("test.fooLabel"));
+      .hasText(i18n("test.fooLabel"));
 
     this.setProperties({
       label: null,

@@ -3,7 +3,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import TopicNotificationsOptions from "select-kit/components/topic-notifications-options";
 
 function extractDescriptions(rows) {
@@ -12,7 +12,7 @@ function extractDescriptions(rows) {
 
 function getTranslations(type = "") {
   return ["watching", "tracking", "regular", "muted"].map((key) => {
-    return I18n.t(`topic.notifications.${key}${type}.description`);
+    return i18n(`topic.notifications.${key}${type}.description`);
   });
 }
 

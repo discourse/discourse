@@ -106,7 +106,7 @@ export default class CategoryRow extends Component {
   get badgeForCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.category, {
-        link: this.categoryLink,
+        link: false,
         allowUncategorized:
           this.allowUncategorizedTopics || this.allowUncategorized,
         hideParent: !!this.parentCategory,
@@ -122,7 +122,7 @@ export default class CategoryRow extends Component {
   get badgeForParentCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.parentCategory, {
-        link: this.categoryLink,
+        link: false,
         allowUncategorized:
           this.allowUncategorizedTopics || this.allowUncategorized,
         recursive: true,
@@ -285,11 +285,11 @@ export default class CategoryRow extends Component {
       {{on "click" this.handleClick}}
       {{on "keydown" this.handleKeyDown}}
       aria-checked={{this.isSelected}}
-      tabindex="0"
+      tabindex="-1"
     >
 
       {{#if this.category}}
-        <div class="category-status" aria-hidden="true">
+        <div class="category-status">
           {{#if this.hasParentCategory}}
             {{#unless this.hideParentCategory}}
               {{this.badgeForParentCategory}}

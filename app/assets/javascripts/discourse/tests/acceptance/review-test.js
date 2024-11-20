@@ -7,7 +7,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Review", function (needs) {
   needs.user();
@@ -65,7 +65,7 @@ acceptance("Review", function (needs) {
     assert
       .dom(".reject-reason-reviewable-modal .d-modal__title")
       .includesHtml(
-        I18n.t("review.reject_reason.title"),
+        i18n("review.reject_reason.title"),
         "opens reject reason modal when user is rejected"
       );
 
@@ -77,7 +77,7 @@ acceptance("Review", function (needs) {
     assert
       .dom(".reject-reason-reviewable-modal .d-modal__title")
       .includesHtml(
-        I18n.t("review.reject_reason.title"),
+        i18n("review.reject_reason.title"),
         "opens reject reason modal when user is rejected and blocked"
       );
   });

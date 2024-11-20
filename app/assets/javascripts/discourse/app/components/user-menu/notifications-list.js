@@ -12,7 +12,7 @@ import {
 } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const MAX_LIMIT = MAX_NOTIFICATIONS_LIMIT_PARAMS;
 const DEFAULT_LIMIT = 30;
@@ -51,7 +51,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.view_all_notifications");
+    return i18n("user_menu.view_all_notifications");
   }
 
   get showDismiss() {
@@ -63,7 +63,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get dismissTitle() {
-    return I18n.t("user.dismiss_notifications_tooltip");
+    return i18n("user.dismiss_notifications_tooltip");
   }
 
   get itemsCacheKey() {
@@ -88,7 +88,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   }
 
   get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.default", {
+    return i18n("notifications.dismiss_confirmation.body.default", {
       count: this.currentUser.unread_high_priority_notifications,
     });
   }

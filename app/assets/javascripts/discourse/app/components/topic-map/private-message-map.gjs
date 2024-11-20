@@ -8,7 +8,7 @@ import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import { groupPath } from "discourse/lib/url";
 import dIcon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PrivateMessageMap extends Component {
   @service site;
@@ -128,7 +128,7 @@ class PmRemoveGroupLink extends Component {
   @action
   showConfirmDialog() {
     this.dialog.deleteConfirm({
-      message: I18n.t("private_message_info.remove_allowed_group", {
+      message: i18n("private_message_info.remove_allowed_group", {
         name: this.args.model.name,
       }),
       confirmButtonLabel: "private_message_info.remove_group",
@@ -196,7 +196,7 @@ class PmRemoveLink extends Component {
       : "private_message_info.remove_allowed_user";
 
     this.dialog.deleteConfirm({
-      message: I18n.t(messageKey, {
+      message: i18n(messageKey, {
         name: this.args.model.username,
       }),
       confirmButtonLabel: this.args.isCurrentUser

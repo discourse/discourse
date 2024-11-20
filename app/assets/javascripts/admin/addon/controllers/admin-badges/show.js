@@ -6,7 +6,7 @@ import { isNone } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 
 const FORM_FIELDS = [
@@ -146,11 +146,11 @@ export default class AdminBadgesShowController extends Controller {
     if (!data.icon && !data.image_url) {
       addError("icon", {
         title: "Icon",
-        message: I18n.t("admin.badges.icon_or_image"),
+        message: i18n("admin.badges.icon_or_image"),
       });
       addError("image_url", {
         title: "Image",
-        message: I18n.t("admin.badges.icon_or_image"),
+        message: i18n("admin.badges.icon_or_image"),
       });
     } else {
       removeError("image_url");
@@ -201,7 +201,7 @@ export default class AdminBadgesShowController extends Controller {
     try {
       this.model = await this.model.save(data);
 
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
 
       if (newBadge) {
         const adminBadges = this.get("adminBadges.model");
@@ -227,7 +227,7 @@ export default class AdminBadgesShowController extends Controller {
     }
 
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.badges.delete_confirm"),
+      message: i18n("admin.badges.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.formApi.reset();
@@ -235,7 +235,7 @@ export default class AdminBadgesShowController extends Controller {
           this.adminBadges.model.removeObject(this.model);
           this.router.transitionTo("adminBadges.index");
         } catch {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       },
     });

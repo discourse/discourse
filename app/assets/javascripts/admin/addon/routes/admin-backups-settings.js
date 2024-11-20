@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import SiteSetting from "admin/models/site-setting";
 
 export default class AdminBackupsSettingsRoute extends DiscourseRoute {
@@ -8,7 +8,7 @@ export default class AdminBackupsSettingsRoute extends DiscourseRoute {
   };
 
   titleToken() {
-    return I18n.t("admin.backups.settings");
+    return i18n("admin.backups.settings");
   }
 
   async model(params) {

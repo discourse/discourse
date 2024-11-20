@@ -7,28 +7,28 @@ import $ from "jquery";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function entranceDate(dt, showTime) {
   const today = new Date();
 
   if (dt.toDateString() === today.toDateString()) {
-    return moment(dt).format(I18n.t("dates.time"));
+    return moment(dt).format(i18n("dates.time"));
   }
 
   if (dt.getYear() === today.getYear()) {
     // No year
     return moment(dt).format(
       showTime
-        ? I18n.t("dates.long_date_without_year_with_linebreak")
-        : I18n.t("dates.long_no_year_no_time")
+        ? i18n("dates.long_date_without_year_with_linebreak")
+        : i18n("dates.long_no_year_no_time")
     );
   }
 
   return moment(dt).format(
     showTime
-      ? I18n.t("dates.long_date_with_year_with_linebreak")
-      : I18n.t("dates.long_date_with_year_without_time")
+      ? i18n("dates.long_date_with_year_with_linebreak")
+      : i18n("dates.long_date_with_year_without_time")
   );
 }
 

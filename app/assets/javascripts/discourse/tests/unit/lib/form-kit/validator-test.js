@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Validator from "discourse/form-kit/lib/validator";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Unit | Lib | FormKit | Validator", function (hooks) {
   setupTest(hooks);
@@ -24,7 +24,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     assert.deepEqual(
       errors,
       [
-        I18n.t("form_kit.errors.too_short", {
+        i18n("form_kit.errors.too_short", {
           count: 1,
         }),
       ],
@@ -37,7 +37,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     assert.deepEqual(
       errors,
       [
-        I18n.t("form_kit.errors.too_long", {
+        i18n("form_kit.errors.too_long", {
           count: 5,
         }),
       ],
@@ -62,7 +62,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     assert.deepEqual(
       errors,
       [
-        I18n.t("form_kit.errors.too_low", {
+        i18n("form_kit.errors.too_low", {
           count: 1,
         }),
       ],
@@ -75,7 +75,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     assert.deepEqual(
       errors,
       [
-        I18n.t("form_kit.errors.too_high", {
+        i18n("form_kit.errors.too_high", {
           count: 5,
         }),
       ],
@@ -99,7 +99,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.not_an_integer")],
+      [i18n("form_kit.errors.not_an_integer")],
       "it returns an error when the value is not an integer"
     );
 
@@ -118,7 +118,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.not_a_number")],
+      [i18n("form_kit.errors.not_a_number")],
       "it returns an error when the value is not a number"
     );
 
@@ -137,7 +137,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.invalid_url")],
+      [i18n("form_kit.errors.invalid_url")],
       "it returns an error when the value is not a valid URL"
     );
 
@@ -157,7 +157,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     }).validate();
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.not_accepted")],
+      [i18n("form_kit.errors.not_accepted")],
       "it returns an error when the value is not accepted"
     );
 
@@ -204,7 +204,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
 
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.required")],
+      [i18n("form_kit.errors.required")],
       "it returns an error when the value is empty spaces with trim"
     );
 
@@ -223,7 +223,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     }).validate("input-number");
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.required")],
+      [i18n("form_kit.errors.required")],
       "it returns an error when the value is undefined"
     );
 
@@ -232,7 +232,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     }).validate("input-number");
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.required")],
+      [i18n("form_kit.errors.required")],
       "it returns an error when the value is not a number"
     );
 
@@ -255,7 +255,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     }).validate("question");
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.required")],
+      [i18n("form_kit.errors.required")],
       "it returns an error when the value is undefined"
     );
 
@@ -264,7 +264,7 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
     }).validate("menu");
     assert.deepEqual(
       errors,
-      [I18n.t("form_kit.errors.required")],
+      [i18n("form_kit.errors.required")],
       "it returns an error when the value is undefined"
     );
 

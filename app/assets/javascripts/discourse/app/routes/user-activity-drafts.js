@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityDrafts extends DiscourseRoute {
   templateName = "user/stream";
@@ -18,8 +18,8 @@ export default class UserActivityDrafts extends DiscourseRoute {
   }
 
   emptyState() {
-    const title = I18n.t("user_activity.no_drafts_title");
-    const body = I18n.t("user_activity.no_drafts_body");
+    const title = i18n("user_activity.no_drafts_title");
+    const body = i18n("user_activity.no_drafts_body");
     return { title, body };
   }
 
@@ -32,6 +32,6 @@ export default class UserActivityDrafts extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("user_action_groups.15");
+    return i18n("user_action_groups.15");
   }
 }

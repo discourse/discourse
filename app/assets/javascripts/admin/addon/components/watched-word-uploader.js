@@ -4,7 +4,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("watched-words-uploader")
 export default class WatchedWordUploader extends Component {
@@ -20,7 +20,7 @@ export default class WatchedWordUploader extends Component {
     },
     perFileData: () => ({ action_key: this.actionKey }),
     uploadDone: () => {
-      this.dialog.alert(I18n.t("admin.watched_words.form.upload_successful"));
+      this.dialog.alert(i18n("admin.watched_words.form.upload_successful"));
       this.done();
     },
   });

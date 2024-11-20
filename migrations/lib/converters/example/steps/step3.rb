@@ -12,8 +12,10 @@ module Migrations::Converters::Example
       (1..1000).map { |i| { counter: i } }
     end
 
-    def process_item(item, stats)
+    def process_item(item)
       sleep(0.5)
+
+      step.log_warning("Test", details: item) if item[:counter] > 10 && item[:counter] < 20
 
       IntermediateDB::LogEntry.create!(type: "info", message: "Step3 - #{item[:counter]}")
     end

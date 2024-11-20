@@ -120,10 +120,6 @@
 
   &.is-loading {
     &.btn-text {
-      .d-button-label {
-        font-size: var(--font-down-2);
-      }
-
       &.btn-small {
         .loading-icon {
           font-size: var(--font-down-1);
@@ -420,7 +416,7 @@
 .btn-transparent {
   &,
   &.btn-default {
-    background: transparent !important;
+    background: transparent;
     border: 0;
     color: var(--primary);
     .d-icon {
@@ -428,6 +424,7 @@
     }
     &:focus,
     &:focus-visible {
+      background: transparent;
       color: var(--tertiary-hover);
       .d-icon {
         color: inherit;
@@ -435,6 +432,7 @@
     }
     .discourse-no-touch & {
       &:hover {
+        background: transparent;
         color: var(--tertiary-hover);
         .d-icon {
           color: inherit;

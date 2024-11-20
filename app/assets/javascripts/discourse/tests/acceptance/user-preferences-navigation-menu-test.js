@@ -5,7 +5,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Navigation Menu", function (needs) {
   needs.user();
@@ -76,7 +76,7 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         `.sidebar-section-link[data-link-name="everything"] .sidebar-section-link-content-badge`
       )
       .hasText(
-        I18n.t("sidebar.new_count", { count: 1 }),
+        i18n("sidebar.new_count", { count: 1 }),
         "everything link now has badge text after the preference is enabled"
       );
 
@@ -92,7 +92,7 @@ acceptance("User Preferences - Navigation Menu", function (needs) {
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
       )
       .hasText(
-        I18n.t("sidebar.new_count", { count: 1 }),
+        i18n("sidebar.new_count", { count: 1 }),
         "category1 now has badge text after the preference is enabled"
       );
   });

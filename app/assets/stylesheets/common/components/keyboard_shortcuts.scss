@@ -105,6 +105,11 @@
       margin-left: auto;
     }
 
+    .delimiter-newline {
+      display: revert;
+      text-align: right;
+    }
+
     kbd {
       font-family: var(--font-family);
       font-weight: bold;

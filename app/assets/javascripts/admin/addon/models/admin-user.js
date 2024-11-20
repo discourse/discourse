@@ -8,7 +8,7 @@ import Group from "discourse/models/group";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminUser extends User {
   static find(user_id) {
@@ -49,11 +49,11 @@ export default class AdminUser extends User {
   @discourseComputed("bounce_score")
   bounceScoreExplanation(bounce_score) {
     if (bounce_score === 0) {
-      return I18n.t("admin.user.bounce_score_explanation.none");
+      return i18n("admin.user.bounce_score_explanation.none");
     } else if (bounce_score < this.siteSettings.bounce_score_threshold) {
-      return I18n.t("admin.user.bounce_score_explanation.some");
+      return i18n("admin.user.bounce_score_explanation.some");
     } else {
-      return I18n.t("admin.user.bounce_score_explanation.threshold_reached");
+      return i18n("admin.user.bounce_score_explanation.threshold_reached");
     }
   }
 

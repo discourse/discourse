@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DiscardDraftModal extends Component {
   @action
@@ -21,7 +21,7 @@ export default class DiscardDraftModal extends Component {
     <DModal
       @closeModal={{@closeModal}}
       class="discard-draft-modal"
-      @dismissable={{false}}
+      @hideHeader={{true}}
     >
       <:body>
         <div class="instructions" role="heading" aria-level="1">

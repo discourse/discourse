@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -232,7 +232,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     const noneRow = this.subject.rowByIndex(0);
     assert.strictEqual(noneRow.value(), null);
-    assert.strictEqual(noneRow.name(), I18n.t("test.none"));
+    assert.strictEqual(noneRow.name(), i18n("test.none"));
   });
 
   test("none:object", async function (assert) {
@@ -283,8 +283,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     await this.subject.expand();
 
     const noneRow = this.subject.rowByIndex(0);
-    assert.strictEqual(noneRow.value(), I18n.t("test.none"));
-    assert.strictEqual(noneRow.name(), I18n.t("test.none"));
+    assert.strictEqual(noneRow.value(), i18n("test.none"));
+    assert.strictEqual(noneRow.name(), i18n("test.none"));
     assert.strictEqual(this.value, "foo");
 
     await this.subject.selectRowByIndex(0);
@@ -427,14 +427,14 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     assert
       .dom(this.subject.header().el())
-      .hasAttribute("name", I18n.t("select_kit.select_to_filter"));
+      .hasAttribute("name", i18n("select_kit.select_to_filter"));
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
     assert.dom(this.subject.header().el()).hasAttribute(
       "name",
-      I18n.t("select_kit.filter_by", {
+      i18n("select_kit.filter_by", {
         name: this.content.firstObject.name,
       })
     );

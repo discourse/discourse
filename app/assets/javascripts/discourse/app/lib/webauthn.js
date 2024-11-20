@@ -1,5 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function stringToBuffer(str) {
   let buffer = new ArrayBuffer(str.length);
@@ -46,7 +46,7 @@ export function getWebauthnCredential(
   errorCallback
 ) {
   if (!isWebauthnSupported()) {
-    return errorCallback(I18n.t("login.security_key_support_missing_error"));
+    return errorCallback(i18n("login.security_key_support_missing_error"));
   }
 
   let challengeBuffer = stringToBuffer(challenge);
@@ -76,9 +76,7 @@ export function getWebauthnCredential(
     .then((credential) => {
       // 3. If credential.response is not an instance of AuthenticatorAssertionResponse, abort the ceremony.
       if (!(credential.response instanceof AuthenticatorAssertionResponse)) {
-        return errorCallback(
-          I18n.t("login.security_key_invalid_response_error")
-        );
+        return errorCallback(i18n("login.security_key_invalid_response_error"));
       }
 
       // 4. Let clientExtensionResults be the result of calling credential.getClientExtensionResults().
@@ -92,7 +90,7 @@ export function getWebauthnCredential(
         )
       ) {
         return errorCallback(
-          I18n.t("login.security_key_no_matching_credential_error")
+          i18n("login.security_key_no_matching_credential_error")
         );
       }
 
@@ -110,7 +108,7 @@ export function getWebauthnCredential(
     })
     .catch((err) => {
       if (err.name === "NotAllowedError") {
-        return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+        return errorCallback(i18n("login.security_key_not_allowed_error"));
       }
       errorCallback(err);
     });
@@ -122,7 +120,7 @@ export async function getPasskeyCredential(
   isFirefox = false
 ) {
   if (!isWebauthnSupported()) {
-    return errorCallback(I18n.t("login.security_key_support_missing_error"));
+    return errorCallback(i18n("login.security_key_support_missing_error"));
   }
 
   // we need to check isConditionalMediationAvailable for Firefox
@@ -177,10 +175,10 @@ export async function getPasskeyCredential(
     }
 
     if (error.name === "NotAllowedError") {
-      return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+      return errorCallback(i18n("login.security_key_not_allowed_error"));
     } else if (error.name === "SecurityError") {
       return errorCallback(
-        I18n.t("login.passkey_security_error", {
+        i18n("login.passkey_security_error", {
           message: error.message,
         })
       );

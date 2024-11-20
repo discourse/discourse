@@ -4,8 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const IS_PINNED_CLASS = "is-pinned";
 
@@ -77,8 +76,8 @@ export default class ChatMessageSeparator extends Component {
 
   #calendarDate(date) {
     return moment(date).calendar(moment(), {
-      sameDay: `[${I18n.t("chat.chat_message_separator.today")}]`,
-      lastDay: `[${I18n.t("chat.chat_message_separator.yesterday")}]`,
+      sameDay: `[${i18n("chat.chat_message_separator.today")}]`,
+      lastDay: `[${i18n("chat.chat_message_separator.yesterday")}]`,
       lastWeek: "LL",
       sameElse: "LL",
     });

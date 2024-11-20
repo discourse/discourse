@@ -725,6 +725,7 @@ en:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Switch channel"
+          switch__unread_channel_arrows: "%{shortcut} Switch unread channel"
           open_quick_channel_selector: "%{shortcut} Open quick channel selector"
           open_insert_link_modal: "%{shortcut} Insert hyperlink (composer only)"
           composer_bold: "%{shortcut} Bold (composer only)"

@@ -1210,7 +1210,6 @@ zh_TW:
       location: "位置"
       website: "網站"
       email_settings: "電子郵件"
-      hide_profile_and_presence: "隱藏我的公開檔案"
       enable_physical_keyboard: "支援iPad外接鍵盤"
       text_size:
         title: "文字大小"
@@ -4348,8 +4347,6 @@ zh_TW:
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "加入"
-        add: "新增emoji"
         name: "名稱"
         group: "群組"
         image: "圖片"
@@ -4384,12 +4381,14 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        tag_title: "標記"
+        user_title: "使用者"
         username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："
-          add: "新增"
-          filter: "搜尋 (網址或外部網址)"
+          url: "網址"
+          save: "保存"
       reseed:
         action:
           label: "取代文字⋯⋯"

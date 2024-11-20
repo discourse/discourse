@@ -3,14 +3,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AccountCreatedIndexController extends Controller {
   @service router;
 
   @discourseComputed
   welcomeTitle() {
-    return I18n.t("invites.welcome_to", {
+    return i18n("invites.welcome_to", {
       site_name: this.siteSettings.title,
     });
   }
