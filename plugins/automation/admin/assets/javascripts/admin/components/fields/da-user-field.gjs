@@ -1,6 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import UserChooser from "select-kit/components/user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
@@ -17,7 +17,7 @@ export default class UserField extends BaseField {
     content = field.acceptedContexts
       .map((context) => {
         return {
-          name: I18n.t(
+          name: i18n(
             `discourse_automation.scriptables.${field.targetName}.fields.${field.name}.${context}_context`
           ),
           username: context,

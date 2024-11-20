@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { Textarea } from "@ember/component";
 import { or } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class WatchedWordTesting extends Component {
   @tracked value;

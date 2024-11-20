@@ -1,7 +1,7 @@
 import EmberObject, { computed } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { isEmpty } from "@ember/utils";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default Mixin.create({
   rejectedPasswords: null,
@@ -13,7 +13,7 @@ export default Mixin.create({
   },
 
   passwordInstructions: computed("passwordMinLength", function () {
-    return I18n.t("user.password.instructions", {
+    return i18n("user.password.instructions", {
       count: this.passwordMinLength,
     });
   }),
@@ -49,7 +49,7 @@ export default Mixin.create({
           Object.assign(failedAttrs, {
             reason:
               this.rejectedPasswordsMessages.get(this.accountPassword) ||
-              I18n.t("user.password.common"),
+              i18n("user.password.common"),
           })
         );
       }
@@ -58,9 +58,9 @@ export default Mixin.create({
       if (isEmpty(this.accountPassword)) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            message: I18n.t("user.password.required"),
+            message: i18n("user.password.required"),
             reason: this.forceValidationReason
-              ? I18n.t("user.password.required")
+              ? i18n("user.password.required")
               : null,
           })
         );
@@ -70,7 +70,7 @@ export default Mixin.create({
       if (this.accountPassword.length < this.passwordMinLength) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            reason: I18n.t("user.password.too_short", {
+            reason: i18n("user.password.too_short", {
               count: this.passwordMinLength,
             }),
           })
@@ -83,7 +83,7 @@ export default Mixin.create({
       ) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            reason: I18n.t("user.password.same_as_username"),
+            reason: i18n("user.password.same_as_username"),
           })
         );
       }
@@ -94,7 +94,7 @@ export default Mixin.create({
       ) {
         return EmberObject.create(
           Object.assign(failedAttrs, {
-            reason: I18n.t("user.password.same_as_email"),
+            reason: i18n("user.password.same_as_email"),
           })
         );
       }
@@ -102,7 +102,7 @@ export default Mixin.create({
       // Looks good!
       return EmberObject.create({
         ok: true,
-        reason: I18n.t("user.password.ok"),
+        reason: i18n("user.password.ok"),
       });
     }
   ),

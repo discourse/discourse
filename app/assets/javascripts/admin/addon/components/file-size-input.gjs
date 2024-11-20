@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 const UNIT_KB = "kb";
@@ -49,9 +49,9 @@ export default class FileSizeInput extends Component {
 
   get dropdownOptions() {
     return [
-      { label: I18n.t("number.human.storage_units.units.kb"), value: UNIT_KB },
-      { label: I18n.t("number.human.storage_units.units.mb"), value: UNIT_MB },
-      { label: I18n.t("number.human.storage_units.units.gb"), value: UNIT_GB },
+      { label: i18n("number.human.storage_units.units.kb"), value: UNIT_KB },
+      { label: i18n("number.human.storage_units.units.mb"), value: UNIT_MB },
+      { label: i18n("number.human.storage_units.units.gb"), value: UNIT_GB },
     ];
   }
 
@@ -81,14 +81,14 @@ export default class FileSizeInput extends Component {
 
     if (sizeInKB > this.args.max) {
       this.args.setValidationMessage(
-        I18n.t("file_size_input.error.size_too_large", {
+        i18n("file_size_input.error.size_too_large", {
           provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
           max_file_size: I18n.toHumanSize(this.args.max * 1024),
         })
       );
     } else if (sizeInKB < this.args.min) {
       this.args.setValidationMessage(
-        I18n.t("file_size_input.error.size_too_small", {
+        i18n("file_size_input.error.size_too_small", {
           provided_file_size: I18n.toHumanSize(sizeInKB * 1024),
           min_file_size: I18n.toHumanSize(this.args.min * 1024),
         })

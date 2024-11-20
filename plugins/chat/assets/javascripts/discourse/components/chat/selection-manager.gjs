@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DeleteMessagesConfirm from "discourse/plugins/chat/discourse/components/chat/modal/delete-messages-confirm";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
@@ -59,7 +59,7 @@ export default class ChatSelectionManager extends Component {
   }
 
   get deleteButtonTitle() {
-    return I18n.t("chat.selection.delete", {
+    return i18n("chat.selection.delete", {
       selectionCount: this.args.pane.selectedMessageIds.length,
       totalCount: DELETE_COUNT_LIMIT,
     });
@@ -147,7 +147,7 @@ export default class ChatSelectionManager extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.quote.copy_success"),
+            message: i18n("chat.quote.copy_success"),
           },
         });
       }

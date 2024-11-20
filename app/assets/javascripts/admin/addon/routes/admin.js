@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminRoute extends DiscourseRoute {
   @service sidebarState;
@@ -12,7 +12,7 @@ export default class AdminRoute extends DiscourseRoute {
   @tracked initialSidebarState;
 
   titleToken() {
-    return I18n.t("admin_title");
+    return i18n("admin_title");
   }
 
   activate() {

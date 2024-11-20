@@ -1451,6 +1451,11 @@ cs:
       home: "Výchozí domovská stránka"
       staged: "Staged"
       staff_counters:
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> smazaný příspěvek'
+          few: '<span class="%{className}">%{count}</span> smazané příspěvky'
+          many: '<span class="%{className}">%{count}</span> smazaných příspěvků'
+          other: '<span class="%{className}">%{count}</span> smazaných příspěvků'
         rejected_posts:
           one: '<span class="%{className}">%{count}</span> odmítnutý příspěvek'
           few: '<span class="%{className}">%{count}</span> odmítnuté příspěvky'
@@ -1813,7 +1818,6 @@ cs:
       location: "Lokace"
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
-      hide_profile_and_presence: "Skrýt můj veřejný profil a informace o mé přítomnosti"
       enable_physical_keyboard: "Povolit podporu fyzické klávesnice na iPad"
       text_size:
         title: "Velikost textu"
@@ -2035,10 +2039,10 @@ cs:
           many: "vytvořených příspěvků"
           other: "vytvořených příspěvků"
         likes_given:
-          one: "dán"
-          few: "dány"
-          many: "dáno"
-          other: "dáno"
+          one: "udělen"
+          few: "uděleny"
+          many: "uděleno"
+          other: "uděleno"
         likes_received:
           one: "obdržen"
           few: "obdrženy"
@@ -3645,7 +3649,7 @@ cs:
         publishing_settings: "Nastavení publikování"
       change_owner:
         title: "Změnit vlastníka"
-        action: "změnit vlastnictví"
+        action: "Změnit vlastnictví"
         error: "Chyba při měnění autora u příspevků."
         placeholder: "uživatelské jméno nového vlastníka"
         instructions:
@@ -6104,6 +6108,7 @@ cs:
         quick_insert_fields:
           add_new_field: "přidat"
           dropdown: "Menu"
+          multiselect: "Více možností"
         validations_modal:
           table_headers:
             key: "Klíč"
@@ -6410,6 +6415,7 @@ cs:
           text: "Text Field"
           confirm: "Potvrzení"
           dropdown: "Menu"
+          multiselect: "Více možností"
       site_text:
         description: "Můžete si přizpůsobit libovolný text na vašem fóru. Začněte hledáním níže:"
         search: "Hledat text, který byste chtěli upravit"
@@ -6602,8 +6608,6 @@ cs:
           grant_existing_holders: Udělit další odznaky stávajícím držitelům odznaků.
       emoji:
         title: "Emoji"
-        new: "přidat"
-        add: "Vložit nový Emoji"
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"
@@ -6638,12 +6642,14 @@ cs:
         post_title: "Příspěvek"
         category_id: "ID kategorie"
         category_title: "Kategorie"
+        user_title: "Uživatel"
         username: "Uživatelské jméno"
         delete_confirm: Opravdu chcete smazat tento trvalý odkaz?
+        more_options: "Další možnosti"
         form:
           label: "Nové:"
-          add: "Přidat"
-          filter: "Hledat (URL nebo externí URL)"
+          url: "URL"
+          save: "Uložit"
       reseed:
         modal:
           categories: "Kategorie"

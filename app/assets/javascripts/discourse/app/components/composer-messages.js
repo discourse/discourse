@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import LinkLookup from "discourse/lib/link-lookup";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _messagesCache = {};
 
@@ -112,8 +112,8 @@ export default class ComposerMessages extends Component {
         const message = this.composer.store.createRecord("composer-message", {
           id: "yourself_confirm",
           templateName: "education",
-          title: I18n.t("composer.yourself_confirm.title"),
-          body: I18n.t("composer.yourself_confirm.body"),
+          title: i18n("composer.yourself_confirm.title"),
+          body: i18n("composer.yourself_confirm.body"),
         });
 
         this.popup(message);
@@ -168,7 +168,7 @@ export default class ComposerMessages extends Component {
           const message = this.composer.store.createRecord("composer-message", {
             id: "user-not-seen",
             templateName: "education",
-            body: I18n.t(body_key, {
+            body: i18n(body_key, {
               usernames: usernames.join(", "),
               time_ago: response.time_ago,
             }),

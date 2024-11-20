@@ -3724,8 +3724,6 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
-        new: "isa"
-        add: "Lisa uus emotikon"
         uploading: "Laen üles..."
         name: "Nimi"
         group: "Grupp"
@@ -3760,12 +3758,13 @@ et:
         post_title: "Postitus"
         category_id: "Foorumi ID"
         category_title: "Foorum"
+        user_title: "Kasutaja"
         username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:
           label: "Uus"
-          add: "Lisa"
-          filter: "Otsi (URL või väline URL)"
+          url: "URL"
+          save: "Salvesta"
       reseed:
         modal:
           categories: "Foorumid"

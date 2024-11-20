@@ -6,7 +6,7 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("button")
 @attributeBindings("style", "title", "ariaLabel:aria-label")
@@ -19,7 +19,7 @@ export default class ColorPickerChoice extends Component {
 
   @discourseComputed("isUsed")
   title(isUsed) {
-    return isUsed ? I18n.t("category.already_used") : null;
+    return isUsed ? i18n("category.already_used") : null;
   }
 
   @discourseComputed("color")

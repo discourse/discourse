@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerChannel extends ChatComposer {
@@ -55,13 +55,13 @@ export default class ChatComposerChannel extends ChatComposer {
 
   get placeholder() {
     if (!this.args.channel.canModifyMessages(this.currentUser)) {
-      return I18n.t(
+      return i18n(
         `chat.placeholder_new_message_disallowed.${this.args.channel.status}`
       );
     }
 
     if (!this.chat.userCanInteractWithChat) {
-      return I18n.t("chat.placeholder_silenced");
+      return i18n("chat.placeholder_silenced");
     } else {
       return this.#messageRecipients(this.args.channel);
     }
@@ -82,24 +82,24 @@ export default class ChatComposerChannel extends ChatComposer {
   #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
       if (channel.chatable.group) {
-        return I18n.t("chat.placeholder_group");
+        return i18n("chat.placeholder_group");
       } else {
         const directMessageRecipients = channel.chatable.users;
         if (
           directMessageRecipients.length === 1 &&
           directMessageRecipients[0].id === this.currentUser.id
         ) {
-          return I18n.t("chat.placeholder_self");
+          return i18n("chat.placeholder_self");
         }
 
-        return I18n.t("chat.placeholder_users", {
+        return i18n("chat.placeholder_users", {
           commaSeparatedNames: directMessageRecipients
             .map((u) => u.name || `@${u.username}`)
-            .join(I18n.t("word_connector.comma")),
+            .join(i18n("word_connector.comma")),
         });
       }
     } else {
-      return I18n.t("chat.placeholder_channel", {
+      return i18n("chat.placeholder_channel", {
         channelName: `#${channel.title}`,
       });
     }

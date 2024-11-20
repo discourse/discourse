@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import WatchedWordTestingModal from "admin/components/modal/watched-word-testing";
 import WatchedWord from "admin/models/watched-word";
 
@@ -38,14 +38,14 @@ export default class AdminWatchedWordsActionController extends Controller {
       try {
         RegExp(regexp);
       } catch {
-        return I18n.t("admin.watched_words.invalid_regex", { word });
+        return i18n("admin.watched_words.invalid_regex", { word });
       }
     }
   }
 
   @discourseComputed("actionNameKey")
   actionDescription(actionNameKey) {
-    return I18n.t(`admin.watched_words.action_descriptions.${actionNameKey}`);
+    return i18n(`admin.watched_words.action_descriptions.${actionNameKey}`);
   }
 
   @action
@@ -96,8 +96,8 @@ export default class AdminWatchedWordsActionController extends Controller {
   clearAll() {
     const actionKey = this.actionNameKey;
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.watched_words.clear_all_confirm", {
-        action: I18n.t(`admin.watched_words.actions.${actionKey}`),
+      message: i18n("admin.watched_words.clear_all_confirm", {
+        action: i18n(`admin.watched_words.actions.${actionKey}`),
       }),
       didConfirm: async () => {
         await ajax(`/admin/customize/watched_words/action/${actionKey}.json`, {

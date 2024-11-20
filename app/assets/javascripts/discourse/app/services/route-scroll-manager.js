@@ -24,6 +24,17 @@ export default class RouteScrollManager extends Service {
     ? document.getElementById("ember-testing-container")
     : document.scrollingElement;
 
+  init() {
+    super.init(...arguments);
+    this.router.on("routeDidChange", this.routeDidChange);
+    this.router.on("routeWillChange", this.routeWillChange);
+  }
+
+  willDestroy() {
+    this.router.off("routeDidChange", this.routeDidChange);
+    this.router.off("routeWillChange", this.routeWillChange);
+  }
+
   @bind
   routeWillChange() {
     this.historyStore.set(STORE_KEY, [
@@ -62,16 +73,5 @@ export default class RouteScrollManager extends Service {
 
     // No overrides - default to true
     return true;
-  }
-
-  init() {
-    super.init(...arguments);
-    this.router.on("routeDidChange", this.routeDidChange);
-    this.router.on("routeWillChange", this.routeWillChange);
-  }
-
-  willDestroy() {
-    this.router.off("routeDidChange", this.routeDidChange);
-    this.router.off("routeWillChange", this.routeWillChange);
   }
 }

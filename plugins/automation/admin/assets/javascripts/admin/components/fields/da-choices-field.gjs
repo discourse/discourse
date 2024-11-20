@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ComboBox from "select-kit/components/combo-box";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
@@ -31,7 +31,7 @@ export default class ChoicesField extends BaseField {
     return (this.args.field.extra.content || []).map((r) => {
       return {
         id: r.id,
-        name: r.translated_name || I18n.t(r.name),
+        name: r.translated_name || i18n(r.name),
       };
     });
   }

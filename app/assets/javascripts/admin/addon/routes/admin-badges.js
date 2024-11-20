@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import EditBadgeGroupingsModal from "../components/modal/edit-badge-groupings";
 
 export default class AdminBadgesRoute extends DiscourseRoute {
@@ -43,7 +43,7 @@ export default class AdminBadgesRoute extends DiscourseRoute {
       const id = json.admin_badges.triggers[k];
       badgeTriggers.push({
         id,
-        name: I18n.t("admin.badges.trigger_type." + k),
+        name: i18n("admin.badges.trigger_type." + k),
       });
     });
 

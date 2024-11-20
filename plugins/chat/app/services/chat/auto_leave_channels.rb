@@ -17,6 +17,8 @@ module Chat
       attribute :group_id, :integer
       attribute :channel_id, :integer
       attribute :category_id, :integer
+
+      validates :event, presence: true
     end
 
     step :remove_memberships
@@ -34,6 +36,7 @@ module Chat
 
       if !group_ids.include?(Group::AUTO_GROUPS[:everyone])
         sql = <<~SQL
+          -- event = #{params.event}
           DELETE FROM user_chat_channel_memberships uccm
           WHERE NOT EXISTS (
             SELECT 1
@@ -41,6 +44,7 @@ module Chat
             WHERE gu.user_id = uccm.user_id
             AND gu.group_id IN (:group_ids)
           )
+          #{params.user_id ? "AND uccm.user_id = #{params.user_id}" : ""}
           RETURNING chat_channel_id, user_id
         SQL
 
@@ -54,6 +58,7 @@ module Chat
       category_sql = params.category_id ? "AND c.id = #{params.category_id}" : ""
 
       sql = <<~SQL
+        -- event = #{params.event}
         WITH valid_permissions AS (
           SELECT gu.user_id, cg.category_id
           FROM group_users gu

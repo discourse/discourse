@@ -3,7 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const TOKEN = "sometoken";
 
@@ -50,7 +50,7 @@ acceptance("Login with email", function (needs) {
     await click("#email-login-link");
 
     assert.dom("#modal-alert").hasHtml(
-      I18n.t("email_login.complete_username_not_found", {
+      i18n("email_login.complete_username_not_found", {
         username: "someuser",
       }),
       "displays an error for an invalid username"
@@ -60,7 +60,7 @@ acceptance("Login with email", function (needs) {
     await click("#email-login-link");
 
     assert.dom("#modal-alert").hasHtml(
-      I18n.t("email_login.complete_email_not_found", {
+      i18n("email_login.complete_email_not_found", {
         email: "someuser@gmail.com",
       }),
       "displays an error for an invalid email"
@@ -75,7 +75,7 @@ acceptance("Login with email", function (needs) {
     assert
       .dom(".alert-success")
       .hasHtml(
-        I18n.t("email_login.complete_username_found", { username: "someuser" }),
+        i18n("email_login.complete_username_found", { username: "someuser" }),
         "displays a success message for a valid username"
       );
 
@@ -85,7 +85,7 @@ acceptance("Login with email", function (needs) {
     await click("#email-login-link");
 
     assert.dom(".alert-success").hasHtml(
-      I18n.t("email_login.complete_email_found", {
+      i18n("email_login.complete_email_found", {
         email: "someuser@gmail.com",
       }),
       "displays a success message for a valid email"

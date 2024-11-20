@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("span")
 export default class ImagesUploader extends Component {
@@ -22,6 +22,6 @@ export default class ImagesUploader extends Component {
   }
 
   get uploadButtonText() {
-    return this.uploadingOrProcessing ? I18n.t("uploading") : I18n.t("upload");
+    return this.uploadingOrProcessing ? i18n("uploading") : i18n("upload");
   }
 }

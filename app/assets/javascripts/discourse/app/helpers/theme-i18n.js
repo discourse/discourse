@@ -1,5 +1,5 @@
 import { registerRawHelper } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 registerRawHelper("theme-i18n", themeI18n);
 export default function themeI18n(themeId, key, params) {
@@ -10,5 +10,5 @@ export default function themeI18n(themeId, key, params) {
         `'themePrefix' is available automatically, and does not need to be imported.\n`
     );
   }
-  return I18n.t(`theme_translations.${themeId}.${key}`, params);
+  return i18n(`theme_translations.${themeId}.${key}`, params);
 }

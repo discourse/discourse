@@ -1,7 +1,7 @@
 import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EditCategory extends DiscourseRoute {
   @service router;
@@ -20,7 +20,7 @@ export default class EditCategory extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("category.edit_dialog_title", {
+    return i18n("category.edit_dialog_title", {
       categoryName: this.currentModel.name,
     });
   }

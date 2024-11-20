@@ -39,7 +39,7 @@ module Migrations::Converters::Base
       with_progressbar do |progressbar|
         @step.items.each do |item|
           stats = job.run(item)
-          progressbar.update(stats)
+          progressbar.update(stats.progress, stats.warning_count, stats.error_count)
         end
       end
     end
@@ -76,11 +76,7 @@ module Migrations::Converters::Base
 
     def with_progressbar
       ::Migrations::ExtendedProgressBar
-        .new(
-          max_progress: @max_progress,
-          report_progress_in_percent: @step.class.report_progress_in_percent?,
-          use_custom_progress_increment: @step.class.use_custom_progress_increment?,
-        )
+        .new(max_progress: @max_progress)
         .run { |progressbar| yield progressbar }
     end
 
@@ -94,7 +90,7 @@ module Migrations::Converters::Base
               ::Migrations::Database::IntermediateDB.insert(sql, *parameters)
             end
 
-            progressbar.update(stats)
+            progressbar.update(stats.progress, stats.warning_count, stats.error_count)
           end
         end
       end

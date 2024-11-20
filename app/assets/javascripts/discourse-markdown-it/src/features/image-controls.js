@@ -1,4 +1,4 @@
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const SCALES = ["100", "75", "50"];
 
@@ -83,7 +83,7 @@ function rule(state) {
 function buildScaleButton(selectedScale, scale) {
   const activeScaleClass = selectedScale === scale ? " active" : "";
   return `<span title="
-            ${I18n.t("composer.image_scale_button", { percent: scale })}" 
+            ${i18n("composer.image_scale_button", { percent: scale })}" 
             class='scale-btn${activeScaleClass}' data-scale='${scale}'
           >
             ${scale}%
@@ -94,12 +94,12 @@ function buildImageShowAltTextControls(altText) {
   return `
   <span class="alt-text-readonly-container">
     <span class="alt-text-edit-btn" 
-      title="${I18n.t("composer.image_alt_text.title")}" 
+      title="${i18n("composer.image_alt_text.title")}" 
     >
       <svg aria-hidden="true" class="fa d-icon d-icon-pencil svg-icon svg-string"><use href="#pencil"></use></svg>
     </span>
     <span class="alt-text" 
-      aria-label="${I18n.t("composer.image_alt_text.aria_label")}"
+      aria-label="${i18n("composer.image_alt_text.aria_label")}"
     >${altText}</span>
   </span>
   `;
@@ -122,8 +122,8 @@ function buildImageEditAltTextControls(altText) {
 function buildImageDeleteButton() {
   return `
   <span class="delete-image-button" 
-    title="${I18n.t("composer.delete_image_button")}" 
-    aria-label="${I18n.t("composer.delete_image_button")}"
+    title="${i18n("composer.delete_image_button")}" 
+    aria-label="${i18n("composer.delete_image_button")}"
   >
     <svg class="fa d-icon d-icon-trash-can svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
       <use href="#trash-can"></use>
@@ -134,7 +134,7 @@ function buildImageDeleteButton() {
 
 function buildImageGalleryControl(imageCount) {
   return `
-  <span class="wrap-image-grid-button" title="${I18n.t(
+  <span class="wrap-image-grid-button" title="${i18n(
     "composer.toggle_image_grid"
   )}" data-image-count="${imageCount}">
     <svg class="fa d-icon d-icon-table-cells svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">

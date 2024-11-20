@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;
@@ -18,7 +18,7 @@ export default class GroupAddMembers extends Component {
   @tracked flash;
 
   get title() {
-    return I18n.t("groups.add_members.title", {
+    return i18n("groups.add_members.title", {
       group_name: this.args.model.fullName || this.args.model.name,
     });
   }

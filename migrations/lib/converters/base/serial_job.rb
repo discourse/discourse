@@ -4,19 +4,19 @@ module Migrations::Converters::Base
   class SerialJob
     def initialize(step)
       @step = step
-      @stats = ProgressStats.new
+      @tracker = step.tracker
     end
 
     def run(item)
-      @stats.reset!
+      @tracker.reset_stats!
 
       begin
-        @step.process_item(item, @stats)
+        @step.process_item(item)
       rescue StandardError => e
-        @stats.log_error("Failed to process item", exception: e, details: item)
+        @tracker.log_error("Failed to process item", exception: e, details: item)
       end
 
-      @stats
+      @tracker.stats
     end
 
     def cleanup

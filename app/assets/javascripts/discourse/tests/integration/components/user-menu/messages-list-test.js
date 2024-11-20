@@ -7,7 +7,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getMessage(overrides = {}) {
   return deepMerge(
@@ -215,7 +215,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(
       items[0].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+      i18n("notifications.group_message_summary", {
         count: 13,
         group_name: "jokers",
       })
@@ -228,7 +228,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(
       items[2].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+      i18n("notifications.group_message_summary", {
         count: 12,
         group_name: "jokers",
       })
@@ -241,7 +241,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(
       items[4].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+      i18n("notifications.group_message_summary", {
         count: 11,
         group_name: "jokers",
       })
@@ -259,7 +259,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       .dom(".panel-body-bottom .show-all")
       .hasAttribute(
         "title",
-        I18n.t("user_menu.view_all_messages"),
+        i18n("user_menu.view_all_messages"),
         "has the correct title"
       );
   });
@@ -279,7 +279,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       .dom(".panel-body-bottom .notifications-dismiss")
       .hasAttribute(
         "title",
-        I18n.t("user.dismiss_messages_tooltip"),
+        i18n("user.dismiss_messages_tooltip"),
         "dismiss button has a title"
       );
 
@@ -306,7 +306,7 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(
       query(".empty-state-title").textContent.trim(),
-      I18n.t("user.no_messages_title"),
+      i18n("user.no_messages_title"),
       "empty state title is shown"
     );
     assert

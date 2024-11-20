@@ -3405,8 +3405,6 @@ sw:
             with_time: <span class="username">%{username}</span> kwenye %{time}<span class="time">
       emoji:
         title: "Emoji"
-        new: "ongeza"
-        add: "Ongeza Emoji Mpya"
         name: "Jina"
         group: "Kikundi"
         image: "Picha"
@@ -3438,12 +3436,13 @@ sw:
         post_title: "Ujumbe"
         category_id: "Utambulisho wa kikundi"
         category_title: "Kikundi"
+        user_title: "Mtumiaji"
         username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
         form:
           label: "Mpya:"
-          add: "Ongeza"
-          filter: "Tafuta (URL au Kiungo cha nje)"
+          url: "Anwani ya mtandao"
+          save: "Hifadhi"
       reseed:
         modal:
           categories: "Kategoria"

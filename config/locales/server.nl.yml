@@ -2297,7 +2297,6 @@ nl:
     disable_mailing_list_mode: "Sta niet toe dat gebruikers de mailinglijstmodus inschakelen (voorkomt dat mailinglijst-e-mails worden verzonden.)"
     default_email_previous_replies: "Vorige antwoorden in e-mails standaard bijvoegen."
     default_email_in_reply_to: "Fragment van antwoord op bericht in e-mails standaard bijvoegen."
-    default_hide_profile_and_presence: "Verberg standaard het openbare gebruikersprofiel en aanwezigheidsfuncties."
     default_other_new_topic_duration_minutes: "Globale standaardvoorwaarde waarvoor een topic als nieuw wordt beschouwd."
     default_other_auto_track_topics_after_msecs: "Globale standaardtijd voordat een topic automatisch wordt gevolgd."
     default_other_notification_level_when_replying: "Globale standaard meldingsniveau wanneer de gebruiker op een topic antwoordt."

@@ -47,6 +47,14 @@ export default class SearchMenu extends Component {
   _debouncer = null;
   _activeSearch = null;
 
+  willDestroy() {
+    if (!this.args.inlineResults) {
+      document.removeEventListener("mousedown", this.onDocumentPress);
+      document.removeEventListener("touchend", this.onDocumentPress);
+    }
+    super.willDestroy(...arguments);
+  }
+
   @bind
   setupEventListeners() {
     // We only need to register click events when the search menu is rendered outside of the header.
@@ -55,14 +63,6 @@ export default class SearchMenu extends Component {
       document.addEventListener("mousedown", this.onDocumentPress);
       document.addEventListener("touchend", this.onDocumentPress);
     }
-  }
-
-  willDestroy() {
-    if (!this.args.inlineResults) {
-      document.removeEventListener("mousedown", this.onDocumentPress);
-      document.removeEventListener("touchend", this.onDocumentPress);
-    }
-    super.willDestroy(...arguments);
   }
 
   @bind

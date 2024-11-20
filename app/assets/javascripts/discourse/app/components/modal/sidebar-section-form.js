@@ -9,7 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { sanitize } from "discourse/lib/text";
 import { afterRender, bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 class Section {
   @tracked title;
@@ -52,10 +52,10 @@ class Section {
       return;
     }
     if (this.#blankTitle) {
-      return I18n.t("sidebar.sections.custom.title.validation.blank");
+      return i18n("sidebar.sections.custom.title.validation.blank");
     }
     if (this.#tooLongTitle) {
-      return I18n.t("sidebar.sections.custom.title.validation.maximum", {
+      return i18n("sidebar.sections.custom.title.validation.maximum", {
         count: SIDEBAR_SECTION.max_title_length,
       });
     }
@@ -114,10 +114,10 @@ class SectionLink {
 
   get invalidIconMessage() {
     if (this.#blankIcon) {
-      return I18n.t("sidebar.sections.custom.links.icon.validation.blank");
+      return i18n("sidebar.sections.custom.links.icon.validation.blank");
     }
     if (this.#tooLongIcon) {
-      return I18n.t("sidebar.sections.custom.links.icon.validation.maximum", {
+      return i18n("sidebar.sections.custom.links.icon.validation.maximum", {
         count: SIDEBAR_URL.max_icon_length,
       });
     }
@@ -128,10 +128,10 @@ class SectionLink {
       return;
     }
     if (this.#blankName) {
-      return I18n.t("sidebar.sections.custom.links.name.validation.blank");
+      return i18n("sidebar.sections.custom.links.name.validation.blank");
     }
     if (this.#tooLongName) {
-      return I18n.t("sidebar.sections.custom.links.name.validation.maximum", {
+      return i18n("sidebar.sections.custom.links.name.validation.maximum", {
         count: SIDEBAR_URL.max_name_length,
       });
     }
@@ -142,15 +142,15 @@ class SectionLink {
       return;
     }
     if (this.#blankValue) {
-      return I18n.t("sidebar.sections.custom.links.value.validation.blank");
+      return i18n("sidebar.sections.custom.links.value.validation.blank");
     }
     if (this.#tooLongValue) {
-      return I18n.t("sidebar.sections.custom.links.value.validation.maximum", {
+      return i18n("sidebar.sections.custom.links.value.validation.maximum", {
         count: SIDEBAR_URL.max_value_length,
       });
     }
     if (this.#invalidValue) {
-      return I18n.t("sidebar.sections.custom.links.value.validation.invalid");
+      return i18n("sidebar.sections.custom.links.value.validation.invalid");
     }
   }
 
@@ -306,8 +306,8 @@ export default class SidebarSectionForm extends Component {
   #updateWithConfirm() {
     return this.dialog.yesNoConfirm({
       message: this.isPublic
-        ? I18n.t("sidebar.sections.custom.update_public_confirm")
-        : I18n.t("sidebar.sections.custom.mark_as_private_confirm"),
+        ? i18n("sidebar.sections.custom.update_public_confirm")
+        : i18n("sidebar.sections.custom.mark_as_private_confirm"),
       didConfirm: () => {
         return this.#updateCall();
       },
@@ -468,7 +468,7 @@ export default class SidebarSectionForm extends Component {
   @action
   resetToDefault() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("sidebar.sections.custom.reset_confirm"),
+      message: i18n("sidebar.sections.custom.reset_confirm"),
       didConfirm: () => {
         return ajax(`/sidebar_sections/reset/${this.transformedModel.id}`, {
           type: "PUT",
@@ -500,8 +500,8 @@ export default class SidebarSectionForm extends Component {
   delete() {
     return this.dialog.yesNoConfirm({
       message: this.model.section.public
-        ? I18n.t("sidebar.sections.custom.delete_public_confirm")
-        : I18n.t("sidebar.sections.custom.delete_confirm"),
+        ? i18n("sidebar.sections.custom.delete_public_confirm")
+        : i18n("sidebar.sections.custom.delete_confirm"),
       didConfirm: () => {
         return ajax(`/sidebar_sections/${this.transformedModel.id}`, {
           type: "DELETE",

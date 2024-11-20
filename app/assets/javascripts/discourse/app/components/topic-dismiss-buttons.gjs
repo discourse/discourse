@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicDismissButtons extends Component {
   @service currentUser;
@@ -15,24 +15,24 @@ export default class TopicDismissButtons extends Component {
 
   get dismissLabel() {
     if (this.args.selectedTopics.length === 0) {
-      return I18n.t("topics.bulk.dismiss_button");
+      return i18n("topics.bulk.dismiss_button");
     }
 
-    return I18n.t("topics.bulk.dismiss_button_with_selected", {
+    return i18n("topics.bulk.dismiss_button_with_selected", {
       count: this.args.selectedTopics.length,
     });
   }
 
   get dismissNewLabel() {
     if (this.currentUser?.new_new_view_enabled) {
-      return I18n.t("topics.bulk.dismiss_button");
+      return i18n("topics.bulk.dismiss_button");
     }
 
     if (this.args.selectedTopics.length === 0) {
-      return I18n.t("topics.bulk.dismiss_new");
+      return i18n("topics.bulk.dismiss_new");
     }
 
-    return I18n.t("topics.bulk.dismiss_new_with_selected", {
+    return i18n("topics.bulk.dismiss_new_with_selected", {
       count: this.args.selectedTopics.length,
     });
   }

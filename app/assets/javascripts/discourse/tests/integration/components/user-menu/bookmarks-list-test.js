@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | bookmarks-list",
@@ -33,7 +33,7 @@ module(
         .dom(".panel-body-bottom .show-all")
         .hasAttribute(
           "title",
-          I18n.t("user_menu.view_all_bookmarks"),
+          i18n("user_menu.view_all_bookmarks"),
           "has the correct title"
         );
     });
@@ -52,7 +52,7 @@ module(
         .dom(".panel-body-bottom .notifications-dismiss")
         .hasAttribute(
           "title",
-          I18n.t("user.dismiss_bookmarks_tooltip"),
+          i18n("user.dismiss_bookmarks_tooltip"),
           "dismiss button has a title"
         );
 
@@ -73,12 +73,12 @@ module(
       await render(template);
       assert.strictEqual(
         query(".empty-state-title").textContent.trim(),
-        I18n.t("user.no_bookmarks_title"),
+        i18n("user.no_bookmarks_title"),
         "empty state title is shown"
       );
       assert.strictEqual(
         query(".empty-state-body").textContent.trim(),
-        I18n.t("user.no_bookmarks_body", { icon: "" }).trim(),
+        i18n("user.no_bookmarks_body", { icon: "" }).trim(),
         "empty state body is shown"
       );
       assert

@@ -3,7 +3,7 @@ import { action, computed } from "@ember/object";
 import { not, readOnly } from "@ember/object/computed";
 import AssociatedGroup from "discourse/models/associated-group";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsFormMembershipFields extends Component {
   tokenSeparator = "|";
@@ -13,7 +13,7 @@ export default class GroupsFormMembershipFields extends Component {
 
   trustLevelOptions = [
     {
-      name: I18n.t("admin.groups.manage.membership.trust_levels_none"),
+      name: i18n("admin.groups.manage.membership.trust_levels_none"),
       value: 0,
     },
     { name: 1, value: 1 },

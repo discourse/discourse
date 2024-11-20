@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -30,23 +30,23 @@ export default class UserNotificationsDropdown extends DropdownSelectBox {
     content.push({
       icon: "bell",
       id: "changeToNormal",
-      description: I18n.t("user.user_notifications.normal_option_title"),
-      name: I18n.t("user.user_notifications.normal_option"),
+      description: i18n("user.user_notifications.normal_option_title"),
+      name: i18n("user.user_notifications.normal_option"),
     });
 
     content.push({
       icon: "bell-slash",
       id: "changeToMuted",
-      description: I18n.t("user.user_notifications.mute_option_title"),
-      name: I18n.t("user.user_notifications.mute_option"),
+      description: i18n("user.user_notifications.mute_option_title"),
+      name: i18n("user.user_notifications.mute_option"),
     });
 
     if (this.get("user.can_ignore_user")) {
       content.push({
         icon: "far-eye-slash",
         id: "changeToIgnored",
-        description: I18n.t("user.user_notifications.ignore_option_title"),
-        name: I18n.t("user.user_notifications.ignore_option"),
+        description: i18n("user.user_notifications.ignore_option_title"),
+        name: i18n("user.user_notifications.ignore_option"),
       });
     }
 

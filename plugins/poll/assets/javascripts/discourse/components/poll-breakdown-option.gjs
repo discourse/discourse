@@ -4,9 +4,8 @@ import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
-import i18n from "discourse-common/helpers/i18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
 @tagName("")

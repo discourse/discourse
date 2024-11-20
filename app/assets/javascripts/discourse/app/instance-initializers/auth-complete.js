@@ -5,7 +5,7 @@ import CreateAccount from "discourse/components/modal/create-account";
 import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import DiscourseUrl from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -91,7 +91,7 @@ export default {
 
             if (options.omniauth_disallow_totp) {
               return loginError(
-                I18n.t("login.omniauth_disallow_totp"),
+                i18n("login.omniauth_disallow_totp"),
                 "error",
                 {
                   loginName: options.email,
@@ -104,7 +104,7 @@ export default {
             for (let i = 0; i < AuthErrors.length; i++) {
               const cond = AuthErrors[i];
               if (options[cond]) {
-                return loginError(htmlSafe(I18n.t(`login.${cond}`)));
+                return loginError(htmlSafe(i18n(`login.${cond}`)));
               }
             }
 

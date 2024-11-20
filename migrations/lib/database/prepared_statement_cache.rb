@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "lru_redux"
+
 module Migrations::Database
   class PreparedStatementCache < LruRedux::Cache
     class PreparedStatementHash < Hash

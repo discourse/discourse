@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
+import { guidFor } from "@ember/object/internals";
 import { getOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
@@ -16,7 +17,7 @@ import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("image-uploader")
 export default class UppyImageUploader extends Component {
@@ -58,6 +59,12 @@ export default class UppyImageUploader extends Component {
     });
   }
 
+  @discourseComputed("id")
+  computedId(id) {
+    // without a fallback ID this will not be accessible
+    return id ? `${id}__input` : `${guidFor(this)}__input`;
+  }
+
   @discourseComputed("siteSettings.enable_experimental_lightbox")
   experimentalLightboxEnabled(experimentalLightboxEnabled) {
     return experimentalLightboxEnabled;
@@ -66,7 +73,7 @@ export default class UppyImageUploader extends Component {
   @discourseComputed("disabled", "notAllowed")
   disabledReason(disabled, notAllowed) {
     if (disabled && notAllowed) {
-      return I18n.t("post.errors.no_uploads_authorized");
+      return i18n("post.errors.no_uploads_authorized");
     }
   }
 
@@ -153,6 +160,17 @@ export default class UppyImageUploader extends Component {
       this.onUploadDeleted();
     } else {
       this.setProperties({ imageUrl: null });
+    }
+  }
+
+  @action
+  handleKeyboardActivation(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault(); // avoid space scrolling the page
+      const input = document.getElementById(this.computedId);
+      if (input && !this.disabled) {
+        input.click();
+      }
     }
   }
 }

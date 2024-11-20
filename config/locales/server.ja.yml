@@ -2223,7 +2223,6 @@ ja:
     disable_mailing_list_mode: "ユーザーによるメーリングリストモードの有効化を禁止する (メーリングリストのメールは送信されなくなります)。"
     default_email_previous_replies: "デフォルトでメールに以前の返信を含めます。"
     default_email_in_reply_to: "デフォルトで、投稿への返信の抜粋をメールに含める。"
-    default_hide_profile_and_presence: "デフォルトで、ユーザーの公開プロファイルとプレゼンス機能を非表示にします。"
     default_other_new_topic_duration_minutes: "トピックが新規とみなされるグローバルのデフォルト条件。"
     default_other_auto_track_topics_after_msecs: "トピックが自動的に追跡されるまでのグローバルのデフォルト時間。"
     default_other_notification_level_when_replying: "ユーザーがトピックに返信する際のグローバルのデフォルト通知レベル。"

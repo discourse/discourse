@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsFormProfileFields extends Component {
   disableSave = null;
@@ -43,26 +43,24 @@ export default class GroupsFormProfileFields extends Component {
 
     if (this.nameInput === "") {
       this.set("uniqueNameValidation", null);
-      return this._failedInputValidation(I18n.t("admin.groups.new.name.blank"));
+      return this._failedInputValidation(i18n("admin.groups.new.name.blank"));
     }
 
     if (this.nameInput.length < this.siteSettings.min_username_length) {
       return this._failedInputValidation(
-        I18n.t("admin.groups.new.name.too_short")
+        i18n("admin.groups.new.name.too_short")
       );
     }
 
     if (this.nameInput.length > this.siteSettings.max_username_length) {
       return this._failedInputValidation(
-        I18n.t("admin.groups.new.name.too_long")
+        i18n("admin.groups.new.name.too_long")
       );
     }
 
     this.checkGroupNameDebounced();
 
-    return this._failedInputValidation(
-      I18n.t("admin.groups.new.name.checking")
-    );
+    return this._failedInputValidation(i18n("admin.groups.new.name.checking"));
   }
 
   checkGroupNameDebounced() {
@@ -83,7 +81,7 @@ export default class GroupsFormProfileFields extends Component {
             validationName,
             EmberObject.create({
               ok: true,
-              reason: I18n.t("admin.groups.new.name.available"),
+              reason: i18n("admin.groups.new.name.available"),
             })
           );
 
@@ -95,7 +93,7 @@ export default class GroupsFormProfileFields extends Component {
           if (response.errors) {
             reason = response.errors.join(" ");
           } else {
-            reason = I18n.t("admin.groups.new.name.not_available");
+            reason = i18n("admin.groups.new.name.not_available");
           }
 
           this.set(validationName, this._failedInputValidation(reason));

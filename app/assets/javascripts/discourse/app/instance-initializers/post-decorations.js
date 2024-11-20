@@ -14,7 +14,7 @@ import { parseAsync } from "discourse/lib/text";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { tokenRange } from "discourse/lib/utilities";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
@@ -129,13 +129,13 @@ export default {
         }
 
         if (props.title) {
-          openPopupBtn.title = I18n.t(props.title);
+          openPopupBtn.title = i18n(props.title);
         }
 
         if (props.label && capabilities.touch) {
           openPopupBtn.innerHTML = `
           <span class="d-button-label">
-            ${I18n.t(props.label)}
+            ${i18n(props.label)}
           </div>`;
         }
 

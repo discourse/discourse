@@ -18,7 +18,7 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default class EditTopicTimerForm extends Component {
@@ -132,12 +132,12 @@ export default class EditTopicTimerForm extends Component {
         (new Date() - new Date(this.args.topic.last_posted_at)) /
           (1000 * 60 * 60)
       );
-      return I18n.t("topic.auto_close_momentarily", { count: diff });
+      return i18n("topic.auto_close_momentarily", { count: diff });
     }
   }
 
   get durationLabel() {
-    return I18n.t(
+    return i18n(
       `topic.topic_status_update.num_of_${
         this.autoDeleteReplies ? "days" : "hours"
       }`

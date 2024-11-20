@@ -12,7 +12,7 @@ import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ShareTopicModal extends Component.extend(
   bufferedProperty("invite")
@@ -39,7 +39,7 @@ export default class ShareTopicModal extends Component.extend(
     Category.fetchVisibleGroups(this.category.id).then((result) => {
       if (result.groups.length > 0) {
         this.setProperties({
-          flash: I18n.t("topic.share.restricted_groups", {
+          flash: i18n("topic.share.restricted_groups", {
             count: result.groups.length,
             groupNames: result.groups.join(", "),
           }),

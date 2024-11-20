@@ -6,7 +6,7 @@ import { tagName } from "@ember-decorators/component";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { DeferredTrackedSet } from "discourse/lib/tracked-tools";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const _pluginNotices = new DeferredTrackedSet();
 
@@ -87,8 +87,8 @@ export default class GlobalNotice extends Component {
       notices.push(
         Notice.create({
           text: this.siteSettings.login_required
-            ? I18n.t("forced_anonymous_login_required")
-            : I18n.t("forced_anonymous"),
+            ? i18n("forced_anonymous_login_required")
+            : i18n("forced_anonymous"),
           id: "forced-anonymous",
         })
       );
@@ -96,21 +96,21 @@ export default class GlobalNotice extends Component {
 
     if (this.session.get("safe_mode")) {
       notices.push(
-        Notice.create({ text: I18n.t("safe_mode.enabled"), id: "safe-mode" })
+        Notice.create({ text: i18n("safe_mode.enabled"), id: "safe-mode" })
       );
     }
 
     if (this.site.get("isStaffWritesOnly")) {
       notices.push(
         Notice.create({
-          text: I18n.t("staff_writes_only_mode.enabled"),
+          text: i18n("staff_writes_only_mode.enabled"),
           id: "alert-staff-writes-only",
         })
       );
     } else if (this.site.get("isReadOnly")) {
       notices.push(
         Notice.create({
-          text: I18n.t("read_only_mode.enabled"),
+          text: i18n("read_only_mode.enabled"),
           id: "alert-read-only",
         })
       );
@@ -119,7 +119,7 @@ export default class GlobalNotice extends Component {
     if (this.router.currentRoute?.queryParams?.preview_theme_id) {
       notices.push(
         Notice.create({
-          text: I18n.t("theme_preview_notice"),
+          text: i18n("theme_preview_notice"),
           id: "theme-preview",
         })
       );
@@ -128,7 +128,7 @@ export default class GlobalNotice extends Component {
     if (this.siteSettings.disable_emails === "yes") {
       notices.push(
         Notice.create({
-          text: I18n.t("emails_are_disabled"),
+          text: i18n("emails_are_disabled"),
           id: "alert-emails-disabled",
           options: {
             dismissable: true,
@@ -139,7 +139,7 @@ export default class GlobalNotice extends Component {
     } else if (this.siteSettings.disable_emails === "non-staff") {
       notices.push(
         Notice.create({
-          text: I18n.t("emails_are_disabled_non_staff"),
+          text: i18n("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
           options: {
             dismissable: true,

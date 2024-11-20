@@ -18,7 +18,7 @@ module Migrations::Database::IntermediateDB
         type,
         message,
         exception&.full_message(highlight: false),
-        details,
+        ::Migrations::Database.to_json(details),
       )
     end
   end

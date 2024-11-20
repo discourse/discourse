@@ -43,6 +43,29 @@ export default class Chat extends Service {
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
 
+  init() {
+    super.init(...arguments);
+
+    if (this.userCanChat) {
+      this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.userCanChat) {
+      this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
+    }
+  }
+
   get activeChannel() {
     return this._activeChannel;
   }
@@ -91,20 +114,6 @@ export default class Chat extends Service {
       this._activeMessage = hash;
     } else {
       this._activeMessage = null;
-    }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    if (this.userCanChat) {
-      this.presenceChannel = this.presence.getChannel("/chat/online");
-
-      onPresenceChange({
-        callback: this.onPresenceChangeCallback,
-        browserHiddenTime: 150000,
-        userUnseenTime: 150000,
-      });
     }
   }
 
@@ -245,15 +254,6 @@ export default class Chat extends Service {
     );
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this.userCanChat) {
-      this.chatSubscriptionsManager.stopChannelsSubscriptions();
-      removeOnPresenceChange(this.onPresenceChangeCallback);
-    }
-  }
-
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
@@ -278,19 +278,31 @@ export default class Chat extends Service {
       : 0;
   }
 
-  switchChannelUpOrDown(direction) {
+  switchChannelUpOrDown(direction, unreadOnly = false) {
     const { activeChannel } = this;
     if (!activeChannel) {
       return; // Chat isn't open. Return and do nothing!
     }
 
+    let publicChannels, directChannels;
+
+    if (unreadOnly) {
+      publicChannels =
+        this.chatChannelsManager.publicMessageChannelsWithActivity;
+      directChannels =
+        this.chatChannelsManager.directMessageChannelsWithActivity;
+    } else {
+      publicChannels = this.chatChannelsManager.publicMessageChannels;
+      directChannels = this.chatChannelsManager.directMessageChannels;
+    }
+
     let currentList, otherList;
     if (activeChannel.isDirectMessageChannel) {
-      currentList = this.chatChannelsManager.truncatedDirectMessageChannels;
-      otherList = this.chatChannelsManager.publicMessageChannels;
+      currentList = directChannels;
+      otherList = publicChannels;
     } else {
-      currentList = this.chatChannelsManager.publicMessageChannels;
-      otherList = this.chatChannelsManager.truncatedDirectMessageChannels;
+      currentList = publicChannels;
+      otherList = directChannels;
     }
 
     const directionUp = direction === "up";

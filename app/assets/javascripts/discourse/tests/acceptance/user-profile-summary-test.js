@@ -3,7 +3,7 @@ import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let deleteAndBlock = null;
 
@@ -111,7 +111,7 @@ acceptance("User Profile - Summary - Stats", function (needs) {
       .dom(".stats-time-read span")
       .hasAttribute(
         "title",
-        I18n.t("user.summary.time_read_title", { duration: "1 day" })
+        i18n("user.summary.time_read_title", { duration: "1 day" })
       );
 
     assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
@@ -119,7 +119,7 @@ acceptance("User Profile - Summary - Stats", function (needs) {
       .dom(".stats-recent-read span")
       .hasAttribute(
         "title",
-        I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
+        i18n("user.summary.recent_time_read_title", { duration: "17 mins" })
       );
   });
 });
@@ -170,7 +170,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
 
     assert.equal(
       query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
+      i18n("admin.user.delete_confirm_title"),
       "dialog has a title"
     );
 

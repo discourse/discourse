@@ -41,7 +41,7 @@ export default function offsetCalculator() {
   const min = headerOffset();
 
   // on mobile, just use the header
-  if (document.querySelector("html").classList.contains("mobile-view")) {
+  if (document.documentElement.classList.contains("mobile-view")) {
     return min;
   }
 

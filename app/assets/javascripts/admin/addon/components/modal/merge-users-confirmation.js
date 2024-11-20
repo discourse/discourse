@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class MergeUsersConfirmation extends Component {
   @tracked value;
@@ -10,7 +10,7 @@ export default class MergeUsersConfirmation extends Component {
   }
 
   get text() {
-    return I18n.t("admin.user.merge.confirmation.text", {
+    return i18n("admin.user.merge.confirmation.text", {
       username: this.args.model.username,
       targetUsername: this.args.model.targetUsername,
     });

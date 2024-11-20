@@ -7,7 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | time-shortcut-picker", function (hooks) {
   setupRenderingTest(hooks);
@@ -33,14 +33,14 @@ module("Integration | Component | time-shortcut-picker", function (hooks) {
     await render(hbs`<TimeShortcutPicker @_itsatrap={{this.itsatrap}} />`);
 
     const expected = [
-      I18n.t("time_shortcut.later_today"),
-      I18n.t("time_shortcut.tomorrow"),
-      I18n.t("time_shortcut.later_this_week"),
-      I18n.t("time_shortcut.this_weekend"),
-      I18n.t("time_shortcut.start_of_next_business_week"),
-      I18n.t("time_shortcut.next_month"),
-      I18n.t("time_shortcut.custom"),
-      I18n.t("time_shortcut.none"),
+      i18n("time_shortcut.later_today"),
+      i18n("time_shortcut.tomorrow"),
+      i18n("time_shortcut.later_this_week"),
+      i18n("time_shortcut.this_weekend"),
+      i18n("time_shortcut.start_of_next_business_week"),
+      i18n("time_shortcut.next_month"),
+      i18n("time_shortcut.custom"),
+      i18n("time_shortcut.none"),
     ];
 
     const options = Array.from(

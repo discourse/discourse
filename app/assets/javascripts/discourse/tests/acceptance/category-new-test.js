@@ -4,7 +4,7 @@ import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
@@ -74,7 +74,7 @@ acceptance("Category New", function (needs) {
       .exists("shows saved required tag group");
 
     assert.dom(".edit-category-title h2").hasText(
-      I18n.t("category.edit_dialog_title", {
+      i18n("category.edit_dialog_title", {
         categoryName: "testing",
       })
     );

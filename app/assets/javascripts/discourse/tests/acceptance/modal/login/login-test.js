@@ -2,7 +2,7 @@ import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { acceptance, chromeTest } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
   chromeTest("You can tab to the login button", async function (assert) {
@@ -24,7 +24,7 @@ acceptance("Modal - Login - With 2FA", function (needs) {
   needs.pretender((server, helper) => {
     server.post(`/session`, () =>
       helper.response({
-        error: I18n.t("login.invalid_second_factor_code"),
+        error: i18n("login.invalid_second_factor_code"),
         multiple_second_factor_methods: false,
         security_key_enabled: false,
         totp_enabled: true,

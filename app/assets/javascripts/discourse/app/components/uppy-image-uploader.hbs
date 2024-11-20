@@ -9,13 +9,16 @@
     <label
       class="btn btn-default pad-left no-text {{if this.disabled 'disabled'}}"
       title={{this.disabledReason}}
+      for={{this.computedId}}
+      tabindex="0"
+      {{on "keydown" this.handleKeyboardActivation}}
     >
       {{d-icon "far-image"}}
       <PickFilesButton
         @registerFileInput={{this.uppyUpload.setup}}
         @fileInputDisabled={{this.disabled}}
-        @fileInputClass="hidden-upload-field"
         @acceptedFormatsOverride="image/*"
+        @fileInputId={{this.computedId}}
       />
     </label>
 

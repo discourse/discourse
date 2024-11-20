@@ -116,6 +116,29 @@ describe "Admin About Config Area Page", type: :system do
         expect(config_area.general_settings_section).to have_saved_successfully
         expect(SiteSetting.about_banner_image).to eq(nil)
       end
+
+      it "can upload an image using keyboard nav" do
+        config_area.visit
+
+        image_file = file_from_fixtures("logo.png", "images")
+        config_area.general_settings_section.banner_image_uploader.select_image_with_keyboard(
+          image_file.path,
+        )
+
+        expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
+      end
+
+      it "can remove the uploaded image using keyboard nav" do
+        SiteSetting.about_banner_image = image_upload
+
+        config_area.visit
+
+        config_area.general_settings_section.banner_image_uploader.remove_image_with_keyboard
+
+        config_area.general_settings_section.submit
+        expect(config_area.general_settings_section).to have_saved_successfully
+        expect(SiteSetting.about_banner_image).to eq(nil)
+      end
     end
   end
 

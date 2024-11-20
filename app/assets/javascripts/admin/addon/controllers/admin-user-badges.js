@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 
 export default class AdminUserBadgesController extends Controller {
@@ -26,6 +26,7 @@ export default class AdminUserBadgesController extends Controller {
   availableBadges() {
     return grantableBadges(this.get("allBadges"), this.get("userBadges"));
   }
+
   @discourseComputed("model", "model.[]", "model.expandedBadges.[]")
   groupedBadges() {
     const allBadges = this.model;
@@ -71,6 +72,7 @@ export default class AdminUserBadgesController extends Controller {
 
     return expanded.sortBy("granted_at").reverse();
   }
+
   @action
   expandGroup(userBadge) {
     const model = this.model;
@@ -105,7 +107,7 @@ export default class AdminUserBadgesController extends Controller {
   @action
   revokeBadge(userBadge) {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.badges.revoke_confirm"),
+      message: i18n("admin.badges.revoke_confirm"),
       didConfirm: () => {
         return userBadge.revoke().then(() => {
           this.model.removeObject(userBadge);
