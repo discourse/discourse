@@ -226,6 +226,7 @@ class PostSerializer < BasicPostSerializer
 
   def badges_granted
     return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
+    return [] unless @topic_view
 
     @topic_view
       .post_user_badges
