@@ -3,11 +3,11 @@
   tabindex="-1"
   {{on "touchstart" @onTouchstart passive=true capture=true}}
   {{on "touchend" @onTouchend passive=true capture=true}}
-  {{on "click" @toggleZoom passive=true}}
+  {{on "click" @imageClicked passive=true}}
 >
   {{#if @shouldDisplayMainImageArrows}}
     <DButton
-      {{on "click" @showPreviousItem passive=true capture=true}}
+      {{on "click" @showPreviousItem capture=true}}
       @title="experimental_lightbox.buttons.previous"
       @icon={{@previousButtonIcon}}
       @ariaHidden="true"
@@ -49,7 +49,7 @@
   {{/if}}
   {{#if @shouldDisplayMainImageArrows}}
     <DButton
-      {{on "click" @showNextItem passive=true capture=true}}
+      {{on "click" @showNextItem capture=true}}
       @title="experimental_lightbox.buttons.next"
       @icon={{@nextButtonIcon}}
       @ariaHidden="true"

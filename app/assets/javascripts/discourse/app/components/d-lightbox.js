@@ -8,12 +8,12 @@ import {
   LAYOUT_TYPES,
   LIGHTBOX_APP_EVENT_NAMES,
   LIGHTBOX_ELEMENT_ID,
-  SWIPE_DIRECTIONS,
+  //SWIPE_DIRECTIONS,
   TITLE_ELEMENT_ID,
 } from "discourse/lib/lightbox/constants";
 import {
   createDownloadLink,
-  getSwipeDirection,
+  //getSwipeDirection,
   openImageInNewTab,
   preloadItemImages,
   scrollParentToElementCenter,
@@ -37,7 +37,7 @@ export default class DLightbox extends Component {
   @tracked isFullScreen = false;
   @tracked rotationAmount = 0;
 
-  @tracked hasCarousel = true;
+  @tracked hasCarousel = false;
   @tracked hasExpandedTitle = false;
 
   options = {};
@@ -111,11 +111,7 @@ export default class DLightbox extends Component {
 
   get shouldDisplayMainImageArrows() {
     return (
-      !this.options.isMobile &&
-      this.canNavigate &&
-      !this.hasCarousel &&
-      !this.isZoomed &&
-      !this.isRotated
+      this.canNavigate && !this.hasCarousel && !this.isZoomed && !this.isRotated
     );
   }
 
@@ -280,7 +276,10 @@ export default class DLightbox extends Component {
       : false;
   }
 
-  zoomOnMouseover(event) {
+  zoomOnMouseover() {
+    return false;
+    /*
+     * This is not working well
     const zoomedImageContainer = event.target;
 
     const offsetX = event.offsetX;
@@ -290,6 +289,16 @@ export default class DLightbox extends Component {
     const y = (offsetY / zoomedImageContainer.offsetHeight) * 100;
 
     zoomedImageContainer.style.backgroundPosition = x + "% " + y + "%";
+    */
+  }
+
+  @bind
+  imageClicked() {
+    if (this.options.isMobile) {
+      return this.showNextItem();
+    } else {
+      this.toggleZoom();
+    }
   }
 
   @bind
@@ -340,13 +349,17 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  showNextItem() {
+  showNextItem(evt) {
     this.#setCurrentItem(this.currentIndex + 1);
+    evt?.preventDefault();
+    evt?.stopPropagation();
   }
 
   @bind
-  showPreviousItem() {
+  showPreviousItem(evt) {
     this.#setCurrentItem(this.currentIndex - 1);
+    evt?.preventDefault();
+    evt?.stopPropagation();
   }
 
   @bind
@@ -409,17 +422,26 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  onTouchstart(event = Event) {
+  onTouchstart() {
+    // causing side effects
+    return false;
+
+    /*
     if (this.isZoomed) {
       return false;
     }
 
     this.touchstartX = event.changedTouches[0].screenX;
     this.touchstartY = event.changedTouches[0].screenY;
+    */
   }
 
   @bind
-  async onTouchend(event) {
+  async onTouchend() {
+    // causing side effects
+    return false;
+
+    /*
     if (this.isZoomed) {
       return false;
     }
@@ -447,12 +469,13 @@ export default class DLightbox extends Component {
         this.close();
         break;
     }
+    */
   }
 
   @bind
   cleanup() {
     if (this.isVisible) {
-      this.hasCarousel = true;
+      this.hasCarousel = false;
       this.hasExpandedTitle = false;
       this.isLoading = false;
       this.items = [];
