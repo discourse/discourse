@@ -666,7 +666,7 @@ export default class ChatMessage extends Component {
                 {{#if this.shouldRenderStopMessageStreamingButton}}
                   <div class="stop-streaming-btn-container">
                     <DButton
-                      @class="stop-streaming-btn"
+                      class="stop-streaming-btn"
                       @icon="stop-circle"
                       @label="cancel"
                       @action={{fn this.stopMessageStreaming @message}}
