@@ -440,21 +440,19 @@ RSpec.describe PostSerializer do
 
   describe "#badges_granted" do
     fab!(:user)
+    fab!(:user2) { Fabricate(:user) }
     fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:post2) { Fabricate(:post, user: user) }
+
+    # Create twp badges that have all required flags set to true
     fab!(:badge1) do
       Badge.create!(
         name: "SomeBadge",
         badge_type_id: BadgeType::Bronze,
+        listable: true,
         show_posts: true,
         post_header: true,
-      )
-    end
-    fab!(:badge2) do
-      Badge.create!(
-        name: "AnotherBadge",
-        badge_type_id: BadgeType::Bronze,
-        show_posts: true,
-        post_header: true,
+        multiple_grant: true,
       )
     end
     fab!(:ub1) do
@@ -466,9 +464,102 @@ RSpec.describe PostSerializer do
         post_id: post.id,
       )
     end
+
+    fab!(:badge2) do
+      Badge.create!(
+        name: "SomeOtherBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        post_header: true,
+        multiple_grant: true,
+      )
+    end
     fab!(:ub2) do
       UserBadge.create!(
         badge_id: badge2.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the show_posts flag set to false
+    fab!(:badge3) do
+      Badge.create!(
+        name: "YetAnotherBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: false,
+        post_header: true,
+      )
+    end
+    fab!(:ub3) do
+      UserBadge.create!(
+        badge_id: badge3.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Re-use our first badge, but on a different post
+    fab!(:ub4) do
+      UserBadge.create!(
+        badge_id: badge1.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post2.id,
+      )
+    end
+
+    # Now re-use our first badge, but on a different user
+    fab!(:ub5) do
+      UserBadge.create!(
+        badge_id: badge1.id,
+        user: user2,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the listable flag set to false
+    fab!(:badge4) do
+      Badge.create!(
+        name: "WeirdBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: false,
+        show_posts: true,
+        post_header: true,
+      )
+    end
+    fab!(:ub6) do
+      UserBadge.create!(
+        badge_id: badge4.id,
+        user: user,
+        granted_by: Discourse.system_user,
+        granted_at: Time.now,
+        post_id: post.id,
+      )
+    end
+
+    # Create a badge that has the post_header flag set to false
+    fab!(:badge5) do
+      Badge.create!(
+        name: "StrangeBadge",
+        badge_type_id: BadgeType::Bronze,
+        listable: true,
+        show_posts: true,
+        post_header: false,
+      )
+    end
+    fab!(:ub7) do
+      UserBadge.create!(
+        badge_id: badge5.id,
         user: user,
         granted_by: Discourse.system_user,
         granted_at: Time.now,
@@ -489,17 +580,51 @@ RSpec.describe PostSerializer do
       expect(serializer.as_json[:badges_granted]).to eq([])
     end
 
-    it "includes badges when `enable_badges` and `show_badges_in_post_header` site settings are enabled" do
-      SiteSetting.enable_badges = true
-      SiteSetting.show_badges_in_post_header = true
+    context "when `enable_badges` and `show_badges_in_post_header` site settings are enabled" do
+      before do
+        SiteSetting.enable_badges = true
+        SiteSetting.show_badges_in_post_header = true
+      end
 
-      json = serializer.as_json
+      it "includes badges that were granted for this user on this post" do
+        json = serializer.as_json
 
-      expect(json[:badges_granted].length).to eq(2)
-      expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to eq(
-        [ub1.badge_id, ub2.badge_id],
-      )
-      expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to eq([ub1.id, ub2.id])
+        expect(json[:badges_granted].length).to eq(2)
+        expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to eq(
+          [ub1.badge_id, ub2.badge_id],
+        )
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to eq([ub1.id, ub2.id])
+      end
+
+      it "does not return a user badge that has the show_posts flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub3.id)
+      end
+
+      it "does not return a user badge that was not granted for this post" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub4.id)
+      end
+
+      it "does not return a user badge that was granted for a different user" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub5.id)
+      end
+
+      it "does not return a user badge that has the listable flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub6.id)
+      end
+
+      it "does not return a user badge that has the post_header flag set to false" do
+        json = serializer.as_json
+
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub7.id)
+      end
     end
   end
 
