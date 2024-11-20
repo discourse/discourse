@@ -227,9 +227,10 @@ class PostSerializer < BasicPostSerializer
   def badges_granted
     return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
 
-    object.badges_granted.map do |user_badge|
-      BasicUserBadgeSerializer.new(user_badge, scope: scope).as_json
-    end
+    @topic_view
+      .post_user_badges
+      .select { |ub| ub.post_id == object.id }
+      .map { |user_badge| BasicUserBadgeSerializer.new(user_badge, scope: scope).as_json }
   end
 
   def link_counts

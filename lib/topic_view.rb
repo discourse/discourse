@@ -135,7 +135,7 @@ class TopicView
     @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
-    @posts = @posts.includes(:post_user_badges)
+    @post_user_badges = UserBadge.for_post_header_badges(@posts) if @posts
 
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
@@ -205,6 +205,12 @@ class TopicView
         .to_h
 
     { users: user_badge_mapping, badges: indexed_badges }
+  end
+
+  def post_user_badges
+    return [] unless @post_user_badges
+
+    @post_user_badges
   end
 
   def show_read_indicator?
