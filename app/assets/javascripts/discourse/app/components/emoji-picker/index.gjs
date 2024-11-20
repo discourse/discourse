@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import EmojiPickerContent from "discourse/components/emoji-picker/content";
+import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
 import DMenu from "float-kit/components/d-menu";
@@ -18,7 +19,7 @@ export default class EmojiPicker extends Component {
 
   <template>
     <DMenu
-      @triggerClass={{@btnClass}}
+      @triggerClass={{concatClass @btnClass "btn-transparent"}}
       @contentClass="emoji-picker__menu"
       @onRegisterApi={{this.onRegisterMenu}}
       @identifier="emoji-picker"

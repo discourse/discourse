@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import KeyValueStore from "discourse/lib/key-value-store";
@@ -9,6 +10,8 @@ const STORE_NAMESPACE = "discourse_emojis_";
 
 @disableImplicitInjections
 export default class EmojiStore extends Service {
+  @tracked list;
+
   store = new KeyValueStore(STORE_NAMESPACE);
 
   constructor() {

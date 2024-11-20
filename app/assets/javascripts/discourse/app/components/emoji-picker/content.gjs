@@ -19,10 +19,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { emojiUrlFor } from "discourse/lib/text";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
 const DEFAULT_VISIBLE_SECTIONS = ["favorites", "smileys_&_emotion"];
@@ -46,6 +46,7 @@ const tonableEmojiUrl = (emoji, scale) => {
 
 export default class EmojiPicker extends Component {
   @service emojiReactionStore;
+  @service emojiStore;
   @service capabilities;
   @service site;
 
@@ -73,7 +74,9 @@ export default class EmojiPicker extends Component {
   }
 
   get sections() {
-    return !this.loading && this.emojis ? Object.keys(this.emojis) : [];
+    return !this.loading && this.emojiStore.list
+      ? Object.keys(this.emojiStore.list)
+      : [];
   }
 
   get groups() {
@@ -91,17 +94,17 @@ export default class EmojiPicker extends Component {
 
     return {
       ...favorites,
-      ...this.emojis,
+      ...this.emojiStore.list,
     };
   }
 
   get flatEmojis() {
-    if (!this.emojis) {
+    if (!this.emojiStore.list) {
       return [];
     }
 
     // eslint-disable-next-line no-unused-vars
-    let { favorites, ...rest } = this.emojis;
+    let { favorites, ...rest } = this.emojiStore.list;
     return Object.values(rest).flat();
   }
 
@@ -339,14 +342,14 @@ export default class EmojiPicker extends Component {
 
   @action
   async loadEmojis() {
-    if (this.emojis) {
+    if (this.emojiStore.list) {
       return;
     }
 
     this.loading = true;
 
     try {
-      this.emojis = await ajax("/emojis.json");
+      this.emojiStore.list = await ajax("/emojis.json");
     } catch (error) {
       popupAjaxError(error);
     } finally {
