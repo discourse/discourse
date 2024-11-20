@@ -5,8 +5,7 @@ import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasAboutYourOrganization extends Component {
   @service toasts;
@@ -41,7 +40,7 @@ export default class AdminConfigAreasAboutYourOrganization extends Component {
       this.toasts.success({
         duration: 30000,
         data: {
-          message: I18n.t(
+          message: i18n(
             "admin.config_areas.about.toasts.your_organization_saved"
           ),
         },

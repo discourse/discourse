@@ -34,7 +34,7 @@ import discourseComputed, {
   bind,
   debounce,
 } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
 export function addComposerUploadHandler(extensions, method) {
@@ -225,18 +225,18 @@ export default class ComposerEditor extends Component {
 
     let reason;
     if (replyLength < 1) {
-      reason = I18n.t("composer.error.post_missing");
+      reason = i18n("composer.error.post_missing");
     } else if (missingReplyCharacters > 0) {
-      reason = I18n.t("composer.error.post_length", {
+      reason = i18n("composer.error.post_length", {
         count: minimumPostLength,
       });
       const tl = this.get("currentUser.trust_level");
       if ((tl === 0 || tl === 1) && !this._isNewTopic) {
         reason +=
           "<br/>" +
-          I18n.t("composer.error.try_like", {
+          i18n("composer.error.try_like", {
             heart: iconHTML("heart", {
-              label: I18n.t("likes_lowercase", { count: 1 }),
+              label: i18n("likes_lowercase", { count: 1 }),
             }),
           });
       }

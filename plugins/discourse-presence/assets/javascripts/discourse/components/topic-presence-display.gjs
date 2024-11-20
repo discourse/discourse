@@ -5,7 +5,7 @@ import { gt } from "truth-helpers";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import helperFn from "discourse/helpers/helper-fn";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicPresenceDisplay extends Component {
   @service presence;

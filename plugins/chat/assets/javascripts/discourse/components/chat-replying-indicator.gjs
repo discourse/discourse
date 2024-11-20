@@ -7,7 +7,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatReplyingIndicator extends Component {
   @service currentUser;
@@ -50,7 +50,7 @@ export default class ChatReplyingIndicator extends Component {
 
   get text() {
     if (this.usernames.length === 1) {
-      return I18n.t("chat.replying_indicator.single_user", {
+      return i18n("chat.replying_indicator.single_user", {
         username: this.usernames[0],
       });
     }
@@ -59,8 +59,8 @@ export default class ChatReplyingIndicator extends Component {
       const lastUsername = this.usernames[this.usernames.length - 1];
       const commaSeparatedUsernames = this.usernames
         .slice(0, this.usernames.length - 1)
-        .join(I18n.t("word_connector.comma"));
-      return I18n.t("chat.replying_indicator.multiple_users", {
+        .join(i18n("word_connector.comma"));
+      return i18n("chat.replying_indicator.multiple_users", {
         commaSeparatedUsernames,
         lastUsername,
       });
@@ -68,8 +68,8 @@ export default class ChatReplyingIndicator extends Component {
 
     const commaSeparatedUsernames = this.usernames
       .slice(0, 2)
-      .join(I18n.t("word_connector.comma"));
-    return I18n.t("chat.replying_indicator.many_users", {
+      .join(i18n("word_connector.comma"));
+    return i18n("chat.replying_indicator.many_users", {
       commaSeparatedUsernames,
       count: this.usernames.length - 2,
     });

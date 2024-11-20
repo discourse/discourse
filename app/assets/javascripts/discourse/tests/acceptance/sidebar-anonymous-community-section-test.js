@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({
@@ -20,7 +20,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.topics.content"),
+      i18n("sidebar.sections.community.links.topics.content"),
       "displays the topics section link first"
     );
   });
@@ -50,31 +50,31 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.users.content"),
+      i18n("sidebar.sections.community.links.users.content"),
       "displays the users section link second"
     );
 
     assert.strictEqual(
       sectionLinks[1].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.about.content"),
+      i18n("sidebar.sections.community.links.about.content"),
       "displays the about section link third"
     );
 
     assert.strictEqual(
       sectionLinks[2].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.faq.content"),
+      i18n("sidebar.sections.community.links.faq.content"),
       "displays the FAQ section link last"
     );
 
     assert.strictEqual(
       sectionLinks[3].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.groups.content"),
+      i18n("sidebar.sections.community.links.groups.content"),
       "displays the groups section link first"
     );
 
     assert.strictEqual(
       sectionLinks[4].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.badges.content"),
+      i18n("sidebar.sections.community.links.badges.content"),
       "displays the badges section link second"
     );
   });

@@ -7,7 +7,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Create Account", function () {
   test("create an account", async function (assert) {
@@ -63,7 +63,7 @@ acceptance("Create Account", function () {
 
     assert
       .dom("#username-validation")
-      .hasText(I18n.t("user.username.required"), "shows signup error");
+      .hasText(i18n("user.username.required"), "shows signup error");
   });
 
   test("can sign in using a third-party auth", async function (assert) {
@@ -103,7 +103,7 @@ acceptance("Create Account - full_name_required", function (needs) {
     await fillIn("#new-account-password", "cool password bro");
 
     await click(".d-modal__footer .btn-primary");
-    assert.dom("#fullname-validation").hasText(I18n.t("user.name.required"));
+    assert.dom("#fullname-validation").hasText(i18n("user.name.required"));
 
     await fillIn("#new-account-name", "Full Name");
 

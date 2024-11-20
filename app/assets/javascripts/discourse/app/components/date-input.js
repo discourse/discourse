@@ -7,7 +7,7 @@ import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function isInputDateSupported() {
   const input = document.createElement("input");
@@ -93,8 +93,8 @@ export default class DateInput extends Component {
         format: "LL",
         firstDay: 1,
         i18n: {
-          previousMonth: I18n.t("dates.previous_month"),
-          nextMonth: I18n.t("dates.next_month"),
+          previousMonth: i18n("dates.previous_month"),
+          nextMonth: i18n("dates.next_month"),
           months: moment.months(),
           weekdays: moment.weekdays(),
           weekdaysShort: moment.weekdaysShort(),
@@ -154,7 +154,7 @@ export default class DateInput extends Component {
 
   @computed("_placeholder")
   get placeholder() {
-    return this._placeholder || I18n.t("dates.placeholder");
+    return this._placeholder || i18n("dates.placeholder");
   }
 
   set placeholder(value) {

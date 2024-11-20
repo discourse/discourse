@@ -5,7 +5,7 @@ import { alias, equal, gte, none } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import DiscourseURL from "discourse/lib/url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * You can throw an instance of this error during a route's beforeModel/model/afterModel hooks.
@@ -65,18 +65,18 @@ export default class ExceptionController extends Controller {
     if (thrown.reason) {
       return thrown.reason;
     } else if (isNetwork) {
-      return I18n.t("errors.reasons.network");
+      return i18n("errors.reasons.network");
     } else if (thrownStatus >= 500) {
-      return I18n.t("errors.reasons.server");
+      return i18n("errors.reasons.server");
     } else if (thrownStatus === 404) {
-      return I18n.t("errors.reasons.not_found");
+      return i18n("errors.reasons.not_found");
     } else if (thrownStatus === 403) {
-      return I18n.t("errors.reasons.forbidden");
+      return i18n("errors.reasons.forbidden");
     } else if (thrown === null) {
-      return I18n.t("errors.reasons.unknown");
+      return i18n("errors.reasons.unknown");
     } else {
       // TODO
-      return I18n.t("errors.reasons.unknown");
+      return i18n("errors.reasons.unknown");
     }
   }
 
@@ -91,22 +91,22 @@ export default class ExceptionController extends Controller {
     if (thrown.desc) {
       return thrown.desc;
     } else if (networkFixed) {
-      return I18n.t("errors.desc.network_fixed");
+      return i18n("errors.desc.network_fixed");
     } else if (isNetwork) {
-      return I18n.t("errors.desc.network");
+      return i18n("errors.desc.network");
     } else if (thrownStatus === 404) {
-      return I18n.t("errors.desc.not_found");
+      return i18n("errors.desc.not_found");
     } else if (thrownStatus === 403) {
-      return I18n.t("errors.desc.forbidden");
+      return i18n("errors.desc.forbidden");
     } else if (thrownStatus >= 500) {
-      return I18n.t("errors.desc.server", {
+      return i18n("errors.desc.server", {
         status: thrownStatus + " " + thrownStatusText,
       });
     } else if (thrown === null) {
-      return I18n.t("errors.desc.unknown");
+      return i18n("errors.desc.unknown");
     } else {
       // TODO
-      return I18n.t("errors.desc.unknown");
+      return i18n("errors.desc.unknown");
     }
   }
 

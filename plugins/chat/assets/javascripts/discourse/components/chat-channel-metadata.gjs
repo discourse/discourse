@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatChannelMetadata extends Component {
   get lastMessageFormattedDate() {
     return moment(this.args.channel.lastMessage.createdAt).calendar(null, {
       sameDay: "LT",
-      lastDay: `[${I18n.t("chat.dates.yesterday")}]`,
+      lastDay: `[${i18n("chat.dates.yesterday")}]`,
       lastWeek: "dddd",
       sameElse: "l",
     });

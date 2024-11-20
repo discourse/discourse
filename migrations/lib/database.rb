@@ -3,23 +3,22 @@
 require "date"
 require "extralite"
 require "ipaddr"
+require "oj"
 
 module Migrations
   module Database
     INTERMEDIATE_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "intermediate_db_schema")
     UPLOADS_DB_SCHEMA_PATH = File.join(::Migrations.root_path, "db", "uploads_db_schema")
 
-    module_function
-
-    def migrate(db_path, migrations_path:)
+    def self.migrate(db_path, migrations_path:)
       Migrator.new(db_path).migrate(migrations_path)
     end
 
-    def reset!(db_path)
+    def self.reset!(db_path)
       Migrator.new(db_path).reset!
     end
 
-    def connect(path)
+    def self.connect(path)
       connection = Connection.new(path:)
       return connection unless block_given?
 
@@ -31,29 +30,34 @@ module Migrations
       nil
     end
 
-    def format_datetime(value)
+    def self.format_datetime(value)
       value&.utc&.iso8601
     end
 
-    def format_date(value)
+    def self.format_date(value)
       value&.to_date&.iso8601
     end
 
-    def format_boolean(value)
+    def self.format_boolean(value)
       return nil if value.nil?
       value ? 1 : 0
     end
 
-    def format_ip_address(value)
+    def self.format_ip_address(value)
       return nil if value.blank?
       IPAddr.new(value).to_s
     rescue ArgumentError
       nil
     end
 
-    def to_blob(value)
+    def self.to_blob(value)
       return nil if value.blank?
-      Extralite::Blob.new(value)
+      ::Extralite::Blob.new(value)
+    end
+
+    def self.to_json(value)
+      return nil if value.nil?
+      ::Oj.dump(value, mode: :compat)
     end
   end
 end

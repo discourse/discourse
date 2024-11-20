@@ -253,6 +253,7 @@ export default class CategoryRow extends Component {
       description.length > limit ? "&hellip;" : ""
     }`;
   }
+
   _isValidInput(eventKey) {
     // relying on passing the event to the input is risky as it could not work
     // dispatching the event won't work as the event won't be trusted

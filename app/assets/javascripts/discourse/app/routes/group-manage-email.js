@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupManageEmail extends DiscourseRoute {
   @service router;
@@ -13,6 +13,6 @@ export default class GroupManageEmail extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("groups.manage.email.title");
+    return i18n("groups.manage.email.title");
   }
 }

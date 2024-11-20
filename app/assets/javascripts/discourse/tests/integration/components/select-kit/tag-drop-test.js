@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function initTags(context) {
   const categories = context.site.categoriesList;
@@ -53,12 +53,12 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
 
     assert.strictEqual(
       content[0].name,
-      I18n.t("tagging.selector_remove_filter"),
+      i18n("tagging.selector_remove_filter"),
       "it has the correct label for removing the tag filter"
     );
     assert.strictEqual(
       content[1].name,
-      I18n.t("tagging.selector_no_tags"),
+      i18n("tagging.selector_no_tags"),
       "it has the translated label for no-tags"
     );
 

@@ -27,6 +27,7 @@ module Chat
             reviewable_id
             edited
             thread
+            blocks
           ]
       ),
     )
@@ -161,6 +162,15 @@ module Chat
 
     def include_user_flag_status?
       user_flag_status.present?
+    end
+
+    def blocks
+      ActiveModel::ArraySerializer.new(
+        object.blocks || [],
+        each_serializer: Chat::BlockSerializer,
+        scope:,
+        root: false,
+      ).as_json
     end
 
     def available_flags

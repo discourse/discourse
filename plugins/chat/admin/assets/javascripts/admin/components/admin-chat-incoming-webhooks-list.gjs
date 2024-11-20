@@ -8,8 +8,7 @@ import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class AdminChatIncomingWebhooksList extends Component {
@@ -24,7 +23,7 @@ export default class AdminChatIncomingWebhooksList extends Component {
   @action
   destroyWebhook(webhook) {
     this.dialog.deleteConfirm({
-      message: I18n.t("chat.incoming_webhooks.confirm_destroy"),
+      message: i18n("chat.incoming_webhooks.confirm_destroy"),
       didConfirm: async () => {
         this.loading = true;
 

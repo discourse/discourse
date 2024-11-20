@@ -220,6 +220,7 @@ export default class TopicList extends Component.extend(LoadMore) {
       };
 
       onKeyDown("th.sortable", (element) => {
+        e.preventDefault();
         this.changeSort(element.dataset.sortOrder);
         this.rerender();
       });

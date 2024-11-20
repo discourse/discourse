@@ -10,8 +10,7 @@ import Form from "discourse/components/form";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat-channel-chooser";
 
 export default class ChatIncomingWebhookEditForm extends Component {
@@ -53,7 +52,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.incoming_webhooks.saved"),
+            message: i18n("chat.incoming_webhooks.saved"),
           },
         });
       } else {
@@ -65,7 +64,7 @@ export default class ChatIncomingWebhookEditForm extends Component {
         this.toasts.success({
           duration: 3000,
           data: {
-            message: I18n.t("chat.incoming_webhooks.created"),
+            message: i18n("chat.incoming_webhooks.created"),
           },
         });
 

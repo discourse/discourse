@@ -13,7 +13,7 @@ import LoadMore from "discourse/mixins/load-more";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("ul")
 @classNames("user-stream")
@@ -113,7 +113,7 @@ export default class UserStream extends Component.extend(LoadMore) {
     const stream = this.stream;
 
     this.dialog.yesNoConfirm({
-      message: I18n.t("drafts.remove_confirmation"),
+      message: i18n("drafts.remove_confirmation"),
       didConfirm: () => {
         Draft.clear(draft.draft_key, draft.sequence)
           .then(() => {

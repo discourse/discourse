@@ -280,6 +280,7 @@ ar:
       placeholder_channel: "الدردشة في %{channelName}"
       placeholder_thread: "الدردشة في سلسلة"
       placeholder_users: "الدردشة مع %{commaSeparatedNames}"
+      placeholder_group: "الدردشة في المجموعة"
       placeholder_new_message_disallowed:
         archived: "القناة مؤرشفة، ولا يمكنك إرسال رسائل جديدة الآن."
         closed: "القناة مغلقة، ولا يمكنك إرسال رسائل جديدة الآن."
@@ -568,6 +569,7 @@ ar:
       incoming_webhooks:
         back: "العودة"
         channel_placeholder: "اختيار قناة"
+        channel: "القناة"
         confirm_destroy: "هل تريد بالتأكيد حذف خطاف الويب الوارد هذا؟ لا يمكن التراجع عن هذا الإجراء."
         current_emoji: "الرمز التعبيري الحالي"
         description: "الوصف"

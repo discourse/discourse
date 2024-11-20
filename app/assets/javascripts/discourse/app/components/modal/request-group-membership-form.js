@@ -4,14 +4,14 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class RequestGroupMembershipForm extends Component {
   @tracked loading = false;
   @tracked reason = this.args.model.group.membership_request_template;
 
   get title() {
-    return I18n.t("groups.membership_request.title", {
+    return i18n("groups.membership_request.title", {
       group_name: this.args.model.group.name,
     });
   }

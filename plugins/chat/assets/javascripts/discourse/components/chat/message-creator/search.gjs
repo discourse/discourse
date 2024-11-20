@@ -8,7 +8,7 @@ import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { MODES } from "./constants";
 import ChatablesLoader from "./lib/chatables-loader";
 import List from "./list";
@@ -35,7 +35,7 @@ export default class ChatMessageCreatorSearch extends Component {
       items.push({
         identifier: "new-group",
         type: "list-action",
-        label: I18n.t("chat.new_message_modal.new_group_chat"),
+        label: i18n("chat.new_message_modal.new_group_chat"),
         enabled: true,
         icon: "users",
         id: "new-group-chat",

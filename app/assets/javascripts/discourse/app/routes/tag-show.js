@@ -13,7 +13,7 @@ import {
   findTopicList,
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const NONE = "none";
 const ALL = "all";
@@ -168,33 +168,31 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   titleToken() {
-    const filterText = I18n.t(
-      `filters.${this.navMode.replace("/", ".")}.title`
-    );
+    const filterText = i18n(`filters.${this.navMode.replace("/", ".")}.title`);
     const model = this.currentModel;
 
     const tag = model?.tag?.id;
     if (tag && tag !== NONE) {
       if (model.category) {
-        return I18n.t("tagging.filters.with_category", {
+        return i18n("tagging.filters.with_category", {
           filter: filterText,
           tag: model.tag.id,
           category: model.category.displayName,
         });
       } else {
-        return I18n.t("tagging.filters.without_category", {
+        return i18n("tagging.filters.without_category", {
           filter: filterText,
           tag: model.tag.id,
         });
       }
     } else {
       if (model.category) {
-        return I18n.t("tagging.filters.untagged_with_category", {
+        return i18n("tagging.filters.untagged_with_category", {
           filter: filterText,
           category: model.category.displayName,
         });
       } else {
-        return I18n.t("tagging.filters.untagged_without_category", {
+        return i18n("tagging.filters.untagged_without_category", {
           filter: filterText,
         });
       }

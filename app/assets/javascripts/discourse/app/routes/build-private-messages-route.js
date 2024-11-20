@@ -5,7 +5,7 @@ import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const NEW_FILTER = "new";
 export const UNREAD_FILTER = "unread";
@@ -18,10 +18,7 @@ export default (inboxType, path, filter) => {
     userActionType = UserAction.TYPES.messages_received;
 
     titleToken() {
-      return [
-        I18n.t(`user.messages.${filter}`),
-        I18n.t("user.private_messages"),
-      ];
+      return [i18n(`user.messages.${filter}`), i18n("user.private_messages")];
     }
 
     async model(params = {}) {
@@ -102,10 +99,10 @@ export default (inboxType, path, filter) => {
     }
 
     emptyState() {
-      const title = I18n.t("user.no_messages_title");
+      const title = i18n("user.no_messages_title");
       const body = this.currentUser?.can_send_private_messages
         ? htmlSafe(
-            I18n.t("user.no_messages_body", {
+            i18n("user.no_messages_body", {
               aboutUrl: getURL("/about"),
               icon: iconHTML("envelope"),
             })

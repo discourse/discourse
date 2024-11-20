@@ -9,7 +9,7 @@ import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service modal;
@@ -141,7 +141,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     if (defaultHomepage() === "categories") {
       return;
     }
-    return I18n.t("filters.categories.title");
+    return i18n("filters.categories.title");
   }
 
   setupController(controller) {

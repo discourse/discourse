@@ -6,7 +6,7 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import { mergeSortedLists } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import Topic from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;
@@ -20,7 +20,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.view_all_messages");
+    return i18n("user_menu.view_all_messages");
   }
 
   get showDismiss() {
@@ -28,7 +28,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get dismissTitle() {
-    return I18n.t("user.dismiss_messages_tooltip");
+    return i18n("user.dismiss_messages_tooltip");
   }
 
   get itemsCacheKey() {
@@ -49,7 +49,7 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
   }
 
   get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+    return i18n("notifications.dismiss_confirmation.body.messages", {
       count: this.#unreadMessagesNotifications,
     });
   }

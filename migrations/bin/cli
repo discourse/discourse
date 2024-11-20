@@ -1,23 +1,49 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "thor"
 require_relative "../lib/migrations"
 
+require "colored2"
+require "thor"
+
 module Migrations
-  load_rails_environment
   configure_zeitwerk
   enable_i18n
 
-  class CommandLineInterface < Thor
-    include ::Migrations::CLI::ConvertCommand
-    include ::Migrations::CLI::ImportCommand
-    include ::Migrations::CLI::UploadCommand
+  module CLI
+    class Application < Thor
+      desc "convert [FROM]", "Convert a file"
+      option :settings, type: :string, desc: "Path of settings file", banner: "path"
+      option :reset, type: :boolean, desc: "Reset database before converting data"
+      def convert(converter_type)
+        ::Migrations::CLI::ConvertCommand.new(converter_type, options).execute
+      end
 
-    def self.exit_on_failure?
-      true
+      desc "import", "Import a file"
+      def import
+        ::Migrations::CLI::ImportCommand.new(options).execute
+      end
+
+      desc "upload", "Upload media uploads"
+      option :settings,
+             type: :string,
+             desc: "Uploads settings file path",
+             default: "./migrations/config/upload.yml",
+             aliases: "-s",
+             banner: "path"
+      option :fix_missing, type: :boolean, desc: "Fix missing uploads"
+      option :optimize, type: :boolean, desc: "Optimize uploads"
+      def upload
+        ::Migrations::CLI::UploadCommand.new(options).execute
+      end
+
+      def self.exit_on_failure?
+        true
+      end
     end
   end
-
-  Dir.chdir(Rails.root) { CommandLineInterface.start } # rubocop:disable Discourse/NoChdir
 end
+
+# rubocop:disable Discourse/NoChdir
+Dir.chdir(File.expand_path("../..", __dir__)) { ::Migrations::CLI::Application.start }
+# rubocop:enable Discourse/NoChdir

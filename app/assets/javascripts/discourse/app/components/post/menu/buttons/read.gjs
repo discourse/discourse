@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import DButton from "discourse/components/d-button";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PostMenuReadButton extends Component {
   static shouldRender(args) {

@@ -11,9 +11,8 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import MessageCreator from "discourse/plugins/chat/discourse/components/chat/message-creator";
 import { MODES } from "discourse/plugins/chat/discourse/components/chat/message-creator/constants";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
@@ -29,10 +28,10 @@ export default class ChatRouteChannelInfoMembers extends Component {
   @tracked filter = "";
   @tracked showAddMembers = false;
 
-  addMemberLabel = I18n.t("chat.members_view.add_member");
-  filterPlaceholder = I18n.t("chat.members_view.filter_placeholder");
-  noMembershipsFoundLabel = I18n.t("chat.channel.no_memberships_found");
-  noMembershipsLabel = I18n.t("chat.channel.no_memberships");
+  addMemberLabel = i18n("chat.members_view.add_member");
+  filterPlaceholder = i18n("chat.members_view.filter_placeholder");
+  noMembershipsFoundLabel = i18n("chat.channel.no_memberships_found");
+  noMembershipsLabel = i18n("chat.channel.no_memberships");
 
   onEnter = modifier((element, [callback]) => {
     const handler = (event) => {

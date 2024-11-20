@@ -4,7 +4,7 @@ import { classNameBindings, classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 import FilterForMore from "select-kit/components/filter-for-more";
 import {
@@ -40,6 +40,12 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
 
   @readOnly("tagId") value;
 
+  init() {
+    super.init(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
+  }
+
   @computed("maxTagsInFilterList", "topTags.[]", "mainCollection.[]")
   get shouldShowMoreTags() {
     if (this.selectKit.filter?.length > 0) {
@@ -47,12 +53,6 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     } else {
       return this.topTags.length > this.maxTagsInFilterList;
     }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.insertAfterCollection(MAIN_COLLECTION, MORE_TAGS_COLLECTION);
   }
 
   modifyComponentForCollection(collection) {
@@ -71,15 +71,15 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
 
   modifyNoSelection() {
     if (this.tagId === NONE_TAG) {
-      return this.defaultItem(NO_TAG_ID, I18n.t("tagging.selector_no_tags"));
+      return this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
     } else {
-      return this.defaultItem(ALL_TAGS_ID, I18n.t("tagging.selector_tags"));
+      return this.defaultItem(ALL_TAGS_ID, i18n("tagging.selector_tags"));
     }
   }
 
   modifySelection(content) {
     if (this.tagId === NONE_TAG) {
-      content = this.defaultItem(NO_TAG_ID, I18n.t("tagging.selector_no_tags"));
+      content = this.defaultItem(NO_TAG_ID, i18n("tagging.selector_no_tags"));
     } else if (this.tagId) {
       content = this.defaultItem(this.tagId, this.tagId);
     }
@@ -103,21 +103,21 @@ export default class TagDrop extends ComboBoxComponent.extend(TagsMixin) {
     if (this.tagId) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: I18n.t("tagging.selector_remove_filter"),
+        name: i18n("tagging.selector_remove_filter"),
       });
     }
 
     if (this.tagId !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
-        name: I18n.t("tagging.selector_no_tags"),
+        name: i18n("tagging.selector_no_tags"),
       });
     }
 
     // If there is a single shortcut, we can have a single "remove filter"
     // option
     if (shortcuts.length === 1 && shortcuts[0].id === ALL_TAGS_ID) {
-      shortcuts[0].name = I18n.t("tagging.selector_remove_filter");
+      shortcuts[0].name = i18n("tagging.selector_remove_filter");
     }
 
     return shortcuts;

@@ -1985,7 +1985,7 @@ en:
                 one {# day}
               other {# days}
             }.
-          edit_link_options: "Edit link options."
+          edit_link_options: "Edit link options or send by email."
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -7218,10 +7218,11 @@ en:
 
       emoji:
         title: "Emoji"
-        description: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
-        new: "Add emoji"
-        add: "Add New Emoji"
-        choose_files: "Choose Files"
+        description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
+        no_emoji: "You don't have any custom emoji yet."
+        add: "Add emoji"
+        back: "Back to emoji"
+        choose_files: "Choose files"
         uploading: "Uploading…"
         name: "Name"
         group: "Group"
@@ -7281,7 +7282,7 @@ en:
         destination: "Destination"
         copy_to_clipboard: "Copy Permalink to Clipboard"
         delete_confirm: Are you sure you want to delete this permalink?
-        no_permalinks: "You don't have any permalinks yet. Create a new permalink above to begin seeing a list of your permalinks here."
+        no_permalinks: "You don't have any permalinks yet."
         add: "Add permalink"
         back: "Back to Permalinks"
         more_options: "More options"

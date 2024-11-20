@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "required": [
+    "action",
+    "channel",
+    "message",
+    "user"
+  ],
+  "properties": {
+    "action": {
+      "type": "object",
+      "required": [
+        "action_id",
+        "schema_version",
+        "text",
+        "type"
+      ],
+      "properties": {
+        "action_id": {
+          "type": "string"
+        },
+        "schema_version": {
+          "type": "integer"
+        },
+        "text": {
+          "type": "object",
+          "required": [
+            "text",
+            "type"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "plain_text"
+              ]
+            }
+          }
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "button"
+          ]
+        }
+      }
+    },
+    "channel": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "required": [
+        "id",
+        "text",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "text": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "integer"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "required": [
+        "id",
+        "username"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

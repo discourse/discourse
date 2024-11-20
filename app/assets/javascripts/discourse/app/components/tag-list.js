@@ -3,7 +3,7 @@ import { sort } from "@ember/object/computed";
 import { classNameBindings } from "@ember-decorators/component";
 import Category from "discourse/models/category";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings(
   ":tags-list",
@@ -18,7 +18,7 @@ export default class TagList extends Component {
 
   @discourseComputed("titleKey")
   title(titleKey) {
-    return titleKey && I18n.t(titleKey);
+    return titleKey && i18n(titleKey);
   }
 
   @discourseComputed("categoryId")

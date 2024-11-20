@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { gte } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import MembersCount from "./members-count";
 import MembersSelector from "./members-selector";
 
@@ -49,7 +49,7 @@ export default class AddMembers extends Component {
         groups,
       });
 
-      this.toasts.success({ data: { message: I18n.t("saved") } });
+      this.toasts.success({ data: { message: i18n("saved") } });
       this.router.transitionTo(
         "chat.channel",
         ...this.args.channel.routeModels

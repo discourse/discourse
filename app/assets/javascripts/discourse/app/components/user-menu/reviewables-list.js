@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import getUrl from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
   @service currentUser;
@@ -16,7 +16,7 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.reviewable.view_all");
+    return i18n("user_menu.reviewable.view_all");
   }
 
   get itemsCacheKey() {

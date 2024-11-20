@@ -1709,7 +1709,6 @@ nl:
       location: "Locatie"
       website: "Website"
       email_settings: "E-mailadres"
-      hide_profile_and_presence: "Mijn openbare profiel en aanwezigheidsfuncties verbergen"
       enable_physical_keyboard: "Ondersteuning voor fysiek toetsenbord op iPad inschakelen"
       text_size:
         title: "Tekstgrootte"
@@ -6681,10 +6680,6 @@ nl:
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:
         title: "Emoji"
-        description: "Voeg nieuwe emoji toe die voor iedereen beschikbaar is. Sleep meerdere bestanden tegelijk zonder een naam in te voeren om emoji's te maken op basis van hun bestandsnamen. De geselecteerde groep wordt gebruikt voor alle bestanden die tegelijk worden toegevoegd. Je kunt ook op 'Nieuwe emoji toevoegen' klikken om de bestandskiezer te openen."
-        new: "Toevoegen"
-        add: "Nieuwe emoji toevoegen"
-        choose_files: "Bestanden kiezen"
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
@@ -6732,17 +6727,19 @@ nl:
         category_id: "Categorie-ID"
         category_title: "Categorie"
         tag_name: "Tagnaam"
+        tag_title: "Taggen"
         external_url: "Externe of relatieve URL"
         user_id: "Gebruikers-ID"
+        user_title: "Gebruiker"
         username: "Gebruikersnaam"
         destination: "Bestemming"
         copy_to_clipboard: "Permalink kopiëren naar klembord"
         delete_confirm: Weet je zeker dat je deze permalink wilt verwijderen?
-        no_permalinks: "Je hebt nog geen permanente links. Maak hierboven een nieuwe permanente link om hier een lijst met je permanente links te zien."
+        more_options: "Meer opties"
         form:
           label: "Nieuw:"
-          add: "Toevoegen"
-          filter: "Zoeken (URL of externe URL)"
+          url: "URL"
+          save: "Opslaan"
       reseed:
         action:
           label: "Tekst vervangen…"

@@ -3,7 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -85,7 +85,7 @@ module("Integration | Component | secret-value-list", function (hooks) {
 
     assert.strictEqual(
       this.message,
-      I18n.t("admin.site_settings.secret_list.invalid_input"),
+      i18n("admin.site_settings.secret_list.invalid_input"),
       "it shows validation error"
     );
   });

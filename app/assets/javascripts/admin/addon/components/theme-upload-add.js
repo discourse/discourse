@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
 const SCSS_VARIABLE_NAMES = [
@@ -66,9 +66,9 @@ export default class ThemeUploadAdd extends Component {
     if (!this.name) {
       return;
     } else if (!this.name.match(/^[a-z_][a-z0-9_-]*$/i)) {
-      return I18n.t("admin.customize.theme.variable_name_error.invalid_syntax");
+      return i18n("admin.customize.theme.variable_name_error.invalid_syntax");
     } else if (SCSS_VARIABLE_NAMES.includes(name.toLowerCase())) {
-      return I18n.t("admin.customize.theme.variable_name_error.no_overwrite");
+      return i18n("admin.customize.theme.variable_name_error.no_overwrite");
     } else if (
       this.args.model.themeFields.some(
         (tf) =>
@@ -76,7 +76,7 @@ export default class ThemeUploadAdd extends Component {
           this.name === tf.name
       )
     ) {
-      return I18n.t("admin.customize.theme.variable_name_error.must_be_unique");
+      return i18n("admin.customize.theme.variable_name_error.must_be_unique");
     }
   }
 

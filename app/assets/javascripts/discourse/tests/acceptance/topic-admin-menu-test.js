@@ -5,7 +5,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Admin Menu Anonymous Users", function () {
   test("Enter as a regular user", async function (assert) {
@@ -67,7 +67,7 @@ acceptance("Topic - Admin Menu", function (needs) {
       .exists("The icon was rendered");
     assert
       .dom(".extra-button .d-button-label")
-      .hasText(I18n.t("yes_value"), "The label was rendered");
+      .hasText(i18n("yes_value"), "The label was rendered");
     await click(".extra-button");
     assert.ok(this.actionCalled, "The action was called");
   });

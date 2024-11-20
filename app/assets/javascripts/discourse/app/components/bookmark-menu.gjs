@@ -13,8 +13,7 @@ import {
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class BookmarkMenu extends Component {
@@ -55,15 +54,15 @@ export default class BookmarkMenu extends Component {
 
   get buttonTitle() {
     if (!this.existingBookmark) {
-      return I18n.t("bookmarks.not_bookmarked");
+      return i18n("bookmarks.not_bookmarked");
     } else {
       if (this.existingBookmark.reminderAt) {
-        return I18n.t("bookmarks.created_with_reminder_generic", {
+        return i18n("bookmarks.created_with_reminder_generic", {
           date: this.existingBookmark.formattedReminder(this.timezone),
           name: this.existingBookmark.name || "",
         });
       } else {
-        return I18n.t("bookmarks.created_generic", {
+        return i18n("bookmarks.created_generic", {
           name: this.existingBookmark.name || "",
         });
       }
@@ -107,9 +106,9 @@ export default class BookmarkMenu extends Component {
     }
 
     if (this.existingBookmark) {
-      return I18n.t("bookmarked.edit_bookmark");
+      return i18n("bookmarked.edit_bookmark");
     } else {
-      return I18n.t("bookmarked.title");
+      return i18n("bookmarked.title");
     }
   }
 
@@ -118,7 +117,7 @@ export default class BookmarkMenu extends Component {
     if (!option.time) {
       return "";
     }
-    return option.time.format(I18n.t(option.timeFormatKey));
+    return option.time.format(i18n(option.timeFormatKey));
   }
 
   @action
@@ -134,7 +133,7 @@ export default class BookmarkMenu extends Component {
         this.toasts.success({
           duration: 1500,
           views: ["mobile"],
-          data: { message: I18n.t("bookmarks.bookmarked_success") },
+          data: { message: i18n("bookmarks.bookmarked_success") },
         });
       })
       .catch((error) => popupAjaxError(error))
@@ -174,7 +173,7 @@ export default class BookmarkMenu extends Component {
         duration: 1500,
         data: {
           icon: "trash-can",
-          message: I18n.t("bookmarks.deleted_bookmark_success"),
+          message: i18n("bookmarks.deleted_bookmark_success"),
         },
       });
     } catch (error) {
@@ -202,7 +201,7 @@ export default class BookmarkMenu extends Component {
         this.toasts.success({
           duration: 1500,
           views: ["mobile"],
-          data: { message: I18n.t("bookmarks.reminder_set_success") },
+          data: { message: i18n("bookmarks.reminder_set_success") },
         });
       } catch (error) {
         popupAjaxError(error);
@@ -266,7 +265,7 @@ export default class BookmarkMenu extends Component {
                 @icon="pencil"
                 @label="edit"
                 @action={{this.onEditBookmark}}
-                @class="bookmark-menu__row-btn btn-transparent"
+                class="bookmark-menu__row-btn btn-transparent"
               />
             </dropdown.item>
             <dropdown.item
@@ -279,7 +278,7 @@ export default class BookmarkMenu extends Component {
                 @icon="trash-can"
                 @label="delete"
                 @action={{this.onRemoveBookmark}}
-                @class="bookmark-menu__row-btn btn-transparent btn-danger"
+                class="bookmark-menu__row-btn btn-transparent btn-danger"
               />
             </dropdown.item>
 
@@ -299,7 +298,7 @@ export default class BookmarkMenu extends Component {
                   @label={{option.label}}
                   @translatedTitle={{this.reminderShortcutTimeTitle option}}
                   @action={{fn this.onChooseReminderOption option}}
-                  @class="bookmark-menu__row-btn btn-transparent"
+                  class="bookmark-menu__row-btn btn-transparent"
                 />
               </dropdown.item>
             {{/each}}

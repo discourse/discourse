@@ -2888,8 +2888,6 @@ sq:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Shto"
-        add: "Add New Emoji"
         name: "Emri"
         group: "Grupi"
         image: "Imazh"
@@ -2909,12 +2907,13 @@ sq:
         post_title: "Postim"
         category_id: "ID e kategorisë"
         category_title: "Kategoria"
+        user_title: "User"
         username: "Emri i përdoruesit"
         delete_confirm: Are you sure you want to delete this permalink?
         form:
           label: "E Re:"
-          add: "Shto"
-          filter: "Search (URL or External URL)"
+          url: "URL"
+          save: "Ruaj"
       reseed:
         modal:
           categories: "Categories"

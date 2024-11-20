@@ -2,13 +2,13 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { buildPermissionDescription } from "discourse/models/permission-type";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupPermissions extends DiscourseRoute {
   @service router;
 
   titleToken() {
-    return I18n.t("groups.permissions.title");
+    return i18n("groups.permissions.title");
   }
 
   model() {

@@ -1,7 +1,7 @@
 import PreloadStore from "discourse/lib/preload-store";
 import Badge from "discourse/models/badge";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class BadgesIndex extends DiscourseRoute {
   model() {
@@ -15,6 +15,6 @@ export default class BadgesIndex extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("badges.title");
+    return i18n("badges.title");
   }
 }

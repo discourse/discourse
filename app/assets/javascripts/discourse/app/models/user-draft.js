@@ -7,7 +7,7 @@ import {
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserDraft extends RestModel {
   @service currentUser;
@@ -35,9 +35,9 @@ export default class UserDraft extends RestModel {
   draftType(draftKey) {
     switch (draftKey) {
       case NEW_TOPIC_KEY:
-        return I18n.t("drafts.new_topic");
+        return i18n("drafts.new_topic");
       case NEW_PRIVATE_MESSAGE_KEY:
-        return I18n.t("drafts.new_private_message");
+        return i18n("drafts.new_private_message");
       default:
         return false;
     }

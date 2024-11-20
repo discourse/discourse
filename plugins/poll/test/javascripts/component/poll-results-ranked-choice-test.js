@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 const RANKED_CHOICE_OUTCOME = {
   tied: false,
@@ -49,7 +49,7 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
 
     assert.strictEqual(
       query("span.poll-results-ranked-choice-info").textContent.trim(),
-      I18n.t("poll.ranked_choice.winner", {
+      i18n("poll.ranked_choice.winner", {
         count: this.rankedChoiceOutcome.round_activity.length,
         winner: this.rankedChoiceOutcome.winning_candidate.html,
       }),

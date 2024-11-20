@@ -4,7 +4,7 @@ import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 
 class TestClass {
@@ -95,7 +95,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.mailing_list_mode"),
+          i18n("topic.notifications.reasons.mailing_list_mode"),
           "mailing_list_mode enabled for the user shows unique text"
         );
     });
@@ -114,7 +114,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.3"),
+          i18n("topic.notifications.reasons.3"),
           "fallback to regular level translation if reason does not exist"
         );
     });
@@ -134,7 +134,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.2_8"),
+          i18n("topic.notifications.reasons.2_8"),
           "use 2_8 notification if user is still tracking category"
         );
     });
@@ -154,7 +154,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.2_8_stale"),
+          i18n("topic.notifications.reasons.2_8_stale"),
           "use _stale notification if user is no longer tracking category"
         );
     });
@@ -174,7 +174,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.3_6"),
+          i18n("topic.notifications.reasons.3_6"),
           "use 3_6 notification if user is still watching category"
         );
     });
@@ -194,7 +194,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.3_6_stale"),
+          i18n("topic.notifications.reasons.3_6_stale"),
           "use _stale notification if user is no longer watching category"
         );
     });
@@ -214,7 +214,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.3_10"),
+          i18n("topic.notifications.reasons.3_10"),
           "use 3_10 notification if user is still watching tag"
         );
     });
@@ -234,7 +234,7 @@ module(
       assert
         .dom(".topic-notifications-button .text")
         .hasText(
-          I18n.t("topic.notifications.reasons.3_10_stale"),
+          i18n("topic.notifications.reasons.3_10_stale"),
           "use _stale notification if user is no longer watching tag"
         );
     });

@@ -6,7 +6,7 @@ import TagUpload from "discourse/components/modal/tag-upload";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TagsIndexController extends Controller {
   @service dialog;
@@ -83,24 +83,24 @@ export default class TagsIndexController extends Controller {
         const tags = result["tags"];
 
         if (tags.length === 0) {
-          this.dialog.alert(I18n.t("tagging.delete_no_unused_tags"));
+          this.dialog.alert(i18n("tagging.delete_no_unused_tags"));
           return;
         }
 
         const joinedTags = tags
           .slice(0, displayN)
-          .join(I18n.t("tagging.tag_list_joiner"));
+          .join(i18n("tagging.tag_list_joiner"));
         const more = Math.max(0, tags.length - displayN);
 
         const tagsString =
           more === 0
             ? joinedTags
-            : I18n.t("tagging.delete_unused_confirmation_more_tags", {
+            : i18n("tagging.delete_unused_confirmation_more_tags", {
                 count: more,
                 tags: joinedTags,
               });
 
-        const message = I18n.t("tagging.delete_unused_confirmation", {
+        const message = i18n("tagging.delete_unused_confirmation", {
           count: tags.length,
           tags: tagsString,
         });

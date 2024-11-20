@@ -11,7 +11,7 @@ import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {
@@ -53,7 +53,7 @@ export default class BookmarkList extends Component {
         return deleteBookmark();
       }
       this.dialog.deleteConfirm({
-        message: I18n.t("bookmarks.confirm_delete"),
+        message: i18n("bookmarks.confirm_delete"),
         didConfirm: () => deleteBookmark(),
         didCancel: () => resolve(false),
       });

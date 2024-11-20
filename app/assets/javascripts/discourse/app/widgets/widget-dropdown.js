@@ -2,7 +2,7 @@ import { schedule } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import hbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /*
 
@@ -93,7 +93,7 @@ export const WidgetDropdownHeaderClass = {
   `,
 
   _buildLabel(attrs) {
-    return attrs.translatedLabel ? attrs.translatedLabel : I18n.t(attrs.label);
+    return attrs.translatedLabel ? attrs.translatedLabel : i18n(attrs.label);
   },
 };
 
@@ -111,7 +111,7 @@ export const WidgetDropdownItemClass = {
           ? attrs.item.html
           : attrs.item.translatedLabel
           ? attrs.item.translatedLabel
-          : I18n.t(attrs.item.label),
+          : i18n(attrs.item.label),
     };
   },
 

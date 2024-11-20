@@ -6,7 +6,7 @@ import { observes } from "@ember-decorators/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Permalink from "admin/models/permalink";
 
 export default class AdminPermalinksIndexController extends Controller {
@@ -37,7 +37,7 @@ export default class AdminPermalinksIndexController extends Controller {
     this.toasts.success({
       duration: 3000,
       data: {
-        message: I18n.t("admin.permalink.copy_success"),
+        message: i18n("admin.permalink.copy_success"),
       },
     });
   }
@@ -45,13 +45,13 @@ export default class AdminPermalinksIndexController extends Controller {
   @action
   destroyRecord(permalink) {
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.permalink.delete_confirm"),
+      message: i18n("admin.permalink.delete_confirm"),
       didConfirm: async () => {
         try {
           await this.store.destroyRecord("permalink", permalink);
           this.model.removeObject(permalink);
         } catch {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       },
     });

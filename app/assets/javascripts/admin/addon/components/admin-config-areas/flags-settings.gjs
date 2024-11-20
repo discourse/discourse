@@ -4,8 +4,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { ajax } from "discourse/lib/ajax";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import AdminFilteredSiteSettings from "admin/components/admin-filtered-site-settings";
 import SiteSetting from "admin/models/site-setting";
 

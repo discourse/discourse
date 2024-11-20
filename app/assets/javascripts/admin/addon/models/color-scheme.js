@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ColorSchemeColor from "admin/models/color-scheme-color";
 
 class ColorSchemes extends ArrayProxy {}
@@ -117,7 +117,7 @@ export default class ColorScheme extends EmberObject {
       return;
     }
 
-    this.setProperties({ savingStatus: I18n.t("saving"), saving: true });
+    this.setProperties({ savingStatus: i18n("saving"), saving: true });
 
     const data = {};
     if (!opts || !opts.enabledOnly) {
@@ -150,7 +150,7 @@ export default class ColorScheme extends EmberObject {
         this.colors.forEach((c) => c.startTrackingChanges());
       }
 
-      this.setProperties({ savingStatus: I18n.t("saved"), saving: false });
+      this.setProperties({ savingStatus: i18n("saved"), saving: false });
       this.notifyPropertyChange("description");
     });
   }

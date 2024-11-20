@@ -1,7 +1,7 @@
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import UserBadge from "discourse/models/user-badge";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserBadges extends DiscourseRoute.extend(
   ViewingActionType
@@ -21,6 +21,6 @@ export default class UserBadges extends DiscourseRoute.extend(
   }
 
   titleToken() {
-    return I18n.t("badges.title");
+    return i18n("badges.title");
   }
 }

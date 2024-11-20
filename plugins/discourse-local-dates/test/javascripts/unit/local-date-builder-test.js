@@ -1,5 +1,5 @@
 import QUnit, { module, test } from "qunit";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import freezeTime from "../helpers/freeze-time";
 import LocalDateBuilder from "../lib/local-date-builder";
 
@@ -283,7 +283,7 @@ module("Unit | Library | local-date-builder", function () {
           timezone: PARIS,
         },
         {
-          formatted: I18n.t(
+          formatted: i18n(
             "discourse_local_dates.relative_dates.countdown.passed"
           ),
         },

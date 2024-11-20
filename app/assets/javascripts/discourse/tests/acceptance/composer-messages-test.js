@@ -8,7 +8,7 @@ import {
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import pretender, { response } from "../helpers/create-pretender";
 
 acceptance("Composer - Messages", function (needs) {
@@ -45,7 +45,7 @@ acceptance("Composer - Messages", function (needs) {
     assert.dom(".composer-popup").exists("shows composer warning message");
 
     assert.dom(".composer-popup").includesHtml(
-      I18n.t("composer.user_not_seen_in_a_while.single", {
+      i18n("composer.user_not_seen_in_a_while.single", {
         usernames: ['<a class="mention" href="/u/charlie">@charlie</a>'],
         time_ago: "1 year ago",
       }),
@@ -95,7 +95,7 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
     await fillIn(".d-editor-input", "Mention @staff");
     assert.dom(".composer-popup").exists("shows composer warning message");
     assert.dom(".composer-popup").includesHtml(
-      I18n.t("composer.cannot_see_group_mention.not_allowed", {
+      i18n("composer.cannot_see_group_mention.not_allowed", {
         group: "staff",
       }),
       "warning message has correct body"
@@ -112,7 +112,7 @@ acceptance("Composer - Messages - Cannot see group", function (needs) {
     await fillIn(".d-editor-input", "Mention @staff2");
     assert.dom(".composer-popup").exists("shows composer warning message");
     assert.dom(".composer-popup").includesHtml(
-      I18n.t("composer.cannot_see_group_mention.some_not_allowed", {
+      i18n("composer.cannot_see_group_mention.some_not_allowed", {
         group: "staff2",
         count: 10,
       }),
@@ -234,13 +234,13 @@ acceptance("Composer - Messages - Private Messages", function (needs) {
     assert
       .dom(".composer-popup")
       .includesHtml(
-        I18n.t("composer.yourself_confirm.title"),
+        i18n("composer.yourself_confirm.title"),
         "warning message has correct title"
       );
     assert
       .dom(".composer-popup")
       .includesHtml(
-        I18n.t("composer.yourself_confirm.body"),
+        i18n("composer.yourself_confirm.body"),
         "warning message has correct body"
       );
   });

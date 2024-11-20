@@ -3,7 +3,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import Category from "./category";
 
 export const PENDING = 0;
@@ -31,7 +31,7 @@ export default class Reviewable extends RestModel {
 
   @discourseComputed("resolvedType")
   humanType(resolvedType) {
-    return I18n.t(`review.types.${underscore(resolvedType)}.title`, {
+    return i18n(`review.types.${underscore(resolvedType)}.title`, {
       defaultValue: "",
     });
   }
@@ -43,7 +43,7 @@ export default class Reviewable extends RestModel {
 
   @discourseComputed("resolvedType")
   humanNoun(resolvedType) {
-    return I18n.t(`review.types.${underscore(resolvedType)}.noun`, {
+    return i18n(`review.types.${underscore(resolvedType)}.noun`, {
       defaultValue: "reviewable",
     });
   }
@@ -55,7 +55,7 @@ export default class Reviewable extends RestModel {
 
     if (uniqueReviewableScores.length === 1) {
       if (uniqueReviewableScores[0].score_type.type === "notify_moderators") {
-        return I18n.t("review.context_question.something_else_wrong", {
+        return i18n("review.context_question.something_else_wrong", {
           reviewable_type: humanNoun,
         });
       }
@@ -65,10 +65,10 @@ export default class Reviewable extends RestModel {
       uniqueReviewableScores
         .map((score) => score.score_type.title.toLowerCase())
         .uniq(),
-      I18n.t("review.context_question.delimiter")
+      i18n("review.context_question.delimiter")
     );
 
-    return I18n.t("review.context_question.is_this_post", {
+    return i18n("review.context_question.is_this_post", {
       reviewable_human_score_types: listOfQuestions,
       reviewable_type: humanNoun,
     });

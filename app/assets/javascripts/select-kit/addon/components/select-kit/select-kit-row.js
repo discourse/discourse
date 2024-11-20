@@ -10,7 +10,7 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @classNames("select-kit-row")
@@ -97,7 +97,7 @@ export default class SelectKitRow extends Component.extend(UtilsMixin) {
       this.getName(this.selectKit.noneItem) !== this.rowName &&
       this.getName(this.selectKit.newItem) === this.rowName
     ) {
-      return I18n.t("select_kit.create", { content: label });
+      return i18n("select_kit.create", { content: label });
     }
     return label;
   }

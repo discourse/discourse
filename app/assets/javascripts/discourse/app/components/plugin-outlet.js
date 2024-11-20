@@ -141,9 +141,11 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     });
     return this.#parentView;
   }
+
   set parentView(value) {
     this.#parentView = value;
   }
+
   get _parentView() {
     return this.parentView;
   }
@@ -166,9 +168,11 @@ class PluginOutletWithTagNameWrapper extends ClassicComponent {
       return this.#parentView.parentView;
     }
   }
+
   set parentView(value) {
     this.#parentView = value;
   }
+
   get _parentView() {
     return this.parentView;
   }

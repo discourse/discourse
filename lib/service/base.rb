@@ -121,6 +121,10 @@ module Service
         const_set("Options", klass)
         steps << OptionsStep.new(:default, class_name: klass)
       end
+
+      def try(*exceptions, &block)
+        steps << TryStep.new(exceptions, &block)
+      end
     end
 
     # @!visibility private
@@ -140,18 +144,18 @@ module Service
           raise "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
         args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
-        context[result_key] = Context.build(object: object)
+        context[result_key] = Context.build({ object: }.compact)
         instance.instance_exec(**args, &method)
+      end
+
+      def result_key
+        "result.#{type}.#{name}"
       end
 
       private
 
       def type
         self.class.name.split("::").last.downcase.sub(/^(\w+)step$/, "\\1")
-      end
-
-      def result_key
-        "result.#{type}.#{name}"
       end
     end
 
@@ -241,6 +245,33 @@ module Service
 
       def call(instance, context)
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
+      end
+    end
+
+    # @!visibility private
+    class TryStep < Step
+      include StepsHelpers
+
+      attr_reader :steps, :exceptions
+
+      def initialize(exceptions, &block)
+        @name = "default"
+        @steps = []
+        @exceptions = exceptions.presence || [StandardError]
+        instance_exec(&block)
+      end
+
+      def call(instance, context)
+        context[result_key] = Context.build
+        steps.each do |step|
+          @current_step = step
+          step.call(instance, context)
+        end
+      rescue *exceptions => e
+        raise e if e.is_a?(Failure)
+        context[@current_step.result_key].fail(raised_exception?: true, exception: e)
+        context[result_key].fail(exception: e)
+        context.fail!
       end
     end
 

@@ -2800,7 +2800,6 @@ id:
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"
       emoji:
-        new: "Menambahkan"
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"
@@ -2812,10 +2811,11 @@ id:
         topic_title: "Topik"
         post_title: "Postingan"
         category_title: "Kategori"
+        user_title: "Pengguna"
         username: "Nama Pengguna"
         form:
           label: "Baru:"
-          add: "Menambahkan"
+          save: "Simpan"
       reseed:
         modal:
           categories: "Kategori"

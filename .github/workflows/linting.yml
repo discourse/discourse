@@ -63,13 +63,9 @@ jobs:
           set -E
           bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake') $(git ls-files '*.thor')
 
-      - name: ESLint (core)
+      - name: ESLint
         if: ${{ !cancelled() }}
         run: pnpm lint:js
-
-      - name: ESLint (core plugins)
-        if: ${{ !cancelled() }}
-        run: pnpm lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}

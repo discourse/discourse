@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class WebhookEvents extends Component {
   @service messageBus;
@@ -56,11 +56,11 @@ export default class WebhookEvents extends Component {
     return [
       {
         id: "successful",
-        name: I18n.t("admin.web_hooks.events.filter_status.successful"),
+        name: i18n("admin.web_hooks.events.filter_status.successful"),
       },
       {
         id: "failed",
-        name: I18n.t("admin.web_hooks.events.filter_status.failed"),
+        name: i18n("admin.web_hooks.events.filter_status.failed"),
       },
     ];
   }
@@ -152,15 +152,13 @@ export default class WebhookEvents extends Component {
   @action
   async redeliverFailed() {
     if (!this.failedEventIds.length) {
-      this.dialog.alert(
-        I18n.t("admin.web_hooks.events.no_events_to_redeliver")
-      );
+      this.dialog.alert(i18n("admin.web_hooks.events.no_events_to_redeliver"));
       this.redeliverEnabled = false;
       return;
     }
 
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.web_hooks.events.redeliver_failed_confirm", {
+      message: i18n("admin.web_hooks.events.redeliver_failed_confirm", {
         count: this.failedEventIds.length,
       }),
       didConfirm: async () => {
@@ -176,7 +174,7 @@ export default class WebhookEvents extends Component {
             });
           } else {
             this.dialog.alert(
-              I18n.t("admin.web_hooks.events.no_events_to_redeliver")
+              i18n("admin.web_hooks.events.no_events_to_redeliver")
             );
           }
         } catch (error) {

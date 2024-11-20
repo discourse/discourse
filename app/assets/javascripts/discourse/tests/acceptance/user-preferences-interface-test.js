@@ -6,7 +6,7 @@ import Site from "discourse/models/site";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();
@@ -99,7 +99,7 @@ acceptance("User Preferences - Interface", function (needs) {
     );
     assert.strictEqual(
       selectKit(".light-color-scheme .select-kit").header().label(),
-      I18n.t("user.color_schemes.default_description")
+      i18n("user.color_schemes.default_description")
     );
   });
 
@@ -240,7 +240,7 @@ acceptance(
       assert.strictEqual(dropdownObject.header().value(), null);
       assert.strictEqual(
         dropdownObject.header().label(),
-        I18n.t("user.color_schemes.default_description")
+        i18n("user.color_schemes.default_description")
       );
 
       await dropdownObject.expand();

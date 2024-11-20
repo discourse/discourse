@@ -43,6 +43,29 @@ export default class Chat extends Service {
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
 
+  init() {
+    super.init(...arguments);
+
+    if (this.userCanChat) {
+      this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.userCanChat) {
+      this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
+    }
+  }
+
   get activeChannel() {
     return this._activeChannel;
   }
@@ -91,20 +114,6 @@ export default class Chat extends Service {
       this._activeMessage = hash;
     } else {
       this._activeMessage = null;
-    }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    if (this.userCanChat) {
-      this.presenceChannel = this.presence.getChannel("/chat/online");
-
-      onPresenceChange({
-        callback: this.onPresenceChangeCallback,
-        browserHiddenTime: 150000,
-        userUnseenTime: 150000,
-      });
     }
   }
 
@@ -243,15 +252,6 @@ export default class Chat extends Service {
     this.chatTrackingStateManager.setupWithPreloadedState(
       channelsView.tracking
     );
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this.userCanChat) {
-      this.chatSubscriptionsManager.stopChannelsSubscriptions();
-      removeOnPresenceChange(this.onPresenceChangeCallback);
-    }
   }
 
   updatePresence() {

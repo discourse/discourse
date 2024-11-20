@@ -7,6 +7,7 @@ export default class UserMenuBaseItem {
     this.site = site;
     this.siteSettings = siteSettings;
   }
+
   get className() {}
 
   get linkHref() {

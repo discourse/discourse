@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
   setupRenderingTest(hooks);
@@ -17,7 +17,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     await render(hbs`<ChatComposerUpload @upload={{this.upload}} />`);
 
     assert.dom(".upload-progress[value='50']").exists();
-    assert.dom(".uploading").hasText(I18n.t("uploading"));
+    assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
   test("image - uploading in progress", async function (assert) {
@@ -31,7 +31,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
 
     assert.dom(".d-icon-far-image").exists();
     assert.dom(".upload-progress[value='78']").exists();
-    assert.dom(".uploading").hasText(I18n.t("uploading"));
+    assert.dom(".uploading").hasText(i18n("uploading"));
   });
 
   test("image - preprocessing upload in progress", async function (assert) {
@@ -44,7 +44,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
 
     await render(hbs`<ChatComposerUpload @upload={{this.upload}} />`);
 
-    assert.dom(".processing").hasText(I18n.t("processing"));
+    assert.dom(".processing").hasText(i18n("processing"));
   });
 
   test("file - upload complete", async function (assert) {

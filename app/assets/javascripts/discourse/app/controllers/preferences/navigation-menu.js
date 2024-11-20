@@ -2,12 +2,12 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends Controller {
   @tracked saved = false;
 
-  subpageTitle = I18n.t("user.preferences_nav.navigation_menu");
+  subpageTitle = i18n("user.preferences_nav.navigation_menu");
 
   saveAttrNames = [
     "sidebar_link_to_filtered_list",

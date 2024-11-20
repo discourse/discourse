@@ -5,7 +5,7 @@ import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("span")
 export default class AvatarUploader extends Component {
@@ -39,8 +39,8 @@ export default class AvatarUploader extends Component {
   @discourseComputed("uppyUpload.uploading", "uppyUpload.uploadProgress")
   uploadLabel() {
     return this.uppyUpload.uploading
-      ? `${I18n.t("uploading")} ${this.uppyUpload.uploadProgress}%`
-      : I18n.t("upload");
+      ? `${i18n("uploading")} ${this.uppyUpload.uploadProgress}%`
+      : i18n("upload");
   }
 
   @action

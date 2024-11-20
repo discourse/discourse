@@ -8,7 +8,7 @@ import { isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL, { samePrefix } from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function isValidLink(link) {
   if (link instanceof jQuery) {
@@ -105,7 +105,7 @@ export default {
         !User.current()
       ) {
         const dialog = getOwnerWithFallback(this).lookup("service:dialog");
-        dialog.alert(I18n.t("post.errors.attachment_download_requires_login"));
+        dialog.alert(i18n("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
         const newWindow = window.open(href, "_blank");
         newWindow.opener = null;

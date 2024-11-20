@@ -2290,7 +2290,6 @@ tr_TR:
     disable_mailing_list_mode: "Kullanıcıların posta listesi modunu etkinleştirmesine izin vermeyin (herhangi bir posta listesi e-postasının gönderilmesini engeller)."
     default_email_previous_replies: "Önceki yanıtları varsayılan olarak e-postalara dahil edin."
     default_email_in_reply_to: "Yanıtlanan gönderinin alıntısını varsayılan olarak e-postalara ekleyin."
-    default_hide_profile_and_presence: "Kullanıcı genel profilini ve varlık özelliklerini varsayılan olarak gizleyin."
     default_other_new_topic_duration_minutes: "Bir konunun yeni olarak kabul edildiği global varsayılan koşul."
     default_other_auto_track_topics_after_msecs: "Bir konunun otomatik olarak izlenmesinden önceki global varsayılan süre."
     default_other_notification_level_when_replying: "Kullanıcı bir konuya yanıt verdiğinde genel varsayılan bildirim seviyesi."
