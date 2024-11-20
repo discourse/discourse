@@ -1,4 +1,8 @@
-<div class={{this.classNames}} {{did-insert this.setupEventListeners}}>
+<div
+  class={{this.classNames}}
+  {{did-insert this.setupEventListeners}}
+  {{on "keydown" this.onKeydown}}
+>
   <div class="search-input">
     {{#if this.search.inTopicContext}}
       <DButton
