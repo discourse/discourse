@@ -16,7 +16,11 @@ class User::BulkDestroy
   private
 
   def fetch_users(params:)
-    User.where(id: params.user_ids.to_a)
+    ids = params.user_ids.to_a
+    # this order cluase ensures we retrieve the users in the same order as the
+    # IDs in the param. we do this to ensure the users are deleted in the same
+    # order as they're selected in the UI
+    User.where(id: ids).order(DB.sql_fragment("array_position(ARRAY[?], users.id)", ids))
   end
 
   def can_delete_users(guardian:, users:)
@@ -24,12 +28,42 @@ class User::BulkDestroy
   end
 
   def delete(users:, guardian:)
-    users.each do |u|
-      UserDestroyer.new(guardian.user).destroy(
-        u,
-        delete_posts: true,
-        context: I18n.t("staff_action_logs.bulk_user_delete", users: users.map(&:id).inspect),
+    users.each.with_index do |u, index|
+      position = index + 1
+      success =
+        UserDestroyer.new(guardian.user).destroy(
+          u,
+          delete_posts: true,
+          prepare_for_destroy: true,
+          context: I18n.t("staff_action_logs.bulk_user_delete", users: users.map(&:id).inspect),
+        )
+
+      if success
+        publish_progress(
+          guardian.user,
+          { position:, username: u.username, total: users.size, success: true },
+        )
+      else
+        publish_progress(
+          guardian.user,
+          {
+            position:,
+            username: u.username,
+            total: users.size,
+            failed: true,
+            error: u.errors.full_messages.join(", "),
+          },
+        )
+      end
+    rescue => err
+      publish_progress(
+        guardian.user,
+        { position:, username: u.username, total: users.size, failed: true, error: err.message },
       )
     end
+  end
+
+  def publish_progress(actor, data)
+    ::MessageBus.publish("/bulk-user-delete", data, user_ids: [actor.id])
   end
 end

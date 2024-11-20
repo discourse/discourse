@@ -414,6 +414,8 @@ class Admin::UsersController < Admin::StaffController
         on_failed_policy(:can_delete_users) do
           render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
         end
+
+        on_model_not_found(:users) { render json: failed_json, status: 404 }
       end
     end
   end

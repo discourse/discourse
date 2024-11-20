@@ -2,25 +2,25 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { observes } from "@ember-decorators/object";
 import { computedI18n } from "discourse/lib/computed";
-import { ajax } from "discourse/lib/ajax";
-import { extractError } from "discourse/lib/ajax-error";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
+import BulkUserDeleteConfirmation from "admin/components/bulk-user-delete-confirmation";
 import AdminUser from "admin/models/admin-user";
 
 export default class AdminUsersListShowController extends Controller.extend(
   CanCheckEmails
 ) {
   @service dialog;
+  @service modal;
 
   @tracked bulkSelect = false;
   @tracked displayBulkActions = false;
-  @tracked bulkSelectedUsers = null;
+  @tracked bulkSelectedUserIdsSet = new Set();
+  @tracked bulkSelectedUsersMap = {};
 
   query = null;
   order = null;
@@ -54,11 +54,6 @@ export default class AdminUsersListShowController extends Controller.extend(
     }
 
     return colCount;
-  }
-
-  @observes("listFilter")
-  _filterUsers() {
-    discourseDebounce(this, this.resetFilters, INPUT_DELAY);
   }
 
   resetFilters() {
@@ -97,6 +92,12 @@ export default class AdminUsersListShowController extends Controller.extend(
   }
 
   @action
+  onListFilterChange(event) {
+    this.set("listFilter", event.target.value);
+    discourseDebounce(this, this.resetFilters, INPUT_DELAY);
+  }
+
+  @action
   loadMore() {
     this._page += 1;
     this._refreshUsers();
@@ -120,48 +121,36 @@ export default class AdminUsersListShowController extends Controller.extend(
   toggleBulkSelect() {
     this.bulkSelect = !this.bulkSelect;
     this.displayBulkActions = false;
-    this.bulkSelectedUsers = null;
+    this.bulkSelectedUsersMap = {};
+    this.bulkSelectedUserIdsSet = new Set();
   }
 
   @action
   bulkSelectItemToggle(userId, event) {
-    if (!this.bulkSelectedUsers) {
-      this.bulkSelectedUsers = {};
-    }
-
     if (event.target.checked) {
-      this.bulkSelectedUsers[userId] = 1;
+      this.bulkSelectedUserIdsSet.add(userId);
+      this.bulkSelectedUsersMap[userId] = 1;
     } else {
-      delete this.bulkSelectedUsers[userId];
+      this.bulkSelectedUserIdsSet.delete(userId);
+      delete this.bulkSelectedUsersMap[userId];
     }
-    this.displayBulkActions = Object.keys(this.bulkSelectedUsers).length > 0;
+    this.displayBulkActions = this.bulkSelectedUserIdsSet.size > 0;
+  }
+
+  @bind
+  async afterBulkDelete() {
+    await this.resetFilters();
+    this.bulkSelectedUsersMap = {};
+    this.bulkSelectedUserIdsSet = new Set();
+    this.displayBulkActions = false;
   }
 
   @action
-  performBulkDelete() {
-    const userIds = Object.keys(this.bulkSelectedUsers);
-    const count = userIds.length;
-    this.dialog.deleteConfirm({
-      title: I18n.t("admin.users.bulk_actions.confirm_delete_title", {
-        count,
-      }),
-      message: I18n.t("admin.users.bulk_actions.confirm_delete_body", {
-        count,
-      }),
-      confirmButtonClass: "btn-danger",
-      confirmButtonIcon: "trash-can",
-      didConfirm: async () => {
-        try {
-          await ajax("/admin/users/destroy-bulk.json", {
-            type: "DELETE",
-            data: { user_ids: userIds },
-          });
-          await this.resetFilters();
-          this.bulkSelectedUsers = null;
-          this.displayBulkActions = false;
-        } catch (err) {
-          this.dialog.alert(extractError(err));
-        }
+  openBulkDeleteConfirmation() {
+    this.modal.show(BulkUserDeleteConfirmation, {
+      model: {
+        userIds: Array.from(this.bulkSelectedUserIdsSet),
+        afterBulkDelete: this.afterBulkDelete,
       },
     });
   }

@@ -21,10 +21,12 @@
 
 <div class="admin-users-list__controls">
   <div class="username">
-    <TextField
-      @value={{this.listFilter}}
-      @placeholder={{this.searchHint}}
-      @title={{this.searchHint}}
+    <input
+      type="text"
+      dir="auto"
+      placeholder={{this.searchHint}}
+      title={{this.searchHint}}
+      {{on "input" this.onListFilterChange}}
     />
   </div>
   {{#if this.displayBulkActions}}
@@ -41,9 +43,11 @@
           <DropdownMenu as |dropdown|>
             <dropdown.item>
               <DButton
-                @translatedLabel={{i18n "admin.users.bulk_actions.delete"}}
+                @translatedLabel={{i18n
+                  "admin.users.bulk_actions.delete.label"
+                }}
                 @icon="trash-can"
-                @action={{this.performBulkDelete}}
+                @action={{this.openBulkDeleteConfirmation}}
                 class="bulk-delete btn-danger"
               />
             </dropdown.item>
@@ -173,12 +177,38 @@
           >
             <div class="directory-table__cell username">
               {{#if this.bulkSelect}}
-                <input
-                  type="checkbox"
-                  class="directory-table__cell-bulk-select"
-                  checked={{eq (get this.bulkSelectedUsers user.id) 1}}
-                  {{on "click" (fn this.bulkSelectItemToggle user.id)}}
-                />
+                {{#if user.can_be_deleted}}
+                  <input
+                    type="checkbox"
+                    class="directory-table__cell-bulk-select"
+                    checked={{eq (get this.bulkSelectedUsersMap user.id) 1}}
+                    {{on "click" (fn this.bulkSelectItemToggle user.id)}}
+                  />
+                {{else}}
+                  <DTooltip
+                    @identifier="bulk-delete-unavailable-reason"
+                    @placement="bottom-start"
+                  >
+                    <:trigger>
+                      <input
+                        type="checkbox"
+                        class="directory-table__cell-bulk-select"
+                        disabled={{true}}
+                      />
+                    </:trigger>
+                    <:content>
+                      {{#if user.admin}}
+                        {{i18n
+                          "admin.users.bulk_actions.admin_cant_be_deleted"
+                        }}
+                      {{else}}
+                        {{i18n
+                          "admin.users.bulk_actions.too_many_or_old_posts"
+                        }}
+                      {{/if}}
+                    </:content>
+                  </DTooltip>
+                {{/if}}
               {{/if}}
               <a
                 class="avatar"
@@ -325,9 +355,8 @@
         {{/each}}
       </:body>
     </ResponsiveTable>
-
-    <ConditionalLoadingSpinner @condition={{this.refreshing}} />
-  {{else}}
+  {{else if (not this.refreshing)}}
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}
+  <ConditionalLoadingSpinner @condition={{this.refreshing}} />
 </LoadMore>

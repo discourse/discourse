@@ -6641,13 +6641,27 @@ en:
         hide_emails: "Hide Emails"
         bulk_actions:
           title: "Bulk actions"
-          delete: "Delete users…"
-          confirm_delete_title:
-            one: "Delete %{count} user?"
-            other: "Delete %{count} users?"
-          confirm_delete_body:
-            one: "Are you sure you want to delete %{count} user? This action is permanent and cannot be reversed."
-            other: "Are you sure you want to delete %{count} users? This action is permanent and cannot be reversed."
+          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
+          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          delete:
+            label: "Delete users…"
+            confirmation_modal:
+              prompt_text:
+                one: "You're about to delete %{count} user permanently. Type \"%{confirmation_phrase}\" below to proceed:"
+                other: "You're about to delete %{count} users permanently. Type \"%{confirmation_phrase}\" below to proceed:"
+              confirmation_phrase:
+                one: "delete %{count} user"
+                other: "delete %{count} users"
+              close: "Close"
+              confirm: "Delete"
+              title:
+                one: "Delete %{count} user"
+                other: "Delete %{count} users"
+              bulk_delete_starting: "Starting bulk delete…"
+              user_delete_succeeded: "[%{position}/%{total}] Successfully deleted @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Failed to delete @%{username} - %{error}"
+              bulk_delete_finished: "Bulk delete operation completed."
+              failed_to_delete_users: "The following users failed to be deleted:"
         nav:
           new: "New"
           active: "Active"
