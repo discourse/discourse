@@ -173,6 +173,11 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
 
+Fabricator(:chat_message_interaction, class_name: "Chat::MessageInteraction") do
+  message { Fabricate(:chat_message) }
+  user { Fabricate(:user) }
+end
+
 Fabricator(:direct_message, class_name: "Chat::DirectMessage") do
   users { [Fabricate(:user), Fabricate(:user)] }
 end
