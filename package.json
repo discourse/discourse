@@ -6,7 +6,7 @@
   "license": "GPL-2.0-only",
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.25.9",
-    "@discourse/lint-configs": "^2.1.0",
+    "@discourse/lint-configs": "^2.2.0",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "6.6.0",
     "@glint/core": "^1.5.0",
