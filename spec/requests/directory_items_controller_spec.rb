@@ -254,6 +254,23 @@ RSpec.describe DirectoryItemsController do
       end
     end
 
+    it "limits as expected with custom fields" do
+      field1 = Fabricate(:user_field, searchable: true)
+      users = Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) }
+
+      DirectoryItem.refresh!
+
+      users.each do |user|
+        group.add(user)
+        user.set_user_field(field1.id, "red")
+      end
+
+      get "/directory_items.json", params: { period: "all", name: "red" }
+      json = response.parsed_body
+
+      expect(json["directory_items"].length).to eq(22)
+    end
+
     it "checks group permissions" do
       group.update!(visibility_level: Group.visibility_levels[:members])
 
