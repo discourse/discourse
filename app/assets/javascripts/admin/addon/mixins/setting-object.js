@@ -3,7 +3,7 @@ import { readOnly } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { isPresent } from "@ember/utils";
 import { deepEqual } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default Mixin.create({
   overridden: computed("value", "default", function () {
@@ -56,7 +56,7 @@ export default Mixin.create({
 
     (validValues || []).forEach((v) => {
       if (v.name && v.name.length > 0 && translateNames) {
-        values.addObject({ name: I18n.t(v.name), value: v.value });
+        values.addObject({ name: i18n(v.name), value: v.value });
       } else {
         values.addObject(v);
       }

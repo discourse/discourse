@@ -15,7 +15,7 @@ import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { groupPath } from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicCell extends Component {
   @service currentUser;
@@ -24,7 +24,7 @@ export default class TopicCell extends Component {
   get newDotText() {
     return this.currentUser?.trust_level > 0
       ? ""
-      : I18n.t("filters.new.lower_title");
+      : i18n("filters.new.lower_title");
   }
 
   get participantGroups() {

@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
@@ -26,10 +26,9 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 
     if (count > 0) {
       this.dialog.alert(
-        I18n.t(
-          "admin.groups.manage.membership.automatic_membership_user_count",
-          { count }
-        )
+        i18n("admin.groups.manage.membership.automatic_membership_user_count", {
+          count,
+        })
       );
     }
   });

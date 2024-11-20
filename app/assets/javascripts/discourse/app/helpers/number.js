@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import { number as numberFormatter } from "discourse/lib/formatter";
 import { escapeExpression } from "discourse/lib/utilities";
 import { registerRawHelper } from "discourse-common/lib/helpers";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 registerRawHelper("number", number);
 
@@ -14,7 +14,7 @@ export default function number(orig, params = {}) {
 
   let title = I18n.toNumber(orig, { precision: 0 });
   if (params.numberKey) {
-    title = I18n.t(params.numberKey, {
+    title = i18n(params.numberKey, {
       number: title,
       count: parseInt(orig, 10),
     });

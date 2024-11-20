@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminPageSubheader from "admin/components/admin-page-subheader";
 import InstallThemeModal from "admin/components/modal/install-theme";
 import ThemesGrid from "admin/components/themes-grid";
@@ -37,7 +37,7 @@ export default class AdminConfigAreasLookAndFeelThemes extends Component {
   addTheme(theme) {
     this.toasts.success({
       data: {
-        message: I18n.t("admin.customize.theme.install_success", {
+        message: i18n("admin.customize.theme.install_success", {
           theme: theme.name,
         }),
       },

@@ -7,7 +7,7 @@ import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/search-test.js. This is simply about the rendering of the
@@ -48,7 +48,7 @@ module("Integration | Component | search-menu", function (hooks) {
 
     assert.strictEqual(
       query(".label-suffix").textContent.trim(),
-      I18n.t("search.in_topics_posts"),
+      i18n("search.in_topics_posts"),
       "search label reflects context of search"
     );
 

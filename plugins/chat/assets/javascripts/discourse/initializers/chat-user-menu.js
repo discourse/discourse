@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatUsername } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 export default {
@@ -19,9 +19,9 @@ export default {
           "chat_invitation",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
-              linkTitle = I18n.t("notifications.titles.chat_invitation");
+              linkTitle = i18n("notifications.titles.chat_invitation");
               icon = "link";
-              description = I18n.t("notifications.chat_invitation");
+              description = i18n("notifications.chat_invitation");
 
               get linkHref() {
                 const data = this.notification.data;
@@ -70,7 +70,7 @@ export default {
               }
 
               get linkTitle() {
-                return I18n.t("notifications.titles.chat_mention");
+                return i18n("notifications.titles.chat_mention");
               }
 
               get icon() {
@@ -95,7 +95,7 @@ export default {
 
                 const i18nSuffix = identifier ? "other_plain" : "direct";
 
-                return I18n.t(`${i18nPrefix}.${i18nSuffix}`, {
+                return i18n(`${i18nPrefix}.${i18nSuffix}`, {
                   identifier,
                   channel: this.notification.data.chat_channel_title,
                 });
@@ -109,19 +109,19 @@ export default {
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
               icon = "discourse-threads";
-              linkTitle = I18n.t("notifications.titles.chat_watched_thread");
+              linkTitle = i18n("notifications.titles.chat_watched_thread");
               description = this.notification.data.description;
 
               get label() {
                 const data = this.notification.data;
 
                 if (data.user_ids.length > 2) {
-                  return I18n.t("notifications.chat_watched_thread_label", {
+                  return i18n("notifications.chat_watched_thread_label", {
                     username: formatUsername(data.username2),
                     count: data.user_ids.length - 1,
                   });
                 } else if (data.user_ids.length === 2) {
-                  return I18n.t("notifications.chat_watched_thread_label", {
+                  return i18n("notifications.chat_watched_thread_label", {
                     username: formatUsername(data.username2),
                     username2: formatUsername(data.username),
                     count: 1,

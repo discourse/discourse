@@ -4,7 +4,7 @@ import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
   needs.user();
@@ -99,8 +99,8 @@ acceptance(
       await formKit().submit();
       assert.form().hasErrors(
         {
-          [I18n.t("groups.manage.email.credentials.username")]: "Required",
-          [I18n.t("groups.manage.email.credentials.password")]: "Required",
+          [i18n("groups.manage.email.credentials.username")]: "Required",
+          [i18n("groups.manage.email.credentials.password")]: "Required",
         },
         "does not allow testing settings if not all fields are filled"
       );
@@ -126,7 +126,7 @@ acceptance(
       await click("#enable_smtp");
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),
-        I18n.t("groups.manage.email.smtp_disable_confirm"),
+        i18n("groups.manage.email.smtp_disable_confirm"),
         "shows a confirm dialogue warning SMTP settings will be wiped"
       );
 
@@ -199,7 +199,7 @@ acceptance(
       await click("#enable_imap");
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),
-        I18n.t("groups.manage.email.imap_disable_confirm"),
+        i18n("groups.manage.email.imap_disable_confirm"),
         "shows a confirm dialogue warning IMAP settings will be wiped"
       );
       await click(".dialog-footer .btn-primary");
@@ -355,7 +355,7 @@ acceptance(
 
       assert.strictEqual(
         query(".dialog-body").innerText.trim(),
-        I18n.t("generic_error_with_reason", {
+        i18n("generic_error_with_reason", {
           error:
             "There was an issue with the SMTP credentials provided, check the username and password and try again.",
         })

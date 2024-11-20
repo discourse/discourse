@@ -3,11 +3,11 @@ import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PasswordReset extends DiscourseRoute {
   titleToken() {
-    return I18n.t("login.reset_password");
+    return i18n("login.reset_password");
   }
 
   model(params) {

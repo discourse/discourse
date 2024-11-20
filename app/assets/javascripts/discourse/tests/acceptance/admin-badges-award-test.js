@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Badges - Mass Award", function (needs) {
   needs.user();
@@ -12,7 +12,7 @@ acceptance("Admin - Badges - Mass Award", function (needs) {
     );
     assert.strictEqual(
       query("label.grant-existing-holders").textContent.trim(),
-      I18n.t("admin.badges.mass_award.grant_existing_holders"),
+      i18n("admin.badges.mass_award.grant_existing_holders"),
       "checkbox for granting existing holders is displayed"
     );
   });

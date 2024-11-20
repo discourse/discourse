@@ -5,7 +5,7 @@ import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class LoginMethod extends EmberObject {
   static buildPostForm(url) {
@@ -30,20 +30,20 @@ export default class LoginMethod extends EmberObject {
 
   @discourseComputed
   title() {
-    return this.title_override || I18n.t(`login.${this.name}.title`);
+    return this.title_override || i18n(`login.${this.name}.title`);
   }
 
   @discourseComputed
   screenReaderTitle() {
     return (
       this.title_override ||
-      I18n.t(`login.${this.name}.sr_title`, { defaultValue: this.title })
+      i18n(`login.${this.name}.sr_title`, { defaultValue: this.title })
     );
   }
 
   @discourseComputed
   prettyName() {
-    return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
+    return this.pretty_name_override || i18n(`login.${this.name}.name`);
   }
 
   doLogin({ reconnect = false, signup = false, params = {} } = {}) {

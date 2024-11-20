@@ -15,7 +15,7 @@ import concatClass from "discourse/helpers/concat-class";
 import DAG from "discourse/lib/dag";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
 import PostMenuAdminButton from "./menu/buttons/admin";

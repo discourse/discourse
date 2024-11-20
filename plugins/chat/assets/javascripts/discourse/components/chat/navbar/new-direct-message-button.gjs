@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default class ChatNavbarNewDirectMessageButton extends Component {
@@ -10,7 +10,7 @@ export default class ChatNavbarNewDirectMessageButton extends Component {
   @service modal;
   @service chat;
 
-  buttonLabel = I18n.t("chat.channels_list_popup.browse");
+  buttonLabel = i18n("chat.channels_list_popup.browse");
 
   get showButtonComponent() {
     return (

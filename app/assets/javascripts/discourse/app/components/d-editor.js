@@ -34,7 +34,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const FOUR_SPACES_INDENT = "4-spaces-indent";
 
@@ -76,6 +76,12 @@ export default class DEditor extends Component {
     },
   };
 
+  init() {
+    super.init(...arguments);
+
+    this.register = getRegister(this);
+  }
+
   @computed("formTemplateIds")
   get selectedFormTemplateId() {
     if (this._selectedFormTemplateId) {
@@ -103,7 +109,7 @@ export default class DEditor extends Component {
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
     if (placeholder) {
-      return I18n.t(placeholder);
+      return i18n(placeholder);
     }
     return null;
   }
@@ -114,12 +120,6 @@ export default class DEditor extends Component {
     if (this.autofocus) {
       this.textManipulation.focus();
     }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.register = getRegister(this);
   }
 
   didInsertElement() {
@@ -463,7 +463,7 @@ export default class DEditor extends Component {
           })
           .then((list) => {
             if (list.length) {
-              list.push({ label: I18n.t("composer.more_emoji"), term });
+              list.push({ label: i18n("composer.more_emoji"), term });
             }
             return list;
           });
@@ -515,7 +515,7 @@ export default class DEditor extends Component {
     } else {
       const [hval, hlen] = getHead(head);
       if (sel.start === sel.end) {
-        sel.value = I18n.t(`composer.${exampleKey}`);
+        sel.value = i18n(`composer.${exampleKey}`);
       }
 
       const trimmedPre = sel.pre.trim();
@@ -668,7 +668,7 @@ export default class DEditor extends Component {
     if (!hasNewLine) {
       if (selValue.length === 0 && isBlankLine) {
         if (isFourSpacesIndent) {
-          const example = I18n.t(`composer.code_text`);
+          const example = i18n(`composer.code_text`);
           this.set("value", `${sel.pre}    ${example}${sel.post}`);
           return this.textManipulation.selectText(
             sel.pre.length + 4,

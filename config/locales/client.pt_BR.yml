@@ -1717,7 +1717,6 @@ pt_BR:
       location: "Localização"
       website: "Site"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Ocultar meu perfil público e recursos de presença"
       enable_physical_keyboard: "Ativar suporte para teclado físico no iPad"
       text_size:
         title: "Tamanho do texto"
@@ -6690,10 +6689,6 @@ pt_BR:
           grant_existing_holders: Conceder emblemas adicionais a titulares de emblema existentes
       emoji:
         title: "Emoji"
-        description: "Adicione novos emojis que estarão disponíveis para todas as pessoas. Arraste e solte vários arquivos de uma vez sem inserir nome, para criar emojis usando seus nomes de arquivo. O grupo selecionado será usado para todos os arquivos que forem adicionados ao mesmo tempo. Clique também em \"Adicionar novo emoji\" para abrir o seletor de arquivos."
-        new: "Adicionar"
-        add: "Adicionar novo emoji"
-        choose_files: "Escolher arquivos"
         uploading: "Enviando…"
         name: "Nome"
         group: "Grupo"
@@ -6741,17 +6736,19 @@ pt_BR:
         category_id: "ID da categoria"
         category_title: "Categoria"
         tag_name: "Nome da etiqueta"
+        tag_title: "Etiqueta"
         external_url: "URL externa ou relacionada"
         user_id: "ID de usuário(a)"
+        user_title: "Usuário(a)"
         username: "Nome de usuário(a)"
         destination: "Destino"
         copy_to_clipboard: "Copiar permalink para a área de transferência"
         delete_confirm: Você tem certeza que quer excluir este link permanente?
-        no_permalinks: "Você ainda não tem links permanentes. Crie um novo link permanente acima para começar a ver uma lista com seus links permanentes aqui."
+        more_options: "Mais opções"
         form:
           label: "Novo:"
-          add: "Adicionar"
-          filter: "Pesquisar (URL ou URL externa)"
+          url: "URL"
+          save: "Salvar"
       reseed:
         action:
           label: "Substituir texto…"

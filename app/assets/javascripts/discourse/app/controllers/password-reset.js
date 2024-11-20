@@ -9,7 +9,7 @@ import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PasswordResetController extends Controller.extend(
   PasswordValidation
@@ -55,7 +55,7 @@ export default class PasswordResetController extends Controller.extend(
 
   @discourseComputed()
   continueButtonText() {
-    return I18n.t("password_reset.continue", {
+    return i18n("password_reset.continue", {
       site_name: this.siteSettings.title,
     });
   }
@@ -134,7 +134,7 @@ export default class PasswordResetController extends Controller.extend(
       }
     } catch (e) {
       if (e.jqXHR?.status === 429) {
-        this.set("errorMessage", I18n.t("user.second_factor.rate_limit"));
+        this.set("errorMessage", i18n("user.second_factor.rate_limit"));
       } else {
         throw new Error(e);
       }

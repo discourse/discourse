@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class PollOptionsDropdownComponent extends Component {
@@ -21,7 +21,7 @@ export default class PollOptionsDropdownComponent extends Component {
 
   get rankLabel() {
     return this.args.rank === 0
-      ? I18n.t("poll.options.ranked_choice.abstain")
+      ? i18n("poll.options.ranked_choice.abstain")
       : this.args.rank;
   }
 

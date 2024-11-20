@@ -5,7 +5,7 @@ import { formattedReminderTime } from "discourse/lib/bookmark";
 import { tomorrow } from "discourse/lib/time-utils";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | bookmark-icon", function (hooks) {
   setupRenderingTest(hooks);
@@ -26,7 +26,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       .exists();
     assert.dom(".svg-icon-title").hasAttribute(
       "title",
-      I18n.t("bookmarks.created_with_reminder_generic", {
+      i18n("bookmarks.created_with_reminder_generic", {
         date: formattedReminderTime(
           this.bookmark.reminder_at,
           this.currentUser.user_option.timezone
@@ -50,7 +50,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     assert.dom(".d-icon-bookmark.bookmark-icon__bookmarked").exists();
     assert.dom(".svg-icon-title").hasAttribute(
       "title",
-      I18n.t("bookmarks.created_generic", {
+      i18n("bookmarks.created_generic", {
         name: "some name",
       })
     );
@@ -66,6 +66,6 @@ module("Integration | Component | bookmark-icon", function (hooks) {
     assert.dom(".d-icon-bookmark.bookmark-icon").exists();
     assert
       .dom(".svg-icon-title")
-      .hasAttribute("title", I18n.t("bookmarks.create"));
+      .hasAttribute("title", i18n("bookmarks.create"));
   });
 });

@@ -5,8 +5,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatModalToggleChannelStatus extends Component {
@@ -27,9 +26,9 @@ export default class ChatModalToggleChannelStatus extends Component {
 
   get instructions() {
     if (this.channel?.isClosed) {
-      return htmlSafe(I18n.t("chat.channel_open.instructions"));
+      return htmlSafe(i18n("chat.channel_open.instructions"));
     } else {
-      return htmlSafe(I18n.t("chat.channel_close.instructions"));
+      return htmlSafe(i18n("chat.channel_close.instructions"));
     }
   }
 

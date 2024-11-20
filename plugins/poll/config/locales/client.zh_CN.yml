@@ -94,6 +94,8 @@ zh_CN:
         label: "选项"
         ranked_choice:
           abstain: "弃权"
+          highest_priority: "（最高优先级）"
+          lowest_priority: "（最低优先级）"
           login: "登录以投票！"
       error_while_toggling_status: "抱歉，切换此投票的状态时出错。"
       error_while_casting_votes: "抱歉，投票时出错。"

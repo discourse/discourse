@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TrustLevel {
   constructor(id, key) {
@@ -9,12 +9,12 @@ export default class TrustLevel {
 
   @computed
   get name() {
-    return I18n.t(`trust_levels.names.${this._key}`);
+    return i18n(`trust_levels.names.${this._key}`);
   }
 
   @computed
   get detailedName() {
-    return I18n.t("trust_levels.detailed_name", {
+    return i18n("trust_levels.detailed_name", {
       level: this.id,
       name: this.name,
     });

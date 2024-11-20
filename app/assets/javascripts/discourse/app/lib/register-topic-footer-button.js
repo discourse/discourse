@@ -1,5 +1,5 @@
 import { computed } from "@ember/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _topicFooterButtons = {};
 
@@ -103,12 +103,12 @@ export function getTopicFooterButtons() {
 
           const label = _compute(button, "label");
           discourseComputedButton.label = label
-            ? I18n.t(label)
+            ? i18n(label)
             : _compute(button, "translatedLabel");
 
           const ariaLabel = _compute(button, "ariaLabel");
           if (ariaLabel) {
-            discourseComputedButton.ariaLabel = I18n.t(ariaLabel);
+            discourseComputedButton.ariaLabel = i18n(ariaLabel);
           } else {
             const translatedAriaLabel = _compute(button, "translatedAriaLabel");
             discourseComputedButton.ariaLabel =
@@ -117,7 +117,7 @@ export function getTopicFooterButtons() {
 
           const title = _compute(button, "title");
           discourseComputedButton.title = title
-            ? I18n.t(title)
+            ? i18n(title)
             : _compute(button, "translatedTitle");
 
           discourseComputedButton.classNames = (

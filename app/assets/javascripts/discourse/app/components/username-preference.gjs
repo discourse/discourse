@@ -13,8 +13,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UsernamePreference extends Component {
   @service siteSettings;
@@ -38,7 +37,7 @@ export default class UsernamePreference extends Component {
   }
 
   get saveButtonText() {
-    return this.saving ? I18n.t("saving") : I18n.t("user.change");
+    return this.saving ? i18n("saving") : i18n("user.change");
   }
 
   @action
@@ -66,7 +65,7 @@ export default class UsernamePreference extends Component {
     }
 
     if (this.newUsername.length < this.minLength) {
-      this.errorMessage = I18n.t("user.name.too_short");
+      this.errorMessage = i18n("user.name.too_short");
       return;
     }
 
@@ -86,7 +85,7 @@ export default class UsernamePreference extends Component {
   @action
   changeUsername() {
     return this.dialog.yesNoConfirm({
-      title: I18n.t("user.change_username.confirm"),
+      title: i18n("user.change_username.confirm"),
       didConfirm: async () => {
         this.saving = true;
 

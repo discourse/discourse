@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse-common/lib/escape";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 export default class AutomationIndex extends Controller {
   @service dialog;
@@ -25,7 +25,7 @@ export default class AutomationIndex extends Controller {
   @action
   destroyAutomation(automation) {
     this.dialog.deleteConfirm({
-      message: I18n.t("discourse_automation.destroy_automation.confirm", {
+      message: i18n("discourse_automation.destroy_automation.confirm", {
         name: escape(automation.name),
       }),
       didConfirm: () => {

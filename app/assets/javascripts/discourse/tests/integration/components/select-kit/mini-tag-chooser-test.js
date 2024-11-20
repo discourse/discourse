@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | select-kit/mini-tag-chooser",
@@ -61,7 +61,7 @@ module(
       const error = query(".select-kit-error").innerText;
       assert.strictEqual(
         error,
-        I18n.t("select_kit.max_content_reached", {
+        i18n("select_kit.max_content_reached", {
           count: this.siteSettings.max_tags_per_topic,
         })
       );
@@ -79,7 +79,7 @@ module(
       const error = query(".select-kit-error").innerText;
       assert.strictEqual(
         error,
-        I18n.t("select_kit.max_content_reached", {
+        i18n("select_kit.max_content_reached", {
           count: 0,
         })
       );
@@ -102,7 +102,7 @@ module(
 
       assert.strictEqual(
         query("input[name=filter-input-search]").placeholder,
-        I18n.t("tagging.choose_for_topic_required_group", {
+        i18n("tagging.choose_for_topic_required_group", {
           count: 1,
           name: "monkey group",
         })
@@ -112,7 +112,7 @@ module(
 
       assert.strictEqual(
         query("input[name=filter-input-search]").placeholder,
-        I18n.t("select_kit.filter_placeholder")
+        i18n("select_kit.filter_placeholder")
       );
     });
 

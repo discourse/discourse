@@ -40,7 +40,7 @@ import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
 import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -991,7 +991,7 @@ export default class User extends RestModel.extend(Evented) {
         data: { context: window.location.pathname },
       });
     } else {
-      return Promise.reject(I18n.t("user.delete_yourself_not_allowed"));
+      return Promise.reject(i18n("user.delete_yourself_not_allowed"));
     }
   }
 

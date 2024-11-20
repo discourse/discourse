@@ -19,7 +19,7 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic", function (needs) {
   needs.user();
@@ -208,7 +208,7 @@ acceptance("Topic", function (needs) {
 
     assert
       .dom("#suggested-topics-title")
-      .hasText(I18n.t("suggested_topics.title"));
+      .hasText(i18n("suggested_topics.title"));
   });
 
   test("Deleting a topic", async function (assert) {
@@ -347,7 +347,7 @@ acceptance("Topic featured links", function (needs) {
     assert
       .dom(".selected-posts")
       .includesHtml(
-        I18n.t("topic.multi_select.description", { count: 18 }),
+        i18n("topic.multi_select.description", { count: 18 }),
         "selects the right number of posts"
       );
 
@@ -356,7 +356,7 @@ acceptance("Topic featured links", function (needs) {
     assert
       .dom(".selected-posts")
       .includesHtml(
-        I18n.t("topic.multi_select.description", { count: 19 }),
+        i18n("topic.multi_select.description", { count: 19 }),
         "selects the right number of posts"
       );
   });
@@ -569,7 +569,7 @@ acceptance("Topic filter replies to post number", function (needs) {
       .dom("#post_3 .show-replies")
       .hasAttribute(
         "title",
-        I18n.t("post.filtered_replies_hint", { count: 3 }),
+        i18n("post.filtered_replies_hint", { count: 3 }),
         "displays the right title for filtering by replies"
       );
 
@@ -580,7 +580,7 @@ acceptance("Topic filter replies to post number", function (needs) {
       .dom("#post_3 .show-replies")
       .hasAttribute(
         "title",
-        I18n.t("post.view_all_posts"),
+        i18n("post.view_all_posts"),
         "displays the right title when filtered by replies"
       );
   });

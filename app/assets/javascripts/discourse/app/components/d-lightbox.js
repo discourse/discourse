@@ -48,6 +48,11 @@ export default class DLightbox extends Component {
   animationDuration = ANIMATION_DURATION;
   scrollPosition = 0;
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.cleanup();
+  }
+
   get layoutType() {
     return window.innerWidth > window.innerHeight
       ? LAYOUT_TYPES.HORIZONTAL
@@ -486,10 +491,5 @@ export default class DLightbox extends Component {
         behavior: "instant",
       });
     }
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.cleanup();
   }
 }

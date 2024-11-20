@@ -1,7 +1,7 @@
 import RelatedMessages from "discourse/components/related-messages";
 import SuggestedTopics from "discourse/components/suggested-topics";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   initialize() {

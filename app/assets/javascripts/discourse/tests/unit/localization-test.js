@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import LocalizationInitializer from "discourse/instance-initializers/localization";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("initializer:localization", function (hooks) {
   setupTest(hooks);
@@ -78,25 +78,25 @@ module("initializer:localization", function (hooks) {
     LocalizationInitializer.initialize(this.owner);
 
     assert.strictEqual(
-      I18n.t("composer.both_languages1"),
+      i18n("composer.both_languages1"),
       "composer.both_languages1 (FR override)",
       "overrides existing translation in current locale"
     );
 
     assert.strictEqual(
-      I18n.t("composer.only_english1"),
+      i18n("composer.only_english1"),
       "composer.only_english1 (EN override)",
       "overrides translation in fallback locale"
     );
 
     assert.strictEqual(
-      I18n.t("composer.only_english2"),
+      i18n("composer.only_english2"),
       "composer.only_english2 (FR override)",
       "overrides translation that doesn't exist in current locale"
     );
 
     assert.strictEqual(
-      I18n.t("composer.both_languages2"),
+      i18n("composer.both_languages2"),
       "composer.both_languages2 (FR)",
       "prefers translation in current locale over override in fallback locale"
     );
@@ -121,31 +121,31 @@ module("initializer:localization", function (hooks) {
     LocalizationInitializer.initialize(this.owner);
 
     assert.strictEqual(
-      I18n.t("admin.api.both_languages1"),
+      i18n("admin.api.both_languages1"),
       "admin.api.both_languages1 (FR override)",
       "overrides existing translation in current locale"
     );
 
     assert.strictEqual(
-      I18n.t("admin.api.only_english1"),
+      i18n("admin.api.only_english1"),
       "admin.api.only_english1 (EN override)",
       "overrides translation in fallback locale"
     );
 
     assert.strictEqual(
-      I18n.t("admin.api.only_english2"),
+      i18n("admin.api.only_english2"),
       "admin.api.only_english2 (FR override)",
       "overrides translation that doesn't exist in current locale"
     );
 
     assert.strictEqual(
-      I18n.t("admin.api.both_languages2"),
+      i18n("admin.api.both_languages2"),
       "admin.api.both_languages2 (FR)",
       "prefers translation in current locale over override in fallback locale"
     );
 
     assert.strictEqual(
-      I18n.t("type_to_filter"),
+      i18n("type_to_filter"),
       "type_to_filter (FR override)",
       "correctly changes the translation key by removing `admin_js`"
     );
@@ -161,7 +161,7 @@ module("initializer:localization", function (hooks) {
     LocalizationInitializer.initialize(this.owner);
 
     assert.strictEqual(
-      I18n.t("composer.both_languages1.foo"),
+      i18n("composer.both_languages1.foo"),
       "[fr.composer.both_languages1.foo]"
     );
   });

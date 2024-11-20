@@ -1361,7 +1361,6 @@ vi:
       location: "Vị trí"
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Ẩn hồ sơ công khai và các tính năng hiện diện của tôi"
       enable_physical_keyboard: "Bật hỗ trợ bàn phím vật lý trên iPad"
       text_size:
         title: "Cở chữ"
@@ -5211,10 +5210,6 @@ vi:
           grant_existing_holders: Cấp huy hiệu bổ sung cho những chủ sở hữu huy hiệu hiện có
       emoji:
         title: "Emoji"
-        description: "Thêm biểu tượng cảm xúc mới sẽ có sẵn cho tất cả mọi người. Kéo và thả nhiều tệp cùng một lúc mà không cần nhập tên để tạo biểu tượng cảm xúc bằng tên tệp của chúng. Nhóm đã chọn sẽ được sử dụng cho tất cả các tệp được thêm vào cùng một lúc. Bạn cũng có thể nhấp vào 'Thêm biểu tượng cảm xúc mới' để mở bộ chọn tệp."
-        new: "Thêm"
-        add: "Thêm emoji mới"
-        choose_files: "Chọn tệp"
         uploading: "Đang tải lên…"
         name: "Tên"
         group: "Nhóm"
@@ -5255,14 +5250,15 @@ vi:
         category_title: "Danh mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
+        user_title: "Người dùng"
         username: "Tên tài khoản"
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
         form:
           label: "Mới:"
-          add: "Thêm"
-          filter: "Tìm kiếm (URL hoặc External URL)"
+          url: "URL"
+          save: "Lưu lại"
       reseed:
         action:
           label: "Thay thế Văn bản…"

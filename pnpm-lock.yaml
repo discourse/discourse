@@ -32,8 +32,8 @@ importers:
         specifier: ^7.25.9
         version: 7.25.9(@babel/core@7.26.0)
       '@discourse/lint-configs':
-        specifier: ^2.1.0
-        version: 2.1.0(ember-template-lint@6.0.0)(eslint@9.14.0)(prettier@2.8.8)
+        specifier: ^2.2.0
+        version: 2.2.0(ember-template-lint@6.0.0)(eslint@9.14.0)(prettier@2.8.8)
       '@discourse/moment-timezone-names-translations':
         specifier: ^1.0.0
         version: 1.0.0
@@ -1836,8 +1836,8 @@ packages:
   '@discourse/itsatrap@2.0.10':
     resolution: {integrity: sha512-Jn1gdiyHMGUsmUfLFf4Q7VnTAv0l7NePbegU6pKhKHEmbzV3FosGxq30fTOYgVyTS1bxqGjlA6LvQttJpv3ROw==}
 
-  '@discourse/lint-configs@2.1.0':
-    resolution: {integrity: sha512-VoZ/+kV1F/nO+bdKN3a/LSFcJTXGwUUVw3yaJiiJCc/+k4fcPaOgcI3z+Ow0ld+DPFZUVkqmxj18r86ThCLyCA==}
+  '@discourse/lint-configs@2.2.0':
+    resolution: {integrity: sha512-lj13X+3/DRV2ZBQe3eJvxOO23e87DPfUSSqm0UPfP04VJ7141BHwWn9VVF0rOr+bMe2eiirsqlg2AbMn7gMb+A==}
     peerDependencies:
       ember-template-lint: 6.0.0
       eslint: ^9.14.0
@@ -2546,6 +2546,12 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@stylistic/eslint-plugin-js@2.11.0':
+    resolution: {integrity: sha512-btchD0P3iij6cIk5RR5QMdEhtCCV0+L6cNheGhGCd//jaHILZMTi/EOqgEDAf1s4ZoViyExoToM+S2Iwa3U9DA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: '>=8.40.0'
 
   '@swc/core-darwin-arm64@1.9.2':
     resolution: {integrity: sha512-nETmsCoY29krTF2PtspEgicb3tqw7Ci5sInTI03EU5zpqYbPjoPH99BVTjj0OsF53jP5MxwnLI5Hm21lUn1d6A==}
@@ -9341,11 +9347,12 @@ snapshots:
 
   '@discourse/itsatrap@2.0.10': {}
 
-  '@discourse/lint-configs@2.1.0(ember-template-lint@6.0.0)(eslint@9.14.0)(prettier@2.8.8)':
+  '@discourse/lint-configs@2.2.0(ember-template-lint@6.0.0)(eslint@9.14.0)(prettier@2.8.8)':
     dependencies:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@9.14.0)
       '@babel/plugin-proposal-decorators': 7.25.9(@babel/core@7.26.0)
+      '@stylistic/eslint-plugin-js': 2.11.0(eslint@9.14.0)
       ember-template-lint: 6.0.0
       eslint: 9.14.0
       eslint-plugin-decorator-position: 6.0.0(@babel/eslint-parser@7.25.8(@babel/core@7.26.0)(eslint@9.14.0))(eslint@9.14.0)
@@ -10305,6 +10312,12 @@ snapshots:
   '@sinonjs/text-encoding@0.7.3': {}
 
   '@socket.io/component-emitter@3.1.2': {}
+
+  '@stylistic/eslint-plugin-js@2.11.0(eslint@9.14.0)':
+    dependencies:
+      eslint: 9.14.0
+      eslint-visitor-keys: 4.2.0
+      espree: 10.3.0
 
   '@swc/core-darwin-arm64@1.9.2':
     optional: true

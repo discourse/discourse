@@ -16,7 +16,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   needs.user({
@@ -282,7 +282,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
       ).textContent.trim(),
-      I18n.t("sidebar.more"),
+      i18n("sidebar.more"),
       "displays the right count as users link is currently active"
     );
 
@@ -386,7 +386,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
       ).textContent.trim(),
-      I18n.t("sidebar.more"),
+      i18n("sidebar.more"),
       "displays the right count as groups link is currently active"
     );
 
@@ -582,7 +582,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       .dom(".sidebar-section-link[data-link-name='my-posts']")
       .hasAttribute(
         "title",
-        I18n.t("sidebar.sections.community.links.my_posts.title"),
+        i18n("sidebar.sections.community.links.my_posts.title"),
         "displays the default title when no drafts are present"
       );
 
@@ -594,7 +594,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       .dom(".sidebar-section-link[data-link-name='my-posts']")
       .hasAttribute(
         "title",
-        I18n.t("sidebar.sections.community.links.my_posts.title_drafts"),
+        i18n("sidebar.sections.community.links.my_posts.title_drafts"),
         "displays the draft title when drafts are present"
       );
   });
@@ -612,7 +612,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(
         ".sidebar-section-link[data-link-name='my-posts']"
       ).textContent.trim(),
-      I18n.t("sidebar.sections.community.links.my_posts.content"),
+      i18n("sidebar.sections.community.links.my_posts.content"),
       "displays the default text when no drafts are present"
     );
 
@@ -624,7 +624,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       query(
         ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-text"
       ).textContent.trim(),
-      I18n.t("sidebar.sections.community.links.my_posts.content_drafts"),
+      i18n("sidebar.sections.community.links.my_posts.content_drafts"),
       "displays the text that's appropriate for when drafts are present"
     );
     assert.strictEqual(

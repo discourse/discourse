@@ -2,12 +2,12 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
-import { i18n } from "discourse/lib/computed";
+import { computedI18n } from "discourse/lib/computed";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class InvitePanel extends Component {
   @readOnly("currentUser.staff") isStaff;
@@ -23,7 +23,7 @@ export default class InvitePanel extends Component {
   // scope to allowed usernames
   @alias("invitingToTopic") allowExistingMembers;
 
-  @i18n("invite.custom_message_placeholder") customMessagePlaceholder;
+  @computedI18n("invite.custom_message_placeholder") customMessagePlaceholder;
 
   groupIds = null;
   allGroups = null;
@@ -217,30 +217,30 @@ export default class InvitePanel extends Component {
   ) {
     if (!canInviteViaEmail) {
       // can't invite via email, only existing users
-      return I18n.t("topic.invite_reply.discourse_connect_enabled");
+      return i18n("topic.invite_reply.discourse_connect_enabled");
     } else if (isPM) {
       // inviting to a message
-      return I18n.t("topic.invite_private.email_or_username");
+      return i18n("topic.invite_private.email_or_username");
     } else if (invitingToTopic) {
       // inviting to a private/public topic
       if (isPrivateTopic && !isAdmin) {
         // inviting to a private topic and is not admin
-        return I18n.t("topic.invite_reply.to_username");
+        return i18n("topic.invite_reply.to_username");
       } else {
         // when inviting to a topic, display instructions based on provided entity
         if (isEmpty(invitee)) {
-          return I18n.t("topic.invite_reply.to_topic_blank");
+          return i18n("topic.invite_reply.to_topic_blank");
         } else if (emailValid(invitee)) {
           this.set("inviteIcon", "envelope");
-          return I18n.t("topic.invite_reply.to_topic_email");
+          return i18n("topic.invite_reply.to_topic_email");
         } else {
           this.set("inviteIcon", "hand-point-right");
-          return I18n.t("topic.invite_reply.to_topic_username");
+          return i18n("topic.invite_reply.to_topic_username");
         }
       }
     } else {
       // inviting to forum
-      return I18n.t("topic.invite_reply.to_forum");
+      return i18n("topic.invite_reply.to_forum");
     }
   }
 
@@ -252,17 +252,17 @@ export default class InvitePanel extends Component {
   @discourseComputed("isPM", "invitee", "invitingExistingUserToTopic")
   successMessage(isPM, invitee, invitingExistingUserToTopic) {
     if (this.isInviteeGroup) {
-      return I18n.t("topic.invite_private.success_group");
+      return i18n("topic.invite_private.success_group");
     } else if (isPM) {
-      return I18n.t("topic.invite_private.success");
+      return i18n("topic.invite_private.success");
     } else if (invitingExistingUserToTopic) {
-      return I18n.t("topic.invite_reply.success_existing_email", {
+      return i18n("topic.invite_reply.success_existing_email", {
         invitee,
       });
     } else if (emailValid(invitee)) {
-      return I18n.t("topic.invite_reply.success_email", { invitee });
+      return i18n("topic.invite_reply.success_email", { invitee });
     } else {
-      return I18n.t("topic.invite_reply.success_username");
+      return i18n("topic.invite_reply.success_username");
     }
   }
 
@@ -272,8 +272,8 @@ export default class InvitePanel extends Component {
       return ajaxError;
     }
     return isPM
-      ? I18n.t("topic.invite_private.error")
-      : I18n.t("topic.invite_reply.error");
+      ? i18n("topic.invite_private.error")
+      : i18n("topic.invite_reply.error");
   }
 
   @discourseComputed("canInviteViaEmail")
@@ -403,15 +403,9 @@ export default class InvitePanel extends Component {
     this.toggleProperty("hasCustomMessage");
     if (this.hasCustomMessage) {
       if (this.inviteModel === this.currentUser) {
-        this.set(
-          "customMessage",
-          I18n.t("invite.custom_message_template_forum")
-        );
+        this.set("customMessage", i18n("invite.custom_message_template_forum"));
       } else {
-        this.set(
-          "customMessage",
-          I18n.t("invite.custom_message_template_topic")
-        );
+        this.set("customMessage", i18n("invite.custom_message_template_topic"));
       }
     } else {
       this.set("customMessage", null);

@@ -4,7 +4,7 @@ import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {
@@ -29,19 +29,19 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @discourseComputed
   availableSubcategoryListStyles() {
     return [
-      { name: I18n.t("category.subcategory_list_styles.rows"), value: "rows" },
+      { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
-        name: I18n.t(
+        name: i18n(
           "category.subcategory_list_styles.rows_with_featured_topics"
         ),
         value: "rows_with_featured_topics",
       },
       {
-        name: I18n.t("category.subcategory_list_styles.boxes"),
+        name: i18n("category.subcategory_list_styles.boxes"),
         value: "boxes",
       },
       {
-        name: I18n.t(
+        name: i18n(
           "category.subcategory_list_styles.boxes_with_featured_topics"
         ),
         value: "boxes_with_featured_topics",
@@ -52,8 +52,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @discourseComputed
   availableViews() {
     return [
-      { name: I18n.t("filters.latest.title"), value: "latest" },
-      { name: I18n.t("filters.top.title"), value: "top" },
+      { name: i18n("filters.latest.title"), value: "latest" },
+      { name: i18n("filters.top.title"), value: "top" },
     ];
   }
 
@@ -61,7 +61,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
   availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
-        return { name: I18n.t(`filters.top.${p}.title`), value: p };
+        return { name: i18n(`filters.top.${p}.title`), value: p };
       }
     );
   }
@@ -69,7 +69,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @discourseComputed
   availableListFilters() {
     return ["all", "none"].map((p) => {
-      return { name: I18n.t(`category.list_filters.${p}`), value: p };
+      return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
@@ -81,7 +81,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       const [name, value] = entry;
 
       options.push({
-        name: I18n.t(`category.search_priority.options.${name}`),
+        name: i18n(`category.search_priority.options.${name}`),
         value,
       });
     });
@@ -102,7 +102,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       "created",
     ]
       .concat(categorySortCriteria)
-      .map((s) => ({ name: I18n.t("category.sort_options." + s), value: s }))
+      .map((s) => ({ name: i18n("category.sort_options." + s), value: s }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
@@ -120,8 +120,8 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @discourseComputed
   sortAscendingOptions() {
     return [
-      { name: I18n.t("category.sort_ascending"), value: true },
-      { name: I18n.t("category.sort_descending"), value: false },
+      { name: i18n("category.sort_ascending"), value: true },
+      { name: i18n("category.sort_descending"), value: false },
     ];
   }
 

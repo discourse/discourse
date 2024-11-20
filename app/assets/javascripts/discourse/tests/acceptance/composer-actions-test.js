@@ -12,7 +12,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Composer Actions", function (needs) {
   needs.user({
@@ -127,7 +127,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
-    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
     assert.ok(query(".d-editor-input").value.includes(quote));
   });
 
@@ -210,7 +210,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
-    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
     assert.ok(query(".d-editor-input").value.includes(quote));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
@@ -226,7 +226,7 @@ acceptance("Composer Actions", function (needs) {
     await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
-    assert.dom(".action-title").hasText(I18n.t("topic.private_message"));
+    assert.dom(".action-title").hasText(i18n("topic.private_message"));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
     assert.strictEqual(composerActions.rows().length, 1);
   });
@@ -416,7 +416,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
 
     assert
       .dom("#reply-control .btn-primary.create .d-button-label")
-      .hasText(I18n.t("composer.create_shared_draft"));
+      .hasText(i18n("composer.create_shared_draft"));
     assert
       .dom(".composer-actions svg.d-icon-far-clipboard")
       .exists("shared draft icon is visible");
@@ -434,7 +434,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
 
     assert
       .dom(".dialog-body")
-      .hasText(I18n.t("composer.composer_actions.reply_as_new_topic.confirm"));
+      .hasText(i18n("composer.composer_actions.reply_as_new_topic.confirm"));
     await click(".dialog-footer .btn-primary");
 
     assert.ok(

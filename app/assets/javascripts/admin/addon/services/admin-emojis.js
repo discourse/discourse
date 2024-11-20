@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const ALL_FILTER = "all";
 const DEFAULT_GROUP = "default";
@@ -54,7 +54,7 @@ export default class AdminEmojis extends Service {
   @action
   destroyEmoji(emoji) {
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.emoji.delete_confirm", {
+      message: i18n("admin.emoji.delete_confirm", {
         name: emoji.get("name"),
       }),
       didConfirm: () => this.#destroyEmoji(emoji),

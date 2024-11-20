@@ -9,7 +9,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserController extends Controller.extend(CanCheckEmails) {
   @service currentUser;
@@ -223,7 +223,7 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
     const location = document.location.pathname;
 
     const performDestroy = (block) => {
-      this.dialog.notice(I18n.t("admin.user.deleting_user"));
+      this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;
@@ -238,19 +238,19 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
           if (data.deleted) {
             document.location = getURL("/admin/users/list/active");
           } else {
-            this.dialog.alert(I18n.t("admin.user.delete_failed"));
+            this.dialog.alert(i18n("admin.user.delete_failed"));
           }
         })
-        .catch(() => this.dialog.alert(I18n.t("admin.user.delete_failed")));
+        .catch(() => this.dialog.alert(i18n("admin.user.delete_failed")));
     };
 
     this.dialog.alert({
-      title: I18n.t("admin.user.delete_confirm_title"),
-      message: I18n.t("admin.user.delete_confirm"),
+      title: i18n("admin.user.delete_confirm_title"),
+      message: i18n("admin.user.delete_confirm"),
       class: "delete-user-modal",
       buttons: [
         {
-          label: I18n.t("admin.user.delete_dont_block"),
+          label: i18n("admin.user.delete_dont_block"),
           class: "btn-primary",
           action: () => {
             return performDestroy(false);
@@ -258,14 +258,14 @@ export default class UserController extends Controller.extend(CanCheckEmails) {
         },
         {
           icon: "triangle-exclamation",
-          label: I18n.t("admin.user.delete_and_block"),
+          label: i18n("admin.user.delete_and_block"),
           class: "btn-danger",
           action: () => {
             return performDestroy(true);
           },
         },
         {
-          label: I18n.t("composer.cancel"),
+          label: i18n("composer.cancel"),
         },
       ],
     });

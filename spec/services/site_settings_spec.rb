@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSettingsTask do
-  before { Discourse::Application.load_tasks }
-
   describe "export" do
     it "creates a hash of all site settings" do
       sso_url = "https://somewhere.over.com"

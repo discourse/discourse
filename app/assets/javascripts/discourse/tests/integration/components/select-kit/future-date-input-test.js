@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getOptions() {
   return Array.from(
@@ -40,7 +40,7 @@ module(
 
       assert.strictEqual(
         this.subject.header().label(),
-        I18n.t("time_shortcut.select_timeframe"),
+        i18n("time_shortcut.select_timeframe"),
         "Default text is rendered"
       );
 
@@ -64,19 +64,19 @@ module(
       await this.subject.expand();
       const options = getOptions();
       const expected = [
-        I18n.t("time_shortcut.later_today"),
-        I18n.t("time_shortcut.tomorrow"),
-        I18n.t("time_shortcut.later_this_week"),
-        I18n.t("time_shortcut.start_of_next_business_week_alt"),
-        I18n.t("time_shortcut.two_weeks"),
-        I18n.t("time_shortcut.next_month"),
-        I18n.t("time_shortcut.two_months"),
-        I18n.t("time_shortcut.three_months"),
-        I18n.t("time_shortcut.four_months"),
-        I18n.t("time_shortcut.six_months"),
-        I18n.t("time_shortcut.one_year"),
-        I18n.t("time_shortcut.forever"),
-        I18n.t("time_shortcut.custom"),
+        i18n("time_shortcut.later_today"),
+        i18n("time_shortcut.tomorrow"),
+        i18n("time_shortcut.later_this_week"),
+        i18n("time_shortcut.start_of_next_business_week_alt"),
+        i18n("time_shortcut.two_weeks"),
+        i18n("time_shortcut.next_month"),
+        i18n("time_shortcut.two_months"),
+        i18n("time_shortcut.three_months"),
+        i18n("time_shortcut.four_months"),
+        i18n("time_shortcut.six_months"),
+        i18n("time_shortcut.one_year"),
+        i18n("time_shortcut.forever"),
+        i18n("time_shortcut.custom"),
       ];
 
       assert.deepEqual(options, expected);
@@ -87,7 +87,7 @@ module(
 
       await this.subject.expand();
       const options = getOptions();
-      const customDateAndTime = I18n.t("time_shortcut.custom");
+      const customDateAndTime = i18n("time_shortcut.custom");
 
       assert.ok(options.includes(customDateAndTime));
     });
@@ -101,7 +101,7 @@ module(
 
       await this.subject.expand();
       const options = getOptions();
-      const customDateAndTime = I18n.t("time_shortcut.custom");
+      const customDateAndTime = i18n("time_shortcut.custom");
 
       assert.false(options.includes(customDateAndTime));
     });
@@ -115,7 +115,7 @@ module(
 
       await this.subject.expand();
       const options = getOptions();
-      const now = I18n.t("time_shortcut.now");
+      const now = i18n("time_shortcut.now");
 
       assert.ok(options.includes(now));
     });

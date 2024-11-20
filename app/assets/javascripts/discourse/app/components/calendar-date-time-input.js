@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class CalendarDateTimeInput extends Component {
   _timeFormat = this.args.timeFormat || "HH:mm:ss";
@@ -91,8 +91,8 @@ export default class CalendarDateTimeInput extends Component {
           setDefaultDate: true,
           keyboardInput: false,
           i18n: {
-            previousMonth: I18n.t("dates.previous_month"),
-            nextMonth: I18n.t("dates.next_month"),
+            previousMonth: i18n("dates.previous_month"),
+            nextMonth: i18n("dates.next_month"),
             months: moment.months(),
             weekdays: moment.weekdays(),
             weekdaysShort: moment.weekdaysMin(),

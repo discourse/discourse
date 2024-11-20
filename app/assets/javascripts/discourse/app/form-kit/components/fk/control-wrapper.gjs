@@ -6,7 +6,7 @@ import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
 import FKText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FKControlWrapper extends Component {
   constructor() {

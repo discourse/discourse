@@ -222,3 +222,7 @@ ro:
       types:
         reviewable_chat_message:
           title: "Mesaj discuție semnalat"
+    keyboard_shortcuts_help:
+      chat:
+        keyboard_shortcuts:
+          switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"

@@ -18,7 +18,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -193,7 +193,7 @@ export default class TopicListItem extends Component {
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
-      : I18n.t("filters.new.lower_title");
+      : i18n("filters.new.lower_title");
   }
 
   @discourseComputed("topic", "lastVisitedTopic")

@@ -3,7 +3,7 @@ import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EmailStylesEditor extends Component {
   @service dialog;
@@ -35,8 +35,8 @@ export default class EmailStylesEditor extends Component {
   @action
   reset() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.customize.email_style.reset_confirm", {
-        fieldName: I18n.t(`admin.customize.email_style.${this.fieldName}`),
+      message: i18n("admin.customize.email_style.reset_confirm", {
+        fieldName: i18n(`admin.customize.email_style.${this.fieldName}`),
       }),
       didConfirm: () => {
         this.styles.setField(

@@ -4,7 +4,7 @@ import { empty, or } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
 import { emailValid } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EmailController extends Controller {
   queryParams = ["new"];
@@ -31,12 +31,12 @@ export default class EmailController extends Controller {
   @discourseComputed("saving", "new")
   saveButtonText(saving, isNew) {
     if (saving) {
-      return I18n.t("saving");
+      return i18n("saving");
     }
     if (isNew) {
-      return I18n.t("user.add_email.add");
+      return i18n("user.add_email.add");
     }
-    return I18n.t("user.change");
+    return i18n("user.change");
   }
 
   @discourseComputed("newEmail")
@@ -49,7 +49,7 @@ export default class EmailController extends Controller {
     if (invalidEmail && (oldEmail || newEmail)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("user.email.invalid"),
+        reason: i18n("user.email.invalid"),
       });
     }
   }
@@ -77,15 +77,15 @@ export default class EmailController extends Controller {
         this.set("success", true);
 
         if (this.model.staff) {
-          this.set("successMessage", I18n.t("user.change_email.success_staff"));
+          this.set("successMessage", i18n("user.change_email.success_staff"));
         } else {
           if (this.currentUser.admin) {
             this.set(
               "successMessage",
-              I18n.t("user.change_email.success_via_admin")
+              i18n("user.change_email.success_via_admin")
             );
           } else {
-            this.set("successMessage", I18n.t("user.change_email.success"));
+            this.set("successMessage", i18n("user.change_email.success"));
           }
         }
       },
@@ -98,7 +98,7 @@ export default class EmailController extends Controller {
         ) {
           this.set("errorMessage", e.jqXHR.responseJSON.errors[0]);
         } else {
-          this.set("errorMessage", I18n.t("user.change_email.error"));
+          this.set("errorMessage", i18n("user.change_email.error"));
         }
       }
     );

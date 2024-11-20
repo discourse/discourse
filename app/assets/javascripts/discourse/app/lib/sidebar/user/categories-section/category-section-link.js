@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { get, set } from "@ember/object";
 import Category from "discourse/models/category";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const UNREAD_AND_NEW_COUNTABLE = {
   propertyName: "unreadAndNewCount",
@@ -19,7 +19,7 @@ const DEFAULT_COUNTABLES = [
   {
     propertyName: "totalUnread",
     badgeTextFunction: (count) => {
-      return I18n.t("sidebar.unread_count", { count });
+      return i18n("sidebar.unread_count", { count });
     },
     route: "discovery.unreadCategory",
     refreshCountFunction: ({ topicTrackingState, category }) => {
@@ -31,7 +31,7 @@ const DEFAULT_COUNTABLES = [
   {
     propertyName: "totalNew",
     badgeTextFunction: (count) => {
-      return I18n.t("sidebar.new_count", { count });
+      return i18n("sidebar.new_count", { count });
     },
     route: "discovery.newCategory",
     refreshCountFunction: ({ topicTrackingState, category }) => {

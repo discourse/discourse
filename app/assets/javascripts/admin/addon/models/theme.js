@@ -4,7 +4,7 @@ import { isBlank, isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ThemeSettings from "admin/models/theme-settings";
 
 const THEME_UPLOAD_VAR = 2;
@@ -117,10 +117,10 @@ class Theme extends RestModel {
         if (target === "translations" || target === "extra_scss") {
           field.translatedName = fieldName;
         } else {
-          field.translatedName = I18n.t(
+          field.translatedName = i18n(
             `admin.customize.theme.${fieldName}.text`
           );
-          field.title = I18n.t(`admin.customize.theme.${fieldName}.title`);
+          field.title = i18n(`admin.customize.theme.${fieldName}.title`);
         }
 
         if (fieldName.indexOf("_tag") > 0) {

@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 0, rank: 0 },
@@ -155,10 +155,10 @@ module("Poll | Component | poll-options", function (hooks) {
 
     assert
       .dom(".dropdown-menu__item:nth-child(2)")
-      .hasText(`1 ${I18n.t("poll.options.ranked_choice.highest_priority")}`);
+      .hasText(`1 ${i18n("poll.options.ranked_choice.highest_priority")}`);
 
     assert
       .dom(".dropdown-menu__item:nth-child(4)")
-      .hasText(`3 ${I18n.t("poll.options.ranked_choice.lowest_priority")}`);
+      .hasText(`3 ${i18n("poll.options.ranked_choice.lowest_priority")}`);
   });
 });

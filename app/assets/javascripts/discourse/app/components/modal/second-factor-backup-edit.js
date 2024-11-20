@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorBackupEdit extends Component {
   @tracked loading = false;
@@ -20,11 +20,11 @@ export default class SecondFactorBackupEdit extends Component {
   @action
   copyBackupCode(successful) {
     if (successful) {
-      this.successMessage = I18n.t(
+      this.successMessage = i18n(
         "user.second_factor_backup.copied_to_clipboard"
       );
     } else {
-      this.errorMessage = I18n.t(
+      this.errorMessage = i18n(
         "user.second_factor_backup.copy_to_clipboard_error"
       );
     }

@@ -3,7 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Theme from "admin/models/theme";
 
 module("Integration | Component | themes-list-item", function (hooks) {
@@ -72,7 +72,7 @@ module("Integration | Component | themes-list-item", function (hooks) {
     );
     assert.deepEqual(
       query(".others-count").innerText.trim(),
-      I18n.t("admin.customize.theme.and_x_more", { count: 1 }),
+      i18n("admin.customize.theme.and_x_more", { count: 1 }),
       "shows count of remaining children"
     );
   });

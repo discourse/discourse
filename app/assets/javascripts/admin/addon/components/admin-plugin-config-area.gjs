@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminPluginConfigArea extends Component {
   @service adminPluginNavManager;
 
   linkText(navLink) {
     if (navLink.label) {
-      return I18n.t(navLink.label);
+      return i18n(navLink.label);
     } else {
       return navLink.text;
     }

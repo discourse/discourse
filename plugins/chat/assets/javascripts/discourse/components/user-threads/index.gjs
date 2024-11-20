@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import List from "discourse/plugins/chat/discourse/components/chat/list";
@@ -21,11 +21,6 @@ export default class UserThreads extends Component {
 
   trackedChannels = {};
 
-  @cached
-  get threadsCollection() {
-    return this.chatApi.userThreads(this.handleLoadedThreads);
-  }
-
   willDestroy() {
     super.willDestroy(...arguments);
 
@@ -34,6 +29,11 @@ export default class UserThreads extends Component {
     });
 
     this.trackedChannels = {};
+  }
+
+  @cached
+  get threadsCollection() {
+    return this.chatApi.userThreads(this.handleLoadedThreads);
   }
 
   @bind

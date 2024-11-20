@@ -1,8 +1,8 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get label() {
-    return I18n.t("notifications.watching_first_post_label");
+    return i18n("notifications.watching_first_post_label");
   }
 }

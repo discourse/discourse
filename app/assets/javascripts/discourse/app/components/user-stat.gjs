@@ -3,7 +3,7 @@ import { htmlSafe } from "@ember/template";
 import formatDuration from "discourse/helpers/format-duration";
 import number from "discourse/helpers/number";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserStat extends Component {
   get type() {

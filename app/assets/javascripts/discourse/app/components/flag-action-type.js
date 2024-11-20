@@ -3,7 +3,7 @@ import { and, equal, not } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class FlagActionType extends Component {
@@ -19,8 +19,8 @@ export default class FlagActionType extends Component {
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
-    return I18n.t("flagging.custom_placeholder_" + nameKey, {
-      defaultValue: I18n.t("flagging.custom_placeholder_notify_moderators"),
+    return i18n("flagging.custom_placeholder_" + nameKey, {
+      defaultValue: i18n("flagging.custom_placeholder_notify_moderators"),
     });
   }
 
@@ -29,7 +29,7 @@ export default class FlagActionType extends Component {
     if (["notify_user", "notify_moderators"].includes(nameKey)) {
       return name.replace(/{{username}}|%{username}/, username);
     } else {
-      return I18n.t("flagging.formatted_name." + nameKey, {
+      return i18n("flagging.formatted_name." + nameKey, {
         defaultValue: name,
       });
     }
@@ -57,11 +57,11 @@ export default class FlagActionType extends Component {
     const len = messageLength || 0;
     const minLen = this.siteSettings.min_personal_message_post_length;
     if (len === 0) {
-      return I18n.t("flagging.custom_message.at_least", { count: minLen });
+      return i18n("flagging.custom_message.at_least", { count: minLen });
     } else if (len < minLen) {
-      return I18n.t("flagging.custom_message.more", { count: minLen - len });
+      return i18n("flagging.custom_message.more", { count: minLen - len });
     } else {
-      return I18n.t("flagging.custom_message.left", {
+      return i18n("flagging.custom_message.left", {
         count: MAX_MESSAGE_LENGTH - len,
       });
     }

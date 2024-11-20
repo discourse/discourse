@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
@@ -40,7 +40,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     assert.dom("li.dropdown-menu__item").exists({ count: 2 });
     assert.strictEqual(
       query("li.dropdown-menu__item span").textContent.trim(),
-      I18n.t("poll.export-results.label"),
+      i18n("poll.export-results.label"),
       "displays the poll Export action"
     );
   });
@@ -76,7 +76,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     assert
       .dom(query("li.dropdown-menu__item span"))
       .hasText(
-        I18n.t("poll.show-tally.label"),
+        i18n("poll.show-tally.label"),
         "displays the show absolute button"
       );
   });
@@ -108,7 +108,7 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     assert.dom("button.widget-button").exists({ count: 1 });
     assert.strictEqual(
       query("button.widget-button span.d-button-label").textContent.trim(),
-      I18n.t("poll.breakdown.breakdown"),
+      i18n("poll.breakdown.breakdown"),
       "displays the poll Close action"
     );
   });
