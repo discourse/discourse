@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 RSpec.describe Chat::MessageInteractionSerializer do
   subject(:serializer) do
-    interaction = Chat::CreateMessageInteraction.call(params:, guardian: user.guardian).interaction
+    interaction =
+      Fabricate(
+        :chat_message_interaction,
+        message:,
+        user:,
+        action: message.blocks.first["elements"].first,
+      )
     described_class.new(interaction, scope: Guardian.new(user), root: false)
   end
 
