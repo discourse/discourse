@@ -8,6 +8,7 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import LoadMore from "discourse/mixins/load-more";
 import deprecated, {
   registerDeprecationHandler,
@@ -18,8 +19,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 registerDeprecationHandler((message, opts) => {
   if (opts?.id === "discourse.hbr-topic-list-overrides") {
     needsHbrTopicList(true);
-    // eslint-disable-next-line no-console
-    console.debug(message);
+    console.debug(consolePrefix(), message);
   }
 });
 
