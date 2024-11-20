@@ -357,7 +357,7 @@ export default class DEditor extends Component {
             component: EmojiPickerVirtual,
             data: {
               didSelectEmoji: (emoji) => {
-                this.emojiSelected(emoji);
+                this.textManipulation.emojiSelected(emoji);
               },
               term: v.term,
             },

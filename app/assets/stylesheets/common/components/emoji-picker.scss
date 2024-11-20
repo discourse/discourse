@@ -65,6 +65,7 @@
     width: 100%;
     overflow-y: scroll;
     text-transform: capitalize;
+    overscroll-behavior: contain;
   }
 
   &__no-results {
