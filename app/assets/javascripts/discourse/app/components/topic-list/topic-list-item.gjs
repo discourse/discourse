@@ -215,7 +215,7 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{#each (@columns.resolve) as |entry|}}
+        {{#each @columns as |entry|}}
           <entry.value.item
             @topic={{@topic}}
             @bulkSelectEnabled={{@bulkSelectEnabled}}

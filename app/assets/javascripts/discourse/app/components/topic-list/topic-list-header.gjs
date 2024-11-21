@@ -1,6 +1,6 @@
 const TopicListHeader = <template>
   <tr>
-    {{#each (@columns.resolve) as |entry|}}
+    {{#each @columns as |entry|}}
       <entry.value.header
         @sortable={{@sortable}}
         @activeOrder={{@order}}

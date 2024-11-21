@@ -32,7 +32,7 @@ export default class TopicList extends Component {
       "topic-list-columns",
       createColumns(),
       context
-    );
+    ).resolve();
   }
 
   get selected() {
