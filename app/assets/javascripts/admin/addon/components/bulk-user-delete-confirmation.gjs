@@ -65,11 +65,7 @@ export default class BulkUserDeleteConfirmation extends Component {
       this.#logSuccess(
         i18n(
           "admin.users.bulk_actions.delete.confirmation_modal.user_delete_succeeded",
-          {
-            position: data.position,
-            total: data.total,
-            username: data.username,
-          }
+          data
         )
       );
     } else if (data.failed) {
@@ -77,12 +73,7 @@ export default class BulkUserDeleteConfirmation extends Component {
       this.#logError(
         i18n(
           "admin.users.bulk_actions.delete.confirmation_modal.user_delete_failed",
-          {
-            position: data.position,
-            total: data.total,
-            username: data.username,
-            error: data.error,
-          }
+          data
         )
       );
     }
