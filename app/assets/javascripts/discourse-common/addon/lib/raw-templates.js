@@ -40,8 +40,9 @@ const TOPIC_LIST_TEMPLATE_NAMES = [
 ];
 
 export function addRawTemplate(name, template, opts = {}) {
+  const cleanName = name.replace(/^javascripts\//, "");
   if (
-    (TOPIC_LIST_TEMPLATE_NAMES.includes(name) ||
+    (TOPIC_LIST_TEMPLATE_NAMES.includes(cleanName) ||
       name.includes("/connectors/")) &&
     !opts.core &&
     !opts.hasModernReplacement
@@ -52,15 +53,21 @@ export function addRawTemplate(name, template, opts = {}) {
       id: "discourse.hbr-topic-list-overrides",
     });
 
-    const source = {};
+    let prefix;
     if (opts.themeId) {
-      source.id = opts.themeId;
-      source.name = opts.themeName;
+      prefix = consolePrefix(null, {
+        type: "theme",
+        id: opts.themeId,
+        name: opts.themeName,
+      });
     } else if (opts.pluginName) {
-      source.name = opts.pluginName;
+      prefix = consolePrefix(null, {
+        type: "plugin",
+        name: opts.pluginName,
+      });
     }
     // eslint-disable-next-line no-console
-    console.debug(consolePrefix(null, source), message);
+    console.debug(prefix, message);
   }
 
   // Core templates should never overwrite themes / plugins

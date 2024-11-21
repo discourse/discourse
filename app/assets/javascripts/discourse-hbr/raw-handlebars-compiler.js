@@ -159,7 +159,7 @@ TemplateCompiler.prototype.processString = function (string, relativePath) {
 
     addRawTemplate("${filename}", template, {
       core: ${!pluginName},
-      pluginName: "${pluginName}",
+      pluginName: ${JSON.stringify(pluginName)},
       hasModernReplacement: ${hasModernReplacement},
     });
 
