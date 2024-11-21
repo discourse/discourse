@@ -692,7 +692,6 @@ class TopicView
       DiscoursePluginRegistry.apply_modifier(
         :topic_view_link_counts,
         TopicLink.counts_for(@guardian, @topic, posts),
-        self,
       )
   end
 
