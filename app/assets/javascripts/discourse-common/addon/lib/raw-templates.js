@@ -1,4 +1,5 @@
 import require from "require";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
@@ -40,17 +41,18 @@ const TOPIC_LIST_TEMPLATE_NAMES = [
 
 export function addRawTemplate(name, template, opts = {}) {
   if (
-    TOPIC_LIST_TEMPLATE_NAMES.includes(name) &&
+    (TOPIC_LIST_TEMPLATE_NAMES.includes(name) ||
+      name.includes("/connectors/")) &&
     !opts.core &&
     !opts.hasModernReplacement
   ) {
-    deprecated(
-      "hbr topic-list template overrides are deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
-      {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      }
-    );
+    const message = `[${name}] hbr topic-list template overrides and connectors are deprecated. Use the value transformer \`topic-list-columns\` and other new topic-list plugin APIs instead.`;
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+    // eslint-disable-next-line no-console
+    console.debug(`[THEME ${opts.themeId} '${opts.themeName}']`, message);
   }
 
   // Core templates should never overwrite themes / plugins
@@ -92,14 +94,6 @@ export function buildRawConnectorCache() {
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
-
-      deprecated(
-        "hbr connectors are deprecated. Use the new plugin outlets instead.",
-        {
-          since: "v3.4.0.beta3-dev",
-          id: "discourse.hbr-topic-list-overrides",
-        }
-      );
     }
   });
   return result;

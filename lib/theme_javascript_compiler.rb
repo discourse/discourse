@@ -225,7 +225,7 @@ class ThemeJavascriptCompiler
         */
         const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
         const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        addRawTemplate(#{raw_template_name(name)}, template, { hasModernReplacement: #{modern_replacement_marker} });
+        addRawTemplate(#{raw_template_name(name)}, template, { themeId: #{@theme_id}, themeName: '#{@theme_name}', hasModernReplacement: #{modern_replacement_marker} });
       })();
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex
