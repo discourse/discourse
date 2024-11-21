@@ -478,11 +478,9 @@ RSpec.configure do |config|
     end
 
     [
-      [PostAction, :post_action_type_id],
       [Reviewable, :target_id],
       [ReviewableHistory, :reviewable_id],
       [ReviewableScore, :reviewable_id],
-      [ReviewableScore, :reviewable_score_type],
       [SidebarSectionLink, :linkable_id],
       [SidebarSectionLink, :sidebar_section_id],
       [User, :last_seen_reviewable_id],
