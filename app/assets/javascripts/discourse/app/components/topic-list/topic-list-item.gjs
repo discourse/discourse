@@ -240,21 +240,19 @@ export default class TopicListItem extends Component {
       />
       {{#if this.site.desktopView}}
         {{#each (this.columns.resolve) as |entry|}}
-          {{#if entry.value.item}}
-            <entry.value.item
-              @topic={{@topic}}
-              @bulkSelectEnabled={{@bulkSelectEnabled}}
-              @onBulkSelectToggle={{this.onBulkSelectToggle}}
-              @isSelected={{this.isSelected}}
-              @showTopicPostBadges={{@showTopicPostBadges}}
-              @hideCategory={{@hideCategory}}
-              @tagsForUser={{@tagsForUser}}
-              @expandPinned={{this.expandPinned}}
-              @showPosters={{@showPosters}}
-              @showLikes={{@showLikes}}
-              @showOpLikes={{@showOpLikes}}
-            />
-          {{/if}}
+          <entry.value.item
+            @topic={{@topic}}
+            @bulkSelectEnabled={{@bulkSelectEnabled}}
+            @onBulkSelectToggle={{this.onBulkSelectToggle}}
+            @isSelected={{this.isSelected}}
+            @showTopicPostBadges={{@showTopicPostBadges}}
+            @hideCategory={{@hideCategory}}
+            @tagsForUser={{@tagsForUser}}
+            @expandPinned={{this.expandPinned}}
+            @showPosters={{@showPosters}}
+            @showLikes={{@showLikes}}
+            @showOpLikes={{@showOpLikes}}
+          />
         {{/each}}
       {{else}}
         <td class="topic-list-data">
