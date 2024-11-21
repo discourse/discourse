@@ -131,7 +131,6 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
-  @cached
   get publicMessageChannelsWithActivity() {
     return this.publicMessageChannels.filter((channel) => channel.hasUnread);
   }
@@ -150,7 +149,6 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
-  @cached
   get directMessageChannelsWithActivity() {
     return this.directMessageChannels.filter((channel) => channel.hasUnread);
   }
