@@ -29,6 +29,7 @@ export default class AdminUsersListShowController extends Controller.extend(
   showEmails = false;
   refreshing = false;
   listFilter = null;
+  lastSelected = null;
 
   @computedI18n("search_hint") searchHint;
 
@@ -128,12 +129,31 @@ export default class AdminUsersListShowController extends Controller.extend(
   @action
   bulkSelectItemToggle(userId, event) {
     if (event.target.checked) {
-      this.bulkSelectedUserIdsSet.add(userId);
-      this.bulkSelectedUsersMap[userId] = 1;
+      this.#addUserToBulkSelection(userId);
+
+      if (event.shiftKey && this.lastSelected) {
+        const list = Array.from(
+          document.querySelectorAll(
+            "input.directory-table__cell-bulk-select:not([disabled])"
+          )
+        );
+        const lastSelectedIndex = list.indexOf(this.lastSelected);
+        if (lastSelectedIndex !== -1) {
+          const newSelectedIndex = list.indexOf(event.target);
+          const start = Math.min(lastSelectedIndex, newSelectedIndex);
+          const end = Math.max(lastSelectedIndex, newSelectedIndex);
+          list.slice(start, end).forEach((input) => {
+            input.checked = true;
+            this.#addUserToBulkSelection(parseInt(input.dataset.userId, 10));
+          });
+        }
+      }
+      this.lastSelected = event.target;
     } else {
       this.bulkSelectedUserIdsSet.delete(userId);
       delete this.bulkSelectedUsersMap[userId];
     }
+
     this.displayBulkActions = this.bulkSelectedUserIdsSet.size > 0;
   }
 
@@ -153,5 +173,10 @@ export default class AdminUsersListShowController extends Controller.extend(
         afterBulkDelete: this.afterBulkDelete,
       },
     });
+  }
+
+  #addUserToBulkSelection(userId) {
+    this.bulkSelectedUserIdsSet.add(userId);
+    this.bulkSelectedUsersMap[userId] = 1;
   }
 }

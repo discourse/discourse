@@ -182,6 +182,7 @@
                     type="checkbox"
                     class="directory-table__cell-bulk-select"
                     checked={{eq (get this.bulkSelectedUsersMap user.id) 1}}
+                    data-user-id={{user.id}}
                     {{on "click" (fn this.bulkSelectItemToggle user.id)}}
                   />
                 {{else}}
