@@ -35,7 +35,7 @@ class User::BulkDestroy
           user,
           delete_posts: true,
           prepare_for_destroy: true,
-          context: I18n.t("staff_action_logs.bulk_user_delete", users: users.map(&:id).inspect),
+          context: I18n.t("staff_action_logs.bulk_user_delete"),
         )
 
       if success

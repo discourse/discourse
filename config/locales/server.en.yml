@@ -5535,7 +5535,7 @@ en:
         other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
-    bulk_user_delete: "bulk deletion of users: %{users}"
+    bulk_user_delete: "deleted in a bulk delete operation"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
