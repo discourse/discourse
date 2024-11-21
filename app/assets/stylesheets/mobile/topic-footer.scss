@@ -55,6 +55,13 @@
     @include breakpoint(mobile-extra-large) {
       margin-left: auto;
     }
+
+    .d-button-label {
+      display: none;
+    }
+    .d-icon {
+      margin-right: 0;
+    }
   }
 
   .bookmark.bookmarked .d-icon-discourse-bookmark-clock,
