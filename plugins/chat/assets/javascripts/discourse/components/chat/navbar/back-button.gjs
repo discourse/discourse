@@ -19,8 +19,15 @@ export default class ChatNavbarBackButton extends Component {
     return this.args.route ?? "chat";
   }
 
+  get showBackButton() {
+    return (
+      this.chatStateManager.isDrawerExpanded ||
+      this.chatStateManager.isFullPageActive
+    );
+  }
+
   <template>
-    {{#if this.chatStateManager.isDrawerExpanded}}
+    {{#if this.showBackButton}}
       {{#if @routeModels}}
         <LinkTo
           @route={{@route}}
