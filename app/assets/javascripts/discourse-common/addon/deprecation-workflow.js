@@ -16,6 +16,10 @@ const DEPRECATION_WORKFLOW = [
     handler: "silence",
     matchId: "discourse.post-menu-widget-overrides",
   },
+  {
+    handler: "silence",
+    matchId: "discourse.hbr-topic-list-overrides",
+  },
 ];
 
 export default DEPRECATION_WORKFLOW;
