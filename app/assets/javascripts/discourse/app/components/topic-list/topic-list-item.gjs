@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -21,16 +20,13 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import { createColumns } from "./dag";
 
 export default class TopicListItem extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;
-  @service topicTrackingState;
 
   highlightIfNeeded = modifier((element) => {
     if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
@@ -74,26 +70,6 @@ export default class TopicListItem extends Component {
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
-  }
-
-  @cached
-  get columns() {
-    const self = this;
-    const context = {
-      get category() {
-        return self.topicTrackingState.get("filterCategory");
-      },
-
-      get filter() {
-        return self.topicTrackingState.get("filter");
-      },
-    };
-
-    return applyValueTransformer(
-      "topic-list-columns",
-      createColumns(),
-      context
-    );
   }
 
   navigateToTopic(topic, href) {
@@ -239,7 +215,7 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{#each (this.columns.resolve) as |entry|}}
+        {{#each (@columns.resolve) as |entry|}}
           <entry.value.item
             @topic={{@topic}}
             @bulkSelectEnabled={{@bulkSelectEnabled}}

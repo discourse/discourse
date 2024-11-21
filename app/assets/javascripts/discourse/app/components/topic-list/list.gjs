@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
@@ -6,10 +7,33 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeader from "discourse/components/topic-list/topic-list-header";
 import TopicListItem from "discourse/components/topic-list/topic-list-item";
 import concatClass from "discourse/helpers/concat-class";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import { createColumns } from "./dag";
 
 export default class TopicList extends Component {
   @service currentUser;
+  @service topicTrackingState;
+
+  @cached
+  get columns() {
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-columns",
+      createColumns(),
+      context
+    );
+  }
 
   get selected() {
     return this.args.bulkSelectHelper?.selected;
@@ -95,6 +119,7 @@ export default class TopicList extends Component {
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead class="topic-list-header">
         <TopicListHeader
+          @columns={{this.columns}}
           @canBulkSelect={{@canBulkSelect}}
           @toggleInTitle={{this.toggleInTitle}}
           @category={{@category}}
@@ -133,6 +158,7 @@ export default class TopicList extends Component {
       <tbody class="topic-list-body">
         {{#each @topics as |topic index|}}
           <TopicListItem
+            @columns={{this.columns}}
             @topic={{topic}}
             @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
