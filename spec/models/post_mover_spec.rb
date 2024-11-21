@@ -2641,50 +2641,55 @@ RSpec.describe PostMover do
     context "with freeze_original option" do
       fab!(:original_topic) { Fabricate(:topic) }
       fab!(:destination_topic) { Fabricate(:topic) }
-      fab!(:post_1) { Fabricate(:post, topic: original_topic) }
-      fab!(:post_2) { Fabricate(:post, topic: original_topic) }
+      fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of this topic") }
+      fab!(:first_post) { Fabricate(:post, topic: original_topic, raw: "first_post") }
+      fab!(:second_post) { Fabricate(:post, topic: original_topic, raw: "second_post") }
 
-      it "keeps all posts when moving to a new topic" do
+      it "keeps a posts when moving it to a new topic" do
         new_topic =
           PostMover.new(
             original_topic,
             Discourse.system_user,
-            [post_1.id, post_2.id],
+            [first_post.id],
             options: {
               freeze_original: true,
             },
           ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
 
-        expect(original_topic.posts.count).to eq(2)
-        expect(new_topic.posts.count).to eq(2)
+        expect(new_topic.posts.map(&:raw)).to include(first_post.raw)
+        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
       end
 
       it "does not get deleted when moved all posts to topic" do
         SiteSetting.delete_merged_stub_topics_after_days = 0
+        all_posts_from_original_topic = original_topic.posts.map(&:raw)
+
         PostMover.new(
           original_topic,
           Discourse.system_user,
-          [post_1.id, post_2.id],
+          original_topic.posts.map(&:id),
           options: {
             freeze_original: true,
           },
         ).to_topic(destination_topic.id)
 
         expect(original_topic.deleted_at).to be_nil
+        expect(original_topic.posts.map(&:raw)).to include(all_posts_from_original_topic)
+        expect(destination_topic.posts.map(&:raw)).to include(all_posts_from_original_topic)
       end
 
-      it "keeps all posts when moving to an existing topic" do
+      it "keeps a post when moving to an existing topic" do
         PostMover.new(
           original_topic,
           Discourse.system_user,
-          [post_1.id, post_2.id],
+          [first_post.id],
           options: {
             freeze_original: true,
           },
         ).to_topic(destination_topic.id)
 
-        expect(original_topic.posts.count).to eq(2)
-        expect(destination_topic.posts.count).to eq(2)
+        expect(new_topic.posts.map(&:raw)).to include(first_post.raw)
+        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
       end
 
       it "lets you move multiple times to the same topic" do
@@ -2692,7 +2697,7 @@ RSpec.describe PostMover do
           PostMover.new(
             original_topic,
             Discourse.system_user,
-            [post_1.id, post_2.id],
+            [first_post.id],
             options: {
               freeze_original: true,
             },
@@ -2700,41 +2705,43 @@ RSpec.describe PostMover do
         mover.to_topic(destination_topic.id)
         mover.to_topic(destination_topic.id)
 
-        expect(original_topic.posts.count).to eq(2)
-        expect(destination_topic.posts.count).to eq(4)
+        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
+        expect(destination_topic.posts.map(&:raw)).to include([first_post.raw, first_post.raw])
       end
 
       it "keeps all posts when moving to a new PM" do
+        moving_posts = [first_post, second_post]
         pm =
           PostMover.new(
             original_topic,
             Discourse.system_user,
-            [post_1.id, post_2.id],
+            moving_posts.map(&:id),
             move_to_pm: true,
             options: {
               freeze_original: true,
             },
           ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
 
-        expect(original_topic.posts.count).to eq(2)
-        expect(pm.posts.count).to eq(2)
+        expect(original_topic.posts.map(&:raw)).to include(moving_posts.map(&:raw))
+        expect(pm.posts.map(&:raw)).to include(moving_posts.map(&:raw))
       end
 
       it "keep all posts when moving to an existing PM" do
         pm = Fabricate(:private_message_topic)
+        moving_posts = [first_post, second_post]
 
         PostMover.new(
           original_topic,
           Discourse.system_user,
-          [post_1.id, post_2.id],
+          moving_posts.map(&:id),
           move_to_pm: true,
           options: {
             freeze_original: true,
           },
         ).to_topic(pm.id)
 
-        expect(original_topic.posts.count).to eq(2)
-        expect(pm.posts.count).to eq(2)
+        expect(original_topic.posts.map(&:raw)).to include(moving_posts.map(&:raw))
+        expect(pm.posts.map(&:raw)).to include(moving_posts.map(&:raw))
       end
     end
   end

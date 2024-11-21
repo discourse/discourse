@@ -71,7 +71,6 @@ class PostMover
   def move_posts_to(topic)
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
-
     # when a topic contains some posts after moving posts to another topic we shouldn't close it
     # two types of posts should prevent a topic from closing:
     #   1. regular posts
