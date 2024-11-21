@@ -56,7 +56,7 @@ export default class TopicParticipant extends Component {
   <template>
     <PluginOutlet
       @name="topic-participant"
-      @outletArgs={{hash participant=this.args.participant}}
+      @outletArgs={{hash participant=@participant}}
     >
       <div class={{this.participantClasses}}>
         <a
