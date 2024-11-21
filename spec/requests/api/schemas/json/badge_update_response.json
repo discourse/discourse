@@ -107,7 +107,7 @@
         "badge_type_id": {
           "type": "integer"
         },
-        "post_header": {
+        "show_in_post_header": {
           "type": "boolean"
         }
       },
@@ -134,7 +134,7 @@
         "show_posts",
         "badge_type_id",
         "image_upload_id",
-        "post_header"
+        "show_in_post_header"
       ]
     }
   },
