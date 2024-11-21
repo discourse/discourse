@@ -11,7 +11,6 @@
         @withInLabel={{@withInLabel}}
         @isIntersection={{true}}
         @searchAllTopics={{true}}
-        @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
         @typeClass="tag-intersection"
@@ -27,7 +26,6 @@
           @slug={{get this.fullSlugForCategoryMap result.model.id}}
           @withInLabel={{@withInLabel}}
           @searchAllTopics={{true}}
-          @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
           @typeClass="category"
@@ -39,7 +37,6 @@
           @slug={{concat this.prefix "#" result.name}}
           @withInLabel={{@withInLabel}}
           @searchAllTopics={{true}}
-          @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
           @typeClass="tag"
@@ -55,7 +52,6 @@
         @slug={{concat this.prefix "@" this.user.username}}
         @suffix={{i18n "search.in_topics_posts"}}
         @searchAllTopics={{true}}
-        @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
         @typeClass="user"
@@ -65,7 +61,6 @@
         @user={{this.user}}
         @slug={{concat this.prefix "@" this.user.username}}
         @suffix={{i18n "search.in_this_topic"}}
-        @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
         @typeClass="user"
@@ -76,7 +71,6 @@
           @user={{result}}
           @slug={{concat this.prefix "@" result.username}}
           @searchAllTopics={{true}}
-          @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
           @typeClass="user"
@@ -93,7 +87,6 @@
         @slug={{concat this.prefix item}}
         @label={{item}}
         @searchAllTopics={{true}}
-        @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
         @typeClass="shortcut"
