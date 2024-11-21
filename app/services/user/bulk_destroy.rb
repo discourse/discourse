@@ -28,11 +28,11 @@ class User::BulkDestroy
   end
 
   def delete(users:, guardian:)
-    users.each.with_index do |u, index|
+    users.find_each.with_index do |user, index|
       position = index + 1
       success =
         UserDestroyer.new(guardian.user).destroy(
-          u,
+          user,
           delete_posts: true,
           prepare_for_destroy: true,
           context: I18n.t("staff_action_logs.bulk_user_delete", users: users.map(&:id).inspect),
@@ -41,24 +41,24 @@ class User::BulkDestroy
       if success
         publish_progress(
           guardian.user,
-          { position:, username: u.username, total: users.size, success: true },
+          { position:, username: user.username, total: users.size, success: true },
         )
       else
         publish_progress(
           guardian.user,
           {
             position:,
-            username: u.username,
+            username: user.username,
             total: users.size,
             failed: true,
-            error: u.errors.full_messages.join(", "),
+            error: user.errors.full_messages.join(", "),
           },
         )
       end
     rescue => err
       publish_progress(
         guardian.user,
-        { position:, username: u.username, total: users.size, failed: true, error: err.message },
+        { position:, username: user.username, total: users.size, failed: true, error: err.message },
       )
     end
   end
