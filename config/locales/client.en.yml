@@ -6643,12 +6643,15 @@ en:
           title: "Bulk actions"
           admin_cant_be_deleted: "This user can't be deleted because they're an admin"
           too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          too_many_selected_users:
+            one: "You've reached the %{count} user limit for bulk deletion"
+            other: "You've reached the %{count} users limit for bulk deletion"
           delete:
             label: "Delete users…"
             confirmation_modal:
               prompt_text:
-                one: "You're about to delete %{count} user permanently. Type \"%{confirmation_phrase}\" below to proceed:"
-                other: "You're about to delete %{count} users permanently. Type \"%{confirmation_phrase}\" below to proceed:"
+                one: 'You''re about to delete %{count} user permanently. Type "%{confirmation_phrase}" below to proceed:'
+                other: 'You''re about to delete %{count} users permanently. Type "%{confirmation_phrase}" below to proceed:'
               confirmation_phrase:
                 one: "delete %{count} user"
                 other: "delete %{count} users"

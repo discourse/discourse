@@ -11,11 +11,14 @@ import { i18n } from "discourse-i18n";
 import BulkUserDeleteConfirmation from "admin/components/bulk-user-delete-confirmation";
 import AdminUser from "admin/models/admin-user";
 
+const MAX_BULK_SELECT_LIMIT = 100;
+
 export default class AdminUsersListShowController extends Controller.extend(
   CanCheckEmails
 ) {
   @service dialog;
   @service modal;
+  @service toasts;
 
   @tracked bulkSelect = false;
   @tracked displayBulkActions = false;
@@ -129,6 +132,19 @@ export default class AdminUsersListShowController extends Controller.extend(
   @action
   bulkSelectItemToggle(userId, event) {
     if (event.target.checked) {
+      if (this.bulkSelectedUserIdsSet.size === MAX_BULK_SELECT_LIMIT) {
+        this.toasts.error({
+          duration: 3000,
+          data: {
+            message: i18n("admin.users.bulk_actions.too_many_selected_users", {
+              count: MAX_BULK_SELECT_LIMIT,
+            }),
+          },
+        });
+        event.preventDefault();
+        return;
+      }
+
       this.#addUserToBulkSelection(userId);
 
       if (event.shiftKey && this.lastSelected) {
