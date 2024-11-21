@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class StartBackup extends Component {
   @service siteSettings;
@@ -24,7 +24,7 @@ export default class StartBackup extends Component {
       this.siteSettings.enable_s3_uploads &&
       !this.siteSettings.include_s3_uploads_in_backups
     ) {
-      return I18n.t("admin.backups.operations.backup.s3_upload_warning");
+      return i18n("admin.backups.operations.backup.s3_upload_warning");
     }
     return "";
   }

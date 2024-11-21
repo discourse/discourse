@@ -686,7 +686,14 @@ class PostMover
 
     days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
     if days_to_deleting == 0
-      if Guardian.new(@user).can_delete?(@original_topic)
+      is_allowed_to_delete_after_merge =
+        DiscoursePluginRegistry.apply_modifier(
+          :is_allowed_to_delete_after_merge,
+          Guardian.new(@user).can_delete?(@original_topic),
+          @original_topic,
+          @user,
+        )
+      if is_allowed_to_delete_after_merge
         first_post = @original_topic.ordered_posts.first
 
         PostDestroyer.new(

@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import userFixtures from "../fixtures/user-fixtures";
 import { acceptance, query, queryAll } from "../helpers/qunit-helpers";
 
@@ -60,7 +60,7 @@ acceptance("User Activity / Topics - empty state", function (needs) {
     await visit(`/u/${currentUser}/activity/topics`);
     assert.equal(
       query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_topics_title")
+      i18n("user_activity.no_topics_title")
     );
   });
 
@@ -68,7 +68,7 @@ acceptance("User Activity / Topics - empty state", function (needs) {
     await visit(`/u/${anotherUser}/activity/topics`);
     assert.equal(
       query("div.empty-state span.empty-state-title").innerText,
-      I18n.t("user_activity.no_topics_title_others", { username: anotherUser })
+      i18n("user_activity.no_topics_title_others", { username: anotherUser })
     );
   });
 });

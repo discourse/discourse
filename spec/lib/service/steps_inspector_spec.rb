@@ -20,6 +20,7 @@ RSpec.describe Service::StepsInspector do
       step :in_transaction_step_1
       step :in_transaction_step_2
     end
+    try { step :might_raise }
     step :final_step
   end
 
@@ -30,9 +31,14 @@ RSpec.describe Service::StepsInspector do
 
   before do
     class DummyService
-      %i[fetch_model policy in_transaction_step_1 in_transaction_step_2 final_step].each do |name|
-        define_method(name) { true }
-      end
+      %i[
+        fetch_model
+        policy
+        in_transaction_step_1
+        in_transaction_step_2
+        might_raise
+        final_step
+      ].each { |name| define_method(name) { true } }
     end
   end
 
@@ -42,14 +48,16 @@ RSpec.describe Service::StepsInspector do
     context "when service runs without error" do
       it "outputs all the steps of the service" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/8] [options] 'default' ✅
-        [2/8] [model] 'model' ✅
-        [3/8] [policy] 'policy' ✅
-        [4/8] [params] 'default' ✅
-        [5/8] [transaction]
-        [6/8]   [step] 'in_transaction_step_1' ✅
-        [7/8]   [step] 'in_transaction_step_2' ✅
-        [8/8] [step] 'final_step' ✅
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ✅
+        [ 3/10] [policy] 'policy' ✅
+        [ 4/10] [params] 'default' ✅
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1' ✅
+        [ 7/10]   [step] 'in_transaction_step_2' ✅
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise' ✅
+        [10/10] [step] 'final_step' ✅
         OUTPUT
       end
     end
@@ -65,14 +73,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/8] [options] 'default' ✅
-        [2/8] [model] 'model' ❌
-        [3/8] [policy] 'policy'
-        [4/8] [params] 'default'
-        [5/8] [transaction]
-        [6/8]   [step] 'in_transaction_step_1'
-        [7/8]   [step] 'in_transaction_step_2'
-        [8/8] [step] 'final_step'
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ❌
+        [ 3/10] [policy] 'policy'
+        [ 4/10] [params] 'default'
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1'
+        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise'
+        [10/10] [step] 'final_step'
         OUTPUT
       end
     end
@@ -88,14 +98,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/8] [options] 'default' ✅
-        [2/8] [model] 'model' ✅
-        [3/8] [policy] 'policy' ❌
-        [4/8] [params] 'default'
-        [5/8] [transaction]
-        [6/8]   [step] 'in_transaction_step_1'
-        [7/8]   [step] 'in_transaction_step_2'
-        [8/8] [step] 'final_step'
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ✅
+        [ 3/10] [policy] 'policy' ❌
+        [ 4/10] [params] 'default'
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1'
+        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise'
+        [10/10] [step] 'final_step'
         OUTPUT
       end
     end
@@ -105,14 +117,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/8] [options] 'default' ✅
-        [2/8] [model] 'model' ✅
-        [3/8] [policy] 'policy' ✅
-        [4/8] [params] 'default' ❌
-        [5/8] [transaction]
-        [6/8]   [step] 'in_transaction_step_1'
-        [7/8]   [step] 'in_transaction_step_2'
-        [8/8] [step] 'final_step'
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ✅
+        [ 3/10] [policy] 'policy' ✅
+        [ 4/10] [params] 'default' ❌
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1'
+        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise'
+        [10/10] [step] 'final_step'
         OUTPUT
       end
     end
@@ -128,14 +142,41 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [1/8] [options] 'default' ✅
-        [2/8] [model] 'model' ✅
-        [3/8] [policy] 'policy' ✅
-        [4/8] [params] 'default' ✅
-        [5/8] [transaction]
-        [6/8]   [step] 'in_transaction_step_1' ✅
-        [7/8]   [step] 'in_transaction_step_2' ❌
-        [8/8] [step] 'final_step'
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ✅
+        [ 3/10] [policy] 'policy' ✅
+        [ 4/10] [params] 'default' ✅
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1' ✅
+        [ 7/10]   [step] 'in_transaction_step_2' ❌
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise'
+        [10/10] [step] 'final_step'
+        OUTPUT
+      end
+    end
+
+    context "when a step raises an exception inside the 'try' block" do
+      before do
+        class DummyService
+          def might_raise
+            raise "BOOM"
+          end
+        end
+      end
+
+      it "shows the failing step" do
+        expect(output).to eq <<~OUTPUT.chomp
+        [ 1/10] [options] 'default' ✅
+        [ 2/10] [model] 'model' ✅
+        [ 3/10] [policy] 'policy' ✅
+        [ 4/10] [params] 'default' ✅
+        [ 5/10] [transaction]
+        [ 6/10]   [step] 'in_transaction_step_1' ✅
+        [ 7/10]   [step] 'in_transaction_step_2' ✅
+        [ 8/10] [try]
+        [ 9/10]   [step] 'might_raise' 💥
+        [10/10] [step] 'final_step'
         OUTPUT
       end
     end
@@ -146,14 +187,16 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [1/8] [options] 'default' ✅
-          [2/8] [model] 'model' ✅
-          [3/8] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
-          [4/8] [params] 'default' ✅
-          [5/8] [transaction]
-          [6/8]   [step] 'in_transaction_step_1' ✅
-          [7/8]   [step] 'in_transaction_step_2' ✅
-          [8/8] [step] 'final_step' ✅
+          [ 1/10] [options] 'default' ✅
+          [ 2/10] [model] 'model' ✅
+          [ 3/10] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
+          [ 4/10] [params] 'default' ✅
+          [ 5/10] [transaction]
+          [ 6/10]   [step] 'in_transaction_step_1' ✅
+          [ 7/10]   [step] 'in_transaction_step_2' ✅
+          [ 8/10] [try]
+          [ 9/10]   [step] 'might_raise' ✅
+          [10/10] [step] 'final_step' ✅
           OUTPUT
         end
       end
@@ -170,14 +213,16 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [1/8] [options] 'default' ✅
-          [2/8] [model] 'model' ✅
-          [3/8] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
-          [4/8] [params] 'default'
-          [5/8] [transaction]
-          [6/8]   [step] 'in_transaction_step_1'
-          [7/8]   [step] 'in_transaction_step_2'
-          [8/8] [step] 'final_step'
+          [ 1/10] [options] 'default' ✅
+          [ 2/10] [model] 'model' ✅
+          [ 3/10] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
+          [ 4/10] [params] 'default'
+          [ 5/10] [transaction]
+          [ 6/10]   [step] 'in_transaction_step_1'
+          [ 7/10]   [step] 'in_transaction_step_2'
+          [ 8/10] [try]
+          [ 9/10]   [step] 'might_raise'
+          [10/10] [step] 'final_step'
           OUTPUT
         end
       end
@@ -264,6 +309,20 @@ RSpec.describe Service::StepsInspector do
 
       it "returns an error related to the step" do
         expect(error).to eq("my error")
+      end
+    end
+
+    context "when an exception occurred inside the 'try' block" do
+      before do
+        class DummyService
+          def might_raise
+            raise "BOOM"
+          end
+        end
+      end
+
+      it "returns an error related to the exception" do
+        expect(error).to match(/RuntimeError: BOOM/)
       end
     end
   end

@@ -64,13 +64,23 @@ module PageObjects
       end
 
       def has_unread_channel?(channel)
-        has_css?(".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread")
+        has_css?(
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix:is(.unread, .urgent)",
+        )
       end
 
       def has_no_unread_channel?(channel)
         has_no_css?(
-          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix.unread",
+          ".sidebar-section-link.channel-#{channel.id} .sidebar-section-link-suffix:is(.unread, .urgent)",
         )
+      end
+
+      def has_active_channel?(channel)
+        has_css?(".sidebar-section-link.channel-#{channel.id}.active")
+      end
+
+      def has_no_active_channel?(channel)
+        has_no_css?(".sidebar-section-link.channel-#{channel.id}.active")
       end
     end
   end

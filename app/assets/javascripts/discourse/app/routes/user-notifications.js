@@ -1,6 +1,6 @@
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const DEFAULT_LIMIT = 60;
 let limit = DEFAULT_LIMIT;
@@ -37,6 +37,6 @@ export default class UserNotifications extends DiscourseRoute.extend(
   }
 
   titleToken() {
-    return I18n.t("user.notifications");
+    return i18n("user.notifications");
   }
 }

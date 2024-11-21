@@ -5,7 +5,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings(
   ":user-stream-item",
@@ -44,6 +44,6 @@ export default class GroupPost extends Component {
 
   @discourseComputed("post.title", "post.post_number")
   titleAriaLabel(title, postNumber) {
-    return I18n.t("groups.aria_post_number", { postNumber, title });
+    return i18n("groups.aria_post_number", { postNumber, title });
   }
 }

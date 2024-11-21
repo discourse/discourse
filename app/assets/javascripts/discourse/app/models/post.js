@@ -18,7 +18,7 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class Post extends RestModel {
   static munge(json) {
@@ -421,7 +421,7 @@ export default class Post extends RestModel {
         this.post_number === 1
           ? "topic.deleted_by_author_simple"
           : "post.deleted_by_author_simple";
-      promise = cook(I18n.t(key)).then((cooked) => {
+      promise = cook(i18n(key)).then((cooked) => {
         this.setProperties({
           cooked,
           can_delete: false,

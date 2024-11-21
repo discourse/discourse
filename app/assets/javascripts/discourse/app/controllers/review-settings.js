@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewSettingsController extends Controller {
   saving = false;
@@ -30,7 +30,7 @@ export default class ReviewSettingsController extends Controller {
 
   @discourseComputed("settings.reviewable_score_types")
   scoreTypes(types) {
-    const username = I18n.t("review.example_username");
+    const username = i18n("review.example_username");
 
     return types.map((type) => ({
       ...type,

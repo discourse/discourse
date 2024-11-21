@@ -1,5 +1,5 @@
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SiteSettingFilter {
   constructor(siteSettings) {
@@ -46,7 +46,7 @@ export default class SiteSettingFilter {
     if (opts.includeAllCategory) {
       all = {
         nameKey: "all_results",
-        name: I18n.t("admin.site_settings.categories.all_results"),
+        name: i18n("admin.site_settings.categories.all_results"),
         siteSettings: [],
       };
 
@@ -114,7 +114,7 @@ export default class SiteSettingFilter {
         matches.pushObjects(siteSettings);
         matchesGroupedByCategory.pushObject({
           nameKey: settingsCategory.nameKey,
-          name: I18n.t(
+          name: i18n(
             "admin.site_settings.categories." + settingsCategory.nameKey
           ),
           siteSettings: this.sortSettings(siteSettings),

@@ -1,12 +1,12 @@
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { assert, module, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Addons | truth-helpers | Integration | includes", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("when using an array", async function () {
+  test("when using an array", async function (assert) {
     this.foo = [1];
     this.bar = 1;
     await render(
@@ -23,7 +23,7 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
     assert.dom(".test").doesNotExist("is false when element is not found");
   });
 
-  test("when using a string", async function () {
+  test("when using a string", async function (assert) {
     this.foo = "foo";
     this.bar = "f";
     await render(

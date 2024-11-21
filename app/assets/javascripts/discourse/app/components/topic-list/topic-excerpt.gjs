@@ -1,5 +1,5 @@
 import dirSpan from "discourse/helpers/dir-span";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const TopicExcerpt = <template>
   {{#if @topic.hasExcerpt}}

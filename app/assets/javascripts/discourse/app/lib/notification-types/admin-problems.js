@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get label() {
@@ -8,7 +8,7 @@ export default class extends NotificationTypeBase {
   }
 
   get description() {
-    return I18n.t("notifications.admin_problems");
+    return i18n("notifications.admin_problems");
   }
 
   get linkHref() {

@@ -9,8 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import {
   MULTIPLE_POLL_TYPE,
@@ -243,7 +242,7 @@ export default class PollComponent extends Component {
         }
         popupAjaxError(error);
       } else {
-        this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
+        this.dialog.alert(i18n("poll.error_while_casting_votes"));
       }
     }
   }
@@ -378,7 +377,7 @@ export default class PollComponent extends Component {
   }
 
   get pollGroups() {
-    return I18n.t("poll.results.groups.title", { groups: this.poll.groups });
+    return i18n("poll.results.groups.title", { groups: this.poll.groups });
   }
 
   get showCastVotesButton() {
@@ -445,7 +444,7 @@ export default class PollComponent extends Component {
 
     const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
 
-    return htmlSafe(I18n.t("poll.average_rating", { average }));
+    return htmlSafe(i18n("poll.average_rating", { average }));
   }
 
   get availableDisplayMode() {
@@ -527,7 +526,7 @@ export default class PollComponent extends Component {
         if (error) {
           popupAjaxError(error);
         } else {
-          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
+          this.dialog.alert(i18n("poll.error_while_fetching_voters"));
         }
       })
       .finally(() => {
@@ -573,7 +572,7 @@ export default class PollComponent extends Component {
     }
 
     this.dialog.yesNoConfirm({
-      message: I18n.t(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
+      message: i18n(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
       didConfirm: () => {
         const status = this.closed ? OPEN_STATUS : CLOSED_STATUS;
         ajax("/polls/toggle_status", {
@@ -607,7 +606,7 @@ export default class PollComponent extends Component {
             if (error) {
               popupAjaxError(error);
             } else {
-              this.dialog.alert(I18n.t("poll.error_while_toggling_status"));
+              this.dialog.alert(i18n("poll.error_while_toggling_status"));
             }
           });
       },
@@ -663,7 +662,7 @@ export default class PollComponent extends Component {
         if (error) {
           popupAjaxError(error);
         } else {
-          this.dialog.alert(I18n.t("poll.error_while_exporting_results"));
+          this.dialog.alert(i18n("poll.error_while_exporting_results"));
         }
       });
   }

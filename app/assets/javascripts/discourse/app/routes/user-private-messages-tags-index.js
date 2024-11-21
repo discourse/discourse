@@ -2,7 +2,7 @@ import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserPrivateMessagesTagsIndex extends DiscourseRoute {
   model() {
@@ -16,7 +16,7 @@ export default class UserPrivateMessagesTagsIndex extends DiscourseRoute {
   }
 
   titleToken() {
-    return [I18n.t("tagging.tags"), I18n.t("user.private_messages")];
+    return [i18n("tagging.tags"), i18n("user.private_messages")];
   }
 
   setupController(controller, model) {

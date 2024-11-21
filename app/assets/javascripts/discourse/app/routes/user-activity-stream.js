@@ -1,6 +1,6 @@
 import ViewingActionType from "discourse/mixins/viewing-action-type";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityStream extends DiscourseRoute.extend(
   ViewingActionType
@@ -34,7 +34,7 @@ export default class UserActivityStream extends DiscourseRoute.extend(
   }
 
   emptyState() {
-    const title = I18n.t("user_activity.no_activity_title");
+    const title = i18n("user_activity.no_activity_title");
     const body = "";
     return { title, body };
   }

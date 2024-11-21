@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Login with email - hide email address taken", function (needs) {
   needs.settings({
@@ -22,7 +22,7 @@ acceptance("Login with email - hide email address taken", function (needs) {
     await click("#email-login-link");
 
     assert.dom(".alert-success").hasHtml(
-      I18n.t("email_login.complete_email_found", {
+      i18n("email_login.complete_email_found", {
         email: "someuser@example.com",
       }),
       "displays the success message for any email address"

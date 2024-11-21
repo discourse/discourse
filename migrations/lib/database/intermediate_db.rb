@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "singleton"
-
 module Migrations::Database
   module IntermediateDB
     def self.setup(db_connection)

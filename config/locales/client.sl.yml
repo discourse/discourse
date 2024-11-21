@@ -1430,7 +1430,6 @@ sl:
       location: "Lokacija"
       website: "Spletna stran"
       email_settings: "E-naslov"
-      hide_profile_and_presence: "Skrij moj javni profil in prisotnost"
       enable_physical_keyboard: "Omogoči podporo fizične tipkovnice na iPadu"
       text_size:
         title: "Velikost besedila"
@@ -4708,8 +4707,6 @@ sl:
             with_time: <span class="username">%{username}</span> ob <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        new: "Dodaj"
-        add: "Dodaj nov emoji"
         uploading: "Nalagam..."
         name: "Ime"
         group: "Skupina"
@@ -4730,12 +4727,13 @@ sl:
         post_title: "Prispevek"
         category_id: "ID kategorije"
         category_title: "Kategorija"
+        user_title: "Uporabnik"
         username: "Uporabniško ime"
         delete_confirm: Ali ste prepričani, da želite odstraniti trajno povezavo?
         form:
           label: "Novo:"
-          add: "Dodaj"
-          filter: "Išči (URL ali zunanji URL)"
+          url: "URL"
+          save: "Shrani"
       reseed:
         modal:
           categories: "Kategorije"

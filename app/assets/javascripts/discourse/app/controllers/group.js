@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 class Tab extends EmberObject {
   init() {
@@ -11,7 +11,7 @@ class Tab extends EmberObject {
 
     this.setProperties({
       route: this.route || `group.${this.name}`,
-      message: I18n.t(`groups.${this.i18nKey || this.name}`),
+      message: i18n(`groups.${this.i18nKey || this.name}`),
     });
   }
 }
@@ -138,7 +138,7 @@ export default class GroupController extends Controller {
     const model = this.model;
 
     this.dialog.deleteConfirm({
-      title: I18n.t("admin.groups.delete_confirm", { group: model.name }),
+      title: i18n("admin.groups.delete_confirm", { group: model.name }),
       bodyComponent: GroupDeleteDialog,
       bodyComponentModel: model,
       didConfirm: () => {
@@ -147,7 +147,7 @@ export default class GroupController extends Controller {
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);
-            this.dialog.alert(I18n.t("admin.groups.delete_failed"));
+            this.dialog.alert(i18n("admin.groups.delete_failed"));
           })
           .then(() => {
             this.router.transitionTo("groups.index");

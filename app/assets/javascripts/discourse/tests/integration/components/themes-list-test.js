@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
 
 function createThemes(itemsCount, customAttributesCallback) {
@@ -89,7 +89,7 @@ module("Integration | Component | themes-list", function (hooks) {
     assert
       .dom(".themes-list-container__item span.empty")
       .hasText(
-        I18n.t("admin.customize.theme.empty"),
+        i18n("admin.customize.theme.empty"),
         "displays the right message"
       );
   });
@@ -136,7 +136,7 @@ module("Integration | Component | themes-list", function (hooks) {
     assert
       .dom(".themes-list-container__item span.empty")
       .hasText(
-        I18n.t("admin.customize.theme.empty"),
+        i18n("admin.customize.theme.empty"),
         "displays the right message"
       );
   });

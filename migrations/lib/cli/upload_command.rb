@@ -1,49 +1,40 @@
 # frozen_string_literal: true
 
-module Migrations::CLI::UploadCommand
-  def self.included(thor)
-    thor.class_eval do
-      desc "upload", "Upload media uploads"
-      option :settings,
-             type: :string,
-             desc: "Uploads settings file path",
-             default: "./migrations/config/upload.yml",
-             aliases: "-s",
-             banner: "path"
-      option :fix_missing, type: :boolean, desc: "Fix missing uploads"
-      option :optimize, type: :boolean, desc: "Optimize uploads"
-      def upload
-        puts "Starting uploads..."
+module Migrations::CLI
+  class UploadCommand
+    def initialize(options)
+      @options = options
+    end
 
-        validate_settings_file!
-        settings = load_settings
+    def execute
+      puts "Starting uploads..."
 
-        ::Migrations::Uploader::Uploads.perform!(settings)
+      validate_settings_file!
+      settings = load_settings
 
-        puts ""
-      end
+      ::Migrations::Uploader::Uploads.perform!(settings)
 
-      private
+      puts ""
+    end
 
-      def load_settings
-        settings = ::Migrations::SettingsParser.parse!(options.settings)
-        merge_settings_from_cli_args!(settings)
+    private
 
-        settings
-      end
+    def load_settings
+      settings = ::Migrations::SettingsParser.parse!(@options.settings)
+      merge_settings_from_cli_args!(@options, settings)
 
-      def merge_settings_from_cli_args!(settings)
-        settings[:fix_missing] = options.fix_missing if options.fix_missing.present?
-        settings[:create_optimized_images] = options.optimize if options.optimize.present?
-      end
+      settings
+    end
 
-      def validate_settings_file!
-        path = options.settings
+    def merge_settings_from_cli_args!(settings)
+      settings[:fix_missing] = options.fix_missing if @options.fix_missing.present?
+      settings[:create_optimized_images] = options.optimize if @options.optimize.present?
+    end
 
-        if !File.exist?(path)
-          raise ::Migrations::NoSettingsFound, "Settings file not found: #{path}"
-        end
-      end
+    def validate_settings_file!
+      path = @options.settings
+
+      raise ::Migrations::NoSettingsFound, "Settings file not found: #{path}" if !File.exist?(path)
     end
   end
 end

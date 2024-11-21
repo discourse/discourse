@@ -5,7 +5,7 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class BookmarkIcon extends Component {
   tagName = "";
@@ -34,7 +34,7 @@ export default class BookmarkIcon extends Component {
   @computed("bookmark.title")
   get title() {
     if (!this.bookmark) {
-      return I18n.t("bookmarks.create");
+      return i18n("bookmarks.create");
     }
 
     return this.bookmark.reminderTitle;

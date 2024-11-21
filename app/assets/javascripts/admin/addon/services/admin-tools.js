@@ -3,7 +3,7 @@ import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import PenalizeUserModal from "admin/components/modal/penalize-user";
 import AdminUser from "admin/models/admin-user";
 
@@ -76,10 +76,9 @@ export default class AdminToolsService extends Service {
           POSTS: adminUser.get("post_count"),
           TOPICS: adminUser.get("topic_count"),
           email:
-            adminUser.get("email") || I18n.t("flagging.hidden_email_address"),
+            adminUser.get("email") || i18n("flagging.hidden_email_address"),
           ip_address:
-            adminUser.get("ip_address") ||
-            I18n.t("flagging.ip_address_missing"),
+            adminUser.get("ip_address") || i18n("flagging.ip_address_missing"),
         })
       );
 
@@ -111,7 +110,7 @@ export default class AdminToolsService extends Service {
                 }
               })
               .catch(() => {
-                this.dialog.alert(I18n.t("admin.user.delete_failed"));
+                this.dialog.alert(i18n("admin.user.delete_failed"));
                 reject();
               });
           },

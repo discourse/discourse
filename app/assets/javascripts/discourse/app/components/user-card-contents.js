@@ -20,7 +20,7 @@ import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNames("user-card")
 @classNameBindings(
@@ -40,7 +40,7 @@ export default class UserCardContents extends CardContentsBase.extend(
   avatarSelector = "[data-user-card]";
   avatarDataAttrKey = "userCard";
   mentionSelector = "a.mention";
-  ariaLabel = I18n.t("user.card");
+  ariaLabel = i18n("user.card");
 
   @setting("allow_profile_backgrounds") allowBackgrounds;
   @setting("enable_badges") showBadges;
@@ -116,7 +116,7 @@ export default class UserCardContents extends CardContentsBase.extend(
 
   @discourseComputed("userTimezone")
   formattedUserLocalTime(timezone) {
-    return moment.tz(timezone).format(I18n.t("dates.time"));
+    return moment.tz(timezone).format(i18n("dates.time"));
   }
 
   @discourseComputed("username")
@@ -126,7 +126,7 @@ export default class UserCardContents extends CardContentsBase.extend(
 
   @discourseComputed("username", "topicPostCount")
   filterPostsLabel(username, count) {
-    return I18n.t("topic.filter_to", { username, count });
+    return i18n("topic.filter_to", { username, count });
   }
 
   @discourseComputed("user.user_fields.@each.value")
@@ -169,12 +169,12 @@ export default class UserCardContents extends CardContentsBase.extend(
   @discourseComputed("showRecentTimeRead", "user.time_read", "recentTimeRead")
   timeReadTooltip(showRecent, timeRead, recentTimeRead) {
     if (showRecent) {
-      return I18n.t("time_read_recently_tooltip", {
+      return i18n("time_read_recently_tooltip", {
         time_read: durationTiny(timeRead),
         recent_time_read: recentTimeRead,
       });
     } else {
-      return I18n.t("time_read_tooltip", {
+      return i18n("time_read_tooltip", {
         time_read: durationTiny(timeRead),
       });
     }

@@ -1,5 +1,5 @@
 import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 
 const DATETIME_FORMAT = "LLL";
@@ -217,7 +217,7 @@ export default class LocalDateBuilder {
       if (diffTime < 0) {
         return moment.duration(diffTime).humanize();
       } else {
-        return I18n.t("discourse_local_dates.relative_dates.countdown.passed");
+        return i18n("discourse_local_dates.relative_dates.countdown.passed");
       }
     }
 
@@ -269,7 +269,7 @@ export default class LocalDateBuilder {
   }
 
   _translateCalendarKey(time, key) {
-    const translated = I18n.t(`discourse_local_dates.relative_dates.${key}`, {
+    const translated = i18n(`discourse_local_dates.relative_dates.${key}`, {
       time: "LT",
     });
 

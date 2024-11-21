@@ -14,11 +14,11 @@ import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import { FORMAT as DATE_INPUT_FORMAT } from "select-kit/components/future-date-input-selector";
 import GroupChooser from "select-kit/components/group-chooser";
 import TopicChooser from "select-kit/components/topic-chooser";
@@ -71,13 +71,13 @@ export default class CreateInvite extends Component {
       .map((days) => {
         return {
           value: days,
-          text: I18n.t("dates.medium.x_days", { count: days }),
+          text: i18n("dates.medium.x_days", { count: days }),
         };
       });
 
     list.push({
       value: 999999,
-      text: I18n.t("time_shortcut.never"),
+      text: i18n("time_shortcut.never"),
     });
 
     return list;
@@ -146,11 +146,11 @@ export default class CreateInvite extends Component {
       if (!this.simpleMode) {
         if (this.sendEmail) {
           this.flashText = sanitize(
-            I18n.t("user.invited.invite.invite_saved_with_sending_email")
+            i18n("user.invited.invite.invite_saved_with_sending_email")
           );
         } else {
           this.flashText = sanitize(
-            I18n.t("user.invited.invite.invite_saved_without_sending_email")
+            i18n("user.invited.invite.invite_saved_without_sending_email")
           );
         }
         this.flashClass = "success";
@@ -249,11 +249,17 @@ export default class CreateInvite extends Component {
   @action
   async createLink() {
     this.sendEmail = false;
+
+    const topicId = applyValueTransformer("invite-simple-mode-topic", null, {
+      invite: this.invite,
+    });
+
     await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(DATE_INPUT_FORMAT),
+      ...(topicId != null && { topic_id: topicId }),
     });
   }
 

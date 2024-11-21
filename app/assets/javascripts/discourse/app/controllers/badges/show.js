@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ShowController extends Controller {
   @controller application;
@@ -23,7 +23,7 @@ export default class ShowController extends Controller {
     return [
       EmberObject.create({
         id: 0,
-        badge: Badge.create({ name: I18n.t("badges.none") }),
+        badge: Badge.create({ name: i18n("badges.none") }),
       }),
       ...filteredList.uniqBy("badge.name"),
     ];

@@ -774,6 +774,7 @@ uk:
         title: "Чат"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Переключити канал"
+          switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
           open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"

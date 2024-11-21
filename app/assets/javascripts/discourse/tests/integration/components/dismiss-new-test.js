@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | modal/dismiss-new", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,7 +18,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
 
     assert
       .dom("#discourse-modal-title")
-      .hasText(I18n.t("topics.bulk.dismiss_new_modal.title"));
+      .hasText(i18n("topics.bulk.dismiss_new_modal.title"));
   });
 
   test("default state", async function (assert) {
@@ -46,7 +46,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     assert
       .dom(".dismiss-topics")
       .hasText(
-        I18n.t("topics.bulk.dismiss_new_modal.topics_with_count", { count: 1 })
+        i18n("topics.bulk.dismiss_new_modal.topics_with_count", { count: 1 })
       );
   });
 
@@ -65,7 +65,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     assert
       .dom(".dismiss-posts")
       .hasText(
-        I18n.t("topics.bulk.dismiss_new_modal.replies_with_count", { count: 1 })
+        i18n("topics.bulk.dismiss_new_modal.replies_with_count", { count: 1 })
       );
   });
 
@@ -79,7 +79,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     assert.dom(".dismiss-posts").doesNotExist();
     assert
       .dom(".dismiss-topics")
-      .hasText(I18n.t("topics.bulk.dismiss_new_modal.topics"));
+      .hasText(i18n("topics.bulk.dismiss_new_modal.topics"));
   });
 
   test("no selected topics with replies subset", async function (assert) {
@@ -92,7 +92,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     assert.dom(".dismiss-topics").doesNotExist();
     assert
       .dom(".dismiss-posts")
-      .hasText(I18n.t("topics.bulk.dismiss_new_modal.replies"));
+      .hasText(i18n("topics.bulk.dismiss_new_modal.replies"));
   });
 
   test("dismissed", async function (assert) {

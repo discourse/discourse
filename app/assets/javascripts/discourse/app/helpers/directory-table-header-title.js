@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default function directoryTableHeaderTitle(args) {
   // Args should include key/values { field, labelKey, icon, translated }
@@ -13,6 +13,6 @@ export default function directoryTableHeaderTitle(args) {
 
   html += args.translated
     ? args.field
-    : I18n.t(labelKey + "_long", { defaultValue: I18n.t(labelKey) });
+    : i18n(labelKey + "_long", { defaultValue: i18n(labelKey) });
   return htmlSafe(html);
 }

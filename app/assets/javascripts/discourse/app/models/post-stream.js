@@ -13,7 +13,7 @@ import { loadTopicView } from "discourse/models/topic";
 import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
 export function setLastEditNotificationClick(
@@ -1255,7 +1255,7 @@ export default class PostStream extends RestModel {
       topic.set("errorTitle", json.extras.title);
       topic.set("errorHtml", json.extras.html);
     } else {
-      topic.set("errorMessage", I18n.t("topic.server_error.description"));
+      topic.set("errorMessage", i18n("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
     }
   }

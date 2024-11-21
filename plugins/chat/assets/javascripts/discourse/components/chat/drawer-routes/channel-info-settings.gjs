@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChannelInfoNav from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-nav";
 import ChannelSettings from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-settings";
@@ -16,7 +16,7 @@ export default class ChatDrawerRoutesSettings extends Component {
     return {
       route: "chat.channel",
       models: this.chat.activeChannel?.routeModels,
-      title: I18n.t("chat.return_to_channel"),
+      title: i18n("chat.return_to_channel"),
     };
   }
 

@@ -23,6 +23,16 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
   excludeSynonyms = false;
   excludeHasSynonyms = false;
 
+  init() {
+    super.init(...arguments);
+
+    this.setProperties({
+      blockedTags: this.blockedTags || [],
+      termMatchesForbidden: false,
+      termMatchErrorMessage: null,
+    });
+  }
+
   modifyComponentForRow(collection, item) {
     if (this.getValue(item) === this.selectKit.filter && !item.count) {
       return "select-kit/select-kit-row";
@@ -48,16 +58,6 @@ export default class TagChooser extends MultiSelectComponent.extend(TagsMixin) {
     }
 
     return null;
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.setProperties({
-      blockedTags: this.blockedTags || [],
-      termMatchesForbidden: false,
-      termMatchErrorMessage: null,
-    });
   }
 
   @computed("tags.[]")

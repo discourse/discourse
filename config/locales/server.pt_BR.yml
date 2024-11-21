@@ -2297,7 +2297,6 @@ pt_BR:
     disable_mailing_list_mode: "Impedir que usuários(as) ativem o modo lista de endereçamento (evita o envio de e-mails de lista de endereçamento.)"
     default_email_previous_replies: "Inclua respostas anteriores em e-mails por padrão."
     default_email_in_reply_to: "Inclua trecho de resposta de postagem em e-mails por padrão."
-    default_hide_profile_and_presence: "Oculte o perfil público do(a) usuário(a) e recursos de presença por padrão."
     default_other_new_topic_duration_minutes: "Condição padrão global para a qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo padrão global antes de um tópico ser monitorado automaticamente."
     default_other_notification_level_when_replying: "Nível de notificação padrão global quando o(a) usuário(a) responde a um tópico."

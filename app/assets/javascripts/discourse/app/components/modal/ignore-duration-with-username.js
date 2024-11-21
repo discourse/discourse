@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import User from "discourse/models/user";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class IgnoreDurationModal extends Component {
   @service currentUser;
@@ -41,7 +41,7 @@ export default class IgnoreDurationModal extends Component {
   @action
   ignore() {
     if (!this.ignoredUntil || !this.ignoredUsername) {
-      this.flash = I18n.t(
+      this.flash = i18n(
         "user.user_notifications.ignore_duration_time_frame_required"
       );
       return;

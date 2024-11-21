@@ -1960,7 +1960,7 @@ class BulkImport::Generic < BulkImport::Base
 
     votes = query(<<~SQL)
       SELECT *
-        FROM votes
+        FROM post_voting_votes
        WHERE votable_type = 'Post'
     SQL
 

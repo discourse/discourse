@@ -18,7 +18,7 @@ import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ForgotPassword from "./forgot-password";
 
 export default class Login extends Component {
@@ -191,7 +191,7 @@ export default class Login extends Component {
     }
 
     if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
-      this.flash = I18n.t("login.blank_username_or_password");
+      this.flash = i18n("login.blank_username_or_password");
       this.flashType = "error";
       return;
     }
@@ -252,7 +252,7 @@ export default class Login extends Component {
           this.dialog.alert(result.error);
         } else if (result.reason === "expired") {
           this.flash = htmlSafe(
-            I18n.t("login.password_expired", {
+            i18n("login.password_expired", {
               reset_url: getURL("/password-reset"),
             })
           );
@@ -310,20 +310,20 @@ export default class Login extends Component {
     } catch (e) {
       // Failed to login
       if (e.jqXHR && e.jqXHR.status === 429) {
-        this.flash = I18n.t("login.rate_limit");
+        this.flash = i18n("login.rate_limit");
         this.flashType = "error";
       } else if (
         e.jqXHR &&
         e.jqXHR.status === 503 &&
         e.jqXHR.responseJSON.error_type === "read_only"
       ) {
-        this.flash = I18n.t("read_only_mode.login_disabled");
+        this.flash = i18n("read_only_mode.login_disabled");
         this.flashType = "error";
       } else if (!areCookiesEnabled()) {
-        this.flash = I18n.t("login.cookies_error");
+        this.flash = i18n("login.cookies_error");
         this.flashType = "error";
       } else {
-        this.flash = I18n.t("login.error");
+        this.flash = i18n("login.error");
         this.flashType = "error";
       }
       this.loggingIn = false;

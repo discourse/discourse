@@ -6,7 +6,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import DEPRECATION_WORKFLOW from "discourse-common/deprecation-workflow";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // Deprecations matching patterns on this list will trigger warnings for admins.
 // To avoid 'crying wolf', we should only add values here when we're sure they're
@@ -95,15 +95,15 @@ export default class DeprecationWarningHandler extends Service {
   notifyAdmin({ id, url }, source) {
     this.#adminWarned = true;
 
-    let notice = I18n.t("critical_deprecation.notice") + " ";
+    let notice = i18n("critical_deprecation.notice") + " ";
 
     if (url) {
-      notice += I18n.t("critical_deprecation.linked_id", {
+      notice += i18n("critical_deprecation.linked_id", {
         id: escapeExpression(id),
         url: escapeExpression(url),
       });
     } else {
-      notice += I18n.t("critical_deprecation.id", {
+      notice += i18n("critical_deprecation.id", {
         id: escapeExpression(id),
       });
     }
@@ -115,14 +115,14 @@ export default class DeprecationWarningHandler extends Service {
     if (source?.type === "theme") {
       notice +=
         " " +
-        I18n.t("critical_deprecation.theme_source", {
+        i18n("critical_deprecation.theme_source", {
           name: escapeExpression(source.name),
           path: source.path,
         });
     } else if (source?.type === "plugin") {
       notice +=
         " " +
-        I18n.t("critical_deprecation.plugin_source", {
+        i18n("critical_deprecation.plugin_source", {
           name: escapeExpression(source.name),
         });
     }

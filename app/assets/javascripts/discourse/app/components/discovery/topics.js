@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DiscoveryTopics extends Component {
   @service router;
@@ -117,21 +117,21 @@ export default class DiscoveryTopics extends Component {
 
     const { category, tag } = this.args;
     if (category) {
-      return I18n.t("topics.bottom.category", {
+      return i18n("topics.bottom.category", {
         category: category.get("name"),
       });
     } else if (tag) {
-      return I18n.t("topics.bottom.tag", {
+      return i18n("topics.bottom.tag", {
         tag: tag.id,
       });
     } else {
       const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
-        return I18n.t("topics.none." + split[0], {
+        return i18n("topics.none." + split[0], {
           category: split[1],
         });
       } else {
-        return I18n.t("topics.bottom." + split[0], {
+        return i18n("topics.bottom." + split[0], {
           category: split[1],
         });
       }
@@ -157,7 +157,7 @@ export default class DiscoveryTopics extends Component {
       tab = "new_new";
     }
 
-    return I18n.t("topics.none.educate." + tab, {
+    return i18n("topics.none.educate." + tab, {
       userPrefsUrl: userPath(
         `${this.currentUser.get("username_lower")}/preferences/tracking`
       ),

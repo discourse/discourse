@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { or } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsFormInteractionFields extends Component {
   @or(
@@ -19,36 +19,36 @@ export default class GroupsFormInteractionFields extends Component {
 
   visibilityLevelOptions = [
     {
-      name: I18n.t("admin.groups.manage.interaction.visibility_levels.public"),
+      name: i18n("admin.groups.manage.interaction.visibility_levels.public"),
       value: 0,
     },
     {
-      name: I18n.t(
+      name: i18n(
         "admin.groups.manage.interaction.visibility_levels.logged_on_users"
       ),
       value: 1,
     },
     {
-      name: I18n.t("admin.groups.manage.interaction.visibility_levels.members"),
+      name: i18n("admin.groups.manage.interaction.visibility_levels.members"),
       value: 2,
     },
     {
-      name: I18n.t("admin.groups.manage.interaction.visibility_levels.staff"),
+      name: i18n("admin.groups.manage.interaction.visibility_levels.staff"),
       value: 3,
     },
     {
-      name: I18n.t("admin.groups.manage.interaction.visibility_levels.owners"),
+      name: i18n("admin.groups.manage.interaction.visibility_levels.owners"),
       value: 4,
     },
   ];
 
   aliasLevelOptions = [
-    { name: I18n.t("groups.alias_levels.nobody"), value: 0 },
-    { name: I18n.t("groups.alias_levels.only_admins"), value: 1 },
-    { name: I18n.t("groups.alias_levels.mods_and_admins"), value: 2 },
-    { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: 3 },
-    { name: I18n.t("groups.alias_levels.owners_mods_and_admins"), value: 4 },
-    { name: I18n.t("groups.alias_levels.everyone"), value: 99 },
+    { name: i18n("groups.alias_levels.nobody"), value: 0 },
+    { name: i18n("groups.alias_levels.only_admins"), value: 1 },
+    { name: i18n("groups.alias_levels.mods_and_admins"), value: 2 },
+    { name: i18n("groups.alias_levels.members_mods_and_admins"), value: 3 },
+    { name: i18n("groups.alias_levels.owners_mods_and_admins"), value: 4 },
+    { name: i18n("groups.alias_levels.everyone"), value: 99 },
   ];
 
   watchingNotificationLevel = NotificationLevels.WATCHING;

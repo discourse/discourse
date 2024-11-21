@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const CUSTOM_REASON_KEY = "custom";
 
@@ -26,7 +26,7 @@ export default class AdminPenaltyReason extends Component {
   @discourseComputed("reasonKeys")
   reasons(keys) {
     return keys.map((key) => {
-      return { id: key, name: I18n.t(`admin.user.suspend_reasons.${key}`) };
+      return { id: key, name: i18n(`admin.user.suspend_reasons.${key}`) };
     });
   }
 
@@ -48,7 +48,7 @@ export default class AdminPenaltyReason extends Component {
     } else {
       this.set(
         "reason",
-        I18n.t(`admin.user.suspend_reasons.${this.selectedReason}`)
+        i18n(`admin.user.suspend_reasons.${this.selectedReason}`)
       );
     }
   }

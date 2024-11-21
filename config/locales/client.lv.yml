@@ -3783,8 +3783,6 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
-        new: "Pievienot"
-        add: "Pievienot Jaunu Smaidiņu"
         name: "Nosaukums"
         group: "Grupa"
         image: "Attēls"
@@ -3818,12 +3816,13 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
+        user_title: "Lietotājs"
         username: "Lietotājvārds"
         delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"
-          add: "Pievienot"
-          filter: "Meklēt (URL)"
+          url: "URL"
+          save: "Saglabāt"
       reseed:
         modal:
           categories: "Sadaļas"

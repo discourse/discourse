@@ -8,7 +8,7 @@ import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import computed, { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default class LocalDatesCreate extends Component {
@@ -215,35 +215,35 @@ export default class LocalDatesCreate extends Component {
 
     return [
       {
-        name: I18n.t(`${key}.every_day`),
+        name: i18n(`${key}.every_day`),
         id: "1.days",
       },
       {
-        name: I18n.t(`${key}.every_week`),
+        name: i18n(`${key}.every_week`),
         id: "1.weeks",
       },
       {
-        name: I18n.t(`${key}.every_two_weeks`),
+        name: i18n(`${key}.every_two_weeks`),
         id: "2.weeks",
       },
       {
-        name: I18n.t(`${key}.every_month`),
+        name: i18n(`${key}.every_month`),
         id: "1.months",
       },
       {
-        name: I18n.t(`${key}.every_two_months`),
+        name: i18n(`${key}.every_two_months`),
         id: "2.months",
       },
       {
-        name: I18n.t(`${key}.every_three_months`),
+        name: i18n(`${key}.every_three_months`),
         id: "3.months",
       },
       {
-        name: I18n.t(`${key}.every_six_months`),
+        name: i18n(`${key}.every_six_months`),
         id: "6.months",
       },
       {
-        name: I18n.t(`${key}.every_year`),
+        name: i18n(`${key}.every_year`),
         id: "1.years",
       },
     ];
@@ -288,7 +288,7 @@ export default class LocalDatesCreate extends Component {
   formattedTo(dateTime, toSelected) {
     const emptyText = toSelected
       ? "&nbsp;"
-      : I18n.t("discourse_local_dates.create.form.until");
+      : i18n("discourse_local_dates.create.form.until");
 
     return dateTime.isValid() ? dateTime.format("LLLL") : emptyText;
   }

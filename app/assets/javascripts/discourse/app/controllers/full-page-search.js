@@ -24,7 +24,7 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const SEARCH_TYPE_DEFAULT = "topics_posts";
 export const SEARCH_TYPE_CATS_TAGS = "categories_tags";
@@ -90,19 +90,19 @@ export default class FullPageSearchController extends Controller {
     );
 
     const searchTypes = [
-      { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
+      { name: i18n("search.type.default"), id: SEARCH_TYPE_DEFAULT },
       {
         name: this.siteSettings.tagging_enabled
-          ? I18n.t("search.type.categories_and_tags")
-          : I18n.t("search.type.categories"),
+          ? i18n("search.type.categories_and_tags")
+          : i18n("search.type.categories"),
         id: SEARCH_TYPE_CATS_TAGS,
       },
-      { name: I18n.t("search.type.users"), id: SEARCH_TYPE_USERS },
+      { name: i18n("search.type.users"), id: SEARCH_TYPE_USERS },
     ];
 
     customSearchTypes.forEach((type) => {
       searchTypes.push({
-        name: I18n.t(type.translationKey),
+        name: i18n(type.translationKey),
         id: type.searchTypeId,
       });
     });
@@ -110,12 +110,12 @@ export default class FullPageSearchController extends Controller {
     this.set("searchTypes", searchTypes);
 
     this.sortOrders = [
-      { name: I18n.t("search.relevance"), id: 0 },
-      { name: I18n.t("search.latest_post"), id: 1, term: "order:latest" },
-      { name: I18n.t("search.most_liked"), id: 2, term: "order:likes" },
-      { name: I18n.t("search.most_viewed"), id: 3, term: "order:views" },
+      { name: i18n("search.relevance"), id: 0 },
+      { name: i18n("search.latest_post"), id: 1, term: "order:latest" },
+      { name: i18n("search.most_liked"), id: 2, term: "order:likes" },
+      { name: i18n("search.most_viewed"), id: 3, term: "order:views" },
       {
-        name: I18n.t("search.latest_topic"),
+        name: i18n("search.latest_topic"),
         id: 4,
         term: "order:latest_topic",
       },
@@ -267,7 +267,7 @@ export default class FullPageSearchController extends Controller {
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
-    return I18n.t("search.result_count", { count, plus, term });
+    return i18n("search.result_count", { count, plus, term });
   }
 
   @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")

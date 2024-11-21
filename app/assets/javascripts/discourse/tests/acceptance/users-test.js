@@ -8,7 +8,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -125,7 +125,7 @@ acceptance("User Directory", function () {
     assert
       .dom(".empty-state-body")
       .hasText(
-        I18n.t("directory.no_results.body"),
+        i18n("directory.no_results.body"),
         "a JIT message is shown when there are no users"
       );
   });
@@ -145,7 +145,7 @@ acceptance("User Directory", function () {
     assert
       .dom(".empty-state-body")
       .hasText(
-        I18n.t("directory.no_results_with_search"),
+        i18n("directory.no_results_with_search"),
         "a different JIT message is used when there are no results for the search term"
       );
   });

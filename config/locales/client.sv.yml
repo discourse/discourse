@@ -1570,7 +1570,6 @@ sv:
       location: "Plats"
       website: "Webbplats"
       email_settings: "E-post"
-      hide_profile_and_presence: "Dölj min offentliga profil och närvarofunktioner"
       enable_physical_keyboard: "Aktivera stöd för fysiskt tangentbord på iPad"
       text_size:
         title: "Textstorlek"
@@ -6206,10 +6205,6 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
-        description: "Lägg till ny emoji som kommer att vara tillgänglig för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn. Den valda gruppen kommer att användas för alla filer som läggs till samtidigt. Du kan också klicka på \"Lägg till ny emoji\" för att öppna filväljaren."
-        new: "Lägg till"
-        add: "Lägg till ny emoji"
-        choose_files: "Välj filer"
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
@@ -6255,17 +6250,18 @@ sv:
         category_id: "Kategori-ID"
         category_title: "Kategori"
         tag_name: "Namn på tagg"
+        tag_title: "Tagg"
         external_url: "Extern eller relativ URL"
         user_id: "Användar-ID"
+        user_title: "Användare"
         username: "Användarnamn"
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
-        no_permalinks: "Du har inga permalänkar än. Skapa en ny permalänk ovan för att börja se en lista över dina permalänkar här."
         form:
           label: "Ny:"
-          add: "Lägg till"
-          filter: "Sök (URL eller Extern URL)"
+          url: "URL"
+          save: "Spara"
       reseed:
         action:
           label: "Ersätt text..."

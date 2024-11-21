@@ -16,7 +16,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 /**
  * Workaround for https://github.com/tildeio/router.js/pull/335
@@ -385,7 +385,7 @@ acceptance("User - Logout", function (needs) {
       .doesNotExist("no cancel button present");
     assert
       .dom(".dialog-footer .btn-primary")
-      .hasText(I18n.t("home"), "primary dialog button is present");
+      .hasText(i18n("home"), "primary dialog button is present");
 
     await click(".dialog-overlay");
   });

@@ -1,6 +1,6 @@
 import { Promise } from "rsvp";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _cache = {};
 
@@ -80,7 +80,7 @@ function retrieveCachedUrl(
       context.strokeRect(0, 0, canvas.width, canvas.height);
 
       let fontSize = 25;
-      const text = I18n.t("image_removed");
+      const text = i18n("image_removed");
 
       // Fill text size to fit the canvas
       let textSize;

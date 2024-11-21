@@ -8,7 +8,7 @@ import NewListHeaderControls from "discourse/components/topic-list/new-list-head
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SortableColumn extends Component {
   @service router;
@@ -124,20 +124,20 @@ export default class SortableColumn extends Component {
             @changeNewListSubset={{@changeNewListSubset}}
           />
         {{else}}
-          <span
-            class={{if @screenreaderOnly "sr-only"}}
-            tabindex={{if @sortable "0"}}
-            role={{if @sortable "button"}}
-            aria-pressed={{this.isSorting}}
-          >
-            {{this.localizedName}}
-          </span>
+          {{#if @sortable}}
+            <button aria-pressed={{this.isSorting}}>
+              {{this.localizedName}}
+              {{#if this.isSorting}}
+                {{icon (if @ascending "chevron-up" "chevron-down")}}
+              {{/if}}
+            </button>
+          {{else}}
+            <span class={{if @screenreaderOnly "sr-only"}}>
+              {{this.localizedName}}
+            </span>
+          {{/if}}
         {{/if}}
       {{/unless}}
-
-      {{#if this.isSorting}}
-        {{icon (if @ascending "chevron-up" "chevron-down")}}
-      {{/if}}
 
       <PluginOutlet
         @name="topic-list-heading-bottom"

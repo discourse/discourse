@@ -1435,7 +1435,6 @@ lt:
       location: "Gyvenamoji vieta"
       website: "Svetainė"
       email_settings: "El. paštas"
-      hide_profile_and_presence: "Slėpti mano viešąjį profilį"
       enable_physical_keyboard: "Įgalinti fizinį klaviatūros palaikymą iPad"
       text_size:
         title: "Teksto dydis"
@@ -5051,8 +5050,6 @@ lt:
           grant_existing_holders: Suteikite papildomų ženklelių esamiems ženklelių savininkams
       emoji:
         title: "Šypsenėlės"
-        new: "Pridėti"
-        add: "Pridėti Naują Šypsenėlę"
         name: "Vardas"
         group: "Grupė"
         image: "Paveiksliukas"
@@ -5088,15 +5085,17 @@ lt:
         category_id: "Kategorijos ID"
         category_title: "Kategorija"
         tag_name: "Žymos pavadinimas"
+        tag_title: "Žymėti"
         external_url: "Išorinis arba santykinis URL"
+        user_title: "Narys"
         username: "Vartotojo vardas"
         destination: "Paskirtis"
         copy_to_clipboard: "Kopijuoti nuolatinę nuorodą į iškarpinę"
         delete_confirm: Ar tikrain nori ištrinti šią laikiną nuorodą?
         form:
           label: "Nauja:"
-          add: "Pridėti"
-          filter: "Ieškoti (URL arba išorinio URL)"
+          url: "Nuoroda"
+          save: "Išsaugoti"
       reseed:
         action:
           label: "Pakeisti tekstą…"

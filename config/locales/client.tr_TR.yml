@@ -1717,7 +1717,6 @@ tr_TR:
       location: "Konum"
       website: "Web Sitesi"
       email_settings: "E-posta"
-      hide_profile_and_presence: "Herkese açık profilimi ve durum özelliklerini gizle"
       enable_physical_keyboard: "iPad'de fiziksel klavye desteğini etkinleştir"
       text_size:
         title: "Metin Boyutu"
@@ -6690,10 +6689,6 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
-        description: "Herkese açık olacak yeni emoji ekleyin. Dosya adlarını kullanarak emoji oluşturmak için ad girmeden birden fazla dosyayı aynı anda sürükleyip bırakın. Seçilen grup, aynı anda eklenen tüm dosyalar için kullanılır. Dosya seçiciyi açmak için \"Yeni Emoji Ekle\"ye de tıklayabilirsiniz."
-        new: "Ekle"
-        add: "Yeni Emoji Ekle"
-        choose_files: "Dosyaları Seçin"
         uploading: "Yükleniyor…"
         name: "Ad"
         group: "Grup"
@@ -6741,17 +6736,19 @@ tr_TR:
         category_id: "Kategori kimliği"
         category_title: "Kategori"
         tag_name: "Etiket adı"
+        tag_title: "Etiket"
         external_url: "Harici veya Göreli URL"
         user_id: "Kullanıcı Kimliği"
+        user_title: "Kullanıcı"
         username: "Kullanıcı Adı"
         destination: "Hedef"
         copy_to_clipboard: "Kalıcı Bağlantıyı Panoya Kopyala"
         delete_confirm: Bu kalıcı bağlantıyı silmek istediğinizden emin misiniz?
-        no_permalinks: "Henüz kalıcı bağlantınız yok. Kalıcı bağlantılarınızın listesini burada görmeye başlamak için yukarıda yeni bir kalıcı bağlantı oluşturun."
+        more_options: "Daha fazla seçenek"
         form:
           label: "Yeni:"
-          add: "Ekle"
-          filter: "Ara (URL veya Harici URL)"
+          url: "URL"
+          save: "Kaydet"
       reseed:
         action:
           label: "Metni Değiştir…"

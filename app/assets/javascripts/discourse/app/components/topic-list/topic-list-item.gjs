@@ -23,7 +23,7 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import { createColumns } from "./dag";
 
 export default class TopicListItem extends Component {

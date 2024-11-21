@@ -9,7 +9,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   needs.settings({
@@ -466,7 +466,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      i18n("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag1 section link`
     );
 
@@ -474,7 +474,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-tag-name=tag2] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.unread_count", { count: 1 }),
+      i18n("sidebar.unread_count", { count: 1 }),
       `displays 1 unread count for tag2 section link`
     );
 
@@ -497,7 +497,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
       query(
         `.sidebar-section-link-wrapper[data-tag-name=tag1] .sidebar-section-link-content-badge`
       ).textContent.trim(),
-      I18n.t("sidebar.new_count", { count: 1 }),
+      i18n("sidebar.new_count", { count: 1 }),
       `displays 1 new count for tag1 section link`
     );
 

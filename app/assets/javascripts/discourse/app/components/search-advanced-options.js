@@ -7,7 +7,7 @@ import {
 } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const REGEXP_BLOCKS = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -38,36 +38,36 @@ let _extraOptions = [];
 
 function inOptionsForUsers() {
   return [
-    { name: I18n.t("search.advanced.filters.unseen"), value: "unseen" },
-    { name: I18n.t("search.advanced.filters.posted"), value: "posted" },
-    { name: I18n.t("search.advanced.filters.created"), value: "created" },
-    { name: I18n.t("search.advanced.filters.watching"), value: "watching" },
-    { name: I18n.t("search.advanced.filters.tracking"), value: "tracking" },
-    { name: I18n.t("search.advanced.filters.bookmarks"), value: "bookmarks" },
+    { name: i18n("search.advanced.filters.unseen"), value: "unseen" },
+    { name: i18n("search.advanced.filters.posted"), value: "posted" },
+    { name: i18n("search.advanced.filters.created"), value: "created" },
+    { name: i18n("search.advanced.filters.watching"), value: "watching" },
+    { name: i18n("search.advanced.filters.tracking"), value: "tracking" },
+    { name: i18n("search.advanced.filters.bookmarks"), value: "bookmarks" },
   ].concat(..._extraOptions.map((eo) => eo.inOptionsForUsers).filter(Boolean));
 }
 
 function inOptionsForAll() {
   return [
-    { name: I18n.t("search.advanced.filters.first"), value: "first" },
-    { name: I18n.t("search.advanced.filters.pinned"), value: "pinned" },
-    { name: I18n.t("search.advanced.filters.wiki"), value: "wiki" },
-    { name: I18n.t("search.advanced.filters.images"), value: "images" },
+    { name: i18n("search.advanced.filters.first"), value: "first" },
+    { name: i18n("search.advanced.filters.pinned"), value: "pinned" },
+    { name: i18n("search.advanced.filters.wiki"), value: "wiki" },
+    { name: i18n("search.advanced.filters.images"), value: "images" },
   ].concat(..._extraOptions.map((eo) => eo.inOptionsForAll).filter(Boolean));
 }
 
 function statusOptions() {
   return [
-    { name: I18n.t("search.advanced.statuses.open"), value: "open" },
-    { name: I18n.t("search.advanced.statuses.closed"), value: "closed" },
-    { name: I18n.t("search.advanced.statuses.public"), value: "public" },
-    { name: I18n.t("search.advanced.statuses.archived"), value: "archived" },
+    { name: i18n("search.advanced.statuses.open"), value: "open" },
+    { name: i18n("search.advanced.statuses.closed"), value: "closed" },
+    { name: i18n("search.advanced.statuses.public"), value: "public" },
+    { name: i18n("search.advanced.statuses.archived"), value: "archived" },
     {
-      name: I18n.t("search.advanced.statuses.noreplies"),
+      name: i18n("search.advanced.statuses.noreplies"),
       value: "noreplies",
     },
     {
-      name: I18n.t("search.advanced.statuses.single_user"),
+      name: i18n("search.advanced.statuses.single_user"),
       value: "single_user",
     },
   ].concat(..._extraOptions.map((eo) => eo.statusOptions).filter(Boolean));
@@ -75,8 +75,8 @@ function statusOptions() {
 
 function postTimeOptions() {
   return [
-    { name: I18n.t("search.advanced.post.time.before"), value: "before" },
-    { name: I18n.t("search.advanced.post.time.after"), value: "after" },
+    { name: i18n("search.advanced.post.time.before"), value: "before" },
+    { name: i18n("search.advanced.post.time.after"), value: "after" },
   ].concat(..._extraOptions.map((eo) => eo.postTimeOptions).filter(Boolean));
 }
 

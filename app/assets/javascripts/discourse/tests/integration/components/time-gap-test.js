@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | time-gap", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,7 +12,7 @@ module("Integration | Component | time-gap", function (hooks) {
     await render(hbs`<TimeGap @daysSince={{this.daysSince}} />`);
     assert
       .dom(".small-action-desc.timegap")
-      .hasText(I18n.t("dates.later.x_days", { count: 5 }));
+      .hasText(i18n("dates.later.x_days", { count: 5 }));
   });
 
   test("it renders months correctly", async function (assert) {
@@ -20,7 +20,7 @@ module("Integration | Component | time-gap", function (hooks) {
     await render(hbs`<TimeGap @daysSince={{this.daysSince}} />`);
     assert
       .dom(".small-action-desc.timegap")
-      .hasText(I18n.t("dates.later.x_months", { count: 3 }));
+      .hasText(i18n("dates.later.x_months", { count: 3 }));
   });
 
   test("it renders years correctly", async function (assert) {
@@ -28,7 +28,7 @@ module("Integration | Component | time-gap", function (hooks) {
     await render(hbs`<TimeGap @daysSince={{this.daysSince}} />`);
     assert
       .dom(".small-action-desc.timegap")
-      .hasText(I18n.t("dates.later.x_years", { count: 2 }));
+      .hasText(i18n("dates.later.x_years", { count: 2 }));
   });
 
   test("it renders the correct elements", async function (assert) {

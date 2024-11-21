@@ -16,8 +16,8 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { i18n } from "discourse-i18n";
 
 class ActionSerializer {
   constructor(perform) {

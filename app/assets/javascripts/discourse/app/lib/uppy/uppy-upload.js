@@ -22,7 +22,7 @@ import UppyChunkedUploader from "discourse/lib/uppy-chunked-uploader-plugin";
 import getUrl from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB
 
@@ -186,7 +186,7 @@ export default class UppyUpload {
 
         if (tooMany) {
           this.dialog.alert(
-            I18n.t("post.errors.too_many_dragged_and_dropped_files", {
+            i18n("post.errors.too_many_dragged_and_dropped_files", {
               count: this.allowMultipleFiles ? maxFiles : 1,
             })
           );

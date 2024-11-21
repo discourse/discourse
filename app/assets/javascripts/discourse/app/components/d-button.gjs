@@ -9,7 +9,7 @@ import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimm
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [
   "DButton no longer supports @action as a string. Please refactor to use an closure action instead.",
@@ -50,21 +50,21 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
   get computedTitle() {
     if (this.args.title) {
-      return I18n.t(this.args.title);
+      return i18n(this.args.title);
     }
     return this.args.translatedTitle;
   }
 
   get computedLabel() {
     if (this.args.label) {
-      return I18n.t(this.args.label);
+      return i18n(this.args.label);
     }
     return this.args.translatedLabel;
   }
 
   get computedAriaLabel() {
     if (this.args.ariaLabel) {
-      return I18n.t(this.args.ariaLabel);
+      return i18n(this.args.ariaLabel);
     }
     if (this.args.translatedAriaLabel) {
       return this.args.translatedAriaLabel;

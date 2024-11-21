@@ -5,7 +5,7 @@ import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -186,7 +186,7 @@ acceptance("Category Edit", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body").textContent.trim(),
-      I18n.t("generic_error_with_reason", {
+      i18n("generic_error_with_reason", {
         error: "duplicate email",
       })
     );
@@ -206,7 +206,7 @@ acceptance("Category Edit", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body").textContent.trim(),
-      I18n.t("generic_error_with_reason", {
+      i18n("generic_error_with_reason", {
         error: "subcategory nested under another subcategory",
       })
     );

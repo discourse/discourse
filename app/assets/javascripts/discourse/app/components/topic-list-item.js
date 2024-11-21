@@ -13,11 +13,13 @@ import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
+import deprecated from "discourse-common/lib/deprecated";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -50,6 +52,32 @@ export function navigateToTopic(topic, href) {
 @classNameBindings(":topic-list-item", "unboundClassNames", "topic.visited")
 @attributeBindings("dataTopicId:data-topic-id", "role", "ariaLevel:aria-level")
 export default class TopicListItem extends Component {
+  static reopen() {
+    const message =
+      "Modifying topic-list-item with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+    // eslint-disable-next-line no-console
+    console.debug(consolePrefix(), message);
+
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    const message =
+      "Modifying topic-list-item with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+    // eslint-disable-next-line no-console
+    console.debug(consolePrefix(), message);
+
+    return super.reopenClass(...arguments);
+  }
+
   @service router;
   @service historyStore;
 
@@ -168,7 +196,7 @@ export default class TopicListItem extends Component {
   newDotText() {
     return this.currentUser && this.currentUser.trust_level > 0
       ? ""
-      : I18n.t("filters.new.lower_title");
+      : i18n("filters.new.lower_title");
   }
 
   @discourseComputed("topic", "lastVisitedTopic")

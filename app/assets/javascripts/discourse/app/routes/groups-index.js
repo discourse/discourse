@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupsIndexRoute extends DiscourseRoute {
   queryParams = {
@@ -11,7 +11,7 @@ export default class GroupsIndexRoute extends DiscourseRoute {
   };
 
   titleToken() {
-    return I18n.t("groups.index.title");
+    return i18n("groups.index.title");
   }
 
   async model(params) {

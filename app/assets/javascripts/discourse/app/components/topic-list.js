@@ -8,13 +8,50 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import LoadMore from "discourse/mixins/load-more";
+import deprecated, {
+  registerDeprecationHandler,
+} from "discourse-common/lib/deprecated";
+import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
+
+registerDeprecationHandler((message, opts) => {
+  if (opts?.id === "discourse.hbr-topic-list-overrides") {
+    needsHbrTopicList(true);
+  }
+});
 
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
 export default class TopicList extends Component.extend(LoadMore) {
+  static reopen() {
+    const message =
+      "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+    // eslint-disable-next-line no-console
+    console.debug(consolePrefix(), message);
+
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    const message =
+      "Modifying topic-list with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+    // eslint-disable-next-line no-console
+    console.debug(consolePrefix(), message);
+
+    return super.reopenClass(...arguments);
+  }
+
   @service modal;
   @service router;
   @service siteSettings;
@@ -220,6 +257,7 @@ export default class TopicList extends Component.extend(LoadMore) {
       };
 
       onKeyDown("th.sortable", (element) => {
+        e.preventDefault();
         this.changeSort(element.dataset.sortOrder);
         this.rerender();
       });

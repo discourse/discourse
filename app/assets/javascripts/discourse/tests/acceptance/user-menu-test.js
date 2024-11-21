@@ -24,7 +24,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User menu", function (needs) {
   needs.user({
@@ -193,24 +193,24 @@ acceptance("User menu", function (needs) {
     });
 
     const expectedTitles = {
-      "user-menu-button-all-notifications": I18n.t(
+      "user-menu-button-all-notifications": i18n(
         "user_menu.tabs.all_notifications"
       ),
-      "user-menu-button-replies": I18n.t("user_menu.tabs.replies_with_unread", {
+      "user-menu-button-replies": i18n("user_menu.tabs.replies_with_unread", {
         count: 2,
       }),
-      "user-menu-button-likes": I18n.t("user_menu.tabs.likes"),
-      "user-menu-button-messages": I18n.t("user_menu.tabs.messages"),
-      "user-menu-button-bookmarks": I18n.t("user_menu.tabs.bookmarks"),
+      "user-menu-button-likes": i18n("user_menu.tabs.likes"),
+      "user-menu-button-messages": i18n("user_menu.tabs.messages"),
+      "user-menu-button-bookmarks": i18n("user_menu.tabs.bookmarks"),
       "user-menu-button-tiny-tab-1": "Custom title: 73",
-      "user-menu-button-review-queue": I18n.t(
+      "user-menu-button-review-queue": i18n(
         "user_menu.tabs.review_queue_with_unread",
         { count: 1 }
       ),
-      "user-menu-button-other-notifications": I18n.t(
+      "user-menu-button-other-notifications": i18n(
         "user_menu.tabs.other_notifications"
       ),
-      "user-menu-button-profile": I18n.t("user_menu.tabs.profile"),
+      "user-menu-button-profile": i18n("user_menu.tabs.profile"),
     };
     await visit("/");
     await click(".d-header-icons .current-user button");
@@ -450,7 +450,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       summaryLink.textContent.trim(),
-      I18n.t("user.summary.title"),
+      i18n("user.summary.title"),
       "summary link has the right label"
     );
     assert.ok(
@@ -465,7 +465,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       activityLink.textContent.trim(),
-      I18n.t("user.activity_stream"),
+      i18n("user.activity_stream"),
       "activity link has the right label"
     );
     assert.ok(
@@ -480,7 +480,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       invitesLink.textContent.trim(),
-      I18n.t("user.invited.title"),
+      i18n("user.invited.title"),
       "invites link has the right label"
     );
     assert.ok(
@@ -505,7 +505,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       draftsLink.textContent.trim(),
-      I18n.t("drafts.label_with_count", { count: 13 }),
+      i18n("drafts.label_with_count", { count: 13 }),
       "drafts link has the right label with count of the user's drafts"
     );
     assert.ok(
@@ -520,7 +520,7 @@ acceptance("User menu", function (needs) {
     );
     assert.strictEqual(
       preferencesLink.textContent.trim(),
-      I18n.t("user.preferences.title"),
+      i18n("user.preferences.title"),
       "preferences link has the right label"
     );
     assert.ok(
@@ -536,7 +536,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      I18n.t("pause_notifications.label"),
+      i18n("pause_notifications.label"),
       "Do Not Disturb button has the right label"
     );
     assert.ok(
@@ -559,7 +559,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      `${I18n.t("pause_notifications.label")} 2h`,
+      `${i18n("pause_notifications.label")} 2h`,
       "Do Not Disturb button has the right label when Do Not Disturb is enabled"
     );
     assert.ok(
@@ -578,7 +578,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      I18n.t("switch_to_anon"),
+      i18n("switch_to_anon"),
       "toggle anonymous button has the right label when the user isn't anonymous"
     );
     assert.ok(
@@ -599,7 +599,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      I18n.t("switch_from_anon"),
+      i18n("switch_from_anon"),
       "toggle anonymous button has the right label when the user is anonymous"
     );
     assert.ok(
@@ -698,7 +698,7 @@ acceptance("User menu", function (needs) {
         .replaceAll(/\s+/g, " ")
         .replaceAll(/\u200B/g, "")
         .trim(),
-      I18n.t("user.log_out"),
+      i18n("user.log_out"),
       "logout button has the right label"
     );
     assert.ok(
@@ -953,7 +953,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       query(
         ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
-      I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
+      i18n("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
 
@@ -989,7 +989,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       query(
         ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
-      I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+      i18n("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
       }),
       "confirmation modal is shown when there are unread bookmark reminder notifications"
@@ -1040,7 +1040,7 @@ acceptance("User menu - Dismiss button", function (needs) {
       query(
         ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
-      I18n.t("notifications.dismiss_confirmation.body.messages", {
+      i18n("notifications.dismiss_confirmation.body.messages", {
         count: 89,
       }),
       "confirmation modal is shown when there are unread messages notifications"

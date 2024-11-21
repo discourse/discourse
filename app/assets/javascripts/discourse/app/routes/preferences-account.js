@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
 import UserBadge from "discourse/models/user-badge";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PreferencesAccount extends RestrictedUserRoute {
   @service modal;
@@ -34,7 +34,7 @@ export default class PreferencesAccount extends RestrictedUserRoute {
       newPrimaryGroupInput: user.get("primary_group_id"),
       newFlairGroupId: user.get("flair_group_id"),
       newStatus: user.status,
-      subpageTitle: I18n.t("user.preferences_nav.account"),
+      subpageTitle: i18n("user.preferences_nav.account"),
     });
   }
 

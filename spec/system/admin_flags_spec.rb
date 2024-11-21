@@ -26,7 +26,10 @@ describe "Admin Flags Page", type: :system do
       "Something Else",
     )
 
-    admin_flags_page.visit.toggle("spam")
+    admin_flags_page.visit
+    expect(page).to have_css(".admin-page-header")
+
+    admin_flags_page.toggle("spam")
     topic_page.visit_topic(post.topic).open_flag_topic_modal
 
     expect(flag_modal).to have_choices("It's Inappropriate", "It's Illegal", "Something Else")
@@ -78,6 +81,7 @@ describe "Admin Flags Page", type: :system do
     expect(admin_flags_page).to have_add_flag_button_enabled
 
     admin_flags_page.click_add_flag
+    expect(page).not_to have_css(".admin-page-header")
     admin_flag_form_page
       .fill_in_name("Vulgar")
       .fill_in_description("New flag description")
@@ -109,6 +113,7 @@ describe "Admin Flags Page", type: :system do
 
     # update
     admin_flags_page.visit.click_edit_flag("custom_vulgar")
+    expect(page).not_to have_css(".admin-page-header")
     admin_flag_form_page.fill_in_name("Tasteless").click_save
 
     expect(admin_flags_page).to have_flags(

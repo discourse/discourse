@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposer from "../../chat-composer";
 
@@ -55,7 +55,7 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   get placeholder() {
-    return I18n.t("chat.placeholder_thread");
+    return i18n("chat.placeholder_thread");
   }
 
   lastUserMessage(user) {

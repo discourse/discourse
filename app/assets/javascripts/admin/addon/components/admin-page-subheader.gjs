@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import {
   DangerActionListItem,
   DangerButton,

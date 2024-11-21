@@ -6,7 +6,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeader from "discourse/components/topic-list/topic-list-header";
 import TopicListItem from "discourse/components/topic-list/topic-list-item";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TopicList extends Component {
   @service currentUser;

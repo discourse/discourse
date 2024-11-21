@@ -90,7 +90,11 @@ class UserSerializer < UserCardSerializer
   end
 
   def groups
-    object.groups.order(:id).visible_groups(scope.user)
+    if scope.user == object
+      object.groups.order(:id).visible_groups(scope.user)
+    else
+      object.groups.order(:id).visible_groups(scope.user).members_visible_groups(scope.user)
+    end
   end
 
   def group_users
