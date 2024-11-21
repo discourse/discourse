@@ -451,7 +451,7 @@ RSpec.describe PostSerializer do
         badge_type_id: BadgeType::Bronze,
         listable: true,
         show_posts: true,
-        post_header: true,
+        show_in_post_header: true,
         multiple_grant: true,
       )
     end
@@ -471,7 +471,7 @@ RSpec.describe PostSerializer do
         badge_type_id: BadgeType::Bronze,
         listable: true,
         show_posts: true,
-        post_header: true,
+        show_in_post_header: true,
         multiple_grant: true,
       )
     end
@@ -492,7 +492,7 @@ RSpec.describe PostSerializer do
         badge_type_id: BadgeType::Bronze,
         listable: true,
         show_posts: false,
-        post_header: true,
+        show_in_post_header: true,
       )
     end
     fab!(:ub3) do
@@ -534,7 +534,7 @@ RSpec.describe PostSerializer do
         badge_type_id: BadgeType::Bronze,
         listable: false,
         show_posts: true,
-        post_header: true,
+        show_in_post_header: true,
       )
     end
     fab!(:ub6) do
@@ -547,14 +547,14 @@ RSpec.describe PostSerializer do
       )
     end
 
-    # Create a badge that has the post_header flag set to false
+    # Create a badge that has the show_in_post_header flag set to false
     fab!(:badge5) do
       Badge.create!(
         name: "StrangeBadge",
         badge_type_id: BadgeType::Bronze,
         listable: true,
         show_posts: true,
-        post_header: false,
+        show_in_post_header: false,
       )
     end
     fab!(:ub7) do
@@ -620,7 +620,7 @@ RSpec.describe PostSerializer do
         expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub6.id)
       end
 
-      it "does not return a user badge that has the post_header flag set to false" do
+      it "does not return a user badge that has the show_in_post_header flag set to false" do
         json = serializer.as_json
 
         expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).not_to include(ub7.id)
