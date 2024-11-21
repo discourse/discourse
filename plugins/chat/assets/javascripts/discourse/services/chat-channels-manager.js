@@ -131,16 +131,8 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
-  @cached
   get publicMessageChannelsWithActivity() {
-    return this.publicMessageChannels.filter(
-      (channel) =>
-        channel.tracking.unreadCount +
-          channel.tracking.mentionCount +
-          channel.tracking.watchedThreadsUnreadCount +
-          channel.threadsManager.unreadThreadCount >
-        0
-    );
+    return this.publicMessageChannels.filter((channel) => channel.hasUnread);
   }
 
   get publicMessageChannelsByActivity() {
@@ -157,16 +149,8 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
-  @cached
   get directMessageChannelsWithActivity() {
-    return this.directMessageChannels.filter(
-      (channel) =>
-        channel.tracking.unreadCount +
-          channel.tracking.mentionCount +
-          channel.tracking.watchedThreadsUnreadCount +
-          channel.threadsManager.unreadThreadCount >
-        0
-    );
+    return this.directMessageChannels.filter((channel) => channel.hasUnread);
   }
 
   get truncatedDirectMessageChannels() {

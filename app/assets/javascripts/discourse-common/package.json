@@ -20,7 +20,7 @@
     "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-resolver": "^13.0.2",
+    "ember-resolver": "^13.1.0",
     "handlebars": "^4.7.8",
     "truth-helpers": "workspace:1.0.0"
   },

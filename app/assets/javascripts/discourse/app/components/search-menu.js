@@ -106,6 +106,13 @@ export default class SearchMenu extends Component {
   }
 
   @action
+  onKeydown(event) {
+    if (event.key === "Escape") {
+      this.close();
+    }
+  }
+
+  @action
   close() {
     if (this.args?.onClose) {
       return this.args.onClose();

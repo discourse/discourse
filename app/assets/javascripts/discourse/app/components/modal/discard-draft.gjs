@@ -20,7 +20,7 @@ export default class DiscardDraftModal extends Component {
   <template>
     <DModal
       @closeModal={{@closeModal}}
-      class="discard-draft-modal"
+      class="discard-draft-modal --stacked"
       @hideHeader={{true}}
     >
       <:body>

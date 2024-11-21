@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  focus,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -414,6 +415,15 @@ acceptance("Search - Anonymous", function (needs) {
     assert
       .dom(".search-menu .search-result-topic .item .topic-title img[alt='+1']")
       .exists(":+1: in the topic title is properly converted to an emoji");
+  });
+
+  test("pressing escape correctly closes the menu", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await focus(".show-advanced-search");
+    await triggerKeyEvent("#search-term", "keydown", "Escape");
+
+    assert.dom(".search-menu-panel").doesNotExist();
   });
 });
 
@@ -1253,7 +1263,7 @@ acceptance("Search - assistant", function (needs) {
     );
   });
 
-  test("topic results - soft loads the topic results after closing then  search menu", async function (assert) {
+  test("topic results - soft loads the topic results after closing the search menu", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "Development mode");

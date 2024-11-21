@@ -28,19 +28,22 @@ module Jobs
 
           next if push_url.blank?
 
-          begin
-            result =
-              Excon.post(
-                push_url,
-                body: payload.merge(notifications: notifications).to_json,
-                headers: {
-                  "Content-Type" => "application/json",
-                  "Accept" => "application/json",
-                },
-              )
+          uri = URI.parse(push_url)
 
-            if result.status != 200
-              # we failed to push a notification ... log it
+          http = FinalDestination::HTTP.new(uri.host, uri.port)
+          http.use_ssl = true
+
+          request =
+            FinalDestination::HTTP::Post.new(
+              uri.request_uri,
+              { "Content-Type" => "application/json" },
+            )
+          request.body = payload.merge(notifications: notifications).to_json
+
+          begin
+            response = http.request(request)
+
+            if response.code.to_i != 200
               Rails.logger.warn(
                 "Failed to push a notification to #{push_url} Status: #{result.status}: #{result.status_line}",
               )
