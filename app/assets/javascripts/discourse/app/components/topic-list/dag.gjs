@@ -18,7 +18,6 @@ import ItemViewsCell from "./item/views-cell";
 
 export function createColumns() {
   const columns = new DAG();
-  columns.add("topic-list-before-columns");
   columns.add("bulk-select", {
     header: HeaderBulkSelectCell,
     item: ItemBulkSelectCell,
@@ -27,7 +26,6 @@ export function createColumns() {
     header: HeaderTopicCell,
     item: ItemTopicCell,
   });
-  columns.add("topic-list-after-main-link");
   columns.add("posters", {
     header: HeaderPostersCell,
     item: ItemPostersCell,
@@ -52,6 +50,5 @@ export function createColumns() {
     header: HeaderActivityCell,
     item: ItemActivityCell,
   });
-  columns.add("topic-list-after-columns");
   return columns;
 }
