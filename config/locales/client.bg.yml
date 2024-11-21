@@ -1493,7 +1493,6 @@ bg:
       location: "Локация"
       website: "Уеб сайт"
       email_settings: "Имейл "
-      hide_profile_and_presence: "Скриване на моя публичен профил и функции за присъствие"
       enable_physical_keyboard: "Активирайте поддръжката на физическа клавиатура на iPad"
       text_size:
         title: "Размер на текста"
@@ -4392,8 +4391,6 @@ bg:
           csv_has_unmatched_users: "Следните записи са в CSV файла, но те не могат да бъдат съчетани със съществуващи потребители и следователно няма да получат значката:"
       emoji:
         title: "Емотикони "
-        new: "Добави "
-        add: "Добави нова емотикона "
         uploading: "Качване…"
         name: "Име "
         group: "Група"
@@ -4432,12 +4429,13 @@ bg:
         post_title: "Публикация"
         category_id: "Категория ID"
         category_title: "Категория"
+        user_title: "Потребител"
         username: "Потребителско име"
         delete_confirm: Сигурни ли сте, че искате да изриете този постоянен адрес?
         form:
           label: "Нов:"
-          add: "Добави"
-          filter: "Търсене (URL или външно URL)"
+          url: "URL"
+          save: "Запази "
       reseed:
         modal:
           categories: "Категории"

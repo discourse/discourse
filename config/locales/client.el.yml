@@ -1455,7 +1455,6 @@ el:
       location: "Τοποθεσία"
       website: "Ιστοσελίδα"
       email_settings: "Email"
-      hide_profile_and_presence: "Κρύψε τα δημόσια χαρακτηριστικά προφίλ και παρουσίας μου."
       enable_physical_keyboard: "Ενεργοποιήστε την υποστήριξη φυσικού πληκτρολογίου στο iPad"
       text_size:
         title: "Μέγεθος κειμένου"
@@ -5259,8 +5258,6 @@ el:
           replace_owners: Αφαιρέστε το σήμα από προηγούμενους κατόχους
       emoji:
         title: "Emoji"
-        new: "Προσθήκη"
-        add: "Προσθήκη νέου emoji"
         uploading: "Μεταφορτώνεται…"
         name: "Όνομα"
         group: "Ομάδα"
@@ -5301,14 +5298,15 @@ el:
         category_title: "Κατηγορία"
         tag_name: "Όνομα ετικέτας"
         external_url: "Εξωτερική ή σχετική διεύθυνση URL"
+        user_title: "Χρήστης"
         username: "Όνομα Χρήστη"
         destination: "Προορισμός"
         copy_to_clipboard: "Αντιγραφή permalink στο πρόχειρο"
         delete_confirm: Είσαι βέβαιος πως θέλεις να διαγράψεις αυτόν τον μόνιμο σύνδεσμο;
         form:
           label: "Νέο:"
-          add: "Προσθήκη"
-          filter: "Αναζήτηση (διεύθυνση URL ή εξωτερική διεύθυνση URL)"
+          url: "URL"
+          save: "Αποθήκευση"
       reseed:
         action:
           label: "Αντικατάσταση κειμένου…"

@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ColorSchemeSelectBaseModal from "admin/components/modal/color-scheme-select-base";
 
 export default class AdminCustomizeColorsController extends Controller {
@@ -33,7 +33,7 @@ export default class AdminCustomizeColorsController extends Controller {
     const base = this.baseColorSchemes.findBy("base_scheme_id", baseKey);
     const newColorScheme = base.copy();
     newColorScheme.setProperties({
-      name: I18n.t("admin.customize.colors.new_name"),
+      name: i18n("admin.customize.colors.new_name"),
       base_scheme_id: base.get("base_scheme_id"),
     });
     newColorScheme.save().then(() => {

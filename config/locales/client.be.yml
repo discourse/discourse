@@ -2224,7 +2224,6 @@ be:
           sample: "Прыклад:"
       emoji:
         title: "Абразкі"
-        new: "дадаць"
         name: "Імя"
         group: "Група"
         image: "Выява"
@@ -2249,12 +2248,13 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
+        user_title: "карыстальнік"
         username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"
-          add: "Дадаць"
-          filter: "Пошук (URL або знешні URL)"
+          url: "URL спасылка"
+          save: "захаваць"
       reseed:
         modal:
           categories: "Катэгорыі"

@@ -1434,7 +1434,6 @@ da:
       location: "Sted"
       website: "Websted"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Skjul min offentlige profil og tilstedeværelsesfunktioner"
       enable_physical_keyboard: "Aktivér understøttelse af fysisk tastatur på iPad"
       text_size:
         title: "Skriftstørrelse"
@@ -5406,9 +5405,6 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
-        new: "Tilføj"
-        add: "Tilføj ny emoji"
-        choose_files: "Vælg Filer"
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
@@ -5448,15 +5444,17 @@ da:
         category_id: "Kategori ID"
         category_title: "Kategori"
         tag_name: "Mærke navn"
+        tag_title: "Mærke"
         external_url: "Ekstern eller Relativ URL"
+        user_title: "Bruger"
         username: "Brugernavn"
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?
         form:
           label: "Ny:"
-          add: "Tilføj"
-          filter: "Søg (URL eller ekstern URL)"
+          url: "URL"
+          save: "Gem"
       reseed:
         action:
           label: "Erstat tekst ..."

@@ -4,7 +4,7 @@ import { next } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexController extends Controller {
   queryParams = [
@@ -42,7 +42,7 @@ export default class ReviewIndexController extends Controller {
 
       return {
         id: type,
-        name: I18n.t(`review.types.${translationKey}.title`),
+        name: i18n(`review.types.${translationKey}.title`),
       };
     });
   }
@@ -52,7 +52,7 @@ export default class ReviewIndexController extends Controller {
     return ["any", "low", "medium", "high"].map((priority) => {
       return {
         id: priority,
-        name: I18n.t(`review.filters.priority.${priority}`),
+        name: i18n(`review.filters.priority.${priority}`),
       };
     });
   }
@@ -63,7 +63,7 @@ export default class ReviewIndexController extends Controller {
       (order) => {
         return {
           id: order,
-          name: I18n.t(`review.filters.orders.${order}`),
+          name: i18n(`review.filters.orders.${order}`),
         };
       }
     );
@@ -80,7 +80,7 @@ export default class ReviewIndexController extends Controller {
       "reviewed",
       "all",
     ].map((id) => {
-      return { id, name: I18n.t(`review.statuses.${id}.title`) };
+      return { id, name: i18n(`review.statuses.${id}.title`) };
     });
   }
 

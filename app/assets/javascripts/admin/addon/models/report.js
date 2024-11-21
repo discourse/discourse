@@ -13,7 +13,7 @@ import {
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
@@ -398,7 +398,7 @@ export default class Report extends EmberObject {
       current = number(current);
     }
 
-    return I18n.t("admin.dashboard.reports.trend_title", {
+    return i18n("admin.dashboard.reports.trend_title", {
       percent,
       prev,
       current,

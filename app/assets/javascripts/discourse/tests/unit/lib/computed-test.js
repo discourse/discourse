@@ -2,31 +2,19 @@ import EmberObject from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import sinon from "sinon";
 import {
+  computedI18n,
   fmt,
   htmlSafe,
-  i18n,
   propertyEqual,
   propertyNotEqual,
   setting,
   url,
 } from "discourse/lib/computed";
 import { setPrefix } from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function () {
-    sinon.stub(I18n, "t").callsFake(function (scope) {
-      return "%@ translated: " + scope;
-    });
-  });
-
-  hooks.afterEach(function () {
-    I18n.t.restore();
-  });
 
   test("setting", function (assert) {
     const siteSettings = getOwner(this).lookup("service:site-settings");
@@ -116,8 +104,8 @@ module("Unit | Utility | computed", function (hooks) {
   test("i18n", function (assert) {
     // eslint-disable-next-line ember/no-classic-classes
     let t = EmberObject.extend({
-      exclaimyUsername: i18n("username", "!!! %@ !!!"),
-      multiple: i18n("username", "mood", "%@ is %@"),
+      exclaimyUsername: computedI18n("username", "!!! %@ !!!"),
+      multiple: computedI18n("username", "mood", "%@ is %@"),
     }).create({
       username: "eviltrout",
       mood: "happy",
@@ -125,25 +113,25 @@ module("Unit | Utility | computed", function (hooks) {
 
     assert.strictEqual(
       t.exclaimyUsername,
-      "%@ translated: !!! eviltrout !!!",
+      "[en.!!! eviltrout !!!]",
       "it inserts the string and then translates"
     );
     assert.strictEqual(
       t.multiple,
-      "%@ translated: eviltrout is happy",
+      "[en.eviltrout is happy]",
       "it inserts multiple strings and then translates"
     );
 
     t.set("username", "codinghorror");
     assert.strictEqual(
       t.multiple,
-      "%@ translated: codinghorror is happy",
+      "[en.codinghorror is happy]",
       "it supports changing properties"
     );
     t.set("mood", "ecstatic");
     assert.strictEqual(
       t.multiple,
-      "%@ translated: codinghorror is ecstatic",
+      "[en.codinghorror is ecstatic]",
       "it supports changing another property"
     );
   });

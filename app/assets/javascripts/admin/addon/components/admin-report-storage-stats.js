@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 @classNames("admin-report-storage-stats")
 export default class AdminReportStorageStats extends Component {
@@ -20,7 +20,7 @@ export default class AdminReportStorageStats extends Component {
 
   @discourseComputed("backupLocation")
   backupLocationName(backupLocation) {
-    return I18n.t(`admin.backups.location.${backupLocation}`);
+    return i18n(`admin.backups.location.${backupLocation}`);
   }
 
   @discourseComputed("backupStats.used_bytes")

@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | replies-notifications-list",
@@ -24,7 +24,7 @@ module(
       assert.dom(".empty-state .empty-state-body").exists();
       assert.strictEqual(
         query(".empty-state .empty-state-title").textContent.trim(),
-        I18n.t("user.no_notifications_title")
+        i18n("user.no_notifications_title")
       );
     });
   }

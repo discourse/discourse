@@ -75,6 +75,10 @@ fi:
     import_error:
       generic: Teeman tuomisessa tapahtui virhe
       upload: "Virhe luotaessa latausresurssia: %{name}. %{errors}"
+      screenshot: "Virhe tuotaessa teeman näyttökuvia. %{errors}"
+      screenshot_invalid_type: "Teeman näyttökuvien täytyy olla jossakin seuraavista muodoista: %{accepted_formats}. Näyttökuvan %{file_name} muoto on virheellinen."
+      screenshot_invalid_size: "Teeman näyttökuvien täytyy olla pienempiä kuin %{max_size}. Näyttökuva %{file_name} on liian suuri."
+      screenshot_invalid_dimensions: "Teeman näyttökuvien enimmäiskoko on %{max_width}x%{max_height}. Näyttökuva %{file_name} ylittää tämän. Sen mitat ovat %{width}x%{height}."
       about_json: "Virhe tuotaessa: about.json ei ole olemassa tai ei kelpaa. Oletko varma, että tämä on Discourse-teema?"
       about_json_too_big: "Tuontivirhe: about.json on suurempi kuin raja %{limit}."
       about_json_values: "about.json sisältää virheellisiä arvoja: %{errors}"
@@ -559,6 +563,9 @@ fi:
         one: "%{count} käyttäjä lisättiin ryhmään."
         other: "%{count} käyttäjää lisättiin ryhmään."
     errors:
+      default_notification_level_users_limit:
+        one: "Oletusilmoitustasoa ei voi asettaa yli %{count} käyttäjän ryhmille. Virheellinen ryhmä: %{group_name}"
+        other: "Oletusilmoitustasoa ei voi asettaa yli %{count} käyttäjän ryhmille. Virheellinen ryhmä: %{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' ei kelpaa luottamustasoksi."
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
       member_already_exist:
@@ -586,6 +593,15 @@ fi:
       trust_level_2: "luottamustaso_2"
       trust_level_3: "luottamustaso_3"
       trust_level_4: "luottamustaso_4"
+    default_descriptions:
+      everyone: "Automaattinen ryhmä, joka sisältää kaikki jäsenet"
+      staff: "Automaattinen ryhmä, joka sisältää ylläpitäjät ja valvojat"
+      admins: "Vastaa tämän sivuston määrittämisestä ja ylläpidosta, ja hänellä on pääsy kaikkiin jäsen- ja toimintatietoihin"
+      moderators: "Vastaa liputuksiin vastaamisesta, keskusteluiden valvomisesta ja jäsenten avustamisesta tilien kanssa"
+      trust_level_0: "Uudet jäseet, joilla on rajalliset kyvyt ja jotka opettelevat yhteisön normeja ja toimintoja"
+      trust_level_1: "Jäsenet, joilla on enemmän luottamusta, jotka ovat osoittaneet alustavaa sitoutumista lukemalla ja jotka voivat nyt käyttää enemmän toimintoja. Kaikki tämän ryhmän jäsenet ovat myös trust_level_0-ryhmän jäseniä."
+      trust_level_2: "Aktiiviset jäsenet, jotka ovat jatkuvasti tehneet ylitöitä ja saaneet täydet kansalaisoikeudet. Kaikki tämän ryhmän jäsenet ovat myös ryhmien trust_level_1 ja trust_level_0 jäseniä."
+      trust_level_3: "Erittäin sitoutuneita, pitkäaikaisia aktiivisia jäseniä, jotka muodostavat yhteisön selkärangan ja ovat saaneet rajoitettuja valvontaoikeuksia. Kaikki tämän ryhmän jäsenet ovat myös ryhmien trust_level_2, trust_level_1 ja trust_level_0 jäseniä."
     request_membership_pm:
       title: "Jäsenhakemus ryhmään @%{group_name}"
     request_accepted_pm:
@@ -2297,7 +2313,6 @@ fi:
     disable_mailing_list_mode: "Estä käyttäjiä ottamasta postituslistatilaa käyttöön (estää postituslistojen sähköpostien lähettämisen)"
     default_email_previous_replies: "Sisällytä aiemmat vastaukset sähköposteihin oletuksena."
     default_email_in_reply_to: "Sisällytä katkelma vastattavasta viestistä sähköpostiin oletuksena."
-    default_hide_profile_and_presence: "Piilota käyttäjän julkinen profiili ja läsnäolo-ominaisuudet oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, milloin ketju tulkitaan uudeksi."
     default_other_auto_track_topics_after_msecs: "Yleinen oletusarvo sille, missä ajassa ketjua aletaan seurata."
     default_other_notification_level_when_replying: "Yleinen oletusilmoitustaso, kun käyttäjä vastaa ketjuun."

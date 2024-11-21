@@ -27,6 +27,11 @@ export default class DialogService extends Service {
   class = null;
   _confirming = false;
 
+  willDestroy() {
+    this.dialogInstance?.destroy();
+    this.reset();
+  }
+
   async dialog(params) {
     const {
       message,
@@ -169,11 +174,6 @@ export default class DialogService extends Service {
 
       _confirming: false,
     });
-  }
-
-  willDestroy() {
-    this.dialogInstance?.destroy();
-    this.reset();
   }
 
   @bind

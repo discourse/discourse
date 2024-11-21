@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { setting } from "discourse/lib/computed";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function failedResult(attrs) {
   return EmberObject.create({
@@ -66,29 +66,29 @@ export default Mixin.create({
 
   basicUsernameValidation(username) {
     if (username && username === this.prefilledUsername) {
-      return validResult({ reason: I18n.t("user.username.prefilled") });
+      return validResult({ reason: i18n("user.username.prefilled") });
     }
 
     if (isEmpty(username)) {
       return failedResult({
-        message: I18n.t("user.username.required"),
+        message: i18n("user.username.required"),
         reason: this.forceValidationReason
-          ? I18n.t("user.username.required")
+          ? i18n("user.username.required")
           : null,
       });
     }
 
     if (username.length < this.siteSettings.min_username_length) {
-      return failedResult({ reason: I18n.t("user.username.too_short") });
+      return failedResult({ reason: i18n("user.username.too_short") });
     }
 
     if (username.length > this.maxUsernameLength) {
-      return failedResult({ reason: I18n.t("user.username.too_long") });
+      return failedResult({ reason: i18n("user.username.too_long") });
     }
 
     return failedResult({
       shouldCheck: true,
-      reason: I18n.t("user.username.checking"),
+      reason: i18n("user.username.checking"),
     });
   },
 
@@ -108,13 +108,13 @@ export default Mixin.create({
     if (result.available) {
       this.set(
         "usernameValidationResult",
-        validResult({ reason: I18n.t("user.username.available") })
+        validResult({ reason: i18n("user.username.available") })
       );
     } else if (result.suggestion) {
       this.set(
         "usernameValidationResult",
         failedResult({
-          reason: I18n.t("user.username.not_available", result),
+          reason: i18n("user.username.not_available", result),
         })
       );
     } else {
@@ -123,7 +123,7 @@ export default Mixin.create({
         failedResult({
           reason: result.errors
             ? result.errors.join(" ")
-            : I18n.t("user.username.not_available_no_suggestion"),
+            : i18n("user.username.not_available_no_suggestion"),
         })
       );
     }

@@ -7,7 +7,7 @@ import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import WatchedWord from "admin/models/watched-word";
 
 @tagName("form")
@@ -84,7 +84,7 @@ export default class WatchedWordForm extends Component {
     if (!this.isUniqueWord) {
       this.setProperties({
         showMessage: true,
-        message: I18n.t("admin.watched_words.form.exists"),
+        message: i18n("admin.watched_words.form.exists"),
       });
       return;
     }
@@ -111,7 +111,7 @@ export default class WatchedWordForm extends Component {
             replacement: "",
             selectedTags: [],
             showMessage: true,
-            message: I18n.t("admin.watched_words.form.success"),
+            message: i18n("admin.watched_words.form.success"),
             isCaseSensitive: false,
             isHtml: false,
           });

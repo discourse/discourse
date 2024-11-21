@@ -5,7 +5,7 @@ import { classNames } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
 @classNames("group-membership-button")
@@ -81,7 +81,7 @@ export default class GroupMembershipButton extends Component {
       this.removeFromGroup();
     } else {
       return this.dialog.yesNoConfirm({
-        message: I18n.t("groups.confirm_leave"),
+        message: i18n("groups.confirm_leave"),
         didConfirm: () => this.removeFromGroup(),
         didCancel: () => this.set("updatingMembership", false),
       });

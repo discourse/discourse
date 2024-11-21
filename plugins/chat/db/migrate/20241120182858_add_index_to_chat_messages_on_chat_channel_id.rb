@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddIndexToChatMessages < ActiveRecord::Migration[7.0]
+class AddIndexToChatMessagesOnChatChannelId < ActiveRecord::Migration[7.1]
   disable_ddl_transaction!
 
   def up

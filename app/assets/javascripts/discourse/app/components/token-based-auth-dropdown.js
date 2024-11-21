@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -16,12 +16,12 @@ export default class TokenBasedAuthDropdown extends DropdownSelectBoxComponent {
       {
         id: "edit",
         icon: "pencil",
-        name: I18n.t("user.second_factor.edit"),
+        name: i18n("user.second_factor.edit"),
       },
       {
         id: "disable",
         icon: "trash-can",
-        name: I18n.t("user.second_factor.disable"),
+        name: i18n("user.second_factor.disable"),
       },
     ];
   }

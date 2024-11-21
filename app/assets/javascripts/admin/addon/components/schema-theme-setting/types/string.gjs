@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import FieldInputDescription from "admin/components/schema-theme-setting/field-input-description";
 
 export default class SchemaThemeSettingTypeString extends Component {
@@ -32,14 +32,14 @@ export default class SchemaThemeSettingTypeString extends Component {
 
     if (valueLength === 0) {
       if (this.required) {
-        return I18n.t("admin.customize.theme.schema.fields.required");
+        return i18n("admin.customize.theme.schema.fields.required");
       } else {
         return;
       }
     }
 
     if (this.minLength && valueLength < this.minLength) {
-      return I18n.t("admin.customize.theme.schema.fields.string.too_short", {
+      return i18n("admin.customize.theme.schema.fields.string.too_short", {
         count: this.minLength,
       });
     }

@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class WatchedWord extends EmberObject {
   static findAll() {
@@ -18,7 +18,7 @@ export default class WatchedWord extends EmberObject {
       return Object.keys(actions).map((nameKey) => {
         return EmberObject.create({
           nameKey,
-          name: I18n.t("admin.watched_words.actions." + nameKey),
+          name: i18n("admin.watched_words.actions." + nameKey),
           words: actions[nameKey],
           compiledRegularExpression: list.compiled_regular_expressions[nameKey],
         });

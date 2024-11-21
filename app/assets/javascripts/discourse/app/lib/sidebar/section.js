@@ -7,7 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { unicodeSlugify } from "discourse/lib/utilities";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class Section {
   @service currentUser;
@@ -47,7 +47,7 @@ export default class Section {
               model: this,
             });
           },
-          title: I18n.t("sidebar.sections.custom.edit"),
+          title: i18n("sidebar.sections.custom.edit"),
         },
       ];
     }

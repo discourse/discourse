@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AdminPageSubheader from "admin/components/admin-page-subheader";
 
 module("Integration | Component | AdminPageSubheader", function (hooks) {

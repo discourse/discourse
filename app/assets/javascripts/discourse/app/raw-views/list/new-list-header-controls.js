@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class NewListHeaderControls extends EmberObject {
   @discourseComputed
@@ -21,22 +21,22 @@ export default class NewListHeaderControls extends EmberObject {
   @discourseComputed
   repliesButtonLabel() {
     if (this.newRepliesCount > 0) {
-      return I18n.t("filters.new.replies_with_count", {
+      return i18n("filters.new.replies_with_count", {
         count: this.newRepliesCount,
       });
     } else {
-      return I18n.t("filters.new.replies");
+      return i18n("filters.new.replies");
     }
   }
 
   @discourseComputed
   topicsButtonLabel() {
     if (this.newTopicsCount > 0) {
-      return I18n.t("filters.new.topics_with_count", {
+      return i18n("filters.new.topics_with_count", {
         count: this.newTopicsCount,
       });
     } else {
-      return I18n.t("filters.new.topics");
+      return i18n("filters.new.topics");
     }
   }
 

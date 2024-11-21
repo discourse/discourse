@@ -4,7 +4,7 @@ import { next } from "@ember/runloop";
 import { fmt } from "discourse/lib/computed";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminThemeEditor extends Component {
   warning = null;
@@ -55,7 +55,7 @@ export default class AdminThemeEditor extends Component {
         "  --mytheme-tertiary-or-highlight: #{dark-light-choose($tertiary, $highlight)};\n" +
         "}";
 
-      return I18n.t("admin.customize.theme.color_definitions.placeholder", {
+      return i18n("admin.customize.theme.color_definitions.placeholder", {
         example: isDocumentRTL() ? `<div dir="ltr">${example}</div>` : example,
       });
     }

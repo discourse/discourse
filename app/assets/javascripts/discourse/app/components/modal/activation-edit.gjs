@@ -2,8 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ActivationEmailForm from "discourse/components/activation-email-form";
+import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
+import { i18n } from "discourse-i18n";
 import ActivationResent from "./activation-resent";
 
 export default class ActivationEdit extends Component {
@@ -38,4 +42,28 @@ export default class ActivationEdit extends Component {
   updateNewEmail(email) {
     this.newEmail = email;
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{i18n "login.change_email"}}
+      @flash={{this.flash}}
+    >
+      <:body>
+        <ActivationEmailForm
+          @email={{@model.newEmail}}
+          @updateNewEmail={{this.updateNewEmail}}
+        />
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.changeEmail}}
+          @label="login.submit_new_email"
+          @disabled={{this.submitDisabled}}
+          class="btn-primary"
+        />
+        <DButton @action={{@closeModal}} @label="close" />
+      </:footer>
+    </DModal>
+  </template>
 }

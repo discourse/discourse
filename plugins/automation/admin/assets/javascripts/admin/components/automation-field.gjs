@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from 'discourse-i18n';
 import DaBooleanField from "./fields/da-boolean-field";
 import DaCategoriesField from "./fields/da-categories-field";
 import DaCategoryField from "./fields/da-category-field";
@@ -68,7 +68,7 @@ export default class AutomationField extends Component {
   }
 
   get label() {
-    return I18n.t(
+    return i18n(
       `discourse_automation${this.target}fields.${this.args.field.name}.label`
     );
   }

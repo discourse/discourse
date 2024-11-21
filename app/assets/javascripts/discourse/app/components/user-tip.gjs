@@ -7,7 +7,7 @@ import UserTipContainer from "discourse/components/user-tip-container";
 import helperFn from "discourse/helpers/helper-fn";
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class UserTip extends Component {
@@ -36,7 +36,7 @@ export default class UserTip extends Component {
         document.querySelector(this.args.triggerSelector);
 
       let buttonText = escape(
-        I18n.t(this.args.buttonLabel || "user_tips.button")
+        i18n(this.args.buttonLabel || "user_tips.button")
       );
       if (this.args.buttonIcon) {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
@@ -57,7 +57,7 @@ export default class UserTip extends Component {
             ? escape(this.args.contentText)
             : null,
           buttonText,
-          buttonSkipText: I18n.t("user_tips.skip"),
+          buttonSkipText: i18n("user_tips.skip"),
           showSkipButton: this.args.showSkipButton,
         },
       });

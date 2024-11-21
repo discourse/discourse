@@ -3,7 +3,7 @@ import TopicStatusIcons from "discourse/helpers/topic-status-icons";
 import { escapeExpression } from "discourse/lib/utilities";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default createWidget("topic-status", {
   tagName: "span.topic-statuses",
@@ -19,7 +19,7 @@ export default createWidget("topic-status", {
       const icon = iconNode(name, iconArgs);
 
       const attributes = {
-        title: escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
+        title: escapeExpression(i18n(`topic_statuses.${key}.help`)),
       };
       let klass = "topic-status";
       if (key === "unpinned" || key === "pinned") {

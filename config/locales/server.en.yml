@@ -653,7 +653,7 @@ en:
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
       trust_level_0: "New members with limited abilities, who are learning community norms and functionality"
 
-      trust_level_1: "Members with more trust, who have shown initial engagement by reading hand can now access more functions. All members of this group are also members of the trust_level_0 group."
+      trust_level_1: "Members with more trust, who have shown initial engagement by reading and can now access more functions. All members of this group are also members of the trust_level_0 group."
 
       trust_level_2: "Active members who have consistently contributed overtime and gained full citizenship privileges. All members of this group are also members of the trust_level_1 and trust_level_0 groups."
 

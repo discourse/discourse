@@ -4,7 +4,7 @@ import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Bookmark from "discourse/models/bookmark";
 import Notification from "discourse/models/notification";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -16,7 +16,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.view_all_bookmarks");
+    return i18n("user_menu.view_all_bookmarks");
   }
 
   get showDismiss() {
@@ -24,7 +24,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   get dismissTitle() {
-    return I18n.t("user.dismiss_bookmarks_tooltip");
+    return i18n("user.dismiss_bookmarks_tooltip");
   }
 
   get itemsCacheKey() {
@@ -45,7 +45,7 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   }
 
   get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+    return i18n("notifications.dismiss_confirmation.body.bookmarks", {
       count: this.#unreadBookmarkRemindersCount,
     });
   }

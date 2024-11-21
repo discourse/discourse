@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 
 export default class UnreadIndicator extends Component {
   @service messageBus;

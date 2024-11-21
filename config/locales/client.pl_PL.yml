@@ -1829,7 +1829,6 @@ pl_PL:
       location: "Lokalizacja"
       website: "Strona internetowa"
       email_settings: "Email"
-      hide_profile_and_presence: "Ukryj mój profil publiczny i funkcje obecności"
       enable_physical_keyboard: "Włącz obsługę klawiatury fizycznej na iPadzie"
       text_size:
         title: "Rozmiar tekstu"
@@ -7177,10 +7176,6 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
-        description: "Dodaj nowe emotikony, które będą dostępne dla wszystkich. Przeciągnij i upuść wiele plików jednocześnie bez wprowadzania nazwy, aby utworzyć emotikony za pomocą ich nazw plików. Wybrana grupa zostanie użyta dla wszystkich plików, które są dodawane w tym samym czasie. Możesz także kliknąć przycisk „Dodaj nową emotikonę”, aby otworzyć selektor plików."
-        new: "Dodaj"
-        add: "Dodaj nowe Emoji"
-        choose_files: "Wybierz pliki"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"
@@ -7228,17 +7223,19 @@ pl_PL:
         category_id: "ID kategorii"
         category_title: "Kategoria"
         tag_name: "Nazwa tagu"
+        tag_title: "Tag"
         external_url: "Zewnętrzny lub względny adres URL"
         user_id: "ID użytkownika"
+        user_title: "Użytkownik"
         username: "Nazwa użytkownika"
         destination: "Miejsce docelowe"
         copy_to_clipboard: "Skopiuj link bezpośredni do schowka"
         delete_confirm: Czy na pewno chcesz usunąć ten permalink?
-        no_permalinks: "Nie masz jeszcze żadnych permalinków. Utwórz nowy permalink powyżej, aby zacząć widzieć listę swoich permalinków tutaj."
+        more_options: "Więcej opcji"
         form:
           label: "Nowy:"
-          add: "Dodaj"
-          filter: "Wyszukaj (URL lub zewnętrzny URL)"
+          url: "URL"
+          save: "Zapisz"
       reseed:
         action:
           label: "Zamień tekst…"

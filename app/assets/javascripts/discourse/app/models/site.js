@@ -81,18 +81,18 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
 
   @sort("categories", "topicCountDesc") categoriesByCount;
 
-  @computed("categories.[]")
-  get categoriesById() {
-    const map = new Map();
-    this.categories.forEach((c) => map.set(c.id, c));
-    return map;
-  }
-
   init() {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
     this.categories = this.categories || [];
+  }
+
+  @computed("categories.[]")
+  get categoriesById() {
+    const map = new Map();
+    this.categories.forEach((c) => map.set(c.id, c));
+    return map;
   }
 
   @discourseComputed("notification_types")

@@ -408,3 +408,5 @@ export class I18nMissingInterpolationArgument extends Error {
 
 // Export a default/global instance
 export default globalThis.I18n = new I18n();
+
+export const i18n = globalThis.I18n.t;

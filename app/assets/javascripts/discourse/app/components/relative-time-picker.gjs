@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { isBlank } from "@ember/utils";
 import { eq } from "truth-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 const HOUR = 60;
@@ -67,23 +67,23 @@ export default class RelativeTimePicker extends Component {
     return [
       {
         id: "mins",
-        name: I18n.t("relative_time_picker.minutes", { count }),
+        name: i18n("relative_time_picker.minutes", { count }),
       },
       {
         id: "hours",
-        name: I18n.t("relative_time_picker.hours", { count }),
+        name: i18n("relative_time_picker.hours", { count }),
       },
       {
         id: "days",
-        name: I18n.t("relative_time_picker.days", { count }),
+        name: i18n("relative_time_picker.days", { count }),
       },
       {
         id: "months",
-        name: I18n.t("relative_time_picker.months", { count }),
+        name: i18n("relative_time_picker.months", { count }),
       },
       {
         id: "years",
-        name: I18n.t("relative_time_picker.years", { count }),
+        name: i18n("relative_time_picker.years", { count }),
       },
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }

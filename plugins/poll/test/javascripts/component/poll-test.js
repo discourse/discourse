@@ -5,7 +5,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 let requests = 0;
 
@@ -171,7 +171,7 @@ module("Poll | Component | poll", function (hooks) {
     );
     assert
       .dom(".poll-container .alert")
-      .hasText(I18n.t("poll.results.groups.title", { groups: "foo" }));
+      .hasText(i18n("poll.results.groups.title", { groups: "foo" }));
     assert.strictEqual(requests, 0);
     assert.dom(".chosen").doesNotExist();
   });

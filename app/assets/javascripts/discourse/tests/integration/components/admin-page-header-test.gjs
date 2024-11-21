@@ -4,7 +4,7 @@ import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import NavItem from "discourse/components/nav-item";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AdminPageHeader from "admin/components/admin-page-header";
 
 const AdminPageHeaderActionsTestComponent = <template>

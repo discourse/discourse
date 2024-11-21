@@ -7,7 +7,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import loadScript from "discourse/lib/load-script";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class PollBreakdownModal extends Component {
   @service dialog;
@@ -66,7 +66,7 @@ export default class PollBreakdownModal extends Component {
         if (error) {
           popupAjaxError(error);
         } else {
-          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
+          this.dialog.alert(i18n("poll.error_while_fetching_voters"));
         }
       })
       .then((result) => {

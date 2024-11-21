@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 export const DEFAULT_PERIOD = "yearly";
 
 export default class AdminSearchLogsIndexController extends Controller {
@@ -9,12 +9,12 @@ export default class AdminSearchLogsIndexController extends Controller {
   searchTypeOptions = [
     {
       id: "all",
-      name: I18n.t("admin.logs.search_logs.types.all_search_types"),
+      name: i18n("admin.logs.search_logs.types.all_search_types"),
     },
-    { id: "header", name: I18n.t("admin.logs.search_logs.types.header") },
+    { id: "header", name: i18n("admin.logs.search_logs.types.header") },
     {
       id: "full_page",
-      name: I18n.t("admin.logs.search_logs.types.full_page"),
+      name: i18n("admin.logs.search_logs.types.full_page"),
     },
   ];
 }

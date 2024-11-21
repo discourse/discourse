@@ -10,7 +10,7 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 import DeleteUserPostsProgressModal from "../components/modal/delete-user-posts-progress";
@@ -98,14 +98,14 @@ export default class AdminUserIndexController extends Controller.extend(
     }
 
     if (staff) {
-      return I18n.t("admin.user.delete_posts_forbidden_because_staff");
+      return i18n("admin.user.delete_posts_forbidden_because_staff");
     }
     if (postCount > this.siteSettings.delete_all_posts_max) {
-      return I18n.t("admin.user.cant_delete_all_too_many_posts", {
+      return i18n("admin.user.cant_delete_all_too_many_posts", {
         count: this.siteSettings.delete_all_posts_max,
       });
     } else {
-      return I18n.t("admin.user.cant_delete_all_posts", {
+      return i18n("admin.user.cant_delete_all_posts", {
         count: this.siteSettings.delete_user_max_post_age,
       });
     }
@@ -118,9 +118,9 @@ export default class AdminUserIndexController extends Controller.extend(
     }
 
     if (staff) {
-      return I18n.t("admin.user.delete_forbidden_because_staff");
+      return i18n("admin.user.delete_forbidden_because_staff");
     } else {
-      return I18n.t("admin.user.delete_forbidden", {
+      return i18n("admin.user.delete_forbidden", {
         count: this.siteSettings.delete_user_max_post_age,
       });
     }
@@ -134,7 +134,7 @@ export default class AdminUserIndexController extends Controller.extend(
   groupAdded(added) {
     this.model
       .groupAdded(added)
-      .catch(() => this.dialog.alert(I18n.t("generic_error")));
+      .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
   groupRemoved(groupId) {
@@ -145,7 +145,7 @@ export default class AdminUserIndexController extends Controller.extend(
           this.set("originalPrimaryGroupId", null);
         }
       })
-      .catch(() => this.dialog.alert(I18n.t("generic_error")));
+      .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
   @discourseComputed("ssoLastPayload")
@@ -160,9 +160,9 @@ export default class AdminUserIndexController extends Controller.extend(
       .then(() => DiscourseURL.redirectTo("/"))
       .catch((e) => {
         if (e.status === 404) {
-          this.dialog.alert(I18n.t("admin.impersonate.not_found"));
+          this.dialog.alert(i18n("admin.impersonate.not_found"));
         } else {
-          this.dialog.alert(I18n.t("admin.impersonate.invalid"));
+          this.dialog.alert(i18n("admin.impersonate.invalid"));
         }
       });
   }
@@ -171,7 +171,7 @@ export default class AdminUserIndexController extends Controller.extend(
   logOut() {
     return this.model
       .logOut()
-      .then(() => this.dialog.alert(I18n.t("admin.user.logged_out")));
+      .then(() => this.dialog.alert(i18n("admin.user.logged_out")));
   }
 
   @action
@@ -197,7 +197,7 @@ export default class AdminUserIndexController extends Controller.extend(
         this.model.setProperties({ active: false, can_activate: true })
       )
       .catch((e) => {
-        const error = I18n.t("admin.user.deactivate_failed", {
+        const error = i18n("admin.user.deactivate_failed", {
           error: this._formatError(e),
         });
         this.dialog.alert(error);
@@ -208,7 +208,7 @@ export default class AdminUserIndexController extends Controller.extend(
   sendActivationEmail() {
     return this.model
       .sendActivationEmail()
-      .then(() => this.dialog.alert(I18n.t("admin.user.activation_email_sent")))
+      .then(() => this.dialog.alert(i18n("admin.user.activation_email_sent")))
       .catch(popupAjaxError);
   }
 
@@ -223,7 +223,7 @@ export default class AdminUserIndexController extends Controller.extend(
         })
       )
       .catch((e) => {
-        const error = I18n.t("admin.user.activate_failed", {
+        const error = i18n("admin.user.activate_failed", {
           error: this._formatError(e),
         });
         this.dialog.alert(error);
@@ -241,7 +241,7 @@ export default class AdminUserIndexController extends Controller.extend(
       .grantAdmin()
       .then((result) => {
         if (result.email_confirmation_required) {
-          this.dialog.alert(I18n.t("admin.user.grant_admin_confirm"));
+          this.dialog.alert(i18n("admin.user.grant_admin_confirm"));
         }
       })
       .catch((error) => {
@@ -278,7 +278,7 @@ export default class AdminUserIndexController extends Controller.extend(
         }
         error =
           error ||
-          I18n.t("admin.user.trust_level_change_failed", {
+          i18n("admin.user.trust_level_change_failed", {
             error: this._formatError(e),
           });
         this.dialog.alert(error);
@@ -302,7 +302,7 @@ export default class AdminUserIndexController extends Controller.extend(
         }
         error =
           error ||
-          I18n.t("admin.user.trust_level_change_failed", {
+          i18n("admin.user.trust_level_change_failed", {
             error: this._formatError(e),
           });
         this.dialog.alert(error);
@@ -322,7 +322,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   deleteAssociatedAccounts() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.user.delete_associated_accounts_confirm"),
+      message: i18n("admin.user.delete_associated_accounts_confirm"),
       didConfirm: () => {
         this.model.deleteAssociatedAccounts().catch(popupAjaxError);
       },
@@ -346,27 +346,27 @@ export default class AdminUserIndexController extends Controller.extend(
               document.location = getURL("/admin/users/list/active");
             }
           } else {
-            this.dialog.alert(I18n.t("admin.user.anonymize_failed"));
+            this.dialog.alert(i18n("admin.user.anonymize_failed"));
             if (data.user) {
               user.setProperties(data.user);
             }
           }
         })
-        .catch(() => this.dialog.alert(I18n.t("admin.user.anonymize_failed")));
+        .catch(() => this.dialog.alert(i18n("admin.user.anonymize_failed")));
     };
 
     this.dialog.alert({
-      message: I18n.t("admin.user.anonymize_confirm"),
+      message: i18n("admin.user.anonymize_confirm"),
       class: "delete-user-modal",
       buttons: [
         {
           icon: "triangle-exclamation",
-          label: I18n.t("admin.user.anonymize_yes"),
+          label: i18n("admin.user.anonymize_yes"),
           class: "btn-danger",
           action: () => performAnonymize(),
         },
         {
-          label: I18n.t("composer.cancel"),
+          label: i18n("composer.cancel"),
         },
       ],
     });
@@ -375,7 +375,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   disableSecondFactor() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("admin.user.disable_second_factor_confirm"),
+      message: i18n("admin.user.disable_second_factor_confirm"),
       didConfirm: () => {
         return this.model.disableSecondFactor();
       },
@@ -399,7 +399,7 @@ export default class AdminUserIndexController extends Controller.extend(
     const location = document.location.pathname;
 
     const performDestroy = (block) => {
-      this.dialog.notice(I18n.t("admin.user.deleting_user"));
+      this.dialog.notice(i18n("admin.user.deleting_user"));
       let formData = { context: location };
       if (block) {
         formData["block_email"] = true;
@@ -419,21 +419,21 @@ export default class AdminUserIndexController extends Controller.extend(
               document.location = getURL("/admin/users/list/active");
             }
           } else {
-            this.dialog.alert(I18n.t("admin.user.delete_failed"));
+            this.dialog.alert(i18n("admin.user.delete_failed"));
           }
         })
         .catch(() => {
-          this.dialog.alert(I18n.t("admin.user.delete_failed"));
+          this.dialog.alert(i18n("admin.user.delete_failed"));
         });
     };
 
     this.dialog.alert({
-      title: I18n.t("admin.user.delete_confirm_title"),
-      message: I18n.t("admin.user.delete_confirm"),
+      title: i18n("admin.user.delete_confirm_title"),
+      message: i18n("admin.user.delete_confirm"),
       class: "delete-user-modal",
       buttons: [
         {
-          label: I18n.t("admin.user.delete_dont_block"),
+          label: i18n("admin.user.delete_dont_block"),
           class: "btn-primary",
           action: () => {
             return performDestroy(false);
@@ -441,14 +441,14 @@ export default class AdminUserIndexController extends Controller.extend(
         },
         {
           icon: "triangle-exclamation",
-          label: I18n.t("admin.user.delete_and_block"),
+          label: i18n("admin.user.delete_and_block"),
           class: "btn-danger",
           action: () => {
             return performDestroy(true);
           },
         },
         {
-          label: I18n.t("composer.cancel"),
+          label: i18n("composer.cancel"),
         },
       ],
     });
@@ -492,12 +492,12 @@ export default class AdminUserIndexController extends Controller.extend(
         if (response.success) {
           this.modal.show(MergeUsersProgressModal);
         } else {
-          this.dialog.alert(I18n.t("admin.user.merge_failed"));
+          this.dialog.alert(i18n("admin.user.merge_failed"));
         }
       })
       .catch(() => {
         AdminUser.find(user.id).then((u) => user.setProperties(u));
-        this.dialog.alert(I18n.t("admin.user.merge_failed"));
+        this.dialog.alert(i18n("admin.user.merge_failed"));
       });
   }
 
@@ -598,7 +598,7 @@ export default class AdminUserIndexController extends Controller.extend(
       data: { primary_group_id: primaryGroupId },
     })
       .then(() => this.set("originalPrimaryGroupId", primaryGroupId))
-      .catch(() => this.dialog.alert(I18n.t("generic_error")));
+      .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
   @action
@@ -609,7 +609,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @action
   deleteSSORecord() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.user.discourse_connect.confirm_delete"),
+      message: i18n("admin.user.discourse_connect.confirm_delete"),
       didConfirm: () => this.model.deleteSSORecord(),
     });
   }

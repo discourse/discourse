@@ -10,7 +10,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserStatusPicker extends Component {
   @tracked isFocused = false;

@@ -4,7 +4,7 @@ import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -57,7 +57,7 @@ module("Unit | Notification Types | liked-consolidated", function (hooks) {
     );
     assert.strictEqual(
       director.description,
-      I18n.t("notifications.liked_consolidated_description", { count: 44 }),
+      i18n("notifications.liked_consolidated_description", { count: 44 }),
       "displays the right content"
     );
   });

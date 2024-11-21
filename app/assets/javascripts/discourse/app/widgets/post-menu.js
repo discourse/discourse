@@ -6,7 +6,7 @@ import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
-import { userPath } from "discourse/lib/url";
+import { smallUserAttrs } from "discourse/lib/user-list-attrs";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
@@ -16,7 +16,7 @@ import RenderGlimmer, {
 } from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -53,16 +53,6 @@ export function replaceButton(name, replaceWith) {
 
 function registerButton(name, builder) {
   _builders[name] = builder;
-}
-
-function smallUserAtts(user) {
-  return {
-    template: user.avatar_template,
-    username: user.username,
-    post_url: user.post_url,
-    url: userPath(user.username_lower),
-    unknown: user.unknown,
-  };
 }
 
 export function buildButton(name, widget) {
@@ -110,7 +100,7 @@ registerButton("read-count", (attrs, state) => {
         contents: count,
         iconRight: true,
         addContainer: false,
-        translatedAriaLabel: I18n.t("post.sr_post_read_count_button", {
+        translatedAriaLabel: i18n("post.sr_post_read_count_button", {
           count,
         }),
         ariaPressed,
@@ -161,7 +151,7 @@ function likeCount(attrs, state) {
       iconRight: true,
       addContainer,
       titleOptions: { count: attrs.liked ? count - 1 : count },
-      translatedAriaLabel: I18n.t("post.sr_post_like_count_button", { count }),
+      translatedAriaLabel: i18n("post.sr_post_like_count_button", { count }),
       ariaPressed,
     };
   }
@@ -258,7 +248,7 @@ registerButton("reply-small", (attrs) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply",
-    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+    translatedAriaLabel: i18n("post.sr_reply_to", {
       post_number: attrs.post_number,
       username: attrs.username,
     }),
@@ -328,7 +318,7 @@ registerButton("replies", (attrs, state, siteSettings) => {
     label: attrs.mobileView ? "post.has_replies_count" : "post.has_replies",
     iconRight: !siteSettings.enable_filtered_replies_view || attrs.mobileView,
     disabled: !!attrs.deleted,
-    translatedAriaLabel: I18n.t("post.sr_expand_replies", { count }),
+    translatedAriaLabel: i18n("post.sr_expand_replies", { count }),
     ariaExpanded,
     ariaPressed,
     ariaControls: `embedded-posts__bottom--${attrs.post_number}`,
@@ -360,7 +350,7 @@ registerButton("reply", (attrs, state, siteSettings, postMenuSettings) => {
     title: "post.controls.reply",
     icon: "reply",
     className: "reply create fade-out",
-    translatedAriaLabel: I18n.t("post.sr_reply_to", {
+    translatedAriaLabel: i18n("post.sr_reply_to", {
       post_number: attrs.post_number,
       username: attrs.username,
     }),
@@ -786,7 +776,7 @@ export default createWidget("post-menu", {
           listClassName: "who-read",
           description,
           count,
-          ariaLabel: I18n.t(
+          ariaLabel: i18n(
             "post.actions.people.sr_post_readers_list_description"
           ),
         })
@@ -808,7 +798,7 @@ export default createWidget("post-menu", {
           listClassName: "who-liked",
           description,
           count,
-          ariaLabel: I18n.t(
+          ariaLabel: i18n(
             "post.actions.people.sr_post_likers_list_description"
           ),
         })
@@ -907,14 +897,13 @@ export default createWidget("post-menu", {
 
   getWhoLiked() {
     const { attrs, state } = this;
-
     return this.store
       .find("post-action-user", {
         id: attrs.id,
         post_action_type_id: LIKE_ACTION,
       })
       .then((users) => {
-        state.likedUsers = users.map(smallUserAtts);
+        state.likedUsers = users.map(smallUserAttrs);
         state.total = users.totalRows;
       });
   },
@@ -923,7 +912,7 @@ export default createWidget("post-menu", {
     const { attrs, state } = this;
 
     return this.store.find("post-reader", { id: attrs.id }).then((users) => {
-      state.readers = users.map(smallUserAtts);
+      state.readers = users.map(smallUserAttrs);
       state.totalReaders = users.totalRows;
     });
   },

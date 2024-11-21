@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const USER_DRAFTS_CHANGED_EVENT = "user-drafts:changed";
 
@@ -61,17 +61,17 @@ export default class MyPostsSectionLink extends BaseSectionLink {
 
   get title() {
     if (this._hasDraft) {
-      return I18n.t("sidebar.sections.community.links.my_posts.title_drafts");
+      return i18n("sidebar.sections.community.links.my_posts.title_drafts");
     } else {
-      return I18n.t("sidebar.sections.community.links.my_posts.title");
+      return i18n("sidebar.sections.community.links.my_posts.title");
     }
   }
 
   get text() {
     if (this._hasDraft && this.currentUser?.new_new_view_enabled) {
-      return I18n.t("sidebar.sections.community.links.my_posts.content_drafts");
+      return i18n("sidebar.sections.community.links.my_posts.content_drafts");
     } else {
-      return I18n.t(
+      return i18n(
         `sidebar.sections.community.links.${this.overridenName
           .toLowerCase()
           .replace(" ", "_")}.content`,
@@ -88,7 +88,7 @@ export default class MyPostsSectionLink extends BaseSectionLink {
     if (this.currentUser.new_new_view_enabled) {
       return this.draftCount.toString();
     } else {
-      return I18n.t("sidebar.sections.community.links.my_posts.draft_count", {
+      return i18n("sidebar.sections.community.links.my_posts.draft_count", {
         count: this.draftCount,
       });
     }

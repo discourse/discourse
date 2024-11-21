@@ -2,8 +2,6 @@
 
 RSpec.describe "tasks/uploads" do
   before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
     SiteSetting.authorized_extensions += "|pdf"
     STDIN.stubs(:gets).returns("y\n")
   end
@@ -28,7 +26,7 @@ RSpec.describe "tasks/uploads" do
     end
 
     def invoke_task
-      capture_stdout { Rake::Task["uploads:secure_upload_analyse_and_update"].invoke }
+      capture_stdout { invoke_rake_task("uploads:secure_upload_analyse_and_update") }
     end
 
     context "when the store is internal" do
@@ -188,7 +186,7 @@ RSpec.describe "tasks/uploads" do
 
   describe "uploads:disable_secure_uploads" do
     def invoke_task
-      capture_stdout { Rake::Task["uploads:disable_secure_uploads"].invoke }
+      capture_stdout { invoke_rake_task("uploads:disable_secure_uploads") }
     end
 
     before do
@@ -253,7 +251,7 @@ RSpec.describe "tasks/uploads" do
 
   describe "uploads:downsize" do
     def invoke_task
-      capture_stdout { Rake::Task["uploads:downsize"].invoke }
+      capture_stdout { invoke_rake_task("uploads:downsize") }
     end
 
     before { STDIN.stubs(:beep) }

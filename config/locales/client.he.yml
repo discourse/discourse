@@ -1571,6 +1571,78 @@ he:
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other { ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -1844,7 +1916,7 @@ he:
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
-      hide_profile_and_presence: "הסתר את מאפייני הפרופיל והנוכחות שלי"
+      hide_profile: "הסתרת הפרופיל הציבורי שלי"
       enable_physical_keyboard: "הפעלת תמיכה במקלדת פיזית ב־iPad"
       text_size:
         title: "גודל טקסט"
@@ -2153,6 +2225,10 @@ he:
       what_are_you_doing: "מה מעלליך?"
       pause_notifications: "השהיית התראות"
       remove_status: "הסרת מצב"
+    presence_toggle:
+      online: "מקוון"
+      offline: "מנותק"
+      title: "החלפת מצבי יכולות נוכחות"
     user_tips:
       button: "הבנתי!"
       skip: "דילוג על עצות"
@@ -4324,7 +4400,7 @@ he:
       predicted_views: "צפיות חזויות"
       so_far: (עד כה)
       read: קריאה
-      minutes: מזערי
+      minutes: דק׳
     post_links:
       about: "הרחיבו לינקים נוספים לפוסט זה"
       title:
@@ -4552,6 +4628,7 @@ he:
       shortcut_delimiter_or: "%{shortcut1} או %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "קיצורי מקלדת"
       short_title: "קיצורי דרך"
       jump_to:
@@ -7293,10 +7370,7 @@ he:
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:
         title: "אמוג׳י"
-        description: "ניתן להוסיף אמוג׳י שיהיו זמינים לכולם. גרירה של מספר קבצים בבת אחת מבלי למלא את שמם תיצור אמוג׳ים לפי שם הקובץ שלהם. הקבוצה הנבחרת תשמש את כל הקבצים שנוספו בו־זמנית. אפשר ללחוץ על ‚הוספת אמוג׳י חדש’ כדי לפתוח את בוחר הקבצים."
-        new: "הוספה"
-        add: "הוספת אמוג׳י חדש"
-        choose_files: "בחירת קבצים"
+        add: "הוספת אמוג׳י"
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
@@ -7345,17 +7419,26 @@ he:
         category_id: "מזהה לקטגוריה"
         category_title: "קטגוריה"
         tag_name: "שם תגית"
+        tag_title: "תגית"
         external_url: "כתובת חיצונית או יחסית"
         user_id: "מזהה משתמש"
+        user_title: "משתמש"
         username: "שם משתמש"
         destination: "יעד"
         copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: ' להסיר את הקישור הקבוע?'
-        no_permalinks: "עדיין אין לך קישורים קבועים. יש ליצור קישור קבוע חדש למעלה כדי להתחיל לראות רשימה של הקישורים הקבועים שלך כאן."
+        add: "הוספת קישור קבוע"
+        back: "חזרה לקישורים הקבועים"
+        more_options: "אפשרויות נוספות"
+        copy_success: "קישור קבוע הועתק ללוח הגזירים"
         form:
           label: "חדש:"
-          add: "הוספה"
-          filter: "חיפוש (כתובת או כתובת חיצונית)"
+          add_header: "הוספת קישור קבוע"
+          edit_header: "עריכת קישור קבוע"
+          filter: "כתובת לחיפוש או כתובת יעד"
+          url: "כתובת"
+          permalink_type: "סוג קישור קבוע"
+          save: "שמירה"
       reseed:
         action:
           label: "החלפת טקסט…"

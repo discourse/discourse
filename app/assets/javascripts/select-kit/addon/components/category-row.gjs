@@ -106,7 +106,7 @@ export default class CategoryRow extends Component {
   get badgeForCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.category, {
-        link: this.categoryLink,
+        link: false,
         allowUncategorized:
           this.allowUncategorizedTopics || this.allowUncategorized,
         hideParent: !!this.parentCategory,
@@ -122,7 +122,7 @@ export default class CategoryRow extends Component {
   get badgeForParentCategory() {
     return htmlSafe(
       categoryBadgeHTML(this.parentCategory, {
-        link: this.categoryLink,
+        link: false,
         allowUncategorized:
           this.allowUncategorizedTopics || this.allowUncategorized,
         recursive: true,
@@ -253,6 +253,7 @@ export default class CategoryRow extends Component {
       description.length > limit ? "&hellip;" : ""
     }`;
   }
+
   _isValidInput(eventKey) {
     // relying on passing the event to the input is risky as it could not work
     // dispatching the event won't work as the event won't be trusted
@@ -285,7 +286,7 @@ export default class CategoryRow extends Component {
       {{on "click" this.handleClick}}
       {{on "keydown" this.handleKeyDown}}
       aria-checked={{this.isSelected}}
-      tabindex="0"
+      tabindex="-1"
     >
 
       {{#if this.category}}

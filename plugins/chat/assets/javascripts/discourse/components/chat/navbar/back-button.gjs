@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarBackButton extends Component {
   get icon() {
@@ -9,7 +9,7 @@ export default class ChatNavbarBackButton extends Component {
   }
 
   get title() {
-    return this.args.title ?? I18n.t("chat.browse.back");
+    return this.args.title ?? i18n("chat.browse.back");
   }
 
   get targetRoute() {

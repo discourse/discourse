@@ -16,7 +16,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import { makeArray } from "discourse-common/lib/helpers";
 import { bind as bindDecorator } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
@@ -406,7 +406,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     if (maximum && selection.length >= maximum) {
       const key =
         this.selectKit.options.maximumLabel || "select_kit.max_content_reached";
-      this.addError(I18n.t(key, { count: maximum }));
+      this.addError(i18n(key, { count: maximum }));
       return false;
     }
 
@@ -563,7 +563,7 @@ export default class SelectKit extends Component.extend(UtilsMixin) {
     let item;
     switch (typeof none) {
       case "string":
-        item = this.defaultItem(null, I18n.t(none));
+        item = this.defaultItem(null, i18n(none));
         break;
       default:
         item = none;

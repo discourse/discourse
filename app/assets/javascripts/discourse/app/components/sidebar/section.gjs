@@ -11,8 +11,8 @@ import {
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import DTooltip from "float-kit/components/d-tooltip";
 import SectionHeader from "./section-header";

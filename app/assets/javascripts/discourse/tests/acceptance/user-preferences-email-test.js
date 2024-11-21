@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Email", function (needs) {
   needs.user();
@@ -24,7 +24,7 @@ acceptance("User Preferences - Email", function (needs) {
     assert
       .dom(".tip.bad")
       .hasText(
-        I18n.t("user.email.invalid"),
+        i18n("user.email.invalid"),
         "it should display invalid email tip"
       );
   });

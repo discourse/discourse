@@ -4,7 +4,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Email Disabled Banner", function (needs) {
   needs.user();
@@ -25,7 +25,7 @@ acceptance("Email Disabled Banner", function (needs) {
       .exists("alert is displayed when email disabled");
     assert
       .dom(".alert-emails-disabled .text")
-      .hasText(I18n.t("emails_are_disabled"), "alert uses the correct text");
+      .hasText(i18n("emails_are_disabled"), "alert uses the correct text");
   });
 
   test("when non-staff", async function (assert) {
@@ -37,7 +37,7 @@ acceptance("Email Disabled Banner", function (needs) {
     assert
       .dom(".alert-emails-disabled .text")
       .hasText(
-        I18n.t("emails_are_disabled_non_staff"),
+        i18n("emails_are_disabled_non_staff"),
         "alert uses the correct text"
       );
 
@@ -49,7 +49,7 @@ acceptance("Email Disabled Banner", function (needs) {
     assert
       .dom(".alert-emails-disabled .text")
       .hasText(
-        I18n.t("emails_are_disabled_non_staff"),
+        i18n("emails_are_disabled_non_staff"),
         "alert uses the correct text"
       );
   });

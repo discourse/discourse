@@ -4,7 +4,7 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FeatureTopic extends Component {
   @service currentUser;
@@ -37,7 +37,7 @@ export default class FeatureTopic extends Component {
       name += "_until";
     }
     const until = moment(this.args.model.topic.pinned_until).format("LL");
-    return I18n.t(name, { categoryLink: this.categoryLink, until });
+    return i18n(name, { categoryLink: this.categoryLink, until });
   }
 
   get canPinGlobally() {
@@ -48,7 +48,7 @@ export default class FeatureTopic extends Component {
   }
 
   get pinMessage() {
-    return I18n.t("topic.feature_topic.pin", {
+    return i18n("topic.feature_topic.pin", {
       categoryLink: this.categoryLink,
     });
   }
@@ -58,7 +58,7 @@ export default class FeatureTopic extends Component {
       this.pinnedInCategoryCount === 0
         ? "topic.feature_topic.not_pinned"
         : "topic.feature_topic.already_pinned";
-    return I18n.t(key, {
+    return i18n(key, {
       categoryLink: this.categoryLink,
       count: this.pinnedInCategoryCount,
     });
@@ -84,7 +84,7 @@ export default class FeatureTopic extends Component {
     if (this.pinDisabled) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("topic.feature_topic.pin_validation"),
+        reason: i18n("topic.feature_topic.pin_validation"),
       });
     }
   }
@@ -93,7 +93,7 @@ export default class FeatureTopic extends Component {
     if (this.pinGloballyDisabled) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("topic.feature_topic.pin_validation"),
+        reason: i18n("topic.feature_topic.pin_validation"),
       });
     }
   }
@@ -130,7 +130,7 @@ export default class FeatureTopic extends Component {
       this.args.closeModal();
     } else {
       this.dialog.yesNoConfirm({
-        message: I18n.t("topic.feature_topic.confirm_pin_globally", {
+        message: i18n("topic.feature_topic.confirm_pin_globally", {
           count: this.pinnedGloballyCount,
         }),
         didConfirm: () => {

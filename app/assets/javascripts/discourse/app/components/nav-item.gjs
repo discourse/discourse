@@ -6,13 +6,13 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class NavItem extends Component {
   @service router;
 
   get contents() {
-    const text = this.args.i18nLabel || I18n.t(this.args.label);
+    const text = this.args.i18nLabel || i18n(this.args.label);
     if (this.args.icon) {
       return htmlSafe(`${iconHTML(this.args.icon)} ${text}`);
     }

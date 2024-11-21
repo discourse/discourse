@@ -7,7 +7,7 @@ import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import UserField from "admin/models/user-field";
 
 @tagName("")
@@ -48,7 +48,7 @@ export default class AdminUserFieldItem extends Component {
     return flags
       .map((flag) => {
         if (this.args.userField[flag]) {
-          return I18n.t(`admin.user_fields.${flag}.enabled`);
+          return i18n(`admin.user_fields.${flag}.enabled`);
         }
       })
       .filter(Boolean)
@@ -114,7 +114,7 @@ export default class AdminUserFieldItem extends Component {
   async _confirmChanges() {
     return new Promise((resolve) => {
       this.dialog.yesNoConfirm({
-        message: I18n.t("admin.user_fields.requirement.confirmation"),
+        message: i18n("admin.user_fields.requirement.confirmation"),
         didCancel: () => resolve(false),
         didConfirm: () => resolve(true),
       });

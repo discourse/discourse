@@ -43,6 +43,29 @@ export default class Chat extends Service {
   @tracked _activeMessage = null;
   @tracked _activeChannel = null;
 
+  init() {
+    super.init(...arguments);
+
+    if (this.userCanChat) {
+      this.presenceChannel = this.presence.getChannel("/chat/online");
+
+      onPresenceChange({
+        callback: this.onPresenceChangeCallback,
+        browserHiddenTime: 150000,
+        userUnseenTime: 150000,
+      });
+    }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.userCanChat) {
+      this.chatSubscriptionsManager.stopChannelsSubscriptions();
+      removeOnPresenceChange(this.onPresenceChangeCallback);
+    }
+  }
+
   get activeChannel() {
     return this._activeChannel;
   }
@@ -91,20 +114,6 @@ export default class Chat extends Service {
       this._activeMessage = hash;
     } else {
       this._activeMessage = null;
-    }
-  }
-
-  init() {
-    super.init(...arguments);
-
-    if (this.userCanChat) {
-      this.presenceChannel = this.presence.getChannel("/chat/online");
-
-      onPresenceChange({
-        callback: this.onPresenceChangeCallback,
-        browserHiddenTime: 150000,
-        userUnseenTime: 150000,
-      });
     }
   }
 
@@ -245,15 +254,6 @@ export default class Chat extends Service {
     );
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this.userCanChat) {
-      this.chatSubscriptionsManager.stopChannelsSubscriptions();
-      removeOnPresenceChange(this.onPresenceChangeCallback);
-    }
-  }
-
   updatePresence() {
     next(() => {
       if (this.isDestroyed || this.isDestroying) {
@@ -291,6 +291,45 @@ export default class Chat extends Service {
         this.chatChannelsManager.publicMessageChannelsWithActivity;
       directChannels =
         this.chatChannelsManager.directMessageChannelsWithActivity;
+
+      // If the active channel has no unread messages, we need to manually insert it into
+      // the list, so we can find the next/previous unread channel.
+      if (!activeChannel.hasUnread) {
+        const allChannels = activeChannel.isDirectMessageChannel
+          ? this.chatChannelsManager.directMessageChannels
+          : this.chatChannelsManager.publicMessageChannels;
+
+        // Find the ID of the channel before the active channel, which is unread
+        let checkChannelIndex =
+          allChannels.findIndex((c) => c.id === activeChannel.id) - 1;
+
+        // If we get back to the start of the list, we can stop
+        while (checkChannelIndex >= 0) {
+          if (allChannels[checkChannelIndex].hasUnread) {
+            break;
+          }
+          checkChannelIndex--;
+        }
+
+        // Insert the active channel after unread channel we found (or at the start of the list)
+        if (activeChannel.isDirectMessageChannel) {
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? 0
+              : directChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          directChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
+        } else {
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? -1
+              : publicChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          publicChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
+        }
+      }
     } else {
       publicChannels = this.chatChannelsManager.publicMessageChannels;
       directChannels = this.chatChannelsManager.directMessageChannels;

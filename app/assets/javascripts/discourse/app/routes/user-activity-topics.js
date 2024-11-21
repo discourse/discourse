@@ -3,7 +3,7 @@ import { htmlSafe } from "@ember/template";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityTopics extends UserTopicListRoute {
   userActionType = UserAction.TYPES.topics;
@@ -28,14 +28,14 @@ export default class UserActivityTopics extends UserTopicListRoute {
     const user = this.modelFor("user");
     let title, body;
     if (this.isCurrentUser(user)) {
-      title = I18n.t("user_activity.no_topics_title");
+      title = i18n("user_activity.no_topics_title");
       body = htmlSafe(
-        I18n.t("user_activity.no_topics_body", {
+        i18n("user_activity.no_topics_body", {
           searchUrl: getURL("/search"),
         })
       );
     } else {
-      title = I18n.t("user_activity.no_topics_title_others", {
+      title = i18n("user_activity.no_topics_title_others", {
         username: user.username,
       });
       body = "";
@@ -45,7 +45,7 @@ export default class UserActivityTopics extends UserTopicListRoute {
   }
 
   titleToken() {
-    return I18n.t("user_action_groups.4");
+    return i18n("user_action_groups.4");
   }
 
   @action

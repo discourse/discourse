@@ -109,15 +109,20 @@
   --facebook-or-white: #{$facebook-or-white};
   --twitter-or-white: #{$twitter-or-white};
 
-  --hljs-comment: #{$hljs-comment};
-  --hljs-number: #{$hljs-number};
-  --hljs-string: #{$hljs-string};
-  --hljs-literal: #{$hljs-literal};
-  --hljs-tag: #{$hljs-tag};
+  --hljs-attr: #{$hljs-attr};
   --hljs-attribute: #{$hljs-attribute};
-  --hljs-symbol: #{$hljs-symbol};
+  --hljs-addition: #{$hljs-addition};
   --hljs-bg: #{$hljs-bg};
-  --hljs-builtin-name: #{$hljs-builtin-name};
+  --hljs-comment: #{$hljs-comment};
+  --hljs-deletion: #{$hljs-deletion};
+  --hljs-keyword: #{$hljs-keyword};
+  --hljs-title: #{$hljs-title};
+  --hljs-name: #{$hljs-name};
+  --hljs-punctuation: #{$hljs-punctuation};
+  --hljs-symbol: #{$hljs-symbol};
+  --hljs-variable: #{$hljs-variable};
+  --hljs-string: #{$hljs-string};
+
   --google: #{$google};
   --google-hover: #{$google-hover};
   --instagram: #{$instagram};

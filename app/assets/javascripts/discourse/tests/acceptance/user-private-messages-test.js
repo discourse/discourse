@@ -15,7 +15,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import selectKit from "../helpers/select-kit-helper";
 
 acceptance(
@@ -358,13 +358,13 @@ acceptance(
 
       assert.strictEqual(
         query(".user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
+        i18n("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.strictEqual(
         query(".user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        i18n("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
     });
@@ -376,7 +376,7 @@ acceptance(
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
+        i18n("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
@@ -386,7 +386,7 @@ acceptance(
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 2 }),
+        i18n("user.messages.new_with_count", { count: 2 }),
         "displays the right count"
       );
 
@@ -400,7 +400,7 @@ acceptance(
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        i18n("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
@@ -417,13 +417,13 @@ acceptance(
         query(
           ".messages-nav .user-nav__messages-group-unread"
         ).innerText.trim(),
-        I18n.t("user.messages.unread_with_count", { count: 1 }),
+        i18n("user.messages.unread_with_count", { count: 1 }),
         "displays the right count"
       );
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
-        I18n.t("user.messages.new_with_count", { count: 1 }),
+        i18n("user.messages.new_with_count", { count: 1 }),
         "displays the right count"
       );
 
@@ -433,13 +433,13 @@ acceptance(
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
+        i18n("user.messages.unread"),
         "displays the right count"
       );
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new"),
+        i18n("user.messages.new"),
         "displays the right count"
       );
     });
@@ -473,7 +473,7 @@ acceptance(
 
       assert.strictEqual(
         query(".user-nav__messages-unread").innerText.trim(),
-        I18n.t("user.messages.unread"),
+        i18n("user.messages.unread"),
         "displays the right count"
       );
 
@@ -527,7 +527,7 @@ acceptance(
 
       assert.strictEqual(
         query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        I18n.t("user.messages.new"),
+        i18n("user.messages.new"),
         "displays the right count"
       );
 
@@ -611,7 +611,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.inbox"),
+        i18n("user.messages.inbox"),
         "User personal inbox is selected in dropdown"
       );
 
@@ -619,7 +619,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.inbox"),
+        i18n("user.messages.inbox"),
         "User personal inbox is still selected when viewing sent messages"
       );
 
@@ -647,7 +647,7 @@ acceptance(
       );
 
       await messagesDropdown.expand();
-      await messagesDropdown.selectRowByName(I18n.t("user.messages.tags"));
+      await messagesDropdown.selectRowByName(i18n("user.messages.tags"));
 
       assert.strictEqual(
         currentURL(),
@@ -657,7 +657,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.tags"),
+        i18n("user.messages.tags"),
         "All tags is selected in dropdown"
       );
 
@@ -665,7 +665,7 @@ acceptance(
 
       assert.strictEqual(
         messagesDropdown.header().name(),
-        I18n.t("user.messages.tags"),
+        i18n("user.messages.tags"),
         "All tags is still selected in dropdown"
       );
     });

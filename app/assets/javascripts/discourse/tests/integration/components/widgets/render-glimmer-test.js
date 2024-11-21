@@ -47,6 +47,7 @@ class DemoWidget extends Widget {
       ),
     ];
   }
+
   dummyAction() {}
 
   @bind
@@ -67,6 +68,11 @@ class DemoComponent extends ClassicComponent {
     super.init(...arguments);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    DemoComponent.eventLog.push("willDestroy");
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     DemoComponent.eventLog.push("didInsertElement");
@@ -80,11 +86,6 @@ class DemoComponent extends ClassicComponent {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     DemoComponent.eventLog.push("didReceiveAttrs");
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    DemoComponent.eventLog.push("willDestroy");
   }
 }
 

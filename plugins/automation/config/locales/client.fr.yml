@@ -6,6 +6,11 @@
 
 fr:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: supprimer l'automatisation
     discourse_automation:
       title: Automatisation
       create: Créer
@@ -14,6 +19,8 @@ fr:
       select_trigger: Sélectionner un déclencheur
       confirm_automation_reset: Cette action réinitialisera les options de script et de déclencheur, le nouvel état sera enregistré. Voulez-vous continuer ?
       confirm_automation_trigger: Cette action déclenchera l'automatisation. Voulez-vous continuer ?
+      no_automation_yet: Vous n'avez encore créé aucune automatisation. Choisissez l'une des options ci-dessous pour commencer.
+      filter_placeholder: Filtrer par nom ou description...
       edit_automation:
         trigger_section:
           forced: Ce déclencheur est forcé par le script.
@@ -143,6 +150,9 @@ fr:
               label: ID du sujet
         post_created_edited:
           fields:
+            original_post_only:
+              label: Publication originale uniquement
+              description: Se déclenchera uniquement si la publication est la publication originale du sujet
             action_type:
               label: Type d'action
               description: "Facultatif, limitez le déclenchement aux seuls événements créés ou modifiés"
@@ -160,6 +170,7 @@ fr:
               description: Facultatif, se déclenchera uniquement si le sujet de la publication est un message privé dans la boîte de réception de ce groupe
             restricted_groups:
               label: Groupes
+              description: Facultatif, ne se déclenchera que si le sujet de la publication est un message privé dans l'une des boîtes de réception du groupe
             ignore_group_members:
               label: Ignorer les membres du groupe
               description: Ignorer le déclencheur si l'expéditeur est membre du groupe spécifié ci-dessus
@@ -172,6 +183,9 @@ fr:
             first_topic_only:
               label: Premier sujet uniquement
               description: Se déclenchera uniquement si le sujet est le premier sujet créé par un utilisateur
+            skip_via_email:
+              label: "Ignorer par e-mail"
+              description: "Ignorez le déclencheur si la publication a été créée par e-mail"
           created: Créé
           edited: Modifié
         user_updated:
@@ -221,6 +235,9 @@ fr:
             watching_tags:
               label: Balises suivies
               description: Se déclenche uniquement si le sujet contient l'une de ces étiquettes
+            trigger_with_pms:
+              label: Déclenchement avec MP
+              description: Se déclenchera même si les étiquettes ont été modifiées dans un message privé
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +396,7 @@ fr:
           fields:
             custom_field_name:
               label: "Nom du champ personnalisé de l'utilisateur"
+      unnamed_automation: "Automatisation sans nom"
       models:
         script:
           name:

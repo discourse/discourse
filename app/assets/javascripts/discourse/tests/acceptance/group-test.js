@@ -2,7 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership.json", () => {
@@ -54,7 +54,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert.strictEqual(
       groupDropdown.rowByIndex(0).name(),
-      I18n.t("groups.index.all")
+      i18n("groups.index.all")
     );
 
     this.siteSettings.enable_group_directory = false;
@@ -183,7 +183,7 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom(".d-modal__header .d-modal__title-text")
       .hasText(
-        I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+        i18n("groups.membership_request.title", { group_name: "Macdonald" })
       );
 
     assert.strictEqual(
@@ -217,7 +217,7 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom("span.empty-state-title")
       .hasText(
-        I18n.t("no_group_messages_title"),
+        i18n("no_group_messages_title"),
         "it should display the right text"
       );
   });
@@ -260,7 +260,7 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.strictEqual(
       query(".dialog-body p:nth-of-type(2)").textContent.trim(),
-      I18n.t("admin.groups.delete_with_messages_confirm", {
+      i18n("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
       "it should warn about orphan messages"
@@ -296,11 +296,11 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.strictEqual(
       memberDropdown.rowByIndex(0).name(),
-      I18n.t("groups.members.remove_member")
+      i18n("groups.members.remove_member")
     );
     assert.strictEqual(
       memberDropdown.rowByIndex(1).name(),
-      I18n.t("groups.members.make_owner")
+      i18n("groups.members.make_owner")
     );
   });
 });

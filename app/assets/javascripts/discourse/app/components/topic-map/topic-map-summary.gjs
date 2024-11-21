@@ -17,8 +17,7 @@ import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
@@ -74,7 +73,7 @@ export default class TopicMapSummary extends Component {
       return;
     }
 
-    return I18n.t("summary.short_title");
+    return i18n("summary.short_title");
   }
 
   get topRepliesIcon() {
@@ -83,8 +82,8 @@ export default class TopicMapSummary extends Component {
 
   get topRepliesLabel() {
     return this.topRepliesSummaryEnabled
-      ? I18n.t("summary.show_all_label")
-      : I18n.t("summary.short_label");
+      ? i18n("summary.show_all_label")
+      : i18n("summary.short_label");
   }
 
   get loneStat() {
@@ -186,7 +185,7 @@ export default class TopicMapSummary extends Component {
       })
       .catch((error) => {
         this.dialog.alert(
-          I18n.t("generic_error_with_reason", {
+          i18n("generic_error_with_reason", {
             error: `http: ${error.status} - ${error.body}`,
           })
         );
@@ -223,7 +222,7 @@ export default class TopicMapSummary extends Component {
       })
       .catch((error) => {
         this.dialog.alert(
-          I18n.t("generic_error_with_reason", {
+          i18n("generic_error_with_reason", {
             error: `http: ${error.status} - ${error.body}`,
           })
         );

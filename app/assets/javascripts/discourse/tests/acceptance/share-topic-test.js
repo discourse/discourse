@@ -3,7 +3,7 @@ import { test } from "qunit";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Share and Invite modal", function (needs) {
   needs.user();
@@ -85,7 +85,7 @@ acceptance("Share and Invite modal", function (needs) {
       .dom("#modal-alert.alert-warning")
       .exists("it shows restricted warning");
     assert.dom("#modal-alert.alert-warning").hasText(
-      I18n.t("topic.share.restricted_groups", {
+      i18n("topic.share.restricted_groups", {
         count: 2,
         groupNames: "group_name_1, group_name_2",
       }),

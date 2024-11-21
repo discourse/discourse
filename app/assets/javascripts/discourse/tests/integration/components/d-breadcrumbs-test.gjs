@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Component | DBreadcrumbsContainer and DBreadcrumbsItem",

@@ -1387,7 +1387,6 @@ fa_IR:
       location: "موقعیت"
       website: "تارنما"
       email_settings: "ایمیل"
-      hide_profile_and_presence: "نمایه کاربری و حضور من را مخفی کن"
       enable_physical_keyboard: "پشتیبانی کی بورد فیزیکی را در آی پد فعال کن"
       text_size:
         title: "سایز قلم متن"
@@ -4795,9 +4794,6 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
-        new: "اضافه کردن"
-        add: "افزودن شکلک جدید"
-        choose_files: "انتخاب پرونده"
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"
@@ -4832,12 +4828,14 @@ fa_IR:
         post_title: "نوشته"
         category_id: "شناسه دسته‌بندی"
         category_title: "دسته‌بندی"
+        tag_title: "برچسب"
+        user_title: "کاربر"
         username: "نام‌کاربری"
         delete_confirm: آیا مطمئنید که می‌خواهید این پیوند یکتا را حذف کنید؟
         form:
           label: "جدید:"
-          add: "افزودن"
-          filter: "جستجو (آدرس یا آدرس خارجی)"
+          url: "آدرس"
+          save: "ذخیره"
       reseed:
         modal:
           categories: "دسته‌بندی‌ها"

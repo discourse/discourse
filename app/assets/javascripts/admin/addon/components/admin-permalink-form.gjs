@@ -8,8 +8,8 @@ import { eq } from "truth-helpers";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import Permalink from "admin/models/permalink";
 

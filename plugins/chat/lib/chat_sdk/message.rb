@@ -116,6 +116,7 @@ module ChatSDK
       enforce_membership: false,
       force_thread: false,
       strip_whitespaces: true,
+      blocks: nil,
       **params,
       &block
     )
@@ -127,6 +128,7 @@ module ChatSDK
             in_reply_to_id:,
             thread_id:,
             upload_ids:,
+            blocks:,
             **params,
           },
           options: {
@@ -145,6 +147,7 @@ module ChatSDK
           on_failed_policy(:ensure_valid_thread_for_channel) do
             raise "Couldn't find thread with id: `#{thread_id}`"
           end
+          on_failed_policy(:accept_blocks) { raise "Only bots can create messages with blocks" }
           on_failed_policy(:allowed_to_join_channel) do
             raise "User with id: `#{guardian.user.id}` can't join this channel"
           end

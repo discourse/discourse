@@ -9,7 +9,7 @@ import {
 } from "discourse/lib/to-markdown";
 import { iconHTML, renderIcon } from "discourse-common/lib/icon-library";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";
@@ -143,7 +143,7 @@ function _partitionedRanges(element) {
 
 function initializeDiscourseLocalDates(api) {
   const siteSettings = api.container.lookup("service:site-settings");
-  const defaultTitle = I18n.t("discourse_local_dates.default_title", {
+  const defaultTitle = i18n("discourse_local_dates.default_title", {
     site_name: siteSettings.title,
   });
 
@@ -312,7 +312,7 @@ function _downloadCalendarNode(element) {
 
   const node = document.createElement("div");
   node.classList.add("download-calendar");
-  node.innerHTML = `${renderIcon("string", "file")} ${I18n.t(
+  node.innerHTML = `${renderIcon("string", "file")} ${i18n(
     "download_calendar.add_to_calendar"
   )}`;
   node.setAttribute("data-starts-at", startDate.toISOString());

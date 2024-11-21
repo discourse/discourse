@@ -2,6 +2,14 @@
 
 class UserApiKeyClient < ActiveRecord::Base
   has_many :keys, class_name: "UserApiKey", dependent: :destroy
+  has_many :scopes,
+           class_name: "UserApiKeyClientScope",
+           foreign_key: "user_api_key_client_id",
+           dependent: :destroy
+
+  def allowed_scopes
+    Set.new(scopes.map(&:name))
+  end
 
   def self.invalid_auth_redirect?(auth_redirect, client: nil)
     return false if client&.auth_redirect == auth_redirect
