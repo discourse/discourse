@@ -8,6 +8,10 @@ body.composer-open .chat-drawer-outlet-container {
   width: 15px;
   height: 15px;
   z-index: z("composer", "content");
+
+  .is-collapsed & {
+    display: none;
+  }
 }
 
 html:not(.rtl) {
