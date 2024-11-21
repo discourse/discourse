@@ -88,7 +88,7 @@ Steps are defined *in the order they will be called*. Each step will call a corr
 
 The immediate benefit is that error handling is done for you, and you don’t have to implement any specific logic in the service itself. We’ll see later how to handle errors.
 
-> ⚠️ As said above, a step shouldn’t raise an exception, as this will not be handled automatically for you by the service. If a service raises an exception, it should be treated as a bug. If you need to call a piece of code that might raise an exception under expected usage, then you should provide a `rescue` block for your step to handle the possible exception.
+> ⚠️ As said above, a step shouldn’t raise an exception, as this will not be handled automatically for you by the service. If a service raises an exception, it should be treated as a bug. If you need to call a piece of code that might raise an exception under expected usage, then you should use the `try` step to wrap the steps that could raise.
 
 Let’s see what steps are available and how to use them.
 
@@ -123,6 +123,10 @@ This step will run coercions and validations defined in the provided block. If t
 ### `transaction`
 
 This step is a bit special, as it will wrap any other steps defined in its block inside a SQL transaction.
+
+### `try`
+
+This step will catch exceptions raised by the steps defined in its block. Specific exception classes can be provided if you don’t want to automatically catch all exceptions.
 
 ### `options`
 
@@ -274,6 +278,10 @@ This matcher expects a model step named `name` to not find its model.
 
 This matcher expects a model step named `name` to find its model, but that model should be invalid.
 
+#### `fail_with_exception`
+
+This matcher expects the `try` step to have caught an exception. A specific exception class can be provided.
+
 #### `fail_a_step(name)`
 
 This matcher expects a step named `name` to fail.
@@ -339,6 +347,14 @@ The step will fail if the policy returns a falsy value. Its result object can be
 ### `transaction(&block)`
 
 This step is a bit special as its only purpose is to wrap other steps inside a SQL transaction. It cannot fail by itself.
+
+### `try(*exceptions, &block)`
+
+**Arguments**
+- *exceptions*: one or more exception classes to catch. Not providing any class is equivalent to provide `StandardError`.
+- *block*: a block containing other steps.
+
+This step wraps other steps. If any of the wrapped steps raises an exception, the `try` step will catch it and fail, which will halt the execution flow.
 
 ### `step(name)`
 
@@ -451,6 +467,13 @@ Will execute the provided block if the model named `name` is not present. It als
 - *name*: the name of the model to match. Defaults to `model`.
 
 Will execute the provided block if the model named `name` contains validation errors. It also provides the actual model as the first argument of the block.
+
+### `on_exceptions(*exceptions)`
+
+**Arguments**
+- *exceptions*: zero or more exception classes that can be caught by a `try` step.
+
+Will execute the provided block if a `try` step failed by catching one of the provided exception classes. If no class is provided, then the block will be executed if a `try` step caught any exception. It also provides the actual exception as the first argument of the block.
 
 ## Contracts
 
@@ -620,6 +643,7 @@ Here’s a recap of what will output `#error` for the different steps:
 - *model*: when the model is an `ActiveRecord` one, it outputs its validation errors. Otherwise, it outputs the reason why it failed, probably a `Model not found` error.
 - *params*: outputs the validation errors followed by the provided parameters.
 - *policy*: doesn’t output anything for a simple policy. When a policy object is used, then it outputs its `reason`.
+- *try*: outputs the exception caught by `try`.
 - *step*: outputs the message provided to `fail!`.
 
 ## Live debugging
