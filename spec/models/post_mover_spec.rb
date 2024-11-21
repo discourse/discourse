@@ -2637,5 +2637,105 @@ RSpec.describe PostMover do
         expect(topic_1.deleted_at).not_to be_nil
       end
     end
+
+    context "with freeze_original option" do
+      fab!(:original_topic) { Fabricate(:topic) }
+      fab!(:destination_topic) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: original_topic) }
+      fab!(:post_2) { Fabricate(:post, topic: original_topic) }
+
+      it "keeps all posts when moving to a new topic" do
+        new_topic =
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [post_1.id, post_2.id],
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
+
+        expect(original_topic.posts.count).to eq(2)
+        expect(new_topic.posts.count).to eq(2)
+      end
+
+      it "does not get deleted when moved all posts to topic" do
+        SiteSetting.delete_merged_stub_topics_after_days = 0
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [post_1.id, post_2.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+
+        expect(original_topic.deleted_at).to be_nil
+      end
+
+      it "keeps all posts when moving to an existing topic" do
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [post_1.id, post_2.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+
+        expect(original_topic.posts.count).to eq(2)
+        expect(destination_topic.posts.count).to eq(2)
+      end
+
+      it "lets you move multiple times to the same topic" do
+        mover =
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [post_1.id, post_2.id],
+            options: {
+              freeze_original: true,
+            },
+          )
+        mover.to_topic(destination_topic.id)
+        mover.to_topic(destination_topic.id)
+
+        expect(original_topic.posts.count).to eq(2)
+        expect(destination_topic.posts.count).to eq(4)
+      end
+
+      it "keeps all posts when moving to a new PM" do
+        pm =
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            [post_1.id, post_2.id],
+            move_to_pm: true,
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
+
+        expect(original_topic.posts.count).to eq(2)
+        expect(pm.posts.count).to eq(2)
+      end
+
+      it "keep all posts when moving to an existing PM" do
+        pm = Fabricate(:private_message_topic)
+
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [post_1.id, post_2.id],
+          move_to_pm: true,
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(pm.id)
+
+        expect(original_topic.posts.count).to eq(2)
+        expect(pm.posts.count).to eq(2)
+      end
+    end
   end
 end

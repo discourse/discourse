@@ -7,11 +7,14 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
-  def initialize(original_topic, user, post_ids, move_to_pm: false)
+  # options:
+  # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
+  def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
     @original_topic = original_topic
     @user = user
     @post_ids = post_ids
     @move_to_pm = move_to_pm
+    @options = options
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
