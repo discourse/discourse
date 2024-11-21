@@ -1,4 +1,5 @@
 import require from "require";
+import { consolePrefix } from "discourse/lib/source-identifier";
 import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
@@ -50,8 +51,16 @@ export function addRawTemplate(name, template, opts = {}) {
       since: "v3.4.0.beta3-dev",
       id: "discourse.hbr-topic-list-overrides",
     });
+
+    const source = {};
+    if (opts.themeId) {
+      source.id = opts.themeId;
+      source.name = opts.themeName;
+    } else if (opts.pluginName) {
+      source.name = opts.pluginName;
+    }
     // eslint-disable-next-line no-console
-    console.debug(`[THEME ${opts.themeId} '${opts.themeName}']`, message);
+    console.debug(consolePrefix(null, source), message);
   }
 
   // Core templates should never overwrite themes / plugins
