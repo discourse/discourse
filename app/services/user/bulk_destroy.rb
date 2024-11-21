@@ -16,7 +16,7 @@ class User::BulkDestroy
   private
 
   def fetch_users(params:)
-    ids = params.user_ids.to_a
+    ids = params.user_ids
     # this order cluase ensures we retrieve the users in the same order as the
     # IDs in the param. we do this to ensure the users are deleted in the same
     # order as they're selected in the UI
