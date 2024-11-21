@@ -44,7 +44,7 @@ class UserBadge < ActiveRecord::Base
   scope :for_post_header_badges,
         ->(posts) do
           by_post_and_user(posts).where(
-            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable AND post_header)",
+            "user_badges.badge_id IN (SELECT id FROM badges WHERE show_posts AND enabled AND listable AND show_in_post_header)",
           )
         end
 

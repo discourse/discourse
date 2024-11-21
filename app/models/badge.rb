@@ -344,28 +344,28 @@ end
 #
 # Table name: badges
 #
-#  id                :integer          not null, primary key
-#  name              :string           not null
-#  description       :text
-#  badge_type_id     :integer          not null
-#  grant_count       :integer          default(0), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  allow_title       :boolean          default(FALSE), not null
-#  multiple_grant    :boolean          default(FALSE), not null
-#  icon              :string           default("fa-certificate")
-#  listable          :boolean          default(TRUE)
-#  target_posts      :boolean          default(FALSE)
-#  query             :text
-#  enabled           :boolean          default(TRUE), not null
-#  auto_revoke       :boolean          default(TRUE), not null
-#  badge_grouping_id :integer          default(5), not null
-#  trigger           :integer
-#  show_posts        :boolean          default(FALSE), not null
-#  system            :boolean          default(FALSE), not null
-#  post_header       :boolean          default(FALSE), not null
-#  long_description  :text
-#  image_upload_id   :integer
+#  id                  :integer          not null, primary key
+#  name                :string           not null
+#  description         :text
+#  badge_type_id       :integer          not null
+#  grant_count         :integer          default(0), not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  allow_title         :boolean          default(FALSE), not null
+#  multiple_grant      :boolean          default(FALSE), not null
+#  icon                :string           default("fa-certificate")
+#  listable            :boolean          default(TRUE)
+#  target_posts        :boolean          default(FALSE)
+#  query               :text
+#  enabled             :boolean          default(TRUE), not null
+#  auto_revoke         :boolean          default(TRUE), not null
+#  badge_grouping_id   :integer          default(5), not null
+#  trigger             :integer
+#  show_posts          :boolean          default(FALSE), not null
+#  system              :boolean          default(FALSE), not null
+#  show_in_post_header :boolean          default(FALSE), not null
+#  long_description    :text
+#  image_upload_id     :integer
 #
 # Indexes
 #
