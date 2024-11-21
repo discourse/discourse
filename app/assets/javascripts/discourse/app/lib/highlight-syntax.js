@@ -1,4 +1,4 @@
-import DEBUG from "@glimmer/env";
+import { DEBUG } from "@glimmer/env";
 import { waitForPromise } from "@ember/test-waiters";
 import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
 import { isTesting } from "discourse-common/config/environment";
