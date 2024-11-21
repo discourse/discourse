@@ -1,5 +1,4 @@
 import require from "require";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
