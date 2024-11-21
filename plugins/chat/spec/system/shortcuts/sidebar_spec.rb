@@ -52,6 +52,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
     fab!(:channel_1) { Fabricate(:chat_channel, name: "Channel 1") }
     fab!(:channel_2) { Fabricate(:chat_channel, name: "Channel 2") }
     fab!(:channel_3) { Fabricate(:chat_channel, name: "Channel 3") }
+    fab!(:channel_4) { Fabricate(:chat_channel, name: "Channel 4") }
     fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
     fab!(:other_user) { Fabricate(:user) }
     fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
@@ -60,6 +61,7 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
       channel_1.add(current_user)
       channel_2.add(current_user)
       channel_3.add(current_user)
+      channel_4.add(current_user)
     end
 
     context "when on homepage" do
@@ -140,19 +142,61 @@ RSpec.describe "Shortcuts | sidebar", type: :system do
       end
 
       it "remembers where the current channel is, even if that channel is unread" do
+        chat.visit_channel(channel_3)
+        expect(sidebar_page).to have_active_channel(channel_3)
+
+        Fabricate(:chat_message, chat_channel: channel_2, message: "hello!", use_service: true)
+        expect(sidebar_page).to have_unread_channel(channel_2)
+
+        Fabricate(:chat_message, chat_channel: channel_4, message: "yes, hello!", use_service: true)
+        expect(sidebar_page).to have_unread_channel(channel_4)
+
+        find("body").send_keys(%i[alt shift arrow_down])
+
+        expect(sidebar_page).to have_active_channel(channel_4)
+        expect(sidebar_page).to have_no_unread_channel(channel_4)
+
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_3,
+          message: "hello, here, too!",
+          use_service: true,
+        )
+        expect(sidebar_page).to have_unread_channel(channel_3)
+
+        find("body").send_keys(%i[alt shift arrow_up])
+
+        expect(sidebar_page).to have_active_channel(channel_3)
+        expect(sidebar_page).to have_no_unread_channel(channel_3)
+
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_4,
+          message: "okay, byebye!",
+          use_service: true,
+        )
+        expect(sidebar_page).to have_unread_channel(channel_4)
+
+        find("body").send_keys(%i[alt shift arrow_up])
+
+        expect(sidebar_page).to have_active_channel(channel_2)
+        expect(sidebar_page).to have_no_unread_channel(channel_2)
+      end
+
+      it "handles the shortcut being pressed quickly" do
         chat.visit_channel(channel_2)
         expect(sidebar_page).to have_active_channel(channel_2)
 
         Fabricate(:chat_message, chat_channel: channel_1, message: "hello!", use_service: true)
         expect(sidebar_page).to have_unread_channel(channel_1)
 
-        Fabricate(:chat_message, chat_channel: channel_3, message: "hello!", use_service: true)
-        expect(sidebar_page).to have_unread_channel(channel_3)
+        Fabricate(:chat_message, chat_channel: channel_4, message: "howdy!", use_service: true)
+        expect(sidebar_page).to have_unread_channel(channel_4)
 
+        find("body").send_keys(%i[alt shift arrow_up])
         find("body").send_keys(%i[alt shift arrow_down])
 
-        expect(sidebar_page).to have_active_channel(channel_3)
-        expect(sidebar_page).to have_no_unread_channel(channel_3)
+        expect(sidebar_page).to have_active_channel(channel_4)
       end
     end
   end

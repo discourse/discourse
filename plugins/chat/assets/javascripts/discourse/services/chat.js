@@ -313,9 +313,21 @@ export default class Chat extends Service {
 
         // Insert the active channel after unread channel we found (or at the start of the list)
         if (activeChannel.isDirectMessageChannel) {
-          directChannels.splice(checkChannelIndex + 1, 0, activeChannel);
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? 0
+              : directChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          directChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
         } else {
-          publicChannels.splice(checkChannelIndex + 1, 0, activeChannel);
+          const unreadChannelIndex =
+            checkChannelIndex < 0
+              ? -1
+              : publicChannels.findIndex(
+                  (c) => c.id === allChannels[checkChannelIndex].id
+                );
+          publicChannels.splice(unreadChannelIndex + 1, 0, activeChannel);
         }
       }
     } else {
