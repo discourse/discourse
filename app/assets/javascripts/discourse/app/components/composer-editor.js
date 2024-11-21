@@ -97,10 +97,6 @@ export default class ComposerEditor extends Component {
 
   fileUploadElementId = "file-uploader";
 
-  get topic() {
-    return this.composer.get("model.topic");
-  }
-
   init() {
     super.init(...arguments);
     this.warnedCannotSeeMentions = [];
@@ -114,6 +110,10 @@ export default class ComposerEditor extends Component {
       uploadHandlers,
       fileUploadElementId: this.fileUploadElementId,
     });
+  }
+
+  get topic() {
+    return this.composer.get("model.topic");
   }
 
   @discourseComputed("composer.model.requiredCategoryMissing")
