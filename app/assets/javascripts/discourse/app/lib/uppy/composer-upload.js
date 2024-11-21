@@ -44,7 +44,7 @@ export default class UppyComposerUpload {
   uploadType = "composer";
   editorInputClass = ".d-editor-input";
   mobileFileUploaderId = "mobile-file-upload";
-  fileUploadElementId = "file-uploader";
+  fileUploadElementId;
   editorClass = ".d-editor";
 
   composerEventPrefix;
@@ -73,6 +73,7 @@ export default class UppyComposerUpload {
       uploadMarkdownResolvers,
       uploadPreProcessors,
       uploadHandlers,
+      fileUploadElementId,
     }
   ) {
     setOwner(this, owner);
@@ -82,6 +83,7 @@ export default class UppyComposerUpload {
     this.uploadMarkdownResolvers = uploadMarkdownResolvers;
     this.uploadPreProcessors = uploadPreProcessors;
     this.uploadHandlers = uploadHandlers;
+    this.fileUploadElementId = fileUploadElementId;
   }
 
   @bind
