@@ -19,6 +19,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
+import PluginOutlet from "discourse/components/plugin-outlet";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const MIN_POST_READ_TIME_MINUTES = 4;
@@ -294,28 +295,33 @@ export default class TopicMapSummary extends Component {
                 "topic_map.menu_titles.replies"
               }}</h3>
             <ConditionalLoadingSpinner @condition={{this.loading}}>
-              <ul>
-                {{#each this.top3LikedPosts as |post|}}
-                  <li>
-                    <a href={{this.postUrl post}}>
-                      <span class="like-section__user">
-                        {{avatar
-                          post.avatar_template
-                          "tiny"
-                          (hash title=post.username)
-                        }}
-                        {{post.username}}
-                      </span>
-                      <span class="like-section__likes">
-                        {{post.like_count}}
-                        {{dIcon "heart"}}</span>
-                      <p>
-                        {{htmlSafe (emojiUnescape post.blurb)}}
-                      </p>
-                    </a>
-                  </li>
-                {{/each}}
-              </ul>
+              <PluginOutlet
+                @name="most-liked-replies"
+                @outletArgs={{hash posts=this.top3LikedPosts}}
+              >
+                <ul>
+                  {{#each this.top3LikedPosts as |post|}}
+                    <li>
+                      <a href={{this.postUrl post}}>
+                        <span class="like-section__user">
+                          {{avatar
+                            post.avatar_template
+                            "tiny"
+                            (hash title=post.username)
+                          }}
+                          {{post.username}}
+                        </span>
+                        <span class="like-section__likes">
+                          {{post.like_count}}
+                          {{dIcon "heart"}}</span>
+                        <p>
+                          {{htmlSafe (emojiUnescape post.blurb)}}
+                        </p>
+                      </a>
+                    </li>
+                  {{/each}}
+                </ul>
+              </PluginOutlet>
             </ConditionalLoadingSpinner>
           </:content>
         </DMenu>
