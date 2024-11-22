@@ -223,7 +223,7 @@ class DbHelper
 
     skipped = DB.query_hash(<<~SQL, params).first
       SELECT #{query_parts[:skipped_sums].join(", ")}
-      FROM \"#{table}\"
+      FROM "#{table}"
     SQL
 
     skipped.select { |_, count| count.to_i > 0 }
@@ -248,7 +248,7 @@ class DbHelper
 
   def self.execute_transform(table, query_parts, params)
     DB.exec(<<~SQL, params)
-      UPDATE \"#{table}\"
+      UPDATE "#{table}"
         SET #{query_parts[:updates].join(", ")}
       WHERE #{query_parts[:conditions].join(" OR ")}
     SQL
