@@ -920,6 +920,15 @@ aside.quote {
 pre {
   max-height: 2000px;
 
+  code {
+    word-wrap: normal;
+    display: block;
+    padding: 0.5em;
+    color: var(--primary);
+    background: var(--blend-primary-secondary-5);
+    max-height: 500px;
+  }
+
   .bidi-warning,
   .bidi-warning span {
     font-style: normal;

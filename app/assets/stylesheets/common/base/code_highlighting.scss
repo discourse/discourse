@@ -1,3 +1,5 @@
+/* originally based on github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
+
 p > code,
 li > code,
 pre > code,
@@ -10,9 +12,13 @@ em > code {
   border-radius: var(--d-button-border-radius);
   font-size: 14px;
   line-height: calc((13 + 4) / 13);
-  padding: 12px;
+}
+
+.hljs {
   display: block;
-  max-height: 500px;
+  padding: 12px;
+  color: var(--primary-very-high);
+  background-color: var(--hljs-bg);
 }
 
 .hljs-comment,
