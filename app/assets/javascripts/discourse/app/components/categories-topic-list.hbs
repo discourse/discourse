@@ -8,7 +8,7 @@
 
 {{#if this.topics}}
   {{#each this.topics as |t|}}
-    {{#if this.currentUser.use_glimmer_topic_list}}
+    {{#if this.currentUser.canUseGlimmerTopicList}}
       <TopicList::LatestTopicListItem @topic={{t}} />
     {{else}}
       <LatestTopicListItem @topic={{t}} />

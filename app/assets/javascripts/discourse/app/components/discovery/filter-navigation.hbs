@@ -2,6 +2,12 @@
 
 <section class="navigation-container">
   <div class="topic-query-filter">
+    {{#if (and this.site.mobileView @canBulkSelect)}}
+      <div class="topic-query-filter__bulk-action-btn">
+        <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
+      </div>
+    {{/if}}
+
     <div class="topic-query-filter__input">
       {{d-icon "filter" class="topic-query-filter__icon"}}
       <Input

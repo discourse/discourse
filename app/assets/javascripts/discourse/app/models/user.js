@@ -38,6 +38,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
+import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -1252,6 +1253,10 @@ export default class User extends RestModel.extend(Evented) {
   )
   trackedTags(trackedTags, watchedTags, watchingFirstPostTags) {
     return [...trackedTags, ...watchedTags, ...watchingFirstPostTags];
+  }
+
+  get canUseGlimmerTopicList() {
+    return this.use_glimmer_topic_list && !needsHbrTopicList();
   }
 }
 

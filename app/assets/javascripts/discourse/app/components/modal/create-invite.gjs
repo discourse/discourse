@@ -14,6 +14,7 @@ import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { canNativeShare, nativeShare } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
@@ -248,11 +249,17 @@ export default class CreateInvite extends Component {
   @action
   async createLink() {
     this.sendEmail = false;
+
+    const topicId = applyValueTransformer("invite-simple-mode-topic", null, {
+      invite: this.invite,
+    });
+
     await this.save({
       max_redemptions_allowed: this.defaultRedemptionsAllowed,
       expires_at: moment()
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(DATE_INPUT_FORMAT),
+      ...(topicId != null && { topic_id: topicId }),
     });
   }
 

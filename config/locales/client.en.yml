@@ -7011,7 +7011,7 @@ en:
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
         show_untranslated: "Only show untranslated"
-        only_show_selected_locale: "Only show results in selected locale"
+        only_show_selected_locale: "Only show results in selected language"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"

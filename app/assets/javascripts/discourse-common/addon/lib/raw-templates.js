@@ -1,9 +1,75 @@
 import require from "require";
+import { consolePrefix } from "discourse/lib/source-identifier";
+import deprecated from "discourse-common/lib/deprecated";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
+let _needsHbrTopicList = false;
+
+export function needsHbrTopicList(value) {
+  if (value === undefined) {
+    return _needsHbrTopicList;
+  } else {
+    _needsHbrTopicList = value;
+  }
+}
+
+export function resetNeedsHbrTopicList() {
+  _needsHbrTopicList = false;
+}
+
+const TOPIC_LIST_TEMPLATE_NAMES = [
+  "list/action-list",
+  "list/activity-column",
+  "list/category-column",
+  "list/new-list-header-controls",
+  "list/participant-groups",
+  "list/post-count-or-badges",
+  "list/posters-column",
+  "list/posts-count-column",
+  "list/topic-excerpt",
+  "list/topic-list-item",
+  "list/unread-indicator",
+  "list/visited-line",
+  "mobile/list/topic-list-item",
+  "topic-bulk-select-dropdown",
+  "topic-list-header-column",
+  "topic-list-header",
+  "topic-post-badges",
+  "topic-status",
+];
 
 export function addRawTemplate(name, template, opts = {}) {
+  const cleanName = name.replace(/^javascripts\//, "");
+  if (
+    (TOPIC_LIST_TEMPLATE_NAMES.includes(cleanName) ||
+      name.includes("/connectors/")) &&
+    !opts.core &&
+    !opts.hasModernReplacement
+  ) {
+    const message = `[${name}] hbr topic-list template overrides and connectors are deprecated. Use the value transformer \`topic-list-columns\` and other new topic-list plugin APIs instead.`;
+    deprecated(message, {
+      since: "v3.4.0.beta3-dev",
+      id: "discourse.hbr-topic-list-overrides",
+    });
+
+    let prefix;
+    if (opts.themeId) {
+      prefix = consolePrefix(null, {
+        type: "theme",
+        id: opts.themeId,
+        name: opts.themeName,
+      });
+    } else if (opts.pluginName) {
+      prefix = consolePrefix(null, {
+        type: "plugin",
+        name: opts.pluginName,
+      });
+    }
+    // eslint-disable-next-line no-console
+    console.debug(prefix, message);
+  }
+
   // Core templates should never overwrite themes / plugins
   if (opts.core && __DISCOURSE_RAW_TEMPLATES[name]) {
     return;

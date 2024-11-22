@@ -1,4 +1,9 @@
-<div class={{this.classNames}} {{did-insert this.setupEventListeners}}>
+<div
+  class={{this.classNames}}
+  {{did-insert this.setupEventListeners}}
+  {{! template-lint-disable no-invalid-interactive }}
+  {{on "keydown" this.onKeydown}}
+>
   <div class="search-input">
     {{#if this.search.inTopicContext}}
       <DButton

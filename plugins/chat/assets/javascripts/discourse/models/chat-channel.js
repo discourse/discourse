@@ -201,6 +201,16 @@ export default class ChatChannel {
     return this.meta.can_join_chat_channel;
   }
 
+  get hasUnread() {
+    return (
+      this.tracking.unreadCount +
+        this.tracking.mentionCount +
+        this.tracking.watchedThreadsUnreadCount +
+        this.threadsManager.unreadThreadCount >
+      0
+    );
+  }
+
   async stageMessage(message) {
     message.id = guid();
     message.staged = true;

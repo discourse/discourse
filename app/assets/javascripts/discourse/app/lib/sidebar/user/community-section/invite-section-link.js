@@ -11,7 +11,7 @@ export default class InviteSectionLink extends BaseSectionLink {
   }
 
   get title() {
-    return i18n("sidebar.sections.community.links.invite.content");
+    return i18n("sidebar.sections.community.links.invite.title");
   }
 
   get text() {
