@@ -10,7 +10,10 @@ export default class ChatDirectMessageButton extends Component {
   @service router;
 
   get shouldRender() {
-    return this.chat.userCanDirectMessage && !this.args.user.suspended;
+    return (
+      this.chat.userCanDirectMessage &&
+      this.args.user.can_send_private_message_to_user
+    );
   }
 
   @action
