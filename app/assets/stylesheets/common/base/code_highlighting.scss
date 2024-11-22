@@ -1,5 +1,3 @@
-/* originally based on github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
-
 p > code,
 li > code,
 pre > code,
@@ -8,12 +6,13 @@ em > code {
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono",
     Menlo, Monaco, Consolas, monospace;
   color: var(--primary-very-high);
-  background-color: var(--hljs-bg);
+  background: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
   font-size: 14px;
   line-height: calc((13 + 4) / 13);
   padding: 12px;
   display: block;
+  max-height: 500px;
 }
 
 .hljs-comment,
