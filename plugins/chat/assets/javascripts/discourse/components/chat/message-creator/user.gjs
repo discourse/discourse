@@ -28,10 +28,9 @@ export default class ChatableUser extends Component {
 
   get isUrgent() {
     return (
-      this.args.item.tracking.unreadCount +
-        this.args.item.tracking.mentionCount +
-        this.args.item.tracking.watchedThreadsUnreadCount >
-      0
+      this.args.item.tracking?.unreadCount > 0 ||
+      this.args.item.tracking?.mentionCount > 0 ||
+      this.args.item.tracking?.watchedThreadsUnreadCount > 0
     );
   }
 

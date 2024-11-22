@@ -59,7 +59,14 @@ export default class ChatablesLoader {
       ]
         .map((item) => {
           const chatable = ChatChatable.create(item);
-          chatable.tracking = this.#injectTracking(chatable);
+          const channel = this.#findChannel(chatable);
+
+          if (channel) {
+            chatable.tracking = channel.tracking;
+            chatable.unread_thread_count =
+              channel.unreadThreadsCountSinceLastViewed;
+          }
+
           return chatable;
         })
         .slice(0, MAX_RESULTS);
@@ -74,26 +81,32 @@ export default class ChatablesLoader {
         let chatable;
         if (channel.chatable?.users?.length === 1) {
           chatable = ChatChatable.createUser(channel.chatable.users[0]);
-          chatable.unread_thread_count =
-            channel.threadsManager.unreadThreadCount;
         } else {
           chatable = ChatChatable.createChannel(channel);
         }
 
         chatable.tracking = channel.tracking;
+        chatable.unread_thread_count =
+          channel.unreadThreadsCountSinceLastViewed;
         return chatable;
       })
       .filter(Boolean)
       .slice(0, MAX_RESULTS);
   }
 
-  #injectTracking(chatable) {
-    if (!chatable.type === "channel") {
+  #findChannel(chatable) {
+    if (!["user", "channel"].includes(chatable.type)) {
       return;
     }
 
-    return this.chatChannelsManager.allChannels.find(
-      (channel) => channel.id === chatable.model.id
-    )?.tracking;
+    const { allChannels } = this.chatChannelsManager;
+    if (chatable.type === "user") {
+      return allChannels.find(
+        ({ chatable: { users } }) =>
+          users?.length === 1 && users[0].id === chatable.model.id
+      );
+    } else if (chatable.type === "channel") {
+      return allChannels.find(({ id }) => id === chatable.model.id);
+    }
   }
 }

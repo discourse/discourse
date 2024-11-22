@@ -6,6 +6,10 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 export default class Channel extends Component {
   @service currentUser;
 
+  get tracking() {
+    return this.args.item.tracking;
+  }
+
   get isUrgent() {
     return this.args.item.model.isDirectMessageChannel
       ? this.hasUnreads || this.hasUrgent
@@ -13,18 +17,22 @@ export default class Channel extends Component {
   }
 
   get hasUnreads() {
-    return this.args.item.tracking.unreadCount > 0;
+    return this.tracking?.unreadCount > 0;
   }
 
   get hasUrgent() {
     return (
-      this.args.item.tracking.mentionCount > 0 ||
-      this.args.item.tracking.watchedThreadsUnreadCount > 0
+      this.tracking?.mentionCount > 0 ||
+      this.tracking?.watchedThreadsUnreadCount > 0
     );
   }
 
+  get hasUnreadThreads() {
+    return this.args.item.unread_thread_count > 0;
+  }
+
   get showIndicator() {
-    return this.hasUnreads || this.isUrgent;
+    return this.hasUnreads || this.hasUnreadThreads || this.hasUrgent;
   }
 
   <template>
