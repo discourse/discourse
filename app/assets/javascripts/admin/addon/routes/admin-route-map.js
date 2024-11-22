@@ -73,7 +73,7 @@ export default function () {
           { path: "/user_fields", resetNamespace: true },
           function () {
             this.route("new");
-            this.route("edit", { path: "/:id" });
+            this.route("edit", { path: "/:id/edit" });
             this.route("index", { path: "/" });
           }
         );

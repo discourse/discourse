@@ -18,6 +18,7 @@ export default class AdminUserFieldsForm extends Component {
   @service router;
   @service adminUserFields;
   @service adminCustomUserFields;
+  @service toasts;
 
   @tracked
   editableDisabled = this.args.userField.requirement === "for_all_users";
@@ -83,6 +84,12 @@ export default class AdminUserFieldsForm extends Component {
       }
 
       this.router.transitionTo("adminUserFields.index");
+      this.toasts.success({
+        duration: 3000,
+        data: {
+          message: i18n("admin.config_areas.user_fields.save_successful"),
+        },
+      });
     } catch (error) {
       popupAjaxError(error);
     }

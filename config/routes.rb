@@ -246,7 +246,8 @@ Discourse::Application.routes.draw do
                   only: %i[index create update destroy],
                   constraints: AdminConstraint.new
         get "user_fields/new" => "user_fields#index"
-        get "user_fields/:id" => "user_fields#edit"
+        get "user_fields/:id" => "user_fields#show"
+        get "user_fields/:id/edit" => "user_fields#edit"
         resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
         get "emojis/new" => "emojis#index"
         get "emojis/settings" => "emojis#index"

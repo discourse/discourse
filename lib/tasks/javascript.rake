@@ -165,6 +165,8 @@ task "javascript:update_constants" => :environment do
     export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};
 
     export const MAX_UNOPTIMIZED_CATEGORIES = #{CategoryList::MAX_UNOPTIMIZED_CATEGORIES};
+
+    export const USER_FIELD_FLAGS = #{UserField::FLAG_ATTRIBUTES};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

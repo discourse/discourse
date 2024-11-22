@@ -30,9 +30,12 @@ class Admin::UserFieldsController < Admin::AdminController
     render_serialized(user_fields, UserFieldSerializer, root: "user_fields")
   end
 
-  def edit
+  def show
     user_field = UserField.find(params[:id])
-    render_serialized(user_field, UserFieldSerializer, root: "user_field")
+    render_serialized(user_field, UserFieldSerializer)
+  end
+
+  def edit
   end
 
   def update

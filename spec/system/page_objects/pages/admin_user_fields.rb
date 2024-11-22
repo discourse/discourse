@@ -22,6 +22,10 @@ module PageObjects
         page.find(".admin-page-header__actions .btn-primary").click
       end
 
+      def click_edit
+        page.find(".admin-user_field-item__edit").click
+      end
+
       def add_field(name: nil, description: nil, requirement: nil, preferences: [])
         click_add_field
 

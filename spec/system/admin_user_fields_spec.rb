@@ -63,8 +63,7 @@ describe "Admin User Fields", type: :system do
 
     it "does not require confirmation if the field already applies to all users" do
       user_fields_page.visit
-
-      page.find(".user-field .edit").click
+      user_fields_page.click_edit
 
       form = page.find(".user-field")
 

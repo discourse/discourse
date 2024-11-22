@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
+import { USER_FIELD_FLAGS } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import UserField from "admin/models/user-field";
+import DMenu from "float-kit/components/d-menu";
 
-@tagName("")
 export default class AdminUserFieldItem extends Component {
   @service adminUserFields;
   @service adminCustomUserFields;
@@ -28,21 +28,36 @@ export default class AdminUserFieldItem extends Component {
   }
 
   get flags() {
-    const flags = [
-      "editable",
-      "show_on_profile",
-      "show_on_user_card",
-      "searchable",
-    ];
-
-    return flags
-      .map((flag) => {
-        if (this.args.userField[flag]) {
-          return i18n(`admin.user_fields.${flag}.enabled`);
-        }
-      })
+    return USER_FIELD_FLAGS.map((flag) => {
+      if (this.args.userField[flag]) {
+        return i18n(`admin.user_fields.${flag}.enabled`);
+      }
+    })
       .filter(Boolean)
       .join(", ");
+  }
+
+  @action
+  moveUp() {
+    this.args.moveUpAction(this.args.userField);
+    this.dMenu.close();
+  }
+
+  @action
+  moveDown() {
+    this.args.moveDownAction(this.args.userField);
+    this.dMenu.close();
+  }
+
+  @action
+  destroy() {
+    this.args.destroyAction(this.args.userField);
+    this.dMenu.close();
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
   }
 
   @action
@@ -51,42 +66,69 @@ export default class AdminUserFieldItem extends Component {
   }
 
   <template>
-    <div class="user-field">
-      <div class="row">
-        <div class="form-display">
-          <b class="name">{{@userField.name}}</b>
-          <br />
-          <span class="description">{{htmlSafe @userField.description}}</span>
-        </div>
-        <div class="form-display field-type">{{@userField.fieldTypeName}}</div>
-        <div class="form-element controls">
+    <tr class="d-admin-row__content admin-user_field-item">
+      <td class="d-admin-row__overview">
+        <div
+          class="d-admin-row__overview-name admin-user_field-item__name"
+        >{{@userField.name}}</div>
+        <div class="d-admin-row__overview-about">{{htmlSafe
+            @userField.description
+          }}</div>
+        <div class="d-admin-row__overview-flags">{{this.flags}}</div>
+      </td>
+      <td class="d-admin-row__detail">
+        {{@userField.fieldTypeName}}
+      </td>
+      <td class="d-admin-row__controls">
+        <div class="d-admin-row__controls-options">
           <DButton
+            class="btn-small admin-user_field-item__edit"
             @action={{this.edit}}
-            @icon="pencil"
             @label="admin.user_fields.edit"
-            class="btn-default edit"
           />
-          <DButton
-            @action={{fn @destroyAction @userField}}
-            @icon="trash-can"
-            @label="admin.user_fields.delete"
-            class="btn-danger cancel"
-          />
-          <DButton
-            @action={{fn @moveUpAction @userField}}
-            @icon="arrow-up"
-            @disabled={{this.cantMoveUp}}
-            class="btn-default"
-          />
-          <DButton
-            @action={{fn @moveDownAction @userField}}
-            @icon="arrow-down"
-            @disabled={{this.cantMoveDown}}
-            class="btn-default"
-          />
+
+          <DMenu
+            @identifier="user_field-menu"
+            @title={{i18n "admin.config_areas.user_fields.more_options.title"}}
+            @icon="ellipsis-vertical"
+            @onRegisterApi={{this.onRegisterApi}}
+          >
+            <:content>
+              <DropdownMenu as |dropdown|>
+                {{#unless this.cantMoveUp}}
+                  <dropdown.item>
+                    <DButton
+                      @label="admin.config_areas.user_fields.more_options.move_up"
+                      @icon="arrow-up"
+                      class="btn-transparent admin-user_field-item__move-up"
+                      @action={{this.moveUp}}
+                    />
+                  </dropdown.item>
+                {{/unless}}
+                {{#unless this.cantMoveDown}}
+                  <dropdown.item>
+                    <DButton
+                      @label="admin.config_areas.user_fields.more_options.move_down"
+                      @icon="arrow-down"
+                      class="btn-transparent admin-user_field-item__move-down"
+                      @action={{this.moveDown}}
+                    />
+                  </dropdown.item>
+                {{/unless}}
+
+                <dropdown.item>
+                  <DButton
+                    @label="admin.config_areas.user_fields.delete"
+                    @icon="trash-can"
+                    class="btn-transparent admin-user_field-item__delete"
+                    @action={{this.destroy}}
+                  />
+                </dropdown.item>
+              </DropdownMenu>
+            </:content>
+          </DMenu>
         </div>
-      </div>
-      <div class="row user-field-flags">{{this.flags}}</div>
-    </div>
+      </td>
+    </tr>
   </template>
 }
