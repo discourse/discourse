@@ -3,15 +3,21 @@ li > code,
 pre > code,
 strong > code,
 em > code {
-  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono",
-    Menlo, Monaco, Consolas, monospace;
+  padding: 0.5em;
+}
+
+code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
   font-size: 14px;
   line-height: calc((13 + 4) / 13);
-  padding: 12px;
+  padding: 0.5em;
+}
+
+pre > code {
   display: block;
+  padding: 12px;
   max-height: 500px;
 }
 
