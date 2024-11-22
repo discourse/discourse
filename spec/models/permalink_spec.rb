@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Permalink do
+  let(:topic) { Fabricate(:topic) }
+  let(:post) { Fabricate(:post, topic: topic) }
+  let(:category) { Fabricate(:category) }
+  let(:tag) { Fabricate(:tag) }
+  let(:user) { Fabricate(:user) }
+
   describe "normalization" do
     it "correctly normalizes" do
       normalizer = Permalink::Normalizer.new("/(\\/hello.*)\\?.*/\\1|/(\\/bye.*)\\?.*/\\1")
@@ -13,92 +19,48 @@ RSpec.describe Permalink do
 
   describe "new record" do
     it "strips blanks" do
-      permalink = described_class.create!(url: " my/old/url  ")
+      permalink = described_class.create!(url: " my/old/url  ", topic_id: topic.id)
       expect(permalink.url).to eq("my/old/url")
     end
 
     it "removes leading slash" do
-      permalink = described_class.create!(url: "/my/old/url")
+      permalink = described_class.create!(url: "/my/old/url", topic_id: topic.id)
       expect(permalink.url).to eq("my/old/url")
     end
 
     it "checks for unique URL" do
-      permalink = described_class.create(url: "/my/old/url")
+      permalink = described_class.create(url: "/my/old/url", topic_id: topic.id)
       expect(permalink.errors[:url]).to be_empty
 
-      permalink = described_class.create(url: "/my/old/url")
+      permalink = described_class.create(url: "/my/old/url", topic_id: topic.id)
       expect(permalink.errors[:url]).to be_present
 
+      permalink = described_class.create(url: "my/old/url", topic_id: topic.id)
+      expect(permalink.errors[:url]).to be_present
+    end
+
+    it "ensures that exactly one associated value is set" do
       permalink = described_class.create(url: "my/old/url")
-      expect(permalink.errors[:url]).to be_present
-    end
+      expect(permalink.errors[:base]).to be_present
 
-    it "validates association" do
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "topic")
-      expect(permalink.errors[:topic_id]).to be_present
+      permalink = described_class.create(url: "my/old/url", topic_id: topic.id, post_id: post.id)
+      expect(permalink.errors[:base]).to be_present
 
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "post")
-      expect(permalink.errors[:post_id]).to be_present
-
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "category")
-      expect(permalink.errors[:category_id]).to be_present
-
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "user")
-      expect(permalink.errors[:user_id]).to be_present
-
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "external_url")
-      expect(permalink.errors[:external_url]).to be_present
-
-      permalink = described_class.create(url: "/my/old/url", permalink_type: "tag")
-      expect(permalink.errors[:tag_id]).to be_present
-    end
-
-    it "clears associations when permalink_type changes" do
-      permalink = described_class.create!(url: " my/old/url  ")
-
-      permalink.update!(permalink_type_value: 1, permalink_type: "topic")
-      expect(permalink.topic_id).to eq(1)
-
-      permalink.update!(permalink_type_value: 1, permalink_type: "post")
-      expect(permalink.topic_id).to be_nil
-      expect(permalink.post_id).to eq(1)
-
-      permalink.update!(permalink_type_value: 1, permalink_type: "category")
-      expect(permalink.post_id).to be_nil
-      expect(permalink.category_id).to eq(1)
-
-      permalink.update!(permalink_type_value: 1, permalink_type: "user")
-      expect(permalink.category_id).to be_nil
-      expect(permalink.user_id).to eq(1)
-
-      permalink.update!(
-        permalink_type_value: "https://discourse.org",
-        permalink_type: "external_url",
-      )
-      expect(permalink.user_id).to be_nil
-      expect(permalink.external_url).to eq("https://discourse.org")
-
-      tag = Fabricate(:tag, name: "art")
-      permalink.update!(permalink_type_value: "art", permalink_type: "tag")
-      expect(permalink.external_url).to be_nil
-      expect(permalink.tag_id).to eq(tag.id)
-
-      permalink.update!(permalink_type_value: 1, permalink_type: "topic")
-      expect(permalink.tag_id).to be_nil
-      expect(permalink.topic_id).to eq(1)
+      permalink = described_class.create(url: "my/old/url", post_id: post.id)
+      expect(permalink.errors[:base]).to be_empty
     end
 
     context "with special characters in URL" do
       it "percent encodes any special character" do
-        permalink = described_class.create!(url: "/2022/10/03/привет-sam")
+        permalink = described_class.create!(url: "/2022/10/03/привет-sam", topic_id: topic.id)
         expect(permalink.url).to eq("2022/10/03/%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82-sam")
       end
 
       it "checks for unique URL" do
-        permalink = described_class.create(url: "/2022/10/03/привет-sam")
+        permalink = described_class.create(url: "/2022/10/03/привет-sam", topic_id: topic.id)
         expect(permalink.errors[:url]).to be_empty
 
-        permalink = described_class.create(url: "/2022/10/03/привет-sam")
+        permalink = described_class.create(url: "/2022/10/03/привет-sam", topic_id: topic.id)
         expect(permalink.errors[:url]).to be_present
       end
     end
@@ -108,11 +70,6 @@ RSpec.describe Permalink do
     subject(:target_url) { permalink.target_url }
 
     let(:permalink) { Fabricate.build(:permalink) }
-    let(:topic) { Fabricate(:topic) }
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:category) { Fabricate(:category) }
-    let(:tag) { Fabricate(:tag) }
-    let(:user) { Fabricate(:user) }
 
     it "returns nil when nothing is set" do
       expect(target_url).to eq(nil)
