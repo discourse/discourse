@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
@@ -19,7 +20,6 @@ import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
-import PluginOutlet from "discourse/components/plugin-outlet";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const MIN_POST_READ_TIME_MINUTES = 4;
