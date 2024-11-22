@@ -15,9 +15,8 @@ RSpec.describe Jobs::Tl3Promotions do
   subject(:run_job) { described_class.new.execute({}) }
 
   let!(:plugin) { Plugin::Instance.new }
-  let!(:demotion_modifier) { :tl3_custom_promotions }
-  let!(:deny_block) { Proc.new { false } }
   let!(:allow_block) { Proc.new { true } }
+  let!(:array_block) { Proc.new { [1, true] } }
 
   it "promotes tl2 user who qualifies for tl3" do
     tl2_user = Fabricate(:user, trust_level: TrustLevel[2])
@@ -48,18 +47,24 @@ RSpec.describe Jobs::Tl3Promotions do
     run_job
   end
 
-  it "allows plugins to control tl3_promotion's demotions" do
+  it "allows plugins to control tl3_promotion's promotions" do
+    DiscoursePluginRegistry.register_modifier(plugin, :tl3_custom_promotions, &allow_block)
     TrustLevel3Requirements.any_instance.stubs(:requirements_met?).never
-    DiscoursePluginRegistry.register_modifier(plugin, demotion_modifier, &deny_block)
     tl2_user = Fabricate(:user, trust_level: TrustLevel[2])
     create_qualifying_stats(tl2_user)
     run_job
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(plugin, :tl3_custom_promotions, &allow_block)
+  end
 
-    DiscoursePluginRegistry.register_modifier(plugin, demotion_modifier, &allow_block)
+  it "allows plugins to control tl3_promotion's demotions" do
+    DiscoursePluginRegistry.register_modifier(plugin, :tl3_custom_demotions, &array_block)
+    TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).never
+    Fabricate(:user, trust_level: TrustLevel[3])
+
     run_job
   ensure
-    DiscoursePluginRegistry.unregister_modifier(plugin, demotion_modifier, &deny_block)
-    DiscoursePluginRegistry.unregister_modifier(plugin, demotion_modifier, &allow_block)
+    DiscoursePluginRegistry.unregister_modifier(plugin, :tl3_custom_demotions, &array_block)
   end
 
   context "with tl3 user who doesn't qualify for tl3 anymore" do
