@@ -22,7 +22,7 @@ module Jobs
             # Don't demote too soon after being promoted
             next if u.on_tl3_grace_period?
 
-            demoted_user_id, modifier_applied =
+            modifier_applied, demoted_user_id =
               DiscoursePluginRegistry.apply_modifier(
                 :tl3_custom_demotions,
                 false,

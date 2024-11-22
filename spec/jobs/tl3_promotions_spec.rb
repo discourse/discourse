@@ -16,7 +16,7 @@ RSpec.describe Jobs::Tl3Promotions do
 
   let!(:plugin) { Plugin::Instance.new }
   let!(:allow_block) { Proc.new { true } }
-  let!(:array_block) { Proc.new { [1, true] } }
+  let!(:array_block) { Proc.new { [true, 1] } }
 
   it "promotes tl2 user who qualifies for tl3" do
     tl2_user = Fabricate(:user, trust_level: TrustLevel[2])
