@@ -7160,8 +7160,8 @@ en:
         multiple_grant: Can be granted multiple times
         visibility_heading: Visibility
         listable: Show badge on the public badges page
-        post_header: Show badge on the post it was granted for
-        post_header_disabled: Requires both 'Show badge on the public badges page' and 'Show post granting badge on badge page' to be enabled.
+        show_in_post_header: Show badge on the post it was granted for
+        show_in_post_header_disabled: Requires both 'Show badge on the public badges page' and 'Show post granting badge on badge page' to be enabled.
         enabled: enabled
         disabled: disabled
         icon: Icon

@@ -27,7 +27,7 @@ const FORM_FIELDS = [
   "badge_grouping_id",
   "trigger",
   "badge_type_id",
-  "post_header",
+  "show_in_post_header",
 ];
 
 export default class AdminBadgesShowController extends Controller {

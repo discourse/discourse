@@ -291,15 +291,15 @@
       </group.Field>
 
       <group.Field
-        @title={{i18n "admin.badges.post_header"}}
+        @title={{i18n "admin.badges.show_in_post_header"}}
         @showTitle={{false}}
-        @name="post_header"
+        @name="show_in_post_header"
         @disabled={{this.disableBadgeOnPosts data}}
         as |field|
       >
         <field.Checkbox>
           {{#if (this.postHeaderDescription data)}}
-            {{i18n "admin.badges.post_header_disabled"}}
+            {{i18n "admin.badges.show_in_post_header_disabled"}}
           {{/if}}
         </field.Checkbox>
       </group.Field>
