@@ -1,81 +1,63 @@
 <div class="d-editor-container">
   <div class="d-editor-textarea-column">
     {{yield}}
-    {{#if this.showFormTemplateForm}}
-      {{#if (gt @formTemplateIds.length 1)}}
-        <FormTemplateChooser
-          @filteredIds={{@formTemplateIds}}
-          @value={{this.selectedFormTemplateId}}
-          @onChange={{this.updateSelectedFormTemplateId}}
-          @options={{hash maximum=1}}
-          class="composer-select-form-template"
-        />
-      {{/if}}
-      <form id="form-template-form">
-        <FormTemplateField::Wrapper
-          @id={{this.selectedFormTemplateId}}
-          @initialValues={{@formTemplateInitialValues}}
-          @onSelectFormTemplate={{@onSelectFormTemplate}}
-        />
-      </form>
-    {{else}}
-      <div
-        class="d-editor-textarea-wrapper
-          {{if this.disabled 'disabled'}}
-          {{if this.isEditorFocused 'in-focus'}}"
-      >
-        <div class="d-editor-button-bar" role="toolbar">
-          {{#each this.toolbar.groups as |group|}}
-            {{#each group.buttons as |b|}}
-              {{#if (b.condition this)}}
-                {{#if b.popupMenu}}
-                  <ToolbarPopupMenuOptions
-                    @content={{this.popupMenuOptions}}
-                    @onChange={{this.onPopupMenuAction}}
-                    @onOpen={{action b.action b}}
-                    @tabindex={{-1}}
-                    @onKeydown={{this.rovingButtonBar}}
-                    @options={{hash icon=b.icon focusAfterOnChange=false}}
-                    class={{b.className}}
-                  />
-                {{else}}
-                  <DButton
-                    @action={{fn (action b.action) b}}
-                    @translatedTitle={{b.title}}
-                    @label={{b.label}}
-                    @icon={{b.icon}}
-                    @preventFocus={{b.preventFocus}}
-                    @onKeyDown={{this.rovingButtonBar}}
-                    tabindex={{b.tabindex}}
-                    class={{b.className}}
-                  />
-                {{/if}}
-              {{/if}}
-            {{/each}}
-          {{/each}}
-        </div>
 
-        <ConditionalLoadingSpinner @condition={{this.loading}} />
-        <this.editorComponent
-          @onSetup={{this.setupEditor}}
-          @markdownOptions={{this.markdownOptions}}
-          @keymap={{this.keymap}}
-          @value={{this.value}}
-          @placeholder={{this.placeholderTranslated}}
-          @disabled={{this.disabled}}
-          @change={{this.change}}
-          @focusIn={{this.handleFocusIn}}
-          @focusOut={{this.handleFocusOut}}
-          @id={{this.textAreaId}}
-        />
-        <PopupInputTip @validation={{this.validation}} />
-        <PluginOutlet
-          @name="after-d-editor"
-          @connectorTagName="div"
-          @outletArgs={{this.outletArgs}}
-        />
+    <div
+      class="d-editor-textarea-wrapper
+        {{if this.disabled 'disabled'}}
+        {{if this.isEditorFocused 'in-focus'}}"
+    >
+      <div class="d-editor-button-bar" role="toolbar">
+        {{#each this.toolbar.groups as |group|}}
+          {{#each group.buttons as |b|}}
+            {{#if (b.condition this)}}
+              {{#if b.popupMenu}}
+                <ToolbarPopupMenuOptions
+                  @content={{this.popupMenuOptions}}
+                  @onChange={{this.onPopupMenuAction}}
+                  @onOpen={{action b.action b}}
+                  @tabindex={{-1}}
+                  @onKeydown={{this.rovingButtonBar}}
+                  @options={{hash icon=b.icon focusAfterOnChange=false}}
+                  class={{b.className}}
+                />
+              {{else}}
+                <DButton
+                  @action={{fn (action b.action) b}}
+                  @translatedTitle={{b.title}}
+                  @label={{b.label}}
+                  @icon={{b.icon}}
+                  @preventFocus={{b.preventFocus}}
+                  @onKeyDown={{this.rovingButtonBar}}
+                  tabindex={{b.tabindex}}
+                  class={{b.className}}
+                />
+              {{/if}}
+            {{/if}}
+          {{/each}}
+        {{/each}}
       </div>
-    {{/if}}
+
+      <ConditionalLoadingSpinner @condition={{this.loading}} />
+      <this.editorComponent
+        @onSetup={{this.setupEditor}}
+        @markdownOptions={{this.markdownOptions}}
+        @keymap={{this.keymap}}
+        @value={{this.value}}
+        @placeholder={{this.placeholderTranslated}}
+        @disabled={{this.disabled}}
+        @change={{this.change}}
+        @focusIn={{this.handleFocusIn}}
+        @focusOut={{this.handleFocusOut}}
+        @id={{this.textAreaId}}
+      />
+      <PopupInputTip @validation={{this.validation}} />
+      <PluginOutlet
+        @name="after-d-editor"
+        @connectorTagName="div"
+        @outletArgs={{this.outletArgs}}
+      />
+    </div>
   </div>
 
   <div

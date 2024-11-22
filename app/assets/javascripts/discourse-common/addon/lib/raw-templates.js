@@ -48,10 +48,14 @@ export function addRawTemplate(name, template, opts = {}) {
     !opts.hasModernReplacement
   ) {
     const message = `[${name}] hbr topic-list template overrides and connectors are deprecated. Use the value transformer \`topic-list-columns\` and other new topic-list plugin APIs instead.`;
+
+    // NOTE: addRawTemplate is called too early for deprecation handlers to process this:
     deprecated(message, {
       since: "v3.4.0.beta3-dev",
       id: "discourse.hbr-topic-list-overrides",
     });
+
+    needsHbrTopicList(true);
 
     let prefix;
     if (opts.themeId) {
