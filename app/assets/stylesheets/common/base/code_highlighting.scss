@@ -8,17 +8,12 @@ em > code {
   font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono",
     Menlo, Monaco, Consolas, monospace;
   color: var(--primary-very-high);
-  background: var(--hljs-bg);
+  background-color: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
   font-size: 14px;
   line-height: calc((13 + 4) / 13);
-}
-
-.hljs {
-  display: block;
   padding: 12px;
-  color: var(--primary-very-high);
-  background-color: var(--hljs-bg);
+  display: block;
 }
 
 .hljs-comment,
