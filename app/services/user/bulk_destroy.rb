@@ -28,22 +28,35 @@ class User::BulkDestroy
   end
 
   def delete(users:, guardian:)
-    users.find_each.with_index do |user, index|
-      position = index + 1
-      success =
-        UserDestroyer.new(guardian.user).destroy(
-          user,
-          delete_posts: true,
-          prepare_for_destroy: true,
-          context: I18n.t("staff_action_logs.bulk_user_delete"),
-        )
+    users
+      .find_each
+      .with_index(1) do |user, position|
+        success =
+          UserDestroyer.new(guardian.user).destroy(
+            user,
+            delete_posts: true,
+            prepare_for_destroy: true,
+            context: I18n.t("staff_action_logs.bulk_user_delete"),
+          )
 
-      if success
-        publish_progress(
-          guardian.user,
-          { position:, username: user.username, total: users.size, success: true },
-        )
-      else
+        if success
+          publish_progress(
+            guardian.user,
+            { position:, username: user.username, total: users.size, success: true },
+          )
+        else
+          publish_progress(
+            guardian.user,
+            {
+              position:,
+              username: user.username,
+              total: users.size,
+              failed: true,
+              error: user.errors.full_messages.join(", "),
+            },
+          )
+        end
+      rescue => err
         publish_progress(
           guardian.user,
           {
@@ -51,16 +64,10 @@ class User::BulkDestroy
             username: user.username,
             total: users.size,
             failed: true,
-            error: user.errors.full_messages.join(", "),
+            error: err.message,
           },
         )
       end
-    rescue => err
-      publish_progress(
-        guardian.user,
-        { position:, username: user.username, total: users.size, failed: true, error: err.message },
-      )
-    end
   end
 
   def publish_progress(actor, data)
