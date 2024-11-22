@@ -297,14 +297,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      const message =
-        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-      deprecated(message, {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      });
-      // eslint-disable-next-line no-console
-      console.debug(consolePrefix(), message);
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -348,14 +347,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      const message =
-        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-      deprecated(message, {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      });
-      // eslint-disable-next-line no-console
-      console.debug(consolePrefix(), message);
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
