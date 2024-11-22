@@ -166,6 +166,7 @@ $hljs-attr: dark-light-choose(#015692, #88aece) !default;
 $hljs-attribute: dark-light-choose(#803378, #c59bc1) !default;
 $hljs-addition: dark-light-choose(#2f6f44, #76c490) !default;
 $hljs-bg: dark-light-choose($primary-50, rgba(0, 0, 0, 0.25)) !default;
+$inline-code-bg: dark-light-choose($primary-100, rgba(0, 0, 0, 0.35)) !default;
 $hljs-comment: $primary-500 !default;
 $hljs-deletion: dark-light-choose(#c02d2e, #de7176) !default;
 $hljs-keyword: dark-light-choose(#015692, #88aece) !default;
