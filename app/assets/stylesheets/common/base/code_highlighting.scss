@@ -5,9 +5,11 @@ em > code {
   padding: 2px 4px;
   background: var(--inline-code-bg);
   white-space: pre-wrap;
+  color: var(--primary);
 }
 
 code {
+  color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
   font-size: 14px;
