@@ -48,7 +48,7 @@ export default class Info extends Component {
   }
 
   get tags() {
-    if (this.args.topicInfo.tags) {
+    if (this.args.topicInfo.get("tags")) {
       return renderTags(this.args.topicInfo);
     }
   }

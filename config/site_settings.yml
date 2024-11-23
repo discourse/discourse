@@ -3345,7 +3345,7 @@ experimental:
     hidden: true
   experimental_topics_filter:
     client: true
-    default: false
+    default: true
   enable_rich_text_paste:
     client: true
     default: true

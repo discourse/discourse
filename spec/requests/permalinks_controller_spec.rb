@@ -2,12 +2,10 @@
 
 RSpec.describe PermalinksController do
   fab!(:topic)
-  fab!(:permalink) { Fabricate(:permalink, url: "deadroute/topic/546") }
+  fab!(:permalink) { Fabricate(:permalink, url: "deadroute/topic/546", topic_id: topic.id) }
 
   describe "show" do
     it "should redirect to a permalink's target_url with status 301" do
-      permalink.update!(permalink_type_value: topic.id, permalink_type: "topic")
-
       get "/#{permalink.url}"
 
       expect(response).to redirect_to(topic.relative_url)
@@ -15,7 +13,6 @@ RSpec.describe PermalinksController do
     end
 
     it "should work for subfolder installs too" do
-      permalink.update!(permalink_type_value: topic.id, permalink_type: "topic")
       set_subfolder "/forum"
 
       get "/#{permalink.url}"
@@ -25,7 +22,7 @@ RSpec.describe PermalinksController do
     end
 
     it "should apply normalizations" do
-      permalink.update!(permalink_type_value: "/topic/100", permalink_type: "external_url")
+      permalink.update!(external_url: "/topic/100", topic_id: nil)
       SiteSetting.permalink_normalizations = "/(.*)\\?.*/\\1"
 
       get "/#{permalink.url}", params: { test: "hello" }
@@ -46,14 +43,9 @@ RSpec.describe PermalinksController do
     end
 
     context "when permalink's target_url is an external URL" do
-      before do
-        permalink.update!(
-          permalink_type_value: "https://github.com/discourse/discourse",
-          permalink_type: "external_url",
-        )
-      end
-
       it "redirects to it properly" do
+        permalink.update!(external_url: "https://github.com/discourse/discourse", topic_id: nil)
+
         get "/#{permalink.url}"
         expect(response).to redirect_to(permalink.external_url)
       end
