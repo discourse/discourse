@@ -226,8 +226,6 @@ export default class TopicListItem extends Component {
             @tagsForUser={{@tagsForUser}}
             @expandPinned={{this.expandPinned}}
             @showPosters={{@showPosters}}
-            @showLikes={{@showLikes}}
-            @showOpLikes={{@showOpLikes}}
           />
         {{/each}}
       {{else}}

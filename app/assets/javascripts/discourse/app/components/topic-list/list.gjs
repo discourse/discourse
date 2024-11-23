@@ -10,6 +10,10 @@ import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import { createColumns } from "./dag";
+import HeaderLikesCell from "./header/likes-cell";
+import HeaderOpLikesCell from "./header/op-likes-cell";
+import ItemLikesCell from "./item/likes-cell";
+import ItemOpLikesCell from "./item/op-likes-cell";
 
 export default class TopicList extends Component {
   @service currentUser;
@@ -28,9 +32,31 @@ export default class TopicList extends Component {
       },
     };
 
+    const defaultColumns = createColumns();
+
+    if (this.args.order === "likes") {
+      defaultColumns.add(
+        "likes",
+        {
+          header: HeaderLikesCell,
+          item: ItemLikesCell,
+        },
+        { after: "replies" }
+      );
+    } else if (this.args.order === "op_likes") {
+      defaultColumns.add(
+        "op-likes",
+        {
+          header: HeaderOpLikesCell,
+          item: ItemOpLikesCell,
+        },
+        { after: "replies" }
+      );
+    }
+
     return applyValueTransformer(
       "topic-list-columns",
-      createColumns(),
+      defaultColumns,
       context
     ).resolve();
   }
@@ -55,12 +81,8 @@ export default class TopicList extends Component {
     return !!this.args.changeSort;
   }
 
-  get showLikes() {
-    return this.args.order === "likes";
-  }
-
-  get showOpLikes() {
-    return this.args.order === "op_likes";
+  get showTopicPostBadges() {
+    return this.args.showTopicPostBadges ?? true;
   }
 
   get lastVisitedTopic() {
@@ -104,10 +126,6 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
-  get showTopicPostBadges() {
-    return this.args.showTopicPostBadges ?? true;
-  }
-
   <template>
     {{! template-lint-disable table-groups }}
     <table
@@ -125,8 +143,6 @@ export default class TopicList extends Component {
           @category={{@category}}
           @hideCategory={{@hideCategory}}
           @showPosters={{@showPosters}}
-          @showLikes={{this.showLikes}}
-          @showOpLikes={{this.showOpLikes}}
           @order={{@order}}
           @changeSort={{@changeSort}}
           @ascending={{@ascending}}
@@ -165,8 +181,6 @@ export default class TopicList extends Component {
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
             @showPosters={{@showPosters}}
-            @showLikes={{this.showLikes}}
-            @showOpLikes={{this.showOpLikes}}
             @expandGloballyPinned={{@expandGloballyPinned}}
             @expandAllPinned={{@expandAllPinned}}
             @lastVisitedTopic={{this.lastVisitedTopic}}

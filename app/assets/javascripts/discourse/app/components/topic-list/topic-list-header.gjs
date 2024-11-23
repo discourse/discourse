@@ -19,8 +19,6 @@ const TopicListHeader = <template>
         @bulkSelectHelper={{@bulkSelectHelper}}
         @changeNewListSubset={{@changeNewListSubset}}
         @showPosters={{@showPosters}}
-        @showLikes={{@showLikes}}
-        @showOpLikes={{@showOpLikes}}
       />
     {{/each}}
   </tr>
