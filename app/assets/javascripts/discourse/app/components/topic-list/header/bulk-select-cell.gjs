@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const BulkSelectCell = <template>
   {{#if @bulkSelectEnabled}}
