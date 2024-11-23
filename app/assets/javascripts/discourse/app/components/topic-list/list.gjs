@@ -10,8 +10,10 @@ import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import { createColumns } from "./dag";
+import HeaderBulkSelectCell from "./header/bulk-select-cell";
 import HeaderLikesCell from "./header/likes-cell";
 import HeaderOpLikesCell from "./header/op-likes-cell";
+import ItemBulkSelectCell from "./item/bulk-select-cell";
 import ItemLikesCell from "./item/likes-cell";
 import ItemOpLikesCell from "./item/op-likes-cell";
 
@@ -33,6 +35,17 @@ export default class TopicList extends Component {
     };
 
     const defaultColumns = createColumns();
+
+    if (this.bulkSelectEnabled) {
+      defaultColumns.add(
+        "bulk-select",
+        {
+          header: HeaderBulkSelectCell,
+          item: ItemBulkSelectCell,
+        },
+        { before: "topic" }
+      );
+    }
 
     if (this.args.order === "likes") {
       defaultColumns.add(
@@ -148,7 +161,6 @@ export default class TopicList extends Component {
           @ascending={{@ascending}}
           @sortable={{this.sortable}}
           @listTitle={{or @listTitle "topic.title"}}
-          @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @bulkSelectHelper={{@bulkSelectHelper}}
           @canDoBulkActions={{this.canDoBulkActions}}
           @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
@@ -177,7 +189,6 @@ export default class TopicList extends Component {
             @columns={{this.columns}}
             @topic={{topic}}
             @bulkSelectHelper={{@bulkSelectHelper}}
-            @bulkSelectEnabled={{this.bulkSelectEnabled}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
             @showPosters={{@showPosters}}
