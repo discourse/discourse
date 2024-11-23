@@ -132,20 +132,10 @@ export default class AdminUsersListShowController extends Controller.extend(
   @action
   bulkSelectItemToggle(userId, event) {
     if (event.target.checked) {
-      if (this.bulkSelectedUserIdsSet.size === MAX_BULK_SELECT_LIMIT) {
-        this.toasts.error({
-          duration: 3000,
-          data: {
-            message: i18n("admin.users.bulk_actions.too_many_selected_users", {
-              count: MAX_BULK_SELECT_LIMIT,
-            }),
-          },
-        });
-        event.preventDefault();
+      if (!this.#canBulkSelectMoreUsers(1)) {
+        this.#showBulkSelectionLimitToast(event);
         return;
       }
-
-      this.#addUserToBulkSelection(userId);
 
       if (event.shiftKey && this.lastSelected) {
         const list = Array.from(
@@ -158,12 +148,19 @@ export default class AdminUsersListShowController extends Controller.extend(
           const newSelectedIndex = list.indexOf(event.target);
           const start = Math.min(lastSelectedIndex, newSelectedIndex);
           const end = Math.max(lastSelectedIndex, newSelectedIndex);
+
+          if (!this.#canBulkSelectMoreUsers(end - start)) {
+            this.#showBulkSelectionLimitToast(event);
+            return;
+          }
+
           list.slice(start, end).forEach((input) => {
             input.checked = true;
             this.#addUserToBulkSelection(parseInt(input.dataset.userId, 10));
           });
         }
       }
+      this.#addUserToBulkSelection(userId);
       this.lastSelected = event.target;
     } else {
       this.bulkSelectedUserIdsSet.delete(userId);
@@ -194,5 +191,21 @@ export default class AdminUsersListShowController extends Controller.extend(
   #addUserToBulkSelection(userId) {
     this.bulkSelectedUserIdsSet.add(userId);
     this.bulkSelectedUsersMap[userId] = 1;
+  }
+
+  #canBulkSelectMoreUsers(count) {
+    return this.bulkSelectedUserIdsSet.size + count <= MAX_BULK_SELECT_LIMIT;
+  }
+
+  #showBulkSelectionLimitToast(event) {
+    this.toasts.error({
+      duration: 3000,
+      data: {
+        message: i18n("admin.users.bulk_actions.too_many_selected_users", {
+          count: MAX_BULK_SELECT_LIMIT,
+        }),
+      },
+    });
+    event.preventDefault();
   }
 }
