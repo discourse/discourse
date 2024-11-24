@@ -174,6 +174,7 @@ export default class TopicList extends Component {
           @sortable={{this.sortable}}
           @listTitle={{or @listTitle "topic.title"}}
           @bulkSelectHelper={{@bulkSelectHelper}}
+          @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
           @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
           @newListSubset={{@newListSubset}}
@@ -201,6 +202,7 @@ export default class TopicList extends Component {
             @columns={{this.columns}}
             @topic={{topic}}
             @bulkSelectHelper={{@bulkSelectHelper}}
+            @bulkSelectEnabled={{this.bulkSelectEnabled}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
             @expandGloballyPinned={{@expandGloballyPinned}}
