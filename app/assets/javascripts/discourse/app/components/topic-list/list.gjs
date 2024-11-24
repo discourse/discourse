@@ -67,7 +67,7 @@ export default class TopicList extends Component {
           header: HeaderLikesCell,
           item: ItemLikesCell,
         },
-        { after: "replies" }
+        { before: "views" }
       );
     } else if (this.args.order === "op_likes") {
       defaultColumns.add(
@@ -76,7 +76,7 @@ export default class TopicList extends Component {
           header: HeaderOpLikesCell,
           item: ItemOpLikesCell,
         },
-        { after: "replies" }
+        { before: "views" }
       );
     }
 
