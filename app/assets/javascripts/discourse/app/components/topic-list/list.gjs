@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopicListHeader from "discourse/components/topic-list/topic-list-header";
-import TopicListItem from "discourse/components/topic-list/topic-list-item";
+import Header from "discourse/components/topic-list/header";
+import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -162,7 +162,7 @@ export default class TopicList extends Component {
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead class="topic-list-header">
-        <TopicListHeader
+        <Header
           @columns={{this.columns}}
           @canBulkSelect={{@canBulkSelect}}
           @toggleInTitle={{this.toggleInTitle}}
@@ -198,7 +198,7 @@ export default class TopicList extends Component {
 
       <tbody class="topic-list-body">
         {{#each @topics as |topic index|}}
-          <TopicListItem
+          <Item
             @columns={{this.columns}}
             @topic={{topic}}
             @bulkSelectHelper={{@bulkSelectHelper}}

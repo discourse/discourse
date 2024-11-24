@@ -23,7 +23,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
-export default class TopicListItem extends Component {
+export default class Item extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;

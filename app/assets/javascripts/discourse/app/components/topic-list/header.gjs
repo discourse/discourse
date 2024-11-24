@@ -1,4 +1,4 @@
-const TopicListHeader = <template>
+const Header = <template>
   <tr>
     {{#each @columns as |entry|}}
       <entry.value.header
@@ -23,4 +23,4 @@ const TopicListHeader = <template>
   </tr>
 </template>;
 
-export default TopicListHeader;
+export default Header;
