@@ -11,7 +11,8 @@ export default class LoginRoute extends DiscourseRoute {
   beforeModel() {
     if (
       !this.siteSettings.login_required &&
-      !this.siteSettings.experimental_full_page_login
+      (!this.siteSettings.experimental_full_page_login ||
+        this.siteSettings.enable_discourse_connect)
     ) {
       this.router
         .replaceWith(`/${defaultHomepage()}`)

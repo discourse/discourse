@@ -171,6 +171,67 @@ shared_examples "social authentication scenarios" do |signup_page_object, login_
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end
+
+    # These tests use Google, but they should be the same for all providers
+
+    context "when opening the external auth from /login" do
+      before { SiteSetting.enable_google_oauth2_logins = true }
+      after { reset_omniauth_config(:google_oauth2) }
+
+      it "fills the signup form" do
+        mock_google_auth
+        visit("/")
+
+        signup_form.open.click_social_button("google_oauth2")
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+
+    context "when overriding local fields" do
+      before do
+        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.auth_overrides_name = true
+        SiteSetting.auth_overrides_username = true
+      end
+      after { reset_omniauth_config(:google_oauth2) }
+
+      it "fills the signup form and disables the inputs" do
+        mock_google_auth
+        visit("/")
+
+        signup_form.open.click_social_button("google_oauth2")
+        expect(signup_form).to be_open
+        expect(signup_form).to have_no_password_input
+        expect(signup_form).to have_valid_username
+        expect(signup_form).to have_valid_email
+        expect(signup_form).to have_disabled_username
+        expect(signup_form).to have_disabled_email
+        expect(signup_form).to have_disabled_name
+        signup_form.click_create_account
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+
+    context "when skipping the signup form" do
+      before do
+        SiteSetting.enable_google_oauth2_logins = true
+        SiteSetting.auth_skip_create_confirm = true
+      end
+      after { reset_omniauth_config(:google_oauth2) }
+
+      it "creates the account directly" do
+        mock_google_auth
+        visit("/")
+
+        signup_form.open.click_social_button("google_oauth2")
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
   end
 
   context "when user exists" do
