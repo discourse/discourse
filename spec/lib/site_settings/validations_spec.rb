@@ -149,6 +149,10 @@ RSpec.describe SiteSettings::Validations do
             error_message,
           )
         end
+
+        it "should be ok when the new value is 'staff'" do
+          expect { validations.validate_enforce_second_factor("staff") }.not_to raise_error
+        end
       end
 
       context "when local logins are enabled" do
@@ -198,6 +202,14 @@ RSpec.describe SiteSettings::Validations do
 
         context "when enforce second factor is disabled" do
           before { SiteSetting.enforce_second_factor = "no" }
+
+          it "should be ok" do
+            expect { validations.validate_enable_local_logins("f") }.not_to raise_error
+          end
+        end
+
+        context "when enforce second factor is staff" do
+          before { SiteSetting.enforce_second_factor = "staff" }
 
           it "should be ok" do
             expect { validations.validate_enable_local_logins("f") }.not_to raise_error

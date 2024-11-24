@@ -221,12 +221,14 @@ module SiteSettings::Validations
     end
     return if SiteSetting.enable_local_logins
     return if new_val == "no"
+    return if new_val == "staff"
     validate_error :second_factor_cannot_be_enforced_with_disabled_local_login
   end
 
   def validate_enable_local_logins(new_val)
     return if new_val == "t"
     return if SiteSetting.enforce_second_factor == "no"
+    return if SiteSetting.enforce_second_factor == "staff"
     validate_error :local_login_cannot_be_disabled_if_second_factor_enforced
   end
 
