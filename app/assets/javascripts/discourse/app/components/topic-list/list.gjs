@@ -13,9 +13,11 @@ import { createColumns } from "./dag";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
 import HeaderLikesCell from "./header/likes-cell";
 import HeaderOpLikesCell from "./header/op-likes-cell";
+import HeaderPostersCell from "./header/posters-cell";
 import ItemBulkSelectCell from "./item/bulk-select-cell";
 import ItemLikesCell from "./item/likes-cell";
 import ItemOpLikesCell from "./item/op-likes-cell";
+import ItemPostersCell from "./item/posters-cell";
 
 export default class TopicList extends Component {
   @service currentUser;
@@ -44,6 +46,17 @@ export default class TopicList extends Component {
           item: ItemBulkSelectCell,
         },
         { before: "topic" }
+      );
+    }
+
+    if (this.args.showPosters) {
+      defaultColumns.add(
+        "posters",
+        {
+          header: HeaderPostersCell,
+          item: ItemPostersCell,
+        },
+        { before: "replies" }
       );
     }
 
@@ -155,7 +168,6 @@ export default class TopicList extends Component {
           @toggleInTitle={{this.toggleInTitle}}
           @category={{@category}}
           @hideCategory={{@hideCategory}}
-          @showPosters={{@showPosters}}
           @order={{@order}}
           @changeSort={{@changeSort}}
           @ascending={{@ascending}}
@@ -191,7 +203,6 @@ export default class TopicList extends Component {
             @bulkSelectHelper={{@bulkSelectHelper}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
-            @showPosters={{@showPosters}}
             @expandGloballyPinned={{@expandGloballyPinned}}
             @expandAllPinned={{@expandAllPinned}}
             @lastVisitedTopic={{this.lastVisitedTopic}}
