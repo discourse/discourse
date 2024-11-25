@@ -5,6 +5,7 @@ class UserEmail < ActiveRecord::Base
 
   attr_accessor :skip_validate_email
   attr_accessor :skip_validate_unique_email
+  attr_accessor :skip_normalize_email
 
   before_validation :strip_downcase_email
   before_validation :normalize_email
@@ -50,9 +51,15 @@ class UserEmail < ActiveRecord::Base
     will_save_change_to_email?
   end
 
+  def normalize_emails?
+    return false if self.skip_normalize_email
+
+    SiteSetting.normalize_emails?
+  end
+
   def unique_email
     email_exists =
-      if SiteSetting.normalize_emails?
+      if self.normalize_emails?
         self
           .class
           .where("lower(email) = ? OR lower(normalized_email) = ?", email, normalized_email)
