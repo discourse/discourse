@@ -897,26 +897,11 @@
   }
 }
 
-.embedding-secondary {
-  h3 {
-    margin: 1em 0;
+.admin-embeddable-host-item__delete {
+  color: var(--danger);
+  svg.d-icon {
+    color: var(--danger);
   }
-  margin-bottom: 2em;
-  .embed-setting {
-    input[type="text"] {
-      width: 50%;
-    }
-    margin: 0.75em 0;
-  }
-  p.description {
-    color: var(--primary-medium);
-    margin-bottom: 1em;
-    max-width: 700px;
-  }
-}
-
-.embedding td input {
-  margin-bottom: 0;
 }
 
 .user-fields {

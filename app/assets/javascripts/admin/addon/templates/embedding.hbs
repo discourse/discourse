@@ -1,111 +1,45 @@
-<div class="embeddable-hosts">
-  {{#if this.embedding.embeddable_hosts}}
-    <table class="embedding grid">
-      <thead>
-        <th style="width: 18%">{{i18n "admin.embedding.host"}}</th>
-        <th style="width: 18%">{{i18n "admin.embedding.allowed_paths"}}</th>
-        <th style="width: 18%">{{i18n "admin.embedding.category"}}</th>
-        <th style="width: 18%">{{i18n "admin.embedding.tags"}}</th>
-        {{#if this.embedding.embed_by_username}}
-          <th style="width: 18%">{{i18n
-              "admin.embedding.post_author"
-              author=this.embedding.embed_by_username
-            }}</th>
-        {{else}}
-          <th style="width: 18%">{{i18n "admin.embedding.post_author"}}</th>
-        {{/if}}
-        <th style="width: 10%">&nbsp;</th>
-      </thead>
-      <tbody>
-        {{#each this.embedding.embeddable_hosts as |host|}}
-          <EmbeddableHost @host={{host}} @deleteHost={{action "deleteHost"}} />
-        {{/each}}
-      </tbody>
-    </table>
-  {{else}}
-    <p>{{i18n "admin.embedding.get_started"}}</p>
+<div class="admin-embedding admin-config-page">
+  {{#if this.showHeader}}
+    <AdminPageHeader
+      @titleLabel="admin.embedding.title"
+      @descriptionLabel="admin.embedding.description"
+      @learnMoreUrl="https://meta.discourse.org/t/embed-discourse-comments-on-another-website-via-javascript/31963"
+    >
+      <:breadcrumbs>
+        <DBreadcrumbsItem
+          @path="/admin/customize/embedding"
+          @label={{i18n "admin.embedding.title"}}
+        />
+      </:breadcrumbs>
+      <:actions as |actions|>
+        <actions.Primary
+          @route="adminEmbedding.new"
+          @title="admin.embedding.add_host"
+          @label="admin.embedding.add_host"
+          class="admin-embedding__header-add-host"
+        />
+      </:actions>
+      <:tabs>
+        <NavItem
+          @route="adminEmbedding.index"
+          @label="admin.embedding.nav.hosts"
+          class="admin-embedding-tabs__hosts"
+        />
+        <NavItem
+          @route="adminEmbedding.settings"
+          @label="admin.embedding.nav.embedding_settings"
+          class="admin-embedding-tabs__embedding-settings"
+        />
+        <NavItem
+          @route="adminEmbedding.crawler_settings"
+          @label="admin.embedding.nav.crawler_settings"
+          class="admin-embedding-tabs__crawler-settings"
+        />
+      </:tabs>
+    </AdminPageHeader>
   {{/if}}
 
-  <DButton
-    @label="admin.embedding.add_host"
-    @action={{this.addHost}}
-    @icon="plus"
-    class="btn-primary add-host"
-  />
-
-  <PluginOutlet
-    @name="after-embeddable-hosts-table"
-    @outletArgs={{hash embedding=this.embedding}}
-  />
+  <div class="admin-container admin-config-page__main-area">
+    {{outlet}}
+  </div>
 </div>
-
-{{#if this.showSecondary}}
-  <div class="embedding-secondary">
-    {{html-safe (i18n "admin.embedding.sample")}}
-    <HighlightedCode @code={{this.embeddingCode}} @lang="html" />
-  </div>
-
-  <hr />
-
-  <div class="embedding-secondary">
-    <h3>{{i18n "admin.embedding.settings"}}</h3>
-
-    <EmbeddingSetting
-      @field="embed_by_username"
-      @value={{this.embedding.embed_by_username}}
-    />
-    <EmbeddingSetting
-      @field="embed_post_limit"
-      @value={{this.embedding.embed_post_limit}}
-    />
-    <EmbeddingSetting
-      @field="embed_title_scrubber"
-      @value={{this.embedding.embed_title_scrubber}}
-      @placeholder="- site.com$"
-    />
-    <EmbeddingSetting
-      @field="embed_truncate"
-      @value={{this.embedding.embed_truncate}}
-      @type="checkbox"
-    />
-    <EmbeddingSetting
-      @field="embed_unlisted"
-      @value={{this.embedding.embed_unlisted}}
-      @type="checkbox"
-    />
-  </div>
-
-  <div class="embedding-secondary">
-    <h3>{{i18n "admin.embedding.crawling_settings"}}</h3>
-    <p class="description">{{i18n "admin.embedding.crawling_description"}}</p>
-
-    <EmbeddingSetting
-      @field="allowed_embed_selectors"
-      @value={{this.embedding.allowed_embed_selectors}}
-      @placeholder="article, #story, .post"
-    />
-
-    <EmbeddingSetting
-      @field="blocked_embed_selectors"
-      @value={{this.embedding.blocked_embed_selectors}}
-      @placeholder=".ad-unit, header"
-    />
-
-    <EmbeddingSetting
-      @field="allowed_embed_classnames"
-      @value={{this.embedding.allowed_embed_classnames}}
-      @placeholder="emoji, classname"
-    />
-  </div>
-
-  <div class="embedding-secondary">
-    <DButton
-      @label="admin.embedding.save"
-      @action={{this.saveChanges}}
-      @disabled={{this.embedding.isSaving}}
-      class="btn-primary embed-save"
-    />
-
-    {{#if this.saved}}{{i18n "saved"}}{{/if}}
-  </div>
-{{/if}}

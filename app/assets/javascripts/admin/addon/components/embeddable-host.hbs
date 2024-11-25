@@ -1,87 +1,45 @@
-{{#if this.editing}}
-  <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.host"}}</div>
-    <Input
-      @value={{this.buffered.host}}
-      placeholder="example.com"
-      @enter={{this.save}}
-      class="host-name"
-      autofocus={{true}}
-    />
-  </td>
-  <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.allowed_paths"}}</div>
-    <Input
-      @value={{this.buffered.allowed_paths}}
-      placeholder="/blog/.*"
-      @enter={{this.save}}
-      class="path-allowlist"
-    />
-  </td>
-  <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.category"}}</div>
-    <CategoryChooser
-      @value={{this.category.id}}
-      @onChangeCategory={{fn (mut this.category)}}
-      class="small"
-    />
-  </td>
-  <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.tags"}}</div>
-    <TagChooser
-      @tags={{this.tags}}
-      @everyTag={{true}}
-      @excludeSynonyms={{true}}
-      @unlimitedTagCount={{true}}
-      @onChange={{fn (mut this.tags)}}
-      @options={{hash filterPlaceholder="category.tags_placeholder"}}
-    />
-  </td>
-  <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.user"}}</div>
-    <UserChooser
-      @value={{this.user}}
-      @onChange={{action "onUserChange"}}
-      @options={{hash maximum=1 excludeCurrentUser=false}}
-    />
-  </td>
-  <td class="editing-controls">
+<td class="d-admin-row__detail">
+  {{this.host.host}}
+</td>
+<td class="d-admin-row__detail">
+  {{this.host.allowed_paths}}
+</td>
+<td class="d-admin-row__detail">
+  {{category-badge this.category allowUncategorized=true}}
+</td>
+<td class="d-admin-row__detail">
+  {{this.tags}}
+</td>
+<td class="d-admin-row__detail">
+  {{this.user}}
+</td>
+
+<td class="d-admin-row__controls">
+  <div class="d-admin-row__controls-options">
     <DButton
-      @icon="check"
-      @action={{this.save}}
-      @disabled={{this.cantSave}}
-      class="btn-primary"
+      class="btn-small admin-embeddable-host-item__edit"
+      @route="adminEmbedding.edit"
+      @routeModels={{this.host}}
+      @label="admin.embedding.edit"
     />
-    <DButton
-      @icon="xmark"
-      @action={{this.cancel}}
-      @disabled={{this.host.isSaving}}
-      class="btn-danger"
-    />
-  </td>
-{{else}}
-  <td>
-    <div class="label">{{i18n "admin.embedding.host"}}</div>
-    {{this.host.host}}
-  </td>
-  <td>
-    <div class="label">
-      {{i18n "admin.embedding.allowed_paths"}}
-    </div>
-    {{this.host.allowed_paths}}
-  </td>
-  <td>
-    <div class="label">{{i18n "admin.embedding.category"}}</div>
-    {{category-badge this.category allowUncategorized=true}}
-  </td>
-  <td>
-    {{this.tags}}
-  </td>
-  <td>
-    {{this.user}}
-  </td>
-  <td class="controls">
-    <DButton @icon="pencil" @action={{this.edit}} />
-    <DButton @icon="trash-can" @action={{this.delete}} class="btn-danger" />
-  </td>
-{{/if}}
+
+    <DMenu
+      @identifier="embedding-host-menu"
+      @title={{i18n "admin.embedding.more_options"}}
+      @icon="ellipsis-vertical"
+    >
+      <:content>
+        <DropdownMenu as |dropdown|>
+          <dropdown.item>
+            <DButton
+              @action={{this.delete}}
+              @icon="trash-can"
+              class="btn-transparent admin-embeddable-host-item__delete"
+              @label="admin.embedding.delete"
+            />
+          </dropdown.item>
+        </DropdownMenu>
+      </:content>
+    </DMenu>
+  </div>
+</td>

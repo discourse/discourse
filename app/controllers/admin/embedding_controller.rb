@@ -8,10 +8,6 @@ class Admin::EmbeddingController < Admin::AdminController
   end
 
   def update
-    if params[:embedding][:embed_by_username].blank?
-      return render_json_error(I18n.t("site_settings.embed_username_required"))
-    end
-
     Embedding.settings.each { |s| @embedding.public_send("#{s}=", params[:embedding][s]) }
 
     if @embedding.save
@@ -20,6 +16,18 @@ class Admin::EmbeddingController < Admin::AdminController
     else
       render_json_error(@embedding)
     end
+  end
+
+  def new
+  end
+
+  def edit
+  end
+
+  def settings
+  end
+
+  def crawler_settings
   end
 
   protected
