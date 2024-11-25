@@ -54,12 +54,6 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
-
-    if (this.skipConfirmation) {
-      this.performAccountCreation().finally(() =>
-        this.set("skipConfirmation", false)
-      );
-    }
   }
 
   @bind
@@ -340,6 +334,14 @@ export default class SignupPageController extends Controller.extend(
       .finally(() => (this._hpPromise = undefined));
 
     return this._hpPromise;
+  }
+
+  handleSkipConfirmation() {
+    if (this.skipConfirmation) {
+      this.performAccountCreation().finally(() =>
+        this.set("skipConfirmation", false)
+      );
+    }
   }
 
   performAccountCreation() {

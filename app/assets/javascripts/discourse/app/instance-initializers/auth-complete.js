@@ -146,6 +146,7 @@ export default {
                   Object.keys(createAccountProps || {}).forEach((key) => {
                     signupController.set(key, createAccountProps[key]);
                   });
+                  signupController.handleSkipConfirmation();
                 });
               } else {
                 modal.show(CreateAccount, { model: createAccountProps });

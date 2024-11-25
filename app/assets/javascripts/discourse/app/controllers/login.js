@@ -116,8 +116,15 @@ export default class LoginPageController extends Controller {
     return getURL("/u/admin-login");
   }
 
+  get shouldTriggerRouteAction() {
+    return (
+      !this.siteSettings.experimental_full_page_login ||
+      this.siteSettings.enable_discourse_connect
+    );
+  }
+
   @action
-  showLoginPage() {
+  showFullPageLogin() {
     this.showLogin = true;
   }
 
