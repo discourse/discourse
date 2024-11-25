@@ -30,7 +30,7 @@ export default class ChatRoute extends DiscourseRoute {
     if (
       transition.from && // don't intercept when directly loading chat
       this.chatStateManager.isDrawerPreferred &&
-      this.chatDrawerRouter.routeNames.includes(transition.targetName)
+      this.chatDrawerRouter.canHandleRoute(transition.to)
     ) {
       transition.abort();
 
