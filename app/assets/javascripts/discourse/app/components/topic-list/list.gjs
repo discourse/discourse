@@ -7,17 +7,25 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import Header from "discourse/components/topic-list/header";
 import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
+import DAG from "discourse/lib/dag";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import { createColumns } from "./dag";
+import HeaderActivityCell from "./header/activity-cell";
 import HeaderBulkSelectCell from "./header/bulk-select-cell";
 import HeaderLikesCell from "./header/likes-cell";
 import HeaderOpLikesCell from "./header/op-likes-cell";
 import HeaderPostersCell from "./header/posters-cell";
+import HeaderRepliesCell from "./header/replies-cell";
+import HeaderTopicCell from "./header/topic-cell";
+import HeaderViewsCell from "./header/views-cell";
+import ItemActivityCell from "./item/activity-cell";
 import ItemBulkSelectCell from "./item/bulk-select-cell";
 import ItemLikesCell from "./item/likes-cell";
 import ItemOpLikesCell from "./item/op-likes-cell";
 import ItemPostersCell from "./item/posters-cell";
+import ItemRepliesCell from "./item/replies-cell";
+import ItemTopicCell from "./item/topic-cell";
+import ItemViewsCell from "./item/views-cell";
 
 export default class TopicList extends Component {
   @service currentUser;
@@ -36,7 +44,30 @@ export default class TopicList extends Component {
       },
     };
 
-    const defaultColumns = createColumns();
+    const defaultColumns = new DAG({
+      // Allow customizations to replace just a header cell or just an item cell
+      onReplaceItem(_, newValue, oldValue) {
+        newValue.header ??= oldValue.header;
+        newValue.item ??= oldValue.item;
+      },
+    });
+
+    defaultColumns.add("topic", {
+      header: HeaderTopicCell,
+      item: ItemTopicCell,
+    });
+    defaultColumns.add("replies", {
+      header: HeaderRepliesCell,
+      item: ItemRepliesCell,
+    });
+    defaultColumns.add("views", {
+      header: HeaderViewsCell,
+      item: ItemViewsCell,
+    });
+    defaultColumns.add("activity", {
+      header: HeaderActivityCell,
+      item: ItemActivityCell,
+    });
 
     if (this.bulkSelectEnabled) {
       defaultColumns.add(
