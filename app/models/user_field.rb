@@ -21,8 +21,11 @@ class UserField < ActiveRecord::Base
 
   scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
   scope :required, -> { not_optional }
+  scope :required_for_existing_users,
+        -> { where(requirement: requirements.values_at(:for_all_users, :for_existing_users)) }
+  scope :for_new_users, -> { where.not(requirement: requirements[:for_existing_users]) }
 
-  enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
+  enum :requirement, { optional: 0, for_all_users: 1, for_existing_users: 3, on_signup: 2 }.freeze
   enum :field_type_enum, { text: 0, confirm: 1, dropdown: 2, multiselect: 3 }.freeze
   alias_attribute :field_type, :field_type_enum
 
@@ -34,6 +37,10 @@ class UserField < ActiveRecord::Base
     !optional?
   end
 
+  def required_for_existing_users?
+    for_all_users? || for_existing_users?
+  end
+
   def queue_index_search
     Jobs.enqueue(:index_user_fields_for_search, user_field_id: self.id)
   end
@@ -41,7 +48,7 @@ class UserField < ActiveRecord::Base
   private
 
   def update_required_fields_version
-    return if !for_all_users?
+    return if !required_for_existing_users?
 
     UserRequiredFieldsVersion.create
     Discourse.request_refresh!

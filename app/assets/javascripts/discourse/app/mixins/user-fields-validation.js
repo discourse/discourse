@@ -18,6 +18,7 @@ export default Mixin.create({
     let userFields = this.site.get("user_fields");
     if (userFields) {
       userFields = userFields
+        .filter((uf) => uf.requirement !== "for_existing_users")
         .sortBy("position")
         .map((f) => EmberObject.create({ value: null, field: f }));
     }

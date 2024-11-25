@@ -17,7 +17,9 @@ export default class AdminUserFieldItem extends Component {
 
   @tracked isEditing = false;
   @tracked
-  editableDisabled = this.args.userField.requirement === "for_all_users";
+  editableDisabled = this._requiredForExistingUsers(
+    this.args.userField.requirement
+  );
 
   originalRequirement = this.args.userField.requirement;
 
@@ -75,7 +77,7 @@ export default class AdminUserFieldItem extends Component {
   setRequirement(value, { set }) {
     set("requirement", value);
 
-    if (value === "for_all_users") {
+    if (this._requiredForExistingUsers(value)) {
       this.editableDisabled = true;
       set("editable", true);
     } else {
@@ -88,8 +90,8 @@ export default class AdminUserFieldItem extends Component {
     let confirm = true;
 
     if (
-      data.requirement === "for_all_users" &&
-      this.originalRequirement !== "for_all_users"
+      this._requiredForExistingUsers(data.requirement) &&
+      this.originalRequirement !== data.requirement
     ) {
       confirm = await this._confirmChanges();
     }
@@ -139,5 +141,9 @@ export default class AdminUserFieldItem extends Component {
     schedule("afterRender", () =>
       document.querySelector(".user-field-name")?.focus()
     );
+  }
+
+  _requiredForExistingUsers(requirement) {
+    return ["for_all_users", "for_existing_users"].includes(requirement);
   }
 }

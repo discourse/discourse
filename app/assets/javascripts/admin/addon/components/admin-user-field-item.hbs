@@ -85,6 +85,14 @@
                     "admin.user_fields.requirement.for_all_users.description"
                   }}</radio.Description>
               </radioGroup.Radio>
+              <radioGroup.Radio @value="for_existing_users" as |radio|>
+                {{i18n
+                  "admin.user_fields.requirement.for_existing_users.title"
+                }}
+                <radio.Description>{{i18n
+                    "admin.user_fields.requirement.for_existing_users.description"
+                  }}</radio.Description>
+              </radioGroup.Radio>
               <radioGroup.Radio @value="on_signup" as |radio|>
                 {{i18n "admin.user_fields.requirement.on_signup.title"}}
                 <radio.Description>{{i18n

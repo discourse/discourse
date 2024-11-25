@@ -1894,7 +1894,8 @@ class User < ActiveRecord::Base
 
   def populated_required_custom_fields?
     UserField
-      .for_all_users
+      .required_for_existing_users
+      .where("created_at > ?", self.created_at)
       .pluck(:id)
       .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
   end
