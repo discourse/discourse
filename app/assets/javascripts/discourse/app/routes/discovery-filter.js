@@ -7,6 +7,25 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
     q: { replace: true, refreshModel: true },
   };
 
+  comingFromDifferentRoute = true;
+
+  beforeModel(transition) {
+    if (transition.from && transition.from.name !== this.routeName) {
+      this.comingFromDifferentRoute = true;
+    } else {
+      this.comingFromDifferentRoute = false;
+    }
+
+    super.beforeModel(...arguments);
+  }
+
+  setupController(controller, model) {
+    super.setupController(controller, model);
+
+    const qParamConfig = this.queryParams.q;
+    qParamConfig.replace = !this.comingFromDifferentRoute;
+  }
+
   async model(data) {
     const list = await this.store.findFiltered("topicList", {
       filter: "filter",
