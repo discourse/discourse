@@ -14,6 +14,15 @@ import {
   transformerWasAdded,
 } from "discourse/lib/transformer";
 
+function notThrows(testCallback) {
+  try {
+    testCallback();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 module("Unit | Utility | transformers", function (hooks) {
   setupTest(hooks);
 
@@ -208,15 +217,6 @@ module("Unit | Utility | transformers", function (hooks) {
     });
 
     test("accepts only simple objects as context", function (assert) {
-      const notThrows = (testCallback) => {
-        try {
-          testCallback();
-          return true;
-        } catch {
-          return false;
-        }
-      };
-
       assert.ok(
         notThrows(() =>
           applyValueTransformer("test-value1-transformer", "foo")
@@ -314,6 +314,20 @@ module("Unit | Utility | transformers", function (hooks) {
           ),
         /context must be a simple JS object/,
         "it will throw an error if context is an instance of a class"
+      );
+    });
+
+    test("accepts an ember hash proxy as context", function (assert) {
+      // A hash-like object
+      const hash = { a: 1 };
+      Object.setPrototypeOf(hash, null);
+      const proxy = new Proxy(hash, {});
+
+      assert.true(
+        notThrows(() =>
+          applyValueTransformer("test-value1-transformer", "foo", proxy)
+        ),
+        "doesn't throw an error if context is a proxy to an ember hash object"
       );
     });
 
@@ -777,15 +791,6 @@ module("Unit | Utility | transformers", function (hooks) {
     });
 
     test("accepts only simple objects as context", function (assert) {
-      const notThrows = (testCallback) => {
-        try {
-          testCallback();
-          return true;
-        } catch {
-          return false;
-        }
-      };
-
       assert.ok(
         notThrows(() =>
           applyBehaviorTransformer("test-behavior1-transformer", () => true)
