@@ -1,3 +1,4 @@
+import { DEBUG } from "@glimmer/env";
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
 import { REPLACEMENTS } from "discourse-common/lib/icon-library";
@@ -22,8 +23,11 @@ export default class StyleguideIcons extends Component {
       ids.push(...Object.keys(REPLACEMENTS));
       this.set("iconIds", [...new Set(ids.sort())]);
     } else {
-      // Let's try again a short time later if there are no svgs loaded yet
-      discourseLater(this, this.setIconIds, 1500);
+      // skip trying it later in debug mode because this was causing the CI to timeout
+      if (!DEBUG) {
+        // Let's try again a short time later if there are no svgs loaded yet
+        discourseLater(this, this.setIconIds, 1500);
+      }
     }
   }
 }
