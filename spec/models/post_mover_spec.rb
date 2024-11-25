@@ -2642,10 +2642,14 @@ RSpec.describe PostMover do
       fab!(:original_topic) { Fabricate(:topic) }
       fab!(:destination_topic) { Fabricate(:topic) }
       fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of this topic") }
+      fab!(:op_of_destination) do
+        Fabricate(:post, topic: destination_topic, raw: "op of this topic")
+      end
       fab!(:first_post) { Fabricate(:post, topic: original_topic, raw: "first_post") }
       fab!(:second_post) { Fabricate(:post, topic: original_topic, raw: "second_post") }
+      fab!(:third_post) { Fabricate(:post, topic: original_topic, raw: "third_post") }
 
-      it "keeps a posts when moving it to a new topic" do
+      it "keeps a post when moving it to a new topic" do
         new_topic =
           PostMover.new(
             original_topic,
@@ -2655,9 +2659,58 @@ RSpec.describe PostMover do
               freeze_original: true,
             },
           ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
-
         expect(new_topic.posts.map(&:raw)).to include(first_post.raw)
         expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
+      end
+
+      it "keeps a post when moving to an existing topic" do
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [first_post.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+        expect(destination_topic.posts.map(&:raw)).to include(first_post.raw)
+        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
+      end
+
+      it "creates the moderator message in the correct position" do
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [first_post.id, second_post.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+
+        moderator_post =
+          original_topic.reload.ordered_posts.find_by(post_number: second_post.post_number + 1) # the next post
+        expect(moderator_post).to be_present
+        expect(moderator_post.post_type).to eq(Post.types[:small_action])
+        expect(moderator_post.action_code).to eq("split_topic")
+      end
+
+      it "keeps posts when moving all posts to a new topic" do
+        all_posts_from_original_topic = original_topic.ordered_posts.map(&:raw)
+
+        new_topic =
+          PostMover.new(
+            original_topic,
+            Discourse.system_user,
+            original_topic.posts.map(&:id),
+            options: {
+              freeze_original: true,
+            },
+          ).to_new_topic("Hi I'm a new topic, with a copy of the old posts")
+
+        expect(original_topic.deleted_at).to be_nil
+        expect(original_topic.closed?).to eq(true)
+
+        expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+        expect(new_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
       end
 
       it "does not get deleted when moved all posts to topic" do
@@ -2674,39 +2727,10 @@ RSpec.describe PostMover do
         ).to_topic(destination_topic.id)
 
         expect(original_topic.deleted_at).to be_nil
-        expect(original_topic.posts.map(&:raw)).to include(all_posts_from_original_topic)
-        expect(destination_topic.posts.map(&:raw)).to include(all_posts_from_original_topic)
-      end
+        expect(original_topic.closed?).to eq(true)
 
-      it "keeps a post when moving to an existing topic" do
-        PostMover.new(
-          original_topic,
-          Discourse.system_user,
-          [first_post.id],
-          options: {
-            freeze_original: true,
-          },
-        ).to_topic(destination_topic.id)
-
-        expect(new_topic.posts.map(&:raw)).to include(first_post.raw)
-        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
-      end
-
-      it "lets you move multiple times to the same topic" do
-        mover =
-          PostMover.new(
-            original_topic,
-            Discourse.system_user,
-            [first_post.id],
-            options: {
-              freeze_original: true,
-            },
-          )
-        mover.to_topic(destination_topic.id)
-        mover.to_topic(destination_topic.id)
-
-        expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
-        expect(destination_topic.posts.map(&:raw)).to include([first_post.raw, first_post.raw])
+        expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+        expect(destination_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
       end
 
       it "keeps all posts when moving to a new PM" do
@@ -2722,16 +2746,20 @@ RSpec.describe PostMover do
             },
           ).to_new_topic("Hi I'm a new PM, with a copy of the old posts")
 
-        expect(original_topic.posts.map(&:raw)).to include(moving_posts.map(&:raw))
-        expect(pm.posts.map(&:raw)).to include(moving_posts.map(&:raw))
+        expect(original_topic.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
+        expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
       end
 
       it "keep all posts when moving to an existing PM" do
         pm = Fabricate(:private_message_topic)
-        moving_posts = [first_post, second_post]
+        pm_with_posts = Fabricate(:private_message_topic)
+        moving_posts = [
+          Fabricate(:post, topic: pm_with_posts),
+          Fabricate(:post, topic: pm_with_posts),
+        ]
 
         PostMover.new(
-          original_topic,
+          pm_with_posts,
           Discourse.system_user,
           moving_posts.map(&:id),
           move_to_pm: true,
@@ -2740,8 +2768,8 @@ RSpec.describe PostMover do
           },
         ).to_topic(pm.id)
 
-        expect(original_topic.posts.map(&:raw)).to include(moving_posts.map(&:raw))
-        expect(pm.posts.map(&:raw)).to include(moving_posts.map(&:raw))
+        expect(pm_with_posts.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
+        expect(pm.posts.map(&:raw)).to include(*moving_posts.map(&:raw))
       end
     end
   end
