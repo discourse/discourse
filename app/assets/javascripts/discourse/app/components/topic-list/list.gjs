@@ -56,7 +56,7 @@ export default class TopicList extends Component {
           header: HeaderPostersCell,
           item: ItemPostersCell,
         },
-        { before: "replies" }
+        { before: "replies", after: "topic" }
       );
     }
 
@@ -67,7 +67,7 @@ export default class TopicList extends Component {
           header: HeaderLikesCell,
           item: ItemLikesCell,
         },
-        { before: "views" }
+        { before: "views", after: ["topic", "posters"] }
       );
     } else if (this.args.order === "op_likes") {
       defaultColumns.add(
@@ -76,7 +76,7 @@ export default class TopicList extends Component {
           header: HeaderOpLikesCell,
           item: ItemOpLikesCell,
         },
-        { before: "views" }
+        { before: "views", after: ["topic", "posters"] }
       );
     }
 
