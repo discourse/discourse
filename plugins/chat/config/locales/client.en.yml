@@ -691,10 +691,10 @@ en:
         chat_quoted: "%{username} quoted your chat message"
 
       titles:
-        chat_mention: "Chat mention"
-        chat_invitation: "Chat invitation"
-        chat_quoted: "Chat quoted"
-        chat_watched_thread: "Chat watched thread"
+        chat_mention: "Mentioned in chat"
+        chat_invitation: "Invited to chat channel"
+        chat_quoted: "Chat message quoted"
+        chat_watched_thread: "Watched chat thread"
     action_codes:
       chat:
         enabled: '%{who} enabled <button class="btn-link open-chat">chat</button> %{when}'

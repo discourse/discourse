@@ -31,7 +31,7 @@ module Jobs
           uri = URI.parse(push_url)
 
           http = FinalDestination::HTTP.new(uri.host, uri.port)
-          http.use_ssl = true
+          http.use_ssl = uri.scheme == "https"
 
           request =
             FinalDestination::HTTP::Post.new(
@@ -45,7 +45,7 @@ module Jobs
 
             if response.code.to_i != 200
               Rails.logger.warn(
-                "Failed to push a notification to #{push_url} Status: #{result.status}: #{result.status_line}",
+                "Failed to push a notification to #{push_url} Status: #{response.code}: #{response.body}",
               )
             end
           rescue => e

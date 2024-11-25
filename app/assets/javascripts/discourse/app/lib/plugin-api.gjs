@@ -293,6 +293,19 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -330,6 +343,19 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;

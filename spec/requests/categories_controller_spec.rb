@@ -44,12 +44,7 @@ RSpec.describe CategoriesController do
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
-      _perm =
-        Permalink.create!(
-          url: "category/something",
-          permalink_type_value: category.id,
-          permalink_type: "category",
-        )
+      _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
       expect(response).to have_http_status(:moved_permanently)
