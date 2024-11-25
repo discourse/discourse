@@ -18,7 +18,7 @@ acceptance("Admin - Users List", function (needs) {
   test("searching users with no matches", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".controls.username input", "doesntexist");
+    await fillIn(".admin-users-list__controls .username input", "doesntexist");
 
     assert.dom(".users-list-container").hasText(i18n("search.no_results"));
   });
@@ -28,7 +28,9 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists();
 
-    await click(".users-list .sortable:nth-child(1)");
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
 
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
@@ -37,7 +39,9 @@ acceptance("Admin - Users List", function (needs) {
       "list should be sorted by username"
     );
 
-    await click(".users-list .sortable:nth-child(1)");
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
 
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(

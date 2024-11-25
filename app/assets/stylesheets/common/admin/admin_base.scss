@@ -473,7 +473,7 @@ $mobile-breakpoint: 700px;
   }
 
   .username {
-    input {
+    input[type="text"] {
       min-width: 15em;
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
@@ -1106,3 +1106,4 @@ a.inline-editable-field {
 @import "common/admin/mini_profiler";
 @import "common/admin/schema_theme_setting_editor";
 @import "common/admin/customize_themes_show_schema";
+@import "common/admin/admin_bulk_users_delete_modal";

@@ -115,11 +115,25 @@
 
   .directory-table {
     margin-top: 1em;
-    &__column-header--username,
-    &__column-header--email {
-      .header-contents {
-        text-align: left;
+    &__column-header {
+      &--username,
+      &---email {
+        .header-contents {
+          text-align: left;
+        }
       }
+
+      &--username {
+        flex-grow: 1;
+      }
+    }
+
+    &__column-header-wrapper {
+      display: flex;
+    }
+
+    &__cell-bulk-select {
+      margin-right: 1em;
     }
 
     &__cell.username {
@@ -147,6 +161,11 @@
 
   .avatar {
     margin-right: 0.25em;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 1em;
   }
 }
 
