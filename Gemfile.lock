@@ -256,7 +256,7 @@ GEM
       ffi (~> 1.9)
     minio_runner (0.1.2)
     minitest (5.25.2)
-    mocha (2.5.0)
+    mocha (2.6.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.5)
     multi_json (1.15.0)
@@ -350,7 +350,7 @@ GEM
     psych (5.2.0)
       stringio
     public_suffix (6.0.1)
-    puma (6.4.3)
+    puma (6.5.0)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.10)

@@ -14,7 +14,7 @@
     "@glint/environment-ember-template-imports": "^1.5.0",
     "@glint/template": "^1.5.0",
     "@mixer/parallel-prettier": "^2.0.3",
-    "@swc/core": "^1.9.2",
+    "@swc/core": "^1.9.3",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "chrome-launcher": "^1.1.2",
@@ -26,7 +26,7 @@
     "jsdoc": "^4.0.4",
     "lefthook": "^1.8.4",
     "licensee": "^11.1.0",
-    "lint-to-the-future": "^2.4.0",
+    "lint-to-the-future": "^2.4.1",
     "lint-to-the-future-ember-template": "^2.0.0",
     "lint-to-the-future-eslint": "^2.2.0",
     "magnific-popup": "1.1.0",
@@ -37,7 +37,7 @@
     "puppeteer-core": "^23.9.0",
     "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "terser": "^5.36.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "scripts": {
     "dev": "concurrently \"bin/ember-cli server --environment=development\" \"RAILS_ENV=development bin/rails server\"",

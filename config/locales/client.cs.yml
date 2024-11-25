@@ -6412,7 +6412,7 @@ cs:
           enabled: "zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
         field_types:
-          text: "Text Field"
+          text: "Text"
           confirm: "Potvrzení"
           dropdown: "Menu"
           multiselect: "Více možností"
