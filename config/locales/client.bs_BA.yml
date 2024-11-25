@@ -4275,7 +4275,7 @@ bs_BA:
           enabled: "prikazano na korisničkoj kartici"
           disabled: "nije prikazano na korisničkoj kartici"
         field_types:
-          text: "Text Field"
+          text: "Text"
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
