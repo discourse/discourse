@@ -52,64 +52,51 @@ export default class TopicList extends Component {
       },
     });
 
+    if (this.bulkSelectEnabled) {
+      defaultColumns.add("bulk-select", {
+        header: HeaderBulkSelectCell,
+        item: ItemBulkSelectCell,
+      });
+    }
+
     defaultColumns.add("topic", {
       header: HeaderTopicCell,
       item: ItemTopicCell,
     });
+
+    if (this.args.showPosters) {
+      defaultColumns.add("posters", {
+        header: HeaderPostersCell,
+        item: ItemPostersCell,
+      });
+    }
+
     defaultColumns.add("replies", {
       header: HeaderRepliesCell,
       item: ItemRepliesCell,
     });
+
+    if (this.args.order === "likes") {
+      defaultColumns.add("likes", {
+        header: HeaderLikesCell,
+        item: ItemLikesCell,
+      });
+    } else if (this.args.order === "op_likes") {
+      defaultColumns.add("op-likes", {
+        header: HeaderOpLikesCell,
+        item: ItemOpLikesCell,
+      });
+    }
+
     defaultColumns.add("views", {
       header: HeaderViewsCell,
       item: ItemViewsCell,
     });
+
     defaultColumns.add("activity", {
       header: HeaderActivityCell,
       item: ItemActivityCell,
     });
-
-    if (this.bulkSelectEnabled) {
-      defaultColumns.add(
-        "bulk-select",
-        {
-          header: HeaderBulkSelectCell,
-          item: ItemBulkSelectCell,
-        },
-        { before: "topic" }
-      );
-    }
-
-    if (this.args.showPosters) {
-      defaultColumns.add(
-        "posters",
-        {
-          header: HeaderPostersCell,
-          item: ItemPostersCell,
-        },
-        { before: "replies", after: "topic" }
-      );
-    }
-
-    if (this.args.order === "likes") {
-      defaultColumns.add(
-        "likes",
-        {
-          header: HeaderLikesCell,
-          item: ItemLikesCell,
-        },
-        { before: "views", after: ["topic", "posters"] }
-      );
-    } else if (this.args.order === "op_likes") {
-      defaultColumns.add(
-        "op-likes",
-        {
-          header: HeaderOpLikesCell,
-          item: ItemOpLikesCell,
-        },
-        { before: "views", after: ["topic", "posters"] }
-      );
-    }
 
     return applyValueTransformer(
       "topic-list-columns",
