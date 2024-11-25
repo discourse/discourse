@@ -6,7 +6,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import AdminUser from "admin/models/admin-user";
 
 export default class ApiKey extends RestModel {
-  @fmt("truncated_key", "%@...") truncatedKey;
+  @fmt("truncated_key", "%@ ...") truncatedKey;
 
   @computed("_user")
   get user() {
