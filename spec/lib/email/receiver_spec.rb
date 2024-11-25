@@ -1366,12 +1366,28 @@ RSpec.describe Email::Receiver do
         expect(IncomingEmail.exists?(post_id: group_post.id)).to eq(false)
       end
 
-      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by
-      matching in_reply_to to the email log" do
+      it "processes a reply from the OP user to the group SMTP username, linking the reply_to_post_number correctly by matching in_reply_to to the email log" do
         email_log, group_post = reply_as_group_user
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
+        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+          Topic.count
+        }.and change { Post.count }.by(1)
+
+        reply_post = Post.last
+        expect(reply_post.reply_to_user).to eq(user_in_group)
+        expect(reply_post.reply_to_post_number).to eq(group_post.post_number)
+      end
+
+      it "handles multiple message IDs in the in_reply_to header by only using the first one" do
+        email_log, group_post = reply_as_group_user
+
+        reply_email = email(:email_to_group_email_username_3)
+        reply_email.gsub!(
+          "MESSAGE_ID_REPLY_TO",
+          "<#{email_log.message_id}> <test/message/id@discourse.com>",
+        )
         expect do Email::Receiver.new(reply_email).process! end.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
