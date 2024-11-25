@@ -10,7 +10,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class TopicListHeaderColumn extends Component {
+export default class SortableColumn extends Component {
   @service router;
 
   get localizedName() {
@@ -49,7 +49,8 @@ export default class TopicListHeaderColumn extends Component {
   }
 
   @action
-  onClick() {
+  onClick(event) {
+    event.preventDefault();
     this.args.changeSort(this.args.order);
   }
 
