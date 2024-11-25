@@ -96,10 +96,20 @@ export default function () {
             this.route("edit", { path: "/:permalink_id" });
           }
         );
-        this.route("adminEmbedding", {
-          path: "/embedding",
-          resetNamespace: true,
-        });
+        this.route(
+          "adminEmbedding",
+          {
+            path: "/embedding",
+            resetNamespace: true,
+          },
+          function () {
+            this.route("index", { path: "/" });
+            this.route("settings");
+            this.route("crawler_settings");
+            this.route("new");
+            this.route("edit", { path: "/:id" });
+          }
+        );
         this.route(
           "adminCustomizeEmailTemplates",
           { path: "/email_templates", resetNamespace: true },
