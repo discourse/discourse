@@ -37,6 +37,7 @@ class UploadSecurity
     category_background
     group_flair
     badge_image
+    site_setting
   ]
 
   PUBLIC_UPLOAD_REFERENCE_TYPES = %w[
