@@ -161,9 +161,9 @@
 
           <DButton
             @action={{if
-              this.shouldShowLogin
+              this.shouldTriggerRouteAction
               (route-action "showLogin")
-              this.showLoginPage
+              this.showFullPageLogin
             }}
             @icon="user"
             @label="log_in"
