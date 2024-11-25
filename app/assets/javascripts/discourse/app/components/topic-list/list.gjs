@@ -121,10 +121,6 @@ export default class TopicList extends Component {
     return !this.bulkSelectEnabled && this.args.canBulkSelect;
   }
 
-  get sortable() {
-    return !!this.args.changeSort;
-  }
-
   get showTopicPostBadges() {
     return this.args.showTopicPostBadges ?? true;
   }
@@ -189,7 +185,7 @@ export default class TopicList extends Component {
           @order={{@order}}
           @changeSort={{@changeSort}}
           @ascending={{@ascending}}
-          @sortable={{this.sortable}}
+          @sortable={{@changeSort}}
           @listTitle={{or @listTitle "topic.title"}}
           @bulkSelectHelper={{@bulkSelectHelper}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
