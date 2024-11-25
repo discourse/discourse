@@ -7006,7 +7006,7 @@ en:
           disabled: "Not searchable"
 
         field_types:
-          text: "Text Field"
+          text: "Text"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
