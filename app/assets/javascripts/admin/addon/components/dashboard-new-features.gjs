@@ -1,12 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
-import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import DashboardNewFeatureItem from "admin/components/dashboard-new-feature-item";
 
 export default class DashboardNewFeatures extends Component {
@@ -14,11 +16,19 @@ export default class DashboardNewFeatures extends Component {
 
   @tracked newFeatures = null;
   @tracked groupedNewFeatures = null;
-  @tracked isLoaded = false;
+  @tracked isLoading = true;
+
+  constructor() {
+    super(...arguments);
+    this.args.onCheckForFeatures(this.loadNewFeatures);
+  }
 
   @bind
-  loadNewFeatures() {
-    ajax("/admin/whats-new.json")
+  loadNewFeatures(opts = {}) {
+    opts.forceRefresh ||= false;
+    this.isLoading = true;
+
+    return ajax("/admin/whats-new.json?force_refresh=" + opts.forceRefresh)
       .then((json) => {
         const items = json.new_features.reduce((acc, feature) => {
           const key = moment(feature.released_at || feature.created_at).format(
@@ -37,10 +47,12 @@ export default class DashboardNewFeatures extends Component {
             features: items[date],
           };
         });
-        this.isLoaded = true;
+      })
+      .catch((err) => {
+        popupAjaxError(err);
       })
       .finally(() => {
-        this.isLoaded = true;
+        this.isLoading = false;
       });
   }
 
@@ -49,24 +61,26 @@ export default class DashboardNewFeatures extends Component {
       class="admin-config-area__primary-content"
       {{didInsert this.loadNewFeatures}}
     >
-      {{#if this.groupedNewFeatures}}
-        {{#each this.groupedNewFeatures as |groupedFeatures|}}
-          <AdminConfigAreaCard @translatedHeading={{groupedFeatures.date}}>
-            <:content>
-              {{#each groupedFeatures.features as |feature|}}
-                <DashboardNewFeatureItem @item={{feature}} />
-              {{/each}}
-            </:content>
-          </AdminConfigAreaCard>
-        {{/each}}
-      {{else if this.isLoaded}}
-        {{htmlSafe
-          (i18n
-            "admin.dashboard.new_features.previous_announcements"
-            url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
-          )
-        }}
-      {{/if}}
+      <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+        {{#if this.groupedNewFeatures}}
+          {{#each this.groupedNewFeatures as |groupedFeatures|}}
+            <AdminConfigAreaCard @translatedHeading={{groupedFeatures.date}}>
+              <:content>
+                {{#each groupedFeatures.features as |feature|}}
+                  <DashboardNewFeatureItem @item={{feature}} />
+                {{/each}}
+              </:content>
+            </AdminConfigAreaCard>
+          {{/each}}
+        {{else}}
+          <AdminConfigAreaEmptyList
+            @emptyLabelArgs={{hash
+              url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
+            }}
+            @emptyLabel="admin.dashboard.new_features.previous_announcements"
+          />
+        {{/if}}
+      </ConditionalLoadingSpinner>
     </div>
   </template>
 }

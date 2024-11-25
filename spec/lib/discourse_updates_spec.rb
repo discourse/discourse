@@ -308,6 +308,14 @@ RSpec.describe DiscourseUpdates do
       expect(result[0]["title"]).to eq("Bells")
       expect(result[1]["title"]).to eq("Whistles")
     end
+
+    it "correctly refetches features if force_refresh is used" do
+      DiscourseUpdates.expects(:update_new_features).once
+      result = DiscourseUpdates.new_features
+      expect(result.length).to eq(3)
+      result = DiscourseUpdates.new_features(force_refresh: true)
+      expect(result.length).to eq(3)
+    end
   end
 
   describe "#get_last_viewed_feature_date" do
