@@ -605,7 +605,7 @@ RSpec.describe UploadsController do
         expect(response.redirect_url).to match("Amz-Expires")
       end
 
-      it "should return signed url for legitimate request with no extension" do
+      it "returns signed url for legitimate request with no extension" do
         upload.update!(extension: nil, url: upload.url.sub(".png", ""))
         sign_in(user)
         get secure_url
