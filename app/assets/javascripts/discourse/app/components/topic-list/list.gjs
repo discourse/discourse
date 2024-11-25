@@ -33,17 +33,6 @@ export default class TopicList extends Component {
 
   @cached
   get columns() {
-    const self = this;
-    const context = {
-      get category() {
-        return self.topicTrackingState.get("filterCategory");
-      },
-
-      get filter() {
-        return self.topicTrackingState.get("filter");
-      },
-    };
-
     const defaultColumns = new DAG({
       // Allow customizations to replace just a header cell or just an item cell
       onReplaceItem(_, newValue, oldValue) {
@@ -97,6 +86,17 @@ export default class TopicList extends Component {
       header: HeaderActivityCell,
       item: ItemActivityCell,
     });
+
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
 
     return applyValueTransformer(
       "topic-list-columns",
