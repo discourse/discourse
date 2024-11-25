@@ -8,7 +8,8 @@ class DiscourseCLI < Thor
     true
   end
 
-  desc "remap [--global,--regex,--force] FROM TO", "Remap a string sequence across all tables"
+  desc "remap [--global,--regex,--force, --skip-max-length-violations] FROM TO",
+       "Remap a string sequence across all tables"
   long_desc <<-TEXT
     Replace a string sequence FROM with TO across all tables.
 
@@ -24,6 +25,10 @@ class DiscourseCLI < Thor
     "regexp_replace" documentation in the PostgreSQL manual for more
     details.
 
+    With --skip-max-length-violations option, remapping is skipped for rows where
+    the remapped text exceeds the column's maximum length constraint. This option is
+    useful for non-critical remaps, allowing you to skip a few violating rows instead
+    of aborting the entire remap process.
 
     Examples:
 
@@ -32,8 +37,9 @@ class DiscourseCLI < Thor
     discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
   TEXT
   option :global, type: :boolean
-  option :regex, type: :boolean
+  option :regex, type: :boolean, default: false
   option :force, type: :boolean
+  option :skip_max_length_violations, type: :boolean, default: false
   def remap(from, to)
     load_rails
 
@@ -49,22 +55,20 @@ class DiscourseCLI < Thor
       puts "WILL RUN ON '#{RailsMultisite::ConnectionManagement.current_db}' DB"
     end
 
-    unless options[:force]
-      puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-      if STDIN.gets.strip.upcase != "YES"
-        puts "aborting."
-        exit 1
-      end
+    confirm!("THIS TASK WILL REWRITE DATA") unless options[:force]
+
+    if options[:skip_max_length_violations]
+      confirm!("WILL SKIP MAX LENGTH VIOLATIONS. THIS MIGHT BE UNSUITABLE FOR CRITICAL REMAPS")
     end
 
     if options[:global]
       RailsMultisite::ConnectionManagement.each_connection do |db|
         puts "", "Remapping tables on #{db}...", ""
-        do_remap(from, to, options[:regex])
+        do_remap(from, to)
       end
     else
       puts "", "Remapping tables on #{RailsMultisite::ConnectionManagement.current_db}...", ""
-      do_remap(from, to, options[:regex])
+      do_remap(from, to)
     end
   end
 
@@ -268,18 +272,38 @@ class DiscourseCLI < Thor
 
   private
 
+  def confirm!(message, prompt = "ARE YOU SURE (type YES):")
+    unless yes?("#{message}, #{prompt}")
+      puts "aborting."
+      exit(1)
+    end
+  end
+
   def load_rails
     require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
   end
 
-  def do_remap(from, to, regex = false)
+  def do_remap(from, to)
     begin
-      if regex
-        DbHelper.regexp_replace(from, to, verbose: true)
+      remap_options = {
+        verbose: true,
+        skip_max_length_violations: options[:skip_max_length_violations],
+      }
+
+      if options[:regex]
+        DbHelper.regexp_replace(from, to, **remap_options)
       else
-        DbHelper.remap(from, to, verbose: true)
+        DbHelper.remap(from, to, **remap_options)
       end
+
       puts "Done", ""
+    rescue PG::StringDataRightTruncation => e
+      puts <<~TEXT
+        #{e}
+        One or more remapped texts exceeded the maximum column length constraint. Either fix the offending
+        column(s) mentioned in the error above or re-run the script with --skip-max-length-violations to skip these rows.
+      TEXT
+      exit(1)
     rescue => ex
       puts "Error: #{ex}"
       puts "The remap has only been partially applied due to the error above. Please re-run the script again."
