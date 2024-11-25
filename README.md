@@ -77,7 +77,7 @@ When working on substantial changes, you may like to set up a staging environmen
 1. Prepare a Discourse instance (could be a local development environment, or a production site)
 
    1. Create a category for the docs
-   2. Install [discourse-doc-categories](https://github.com/discourse/discourse-doc-categories), and enable it for the category
+   2. Install [discourse-doc-categories](https://github.com/discourse/discourse-doc-categories), and configure fully by adding the category & assigning an index topic
    3. Enable [DiscoTOC](https://meta.discourse.org/t/111143) for the category
    4. Ensure data-explorer is installed and enabled
 

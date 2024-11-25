@@ -7,7 +7,6 @@ require "faraday/retry"
 require "faraday/multipart"
 require "listen"
 
-PRODUCTION_HOST = "https://meta.discourse.org"
 CATEGORY_ID = ENV["DOCS_CATEGORY_ID"].to_i
 DATA_EXPLORER_QUERY_ID = ENV["DOCS_DATA_EXPLORER_QUERY_ID"].to_i
 DOCS_TARGET = ENV["DOCS_TARGET"]
@@ -77,7 +76,13 @@ map_to_remote.call
 
 puts "Deleting topics if necessary..."
 
-cat_desc_topic_id = remote_topics.find { |t| t[:is_index_topic] }[:topic_id]
+cat_desc_topic = remote_topics.find { |t| t[:is_index_topic] }
+if cat_desc_topic.nil?
+  puts "Docs category is missing an index topic"
+  exit 1
+end
+cat_desc_topic_id = cat_desc_topic[:topic_id]
+
 remote_topics
   .reject { |remote_doc| remote_doc[:deleted_at] }
   .reject { |remote_doc| docs.any? { |doc| doc.topic_id == remote_doc[:topic_id] } }
