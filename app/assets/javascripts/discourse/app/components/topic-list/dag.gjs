@@ -9,7 +9,13 @@ import ItemTopicCell from "./item/topic-cell";
 import ItemViewsCell from "./item/views-cell";
 
 export function createColumns() {
-  const columns = new DAG();
+  const columns = new DAG({
+    // Allow customizations to replace just a header cell or just an item cell
+    onReplaceItem(_, newValue, oldValue) {
+      newValue.header ??= oldValue.header;
+      newValue.item ??= oldValue.item;
+    },
+  });
   columns.add("topic", {
     header: HeaderTopicCell,
     item: ItemTopicCell,
