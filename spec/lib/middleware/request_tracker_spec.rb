@@ -684,8 +684,9 @@ RSpec.describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, "warn+block"
 
-      status, _ = middleware.call(env)
-      status, headers = middleware.call(env)
+      env1 = env("REMOTE_ADDR" => "192.0.2.42")
+      status, _ = middleware.call(env1)
+      status, headers = middleware.call(env1)
 
       expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
@@ -696,8 +697,9 @@ RSpec.describe Middleware::RequestTracker do
       global_setting :max_reqs_per_ip_per_10_seconds, 1
       global_setting :max_reqs_per_ip_mode, "warn"
 
-      status, _ = middleware.call(env)
-      status, _ = middleware.call(env)
+      env1 = env("REMOTE_ADDR" => "192.0.2.42")
+      status, _ = middleware.call(env1)
+      status, _ = middleware.call(env1)
 
       expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
