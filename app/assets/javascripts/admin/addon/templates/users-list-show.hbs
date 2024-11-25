@@ -19,19 +19,50 @@
   {{/if}}
 </div>
 
-<div class="username controls">
-  <TextField
-    @value={{this.listFilter}}
-    @placeholder={{this.searchHint}}
-    @title={{this.searchHint}}
-  />
+<div class="admin-users-list__controls">
+  <div class="username">
+    <input
+      type="text"
+      dir="auto"
+      placeholder={{this.searchHint}}
+      title={{this.searchHint}}
+      {{on "input" this.onListFilterChange}}
+    />
+  </div>
+  {{#if this.displayBulkActions}}
+    <div class="bulk-actions-dropdown">
+      <DMenu @autofocus={{true}} @identifier="bulk-select-admin-users-dropdown">
+        <:trigger>
+          <span class="d-button-label">
+            {{i18n "admin.users.bulk_actions.title"}}
+          </span>
+          {{dIcon "angle-down"}}
+        </:trigger>
+
+        <:content>
+          <DropdownMenu as |dropdown|>
+            <dropdown.item>
+              <DButton
+                @translatedLabel={{i18n
+                  "admin.users.bulk_actions.delete.label"
+                }}
+                @icon="trash-can"
+                @action={{this.openBulkDeleteConfirmation}}
+                class="bulk-delete btn-danger"
+              />
+            </dropdown.item>
+          </DropdownMenu>
+        </:content>
+      </DMenu>
+    </div>
+  {{/if}}
 </div>
 <LoadMore
   @selector=".directory-table .directory-table__cell"
   @action={{action "loadMore"}}
   class="users-list-container"
 >
-  {{#if this.model}}
+  {{#if this.users}}
     <ResponsiveTable
       @className="users-list"
       @aria-label={{this.title}}
@@ -42,18 +73,24 @@
           ", minmax(min-content, 1fr))"
         )
       }}
-      @updates={{this.model.email}}
     >
       <:header>
-        <TableHeaderToggle
-          @onToggle={{this.updateOrder}}
-          @field="username"
-          @labelKey="username"
-          @order={{this.order}}
-          @asc={{this.asc}}
-          @automatic={{true}}
-          class="directory-table__column-header--username"
-        />
+        <div class="directory-table__column-header-wrapper">
+          <DButton
+            class="btn-flat bulk-select"
+            @icon="list-check"
+            @action={{this.toggleBulkSelect}}
+          />
+          <TableHeaderToggle
+            @onToggle={{this.updateOrder}}
+            @field="username"
+            @labelKey="username"
+            @order={{this.order}}
+            @asc={{this.asc}}
+            @automatic={{true}}
+            class="directory-table__column-header--username"
+          />
+        </div>
         <TableHeaderToggle
           @onToggle={{this.updateOrder}}
           @field="email"
@@ -130,14 +167,50 @@
       </:header>
 
       <:body>
-        {{#each this.model as |user|}}
+        {{#each this.users as |user|}}
           <div
             class="user
               {{user.selected}}
               {{unless user.active 'not-activated'}}
               directory-table__row"
+            data-user-id={{user.id}}
           >
             <div class="directory-table__cell username">
+              {{#if this.bulkSelect}}
+                {{#if user.can_be_deleted}}
+                  <input
+                    type="checkbox"
+                    class="directory-table__cell-bulk-select"
+                    checked={{eq (get this.bulkSelectedUsersMap user.id) 1}}
+                    data-user-id={{user.id}}
+                    {{on "click" (fn this.bulkSelectItemToggle user.id)}}
+                  />
+                {{else}}
+                  <DTooltip
+                    @identifier="bulk-delete-unavailable-reason"
+                    @placement="bottom-start"
+                  >
+                    <:trigger>
+                      <input
+                        type="checkbox"
+                        class="directory-table__cell-bulk-select"
+                        disabled={{true}}
+                      />
+                    </:trigger>
+                    <:content>
+                      {{#if user.admin}}
+                        {{i18n
+                          "admin.users.bulk_actions.admin_cant_be_deleted"
+                        }}
+                      {{else}}
+                        {{i18n
+                          "admin.users.bulk_actions.too_many_or_old_posts"
+                        }}
+                      {{/if}}
+                    </:content>
+                  </DTooltip>
+                {{/if}}
+              {{/if}}
               <a
                 class="avatar"
                 href={{user.path}}
@@ -283,9 +356,8 @@
         {{/each}}
       </:body>
     </ResponsiveTable>
-
-    <ConditionalLoadingSpinner @condition={{this.refreshing}} />
-  {{else}}
+  {{else if (not this.refreshing)}}
     <p>{{i18n "search.no_results"}}</p>
   {{/if}}
+  <ConditionalLoadingSpinner @condition={{this.refreshing}} />
 </LoadMore>

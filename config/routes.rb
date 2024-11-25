@@ -133,6 +133,7 @@ Discourse::Application.routes.draw do
           delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
           get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
           put "approve-bulk" => "users#approve_bulk"
+          delete "destroy-bulk" => "users#destroy_bulk"
         end
         delete "penalty_history", constraints: AdminConstraint.new
         put "suspend"
@@ -245,6 +246,9 @@ Discourse::Application.routes.draw do
         resources :user_fields,
                   only: %i[index create update destroy],
                   constraints: AdminConstraint.new
+        get "user_fields/new" => "user_fields#index"
+        get "user_fields/:id" => "user_fields#show"
+        get "user_fields/:id/edit" => "user_fields#edit"
         resources :emojis, only: %i[index create destroy], constraints: AdminConstraint.new
         get "emojis/new" => "emojis#index"
         get "emojis/settings" => "emojis#index"

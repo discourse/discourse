@@ -94,6 +94,16 @@
       margin-bottom: 0.1em;
     }
   }
+
+  &-flags {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    text-transform: lowercase;
+
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
 }
 
 .d-admin-row__controls {

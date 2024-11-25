@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::StaffController
   def index
     users = ::AdminUserIndexQuery.new(params).find_users
 
-    opts = {}
+    opts = { include_can_be_deleted: true }
     if params[:show_emails] == "true"
       StaffActionLogger.new(current_user).log_show_emails(users, context: request.path)
       opts[:emails_desired] = true
@@ -398,6 +398,24 @@ class Admin::UsersController < Admin::StaffController
                    ),
                },
                status: 403
+      end
+    end
+  end
+
+  def destroy_bulk
+    hijack do
+      User::BulkDestroy.call(service_params) do
+        on_success { render json: { deleted: true } }
+
+        on_failed_contract do |contract|
+          render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
+        end
+
+        on_failed_policy(:can_delete_users) do
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: 403
+        end
+
+        on_model_not_found(:users) { render json: failed_json, status: 404 }
       end
     end
   end
