@@ -317,10 +317,13 @@ export function applyValueTransformer(
 
   if (
     typeof (context ?? undefined) !== "undefined" &&
-    !(typeof context === "object" && context.constructor === Object)
+    !(
+      typeof context === "object" &&
+      (context.constructor === Object || context.constructor === undefined)
+    )
   ) {
     throw (
-      `${prefix}("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
+      `${prefix}("${transformerName}", ...): context must be a simple JS object/an Ember hash or nullish.\n` +
       "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
       "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
       "and mutating the context directly. Inevitably, this leads to fragile integrations."
