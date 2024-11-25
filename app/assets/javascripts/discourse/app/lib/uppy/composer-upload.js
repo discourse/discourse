@@ -365,13 +365,14 @@ export default class UppyComposerUpload {
         if (!this.uppyWrapper.uppyInstance) {
           return;
         }
-        this.#removeInProgressUpload(file.id);
         let upload = response.body;
         const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
 
+        // Only remove in progress after async resolvers finish:
+        this.#removeInProgressUpload(file.id);
         cacheShortUploadUrl(upload.short_url, upload);
 
         new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
