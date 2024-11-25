@@ -6,9 +6,16 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
 export default class ChatNavbarChannelTitle extends Component {
   @service chatStateManager;
 
+  get shouldLinkToSettings() {
+    return (
+      this.chatStateManager.isDrawerExpanded ||
+      this.chatStateManager.isFullPageActive
+    );
+  }
+
   <template>
     {{#if @channel}}
-      {{#if this.chatStateManager.isDrawerExpanded}}
+      {{#if this.shouldLinkToSettings}}
         <LinkTo
           @route="chat.channel.info.settings"
           @models={{@channel.routeModels}}
