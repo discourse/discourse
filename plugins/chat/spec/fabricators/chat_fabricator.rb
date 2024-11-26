@@ -81,7 +81,8 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
             :in_reply_to,
             :thread,
             :upload_ids,
-            :incoming_chat_webhook
+            :incoming_chat_webhook,
+            :blocks
 
   initialize_with do |transients|
     channel =
@@ -101,6 +102,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
           thread_id: transients[:thread]&.id,
           in_reply_to_id: transients[:in_reply_to]&.id,
           upload_ids: transients[:upload_ids],
+          blocks: transients[:blocks],
         },
         options: {
           process_inline: true,
@@ -169,6 +171,11 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   created_by { Fabricate(:user) }
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
+end
+
+Fabricator(:chat_message_interaction, class_name: "Chat::MessageInteraction") do
+  message { Fabricate(:chat_message) }
+  user { Fabricate(:user) }
 end
 
 Fabricator(:direct_message, class_name: "Chat::DirectMessage") do

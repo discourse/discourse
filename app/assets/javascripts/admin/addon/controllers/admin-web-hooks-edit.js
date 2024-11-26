@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminWebHooksEditController extends Controller {
   @service dialog;
@@ -26,9 +26,9 @@ export default class AdminWebHooksEditController extends Controller {
   @discourseComputed("model.isSaving", "saved", "saveButtonDisabled")
   savingStatus(isSaving, saved, saveButtonDisabled) {
     if (isSaving) {
-      return I18n.t("saving");
+      return i18n("saving");
     } else if (!saveButtonDisabled && saved) {
-      return I18n.t("saved");
+      return i18n("saved");
     }
     // Use side effect of validation to clear saved text
     this.set("saved", false);
@@ -38,8 +38,8 @@ export default class AdminWebHooksEditController extends Controller {
   @discourseComputed("model.isNew")
   saveButtonText(isNew) {
     return isNew
-      ? I18n.t("admin.web_hooks.create")
-      : I18n.t("admin.web_hooks.save");
+      ? i18n("admin.web_hooks.create")
+      : i18n("admin.web_hooks.save");
   }
 
   @discourseComputed("model.secret")
@@ -48,14 +48,14 @@ export default class AdminWebHooksEditController extends Controller {
       if (secret.includes(" ")) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("admin.web_hooks.secret_invalid"),
+          reason: i18n("admin.web_hooks.secret_invalid"),
         });
       }
 
       if (secret.length < 12) {
         return EmberObject.create({
           failed: true,
-          reason: I18n.t("admin.web_hooks.secret_too_short"),
+          reason: i18n("admin.web_hooks.secret_too_short"),
         });
       }
     }
@@ -66,7 +66,7 @@ export default class AdminWebHooksEditController extends Controller {
     if (!isWildcard && isEmpty(eventTypes)) {
       return EmberObject.create({
         failed: true,
-        reason: I18n.t("admin.web_hooks.event_type_missing"),
+        reason: i18n("admin.web_hooks.event_type_missing"),
       });
     }
   }

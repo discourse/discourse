@@ -10,7 +10,7 @@ export default class NoneCategoryRow extends CategoryRowComponent {
   badgeForCategory(category) {
     return htmlSafe(
       categoryBadgeHTML(category, {
-        link: this.categoryLink,
+        link: false,
         allowUncategorized: true,
         hideParent: true,
       })

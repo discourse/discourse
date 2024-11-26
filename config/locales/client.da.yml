@@ -1434,7 +1434,6 @@ da:
       location: "Sted"
       website: "Websted"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Skjul min offentlige profil og tilstedeværelsesfunktioner"
       enable_physical_keyboard: "Aktivér understøttelse af fysisk tastatur på iPad"
       text_size:
         title: "Skriftstørrelse"
@@ -1546,7 +1545,6 @@ da:
           success: "Invitiationslinket blev genereret!"
           error: "Der opstod en fejl under generering af Invitationslink"
         invite:
-          instructions: "Del dette link for øjeblikkeligt at give adgang til dette websted:"
           expires_in_time: "Udløber om %{time}"
           expired_at_time: "Udløb kl. %{time}"
           copy_link: "Kopiér link"
@@ -1561,9 +1559,8 @@ da:
           add_to_groups: "Tilføj til grupper"
           expires_after: "Udløber efter"
           send_invite_email: "Gem og send e-mail"
-          save_invite: "Gem"
+          update_invite: "Opdater"
           cancel: "Annuller"
-          invite_saved: "Invitation gemt."
         bulk_invite:
           none: "Ingen invitationer at vise på denne side."
           text: "Masseinvitation"
@@ -2427,6 +2424,8 @@ da:
         bookmarks: "Der er ikke flere bogmærkede emner."
         filter: "Der er ikke flere emner."
     topic_bulk_actions:
+      dismiss:
+        name: "Ignorer Alle"
       close_topics:
         name: "Luk"
         optional: (valgfri)
@@ -2904,17 +2903,22 @@ da:
       few_likes_left: "Tak fordi du spreder kærligheden! Du har kun få 'Synes godt om' tilbage i dag."
       controls:
         reply: "begynd at skrive et svar til dette indlæg"
+        like_action: "Like"
         like: "'Synes godt om' dette indlæg"
         has_liked: "Du synes godt om dette indlæg"
         read_indicator: "medlemmer der har læst dette indlæg"
+        undo_like_action: "Undo like"
         undo_like: "fortryd 'Synes godt om'"
         edit: "redigér dette indlæg"
         edit_action: "Rediger"
         edit_anonymous: "Beklager, du skal være logget ind for at redigere dette indlæg."
+        flag_action: "Rapportér"
         flag: "gør moderator opmærksom på dette indlæg"
         delete: "slet dette indlæg"
         undelete: "annullér sletning"
+        share_action: "Del"
         share: "del et link til dette indlæg"
+        copy_action: "Kopiér link"
         link_copied: "Link kopieret!"
         more: "Mere"
         delete_replies:
@@ -2927,6 +2931,7 @@ da:
             other: "Ja, og alle %{count} svar"
           just_the_post: "Nej, kun dette indlæg"
         admin: "indlæg administrator handlinger"
+        admin_action: "Admin"
         permanently_delete: "Slet permanent"
         wiki: "Opret Wiki"
         unwiki: "Fjern Wiki"
@@ -5057,7 +5062,6 @@ da:
         time_read: "Læsetid"
         post_edits_count: "Indlægs Redigeringer"
         anonymize: "Anonymiser Bruger"
-        anonymize_confirm: "Er du HELT SIKKER på at du vil anonymisere denne konto? Dette vil ændre brugernavnet og email adressen, samt nulstille profil informationen."
         anonymize_yes: "Ja, anonymiser denne konto"
         anonymize_failed: "Der var problemer med at anonymisere denne konto."
         delete: "Slet bruger"
@@ -5401,8 +5405,6 @@ da:
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:
         title: "Humørikon"
-        add: "Tilføj ny emoji"
-        choose_files: "Vælg Filer"
         uploading: "Overfører…"
         name: "Navn"
         group: "Gruppe"
@@ -5442,15 +5444,17 @@ da:
         category_id: "Kategori ID"
         category_title: "Kategori"
         tag_name: "Mærke navn"
+        tag_title: "Mærke"
         external_url: "Ekstern eller Relativ URL"
+        user_title: "Bruger"
         username: "Brugernavn"
         destination: "Destination"
         copy_to_clipboard: "Kopier Permalink til udklipsholder"
         delete_confirm: Er du sikker på at du vil slette dette permalink?
         form:
           label: "Ny:"
-          add: "Tilføj"
-          filter: "Søg (URL eller ekstern URL)"
+          url: "URL"
+          save: "Gem"
       reseed:
         action:
           label: "Erstat tekst ..."

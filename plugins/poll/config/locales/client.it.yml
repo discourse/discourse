@@ -102,6 +102,8 @@ it:
         label: "Opzioni"
         ranked_choice:
           abstain: "Astieniti"
+          highest_priority: "(massima priorità)"
+          lowest_priority: "(minima priorità)"
           login: "Accedi per votare!"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."

@@ -5,7 +5,7 @@ import CreateAccount from "discourse/components/modal/create-account";
 import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import DiscourseUrl from "discourse/lib/url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -69,7 +69,7 @@ export default {
                 ...properties,
               };
 
-              if (siteSettings.experimental_full_page_login) {
+              if (siteSettings.full_page_login) {
                 router.transitionTo("login").then((login) => {
                   Object.keys(loginProps || {}).forEach((key) => {
                     login.controller.set(key, loginProps[key]);
@@ -91,7 +91,7 @@ export default {
 
             if (options.omniauth_disallow_totp) {
               return loginError(
-                I18n.t("login.omniauth_disallow_totp"),
+                i18n("login.omniauth_disallow_totp"),
                 "error",
                 {
                   loginName: options.email,
@@ -104,7 +104,7 @@ export default {
             for (let i = 0; i < AuthErrors.length; i++) {
               const cond = AuthErrors[i];
               if (options[cond]) {
-                return loginError(htmlSafe(I18n.t(`login.${cond}`)));
+                return loginError(htmlSafe(i18n(`login.${cond}`)));
               }
             }
 
@@ -139,11 +139,14 @@ export default {
                 skipConfirmation: siteSettings.auth_skip_create_confirm,
               };
 
-              if (siteSettings.experimental_full_page_login) {
-                router.transitionTo("signup").then((login) => {
+              if (siteSettings.full_page_login) {
+                router.transitionTo("signup").then((signup) => {
+                  const signupController =
+                    signup.controller || owner.lookup("controller:signup");
                   Object.keys(createAccountProps || {}).forEach((key) => {
-                    login.controller.set(key, createAccountProps[key]);
+                    signupController.set(key, createAccountProps[key]);
                   });
+                  signupController.handleSkipConfirmation();
                 });
               } else {
                 modal.show(CreateAccount, { model: createAccountProps });

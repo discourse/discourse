@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import PermissionType from "discourse/models/permission-type";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const EVERYONE = "everyone";
 
@@ -62,8 +62,8 @@ export default class CategoryPermissionRow extends Component {
 
   get replyTooltip() {
     return this.replyDisabled
-      ? I18n.t("category.permissions.inherited")
-      : I18n.t("category.permissions.toggle_reply");
+      ? i18n("category.permissions.inherited")
+      : i18n("category.permissions.toggle_reply");
   }
 
   get createDisabled() {
@@ -81,8 +81,8 @@ export default class CategoryPermissionRow extends Component {
 
   get createTooltip() {
     return this.createDisabled
-      ? I18n.t("category.permissions.inherited")
-      : I18n.t("category.permissions.toggle_full");
+      ? i18n("category.permissions.inherited")
+      : i18n("category.permissions.toggle_full");
   }
 
   get groupLink() {

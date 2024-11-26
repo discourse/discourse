@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
@@ -20,16 +20,16 @@ export default class CategoriesAdminDropdown extends DropdownSelectBoxComponent 
     const items = [
       {
         id: "create",
-        name: I18n.t("category.create"),
-        description: I18n.t("category.create_long"),
+        name: i18n("category.create"),
+        description: i18n("category.create_long"),
         icon: "plus",
       },
     ];
 
     items.push({
       id: "reorder",
-      name: I18n.t("categories.reorder.title"),
-      description: I18n.t("categories.reorder.title_long"),
+      name: i18n("categories.reorder.title"),
+      description: i18n("categories.reorder.title_long"),
       icon: "shuffle",
     });
 

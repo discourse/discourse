@@ -684,7 +684,15 @@ class TopicView
   end
 
   def link_counts
-    @link_counts ||= TopicLink.counts_for(@guardian, @topic, posts)
+    # Normal memoizations doesn't work in nil cases, so using the ol' `defined?` trick
+    # to memoize more safely, as a modifier could nil this out.
+    return @link_counts if defined?(@link_counts)
+
+    @link_counts =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_view_link_counts,
+        TopicLink.counts_for(@guardian, @topic, posts),
+      )
   end
 
   def pm_params

@@ -109,6 +109,13 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :disagree, icon: "thumbs-down")
     end
 
+    post_visible_or_system_user = !post.hidden? || guardian.user.is_system_user?
+    can_delete_post_or_topic = guardian.can_delete_post_or_topic?(post)
+
+    # We must return early in this case otherwise we can end up with a bundle
+    # with no associated actions, which is not valid on the client.
+    return if !can_delete_post_or_topic && !post_visible_or_system_user
+
     ignore =
       actions.add_bundle(
         "#{id}-ignore",
@@ -116,10 +123,10 @@ class ReviewableFlaggedPost < Reviewable
         label: "reviewables.actions.ignore.title",
       )
 
-    if !post.hidden? || guardian.user.is_system_user?
+    if post_visible_or_system_user
       build_action(actions, :ignore_and_do_nothing, icon: "up-right-from-square", bundle: ignore)
     end
-    if guardian.can_delete_post_or_topic?(post)
+    if can_delete_post_or_topic
       build_action(actions, :delete_and_ignore, icon: "trash-can", bundle: ignore)
       if post.reply_count > 0
         build_action(

@@ -1075,7 +1075,7 @@ th:
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
         invite:
-          save_invite: "บันทึก"
+          update_invite: "อัปเดต"
           cancel: "ยกเลิก"
       password:
         title: "รหัสผ่าน"
@@ -1645,6 +1645,8 @@ th:
         top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
+      dismiss:
+        name: "ซ่อน"
       close_topics:
         name: "ปิด"
         optional: (ทางเลือก)
@@ -1977,12 +1979,15 @@ th:
         like: "ถูกใจโพสต์นี้"
         has_liked: "คุณได้ถูกใจโพสต์นี้แล้ว"
         read_indicator: "สมาชิกที่อ่านโพสต์นี้"
+        undo_like_action: "เลิกถูกใจ"
         undo_like: "เลิกถูกใจ"
         edit: "แก้ไขโพสต์นี้"
         edit_action: "แก้ไข"
         edit_anonymous: "ขออภัย คุณต้องเข้าสู่ระบบเพื่อแก้ไขโพสต์นี้"
+        flag_action: "ธง"
         delete: "ลบโพสต์นี้"
         undelete: "เลิกลบโพสต์นี้"
+        share_action: "แบ่งปัน"
         share: "แบ่งปันลิงก์ไปยังโพสต์นี้"
         more: "อื่นๆ"
         delete_replies:
@@ -1992,6 +1997,7 @@ th:
           all_replies:
             other: "ใช่ และทั้งหมด %{count}คำตอบ"
           just_the_post: "ไม่ แค่โพสต์นี้เท่านั้น"
+        admin_action: "ผู้ดูแลระบบ"
         publish_page: "การเผยแพร่เพจ"
         unhide: "เลิกซ่อน"
         lock_post: "ล็อกโพสต์"
@@ -3290,7 +3296,6 @@ th:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
-        add: "เพิ่มอีโมจิใหม่"
         name: "ชื่อ"
         group: "กลุ่ม"
         image: "ภาพ"
@@ -3315,12 +3320,13 @@ th:
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
         tag_name: "ชื่อแท็ก"
+        user_title: "ผู้ใช้"
         username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
         form:
           label: "ใหม่:"
-          add: "เพิ่ม"
-          filter: "ค้นหา (URL หรือ ลิงก์ภายนอก)"
+          url: "URL"
+          save: "บันทึก"
       reseed:
         modal:
           categories: "หมวดหมู่"

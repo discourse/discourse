@@ -1,5 +1,6 @@
-import { render } from "@ember/test-helpers";
-import { module, test } from "qunit";
+import { fn } from "@ember/helper";
+import { click, render } from "@ember/test-helpers";
+import { module, test, todo } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -34,7 +35,7 @@ module(
       let data = { image_url: "/images/discourse-logo-sketch-small.png" };
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form|>
+        <Form @data={{data}} as |form|>
           <form.Field @name="image_url" @title="Foo" as |field|>
             <field.Image @type="site_setting" />
           </form.Field>
@@ -45,5 +46,29 @@ module(
 
       assert.form().field("image_url").hasValue(data.image_url);
     });
+
+    test("removing the upload", async function (assert) {
+      let data = { image_url: "/images/discourse-logo-sketch-small.png" };
+
+      await render(<template>
+        <Form @data={{data}} as |form|>
+          <form.Field @name="image_url" @title="Foo" as |field|>
+            <field.Image @type="site_setting" />
+          </form.Field>
+
+          <form.Button class="test" @action={{fn form.set "image_url" null}} />
+        </Form>
+      </template>);
+
+      await formKit().submit();
+
+      assert.form().field("image_url").hasValue(data.image_url);
+
+      await click(".test");
+
+      assert.form().field("image_url").hasNoValue();
+    });
+
+    todo("when disabled", async function () {});
   }
 );

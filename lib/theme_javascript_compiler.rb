@@ -217,6 +217,7 @@ class ThemeJavascriptCompiler
     compiled =
       DiscourseJsProcessor::Transpiler.new.compile_raw_template(hbs_template, theme_id: @theme_id)
     source_for_comment = hbs_template.gsub("*/", '*\/').indent(4, " ")
+    modern_replacement_marker = hbs_template.include?("{{!-- has-modern-replacement --}}")
     @output_tree << ["#{name}.js", <<~JS]
       (function() {
         /*
@@ -224,7 +225,7 @@ class ThemeJavascriptCompiler
         */
         const addRawTemplate = requirejs('discourse-common/lib/raw-templates').addRawTemplate;
         const template = requirejs('discourse-common/lib/raw-handlebars').template(#{compiled});
-        addRawTemplate(#{raw_template_name(name)}, template);
+        addRawTemplate(#{raw_template_name(name)}, template, { themeId: #{@theme_id}, themeName: #{@theme_name.to_json}, hasModernReplacement: #{modern_replacement_marker} });
       })();
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex

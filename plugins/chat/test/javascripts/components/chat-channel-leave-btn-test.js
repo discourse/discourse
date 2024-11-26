@@ -4,7 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
@@ -35,7 +35,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
 
     assert
       .dom(".chat-channel-leave-btn")
-      .hasAttribute("title", I18n.t("chat.direct_messages.leave"));
+      .hasAttribute("title", i18n("chat.direct_messages.leave"));
   });
 
   test("has a specific title for message channel", async function (assert) {
@@ -45,7 +45,7 @@ module("Discourse Chat | Component | chat-channel-leave-btn", function (hooks) {
 
     assert
       .dom(".chat-channel-leave-btn")
-      .hasAttribute("title", I18n.t("chat.leave"));
+      .hasAttribute("title", i18n("chat.leave"));
   });
 
   test("is not visible on mobile", async function (assert) {

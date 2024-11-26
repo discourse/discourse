@@ -21,7 +21,7 @@ import User from "discourse/models/user";
 import { tinyAvatar } from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _customizations = [];
 export function registerCustomizationCallback(cb) {
@@ -303,7 +303,7 @@ export default class Composer extends RestModel {
   @observes("composeState")
   composeStateChanged() {
     const oldOpen = this.composerOpened;
-    const elem = document.querySelector("html");
+    const elem = document.documentElement;
 
     if (this.composeState === FULLSCREEN) {
       elem.classList.add("fullscreen-composer");
@@ -423,7 +423,7 @@ export default class Composer extends RestModel {
     }
 
     if (post) {
-      options.label = I18n.t(`post.${action}`);
+      options.label = i18n(`post.${action}`);
       options.userAvatar = tinyAvatar(post.avatar_template);
 
       if (this.site.desktopView) {
@@ -443,7 +443,7 @@ export default class Composer extends RestModel {
 
       options.postLink = {
         href: `${topic.url}/${postNumber}`,
-        anchor: I18n.t("post.post_number", { number: postNumber }),
+        anchor: i18n("post.post_number", { number: postNumber }),
       };
 
       const name = prioritizeNameFallback(post.name, post.username);
@@ -535,9 +535,7 @@ export default class Composer extends RestModel {
       const category = this.category;
       if (category && category.topic_template) {
         if (this.reply.trim() === category.topic_template.trim()) {
-          this.dialog.alert(
-            I18n.t("composer.error.topic_template_not_modified")
-          );
+          this.dialog.alert(i18n("composer.error.topic_template_not_modified"));
           return true;
         }
       }
@@ -1321,7 +1319,7 @@ export default class Composer extends RestModel {
         }
         if (result.conflict_user) {
           this.setProperties({
-            draftStatus: I18n.t("composer.edit_conflict"),
+            draftStatus: i18n("composer.edit_conflict"),
             draftConflictUser: result.conflict_user,
           });
         } else {
@@ -1355,12 +1353,12 @@ export default class Composer extends RestModel {
               message: json.extras.description,
               buttons: [
                 {
-                  label: I18n.t("composer.reload"),
+                  label: i18n("composer.reload"),
                   class: "btn-primary",
                   action: () => window.location.reload(),
                 },
                 {
-                  label: I18n.t("composer.ignore"),
+                  label: i18n("composer.ignore"),
                   class: "btn",
                   action: () => this.set("draftForceSave", true),
                 },
@@ -1369,7 +1367,7 @@ export default class Composer extends RestModel {
           }
         }
         this.setProperties({
-          draftStatus: draftStatus || I18n.t("composer.drafts_offline"),
+          draftStatus: draftStatus || i18n("composer.drafts_offline"),
           draftConflictUser: null,
         });
       })

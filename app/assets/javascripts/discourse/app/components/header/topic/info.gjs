@@ -11,7 +11,7 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import renderTags from "discourse/lib/render-tags";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import PluginOutlet from "../../plugin-outlet";
 import FeaturedLink from "./featured-link";
 import Participant from "./participant";
@@ -48,7 +48,7 @@ export default class Info extends Component {
   }
 
   get tags() {
-    if (this.args.topicInfo.tags) {
+    if (this.args.topicInfo.get("tags")) {
       return renderTags(this.args.topicInfo);
     }
   }

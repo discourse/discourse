@@ -26,7 +26,7 @@
   }
 
   td {
-    vertical-align: top;
+    vertical-align: middle;
     padding-top: var(--space-3);
     padding-bottom: var(--space-3);
 
@@ -37,6 +37,15 @@
 
     &:first-child {
       @include breakpoint("tablet") {
+        border-top: 0;
+      }
+    }
+
+    &.d-admin-row__overview {
+      width: 55%;
+
+      @include breakpoint("tablet") {
+        width: auto;
         border-top: 0;
       }
     }
@@ -62,13 +71,6 @@
 }
 
 .d-admin-row__overview {
-  width: 55%;
-
-  @include breakpoint("tablet") {
-    width: auto;
-    border-top: 0;
-  }
-
   &-name {
     font-weight: 700;
     max-width: 80%;
@@ -90,6 +92,16 @@
     .d-icon {
       font-size: var(--font-down-3);
       margin-bottom: 0.1em;
+    }
+  }
+
+  &-flags {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    text-transform: lowercase;
+
+    &::first-letter {
+      text-transform: uppercase;
     }
   }
 }

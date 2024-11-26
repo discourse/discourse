@@ -13,7 +13,7 @@ import {
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",
@@ -37,7 +37,7 @@ export default class ComposerActionTitle extends Component {
     }
 
     if (TITLES[action]) {
-      return I18n.t(TITLES[action]);
+      return i18n(TITLES[action]);
     }
 
     if (action === REPLY) {

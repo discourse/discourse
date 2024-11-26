@@ -131,6 +131,10 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
+  get publicMessageChannelsWithActivity() {
+    return this.publicMessageChannels.filter((channel) => channel.hasUnread);
+  }
+
   get publicMessageChannelsByActivity() {
     return this.#sortChannelsByActivity(this.publicMessageChannels);
   }
@@ -143,6 +147,10 @@ export default class ChatChannelsManager extends Service {
         return channel.isDirectMessageChannel && membership.following;
       })
     );
+  }
+
+  get directMessageChannelsWithActivity() {
+    return this.directMessageChannels.filter((channel) => channel.hasUnread);
   }
 
   get truncatedDirectMessageChannels() {

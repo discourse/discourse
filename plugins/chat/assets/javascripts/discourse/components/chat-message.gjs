@@ -21,11 +21,12 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
 import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
 import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageBlocks from "discourse/plugins/chat/discourse/components/chat-message/blocks";
 import ChatMessageActionsMobileModal from "discourse/plugins/chat/discourse/components/chat-message-actions-mobile";
 import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
@@ -132,7 +133,7 @@ export default class ChatMessage extends Component {
 
     recursiveCount(this.args.message);
 
-    return I18n.t("chat.deleted", { count });
+    return i18n("chat.deleted", { count });
   }
 
   get shouldRender() {
@@ -665,7 +666,7 @@ export default class ChatMessage extends Component {
                 {{#if this.shouldRenderStopMessageStreamingButton}}
                   <div class="stop-streaming-btn-container">
                     <DButton
-                      @class="stop-streaming-btn"
+                      class="stop-streaming-btn"
                       @icon="stop-circle"
                       @label="cancel"
                       @action={{fn this.stopMessageStreaming @message}}
@@ -673,6 +674,8 @@ export default class ChatMessage extends Component {
 
                   </div>
                 {{/if}}
+
+                <ChatMessageBlocks @message={{@message}} />
 
                 <ChatMessageError
                   @message={{@message}}

@@ -902,7 +902,6 @@ sr:
         invite:
           show_advanced: "Прикажи напредне опције"
           hide_advanced: "Сакриј напредне опције"
-          save_invite: "Sačuvaj"
           cancel: "Odustani"
       password:
         title: "Šifra"
@@ -1248,6 +1247,8 @@ sr:
         top: "Nema više glavnih tema."
         bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
+      dismiss:
+        name: "Одбаци"
       close_topics:
         name: "Zatvori"
       archive_topics:
@@ -1454,18 +1455,22 @@ sr:
         reply: "počnite sa sastavljanjem odgovora na ovu poruku"
         like: "Lajkuj ovu poruku"
         has_liked: "lajkovao si ovu poruku"
+        undo_like_action: "Poništi Lajk"
         undo_like: "poništi lajk"
         edit: "izmeni ovu poruku"
         edit_action: "Izmeni"
         edit_anonymous: "Žao nam je, morate biti prijavljeni da bi ste izmjenili ovu poruku."
+        flag_action: "Označi Zastavom"
         flag: "privatno označi poruku za pozornost ili pošalji privatno obaveštenje o njoj"
         delete: "obriši ovu poruku"
         undelete: "poništi brisanje poruke"
+        share_action: "Podeli"
         share: "podeli link ka ovoj poruci"
         more: "Više"
         delete_replies:
           just_the_post: "Ne, samo ovu objavu"
         admin: "admin akcije na objavi"
+        admin_action: "Admin"
         wiki: "Napravi Wiki"
         unwiki: "Ukloni Wiki"
         convert_to_moderator: "Dodaj Boje Osoblja"
@@ -2640,7 +2645,6 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        add: "Dodaj Novi Emoji"
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -2656,10 +2660,12 @@ sr:
         post_id: "ID Poruke"
         post_title: "Post"
         category_title: "Kategorija"
+        user_title: "Korisnik"
         username: "Korisničko Ime"
         form:
           label: "Novo:"
-          add: "Dodaj"
+          url: "URL"
+          save: "Sačuvaj"
       reseed:
         modal:
           categories: "Kategorije"

@@ -1338,7 +1338,6 @@ lv:
           success: "Ielūguma saite gatava!"
           error: "Ģenerējot uzaicinājuma saiti, radās kļūda"
         invite:
-          instructions: "Kopīgojiet šo saiti, lai uzreiz piešķirtu piekļuvi šai vietnei:"
           expires_in_time: "Derīguma termiņš beidzas pēc %{time}"
           expired_at_time: "Derīguma termiņš beidzas pēc %{time}"
           show_advanced: "Rādīt papildu opcijas"
@@ -1347,9 +1346,7 @@ lv:
           add_to_groups: "Pievienot grupām"
           expires_after: "Derīguma termiņš beidzas"
           send_invite_email: "Saglabāt un nosūtīt e -pastu"
-          save_invite: "Saglabāt"
           cancel: "Atcelt"
-          invite_saved: "Uzaicinājums saglabāts."
         bulk_invite:
           success: "Fails veiksmīgi lejuplādēts, jums paziņos, kad process beidzies."
           error: "Atvainojiet, failam jābūt CSV formātā."
@@ -1923,6 +1920,8 @@ lv:
         top: "Vairāk svarīgu tēmu nav. "
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
     topic_bulk_actions:
+      dismiss:
+        name: "Nerādīt"
       close_topics:
         name: "Aizvērt"
         optional: (pēc izvēles)
@@ -2261,18 +2260,22 @@ lv:
         reply: "sākt rakstīt atbildi šim ierakstam"
         like: "patīk šis ieraksts"
         has_liked: "jums patika šis ieraksts"
+        undo_like_action: "Atcelt atzinību"
         undo_like: "atcelt atzinību"
         edit: "rediģēt šo ierakstu"
         edit_action: "Rediģēt"
         edit_anonymous: "Atvainojiet, bet jums jāienāk forumā, lai rediģētu šo ierakstu."
+        flag_action: "Sūdzība"
         flag: "privāti ziņot par šo ierakstu vai nosūtīt privātu paziņojumu par to"
         delete: "dzēst šo ierakstu"
         undelete: "atcelt šī ieraksta dzēšanu"
+        share_action: "Dalīties"
         share: "dalīties ar saiti uz šo ierakstu"
         more: "Vairāk"
         delete_replies:
           just_the_post: "Nē, tikai šo ierakstu"
         admin: "ieraksta administratora darbības"
+        admin_action: "Administrators"
         wiki: "Pārveidot par wiki ierakstu"
         unwiki: "Noņemt wiki statusu"
         convert_to_moderator: "Pievienot darbinieka krāsu"
@@ -3515,7 +3518,6 @@ lv:
         approve_bulk_success: "Visi izvēlētie lietotāji tika apstiprināti un informēti."
         time_read: "Kopējais lasīšanas laiks"
         anonymize: "Anonimizēt lietotāju (anonymize)"
-        anonymize_confirm: "Vai esi drošs ka vēlies anonimizēt šo kontu (anonymize)? Šis mainīs lietotājvārdu un e-pastu, un visu profila informāciju."
         anonymize_yes: "Jā, anonimizēt kontu. (anonymize)"
         anonymize_failed: "Radās problēma ar konta anonimizēšanu (anonymizing)."
         delete: "Dzēst lietotāju."
@@ -3781,7 +3783,6 @@ lv:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
       emoji:
         title: "Smaidiņi"
-        add: "Pievienot Jaunu Smaidiņu"
         name: "Nosaukums"
         group: "Grupa"
         image: "Attēls"
@@ -3815,12 +3816,13 @@ lv:
         post_title: "Ieraksts"
         category_id: "Kategorijas ID"
         category_title: "Kategorija"
+        user_title: "Lietotājs"
         username: "Lietotājvārds"
         delete_confirm: Vai tiešām vēlies dzēst šo ierakstu?
         form:
           label: "Jauns:"
-          add: "Pievienot"
-          filter: "Meklēt (URL)"
+          url: "URL"
+          save: "Saglabāt"
       reseed:
         modal:
           categories: "Sadaļas"

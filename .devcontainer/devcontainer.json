@@ -1,16 +1,36 @@
 {
   "name": "Discourse",
-  "image": "discourse/discourse_dev:release",
-  "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/var/www/discourse,type=bind",
-  "workspaceFolder": "/var/www/discourse",
-  "settings": {
-    "search.followSymlinks": false
-  },
-  "postStartCommand": "sudo /sbin/boot",
-  "extensions": ["rebornix.Ruby"],
-  "forwardPorts": [9292],
+  "image": "docker.io/discourse/discourse_dev:20241111-0710",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/discourse,type=bind",
+  "workspaceFolder": "/workspace/discourse",
+  "postStartCommand": "./.devcontainer/scripts/start.rb",
+  "forwardPorts": [
+    9292, // bin/unicorn
+    3000, // bin/rails s
+    4200, // ember-cli
+    8025, // mailhog
+    9229  // chrome remote debug
+  ],
   "remoteUser": "discourse",
   "remoteEnv": {
-    "DISCOURSE_DEV_HOSTS": ".githubpreview.dev"
+    "RAILS_DEVELOPMENT_HOSTS": ".app.github.dev",
+    "PGUSER": "discourse",
+    "SELENIUM_FORWARD_DEVTOOLS_TO_PORT": "9229",
+  },
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    "source=${localWorkspaceFolderBasename}-pg,target=/shared/postgres_data,type=volume",
+    "source=${localWorkspaceFolderBasename}-redis,target=/shared/redis,type=volume"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Shopify.ruby-lsp",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "lifeart.vscode-glimmer-syntax",
+        "typed-ember.glint-vscode"
+      ]
+    }
   }
 }

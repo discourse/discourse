@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DToggleSwitch extends Component {
   get computedLabel() {
     if (this.args.label) {
-      return I18n.t(this.args.label);
+      return i18n(this.args.label);
     }
     return this.args.translatedLabel;
   }

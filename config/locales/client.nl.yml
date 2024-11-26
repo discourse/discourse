@@ -1709,7 +1709,6 @@ nl:
       location: "Locatie"
       website: "Website"
       email_settings: "E-mailadres"
-      hide_profile_and_presence: "Mijn openbare profiel en aanwezigheidsfuncties verbergen"
       enable_physical_keyboard: "Ondersteuning voor fysiek toetsenbord op iPad inschakelen"
       text_size:
         title: "Tekstgrootte"
@@ -1827,7 +1826,6 @@ nl:
           success: "Uitnodigingslink gegenereerd!"
           error: "Er is een fout opgetreden bij het genereren van de uitnodigingslink"
         invite:
-          instructions: "Deel deze link om direct toegang te geven tot deze site:"
           expires_in_time: "Verloopt over %{time}"
           expired_at_time: "Verlopen om %{time}"
           copy_link: "Link kopiëren"
@@ -1844,9 +1842,8 @@ nl:
           expires_after: "Verloopt na"
           send_invite_email: "E-mail opslaan en verzenden"
           send_invite_email_instructions: "Beperk uitnodiging tot e-mail om een uitnodigings-e-mail te sturen"
-          save_invite: "Opslaan"
+          update_invite: "Bijwerken"
           cancel: "Annuleren"
-          invite_saved: "Uitnodiging opgeslagen."
         bulk_invite:
           none: "Geen uitnodigingen om weer te geven op deze pagina."
           text: "Bulkuitnodiging"
@@ -2960,6 +2957,8 @@ nl:
         bookmarks: "Er zijn verder geen topics met bladwijzers."
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
+      dismiss:
+        name: "Sluiten"
       close_topics:
         name: "Sluiten"
         note: "Opmerking"
@@ -3529,17 +3528,23 @@ nl:
       few_likes_left: "Bedankt voor je steun! Je kunt vandaag nog maar een paar likes uitdelen."
       controls:
         reply: "begin met opstellen van een antwoord op dit bericht"
+        like_action: "Leuk"
         like: "dit bericht liken"
         has_liked: "je hebt dit bericht geliket"
         read_indicator: "leden die dit bericht hebben gelezen"
+        undo_like_action: "Like ongedaan maken"
         undo_like: "like ongedaan maken"
         edit: "dit bericht bewerken"
         edit_action: "Bewerken"
         edit_anonymous: "Sorry, je moet aangemeld zijn om dit bericht te bewerken."
+        flag_action: "Markeren"
         flag: "geef dit topic een privémarkering of stuur een privébericht erover"
+        delete_action: "Bericht verwijderen"
         delete: "dit bericht verwijderen"
         undelete: "dit bericht herstellen"
+        share_action: "Delen"
         share: "deel een link naar dit bericht"
+        copy_action: "Link kopiëren"
         copy_title: "kopieer een link naar dit bericht naar het klembord"
         link_copied: "Link gekopieerd!"
         more: "Meer"
@@ -3553,6 +3558,7 @@ nl:
             other: "Ja, en alle %{count} antwoorden"
           just_the_post: "Nee, alleen dit bericht"
         admin: "berichtbeheeracties"
+        admin_action: "Beheerder"
         permanently_delete: "Permanent verwijderen"
         permanently_delete_confirmation: "Weet je zeker dat je dit bericht permanent wilt verwijderen? Je kunt het niet herstellen."
         wiki: "Wiki maken"
@@ -4731,6 +4737,7 @@ nl:
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
           previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
+          experimental: "Experimenteel"
         last_checked: "Laatst gecontroleerd"
         refresh_problems: "Vernieuwen"
         no_problems: "Er zijn geen problemen gevonden."
@@ -6265,7 +6272,6 @@ nl:
         time_read: "Leestijd"
         post_edits_count: "Berichtbewerkingen"
         anonymize: "Gebruiker anonimiseren"
-        anonymize_confirm: "Weet je ZEKER dat je dit account wilt anonimiseren? Hierdoor worden de gebruikersnaam en het e-mailadres gewijzigd en worden alle profielgegevens opnieuw ingesteld."
         anonymize_yes: "Ja, dit account anonimiseren"
         anonymize_failed: "Er is een probleem opgetreden bij het anonimiseren van het account."
         delete: "Gebruiker verwijderen"
@@ -6322,7 +6328,6 @@ nl:
         cant_delete_all_too_many_posts:
           one: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} bericht heeft geplaatst. (delete_all_posts_max)"
           other: "Kan niet alle berichten verwijderen, omdat de gebruiker meer dan %{count} berichten heeft geplaatst. (delete_all_posts_max)"
-        delete_confirm_title: "Weet je zeker dat je deze gebruiker wilt verwijderen? Dit is permanent!"
         delete_confirm: "Het verdient over het algemeen de voorkeur om gebruikers te anonimiseren in plaats van ze te verwijderen, om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd."
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
@@ -6675,9 +6680,6 @@ nl:
           grant_existing_holders: Extra badges toekennen aan bestaande badgehouders
       emoji:
         title: "Emoji"
-        help: "Voeg nieuwe emoji toe die voor iedereen beschikbaar is. Sleep meerdere bestanden tegelijk zonder een naam in te voeren om emoji's te maken op basis van hun bestandsnamen. De geselecteerde groep wordt gebruikt voor alle bestanden die tegelijk worden toegevoegd. Je kunt ook op 'Nieuwe emoji toevoegen' klikken om de bestandskiezer te openen."
-        add: "Nieuwe emoji toevoegen"
-        choose_files: "Bestanden kiezen"
         uploading: "Uploaden…"
         name: "Naam"
         group: "Groep"
@@ -6725,17 +6727,19 @@ nl:
         category_id: "Categorie-ID"
         category_title: "Categorie"
         tag_name: "Tagnaam"
+        tag_title: "Taggen"
         external_url: "Externe of relatieve URL"
         user_id: "Gebruikers-ID"
+        user_title: "Gebruiker"
         username: "Gebruikersnaam"
         destination: "Bestemming"
         copy_to_clipboard: "Permalink kopiëren naar klembord"
         delete_confirm: Weet je zeker dat je deze permalink wilt verwijderen?
-        no_permalinks: "Je hebt nog geen permanente links. Maak hierboven een nieuwe permanente link om hier een lijst met je permanente links te zien."
+        more_options: "Meer opties"
         form:
           label: "Nieuw:"
-          add: "Toevoegen"
-          filter: "Zoeken (URL of externe URL)"
+          url: "URL"
+          save: "Opslaan"
       reseed:
         action:
           label: "Tekst vervangen…"

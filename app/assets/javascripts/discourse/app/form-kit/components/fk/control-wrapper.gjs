@@ -6,7 +6,7 @@ import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
 import FKText from "discourse/form-kit/components/fk/text";
 import concatClass from "discourse/helpers/concat-class";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FKControlWrapper extends Component {
   constructor() {
@@ -44,10 +44,10 @@ export default class FKControlWrapper extends Component {
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
         (if this.error "has-error")
-        (if @field.disabled "is-disabled")
+        (if @disabled "is-disabled")
         (if (eq @format "full") "--full")
       }}
-      data-disabled={{@field.disabled}}
+      data-disabled={{@disabled}}
       data-name={{@field.name}}
       data-control-type={{this.controlType}}
     >
@@ -86,6 +86,7 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @selection={{@selection}}
+          @disabled={{@disabled}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if this.error "true"}}
@@ -96,7 +97,12 @@ export default class FKControlWrapper extends Component {
           {{yield components}}
         </@component>
 
-        <FKMeta @value={{@value}} @field={{@field}} @error={{this.error}} />
+        <FKMeta
+          @disabled={{@disabled}}
+          @value={{@value}}
+          @field={{@field}}
+          @error={{this.error}}
+        />
       </div>
     </div>
   </template>

@@ -5,7 +5,7 @@ import { classNameBindings } from "@ember-decorators/component";
 import { emojiUrlFor } from "discourse/lib/text";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {
@@ -138,7 +138,7 @@ export default class EmojiValueList extends Component {
   _validateInput(input) {
     if (!emojiUrlFor(input)) {
       this.setValidationMessage(
-        I18n.t("admin.site_settings.emoji_list.invalid_input")
+        i18n("admin.site_settings.emoji_list.invalid_input")
       );
       return false;
     }

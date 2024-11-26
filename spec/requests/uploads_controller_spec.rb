@@ -61,6 +61,21 @@ RSpec.describe UploadsController do
         expect(response.status).to eq 200
       end
 
+      it "accepts the type param but logs a deprecation message when used" do
+        allow(Discourse).to receive(:deprecate)
+        post "/uploads.json",
+             params: {
+               file: Rack::Test::UploadedFile.new(logo_file),
+               type: "avatar",
+             }
+        expect(response.status).to eq 200
+        expect(Discourse).to have_received(:deprecate).with(
+          "the :type param of `POST /uploads` is deprecated, use the :upload_type param instead",
+          since: "3.4",
+          drop_from: "3.5",
+        )
+      end
+
       it "is successful with an image" do
         post "/uploads.json", params: { file: logo, upload_type: "avatar" }
         expect(response.status).to eq 200
@@ -588,6 +603,16 @@ RSpec.describe UploadsController do
 
         expect(response.status).to eq(302)
         expect(response.redirect_url).to match("Amz-Expires")
+      end
+
+      it "returns signed url for legitimate request with no extension" do
+        upload.update!(extension: nil, url: upload.url.sub(".png", ""))
+        sign_in(user)
+        get secure_url
+
+        expect(response.status).to eq(302)
+        expect(response.redirect_url).to match("Amz-Expires")
+        expect(response.location).not_to include(".?")
       end
 
       it "should return secure uploads URL when looking up urls" do

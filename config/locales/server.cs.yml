@@ -588,6 +588,8 @@ cs:
   post:
     image_placeholder:
       broken: "Tento obrázek je rozbitý"
+    cannot_permanently_delete:
+      many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
     too_many_requests: "Tuto akci jste provedli příliš mnohokrát. Počkejte prosím %{time_left} , než to zkusíte znovu."
@@ -818,6 +820,7 @@ cs:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\n\\n%{message}\n"
     illegal:
+      description: "Toto téma vyžaduje pozornost redakce, protože se domnívám, že obsahuje nezákonný obsah."
       email_body: "%{link}\\n\\n%{message}\n"
   archetypes:
     regular:

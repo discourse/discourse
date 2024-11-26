@@ -1288,7 +1288,6 @@ id:
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
-    create_post_for_category_and_tag_changes: "Buat post tindakan kecil saat kategori atau tag topik berubah"
     automatically_clean_unused_tags: "Secara otomatis menghapus tag yang tidak digunakan pada topik atau pesan pribadi apa pun setiap hari."
     watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"

@@ -1680,7 +1680,6 @@ nb_NO:
       location: "Sted"
       website: "Nettsted"
       email_settings: "E-post"
-      hide_profile_and_presence: "Skjul min offentlige profil og tilstedeværelsesfunksjoner"
       enable_physical_keyboard: "Aktiver fysisk tastaturstøtte på iPad"
       text_size:
         title: "Tekststørrelse"
@@ -1797,7 +1796,6 @@ nb_NO:
           success: "Invitasjonslenke har blitt generert!"
           error: "Det oppstod en feil under generering av invitasjonslenke"
         invite:
-          instructions: "Del denne lenken for å gi tilgang til dette nettstedet umiddelbart:"
           expires_in_time: "Utløper om %{time}"
           expired_at_time: "Utløpt kl. %{time}"
           link_copied: "Lenk kopiert!"
@@ -1813,9 +1811,8 @@ nb_NO:
           expires_after: "Utløper etter"
           send_invite_email: "Lagre og send e-post"
           send_invite_email_instructions: "Begrens invitasjon til e-post for å sende en invitasjon via e-post"
-          save_invite: "Lagre"
+          update_invite: "Oppdater"
           cancel: "Avbryt"
-          invite_saved: "Invitasjon lagret."
         bulk_invite:
           none: "Ingen invitasjoner til å vise på denne siden."
           text: "Bulk invitasjon"
@@ -2928,6 +2925,8 @@ nb_NO:
         bookmarks: "Det finnes ingen flere bokmerkede emner."
         filter: "Det finnes ikke flere emner."
     topic_bulk_actions:
+      dismiss:
+        name: "Avslå"
       close_topics:
         name: "Lukk"
         note: "Merk"
@@ -3492,16 +3491,20 @@ nb_NO:
       few_likes_left: "Takk for at du gir likeklikk! Du vil nå grensen for antall ting du kan like i dag ganske snart."
       controls:
         reply: "begynn å skrive et svar til dette innlegget"
+        like_action: "Lik"
         like: "lik dette innlegget"
         has_liked: "du liker dette innlegget"
         read_indicator: "medlemmer som leser dette innlegget"
+        undo_like_action: "Angre liker"
         undo_like: "angre liker"
         edit: "rediger dette innlegget"
         edit_action: "Rediger"
         edit_anonymous: "Beklager, du må være innlogget for å endre dette innlegget."
+        flag_action: "Flagg"
         flag: "rapporter dette innlegget privat eller send et privat varsel om det"
         delete: "slett dette innlegget"
         undelete: "gjenopprett dette innlegget"
+        share_action: "Del"
         share: "del en lenke til dette innlegget"
         copy_title: "kopier en lenke til dette innlegget til utklippstavlen"
         link_copied: "Lenk kopiert!"
@@ -3516,6 +3519,7 @@ nb_NO:
             other: "Ja, og alle %{count} svar"
           just_the_post: "Nei, kun dette innlegget"
         admin: "Innleggsadministrasjon"
+        admin_action: "Admin"
         permanently_delete: "Slett permanent"
         permanently_delete_confirmation: "Er du sikker på at du vil slette dette innlegget permanent? Du vil ikke kunne gjenopprette det."
         wiki: "Opprett wiki"
@@ -5373,7 +5377,6 @@ nb_NO:
         approve_bulk_success: "Suksess! Alle valgte brukere har blitt godkjent og varslet."
         time_read: "Lesetid"
         anonymize: "Anonymiser Bruker"
-        anonymize_confirm: "Ønsker du virkelig å anonymisere denne kontoen? Dette vil endre brukernavn og e-post samt tilbakestille kontoinnstillinger."
         anonymize_yes: "Ja, anonymiser denne kontoen"
         anonymize_failed: "Det oppstod en feil ved anonymisering av denne kontoen."
         delete: "Slett bruker"
@@ -5644,7 +5647,6 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        add: "Legg til ny Emoji"
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
@@ -5679,12 +5681,14 @@ nb_NO:
         post_title: "Innlegg"
         category_id: "Kategori-ID"
         category_title: "Kategori"
+        user_title: "Bruker"
         username: "Brukernavn"
         delete_confirm: Er du sikker på at du vil slette denne permalenken?
+        more_options: "Flere valg"
         form:
           label: "Ny:"
-          add: "Legg til"
-          filter: "Søk (URL eller ekstern URL)"
+          url: "URL"
+          save: "Lagre"
       reseed:
         modal:
           categories: "Kategorier"

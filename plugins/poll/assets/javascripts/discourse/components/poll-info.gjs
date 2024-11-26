@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { relativeAge } from "discourse/lib/formatter";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const ON_VOTE = "on_vote";
 const ON_CLOSE = "on_close";
@@ -18,13 +18,13 @@ export default class PollInfoComponent extends Component {
 
     if (max > 0) {
       if (min === max && min > 1) {
-        return htmlSafe(I18n.t("poll.multiple.help.x_options", { count: min }));
+        return htmlSafe(i18n("poll.multiple.help.x_options", { count: min }));
       }
 
       if (min > 1) {
         if (max < optionsCount) {
           return htmlSafe(
-            I18n.t("poll.multiple.help.between_min_and_max_options", {
+            i18n("poll.multiple.help.between_min_and_max_options", {
               min,
               max,
             })
@@ -32,20 +32,20 @@ export default class PollInfoComponent extends Component {
         }
 
         return htmlSafe(
-          I18n.t("poll.multiple.help.at_least_min_options", { count: min })
+          i18n("poll.multiple.help.at_least_min_options", { count: min })
         );
       }
 
       if (max <= optionsCount) {
         return htmlSafe(
-          I18n.t("poll.multiple.help.up_to_max_options", { count: max })
+          i18n("poll.multiple.help.up_to_max_options", { count: max })
         );
       }
     }
   }
 
   get votersLabel() {
-    return I18n.t("poll.voters", { count: this.args.voters });
+    return i18n("poll.voters", { count: this.args.voters });
   }
 
   get showTotalVotes() {
@@ -59,15 +59,15 @@ export default class PollInfoComponent extends Component {
   }
 
   get totalVotesLabel() {
-    return I18n.t("poll.total_votes", { count: this.totalVotes });
+    return i18n("poll.total_votes", { count: this.totalVotes });
   }
 
   get automaticCloseAgeLabel() {
-    return I18n.t("poll.automatic_close.age", this.age);
+    return i18n("poll.automatic_close.age", this.age);
   }
 
   get automaticCloseClosesInLabel() {
-    return I18n.t("poll.automatic_close.closes_in", this.timeLeft);
+    return i18n("poll.automatic_close.closes_in", this.timeLeft);
   }
 
   get showMultipleHelpText() {
@@ -110,7 +110,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsOnVoteTitle() {
-    return htmlSafe(I18n.t("poll.results.vote.title"));
+    return htmlSafe(i18n("poll.results.vote.title"));
   }
 
   get resultsOnClose() {
@@ -118,7 +118,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsOnCloseTitle() {
-    return htmlSafe(I18n.t("poll.results.closed.title"));
+    return htmlSafe(i18n("poll.results.closed.title"));
   }
 
   get resultsStaffOnly() {
@@ -129,7 +129,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get resultsStaffOnlyTitle() {
-    return htmlSafe(I18n.t("poll.results.staff.title"));
+    return htmlSafe(i18n("poll.results.staff.title"));
   }
 
   get publicTitle() {
@@ -142,7 +142,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get publicTitleLabel() {
-    return htmlSafe(I18n.t("poll.public.title"));
+    return htmlSafe(i18n("poll.public.title"));
   }
 
   get showInstructionsSection() {
@@ -155,6 +155,7 @@ export default class PollInfoComponent extends Component {
       this.publicTitle
     );
   }
+
   <template>
     <div class="poll-info">
       <div class="poll-info_counts">

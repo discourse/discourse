@@ -4,7 +4,7 @@ import { formatUsername } from "discourse/lib/utilities";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
@@ -77,7 +77,7 @@ export default createWidget("poster-name", {
   posterGlyph(attrs) {
     if (attrs.moderator || attrs.groupModerator) {
       return iconNode("shield-halved", {
-        title: I18n.t("user.moderator_tooltip"),
+        title: i18n("user.moderator_tooltip"),
       });
     }
   },

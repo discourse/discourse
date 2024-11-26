@@ -5,7 +5,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { replaceIcon } from "discourse-common/lib/icon-library";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import ChatHeaderIcon from "../components/chat/header/icon";
@@ -36,11 +36,11 @@ class ChatSetupInit {
           return {
             icon: "comment-dots",
             class: "chat-messages",
-            activityText: I18n.t("about.activities.chat_messages", {
+            activityText: i18n("about.activities.chat_messages", {
               count,
               formatted_number: number(count),
             }),
-            period: I18n.t("about.activities.periods.last_7_days"),
+            period: i18n("about.activities.periods.last_7_days"),
           };
         }
       });
@@ -132,10 +132,10 @@ class ChatSetupInit {
           if (currentUserTimezone) {
             dateTimeEl.innerText = moment
               .tz(dateTimeRaw, currentUserTimezone)
-              .format(I18n.t("dates.long_no_year"));
+              .format(i18n("dates.long_no_year"));
           } else {
             dateTimeEl.innerText = moment(dateTimeRaw).format(
-              I18n.t("dates.long_no_year")
+              i18n("dates.long_no_year")
             );
           }
 

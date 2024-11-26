@@ -28,6 +28,14 @@ export default class PollBreakdownChart extends Component {
     this._optionToSlice = {};
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this._chart) {
+      this._chart.destroy();
+    }
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 
@@ -41,14 +49,6 @@ export default class PollBreakdownChart extends Component {
     if (this._chart) {
       this._updateDisplayMode();
       this._updateHighlight();
-    }
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    if (this._chart) {
-      this._chart.destroy();
     }
   }
 

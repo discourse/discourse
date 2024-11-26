@@ -8,7 +8,7 @@ import {
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Quote button - logged in", function (needs) {
   needs.user();
@@ -45,10 +45,10 @@ acceptance("Topic - Quote button - logged in", function (needs) {
 
     assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
       .exists("it includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
+      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
       .exists("it includes the email share button");
   });
 
@@ -103,10 +103,10 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
 
     assert.ok(queryAll(".quote-sharing"), "it shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
       .exists("it includes the twitter share button");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.email")}']`)
+      .dom(`.quote-sharing .btn[title='${i18n("share.email")}']`)
       .exists("it includes the email share button");
     assert
       .dom(".insert-quote")
@@ -121,7 +121,7 @@ acceptance("Topic - Quote button - anonymous", function (needs) {
 
     assert.dom(".quote-sharing").exists("shows the quote sharing options");
     assert
-      .dom(`.quote-sharing .btn[title='${I18n.t("share.twitter")}']`)
+      .dom(`.quote-sharing .btn[title='${i18n("share.twitter")}']`)
       .exists("it includes the twitter share button");
     assert
       .dom(".quote-share-label")

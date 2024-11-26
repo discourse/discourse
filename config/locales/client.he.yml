@@ -1367,9 +1367,9 @@ he:
       profile_hidden: "הפרופיל הציבורי של משתמש זה מוסתר"
       login_to_view_profile: "יש להיכנס כדי לצפות בפרופילי משתמש"
       inactive_user: "משתמש זה אינו פעיל עוד."
-      expand_profile: "הרחב"
+      expand_profile: "הרחבה"
       sr_expand_profile: "הרחבת פרטי הפרופיל"
-      collapse_profile: "הקטן"
+      collapse_profile: "צמצום"
       sr_collapse_profile: "צמצום פרטי הפרופיל"
       bookmarks: "סימניות"
       bio: "אודותיי"
@@ -1388,7 +1388,7 @@ he:
         enable: "הפעלת התראות"
         each_browser_note: "הערה: עליך לשנות הגדרה זו בכל דפדפן שמשמש אותך. כל ההודעות יושבתו אם בחרת להשהות התראות מתפריט המשתמש, ללא קשר להגדרה זו."
         consent_prompt: "לקבל התראות חיות כשמתקבלות תגובות לפוסטים שלך?"
-      dismiss: "דחה"
+      dismiss: "התעלמות"
       dismiss_notifications: "להתעלם מהכול"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       dismiss_bookmarks_tooltip: "סימון כל תזכורות הסימניות כנקראו"
@@ -1571,6 +1571,78 @@ he:
         warnings: "אזהרות רשמיות"
         read_more_in_group: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב־%{groupLink}."
         read_more: "מעניין אותך לקרוא עוד? אפשר לעיין בהודעות אחרות ב<a href='%{basePath}/u/%{username}/messages'>הודעות הפרטיות</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other { ועוד <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/group/{groupName}/new">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+                other {נותרו <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { ועוד <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two { ועוד <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {  ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other { ועוד <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> שלא נקראה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> שלא נקראו, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {נותרה <a href="{basePath}/u/{username}/messages/unread">הודעה</a> חדשה, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   two {נותרו <a href="{basePath}/u/{username}/messages/unread">שתי הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                   many {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+                other {נותרו <a href="{basePath}/u/{username}/messages/unread"># הודעות</a> חדשות, או שאפשר לעיין בהודעות אחרות דרך <a href="{basePath}/u/{username}/messages">הודעות פרטיות</a> אחרות}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "חשבון"
         security: "אבטחה"
@@ -1844,7 +1916,7 @@ he:
       location: "מיקום"
       website: "אתר"
       email_settings: "דואר אלקטרוני"
-      hide_profile_and_presence: "הסתר את מאפייני הפרופיל והנוכחות שלי"
+      hide_profile: "הסתרת הפרופיל הציבורי שלי"
       enable_physical_keyboard: "הפעלת תמיכה במקלדת פיזית ב־iPad"
       text_size:
         title: "גודל טקסט"
@@ -1967,7 +2039,6 @@ he:
         invite:
           new_title: "הזמנת חברים"
           edit_title: "עריכת הזמנה"
-          instructions: "ניתן לשתף את הקישור הזה באופן מיידי כדי להעניק גישה לאתר:"
           expires_in_time: "תפוג בעוד %{time}"
           expired_at_time: "פגה ב־%{time}"
           create_link_to_invite: "יצירת קישור שאפשר לשתף כדי להעניק גישה מיידית לאתר הזה."
@@ -2003,10 +2074,13 @@ he:
           custom_message_placeholder: "הוספת מסר אישי להזמנה שלך"
           send_invite_email: "לשמור ולשלח דוא״ל"
           send_invite_email_instructions: "הגבלת ההזמנה לדוא״ל כדי לשלוח הודעת הזמנה"
-          save_invite: "שמירה"
+          update_invite: "עדכון"
+          update_invite_and_send_email: "עדכון ושליחת דוא״ל"
           cancel: "ביטול"
           create_link: "יצירת קישור"
-          invite_saved: "ההזמנה נשמרה."
+          create_link_and_send_email: "יצירת קישור ושליחת דוא״ל"
+          invite_saved_without_sending_email: "הזמנה נשלחה. יש להעתיק את הקישור שלהלן ולשתף אותו כדי להעניק גישה מיידית לאתר הזה."
+          invite_saved_with_sending_email: "הודעת הזמנה נשלחה בדוא״ל. אפשר גם להעתיק את הקישור להלן ולשתף אותו כדי להעניק גישה מיידית לאתר."
         bulk_invite:
           none: "אין הזמנות להצגה בעמוד הזה."
           text: "הזמנה כמותית"
@@ -2151,6 +2225,10 @@ he:
       what_are_you_doing: "מה מעלליך?"
       pause_notifications: "השהיית התראות"
       remove_status: "הסרת מצב"
+    presence_toggle:
+      online: "מקוון"
+      offline: "מנותק"
+      title: "החלפת מצבי יכולות נוכחות"
     user_tips:
       button: "הבנתי!"
       skip: "דילוג על עצות"
@@ -2507,7 +2585,6 @@ he:
       facebook_messenger: "Facebook Messenger"
     category_page_style:
       categories_only: "קטגוריות בלבד"
-      categories_only_optimized: "קטגוריות בלבד (ממוטב)"
       categories_with_featured_topics: "קטגוריות עם נושאים מומלצים"
       categories_and_latest_topics: "קטגוריות ונושאים אחרונים"
       categories_and_latest_topics_created_date: "קטגוריות ונושאים עדכניים (מיון לפי תאריך יצירת הנושא)"
@@ -2890,7 +2967,7 @@ he:
             two: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
             many: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
             other: "להמשיך? יש לך %{count} הודעות פרטיות שלא נקראו."
-        dismiss: "דחה"
+        dismiss: "התעלמות"
         cancel: "ביטול"
       group_message_summary:
         one: "הודעה %{count} בתיבת ה%{group_name} שלך"
@@ -3267,6 +3344,8 @@ he:
         bookmarks: "אין עוד סימניות לנושאים."
         filter: "אין נושאים נוספים."
     topic_bulk_actions:
+      dismiss:
+        name: "התעלמות"
       close_topics:
         name: "סגירה"
         note: "הערה"
@@ -3907,17 +3986,24 @@ he:
       few_likes_left: "תודה על כל האהבה! נותרו לך סימוני לייק מועטים להיום."
       controls:
         reply: "התחילו לכתוב תגובה לפוסט זה"
+        like_action: "לייק"
         like: "תנו לייק לפוסט זה"
         has_liked: "אהבת פוסט זה"
         read_indicator: "חברים שקוראים את הפוסט הזה"
+        undo_like_action: "בטל לייק"
         undo_like: "בטל 'אהוב'"
         edit: "עירכו פוסט זה"
         edit_action: "עריכה"
         edit_anonymous: "עליך להיכנס כדי לערוך פוסט זה, עמך הסליחה."
+        flag_action: "סימון"
         flag: "סימון הנושא הזה להגברת תשומת הלב או לשלוח התראה פרטית לגביו"
+        delete_action: "מחיקת פוסט"
         delete: "מחק פוסט זה"
+        undelete_action: "שחזור פוסט ממחיקה"
         undelete: "שחזר פוסט זה"
+        share_action: "שיתוף"
         share: "שיתוף קישור לפוסט זה"
+        copy_action: "העתקת קישור"
         copy_title: "העתקת קישור לפוסט זה ללוח הגזירים"
         link_copied: "הקישור הועתק!"
         more: "עוד"
@@ -3935,6 +4021,7 @@ he:
             other: "כן, וכל %{count}התגובות."
           just_the_post: "לא, רק את הפוסט"
         admin: "פעולות ניהול של הפוסט"
+        admin_action: "הנהלה"
         permanently_delete: "למחוק לצמיתות"
         permanently_delete_confirmation: "למחוק את הפוסט הזה לצמיתות? לא תהיה אפשרות לשחזר אותו."
         wiki: "יצירת wiki"
@@ -4313,7 +4400,7 @@ he:
       predicted_views: "צפיות חזויות"
       so_far: (עד כה)
       read: קריאה
-      minutes: מזערי
+      minutes: דק׳
     post_links:
       about: "הרחיבו לינקים נוספים לפוסט זה"
       title:
@@ -4541,6 +4628,7 @@ he:
       shortcut_delimiter_or: "%{shortcut1} או %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "קיצורי מקלדת"
       short_title: "קיצורי דרך"
       jump_to:
@@ -5215,6 +5303,7 @@ he:
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
           previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "מידע נוסף…"
+          experimental: "ניסיוני"
           experiment_enabled: "הפעלת את היכולת הניסיונית."
           experiment_disabled: "השבתת את היכולת הניסיונית."
           experiment_toggled_too_fast: "החלפת את המצב של היכולת הניסיונית מהר מדי. נא להמתין כמה שניות בטרם ניסיון חוזר."
@@ -6842,8 +6931,9 @@ he:
         time_read: "זמן קריאה"
         post_edits_count: "עריכות של פוסטים"
         anonymize: "הפיכת משתמשים לאלמוניים"
-        anonymize_confirm: "<b>באמת<\\b> להפוך חשבון זה לאלמוני? פעולה זו תשנה את שם המשתמש ואת כתובת הדוא״ל ותאפס את כל נתוני הפרופיל."
+        anonymize_confirm: "להפוך חשבון זה לאלמוני? פעולה זו תשנה את שם המשתמש ואת כתובת הדוא״ל ותאפס את כל נתוני הפרופיל."
         delete_associated_accounts_confirm: "למחוק את החשבונות המשויכים מהחשבון הזה? המשתמש לא יוכל להיכנס או כתובת הדוא״ל שלו הוחלפה."
+        disable_second_factor_confirm: "להשבית אימות דו־שלבי לחשבון הזה?"
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
         anonymize_failed: "אירעה תקלה בהפיכת חשבון זה לאלמוני."
         delete: "מחיקת משתמש"
@@ -7280,9 +7370,7 @@ he:
           grant_existing_holders: הענקת עיטורים נוספים למחזיקים בעיטורים קיימים
       emoji:
         title: "אמוג׳י"
-        help: "ניתן להוסיף אמוג׳י שיהיו זמינים לכולם. גרירה של מספר קבצים בבת אחת מבלי למלא את שמם תיצור אמוג׳ים לפי שם הקובץ שלהם. הקבוצה הנבחרת תשמש את כל הקבצים שנוספו בו־זמנית. אפשר ללחוץ על ‚הוספת אמוג׳י חדש’ כדי לפתוח את בוחר הקבצים."
-        add: "הוספת אמוג׳י חדש"
-        choose_files: "בחירת קבצים"
+        add: "הוספת אמוג׳י"
         uploading: "בהליכי העלאה…"
         name: "שם"
         group: "קבוצה"
@@ -7331,17 +7419,26 @@ he:
         category_id: "מזהה לקטגוריה"
         category_title: "קטגוריה"
         tag_name: "שם תגית"
+        tag_title: "תגית"
         external_url: "כתובת חיצונית או יחסית"
         user_id: "מזהה משתמש"
+        user_title: "משתמש"
         username: "שם משתמש"
         destination: "יעד"
         copy_to_clipboard: "העתקת קישור קבוע ללוח"
         delete_confirm: ' להסיר את הקישור הקבוע?'
-        no_permalinks: "עדיין אין לך קישורים קבועים. יש ליצור קישור קבוע חדש למעלה כדי להתחיל לראות רשימה של הקישורים הקבועים שלך כאן."
+        add: "הוספת קישור קבוע"
+        back: "חזרה לקישורים הקבועים"
+        more_options: "אפשרויות נוספות"
+        copy_success: "קישור קבוע הועתק ללוח הגזירים"
         form:
           label: "חדש:"
-          add: "הוספה"
-          filter: "חיפוש (כתובת או כתובת חיצונית)"
+          add_header: "הוספת קישור קבוע"
+          edit_header: "עריכת קישור קבוע"
+          filter: "כתובת לחיפוש או כתובת יעד"
+          url: "כתובת"
+          permalink_type: "סוג קישור קבוע"
+          save: "שמירה"
       reseed:
         action:
           label: "החלפת טקסט…"

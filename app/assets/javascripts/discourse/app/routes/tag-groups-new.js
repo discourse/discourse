@@ -1,6 +1,6 @@
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TagGroupsNew extends DiscourseRoute {
   @service router;
@@ -13,7 +13,7 @@ export default class TagGroupsNew extends DiscourseRoute {
 
   model() {
     return this.store.createRecord("tagGroup", {
-      name: I18n.t("tagging.groups.new_name"),
+      name: i18n("tagging.groups.new_name"),
     });
   }
 }

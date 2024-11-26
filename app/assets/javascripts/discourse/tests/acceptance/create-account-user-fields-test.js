@@ -3,7 +3,7 @@ import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const CUSTOM_VALIDATION_REASON = "bad choice";
 
@@ -61,7 +61,7 @@ acceptance("Create Account - User Fields", function (needs) {
     await click(".d-modal__footer .btn-primary");
     assert
       .dom("#account-email-validation")
-      .hasText(I18n.t("user.email.required"));
+      .hasText(i18n("user.email.required"));
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
@@ -88,7 +88,7 @@ acceptance("Create Account - User Fields", function (needs) {
 
     assert
       .dom("#account-email-validation")
-      .hasText(I18n.t("user.email.required"), "hitting Enter triggers action");
+      .hasText(i18n("user.email.required"), "hitting Enter triggers action");
   });
 
   test("shows validation error for user fields", async function (assert) {

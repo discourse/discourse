@@ -47,9 +47,9 @@ module ServiceMatchers
       set_unexpected_result
       message =
         if !step_exists?
-          "Expected #{type} '#{name}' (key: '#{step}') was not found in the result object."
+          step_not_existing_message
         elsif !step_failed?
-          "Expected #{type} '#{name}' (key: '#{step}') to fail but it succeeded."
+          step_failed_message
         else
           "expected the service to fail but it succeeded."
         end
@@ -58,8 +58,7 @@ module ServiceMatchers
 
     def failure_message_when_negated
       set_unexpected_result
-      message = "Expected #{type} '#{name}' (key: '#{step}') to succeed but it failed."
-      error_message_with_inspection(message)
+      error_message_with_inspection(negated_message)
     end
 
     def description
@@ -97,6 +96,18 @@ module ServiceMatchers
       return unless result[step]
       result[step]["spec.unexpected_result"] = true
     end
+
+    def step_not_existing_message
+      "Expected #{type} '#{name}' (key: '#{step}') was not found in the result object."
+    end
+
+    def step_failed_message
+      "Expected #{type} '#{name}' (key: '#{step}') to fail but it succeeded."
+    end
+
+    def negated_message
+      "Expected #{type} '#{name}' (key: '#{step}') to succeed but it failed."
+    end
   end
 
   class FailContract < FailStep
@@ -133,6 +144,46 @@ module ServiceMatchers
     end
   end
 
+  class FailWithException < FailStep
+    attr_reader :exception
+
+    def initialize(exception)
+      @exception = exception
+      @name = "default"
+    end
+
+    def type
+      "try"
+    end
+
+    def description
+      "fail with an exception (#{exception})"
+    end
+
+    def step_failed?
+      super && result[step].exception.is_a?(exception)
+    end
+
+    def step_not_existing_message
+      "Expected try block (key: '#{step}') was not found in the result object."
+    end
+
+    def step_failed_message
+      message =
+        "Expected try block (key: '#{step}') to fail with an exception of type '#{exception}'"
+      message +=
+        if result[step].exception.blank?
+          " but it succeeded."
+        else
+          " but it failed with an exception of type '#{result[step].exception.class}'"
+        end
+    end
+
+    def negated_message
+      "Expected try block (key: '#{step}') to succeed but it failed."
+    end
+  end
+
   def fail_a_policy(name)
     FailPolicy.new(name)
   end
@@ -147,6 +198,10 @@ module ServiceMatchers
 
   def fail_with_an_invalid_model(name = "model")
     FailWithInvalidModel.new(name)
+  end
+
+  def fail_with_exception(exception = StandardError)
+    FailWithException.new(exception)
   end
 
   def fail_a_step(name = "model")

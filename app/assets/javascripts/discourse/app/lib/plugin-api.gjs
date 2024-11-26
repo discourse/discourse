@@ -293,6 +293,19 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -330,6 +343,19 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -2273,6 +2299,7 @@ class PluginApi {
   addSaveableUserField(fieldName) {
     addSaveableUserField(fieldName);
   }
+
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
@@ -3362,7 +3389,6 @@ class PluginApi {
     registeredTabs.push(tab);
   }
 
-  // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3436,11 +3462,12 @@ function getPluginApi(version) {
 }
 
 /**
- * withPluginApi(version, apiCodeCallback, opts)
+ * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
  *
- * Helper to version our client side plugin API. Pass the version of the API that your
- * plugin is coded against. If that API is available, the `apiCodeCallback` function will
- * be called with the `PluginApi` object.
+ * @param {number} version - The version of the API that the plugin is coded against.
+ * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {object} [opts] - Optional additional options to pass to the callback function.
+ * @returns {*} The result of the `callback` function, if executed
  */
 export function withPluginApi(version, apiCodeCallback, opts) {
   opts = opts || {};

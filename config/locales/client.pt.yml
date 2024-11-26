@@ -1428,7 +1428,6 @@ pt:
       location: "Localização"
       website: "Site da Web"
       email_settings: "E-mail"
-      hide_profile_and_presence: "Esconder o meu perfil público e a funcionalidade de presença"
       enable_physical_keyboard: "Ativar suporte para teclado físico no iPad"
       text_size:
         title: "Tamanho do Texto"
@@ -1540,7 +1539,6 @@ pt:
           success: "Hiperligação do convite gerada com sucesso!"
           error: "Ocorreu um erro ao gerar o Link de Convite"
         invite:
-          instructions: "Compartilhe este link para conceder acesso instantâneo a este site:"
           expires_in_time: "Expira em %{time}"
           expired_at_time: "Expirou em %{time}"
           copy_link: "Copiar link"
@@ -1551,9 +1549,8 @@ pt:
           add_to_groups: "Adicionar aos grupos"
           expires_after: "Expira após"
           send_invite_email: "Guardar e Enviar E-mail"
-          save_invite: "Guardar"
+          update_invite: "Atualização"
           cancel: "Cancelar"
-          invite_saved: "Convite salvo."
         bulk_invite:
           none: "Sem convites para exibir nesta página."
           text: "Convite em massa"
@@ -2368,6 +2365,8 @@ pt:
         top: "Não existem mais tópicos recentes."
         bookmarks: "Não há mais tópicos marcados."
     topic_bulk_actions:
+      dismiss:
+        name: "Marcar Visto"
       close_topics:
         name: "Fechar"
         optional: (opcional)
@@ -2823,17 +2822,22 @@ pt:
       few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas um gostos para hoje."
       controls:
         reply: "começar a compor uma resposta a este tópico"
+        like_action: "Gostar"
         like: "gostar desta mensagem"
         has_liked: "gostou desta mensagem"
         read_indicator: "membros que leram esta publicação"
+        undo_like_action: "Retirar gosto"
         undo_like: "desfazer gosto"
         edit: "editar esta publicação"
         edit_action: "Editar"
         edit_anonymous: "Pedimos desculpa, mas necessita de ter sessão iniciada para editar esta publicação."
+        flag_action: "Denunciar"
         flag: "sinalizar privadamente esta mensagem para moderação ou enviar uma notificação privada sobre a mesma"
         delete: "eliminar esta publicação"
         undelete: "restaurar esta mensagem"
+        share_action: "Partilhar"
         share: "partilhar uma ligação a esta publicação"
+        copy_action: "Copiar link"
         more: "Mais"
         delete_replies:
           confirm: "Deseja também eliminar as respostas a esta publicação?"
@@ -2845,6 +2849,7 @@ pt:
             other: "Sim, e todas as %{count} respostas"
           just_the_post: "Não, apenas esta mensagem"
         admin: "ações administrativas de publicação"
+        admin_action: "Administração"
         permanently_delete: "Excluir Permanentemente"
         wiki: "Fazer Wiki"
         unwiki: "Remover Wiki"
@@ -4578,7 +4583,6 @@ pt:
         approve_bulk_success: "Sucesso! Todos os utilizadores selecionados foram aprovados e notificados."
         time_read: "Tempo de leitura"
         anonymize: "Tornar utilizador anónimo"
-        anonymize_confirm: "Tem a CERTEZA que deseja tornar esta conta anónima? Isto irá alterar o nome de utilizador e email e repor todas as informações de perfil."
         anonymize_yes: "Sim, tornar esta conta anónima"
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."
         delete: "Eliminar Utilizador"
@@ -4842,7 +4846,6 @@ pt:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        add: "Adicionar Novo Emoji"
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"
@@ -4877,12 +4880,13 @@ pt:
         post_title: "Mensagem"
         category_id: "ID da Categoria"
         category_title: "Categoria"
+        user_title: "Utilizador"
         username: "Nome de Utilizador"
         delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"
-          add: "Adicionar"
-          filter: "Pesquisar (URL ou URL Externo)"
+          url: "URL"
+          save: "Guardar"
       reseed:
         modal:
           categories: "Categorias"

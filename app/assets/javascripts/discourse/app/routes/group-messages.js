@@ -1,13 +1,13 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupMessages extends DiscourseRoute {
   @service router;
 
   titleToken() {
-    return I18n.t("groups.messages");
+    return i18n("groups.messages");
   }
 
   model() {

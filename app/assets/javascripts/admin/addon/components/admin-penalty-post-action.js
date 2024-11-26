@@ -4,7 +4,7 @@ import { equal } from "@ember/object/computed";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const ACTIONS = ["delete", "delete_replies", "edit", "none"];
 
@@ -17,7 +17,7 @@ export default class AdminPenaltyPostAction extends Component {
   @discourseComputed
   penaltyActions() {
     return ACTIONS.map((id) => {
-      return { id, name: I18n.t(`admin.user.penalty_post_${id}`) };
+      return { id, name: i18n(`admin.user.penalty_post_${id}`) };
     });
   }
 

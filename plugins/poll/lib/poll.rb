@@ -17,6 +17,12 @@ class DiscoursePoll::Poll
         if poll.ranked_choice?
           options = options.values.map { |hash| hash }
           options.select! { |o| available_options.include?(o[:digest]) }
+
+          if options.all? { |o| o[:rank] == "0" }
+            raise DiscoursePoll::Error.new I18n.t(
+                                             "poll.requires_that_at_least_one_option_is_ranked",
+                                           )
+          end
         else
           options.select! { |o| available_options.include?(o) }
         end

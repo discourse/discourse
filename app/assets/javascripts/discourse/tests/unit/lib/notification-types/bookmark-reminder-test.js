@@ -5,7 +5,7 @@ import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -47,7 +47,7 @@ module("Unit | Notification Types | bookmark-reminder", function (hooks) {
     );
     assert.strictEqual(
       director.linkTitle,
-      I18n.t("notifications.titles.bookmark_reminder_with_name", {
+      i18n("notifications.titles.bookmark_reminder_with_name", {
         name: "My awesome bookmark",
       }),
       "content includes the bookmark name when the bookmark has a name"

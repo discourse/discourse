@@ -116,6 +116,49 @@ describe "Admin About Config Area Page", type: :system do
         expect(config_area.general_settings_section).to have_saved_successfully
         expect(SiteSetting.about_banner_image).to eq(nil)
       end
+
+      it "can upload an image using keyboard nav" do
+        config_area.visit
+
+        image_file = file_from_fixtures("logo.png", "images")
+        config_area.general_settings_section.banner_image_uploader.select_image_with_keyboard(
+          image_file.path,
+        )
+
+        expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
+      end
+
+      it "can remove the uploaded image using keyboard nav" do
+        SiteSetting.about_banner_image = image_upload
+
+        config_area.visit
+
+        config_area.general_settings_section.banner_image_uploader.remove_image_with_keyboard
+
+        config_area.general_settings_section.submit
+        expect(config_area.general_settings_section).to have_saved_successfully
+        expect(SiteSetting.about_banner_image).to eq(nil)
+      end
+
+      context "when login_required is true" do
+        before { SiteSetting.login_required = true }
+
+        it "doesn't mark the banner image upload as secure" do
+          setup_or_skip_s3_system_test(enable_secure_uploads: true)
+
+          config_area.visit
+
+          image_file = file_from_fixtures("logo.png", "images")
+          config_area.general_settings_section.banner_image_uploader.select_image(image_file.path)
+          expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
+
+          config_area.general_settings_section.submit
+
+          expect(config_area.general_settings_section).to have_saved_successfully
+
+          expect(SiteSetting.about_banner_image.secure).to eq(false)
+        end
+      end
     end
   end
 

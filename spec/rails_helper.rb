@@ -291,6 +291,7 @@ RSpec.configure do |config|
 
     DiscoursePluginRegistry.reset! if ENV["LOAD_PLUGINS"] != "1"
     Discourse.current_user_provider = TestCurrentUserProvider
+    Discourse::Application.load_tasks
 
     SiteSetting.refresh!
 
@@ -476,23 +477,19 @@ RSpec.configure do |config|
       Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
-    migrate_column_to_bigint(PostAction, :post_action_type_id)
-    migrate_column_to_bigint(Reviewable, :target_id)
-    migrate_column_to_bigint(ReviewableHistory, :reviewable_id)
-    migrate_column_to_bigint(ReviewableScore, :reviewable_id)
-    migrate_column_to_bigint(ReviewableScore, :reviewable_score_type)
-    migrate_column_to_bigint(SidebarSectionLink, :linkable_id)
-    migrate_column_to_bigint(SidebarSectionLink, :sidebar_section_id)
-    migrate_column_to_bigint(User, :last_seen_reviewable_id)
-    migrate_column_to_bigint(User, :required_fields_version)
-
-    $columns_to_migrate_to_bigint.each do |model, column|
-      if model.is_a?(String)
-        DB.exec("ALTER TABLE #{model} ALTER #{column} TYPE bigint")
-      else
-        DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
-        model.reset_column_information
-      end
+    [
+      [PostAction, :post_action_type_id],
+      [Reviewable, :target_id],
+      [ReviewableHistory, :reviewable_id],
+      [ReviewableScore, :reviewable_id],
+      [ReviewableScore, :reviewable_score_type],
+      [SidebarSectionLink, :linkable_id],
+      [SidebarSectionLink, :sidebar_section_id],
+      [User, :last_seen_reviewable_id],
+      [User, :required_fields_version],
+    ].each do |model, column|
+      DB.exec("ALTER TABLE #{model.table_name} ALTER #{column} TYPE bigint")
+      model.reset_column_information
     end
 
     # Sets sequence's value to be greater than the max value that an INT column can hold. This is done to prevent
@@ -696,7 +693,7 @@ RSpec.configure do |config|
 
       RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
         lines << "\n"
-        lines << "Error encountered while proccessing #{path}"
+        lines << "Error encountered while processing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
         ex.backtrace.each_with_index do |line, backtrace_index|
           if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]
@@ -713,6 +710,7 @@ RSpec.configure do |config|
     unfreeze_time
     ActionMailer::Base.deliveries.clear
     Discourse.redis.flushdb
+    Scheduler::Defer.do_all_work
   end
 
   config.after(:each, type: :system) do |example|
@@ -967,12 +965,12 @@ ensure
 end
 
 def track_log_messages
-  old_logger = Rails.logger
-  logger = Rails.logger = FakeLogger.new
+  logger = FakeLogger.new
+  Rails.logger.broadcast_to(logger)
   yield logger
   logger
 ensure
-  Rails.logger = old_logger
+  Rails.logger.stop_broadcasting_to(logger)
 end
 
 # this takes a string and returns a copy where 2 different
@@ -1030,6 +1028,7 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
+  options.add_argument("--remote-allow-origins=*")
 
   # A file that contains just a list of paths like so:
   #
@@ -1046,10 +1045,6 @@ def apply_base_chrome_options(options)
   if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
     options.add_argument("--force-device-scale-factor=1")
   end
-end
-
-def migrate_column_to_bigint(model, column)
-  ($columns_to_migrate_to_bigint ||= []) << [model, column]
 end
 
 class SpecSecureRandom

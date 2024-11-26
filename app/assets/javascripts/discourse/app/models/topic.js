@@ -24,7 +24,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Category from "./category";
 
 export function loadTopicView(topic, args) {
@@ -394,10 +394,10 @@ export default class Topic extends RestModel {
       const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
 
       return bumpedAtStr !== createdAtStr
-        ? `${I18n.t("topic.created_at", {
+        ? `${i18n("topic.created_at", {
             date: longDate(createdAt),
-          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
-        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+          })}\n${i18n("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : i18n("topic.created_at", { date: longDate(createdAt) });
     }
   }
 
@@ -478,7 +478,7 @@ export default class Topic extends RestModel {
       const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS).find(
         (key) => TOPIC_VISIBILITY_REASONS[key] === this.visibility_reason_id
       );
-      return I18n.t(`topic_statuses.visibility_reasons.${reasonKey}`);
+      return i18n(`topic_statuses.visibility_reasons.${reasonKey}`);
     }
 
     return "";

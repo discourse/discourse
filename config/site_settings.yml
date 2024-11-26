@@ -628,6 +628,9 @@ login:
     default: 1440
     min: 1
     max: 175200
+  full_page_login:
+    default: false
+    client: true
 
 users:
   min_username_length:
@@ -909,7 +912,9 @@ posting:
     client: true
     default: 2
     min: 1
-  max_emojis_in_title: 1
+  max_emojis_in_title:
+    default: 1
+    area: "emojis"
   allow_uncategorized_topics:
     client: true
     default: false
@@ -1097,18 +1102,22 @@ posting:
   enable_emoji:
     default: true
     client: true
+    area: "emojis"
   enable_emoji_shortcuts:
     default: true
     client: true
+    area: "emojis"
   emoji_set:
     default: "twitter"
     client: true
     enum: "EmojiSetSiteSetting"
+    area: "emojis"
   emoji_autocomplete_min_chars:
     client: true
     default: 0
     locale_default:
       fr: 1
+    area: "emojis"
   enable_inline_emoji_translation:
     client: true
     default: false
@@ -1117,11 +1126,13 @@ posting:
       zh_TW: true
       ja: true
       ko: true
+    area: "emojis"
   emoji_deny_list:
     type: emoji_list
     default: ""
     client: true
     refresh: true
+    area: "emojis"
   approve_post_count:
     default: 0
   approve_unless_trust_level:
@@ -1674,6 +1685,7 @@ files:
   external_emoji_url:
     default: ""
     client: true
+    area: "emojis"
   restrict_letter_avatar_colors:
     default: ""
     type: list
@@ -3007,7 +3019,9 @@ user_preferences:
     default: 2
   default_email_in_reply_to:
     default: false
-  default_hide_profile_and_presence:
+  default_hide_profile:
+    default: false
+  default_hide_presence:
     default: false
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
@@ -3109,6 +3123,10 @@ user_api:
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list
+  allow_user_api_key_client_scopes:
+    default: ""
+    type: list
+    hidden: true
   push_api_secret_key:
     default: ""
     hidden: true
@@ -3134,6 +3152,10 @@ user_api:
     max: 36500
   revoke_user_api_keys_maxlife_days:
     default: 0
+    max: 36500
+    hidden: true
+  unused_registered_user_api_key_clients_days:
+    default: 30
     max: 36500
     hidden: true
 
@@ -3276,9 +3298,6 @@ dashboard:
     client: true
 
 experimental:
-  experimental_full_page_login:
-    default: false
-    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -3326,7 +3345,7 @@ experimental:
     hidden: true
   experimental_topics_filter:
     client: true
-    default: false
+    default: true
   enable_rich_text_paste:
     client: true
     default: true

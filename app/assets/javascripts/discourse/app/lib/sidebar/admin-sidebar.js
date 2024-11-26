@@ -11,7 +11,7 @@ import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
 
@@ -60,7 +60,7 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
 
   get text() {
     return this.adminSidebarNavLink.label
-      ? I18n.t(this.adminSidebarNavLink.label)
+      ? i18n(this.adminSidebarNavLink.label)
       : this.adminSidebarNavLink.text;
   }
 
@@ -153,7 +153,7 @@ function defineAdminSection(
 
     get text() {
       return this.adminNavSectionData.label
-        ? I18n.t(this.adminNavSectionData.label)
+        ? i18n(this.adminNavSectionData.label)
         : this.adminNavSectionData.text;
     }
 
@@ -258,7 +258,7 @@ export function addAdminSidebarSectionLink(sectionName, link) {
   // label must be valid, don't want broken [XYZ translation missing]
   if (
     link.label &&
-    I18n.t(link.label) === I18n.missingTranslation(link.label, null, {})
+    i18n(link.label) === I18n.missingTranslation(link.label, null, {})
   ) {
     // eslint-disable-next-line no-console
     console.debug(
@@ -382,7 +382,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
             link.name,
-            I18n.t(link.keywords).split("|")
+            i18n(link.keywords).split("|")
           );
         }
       })
@@ -424,6 +424,6 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       ),
     };
 
-    return htmlSafe(I18n.t("sidebar.no_results.description", params));
+    return htmlSafe(i18n("sidebar.no_results.description", params));
   }
 }

@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class UserFlagPercentage extends Component {
@@ -37,14 +37,14 @@ export default class UserFlagPercentage extends Component {
       result.label = `${result.ignored}%`;
     }
 
-    result.title = I18n.t("review.user_percentage.summary", {
-      agreed: I18n.t("review.user_percentage.agreed", {
+    result.title = i18n("review.user_percentage.summary", {
+      agreed: i18n("review.user_percentage.agreed", {
         count: result.agreed,
       }),
-      disagreed: I18n.t("review.user_percentage.disagreed", {
+      disagreed: i18n("review.user_percentage.disagreed", {
         count: result.disagreed,
       }),
-      ignored: I18n.t("review.user_percentage.ignored", {
+      ignored: i18n("review.user_percentage.ignored", {
         count: result.ignored,
       }),
       count: total,

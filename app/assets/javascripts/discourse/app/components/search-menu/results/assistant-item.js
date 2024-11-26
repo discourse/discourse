@@ -70,19 +70,13 @@ export default class AssistantItem extends Component {
       return;
     }
 
-    if (e.key === "Escape") {
-      this.args.closeSearchMenu();
-      e.preventDefault();
-      return false;
-    }
-
     if (e.key === "Enter") {
       this.itemSelected();
     }
 
-    this.search.handleArrowUpOrDown(e);
-    e.stopPropagation();
-    e.preventDefault();
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      this.search.handleArrowUpOrDown(e);
+    }
   }
 
   @action

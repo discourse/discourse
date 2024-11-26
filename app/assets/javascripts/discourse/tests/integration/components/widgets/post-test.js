@@ -7,7 +7,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
@@ -302,7 +302,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       .dom("button.like")
       .hasAttribute(
         "title",
-        I18n.t("post.controls.like"),
+        i18n("post.controls.like"),
         "shows the right button title for anonymous users"
       );
 
@@ -377,7 +377,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       .dom("button.delete")
       .hasAttribute(
         "title",
-        I18n.t("post.controls.delete_topic_disallowed"),
+        i18n("post.controls.delete_topic_disallowed"),
         "shows the right button title for users without permissions"
       );
   });
@@ -1115,7 +1115,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} />`);
 
     assert.dom(".post-notice.returning-user:not(.old)").hasText(
-      I18n.t("post.notice.returning_user", {
+      i18n("post.notice.returning_user", {
         user: "codinghorror",
         time: "2 days ago",
       })
@@ -1138,9 +1138,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     assert
       .dom(".post-notice.old.new-user")
-      .hasText(
-        I18n.t("post.notice.new_user", { user: "Jeff", time: "Jan '10" })
-      );
+      .hasText(i18n("post.notice.new_user", { user: "Jeff", time: "Jan '10" }));
   });
 
   test("show group request in post", async function (assert) {
@@ -1153,7 +1151,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       <MountWidget @widget="post" @args={{this.args}} />`);
 
     const link = query(".group-request a");
-    assert.strictEqual(link.innerText.trim(), I18n.t("groups.requests.handle"));
+    assert.strictEqual(link.innerText.trim(), i18n("groups.requests.handle"));
     assert
       .dom(".group-request a")
       .hasAttribute("href", "/g/testGroup/requests?filter=foo");

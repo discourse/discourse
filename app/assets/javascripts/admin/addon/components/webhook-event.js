@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class WebhookEvent extends Component {
   @service dialog;
@@ -37,7 +37,7 @@ export default class WebhookEvent extends Component {
 
   get completion() {
     const seconds = Math.floor(this.args.event.duration / 10.0) / 100.0;
-    return I18n.t("admin.web_hooks.events.completed_in", { count: seconds });
+    return i18n("admin.web_hooks.events.completed_in", { count: seconds });
   }
 
   get expandRequestIcon() {
@@ -55,7 +55,7 @@ export default class WebhookEvent extends Component {
   @action
   redeliver() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.web_hooks.events.redeliver_confirm"),
+      message: i18n("admin.web_hooks.events.redeliver_confirm"),
       didConfirm: async () => {
         try {
           const json = await ajax(
@@ -82,7 +82,7 @@ export default class WebhookEvent extends Component {
       this.headers = plainJSON(headers);
       this.body = prettyJSON(this.args.event.payload);
       this.expandDetails = this.expandDetailsRequestKey;
-      this.bodyLabel = I18n.t("admin.web_hooks.events.payload");
+      this.bodyLabel = i18n("admin.web_hooks.events.payload");
     } else {
       this.expandDetails = null;
     }
@@ -94,7 +94,7 @@ export default class WebhookEvent extends Component {
       this.headers = plainJSON(this.args.event.response_headers);
       this.body = this.args.event.response_body;
       this.expandDetails = this.expandDetailsResponseKey;
-      this.bodyLabel = I18n.t("admin.web_hooks.events.body");
+      this.bodyLabel = i18n("admin.web_hooks.events.body");
     } else {
       this.expandDetails = null;
     }

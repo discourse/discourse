@@ -7,7 +7,7 @@ import * as AvatarUtils from "discourse-common/lib/avatar-utils";
 import deprecated from "discourse-common/lib/deprecated";
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _defaultHomepage;
 
@@ -494,10 +494,10 @@ export function translateModKey(string) {
   } else {
     string = string
       .toLowerCase()
-      .replace("shift", I18n.t("shortcut_modifier_key.shift"))
-      .replace("ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("meta", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("alt", I18n.t("shortcut_modifier_key.alt"));
+      .replace("shift", i18n("shortcut_modifier_key.shift"))
+      .replace("ctrl", i18n("shortcut_modifier_key.ctrl"))
+      .replace("meta", i18n("shortcut_modifier_key.ctrl"))
+      .replace("alt", i18n("shortcut_modifier_key.alt"));
   }
 
   return string;

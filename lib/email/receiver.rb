@@ -927,23 +927,27 @@ module Email
     def create_group_post(group, user, body, elided)
       message_ids = Email::Receiver.extract_reply_message_ids(@mail, max_message_id_count: 5)
 
-      # incoming emails with matching message ids, and then cross references
+      # Incoming emails with matching message ids, and then cross references
       # these with any email addresses for the user vs to/from/cc of the
       # incoming emails. in effect, any incoming email record for these
-      # message ids where the user is involved in any way will be returned
+      # message ids where the user is involved in any way will be returned.
       incoming_emails = IncomingEmail.where(message_id: message_ids)
       if !group.allow_unknown_sender_topic_replies
         incoming_emails = incoming_emails.addressed_to_user(user)
       end
       post_ids = incoming_emails.pluck(:post_id) || []
 
-      # if the user is directly replying to an email send to them from discourse,
+      # If the user is directly replying to an email send to them from discourse,
       # there will be a corresponding EmailLog record, so we can use that as the
-      # reply post if it exists
-      if Email::MessageIdService.discourse_generated_message_id?(mail.in_reply_to)
+      # reply post if it exists.
+      #
+      # Since In-Reply-To can technically have multiple message ids, we only
+      # consider the first one here to simplify things.
+      first_in_reply_to = Array.wrap(mail.in_reply_to).first
+      if Email::MessageIdService.discourse_generated_message_id?(first_in_reply_to)
         post_id_from_email_log =
           EmailLog
-            .where(message_id: mail.in_reply_to)
+            .where(message_id: first_in_reply_to)
             .addressed_to_user(user)
             .order(created_at: :desc)
             .limit(1)

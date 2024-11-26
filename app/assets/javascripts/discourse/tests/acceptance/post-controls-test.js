@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Post controls", function () {
   test("accessibility of the likes list below the post", async function (assert) {
@@ -14,7 +14,7 @@ acceptance("Post controls", function () {
       .dom("#post_2 button.like-count")
       .hasAria(
         "label",
-        I18n.t("post.sr_post_like_count_button", { count: 4 }),
+        i18n("post.sr_post_like_count_button", { count: 4 }),
         "show likes button has aria-label"
       );
 
@@ -30,7 +30,7 @@ acceptance("Post controls", function () {
       .dom("#post_2 .small-user-list.who-liked .small-user-list-content")
       .hasAria(
         "label",
-        I18n.t("post.actions.people.sr_post_likers_list_description"),
+        i18n("post.actions.people.sr_post_likers_list_description"),
         "likes container has aria-label"
       );
     assert
@@ -59,7 +59,7 @@ acceptance("Post controls", function () {
       .dom("#post_1 button.show-replies")
       .hasAria(
         "label",
-        I18n.t("post.sr_expand_replies", { count: 1 }),
+        i18n("post.sr_expand_replies", { count: 1 }),
         "show replies button has aria-label"
       );
 
@@ -78,7 +78,7 @@ acceptance("Post controls", function () {
       .hasAttribute("role", "region", "replies have region role");
     assert.dom("#post_1 .embedded-posts .reply").hasAria(
       "label",
-      I18n.t("post.sr_embedded_reply_description", {
+      i18n("post.sr_embedded_reply_description", {
         post_number: 1,
         username: "somebody",
       }),
@@ -88,7 +88,7 @@ acceptance("Post controls", function () {
       .dom("#post_1 .embedded-posts .btn.collapse-up")
       .hasAria(
         "label",
-        I18n.t("post.sr_collapse_replies"),
+        i18n("post.sr_collapse_replies"),
         "collapse button has aria-label"
       );
   });

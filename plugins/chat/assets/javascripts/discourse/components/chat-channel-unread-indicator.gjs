@@ -11,6 +11,7 @@ export default class ChatChannelUnreadIndicator extends Component {
   get showUnreadIndicator() {
     return (
       this.args.channel.tracking.unreadCount > 0 ||
+      this.args.channel.tracking.mentionCount > 0 ||
       this.args.channel.unreadThreadsCountSinceLastViewed > 0
     );
   }

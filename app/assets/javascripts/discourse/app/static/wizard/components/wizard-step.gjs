@@ -7,7 +7,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import emoji from "discourse/helpers/emoji";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
 
 export default class WizardStepComponent extends Component {

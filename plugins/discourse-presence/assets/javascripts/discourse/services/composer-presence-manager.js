@@ -8,10 +8,14 @@ const KEEP_ALIVE_DURATION_SECONDS = 10;
 export default class ComposerPresenceManager extends Service {
   @service presence;
 
+  willDestroy() {
+    this.leave();
+  }
+
   notifyState(intent, id) {
     if (
       this.siteSettings.allow_users_to_hide_profile &&
-      this.currentUser.user_option.hide_profile_and_presence
+      this.currentUser.user_option.hide_presence
     ) {
       return;
     }
@@ -56,9 +60,5 @@ export default class ComposerPresenceManager extends Service {
     let channelName = `${PRESENCE_CHANNEL_PREFIX}/${intent}/${id}`;
     this._presentChannel = this.presence.getChannel(channelName);
     this._presentChannel.enter();
-  }
-
-  willDestroy() {
-    this.leave();
   }
 }

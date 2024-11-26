@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
+import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
@@ -75,7 +75,7 @@ export default class LatestTopicListItem extends Component {
           @outletArgs={{hash topic=@topic}}
         />
 
-        <PostsCountColumn @topic={{@topic}} @tagName="div" />
+        <ItemRepliesCell @topic={{@topic}} @tagName="div" />
 
         <div class="topic-last-activity">
           <a

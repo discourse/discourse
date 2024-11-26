@@ -942,8 +942,8 @@ RSpec.describe ListController do
       end
     end
 
-    context "when `hide_profile_and_presence` is true" do
-      before { user.user_option.update_columns(hide_profile_and_presence: true) }
+    context "when `hide_profile` is true" do
+      before { user.user_option.update_columns(hide_profile: true) }
 
       it "returns 404" do
         get "/topics/created-by/#{user.username}.json"
@@ -1149,8 +1149,8 @@ RSpec.describe ListController do
   end
 
   describe "user_topics_feed" do
-    it "returns 404 if `hide_profile_and_presence` user option is checked" do
-      user.user_option.update_columns(hide_profile_and_presence: true)
+    it "returns 404 if `hide_profile` user option is checked" do
+      user.user_option.update_columns(hide_profile: true)
       get "/u/#{user.username}/activity/topics.rss"
       expect(response.status).to eq(404)
     end
@@ -1321,8 +1321,6 @@ RSpec.describe ListController do
     fab!(:private_message_topic)
     fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
 
-    before { SiteSetting.experimental_topics_filter = true }
-
     it "should not return topics that the user is not allowed to view" do
       sign_in(user)
 
@@ -1343,16 +1341,6 @@ RSpec.describe ListController do
       expect(
         response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] },
       ).to contain_exactly(topic.id)
-    end
-
-    it "should respond with 404 response code when `experimental_topics_filter` site setting has not been enabled" do
-      SiteSetting.experimental_topics_filter = false
-
-      sign_in(user)
-
-      get "/filter.json"
-
-      expect(response.status).to eq(404)
     end
 
     it "returns category definition topics if `show_category_definitions_in_topic_lists` site setting is enabled" do

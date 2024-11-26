@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  focus,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -16,7 +17,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const clickOutside = () =>
   triggerEvent(document.querySelector("header.d-header"), "pointerdown");
@@ -132,7 +133,7 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
       ).innerText.trim(),
-      I18n.t("search.in_topics_posts"),
+      i18n("search.in_topics_posts"),
       "first dropdown item includes correct suffix"
     );
 
@@ -152,7 +153,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       query(".search-link .label-suffix").textContent.trim(),
-      I18n.t("search.in"),
+      i18n("search.in"),
       "first option includes suffix"
     );
 
@@ -173,7 +174,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
-      I18n.t("search.in"),
+      i18n("search.in"),
       "second option includes suffix"
     );
 
@@ -199,7 +200,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
-      I18n.t("search.in"),
+      i18n("search.in"),
       "second option includes suffix"
     );
 
@@ -229,7 +230,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
-      I18n.t("search.in_this_topic"),
+      i18n("search.in_this_topic"),
       "second option includes suffix"
     );
   });
@@ -290,7 +291,7 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
       ).textContent.trim(),
-      I18n.t("search.in_topics_posts"),
+      i18n("search.in_topics_posts"),
       "first result hints at global search"
     );
 
@@ -298,7 +299,7 @@ acceptance("Search - Anonymous", function (needs) {
       query(
         ".search-menu-assistant-item:nth-child(2) .search-item-slug .label-suffix"
       ).textContent.trim(),
-      I18n.t("search.in_this_topic"),
+      i18n("search.in_this_topic"),
       "second result hints at search within current topic"
     );
   });
@@ -318,7 +319,7 @@ acceptance("Search - Anonymous", function (needs) {
 
     assert.strictEqual(
       secondOption.querySelector(".label-suffix").textContent.trim(),
-      I18n.t("search.in_posts_by", { username: "eviltrout" }),
+      i18n("search.in_posts_by", { username: "eviltrout" }),
       "second option includes suffix for user-scoped search"
     );
   });
@@ -414,6 +415,15 @@ acceptance("Search - Anonymous", function (needs) {
     assert
       .dom(".search-menu .search-result-topic .item .topic-title img[alt='+1']")
       .exists(":+1: in the topic title is properly converted to an emoji");
+  });
+
+  test("pressing escape correctly closes the menu", async function (assert) {
+    await visit("/");
+    await click("#search-button");
+    await focus(".show-advanced-search");
+    await triggerKeyEvent("#search-term", "keydown", "Escape");
+
+    assert.dom(".search-menu-panel").doesNotExist();
   });
 });
 
@@ -521,7 +531,7 @@ acceptance("Search - Authenticated", function (needs) {
     assert.dom(".search-menu .results .no-results").exists({ count: 1 });
     assert
       .dom(".search-menu .results .no-results")
-      .hasText(I18n.t("search.no_results"));
+      .hasText(i18n("search.no_results"));
   });
 
   test("topic results - topic search scope - clicking a search result navigates to topic url", async function (assert) {
@@ -1253,7 +1263,7 @@ acceptance("Search - assistant", function (needs) {
     );
   });
 
-  test("topic results - soft loads the topic results after closing then  search menu", async function (assert) {
+  test("topic results - soft loads the topic results after closing the search menu", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "Development mode");

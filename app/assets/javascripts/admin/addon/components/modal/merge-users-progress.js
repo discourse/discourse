@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class MergeUsersProgress extends Component {
   @service messageBus;
 
-  @tracked message = I18n.t("admin.user.merging_user");
+  @tracked message = i18n("admin.user.merging_user");
 
   constructor() {
     super(...arguments);
@@ -33,7 +33,7 @@ export default class MergeUsersProgress extends Component {
     } else if (data.message) {
       this.message = data.message;
     } else if (data.failed) {
-      this.message = I18n.t("admin.user.merge_failed");
+      this.message = i18n("admin.user.merge_failed");
     }
   }
 }

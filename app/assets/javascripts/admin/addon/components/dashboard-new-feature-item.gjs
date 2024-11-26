@@ -10,9 +10,8 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class DiscourseNewFeatureItem extends Component {
@@ -33,7 +32,7 @@ export default class DiscourseNewFeatureItem extends Component {
       this.toasts.error({
         duration: 3000,
         data: {
-          message: I18n.t(
+          message: i18n(
             "admin.dashboard.new_features.experiment_toggled_too_fast"
           ),
         },
@@ -57,8 +56,8 @@ export default class DiscourseNewFeatureItem extends Component {
         duration: 3000,
         data: {
           message: this.experimentEnabled
-            ? I18n.t("admin.dashboard.new_features.experiment_enabled")
-            : I18n.t("admin.dashboard.new_features.experiment_disabled"),
+            ? i18n("admin.dashboard.new_features.experiment_enabled")
+            : i18n("admin.dashboard.new_features.experiment_disabled"),
         },
       });
     } catch (error) {

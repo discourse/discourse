@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Theme", function (needs) {
   needs.user();
@@ -205,7 +205,7 @@ acceptance("Theme", function (needs) {
     await click(".themes-list-container__item .info");
     assert.ok(
       query(".control-unit .status-message").innerText.includes(
-        I18n.t("admin.customize.theme.last_attempt")
+        i18n("admin.customize.theme.last_attempt")
       ),
       "it says that theme is not completely installed"
     );
@@ -218,7 +218,7 @@ acceptance("Theme", function (needs) {
 
     assert.notOk(
       query(".metadata.control-unit").innerText.includes(
-        I18n.t("admin.customize.theme.last_attempt")
+        i18n("admin.customize.theme.last_attempt")
       ),
       "it does not say that theme is not completely installed"
     );

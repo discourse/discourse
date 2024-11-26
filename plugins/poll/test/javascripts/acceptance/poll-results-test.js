@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 
 acceptance("Poll results", function (needs) {
   needs.user();
@@ -1121,7 +1121,7 @@ acceptance("Poll results", function (needs) {
       query(
         ".poll-container .discourse-poll-ranked_choice-results .tab-container .tab.nav-item.active button"
       ).innerText,
-      I18n.t("poll.results.tabs.outcome"),
+      i18n("poll.results.tabs.outcome"),
       "Outcome tab is active"
     );
 
@@ -1133,7 +1133,7 @@ acceptance("Poll results", function (needs) {
       query(
         ".poll-container .discourse-poll-ranked_choice-results .tab-container .tab.nav-item.active button"
       ).innerText,
-      I18n.t("poll.results.tabs.votes"),
+      i18n("poll.results.tabs.votes"),
       "Votes tab is active"
     );
 

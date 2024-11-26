@@ -11,6 +11,12 @@ module PageObjects
         attach_file(path) { @element.find("label.btn-default").click }
       end
 
+      def select_image_with_keyboard(path)
+        label = @element.find("label.btn-default")
+        label.send_keys(:enter)
+        attach_file(path) { label.click }
+      end
+
       def has_uploaded_image?
         # if there's a delete button (.btn-danger), then there must be an
         # uploaded image.
@@ -21,6 +27,11 @@ module PageObjects
 
       def remove_image
         @element.find(".btn-danger").click
+      end
+
+      def remove_image_with_keyboard
+        delete_button = @element.find(".btn-danger")
+        delete_button.send_keys(:enter)
       end
     end
   end

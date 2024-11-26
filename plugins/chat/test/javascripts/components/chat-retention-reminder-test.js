@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 module(
@@ -17,7 +17,7 @@ module(
       await render(hbs`<ChatRetentionReminder @channel={{this.channel}} />`);
 
       assert.dom(".chat-retention-reminder").includesText(
-        I18n.t("chat.retention_reminders.long", {
+        i18n("chat.retention_reminders.long", {
           count: this.siteSettings.chat_channel_retention_days,
         })
       );
@@ -32,7 +32,7 @@ module(
       );
 
       assert.dom(".chat-retention-reminder").includesText(
-        I18n.t("chat.retention_reminders.short", {
+        i18n("chat.retention_reminders.short", {
           count: this.siteSettings.chat_channel_retention_days,
         })
       );

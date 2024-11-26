@@ -8,6 +8,10 @@ body.composer-open .chat-drawer-outlet-container {
   width: 15px;
   height: 15px;
   z-index: z("composer", "content");
+
+  .is-collapsed & {
+    display: none;
+  }
 }
 
 html:not(.rtl) {
@@ -76,9 +80,10 @@ html.rtl {
     }
   }
 
-  &:not(.is-expanded) {
+  &.is-collapsed {
     min-height: 0 !important;
     height: auto !important;
+    max-width: 25vw;
   }
 
   .chat-channel,

@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class EditBadgeGroupings extends Component {
   @service dialog;
@@ -43,7 +43,7 @@ export default class EditBadgeGroupings extends Component {
   add() {
     const obj = this.store.createRecord("badge-grouping", {
       editing: true,
-      name: I18n.t("admin.badges.badge_grouping"),
+      name: i18n("admin.badges.badge_grouping"),
     });
     this.workingCopy.pushObject(obj);
   }
@@ -69,7 +69,7 @@ export default class EditBadgeGroupings extends Component {
       this.args.model.updateGroupings(this.workingCopy);
       this.args.closeModal();
     } catch {
-      this.dialog.alert(I18n.t("generic_error"));
+      this.dialog.alert(i18n("generic_error"));
     }
   }
 

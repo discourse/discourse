@@ -173,6 +173,7 @@ cs:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "příspěvek č.%{postNumber} od @%{username}"
       close: "zavřít"
+      twitter: "Sdílet na X"
       facebook: "Sdílet na Facebooku"
       email: "Odeslat e-mailem"
       url: "Zkopírujte a sdílejte URL adresu."
@@ -355,6 +356,18 @@ cs:
       active_user_count: "Aktivní uživatelé"
       visitor_count: "Návštěvníci"
       eu_visitor_count: "Návštěvníci z Evropské unie"
+      traffic_info_footer_MF: |
+        Za posledních 6 měsíců tento web zobrazil obsah přibližně { total_visitors, plural,
+            one {# člověku}
+            few {# lidem}
+            many {# lidem}
+          other {# lidem}
+        } měsíčně, z toho odhadem { eu_visitors, plural,
+            one {# člověku}
+            few {# lidem}
+            many {# lidem}
+          other {# lidem}
+        } z Evropské unie.
       contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
       site_activity: "Aktivita webu"
@@ -386,25 +399,38 @@ cs:
           few: "%{formatted_number} líbí se mi"
           many: "%{formatted_number} líbí se mi"
           other: "%{formatted_number} líbí se mi"
+        visitors_MF: |
+          { total_count, plural,
+              one {{total_formatted_number} návštěvník}
+              few {{total_formatted_number} návštěvníci}
+              many {{total_formatted_number} návštěvníci}
+            other {{total_formatted_number} návštěvníci}
+          }, cca { eu_count, plural,
+              one {~{eu_formatted_number}}
+              few {{eu_formatted_number}~}
+              many {{eu_formatted_number}~}
+            other {{eu_formatted_number}~}
+          } z EU.
         periods:
           last_7_days: "Za posledních 7 dní"
           today: "dnes"
           all_time: "za celou dobu"
       member_count:
-        one: "%{formatted_number} Člen"
-        few: "%{formatted_number} Členové"
-        many: "%{formatted_number} Členů"
-        other: "%{formatted_number} Členů"
+        one: "%{formatted_number} člen"
+        few: "%{formatted_number} členové"
+        many: "%{formatted_number} členů"
+        other: "%{formatted_number} členů"
       admin_count:
-        one: "%{formatted_number} Správce"
-        few: "%{formatted_number} Správci"
-        many: "%{formatted_number} Správců"
-        other: "%{formatted_number} Správců"
+        one: "%{formatted_number} správce"
+        few: "%{formatted_number} správci"
+        many: "%{formatted_number} správců"
+        other: "%{formatted_number} správců"
       moderator_count:
-        one: "%{formatted_number} Moderátor"
-        few: "%{formatted_number} Moderátoři"
-        many: "%{formatted_number} Moderátorů"
-        other: "%{formatted_number} Moderátorů"
+        one: "%{formatted_number} moderátor"
+        few: "%{formatted_number} moderátoři"
+        many: "%{formatted_number} moderátorů"
+        other: "%{formatted_number} moderátorů"
+      report_inappropriate_content: "Pokud narazíte na nevhodný obsah, neváhejte zahájit konverzaci s našimi moderátory a administrátory. Nezapomeňte se před oslovením přihlásit."
       site_age:
         less_than_one_month: "Založeno před méně než 1 měsícem"
         month:
@@ -1425,6 +1451,11 @@ cs:
       home: "Výchozí domovská stránka"
       staged: "Staged"
       staff_counters:
+        deleted_posts:
+          one: '<span class="%{className}">%{count}</span> smazaný příspěvek'
+          few: '<span class="%{className}">%{count}</span> smazané příspěvky'
+          many: '<span class="%{className}">%{count}</span> smazaných příspěvků'
+          other: '<span class="%{className}">%{count}</span> smazaných příspěvků'
         rejected_posts:
           one: '<span class="%{className}">%{count}</span> odmítnutý příspěvek'
           few: '<span class="%{className}">%{count}</span> odmítnuté příspěvky'
@@ -1458,6 +1489,74 @@ cs:
         warnings: "Oficiální varování"
         read_more_in_group: "Chcete si přečíst více? Projděte další zprávy v %{groupLink}."
         read_more: "Chcete si přečíst více? Projděte další <a href='%{basePath}/u/%{username}/messages'>osobní zprávy</a>."
+        read_more_group_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtená</a>}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtené</a>}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtených</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other { a <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtená</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtené</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/unread"># nepřečtených</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nová</a> zpráva nebo procházejte další zprávy v {groupLink}}
+                  few {Zbývají zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nové</a> zprávy nebo procházejte další zprávy v {groupLink}}
+                other {Zbývá zde <a href="{basePath}/u/{username}/messages/group/{groupName}/new"># nových</a> zpráv nebo procházejte další zprávy v {groupLink}}
+              }
+            }
+            other {}
+          }
+        read_more_personal_pm_MF: |
+          { HAS_UNREAD_AND_NEW, select,
+            true {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtená</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/unread"># nepřečtené</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one { a <a href="{basePath}/u/{username}/messages/new"># nová</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few { a <a href="{basePath}/u/{username}/messages/new"># nové</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many { a <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other { a <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+            }
+            false {
+              { UNREAD, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtená</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/unread"># nepřečtené</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/unread"># nepřečtených</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+              { NEW, plural,
+                   =0 {}
+                  one {Zbývá <a href="{basePath}/u/{username}/messages/new"># nová</a> zpráva nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   few {Zbývají <a href="{basePath}/u/{username}/messages/new"># nové</a> zprávy nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                   many {Zbývá <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+                other {Zbývá <a href="{basePath}/u/{username}/messages/new"># nových</a> zpráv nebo procházejte ostatní <a href="{basePath}/u/{username}/messages">osobní zprávy</a>}
+              }
+            }
+            other {}
+          }
       preferences_nav:
         account: "Účet"
         security: "Zabezpečení"
@@ -1666,6 +1765,7 @@ cs:
         approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
       name:
         title: "Jméno"
+        title_optional: "Jméno (nepovinné)"
         instructions: "Vaše celé jméno (nepovinné)"
         instructions_required: "Vaše celé jméno"
         required: "Zadejte jméno"
@@ -1718,7 +1818,6 @@ cs:
       location: "Lokace"
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
-      hide_profile_and_presence: "Skrýt můj veřejný profil a informace o mé přítomnosti"
       enable_physical_keyboard: "Povolit podporu fyzické klávesnice na iPad"
       text_size:
         title: "Velikost textu"
@@ -1837,12 +1936,30 @@ cs:
           title: "Odkaz na pozvání"
           success: "Odkaz pozvánky byl úspěšně vygenerován!"
           error: "Při generování odkazu s pozvánkou došlo k chybě"
+        cannot_invite_to_forum: "Je nám líto, ale nemáte oprávnění vytvářet pozvánky. Obraťte se prosím na správce, aby vám udělil oprávnění k vytváření pozvánek."
         invite:
-          instructions: "Sdílejte tento odkaz pro okamžité udělení přístupu k tomuto webu:"
+          new_title: "Pozvat členy"
+          edit_title: "Upravit pozvánku"
           expires_in_time: "Vyprší za %{time}"
           expired_at_time: "Vypršelo %{time}"
+          create_link_to_invite: "Vytvořte odkaz, který lze sdílet a okamžitě tím udělit přístup k tomuto webu."
+          copy_link_and_share_it: "Zkopírujte níže uvedený odkaz a sdílejte jej, abyste okamžitě udělili přístup k tomuto webu."
           copy_link: "Kopírovat odkaz"
           link_copied: "Odkaz zkopírován!"
+          share_link: "Sdílet odkaz"
+          link_validity_MF: |
+            Odkaz je platný až pro { user_count, plural,
+                one {# uživatele}
+                few {# uživatele}
+                many {# uživatelů}
+              other {# uživatelů}
+            } a jeho platnost vyprší za { duration_days, plural,
+                one {# den}
+                few {# dny}
+                many {# dnů}
+              other {# dnů}
+            }.
+          edit_link_options: "Upravit možnosti odkazu."
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           restrict: "Omezit na"
@@ -1852,12 +1969,19 @@ cs:
           max_redemptions_allowed: "Max. použití"
           add_to_groups: "Přidat do skupin"
           invite_to_topic: "Navigovat do tématu"
+          expires_at: "Vyprší v"
           expires_after: "Nastavit vypršení po"
+          custom_message: "Vlastní zpráva"
+          custom_message_placeholder: "Přidejte k pozvánce osobní poznámku"
           send_invite_email: "Uložit a odeslat e-mail"
           send_invite_email_instructions: "Omezit pozvání na e-mail pro odeslání pozvánky"
-          save_invite: "Uložit"
+          update_invite: "Aktualizovat"
+          update_invite_and_send_email: "Aktualizovat a poslat e-mail"
           cancel: "Zrušit"
-          invite_saved: "Pozvánka uložena."
+          create_link: "Vytvořit odkaz"
+          create_link_and_send_email: "Vytvořte odkaz a odešlete e-mail"
+          invite_saved_without_sending_email: "Pozvánka byla uložena. Zkopírujte níže uvedený odkaz a sdílejte jej, abyste okamžitě udělili přístup k tomuto webu."
+          invite_saved_with_sending_email: "E-mail s pozvánkou byl odeslán. Můžete také zkopírovat níže uvedený odkaz a sdílet jej, abyste okamžitě udělili přístup k tomuto webu."
         bulk_invite:
           none: "Na této stránce nejsou k zobrazení žádné pozvánky."
           text: "Hromadné pozvání"
@@ -1915,10 +2039,10 @@ cs:
           many: "vytvořených příspěvků"
           other: "vytvořených příspěvků"
         likes_given:
-          one: "dán"
-          few: "dány"
-          many: "dáno"
-          other: "dáno"
+          one: "udělen"
+          few: "uděleny"
+          many: "uděleno"
+          other: "uděleno"
         likes_received:
           one: "obdržen"
           few: "obdrženy"
@@ -2155,6 +2279,7 @@ cs:
       associate: "Máte již účet? <a href='%{associate_link}'>Přihlaste se</a> a propojte svůj účet %{provider}."
       activation_title: "Aktivujte svůj účet"
       already_have_account: "Máte již účet?"
+      no_account_yet: "Nemáte účet?"
       progress_bar:
         signup: "Registrace"
         activate: "Aktivace"
@@ -3055,6 +3180,8 @@ cs:
         bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
         filter: "Nejsou zde žádná další témata."
     topic_bulk_actions:
+      dismiss:
+        name: "Označit jako přečtené"
       close_topics:
         name: "Zavřít"
         note: "Poznámka"
@@ -3522,7 +3649,7 @@ cs:
         publishing_settings: "Nastavení publikování"
       change_owner:
         title: "Změnit vlastníka"
-        action: "změnit vlastnictví"
+        action: "Změnit vlastnictví"
         error: "Chyba při měnění autora u příspevků."
         placeholder: "uživatelské jméno nového vlastníka"
         instructions:
@@ -3683,17 +3810,22 @@ cs:
       few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několik málo lajků."
       controls:
         reply: "otevře okno pro sepsání odpovědi na tento příspěvek"
+        like_action: "To se mi líbí"
         like: "to se mi líbí"
         has_liked: "tento příspěvek se vám líbí"
         read_indicator: "členové, kteří si přečetli tento příspěvek"
+        undo_like_action: "Už se mi to nelíbí"
         undo_like: "už se mi to nelíbí"
         edit: "upravit příspěvek"
         edit_action: "Upravit"
         edit_anonymous: "Omlouváme se, ale pro editaci tohoto příspěvku musíte být přihlášení."
+        flag_action: "Nahlášení"
         flag: "nahlásit příspěvek moderátorovi"
         delete: "smazat příspěvek"
         undelete: "obnovit příspěvek"
+        share_action: "Sdílet"
         share: "sdílet odkaz na tento příspěvek"
+        copy_action: "Kopírovat odkaz"
         copy_title: "zkopírovat odkaz na tento příspěvek do schránky"
         link_copied: "Odkaz zkopírován!"
         more: "Více"
@@ -3711,6 +3843,7 @@ cs:
             other: "Ano a dalších %{count} odpovědí"
           just_the_post: "Ne, pouze tento příspěvek"
         admin: "post admin actions"
+        admin_action: "Administrace"
         permanently_delete: "Trvale smazat"
         permanently_delete_confirmation: "Jste si jistý, že chcete tento příspěvek trvale smazat? Nebudete jej moci obnovit."
         wiki: "Převést na wiki"
@@ -3991,7 +4124,7 @@ cs:
       sort_ascending: "Vzestupně"
       sort_descending: "Sestupně"
       subcategory_list_styles:
-        rows: "Řady"
+        rows: "Řádky"
         rows_with_featured_topics: "Řádky s vybranými tématy"
         boxes: "Boxy "
         boxes_with_featured_topics: "Boxy s vybranými tématy"
@@ -4949,6 +5082,7 @@ cs:
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
           previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
+          experimental: "Experimentální"
         last_checked: "Naposledy zkontrolováno"
         refresh_problems: "Obnovit"
         no_problems: "Nenalezeny žádné problémy."
@@ -5195,7 +5329,7 @@ cs:
       web_hooks:
         title: "Webhooks"
         none: "Právě tu nejsou žádné webhooks."
-        instruction: "Webhooks umožňuje Discoursu upozornit na externí služby pokud se na vaší stránce děje nějaká údálost. Pokud je wehook zaplý, bude žádost o příspěvek poslaná na uvedené URL adresy."
+        instruction: "Webhook umožňuje službě Discourse upozorňovat externí služby, když na vašem webu dojde k určité události. Po spuštění webhooku se na zadané adresy URL odešle požadavek POST."
         detailed_instruction: "Pokud nastane vybraná událost, žádost o příspěvek bude odeslána na uvedené URL."
         new: "Nový Webhook"
         create: "Vytvoř"
@@ -5436,7 +5570,7 @@ cs:
           onebox: "Onebox"
           files: "Soubory"
           other_options: "Ostatní"
-          search: "Prohledat"
+          search: "Vyhledávání"
           experimental: "Experimentální"
           all_site_settings: "Všechna nastavení"
       navigation_menu:
@@ -5623,6 +5757,7 @@ cs:
           import_web_tip: "Úložiště obsahující motiv"
           import_web_advanced: "Pokročilé…"
           is_private: "Motiv je v soukromém git úložišti"
+          remote_branch: "Název pobočky (nepovinné)"
           public_key: "Udělte následujícímu veřejnému klíči přístup k repozitáři:"
           install: "Instalovat"
           installed: "Nainstalováno"
@@ -5888,6 +6023,7 @@ cs:
             check_personal_message: "zkontrolovat soukromou zprávu"
             post_approved: "příspěvek schválen"
             post_rejected: "příspěvek zamítnut"
+            merge_user: "sloučit uživatele"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -5972,6 +6108,7 @@ cs:
         quick_insert_fields:
           add_new_field: "přidat"
           dropdown: "Menu"
+          multiselect: "Více možností"
         validations_modal:
           table_headers:
             key: "Klíč"
@@ -6104,8 +6241,7 @@ cs:
         approve_bulk_success: "Povedlo se! Všichni uživatelé byli schváleni a byly jim rozeslány notifikace."
         time_read: "Čas strávený čtením"
         post_edits_count: "Úpravy příspěvků"
-        anonymize: "Anonymní uživatel"
-        anonymize_confirm: "Opravdu chcete tento účet anonymizovat? Tím se změní uživatelské jméno a e-mail a vyčistí všechny informace v profilu."
+        anonymize: "Anonymizovat uživatele"
         anonymize_yes: "Ano, udělejte tento účet anonymním"
         anonymize_failed: "Nastal problém při anonymizování účtu."
         delete: "Smazat uživatele"
@@ -6116,13 +6252,28 @@ cs:
           confirmation:
             cancel: "Zrušit"
         merge:
+          button: "Sloučit"
           prompt:
+            title: "Přenést a odstranit @%{username}"
             description: |
-              <p>Vyberte prosím nového vlastníka pro obsah <b>@%{username}'s</b> .</p>
+              <p>Vyberte prosím nového vlastníka pro obsah uživatele <b>@%{username}</b> .</p>
 
               <p>Přenesena budou všechna témata, příspěvky, zprávy a další obsah vytvořený uživatelem <b>@%{username}</b>.</p>
+            target_username_placeholder: "Uživatelské jméno nového vlastníka"
+            transfer_and_delete: "Přenést a odstranit @%{username}"
             cancel: "Zrušit"
+          progress:
+            title: "Průběh slučování"
           confirmation:
+            title: "Přenést a odstranit @%{username}"
+            description: |
+              <p>Veškerý obsah uživatele <b>@%{username}</b> bude přenesen a připsán uživateli <b>@%{targetUsername}</b>. Po dokončení přenosu obsahu bude účet <b>@%{username}s</b> odstraněn.</p>
+
+              <p><b>Toto nelze vzít zpět!</b></p>
+
+              <p>Chcete-li pokračovat, zadejte: <code>%{text}</code></p>
+            text: "převést @%{username} na @%{targetUsername}"
+            transfer_and_delete: "Přenést a odstranit @%{username}"
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         delete_forbidden_because_staff: "Správci ani moderátoři nemůžou být odstraněni."
@@ -6261,9 +6412,10 @@ cs:
           enabled: "zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
         field_types:
-          text: "Text Field"
+          text: "Text"
           confirm: "Potvrzení"
           dropdown: "Menu"
+          multiselect: "Více možností"
       site_text:
         description: "Můžete si přizpůsobit libovolný text na vašem fóru. Začněte hledáním níže:"
         search: "Hledat text, který byste chtěli upravit"
@@ -6456,7 +6608,6 @@ cs:
           grant_existing_holders: Udělit další odznaky stávajícím držitelům odznaků.
       emoji:
         title: "Emoji"
-        add: "Vložit nový Emoji"
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"
@@ -6491,12 +6642,14 @@ cs:
         post_title: "Příspěvek"
         category_id: "ID kategorie"
         category_title: "Kategorie"
+        user_title: "Uživatel"
         username: "Uživatelské jméno"
         delete_confirm: Opravdu chcete smazat tento trvalý odkaz?
+        more_options: "Další možnosti"
         form:
           label: "Nové:"
-          add: "Přidat"
-          filter: "Hledat (URL nebo externí URL)"
+          url: "URL"
+          save: "Uložit"
       reseed:
         modal:
           categories: "Kategorie"

@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
   needs.user();
@@ -18,9 +18,9 @@ acceptance("Admin - Users List", function (needs) {
   test("searching users with no matches", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".controls.username input", "doesntexist");
+    await fillIn(".admin-users-list__controls .username input", "doesntexist");
 
-    assert.dom(".users-list-container").hasText(I18n.t("search.no_results"));
+    assert.dom(".users-list-container").hasText(i18n("search.no_results"));
   });
 
   test("sorts users", async function (assert) {
@@ -28,7 +28,9 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists();
 
-    await click(".users-list .sortable:nth-child(1)");
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
 
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
@@ -37,7 +39,9 @@ acceptance("Admin - Users List", function (needs) {
       "list should be sorted by username"
     );
 
-    await click(".users-list .sortable:nth-child(1)");
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
+    );
 
     assert.ok(
       query(".users-list .user:nth-child(1) .username").innerText.includes(
@@ -71,8 +75,8 @@ acceptance("Admin - Users List", function (needs) {
   test("switching tabs", async function (assert) {
     const activeUser = "eviltrout";
     const suspectUser = "sam";
-    const activeTitle = I18n.t("admin.users.titles.active");
-    const suspectTitle = I18n.t("admin.users.titles.new");
+    const activeTitle = i18n("admin.users.titles.active");
+    const suspectTitle = i18n("admin.users.titles.new");
 
     await visit("/admin/users/list/active");
 

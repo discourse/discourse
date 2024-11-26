@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import NavItem from "discourse/components/nav-item";
 import { headerActionComponentForPlugin } from "discourse/lib/admin-plugin-header-actions";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AdminPageHeader from "./admin-page-header";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 

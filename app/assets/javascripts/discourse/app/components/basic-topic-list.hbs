@@ -1,6 +1,6 @@
 <ConditionalLoadingSpinner @condition={{this.loading}}>
   {{#if this.topics}}
-    {{#if this.currentUser.use_glimmer_topic_list}}
+    {{#if this.currentUser.canUseGlimmerTopicList}}
       <TopicList::List
         @showPosters={{this.showPosters}}
         @hideCategory={{this.hideCategory}}

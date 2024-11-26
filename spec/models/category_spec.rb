@@ -474,13 +474,13 @@ RSpec.describe Category do
     end
 
     it "deletes permalink when category slug is reused" do
-      Fabricate(:permalink, url: "/c/bikeshed-category")
+      Fabricate(:permalink, url: "/c/bikeshed-category", category_id: 42)
       Fabricate(:category_with_definition, slug: "bikeshed-category")
       expect(Permalink.count).to eq(0)
     end
 
     it "deletes permalink when sub category slug is reused" do
-      Fabricate(:permalink, url: "/c/main-category/sub-category")
+      Fabricate(:permalink, url: "/c/main-category/sub-category", category_id: 42)
       main_category = Fabricate(:category_with_definition, slug: "main-category")
       Fabricate(
         :category_with_definition,

@@ -10,10 +10,10 @@ import { extractError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_HINT = htmlSafe(
-  I18n.t("chat.create_channel.choose_category.default_hint", {
+  i18n("chat.create_channel.choose_category.default_hint", {
     link: "/categories",
     category: "category",
   })
@@ -136,7 +136,7 @@ export default class ChatModalCreateChannel extends Component {
     if (catPermissions.private) {
       switch (allowedGroups.length) {
         case 1:
-          warning = I18n.t(
+          warning = i18n(
             "chat.create_channel.auto_join_users.warning_1_group",
             {
               count: catPermissions.members_count,
@@ -145,7 +145,7 @@ export default class ChatModalCreateChannel extends Component {
           );
           break;
         case 2:
-          warning = I18n.t(
+          warning = i18n(
             "chat.create_channel.auto_join_users.warning_2_groups",
             {
               count: catPermissions.members_count,
@@ -166,7 +166,7 @@ export default class ChatModalCreateChannel extends Component {
           break;
       }
     } else {
-      warning = I18n.t(
+      warning = i18n(
         "chat.create_channel.auto_join_users.public_category_warning",
         {
           category: escapeExpression(category.name),
@@ -193,26 +193,20 @@ export default class ChatModalCreateChannel extends Component {
 
           switch (allowedGroups.length) {
             case 1:
-              hint = I18n.t(
-                "chat.create_channel.choose_category.hint_1_group",
-                {
-                  settingLink,
-                  group: escapeExpression(allowedGroups[0]),
-                }
-              );
+              hint = i18n("chat.create_channel.choose_category.hint_1_group", {
+                settingLink,
+                group: escapeExpression(allowedGroups[0]),
+              });
               break;
             case 2:
-              hint = I18n.t(
-                "chat.create_channel.choose_category.hint_2_groups",
-                {
-                  settingLink,
-                  group1: escapeExpression(allowedGroups[0]),
-                  group2: escapeExpression(allowedGroups[1]),
-                }
-              );
+              hint = i18n("chat.create_channel.choose_category.hint_2_groups", {
+                settingLink,
+                group1: escapeExpression(allowedGroups[0]),
+                group2: escapeExpression(allowedGroups[1]),
+              });
               break;
             default:
-              hint = I18n.t(
+              hint = i18n(
                 "chat.create_channel.choose_category.hint_multiple_groups",
                 {
                   settingLink,

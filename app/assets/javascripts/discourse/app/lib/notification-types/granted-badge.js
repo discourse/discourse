@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class extends NotificationTypeBase {
   get linkHref() {
@@ -21,7 +21,7 @@ export default class extends NotificationTypeBase {
   }
 
   get description() {
-    return I18n.t("notifications.granted_badge", {
+    return i18n("notifications.granted_badge", {
       description: this.notification.data.badge_name,
     });
   }

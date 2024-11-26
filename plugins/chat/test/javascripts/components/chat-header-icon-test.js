@@ -3,7 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import { HEADER_INDICATOR_PREFERENCE_ALL_NEW } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 module("Discourse Chat | Component | chat-header-icon", function (hooks) {
@@ -21,7 +21,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", I18n.t("chat.title_capitalized"))
+      .hasAttribute("title", i18n("chat.title_capitalized"))
       .hasAttribute("href", "/chat");
 
     assert.dom(".d-icon-d-chat").exists();
@@ -37,7 +37,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", I18n.t("sidebar.panels.forum.label"))
+      .hasAttribute("title", i18n("sidebar.panels.forum.label"))
       .hasAttribute("href", "/latest");
 
     assert.dom(".d-icon-shuffle").exists();
@@ -50,7 +50,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", I18n.t("chat.title_capitalized"))
+      .hasAttribute("title", i18n("chat.title_capitalized"))
       .hasAttribute("href", "/chat");
 
     assert.dom(".d-icon-d-chat").exists();
@@ -69,7 +69,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", I18n.t("sidebar.panels.forum.label"))
+      .hasAttribute("title", i18n("sidebar.panels.forum.label"))
       .hasAttribute("href", "/latest");
     assert.dom(".d-icon-shuffle").exists();
     assert.dom(".chat-channel-unread-indicator__number").doesNotExist();
@@ -84,7 +84,7 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert
       .dom(".icon.btn-flat")
-      .hasAttribute("title", I18n.t("sidebar.panels.chat.label"))
+      .hasAttribute("title", i18n("sidebar.panels.chat.label"))
       .hasAttribute("href", "/chat");
     assert.dom(".d-icon-d-chat").exists();
     assert

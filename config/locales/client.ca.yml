@@ -1191,7 +1191,6 @@ ca:
       location: "Ubicació"
       website: "Lloc web"
       email_settings: "Correu electrònic"
-      hide_profile_and_presence: "Amaga les característiques del meu perfil i la meva presència públics "
       enable_physical_keyboard: "Habilita el suport de teclat físic en iPad"
       text_size:
         title: "Mida del text"
@@ -1285,7 +1284,6 @@ ca:
         invite_link:
           success: "Enllaç d'invitació generat emb èxit!"
         invite:
-          save_invite: "Desa"
           cancel: "Cancel·la"
         bulk_invite:
           error: "El fitxer hauria de tenir format CSV."
@@ -1924,6 +1922,8 @@ ca:
         top: "No hi ha més temes destacats."
         bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
+      dismiss:
+        name: "Descarta-ho"
       close_topics:
         name: "Tanca"
         optional: (opcional)
@@ -2296,16 +2296,20 @@ ca:
       few_likes_left: "Gràcies per compartir l'amor! Us queden uns quants 'm'agrada' per donar avui."
       controls:
         reply: "comença a redactar una resposta a aquesta publicació"
+        like_action: "M'agrada"
         like: "m'agrada aquesta publicació"
         has_liked: "us ha agradat aquesta publicació"
         read_indicator: "membres que han llegit aquesta publicació"
+        undo_like_action: "Desfés 'M'agrada'"
         undo_like: "desfés 'M'agrada'"
         edit: "edita aquesta publicació"
         edit_action: "Edita"
         edit_anonymous: "Ho sentim, però heu d'iniciar la sessió per a editar aquesta publicació."
+        flag_action: "Bandera"
         flag: "posa bandera en privat a aquesta publicació per a destacar-la o envia una notificació privada sobre això"
         delete: "suprimeix aquesta publicació"
         undelete: "restaura aquesta publicació"
+        share_action: "Comparteix"
         share: "comparteix un enllaç sobre aquesta publicació"
         more: "Més"
         delete_replies:
@@ -2318,6 +2322,7 @@ ca:
             other: "Sí, i totes les %{count} respostes"
           just_the_post: "No, només aquesta publicació"
         admin: "accions d'administració de publicació"
+        admin_action: "Administració"
         wiki: "Passa a wiki"
         unwiki: "Elimina la wiki"
         convert_to_moderator: "Afegeix un color de l'equip responsable"
@@ -3994,7 +3999,6 @@ ca:
         time_read: "Temps de lectura"
         post_edits_count: "Edicions de la publicació"
         anonymize: "Fes anònim l'usuari"
-        anonymize_confirm: "Esteu segur que voleu fer anònim aquest compte? Això canviarà el nom d'usuari i el correu electrònic, i restablirà tota la informació de perfil."
         anonymize_yes: "Sí, fes anònim aquest compte"
         anonymize_failed: "Hi ha hagut un problema en fer anònim aquest compte."
         delete: "Suprimeix l'usuari"
@@ -4271,7 +4275,6 @@ ca:
             with_time: <span class="username">%{username}</span> en <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        add: "Afegeix emoji nou"
         name: "Nom"
         group: "Grup"
         image: "Imatge"
@@ -4305,12 +4308,13 @@ ca:
         post_title: "Publicació"
         category_id: "ID de categoria"
         category_title: "Categoria"
+        user_title: "Usuari"
         username: "Nom d'usuari "
         delete_confirm: Esteu segur que voleu suprimir l'enllaç permanent?
         form:
           label: "Nou:"
-          add: "Afegeix"
-          filter: "Cerca (URL o URL extern)"
+          url: "URL"
+          save: "Desa"
       reseed:
         action:
           label: "Reemplaça el text..."

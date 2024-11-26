@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class WebhookStatus extends Component {
   iconNames = ["far-circle", "circle-xmark", "circle", "circle"];
@@ -12,7 +12,7 @@ export default class WebhookStatus extends Component {
   }
 
   get deliveryStatus() {
-    return I18n.t(`admin.web_hooks.delivery_status.${this.status.name}`);
+    return i18n(`admin.web_hooks.delivery_status.${this.status.name}`);
   }
 
   get iconName() {

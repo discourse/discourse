@@ -6,7 +6,7 @@ import GroupDefaultNotificationsModal from "discourse/components/modal/group-def
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class GroupManageSaveButton extends Component {
   @service modal;
@@ -19,7 +19,7 @@ export default class GroupManageSaveButton extends Component {
 
   @discourseComputed("saving")
   savingText(saving) {
-    return saving ? I18n.t("saving") : I18n.t("save");
+    return saving ? i18n("saving") : i18n("save");
   }
 
   @discourseComputed(
@@ -33,11 +33,11 @@ export default class GroupManageSaveButton extends Component {
     }
 
     if (isPrimaryGroup) {
-      return I18n.t("admin.groups.manage.alert.primary_group", {
+      return i18n("admin.groups.manage.alert.primary_group", {
         group_name: this.model.name,
       });
     } else if (hasFlair) {
-      return I18n.t("admin.groups.manage.alert.flair_group", {
+      return i18n("admin.groups.manage.alert.flair_group", {
         group_name: this.model.name,
       });
     }

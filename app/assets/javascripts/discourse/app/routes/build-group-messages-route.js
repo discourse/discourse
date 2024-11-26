@@ -1,10 +1,10 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default (type) => {
   return class BuildGroupMessagesRoute extends UserTopicListRoute {
     titleToken() {
-      return I18n.t(`user.messages.${type}`);
+      return i18n(`user.messages.${type}`);
     }
 
     async model() {
@@ -50,7 +50,7 @@ export default (type) => {
 
     emptyState() {
       return {
-        title: I18n.t("no_group_messages_title"),
+        title: i18n("no_group_messages_title"),
         body: "",
       };
     }

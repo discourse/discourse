@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const DAYS = [
   "monday",
@@ -108,7 +108,7 @@ export default class UserNotificationSchedule extends Component {
 
     if (opts.includeNone) {
       timeOptions.push({
-        name: I18n.t("user.notification_schedule.none"),
+        name: i18n("user.notification_schedule.none"),
         value: -1,
       });
     }
@@ -123,7 +123,7 @@ export default class UserNotificationSchedule extends Component {
       if (hours === 24) {
         if (opts.showMidnight) {
           timeOptions.push({
-            name: I18n.t("user.notification_schedule.midnight"),
+            name: i18n("user.notification_schedule.midnight"),
             value: 1440,
           });
         }
