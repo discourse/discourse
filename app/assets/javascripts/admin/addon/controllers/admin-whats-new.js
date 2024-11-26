@@ -4,9 +4,7 @@ import { action } from "@ember/object";
 export default class AdminWhatsNewController extends Controller {
   @action
   checkForUpdates() {
-    if (this.checkFeaturesCallback) {
-      this.checkFeaturesCallback({ forceRefresh: true });
-    }
+    this.checkFeaturesCallback?.({ forceRefresh: true });
   }
 
   @action

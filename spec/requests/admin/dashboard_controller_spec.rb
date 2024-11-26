@@ -211,7 +211,7 @@ RSpec.describe Admin::DashboardController do
               "emoji" => "🚀",
               "title" => "Space platform launched!",
               "description" => "Now to make it to the next planet unscathed...",
-              "created_at" => (Time.zone.now - 1.minutes),
+              "created_at" => 1.minute.ago,
             },
           ].to_json,
         )

@@ -2861,7 +2861,6 @@ en:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completed"
       new_features: "New features available!"
-      check_for_updates: "Check for updates"
       admin_problems: "New advice on your site dashboard"
       dismiss_confirmation:
         body:

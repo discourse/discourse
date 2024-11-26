@@ -132,7 +132,8 @@ module DiscourseUpdates
     end
 
     def new_features_payload
-      response = Excon.new(new_features_endpoint).request(expects: [200], method: :Get)
+      response =
+        Excon.new(new_features_endpoint).request(expects: [200], method: :Get, read_timeout: 5)
       response.body
     end
 
