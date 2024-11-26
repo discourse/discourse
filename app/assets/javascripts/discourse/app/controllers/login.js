@@ -118,7 +118,7 @@ export default class LoginPageController extends Controller {
 
   get shouldTriggerRouteAction() {
     return (
-      !this.siteSettings.experimental_full_page_login ||
+      !this.siteSettings.full_page_login ||
       this.siteSettings.enable_discourse_connect
     );
   }
