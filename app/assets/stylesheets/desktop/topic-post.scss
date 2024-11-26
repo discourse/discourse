@@ -617,6 +617,7 @@ blockquote {
   float: left;
   z-index: z("base") + 1;
   height: 100%;
+  overflow-anchor: none;
 }
 
 .gap {
