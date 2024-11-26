@@ -70,11 +70,11 @@ es:
       open:
         title: "Abrir la encuesta"
         label: "Abrir"
-        confirm: "¿Quieres abrir esta encuesta?"
+        confirm: "¿Seguro que quieres abrir esta encuesta?"
       close:
         title: "Cerrar la encuesta"
         label: "Cerrar"
-        confirm: "¿Quieres cerrar esta encuesta?"
+        confirm: "¿Seguro que quieres cerrar esta encuesta?"
       automatic_close:
         closes_in: "Cierra en <strong>%{timeLeft}</strong>."
         age: "Cerrado <strong>%{age}</strong>"

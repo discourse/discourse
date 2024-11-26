@@ -599,7 +599,6 @@ hu:
       admins: "Felelős az oldal konfigurálásért és karbantartásáért, hozzáfér minden taghoz és tevékenységi adathoz."
       moderators: "Felelős a megjelölések megválaszolásáért, a beszélgetések moderálásáért és a tagoknak a fiókjaikkal kapacsolatos segítségnyújtásért."
       trust_level_0: "Korlátozott képességekkel rendelkező új tagok, akik tanulják a közösségi normákat és funkciókat."
-      trust_level_1: "A nagyobb bizalommal rendelkező tagok, akik kezdeti elkötelezettséget mutattak olvasásukkal most több funkcióhoz férhetnek hozzá. E csoport minden tagja egyben a bizalmi_szint_0 csoport tagja is."
       trust_level_2: "Aktív tagok, akik folyamatos hozzájárulásaik révén teljes állampolgári jogokat szereztek. Ennek a csoportnak minden tagja a bizalmi_szint_1 és a bizalmi_szint_0 csoportok tagja is."
       trust_level_3: "Magasan elkötelezett, hosszú távú hozzájárulók, akik a közösség gerincét alkotják, és korlátozott moderátori jogosultságokat szereztek. Ennek a csoportnak minden tagja a bizalmi_szint_2, bizalmi_szint_1 és bizalmi_szint_0 csoportok tagja is."
       trust_level_4: "Manuálisan előléptetett tagok, akiket példamutató hozzájárulásaik alapján ismertek el, és további moderátori jogosultságokkal ruháztak fel. Ennek a csoportnak minden tagja a bizalmi_szint_3, bizalmi_szint_2, bizalmi_szint_1 és bizalmi_szint_0 csoportok tagja is."

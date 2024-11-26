@@ -133,6 +133,7 @@ nl:
       header_indicator_preference:
         title: "Activiteitsindicator weergeven in kop"
         all_new: "Alle nieuwe berichten"
+        dm_and_mentions: "Directe berichten, vermeldingen en geobserveerde threads"
         only_mentions: "Alleen vermeldingen"
         never: "Nooit"
       separate_sidebar_mode:
@@ -248,6 +249,7 @@ nl:
       placeholder_channel: "Chat in %{channelName}"
       placeholder_thread: "Chat in thread"
       placeholder_users: "Chatten met %{commaSeparatedNames}"
+      placeholder_group: "Chatten in groep"
       placeholder_new_message_disallowed:
         archived: "Kanaal is gearchiveerd, je kunt momenteel geen nieuwe berichten sturen."
         closed: "Kanaal is gesloten, je kunt momenteel geen nieuwe berichten sturen."
@@ -458,6 +460,7 @@ nl:
         auto_join_users_info: "Bekijk elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest. Voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
         auto_join_users_info_no_category: "Bekijk elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest. Voeg ze toe aan dit kanaal als ze toegang hebben tot de geselecteerde categorie ."
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
+        notification_level: "Pushmeldingen verzenden"
         follow: "Deelnemen"
         followed: "Lid sinds"
         mute: "Kanaal dempen"
@@ -482,6 +485,7 @@ nl:
           title: "Chatberichten exporteren"
           description: "Hierdoor worden alle berichten van alle kanalen geëxporteerd."
           create_export: "Export maken"
+          confirm_export: "Hiermee worden alle berichten van alle kanalen geëxporteerd en wordt het resultaat naar jou gestuurd in een persoonlijk bericht. Weet je zeker dat je wilt exporteren?"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
       my_threads:
         title: Mijn threads
@@ -500,6 +504,7 @@ nl:
       incoming_webhooks:
         back: "Vorige"
         channel_placeholder: "Selecteer een kanaal"
+        channel: "Kanaal"
         confirm_destroy: "Weet je zeker dat je deze inkomende webhook wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
         current_emoji: "Huidige emoji"
         description: "Beschrijving"
@@ -523,6 +528,8 @@ nl:
         username: "Gebruikersnaam"
         username_instructions: "Gebruikersnaam van bot die in kanaal plaatst. Standaard ingesteld op 'systeem' als dit leeg is gelaten."
         instructions: "Inkomende webhooks kunnen door externe systemen worden gebruikt om als botgebruiker berichten in een aangewezen chatkanaal te plaatsen via het eindpunt <code>/hooks/:key</code>. De payload bestaat uit een enkele <code>tekst</code>-parameter, die beperkt is tot 2000 tekens.<br><br>We ondersteunen ook beperkte Slack-opgemaakte <code>tekst</code>-parameters, het extraheren van links en vermeldingen op basis van de opmaak op <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, maar het eindpunt <code>/hooks/:key/slack</code> moet hiervoor gebruikt worden."
+        saved: "Webhookwijzigingen opgeslagen"
+        created: "Webhook gemaakt"
       selection:
         cancel: "Annuleren"
         quote_selection: "Citaat in topic"
@@ -600,10 +607,13 @@ nl:
         notifications:
           regular:
             title: "Normaal"
+            description: "Ontvang een melding wanneer iemand je vermeldt in deze thread."
           tracking:
             title: "Tracking"
+            description: "Ontvang een melding wanneer iemand je vermeldt in deze thread en zie het aantal nieuwe reacties in de threadslijst."
           watching:
             title: "Geobserveerd"
+            description: "Ontvang een melding over alle reacties in deze thread en zie het aantal nieuwe reacties in de threadslijst."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -629,6 +639,9 @@ nl:
       chat_invitation: "heeft je uitgenodigd om deel te nemen aan een chatkanaal"
       chat_invitation_html: "<span>%{username}</span> <span>heeft je uitgenodigd voor een chatkanaal</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} en %{username2}"
+        other: "%{username} en %{count} anderen"
       popup:
         chat_mention:
           direct: 'heeft je genoemd in "%{channel}"'
@@ -642,10 +655,6 @@ nl:
           other_html: "<span>%{username}</span> <span>heeft %{identifier} genoemd in een privéchat</span>"
         chat_message: "Nieuw chatbericht"
         chat_quoted: "%{username} heeft je chatbericht geciteerd"
-      titles:
-        chat_mention: "Chatvermelding"
-        chat_invitation: "Chatuitnodiging"
-        chat_quoted: "Chat geciteerd"
     action_codes:
       chat:
         enabled: '%{who} heeft <button class="btn-link open-chat">chat</button> %{when} ingeschakeld'
@@ -676,6 +685,7 @@ nl:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Kanaal wisselen"
+          switch__unread_channel_arrows: "%{shortcut} Ongelezen kanaal wisselen"
           open_quick_channel_selector: "%{shortcut} Snelle kanaalkiezer openen"
           open_insert_link_modal: "%{shortcut} Hyperlink invoegen (alleen opstellen)"
           composer_bold: "%{shortcut} Vet (alleen opstellen)"

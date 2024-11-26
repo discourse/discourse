@@ -1857,7 +1857,6 @@ hu:
                 one {# napon belül lejár}
               other {# nap}
             }.
-          edit_link_options: "Link opciók szerkesztése"
           show_advanced: "Speciális beállítások megjelenítése"
           hide_advanced: "Speciális beállítások elrejtése"
           restrict: "Korlátozás a következőkre:"
@@ -5386,6 +5385,13 @@ hu:
             themes_description: "A témák kiterjedt testreszabások, amelyek megváltoztatják a fórum stílusának több elemét, és gyakran további kezelőfelület-szolgáltatásokat is tartalmaznak."
             new_theme: "Új téma"
             user_selectable: "Felhasználó által választható"
+        user_fields:
+          type: "Típus"
+          more_options:
+            title: "További lehetőségek"
+            move_up: "Mozgatás fel"
+            move_down: "Mozgatás le"
+          delete: "Törlés"
       plugins:
         title: "Bővítmények"
         installed: "Telepített bővítmények"
@@ -6268,6 +6274,11 @@ hu:
         status: "Állapot"
         show_emails: "E-mailek megjelenítése"
         hide_emails: "E-mailek elrejtése"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Lezárás"
+              confirm: "Törlés"
         nav:
           new: "Új"
           active: "Aktív"
@@ -6553,8 +6564,6 @@ hu:
           confirm_delete: "Biztos, hogy törölni szeretné ezt a DiscourseConnect rekordot?"
       user_fields:
         title: "Felhasználói mezők"
-        help: "Adj hozzá olyan mezőket, amelyeket a felhasználók kitölthetnek."
-        create: "Felhasználói mező létrehozása"
         untitled: "Névtelen"
         name: "Mező neve"
         type: "Mező típusa"
@@ -6583,22 +6592,15 @@ hu:
           confirmation: "Megkéri a meglévő felhasználókat, hogy töltsék ki ezt a mezőt, és addig nem tehetnek mást az Ön webhelyén, amíg a mezőt ki nem töltik. Folytassa?"
         editable:
           title: "Bejelentkezés után szerkeszthető"
-          enabled: "szerkeszthető"
-          disabled: "nem szerkeszthető"
         show_on_profile:
           title: "Megjelenjen a nyilvános profilon"
-          enabled: "látható a profiljában"
-          disabled: "nem látható a profiljában"
         show_on_user_card:
           title: "Megjelenítés a felhasználói kártyán"
-          enabled: "megjelenítés a felhasználói kártyán"
-          disabled: "nem látható a felhasználói kártyán"
         searchable:
           title: "Kereshető"
-          enabled: "kereshető"
-          disabled: "nem kereshető"
+          enabled: "Kereshető"
         field_types:
-          text: "Szöveges mező"
+          text: "Szöveg"
           confirm: "Megerősítés"
           dropdown: "Legördülő menü"
           multiselect: "Többszörös kiválasztás"
@@ -6614,7 +6616,6 @@ hu:
         show_overriden: "Csak a felülírtak megjelenítése"
         show_outdated: "Csak az elavult/érvénytelent jelenítse meg"
         show_untranslated: "Csak a lefordítatlanok megjelenítése"
-        only_show_selected_locale: "Csak a kiválasztott nyelven jelenítse meg az eredményeket"
         locale: "Nyelv:"
         more_than_50_results: "Több mint 50 találat van. Kérlek finomíts a keresésen."
         no_results: "Nem található egyező szöveg"
@@ -6820,6 +6821,7 @@ hu:
           grant_existing_holders: Adjon további jelvényeket a meglévő jelvénytulajdonosoknak
       emoji:
         title: "Emodzsi"
+        delete: "Törlés"
         uploading: "Feltöltés..."
         name: "Név"
         group: "Csoport"

@@ -19,8 +19,8 @@ zh_CN:
       select_trigger: 选择触发器
       confirm_automation_reset: 此操作将重置脚本和触发器选项，新状态将被保存，要继续吗？
       confirm_automation_trigger: 此操作将触发自动化，要继续吗？
-      no_automation_yet: 您尚未创建任何自动化。请选择以下选项开始创建。
-      filter_placeholder: 按名称或描述筛选...
+      no_automation_yet: 您尚未创建任何自动化。请选择以下选项以开始。
+      filter_placeholder: 按名称或描述筛选…
       edit_automation:
         trigger_section:
           forced: 此触发器由脚本强制执行。
@@ -151,7 +151,7 @@ zh_CN:
           fields:
             original_post_only:
               label: 仅原帖
-              description: 仅当帖子为该话题中的原帖时才触发
+              description: 仅在帖子为话题中的原帖时触发
             action_type:
               label: 操作类型
               description: "可选，仅限创建或编辑事件触发"
@@ -169,7 +169,7 @@ zh_CN:
               description: 可选，仅在帖子所属话题是此群组收件箱中的私信时触发
             restricted_groups:
               label: 群组
-              description: 可选，仅当帖子的话题是某个群组收件箱中的私信时才触发
+              description: 可选，仅在帖子的话题是某个群组收件箱中的私信时触发
             ignore_group_members:
               label: 忽略群组成员
               description: 如果发件人是上面指定的群组的成员，则跳过触发器
@@ -183,7 +183,7 @@ zh_CN:
               label: 仅第一个话题
               description: 仅在该话题是用户创建的第一个话题时触发
             skip_via_email:
-              label: "跳过通过电子邮件"
+              label: "通过电子邮件跳过"
               description: "如果帖子是通过电子邮件创建的，则跳过该触发器。"
           created: 创建
           edited: 已编辑

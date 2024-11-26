@@ -105,7 +105,7 @@ zh_CN:
         doc: 允许向用户发送多条 PM。每条 PM 都接受延迟。
       suspend_user_by_email:
         title: 通过电子邮件暂停用户
-        description: 根据电子邮件地址自动暂停账户
+        description: 根据电子邮件地址自动暂停帐户
       user_global_notice:
         title: 用户全局通知
         description: 允许为用户显示全局通知
@@ -150,5 +150,5 @@ zh_CN:
         title: "发送聊天消息"
         description: "向频道发送自定义聊天消息"
       random_assign:
-        title: "随机分配"
-        description: "向群组随机分配话题"
+        title: "随机指定"
+        description: "向群组随机指定话题"

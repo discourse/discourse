@@ -1959,7 +1959,6 @@ cs:
                 many {# dnů}
               other {# dnů}
             }.
-          edit_link_options: "Upravit možnosti odkazu."
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           restrict: "Omezit na"
@@ -5541,6 +5540,11 @@ cs:
         look_and_feel:
           themes:
             title: "Motivy"
+        user_fields:
+          type: "Typ"
+          more_options:
+            title: "Další možnosti"
+          delete: "Smazat"
       plugins:
         title: "Pluginy"
         name: "Název"
@@ -6140,6 +6144,11 @@ cs:
         id_not_found: "Bohužel uživatel s tímto id není v našem systému."
         status: "Stav"
         show_emails: "Ukázat emailové adresy"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zavřít"
+              confirm: "Smazat"
         nav:
           new: "Noví"
           active: "Aktivní"
@@ -6379,8 +6388,6 @@ cs:
           confirm_delete: "Opravdu chcete smazat tento záznam DiscourseConnect?"
       user_fields:
         title: "Uživatelská pole"
-        help: "Přidej fields, které tvoji uživatelé mohou vyplnit."
-        create: "Vytvořit rozšíření"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -6401,16 +6408,10 @@ cs:
             title: "Volitelné"
         editable:
           title: "Editovatelné po registraci"
-          enabled: "editovatelné"
-          disabled: "není editovatelné"
         show_on_profile:
           title: "Zveřejnit na uživatelském profilu"
-          enabled: "zveřejněno na profilu"
-          disabled: "nezveřejněno na profilu"
         show_on_user_card:
           title: "Zobrazit na kartě uživatele"
-          enabled: "zobrazeno na kartě uživatele"
-          disabled: "Nezobrazeno na kartě uživatele"
         field_types:
           text: "Text"
           confirm: "Potvrzení"
@@ -6428,7 +6429,6 @@ cs:
         show_overriden: "Zobrazit pouze změněné"
         show_outdated: "Zobrazit pouze zastaralé/neplatné"
         show_untranslated: "Zobrazit pouze nepřeložené"
-        only_show_selected_locale: "Zobrazit výsledky pouze ve vybraném jazyce"
         locale: "Jazyk:"
         more_than_50_results: "K dispozici je více než 50 výsledků. Zpřesněte prosím vyhledávání."
         no_results: "Nebyly nalezeny žádné odpovídající texty"
@@ -6608,6 +6608,7 @@ cs:
           grant_existing_holders: Udělit další odznaky stávajícím držitelům odznaků.
       emoji:
         title: "Emoji"
+        delete: "Smazat"
         uploading: "Nahrávání…"
         name: "Název"
         group: "Skupina"

@@ -312,9 +312,6 @@ fa_IR:
       popup:
         chat_message: "پیام گفتگو جدید"
         chat_quoted: "%{username} پیام گفتگو شما را نقل کرد"
-      titles:
-        chat_mention: "اشاره گفتگو"
-        chat_invitation: "دعوت‌نامه گفتگو"
     action_codes:
       chat:
         enabled: '%{who} فعال شد <button class="btn-link open-chat">گفتگو</button> %{when}'
