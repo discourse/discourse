@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
 import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
 import { i18n } from "discourse-i18n";
@@ -161,18 +162,14 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   }
 
   get wrapperElement() {
-    const { href, type } = this.args;
-
-    return href
-      ? <template><a href={{href}} ...attributes>{{yield}}</a></template>
-      : <template>
-          <button type={{or type "button"}} ...attributes>{{yield}}</button>
-        </template>;
+    return element(this.args.href ? "a" : "button");
   }
 
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     <this.wrapperElement
+      href={{@href}}
+      type={{unless @href (or @type "button")}}
       {{! For legacy compatibility. Prefer passing class as attributes. }}
       class={{concatClass
         @class

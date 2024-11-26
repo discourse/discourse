@@ -18,6 +18,19 @@ import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
 import FKRow from "discourse/form-kit/components/fk/row";
 
+const RowColWrapper = <template>
+  <FKRow as |row|>
+    <row.Col @size={{@size}}>
+      {{yield}}
+    </row.Col>
+  </FKRow>
+</template>;
+
+const EmptyWrapper = <template>
+  {{! template-lint-disable no-yield-only }}
+  {{yield}}
+</template>;
+
 export default class FKField extends Component {
   @tracked field;
   @tracked name;
@@ -72,18 +85,9 @@ export default class FKField extends Component {
 
   get wrapper() {
     if (this.args.size) {
-      return <template>
-        <FKRow as |row|>
-          <row.Col @size={{@size}}>
-            {{yield}}
-          </row.Col>
-        </FKRow>
-      </template>;
+      return RowColWrapper;
     } else {
-      return <template>
-        {{! template-lint-disable no-yield-only }}
-        {{yield}}
-      </template>;
+      return EmptyWrapper;
     }
   }
 
