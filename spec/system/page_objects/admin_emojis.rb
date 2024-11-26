@@ -36,7 +36,7 @@ module PageObjects
       end
 
       def delete_button_selector
-        ".d-icon-trash-can"
+        ".d-admin-row__controls-delete"
       end
     end
   end
