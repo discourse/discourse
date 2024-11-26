@@ -2685,7 +2685,13 @@ RSpec.describe PostMover do
             freeze_original: true,
           },
         ).to_topic(destination_topic.id)
-        expect(MovedPost.count).to eq(1)
+        expect(
+          MovedPost.exists?(
+            old_topic_id: original_topic.id,
+            new_topic_id: destination_topic.id,
+            old_post_id: first_post.id,
+          ),
+        ).to eq(true)
       end
 
       it "creates the moderator message in the correct position" do
