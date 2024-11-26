@@ -72,11 +72,13 @@ export default class PollComponent extends Component {
   areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
+    let allZeros = true;
 
     arr.forEach((obj) => {
       const rank = obj.rank;
 
       if (rank !== 0) {
+        allZeros = false; // Set to false if any rank is non-zero
         if (ranks.has(rank)) {
           hasNonZeroDuplicate = true;
           return; // Exit forEach loop if a non-zero duplicate is found
@@ -85,7 +87,7 @@ export default class PollComponent extends Component {
       }
     });
 
-    return !hasNonZeroDuplicate;
+    return !hasNonZeroDuplicate && !allZeros;
   };
 
   _toggleOption = (option, rank = 0) => {

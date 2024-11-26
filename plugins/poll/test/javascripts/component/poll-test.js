@@ -41,6 +41,135 @@ module("Poll | Component | poll", function (hooks) {
     });
   });
 
+  test("valid ranks with which you can vote", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+        polls_votes: {
+          poll: [
+            {
+              digest: "1f972d1df351de3ce35a787c89faad29",
+              rank: 1,
+            },
+            {
+              digest: "d7ebc3a9beea2e680815a1e4f57d6db6",
+              rank: 2,
+            },
+            {
+              digest: "6c986ebcde3d5822a6e91a695c388094",
+              rank: 3,
+            },
+          ],
+        },
+      }),
+      poll: new TrackedObject({
+        name: "poll",
+        type: "ranked_choice",
+        status: "open",
+        results: "on_close",
+        options: [
+          {
+            id: "1f972d1df351de3ce35a787c89faad29",
+            html: "this",
+            votes: 0,
+            rank: 1,
+          },
+          {
+            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+            html: "that",
+            votes: 0,
+            rank: 2,
+          },
+          {
+            id: "6c986ebcde3d5822a6e91a695c388094",
+            html: "other",
+            votes: 0,
+            rank: 3,
+          },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+
+    assert.dom(".poll-buttons .cast-votes:disabled").doesNotExist();
+    assert.dom(".poll-buttons .cast-votes").exists();
+  });
+
+  test("invalid ranks with which you cannot vote", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+      }),
+      poll: new TrackedObject({
+        name: "poll",
+        type: "ranked_choice",
+        status: "open",
+        results: "always",
+        options: [
+          {
+            id: "1f972d1df351de3ce35a787c89faad29",
+            html: "this",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+            html: "that",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "6c986ebcde3d5822a6e91a695c388094",
+            html: "other",
+            votes: 0,
+            rank: 0,
+          },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(hbs`<Poll @post={{this.post}} @poll={{this.poll}} />`);
+
+    await click(
+      ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button",
+      "open dropdown"
+    );
+
+    assert
+      .dom(".dropdown-menu__item:nth-child(2)")
+      .hasText(`1 ${I18n.t("poll.options.ranked_choice.highest_priority")}`);
+
+    await click(
+      ".dropdown-menu__item:nth-child(2) button",
+      "select 1st priority"
+    );
+
+    assert.dom(".poll-buttons .cast-votes:disabled").doesNotExist();
+    assert.dom(".poll-buttons .cast-votes").exists();
+
+    await click(
+      ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button",
+      "open dropdown"
+    );
+
+    await click(".dropdown-menu__item:nth-child(1) button", "select Abstain");
+
+    assert.dom(".poll-buttons .cast-votes:disabled").exists();
+  });
+
   test("shows vote", async function (assert) {
     this.setProperties({
       post: EmberObject.create({
