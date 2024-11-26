@@ -5,7 +5,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 let requests = 0;
 
