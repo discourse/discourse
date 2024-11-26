@@ -4088,6 +4088,9 @@ vi:
         look_and_feel:
           themes:
             title: "Themes"
+        user_fields:
+          type: "Loại"
+          delete: "Xóa"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4763,6 +4766,11 @@ vi:
         status: "Trạng thái"
         show_emails: "Hiện địa chỉ Email"
         hide_emails: "Ẩn Email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Đóng"
+              confirm: "Xóa"
         nav:
           new: "Mới"
           active: "Kích hoạt"
@@ -5004,8 +5012,6 @@ vi:
           delete_sso_record: "Xóa bản ghi SSO"
       user_fields:
         title: "Trường tài khoản"
-        help: "Thêm trường dữ liệu cho người dùng nhập."
-        create: "Tạo trường tài khoản"
         untitled: "Không có tiêu đề"
         name: "Tên Trường"
         type: "Loại Trường"
@@ -5026,19 +5032,10 @@ vi:
             title: "Tùy chọn"
         editable:
           title: "Có thể chỉnh sửa sau khi đăng ký"
-          enabled: "có thể chỉnh sửa"
-          disabled: "không thể chỉnh sửa"
-        show_on_profile:
-          enabled: "hiển thị trong hồ sơ"
-          disabled: "không hiển thị trong hồ sơ"
         show_on_user_card:
           title: "Hiện trên thẻ người dùng"
-          enabled: "hiển trên thẻ người dùng"
-          disabled: "không hiện trên thẻ người dùng"
-        searchable:
-          disabled: "không thể tìm kiếm được"
         field_types:
-          text: "Nội dung chữ"
+          text: "Văn bản"
           confirm: "Xác nhận"
           dropdown: "Xổ xuống"
           multiselect: "Chọn nhiều"
@@ -5210,6 +5207,7 @@ vi:
           grant_existing_holders: Cấp huy hiệu bổ sung cho những chủ sở hữu huy hiệu hiện có
       emoji:
         title: "Emoji"
+        delete: "Xóa"
         uploading: "Đang tải lên…"
         name: "Tên"
         group: "Nhóm"

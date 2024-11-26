@@ -728,9 +728,9 @@ sk:
         chat_message: "Nová správa v chate"
         chat_quoted: "%{username} citoval tvoju správu na chate"
       titles:
-        chat_mention: "Zmienka o chate"
-        chat_invitation: "Pozvánka na chat"
-        chat_quoted: "Chat citovaný"
+        chat_mention: "Spomenuté v chate"
+        chat_invitation: "Pozvaný do kanála chatu"
+        chat_quoted: "Citovaná správa chatu"
         chat_watched_thread: "Sledované vlákno chatu"
     action_codes:
       chat:

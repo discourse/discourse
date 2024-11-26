@@ -88,6 +88,7 @@ el:
       number_value_not_valid_min_max: "Η τιμή πρέπει να είναι μεταξύ %{min} και %{max}."
       objects:
         required: "πρέπει να υπάρχει"
+        invalid_type: "%{type} δεν είναι έγκυρος τύπος"
         not_valid_integer_value: "πρέπει να είναι ακέραιος αριθμός"
         string_value_not_valid_url: "πρέπει να είναι μια έγκυρη διεύθυνση URL"
     locale_errors:

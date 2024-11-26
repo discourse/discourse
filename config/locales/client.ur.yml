@@ -4032,6 +4032,9 @@ ur:
         look_and_feel:
           themes:
             title: "تِھیمز"
+        user_fields:
+          type: "قِسم"
+          delete: "مٹائیں"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -4718,6 +4721,11 @@ ur:
         status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "بند کریں"
+              confirm: "مٹائیں"
         nav:
           new: "نیا"
           active: "فعال"
@@ -4972,8 +4980,6 @@ ur:
           confirm_delete: "کیا آپ واقعی اس DiscourseConnect ریکارڈ کو حذف کرنا چاہیں گے؟"
       user_fields:
         title: "صارف کے لیے دیئے گئے خانے"
-        help: "خانے شامل کریں جو آپ کے صارفین پُر کر سکیں۔"
-        create: "صارفین سے پُر ہونے والے خانے بنائیں۔"
         untitled: "بلاعنوان"
         name: "فیلڈ کا نام"
         type: "فیلڈ کی قسم"
@@ -4991,20 +4997,8 @@ ur:
         requirement:
           optional:
             title: "اختیاری"
-        editable:
-          enabled: "قابلِ ترمیم"
-          disabled: "ناقابلِ ترمیم"
-        show_on_profile:
-          enabled: "پروفائل پر دکھائیں؟"
-          disabled: "پروفائل پر نہیں دکھایا؟"
-        show_on_user_card:
-          enabled: "صارف کارڈ پر دکھایا گیا"
-          disabled: "صارف کارڈ پر نہیں دکھایا گیا"
-        searchable:
-          enabled: "قابل تلاش؟"
-          disabled: "قابل تلاش نہیں"
         field_types:
-          text: "ٹَیکسٹ کی جگہ"
+          text: "ٹیکسٹ"
           confirm: "تصدیق"
           dropdown: "ڈراپ ڈاؤن"
           multiselect: "کثیر الانتخاب"
@@ -5169,6 +5163,7 @@ ur:
           grant_existing_holders: موجودہ بیج ہولڈرز کو اضافی بیجز دیں
       emoji:
         title: "اِیمَوجی"
+        delete: "مٹائیں"
         name: "نام"
         group: "گروپ"
         image: "تصویر"

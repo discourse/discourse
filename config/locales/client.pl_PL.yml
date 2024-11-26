@@ -1970,7 +1970,6 @@ pl_PL:
                 many {# dni}
               other {# dni}
             }.
-          edit_link_options: "Edytuj opcje łącza."
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           restrict: "Ogranicz do"
@@ -5722,6 +5721,13 @@ pl_PL:
             set_default_theme: "Ustaw domyślne"
             default_theme: "Motyw domyślny"
             new_theme: "Nowy motyw"
+        user_fields:
+          type: "Typ"
+          more_options:
+            title: "Więcej opcji"
+            move_up: "Przenieś wyżej"
+            move_down: "Przenieś niżej"
+          delete: "Usuń"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -6615,6 +6621,11 @@ pl_PL:
         status: "Status"
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zamknij"
+              confirm: "Usuń"
         nav:
           new: "Nowi"
           active: "Aktywni"
@@ -6900,8 +6911,6 @@ pl_PL:
           confirm_delete: "Czy na pewno chcesz usunąć ten rekord DiscourseConnect?"
       user_fields:
         title: "Pola użytkownika"
-        help: "Dodaj pola które użytkownicy mogą wypełnić."
-        create: "Dodaj pole użytkownika"
         untitled: "Bez tytułu"
         name: "Nazwa pola"
         type: "Typ pola"
@@ -6930,22 +6939,15 @@ pl_PL:
           confirmation: "Spowoduje to wyświetlenie istniejącym użytkownikom monitu o wypełnienie tego pola i nie pozwoli im na wykonanie żadnych innych czynności w Twojej witrynie, dopóki pole to nie zostanie wypełnione. Kontynuować?"
         editable:
           title: "Edytowalne po rejestracji"
-          enabled: "edytowalne"
-          disabled: "nieedytowalne"
         show_on_profile:
           title: "Widoczne w publicznym profilu"
-          enabled: "widoczne w profilu"
-          disabled: "niewidoczne w profilu"
         show_on_user_card:
           title: "Pokaż na karcie użytkownika"
-          enabled: "wyświetlane na karcie użytkownika"
-          disabled: "nie pokazany na karcie użytkownika"
         searchable:
           title: "Możliwe do wyszukania"
-          enabled: "możliwe do wyszukania"
-          disabled: "nie można wyszukiwać"
+          enabled: "Możliwe do wyszukania"
         field_types:
-          text: "Pole tekstowe"
+          text: "Tekst"
           confirm: "Potwierdzenie"
           dropdown: "Lista rozwijana"
           multiselect: "Wielokrotny wybór"
@@ -6961,7 +6963,6 @@ pl_PL:
         show_overriden: "Pokaż tylko nadpisane"
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         show_untranslated: "Pokazuj tylko nieprzetłumaczone"
-        only_show_selected_locale: "Pokaż wyniki tylko w wybranej lokalizacji"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         no_results: "Nie znaleziono pasujących tekstów witryny"
@@ -7176,6 +7177,7 @@ pl_PL:
           grant_existing_holders: Przyznaj dodatkowe odznaki obecnym posiadaczom odznak
       emoji:
         title: "Emoji"
+        delete: "Usuń"
         uploading: "Przesyłanie…"
         name: "Nazwa"
         group: "Grupa"

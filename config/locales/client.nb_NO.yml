@@ -4684,6 +4684,11 @@ nb_NO:
         look_and_feel:
           themes:
             title: "Drakter"
+        user_fields:
+          type: "Type"
+          more_options:
+            title: "Flere valg"
+          delete: "Slett"
       plugins:
         title: "Utvidelser"
         name: "Navn"
@@ -5278,6 +5283,11 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         show_emails: "Vis e-poster"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Lukk"
+              confirm: "Slett"
         nav:
           new: "Ny"
           active: "Aktiv"
@@ -5476,8 +5486,6 @@ nb_NO:
           external_avatar_url: "Profilbilde URL"
       user_fields:
         title: "Brukerfelter"
-        help: "Legg til felter som dine brukere kan fylle ut."
-        create: "Opprett brukerfelt"
         untitled: "Uten tittel"
         name: "Feltnavn"
         type: "Felttype"
@@ -5498,18 +5506,12 @@ nb_NO:
             title: "Valgfritt"
         editable:
           title: "Kan det endres etter registrering"
-          enabled: "kan endres"
-          disabled: "kan ikke endres"
         show_on_profile:
           title: "Vis på offentlig profil"
-          enabled: "vises på profil"
-          disabled: "vises ikke på profil"
         show_on_user_card:
           title: "Vis på brukerkort"
-          enabled: "vist på brukerkort"
-          disabled: "ikke vist på brukerkort"
         field_types:
-          text: "Tekstfelt"
+          text: "Tekst"
           confirm: "Bekreftelse"
           dropdown: "Nedtrekk"
       site_text:
@@ -5647,6 +5649,7 @@ nb_NO:
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Slett"
         uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"

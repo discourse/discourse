@@ -2768,6 +2768,7 @@ de:
     cannot_delete_has_posts:
       one: "Benutzer %{username} hat %{count} Beitrag in einem öffentlichen Thema oder einer persönlichen Nachricht verfasst. Löschen nicht möglich."
       other: "Benutzer %{username} hat %{count} Beiträge in öffentlichen Themen oder persönlichen Nachrichten verfasst. Löschen nicht möglich."
+    cannot_bulk_delete: "Ein oder mehrere Benutzer können nicht gelöscht werden, weil sie entweder ein Admin sind, zu viele Beiträge haben oder einen sehr alten Beitrag haben."
   unsubscribe_mailer:
     title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
@@ -5046,6 +5047,7 @@ de:
         other: "Automatisch widerrufen, erstellt vor mehr als %{count} Tagen"
       revoked: Widerrufen
       restored: Wiederhergestellt
+    bulk_user_delete: "bei einem Massenlöschvorgang gelöscht"
   reviewables:
     already_handled: "Vielen Dank, aber wir haben diesen Beitrag bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
     already_handled_and_user_not_exist: "Danke, aber jemand hat es bereits überprüft und dieser Benutzer existiert nicht mehr."

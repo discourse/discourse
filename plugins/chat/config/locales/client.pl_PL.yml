@@ -704,11 +704,6 @@ pl_PL:
           other_html: "<span>%{username}</span> <span>oznaczył %{identifier} na czacie osobistym</span>"
         chat_message: "Nowa wiadomość na czacie"
         chat_quoted: "%{username} zacytował Twoją wiadomość na czacie"
-      titles:
-        chat_mention: "Wzmianka na czacie"
-        chat_invitation: "Zaproszenie do czatu"
-        chat_quoted: "Cytowany czat"
-        chat_watched_thread: "Obserwowany wątek czatu"
     action_codes:
       chat:
         enabled: '%{who} włączone <button class="btn-link open-chat">czat</button> %{when}'

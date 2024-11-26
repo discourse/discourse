@@ -6,6 +6,11 @@
 
 pt_BR:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: excluir automação
     discourse_automation:
       title: Automação
       create: Criar
@@ -14,6 +19,8 @@ pt_BR:
       select_trigger: Selecione um acionador
       confirm_automation_reset: Esta ação redefinirá as opções de script e de acionamento, o novo estado será salvo. Deseja continuar?
       confirm_automation_trigger: Esta ação acionará a automação. Deseja continuar?
+      no_automation_yet: Você ainda não criou nenhuma automação. Escolha uma opção abaixo para começar.
+      filter_placeholder: Filtrar por nome ou descrição...
       edit_automation:
         trigger_section:
           forced: Este acionador é forçado por script.
@@ -143,6 +150,9 @@ pt_BR:
               label: ID do tópico
         post_created_edited:
           fields:
+            original_post_only:
+              label: Apenas postagem original
+              description: Isso é ativado apenas se a postagem for a postagem original no tópico
             action_type:
               label: Tipo de ação
               description: "Opcional, acionamento de limite apenas para eventos criados ou editados"
@@ -160,6 +170,7 @@ pt_BR:
               description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada na caixa de mensagens deste grupo
             restricted_groups:
               label: Grupos
+              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem privada em uma das caixas de entrada do grupo
             ignore_group_members:
               label: Ignorar membros de grupo
               description: Ignorar o gatilho se o(a) remetente for um membro do Grupo especificado acima
@@ -172,6 +183,9 @@ pt_BR:
             first_topic_only:
               label: Apenas primeiro tópico
               description: Ativa apenas se o tópico for o primeiro tópico criado pelo(a) usuário(a)
+            skip_via_email:
+              label: "Pular por e-mail"
+              description: "Pule o acionador se a postagem tiver sido criada por e-mail"
           created: Criado(a)
           edited: Editado(a)
         user_updated:
@@ -221,6 +235,9 @@ pt_BR:
             watching_tags:
               label: Etiquetas de acompanhamento
               description: Ativa-se apenas se o tópico tiver uma destas etiquetas
+            trigger_with_pms:
+              label: Ativar com MPs
+              description: Isso é ativado mesmo se as etiquetas forem alteradas numa MP
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +396,7 @@ pt_BR:
           fields:
             custom_field_name:
               label: "Nome do campo personalizado do(a) usuário(a)"
+      unnamed_automation: "Automação sem nome"
       models:
         script:
           name:

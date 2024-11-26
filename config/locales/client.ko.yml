@@ -3982,6 +3982,9 @@ ko:
         look_and_feel:
           themes:
             title: "테마"
+        user_fields:
+          type: "유형"
+          delete: "삭제하기"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4678,6 +4681,11 @@ ko:
         status: "상태"
         show_emails: "이메일 표시"
         hide_emails: "이메일 숨기기"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "삭제하기"
         nav:
           new: "신규"
           active: "활성"
@@ -4931,8 +4939,6 @@ ko:
           confirm_delete: "이 DiscourseConnect 기록을 삭제할까요?"
       user_fields:
         title: "사용자 필드"
-        help: "사용자가 입력할 수 있는 필드를 추가합니다."
-        create: "사용자 필드 생성"
         untitled: "무제"
         name: "필드 이름"
         type: "필드 유형"
@@ -4953,22 +4959,15 @@ ko:
             title: "선택 사항"
         editable:
           title: "가입 후 편집 가능"
-          enabled: "편집 가능"
-          disabled: "편집 불가"
         show_on_profile:
           title: "다른 사람이 프로필을 볼수 있게할까요"
-          enabled: "프로필에 표시"
-          disabled: "프로필에 표시하지 않기"
         show_on_user_card:
           title: "사용자 카드에 표시할까요"
-          enabled: "사용자 카드에 표시"
-          disabled: "사용자 카드에 표시하지 않기"
         searchable:
           title: "검색 가능한가요"
-          enabled: "검색 가능"
-          disabled: "검색 불가"
+          enabled: "검색 가능한가요"
         field_types:
-          text: "텍스트 필드"
+          text: "텍스트"
           confirm: "확인"
           dropdown: "드롭다운"
           multiselect: "다중 선택"
@@ -5138,6 +5137,7 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
+        delete: "삭제하기"
         name: "이름"
         group: "그룹"
         image: "이미지"

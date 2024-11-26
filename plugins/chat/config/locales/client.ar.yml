@@ -149,6 +149,7 @@ ar:
       header_indicator_preference:
         title: "إظهار مؤشر النشاط في الرأس"
         all_new: "كل الرسائل الجديدة"
+        dm_and_mentions: "الرسائل المباشرة والإشارات وسلاسل الدردشة المراقبة"
         only_mentions: "الإشارات فقط"
         never: "أبدًا"
       separate_sidebar_mode:
@@ -527,6 +528,7 @@ ar:
         auto_join_users_info: "تحقَّق كل ساعة من المستخدمين الذين كانوا نشطين في الأشهر الثلاثة الماضية. قم بإضافتهم إلى هذه القناة إذا كان لديهم وصول إلى الفئة %{category}."
         auto_join_users_info_no_category: "تحقَّق كل ساعة من المستخدمين الذين كانوا نشطين في الأشهر الثلاثة الماضية. قم بإضافتهم إلى هذه القناة إذا كان لديهم وصول إلى الفئة المحدَّدة."
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
+        notification_level: "إرسال إشعارات فورية"
         follow: "الانضمام"
         followed: "انضم"
         mute: "كتم القناة"
@@ -551,6 +553,7 @@ ar:
           title: "تصدير رسائل الدردشة"
           description: "يؤدي هذا إلى تصدير جميع الرسائل من جميع القنوات."
           create_export: "إنشاء تصدير"
+          confirm_export: "يؤدي هذا إلى تصدير جميع الرسائل من جميع القنوات وإرسال النتيجة إليك في رسالة شخصية. هل تريد بالتأكيد التصدير؟"
           export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
       my_threads:
         title: سلاسل الدردشة الخاصة بي
@@ -593,6 +596,8 @@ ar:
         username: "اسم المستخدم"
         username_instructions: "اسم المستخدم لبرنامج الروبوت الذي ينشر على القناة. يتم تعيينه افتراضيًا إلى \"النظام\" عند تركه فارغة."
         instructions: "يمكن استخدام خطافات الويب الواردة بواسطة أنظمة خارجية لنشر الرسائل في قناة دردشة مخصَّصة كمستخدم برنامج روبوت عبر نقطة النهاية <code>/hooks/:key</code>. يتألف الحمل من معلمة <code>نصية</code> فردية، وهي مقيَّدة إلى 2000 حرف.<br><br>نحن ندعم أيضًا المعلمات <code>النصية</code> بتنسيق Slack، مع استخراج الروابط والإشارات بناءً على التنسيق في <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>، لكن يجب استخدام نقطة النهاية <code>/hooks/:key/slack</code> من أجل ذلك."
+        saved: "تم حفظ التغييرات في خطاف الويب"
+        created: "تم إنشاء خطاف الويب"
       selection:
         cancel: "إلغاء"
         quote_selection: "اقتباس في الموضوع"
@@ -698,10 +703,13 @@ ar:
         notifications:
           regular:
             title: "طبيعية"
+            description: "احصل على إشعار عندما يشير إليك شخص ما في سلسلة الدردشة هذه."
           tracking:
             title: "التتبُّع"
+            description: "احصل على إشعار عندما يشير إليك شخص ما في سلسلة الدردشة هذه، وشاهد عدد الردود الجديدة في قائمة سلسلة الدردشة."
           watching:
             title: "المراقبة"
+            description: "احصل على إشعار بشأن جميع الردود في سلسلة الدردشة هذه، وشاهد عدد الردود الجديدة في قائمة سلسلة الدردشة."
         participants_other_count:
           zero: "+%{count}"
           one: "+%{count}"
@@ -731,6 +739,13 @@ ar:
       chat_invitation: "دعاك للانضمام إلى قناة دردشة"
       chat_invitation_html: "دعاك <span>%{username}</span> <span>للانضمام إلى قناة دردشة</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        zero: "%{username} و%{count} آخر"
+        one: "%{username} و%{username2}"
+        two: "%{username} ومستخدمان (%{count}) آخران"
+        few: "%{username} و%{count} مستخدمين آخرين"
+        many: "%{username} و%{count} مستخدمًا آخر"
+        other: "%{username} و%{count} مستخدم آخر"
       popup:
         chat_mention:
           direct: 'أشار إليك في "%{channel}"'
@@ -744,10 +759,6 @@ ar:
           other_html: "أشار <span>%{username}</span> <span>إلى %{identifier} في دردشة شخصية</span>"
         chat_message: "رسالة دردشة جديدة"
         chat_quoted: "اقتبس %{username} رسالة الدردشة الخاصة بك"
-      titles:
-        chat_mention: "إشارة في الدردشة"
-        chat_invitation: "دعوة الدردشة"
-        chat_quoted: "تم اقتباس الدردشة"
     action_codes:
       chat:
         enabled: 'فعَّل %{who} <button class="btn-link open-chat">الدردشة</button> في %{when}'
@@ -778,6 +789,7 @@ ar:
         title: "الدردشة"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} تبديل القناة"
+          switch__unread_channel_arrows: "%{shortcut} تبديل القناة غير المقروءة"
           open_quick_channel_selector: "%{shortcut} فتح محدِّد قناة سريع"
           open_insert_link_modal: "%{shortcut} إدراج رابط تشعبي (أداة الإنشاء فقط)"
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"

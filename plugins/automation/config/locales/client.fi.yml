@@ -6,6 +6,11 @@
 
 fi:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: poista automaatio
     discourse_automation:
       title: Automaatio
       create: Aloitus
@@ -14,6 +19,8 @@ fi:
       select_trigger: Valitse triggeri
       confirm_automation_reset: Tämä toiminto nollaa skripti- ja triggeriasetukset, uusi tila tallennetaan. Haluatko jatkaa?
       confirm_automation_trigger: Tämä toiminto käynnistää automaation, haluatko jatkaa?
+      no_automation_yet: Et ole vielä luonut automaatioita. Aloita valitsemalla vaihtoehto alta.
+      filter_placeholder: Suodata nimen tai kuvauksen mukaan...
       edit_automation:
         trigger_section:
           forced: Tämä triggeri on skriptin pakottama.
@@ -143,6 +150,9 @@ fi:
               label: Ketjun tunnus
         post_created_edited:
           fields:
+            original_post_only:
+              label: Vain alkuperäinen viesti
+              description: Käynnistyy vain, jos viesti on ketjun alkuperäinen viesti
             action_type:
               label: Toiminnon tyyppi
               description: "Valinnainen, rajaa käynnistyksen vain luomis- tai muokkaustapahtumiin"
@@ -160,6 +170,7 @@ fi:
               description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti tämän ryhmän postilaatikossa
             restricted_groups:
               label: Ryhmät
+              description: Valinnainen, käynnistyy vain, jos viestin ketju on yksityisviesti jossakin ryhmän postilaatikoista
             ignore_group_members:
               label: Ohita ryhmän jäsenet
               description: Ohita triggeri, jos lähettäjä on edellä määritellyn ryhmän jäsen
@@ -172,6 +183,9 @@ fi:
             first_topic_only:
               label: Vain ensimmäinen ketju
               description: Käynnistyy vain, jos ketju on ensimmäinen käyttäjän luoma ketju
+            skip_via_email:
+              label: "Ohita sähköpostitse"
+              description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
           created: Luotu
           edited: Muokattu
         user_updated:
@@ -221,6 +235,9 @@ fi:
             watching_tags:
               label: Tarkkailussa olevat tunnisteet
               description: Käynnistyy vain, jos ketjulla on jokin näistä tunnisteista
+            trigger_with_pms:
+              label: Käynnistä yksityisviesteillä
+              description: Käynnistyy, vaikka tunnisteet olisi muutettu yksityisviestillä
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +396,7 @@ fi:
           fields:
             custom_field_name:
               label: "Käyttäjän mukautetun kentän nimi"
+      unnamed_automation: "Nimetön automaatio"
       models:
         script:
           name:
