@@ -94,8 +94,7 @@ class PostMover
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
 
     if @options[:freeze_original] # in this case we need to add the moderator post after the last copied post
-      from_posts = @original_topic.posts.where("post_number > ?", posts.last.post_number)
-
+      from_posts = @original_topic.ordered_posts.where("post_number > ?", posts.last.post_number)
       shift_post_numbers(from_posts) if !moving_all_posts
 
       @first_post_number_moved = posts.last.post_number + 1
@@ -350,7 +349,7 @@ class PostMover
   end
 
   def shift_post_numbers(from_posts)
-    from_posts.each { |post| post.update_columns(post_number: post.post_number + 1) }
+    from_posts.reverse_each { |post| post.update_columns(post_number: post.post_number + 1) }
   end
 
   def move_incoming_emails
