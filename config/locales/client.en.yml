@@ -4352,7 +4352,7 @@ en:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       filter:
-        title: "Filter"
+        title: "Filtered results for %{filter}"
         button:
           label: "Filter"
       latest:
