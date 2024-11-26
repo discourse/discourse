@@ -177,6 +177,35 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               ".chat-channel-row:nth-child(2)[data-chat-channel-id=\"#{dm_channel_1.id}\"]",
             )
           end
+
+          context "with threads" do
+            fab!(:message) do
+              Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user)
+            end
+            fab!(:thread) do
+              Fabricate(:chat_thread, channel: dm_channel_1, original_message: message)
+            end
+
+            before { dm_channel_1.membership_for(current_user).mark_read!(message.id) }
+
+            it "shows urgent badge for mentions" do
+              Jobs.run_immediately!
+
+              visit("/chat/direct-messages")
+
+              expect(channels_index_page).to have_no_unread_channel(dm_channel_1)
+
+              Fabricate(
+                :chat_message_with_service,
+                chat_channel: dm_channel_1,
+                thread: thread,
+                message: "hello @#{current_user.username}",
+                user: user_1,
+              )
+
+              expect(channels_index_page).to have_unread_channel(dm_channel_1, urgent: true)
+            end
+          end
         end
       end
 
