@@ -3765,7 +3765,9 @@ ru:
       show_hidden: "Просмотр игнорируемого контента."
       deleted_by_author_simple: "(сообщение удалено автором)"
       collapse: "свернуть"
+      load_more_replies: "загрузить еще ответы"
       sr_collapse_replies: "Свернуть встроенные ответы"
+      sr_load_more_replies: "Загрузить еще вложенные ответы"
       sr_date: "Дата сообщения"
       sr_expand_replies:
         one: "На это сообщение есть %{count} ответ"

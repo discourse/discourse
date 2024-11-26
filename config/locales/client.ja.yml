@@ -3219,7 +3219,9 @@ ja:
       show_hidden: "無視したコンテンツを表示します。"
       deleted_by_author_simple: "(作成者が削除した投稿)"
       collapse: "折りたたむ"
+      load_more_replies: "返信をさらに読み込む"
       sr_collapse_replies: "埋め込まれた返信を折りたたむ"
+      sr_load_more_replies: "埋め込み返信をさらに読み込む"
       sr_date: "投稿日"
       sr_expand_replies:
         other: "この投稿には %{count} 件の返信があります"

@@ -31,6 +31,7 @@ el:
           format_title: Μορφή ημερομηνίας
           timezone: Ζώνη ώρας
           until: Μέχρι...
+          current_timezone: "Τρέχουσα ζώνη ώρας:"
           recurring:
             every_day: "Κάθε μέρα"
             every_week: "Κάθε εβδομάδα"
@@ -40,3 +41,4 @@ el:
             every_three_months: "Κάθε τρεις μήνες"
             every_six_months: "Κάθε έξι μήνες"
             every_year: "Κάθε χρόνο"
+      default_title: "%{site_name} Εκδήλωση"

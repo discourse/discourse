@@ -799,7 +799,7 @@ pt_BR:
       topic_exists_no_oldest: "Não é possível excluir esta categoria porque contagem de tópicos é de %{count}."
     uncategorized_description: "Tópicos que não precisam de uma categoria ou que não se encaixam em nenhuma outra categoria existente."
   trust_levels:
-    admin: "Administrador(a)"
+    admin: "Administração"
     staff: "Equipe"
     change_failed_explanation: "Você tentou rebaixar %{user_name} para \"%{new_trust_level}\". No entanto, o seu nível de confiança já é \"%{current_trust_level}\". %{user_name} permanecerá em \"%{current_trust_level}\". Se você deseja rebaixar um(a) usuário(a), bloqueie o nível de confiança antes."
   post:
@@ -1171,7 +1171,7 @@ pt_BR:
       labels:
         edited_at: Data
         post: Postar
-        editor: Editor
+        editor: Editor(a)
         author: Autor(a)
         edit_reason: Motivo
       description: "Número de novas edições de postagens."
@@ -1243,7 +1243,7 @@ pt_BR:
       description: "Visualizações de página para usuários(as) que entraram com a conta, usuários(as) anônimos(as) e rastreadores."
       labels:
         post: Postar
-        editor: Editor
+        editor: Editor(a)
         author: Autor(a)
         edit_reason: Motivo
     consolidated_api_requests:
@@ -1317,7 +1317,7 @@ pt_BR:
       labels:
         type: Tipo
       xaxis_labels:
-        admin: Administrador(a)
+        admin: Administração
         moderator: Moderador(a)
         suspended: Suspenso(a)
         silenced: Silenciado(a)
@@ -1833,7 +1833,7 @@ pt_BR:
     google_oauth2_client_secret: "Segredo de cliente do seu app Google."
     google_oauth2_prompt: "Uma lista opcional delimitada por espaço de valores de linhas que especifica se o servidor de autorização solicita ao(à) usuário(a) reautenticação e consentimento. Acesse <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> para consultar os valores possíveis."
     google_oauth2_hd: "Um domínio opcional hospedado pelo Google Apps ao qual a entrada com conta será limitada. Acesse <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> para obter mais detalhes."
-    google_oauth2_hd_groups: "(experimental) Recupere os grupos do Google dos(as) usuários(as) no domínio ou autenticação hospedada. Grupos do Google recuperados podem ser usados para conceder associação automática ao grupo do Discourse. Para mais informações, consulte: https://meta.discourse.org/t/226850"
+    google_oauth2_hd_groups: "(experimental) Recupere os grupos do Google dos(as) usuários(as) no domínio ou autenticação hospedada. Grupos do Google recuperados podem ser usados para conceder associação automática ao grupo do Discourse (veja as configurações do grupo). Para obter mais informações, consulte: https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Um endereço de e-mail pertencente a uma conta de administrador do Google Workspace. Será usado com as credenciais da conta de serviço para buscar informações do grupo."
     google_oauth2_hd_groups_service_account_json: "Informações de chave formatadas em JSON para a Conta de Serviço. Serão usadas para buscar informações do grupo."
     enable_twitter_logins: "Ative a autenticação do Twitter, requer twitter_consumer_key e twitter_consumer_secret. Acesse <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurando a entrada com conta Twitter (e muitas inserções) para o Discourse</a>."
@@ -3913,7 +3913,7 @@ pt_BR:
         Clique no link a seguir para entrar com a conta:
         %{base_url}/session/email-login/%{email_token}
     set_password:
-      title: "Configurar senha"
+      title: "Definir senha"
       subject_template: "[%{email_prefix}] Configurar senha"
       text_body_template: |
         Alguém pediu para adicionar uma senha à sua conta em [%{site_name}](%{base_url}). Como alternativa, você pode entrar com a conta qualquer serviço on-line compatível (Google, Facebook, etc.) associado a esse endereço de e-mail validado.

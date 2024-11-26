@@ -619,6 +619,9 @@ hy:
       title: "Հավանել"
       description: "Հավանել այս գրառումը"
       short_description: "Հավանել այս գրառումը"
+  webauthn:
+    validation:
+      not_found_error: "Տրամադրված հավատարմագրման ID-ով անվտանգության բանալի չի գտնվել:"
   topic_flag_types:
     spam:
       title: "Սպամ"

@@ -3401,7 +3401,9 @@ tr_TR:
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
+      load_more_replies: "daha fazla yanıt yükle"
       sr_collapse_replies: "Gömülü yanıtları daralt"
+      sr_load_more_replies: "Daha fazla gömülü yanıt yükle"
       sr_date: "Gönderi tarihi"
       sr_expand_replies:
         one: "Bu gönderinin %{count} yanıtı var"
