@@ -7,8 +7,14 @@
 el:
   js:
     discourse_automation:
+      title: Αυτοματισμός
       create: Δημιουργία
       update: Ενημέρωση
+      edit_automation:
+        trigger_section:
+          title: Πότε/Τι...
+        fields_section:
+          title: Επιλογές σεναρίου
       fields:
         user:
           label: Χρήστης

@@ -25,14 +25,33 @@ el:
           title: "Τα αποτελέσματα θα εμφανιστούν μόλις <strong>κλείσουν</strong>."
         staff:
           title: "Τα αποτελέσματα εμφανίζονται μόνο σε μέλη του <strong>προσωπικού</strong>."
+        tabs:
+          votes: "Ψήφοι"
+          outcome: "Αποτέλεσμα"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Επιλέξτε τουλάχιστον <strong>%{count} επιλογή</strong>."
+            other: "Επιλέξτε τουλάχιστον <strong>%{count} επιλογές</strong>."
+          up_to_max_options:
+            one: "Επιλέξτε το πολύ <strong>%{count} επιλογή</strong>."
+            other: "Επιλέξτε το πολύ <strong>%{count} επιλογές</strong>."
+          x_options:
+            one: "Επιλέξτε <strong>%{count} επιλογή</strong>."
+            other: "Επιλέξτε <strong>%{count} επιλογές</strong>."
+          between_min_and_max_options: "Επιλέξτε μεταξύ <strong>%{min} και %{max} επιλογών</strong>."
       cast-votes:
         title: "Δώστε τις ψήφους σας"
         label: "Ψηφίστε τώρα!"
       show-results:
         title: "Εμφάνισε τα αποτελέσματα της ψηφοφορίας"
         label: "Αποτελέσματα"
+      remove-vote:
+        title: "Αφαιρέστε την ψήφο σας"
+        label: "Αναίρεση ψήφου"
       hide-results:
         title: "Πίσω στις ψήφους σας"
+        label: "Ψήφισε"
       group-results:
         title: "Ομαδοποίηση ψήφων ανά πεδίο χρήστη"
         label: "Εμφάνιση ανάλυσης"
@@ -57,9 +76,24 @@ el:
         percentage: "Ποσοστό"
         count: "Άθροισμα"
       ranked_choice:
+        title:
+          rounds: "Γύροι"
+          outcome: "Αποτέλεσμα"
         none: "Κανένα"
+        majority: "Πλειοψηφία"
+        eliminated: "Μη επιλεγμένο"
+        round: "Γύρος"
+        winner:
+          one: "Νικητής ήταν %{winner} μετά από έναν γύρο."
+          other: "Νικητής ήταν %{winner} μετά από %{count} γύρους."
+        tied:
+          one: "Ισοψηφία μετά από έναν γύρο μεταξύ των παρακάτω υποψηφίων:"
+          other: "Ισοψηφία μετά από %{count} γύρους μεταξύ των ακόλουθων υποψηφίων:"
       options:
         label: "Επιλογές"
+        ranked_choice:
+          abstain: "Αποχή"
+          login: "Συνδεθείτε για να ψηφίσετε!"
       error_while_toggling_status: "Λυπάμαι, παρουσιάστηκε σφάλμα κατά την εναλλαγή της κατάστασης αυτής της δημοσκόπησης."
       error_while_casting_votes: "Λυπάμαι, παρουσιάστηκε ένα σφάλμα κατά την ψηφοφορία."
       error_while_fetching_voters: "Συγνώμη, παρουσιάστηκε ένα σφάλμα κατά τη διαδικασία εμφάνισης των ψηφοφόρων."
@@ -69,23 +103,40 @@ el:
         insert: Εισαγωγή ψηφοφορίας
         help:
           options_min_count: Επιλέξτε τουλάχιστον 1 επιλογή.
+          options_max_count: Εισαγάγετε το πολύ %{count} επιλογές.
+          invalid_min_value: Η ελάχιστη τιμή πρέπει να είναι τουλάχιστον 1.
+          invalid_max_value: Η μέγιστη τιμή πρέπει να είναι τουλάχιστον 1, αλλά λιγότερη από ή ίση με τον αριθμό των επιλογών.
           invalid_values: Η ελάχιστη τιμή θα πρέπει να είναι μικρότερη από τη μέγιστη τιμή.
           min_step_value: Η ελάχιστη τιμή για το βήμα είναι 1
         poll_type:
           label: Τύπος
           regular: Μία επιλογή
           multiple: Πολλαπλές επιλογές
+          ranked_choice: Σειρά Προτίμησης
           number: Αξιολόγηση αριθμoύ
         poll_result:
+          label: Εμφάνιση Αποτελεσμάτων...
           always: Πάντα ορατό
+          vote: Μόνο μετά την ψηφοφορία
+          closed: Όταν κλείσει η ψηφοφορία
           staff: Μόνο το προσωπικό
+        poll_groups:
+          label: Περιορίστε την ψηφοφορία σε αυτές τις ομάδες
         poll_chart_type:
+          label: Διάγραμμα αποτελεσμάτων
           bar: Μπάρες
           pie: Πίτα
         poll_config:
+          max: Μέγιστες επιλογές
+          min: Ελάχιστες επιλογές
           step: Βήμα
         poll_public:
           label: Προβολή ψηφοφόρων.
+        poll_title:
+          label: Τίτλος (προαιρετικό)
+        poll_options:
+          label: Επιλογές (μία ανά γραμμή)
+          add: Προσθήκη επιλογής
         automatic_close:
           label: Αυτόματο κλείσιμο ψηφοφορίας
         show_advanced: "Εμφάνιση Προχωρημένων Επιλογών"

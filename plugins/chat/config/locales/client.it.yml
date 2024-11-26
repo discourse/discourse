@@ -272,7 +272,7 @@ it:
       return_to_channel: "Torna al canale"
       return_to_threads_list: "Torna all'elenco dei thread"
       unread_threads_count:
-        one: "Hai %{count} discussione non lette"
+        one: "Hai %{count} discussione non letta"
         other: "Hai %{count} discussioni non lette"
       scroll_to_bottom: "Scorri fino in fondo"
       scroll_to_new_messages: "Vedi nuovi messaggi"

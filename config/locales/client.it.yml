@@ -143,7 +143,7 @@ it:
       close: "chiudi"
       twitter: "Condividi su Twitter"
       facebook: "Condividi su Facebook"
-      email: "Invia per email"
+      email: "Invia per e-mail"
       url: "Copia e condividi l'URL"
     word_connector:
       comma: ", "
@@ -182,7 +182,7 @@ it:
       banner:
         enabled: "Lo ha reso un banner il %{when}. Apparirà in cima a ogni pagina finché non verrà chiuso dall'utente."
         disabled: "Ha rimosso questo banner il %{when}. Non apparirà più in cima a ogni pagina."
-      forwarded: "Ha inoltrato l'email sopra"
+      forwarded: "Ha inoltrato l'e-mail sopra"
     topic_admin_menu: "azioni argomento"
     skip_to_main_content: "Passa al contenuto principale"
     skip_user_nav: "Passa al contenuto del profilo"

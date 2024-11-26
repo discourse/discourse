@@ -2655,9 +2655,9 @@ ru:
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
       clean_up_inactive_users_after_days:
-      - "выключено"
-      - "неактивно"
-      - "выключено"
+      - "выключенные"
+      - "неактивные"
+      - "неактивированные"
       purge_unactivated_users_grace_period_days:
       - "выключено"
       - "неактивно"
