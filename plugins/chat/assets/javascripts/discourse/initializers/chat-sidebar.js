@@ -424,8 +424,7 @@ export default {
 
             get suffixValue() {
               return this.channel.tracking.unreadCount > 0 ||
-                (this.chatService.activeChannel?.id !== this.channel.id &&
-                  this.channel.unreadThreadsCountSinceLastViewed > 0)
+                this.channel.unreadThreadsCountSinceLastViewed > 0
                 ? "circle"
                 : "";
             }
