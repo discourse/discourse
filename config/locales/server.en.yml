@@ -70,6 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
+    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
+    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
