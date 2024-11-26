@@ -2676,6 +2676,18 @@ RSpec.describe PostMover do
         expect(original_topic.posts.map(&:raw)).to include(first_post.raw)
       end
 
+      it "creates a MovedPost record when moving to an existing topic" do
+        PostMover.new(
+          original_topic,
+          Discourse.system_user,
+          [first_post.id],
+          options: {
+            freeze_original: true,
+          },
+        ).to_topic(destination_topic.id)
+        expect(MovedPost.count).to eq(1)
+      end
+
       it "creates the moderator message in the correct position" do
         PostMover.new(
           original_topic,
