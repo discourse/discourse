@@ -343,9 +343,10 @@ acceptance("Composer - Image Preview", function (needs) {
       "Image should be removed from the editor"
     );
 
-    assert
-      .dom(".d-editor-input")
-      .doesNotHaveValue(/image_example_0/, "does not have the first image");
+    assert.false(
+      query(".d-editor-input").value.includes("image_example_0"),
+      "does not have the first image"
+    );
 
     assert
       .dom(".d-editor-input")
