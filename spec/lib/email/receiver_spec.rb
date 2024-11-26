@@ -218,9 +218,7 @@ RSpec.describe Email::Receiver do
   end
 
   it "strips null bytes from the subject" do
-    expect do process(:null_byte_in_subject) end.to raise_error(
-      Email::Receiver::BadDestinationAddress,
-    )
+    expect { process(:null_byte_in_subject) }.to raise_error(Email::Receiver::BadDestinationAddress)
   end
 
   describe "bounces to VERP" do
@@ -1371,7 +1369,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
 
@@ -1388,7 +1386,7 @@ RSpec.describe Email::Receiver do
           "MESSAGE_ID_REPLY_TO",
           "<#{email_log.message_id}> <test/message/id@discourse.com>",
         )
-        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
 
@@ -1402,7 +1400,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to change { Topic.count }.by(
+        expect { Email::Receiver.new(reply_email).process! }.to change { Topic.count }.by(
           1,
         ).and change { Post.count }.by(1)
 
@@ -1416,7 +1414,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2_as_unknown_sender)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to not_change {
+        expect { Email::Receiver.new(reply_email).process! }.to not_change {
           Topic.count
         }.and change { Post.count }.by(1)
 
@@ -1433,7 +1431,7 @@ RSpec.describe Email::Receiver do
 
         reply_email = email(:email_to_group_email_username_2)
         reply_email.gsub!("MESSAGE_ID_REPLY_TO", email_log.message_id)
-        expect do Email::Receiver.new(reply_email).process! end.to change { Topic.count }.by(
+        expect { Email::Receiver.new(reply_email).process! }.to change { Topic.count }.by(
           1,
         ).and change { Post.count }.by(1)
 
