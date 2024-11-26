@@ -166,6 +166,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
 
       context "with dm channel" do
         fab!(:current_user) { Fabricate(:admin) }
+        fab!(:user_1) { Fabricate(:user) }
         fab!(:user_2) { Fabricate(:user) }
 
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
