@@ -1,7 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Lightbox", function (needs) {
@@ -30,10 +30,9 @@ acceptance("Lightbox", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
-    assert.equal(
-      query(".mfp-title").textContent,
-      "image · 1500×842 234 KB · download · original image"
-    );
+    assert
+      .dom(".mfp-title")
+      .hasText("image · 1500×842 234 KB · download · original image");
 
     assert
       .dom(".image-source-link:nth-child(1)")

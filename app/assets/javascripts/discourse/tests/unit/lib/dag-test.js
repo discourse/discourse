@@ -80,11 +80,11 @@ module("Unit | Lib | DAG", function (hooks) {
       },
     });
     dag.add("key1", "value1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item already exists
     dag.add("key1", "value1");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
   test("should remove an item from the map", function (assert) {
@@ -115,11 +115,11 @@ module("Unit | Lib | DAG", function (hooks) {
     });
     dag.add("key1", "value1");
     dag.delete("key1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.delete("key1");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
   test("should replace the value from an item in the map", function (assert) {
@@ -162,11 +162,11 @@ module("Unit | Lib | DAG", function (hooks) {
     });
     dag.add("key1", "value1");
     dag.replace("key1", "replaced-value1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.replace("key2", "replaced-value2");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
   test("should reposition an item in the map", function (assert) {
@@ -204,11 +204,11 @@ module("Unit | Lib | DAG", function (hooks) {
     });
     dag.add("key1", "value1");
     dag.reposition("key1", { before: "key2" });
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.reposition("key2", { before: "key1" });
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
   test("should return the entries in the map", function (assert) {
@@ -222,14 +222,18 @@ module("Unit | Lib | DAG", function (hooks) {
     const dagEntries = dag.entries();
 
     entries.forEach((entry, index) => {
-      assert.equal(dagEntries[index][0], entry[0], "the key is correct");
-      assert.equal(dagEntries[index][1], entry[1], "the value is correct");
-      assert.equal(
+      assert.strictEqual(dagEntries[index][0], entry[0], "the key is correct");
+      assert.strictEqual(
+        dagEntries[index][1],
+        entry[1],
+        "the value is correct"
+      );
+      assert.strictEqual(
         dagEntries[index][2]["before"],
         entry[2]["before"],
         "the before position is correct"
       );
-      assert.equal(
+      assert.strictEqual(
         dagEntries[index][2]["after"],
         entry[2]["after"],
         "the after position is correct"

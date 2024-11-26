@@ -436,8 +436,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       // after uploading we have this in the textarea:
       // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
       // cursor should be just before "text after image":
-      assert.equal(input.selectionStart, 76);
-      assert.equal(input.selectionEnd, 76);
+      assert.strictEqual(input.selectionStart, 76);
+      assert.strictEqual(input.selectionEnd, 76);
       done();
     });
 

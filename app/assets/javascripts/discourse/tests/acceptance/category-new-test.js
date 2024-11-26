@@ -110,7 +110,7 @@ acceptance("New category preview", function (needs) {
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
-    assert.equal(previewBadgeColor, "#0088CC");
+    assert.strictEqual(previewBadgeColor, "#0088CC");
 
     await fillIn(".hex-input", "FF00FF");
 
@@ -119,6 +119,6 @@ acceptance("New category preview", function (needs) {
       .style.getPropertyValue("--category-badge-color")
       .trim();
 
-    assert.equal(previewBadgeColor, "#FF00FF");
+    assert.strictEqual(previewBadgeColor, "#FF00FF");
   });
 });

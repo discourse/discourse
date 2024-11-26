@@ -270,7 +270,7 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - redirects to the 2fa page", async function (assert) {
     await visit("/admin/users/4/user2");
     await click(".grant-admin");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
@@ -293,11 +293,9 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      i18n("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-primary");
 

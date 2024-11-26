@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { i18n } from "discourse-i18n";
 import userFixtures from "../fixtures/user-fixtures";
-import { acceptance, query, queryAll } from "../helpers/qunit-helpers";
+import { acceptance, queryAll } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Topics - bulk actions", function (needs) {
   const currentUser = "eviltrout";
@@ -58,17 +58,17 @@ acceptance("User Activity / Topics - empty state", function (needs) {
 
   test("When looking at the own activity page", async function (assert) {
     await visit(`/u/${currentUser}/activity/topics`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      i18n("user_activity.no_topics_title")
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(i18n("user_activity.no_topics_title"));
   });
 
   test("When looking at another user's activity page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/topics`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      i18n("user_activity.no_topics_title_others", { username: anotherUser })
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(
+        i18n("user_activity.no_topics_title_others", { username: anotherUser })
+      );
   });
 });
