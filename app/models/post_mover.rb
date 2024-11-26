@@ -7,14 +7,11 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
-  # options:
-  # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
-  def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
+  def initialize(original_topic, user, post_ids, move_to_pm: false)
     @original_topic = original_topic
     @user = user
     @post_ids = post_ids
     @move_to_pm = move_to_pm
-    @options = options
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
@@ -92,14 +89,6 @@ class PostMover
 
     @first_post_number_moved =
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
-
-    if @options[:freeze_original] # in this case we need to add the moderator post after the last copied post
-      from_posts = @original_topic.posts.where("post_number > ?", posts.last.post_number)
-
-      shift_post_numbers(from_posts) if !moving_all_posts
-
-      @first_post_number_moved = posts.last.post_number + 1
-    end
 
     move_each_post
     handle_moved_references
@@ -292,22 +281,15 @@ class PostMover
 
     update[:reply_to_user_id] = nil unless @move_map[post.reply_to_post_number]
 
-    moved_post =
-      if @options[:freeze_original]
-        post.dup
-      else
-        post
-      end
+    post.attributes = update
+    post.save(validate: false)
 
-    moved_post.attributes = update
-    moved_post.save(validate: false)
-
-    DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)
+    DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
-    moved_post.topic_links.update_all(topic_id: destination_topic.id)
+    post.topic_links.update_all(topic_id: destination_topic.id)
 
-    moved_post
+    post
   end
 
   def move_same_topic(post)
@@ -347,10 +329,6 @@ class PostMover
       INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
       VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
-  end
-
-  def shift_post_numbers(from_posts)
-    from_posts.each { |post| post.update_columns(post_number: post.post_number + 1) }
   end
 
   def move_incoming_emails
@@ -705,7 +683,6 @@ class PostMover
 
   def close_topic_and_schedule_deletion
     @original_topic.update_status("closed", true, @user)
-    return if @options[:freeze_original] # we only close the topic when freezing it
 
     days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
     if days_to_deleting == 0
