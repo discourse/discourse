@@ -25,6 +25,10 @@ export default class DMenu extends Component {
   registerTrigger = modifier((element) => {
     this.menuInstance.trigger = element;
     this.options.onRegisterApi?.(this.menuInstance);
+
+    return () => {
+      this.menuInstance.destroy();
+    };
   });
 
   get menuId() {

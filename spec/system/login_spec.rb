@@ -252,12 +252,12 @@ describe "Login", type: :system do
   end
 
   context "when fullpage desktop" do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "login scenarios", PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "login scenarios", PageObjects::Pages::Login.new
   end
 end

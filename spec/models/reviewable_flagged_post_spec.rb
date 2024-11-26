@@ -83,6 +83,17 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(reviewable.actions_for(guardian).has?(:agree_and_suspend)).to eq(false)
       end
 
+      it "doesn't end up with an empty ignore bundle when the post is already hidden and deleted" do
+        post.update!(hidden: true)
+        post.topic.trash!
+        post.trash!
+        expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
+        expect(reviewable.actions_for(guardian).has?(:delete_and_ignore)).to eq(false)
+        expect(
+          reviewable.actions_for(guardian).bundles.find { |bundle| bundle.id.include?("-ignore") },
+        ).to be_blank
+      end
+
       context "when flagged as potential_spam" do
         before { reviewable.update!(potential_spam: true) }
 
