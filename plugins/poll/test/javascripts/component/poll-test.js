@@ -150,7 +150,7 @@ module("Poll | Component | poll", function (hooks) {
 
     assert
       .dom(".dropdown-menu__item:nth-child(2)")
-      .hasText(`1 ${i18n.t("poll.options.ranked_choice.highest_priority")}`);
+      .hasText(`1 ${i18n("poll.options.ranked_choice.highest_priority")}`);
 
     await click(
       ".dropdown-menu__item:nth-child(2) button",
