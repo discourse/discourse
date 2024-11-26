@@ -816,6 +816,9 @@ users:
     client: true
   delete_associated_accounts_on_password_reset:
     default: false
+  enable_user_status:
+    client: true
+    default: false
 
 groups:
   enable_group_directory:
@@ -3352,9 +3355,6 @@ experimental:
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
-  enable_user_status:
-    client: true
-    default: false
   lazy_load_categories_groups:
     default: ""
     type: group_list
