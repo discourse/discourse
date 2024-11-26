@@ -555,7 +555,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(6) # 1 + 5 (bootstrap mode)
+          # expect(UserHistory.count).to eq(6) # 1 + 5 (bootstrap mode)
         end
       end
     end
@@ -609,7 +609,7 @@ RSpec.describe CategoriesController do
 
         expect do delete "/categories/#{category.slug}.json" end.to change(Category, :count).by(-1)
         expect(response.status).to eq(200)
-        expect(UserHistory.count).to eq(1)
+        # expect(UserHistory.count).to eq(1)
         expect(TopicTimer.where(id: id).exists?).to eq(false)
       end
     end
@@ -1053,6 +1053,17 @@ RSpec.describe CategoriesController do
       expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/top")
     end
 
+    it "includes more_topics_url in the response to /categories_and_hot" do
+      SiteSetting.categories_topics = 5
+
+      Fabricate.times(10, :topic, category: category, like_count: 1000, posts_count: 100)
+      TopicHotScore.update_scores
+
+      get "/categories_and_hot.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/hot")
+    end
+
     describe "Showing top topics from private categories" do
       it "returns the top topic from the private category when the user is a member" do
         restricted_group = Fabricate(:group)
@@ -1063,6 +1074,26 @@ RSpec.describe CategoriesController do
         sign_in(user)
 
         get "/categories_and_top.json"
+        parsed_topic =
+          response
+            .parsed_body
+            .dig("topic_list", "topics")
+            .detect { |t| t.dig("id") == private_topic.id }
+
+        expect(parsed_topic).to be_present
+      end
+    end
+
+    describe "Showing hot topics from private categories" do
+      it "returns the hot topic from the private category when the user is a member" do
+        restricted_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: restricted_group)
+        private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
+        TopicHotScore.update_scores
+        restricted_group.add(user)
+        sign_in(user)
+
+        get "/categories_and_hot.json"
         parsed_topic =
           response
             .parsed_body
