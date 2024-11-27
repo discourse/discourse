@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
@@ -38,6 +39,7 @@ export default class FKControlWrapper extends Component {
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-control-type={{this.controlType}}
+      {{willDestroy (fn @unregisterField @field.name)}}
     >
       {{#if @field.showTitle}}
         <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>

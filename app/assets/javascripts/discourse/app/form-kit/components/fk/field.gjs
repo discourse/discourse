@@ -55,7 +55,6 @@ export default class FKField extends Component {
       @validation={{@validation}}
       @onSet={{@onSet}}
       @registerField={{@registerField}}
-      @unregisterField={{@unregisterField}}
       @format={{@format}}
       @disabled={{@disabled}}
       as |field|
@@ -65,84 +64,98 @@ export default class FKField extends Component {
           (hash
             Custom=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlCustom
               field=field
             )
             Code=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlCode
               field=field
             )
             Question=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlQuestion
               field=field
             )
             Textarea=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlTextarea
               field=field
             )
             Checkbox=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlCheckbox
               field=field
             )
             Image=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlImage
               field=field
             )
             Password=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlPassword
               field=field
             )
             Composer=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlComposer
               field=field
             )
             Icon=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlIcon
               field=field
             )
             Toggle=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlToggle
               field=field
             )
             Menu=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlMenu
               field=field
             )
             Select=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlSelect
               field=field
             )
             Input=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlInput
               field=field
             )
             RadioGroup=(component
               FKControlWrapper
+              unregisterField=@unregisterField
               errors=@errors
               component=FKControlRadioGroup
               field=field
