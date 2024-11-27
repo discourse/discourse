@@ -13,8 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.38.0] - 2024-10-30
 
-- Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "
-  more topics" (suggested/related) area.
+- Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.
 
 ## [1.37.3] - 2024-10-24
 
@@ -22,42 +21,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.37.2] - 2024-10-02
 
-- Fixed comments and text references to Font Awesome 5 in favor of the more generic Font Awesome due to core now having
-  the latest version and no longer needing to specify version 5.
+- Fixed comments and text references to Font Awesome 5 in favor of the more generic Font Awesome due to core now having the latest version and no longer needing to specify version 5.
 
 ## [1.37.1] - 2024-08-21
 
-- Added support for `shortcut` in `addComposerToolbarPopupMenuOption` which allows to add a keyboard shortcut to the
-  popup menu option.
+- Added support for `shortcut` in `addComposerToolbarPopupMenuOption` which allows to add a keyboard shortcut to the popup menu option.
 
 ## [1.37.0] - 2024-08-19
 
-- Added `addAboutPageActivity` which allows plugins/TCs to register a custom site activity item in the new /about page.
-  Requires the server-side `register_stat` plugin API.
+- Added `addAboutPageActivity` which allows plugins/TCs to register a custom site activity item in the new /about page. Requires the server-side `register_stat` plugin API.
 
 ## [1.36.0] - 2024-08-06
 
-- Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked
-  and before a search log is created
+- Added `addLogSearchLinkClickedCallbacks` which allows plugins/TCs to register a callback when a search link is clicked and before a search log is created
 
 ## [1.35.0] - 2024-07-30
 
-- Added `registerBehaviorTransformer` which allows registering a transformer callback to override behavior defined in
-  Discourse modules
-- Added `addBehaviorTransformerName` which allows plugins/TCs to register a new transformer to override behavior defined
-  in their modules
+- Added `registerBehaviorTransformer` which allows registering a transformer callback to override behavior defined in Discourse modules
+- Added `addBehaviorTransformerName` which allows plugins/TCs to register a new transformer to override behavior defined in their modules
 
 ## [1.34.0] - 2024-06-06
 
-- Added `registerValueTransformer` which allows registering a transformer callback to override values defined in
-  Discourse modules
-- Added `addValueTransformerName` which allows plugins/TCs to register a new transformer to override values defined in
-  their modules
+- Added `registerValueTransformer` which allows registering a transformer callback to override values defined in Discourse modules
+- Added `addValueTransformerName` which allows plugins/TCs to register a new transformer to override values defined in their modules
 
 ## [1.33.0] - 2024-06-06
 
-- Added `addCustomUserFieldValidationCallback` which allows to set a callback to change the validation and user facing
-  message when attempting to save the signup form.
+- Added `addCustomUserFieldValidationCallback` which allows to set a callback to change the validation and user facing message when attempting to save the signup form.
 
 ## [1.32.0] - 2024-05-16
 
@@ -69,18 +59,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.30.0] - 2024-03-20
 
-- Added `addAdminPluginConfigurationNav`, which defines a list of links used in the adminPlugins.show page for a
-  specific plugin, and displays them either in an inner sidebar or in a top horizontal nav.
+- Added `addAdminPluginConfigurationNav`, which defines a list of links used in the adminPlugins.show page for a specific plugin, and displays them either in an inner sidebar or in a top horizontal nav.
 
 ## [1.29.0] - 2024-03-05
 
-- Added `headerButtons` which allows for manipulation of the header buttons. This includes, adding, removing, or
-  modifying the order of buttons.
+- Added `headerButtons` which allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
 
 ## [1.28.0] - 2024-02-21
 
-- Added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying
-  the order of icons.
+- Added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
 
 ## [1.27.0] - 2024-02-21
 
@@ -93,78 +80,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.25.0] - 2024-02-05
 
-- Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper
-  that appears on hover of an uploaded image.
+- Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper that appears on hover of an uploaded image.
 
 ## [1.24.0] - 2024-01-08
 
-- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement
-  for the `admin-menu` plugin outlet. This only has an effect if the `admin_sidebar_enabled_groups` site setting is in
-  use, which enables the new admin nav sidebar.
+- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. This only has an effect if the `admin_sidebar_enabled_groups` site setting is in use, which enables the new admin nav sidebar.
 
 ## [1.23.0] - 2024-01-03
 
 ### Added
 
-- Added `setUserMenuNotificationsLimit` function which is used to specify a new limit for the notifications query when
-  the user menu is opened.
+- Added `setUserMenuNotificationsLimit` function which is used to specify a new limit for the notifications query when the user menu is opened.
 
 ## [1.21.0] - 2023-12-22
 
 ### Added
 
-- Added `includeUserFieldPropertiesOnSave` function, which includes the passed user field properties in the user field
-  save request. This is useful for plugins that are adding additional columns to the user field model and want to save
-  the new property values alongside the default user field properties (all under the same save call).
+- Added `includeUserFieldPropertiesOnSave` function, which includes the passed user field properties in the user field save request. This is useful for plugins that are adding additional columns to the user field model and want to save the new property values alongside the default user field properties (all under the same save call).
+
 
 ## [1.20.0] - 2023-12-20
 
 ### Added
 
-- Added `addSearchMenuAssistantSelectCallback` function, which is used to override the behavior of clicking a search
-  menu assistant item. If any callback returns false, the core behavior will not be executed.
+- Added `addSearchMenuAssistantSelectCallback` function, which is used to override the behavior of clicking a search menu assistant item. If any callback returns false, the core behavior will not be executed.
 
 ## [1.19.0] - 2023-12-13
 
 ### Added
 
-- Added `setNotificationsLimit` function, which sets a new limit for how many notifications are loaded for the user
-  notifications route
+- Added `setNotificationsLimit` function, which sets a new limit for how many notifications are loaded for the user notifications route
 
-- Added `addBeforeLoadMoreNotificationsCallback` function, which takes a function as the argument. All added callbacks
-  are evaluated before `loadMore` is triggered for user notifications. If any callback returns false, notifications will
-  not be loaded.
+- Added `addBeforeLoadMoreNotificationsCallback` function, which takes a function as the argument. All added callbacks are evaluated before `loadMore` is triggered for user notifications. If any callback returns false, notifications will not be loaded.
 
 ## [1.18.0] - 2023-12-1
 
 ### Added
 
-- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an
-  argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the
-  functionality of the topic timeline.
+- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the functionality of the topic timeline.
 
 ## [1.17.0] - 2023-11-30
 
 ### Added
 
-- Introduces `forceDropdownAnimationForMenuPanels` API for forcing one or many Menu Panels (search-menu, user-menu, etc)
-  to be rendered as a dropdown. This can be useful for plugins as the default behavior is to add a 'slide-in' behavior
-  to a menu panel if you are viewing on a small screen. eg. mobile.
+- Introduces `forceDropdownAnimationForMenuPanels` API for forcing one or many Menu Panels (search-menu, user-menu, etc) to be rendered as a dropdown. This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
 
 ## [1.16.0] - 2023-11-17
 
 ### Added
 
-- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule
-  syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
+- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
 
 ## [1.15.0] - 2023-10-18
 
 ### Added
 
-- Added `hidden` option to `addSidebarPanel`, this can be used to remove the panel from combined sidebar mode as well as
-  hiding its switch button. Useful for cases where only one sidebar should be shown at a time regardless of other
-  panels.
+- Added `hidden` option to `addSidebarPanel`, this can be used to remove the panel from combined sidebar mode as well as hiding its switch button. Useful for cases where only one sidebar should be shown at a time regardless of other panels.
 - Added `getSidebarPanel` function, which returns the current sidebar panel object for comparison.
 
 ## [1.14.0] - 2023-10-06
@@ -209,11 +180,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds `showSidebarSwitchPanelButtons` which is experimental, and allows plugins to show sidebar switch panel buttons in
-  separated mode
+- Adds `showSidebarSwitchPanelButtons` which is experimental, and allows plugins to show sidebar switch panel buttons in separated mode
 
-- Adds `hideSidebarSwitchPanelButtons` which is experimental, and allows plugins to hide sidebar switch panel buttons in
-  separated mode
+- Adds `hideSidebarSwitchPanelButtons` which is experimental, and allows plugins to hide sidebar switch panel buttons in separated mode
 
 ## [1.8.1] - 2023-08-08
 
@@ -224,7 +193,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.0] - 2023-07-18
 
 ### Added
-
 - Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the
   BaseCustomSidebarPanel class.
 
