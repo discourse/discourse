@@ -161,16 +161,16 @@ GEM
     fspath (3.1.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.28.3-aarch64-linux)
+    google-protobuf (4.29.0-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-arm64-darwin)
+    google-protobuf (4.29.0-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-x86_64-darwin)
+    google-protobuf (4.29.0-x86_64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.3-x86_64-linux)
+    google-protobuf (4.29.0-x86_64-linux)
       bigdecimal
       rake (>= 13)
     guess_html_encoding (0.0.11)
