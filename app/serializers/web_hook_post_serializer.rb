@@ -32,12 +32,16 @@ class WebHookPostSerializer < PostSerializer
     mentioned_users
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
+  def topic_posts
+    @topic_posts ||= object.topic.posts.where(user_deleted: false)
+  end
+
   def topic_posts_count
-    object.topic ? object.topic.posts_count : 0
+    object.topic ? topic_posts.count : 0
   end
 
   def topic_filtered_posts_count
-    object.topic ? object.topic.posts.where(post_type: Post.types[:regular]).count : 0
+    object.topic ? topic_posts.where(post_type: Post.types[:regular]).count : 0
   end
 
   def topic_archetype
