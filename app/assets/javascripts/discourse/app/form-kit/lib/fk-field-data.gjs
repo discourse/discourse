@@ -75,7 +75,7 @@ export default class FKFieldData extends Component {
       await this.args.set(this.name, value, { index: this.collectionIndex });
     }
 
-    this.args.triggerRevalidationFor(name);
+    this.args.triggerRevalidationFor(this.name);
   }
 
   /**
