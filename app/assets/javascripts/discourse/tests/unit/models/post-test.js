@@ -102,8 +102,8 @@ module("Unit | Model | post", function (hooks) {
     post.likeAction = { count: 1 };
     assert.deepEqual(post.likeAction, { count: 1 }, "likeAction set");
 
-    // creating a new post with the same id should reset the likeAction because the information required to properly
-    // generate the field is not available
+    // creating a new record with the same id should reset the likeAction in the original post because instance
+    // is cached and the information required to properly generate the field is not available in the new JSON data
     this.store.createRecord("post", {
       id: 1173,
     });
