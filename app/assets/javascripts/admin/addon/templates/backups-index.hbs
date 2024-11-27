@@ -32,7 +32,7 @@
 <table class="d-admin-table admin-backups-list">
   <thead>
     <th>{{i18n "admin.backups.columns.filename"}}</th>
-    <th>{{i18n "admin.backups.columns.size"}}</th>
+    <th class="backup-size">{{i18n "admin.backups.columns.size"}}</th>
     <th></th>
   </thead>
   <tbody>
@@ -41,7 +41,7 @@
         class="d-admin-row__content backup-item-row"
         data-backup-filename={{backup.filename}}
       >
-        <td class="d-admin-row__detail">
+        <td class="d-admin-row__overview">
           <div class="backup-filename">
             {{backup.filename}}
           </div>
