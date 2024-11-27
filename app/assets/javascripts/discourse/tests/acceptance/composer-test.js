@@ -468,7 +468,7 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert
       .dom(".topic-post:last-of-type .cooked p")
-      .doesNotHaveText(
+      .doesNotIncludeText(
         "enqueue this content please",
         "doesn't insert the post"
       );
