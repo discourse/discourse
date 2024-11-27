@@ -113,6 +113,32 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         end
       end
 
+      context "when flagged as illegal" do
+        before do
+          reviewable.add_score(
+            Discourse.system_user,
+            ReviewableScore.types[:illegal],
+            reason: "Looks pretty sus.",
+          )
+          reviewable.update(potential_spam: false)
+        end
+
+        it "excludes delete action if the reviewer cannot delete the user" do
+          post.user.user_stat.update!(
+            first_post_created_at: 1.year.ago,
+            post_count: User::MAX_STAFF_DELETE_POST_COUNT + 1,
+          )
+
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be false
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be false
+        end
+
+        it "includes delete actions if the reviewer can delete the user" do
+          expect(reviewable.actions_for(guardian).has?(:delete_user)).to be true
+          expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
+        end
+      end
+
       context "for ignore_and_do_nothing" do
         it "does not return `ignore_and_do_nothing` when post is hidden" do
           post.update(hidden: true)
