@@ -55,7 +55,7 @@ acceptance("Post inline mentions", function (needs) {
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
-    assert.ok(
+    assert.true(
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
     );
@@ -84,7 +84,7 @@ acceptance("Post inline mentions", function (needs) {
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
-    assert.ok(
+    assert.true(
       statusElement.src.includes(status.emoji),
       "status emoji is correct"
     );
@@ -117,7 +117,7 @@ acceptance("Post inline mentions", function (needs) {
     const statusElement = query(
       ".topic-post .cooked .mention .user-status-message img"
     );
-    assert.ok(
+    assert.true(
       statusElement.src.includes(newStatus.emoji),
       "updated status emoji is correct"
     );
@@ -169,16 +169,18 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       .exists("user status is shown");
 
     await mouseMove(".user-status-message");
-    const statusTooltip = document.querySelector(
-      ".user-status-message-tooltip"
-    );
-    assert.ok(statusTooltip, "status tooltip is shown");
-    assert.ok(
-      statusTooltip.querySelector("img").src.includes(status.emoji),
+
+    assert
+      .dom(".user-status-message-tooltip")
+      .exists("status tooltip is shown");
+    assert.true(
+      document
+        .querySelector(".user-status-message-tooltip img")
+        .src.includes(status.emoji),
       "emoji is correct"
     );
     assert
-      .dom(".user-status-tooltip-description", statusTooltip)
+      .dom(".user-status-tooltip-description")
       .hasText(status.description, "status description is correct");
   });
 });

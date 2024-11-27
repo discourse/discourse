@@ -380,7 +380,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     trackingState.loadStates([{ topic_id: 111 }, { topic_id: 222 }]);
     trackingState.set("_trackedTopicLimit", 5);
     trackingState.sync(list, "unread");
-    assert.ok(
+    assert.true(
       trackingState.states.has("t111"),
       "expect state for topic 111 not to be deleted"
     );
@@ -591,7 +591,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       1,
       "increments message count"
     );
-    assert.ok(
+    assert.true(
       DiscourseURL.redirectTo.calledWith("/"),
       "redirect to / because topic is destroyed"
     );

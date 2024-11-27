@@ -62,7 +62,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
       hbs`<DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
     );
 
-    assert.ok(this.api instanceof DMenuInstance);
+    assert.true(this.api instanceof DMenuInstance);
   });
 
   test("@onShow", async function (assert) {
@@ -320,7 +320,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await click(".second.fk-d-menu__trigger");
 
-    assert.dom(".fk-d-menu.first").exists("it doesn’t autoclose");
+    assert.dom(".fk-d-menu.first").exists("doesn’t autoclose");
     assert.dom(".fk-d-menu.second").exists();
   });
 

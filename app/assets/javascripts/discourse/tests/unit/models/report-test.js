@@ -8,12 +8,10 @@ function reportWithData(data) {
 
   return store.createRecord("report", {
     type: "topics",
-    data: data.map((val, index) => {
-      return {
-        x: moment().subtract(index, "days").format("YYYY-MM-DD"),
-        y: val,
-      };
-    }),
+    data: data.map((val, index) => ({
+      x: moment().subtract(index, "days").format("YYYY-MM-DD"),
+      y: val,
+    })),
   });
 }
 
@@ -85,8 +83,8 @@ module("Unit | Model | report", function (hooks) {
       this,
       [6, 8, 5, 2, 1]
     ).yesterdayCountTitle;
-    assert.ok(title.includes("+60%"));
-    assert.ok(title.match(/Was 5/));
+    assert.true(title.includes("+60%"));
+    assert.true(/Was 5/.test(title));
   });
 
   test("yesterdayCountTitle when two days ago was 0", function (assert) {
@@ -95,7 +93,7 @@ module("Unit | Model | report", function (hooks) {
       [6, 8, 0, 2, 1]
     ).yesterdayCountTitle;
     assert.false(title.includes("%"));
-    assert.ok(title.match(/Was 0/));
+    assert.true(/Was 0/.test(title));
   });
 
   test("sevenDaysCountTitle", function (assert) {
@@ -103,22 +101,22 @@ module("Unit | Model | report", function (hooks) {
       this,
       [100, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 100, 100]
     ).sevenDaysCountTitle;
-    assert.ok(title.match(/-50%/));
-    assert.ok(title.match(/Was 14/));
+    assert.true(/-50%/.test(title));
+    assert.true(/Was 14/.test(title));
   });
 
   test("thirtyDaysCountTitle", function (assert) {
     const report = reportWithData.call(this, [5, 5, 5, 5]);
     report.set("prev30Days", 10);
 
-    assert.ok(report.thirtyDaysCountTitle.includes("+50%"));
-    assert.ok(report.thirtyDaysCountTitle.match(/Was 10/));
+    assert.true(report.thirtyDaysCountTitle.includes("+50%"));
+    assert.true(/Was 10/.test(report.thirtyDaysCountTitle));
 
     const report2 = reportWithData.call(this, [5, 5, 5, 5]);
     report2.set("prev_period", 20);
 
-    assert.ok(report2.thirtyDaysCountTitle.includes("-25%"));
-    assert.ok(report2.thirtyDaysCountTitle.match(/Was 20/));
+    assert.true(report2.thirtyDaysCountTitle.includes("-25%"));
+    assert.true(/Was 20/.test(report2.thirtyDaysCountTitle));
   });
 
   test("sevenDaysTrend", function (assert) {

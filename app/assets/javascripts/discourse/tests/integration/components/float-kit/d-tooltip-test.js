@@ -55,7 +55,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
     );
 
-    assert.ok(this.api instanceof DTooltipInstance);
+    assert.true(this.api instanceof DTooltipInstance);
   });
 
   test("@onShow", async function (assert) {

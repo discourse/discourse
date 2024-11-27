@@ -307,6 +307,6 @@ acceptance("Admin - User Index", function (needs) {
     await click(".btn-user-delete");
     await click(".dialog-footer .btn-danger");
 
-    assert.ok(deleteAndBlock, "user does not get blocked");
+    assert.true(deleteAndBlock, "user does not get blocked");
   });
 });

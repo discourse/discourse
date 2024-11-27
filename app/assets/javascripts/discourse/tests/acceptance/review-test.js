@@ -219,8 +219,9 @@ acceptance("Review", function (needs) {
   test("Reviewables can become stale", async function (assert) {
     await visit("/review");
 
-    const reviewable = query(`[data-reviewable-id="1234"]`);
-    assert.notOk(reviewable.className.includes("reviewable-stale"));
+    assert
+      .dom("[data-reviewable-id='1234']")
+      .doesNotHaveClass("reviewable-stale");
     assert.dom("[data-reviewable-id='1234'] .status .pending").exists();
     assert.dom(".stale-help").doesNotExist();
 
@@ -231,10 +232,10 @@ acceptance("Review", function (needs) {
       },
     });
 
-    assert.ok(reviewable.className.includes("reviewable-stale"));
+    assert.dom("[data-reviewable-id='1234']").hasClass("reviewable-stale");
     assert.dom("[data-reviewable-id='1234'] .status .approved").exists();
     assert.dom(".stale-help").exists();
-    assert.ok(query(".stale-help").innerText.includes("foo"));
+    assert.dom(".stale-help").includesText("foo");
 
     await visit("/");
     await visit("/review"); // reload review

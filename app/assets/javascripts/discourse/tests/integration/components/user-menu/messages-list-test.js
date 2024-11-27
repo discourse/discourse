@@ -270,11 +270,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     });
     await render(template);
 
-    const dismiss = query(".panel-body-bottom .notifications-dismiss");
-    assert.ok(
-      dismiss,
-      "dismiss button is shown if the user has unread private_message notifications"
-    );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .exists(
+        "dismiss button is shown if the user has unread private_message notifications"
+      );
     assert
       .dom(".panel-body-bottom .notifications-dismiss")
       .hasAttribute(

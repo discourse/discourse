@@ -51,12 +51,12 @@ acceptance("Topic", function (needs) {
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
       `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
-      "it fills composer with the ring string"
+      "fills composer with the ring string"
     );
     assert.strictEqual(
       selectKit(".category-chooser").header().value(),
       "2",
-      "it fills category selector with the right category"
+      "fills category selector with the right category"
     );
   });
 
@@ -70,14 +70,14 @@ acceptance("Topic", function (needs) {
     assert.strictEqual(
       query(".d-editor-input").value.trim(),
       `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
-      "it fills composer with the ring string"
+      "fills composer with the ring string"
     );
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
       privateMessageUsers.header().value(),
       "someguy,test,Group",
-      "it fills up the composer correctly"
+      "fills up the composer correctly"
     );
   });
 
@@ -94,7 +94,7 @@ acceptance("Topic", function (needs) {
 
     assert
       .dom(".post-action-menu__copy-link-checkmark")
-      .exists("it shows the Link Copied! message");
+      .exists("shows the Link Copied! message");
   });
 
   test("Showing and hiding the edit controls", async function (assert) {
@@ -125,10 +125,10 @@ acceptance("Topic", function (needs) {
 
     assert
       .dom("#topic-title .badge-category")
-      .hasText("faq", "it displays the new category");
+      .hasText("faq", "displays the new category");
     assert
       .dom(".fancy-title")
-      .hasText("this is the new title", "it displays the new title");
+      .hasText("this is the new title", "displays the new title");
   });
 
   test("Marking a topic as wiki", async function (assert) {
@@ -148,7 +148,7 @@ acceptance("Topic", function (needs) {
 
     assert
       .dom(".fancy-title")
-      .hasText("PM for testing", "it routes to the right topic");
+      .hasText("PM for testing", "routes to the right topic");
 
     await visit("/t/280/20");
 
@@ -156,7 +156,7 @@ acceptance("Topic", function (needs) {
       .dom(".fancy-title")
       .hasText(
         "Internationalization / localization",
-        "it routes to the right topic"
+        "routes to the right topic"
       );
   });
 
@@ -251,7 +251,7 @@ acceptance("Topic", function (needs) {
 
     assert
       .dom(".topic-post.user-suspended > #post_1")
-      .exists("it has a class applied");
+      .exists("has a class applied");
   });
 });
 
@@ -319,9 +319,7 @@ acceptance("Topic featured links", function (needs) {
     await click(".topic-admin-visible .btn");
 
     await click(".toggle-admin-menu");
-    assert
-      .dom(".topic-admin-pin")
-      .exists("it should show the multi select menu");
+    assert.dom(".topic-admin-pin").exists("should show the multi select menu");
   });
 
   test("selecting posts", async function (assert) {
@@ -331,11 +329,11 @@ acceptance("Topic featured links", function (needs) {
 
     assert
       .dom(".selected-posts:not(.hidden)")
-      .exists("it should show the multi select menu");
+      .exists("should show the multi select menu");
 
     assert
       .dom(".select-all")
-      .exists("it should allow users to select all the posts");
+      .exists("should allow users to select all the posts");
   });
 
   test("select below", async function (assert) {
@@ -373,7 +371,7 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(
         'quote="codinghorror said, post:3, topic:280"'
       )
@@ -385,7 +383,7 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_9 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(
         'quote="A new topic with a link to another topic, post:3, topic:62"'
       )
@@ -397,7 +395,7 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".reply");
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(
         'quote="codinghorror said, post:3, topic:280"'
       )
@@ -413,7 +411,7 @@ acceptance("Topic featured links", function (needs) {
       await triggerKeyEvent(document, "keypress", "J");
       await triggerKeyEvent(document, "keypress", "T");
 
-      assert.ok(
+      assert.true(
         query(".d-editor-input").value.includes(
           'quote="codinghorror said, post:3, topic:280"'
         )
@@ -425,7 +423,7 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 .cooked");
     await click(".quote-button .insert-quote");
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(
         'quote="pekka, post:5, topic:280, full:true"'
       )
@@ -468,17 +466,16 @@ acceptance("Topic with title decorated", function (needs) {
   test("Decorate topic title", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      query(".fancy-title").innerText.endsWith("-280-topic-title"),
-      "it decorates topic title"
-    );
+    assert
+      .dom(".fancy-title")
+      .hasText(/-280-topic-title$/, "decorates topic title");
 
-    assert.ok(
-      query(".raw-topic-link:nth-child(1)").innerText.endsWith(
-        "-27331-topic-list-item-title"
-      ),
-      "it decorates topic list item title"
-    );
+    assert
+      .dom(".raw-topic-link:nth-child(1)")
+      .hasText(
+        /-27331-topic-list-item-title$/,
+        "decorates topic list item title"
+      );
   });
 });
 
@@ -493,11 +490,9 @@ acceptance("Topic pinning/unpinning as an admin", function (needs) {
 
     assert
       .dom(".feature-topic .btn-primary")
-      .exists("it should show the 'Pin Topic' button");
+      .exists("should show the 'Pin Topic' button");
 
-    assert
-      .dom(".make-banner")
-      .exists("it should show the 'Banner Topic' button");
+    assert.dom(".make-banner").exists("should show the 'Banner Topic' button");
   });
 });
 
@@ -512,11 +507,9 @@ acceptance("Topic pinning/unpinning as a staff member", function (needs) {
 
     assert
       .dom(".feature-topic .btn-primary")
-      .exists("it should show the 'Pin Topic' button");
+      .exists("should show the 'Pin Topic' button");
 
-    assert
-      .dom(".make-banner")
-      .exists("it should show the 'Banner Topic' button");
+    assert.dom(".make-banner").exists("should show the 'Banner Topic' button");
   });
 });
 
@@ -531,11 +524,11 @@ acceptance("Topic pinning/unpinning as a group moderator", function (needs) {
 
     assert
       .dom(".feature-topic .btn-primary")
-      .exists("it should show the 'Pin Topic' button");
+      .exists("should show the 'Pin Topic' button");
 
     assert
       .dom(".make-banner")
-      .doesNotExist("it should not show the 'Banner Topic' button");
+      .doesNotExist("should not show the 'Banner Topic' button");
   });
 });
 
@@ -605,26 +598,26 @@ acceptance("Navigating between topics", function (needs) {
   test("clicking slug-less URLs within the same topic", async function (assert) {
     await visit("/t/-/280");
     await click("a.same-topic-slugless");
-    assert.ok(currentURL().includes("/280"));
+    assert.true(currentURL().includes("/280"));
 
     await click("a.same-topic-slugless-post");
-    assert.ok(currentURL().includes("/280"));
+    assert.true(currentURL().includes("/280"));
   });
 
   test("clicking slug-less URLs to a different topic", async function (assert) {
     await visit("/t/-/280");
     await click("a.diff-topic-slugless");
-    assert.ok(currentURL().includes("/28830"));
+    assert.true(currentURL().includes("/28830"));
 
     await visit("/t/-/280");
     await click("a.diff-topic-slugless-post");
-    assert.ok(currentURL().includes("/28830"));
+    assert.true(currentURL().includes("/28830"));
   });
 
   test("clicking post URLs", async function (assert) {
     await visit("/t/-/280");
     await click("a.by-post-id");
-    assert.ok(currentURL().includes("/280"));
+    assert.true(currentURL().includes("/280"));
   });
 });
 
@@ -646,10 +639,10 @@ acceptance("Topic stats update automatically", function () {
     await publishToMessageBus("/topic/280", likesChangedFixture);
 
     assert.dom(likesCountSelectors).hasText(expectedLikesCount);
-    assert.notEqual(
+    assert.notStrictEqual(
       oldLikesCount,
       expectedLikesCount,
-      "it updates the likes count on the topic stats"
+      "updates the likes count on the topic stats"
     );
   });
 });

@@ -43,7 +43,7 @@ module("Unit | Utility | sanitizer", function (hooks) {
     cooked(
       "hello<script>alert(42)</script>",
       "<p>hello</p>",
-      "it sanitizes while cooking"
+      "sanitizes while cooking"
     );
 
     cooked(
@@ -52,47 +52,47 @@ module("Unit | Utility | sanitizer", function (hooks) {
       "we can embed proper links"
     );
 
-    cooked("<center>hello</center>", "hello", "it does not allow centering");
+    cooked("<center>hello</center>", "hello", "does not allow centering");
     cooked(
       "<blockquote>a\n</blockquote>\n",
       "<blockquote>a\n</blockquote>",
-      "it does not double sanitize"
+      "does not double sanitize"
     );
 
     cooked(
       '<iframe src="http://discourse.org" width="100" height="42"></iframe>',
       "",
-      "it does not allow most iframes"
+      "does not allow most iframes"
     );
 
     cooked(
       '<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2624.9983685732213!2d2.29432085!3d48.85824149999999!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1385737436368" width="100" height="42"></iframe>',
       '<iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2624.9983685732213!2d2.29432085!3d48.85824149999999!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1385737436368" width="100" height="42"></iframe>',
-      "it allows iframe to google maps"
+      "allows iframe to google maps"
     );
 
     cooked(
       '<iframe width="425" height="350" frameborder="0" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik"></iframe>',
       '<iframe width="425" height="350" frameborder="0" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik"></iframe>',
-      "it allows iframe to OpenStreetMap"
+      "allows iframe to OpenStreetMap"
     );
 
     cooked(
       `BEFORE\n\n<iframe src=http://example.com>\n\nINSIDE\n\n</iframe>\n\nAFTER`,
       `<p>BEFORE</p>\n\n<p>AFTER</p>`,
-      "it strips unauthorized iframes - unallowed src"
+      "strips unauthorized iframes - unallowed src"
     );
 
     cooked(
       `BEFORE\n\n<iframe src=''>\n\nINSIDE\n\n</iframe>\n\nAFTER`,
       `<p>BEFORE</p>\n\n<p>AFTER</p>`,
-      "it strips unauthorized iframes - empty src"
+      "strips unauthorized iframes - empty src"
     );
 
     cooked(
       `BEFORE\n\n<iframe src='http://example.com'>\n\nAFTER`,
       `<p>BEFORE</p>`,
-      "it strips unauthorized partial iframes"
+      "strips unauthorized partial iframes"
     );
 
     assert.strictEqual(engine.sanitize("<textarea>hullo</textarea>"), "hullo");
@@ -109,29 +109,29 @@ module("Unit | Utility | sanitizer", function (hooks) {
     cooked(
       "[the answer](javascript:alert(42))",
       "<p>[the answer](javascript:alert(42))</p>",
-      "it prevents XSS"
+      "prevents XSS"
     );
 
     cooked(
       '<i class="fa fa-bug fa-spin" style="font-size:600%"></i>\n<!-- -->',
       "<p><i></i></p>",
-      "it doesn't circumvent XSS with comments"
+      "doesn't circumvent XSS with comments"
     );
 
     cooked(
       '<span class="-bbcode-s fa fa-spin">a</span>',
       "<p><span>a</span></p>",
-      "it sanitizes spans"
+      "sanitizes spans"
     );
     cooked(
       '<span class="fa fa-spin -bbcode-s">a</span>',
       "<p><span>a</span></p>",
-      "it sanitizes spans"
+      "sanitizes spans"
     );
     cooked(
       '<span class="bbcode-s">a</span>',
       '<p><span class="bbcode-s">a</span></p>',
-      "it sanitizes spans"
+      "sanitizes spans"
     );
 
     cooked(
@@ -139,7 +139,7 @@ module("Unit | Utility | sanitizer", function (hooks) {
       "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>"
     );
     cooked(
-      "it has been <strike>1 day</strike> 0 days since our last test failure",
+      "has been <strike>1 day</strike> 0 days since our last test failure",
       "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>"
     );
     cooked(
@@ -216,26 +216,26 @@ module("Unit | Utility | sanitizer", function (hooks) {
 
   test("autoplay videos must be muted", function (assert) {
     let engine = build({ siteSettings: {} });
-    assert.ok(
-      engine
-        .sanitize(
+    assert.true(
+      /muted/.test(
+        engine.sanitize(
           `<p>Hey</p><video autoplay src="http://example.com/music.mp4"/>`
         )
-        .match(/muted/)
+      )
     );
-    assert.ok(
-      engine
-        .sanitize(
+    assert.true(
+      /muted/.test(
+        engine.sanitize(
           `<p>Hey</p><video autoplay><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
-        .match(/muted/)
+      )
     );
-    assert.ok(
-      engine
-        .sanitize(
+    assert.true(
+      /muted/.test(
+        engine.sanitize(
           `<p>Hey</p><video autoplay muted><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
-        .match(/muted/)
+      )
     );
     assert.false(
       /muted/.test(

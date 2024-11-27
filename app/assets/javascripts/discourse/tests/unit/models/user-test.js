@@ -36,13 +36,13 @@ module("Unit | Model | user", function (hooks) {
   test("isAllowedToUploadAFile", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { trust_level: 0, admin: true });
-    assert.ok(
+    assert.true(
       user.isAllowedToUploadAFile("image"),
       "admin can always upload a file"
     );
 
     user.setProperties({ admin: false, moderator: true });
-    assert.ok(
+    assert.true(
       user.isAllowedToUploadAFile("image"),
       "moderator can always upload a file"
     );
@@ -111,7 +111,7 @@ module("Unit | Model | user", function (hooks) {
 
     User.createCurrent();
 
-    assert.ok(spyMomentGuess.notCalled);
+    assert.false(spyMomentGuess.called);
   });
 
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {

@@ -114,13 +114,11 @@ acceptance("Group Requests", function (needs) {
     await click(
       ".group-members .directory-table__row:first-child .btn-primary"
     );
-    assert.ok(
-      query(
+    assert
+      .dom(
         ".group-members .directory-table__row:first-child .directory-table__cell:nth-child(4)"
       )
-        .innerText.trim()
-        .startsWith("accepted")
-    );
+      .hasText(/^accepted/);
     assert.deepEqual(requests, [["19", "true"]]);
 
     await click(".group-members .directory-table__row:last-child .btn-danger");

@@ -32,23 +32,17 @@ acceptance("Admin - Users List", function (needs) {
       ".users-list .directory-table__column-header--username.sortable"
     );
 
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        "eviltrout"
-      ),
-      "list should be sorted by username"
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText("eviltrout", "list should be sorted by username");
 
     await click(
       ".users-list .directory-table__column-header--username.sortable"
     );
 
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        "discobot"
-      ),
-      "list should be sorted ascending by username"
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText("discobot", "list should be sorted ascending by username");
   });
 
   test("toggles email visibility", async function (assert) {
@@ -81,37 +75,29 @@ acceptance("Admin - Users List", function (needs) {
     await visit("/admin/users/list/active");
 
     assert.dom(".admin-title h2").hasText(activeTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        activeUser
-      )
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(activeUser);
 
     await click('a[href="/admin/users/list/new"]');
 
     assert.dom(".admin-title h2").hasText(suspectTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        suspectUser
-      )
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(suspectUser);
 
     await click(".users-list .sortable:nth-child(4)");
 
     assert.dom(".admin-title h2").hasText(suspectTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        suspectUser
-      )
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(suspectUser);
 
     await click('a[href="/admin/users/list/active"]');
 
     assert.dom(".admin-title h2").hasText(activeTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        activeUser
-      )
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(activeUser);
   });
 });

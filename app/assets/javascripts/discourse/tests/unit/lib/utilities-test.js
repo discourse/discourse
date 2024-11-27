@@ -53,11 +53,11 @@ module("Unit | Utilities", function (hooks) {
   });
 
   test("emailValid", function (assert) {
-    assert.ok(
+    assert.true(
       emailValid("Bob@example.com"),
       "allows upper case in the first part of emails"
     );
-    assert.ok(
+    assert.true(
       emailValid("bob@EXAMPLE.com"),
       "allows upper case in the email domain"
     );

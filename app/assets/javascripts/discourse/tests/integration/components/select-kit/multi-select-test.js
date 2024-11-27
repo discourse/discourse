@@ -42,21 +42,21 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
 
     const content = this.subject.displayedContent();
-    assert.strictEqual(content.length, 3, "it shows rows");
+    assert.strictEqual(content.length, 3, "shows rows");
     assert.strictEqual(
       content[0].name,
       this.content.firstObject.name,
-      "it has the correct name"
+      "has the correct name"
     );
     assert.strictEqual(
       content[0].id,
       this.content.firstObject.id.toString(),
-      "it has the correct value"
+      "has the correct value"
     );
     assert.strictEqual(
       this.subject.header().value(),
       null,
-      "it doesn't set a value from the content"
+      "doesn't set a value from the content"
     );
   });
 
@@ -79,9 +79,9 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await this.subject.deselectItemByValue(1);
 
-    assert.ok(
+    assert.true(
       this.subject.isExpanded(),
-      "it doesn’t close the dropdown when no selection has been made"
+      "doesn’t close the dropdown when no selection has been made"
     );
   });
 
@@ -99,7 +99,7 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
-    assert.ok(this.subject.isExpanded(), "it doesn’t close the dropdown");
+    assert.true(this.subject.isExpanded(), "doesn’t close the dropdown");
   });
 
   test("pasting", async function (assert) {
@@ -129,6 +129,6 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
 
     assert
       .dom(".selected-content")
-      .doesNotExist("it doesn’t render an empty content div");
+      .doesNotExist("doesn’t render an empty content div");
   });
 });

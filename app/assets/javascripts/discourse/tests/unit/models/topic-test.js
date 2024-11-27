@@ -28,10 +28,10 @@ module("Unit | Model | topic", function (hooks) {
     assert.false(topic.visited, "not visited unless we've read all the posts");
 
     topic.set("last_read_post_number", 2);
-    assert.ok(topic.visited, "is visited once we've read all the posts");
+    assert.true(topic.visited, "is visited once we've read all the posts");
 
     topic.set("last_read_post_number", 3);
-    assert.ok(
+    assert.true(
       topic.visited,
       "is visited if we've read all the posts and some are deleted at the end"
     );

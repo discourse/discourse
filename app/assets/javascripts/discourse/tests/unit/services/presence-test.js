@@ -214,8 +214,8 @@ module("Unit | Service | presence | subscribing", function (hooks) {
 
     await channelDup.subscribe();
     assert.true(channelDup.subscribed, "channelDup can subscribe");
-    assert.ok(
-      channelDup._presenceState,
+    assert.true(
+      !!channelDup._presenceState,
       "channelDup has a valid internal state"
     );
     assert.strictEqual(

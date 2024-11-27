@@ -45,7 +45,7 @@ module(
       });
 
       await render(hbs`<FormTemplateChooser />`);
-      assert.ok(this.subject.isDisabled());
+      assert.true(this.subject.isDisabled());
     });
   }
 );
