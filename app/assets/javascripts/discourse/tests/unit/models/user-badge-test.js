@@ -12,7 +12,7 @@ module("Unit | Model | user-badge", function (hooks) {
     const userBadge = UserBadge.createFromJson(
       cloneJSON(badgeFixtures["/user_badges"])
     );
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.false(Array.isArray(userBadge), "does not return an array");
     assert.strictEqual(
       userBadge.badge.name,
       "Badge 2",
@@ -54,7 +54,7 @@ module("Unit | Model | user-badge", function (hooks) {
 
   test("grant", async function (assert) {
     const userBadge = await UserBadge.grant(1, "username");
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.false(Array.isArray(userBadge), "does not return an array");
   });
 
   test("revoke", async function (assert) {

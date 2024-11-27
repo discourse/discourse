@@ -10,10 +10,10 @@ module("Unit | Model | result-set", function (hooks) {
     const resultSet = store.createRecord("result-set", { content: [] });
     assert.strictEqual(resultSet.length, 0);
     assert.strictEqual(resultSet.totalRows, 0);
-    assert.ok(!resultSet.loadMoreUrl);
-    assert.ok(!resultSet.loading);
-    assert.ok(!resultSet.loadingMore);
-    assert.ok(!resultSet.refreshing);
+    assert.strictEqual(resultSet.loadMoreUrl, null);
+    assert.false(resultSet.loading);
+    assert.false(resultSet.loadingMore);
+    assert.false(resultSet.refreshing);
   });
 
   test("pagination support", async function (assert) {
@@ -21,18 +21,22 @@ module("Unit | Model | result-set", function (hooks) {
     const resultSet = await store.findAll("widget");
     assert.strictEqual(resultSet.length, 2);
     assert.strictEqual(resultSet.totalRows, 4);
-    assert.ok(resultSet.loadMoreUrl, "has a url to load more");
-    assert.ok(!resultSet.loadingMore, "it is not loading more");
-    assert.ok(resultSet.canLoadMore);
+    assert.strictEqual(
+      resultSet.loadMoreUrl,
+      "/load-more-widgets",
+      "has a url to load more"
+    );
+    assert.false(resultSet.loadingMore, "not loading more");
+    assert.true(resultSet.canLoadMore);
 
     const promise = resultSet.loadMore();
-    assert.ok(resultSet.loadingMore, "it is loading more");
+    assert.true(resultSet.loadingMore, "is loading more");
 
     await promise;
-    assert.ok(!resultSet.loadingMore, "it finished loading more");
+    assert.false(resultSet.loadingMore, "finished loading more");
     assert.strictEqual(resultSet.length, 4);
-    assert.ok(!resultSet.loadMoreUrl);
-    assert.ok(!resultSet.canLoadMore);
+    assert.strictEqual(resultSet.loadMoreUrl, null);
+    assert.false(resultSet.canLoadMore);
   });
 
   test("refresh support", async function (assert) {
@@ -41,13 +45,13 @@ module("Unit | Model | result-set", function (hooks) {
     assert.strictEqual(
       resultSet.refreshUrl,
       "/widgets?refresh=true",
-      "it has the refresh url"
+      "has the refresh url"
     );
 
     const promise = resultSet.refresh();
-    assert.ok(resultSet.refreshing, "it is refreshing");
+    assert.true(resultSet.refreshing, "is refreshing");
 
     await promise;
-    assert.ok(!resultSet.refreshing, "it is finished refreshing");
+    assert.false(resultSet.refreshing, "finished refreshing");
   });
 });

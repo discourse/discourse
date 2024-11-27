@@ -168,7 +168,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
     await channel.subscribe();
 
     assert.strictEqual(channel.count, 3, "has the correct count");
-    assert.strictEqual(channel.countOnly, true, "identifies as countOnly");
+    assert.true(channel.countOnly, "identifies as countOnly");
     assert.strictEqual(channel.users, null, "has null users list");
 
     await publishToMessageBus(
