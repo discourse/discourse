@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Unit | Model | post", function (hooks) {
   setupTest(hooks);
@@ -32,18 +33,36 @@ module("Unit | Model | post", function (hooks) {
   });
 
   test("updateFromPost", function (assert) {
+    withPluginApi("1.39.0", (api) => {
+      api.addTrackedPostProperty("plugin_property");
+    });
+
     const post = this.store.createRecord("post", {
       post_number: 1,
       raw: "hello world",
+      likeAction: null, // `likeAction` is a tracked property from the model added using `@trackedPostProperty`
     });
 
     post.updateFromPost(
       this.store.createRecord("post", {
         raw: "different raw",
+        yours: false,
+        likeAction: { count: 1 },
+        plugin_property: "different plugin value",
       })
     );
 
-    assert.strictEqual(post.raw, "different raw", "raw field updated");
+    assert.strictEqual(post.raw, "different raw", "`raw` field was updated");
+    assert.deepEqual(
+      post.likeAction,
+      { count: 1 },
+      "`likeAction` field was updated"
+    );
+    assert.strictEqual(
+      post.plugin_property,
+      "different plugin value",
+      "`plugin_property` field was updated"
+    );
   });
 
   test("destroy by staff", async function (assert) {

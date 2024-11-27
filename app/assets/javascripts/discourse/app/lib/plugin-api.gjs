@@ -820,8 +820,15 @@ class PluginApi {
     includeAttributes(...attributes);
   }
 
-  addTrackedPostProperty(name, value) {
-    _addTrackedPostProperty(name, value);
+  /**
+   * Adds a tracked property to the post model.
+   *
+   * This method is used to mark a property as tracked for post updates.
+   *
+   * @param {string} name - The name of the property to track.
+   */
+  addTrackedPostProperty(name) {
+    _addTrackedPostProperty(name);
   }
 
   /**

@@ -82,6 +82,7 @@ import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
+import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -257,6 +258,7 @@ export function testCleanup(container, app) {
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
   resetNeedsHbrTopicList();
+  clearAddedTrackedPostProperties();
 }
 
 function cleanupCssGeneratorTags() {

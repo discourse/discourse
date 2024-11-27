@@ -21,7 +21,7 @@ import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
-const pluginTrackedProperties = new Map();
+const pluginTrackedProperties = new Set();
 const trackedPropertiesForPostUpdate = new Set();
 
 /**
@@ -31,11 +31,18 @@ const trackedPropertiesForPostUpdate = new Set();
  * Intended to be used only in the plugin API.
  *
  * @param {string} propertyKey - The key of the property to track.
- * @param {*} value - The initial value of the property.
  */
-export function _addTrackedPostProperty(propertyKey, value) {
-  pluginTrackedProperties.set(propertyKey, value);
-  trackedPropertiesForPostUpdate.add(propertyKey);
+export function _addTrackedPostProperty(propertyKey) {
+  pluginTrackedProperties.add(propertyKey);
+}
+
+/**
+ * Clears all tracked properties added using the API
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function clearAddedTrackedPostProperties() {
+  pluginTrackedProperties.clear();
 }
 
 /**
@@ -175,8 +182,8 @@ export default class Post extends RestModel {
     super(...arguments);
 
     // adds tracked properties defined by plugin to the instance
-    pluginTrackedProperties.forEach((value, key) => {
-      defineTrackedProperty(this, key, value);
+    pluginTrackedProperties.forEach((propertyKey) => {
+      defineTrackedProperty(this, propertyKey);
     });
   }
 
@@ -518,33 +525,35 @@ export default class Post extends RestModel {
    * is already found in an identity map.
    **/
   updateFromPost(otherPost) {
-    [...Object.keys(otherPost), ...trackedPropertiesForPostUpdate].forEach(
-      (key) => {
-        let value = otherPost[key],
-          oldValue = this[key];
+    [
+      ...Object.keys(otherPost),
+      ...trackedPropertiesForPostUpdate,
+      ...pluginTrackedProperties,
+    ].forEach((key) => {
+      let value = otherPost[key],
+        oldValue = this[key];
 
-        if (!value) {
-          value = null;
+      if (!value) {
+        value = null;
+      }
+      if (!oldValue) {
+        oldValue = null;
+      }
+
+      let skip = false;
+      if (typeof value !== "function" && oldValue !== value) {
+        // wishing for an identity map
+        if (key === "reply_to_user" && value && oldValue) {
+          skip =
+            value.username === oldValue.username ||
+            get(value, "username") === get(oldValue, "username");
         }
-        if (!oldValue) {
-          oldValue = null;
-        }
 
-        let skip = false;
-        if (typeof value !== "function" && oldValue !== value) {
-          // wishing for an identity map
-          if (key === "reply_to_user" && value && oldValue) {
-            skip =
-              value.username === oldValue.username ||
-              get(value, "username") === get(oldValue, "username");
-          }
-
-          if (!skip) {
-            this.set(key, value);
-          }
+        if (!skip) {
+          this.set(key, value);
         }
       }
-    );
+    });
   }
 
   expandHidden() {
