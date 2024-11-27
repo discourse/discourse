@@ -16,6 +16,13 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 
+  it "sets `potentially_illegal` when an illegal flag is added" do
+    reviewable = PostActionCreator.off_topic(user, post).reviewable
+    expect(reviewable.potentially_illegal?).to eq(false)
+    PostActionCreator.illegal(Fabricate(:user, refresh_auto_groups: true), post)
+    expect(reviewable.reload.potentially_illegal?).to eq(true)
+  end
+
   describe "actions" do
     let!(:result) { PostActionCreator.spam(user, post) }
     let(:reviewable) { result.reviewable }
@@ -95,7 +102,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       context "when flagged as potential_spam" do
-        before { reviewable.update!(potential_spam: true) }
+        before { reviewable.update!(potential_spam: true, potentially_illegal: false) }
 
         it "excludes delete action if the reviewer cannot delete the user" do
           post.user.user_stat.update!(
@@ -114,14 +121,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       end
 
       context "when flagged as illegal" do
-        before do
-          reviewable.add_score(
-            Discourse.system_user,
-            ReviewableScore.types[:illegal],
-            reason: "Looks pretty sus.",
-          )
-          reviewable.update(potential_spam: false)
-        end
+        before { reviewable.update(potential_spam: false, potentially_illegal: true) }
 
         it "excludes delete action if the reviewer cannot delete the user" do
           post.user.user_stat.update!(
