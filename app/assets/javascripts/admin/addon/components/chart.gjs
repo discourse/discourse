@@ -7,10 +7,7 @@ import loadScript from "discourse/lib/load-script";
 export default class Chart extends Component {
   renderChart = modifier((element, [chartConfig]) => {
     loadScript("/javascripts/Chart.min.js").then(() => {
-      this.chart = new window.Chart(
-        element.getContext("2d"),
-        chartConfig
-      );
+      this.chart = new window.Chart(element.getContext("2d"), chartConfig);
     });
 
     return () => this.chart?.destroy();
