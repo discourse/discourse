@@ -32,8 +32,9 @@ module("Unit | Utility | computed", function (hooks) {
       "airplane",
       "it has the value of the site setting"
     );
-    assert.false(
+    assert.strictEqual(
       t.missingProp,
+      undefined,
       "is falsy when the site setting is not defined"
     );
   });
