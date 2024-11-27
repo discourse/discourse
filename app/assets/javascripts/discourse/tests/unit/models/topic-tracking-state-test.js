@@ -317,16 +317,8 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     };
 
     trackingState.sync(list, "unread");
-    assert.strictEqual(
-      list.topics[0].unseen,
-      false,
-      "expect unread topic to be marked as seen"
-    );
-    assert.strictEqual(
-      list.topics[0].prevent_sync,
-      true,
-      "expect unread topic to be marked as prevent_sync"
-    );
+    assert.false(list.topics[0].unseen, "expect unread topic to be marked as seen");
+    assert.true(list.topics[0].prevent_sync, "expect unread topic to be marked as prevent_sync");
   });
 
   test("sync - remove topic from state for performance if it is seen and has no unread or new posts and there are too many tracked topics in memory", function (assert) {
@@ -532,11 +524,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
-    assert.strictEqual(
-      trackingState.findState(111).deleted,
-      true,
-      "marks the topic as deleted"
-    );
+    assert.true(trackingState.findState(111).deleted, "marks the topic as deleted");
     assert.strictEqual(
       trackingState.messageCount,
       1,
@@ -559,11 +547,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/recover", { topic_id: 111 });
 
-    assert.strictEqual(
-      trackingState.findState(111).deleted,
-      false,
-      "marks the topic as not deleted"
-    );
+    assert.false(trackingState.findState(111).deleted, "marks the topic as not deleted");
     assert.strictEqual(
       trackingState.messageCount,
       1,
@@ -824,13 +808,13 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.strictEqual(currentUser.unmuted_topics[0].topicId, 2);
 
     trackingState.pruneOldMutedAndUnmutedTopics();
-    assert.strictEqual(trackingState.isMutedTopic(1), true);
-    assert.strictEqual(trackingState.isUnmutedTopic(2), true);
+    assert.true(trackingState.isMutedTopic(1));
+    assert.true(trackingState.isUnmutedTopic(2));
 
     this.clock.tick(60000);
     trackingState.pruneOldMutedAndUnmutedTopics();
-    assert.strictEqual(trackingState.isMutedTopic(1), false);
-    assert.strictEqual(trackingState.isUnmutedTopic(2), false);
+    assert.false(trackingState.isMutedTopic(1));
+    assert.false(trackingState.isUnmutedTopic(2));
   });
 });
 
@@ -1045,7 +1029,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
       payload: { topic_ids: [112] },
     });
 
-    assert.strictEqual(this.trackingState.findState(112).is_seen, true);
+    assert.true(this.trackingState.findState(112).is_seen);
   });
 
   test("marks a topic as read", async function (assert) {
@@ -1214,11 +1198,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       },
       "new topic loaded into state"
     );
-    assert.strictEqual(
-      stateCallbackCalled,
-      true,
-      "state change callback called"
-    );
+    assert.true(stateCallbackCalled, "state change callback called");
   });
 
   test("adds incoming so it is counted in topic lists", async function (assert) {

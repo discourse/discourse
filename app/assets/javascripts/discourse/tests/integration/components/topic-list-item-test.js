@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | topic-list-item", function (hooks) {
   setupRenderingTest(hooks);
@@ -31,8 +30,8 @@ module("Integration | Component | topic-list-item", function (hooks) {
       />
     `);
 
-    const checkboxes = queryAll("input.bulk-select");
-    assert.ok(checkboxes[0].checked);
-    assert.ok(!checkboxes[1].checked);
+    const checkboxes = [...document.querySelectorAll("input.bulk-select")];
+    assert.dom(checkboxes[0]).isChecked();
+    assert.dom(checkboxes[1]).isNotChecked();
   });
 });

@@ -24,11 +24,7 @@ module("Unit | Utility | oneboxer", function (hooks) {
 
     await loadOnebox(element);
 
-    assert.strictEqual(
-      failedCache["http://somebadurl.com"],
-      true,
-      "stores the url as failed in a cache"
-    );
+    assert.true(failedCache["http://somebadurl.com"], "stores the url as failed in a cache");
     assert.strictEqual(
       loadOnebox(element),
       undefined,

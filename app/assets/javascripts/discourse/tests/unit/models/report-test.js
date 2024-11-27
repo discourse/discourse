@@ -94,7 +94,7 @@ module("Unit | Model | report", function (hooks) {
       this,
       [6, 8, 0, 2, 1]
     ).yesterdayCountTitle;
-    assert.ok(!title.includes("%"));
+    assert.false(title.includes("%"));
     assert.ok(title.match(/Was 0/));
   });
 

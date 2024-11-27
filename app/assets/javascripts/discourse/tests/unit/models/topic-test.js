@@ -238,11 +238,11 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.invisible, undefined);
 
     const visibleTopic = this.store.createRecord("topic", { visible: true });
-    assert.strictEqual(visibleTopic.visible, true);
-    assert.strictEqual(visibleTopic.invisible, false);
+    assert.true(visibleTopic.visible);
+    assert.false(visibleTopic.invisible);
 
     const invisibleTopic = this.store.createRecord("topic", { visible: false });
-    assert.strictEqual(invisibleTopic.visible, false);
-    assert.strictEqual(invisibleTopic.invisible, true);
+    assert.false(invisibleTopic.visible);
+    assert.true(invisibleTopic.invisible);
   });
 });

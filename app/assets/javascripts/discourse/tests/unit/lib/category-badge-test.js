@@ -56,11 +56,11 @@ module("Unit | Utility | category-badge", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", { name: "hello", id: 123 });
 
-    assert.ok(
-      !categoryBadgeHTML(category).includes("topic-count"),
+    assert.notOk(
+      categoryBadgeHTML(category).includes("topic-count"),
       "it does not include topic count by default"
     );
-    assert.ok(
+    assert.true(
       categoryBadgeHTML(category, { topicCount: 20 }).indexOf("topic-count") >
         20,
       "is included when specified"
@@ -137,21 +137,21 @@ module("Unit | Utility | category-badge", function (hooks) {
     });
 
     siteSettings.max_category_nesting = 0;
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
+    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
 
     siteSettings.max_category_nesting = 1;
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
+    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
 
     siteSettings.max_category_nesting = 2;
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.ok(!categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
+    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
 
     siteSettings.max_category_nesting = 3;
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.ok(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
+    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
   });
 });

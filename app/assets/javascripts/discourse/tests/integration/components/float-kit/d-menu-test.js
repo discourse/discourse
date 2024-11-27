@@ -72,7 +72,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await render(hbs`<DMenu @inline={{true}} @onShow={{this.onShow}} />`);
     await open();
 
-    assert.strictEqual(this.test, true);
+    assert.true(this.test);
   });
 
   test("@onClose", async function (assert) {
@@ -83,7 +83,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
     await close();
 
-    assert.strictEqual(this.test, true);
+    assert.true(this.test);
   });
 
   test("-expanded class", async function (assert) {

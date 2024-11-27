@@ -62,7 +62,7 @@ module(
       await settled();
 
       assert.deepEqual(this.manager.emojis, emojisResponse());
-      assert.strictEqual(this.manager.loading, false);
+      assert.false(this.manager.loading);
     });
 
     test("closeExisting", async function (assert) {

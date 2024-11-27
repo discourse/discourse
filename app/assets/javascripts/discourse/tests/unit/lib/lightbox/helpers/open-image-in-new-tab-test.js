@@ -14,11 +14,7 @@ module(
 
       await openImageInNewTab(lightboxItem);
 
-      assert.strictEqual(
-        openStub.calledWith("image.jpg", "_blank"),
-        true,
-        "calls window.open with the correct arguments"
-      );
+      assert.true(openStub.calledWith("image.jpg", "_blank"), "calls window.open with the correct arguments");
 
       openStub.restore();
     });
@@ -33,11 +29,7 @@ module(
 
       await openImageInNewTab(lightboxItem);
 
-      assert.strictEqual(
-        consoleErrorStub.called,
-        true,
-        "logs an error to the console"
-      );
+      assert.true(consoleErrorStub.called, "logs an error to the console");
 
       openStub.restore();
       consoleErrorStub.restore();

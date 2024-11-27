@@ -32,9 +32,9 @@ module("Unit | Utility | computed", function (hooks) {
       "airplane",
       "it has the value of the site setting"
     );
-    assert.ok(
-      !t.missingProp,
-      "it is falsy when the site setting is not defined"
+    assert.false(
+      t.missingProp,
+      "is falsy when the site setting is not defined"
     );
   });
 
@@ -47,9 +47,9 @@ module("Unit | Utility | computed", function (hooks) {
       biscuits: 10,
     });
 
-    assert.ok(t.same, "it is true when the properties are the same");
+    assert.true(t.same, "is true when the properties are the same");
     t.set("biscuits", 9);
-    assert.ok(!t.same, "it isn't true when one property is different");
+    assert.false(t.same, "isn't true when one property is different");
   });
 
   test("propertyNotEqual", function (assert) {
@@ -61,9 +61,9 @@ module("Unit | Utility | computed", function (hooks) {
       biscuits: 10,
     });
 
-    assert.ok(!t.diff, "it isn't true when the properties are the same");
+    assert.false(t.diff, "isn't true when the properties are the same");
     t.set("biscuits", 9);
-    assert.ok(t.diff, "it is true when one property is different");
+    assert.true(t.diff, "is true when one property is different");
   });
 
   test("fmt", function (assert) {

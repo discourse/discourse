@@ -62,11 +62,7 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
       "controller:admin-customize-themes-show"
     );
     controller.setProperties({ model: theme });
-    assert.deepEqual(
-      controller.hasSettings,
-      true,
-      "sets the hasSettings property to true with settings"
-    );
+    assert.true(controller.hasSettings, "sets the hasSettings property to true with settings");
   });
 
   test("hides settings editor button with no settings", function (assert) {
@@ -80,10 +76,6 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
       "controller:admin-customize-themes-show"
     );
     controller.setProperties({ model: theme });
-    assert.deepEqual(
-      controller.hasSettings,
-      false,
-      "sets the hasSettings property to true with settings"
-    );
+    assert.false(controller.hasSettings, "sets the hasSettings property to true with settings");
   });
 });

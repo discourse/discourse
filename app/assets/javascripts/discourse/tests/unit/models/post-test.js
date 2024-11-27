@@ -11,7 +11,7 @@ module("Unit | Model | post", function (hooks) {
 
   test("defaults", function (assert) {
     const post = this.store.createRecord("post", { id: 1 });
-    assert.blank(post.deleted_at, "it has no deleted_at by default");
+    assert.blank(post.deleted_at, "has no deleted_at by default");
     assert.blank(post.deleted_by, "there is no deleted_by by default");
   });
 
@@ -20,15 +20,15 @@ module("Unit | Model | post", function (hooks) {
     assert.ok(post.new_user, "post is from a new user");
 
     post.set("trust_level", 1);
-    assert.ok(!post.new_user, "post is no longer from a new user");
+    assert.false(post.new_user, "post is no longer from a new user");
   });
 
   test("firstPost", function (assert) {
     const post = this.store.createRecord("post", { post_number: 1 });
-    assert.ok(post.firstPost, "it's the first post");
+    assert.true(post.firstPost, "is the first post");
 
     post.set("post_number", 10);
-    assert.ok(!post.firstPost, "post is no longer the first post");
+    assert.false(post.firstPost, "post is no longer the first post");
   });
 
   test("updateFromPost", function (assert) {
@@ -60,17 +60,17 @@ module("Unit | Model | post", function (hooks) {
 
     await post.destroy(user);
 
-    assert.present(post.deleted_at, "it has a `deleted_at` field.");
+    assert.present(post.deleted_at, "has a `deleted_at` field.");
     assert.strictEqual(
       post.deleted_by,
       user,
-      "it has the user in the `deleted_by` field"
+      "has the user in the `deleted_by` field"
     );
 
     await post.recover();
 
-    assert.blank(post.deleted_at, "it clears `deleted_at` when recovering");
-    assert.blank(post.deleted_by, "it clears `deleted_by` when recovering");
+    assert.blank(post.deleted_at, "clears `deleted_at` when recovering");
+    assert.blank(post.deleted_by, "clears `deleted_by` when recovering");
   });
 
   test("destroy by non-staff", async function (assert) {
@@ -86,11 +86,15 @@ module("Unit | Model | post", function (hooks) {
 
     await post.destroy(user);
 
-    assert.ok(
-      !post.can_delete,
+    assert.false(
+      post.can_delete,
       "the post can't be deleted again in this session"
     );
-    assert.ok(post.cooked !== originalCooked, "the cooked content changed");
+    assert.notStrictEqual(
+      post.cooked,
+      originalCooked,
+      "the cooked content changed"
+    );
     assert.strictEqual(post.version, 2, "the version number increased");
   });
 });

@@ -471,11 +471,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       "||a|b|\n|---|---|---|\n|1|2|3|\n",
       "only the plain text table is pasted"
     );
-    assert.strictEqual(
-      uppyEventFired,
-      false,
-      "uppy does not start uploading the file"
-    );
+    assert.false(uppyEventFired, "uppy does not start uploading the file");
     done();
   });
 });

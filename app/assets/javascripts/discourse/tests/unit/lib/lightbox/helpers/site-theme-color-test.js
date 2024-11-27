@@ -19,11 +19,7 @@ module(
 
       const themeColor = await getSiteThemeColor();
 
-      assert.strictEqual(
-        querySelectorSpy.calledWith('meta[name="theme-color"]'),
-        true,
-        "Queries the correct element"
-      );
+      assert.true(querySelectorSpy.calledWith('meta[name="theme-color"]'), "Queries the correct element");
 
       assert.strictEqual(
         themeColor,
@@ -40,11 +36,7 @@ module(
 
       await setSiteThemeColor("0000ff");
 
-      assert.strictEqual(
-        querySelectorSpy.calledWith('meta[name="theme-color"]'),
-        true,
-        "queries the correct element"
-      );
+      assert.true(querySelectorSpy.calledWith('meta[name="theme-color"]'), "queries the correct element");
 
       assert.strictEqual(
         querySelectorSpy.returnValues[0].content,

@@ -63,6 +63,6 @@ module("Unit | Utility | preload-store", function (hooks) {
     const result = await PreloadStore.getAndRemove("falsy", () =>
       assert.ok(false)
     );
-    assert.strictEqual(result, false);
+    assert.false(result);
   });
 });

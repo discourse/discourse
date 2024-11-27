@@ -473,13 +473,9 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+      assert.true(this.consoleWarnStub.calledWith(
           "Deprecation notice: outlet arg `shouldDisplay` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-        ),
-        true,
-        "logs the default message to the console"
-      );
+        ), "logs the default message to the console");
     });
 
     test("deprecated parameters with custom deprecation data", async function (assert) {
@@ -506,36 +502,20 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+      assert.true(this.consoleWarnStub.calledWith(
           sinon.match(/The 'shouldDisplay' is deprecated on this test/)
-        ),
-        true,
-        "logs the custom deprecation message to the console"
-      );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+        ), "logs the custom deprecation message to the console");
+      assert.true(this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.plugin-connector.deprecated-arg.test/
           )
-        ),
-        true,
-        "logs custom deprecation id"
-      );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+        ), "logs custom deprecation id");
+      assert.true(this.consoleWarnStub.calledWith(
           sinon.match(/deprecated since Discourse 3.3.0.beta4-dev/)
-        ),
-        true,
-        "logs deprecation since information"
-      );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+        ), "logs deprecation since information");
+      assert.true(this.consoleWarnStub.calledWith(
           sinon.match(/removal in Discourse 3.4.0/)
-        ),
-        true,
-        "logs dropFrom information"
-      );
+        ), "logs dropFrom information");
     });
 
     test("silence nested deprecations", async function (assert) {
@@ -568,24 +548,16 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         1,
         "console warn was called once"
       );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+      assert.false(this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.deprecation-that-should-not-be-logged/
           )
-        ),
-        false,
-        "does not log silence deprecation"
-      );
-      assert.strictEqual(
-        this.consoleWarnStub.calledWith(
+        ), "does not log silence deprecation");
+      assert.true(this.consoleWarnStub.calledWith(
           sinon.match(
             /deprecation id: discourse.plugin-connector.deprecated-arg/
           )
-        ),
-        true,
-        "logs expected deprecation"
-      );
+        ), "logs expected deprecation");
     });
 
     test("unused arguments", async function (assert) {
@@ -793,20 +765,12 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for @outletArgs.hello"
-        );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+          ), "logs the expected message for @outletArgs.hello");
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for this.hello"
-        );
+          ), "logs the expected message for this.hello");
       });
 
       test("using templateOnly by default when @defaultGlimmer=true", async function (assert) {
@@ -827,20 +791,12 @@ module(
           1,
           "console warn was called once"
         );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for @outletArgs.hello"
-        );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+          ), "logs the expected message for @outletArgs.hello");
+        assert.false(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/templates/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          false,
-          "does not log the message for this.hello"
-        );
+          ), "does not log the message for this.hello");
       });
 
       test("using simple object when provided", async function (assert) {
@@ -867,20 +823,12 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for @outletArgs.hello"
-        );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+          ), "logs the expected message for @outletArgs.hello");
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [used on connector discourse/plugins/some-plugin/connectors/test-name/my-connector] [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for this.hello"
-        );
+          ), "logs the expected message for this.hello");
       });
 
       test("using custom component class if provided", async function (assert) {
@@ -906,20 +854,12 @@ module(
           2,
           "console warn was called twice"
         );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for @outletArgs.hello"
-        );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+          ), "logs the expected message for @outletArgs.hello");
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for this.hello"
-        );
+          ), "logs the expected message for this.hello");
       });
 
       test("using custom templateOnly() if provided", async function (assert) {
@@ -941,13 +881,9 @@ module(
           1,
           "console warn was called twice"
         );
-        assert.strictEqual(
-          this.consoleWarnStub.calledWith(
+        assert.true(this.consoleWarnStub.calledWith(
             "Deprecation notice: outlet arg `hello` is deprecated on the outlet `test-name` [deprecation id: discourse.plugin-connector.deprecated-arg]"
-          ),
-          true,
-          "logs the expected message for @outletArgs.hello"
-        );
+          ), "logs the expected message for @outletArgs.hello");
       });
 
       test("unused arguments", async function (assert) {

@@ -466,11 +466,12 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "enqueue this content please");
     await click("#reply-control button.create");
-    assert.ok(
-      query(".topic-post:last-of-type .cooked p").innerText !==
+    assert
+      .dom(".topic-post:last-of-type .cooked p")
+      .doesNotHaveText(
         "enqueue this content please",
-      "it doesn't insert the post"
-    );
+        "doesn't insert the post"
+      );
     assert.dom(".d-modal").exists("pops up a modal");
 
     await click(".d-modal__footer button");
