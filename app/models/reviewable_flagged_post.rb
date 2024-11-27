@@ -48,7 +48,7 @@ class ReviewableFlaggedPost < Reviewable
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
-    if potential_spam? && guardian.can_delete_user?(target_created_by)
+    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
       delete_user_actions(actions, agree_bundle)
     end
 
@@ -390,6 +390,10 @@ class ReviewableFlaggedPost < Reviewable
         url: post.url,
       },
     )
+  end
+
+  def potentially_illegal?
+    reviewable_scores.exists?(reviewable_score_type: ReviewableScore.types[:illegal])
   end
 end
 
