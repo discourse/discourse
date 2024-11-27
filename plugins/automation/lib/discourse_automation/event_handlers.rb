@@ -239,9 +239,8 @@ module DiscourseAutomation
           watching_tags = automation.trigger_field("watching_tags")
 
           if watching_tags["value"]
-            changed_tags = removed_tags + added_tags
-            is_ok = watching_tags["value"].any? { |tag| changed_tags.include?(tag) }
-            next if !is_ok
+            changed_tags = (removed_tags | added_tags)
+            next if (changed_tags & watching_tags["value"]).empty?
           end
 
           automation.trigger!(

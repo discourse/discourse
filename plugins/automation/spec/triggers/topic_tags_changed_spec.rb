@@ -128,6 +128,18 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
 
       expect(list.length).to eq(0)
     end
+
+    it "should fire the trigger if a tag is add and one is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag_2.name])
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
   end
 
   context "when watching a category" do
