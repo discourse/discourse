@@ -14,7 +14,10 @@ module(
 
       await openImageInNewTab(lightboxItem);
 
-      assert.true(openStub.calledWith("image.jpg", "_blank"), "calls window.open with the correct arguments");
+      assert.true(
+        openStub.calledWith("image.jpg", "_blank"),
+        "calls window.open with the correct arguments"
+      );
 
       openStub.restore();
     });

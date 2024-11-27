@@ -317,8 +317,14 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     };
 
     trackingState.sync(list, "unread");
-    assert.false(list.topics[0].unseen, "expect unread topic to be marked as seen");
-    assert.true(list.topics[0].prevent_sync, "expect unread topic to be marked as prevent_sync");
+    assert.false(
+      list.topics[0].unseen,
+      "expect unread topic to be marked as seen"
+    );
+    assert.true(
+      list.topics[0].prevent_sync,
+      "expect unread topic to be marked as prevent_sync"
+    );
   });
 
   test("sync - remove topic from state for performance if it is seen and has no unread or new posts and there are too many tracked topics in memory", function (assert) {
@@ -524,7 +530,10 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
-    assert.true(trackingState.findState(111).deleted, "marks the topic as deleted");
+    assert.true(
+      trackingState.findState(111).deleted,
+      "marks the topic as deleted"
+    );
     assert.strictEqual(
       trackingState.messageCount,
       1,
@@ -547,7 +556,10 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
     await publishToMessageBus("/recover", { topic_id: 111 });
 
-    assert.false(trackingState.findState(111).deleted, "marks the topic as not deleted");
+    assert.false(
+      trackingState.findState(111).deleted,
+      "marks the topic as not deleted"
+    );
     assert.strictEqual(
       trackingState.messageCount,
       1,

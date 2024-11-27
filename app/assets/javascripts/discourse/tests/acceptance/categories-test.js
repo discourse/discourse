@@ -153,8 +153,16 @@ acceptance("Categories - preloadStore handling", function () {
 
       await visit(`/categories`);
 
-      assert.strictEqual(PreloadStore.get("topic_list"), undefined, `topic_list is removed from preloadStore for ${style}`);
-      assert.strictEqual(PreloadStore.get("categories_list"), undefined, `topic_list is removed from preloadStore for ${style}`);
+      assert.strictEqual(
+        PreloadStore.get("topic_list"),
+        undefined,
+        `topic_list is removed from preloadStore for ${style}`
+      );
+      assert.strictEqual(
+        PreloadStore.get("categories_list"),
+        undefined,
+        `topic_list is removed from preloadStore for ${style}`
+      );
     });
   }
 });

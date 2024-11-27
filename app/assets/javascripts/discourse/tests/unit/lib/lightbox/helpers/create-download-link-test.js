@@ -15,7 +15,10 @@ module(
 
       createDownloadLink(lightboxItem);
 
-      assert.true(createElementSpy.calledWith("a"), "creates an anchor element");
+      assert.true(
+        createElementSpy.calledWith("a"),
+        "creates an anchor element"
+      );
 
       assert.strictEqual(
         createElementSpy.returnValues[0].href,
