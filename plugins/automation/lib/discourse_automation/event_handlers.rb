@@ -239,12 +239,8 @@ module DiscourseAutomation
           watching_tags = automation.trigger_field("watching_tags")
 
           if watching_tags["value"]
-            should_skip = false
-            watching_tags["value"].each do |tag|
-              should_skip = true if !removed_tags.empty? && !removed_tags.include?(tag)
-              should_skip = true if !added_tags.empty? && !added_tags.include?(tag)
-            end
-            next if should_skip
+            changed_tags = (removed_tags | added_tags)
+            next if (changed_tags & watching_tags["value"]).empty?
           end
 
           automation.trigger!(
