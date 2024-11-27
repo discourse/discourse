@@ -103,6 +103,7 @@ class Reviewable < ActiveRecord::Base
     payload: nil,
     reviewable_by_moderator: false,
     potential_spam: true,
+    potentially_illegal: false,
     target_created_by: nil
   )
     reviewable =
@@ -113,6 +114,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        potentially_illegal: potentially_illegal,
         target_created_by: target_created_by,
       )
     reviewable.created_new!
@@ -136,12 +138,14 @@ class Reviewable < ActiveRecord::Base
         id: target.id,
         type: target.class.polymorphic_name,
         potential_spam: potential_spam == true ? true : nil,
+        potentially_illegal: potentially_illegal == true ? true : nil,
       }
 
       row = DB.query_single(<<~SQL, update_args)
         UPDATE reviewables
         SET status = :status,
-          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam)
+          potential_spam = COALESCE(:potential_spam, reviewables.potential_spam),
+          potentially_illegal = COALESCE(:potentially_illegal, reviewables.potentially_illegal)
         FROM reviewables AS old_reviewables
         WHERE reviewables.target_id = :id
           AND reviewables.target_type = :type
@@ -776,6 +780,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #
