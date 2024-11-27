@@ -57,6 +57,7 @@ export default class FKField extends Component {
       @registerField={{@registerField}}
       @format={{@format}}
       @disabled={{@disabled}}
+      @collectionName={{@collectionName}}
       as |field|
     >
       <this.wrapper @size={{@size}}>
