@@ -93,4 +93,21 @@ module("Unit | Model | post", function (hooks) {
     assert.ok(post.cooked !== originalCooked, "the cooked content changed");
     assert.strictEqual(post.version, 2, "the version number increased");
   });
+
+  test("likeAction", function (assert) {
+    const post = this.store.createRecord("post", {
+      id: 1173,
+    });
+
+    post.likeAction = { count: 1 };
+    assert.deepEqual(post.likeAction, { count: 1 }, "likeAction set");
+
+    // creating a new post with the same id should reset the likeAction because the information required to properly
+    // generate the field is not available
+    this.store.createRecord("post", {
+      id: 1173,
+    });
+
+    assert.ok(post.likeAction === null, "likeAction was reset to null");
+  });
 });

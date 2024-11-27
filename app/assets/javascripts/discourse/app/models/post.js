@@ -22,6 +22,7 @@ import { i18n } from "discourse-i18n";
 
 export default class Post extends RestModel {
   static munge(json) {
+    json.likeAction = null;
     if (json.actions_summary) {
       const lookup = EmberObject.create();
 
