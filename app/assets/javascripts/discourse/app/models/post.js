@@ -10,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -19,6 +20,39 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
+
+const pluginTrackedProperties = new Map();
+const trackedPropertiesForPostUpdate = new Set();
+
+/**
+ * @internal
+ * Adds a tracked property to the post model.
+ *
+ * Intended to be used only in the plugin API.
+ *
+ * @param {string} propertyKey - The key of the property to track.
+ * @param {*} value - The initial value of the property.
+ */
+export function _addTrackedPostProperty(propertyKey, value) {
+  pluginTrackedProperties.set(propertyKey, value);
+  trackedPropertiesForPostUpdate.add(propertyKey);
+}
+
+/**
+ * Decorator to mark a property as post property as tracked.
+ *
+ * It extends the standard Ember @tracked behavior to also keep track of the fields
+ * that need to be copied when using `post.updateFromPost`.
+ *
+ * @param {Object} target - The target object.
+ * @param {string} propertyKey - The key of the property to track.
+ * @param {PropertyDescriptor} descriptor - The property descriptor.
+ * @returns {PropertyDescriptor} The updated property descriptor.
+ */
+function trackedPostProperty(target, propertyKey, descriptor) {
+  trackedPropertiesForPostUpdate.add(propertyKey);
+  return tracked(target, propertyKey, descriptor);
+}
 
 export default class Post extends RestModel {
   static munge(json) {
@@ -107,17 +141,22 @@ export default class Post extends RestModel {
   @service currentUser;
   @service site;
 
-  @tracked bookmarked;
-  @tracked can_delete;
-  @tracked can_edit;
-  @tracked can_permanently_delete;
-  @tracked can_recover;
-  @tracked deleted_at;
-  @tracked likeAction;
-  @tracked post_type;
-  @tracked user_deleted;
-  @tracked user_id;
-  @tracked yours;
+  // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
+  // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
+  // the standard tracked method because these properties are added to the class prototype and are not enumarated by
+  // object.keys().
+  // See https://github.com/emberjs/ember.js/issues/18220
+  @trackedPostProperty bookmarked;
+  @trackedPostProperty can_delete;
+  @trackedPostProperty can_edit;
+  @trackedPostProperty can_permanently_delete;
+  @trackedPostProperty can_recover;
+  @trackedPostProperty deleted_at;
+  @trackedPostProperty likeAction;
+  @trackedPostProperty post_type;
+  @trackedPostProperty user_deleted;
+  @trackedPostProperty user_id;
+  @trackedPostProperty yours;
 
   customShare = null;
 
@@ -131,6 +170,15 @@ export default class Post extends RestModel {
 
   // Posts can show up as deleted if the topic is deleted
   @and("firstPost", "topic.deleted_at") deletedViaTopic;
+
+  constructor() {
+    super(...arguments);
+
+    // adds tracked properties defined by plugin to the instance
+    pluginTrackedProperties.forEach((value, key) => {
+      defineTrackedProperty(this, key, value);
+    });
+  }
 
   @discourseComputed("url", "customShare")
   shareUrl(url) {
@@ -466,35 +514,37 @@ export default class Post extends RestModel {
   }
 
   /**
-   Updates a post from another's attributes. This will normally happen when a post is loading but
-   is already found in an identity map.
+   * Updates a post from another's attributes. This will normally happen when a post is loading but
+   * is already found in an identity map.
    **/
   updateFromPost(otherPost) {
-    Object.keys(otherPost).forEach((key) => {
-      let value = otherPost[key],
-        oldValue = this[key];
+    [...Object.keys(otherPost), ...trackedPropertiesForPostUpdate].forEach(
+      (key) => {
+        let value = otherPost[key],
+          oldValue = this[key];
 
-      if (!value) {
-        value = null;
-      }
-      if (!oldValue) {
-        oldValue = null;
-      }
-
-      let skip = false;
-      if (typeof value !== "function" && oldValue !== value) {
-        // wishing for an identity map
-        if (key === "reply_to_user" && value && oldValue) {
-          skip =
-            value.username === oldValue.username ||
-            get(value, "username") === get(oldValue, "username");
+        if (!value) {
+          value = null;
+        }
+        if (!oldValue) {
+          oldValue = null;
         }
 
-        if (!skip) {
-          this.set(key, value);
+        let skip = false;
+        if (typeof value !== "function" && oldValue !== value) {
+          // wishing for an identity map
+          if (key === "reply_to_user" && value && oldValue) {
+            skip =
+              value.username === oldValue.username ||
+              get(value, "username") === get(oldValue, "username");
+          }
+
+          if (!skip) {
+            this.set(key, value);
+          }
         }
       }
-    });
+    );
   }
 
   expandHidden() {

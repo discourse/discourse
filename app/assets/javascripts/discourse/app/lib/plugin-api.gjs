@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.38.0";
+export const PLUGIN_API_VERSION = "1.39.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -119,6 +119,7 @@ import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
+import { _addTrackedPostProperty } from "discourse/models/post";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import {
   addSaveableUserField,
@@ -817,6 +818,10 @@ class PluginApi {
    **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
+  }
+
+  addTrackedPostProperty(name, value) {
+    _addTrackedPostProperty(name, value);
   }
 
   /**
@@ -2135,13 +2140,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
