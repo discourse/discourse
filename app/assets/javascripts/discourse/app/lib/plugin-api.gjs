@@ -2147,16 +2147,13 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-    *
-    <DMenu @icon="foo" title={{i18n "title"}}>
-      *
-      <:content as |args|>
-        *       dropdown content here
-        *
-        <DButton @action={{args.close}} @icon="bar" />
-        *     </:content>
-      *   </DMenu>
-    * </template>;
+   *   <DMenu @icon="foo" title={{i18n "title"}}>
+   *     <:content as |args|>
+   *       dropdown content here
+   *       <DButton @action={{args.close}} @icon="bar" />
+   *     </:content>
+   *   </DMenu>
+   * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
