@@ -139,7 +139,7 @@ module("Unit | Utility | sanitizer", function (hooks) {
       "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>"
     );
     cooked(
-      "has been <strike>1 day</strike> 0 days since our last test failure",
+      "it has been <strike>1 day</strike> 0 days since our last test failure",
       "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>"
     );
     cooked(

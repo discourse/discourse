@@ -86,30 +86,20 @@ acceptance("Group Requests", function (needs) {
     await visit("/g/Macdonald/requests");
 
     assert.dom(".group-members .group-member").exists({ count: 2 });
-    assert.strictEqual(
-      query(".group-members .directory-table__row:first-child .user-detail")
-        .innerText.trim()
-        .replace(/\s+/g, " "),
-      "eviltrout Robin Ward"
-    );
-    assert.strictEqual(
-      query(
+    assert
+      .dom(".group-members .directory-table__row:first-child .user-detail")
+      .hasText("eviltrout Robin Ward");
+    assert
+      .dom(
         ".group-members .directory-table__row:first-child .directory-table__cell:nth-child(3)"
-      ).innerText.trim(),
-      "Please accept my membership request."
-    );
-    assert.strictEqual(
-      query(
-        ".group-members .directory-table__row:first-child .btn-primary"
-      ).innerText.trim(),
-      "Accept"
-    );
-    assert.strictEqual(
-      query(
-        ".group-members .directory-table__row:first-child .btn-danger"
-      ).innerText.trim(),
-      "Deny"
-    );
+      )
+      .includesText("Please accept my membership request.");
+    assert
+      .dom(".group-members .directory-table__row:first-child .btn-primary")
+      .hasText("Accept");
+    assert
+      .dom(".group-members .directory-table__row:first-child .btn-danger")
+      .hasText("Deny");
 
     await click(
       ".group-members .directory-table__row:first-child .btn-primary"
@@ -118,16 +108,15 @@ acceptance("Group Requests", function (needs) {
       .dom(
         ".group-members .directory-table__row:first-child .directory-table__cell:nth-child(4)"
       )
-      .hasText(/^accepted/);
+      .includesText("accepted");
     assert.deepEqual(requests, [["19", "true"]]);
 
     await click(".group-members .directory-table__row:last-child .btn-danger");
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".group-members .directory-table__row:last-child .directory-table__cell:nth-child(4)"
-      ).innerText.trim(),
-      "denied"
-    );
+      )
+      .hasText("denied");
     assert.deepEqual(requests, [
       ["19", "true"],
       ["20", undefined],

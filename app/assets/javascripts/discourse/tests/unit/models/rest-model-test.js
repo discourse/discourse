@@ -108,7 +108,9 @@ module("Unit | Model | rest-model", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
-    assert.true(await widget.destroyRecord());
+    assert.deepEqual(await widget.destroyRecord(), {
+      success: true,
+    });
   });
 
   test("custom api name", async function (assert) {

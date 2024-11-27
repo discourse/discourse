@@ -178,7 +178,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     const childRow = this.subject.rowByValue(childCategoryId);
     assert.true(childRow.exists(), "the child row is showing");
 
-    assert.dom(".category-status", childRow.el()).hasText(/^spec/);
+    assert.dom(".category-status", childRow.el()).includesText("spec");
   });
 
   test("allow_uncategorized_topics (true)", async function (assert) {

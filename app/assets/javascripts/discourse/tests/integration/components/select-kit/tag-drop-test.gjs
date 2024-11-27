@@ -7,24 +7,13 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import TagDrop from "select-kit/components/tag-drop";
 
-function initTags(context) {
-  const categories = context.site.categoriesList;
-  const category = categories.findBy("id", 2);
-
-  // top_tags
-  context.setProperties({
-    currentCategory: category,
-    tagId: "jeff",
-  });
-}
-
 module("Integration | Component | select-kit/tag-drop", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.set("subject", selectKit());
+    this.subject = selectKit();
 
-    this.site.set("top_tags", ["jeff", "neil", "arpit", "régis"]);
+    this.site.top_tags = ["jeff", "neil", "arpit", "régis"];
 
     pretender.get("/tags/filter/search", (params) => {
       if (params.queryParams.q === "dav") {
@@ -36,13 +25,14 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
   });
 
   test("default", async function (assert) {
-    initTags(this);
+    const categories = this.site.categoriesList;
+    const category = categories.findBy("id", 2);
 
     await render(<template>
       <TagDrop
-        @currentCategory={{this.currentCategory}}
-        @tagId={{this.tagId}}
-        @options={{hash tagId=this.tagId}}
+        @currentCategory={{category}}
+        @tagId={{"jeff"}}
+        @options={{hash tagId="jeff"}}
       />
     </template>);
 

@@ -80,9 +80,11 @@ acceptance("Poll breakdown", function (needs) {
         "renders a chart for each of the groups in group_results response"
       );
 
-    assert
-      .dom(".poll-breakdown-chart-container > canvas")
-      .hasProperty("$chartjs", "$chartjs is defined on the pie charts");
+    assert.notStrictEqual(
+      document.querySelector(".poll-breakdown-chart-container > canvas")
+        .$chartjs,
+      undefined
+    );
   });
 
   test("Changing the display mode from percentage to count", async function (assert) {
