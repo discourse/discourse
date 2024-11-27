@@ -15,8 +15,8 @@ import FKControlSelect from "discourse/form-kit/components/fk/control/select";
 import FKControlTextarea from "discourse/form-kit/components/fk/control/textarea";
 import FKControlToggle from "discourse/form-kit/components/fk/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/fk/control-wrapper";
+import FKFieldData from "discourse/form-kit/components/fk/field-data";
 import FKRow from "discourse/form-kit/components/fk/row";
-import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 
 const RowColWrapper = <template>
   <FKRow as |row|>
