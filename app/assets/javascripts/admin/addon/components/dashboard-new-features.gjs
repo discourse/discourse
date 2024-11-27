@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -73,11 +72,9 @@ export default class DashboardNewFeatures extends Component {
           </AdminConfigAreaCard>
         {{else}}
           <AdminConfigAreaEmptyList
-            @emptyLabel={{htmlSafe
-              (i18n
-                "admin.dashboard.new_features.previous_announcements"
-                url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
-              )
+            @emptyLabel={{i18n
+              "admin.dashboard.new_features.previous_announcements"
+              url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
             }}
           />
         {{/each}}
