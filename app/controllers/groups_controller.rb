@@ -413,7 +413,12 @@ class GroupsController < ApplicationController
 
       emails.each do |email|
         begin
-          Invite.generate(current_user, email: email, group_ids: [group.id])
+          Invite.generate(
+            current_user,
+            email: email,
+            group_ids: [group.id],
+            skip_email: params[:skip_email].to_s == "true",
+          )
         rescue RateLimiter::LimitExceeded => e
           return(
             render_json_error(
