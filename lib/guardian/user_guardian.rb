@@ -130,11 +130,13 @@ module UserGuardian
     return false if user.blank?
     return true if is_me?(user) || is_staff?
 
+    profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
+
+    return true if user.staff? && !profile_hidden
+
     if user.user_stat.blank? || user.user_stat.post_count == 0
       return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
     end
-
-    profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
 
     if anonymous? || !@user.has_trust_level?(TrustLevel[1])
       return user.has_trust_level?(TrustLevel[1]) && !profile_hidden

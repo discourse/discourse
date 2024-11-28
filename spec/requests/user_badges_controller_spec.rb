@@ -5,6 +5,8 @@ RSpec.describe UserBadgesController do
   fab!(:admin)
   fab!(:badge)
 
+  before { user.user_stat.update!(post_count: 1) }
+
   describe "#index" do
     fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
 

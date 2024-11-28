@@ -260,6 +260,14 @@ RSpec.describe UserGuardian do
     it "is false for no user" do
       expect(Guardian.new.can_see_profile?(nil)).to eq(false)
     end
+
+    it "is true for staff users even when they have no posts" do
+      admin.user_stat.update!(post_count: 0)
+      moderator.user_stat.update!(post_count: 0)
+
+      expect(Guardian.new.can_see_profile?(admin)).to eq(true)
+      expect(Guardian.new.can_see_profile?(moderator)).to eq(true)
+    end
   end
 
   describe "#can_see_user_actions?" do
