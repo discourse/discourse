@@ -136,8 +136,9 @@ module Scheduler
     rescue => ex
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
-      ActiveRecord::Base.connection.verify!
-      ActiveRecord::Base.connection_handler.clear_active_connections!
+      if ActiveRecord::Base.connection
+        ActiveRecord::Base.connection_handler.clear_active_connections!
+      end
       if start
         @stats_mutex.synchronize do
           stats = @stats[desc]
