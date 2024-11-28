@@ -1564,6 +1564,25 @@ RSpec.describe CategoriesController do
       expect(response.parsed_body["categories"].length).not_to eq(0)
     end
 
+    it "produces exactly 5 subcategories" do
+      subcategories = Fabricate.times(6, :category, parent_category: category)
+      subcategories[3].update!(read_restricted: true)
+
+      get "/categories/hierarchical_search.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).to eq(7)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+        category.id,
+        subcategories[0].id,
+        subcategories[1].id,
+        subcategories[2].id,
+        subcategories[4].id,
+        subcategories[5].id,
+        SiteSetting.uncategorized_category_id,
+      )
+    end
+
     it "doesn't produce categories with a very specific term" do
       get "/categories/hierarchical_search.json", params: { term: "acategorythatdoesnotexist" }
 
