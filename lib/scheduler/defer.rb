@@ -24,6 +24,7 @@ module Scheduler
       @reactor = nil
       @timeout = DEFAULT_TIMEOUT
       @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
+      @finish = false
     end
 
     def timeout=(t)
@@ -72,7 +73,11 @@ module Scheduler
       end
     end
 
-    def stop!
+    def stop!(finish_work: false)
+      if finish_work
+        @finish = true
+        @thread&.join
+      end
       @thread.kill if @thread&.alive?
       @thread = nil
       @reactor&.stop
@@ -96,7 +101,7 @@ module Scheduler
         @thread =
           Thread.new do
             @thread.abort_on_exception = true if Rails.env.test?
-            do_work while true
+            do_work while (!@finish || !@queue.empty?)
           end if !@thread&.alive?
       end
     end

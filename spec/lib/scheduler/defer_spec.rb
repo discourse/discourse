@@ -28,7 +28,7 @@ RSpec.describe Scheduler::Defer do
     @defer.later("second") {}
     @defer.later("bad") { raise "boom" }
 
-    wait_for(200) { @defer.length == 0 }
+    @defer.stop!(finish_work: true)
 
     stats = Hash[@defer.stats]
 
@@ -105,11 +105,8 @@ RSpec.describe Scheduler::Defer do
 
   it "can queue jobs properly" do
     s = nil
-
     @defer.later { s = "good" }
-
-    wait_for(1000) { s == "good" }
-
+    @defer.stop!(finish_work: true)
     expect(s).to eq("good")
   end
 
