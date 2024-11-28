@@ -236,7 +236,7 @@ de:
               label: Überwachte Schlagwörter
               description: Wird nur bei Themen mit einem dieser Schlagwörter ausgelöst
             trigger_with_pms:
-              label: Auslösen mit PNs
+              label: Auslösen mit PN
               description: Wird auch ausgelöst, wenn die Schlagwörter in einer PN geändert wurden
         after_post_cook:
           fields:

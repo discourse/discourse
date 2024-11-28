@@ -1,8 +1,8 @@
 import avatar from "discourse/helpers/avatar";
 
-const PostersColumn = <template>
+const PostersCell = <template>
   <td class="posters topic-list-data">
-    {{#each @posters as |poster|}}
+    {{#each @topic.featuredUsers as |poster|}}
       {{#if poster.moreCount}}
         <a class="posters-more-count">{{poster.moreCount}}</a>
       {{else}}
@@ -22,4 +22,4 @@ const PostersColumn = <template>
   </td>
 </template>;
 
-export default PostersColumn;
+export default PostersCell;

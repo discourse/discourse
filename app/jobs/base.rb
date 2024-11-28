@@ -88,6 +88,7 @@ module Jobs
           @data["net_duration"] = profile.dig(:net, :duration) || 0 # Redis Duration (s)
           @data["net_calls"] = profile.dig(:net, :calls) || 0 # Redis commands
           @data["live_slots_finish"] = GC.stat[:heap_live_slots]
+          @data["live_slots"] = @data["live_slots_finish"] - @data["live_slots_start"]
 
           if exception.present?
             @data["exception"] = exception # Exception - if job fails a json encoded exception
@@ -136,25 +137,10 @@ module Jobs
         @data["@timestamp"] = Time.now
         @data["duration"] = current_duration if @data["status"] == "pending"
         self.class.raw_log("#{@data.to_json}\n")
-
-        if live_slots_limit > 0 && @data["live_slots_start"].present? &&
-             @data["live_slots_finish"].present?
-          live_slots = @data["live_slots_finish"] - @data["live_slots_start"]
-
-          if live_slots >= live_slots_limit
-            Rails.logger.warn(
-              "Sidekiq Job '#{@data["job_name"]}' allocated #{live_slots} objects in the heap: #{@data.inspect}",
-            )
-          end
-        end
       end
 
       def enabled?
         Discourse.enable_sidekiq_logging?
-      end
-
-      def live_slots_limit
-        @live_slots_limit ||= ENV["DISCOURSE_LIVE_SLOTS_SIDEKIQ_LIMIT"].to_i
       end
 
       def self.mutex

@@ -66,6 +66,36 @@ acceptance("Create Account", function () {
       .hasText(i18n("user.username.required"), "shows signup error");
   });
 
+  test("custom instructions", async function (assert) {
+    this.siteSettings.signup_form_email_instructions = "email";
+    this.siteSettings.signup_form_username_instructions = "username";
+    this.siteSettings.signup_form_password_instructions = "password";
+    this.siteSettings.signup_form_full_name_instructions = "fullname";
+
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert.dom("#account-email-validation-more-info").hasText("email");
+    assert.dom("#username-validation-more-info").hasText("username");
+    assert.dom("#password-validation-more-info").hasText("password");
+    assert.dom("#fullname-validation-more-info").hasText("fullname");
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-password", "supersecurepassword");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert
+      .dom("#username-validation")
+      .hasText(i18n("user.username.required"), "shows signup error");
+
+    // only shows the instructions if the validation is not visible
+    assert.dom("#account-email-validation-more-info").doesNotExist();
+    assert.dom("#username-validation-more-info").doesNotExist();
+    assert.dom("#password-validation-more-info").doesNotExist();
+    assert.dom("#fullname-validation-more-info").exists();
+  });
+
   test("can sign in using a third-party auth", async function (assert) {
     sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
       assert.step("buildPostForm");

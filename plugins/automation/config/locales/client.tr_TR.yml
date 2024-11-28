@@ -6,6 +6,11 @@
 
 tr_TR:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: otomasyonu sil
     discourse_automation:
       title: Otomasyon
       create: Oluştur
@@ -14,6 +19,8 @@ tr_TR:
       select_trigger: Tetikleyici seçin
       confirm_automation_reset: Bu eylem komut dosyası ve tetikleyici seçeneklerini sıfırlar, yeni durum kaydedilir, devam etmek istiyor musunuz?
       confirm_automation_trigger: Bu eylem otomasyonu tetikler, devam etmek istiyor musunuz?
+      no_automation_yet: Henüz herhangi bir otomasyon oluşturmadınız. Başlamak için aşağıdan bir seçenek belirleyin.
+      filter_placeholder: Ada veya açıklamaya göre filtreleyin...
       edit_automation:
         trigger_section:
           forced: Bu tetikleyici, komut dosyası ile zorlanır.
@@ -143,6 +150,9 @@ tr_TR:
               label: Konu kimliği
         post_created_edited:
           fields:
+            original_post_only:
+              label: Yalnızca orijinal gönderi
+              description: Yalnızca gönderi, konudaki orijinal gönderiyse tetiklenir
             action_type:
               label: Eylem türü
               description: "İsteğe bağlı, tetiklemeyi yalnızca oluşturulan veya düzenlenen etkinliklerle sınırlandırın"
@@ -160,6 +170,7 @@ tr_TR:
               description: İsteğe bağlı, yalnızca gönderinin konusu bu grubun gelen kutusundaki bir özel mesajsa tetiklenir
             restricted_groups:
               label: Grup
+              description: İsteğe bağlı, yalnızca gönderinin konusu grup gelen kutularından birinde bulunan bir özel mesajsa tetiklenir
             ignore_group_members:
               label: Grup üyelerini yok say
               description: Gönderen yukarıda belirtilen Grubun bir üyesiyse tetikleyiciyi atla
@@ -172,6 +183,9 @@ tr_TR:
             first_topic_only:
               label: Yalnızca ilk konu
               description: Yalnızca konu bir kullanıcının oluşturduğu ilk konuysa tetiklenir
+            skip_via_email:
+              label: "E-posta yoluyla atla"
+              description: "Gönderi e-posta yoluyla oluşturulmuşsa tetikleyiciyi atla"
           created: Oluşturulma
           edited: Düzenlendi
         user_updated:
@@ -221,6 +235,9 @@ tr_TR:
             watching_tags:
               label: Etiket izleme
               description: Yalnızca konu bu etiketlerden herhangi birine sahipse tetiklenir
+            trigger_with_pms:
+              label: Kişisel mesajlarla tetikleyin
+              description: Etiketler bir kişisel mesajda değiştirilmiş olsa bile tetiklenir
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +396,7 @@ tr_TR:
           fields:
             custom_field_name:
               label: "Kullanıcı Özel Alan adı"
+      unnamed_automation: "Adsız otomasyon"
       models:
         script:
           name:

@@ -94,6 +94,8 @@ ja:
         label: "オプション"
         ranked_choice:
           abstain: "棄権"
+          highest_priority: "(最優先)"
+          lowest_priority: "(最低優先)"
           login: "ログインして投票！"
       error_while_toggling_status: "この投票のステータスを切り替える際にエラーが発生しました。"
       error_while_casting_votes: "投票の際にエラーが発生しました。"

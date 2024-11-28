@@ -27,17 +27,17 @@ module("Unit | Model | rest-model", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.name, "Trout Lure");
-    assert.ok(!widget.isSaving, "it is not saving");
+    assert.false(widget.isSaving, "it is not saving");
 
     const spyBeforeUpdate = sinon.spy(widget, "beforeUpdate");
     const spyAfterUpdate = sinon.spy(widget, "afterUpdate");
     const promise = widget.update({ name: "new name" });
-    assert.ok(widget.isSaving, "it is saving");
-    assert.ok(spyBeforeUpdate.calledOn(widget));
+    assert.true(widget.isSaving, "it is saving");
+    assert.true(spyBeforeUpdate.calledOn(widget));
 
     const result = await promise;
-    assert.ok(spyAfterUpdate.calledOn(widget));
-    assert.ok(!widget.isSaving, "it is no longer saving");
+    assert.true(spyAfterUpdate.calledOn(widget));
+    assert.false(widget.isSaving, "it is no longer saving");
     assert.strictEqual(widget.name, "new name");
 
     assert.ok(result.target, "it has a reference to the record");
@@ -61,23 +61,23 @@ module("Unit | Model | rest-model", function (hooks) {
     const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
-    assert.ok(widget.isNew, "it is a new record");
-    assert.ok(!widget.isCreated, "it is not created");
-    assert.ok(!widget.isSaving, "it is not saving");
+    assert.true(widget.isNew, "it is a new record");
+    assert.false(widget.isCreated, "it is not created");
+    assert.false(widget.isSaving, "it is not saving");
 
     const spyBeforeCreate = sinon.spy(widget, "beforeCreate");
     const spyAfterCreate = sinon.spy(widget, "afterCreate");
     const promise = widget.save({ name: "Evil Widget" });
-    assert.ok(widget.isSaving, "it is not saving");
-    assert.ok(spyBeforeCreate.calledOn(widget));
+    assert.true(widget.isSaving, "it is not saving");
+    assert.true(spyBeforeCreate.calledOn(widget));
 
     const result = await promise;
-    assert.ok(spyAfterCreate.calledOn(widget));
-    assert.ok(!widget.isSaving, "it is no longer saving");
+    assert.true(spyAfterCreate.calledOn(widget));
+    assert.false(widget.isSaving, "it is no longer saving");
     assert.ok(widget.id, "it has an id");
     assert.ok(widget.name, "Evil Widget");
-    assert.ok(widget.isCreated, "it is created");
-    assert.ok(!widget.isNew, "it is no longer new");
+    assert.true(widget.isCreated, "it is created");
+    assert.false(widget.isNew, "it is no longer new");
 
     assert.ok(result.target, "it has a reference to the record");
     assert.strictEqual(result.target.name, widget.name);

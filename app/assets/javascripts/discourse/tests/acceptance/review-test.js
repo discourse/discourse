@@ -185,8 +185,8 @@ acceptance("Review", function (needs) {
     let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
     requests = [];
     await tags.expand();
-    assert.equal(requests.length, 1);
-    assert.equal(requests[0].queryParams.categoryId, "6");
+    assert.strictEqual(requests.length, 1);
+    assert.strictEqual(requests[0].queryParams.categoryId, "6");
     await tags.fillInFilter("monkey");
     await tags.selectRowByValue("monkey");
 

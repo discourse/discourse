@@ -318,6 +318,7 @@ ro:
       admins: "Responsabil pentru configurarea și întreținerea acestui site, cu acces la toate datele privind membrii și activitățile"
       moderators: "Responsabil pentru a răspunde la semnalări, a modera discuțiile și a ajuta membrii cu conturile lor"
       trust_level_0: "Membrii noi cu abilități limitate, care învață normele și funcționalitatea comunității"
+      trust_level_1: "Membri cu mai multă încredere, care au demonstrat un angajament inițial prin lectură și pot accesa acum mai multe funcții. Toți membrii acestui grup sunt, de asemenea, membri ai grupului trust_level_0."
   education:
     until_posts:
       one: "o postare"

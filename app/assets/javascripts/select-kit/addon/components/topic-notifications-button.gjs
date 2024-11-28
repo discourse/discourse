@@ -10,6 +10,11 @@ import getURL from "discourse-common/lib/get-url";
 import I18n, { i18n } from "discourse-i18n";
 import TopicNotificationsOptions from "select-kit/components/topic-notifications-options";
 
+const ParagraphWrapper = <template><p class="reason">{{yield}}</p></template>;
+const EmptyWrapper = <template>
+  {{! template-lint-disable no-yield-only}}{{yield}}
+</template>;
+
 export default class TopicNotificationsButton extends Component {
   @service currentUser;
 
@@ -86,11 +91,9 @@ export default class TopicNotificationsButton extends Component {
 
   get conditionalWrapper() {
     if (this.args.expanded) {
-      return <template><p class="reason">{{yield}}</p></template>;
+      return ParagraphWrapper;
     } else {
-      return <template>
-        {{! template-lint-disable no-yield-only}}{{yield}}
-      </template>;
+      return EmptyWrapper;
     }
   }
 

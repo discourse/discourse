@@ -4914,6 +4914,9 @@ te:
           title: "రూపం మరియు అనుభూతి"
           themes:
             title: "థీమ్స్"
+        user_fields:
+          type: "రకం"
+          delete: "తొలగించు"
       plugins:
         title: "చొప్పింతలు"
         name: "పేరు"
@@ -5732,6 +5735,11 @@ te:
         status: "స్థితి"
         show_emails: "ఇమెయిల్‌లను చూపండి"
         hide_emails: "ఇమెయిల్‌లను దాచండి"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "మూసివేయండి"
+              confirm: "తొలగించు"
         nav:
           new: "కొత్త"
           active: "క్రియాశీల"
@@ -6010,8 +6018,6 @@ te:
           confirm_delete: "మీరు ఖచ్చితంగా ఈ DiscourseConnect రికార్డ్‌ను తొలగించాలనుకుంటున్నారా?"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
-        help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."
-        create: "సభ్యుడు ఫీల్డ్‌ని సృష్టించండి"
         untitled: "పేరులేని"
         name: "క్షేత్రం పేరు"
         type: "క్షేత్రం టైపు"
@@ -6032,22 +6038,15 @@ te:
             title: "ఐచ్ఛికం"
         editable:
           title: "సైన్అప్ తర్వాత సవరించదగినది"
-          enabled: "సవరించదగిన"
-          disabled: "సవరించలేనిది"
         show_on_profile:
           title: "పబ్లిక్ ప్రొఫైల్‌లో చూపించండి"
-          enabled: "ప్రొఫైల్‌లో చూపండి"
-          disabled: "ప్రొఫైల్‌లో చూపవద్దు"
         show_on_user_card:
           title: "సభ్యుడి కార్డ్‌లో చూపించండీ"
-          enabled: "సభ్యుని కార్డ్‌లో చూపబడింది"
-          disabled: "సభ్యుడు కార్డ్‌లో చూపబడదు"
         searchable:
           title: "శోధించదగినది"
           enabled: "శోధించదగినది"
-          disabled: "శోధించదగినది కాదు"
         field_types:
-          text: "పాఠ్య క్షేత్రం"
+          text: "వచనం"
           confirm: "ఖాయము"
           dropdown: "డ్రాప్డౌన్"
           multiselect: "బహుళ ఎంపిక"
@@ -6230,6 +6229,7 @@ te:
           grant_existing_holders: ఇప్పటికే ఉన్న బ్యాడ్జ్ హోల్డర్‌లకు అదనపు బ్యాడ్జ్‌లను మంజూరు చేయండి
       emoji:
         title: "ఇమోజి"
+        delete: "తొలగించు"
         uploading: "అప్‌లోడ్ చేయబడుతోంది…"
         name: "పేరు"
         group: "సమూహం"

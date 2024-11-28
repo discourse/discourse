@@ -32,7 +32,7 @@ acceptance("Do not disturb", function (needs) {
     assert.dom(".do-not-disturb-modal").exists("modal to choose time appears");
 
     let tiles = queryAll(".do-not-disturb-tile");
-    assert.ok(tiles.length === 4, "There are 4 duration choices");
+    assert.strictEqual(tiles.length, 4, "There are 4 duration choices");
 
     await click(tiles[0]);
 

@@ -4352,7 +4352,7 @@ en:
       with_topics: "%{filter} topics"
       with_category: "%{filter} %{category} topics"
       filter:
-        title: "Filter"
+        title: "Filtered results for %{filter}"
         button:
           label: "Filter"
       latest:
@@ -5115,6 +5115,7 @@ en:
 
       new_features:
         title: "What's new"
+        check_for_updates: "Check for updates"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -5737,6 +5738,16 @@ en:
             themes_description: "Themes are expansive customizations that change multiple elements of the style of your forum design, and often also include additional front-end features."
             new_theme: "New theme"
             user_selectable: "User selectable"
+        user_fields:
+          field: "Field"
+          type: "Type"
+          more_options:
+            title: "More options"
+            move_up: "Move up"
+            move_down: "Move down"
+          delete: "Delete"
+          delete_successful: "User field deleted."
+          save_successful: "User field saved."
       plugins:
         title: "Plugins"
         installed: "Installed plugins"
@@ -6639,6 +6650,32 @@ en:
         status: "Status"
         show_emails: "Show Emails"
         hide_emails: "Hide Emails"
+        bulk_actions:
+          title: "Bulk actions"
+          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
+          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          too_many_selected_users:
+            one: "You've reached the %{count} user limit for bulk deletion"
+            other: "You've reached the %{count} users limit for bulk deletion"
+          delete:
+            label: "Delete users…"
+            confirmation_modal:
+              prompt_text:
+                one: 'You''re about to delete %{count} user permanently. Type "%{confirmation_phrase}" below to proceed:'
+                other: 'You''re about to delete %{count} users permanently. Type "%{confirmation_phrase}" below to proceed:'
+              confirmation_phrase:
+                one: "delete %{count} user"
+                other: "delete %{count} users"
+              close: "Close"
+              confirm: "Delete"
+              title:
+                one: "Delete %{count} user"
+                other: "Delete %{count} users"
+              bulk_delete_starting: "Starting bulk delete…"
+              user_delete_succeeded: "[%{position}/%{total}] Successfully deleted @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Failed to delete @%{username} - %{error}"
+              bulk_delete_finished: "Bulk delete operation completed."
+              failed_to_delete_users: "The following users failed to be deleted:"
         nav:
           new: "New"
           active: "Active"
@@ -6946,8 +6983,12 @@ en:
 
       user_fields:
         title: "User Fields"
-        help: "Add fields that your users can fill out."
-        create: "Create User Field"
+        help: "Create custom user fields to collect extra details about your community members. You can choose what information is required during sign-up, what shows on profiles, and what users can update."
+        no_user_fields: "You don't have any custom user fields yet."
+        add: "Add user field"
+        back: "Back to user fields"
+        edit_header: "Edit User Field"
+        new_header: "Add User Field"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -6976,23 +7017,23 @@ en:
           confirmation: "This will prompt existing users to fill in this field and will not allow them to do anything else on your site until the field is filled. Proceed?"
         editable:
           title: "Editable after signup"
-          enabled: "editable"
-          disabled: "not editable"
+          enabled: "Editable"
+          disabled: "Not editable"
         show_on_profile:
           title: "Show on public profile"
-          enabled: "shown on profile"
-          disabled: "not shown on profile"
+          enabled: "Shown on profile"
+          disabled: "Not shown on profile"
         show_on_user_card:
           title: "Show on user card"
-          enabled: "shown on user card"
-          disabled: "not shown on user card"
+          enabled: "Shown on user card"
+          disabled: "Not shown on user card"
         searchable:
           title: "Searchable"
-          enabled: "searchable"
-          disabled: "not searchable"
+          enabled: "Searchable"
+          disabled: "Not searchable"
 
         field_types:
-          text: "Text Field"
+          text: "Text"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
@@ -7221,6 +7262,7 @@ en:
         description: "Add new emoji that will be available to everyone. Select multiple files to create emojis using their file names. The selected group will be used for all files that are added at the same time."
         no_emoji: "You don't have any custom emoji yet."
         add: "Add emoji"
+        delete: "Delete"
         back: "Back to emoji"
         choose_files: "Choose files"
         uploading: "Uploading…"

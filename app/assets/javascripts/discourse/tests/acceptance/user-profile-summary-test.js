@@ -1,7 +1,7 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -106,7 +106,7 @@ acceptance("User Profile - Summary - Stats", function (needs) {
   test("Summary Read Times", async function (assert) {
     await visit("/u/eviltrout/summary");
 
-    assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
+    assert.dom(".stats-time-read span").hasText("1d");
     assert
       .dom(".stats-time-read span")
       .hasAttribute(
@@ -114,7 +114,7 @@ acceptance("User Profile - Summary - Stats", function (needs) {
         i18n("user.summary.time_read_title", { duration: "1 day" })
       );
 
-    assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
+    assert.dom(".stats-recent-read span").hasText("17m");
     assert
       .dom(".stats-recent-read span")
       .hasAttribute(
@@ -168,11 +168,9 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      i18n("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-danger");
     assert.ok(deleteAndBlock, "second button also block user");

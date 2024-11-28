@@ -29,13 +29,13 @@ export default class ComposerToggles extends Component {
   toggleIcon(composeState) {
     return composeState === "draft" || composeState === "saving"
       ? "xmark"
-      : "chevron-down";
+      : "angles-down";
   }
 
   @discourseComputed("composeState")
   fullscreenIcon(composeState) {
     return composeState === "draft"
-      ? "chevron-up"
+      ? "angles-up"
       : composeState === "fullscreen"
       ? "discourse-compress"
       : "discourse-expand";

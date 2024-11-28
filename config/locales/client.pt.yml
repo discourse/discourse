@@ -3947,6 +3947,9 @@ pt:
         look_and_feel:
           themes:
             title: "Temas"
+        user_fields:
+          type: "Tipo"
+          delete: "Eliminar"
       plugins:
         title: "Plugins"
         name: "Nome"
@@ -4505,6 +4508,11 @@ pt:
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
         show_emails: "Mostrar Emails"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Eliminar"
         nav:
           new: "Novo"
           active: "Ativo"
@@ -4677,8 +4685,6 @@ pt:
           external_avatar_url: "URL da Fotografia de Perfil"
       user_fields:
         title: "Campos de utilizador"
-        help: "Adicione campos que os seus utilizadores poderão preencher."
-        create: "Criar Campo de Utilizador"
         untitled: "Sem título"
         name: "Nome do Campo"
         type: "Tipo do Campo"
@@ -4699,18 +4705,12 @@ pt:
             title: "Opcional"
         editable:
           title: "Editável depois da inscrição"
-          enabled: "editável"
-          disabled: "não editável"
         show_on_profile:
           title: "Exibir no perfil público"
-          enabled: "exibido no perfil"
-          disabled: "não exibido no perfil"
         show_on_user_card:
           title: "Mostrar no cartão de utilizador"
-          enabled: "mostrar no cartão de utilizador"
-          disabled: "não apresentado no cartão de utilizador"
         field_types:
-          text: "Campo de Texto"
+          text: "Texto"
           confirm: "Confirmação"
           dropdown: "Lista pendente"
       site_text:
@@ -4846,6 +4846,7 @@ pt:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Eliminar"
         uploading: "A enviar…"
         name: "Nome"
         group: "Grupo"

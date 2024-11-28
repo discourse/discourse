@@ -689,7 +689,7 @@ sk:
       admins: "Zodpovednosť za konfiguráciu a údržbu tejto stránky s prístupom ku všetkým údajom o členoch a aktivitách"
       moderators: "Zodpovedá za odpovede na príznaky, moderovanie diskusií a pomoc členom s ich účtami."
       trust_level_0: "Noví členovia s obmedzenými schopnosťami, ktorí sa učia normám a funkčnosti komunity"
-      trust_level_1: "Členovia s väčšou dôverou, ktorí preukázali počiatočnú angažovanosť čítaním rukou, majú teraz prístup k viacerým funkciám. Všetci členovia tejto skupiny sú zároveň členmi skupiny trust_level_0."
+      trust_level_1: "Členovia s väčšou dôverou, ktorí preukázali počiatočnú angažovanosť čítaním a teraz majú prístup k viacerým funkciám. Všetci členovia tejto skupiny sú zároveň členmi skupiny trust_level_0."
       trust_level_2: "Aktívni členovia, ktorí sústavne prispievali nadčasmi a získali plné občianske práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_1 a trust_level_0."
       trust_level_3: "Vysoko angažovaní, dlhodobí prispievatelia, ktorí tvoria základ komunity a získali obmedzené moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_2, trust_level_1 a trust_level_0."
       trust_level_4: "Ručne povýšení členovia, ktorí boli ocenení svojimi príkladnými príspevkami a ktorým boli zverené ďalšie moderátorské práva. Všetci členovia tejto skupiny sú zároveň členmi skupín trust_level_3, trust_level_2, trust_level_1 a trust_level_0."
@@ -2971,6 +2971,7 @@ sk:
       few: "Používateľ %{username} má %{count} príspevkov vo verejnej téme alebo osobnej správe, takže ich nemožno odstrániť."
       many: "Používateľ %{username} má %{count} príspevkov vo verejnej téme alebo osobnej správe, takže ich nemožno odstrániť."
       other: "Používateľ %{username} má %{count} príspevky vo verejných témach alebo osobných správach, takže ich nemožno vymazať."
+    cannot_bulk_delete: "Jedného alebo viacerých používateľov nemožno odstrániť, pretože sú správcom, majú príliš veľa príspevkov alebo majú veľmi starý príspevok."
   unsubscribe_mailer:
     title: "Odhlásenie mailerov"
     subject_template: "Potvrďte, že už ďalej nechcete dostávať aktualizácie z %{site_title}"
@@ -5293,6 +5294,7 @@ sk:
         other: "Automaticky odvolané, vytvorené pred viac ako %{count} dňami"
       revoked: Odvolané
       restored: Obnovené
+    bulk_user_delete: "odstránené v operácii hromadného vymazania"
   reviewables:
     already_handled: "Ďakujeme, ale tento príspevok sme už preskúmali a rozhodli sme, že ho netreba znova označiť."
     already_handled_and_user_not_exist: "Ďakujem, ale niekto to už preskúmal a tento používateľ už neexistuje."

@@ -1,0 +1,23 @@
+.bulk-user-delete-confirmation {
+  &__progress {
+    font-family: var(--d-font-family--monospace);
+    max-height: 400px;
+    background: var(--blend-primary-secondary-5);
+    padding: 1em;
+    overflow-y: auto;
+  }
+  &__progress-line {
+    overflow-anchor: none;
+
+    &.-success {
+      color: var(--success);
+    }
+    &.-error {
+      color: var(--danger);
+    }
+  }
+  &__progress-anchor {
+    overflow-anchor: auto;
+    height: 1px;
+  }
+}

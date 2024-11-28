@@ -23,6 +23,10 @@ export default class DTooltip extends Component {
   registerTrigger = modifier((element) => {
     this.tooltipInstance.trigger = element;
     this.options.onRegisterApi?.(this.tooltipInstance);
+
+    return () => {
+      this.tooltipInstance.destroy();
+    };
   });
 
   get options() {

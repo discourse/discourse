@@ -693,7 +693,7 @@ RSpec.configure do |config|
 
       RspecErrorTracker.exceptions.each_with_index do |(path, ex), index|
         lines << "\n"
-        lines << "Error encountered while proccessing #{path}"
+        lines << "Error encountered while processing #{path}"
         lines << "  #{ex.class}: #{ex.message}"
         ex.backtrace.each_with_index do |line, backtrace_index|
           if ENV["RSPEC_EXCLUDE_GEMS_IN_BACKTRACE"]

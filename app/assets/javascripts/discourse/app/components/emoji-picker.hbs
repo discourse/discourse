@@ -115,22 +115,31 @@
       </div>
 
       <div class="emoji-picker-footer">
-        <div class="emoji-picker-emoji-info">
-          {{#if this.hoveredEmoji}}
-            {{replace-emoji (concat ":" this.hoveredEmoji ":")}}
-          {{/if}}
-        </div>
+        <PluginOutlet
+          @name="emoji-picker-footer"
+          @outletArgs={{hash
+            diversityScales=this.diversityScales
+            hoveredEmoji=this.hoveredEmoji
+            onDiversitySelection=this.onDiversitySelection
+          }}
+        >
+          <div class="emoji-picker-emoji-info">
+            {{#if this.hoveredEmoji}}
+              {{replace-emoji (concat ":" this.hoveredEmoji ":")}}
+            {{/if}}
+          </div>
 
-        <div class="emoji-picker-diversity-picker">
-          {{#each this.diversityScales as |diversityScale index|}}
-            <DButton
-              @icon={{diversityScale.icon}}
-              @title={{diversityScale.title}}
-              @action={{fn this.onDiversitySelection index}}
-              class={{concat-class "diversity-scale" diversityScale.name}}
-            />
-          {{/each}}
-        </div>
+          <div class="emoji-picker-diversity-picker">
+            {{#each this.diversityScales as |diversityScale index|}}
+              <DButton
+                @icon={{diversityScale.icon}}
+                @title={{diversityScale.title}}
+                @action={{fn this.onDiversitySelection index}}
+                class={{concat-class "diversity-scale" diversityScale.name}}
+              />
+            {{/each}}
+          </div>
+        </PluginOutlet>
       </div>
     </div>
   </div>

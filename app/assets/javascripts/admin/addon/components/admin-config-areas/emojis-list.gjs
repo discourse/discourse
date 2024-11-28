@@ -77,8 +77,8 @@ export default class AdminConfigAreasEmojisList extends Component {
                 <td class="d-admin-row__controls action">
                   <DButton
                     @action={{fn this.adminEmojis.destroyEmoji emoji}}
-                    @icon="trash-can"
-                    class="btn-small"
+                    @label="admin.emoji.delete"
+                    class="btn-small d-admin-row__controls-delete"
                   />
                 </td>
               </tr>
@@ -91,7 +91,7 @@ export default class AdminConfigAreasEmojisList extends Component {
         @ctaLabel="admin.emoji.add"
         @ctaRoute="adminEmojis.new"
         @ctaClass="admin-emojis__add-emoji"
-        @emptyLabel="admin.emoji.no_emoji"
+        @emptyLabel={{i18n "admin.emoji.no_emoji"}}
       />
     {{/if}}
   </template>

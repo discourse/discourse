@@ -133,6 +133,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("via-email without permission", async function (assert) {
+    this.rawEmailShown = false;
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
@@ -142,8 +143,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.via-email");
-    assert.ok(
-      !this.rawEmailShown,
+    assert.false(
+      this.rawEmailShown,
       "clicking the envelope doesn't show the raw email"
     );
   });
@@ -162,6 +163,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("history without view permission", async function (assert) {
+    this.historyShown = false;
     this.set("args", { version: 3, canViewEditHistory: false });
     this.set("showHistory", () => (this.historyShown = true));
 
@@ -171,9 +173,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.edits");
-    assert.ok(
-      !this.historyShown,
-      `clicking the pencil doesn't show the history`
+    assert.false(
+      this.historyShown,
+      "clicking the pencil doesn't show the history"
     );
   });
 

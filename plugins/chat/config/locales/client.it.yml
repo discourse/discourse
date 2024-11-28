@@ -276,7 +276,7 @@ it:
       return_to_channel: "Torna al canale"
       return_to_threads_list: "Torna all'elenco dei thread"
       unread_threads_count:
-        one: "Hai %{count} discussione non lette"
+        one: "Hai %{count} discussione non letta"
         other: "Hai %{count} discussioni non lette"
       scroll_to_bottom: "Scorri fino in fondo"
       scroll_to_new_messages: "Vedi nuovi messaggi"
@@ -655,11 +655,6 @@ it:
           other_html: "<span>%{username}</span> <span>ha menzionato %{identifier} nella chat personale</span>"
         chat_message: "Nuovo messaggio di chat"
         chat_quoted: "%{username} ha citato il tuo messaggio di chat"
-      titles:
-        chat_mention: "Menzione in chat"
-        chat_invitation: "Invito alla chat"
-        chat_quoted: "Chat citata"
-        chat_watched_thread: "Discussione in chat osservata"
     action_codes:
       chat:
         enabled: '%{who} ha abilitato la <button class="btn-link open-chat">chat</button> %{when}'

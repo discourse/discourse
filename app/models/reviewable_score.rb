@@ -6,7 +6,7 @@ class ReviewableScore < ActiveRecord::Base
   belongs_to :reviewed_by, class_name: "User"
   belongs_to :meta_topic, class_name: "Topic"
 
-  enum status: { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
+  enum :status, { pending: 0, agreed: 1, disagreed: 2, ignored: 3 }
 
   # To keep things simple the types correspond to `PostActionType` for backwards
   # compatibility, but we can add extra reasons for scores.

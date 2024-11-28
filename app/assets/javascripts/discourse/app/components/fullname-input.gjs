@@ -1,13 +1,23 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
+import { service } from "@ember/service";
 import InputTip from "discourse/components/input-tip";
 import TextField from "discourse/components/text-field";
 import valueEntered from "discourse/helpers/value-entered";
 
 export default class SidebarEditNavigationMenuTagsModal extends Component {
+  @service siteSettings;
+
   get showFullname() {
     return (
       this.siteSettings.full_name_required || this.siteSettings.enable_names
+    );
+  }
+
+  get showFullnameInstructions() {
+    return (
+      this.siteSettings.signup_form_full_name_instructions &&
+      !this.args.nameValidation.reason
     );
   }
 
@@ -27,7 +37,13 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
         {{@nameTitle}}
       </label>
 
-      <InputTip @validation={{@nameValidation}} id="fullname-validation" />
+      {{#if this.showFullnameInstructions}}
+        <span class="more-info" id="fullname-validation-more-info">
+          {{this.siteSettings.signup_form_full_name_instructions}}
+        </span>
+      {{else}}
+        <InputTip @validation={{@nameValidation}} id="fullname-validation" />
+      {{/if}}
     </div>
   </template>
 }

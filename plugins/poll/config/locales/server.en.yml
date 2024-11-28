@@ -39,6 +39,7 @@ en:
     named_poll_with_multiple_choices_has_invalid_parameters: "Poll named <strong>%{name}</strong> with multiple choice has invalid parameters."
 
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
+    requires_that_at_least_one_option_is_ranked: "In ranked-choice polls, you must rank at least one option."
 
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "You cannot change a poll after the first %{minutes} minutes."

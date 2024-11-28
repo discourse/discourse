@@ -4,6 +4,16 @@ import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dr
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import { i18n } from "discourse-i18n";
 
+const BulkSelectGlimmerWrapper = <template>
+  <span class="bulk-select-topic-dropdown__count">
+    {{i18n "topics.bulk.selected_count" count=@data.selectedCount}}
+  </span>
+  <BulkSelectTopicsDropdown
+    @bulkSelectHelper={{@data.bulkSelectHelper}}
+    @afterBulkActionComplete={{@data.afterBulkAction}}
+  />
+</template>;
+
 export default class extends EmberObject {
   @service router;
 
@@ -20,15 +30,7 @@ export default class extends EmberObject {
     return rawRenderGlimmer(
       this,
       "div.bulk-select-topics-dropdown",
-      <template>
-        <span class="bulk-select-topic-dropdown__count">
-          {{i18n "topics.bulk.selected_count" count=@data.selectedCount}}
-        </span>
-        <BulkSelectTopicsDropdown
-          @bulkSelectHelper={{@data.bulkSelectHelper}}
-          @afterBulkActionComplete={{@data.afterBulkAction}}
-        />
-      </template>,
+      BulkSelectGlimmerWrapper,
       {
         bulkSelectHelper: this.bulkSelectHelper,
         selectedCount: this.selectedCount,

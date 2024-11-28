@@ -323,10 +323,9 @@ module("Unit | Utilities | clipboard", function (hooks) {
     }
 
     await clipboardCopyAsync(asyncFunction);
-    assert.strictEqual(
+    assert.true(
       this.mockClipboard.writeText.calledWith("some text to copy"),
-      true,
-      "it writes to the clipboard using writeText instead of write"
+      "writes to the clipboard using writeText instead of write"
     );
   });
 

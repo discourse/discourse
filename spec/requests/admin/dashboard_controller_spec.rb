@@ -191,6 +191,38 @@ RSpec.describe Admin::DashboardController do
         expect(json["has_unseen_features"]).to eq(true)
       end
 
+      it "allows for forcing a refresh of new features, busting the cache" do
+        populate_new_features
+
+        get "/admin/whats-new.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(2)
+
+        get "/admin/whats-new.json"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(2)
+
+        DiscourseUpdates.stubs(:new_features_payload).returns(
+          [
+            {
+              "id" => "3",
+              "emoji" => "🚀",
+              "title" => "Space platform launched!",
+              "description" => "Now to make it to the next planet unscathed...",
+              "created_at" => 1.minute.ago,
+            },
+          ].to_json,
+        )
+
+        get "/admin/whats-new.json?force_refresh=true"
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["new_features"].length).to eq(1)
+        expect(json["new_features"][0]["id"]).to eq("3")
+      end
+
       it "passes unseen feature state" do
         populate_new_features
         DiscourseUpdates.mark_new_features_as_seen(admin.id)
