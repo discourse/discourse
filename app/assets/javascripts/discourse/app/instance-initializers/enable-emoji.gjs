@@ -24,7 +24,6 @@ export default {
           group: "extras",
           icon: "far-face-smile",
           action: (emoji) => {
-            console.log("emoji", emoji);
             toolbar.context.textManipulation.emojiSelected(emoji);
           },
           title: "composer.emoji",
