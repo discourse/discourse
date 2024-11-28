@@ -79,12 +79,20 @@ module Middleware
       end
 
       def blocked_crawler?
+        # Use the source tag metadata to detect whether a request is coming from
+        # an address belonging to a known crawler.
+        verified_crawler = SrcTagInfo.new(@request).verified_crawler
+
+        # If so, we'll use *only* that crawler name
+        # for determing a block/allow.
+        crawler_identifier = verified_crawler || @user_agent
+
         @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
           !@request.path.ends_with?("srv/status") &&
           @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
           @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(@user_agent)
+          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol

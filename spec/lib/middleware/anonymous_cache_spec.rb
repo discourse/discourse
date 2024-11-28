@@ -418,5 +418,67 @@ RSpec.describe Middleware::AnonymousCache do
 
       expect(@status).to eq(403)
     end
+
+    context "with src-tag" do
+      ENV["DISCOURSE_HTTP_SRC_TAG_HEADER"] = "src-tag"
+      ENV["DISCOURSE_HTTP_SRC_TAG_SUPPORTED_HEADER"] = "src-tag-lists"
+
+      context "when src is googlebot" do
+        headers = { "REMOTE_ADDR" => "1.1.1.1", "HTTP_SRC_TAG" => "crawler-googlebot" }
+
+        context "when googlebot is blocked" do
+          before { SiteSetting.blocked_crawler_user_agents = "Googlebot" }
+
+          it "blocks googlebot" do
+            get "/",
+                headers:
+                  headers.merge(
+                    { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" },
+                  )
+            expect(@status).to eq(403)
+          end
+
+          it "blocks apparent non-googlebot requests" do
+            get "/", headers: headers.merge({ "HTTP_USER_AGENT" => "Innocentbot/42" })
+            expect(@status).to eq(403)
+          end
+        end
+
+        context "when googlebot is not blocked" do
+          before { SiteSetting.blocked_crawler_user_agents = "Nexus 5X Build|AppleWebKit" }
+
+          it "does not block googlebot" do
+            get "/",
+                headers:
+                  headers.merge(
+                    { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" },
+                  )
+            expect(@status).to eq(200)
+          end
+          it "does not block googlebot UAs including a blocked string" do
+            get "/",
+                headers:
+                  headers.merge(
+                    {
+                      "HTTP_USER_AGENT" =>
+                        "Mozilla/5.0 (Nexus 5X Build/MMB29P) AppleWebKit/537.36 Chrome/130.0.6723.69 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+                    },
+                  )
+            expect(@status).to eq(200)
+          end
+          it "does not block non-googlebot UAs including a blocked string" do
+            get "/",
+                headers:
+                  headers.merge(
+                    {
+                      "HTTP_USER_AGENT" =>
+                        "Mozilla/5.0 (Nexus 5X Build/MMB29P) AppleWebKit/537.36 Chrome/130.0.6723.69",
+                    },
+                  )
+            expect(@status).to eq(200)
+          end
+        end
+      end
+    end
   end
 end
