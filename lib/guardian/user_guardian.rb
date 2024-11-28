@@ -128,12 +128,19 @@ module UserGuardian
 
   def can_see_profile?(user)
     return false if user.blank?
-    return true if !SiteSetting.allow_users_to_hide_profile?
+    return true if is_me?(user) || is_staff?
 
-    # If a user has hidden their profile, restrict it to them and staff
-    return is_me?(user) || is_staff? if user.user_option.try(:hide_profile?)
+    if user.user_stat.blank? || user.user_stat.post_count == 0
+      return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
+    end
 
-    true
+    profile_hidden = SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
+
+    if anonymous? || !@user.has_trust_level?(TrustLevel[1])
+      return user.has_trust_level?(TrustLevel[1]) && !profile_hidden
+    end
+
+    !profile_hidden
   end
 
   def can_see_user_actions?(user, action_types)
