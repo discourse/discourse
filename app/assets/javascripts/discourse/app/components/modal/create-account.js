@@ -157,14 +157,6 @@ export default class CreateAccount extends Component.extend(
     );
   }
 
-  @discourseComputed
-  emailInstructions() {
-    return (
-      this.siteSettings.signup_form_email_instructions ||
-      i18n("user.email.instructions")
-    );
-  }
-
   @discourseComputed(
     "passwordValidation.ok",
     "passwordValidation.reason",
@@ -181,15 +173,10 @@ export default class CreateAccount extends Component.extend(
     );
   }
 
-  @discourseComputed
-  passwordInstructions() {
-    return this.siteSettings.signup_form_password_instructions;
-  }
-
   @discourseComputed("usernameValidation.reason")
   showUsernameInstructions(usernameValidationReason) {
     return (
-      this.siteSettings.signup_form_username_instructions &&
+      this.siteSettings.show_signup_form_username_instructions &&
       !usernameValidationReason
     );
   }
