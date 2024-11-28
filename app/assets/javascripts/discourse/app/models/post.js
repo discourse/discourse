@@ -63,7 +63,7 @@ function trackedPostProperty(target, propertyKey, descriptor) {
 
 export default class Post extends RestModel {
   static munge(json) {
-    json.likeAction = null;
+    json.likeAction ??= null;
     if (json.actions_summary) {
       const lookup = EmberObject.create();
 
