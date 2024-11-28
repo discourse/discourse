@@ -631,18 +631,18 @@ login:
   full_page_login:
     default: false
     client: true
-  signup_form_email_instructions:
+  show_signup_form_email_instructions:
     client: true
-    default: ""
-  signup_form_username_instructions:
+    default: true
+  show_signup_form_username_instructions:
     client: true
-    default: ""
-  signup_form_full_name_instructions:
+    default: false
+  show_signup_form_full_name_instructions:
     client: true
-    default: ""
-  signup_form_password_instructions:
+    default: false
+  show_signup_form_password_instructions:
     client: true
-    default: ""
+    default: false
 
 users:
   min_username_length:
