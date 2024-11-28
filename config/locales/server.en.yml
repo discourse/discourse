@@ -1885,10 +1885,10 @@ en:
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
     full_page_login: "Show the login and signup forms in a full page (when unchecked, users will see the forms in a modal). "
-    signup_form_email_instructions: Email instructions to show on the signup form (overrides the default field description).
-    signup_form_username_instructions: Username instructions to show on the signup form.
-    signup_form_full_name_instructions: Full name instructions to show on the signup form.
-    signup_form_password_instructions: Password instructions to show on the signup form.
+    show_signup_form_email_instructions: Show email instructions on the signup form.
+    show_signup_form_username_instructions: Show username instructions on the signup form.
+    show_signup_form_full_name_instructions: Show full name instructions on the signup form.
+    show_signup_form_password_instructions: Show password instructions on the signup form.
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"

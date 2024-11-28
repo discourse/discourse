@@ -7,7 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 export default class FKControlCode extends Component {
   static controlType = "code";
 
-  initialValue = this.args.value || "";
+  initialValue = this.args.field.value || "";
 
   @action
   handleInput(content) {
@@ -27,7 +27,7 @@ export default class FKControlCode extends Component {
       @content={{this.initialValue}}
       @onChange={{this.handleInput}}
       @mode={{@lang}}
-      @disabled={{@disabled}}
+      @disabled={{@field.disabled}}
       class="form-kit__control-code"
       style={{this.style}}
       ...attributes
