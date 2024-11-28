@@ -5,7 +5,9 @@ import loadScript from "discourse/lib/load-script";
 // args:
 // chartConfig - object
 export default class Chart extends Component {
-  renderChart = modifier((element, [chartConfig]) => {
+  renderChart = modifier((element) => {
+    const { chartConfig } = this.args;
+
     loadScript("/javascripts/Chart.min.js").then(() => {
       this.chart = new window.Chart(element.getContext("2d"), chartConfig);
     });
@@ -16,7 +18,7 @@ export default class Chart extends Component {
   <template>
     <div ...attributes>
       <div class="chart-canvas-container">
-        <canvas {{this.renderChart @chartConfig}} class="chart-canvas"></canvas>
+        <canvas {{this.renderChart}} class="chart-canvas"></canvas>
       </div>
     </div>
   </template>
