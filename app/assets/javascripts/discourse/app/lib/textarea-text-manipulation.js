@@ -189,6 +189,10 @@ export default class TextareaTextManipulation {
     }
   }
 
+  applySurroundSelection(head, tail, exampleKey, opts) {
+    this.applySurround(this.getSelected(), head, tail, exampleKey, opts);
+  }
+
   applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
     const post = sel.post;

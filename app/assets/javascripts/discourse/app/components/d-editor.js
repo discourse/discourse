@@ -480,11 +480,6 @@ export default class DEditor extends Component {
     });
   }
 
-  _applySurround(head, tail, exampleKey, opts) {
-    const selected = this.textManipulation.getSelected();
-    this.textManipulation.applySurround(selected, head, tail, exampleKey, opts);
-  }
-
   @action
   rovingButtonBar(event) {
     let target = event.target;
@@ -673,7 +668,11 @@ export default class DEditor extends Component {
         textManipulation,
         "replaceText"
       );
-      this.appEvents.on("composer:apply-surround", this, "_applySurround");
+      this.appEvents.on(
+        "composer:apply-surround",
+        textManipulation,
+        "applySurroundSelection"
+      );
       this.appEvents.on(
         "composer:indent-selected-text",
         textManipulation,
@@ -696,7 +695,11 @@ export default class DEditor extends Component {
           textManipulation,
           "replaceText"
         );
-        this.appEvents.off("composer:apply-surround", this, "_applySurround");
+        this.appEvents.off(
+          "composer:apply-surround",
+          textManipulation,
+          "applySurroundSelection"
+        );
         this.appEvents.off(
           "composer:indent-selected-text",
           textManipulation,
