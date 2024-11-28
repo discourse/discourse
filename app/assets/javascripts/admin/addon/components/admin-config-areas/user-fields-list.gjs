@@ -97,7 +97,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
           @ctaLabel="admin.user_fields.add"
           @ctaRoute="adminUserFields.new"
           @ctaClass="admin-user_fields__add-emoji"
-          @emptyLabel={{i18n "admin.user_fields.no_user_fields"}}
+          @emptyLabel="admin.user_fields.no_user_fields"
         />
       {{/if}}
     </div>
