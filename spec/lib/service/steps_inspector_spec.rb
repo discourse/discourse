@@ -11,15 +11,18 @@ RSpec.describe Service::StepsInspector do
 
     model :model
     policy :policy
+
     params do
       attribute :parameter
 
       validates :parameter, presence: true
     end
+
     transaction do
       step :in_transaction_step_1
       step :in_transaction_step_2
     end
+
     try { step :might_raise }
     step :final_step
   end

@@ -6,6 +6,7 @@ class SiteSetting::Update
   options { attribute :allow_changing_hidden, :boolean, default: false }
 
   policy :current_user_is_admin
+
   params do
     attribute :setting_name
     attribute :new_value
@@ -34,6 +35,7 @@ class SiteSetting::Update
         end
     end
   end
+
   policy :setting_is_visible
   policy :setting_is_configurable
   step :save

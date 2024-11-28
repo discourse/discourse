@@ -4,12 +4,15 @@ class Flags::ToggleFlag
   include Service::Base
 
   policy :invalid_access
+
   params do
     attribute :flag_id, :integer
 
     validates :flag_id, presence: true
   end
+
   model :flag
+
   transaction do
     step :toggle
     step :log
