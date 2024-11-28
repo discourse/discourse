@@ -3,8 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   metaModifier,
-  query,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -148,11 +146,11 @@ acceptance("Local Dates - composer", function (needs) {
       shiftKey: true,
     });
 
-    const inputValue = query("#reply-control .d-editor-input").value.trim();
-
-    assert.ok(
-      inputValue.startsWith(`and the time now is: [date=${date}`),
-      "it adds the current date"
-    );
+    assert
+      .dom("#reply-control .d-editor-input")
+      .hasValue(
+        new RegExp(`and the time now is: \\[date=${date}`),
+        "it adds the current date"
+      );
   });
 });
