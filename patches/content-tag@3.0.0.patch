@@ -1,5 +1,5 @@
 diff --git a/pkg/standalone/content_tag.js b/pkg/standalone/content_tag.js
-index 0a676a08c4aa05d096d402da649bca24ad60cfc1..68cbe90df17b17eba9c232952b037df56df6648b 100644
+index ffac649b59d3c00ee025807971082cfea4e1cb2c..511c7ccf57b16e2d95dcd94da737d79ef170387f 100644
 --- a/pkg/standalone/content_tag.js
 +++ b/pkg/standalone/content_tag.js
 @@ -1,5 +1,6 @@
