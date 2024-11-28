@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
-import { action } from "@ember/object";
+import { concat, fn } from "@ember/helper";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKMeta from "discourse/form-kit/components/fk/meta";
@@ -9,23 +9,12 @@ import concatClass from "discourse/helpers/concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class FKControlWrapper extends Component {
-  constructor() {
-    super(...arguments);
-
-    this.args.field.setType(this.controlType);
-  }
-
   get controlType() {
     if (this.args.component.controlType === "input") {
       return this.args.component.controlType + "-" + (this.args.type || "text");
     }
 
     return this.args.component.controlType;
-  }
-
-  @action
-  setFieldType() {
-    this.args.field.type = this.controlType;
   }
 
   get error() {
@@ -44,12 +33,13 @@ export default class FKControlWrapper extends Component {
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
         (if this.error "has-error")
-        (if @disabled "is-disabled")
-        (if (eq @format "full") "--full")
+        (if @field.disabled "is-disabled")
+        (if (eq @field.format "full") "--full")
       }}
-      data-disabled={{@disabled}}
+      data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-control-type={{this.controlType}}
+      {{willDestroy (fn @unregisterField @field.name)}}
     >
       {{#if @field.showTitle}}
         <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
@@ -72,7 +62,7 @@ export default class FKControlWrapper extends Component {
       <div
         class={{concatClass
           "form-kit__container-content"
-          (if @format (concat "--" @format))
+          (if @field.format (concat "--" @field.format))
         }}
       >
         <@component
@@ -86,7 +76,6 @@ export default class FKControlWrapper extends Component {
           @after={{@after}}
           @height={{@height}}
           @selection={{@selection}}
-          @disabled={{@disabled}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if this.error "true"}}
@@ -97,12 +86,7 @@ export default class FKControlWrapper extends Component {
           {{yield components}}
         </@component>
 
-        <FKMeta
-          @disabled={{@disabled}}
-          @value={{@value}}
-          @field={{@field}}
-          @error={{this.error}}
-        />
+        <FKMeta @field={{@field}} @error={{this.error}} />
       </div>
     </div>
   </template>
