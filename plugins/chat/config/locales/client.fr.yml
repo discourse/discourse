@@ -655,11 +655,6 @@ fr:
           other_html: "<span>%{username}</span> <span>a mentionné %{identifier} dans une discussion privée</span>"
         chat_message: "Nouveau message de discussion"
         chat_quoted: "%{username} a cité votre message de discussion"
-      titles:
-        chat_mention: "Mention de discussion"
-        chat_invitation: "Invitation à rejoindre la discussion"
-        chat_quoted: "Discussion citée"
-        chat_watched_thread: "Fil de discussion surveillé"
     action_codes:
       chat:
         enabled: '%{who} a activé la <button class="btn-link open-chat">discussion</button> %{when}'

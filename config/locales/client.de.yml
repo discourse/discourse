@@ -1856,7 +1856,7 @@ de:
                 one {# Tag}
               other {# Tagen}
             } ab.
-          edit_link_options: "Link-Optionen bearbeiten."
+          edit_link_options: "Link-Optionen bearbeiten oder per E-Mail versenden."
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           restrict: "Beschränken auf"
@@ -5307,7 +5307,7 @@ de:
             Wenn vorhanden, ersetzt sie die Kontakt-E-Mail-Adresse unter /about und ist für anonyme Benutzer auf öffentlichen Websites sichtbar.
           site_contact_name: "Website-Ansprechpartner"
           site_contact_name_help: |
-            Ein Mitarbeiterbenutzername, von dem alle automatisierten Nachrichten gesendet werden. Wenn dieses Feld leer gelassen wird, wird das Standardsystemkonto verwendet.
+            Ein Benutzername eines Team-Mitglieds, von dem alle automatisierten Nachrichten gesendet werden. Wenn dieses Feld leer gelassen wird, wird das Standardsystemkonto verwendet.
           site_contact_group: "Website-Ansprechpartner-Gruppe"
           site_contact_group_help: |
             Die Gruppe, die zu allen automatisch versendeten privaten Nachrichten eingeladen wird.
@@ -5381,6 +5381,16 @@ de:
             themes_description: "Themes sind umfangreiche Anpassungen, die mehrere Elemente des Stils deines Forumsdesigns verändern und oft auch zusätzliche Frontend-Funktionen enthalten."
             new_theme: "Neues Theme"
             user_selectable: "Vom Benutzer wählbar"
+        user_fields:
+          field: "Feld"
+          type: "Art"
+          more_options:
+            title: "Mehr Optionen"
+            move_up: "Nach oben"
+            move_down: "Nach unten"
+          delete: "Löschen"
+          delete_successful: "Benutzerfeld gelöscht."
+          save_successful: "Benutzerfeld gespeichert."
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -6263,6 +6273,32 @@ de:
         status: "Status"
         show_emails: "E-Mails anzeigen"
         hide_emails: "E-Mails ausblenden"
+        bulk_actions:
+          title: "Massenaktionen"
+          admin_cant_be_deleted: "Dieser Benutzer kann nicht gelöscht werden, weil er ein Admin ist"
+          too_many_or_old_posts: "Dieser Benutzer kann nicht gelöscht werden, da er zu viele Beiträge oder einen sehr alten Beitrag hat."
+          too_many_selected_users:
+            one: "Du hast das %{count} Benutzerlimit für die Massenlöschung erreicht"
+            other: "Du hast die %{count} Benutzergrenze für die Massenlöschung erreicht"
+          delete:
+            label: "Benutzer löschen …"
+            confirmation_modal:
+              prompt_text:
+                one: 'Du bist dabei, den Benutzer %{count} endgültig zu löschen. Gib unten "%{confirmation_phrase}" ein, um fortzufahren:'
+                other: 'Du bist dabei, %{count} Benutzer dauerhaft zu löschen. Gib unten "%{confirmation_phrase}" ein, um fortzufahren:'
+              confirmation_phrase:
+                one: "%{count} Benutzer löschen"
+                other: "%{count} Benutzer löschen"
+              close: "Beenden"
+              confirm: "Löschen"
+              title:
+                one: "%{count} Benutzer löschen"
+                other: "%{count} Benutzer löschen"
+              bulk_delete_starting: "Start der Massenlöschung…"
+              user_delete_succeeded: "[%{position}/%{total}] Erfolgreich gelöscht @%{username}"
+              user_delete_failed: "[%{position}/%{total}] Löschen fehlgeschlagen @%{username} - %{error}"
+              bulk_delete_finished: "Massenlöschvorgang abgeschlossen."
+              failed_to_delete_users: "Die folgenden Benutzer konnten nicht gelöscht werden:"
         nav:
           new: "Neu"
           active: "Aktiv"
@@ -6542,8 +6578,12 @@ de:
           confirm_delete: "Bist du sicher, dass du diesen DiscourseConnect-Datensatz löschen möchtest?"
       user_fields:
         title: "Benutzerfelder"
-        help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
-        create: "Benutzerfeld erstellen"
+        help: "Erstelle benutzerdefinierte Benutzerfelder, um zusätzliche Details über deine Community-Mitglieder zu sammeln. Du kannst festlegen, welche Informationen bei der Anmeldung erforderlich sind, was in den Profilen angezeigt wird und was die Benutzer aktualisieren können."
+        no_user_fields: "Du hast noch keine eigenen Benutzerfelder."
+        add: "Benutzerfeld hinzufügen"
+        back: "Zurück zu den Benutzerfeldern"
+        edit_header: "Benutzerfeld bearbeiten"
+        new_header: "Benutzerfeld hinzufügen"
         untitled: "Ohne Titel"
         name: "Feldname"
         type: "Feldtyp"
@@ -6572,22 +6612,22 @@ de:
           confirmation: "Dadurch werden bestehende Benutzer aufgefordert, dieses Feld auszufüllen, und sie können erst dann etwas anderes auf deiner Website tun, wenn das Feld ausgefüllt ist. Fortfahren?"
         editable:
           title: "Nach der Registrierung editierbar"
-          enabled: "editierbar"
-          disabled: "nicht editierbar"
+          enabled: "Bearbeitbar"
+          disabled: "Nicht editierbar"
         show_on_profile:
           title: "Im öffentlichen Profil anzeigen"
-          enabled: "wird im Profil angezeigt"
-          disabled: "wird im Profil nicht angezeigt"
+          enabled: "Wird im Profil angezeigt"
+          disabled: "Wird im Profil nicht angezeigt"
         show_on_user_card:
           title: "Auf Benutzerkarte anzeigen"
-          enabled: "wird auf Benutzerkarte angezeigt"
-          disabled: "wird nicht auf Benutzerkarte angezeigt"
+          enabled: "Wird auf Benutzerkarte angezeigt"
+          disabled: "Wird nicht auf Benutzerkarte angezeigt"
         searchable:
           title: "In Suche einschließen"
-          enabled: "in Suche einschließen"
-          disabled: "nicht in Suche einschließen"
+          enabled: "In Suche einschließen"
+          disabled: "Nicht durchsuchbar"
         field_types:
-          text: "Textfeld"
+          text: "Text"
           confirm: "Bestätigung"
           dropdown: "Drop-down-Liste"
           multiselect: "Mehrfachauswahl"
@@ -6603,7 +6643,7 @@ de:
         show_overriden: "Nur geänderte Texte anzeigen"
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
         show_untranslated: "Nur unübersetzte anzeigen"
-        only_show_selected_locale: "Nur Ergebnisse im ausgewählten Gebietsschema anzeigen"
+        only_show_selected_locale: "Nur Ergebnisse in der ausgewählten Sprache anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
         no_results: "Keine passenden Website-Texte gefunden"
@@ -6812,6 +6852,7 @@ de:
         description: "Füge neue Emojis hinzu, die dann für alle verfügbar sind. Wähle mehrere Dateien aus, um Emojis unter Verwendung ihrer Dateinamen zu erstellen. Die ausgewählte Gruppe wird für alle Dateien verwendet, die gleichzeitig hinzugefügt werden."
         no_emoji: "Du hast noch keine benutzerdefinierten Emoji."
         add: "Emoji hinzufügen"
+        delete: "Löschen"
         back: "Zurück zu Emoji"
         choose_files: "Dateien auswählen"
         uploading: "Wird hochgeladen …"

@@ -4,12 +4,7 @@ import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import {
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { count, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -49,8 +44,8 @@ module(
                      @model={{this.post}}
                      @args={{this.args}} />`);
 
-      assert.ok(exists(".names"), "includes poster name");
-      assert.ok(exists("a.post-date"), "includes post date");
+      assert.dom(".names").exists("includes poster name");
+      assert.dom("a.post-date").exists("includes post date");
     });
 
     test("post - links", async function (assert) {
@@ -125,7 +120,7 @@ module(
       `);
 
       await click(".post-info .wiki");
-      assert.ok(
+      assert.true(
         this.historyShown,
         "clicking the wiki icon displays the post history"
       );
@@ -141,7 +136,7 @@ module(
       `);
 
       await click(".post-info .wiki");
-      assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
+      assert.true(this.editPostCalled, "clicking wiki icon edits the post");
     });
 
     test("via-email", async function (assert) {
@@ -154,13 +149,14 @@ module(
       );
 
       await click(".post-info.via-email");
-      assert.ok(
+      assert.true(
         this.rawEmailShown,
         "clicking the envelope shows the raw email"
       );
     });
 
     test("via-email without permission", async function (assert) {
+      this.rawEmailShown = false;
       this.set("args", { via_email: true, canViewRawEmail: false });
       this.set("showRawEmail", () => (this.rawEmailShown = true));
 
@@ -170,8 +166,8 @@ module(
       );
 
       await click(".post-info.via-email");
-      assert.ok(
-        !this.rawEmailShown,
+      assert.false(
+        this.rawEmailShown,
         "clicking the envelope doesn't show the raw email"
       );
     });
@@ -186,10 +182,11 @@ module(
       );
 
       await click(".post-info.edits button");
-      assert.ok(this.historyShown, "clicking the pencil shows the history");
+      assert.true(this.historyShown, "clicking the pencil shows the history");
     });
 
     test("history without view permission", async function (assert) {
+      this.historyShown = false;
       this.set("args", { version: 3, canViewEditHistory: false });
       this.set("showHistory", () => (this.historyShown = true));
 
@@ -199,8 +196,8 @@ module(
       );
 
       await click(".post-info.edits");
-      assert.ok(
-        !this.historyShown,
+      assert.false(
+        this.historyShown,
         `clicking the pencil doesn't show the history`
       );
     });
@@ -221,7 +218,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(exists(".read-state.read"));
+      assert.dom(".read-state.read").exists();
     });
 
     test(`unread indicator`, async function (assert) {
@@ -230,7 +227,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(exists(".read-state"));
+      assert.dom(".read-state").exists();
     });
 
     test("reply directly above (suppressed)", async function (assert) {
@@ -243,8 +240,8 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(!exists("a.reply-to-tab"), "hides the tab");
-      assert.ok(!exists(".avoid-tab"), "doesn't have the avoid tab class");
+      assert.dom("a.reply-to-tab").doesNotExist("hides the tab");
+      assert.dom(".avoid-tab").doesNotExist("doesn't have the avoid tab class");
     });
 
     test("reply a few posts above (suppressed)", async function (assert) {
@@ -257,7 +254,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(exists("a.reply-to-tab"), "shows the tab");
+      assert.dom("a.reply-to-tab").exists("shows the tab");
       assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
     });
 
@@ -288,7 +285,7 @@ module(
       );
 
       await click(".topic-body .expand-hidden");
-      assert.ok(this.unhidden, "triggers the action");
+      assert.true(this.unhidden, "triggers the action");
     });
 
     test(`cooked content hidden - can't view hidden post`, async function (assert) {
@@ -300,10 +297,9 @@ module(
           <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} @expandHidden={{this.expandHidden}} />`
       );
 
-      assert.ok(
-        !exists(".topic-body .expand-hidden"),
-        "button is not displayed"
-      );
+      assert
+        .dom(".topic-body .expand-hidden")
+        .doesNotExist("button is not displayed");
     });
 
     test("expand first post", async function (assert) {
@@ -315,7 +311,7 @@ module(
       );
 
       await click(".topic-body .expand-post");
-      assert.ok(!exists(".expand-post"), "button is gone");
+      assert.dom(".expand-post").doesNotExist("button is gone");
     });
 
     test("can't show admin menu when you can't manage", async function (assert) {
@@ -324,7 +320,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(!exists(".post-menu-area .show-post-admin-menu"));
+      assert.dom(".post-menu-area .show-post-admin-menu").doesNotExist();
     });
 
     test("show admin menu", async function (assert) {
@@ -378,7 +374,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
       );
-      assert.ok(this.deleted);
+      assert.true(this.deleted);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -413,7 +409,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
       );
-      assert.ok(this.deleted);
+      assert.true(this.deleted);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -448,7 +444,7 @@ module(
         "[data-content][data-identifier='admin-post-menu'] .toggle-post-type"
       );
 
-      assert.ok(this.toggled);
+      assert.true(this.toggled);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -477,7 +473,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .rebuild-html"
       );
-      assert.ok(this.baked);
+      assert.true(this.baked);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -503,7 +499,7 @@ module(
         "[data-content][data-identifier='admin-post-menu'] .unhide-post"
       );
 
-      assert.ok(unhidden);
+      assert.true(unhidden);
 
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
@@ -535,7 +531,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .change-owner"
       );
-      assert.ok(this.owned);
+      assert.true(this.owned);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -784,7 +780,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.ok(exists(".user-status-message"));
+      assert.dom(".user-status-message").exists();
     });
 
     test("doesn't show user status if disabled in site settings", async function (assert) {
@@ -800,7 +796,7 @@ module(
       await render(hbs`
         <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />`);
 
-      assert.notOk(exists(".user-status-message"));
+      assert.dom(".user-status-message").doesNotExist();
     });
   }
 );

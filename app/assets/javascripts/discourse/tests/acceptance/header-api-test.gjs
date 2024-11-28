@@ -29,7 +29,7 @@ acceptance("Header API - anonymous", function () {
     await visit("/");
     const testButton = document.querySelector(".test-button");
     const authButtons = document.querySelector(".auth-buttons");
-    assert.equal(
+    assert.strictEqual(
       testButton.compareDocumentPosition(authButtons),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test button is positioned before auth-buttons"
@@ -57,7 +57,7 @@ acceptance("Header API - anonymous", function () {
     await visit("/");
     const testIcon = document.querySelector(".test-icon");
     const search = document.querySelector(".search-dropdown");
-    assert.equal(
+    assert.strictEqual(
       testIcon.compareDocumentPosition(search),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test icon is positioned before search icon"
@@ -95,7 +95,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-button");
     const test2 = document.querySelector(".test2-button");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 button is positioned before Test1 button"
@@ -129,7 +129,7 @@ acceptance("Glimmer Header API - authenticated", function (needs) {
     await visit("/");
     const test1 = document.querySelector(".test1-icon");
     const test2 = document.querySelector(".test2-icon");
-    assert.equal(
+    assert.strictEqual(
       test2.compareDocumentPosition(test1),
       Node.DOCUMENT_POSITION_FOLLOWING,
       "Test2 icon is positioned before Test1 icon"

@@ -4051,6 +4051,11 @@ hy:
         look_and_feel:
           themes:
             title: "Թեմաներ"
+        user_fields:
+          type: "Տիպը"
+          more_options:
+            title: "Ավելի շատ տարբերակներ"
+          delete: "Ջնջել"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"
@@ -4675,6 +4680,11 @@ hy:
         status: "Ստատուս"
         show_emails: "Ցուցադրել Էլ. հասցեները"
         hide_emails: "Թաքցնել Էլ. նամակները"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Փակել"
+              confirm: "Ջնջել"
         nav:
           new: "Նոր"
           active: "Ակտիվ"
@@ -4898,8 +4908,6 @@ hy:
           external_avatar_url: "Պրոֆիլի Նկարի URL"
       user_fields:
         title: "Օգտատիրոջ Դաշտերը"
-        help: "Ավելացրեք դաշտեր, որոնք Ձեր օգտատերերը կարող են լրացնել:"
-        create: "Ստեղծել Օգտատիրոջ Դաշտ"
         untitled: "Անվերնագիր"
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
@@ -4917,17 +4925,8 @@ hy:
         requirement:
           optional:
             title: "Ընտրովի"
-        editable:
-          enabled: "խմբագրելի է"
-          disabled: "խմբագրելի չէ"
-        show_on_profile:
-          enabled: "ցուցադրել պրոֆիլում"
-          disabled: "չցուցադրել պրոֆիլում"
-        show_on_user_card:
-          enabled: "ցուցադրել օգտատիրոջ քարտի վրա"
-          disabled: "չցուցադրել օգտատիրոջ քարտի վրա"
         field_types:
-          text: "Տեքստային Դաշտ"
+          text: "Տեքստ"
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
@@ -5078,6 +5077,7 @@ hy:
           replace_owners: Հեռացնել նախորդ սեփականատիրոջ կրծքանշանը
       emoji:
         title: "Էմոջի"
+        delete: "Ջնջել"
         uploading: "Վերբեռնվում է…"
         name: "Անուն"
         group: "Խումբ"

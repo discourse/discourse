@@ -12,7 +12,7 @@
     data-chat-thread-id={{this.chat.activeChannel.activeThread.id}}
     class={{concat-class
       "chat-drawer"
-      (if this.chatStateManager.isDrawerExpanded "is-expanded")
+      (if this.chatStateManager.isDrawerExpanded "is-expanded" "is-collapsed")
     }}
     {{chat/resizable-node ".chat-drawer-resizer" this.didResize}}
     style={{this.drawerStyle}}

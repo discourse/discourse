@@ -297,7 +297,7 @@ export default class ApplicationRoute extends DiscourseRoute {
     } else {
       if (this.isOnlyOneExternalLoginMethod) {
         this.login.externalLogin(this.externalLoginMethods[0]);
-      } else if (this.siteSettings.experimental_full_page_login) {
+      } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("login").then((login) => {
           login.controller.set("canSignUp", this.controller.canSignUp);
           if (this.siteSettings.login_required) {
@@ -326,7 +326,7 @@ export default class ApplicationRoute extends DiscourseRoute {
         this.login.externalLogin(this.externalLoginMethods[0], {
           signup: true,
         });
-      } else if (this.siteSettings.experimental_full_page_login) {
+      } else if (this.siteSettings.full_page_login) {
         this.router.transitionTo("signup").then((signup) => {
           Object.keys(createAccountProps || {}).forEach((key) => {
             signup.controller.set(key, createAccountProps[key]);

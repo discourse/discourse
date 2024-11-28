@@ -98,6 +98,18 @@ module PageObjects
         has_valid_password?
       end
 
+      def has_disabled_email?
+        find(".create-account-email").has_css?("input[disabled]")
+      end
+
+      def has_disabled_name?
+        find(".create-account__fullname").has_css?("input[disabled]")
+      end
+
+      def has_disabled_username?
+        find(".create-account__username").has_css?("input[disabled]")
+      end
+
       def click_social_button(provider)
         click(".btn-social.#{provider}")
       end

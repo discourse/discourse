@@ -26,6 +26,7 @@ export default class UserField extends RestModel {
   @tracked show_on_profile;
   @tracked show_on_user_card;
   @tracked searchable;
+  @tracked requirement;
 
   get fieldTypeName() {
     return UserField.fieldTypes().find((ft) => ft.id === this.field_type).name;

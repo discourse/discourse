@@ -113,8 +113,8 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     await click(".untrack [type='checkbox']");
     await click("#dismiss-read-confirm");
 
-    assert.strictEqual(state.dismissTopics, false);
-    assert.strictEqual(state.dismissPosts, false);
-    assert.strictEqual(state.untrack, true);
+    assert.false(state.dismissTopics);
+    assert.false(state.dismissPosts);
+    assert.true(state.untrack);
   });
 });

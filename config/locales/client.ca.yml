@@ -3294,6 +3294,9 @@ ca:
         look_and_feel:
           themes:
             title: "Aparences"
+        user_fields:
+          type: "Tipus"
+          delete: "Suprimeix"
       plugins:
         title: "Connectors"
         name: "Nom"
@@ -3896,6 +3899,11 @@ ca:
         status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Tanca"
+              confirm: "Suprimeix"
         nav:
           new: "Nou"
           active: "Actiu"
@@ -4100,8 +4108,6 @@ ca:
           external_avatar_url: "URL de la imatge de perfil"
       user_fields:
         title: "Camps d'usuari"
-        help: "Afegeix camps que els usuaris poden emplenar."
-        create: "Crea un camp d'usuari"
         untitled: "Sense títol"
         name: "Nom del camp"
         type: "Tipus de camp"
@@ -4120,19 +4126,12 @@ ca:
         requirement:
           optional:
             title: "Opcional"
-        editable:
-          enabled: "editable"
-          disabled: "no editable"
         show_on_profile:
           title: "Voleu mostrar-ho en el perfil públic"
-          enabled: "mostrat en el perfil"
-          disabled: "no mostrat en el perfil"
         show_on_user_card:
           title: "Mostra en la targeta d'usuari"
-          enabled: "mostrat en la targeta d'usuari"
-          disabled: "no mostrat en la targeta de l'usuari"
         field_types:
-          text: "Camp de text"
+          text: "Text"
           confirm: "Confirmació"
           dropdown: "Desplega"
       site_text:
@@ -4275,6 +4274,7 @@ ca:
             with_time: <span class="username">%{username}</span> en <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Suprimeix"
         name: "Nom"
         group: "Grup"
         image: "Imatge"

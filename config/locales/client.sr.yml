@@ -2062,6 +2062,9 @@ sr:
             invalid_applies_to: "Potrebno"
             topic: "teme"
             post: "poruke"
+        user_fields:
+          type: "Tip"
+          delete: "Obriši"
       plugins:
         title: "Dodatci"
         name: "Ime foruma"
@@ -2365,6 +2368,11 @@ sr:
         not_found: "Žao nam je, taj korisnik ne postoji u našem sistemu."
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
         show_emails: "Pokaži Email-ove"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Obriši"
         nav:
           new: "Novo"
           active: "Aktivno"
@@ -2509,8 +2517,6 @@ sr:
           external_avatar_url: "URL Profilne Slike"
       user_fields:
         title: "Korisnička polja"
-        help: "Dodaj polja koja korisnici mogu popuniti."
-        create: "Otvori Korisnička Polja"
         untitled: "Nenaslovljeno"
         name: "Ime Polja"
         type: "Tip Polja"
@@ -2528,14 +2534,9 @@ sr:
           disabled: "nepotrebno"
         editable:
           title: "Izmenljivo nakon registracije"
-          enabled: "izmenljivo"
-          disabled: "nije izmenljivo"
         show_on_profile:
           title: "Pokaži na javnom profilu"
-          enabled: "pokaži na profilu"
-          disabled: "nije prikazano na profilu"
         field_types:
-          text: "Tekst Polja"
           confirm: "Potvrda"
       site_text:
         edit: "izmeni"
@@ -2645,6 +2646,7 @@ sr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Obriši"
         name: "Ime"
         group: "Grupa"
         image: "Slika"

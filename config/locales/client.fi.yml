@@ -1856,7 +1856,6 @@ fi:
                 one {# päivän kuluttua}
               other {# päivän kuluttua}
             }.
-          edit_link_options: "Muokkaa linkin asetuksia."
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
           restrict: "Rajoita:"
@@ -5380,6 +5379,13 @@ fi:
             themes_description: "Teemat ovat laajoja mukautuksia, jotka muuttavat useita foorumisi ulkoasun tyylin elementtejä ja sisältävät usein myös lisäkäyttöliittymäominaisuuksia."
             new_theme: "Uusi teema"
             user_selectable: "Käyttäjän valittavissa"
+        user_fields:
+          type: "Tyyppi"
+          more_options:
+            title: "Lisää vaihtoehtoja"
+            move_up: "Siirrä ylös"
+            move_down: "Siirrä alas"
+          delete: "Poista"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -6262,6 +6268,11 @@ fi:
         status: "Tila"
         show_emails: "Näytä sähköpostit"
         hide_emails: "Piilota sähköpostit"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Sulje"
+              confirm: "Poista"
         nav:
           new: "Uudet"
           active: "Aktiiviset"
@@ -6541,8 +6552,6 @@ fi:
           confirm_delete: "Haluatko varmasti poistaa tämän DiscourseConnect-tietueen?"
       user_fields:
         title: "Käyttäjäkentät"
-        help: "Lisää kenttiä, jotka käyttäjät voivat täyttää."
-        create: "Luo käyttäjäkenttä"
         untitled: "Nimetön"
         name: "Kentän nimi"
         type: "Kentän tyyppi"
@@ -6571,22 +6580,15 @@ fi:
           confirmation: "Tämä kehottaa nykyisiä käyttäjiä täyttämään tämän kentän eikä anna heidän tehdä mitään muuta sivustollasi ennen kuin kenttä on täytetty. Haluatko jatkaa?"
         editable:
           title: "Muokattavissa rekisteröitymisen jälkeen"
-          enabled: "muokattavissa"
-          disabled: "ei muokattavissa"
         show_on_profile:
           title: "Näytetään julkisessa profiilissa"
-          enabled: "näytetään profiilissa"
-          disabled: "ei näytetä profiilissa"
         show_on_user_card:
           title: "Näytetään käyttäjäkortilla"
-          enabled: "näytetään käyttäjäkortilla"
-          disabled: "ei näytetä käyttäjäkortilla"
         searchable:
           title: "Haettavissa"
-          enabled: "haettavissa"
-          disabled: "ei haettavissa"
+          enabled: "Haettavissa"
         field_types:
-          text: "Tekstikenttä"
+          text: "Teksti"
           confirm: "Vahvistus"
           dropdown: "Pudotusvalikko"
           multiselect: "Monivalinta"
@@ -6602,7 +6604,6 @@ fi:
         show_overriden: "Näytä vain korvatut"
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         show_untranslated: "Näytä vain kääntämättömät"
-        only_show_selected_locale: "Näytä tulokset vain valitulla kielialueella"
         locale: "Kieli:"
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
         no_results: "Sivustolta ei löytynyt vastaavia tekstejä"
@@ -6811,6 +6812,7 @@ fi:
         description: "Lisää uusi emoji, joka on kaikkien käytettävissä. Valitse useita tiedostoja luodaksesi emojeja niiden tiedostonimillä. Valittua ryhmää käytetään kaikille tiedostoille, jotka lisätään samaan aikaan."
         no_emoji: "Sinulla ei ole vielä mukautettuja emojeja."
         add: "Lisää emoji"
+        delete: "Poista"
         back: "Takaisin emojiin"
         choose_files: "Valitse tiedostot"
         uploading: "Ladataan…"

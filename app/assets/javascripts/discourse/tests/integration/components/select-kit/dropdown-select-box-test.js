@@ -46,7 +46,7 @@ module(
       `);
 
       await this.subject.expand();
-      assert.ok(this.subject.isExpanded());
+      assert.true(this.subject.isExpanded());
 
       await this.subject.selectRowByValue(DEFAULT_VALUE);
       assert.false(
@@ -83,7 +83,7 @@ module(
         .hasAttribute(
           "title",
           "[en.test_none]",
-          "it adds a title attribute to the button"
+          "adds a title attribute to the button"
         );
     });
 
@@ -100,10 +100,9 @@ module(
         />
       `);
 
-      assert.ok(
-        this.subject.header().el().querySelector(".selected-name"),
-        "it shows the text of the selected item"
-      );
+      assert
+        .dom(".selected-name", this.subject.header().el())
+        .exists("shows the text of the selected item");
     });
   }
 );

@@ -16,7 +16,10 @@ acceptance("CategoryChooser", function (needs) {
     await click("#create-topic");
     await categoryChooser.expand();
 
-    assert.ok(categoryChooser.rowByIndex(0).name() !== "uncategorized");
+    assert.notStrictEqual(
+      categoryChooser.rowByIndex(0).name(),
+      "uncategorized"
+    );
   });
 
   test("prefill category when category_id is set", async function (assert) {

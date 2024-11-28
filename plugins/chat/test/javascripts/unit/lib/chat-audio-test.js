@@ -44,70 +44,70 @@ module("Discourse Chat | Unit | chat-audio", function (hooks) {
     });
   });
 
-  test("it registers desktop notification handler", function (assert) {
-    assert.ok(this.stub.calledOnce);
+  test("registers desktop notification handler", function (assert) {
+    assert.true(this.stub.calledOnce);
   });
 
-  test("it plays chat sound", async function (assert) {
+  test("plays chat sound", async function (assert) {
     await this.handleNotification();
 
-    assert.ok(this.playStub.calledOnce);
+    assert.true(this.playStub.calledOnce);
   });
 
-  test("it skips chat sound for user in DND mode", async function (assert) {
+  test("skips chat sound for user in DND mode", async function (assert) {
     this.currentUser.isInDoNotDisturb = () => true;
     await this.handleNotification();
 
-    assert.ok(this.playStub.notCalled);
+    assert.true(this.playStub.notCalled);
   });
 
-  test("it skips chat sound for user with no chat sound set", async function (assert) {
+  test("skips chat sound for user with no chat sound set", async function (assert) {
     this.currentUser.chat_sound = null;
     await this.handleNotification();
 
-    assert.ok(this.playStub.notCalled);
+    assert.true(this.playStub.notCalled);
   });
 
-  test("it plays a chat sound for mentions", async function (assert) {
+  test("plays a chat sound for mentions", async function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "only_mentions";
 
     await this.handleNotification({ notification_type: 29 });
 
-    assert.ok(this.playStub.calledOnce);
+    assert.true(this.playStub.calledOnce);
   });
 
-  test("it skips chat sound for non-mentions", async function (assert) {
+  test("skips chat sound for non-mentions", async function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "only_mentions";
 
     await this.handleNotification();
 
-    assert.ok(this.playStub.notCalled);
+    assert.true(this.playStub.notCalled);
   });
 
-  test("it plays a chat sound for DMs", async function (assert) {
+  test("plays a chat sound for DMs", async function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
 
     await this.handleNotification({ is_direct_message_channel: true });
 
-    assert.ok(this.playStub.calledOnce);
+    assert.true(this.playStub.calledOnce);
   });
 
-  test("it skips chat sound for non-DM messages", async function (assert) {
+  test("skips chat sound for non-DM messages", async function (assert) {
     this.currentUser.user_option.chat_header_indicator_preference =
       "dm_and_mentions";
 
     await this.handleNotification({ is_direct_message_channel: false });
 
-    assert.ok(this.playStub.notCalled);
+    assert.true(this.playStub.notCalled);
   });
 
-  test("it skips chat sound when service worker returns false", async function (assert) {
+  test("skips chat sound when service worker returns false", async function (assert) {
     chatAudioInitializer.canPlaySound.returns(Promise.resolve(false));
     await this.handleNotification();
 
-    assert.ok(this.playStub.notCalled);
+    assert.true(this.playStub.notCalled);
   });
 });

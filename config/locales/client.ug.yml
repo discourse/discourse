@@ -1856,7 +1856,7 @@ ug:
                 one {# كۈن}
               other {# كۈن}
             } دە ۋاقتى ئۆتىدۇ.
-          edit_link_options: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ."
+          edit_link_options: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ ياكى ئېلخەت ئارقىلىق يوللايدۇ."
           show_advanced: "ئالىي تاللانمىنى كۆرسەت"
           hide_advanced: "ئالىي تاللانمىنى يوشۇر"
           restrict: "چەكلىمە"
@@ -2607,6 +2607,7 @@ ug:
         new_reviewable:
           one: "%{count} يېڭى تەستىق كۈتۈۋاتقان"
           other: "%{count} يېڭى تەستىق كۈتۈۋاتقان"
+      paused: "ئۇقتۇرۇش ۋاقىتلىق توختىتىلدى"
       title: "@ئىسىم بىلەن سىزنى تىلغا ئالسا، تېما ۋە يازمىغا جاۋاب قايتۇرسا ۋە ئۇچۇر يوللىسا سىزگە ئۇقتۇرىدۇ"
       none: "بۇ ۋاقىتتا ئۇقتۇرۇشنى يۈكلىيەلمىدى."
       empty: "ھېچقانداق ئۇقتۇرۇش تېپىلمىدى."
@@ -4180,6 +4181,7 @@ ug:
       shortcut_delimiter_or: "%{shortcut1} ياكى %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ھەرپتاختا تېزلەتمىسى"
       short_title: "تېزلەتمە"
       jump_to:
@@ -5370,6 +5372,13 @@ ug:
             default_theme: "كۆڭۈلدىكى ئۆرنەك"
             new_theme: "يېڭى ئۆرنەك"
             user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
+        user_fields:
+          type: "تىپى"
+          more_options:
+            title: "تېخىمۇ كۆپ تاللانما"
+            move_up: "ئۈستىگە يۆتكەل"
+            move_down: "ئاستىغا يۆتكەل"
+          delete: "ئۆچۈر"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"
@@ -6251,6 +6260,11 @@ ug:
         status: "ھالەت"
         show_emails: "ئېلخەتنى كۆرسەت"
         hide_emails: "ئېلخەتنى يوشۇر"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "تاقا"
+              confirm: "ئۆچۈر"
         nav:
           new: "يېڭى"
           active: "ئاكتىپ"
@@ -6384,6 +6398,7 @@ ug:
         time_read: "ئوقۇش ۋاقتى"
         post_edits_count: "يازما تەھرىر"
         anonymize: "ئىشلەتكۈچىنى نامسىزلاشتۇر"
+        disable_second_factor_confirm: "بۇ ھېساباتنىڭ ئىككى ئامىللىق دەلىللەش ئىقتىدارىنى راستتىنلا چەكلەمسىز؟"
         anonymize_yes: "ھەئە، بۇ ھېساباتنى نامسىزلاشتۇر"
         anonymize_failed: "ھېساباتنى نامسىزلاشتۇرۇشتا مەسىلە كۆرۈلدى."
         delete: "ئىشلەتكۈچى ئۆچۈر"
@@ -6532,8 +6547,6 @@ ug:
           confirm_delete: "بۇ DiscourseConnect خاتىرىسىنى راستتىنلا ئۆچۈرەمسىز؟"
       user_fields:
         title: "ئىشلەتكۈچى بۆلىكى"
-        help: "ئىشلەتكۈچى تولدۇرالايدىغان بۆلەك قوشىدۇ."
-        create: "ئىشلەتكۈچى بۆلىكى قۇر"
         untitled: "ماۋزۇسىز"
         name: "بۆلەك ئىسمى"
         type: "بۆلەك تىپى"
@@ -6562,22 +6575,15 @@ ug:
           confirmation: "بۇنداق بولغاندا نۆۋەتتىكى ئىشلەتكۈچىنىڭ بۇ بۆلەكنى تولدۇرۇشىنى ئەسكەرتىدۇ ھەمدە بۇ بۆلەكنى تولدۇرۇشتىن بۇرۇن ئۇلارنىڭ تور بېكەتتە ھەر قانداق مەشغۇلات ئېلىپ بېرىشىغا يول قويۇلمايدۇ. داۋاملاشتۇرامدۇ؟"
         editable:
           title: "تىزىملاتقاندىن كېيىن تەھرىرلىيەلەيدۇ"
-          enabled: "تەھرىرلەشچان"
-          disabled: "تەھرىرلەشكە بولمايدۇ"
         show_on_profile:
           title: "ئاممىۋى تەرجىمىھالدا كۆرۈنىدۇ"
-          enabled: "تەرجىمىھالدا كۆرۈنىدۇ"
-          disabled: "تەرجىمىھالدا كۆرۈنمەيدۇ"
         show_on_user_card:
           title: "ئىشلەتكۈچى كارتىسىدا كۆرسىتىدۇ"
-          enabled: "ئىشلەتكۈچى كارتىسىدا كۆرۈنىدۇ"
-          disabled: "ئىشلەتكۈچى كارتىسىدا كۆرۈنمەيدۇ"
         searchable:
           title: "ئىزدەشچان"
           enabled: "ئىزدەشچان"
-          disabled: "ئىزدەلمەس"
         field_types:
-          text: "تېكىست بۆلىكى"
+          text: "تېكىست"
           confirm: "جەزملەش"
           dropdown: "تارتما تىزىملىك"
           multiselect: "كۆپ تاللاش"
@@ -6593,7 +6599,6 @@ ug:
         show_overriden: "قاپلىۋەتكەننىلا كۆرسىتىدۇ"
         show_outdated: "پەقەت ۋاقتى ئۆتكەن/ئىناۋەتسىزنىلا كۆرسىتىدۇ"
         show_untranslated: "پەقەت تەرجىمە قىلىنمىغاننىلا كۆرسىتىدۇ"
-        only_show_selected_locale: "تاللىغان دائىرىدىكى نەتىجىنىلا كۆرسىتىدۇ"
         locale: "تىل:"
         more_than_50_results: "50 دىن ئارتۇق نەتىجە بار. ئىزدىشىڭىزنى ياخشىلاڭ."
         no_results: "ماس كېلىدىغان تور بېكەت تېكىستى تېپىلمىدى"
@@ -6800,6 +6805,7 @@ ug:
       emoji:
         title: "چىراي ئىپادە"
         add: "چىراي ئىپادە قوش"
+        delete: "ئۆچۈر"
         uploading: "يۈكلەۋاتىدۇ…"
         name: "ئىسمى"
         group: "گۇرۇپپا"

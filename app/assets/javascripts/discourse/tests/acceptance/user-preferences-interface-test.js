@@ -307,7 +307,7 @@ acceptance(
 
       // dark scheme
       await selectKit(".dark-color-scheme .combobox").expand();
-      assert.ok(
+      assert.true(
         selectKit(".dark-color-scheme .combobox").rowByValue(1).exists(),
         "default dark scheme is included"
       );
@@ -361,10 +361,9 @@ acceptance(
       await selectKit(".light-color-scheme .combobox").expand();
       await selectKit(".light-color-scheme .combobox").selectRowByValue(3);
 
-      assert.notOk(
-        document.querySelector("link#cs-preview-light"),
-        "stylesheet not loaded"
-      );
+      assert
+        .dom("link#cs-preview-light", document.body)
+        .doesNotExist("stylesheet not loaded");
     });
   }
 );

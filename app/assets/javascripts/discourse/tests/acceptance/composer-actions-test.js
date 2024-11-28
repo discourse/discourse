@@ -128,7 +128,7 @@ acceptance("Composer Actions", function (needs) {
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
     assert.dom(".action-title").hasText(i18n("topic.create_long"));
-    assert.ok(query(".d-editor-input").value.includes(quote));
+    assert.true(query(".d-editor-input").value.includes(quote));
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
@@ -211,7 +211,7 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.expand();
 
     assert.dom(".action-title").hasText(i18n("topic.create_long"));
-    assert.ok(query(".d-editor-input").value.includes(quote));
+    assert.true(query(".d-editor-input").value.includes(quote));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
     assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
@@ -437,7 +437,7 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
       .hasText(i18n("composer.composer_actions.reply_as_new_topic.confirm"));
     await click(".dialog-footer .btn-primary");
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.startsWith(
         "Continuing the discussion from"
       )

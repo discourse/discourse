@@ -155,19 +155,19 @@ module("Unit | Model | composer", function (hooks) {
 
   test("replyDirty", function (assert) {
     const composer = createComposer.call(this);
-    assert.ok(!composer.replyDirty, "by default it's false");
+    assert.false(composer.replyDirty, "false by default");
 
     composer.setProperties({
       originalText: "hello",
       reply: "hello",
     });
 
-    assert.ok(
-      !composer.replyDirty,
-      "it's false when the originalText is the same as the reply"
+    assert.false(
+      composer.replyDirty,
+      "false when the originalText is the same as the reply"
     );
     composer.set("reply", "hello world");
-    assert.ok(composer.replyDirty, "it's true when the reply changes");
+    assert.true(composer.replyDirty, "true when the reply changes");
   });
 
   test("appendText", function (assert) {
@@ -232,13 +232,13 @@ module("Unit | Model | composer", function (hooks) {
     const composer = createComposer.call(this);
 
     composer.set("title", "asdf");
-    assert.ok(!composer.titleLengthValid, "short titles are not valid");
+    assert.false(composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.titleLengthValid, "long titles are not valid");
+    assert.false(composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.titleLengthValid, "in the range is okay");
+    assert.true(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Title length for private messages", function (assert) {
@@ -247,13 +247,13 @@ module("Unit | Model | composer", function (hooks) {
     const composer = createComposer.call(this, { action: PRIVATE_MESSAGE });
 
     composer.set("title", "asdf");
-    assert.ok(!composer.titleLengthValid, "short titles are not valid");
+    assert.false(composer.titleLengthValid, "short titles are not valid");
 
     composer.set("title", "this is a long title");
-    assert.ok(!composer.titleLengthValid, "long titles are not valid");
+    assert.false(composer.titleLengthValid, "long titles are not valid");
 
     composer.set("title", "just right");
-    assert.ok(composer.titleLengthValid, "in the range is okay");
+    assert.true(composer.titleLengthValid, "in the range is okay");
   });
 
   test("Post length for private messages with non human users", function (assert) {
@@ -268,21 +268,18 @@ module("Unit | Model | composer", function (hooks) {
 
   test("editingFirstPost", function (assert) {
     const composer = createComposer.call(this);
-    assert.ok(!composer.editingFirstPost, "it's false by default");
+    assert.false(composer.editingFirstPost, "false by default");
 
     const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", { id: 123, post_number: 2 });
     composer.setProperties({ post, action: EDIT });
-    assert.ok(
-      !composer.editingFirstPost,
-      "it's false when not editing the first post"
+    assert.false(
+      composer.editingFirstPost,
+      "false when not editing the first post"
     );
 
     post.set("post_number", 1);
-    assert.ok(
-      composer.editingFirstPost,
-      "it's true when editing the first post"
-    );
+    assert.true(composer.editingFirstPost, "true when editing the first post");
   });
 
   test("clearState", function (assert) {
@@ -309,7 +306,7 @@ module("Unit | Model | composer", function (hooks) {
       draftKey: "abcd",
       draftSequence: 1,
     });
-    assert.ok(!composer.categoryId, "Uncategorized by default");
+    assert.strictEqual(composer.categoryId, null, "Uncategorized by default");
   });
 
   test("initial category when uncategorized is not allowed", function (assert) {
@@ -319,8 +316,9 @@ module("Unit | Model | composer", function (hooks) {
       draftKey: "abcd",
       draftSequence: 1,
     });
-    assert.ok(
-      !composer.categoryId,
+    assert.strictEqual(
+      composer.categoryId,
+      null,
       "Uncategorized by default. Must choose a category."
     );
   });
@@ -356,9 +354,8 @@ module("Unit | Model | composer", function (hooks) {
       quote,
       "originalText is the quote"
     );
-    assert.strictEqual(
+    assert.false(
       newComposer().replyDirty,
-      false,
       "replyDirty is initially false with a quote"
     );
   });
@@ -377,17 +374,17 @@ module("Unit | Model | composer", function (hooks) {
     composer.setProperties({ post, action: EDIT });
 
     composer.set("title", "asdf");
-    assert.ok(composer.titleLengthValid, "admins can use short titles");
+    assert.true(composer.titleLengthValid, "admins can use short titles");
 
     composer.set("title", "this is a long title");
-    assert.ok(composer.titleLengthValid, "admins can use long titles");
+    assert.true(composer.titleLengthValid, "admins can use long titles");
 
     composer.set("title", "just right");
-    assert.ok(composer.titleLengthValid, "in the range is okay");
+    assert.true(composer.titleLengthValid, "in the range is okay");
 
     composer.set("title", "");
-    assert.ok(
-      !composer.titleLengthValid,
+    assert.false(
+      composer.titleLengthValid,
       "admins must set title to at least 1 character"
     );
   });
@@ -434,7 +431,7 @@ module("Unit | Model | composer", function (hooks) {
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
-    assert.ok(composer.canEditTopicFeaturedLink, "can paste link");
+    assert.true(composer.canEditTopicFeaturedLink, "can paste link");
   });
 
   test("targetRecipientsArray contains types", function (assert) {

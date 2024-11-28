@@ -740,10 +740,10 @@ uk:
         chat_message: "Нове повідомлення в чаті"
         chat_quoted: "%{username} процитував ваше повідомлення в чаті"
       titles:
-        chat_mention: "Згадка в чаті"
-        chat_invitation: "Запрошення до чату"
-        chat_quoted: "Чат процитований"
-        chat_watched_thread: "Потік перегляду чату"
+        chat_mention: "Згадано в чаті"
+        chat_invitation: "Запрошено до чату"
+        chat_quoted: "Процитовано повідомлення чату"
+        chat_watched_thread: "Переглянута гілка чату"
     action_codes:
       chat:
         enabled: '%{who} включив <button class="btn-link open-chat">чат</button> %{when}'

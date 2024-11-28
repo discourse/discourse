@@ -55,7 +55,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
 
       // assert that the initial secondary actions are present
       const secondaryActions = interactor.secondaryActions;
-      assert.ok(secondaryActions.length > 0);
+      assert.true(secondaryActions.length > 0);
 
       try {
         // remove the first secondary action listed
@@ -64,7 +64,7 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
         const updatedSecondaryActions = interactor.secondaryActions;
 
         // assert that the secondary action was removed
-        assert.ok(
+        assert.true(
           updatedSecondaryActions.length < secondaryActions.length,
           "the updated secondary actions must contain less items than the original"
         );

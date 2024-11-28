@@ -5,18 +5,16 @@ import DAG from "discourse/lib/dag";
 module("Unit | Lib | DAG", function (hooks) {
   setupTest(hooks);
 
-  let dag;
-
-  test("DAG.from should create a DAG instance from the provided entries", function (assert) {
-    dag = DAG.from([
+  test("DAG.from creates a DAG instance from the provided entries", function (assert) {
+    const dag = DAG.from([
       ["key1", "value1", { after: "key2" }],
       ["key2", "value2", { before: "key3" }],
       ["key3", "value3", { before: "key1" }],
     ]);
 
-    assert.ok(dag.has("key1"));
-    assert.ok(dag.has("key2"));
-    assert.ok(dag.has("key3"));
+    assert.true(dag.has("key1"));
+    assert.true(dag.has("key2"));
+    assert.true(dag.has("key3"));
 
     const resolved = dag.resolve();
     const keys = resolved.map((entry) => entry.key);
@@ -24,32 +22,32 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(keys, ["key2", "key3", "key1"]);
   });
 
-  test("should add items to the map", function (assert) {
-    dag = new DAG();
+  test("adds items to the map", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2");
     dag.add("key3", "value3");
 
-    assert.ok(dag.has("key1"));
-    assert.ok(dag.has("key2"));
-    assert.ok(dag.has("key3"));
+    assert.true(dag.has("key1"));
+    assert.true(dag.has("key2"));
+    assert.true(dag.has("key3"));
 
     // adding a new item
-    assert.ok(
+    assert.true(
       dag.add("key4", "value4"),
       "adding an item returns true when the item is added"
     );
-    assert.ok(dag.has("key4"));
+    assert.true(dag.has("key4"));
 
     // adding an item that already exists
-    assert.notOk(
+    assert.false(
       dag.add("key1", "value1"),
       "adding an item returns false when the item already exists"
     );
   });
 
-  test("should not throw an error when throwErrorOnCycle is false when adding an item creates a cycle", function (assert) {
-    dag = new DAG({
+  test("does not throw an error when throwErrorOnCycle is false when adding an item creates a cycle", function (assert) {
+    const dag = new DAG({
       throwErrorOnCycle: false,
       defaultPosition: { before: "key3" },
     });
@@ -60,9 +58,9 @@ module("Unit | Lib | DAG", function (hooks) {
     // This would normally cause a cycle if throwErrorOnCycle was true
     dag.add("key3", "value3", { after: "key1" });
 
-    assert.ok(dag.has("key1"));
-    assert.ok(dag.has("key2"));
-    assert.ok(dag.has("key3"));
+    assert.true(dag.has("key1"));
+    assert.true(dag.has("key2"));
+    assert.true(dag.has("key3"));
 
     const resolved = dag.resolve();
     const keys = resolved.map((entry) => entry.key);
@@ -71,59 +69,59 @@ module("Unit | Lib | DAG", function (hooks) {
     assert.deepEqual(keys, ["key3", "key2", "key1"]);
   });
 
-  test("should call the method specified for onAddItem callback when an item is added", function (assert) {
+  test("calls the method specified for onAddItem callback when an item is added", function (assert) {
     let called = 0;
 
-    dag = new DAG({
+    const dag = new DAG({
       onAddItem: () => {
         called++;
       },
     });
     dag.add("key1", "value1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item already exists
     dag.add("key1", "value1");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
-  test("should remove an item from the map", function (assert) {
-    dag = new DAG();
+  test("removes an item from the map", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2");
     dag.add("key3", "value3");
 
     let removed = dag.delete("key2");
 
-    assert.ok(dag.has("key1"));
+    assert.true(dag.has("key1"));
     assert.false(dag.has("key2"));
-    assert.ok(dag.has("key3"));
+    assert.true(dag.has("key3"));
 
-    assert.ok(removed, "delete returns true when the item is removed");
+    assert.true(removed, "delete returns true when the item is removed");
 
     removed = dag.delete("key2");
-    assert.notOk(removed, "delete returns false when the item doesn't exist");
+    assert.false(removed, "delete returns false when the item doesn't exist");
   });
 
-  test("should call the method specified for onDeleteItem callback when an item is removed", function (assert) {
+  test("calls the method specified for onDeleteItem callback when an item is removed", function (assert) {
     let called = 0;
 
-    dag = new DAG({
+    const dag = new DAG({
       onDeleteItem: () => {
         called++;
       },
     });
     dag.add("key1", "value1");
     dag.delete("key1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.delete("key1");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
-  test("should replace the value from an item in the map", function (assert) {
-    dag = new DAG();
+  test("replaces the value from an item in the map", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2");
     dag.add("key3", "value3");
@@ -136,7 +134,7 @@ module("Unit | Lib | DAG", function (hooks) {
       ["value1", "replaced-value2", "value3"],
       "replace allows simply replacing the value"
     );
-    assert.ok(replaced, "replace returns true when the item is replaced");
+    assert.true(replaced, "replace returns true when the item is replaced");
 
     // also changing the position
     dag.replace("key2", "replaced-value2-again", { before: "key1" });
@@ -149,34 +147,34 @@ module("Unit | Lib | DAG", function (hooks) {
 
     // replacing an item that doesn't exist
     replaced = dag.replace("key4", "replaced-value4");
-    assert.notOk(replaced, "replace returns false when the item doesn't exist");
+    assert.false(replaced, "replace returns false when the item doesn't exist");
   });
 
-  test("should call the method specified for onReplaceItem callback when an item is replaced", function (assert) {
+  test("calls the method specified for onReplaceItem callback when an item is replaced", function (assert) {
     let called = 0;
 
-    dag = new DAG({
+    const dag = new DAG({
       onReplaceItem: () => {
         called++;
       },
     });
     dag.add("key1", "value1");
     dag.replace("key1", "replaced-value1");
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.replace("key2", "replaced-value2");
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
-  test("should reposition an item in the map", function (assert) {
-    dag = new DAG();
+  test("repositions an item in the map", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2");
     dag.add("key3", "value3");
 
     let repositioned = dag.reposition("key3", { before: "key1" });
-    assert.ok(
+    assert.true(
       repositioned,
       "reposition returns true when the item is repositioned"
     );
@@ -188,48 +186,52 @@ module("Unit | Lib | DAG", function (hooks) {
 
     // repositioning an item that doesn't exist
     repositioned = dag.reposition("key4", { before: "key1" });
-    assert.notOk(
+    assert.false(
       repositioned,
       "reposition returns false when the item doesn't exist"
     );
   });
 
-  test("should call the method specified for onRepositionItem callback when an item is repositioned", function (assert) {
+  test("calls the method specified for onRepositionItem callback when an item is repositioned", function (assert) {
     let called = 0;
 
-    dag = new DAG({
+    const dag = new DAG({
       onRepositionItem: () => {
         called++;
       },
     });
     dag.add("key1", "value1");
     dag.reposition("key1", { before: "key2" });
-    assert.equal(called, 1, "the callback was called");
+    assert.strictEqual(called, 1, "the callback was called");
 
     // it doesn't call the callback when the item doesn't exist
     dag.reposition("key2", { before: "key1" });
-    assert.equal(called, 1, "the callback was not called");
+    assert.strictEqual(called, 1, "the callback was not called");
   });
 
-  test("should return the entries in the map", function (assert) {
+  test("returns the entries in the map", function (assert) {
     const entries = [
       ["key1", "value1", { after: "key2" }],
       ["key2", "value2", { before: "key3" }],
       ["key3", "value3", { before: "key1" }],
     ];
 
-    dag = DAG.from(entries);
+    const dag = DAG.from(entries);
     const dagEntries = dag.entries();
 
     entries.forEach((entry, index) => {
-      assert.equal(dagEntries[index][0], entry[0], "the key is correct");
-      assert.equal(dagEntries[index][1], entry[1], "the value is correct");
-      assert.equal(
+      assert.strictEqual(dagEntries[index][0], entry[0], "the key is correct");
+      assert.strictEqual(
+        dagEntries[index][1],
+        entry[1],
+        "the value is correct"
+      );
+      assert.strictEqual(
         dagEntries[index][2]["before"],
         entry[2]["before"],
         "the before position is correct"
       );
-      assert.equal(
+      assert.strictEqual(
         dagEntries[index][2]["after"],
         entry[2]["after"],
         "the after position is correct"
@@ -237,8 +239,8 @@ module("Unit | Lib | DAG", function (hooks) {
     });
   });
 
-  test("should resolve the map in the correct order", function (assert) {
-    dag = new DAG();
+  test("resolves the map in the correct order", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2");
     dag.add("key3", "value3");
@@ -250,7 +252,7 @@ module("Unit | Lib | DAG", function (hooks) {
   });
 
   test("allows for custom before and after default positioning", function (assert) {
-    dag = new DAG({ defaultPosition: { before: "key3", after: "key2" } });
+    const dag = new DAG({ defaultPosition: { before: "key3", after: "key2" } });
     dag.add("key1", "value1", {});
     dag.add("key2", "value2", { after: "key1" });
     dag.add("key3", "value3", { after: "key2" });
@@ -273,8 +275,8 @@ module("Unit | Lib | DAG", function (hooks) {
     );
   });
 
-  test("should resolve only existing keys", function (assert) {
-    dag = new DAG();
+  test("resolves only existing keys", function (assert) {
+    const dag = new DAG();
     dag.add("key1", "value1");
     dag.add("key2", "value2", { before: "key1" });
     dag.add("key3", "value3");
@@ -288,7 +290,7 @@ module("Unit | Lib | DAG", function (hooks) {
   });
 
   test("throws on bad positioning", function (assert) {
-    dag = new DAG();
+    const dag = new DAG();
 
     assert.throws(
       () => dag.add("key1", "value1", { before: "key1" }),

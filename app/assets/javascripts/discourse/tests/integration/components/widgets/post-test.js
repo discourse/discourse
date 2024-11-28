@@ -101,7 +101,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     `);
 
     await click(".post-info .wiki");
-    assert.ok(
+    assert.true(
       this.historyShown,
       "clicking the wiki icon displays the post history"
     );
@@ -116,7 +116,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     `);
 
     await click(".post-info .wiki");
-    assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
+    assert.true(this.editPostCalled, "clicking wiki icon edits the post");
   });
 
   test("via-email", async function (assert) {
@@ -129,10 +129,14 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.via-email");
-    assert.ok(this.rawEmailShown, "clicking the envelope shows the raw email");
+    assert.true(
+      this.rawEmailShown,
+      "clicking the envelope shows the raw email"
+    );
   });
 
   test("via-email without permission", async function (assert) {
+    this.rawEmailShown = false;
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
@@ -142,8 +146,8 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.via-email");
-    assert.ok(
-      !this.rawEmailShown,
+    assert.false(
+      this.rawEmailShown,
       "clicking the envelope doesn't show the raw email"
     );
   });
@@ -158,10 +162,11 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.edits button");
-    assert.ok(this.historyShown, "clicking the pencil shows the history");
+    assert.true(this.historyShown, "clicking the pencil shows the history");
   });
 
   test("history without view permission", async function (assert) {
+    this.historyShown = false;
     this.set("args", { version: 3, canViewEditHistory: false });
     this.set("showHistory", () => (this.historyShown = true));
 
@@ -171,9 +176,9 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".post-info.edits");
-    assert.ok(
-      !this.historyShown,
-      `clicking the pencil doesn't show the history`
+    assert.false(
+      this.historyShown,
+      "clicking the pencil doesn't show the history"
     );
   });
 
@@ -252,7 +257,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     assert
       .dom(".actions button.post-action-menu__copy-link")
-      .exists("it renders a copy link button");
+      .exists("renders a copy link button");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -307,7 +312,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       );
 
     await click(".actions button.like");
-    assert.ok(this.loginShown);
+    assert.true(this.loginShown);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -321,7 +326,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click("button.edit");
-    assert.ok(this.editPostCalled, "it triggered the edit action");
+    assert.true(this.editPostCalled, "triggered the edit action");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -345,7 +350,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click("button.delete");
-    assert.ok(this.deletePostCalled, "it triggered the delete action");
+    assert.true(this.deletePostCalled, "triggered the delete action");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -393,7 +398,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click("button.recover");
-    assert.ok(this.recovered);
+    assert.true(this.recovered);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -418,7 +423,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await click(".show-more-actions");
     await click("button.delete");
-    assert.ok(this.deletePostCalled, "it triggered the delete action");
+    assert.true(this.deletePostCalled, "triggered the delete action");
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -459,7 +464,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click("button.recover");
-    assert.ok(this.recovered);
+    assert.true(this.recovered);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb
@@ -484,7 +489,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     assert.dom("button.create-flag").exists();
 
     await click("button.create-flag");
-    assert.ok(this.flagsShown, "it triggered the action");
+    assert.true(this.flagsShown, "triggered the action");
   });
 
   test(`flagging: can't flag`, async function (assert) {
@@ -578,7 +583,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     );
 
     await click(".topic-body .expand-hidden");
-    assert.ok(this.unhidden, "triggers the action");
+    assert.true(this.unhidden, "triggers the action");
   });
 
   test(`cooked content hidden - can't view hidden post`, async function (assert) {
@@ -695,7 +700,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(
       "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
     );
-    assert.ok(this.deleted);
+    assert.true(this.deleted);
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("also hides the menu");
@@ -730,7 +735,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(
       "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
     );
-    assert.ok(this.deleted);
+    assert.true(this.deleted);
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("also hides the menu");
@@ -764,7 +769,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       "[data-content][data-identifier='admin-post-menu'] .toggle-post-type"
     );
 
-    assert.ok(this.toggled);
+    assert.true(this.toggled);
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("also hides the menu");
@@ -792,7 +797,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(
       "[data-content][data-identifier='admin-post-menu'] .rebuild-html"
     );
-    assert.ok(this.baked);
+    assert.true(this.baked);
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("also hides the menu");
@@ -825,7 +830,7 @@ module("Integration | Component | Widget | post", function (hooks) {
       "[data-content][data-identifier='admin-post-menu'] .unhide-post"
     );
 
-    assert.ok(unhidden);
+    assert.true(unhidden);
 
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
@@ -856,7 +861,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await click(
       "[data-content][data-identifier='admin-post-menu'] .change-owner"
     );
-    assert.ok(this.owned);
+    assert.true(this.owned);
     assert
       .dom("[data-content][data-identifier='admin-post-menu']")
       .doesNotExist("also hides the menu");
@@ -872,7 +877,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     `);
 
     await click(".post-controls .create");
-    assert.ok(this.replied);
+    assert.true(this.replied);
   });
 
   // glimmer-post-menu: deprecated in favor of spec/system/post_menu_spec.rb

@@ -1530,7 +1530,7 @@ ro:
                 few {în # zile}
               other {în # de zile}
             }.
-          edit_link_options: "Editează opțiuni legătură."
+          edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
           expires_at: "Expiră la"
@@ -3711,6 +3711,16 @@ ro:
             themes_description: "Temele sunt personalizări extinse care schimbă mai multe elemente ale stilului de design al forumului tău și adesea includ și funcții frontale suplimentare."
             new_theme: "Temă nouă"
             user_selectable: "Selectabil de către utilizator"
+        user_fields:
+          field: "Câmp"
+          type: "Tip"
+          more_options:
+            title: "Mai multe opțiuni"
+            move_up: "Mută în sus"
+            move_down: "Mută în jos"
+          delete: "Șterge"
+          delete_successful: "Câmp utilizator șters."
+          save_successful: "Câmp utilizator salvat."
       plugins:
         title: "Plugin-uri"
         installed: "Module instalate"
@@ -4230,6 +4240,11 @@ ro:
         id_not_found: "Ne pare rău, dar acest utilizator nu există în sistem."
         status: "Status"
         show_emails: "Arată email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Închide sondajul"
+              confirm: "Șterge"
         nav:
           new: "Noi"
           active: "Activi"
@@ -4418,8 +4433,12 @@ ro:
           external_avatar_url: "URL poză de profil"
       user_fields:
         title: "Câmpuri utilizator"
-        help: "Adaugă câmpuri pe care utilizatorii le pot completa."
-        create: "Creează un câmp utilizator"
+        help: "Creează câmpuri de utilizator personalizate pentru a colecta detalii suplimentare despre membrii comunității tale. Poți alege ce informații sunt necesare în timpul înregistrării, ce se afișează pe profiluri și ce pot actualiza utilizatorii."
+        no_user_fields: "Încă nu ai niciun câmp de utilizator personalizat."
+        add: "Adaugă câmp utilizator"
+        back: "Înapoi la câmpuri utilizator"
+        edit_header: "Editează câmp utilizator"
+        new_header: "Adaugă câmp utilizator"
         untitled: "Fără titlu"
         name: "Nume câmp"
         type: "Tip câmp"
@@ -4440,18 +4459,21 @@ ro:
             title: "Opțional"
         editable:
           title: "Editabil după înregistrare"
-          enabled: "editabil"
-          disabled: "nu este editabil"
+          enabled: "Se poate edita"
+          disabled: "Nu se poate edita"
         show_on_profile:
           title: "Arată în profilul public"
-          enabled: "se afișează în profil"
-          disabled: "nu se afișează în profil"
+          enabled: "Se afișează în profil"
+          disabled: "Nu se afișează în profil"
         show_on_user_card:
           title: "Afișează pe pagina cu date personale utilizatorului"
-          enabled: "se afișează"
-          disabled: "nu se afișează"
+          enabled: "Se afișează pe cardul de utilizator"
+          disabled: "Nu se afișează pe cardul utilizatorului"
+        searchable:
+          enabled: "Se poate căuta"
+          disabled: "Nu se poate căuta"
         field_types:
-          text: "Câmp text"
+          text: "Text"
           confirm: "Confirmare"
           dropdown: "Meniu derulant"
       site_text:
@@ -4464,7 +4486,7 @@ ro:
         go_back: "Înapoi la căutare"
         recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
-        only_show_selected_locale: "Afișează rezultatele doar în locala selectată"
+        only_show_selected_locale: "Afișează rezultatele numai în limba selectată"
         outdated:
           dismiss: "Renunță"
       settings:
@@ -4600,6 +4622,7 @@ ro:
         description: "Adaugă emoji noi care vor fi disponibile pentru toată lumea. Selectează mai multe fișiere pentru a crea emoji-uri folosind numele acestora. Grupul selectat va fi folosit pentru toate fișierele care sunt adăugate în același timp."
         no_emoji: "Încă nu ai niciun emoji personalizat."
         add: "Adaugă emoji"
+        delete: "Șterge"
         back: "Înapoi la emoji"
         choose_files: "Alege fișiere"
         name: "Nume"

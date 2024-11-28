@@ -126,8 +126,6 @@ class ListController < ApplicationController
   end
 
   def filter
-    raise Discourse::NotFound if !SiteSetting.experimental_topics_filter
-
     topic_query_opts = { no_definitions: !SiteSetting.show_category_definitions_in_topic_lists }
 
     %i[page q].each do |key|

@@ -54,12 +54,6 @@ export default class SignupPageController extends Controller.extend(
     }
 
     this.fetchConfirmationValue();
-
-    if (this.skipConfirmation) {
-      this.performAccountCreation().finally(() =>
-        this.set("skipConfirmation", false)
-      );
-    }
   }
 
   @bind
@@ -129,6 +123,58 @@ export default class SignupPageController extends Controller.extend(
   @discourseComputed
   fullnameRequired() {
     return this.siteSettings.full_name_required;
+  }
+
+  @discourseComputed(
+    "emailValidation.ok",
+    "emailValidation.reason",
+    "emailValidationVisible"
+  )
+  showEmailValidation(
+    emailValidationOk,
+    emailValidationReason,
+    emailValidationVisible
+  ) {
+    return (
+      emailValidationOk || (emailValidationReason && emailValidationVisible)
+    );
+  }
+
+  @discourseComputed
+  emailInstructions() {
+    return (
+      this.siteSettings.signup_form_email_instructions ||
+      i18n("user.email.instructions")
+    );
+  }
+
+  @discourseComputed(
+    "passwordValidation.ok",
+    "passwordValidation.reason",
+    "passwordValidationVisible"
+  )
+  showPasswordValidation(
+    passwordValidationOk,
+    passwordValidationReason,
+    passwordValidationVisible
+  ) {
+    return (
+      passwordValidationOk ||
+      (passwordValidationReason && passwordValidationVisible)
+    );
+  }
+
+  @discourseComputed
+  passwordInstructions() {
+    return this.siteSettings.signup_form_password_instructions;
+  }
+
+  @discourseComputed("usernameValidation.reason")
+  showUsernameInstructions(usernameValidationReason) {
+    return (
+      this.siteSettings.signup_form_username_instructions &&
+      !usernameValidationReason
+    );
   }
 
   @discourseComputed("authOptions.auth_provider")
@@ -210,7 +256,7 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
-  showPasswordValidation() {
+  togglePasswordValidation() {
     if (this.passwordValidation.reason) {
       this.set("passwordValidationVisible", true);
     } else {
@@ -340,6 +386,14 @@ export default class SignupPageController extends Controller.extend(
       .finally(() => (this._hpPromise = undefined));
 
     return this._hpPromise;
+  }
+
+  handleSkipConfirmation() {
+    if (this.skipConfirmation) {
+      this.performAccountCreation().finally(() =>
+        this.set("skipConfirmation", false)
+      );
+    }
   }
 
   performAccountCreation() {

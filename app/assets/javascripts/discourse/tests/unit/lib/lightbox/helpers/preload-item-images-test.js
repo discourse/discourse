@@ -8,7 +8,6 @@ import { cloneJSON } from "discourse-common/lib/object";
 
 module(
   "Unit | lib | Experimental Lightbox | Helpers | preloadItemImages()",
-
   function () {
     const baseLightboxItem = generateLightboxObject().items[0];
 
@@ -17,9 +16,9 @@ module(
 
       const result = await preloadItemImages(lightboxItem);
 
-      assert.ok(result.isLoaded, "isLoaded should be true");
+      assert.true(result.isLoaded, "isLoaded should be true");
 
-      assert.ok(!result.hasLoadingError, "hasLoadingError should be false");
+      assert.false(result.hasLoadingError, "hasLoadingError should be false");
 
       assert.strictEqual(
         result.width,
@@ -39,7 +38,7 @@ module(
         "aspectRatio should be equal to image width/height"
       );
 
-      assert.ok(
+      assert.true(
         result.canZoom,
         "canZoom should be true if fullsizeImage width or height is greater than window inner width or height"
       );
@@ -53,9 +52,8 @@ module(
 
       const result = await preloadItemImages(lightboxItem);
 
-      assert.strictEqual(
+      assert.true(
         result.hasLoadingError,
-        true,
         "sets hasLoadingError to true if there is an error"
       );
     });

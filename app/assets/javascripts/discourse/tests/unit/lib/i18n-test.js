@@ -117,9 +117,9 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.strictEqual(
       I18n.defaultLocale,
       "en",
-      "it has English as default locale"
+      "has English as default locale"
     );
-    assert.ok(I18n.pluralizationRules["en"], "it has English pluralizer");
+    assert.true(!!I18n.pluralizationRules["en"], "has English pluralizer");
   });
 
   test("translations", function (assert) {
@@ -185,19 +185,19 @@ module("Unit | Utility | i18n", function (hooks) {
     assert.strictEqual(
       i18n("admin.dashboard.title"),
       "Raporty",
-      "it uses extra translations when they exists"
+      "uses extra translations when they exists"
     );
 
     assert.strictEqual(
       i18n("admin.web_hooks.events.incoming", { count: 2 }),
       "Istnieją 2 nowe wydarzenia.",
-      "it uses pluralized extra translation when it exists"
+      "uses pluralized extra translation when it exists"
     );
 
     assert.strictEqual(
       i18n("admin.dashboard.backup_count", { count: 2 }),
       "2 backups",
-      "it falls back to English and uses extra translations when they exists"
+      "falls back to English and uses extra translations when they exists"
     );
   });
 
@@ -360,11 +360,11 @@ module("Unit | Utility | i18n", function (hooks) {
   });
 
   test("messageFormat", function (assert) {
-    assert.ok(
-      I18n.messageFormat("posts_likes_MF", { count: 2, ratio: "high" }).match(
-        /2 replies/
+    assert.true(
+      /2 replies/.test(
+        I18n.messageFormat("posts_likes_MF", { count: 2, ratio: "high" })
       ),
-      "It works properly"
+      "works properly"
     );
     I18n._mfMessages = null;
     assert.strictEqual(

@@ -811,15 +811,6 @@
     .loading-container {
       width: 100%;
     }
-    .destination {
-      margin-top: 0.5em;
-    }
-    .d-admin-row__controls-options {
-      padding-bottom: 1em;
-    }
-    td {
-      width: auto;
-    }
   }
   .permalink-search input {
     width: 100%;
@@ -832,25 +823,6 @@
     color: var(--danger);
     svg {
       color: var(--danger);
-    }
-  }
-}
-
-table.permalinks {
-  @include breakpoint(tablet, min-width) {
-    td.url,
-    th.url {
-      width: 33%;
-    }
-
-    th.destination,
-    td.destination {
-      width: 60%;
-    }
-  }
-  @include breakpoint(tablet) {
-    td.url .btn-flat {
-      display: none;
     }
   }
 }

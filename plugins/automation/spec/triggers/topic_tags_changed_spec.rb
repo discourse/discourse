@@ -82,6 +82,66 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     end
   end
 
+  context "when watching a few cool tags" do
+    fab!(:cool_tag_2) { Fabricate(:tag) }
+    fab!(:cool_tag_3) { Fabricate(:tag) }
+
+    before do
+      automation.upsert_field!(
+        "watching_tags",
+        "tags",
+        { value: [cool_tag.name, cool_tag_2.name, cool_tag_3.name] },
+        target: "trigger",
+      )
+      automation.reload
+    end
+
+    it "should fire the trigger if any tag is added" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should fire the trigger if any tag is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should not fire if the tag is not present" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [bad_tag.name])
+        end
+
+      expect(list.length).to eq(0)
+    end
+
+    it "should fire the trigger if a tag is add and one is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag_2.name])
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+  end
+
   context "when watching a category" do
     before do
       automation.upsert_field!(
@@ -108,6 +168,55 @@ describe DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED do
     end
 
     it "should fire the trigger if the tag is removed" do
+      topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
+
+      list =
+        capture_contexts { DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), []) }
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should not fire if not the watching category" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: Fabricate(:category))
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [cool_tag.name])
+        end
+
+      expect(list.length).to eq(0)
+    end
+  end
+
+  context "when watching a few categories" do
+    fab!(:category_2) { Fabricate(:category) }
+    fab!(:category_3) { Fabricate(:category) }
+
+    before do
+      automation.upsert_field!(
+        "watching_categories",
+        "categories",
+        { value: [category.id, category_2.id, category_3.id] },
+        target: "trigger",
+      )
+      automation.reload
+    end
+
+    it "should fire the trigger if any tag is added" do
+      topic_0 = Fabricate(:topic, user: user, tags: [], category: category)
+      topic_1 = Fabricate(:topic, user: user, tags: [], category: category_2)
+
+      list =
+        capture_contexts do
+          DiscourseTagging.tag_topic_by_names(topic_0, Guardian.new(user), [bad_tag.name])
+          DiscourseTagging.tag_topic_by_names(topic_1, Guardian.new(user), [bad_tag.name])
+        end
+
+      expect(list.length).to eq(2)
+      expect(list[0]["kind"]).to eq(DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED)
+    end
+
+    it "should fire the trigger if any tag is removed" do
       topic_0 = Fabricate(:topic, user: user, tags: [cool_tag], category: category)
 
       list =

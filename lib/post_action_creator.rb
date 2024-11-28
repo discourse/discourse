@@ -388,6 +388,7 @@ class PostActionCreator
         topic: @post.topic,
         reviewable_by_moderator: true,
         potential_spam: @post_action_type_id == @post_action_type_view.types[:spam],
+        potentially_illegal: @post_action_type_id == @post_action_type_view.types[:illegal],
         payload: {
           targets_topic: @targets_topic,
         },

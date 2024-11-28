@@ -656,10 +656,10 @@ de:
         chat_message: "Neue Chat-Nachricht"
         chat_quoted: "%{username} hat deine Chat-Nachricht zitiert"
       titles:
-        chat_mention: "Chat-Erwähnung"
-        chat_invitation: "Chat-Einladung"
-        chat_quoted: "Chat zitiert"
-        chat_watched_thread: "Im Chat beobachteter Thread"
+        chat_mention: "Im Chat erwähnt"
+        chat_invitation: "Zum Chat-Kanal eingeladen"
+        chat_quoted: "Chat-Nachricht zitiert"
+        chat_watched_thread: "Beobachteter Chat-Thread"
     action_codes:
       chat:
         enabled: '%{who} hat <button class="btn-link open-chat">Chat</button> aktiviert %{when}'

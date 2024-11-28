@@ -6,7 +6,7 @@ import element from "discourse/helpers/element";
 import number from "discourse/helpers/number";
 import I18n from "discourse-i18n";
 
-export default class PostsCountColumn extends Component {
+export default class RepliesCell extends Component {
   @service siteSettings;
 
   get ratio() {

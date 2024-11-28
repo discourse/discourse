@@ -23,7 +23,7 @@ export default {
       if (pluginMatch || themeIdMatch) {
         const source = {
           type: pluginMatch ? "plugin" : "theme",
-          name: pluginMatch || getThemeInfo(parseInt(themeIdMatch, 10)),
+          name: pluginMatch || getThemeInfo(parseInt(themeIdMatch, 10)).name,
           id: themeIdMatch,
         };
         options.source = source;
