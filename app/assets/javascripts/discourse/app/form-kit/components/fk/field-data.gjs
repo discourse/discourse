@@ -69,10 +69,12 @@ export default class FKFieldData extends Component {
     if (this.args.onSet) {
       await this.args.onSet(value, {
         set: this.args.set,
-        index: this.collectionIndex,
+        index: this.args.collectionIndex,
       });
     } else {
-      await this.args.set(this.name, value, { index: this.collectionIndex });
+      await this.args.set(this.name, value, {
+        index: this.args.collectionIndex,
+      });
     }
 
     this.args.triggerRevalidationFor(this.name);
@@ -118,14 +120,6 @@ export default class FKFieldData extends Component {
    */
   get showTitle() {
     return this.args.showTitle ?? true;
-  }
-
-  /**
-   * Index of the field in a collection, if applicable.
-   * @type {number|null}
-   */
-  get collectionIndex() {
-    return this.args.collectionIndex;
   }
 
   /**
@@ -229,8 +223,8 @@ export default class FKFieldData extends Component {
     const validationErrors = await validator.validate(this.type);
     validationErrors.forEach((message) => {
       let title = this.title;
-      if (this.collectionIndex !== undefined) {
-        title += ` #${this.collectionIndex + 1}`;
+      if (this.args.collectionIndex !== undefined) {
+        title += ` #${this.args.collectionIndex + 1}`;
       }
 
       this.addError(name, { title, message });
