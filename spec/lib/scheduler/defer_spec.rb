@@ -22,6 +22,12 @@ RSpec.describe Scheduler::Defer do
     Discourse.reset_catch_job_exceptions!
   end
 
+  it "can finish work properly without crashing" do
+    @defer.later {}
+    sleep 0.005
+    @defer.stop!(finish_work: true)
+  end
+
   it "supports basic instrumentation" do
     @defer.later("first") {}
     @defer.later("first") {}
