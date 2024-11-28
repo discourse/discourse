@@ -4,11 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import { getHashtagTypeClasses as getHashtagTypeClassesNew } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
-import {
-  caretPosition,
-  escapeExpression,
-  inCodeBlock,
-} from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
@@ -50,8 +46,8 @@ export function setupHashtagAutocomplete(
   );
 }
 
-export async function hashtagTriggerRule(textarea) {
-  return !(await inCodeBlock(textarea.value, caretPosition(textarea)));
+export async function hashtagTriggerRule(textaream, { inCodeBlock }) {
+  return !(await inCodeBlock());
 }
 
 export function hashtagAutocompleteOptions(
@@ -62,8 +58,6 @@ export function hashtagAutocompleteOptions(
   return {
     template: findRawTemplate("hashtag-autocomplete"),
     key: "#",
-    afterComplete: autocompleteOptions.afterComplete,
-    treatAsTextarea: autocompleteOptions.treatAsTextarea,
     scrollElementSelector: ".hashtag-autocomplete__fadeout",
     autoSelectFirstSuggestion: true,
     transformComplete: (obj) => obj.ref,
@@ -75,6 +69,7 @@ export function hashtagAutocompleteOptions(
     },
     triggerRule: async (textarea, opts) =>
       await hashtagTriggerRule(textarea, opts),
+    ...autocompleteOptions,
   };
 }
 

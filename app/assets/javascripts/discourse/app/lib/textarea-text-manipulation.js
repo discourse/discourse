@@ -12,6 +12,7 @@ import {
   clipboardHelpers,
   determinePostReplaceSelection,
   inCodeBlock,
+  setCaretPosition,
 } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
@@ -66,6 +67,11 @@ export default class TextareaTextManipulation {
 
   get value() {
     return this.textarea.value;
+  }
+
+  set value(value) {
+    this.textarea.value = value;
+    this.textarea.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   // ensures textarea scroll position is correct
@@ -825,7 +831,31 @@ export default class TextareaTextManipulation {
     putCursorAtEnd(this.textarea);
   }
 
-  autocomplete() {
-    return this.$textarea.autocomplete(...arguments);
+  autocomplete(options) {
+    return this.$textarea.autocomplete(
+      options instanceof Object
+        ? { textManipulation: this, ...options }
+        : options
+    );
+  }
+
+  replaceTerm({ start, end, term }) {
+    let text = this.value;
+    const space = text.substring(end + 1, end + 2) === " " ? "" : " ";
+    text =
+      text.substring(0, start) +
+      term +
+      space +
+      text.substring(end + 1, text.length);
+    this.value = text;
+    setCaretPosition(this.textarea, start + 1 + term.trim().length);
+  }
+
+  getCaretPosition() {
+    return caretPosition(this.textarea);
+  }
+
+  getCaretCoords(start) {
+    return this.$textarea.caretPosition({ pos: start + 1 });
   }
 }
