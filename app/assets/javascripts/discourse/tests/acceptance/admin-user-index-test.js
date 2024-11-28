@@ -6,7 +6,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("Admin - User Index", function (needs) {
   needs.user();
@@ -129,11 +129,7 @@ acceptance("Admin - User Index", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -270,7 +266,7 @@ acceptance("Admin - User Index", function (needs) {
   test("grant admin - redirects to the 2fa page", async function (assert) {
     await visit("/admin/users/4/user2");
     await click(".grant-admin");
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/session/2fa?nonce=some-nonce",
       "user is redirected to the 2FA page"
@@ -293,11 +289,9 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/5/user5");
     await click(".btn-user-delete");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      i18n("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-primary");
 
@@ -309,6 +303,6 @@ acceptance("Admin - User Index", function (needs) {
     await click(".btn-user-delete");
     await click(".dialog-footer .btn-danger");
 
-    assert.ok(deleteAndBlock, "user does not get blocked");
+    assert.true(deleteAndBlock, "user does not get blocked");
   });
 });

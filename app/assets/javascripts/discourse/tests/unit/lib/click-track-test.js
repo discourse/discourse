@@ -26,7 +26,7 @@ function testOpenInANewTab(description, clickEventModifier) {
     const clickEvent = generateClickEventOn("a");
     clickEventModifier(clickEvent);
     assert.true(track(clickEvent));
-    assert.strictEqual(clickEvent.defaultPrevented, false);
+    assert.false(clickEvent.defaultPrevented);
   });
 }
 

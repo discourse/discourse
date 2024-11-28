@@ -3,7 +3,6 @@ import { test } from "qunit";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -58,25 +57,25 @@ acceptance("User Status", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.equal(
-      query(
-        "div.quick-access-panel li.set-user-status span.item-label"
-      ).textContent.trim(),
-      userStatus,
-      "shows user status description on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status span.item-label")
+      .hasText(userStatus, "shows user status description on the menu");
 
-    assert.equal(
-      query("div.quick-access-panel li.set-user-status img.emoji").alt,
-      `${userStatusEmoji}`,
-      "shows user status emoji on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status img.emoji")
+      .hasAttribute(
+        "alt",
+        `${userStatusEmoji}`,
+        "shows user status emoji on the menu"
+      );
 
-    assert.equal(
-      query(".header-dropdown-toggle .user-status-background img.emoji").alt,
-      `:${userStatusEmoji}:`,
-      "shows user status emoji on the user avatar in the header"
-    );
+    assert
+      .dom(".header-dropdown-toggle .user-status-background img.emoji")
+      .hasAttribute(
+        "alt",
+        `:${userStatusEmoji}:`,
+        "shows user status emoji on the user avatar in the header"
+      );
   });
 
   test("shows user status on the user status modal", async function (assert) {
@@ -96,21 +95,15 @@ acceptance("User Status", function (needs) {
     assert
       .dom(".btn-emoji img.emoji")
       .hasAttribute("title", userStatusEmoji, "status emoji is shown");
-    assert.equal(
-      query(".user-status-description").value,
-      userStatus,
-      "status description is shown"
-    );
-    assert.equal(
-      query(".date-picker").value,
-      "2100-02-01",
-      "date of auto removing of status is shown"
-    );
-    assert.equal(
-      query(".time-input").value,
-      "09:35",
-      "time of auto removing of status is shown"
-    );
+    assert
+      .dom(".user-status-description")
+      .hasValue(userStatus, "status description is shown");
+    assert
+      .dom(".date-picker")
+      .hasValue("2100-02-01", "date of auto removing of status is shown");
+    assert
+      .dom(".time-input")
+      .hasValue("09:35", "time of auto removing of status is shown");
   });
 
   test("emoji picking", async function (assert) {
@@ -144,27 +137,27 @@ acceptance("User Status", function (needs) {
       .exists("chosen status emoji is shown");
     await click(".btn-primary"); // save
 
-    assert.equal(
-      query(".header-dropdown-toggle .user-status-background img.emoji").alt,
-      `:${userStatusEmoji}:`,
-      "shows user status emoji on the user avatar in the header"
-    );
+    assert
+      .dom(".header-dropdown-toggle .user-status-background img.emoji")
+      .hasAttribute(
+        "alt",
+        `:${userStatusEmoji}:`,
+        "shows user status emoji on the user avatar in the header"
+      );
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
-    assert.equal(
-      query(
-        "div.quick-access-panel li.set-user-status span.item-label"
-      ).textContent.trim(),
-      userStatus,
-      "shows user status description on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status span.item-label")
+      .hasText(userStatus, "shows user status description on the menu");
 
-    assert.equal(
-      query("div.quick-access-panel li.set-user-status img.emoji").alt,
-      `${userStatusEmoji}`,
-      "shows user status emoji on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status img.emoji")
+      .hasAttribute(
+        "alt",
+        `${userStatusEmoji}`,
+        "shows user status emoji on the menu"
+      );
   });
 
   test("updating user status", async function (assert) {
@@ -181,18 +174,16 @@ acceptance("User Status", function (needs) {
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
-    assert.equal(
-      query(
-        "div.quick-access-panel li.set-user-status span.item-label"
-      ).textContent.trim(),
-      updatedStatus,
-      "shows user status description on the menu"
-    );
-    assert.equal(
-      query("div.quick-access-panel li.set-user-status img.emoji").alt,
-      `${userStatusEmoji}`,
-      "shows user status emoji on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status span.item-label")
+      .hasText(updatedStatus, "shows user status description on the menu");
+    assert
+      .dom("div.quick-access-panel li.set-user-status img.emoji")
+      .hasAttribute(
+        "alt",
+        `${userStatusEmoji}`,
+        "shows user status emoji on the menu"
+      );
   });
 
   test("clearing user status", async function (assert) {
@@ -230,13 +221,9 @@ acceptance("User Status", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.equal(
-      query(
-        "div.quick-access-panel li.set-user-status span.relative-date"
-      ).textContent.trim(),
-      "1h",
-      "shows user status timer on the menu"
-    );
+    assert
+      .dom("div.quick-access-panel li.set-user-status span.relative-date")
+      .hasText("1h", "shows user status timer on the menu");
   });
 
   test("it's impossible to set status without description", async function (assert) {
@@ -283,11 +270,9 @@ acceptance("User Status", function (needs) {
         userStatusEmoji,
         "the actual status emoji is shown"
       );
-    assert.equal(
-      query(".user-status-description").value,
-      userStatus,
-      "the actual status description is shown"
-    );
+    assert
+      .dom(".user-status-description")
+      .hasValue(userStatus, "the actual status description is shown");
   });
 
   test("shows the trash button when editing status that was set before", async function (assert) {
@@ -323,11 +308,9 @@ acceptance("User Status", function (needs) {
     await openUserStatusModal();
 
     assert.dom(".d-icon-discourse-emojis").exists("empty status icon is shown");
-    assert.equal(
-      query(".user-status-description").value,
-      "",
-      "no status description is shown"
-    );
+    assert
+      .dom(".user-status-description")
+      .hasValue("", "no status description is shown");
   });
 });
 
@@ -511,23 +494,25 @@ acceptance("User Status - user menu", function (needs) {
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
 
-    assert.equal(
-      query("li.set-user-status .item-label").textContent.trim(),
-      userStatus,
-      "shows user status description on the menu"
-    );
+    assert
+      .dom("li.set-user-status .item-label")
+      .hasText(userStatus, "shows user status description on the menu");
 
-    assert.equal(
-      query("li.set-user-status .emoji").alt,
-      `${userStatusEmoji}`,
-      "shows user status emoji on the menu"
-    );
+    assert
+      .dom("li.set-user-status .emoji")
+      .hasAttribute(
+        "alt",
+        `${userStatusEmoji}`,
+        "shows user status emoji on the menu"
+      );
 
-    assert.equal(
-      query(".header-dropdown-toggle .user-status-background img.emoji").alt,
-      `:${userStatusEmoji}:`,
-      "shows user status emoji on the user avatar in the header"
-    );
+    assert
+      .dom(".header-dropdown-toggle .user-status-background img.emoji")
+      .hasAttribute(
+        "alt",
+        `:${userStatusEmoji}:`,
+        "shows user status emoji on the user avatar in the header"
+      );
   });
 
   test("user menu gets closed when the user status modal is opened", async function (assert) {

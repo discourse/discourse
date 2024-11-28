@@ -125,6 +125,58 @@ export default class SignupPageController extends Controller.extend(
     return this.siteSettings.full_name_required;
   }
 
+  @discourseComputed(
+    "emailValidation.ok",
+    "emailValidation.reason",
+    "emailValidationVisible"
+  )
+  showEmailValidation(
+    emailValidationOk,
+    emailValidationReason,
+    emailValidationVisible
+  ) {
+    return (
+      emailValidationOk || (emailValidationReason && emailValidationVisible)
+    );
+  }
+
+  @discourseComputed
+  emailInstructions() {
+    return (
+      this.siteSettings.signup_form_email_instructions ||
+      i18n("user.email.instructions")
+    );
+  }
+
+  @discourseComputed(
+    "passwordValidation.ok",
+    "passwordValidation.reason",
+    "passwordValidationVisible"
+  )
+  showPasswordValidation(
+    passwordValidationOk,
+    passwordValidationReason,
+    passwordValidationVisible
+  ) {
+    return (
+      passwordValidationOk ||
+      (passwordValidationReason && passwordValidationVisible)
+    );
+  }
+
+  @discourseComputed
+  passwordInstructions() {
+    return this.siteSettings.signup_form_password_instructions;
+  }
+
+  @discourseComputed("usernameValidation.reason")
+  showUsernameInstructions(usernameValidationReason) {
+    return (
+      this.siteSettings.signup_form_username_instructions &&
+      !usernameValidationReason
+    );
+  }
+
   @discourseComputed("authOptions.auth_provider")
   passwordRequired(authProvider) {
     return isEmpty(authProvider);
@@ -204,7 +256,7 @@ export default class SignupPageController extends Controller.extend(
   }
 
   @action
-  showPasswordValidation() {
+  togglePasswordValidation() {
     if (this.passwordValidation.reason) {
       this.set("passwordValidationVisible", true);
     } else {

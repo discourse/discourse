@@ -1288,7 +1288,7 @@ module(
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 4);
-      assert.ok(tree.nodes[2].active);
+      assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });

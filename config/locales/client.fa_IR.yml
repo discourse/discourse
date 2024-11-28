@@ -1519,7 +1519,6 @@ fa_IR:
                 one {# روز}
               other {# روز}
             } دیگر منقضی می‌شود.
-          edit_link_options: "گزینه‌های پیوند را ویرایش کنید."
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
           restrict: "محدود کردن به"
@@ -3905,6 +3904,9 @@ fa_IR:
         look_and_feel:
           themes:
             title: "قالب‌ها"
+        user_fields:
+          type: "نوع"
+          delete: "حذف"
       plugins:
         title: "افزونه‌ها"
         name: "نام"
@@ -4439,6 +4441,11 @@ fa_IR:
         status: "وضعیت"
         show_emails: "ایمیل ها را نشان بده"
         hide_emails: "مخفی کردن رایانامه‌ها"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "بستن"
+              confirm: "حذف"
         nav:
           new: "جدید"
           active: "فعال"
@@ -4614,8 +4621,6 @@ fa_IR:
           external_avatar_url: "نشانی اینترنتی تصویر پروفایل"
       user_fields:
         title: "زمینه‌های کاربر"
-        help: "زمینه‌هایی را که کاربرانتان می‌توانند پر کنند اضافه کنید."
-        create: "ساخت زمینه برای کاربر"
         untitled: "بدون عنوان"
         name: "نام زمینه"
         type: "نوع زمینه"
@@ -4635,20 +4640,8 @@ fa_IR:
             title: "اختیاری"
           on_signup:
             title: "هنگام ثبت‌نام"
-        editable:
-          enabled: "قابل ویرایش"
-          disabled: "غیر قابل ویرایش"
-        show_on_profile:
-          enabled: "نمایش در نمایه"
-          disabled: "در نمایه نشان ندهد"
-        show_on_user_card:
-          enabled: "در کارت کاربر نمایش داده شده"
-          disabled: "در کارت کاربر نمایش داده نشده"
-        searchable:
-          enabled: "قابل جستجو"
-          disabled: "قابل جستجو نیست"
         field_types:
-          text: "زمینه متنی"
+          text: "متن"
           confirm: "تاییدیه"
           dropdown: "کرکره‌ای"
       site_text:
@@ -4794,6 +4787,7 @@ fa_IR:
             with_time: <span class="username">%{username}</span> در <span class="time">%{time}</span>
       emoji:
         title: "شکلک"
+        delete: "حذف"
         uploading: "در حال بارگذاری…"
         name: "نام"
         group: "گروه"

@@ -3451,6 +3451,9 @@ bs_BA:
         look_and_feel:
           themes:
             title: "Teme"
+        user_fields:
+          type: "Tip"
+          delete: "Delete"
       plugins:
         title: "Pluginovi"
         name: "Ime"
@@ -4045,6 +4048,11 @@ bs_BA:
         status: "Status"
         show_emails: "Prikaži e-mailove"
         hide_emails: "Hide Emails"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Delete"
         nav:
           new: "Novi"
           active: "Active"
@@ -4242,8 +4250,6 @@ bs_BA:
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "User Fields"
-        help: "Add fields that your users can fill out."
-        create: "Create User Field"
         untitled: "Untitled"
         name: "Field Name"
         type: "Field Type"
@@ -4264,18 +4270,12 @@ bs_BA:
             title: "Opciono"
         editable:
           title: "Editable after signup"
-          enabled: "editable"
-          disabled: "not editable"
         show_on_profile:
           title: "Prikaži na javnom profilu"
-          enabled: "prikazano na profilu"
-          disabled: "nije prikazano na profilu"
         show_on_user_card:
           title: "Prikaži na korisničkoj kartici"
-          enabled: "prikazano na korisničkoj kartici"
-          disabled: "nije prikazano na korisničkoj kartici"
         field_types:
-          text: "Text"
+          text: "Poruka"
           confirm: "Confirmation"
           dropdown: "Ispustiti"
       site_text:
@@ -4419,6 +4419,7 @@ bs_BA:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Delete"
         name: "Ime"
         group: "Grupa"
         image: "Slika"

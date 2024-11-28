@@ -69,6 +69,6 @@ acceptance("Topic - Admin Menu", function (needs) {
       .dom(".extra-button .d-button-label")
       .hasText(i18n("yes_value"), "The label was rendered");
     await click(".extra-button");
-    assert.ok(this.actionCalled, "The action was called");
+    assert.true(this.actionCalled, "The action was called");
   });
 });

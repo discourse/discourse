@@ -436,8 +436,8 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       // after uploading we have this in the textarea:
       // "The image:\n![avatar.PNG|690x320](upload://yoj8pf9DdIeHRRULyw7i57GAYdz.jpeg)\ntext after image"
       // cursor should be just before "text after image":
-      assert.equal(input.selectionStart, 76);
-      assert.equal(input.selectionEnd, 76);
+      assert.strictEqual(input.selectionStart, 76);
+      assert.strictEqual(input.selectionEnd, 76);
       done();
     });
 
@@ -471,11 +471,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       "||a|b|\n|---|---|---|\n|1|2|3|\n",
       "only the plain text table is pasted"
     );
-    assert.strictEqual(
-      uppyEventFired,
-      false,
-      "uppy does not start uploading the file"
-    );
+    assert.false(uppyEventFired, "uppy does not start uploading the file");
     done();
   });
 });

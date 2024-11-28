@@ -863,7 +863,7 @@ class Theme < ActiveRecord::Base
   end
 
   def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
-    block = -> do
+    block = ->(*) do
       runner = ThemeSettingsMigrationsRunner.new(self)
       results =
         runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)

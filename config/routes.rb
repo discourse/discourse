@@ -1215,6 +1215,7 @@ Discourse::Application.routes.draw do
 
     get "categories_and_latest" => "categories#categories_and_latest"
     get "categories_and_top" => "categories#categories_and_top"
+    get "categories_and_hot" => "categories#categories_and_hot"
 
     get "c/:id/show" => "categories#show"
     get "c/:id/visible_groups" => "categories#visible_groups"

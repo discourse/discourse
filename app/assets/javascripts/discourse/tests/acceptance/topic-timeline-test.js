@@ -332,21 +332,21 @@ acceptance("Glimmer Topic Timeline", function (needs) {
     });
   });
 
-  test("it has a topic admin menu", async function (assert) {
+  test("has a topic admin menu", async function (assert) {
     await visit("/t/internationalization-localization");
     assert
       .dom(".timeline-controls .topic-admin-menu-button")
       .exists("admin menu is present");
   });
 
-  test("it has a reply-to-post button", async function (assert) {
+  test("has a reply-to-post button", async function (assert) {
     await visit("/t/internationalization-localization");
     assert
       .dom(".timeline-footer-controls .reply-to-post")
       .exists("reply to post button is present");
   });
 
-  test("it has a topic notification button", async function (assert) {
+  test("has a topic notification button", async function (assert) {
     await visit("/t/internationalization-localization");
     assert
       .dom(".timeline-footer-controls .topic-notifications-button")
@@ -381,7 +381,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
   test("clicking the timeline padding updates the position", async function (assert) {
     await visit("/t/internationalization-localization/280/2");
     await click(".timeline-scrollarea .timeline-padding");
-    assert.notOk(
+    assert.false(
       currentURL().includes("/280/2"),
       "The position of the currently viewed post has been updated from it's initial position"
     );

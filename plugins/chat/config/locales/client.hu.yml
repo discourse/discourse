@@ -602,11 +602,6 @@ hu:
           other_html: "<span>%{username}</span> <span>megemlítette %{identifier} felhasználót egy személyes csevegésben</span>"
         chat_message: "Új csevegőüzenet"
         chat_quoted: "%{username} idézte a csevegési üzenetet"
-      titles:
-        chat_mention: "Csevegési megemlítés"
-        chat_invitation: "Csevegési meghívó"
-        chat_quoted: "Csevegés idézve"
-        chat_watched_thread: "Figyelt csevegés téma"
     action_codes:
       chat:
         enabled: '%{who} engedélyezte a <button class="btn-link open-chat">csevegést</button> %{when}'

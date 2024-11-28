@@ -57,25 +57,27 @@ acceptance("User Directory", function () {
 
     await visit("/u");
 
-    const firstRowUserField = query(
-      ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field"
-    );
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .exists("User field is displayed as a link");
 
-    const userFieldLink = firstRowUserField.querySelector("a");
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .hasAttribute(
+        "href",
+        "/u?name=Blue&order=likes_received",
+        "The link points to the correct URL"
+      );
 
-    assert.ok(userFieldLink, "User field is displayed as a link");
-
-    assert.strictEqual(
-      userFieldLink.getAttribute("href"),
-      "/u?name=Blue&order=likes_received",
-      "The link points to the correct URL"
-    );
-
-    assert.strictEqual(
-      userFieldLink.textContent.trim(),
-      "Blue",
-      "Link text is correct"
-    );
+    assert
+      .dom(
+        ".directory .directory-table__body .directory-table__row:first-child .directory-table__value--user-field a"
+      )
+      .hasText("Blue", "Link text is correct");
   });
 
   test("Visit With Group Filter", async function (assert) {
@@ -104,10 +106,9 @@ acceptance("User Directory", function () {
 
     await triggerKeyEvent(secondHeading, "keypress", "Enter");
 
-    assert.ok(
-      query(`${secondHeading} .d-icon-chevron-up`),
-      "list has been sorted"
-    );
+    assert
+      .dom(`${secondHeading} .d-icon-chevron-up`)
+      .exists("list has been sorted");
   });
 
   test("Visit with no users", async function (assert) {

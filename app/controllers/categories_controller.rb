@@ -7,6 +7,7 @@ class CategoriesController < ApplicationController
                    index
                    categories_and_latest
                    categories_and_top
+                   categories_and_hot
                    show
                    redirect
                    find_by_slug
@@ -17,7 +18,14 @@ class CategoriesController < ApplicationController
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
   before_action :initialize_staff_action_logger, only: %i[create update destroy]
-  skip_before_action :check_xhr, only: %i[index categories_and_latest categories_and_top redirect]
+  skip_before_action :check_xhr,
+                     only: %i[
+                       index
+                       categories_and_latest
+                       categories_and_top
+                       categories_and_hot
+                       redirect
+                     ]
   skip_before_action :verify_authenticity_token, only: %i[search]
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
@@ -72,6 +80,10 @@ class CategoriesController < ApplicationController
 
   def categories_and_top
     categories_and_topics(:top)
+  end
+
+  def categories_and_hot
+    categories_and_topics(:hot)
   end
 
   def move
@@ -650,6 +662,9 @@ class CategoriesController < ApplicationController
           SiteSetting.top_page_default_timeframe.to_sym,
         )
       @topic_list.more_topics_url = url_for(top_path)
+    when "categories_and_hot_topics"
+      @topic_list = TopicQuery.new(current_user, topic_options).list_hot
+      @topic_list.more_topics_url = url_for(hot_path)
     end
 
     @topic_list

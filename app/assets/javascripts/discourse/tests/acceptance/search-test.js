@@ -62,9 +62,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
 
     assert.dom("#search-term").exists("shows the search input");
-    assert
-      .dom(".show-advanced-search")
-      .exists("it shows full page search button");
+    assert.dom(".show-advanced-search").exists("shows full page search button");
   });
 
   test("random quick tips", async function (assert) {
@@ -88,7 +86,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(".full-page-search").value,
       "dev",
-      "it goes to full search page and preserves the search term"
+      "goes to full search page and preserves the search term"
     );
 
     assert
@@ -273,7 +271,7 @@ acceptance("Search - Anonymous", function (needs) {
     assert.strictEqual(
       query(".full-page-search").value,
       "proper topic:280",
-      "it goes to full search page and preserves search term + context"
+      "goes to full search page and preserves search term + context"
     );
 
     assert
@@ -499,16 +497,16 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/search?expanded=true");
     await inSelector.expand();
 
-    assert.ok(inSelector.rowByValue("first").exists());
-    assert.ok(inSelector.rowByValue("pinned").exists());
-    assert.ok(inSelector.rowByValue("wiki").exists());
-    assert.ok(inSelector.rowByValue("images").exists());
+    assert.true(inSelector.rowByValue("first").exists());
+    assert.true(inSelector.rowByValue("pinned").exists());
+    assert.true(inSelector.rowByValue("wiki").exists());
+    assert.true(inSelector.rowByValue("images").exists());
 
-    assert.ok(inSelector.rowByValue("unseen").exists());
-    assert.ok(inSelector.rowByValue("posted").exists());
-    assert.ok(inSelector.rowByValue("watching").exists());
-    assert.ok(inSelector.rowByValue("tracking").exists());
-    assert.ok(inSelector.rowByValue("bookmarks").exists());
+    assert.true(inSelector.rowByValue("unseen").exists());
+    assert.true(inSelector.rowByValue("posted").exists());
+    assert.true(inSelector.rowByValue("watching").exists());
+    assert.true(inSelector.rowByValue("tracking").exists());
+    assert.true(inSelector.rowByValue("bookmarks").exists());
 
     assert.dom(".search-advanced-options .in-likes").exists();
     assert.dom(".search-advanced-options .in-private").exists();
@@ -649,12 +647,12 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", 65); // maps to lowercase a
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes("a link"),
       "still has the original composer content"
     );
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(
         searchFixtures["search/query"].topics[0].slug
       ),
@@ -1235,7 +1233,7 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
     assert
       .dom(".btn.search-context")
-      .exists("it shows the button when reinvoking search");
+      .exists("shows the button when reinvoking search");
 
     await fillIn("#search-term", "emoji");
     await query("input#search-term").focus();

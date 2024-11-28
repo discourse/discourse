@@ -248,6 +248,9 @@ body.signup-page {
   .create-account__password-info {
     display: flex;
     justify-content: space-between;
+    .create-account__password-tip-validation {
+      display: flex;
+    }
   }
 
   .inline-spinner {

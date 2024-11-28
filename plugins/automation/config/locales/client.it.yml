@@ -151,8 +151,8 @@ it:
         post_created_edited:
           fields:
             original_post_only:
-              label: Solo post originale
-              description: Verrà attivata solo se il post è il post originale nell'argomento
+              label: Solo messaggio originale
+              description: Verrà attivata solo se il messaggio è il messaggio originale nell'argomento
             action_type:
               label: Tipo di azione
               description: "Facoltativo, limita l'attivazione solo agli eventi creati o modificati"
@@ -184,8 +184,8 @@ it:
               label: Solo il primo argomento
               description: L'attivazione avverrà solo se l'argomento è il primo creato da un utente
             skip_via_email:
-              label: "Salta tramite email"
-              description: "Salta l'attivazione se il post è stato creato tramite email"
+              label: "Salta tramite e-mail"
+              description: "Salta l'attivazione se il messaggio è stato creato tramite e-mail"
           created: Creato
           edited: Modificato
         user_updated:

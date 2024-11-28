@@ -2206,6 +2206,9 @@ sq:
             invalid_applies_to: "E nevojshme"
             topic: "topics"
             post: "postime"
+        user_fields:
+          type: "Lloji"
+          delete: "Fshij"
       plugins:
         title: "Pluginet"
         name: "Emri"
@@ -2580,6 +2583,11 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         show_emails: "Trego adresat email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Mbyll"
+              confirm: "Fshij"
         nav:
           new: "E Re"
           active: "Aktiv"
@@ -2730,8 +2738,6 @@ sq:
           external_avatar_url: "URL e fotos së profilit"
       user_fields:
         title: "Fushat e përdoruesit"
-        help: "Shto fusha që përdoruesit mund të plotësojnë."
-        create: "Krijo fushë përdoruesi"
         untitled: "Pa Titull"
         name: "Fusha e emrit"
         type: "Field Type"
@@ -2749,17 +2755,10 @@ sq:
           disabled: "fakultativ"
         editable:
           title: "Editable after signup"
-          enabled: "e modifikueshme"
-          disabled: "jo e modifikueshme"
-        show_on_profile:
-          enabled: "e treguar në profilin publik"
-          disabled: "nuk tregohet në profilin publik"
         show_on_user_card:
           title: "Trego në kartën e anëtarit"
-          enabled: "e treguar në kartën e anëtarit"
-          disabled: "nuk tregohet në kartën e anëtarit"
         field_types:
-          text: "Fusha tekstit"
+          text: "Tekst"
           confirm: "Konfirmimi"
           dropdown: "Listë Dropdown"
       site_text:
@@ -2888,6 +2887,7 @@ sq:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
+        delete: "Fshij"
         name: "Emri"
         group: "Grupi"
         image: "Imazh"

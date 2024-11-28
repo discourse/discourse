@@ -47,7 +47,7 @@ module("Unit | Utility | UppyMediaOptimization Plugin", function (hooks) {
       },
     });
     assert.strictEqual(plugin.id, "uppy-media-optimization");
-    assert.strictEqual(plugin.runParallel, true);
+    assert.true(plugin.runParallel);
     assert.strictEqual(plugin.optimizeFn(), "wow such optimized");
   });
 

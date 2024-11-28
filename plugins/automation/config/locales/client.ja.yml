@@ -6,6 +6,11 @@
 
 ja:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: 自動化を削除
     discourse_automation:
       title: 自動化
       create: 作成
@@ -14,6 +19,8 @@ ja:
       select_trigger: トリガーを選択
       confirm_automation_reset: この操作により、スクリプトとトリガーのオプションがリセットされ、新しい状態が保存されます。続行しますか？
       confirm_automation_trigger: この操作により、自動化がトリガーされます。続行しますか？
+      no_automation_yet: 自動化をまだ作成していません。以下のオプションを選択して開始してください。
+      filter_placeholder: 名前または説明でフィルタ...
       edit_automation:
         trigger_section:
           forced: このトリガーはスクリプトで強制されています。
@@ -142,6 +149,9 @@ ja:
               label: トピック ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: 元の投稿のみ
+              description: 投稿がトピック内のオリジナルの投稿である場合にのみトリガーされます
             action_type:
               label: 操作のタイプ
               description: "オプション。トリガーを作成または編集されたイベントのみに制限します"
@@ -159,6 +169,7 @@ ja:
               description: オプション。投稿のトピックがこのグループの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
             restricted_groups:
               label: グループ
+              description: オプション。投稿のトピックがグループのいずれかの受信トレイにあるプライベートメッセージである場合にのみトリガーされます。
             ignore_group_members:
               label: グループメンバーを無視
               description: 送信者が上記に指定されたグループのメンバーである場合はトリガーをスキップします。
@@ -171,6 +182,9 @@ ja:
             first_topic_only:
               label: 最初のトピックのみ
               description: トピックがユーザーが作成した最初のトピックである場合にのみトリガーされます。
+            skip_via_email:
+              label: "メールの場合はスキップ"
+              description: "投稿がメールで作成された場合はトリガーをスキップします"
           created: 作成
           edited: 編集
         user_updated:
@@ -220,6 +234,9 @@ ja:
             watching_tags:
               label: ウォッチ中のタグ
               description: トピックにこれらのいずれかのタグが設定されている場合にのみトリガーされます
+            trigger_with_pms:
+              label: PM でトリガー
+              description: タグが PM で変更された場合でもトリガーされます
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -378,6 +395,7 @@ ja:
           fields:
             custom_field_name:
               label: "ユーザーカスタムフィールド名"
+      unnamed_automation: "無題の自動化"
       models:
         script:
           name:

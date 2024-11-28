@@ -98,8 +98,8 @@ acceptance("User notification schedule", function (needs) {
     );
 
     await selectKit(".day.Tuesday .ends-at .combobox").expand();
-    assert.ok(
-      !selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
+    assert.false(
+      selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
       "End time options are limited to + 30 past start time"
     );
   });

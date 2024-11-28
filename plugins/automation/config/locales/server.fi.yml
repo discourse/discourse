@@ -105,6 +105,7 @@ fi:
         doc: Mahdollistaa useiden yksityisviestien lähettämisen käyttäjälle. Kussakin yksityisviestissä voi olla viive.
       suspend_user_by_email:
         title: Hyllytä käyttäjä sähköpostitse
+        description: Hyllytä tili automaattisesti sähköpostiosoitteen perusteella
       user_global_notice:
         title: Käyttäjän yleinen ilmoitus
         description: Mahdollistaa yleisen ilmoituksen näyttämisen käyttäjälle
@@ -141,6 +142,13 @@ fi:
         button_text: Valmis
       add_user_to_group_through_custom_field:
         title: "Lisää käyttäjä ryhmään käyttäjän mukautetun kentän kautta"
+        description: "Lisää käyttäjiä automaattisesti ryhmiin, kun he kirjautuvat sisään, tai toistuvalla tarkistuksella"
       group_category_notification_default:
         title: "Ryhmän alueen ilmoitusoletus"
         description: "Aseta alueen oletusarvoinen ilmoitustaso ryhmän jäsenille"
+      send_chat_message:
+        title: "Lähetä chat-viesti"
+        description: "Lähetä mukautettu chat-viesti kanavalle"
+      random_assign:
+        title: "Satunnainen määritys"
+        description: "Määritä ketjuja satunnaisesti ryhmälle"

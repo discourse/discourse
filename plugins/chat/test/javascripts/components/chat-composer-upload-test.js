@@ -95,7 +95,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.strictEqual(this.uploadRemoved, true);
+    assert.true(this.uploadRemoved);
   });
 
   test("cancelling in progress upload", async function (assert) {
@@ -115,6 +115,6 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     await click(".chat-composer-upload__remove-btn");
-    assert.strictEqual(this.uploadRemoved, true);
+    assert.true(this.uploadRemoved);
   });
 });

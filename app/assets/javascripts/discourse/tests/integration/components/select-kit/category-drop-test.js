@@ -49,12 +49,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
       />
     `);
 
-    const header = this.subject.header().el();
-
-    assert.ok(
-      header.querySelector(`.d-icon-caret-right`),
-      "it uses the correct default icon"
-    );
+    assert
+      .dom(".d-icon-caret-right", this.subject.header().el())
+      .exists("uses the correct default icon");
   });
 
   test("none", async function (assert) {
@@ -69,7 +66,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     assert.strictEqual(
       text,
       i18n("categories.categories_label"),
-      "it uses the noneLabel"
+      "uses the noneLabel"
     );
   });
 
@@ -90,10 +87,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await this.subject.expand();
 
     const row = this.subject.rowByValue(this.category.id);
-    assert.ok(
-      row.el().querySelector(".category-desc"),
-      "it shows category description for newcomers"
-    );
+    assert
+      .dom(".category-desc", row.el())
+      .exists("shows category description for newcomers");
   });
 
   test("[not staff - TL1] displayCategoryDescription", async function (assert) {
@@ -113,10 +109,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await this.subject.expand();
 
     const row = this.subject.rowByValue(this.category.id);
-    assert.notOk(
-      row.el().querySelector(".category-desc"),
-      "it doesn't shows category description for TL0+"
-    );
+    assert
+      .dom(".category-desc", row.el())
+      .doesNotExist("doesn't shows category description for TL0+");
   });
 
   test("[staff - TL0] displayCategoryDescription", async function (assert) {
@@ -136,10 +131,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await this.subject.expand();
 
     const row = this.subject.rowByValue(this.category.id);
-    assert.notOk(
-      row.el().querySelector(".category-desc"),
-      "it doesn't show category description for staff"
-    );
+    assert
+      .dom(".category-desc", row.el())
+      .doesNotExist("doesn't show category description for staff");
   });
 
   test("hideParentCategory (default: false)", async function (assert) {
@@ -177,15 +171,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await this.subject.expand();
 
     const parentRow = this.subject.rowByValue(this.parentCategory.id);
-    assert.notOk(parentRow.exists(), "the parent row is not showing");
+    assert.false(parentRow.exists(), "the parent row is not showing");
 
     const childCategory = this.categories.firstObject;
     const childCategoryId = childCategory.id;
     const childRow = this.subject.rowByValue(childCategoryId);
-    assert.ok(childRow.exists(), "the child row is showing");
+    assert.true(childRow.exists(), "the child row is showing");
 
-    const categoryStatus = childRow.el().querySelector(".category-status");
-    assert.ok(categoryStatus.innerText.trim().match(/^spec/));
+    assert.dom(".category-status", childRow.el()).includesText("spec");
   });
 
   test("allow_uncategorized_topics (true)", async function (assert) {
@@ -204,7 +197,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
     const uncategorizedCategoryId = this.site.uncategorized_category_id;
     const row = this.subject.rowByValue(uncategorizedCategoryId);
-    assert.ok(row.exists(), "the uncategorized row is showing");
+    assert.true(row.exists(), "the uncategorized row is showing");
   });
 
   test("allow_uncategorized_topics (false)", async function (assert) {
@@ -223,7 +216,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
     const uncategorizedCategoryId = this.site.uncategorized_category_id;
     const row = this.subject.rowByValue(uncategorizedCategoryId);
-    assert.notOk(row.exists(), "the uncategorized row is not showing");
+    assert.false(row.exists(), "the uncategorized row is not showing");
   });
 
   test("countSubcategories (default: false)", async function (assert) {
@@ -246,7 +239,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     assert.strictEqual(
       topicCount,
       "× 481",
-      "it doesn't include the topic count of subcategories"
+      "doesn't include the topic count of subcategories"
     );
   });
 
@@ -273,7 +266,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     assert.strictEqual(
       topicCount,
       "× 584",
-      "it includes the topic count of subcategories"
+      "includes the topic count of subcategories"
     );
   });
 
@@ -369,9 +362,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await this.subject.expand();
     await this.subject.selectRowByValue(26);
 
-    assert.ok(
+    assert.true(
       DiscourseURL.routeTo.calledWith("/c/feature/spec/26"),
-      "it builds a correct URL"
+      "builds a correct URL"
     );
   });
 });

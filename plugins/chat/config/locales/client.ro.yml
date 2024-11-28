@@ -212,6 +212,11 @@ ro:
         cancel: "Anulează"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      titles:
+        chat_mention: "Menționat în conversație"
+        chat_invitation: "Invitat în canalul de conversație"
+        chat_quoted: "Mesaj de conversație citat"
+        chat_watched_thread: "Fir de discuție urmărit"
     discourse_automation:
       scriptables:
         send_chat_message:

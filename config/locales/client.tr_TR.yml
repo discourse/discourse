@@ -142,6 +142,7 @@ tr_TR:
       topic_html: 'Konu: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username} adlı kullanıcının #%{postNumber}. gönderisi"
       close: "kapat"
+      twitter: "X'te paylaş"
       facebook: "Facebook'ta paylaş"
       email: "E-posta ile gönder"
       url: "URL'yi kopyala ve paylaş"
@@ -1274,6 +1275,7 @@ tr_TR:
       allow_private_messages: "Diğer kullanıcıların bana kişisel mesaj göndermesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan metin için alıntı yanıtını etkinleştir"
+      enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
       enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
@@ -1664,6 +1666,7 @@ tr_TR:
         approval_required: "Bu foruma erişebilmeniz için bir moderatörün yeni hesabınızı manuel olarak onaylaması gerekiyor. Hesabınız onaylandığında bir e-posta alacaksınız!"
       name:
         title: "Ad"
+        title_optional: "Ad (isteğe bağlı)"
         instructions: "Adınız soyadınız (isteğe bağlı)"
         instructions_required: "Adınız Soyadınız"
         required: "Lütfen bir ad girin"
@@ -1717,6 +1720,7 @@ tr_TR:
       location: "Konum"
       website: "Web Sitesi"
       email_settings: "E-posta"
+      hide_profile: "Herkese açık profilimi gizle"
       enable_physical_keyboard: "iPad'de fiziksel klavye desteğini etkinleştir"
       text_size:
         title: "Metin Boyutu"
@@ -1833,11 +1837,25 @@ tr_TR:
           title: "Davet Bağlantısı"
           success: "Davet bağlantısı başarıyla oluşturuldu!"
           error: "Davet bağlantısı oluşturulurken bir hata oluştu"
+        cannot_invite_to_forum: "Üzgünüz, davet oluşturma izniniz yok. Lütfen size davet izni vermesi için bir yöneticiyle iletişime geçin."
         invite:
+          new_title: "Üye davet edin"
+          edit_title: "Daveti düzenleyin"
           expires_in_time: "Süresi %{time} içinde dolacak:"
           expired_at_time: "Şu zamanda süresi doldu: %{time}"
+          create_link_to_invite: "Bu siteye anında erişim sağlamak için paylaşılabilecek bir bağlantı oluşturun."
+          copy_link_and_share_it: "Bu siteye anında erişim sağlamak için aşağıdaki bağlantıyı kopyalayın ve paylaşın."
           copy_link: "Bağlantıyı kopyala"
           link_copied: "Bağlantı kopyalandı!"
+          share_link: "Bağlantıyı paylaş"
+          link_validity_MF: |
+            Bağlantı { user_count, plural,
+                one {# kullanıcıya}
+              other {# kullanıcıya}
+            } kadar ve { duration_days, plural,
+                one {# günlüğüne}
+              other {# günlüğüne}
+            } geçerlidir.
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           restrict: "Şununla kısıtla"
@@ -1847,11 +1865,19 @@ tr_TR:
           max_redemptions_allowed: "Maksimum kullanım"
           add_to_groups: "Gruplara ekle"
           invite_to_topic: "Konuya gidin"
+          expires_at: "Son kullanma tarihi:"
           expires_after: "Geçerliliğini yitireceği zaman"
+          custom_message: "Özel mesaj"
+          custom_message_placeholder: "Davetinize kişisel bir not ekleyin"
           send_invite_email: "Kaydet ve E-posta Gönder"
           send_invite_email_instructions: "Davet e-postası göndermek için e-postaya daveti kısıtla"
           update_invite: "Güncelle"
+          update_invite_and_send_email: "Güncelleyin ve e-posta gönderin"
           cancel: "İptal et"
+          create_link: "Bağlantı oluştur"
+          create_link_and_send_email: "Bağlantı oluştur ve e-posta gönder"
+          invite_saved_without_sending_email: "Davet kaydedildi. Bu siteye anında erişim sağlamak için aşağıdaki bağlantıyı kopyalayın ve paylaşın."
+          invite_saved_with_sending_email: "Davet e-postası gönderildi. Ayrıca aşağıdaki bağlantıyı kopyalayabilir ve bu siteye anında erişim sağlamak için paylaşabilirsiniz."
         bulk_invite:
           none: "Bu sayfada görüntülenecek davet yok."
           text: "Toplu Davet"
@@ -1966,12 +1992,18 @@ tr_TR:
         sent_by: "Gönderen:"
         private_message: "mesaj"
         the_topic: "konu"
+      card: "Kullanıcı kartı"
+      profile_link: "%{username}, profili ziyaret edin"
     user_status:
       save: "Kaydet"
       set_custom_status: "Özel durum ayarla"
       what_are_you_doing: "Ne yapıyorsunuz?"
       pause_notifications: "Bildirimleri duraklat"
       remove_status: "Durumu kaldır"
+    presence_toggle:
+      online: "Çevrimiçi"
+      offline: "Çevrimdışı"
+      title: "Varlık özelliklerini değiştirin"
     user_tips:
       button: "Anladım!"
       skip: "İpuçlarını atla"
@@ -2155,8 +2187,10 @@ tr_TR:
       associate: "Zaten bir hesabınız var mı? %{provider} hesabınızı bağlamak için <a href='%{associate_link}'>giriş yapın</a>."
       activation_title: "Hesabınızı etkinleştirin"
       already_have_account: "Zaten hesabınız var mı?"
+      no_account_yet: "Hesabınız yok mu?"
       progress_bar:
         signup: "Kaydol"
+        activate: "Etkinleştir"
         approve: "Onayla"
         login: "Giriş Yap"
     forgot_password:
@@ -2566,6 +2600,7 @@ tr_TR:
         new_reviewable:
           one: "%{count} yeni incelenebilir öge"
           other: "%{count} yeni incelenebilir öge"
+      paused: "Bildirimler duraklatıldı"
       title: "@ad bahsetmeleri, gönderilerinize ve konularınıza verilen yanıtlar, mesajlar vb. ilgili bildirimler"
       none: "Şu anda bildirimler yüklenemiyor."
       empty: "Bildirim bulunamadı."
@@ -3462,7 +3497,9 @@ tr_TR:
       show_hidden: "Yok sayılan içeriği görüntüleyin."
       deleted_by_author_simple: "(gönderi yazarı tarafından silindi)"
       collapse: "daralt"
+      load_more_replies: "daha fazla yanıt yükle"
       sr_collapse_replies: "Gömülü yanıtları daralt"
+      sr_load_more_replies: "Daha fazla gömülü yanıt yükle"
       sr_date: "Gönderi tarihi"
       sr_expand_replies:
         one: "Bu gönderinin %{count} yanıtı var"
@@ -3475,6 +3512,9 @@ tr_TR:
         one: "gizlenen %{count} yorumu görüntüle"
         other: "gizlenen %{count} yorumu görüntüle"
       sr_reply_to: "@%{username} tarafından oluşturulan #%{post_number} numaralı gönderiye yanıt verin"
+      link_clicked:
+        one: "bağlantıya %{count} kez tıklandı"
+        other: "bağlantıya %{count} kez tıklandı"
       notice:
         new_user: "%{user} ilk kez gönderi paylaştı. Hadi ona topluluğumuza hoş geldin diyelim!"
         returning_user: "%{user} adlı kullanıcıyı göreli uzun süre oldu. Son gönderisi %{time} tarihindeydi."
@@ -3549,6 +3589,7 @@ tr_TR:
         flag: "bu gönderinin incelenmesi için özel olarak bayrak ekleyin veya bununla ilgili özel bir bildirim gönderin"
         delete_action: "Gönderiyi sil"
         delete: "bu gönderiyi sil"
+        undelete_action: "Silinen gönderiyi geri al"
         undelete: "bu gönderiyi silme işlemini geri al"
         share_action: "Paylaş"
         share: "bu gönderiye bir bağlantı paylaş"
@@ -3742,6 +3783,8 @@ tr_TR:
       badge_colors: "Rozet renkleri"
       background_color: "Arka plan rengi"
       foreground_color: "Ön plan rengi"
+      color_used: "Kullanılan renk"
+      predefined_colors: "Önceden tanımlanmış renk seçenekleri"
       name_placeholder: "En fazla bir veya iki kelime"
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
@@ -4125,6 +4168,7 @@ tr_TR:
       shortcut_delimiter_or: "%{shortcut1} veya %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "Klavye Kısayolları"
       short_title: "Kısayollar"
       jump_to:
@@ -4395,6 +4439,7 @@ tr_TR:
       dismiss: "Kapat"
     safe_mode:
       enabled: "Güvenli mod etkin, güvenli moddan çıkmak için bu tarayıcı penceresini kapatın"
+    theme_preview_notice: "Şu anda bir temayı ön izliyorsunuz, normal site yapılandırmanıza dönmek için bu tarayıcı sekmesini veya penceresini kapatın."
     image_removed: "(görüntü kaldırıldı)"
     pause_notifications:
       title: "Bildirimleri şu süreyle duraklat…"
@@ -4591,6 +4636,7 @@ tr_TR:
                 other: "%{count} beklemede"
             invite:
               content: "Davet et"
+              title: "Yeni üye davet edin"
         global_section: "Genel bölüm, herkes tarafından görülebilir"
       panels:
         forum:
@@ -4746,6 +4792,12 @@ tr_TR:
           previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
           experimental: "Deneysel"
+          experiment_enabled: "Deneysel özelliği etkinleştirdiniz."
+          experiment_disabled: "Deneysel özelliği devre dışı bıraktınız."
+          experiment_toggled_too_fast: "Deneysel özelliğe çok hızlı geçiş yaptınız. Lütfen tekrar denemeden önce birkaç saniye bekleyin."
+          experiment_tooltip:
+            title: "Deneysel özelliğimizi deneyin"
+            content: "Geliştirme aşamasındaki en yeni özelliğimizi deneyin! Henüz deneysel aşamada olduğu için her an kaldırabiliriz. Dilediğiniz zaman devre dışı bırakabilirsiniz."
         last_checked: "Son kontrol"
         refresh_problems: "Yenile"
         no_problems: "Hiçbir sorun bulunamadı."
@@ -4863,6 +4915,7 @@ tr_TR:
             publish_read_state: "Grup mesajlarında grup okundu durumunu yayınlayın"
           membership:
             automatic: Otomatik
+            automatic_tooltip: "Bu grup otomatiktir, grubu silemezsiniz ve üyeler otomatik olarak eklenir ve çıkarılır"
             trust_levels_title: "Üyelere eklendiklerinde otomatik olarak verilen güven seviyesi:"
             effects: Etkileri
             trust_levels_none: "Hiçbiri"
@@ -5113,6 +5166,8 @@ tr_TR:
           group_name: "Grup Kullanıcısı Olayları"
           user_added_to_group: "Bir kullanıcı bir gruba eklendi"
           user_removed_from_group: "Bir kullanıcı bir gruptan çıkarıldı"
+        custom_event:
+          group_name: "Özel Etkinlikler"
         user_promoted_event:
           group_name: "Kullanıcı Terfisi Olayları"
           user_promoted: "Bir kullanıcı terfi edildi"
@@ -5210,39 +5265,65 @@ tr_TR:
           screened_ips: "Taranan IP'ler"
           screened_urls: "Taranan URL'ler"
           search_logs: "Arama Günlükleri"
+          security: "Güvenlik ayarları"
+          spam: "Spam ayarları"
           staff_action_logs: "Personel Eylemi Günlükleri"
       section_landing_pages:
         account:
           title: "Hesap"
           backups:
             title: "Yedeklemeler"
+            description: "Sitenizin verilerinin yedeğini alın"
           whats_new:
             title: "Yenilikler"
+            description: "Discourse'taki yeni yayınları ve iyileştirmeleri keşfedin"
       config_areas:
         about:
           header: "Siteniz hakkında"
+          description: "Burada bu site ve ekibiniz hakkında bilgi verin, böylece insanlar topluluğunuzun ne hakkında olduğunu, arkasında kimlerin olduğunu ve bir sorun olması durumunda size nasıl ulaşacaklarını öğrenebilirler. Sitenizin <a href=\"%{basePath}/about\">Hakkında sayfasında</a> gösterilir."
           general_settings: "Genel Ayarlar"
           community_name: "Topluluk adı"
           community_name_placeholder: "Örnek Topluluk"
           community_summary: "Topluluk özeti"
           community_description: "Topluluk açıklaması"
+          community_title: "Topluluk başlığı"
+          community_title_help: "Kategoriler ve konu listeleri gibi önemli sayfalar için tarayıcı sekmesinde gösterilen kısa açıklama."
           banner_image: "Banner görüntüsü"
+          banner_image_help: |
+            Bu, Hakkında sayfanızda kullanılır. Önerilen boyut: 1100x300 px. Kabul edilen türler: 10 MB'ye kadar JPG, PNG ve SVG.
           contact_information: "İletişim bilgileri"
           community_owner: "Topluluk sahibi"
           community_owner_placeholder: "Johnny Smith"
+          community_owner_help: |
+            Kritik bildirimler için kullanılan ve /about (hakkında) üzerinde de gösterilen ad. Herkese açık sitelerdeki anonim kullanıcılar tarafından görülebilir.
           contact_email: "İletişim e-postası"
           contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_help: |
+            Kritik bildirimler için kullanılan ve /about (hakkında) üzerinde de gösterilen e-posta. Herkese açık sitelerdeki anonim kullanıcılar tarafından görülebilir.
           contact_url: "İletişim URL'si"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            Mevcut olduğunda, iletişim e-posta adresini /about (hakkında) olarak değiştirir ve herkese açık sitelerdeki anonim kullanıcılar tarafından görünür olur.
           site_contact_name: "Site iletişim adı"
+          site_contact_name_help: |
+            Tüm otomatik mesajların gönderileceği bir personel kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılır.
           site_contact_group: "Site iletişim grubu"
+          site_contact_group_help: |
+            Otomatik olarak gönderilen tüm özel mesajlara davet edilen grup.
           your_organization: "Organizasyonunuz"
+          your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
           company_name_placeholder: "Acme Organizasyonu"
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
           governing_law: "Geçerli kanun"
+          governing_law_placeholder: "İl, Eyalet veya Ülke"
+          governing_law_help: |
+            Sitenin yasal koşulları için yargı alanını, genellikle şirketin kayıtlı olduğu veya faaliyet gösterdiği yeri belirtin.
           city_for_disputes: "Anlaşmazlıklar için şehir"
+          city_for_disputes_placeholder: "Şehir"
+          city_for_disputes_help: |
+            Bu forumla ilgili yasal anlaşmazlıkların çözümü için şehri belirtin.
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -5252,6 +5333,7 @@ tr_TR:
           saved: "kaydedildi!"
         flags:
           header: "Moderasyon Bayrakları"
+          edit_header: "Bayrağı düzenle"
           subheader: "Discourse'taki bayrak ekleme sistemi sizin ve moderatör ekibinizin içeriği ve kullanıcı davranışını yönetmenize yardımcı olarak topluluğunuzun saygılı ve sağlıklı kalmasını sağlar. Varsayılanlar çoğu topluluk için uygundur ve bunları değiştirmeniz gerekmez. Ancak sitenizin belirli gereklilikleri varsa ihtiyacınız olmayan bayrakları devre dışı bırakabilir ve kendi özel bayraklarınızı ekleyebilirsiniz."
           description: "Açıklama"
           enabled: "Etkin mi?"
@@ -5261,6 +5343,7 @@ tr_TR:
           delete: "Sil"
           delete_confirm: '"%{name}" adlı temayı silmek istediğinizden emin misiniz?'
           flags_tab: "Bildirilenler"
+          settings: "Bayrak Ayarları"
           form:
             add_header: "Bayrak ekle"
             edit_header: "Bayrağı düzenle"
@@ -5280,16 +5363,34 @@ tr_TR:
             non_deletable: "Bu bayrak bir sistem bayrağı olduğu veya inceleme sisteminde zaten kullanıldığı için silemezsiniz ancak yine de devre dışı bırakabilirsiniz."
             require_message: "Kullanıcılardan ek sebepler belirtmelerini isteyin"
             require_message_description: "Bu bayrak seçildiğinde, kullanıcının içeriğe neden bayrak eklediğine ilişkin ek ayrıntı sağlaması için bir metin alanı görüntülenir."
+            auto_action_type: "Bayrak eklenen içeriği otomatik gizle"
           more_options:
             title: "Daha fazla seçenek"
             move_up: "Yukarı taşı"
             move_down: "Aşağı taşı"
         look_and_feel:
           title: "Görünüm ve his"
+          description: "Discourse sitenizi özelleştirip markalaştırarak ona ayırt edici bir stil kazandırın."
           themes:
             title: "Temalar"
+            themes_intro: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
+            themes_intro_img_alt: "Yeni tema yer tutucu"
+            set_default_theme: "Varsayılanı ayarla"
+            default_theme: "Varsayılan tema"
+            themes_description: "Temalar, forum tasarımınızın stilinin birçok unsurunu değiştiren ve genellikle ek ön uç özellikleri de içeren geniş kapsamlı özelleştirmelerdir."
+            new_theme: "Yeni tema"
+            user_selectable: "Kullanıcı tarafından seçilebilir"
+        user_fields:
+          type: "Tür"
+          more_options:
+            title: "Daha fazla seçenek"
+            move_up: "Yukarı taşı"
+            move_down: "Aşağı taşı"
+          delete: "Sil"
       plugins:
         title: "Eklentiler"
+        installed: "Yüklü eklentiler"
+        description: "Yüklediğiniz tüm Discourse eklentileri veya Discourse barındırma ile önceden yüklenmiş olarak gelen eklentiler bu listede görünür."
         name: "Ad"
         none_installed: "Yüklü herhangi bir eklentiniz yok."
         version: "Sürüm"
@@ -5451,6 +5552,8 @@ tr_TR:
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"
+          themes_intro_new: "Başlamak için yeni bir tema yükleyin veya bu kaynakları kullanarak sıfırdan kendi temanızı oluşturun."
+          themes_intro_img_alt: "Yeni tema yer tutucu"
           beginners_guide_title: "Yeni Başlayanlar İçin Discourse Temaları kılavuzu"
           developers_guide_title: "Discourse Temaları için geliştirici kılavuzu"
           browse_themes: "Topluluk temalarına göz atın"
@@ -5498,12 +5601,17 @@ tr_TR:
           convert_theme_alert_generic: "Bu temayı bileşene dönüştürmek istediğinizden emin misiniz?"
           convert_theme_tooltip: "Bu temayı bileşene dönüştür"
           inactive_themes: "Etkin olmayan temalar:"
+          set_default_theme: "Varsayılanı ayarla"
+          default_theme: "Varsayılan tema"
+          set_default_success: "Varsayılan tema %{theme} olarak ayarlandı"
+          install_success: "%{theme} başarıyla yüklendi!"
           inactive_components: "Kullanılmayan bileşenler:"
           selected:
             one: "%{count} tane seçildi"
             other: "%{count} tane seçildi"
           cancel: "İptal et"
           broken_theme_tooltip: "Bu temanın CSS, HTML veya YAML'sinde hatalar var"
+          broken_theme: "Bozuk temayı devre dışı bırak"
           disabled_component_tooltip: "Bu bileşen devre dışı bırakıldı"
           default_theme_tooltip: "Bu tema, sitenin varsayılan teması"
           updates_available_tooltip: "Bu tema için güncellemeler mevcut"
@@ -5570,6 +5678,7 @@ tr_TR:
           update_to_latest: "En Sona Güncelle"
           check_for_updates: "Güncellemeleri kontrol et"
           updating: "Güncelleniyor…"
+          update_success: "%{theme} Güncelleme tamamlandı"
           up_to_date: "Tema güncel, son kontrol:"
           has_overwritten_history: "Geçerli tema sürümü artık mevcut değil çünkü Git geçmişi zorla gönderilerek üzerine yazıldı."
           add: "Ekle"
@@ -5961,6 +6070,10 @@ tr_TR:
             custom_emoji_destroy: "özel emoji'yi sil"
             delete_post_permanently: "gönderiyi kalıcı olarak sil"
             delete_topic_permanently: "konuyu kalıcı olarak sil"
+            tag_group_create: "etiket grubu oluştur"
+            tag_group_destroy: "etiket grubu sil"
+            tag_group_change: "etiket grubunu değiştir"
+            delete_associated_accounts: "ilişkili hesapları sil"
         screened_emails:
           title: "Taranan E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilir ve kayıt engellenir veya başka bir işlem gerçekleştirilir."
@@ -6156,6 +6269,11 @@ tr_TR:
         status: "Durum"
         show_emails: "E-postaları Göster"
         hide_emails: "E-postaları gizle"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Bitir"
+              confirm: "Sil"
         nav:
           new: "Yeni"
           active: "Aktif"
@@ -6186,6 +6304,9 @@ tr_TR:
         check_sso:
           title: "SSO yükünü göster"
           text: "Göster"
+        delete_associated_accounts:
+          title: "Bu kullanıcıyla ilişkili tüm hesapları silin"
+          text: "Ilişkili hesapları sil"
       user:
         suspend_failed: "Bu kullanıcı askıya alınırken bir sorun oluştu %{error}"
         unsuspend_failed: "Bu kullanıcının askıya alınması kaldırılırken bir sorun oluştu %{error}"
@@ -6280,6 +6401,9 @@ tr_TR:
         time_read: "Okuma Zamanı"
         post_edits_count: "Gönderi Düzenlemeleri"
         anonymize: "Kullanıcıyı Anonimleştir"
+        anonymize_confirm: "Bu hesabı anonimleştirmek istediğinizden emin misiniz? Bu işlem, kullanıcı adını ve e-postayı değiştirir ve tüm profil bilgilerini sıfırlar."
+        delete_associated_accounts_confirm: "Bu hesaptaki tüm ilişkili hesapları silmek istediğinizden emin misiniz? Kullanıcı, e-postası değiştiyse giriş yapamayabilir."
+        disable_second_factor_confirm: "Bu hesap için İki Adımlı Kimlik Doğrulamayı devre dışı bırakmak istediğinizden emin misiniz?"
         anonymize_yes: "Evet, bu hesabı anonimleştir"
         anonymize_failed: "Hesap anonimleştirilirken bir sorun oluştu."
         delete: "Kullanıcıyı Sil"
@@ -6336,6 +6460,7 @@ tr_TR:
         cant_delete_all_too_many_posts:
           one: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
           other: "Kullanıcının %{count} üzeri gönderisi olduğundan tüm gönderiler silinemiyor. (delete_all_posts_max)"
+        delete_confirm_title: "Bu kullanıcıyı silmek istediğinizden emin misiniz? Bu işlem kalıcıdır!"
         delete_confirm: "Mevcut tartışmalardan içeriğin kaldırılmasını önlemek için kullanıcıları silmek yerine anonimleştirmek genellikle tercih edilir."
         delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Yalnızca sil"
@@ -6428,8 +6553,6 @@ tr_TR:
           confirm_delete: "Bu DiscourseConnect kaydını silmek istediğinizden emin misiniz?"
       user_fields:
         title: "Kullanıcı Alanları"
-        help: "Kullanıcılarınızın doldurabileceği alanlar ekleyin."
-        create: "Kullanıcı Alanı Oluştur"
         untitled: "Başlıksız"
         name: "Alan Adı"
         type: "Alan Türü"
@@ -6458,22 +6581,15 @@ tr_TR:
           confirmation: "Bu, mevcut kullanıcılardan bu alanı doldurmalarını ister ve alan doldurulana kadar sitenizde başka bir şey yapmalarına izin vermez. Devam edilsin mi?"
         editable:
           title: "Kayıttan sonra düzenlenebilir"
-          enabled: "düzenlenebilir"
-          disabled: "düzenlenemez"
         show_on_profile:
           title: "Herkese açık profilde göster"
-          enabled: "profilde gösteriliyor"
-          disabled: "profilde gösterilmiyor"
         show_on_user_card:
           title: "Kullanıcı kartında göster"
-          enabled: "kullanıcı kartında gösterilir"
-          disabled: "kullanıcı kartında gösterilmez"
         searchable:
           title: "Aranabilir"
-          enabled: "aranabilir"
-          disabled: "aranamaz"
+          enabled: "Aranabilir"
         field_types:
-          text: "Metin Alanı"
+          text: "Metin"
           confirm: "Onayla"
           dropdown: "Açılır Menü"
           multiselect: "Çoklu seçim"
@@ -6489,7 +6605,6 @@ tr_TR:
         show_overriden: "Yalnızca geçersiz kılınanları göster"
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         show_untranslated: "Yalnızca çevrilmemişleri göster"
-        only_show_selected_locale: "Yalnızca seçili yerel ayarlardaki sonuçları göster"
         locale: "Dil:"
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
         no_results: "Eşleşen site metni yok"
@@ -6507,6 +6622,7 @@ tr_TR:
         none: "hiçbiri"
         save: "kaydet"
         cancel: "iptal et"
+        unmask: "giriş maskelemeyi kaldır"
       site_settings:
         emoji_list:
           invalid_input: "Emoji listesi yalnızca geçerli emoji adlarını içermelidir, örneğin: sarılmalar"
@@ -6600,6 +6716,7 @@ tr_TR:
       badges:
         status: Durum
         title: Rozetler
+        page_description: Rozetler, topluluk içindeki olumlu davranışları ve katılımı tanımak, doğrulamak ve teşvik etmek için kullanıcıları aktiviteleri, katkıları ve başarıları için ödüllendirir.
         new_badge: Yeni Rozet
         new: Yeni
         name: Ad
@@ -6608,6 +6725,7 @@ tr_TR:
         description: Açıklama
         long_description: Uzun açıklama
         badge_type: Rozet türü
+        group_settings: Grup Ayarları
         badge_grouping: Grup
         badge_groupings:
           modal_title: Rozet Gruplamaları
@@ -6671,6 +6789,9 @@ tr_TR:
             with_post: <span class="username">%{username}</span> %{link} bağlantısındaki gönderi için
             with_post_time: <span class="username">%{username}</span> <span class="time">%{time}</span> saatinde %{link} bağlantısındaki gönderi için
             with_time: <span class="username">%{username}</span>, <span class="time">%{time}</span>
+        badge_intro:
+          title: "Bir rozet seçin veya yeni bir tane oluşturun"
+          description: "Özelleştirmek için mevcut bir rozeti seçerek başlayın veya yepyeni bir rozet oluşturun"
         mass_award:
           title: Toplu Ödül
           description: Aynı rozeti tek seferde birçok kullanıcıya verin.
@@ -6689,9 +6810,16 @@ tr_TR:
           grant_existing_holders: Mevcut rozet sahiplerine ek rozetler ver
       emoji:
         title: "Emoji"
+        description: "Herkesin kullanabileceği yeni emoji ekleyin. Dosya adlarını kullanarak emoji'ler oluşturmak için birden fazla dosya seçin. Seçilen grup aynı anda eklenen tüm dosyalar için kullanılır."
+        no_emoji: "Henüz özel bir emoji'niz yok."
+        add: "Emoji ekle"
+        delete: "Sil"
+        back: "Emoji'ye geri dön"
+        choose_files: "Dosya seç"
         uploading: "Yükleniyor…"
         name: "Ad"
         group: "Grup"
+        created_by: "Oluşturan:"
         image: "Görüntü"
         alt: "özel emoji ön izlemesi"
         delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
@@ -6744,10 +6872,18 @@ tr_TR:
         destination: "Hedef"
         copy_to_clipboard: "Kalıcı Bağlantıyı Panoya Kopyala"
         delete_confirm: Bu kalıcı bağlantıyı silmek istediğinizden emin misiniz?
+        no_permalinks: "Henüz kalıcı bağlantınız yok."
+        add: "Kalıcı bağlantı ekle"
+        back: "Kalıcı Bağlantılara geri dön"
         more_options: "Daha fazla seçenek"
+        copy_success: "Kalıcı bağlantı panoya kopyalandı"
         form:
           label: "Yeni:"
+          add_header: "Kalıcı bağlantı ekle"
+          edit_header: "Kalıcı bağlantıyı düzenle"
+          filter: "Arama URL'si veya hedef URL"
           url: "URL"
+          permalink_type: "Kalıcı bağlantı türü"
           save: "Kaydet"
       reseed:
         action:

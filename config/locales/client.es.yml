@@ -1856,7 +1856,6 @@ es:
             one {# día}
             other {# días} }
             }.
-          edit_link_options: "Editar opciones de enlace."
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
           restrict: "Restringir a"
@@ -2168,8 +2167,8 @@ es:
       remove: "Eliminar…"
       add: "Añadir…"
       leave_message: "¿Quieres abandonar este mensaje?"
-      remove_allowed_user: "¿Quieres quitar a %{name} de este mensaje?"
-      remove_allowed_group: "¿Quieres quitar a %{name} de este mensaje?"
+      remove_allowed_user: "¿Seguro que quieres eliminar a %{name} de este mensaje?"
+      remove_allowed_group: "¿Seguro que quieres eliminar a %{name} de este mensaje?"
       leave: "Abandonar"
       remove_group: "Eliminar grupo"
       remove_user: "Eliminar usuario"
@@ -5379,6 +5378,13 @@ es:
             themes_description: "Los temas son personalizaciones expansivas que cambian múltiples elementos del estilo del diseño de tu foro, y a menudo también incluyen características adicionales del front-end."
             new_theme: "Nuevo tema"
             user_selectable: "Seleccionable por el usuario"
+        user_fields:
+          type: "Tipo"
+          more_options:
+            title: "Más opciones"
+            move_up: "Sube"
+            move_down: "Baja"
+          delete: "Eliminar"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"
@@ -6261,6 +6267,11 @@ es:
         status: "Estado"
         show_emails: "Mostrar correos electrónicos"
         hide_emails: "Ocultar correos electrónicos"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Cerrar"
+              confirm: "Eliminar"
         nav:
           new: "Nuevos"
           active: "Activos"
@@ -6540,8 +6551,6 @@ es:
           confirm_delete: "¿Seguro que quieres eliminar este registro de DiscourseConnect?"
       user_fields:
         title: "Campos de usuario"
-        help: "Añade campos que cada usuario puede rellenar."
-        create: "Crear campo de usuario"
         untitled: "Sin título"
         name: "Nombre del campo"
         type: "Tipo de campo"
@@ -6570,22 +6579,15 @@ es:
           confirmation: "Esto pedirá a los usuarios existentes que rellenen este campo y no les permitirá hacer nada más en tu sitio hasta que el campo esté rellenado. ¿Continuar?"
         editable:
           title: "Editable después del registro"
-          enabled: "editable"
-          disabled: "no editable"
         show_on_profile:
           title: "Se muestra públicamente en el perfil"
-          enabled: "Mostrado en el perfil"
-          disabled: "No mostrado en el perfil"
         show_on_user_card:
           title: "Mostrar en las tarjetas de usuario"
-          enabled: "mostrado en las tarjetas de usuario"
-          disabled: "no mostrado en las tarjetas de usuario"
         searchable:
           title: "Se puede buscar"
-          enabled: "se puede buscar"
-          disabled: "no se puede buscar"
+          enabled: "Se puede buscar"
         field_types:
-          text: "Campo de texto"
+          text: "Texto"
           confirm: "Confirmación"
           dropdown: "Desplegable"
           multiselect: "Selección múltiple"
@@ -6601,7 +6603,6 @@ es:
         show_overriden: "Mostrar solo los sobrescritos"
         show_outdated: "Mostrar solo obsoletos/no válidos"
         show_untranslated: "Mostrar solo sin traducir"
-        only_show_selected_locale: "Mostrar resultados solo en la configuración regional seleccionada"
         locale: "Idioma:"
         more_than_50_results: "Hay más de 50 resultados. Por favor, afina tu búsqueda."
         no_results: "No se han encontrado textos de sitios coincidentes"
@@ -6808,6 +6809,7 @@ es:
       emoji:
         title: "Emoji"
         add: "Añadir emoji"
+        delete: "Eliminar"
         uploading: "Subiendo…"
         name: "Nombre"
         group: "Grupo"
@@ -6874,7 +6876,7 @@ es:
           edit_header: "Editar permalink"
           filter: "URL de búsqueda o URL de destino"
           url: "URL"
-          permalink_type: "Tipo de Permalink"
+          permalink_type: "Tipo de permalink"
           save: "Guardar"
       reseed:
         action:

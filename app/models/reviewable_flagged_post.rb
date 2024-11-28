@@ -48,10 +48,6 @@ class ReviewableFlaggedPost < Reviewable
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
-    if potential_spam? && guardian.can_delete_user?(target_created_by)
-      delete_user_actions(actions, agree_bundle)
-    end
-
     if !post.user_deleted? && !post.hidden?
       build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
     end
@@ -81,6 +77,10 @@ class ReviewableFlaggedPost < Reviewable
           confirm: true,
         )
       end
+    end
+
+    if (potential_spam? || potentially_illegal?) && guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree_bundle)
     end
 
     if guardian.can_suspend?(target_created_by)
@@ -416,6 +416,7 @@ end
 #  updated_at              :datetime         not null
 #  force_review            :boolean          default(FALSE), not null
 #  reject_reason           :text
+#  potentially_illegal     :boolean          default(FALSE)
 #
 # Indexes
 #

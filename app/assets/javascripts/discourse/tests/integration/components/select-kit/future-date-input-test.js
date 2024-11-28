@@ -89,7 +89,7 @@ module(
       const options = getOptions();
       const customDateAndTime = i18n("time_shortcut.custom");
 
-      assert.ok(options.includes(customDateAndTime));
+      assert.true(options.includes(customDateAndTime));
     });
 
     test("doesn't show 'Custom date and time' if disabled", async function (assert) {
@@ -117,7 +117,7 @@ module(
       const options = getOptions();
       const now = i18n("time_shortcut.now");
 
-      assert.ok(options.includes(now));
+      assert.true(options.includes(now));
     });
 
     test("changing date/time updates the input correctly", async function (assert) {
@@ -129,13 +129,13 @@ module(
 
       await fillIn(".time-input", "11:15");
 
-      assert.ok(this.input.includes("2032-01-01"));
-      assert.ok(this.input.includes("11:15"));
+      assert.true(this.input.includes("2032-01-01"));
+      assert.true(this.input.includes("11:15"));
 
       await fillIn(".date-picker", "2033-01-01 ");
 
-      assert.ok(this.input.includes("2033-01-01"));
-      assert.ok(this.input.includes("11:15"));
+      assert.true(this.input.includes("2033-01-01"));
+      assert.true(this.input.includes("11:15"));
     });
   }
 );

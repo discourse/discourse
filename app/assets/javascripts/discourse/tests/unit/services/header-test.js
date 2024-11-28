@@ -11,8 +11,8 @@ module("Unit | Service | header", function (hooks) {
 
   test("it registers hiders", function (assert) {
     this.header.registerHider(this, ["search", "login"]);
-    assert.ok(this.header.headerButtonsHidden.includes("search"));
-    assert.ok(this.header.headerButtonsHidden.includes("login"));
+    assert.true(this.header.headerButtonsHidden.includes("search"));
+    assert.true(this.header.headerButtonsHidden.includes("login"));
   });
 
   test("it does not register invalid buttons for hiders", function (assert) {

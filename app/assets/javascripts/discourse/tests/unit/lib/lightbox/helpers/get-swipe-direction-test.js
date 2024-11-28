@@ -50,14 +50,13 @@ module(
         "returns 'DOWN' for swipes with a large positive y-axis difference"
       );
 
-      assert.strictEqual(
+      assert.false(
         getSwipeDirection({
           touchstartX: 50,
           touchstartY: 50,
           touchendX: 49,
           touchendY: 49,
         }),
-        false,
         "returns 'false' for swipes with a small x-axis difference and a small y-axis difference"
       );
     });

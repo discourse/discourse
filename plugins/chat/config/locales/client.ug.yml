@@ -600,11 +600,6 @@ ug:
           other_html: "<span>%{username}</span> <span>شەخسىي سۆھبەتتە %{identifier} ئاتالدى</span>"
         chat_message: "يېڭى سۆھبەت ئۇچۇرى"
         chat_quoted: "سۆھبەت ئۇچۇرىڭىزنى %{username} نەقىل ئالدى"
-      titles:
-        chat_mention: "سۆھبەتتە ئاتاش"
-        chat_invitation: "سۆھبەت تەكلىپى"
-        chat_quoted: "سۆھبەت نەقىل ئېلىندى"
-        chat_watched_thread: "كۆزەتتىكى تېما سۆھبىتى"
     action_codes:
       chat:
         enabled: '%{when} دە %{who} <button class="btn-link open-chat">سۆھبەت</button>نى قوزغاتتى'

@@ -3620,6 +3620,9 @@ bg:
             invalid_applies_to: "Задъжителни"
             topic: "теми"
             post: "публикации"
+        user_fields:
+          type: "Тип"
+          delete: "Изтрий"
       plugins:
         title: "Приставки"
         name: "Име"
@@ -4072,6 +4075,11 @@ bg:
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
         show_emails: "Покажи имейла"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Затвори"
+              confirm: "Изтрий"
         nav:
           new: "Нови"
           active: "Активни"
@@ -4223,8 +4231,6 @@ bg:
           external_avatar_url: "URL до аватара"
       user_fields:
         title: "User Fields"
-        help: "Добавете поле, което потребителите ще могат да попълват."
-        create: "Създай поле"
         untitled: "Untitled"
         name: "Име на полето"
         type: "Вид на полето"
@@ -4245,18 +4251,12 @@ bg:
             title: "По избор"
         editable:
           title: "Да се редактира след регистрация"
-          enabled: "може да се редактира"
-          disabled: "Текстово поле"
         show_on_profile:
           title: "Покажи на публичния профил"
-          enabled: "показано на профила"
-          disabled: "не се показва на профила"
         show_on_user_card:
           title: "Показване в потребителската карта"
-          enabled: "показано в потребителската карта"
-          disabled: "не е показано в потребителската карта"
         field_types:
-          text: "Текстово поле"
+          text: "Текст"
           confirm: "Потвърждение"
           dropdown: "Падащо"
       site_text:
@@ -4391,6 +4391,7 @@ bg:
           csv_has_unmatched_users: "Следните записи са в CSV файла, но те не могат да бъдат съчетани със съществуващи потребители и следователно няма да получат значката:"
       emoji:
         title: "Емотикони "
+        delete: "Изтрий"
         uploading: "Качване…"
         name: "Име "
         group: "Група"

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 class ApplicationRequest < ActiveRecord::Base
-  enum req_type: {
+  enum :req_type,
+       {
          http_total: 0,
          http_2xx: 1,
          http_background: 2,

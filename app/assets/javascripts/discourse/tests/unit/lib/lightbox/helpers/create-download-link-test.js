@@ -15,9 +15,8 @@ module(
 
       createDownloadLink(lightboxItem);
 
-      assert.strictEqual(
+      assert.true(
         createElementSpy.calledWith("a"),
-        true,
         "creates an anchor element"
       );
 
@@ -33,7 +32,7 @@ module(
         "sets the correct download attribute"
       );
 
-      assert.strictEqual(clickStub.called, true, "clicks the link element");
+      assert.true(clickStub.called, "clicks the link element");
 
       createElementSpy.restore();
       clickStub.restore();
