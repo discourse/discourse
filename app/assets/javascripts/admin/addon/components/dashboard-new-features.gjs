@@ -72,7 +72,7 @@ export default class DashboardNewFeatures extends Component {
           </AdminConfigAreaCard>
         {{else}}
           <AdminConfigAreaEmptyList
-            @emptyLabel={{i18n
+            @emptyLabelTranslated={{i18n
               "admin.dashboard.new_features.previous_announcements"
               url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
             }}
