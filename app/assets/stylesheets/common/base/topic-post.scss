@@ -834,17 +834,6 @@ aside.quote {
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .topic-body.highlighted,
-  .small-action-desc.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
-  }
-  // Disable animation so deleted status is visible immediately
-  .deleted .topic-body.highlighted {
-    animation: none;
-  }
-}
-
 .small-action-desc,
 .topic-body {
   &:focus-visible {
