@@ -17,7 +17,7 @@ module("Unit | Utility | link-lookup", function (hooks) {
   });
 
   test("works with https", function (assert) {
-    assert.ok(
+    assert.true(
       this.linkLookup.check(
         this.post,
         "https://en.wikipedia.org/wiki/handheld_game_console"
@@ -26,7 +26,7 @@ module("Unit | Utility | link-lookup", function (hooks) {
   });
 
   test("works with http", function (assert) {
-    assert.ok(
+    assert.true(
       this.linkLookup.check(
         this.post,
         "http://en.wikipedia.org/wiki/handheld_game_console"
@@ -35,7 +35,7 @@ module("Unit | Utility | link-lookup", function (hooks) {
   });
 
   test("works with trailing slash", function (assert) {
-    assert.ok(
+    assert.true(
       this.linkLookup.check(
         this.post,
         "https://en.wikipedia.org/wiki/handheld_game_console/"
@@ -44,7 +44,7 @@ module("Unit | Utility | link-lookup", function (hooks) {
   });
 
   test("works with uppercase characters", function (assert) {
-    assert.ok(
+    assert.true(
       this.linkLookup.check(
         this.post,
         "https://en.wikipedia.org/wiki/Handheld_game_console"

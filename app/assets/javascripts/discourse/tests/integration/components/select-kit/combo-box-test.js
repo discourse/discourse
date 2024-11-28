@@ -49,10 +49,7 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
 
     const header = this.subject.header();
 
-    assert.ok(
-      header.el().querySelector(".btn-clear"),
-      "it shows the clear button"
-    );
+    assert.dom(".btn-clear", header.el()).exists("shows the clear button");
     assert.strictEqual(header.value(), DEFAULT_VALUE.toString());
 
     await click(header.el().querySelector(".btn-clear"));
@@ -82,16 +79,14 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
 
     const header = this.subject.header().el();
 
-    assert.ok(
-      header.querySelector(`.d-icon-${this.caretDownIcon}`),
-      "it uses the icon provided"
-    );
+    assert
+      .dom(`.d-icon-${this.caretDownIcon}`, header)
+      .exists("uses the icon provided");
 
     await this.subject.expand();
 
-    assert.ok(
-      header.querySelector(`.d-icon-${this.caretUpIcon}`),
-      "it uses the icon provided"
-    );
+    assert
+      .dom(`.d-icon-${this.caretUpIcon}`, header)
+      .exists("uses the icon provided");
   });
 });

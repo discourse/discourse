@@ -43,11 +43,11 @@ module(
         [NOTIFICATION_TYPES.bookmark_reminder]: 72,
       });
       await render(template);
-      const dismiss = query(".panel-body-bottom .notifications-dismiss");
-      assert.ok(
-        dismiss,
-        "dismiss button is shown if the user has unread bookmark_reminder notifications"
-      );
+      assert
+        .dom(".panel-body-bottom .notifications-dismiss")
+        .exists(
+          "dismiss button is shown if the user has unread bookmark_reminder notifications"
+        );
       assert
         .dom(".panel-body-bottom .notifications-dismiss")
         .hasAttribute(

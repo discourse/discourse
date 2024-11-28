@@ -704,11 +704,12 @@ acceptance(
     test("suggested messages without new or unread", async function (assert) {
       await visit("/t/12");
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "Want to read more? Browse other messages in personal messages.",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "Want to read more? Browse other messages in personal messages.",
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages with new and unread", async function (assert) {
@@ -716,40 +717,41 @@ acceptance(
 
       await publishNewToMessageBus({ userId: 5, topicId: 1 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
 
       await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 unread and 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 unread and 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
 
       await publishReadToMessageBus({ userId: 5, topicId: 2 });
 
-      assert.strictEqual(
-        query(".more-topics__browse-more").innerText.trim(),
-        "There is 1 new message remaining, or browse other personal messages",
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          "There is 1 new message remaining, or browse other personal messages",
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages for group messages without new or unread", async function (assert) {
       await visit("/t/13");
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /Want to read more\? Browse other messages in\s+awesome_group\./
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /Want to read more\? Browse other messages in\s+awesome_group\./,
+          "displays the right browse more message"
+        );
     });
 
     test("suggested messages for group messages with new and unread", async function (assert) {
@@ -757,25 +759,21 @@ acceptance(
 
       await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /There is 1 new message remaining, or browse other messages in\s+awesome_group/
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /There is 1 new message remaining, or browse other messages in\s+awesome_group/,
+          "displays the right browse more message"
+        );
 
       await publishGroupUnreadToMessageBus({ groupIds: [14], topicId: 2 });
 
-      assert.ok(
-        query(".more-topics__browse-more")
-          .innerText.trim()
-          .match(
-            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
-          ),
-        "displays the right browse more message"
-      );
+      assert
+        .dom(".more-topics__browse-more")
+        .hasText(
+          /There is 1 unread\s+and 1 new message remaining, or browse other messages in\s+awesome_group/,
+          "displays the right browse more message"
+        );
     });
   }
 );

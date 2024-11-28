@@ -103,7 +103,7 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     controller.performGrantBadge();
     await settled();
 
-    assert.ok(
+    assert.true(
       GrantBadgeStub.calledWith(badgeToGrant.id, user.username, badgeReason)
     );
 

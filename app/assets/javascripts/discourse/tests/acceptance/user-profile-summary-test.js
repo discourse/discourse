@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
@@ -142,11 +142,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -161,7 +157,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     await click(".btn-delete-user");
     await click(".dialog-footer .btn-primary");
 
-    assert.notOk(deleteAndBlock, "first button does not block user");
+    assert.false(deleteAndBlock, "first button does not block user");
   });
 
   test("Delete and block", async function (assert) {
@@ -173,6 +169,6 @@ acceptance("User Profile - Summary - Admin", function (needs) {
       .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-danger");
-    assert.ok(deleteAndBlock, "second button also block user");
+    assert.true(deleteAndBlock, "second button also block user");
   });
 });

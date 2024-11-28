@@ -120,7 +120,7 @@ module(
       `);
 
       await click(".post-info .wiki");
-      assert.ok(
+      assert.true(
         this.historyShown,
         "clicking the wiki icon displays the post history"
       );
@@ -136,7 +136,7 @@ module(
       `);
 
       await click(".post-info .wiki");
-      assert.ok(this.editPostCalled, "clicking wiki icon edits the post");
+      assert.true(this.editPostCalled, "clicking wiki icon edits the post");
     });
 
     test("via-email", async function (assert) {
@@ -149,7 +149,7 @@ module(
       );
 
       await click(".post-info.via-email");
-      assert.ok(
+      assert.true(
         this.rawEmailShown,
         "clicking the envelope shows the raw email"
       );
@@ -182,7 +182,7 @@ module(
       );
 
       await click(".post-info.edits button");
-      assert.ok(this.historyShown, "clicking the pencil shows the history");
+      assert.true(this.historyShown, "clicking the pencil shows the history");
     });
 
     test("history without view permission", async function (assert) {
@@ -285,7 +285,7 @@ module(
       );
 
       await click(".topic-body .expand-hidden");
-      assert.ok(this.unhidden, "triggers the action");
+      assert.true(this.unhidden, "triggers the action");
     });
 
     test(`cooked content hidden - can't view hidden post`, async function (assert) {
@@ -374,7 +374,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
       );
-      assert.ok(this.deleted);
+      assert.true(this.deleted);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -409,7 +409,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
       );
-      assert.ok(this.deleted);
+      assert.true(this.deleted);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -444,7 +444,7 @@ module(
         "[data-content][data-identifier='admin-post-menu'] .toggle-post-type"
       );
 
-      assert.ok(this.toggled);
+      assert.true(this.toggled);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -473,7 +473,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .rebuild-html"
       );
-      assert.ok(this.baked);
+      assert.true(this.baked);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");
@@ -499,7 +499,7 @@ module(
         "[data-content][data-identifier='admin-post-menu'] .unhide-post"
       );
 
-      assert.ok(unhidden);
+      assert.true(unhidden);
 
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
@@ -531,7 +531,7 @@ module(
       await click(
         "[data-content][data-identifier='admin-post-menu'] .change-owner"
       );
-      assert.ok(this.owned);
+      assert.true(this.owned);
       assert
         .dom("[data-content][data-identifier='admin-post-menu']")
         .doesNotExist("also hides the menu");

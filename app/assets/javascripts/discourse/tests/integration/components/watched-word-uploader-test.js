@@ -30,7 +30,7 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
         )[0][1].meta.action_key,
         "flag"
       );
-      assert.ok(
+      assert.true(
         dialog.alert.calledWith(
           i18n("admin.watched_words.form.upload_successful")
         ),
