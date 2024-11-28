@@ -12,7 +12,7 @@ To learn more, visit [**discourse.org**](https://www.discourse.org) and join our
 
 <a href="https://blog.discourse.org/2023/08/discourse-3-1-is-here/"><img alt="Discourse 3.1" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261215898-ae95f963-5ab4-4509-b87a-f9f6e9a109bf.png" width="720px"></a>
 
-<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://github-production-user-asset-6210df.s3.amazonaws.com/5862206/261580781-1413ac96-5d08-40b2-bc8e-27c3f2d3bfe6.png" width="720px"></a>
+<a href="https://forum.homeexchange.com"><img alt="HomeExchange" src="https://github.com/user-attachments/assets/42fbbd25-502f-4047-a348-c93fb99d7986" width="720px"></a>
 
 <a href="https://twittercommunity.com/"><img alt="X Community" src="https://github.com/discourse/discourse/assets/2790986/ebb63eee-1927-4060-ada1-cf1bc774084c.png" width="720px"></a>
 
