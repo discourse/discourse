@@ -59,7 +59,8 @@ function positioningWorkaround(fixedElement) {
         (lastTouchedElement.nodeName === "TEXTAREA" &&
           document.activeElement === lastTouchedElement) ||
         lastTouchedElement.closest(".d-editor-button-bar") ||
-        lastTouchedElement.classList.contains("emoji"))
+        lastTouchedElement.classList.contains("emoji") ||
+        lastTouchedElement.closest(".display-edit-reason"))
     ) {
       return;
     }
