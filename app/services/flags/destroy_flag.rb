@@ -8,10 +8,12 @@ class Flags::DestroyFlag
 
     validates :id, presence: true
   end
+
   model :flag
   policy :not_system
   policy :not_used
   policy :invalid_access
+
   transaction do
     step :destroy
     step :log

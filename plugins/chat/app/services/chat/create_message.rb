@@ -72,6 +72,7 @@ module Chat
     policy :ensure_thread_matches_parent
     model :uploads, optional: true
     model :message_instance, :instantiate_message
+
     transaction do
       step :create_excerpt
       step :update_created_by_sdk
@@ -83,6 +84,7 @@ module Chat
       step :update_membership_last_read
       step :process_direct_message_channel
     end
+
     step :publish_new_thread
     step :process
     step :publish_user_tracking_state

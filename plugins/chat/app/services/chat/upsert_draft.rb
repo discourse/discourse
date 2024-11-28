@@ -31,6 +31,7 @@ module Chat
 
       validates :channel_id, presence: true
     end
+
     model :channel
     policy :can_upsert_draft
     step :check_thread_exists
