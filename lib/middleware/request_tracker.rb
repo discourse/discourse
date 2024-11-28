@@ -439,12 +439,34 @@ class Middleware::RequestTracker
     return :skip if @@ip_skipper&.call(request.ip)
     return :skip if STATIC_IP_SKIPPER&.any? { |entry| entry.include?(request.ip) }
 
-    if cookie && cookie[:user_id] && cookie[:trust_level] &&
-         cookie[:trust_level] >= GlobalSetting.skip_per_ip_rate_limit_trust_level
-      [cookie[:user_id], false, "id", "user"]
-    else
-      [request.ip, true, "ip", "IP address"]
+    # authenticated user?
+    if cookie && cookie[:user_id] && cookie[:trust_level]
+      if cookie[:trust_level] >= GlobalSetting.skip_per_ip_rate_limit_trust_level
+        return "id/#{cookie[:user_id]}", false, "id", "user"
+      else
+        # if the authenticated user comes from another bucketed source
+        # (e.g. public cloud) but does not meet skip_per_ip_rate_limit_trust_level,
+        # we don't want to bucket them along with the rest of the cloud,
+        # so they still get bucketed by IP
+        return "ip/#{request.ip}", true, "ip", "IP address"
+      end
     end
+
+    # TODO: authenticated user via API?
+
+    src_tag_info = SrcTagInfo.new(request)
+    # known crawler?
+    if verified_crawler = src_tag_info.verified_crawler
+      return "crawler/#{verified_crawler}", false, "crawler", "crawler (#{verified_crawler})"
+    end
+
+    # public cloud?
+    if verified_cloud = src_tag_info.verified_cloud
+      return "cloud/#{verified_cloud}", false, "cloud", "public cloud (#{verified_cloud})"
+    end
+
+    # fallback choice: IP
+    ["ip/#{request.ip}", true, "ip", "IP address"]
   end
 
   def rate_limit(request, cookie)

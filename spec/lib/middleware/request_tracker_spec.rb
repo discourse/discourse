@@ -747,6 +747,45 @@ RSpec.describe Middleware::RequestTracker do
       expect(status).to eq(200)
     end
 
+    context "with src-tag headers" do
+      ENV["DISCOURSE_HTTP_SRC_TAG_HEADER"] = "src-tag"
+      ENV["DISCOURSE_HTTP_SRC_TAG_SUPPORTED_HEADER"] = "src-tag-lists"
+
+      it "does bucket a public cloud" do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, "block"
+
+        env1 = env("REMOTE_ADDR" => "1.1.1.1", "HTTP_SRC_TAG" => "cloud-aws-ec2")
+        env2 = env("REMOTE_ADDR" => "1.1.1.2", "HTTP_SRC_TAG" => "cloud-aws-ec2")
+        env3 = env("REMOTE_ADDR" => "1.1.1.3")
+
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+
+        status, headers = middleware.call(env2)
+        expect(status).to eq(429)
+        expect(headers["Retry-After"]).to eq("10")
+        expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("cloud_10_secs_limit")
+
+        status, _ = middleware.call(env3)
+        expect(status).to eq(200)
+      end
+
+      it "does bucket public clouds separately" do
+        global_setting :max_reqs_per_ip_per_10_seconds, 1
+        global_setting :max_reqs_per_ip_mode, "block"
+
+        env1 = env("REMOTE_ADDR" => "1.1.1.1", "HTTP_SRC_TAG" => "cloud-aws-ec2")
+        env2 = env("REMOTE_ADDR" => "1.1.1.2", "HTTP_SRC_TAG" => "cloud-gcp")
+
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(env2)
+        expect(status).to eq(200)
+      end
+    end
+
     describe "diagnostic information" do
       it "is included when the requests-per-10-seconds limit is reached" do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
