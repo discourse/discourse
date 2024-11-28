@@ -85,9 +85,14 @@ export function highlightPost(postNumber) {
   }
 
   if (postNumber > 1) {
+    // Transport screenreader to correct post by focusing it
     element.setAttribute("tabindex", "0");
+    element.addEventListener(
+      "focusin",
+      () => element.removeAttribute("tabindex"),
+      { once: true }
+    );
     element.focus();
-    setTimeout(() => element.removeAttribute("tabindex"), 1000);
   }
 }
 
