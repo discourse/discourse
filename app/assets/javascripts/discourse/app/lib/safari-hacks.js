@@ -49,6 +49,7 @@ function positioningWorkaround(fixedElement) {
     // - invoking emoji dropdown via : and hitting return
     // - invoking a button in the editor toolbar
     // - tapping on emoji in the emoji modal
+    // - tapping on the edit reason icon/input
 
     if (
       lastTouchedElement &&
