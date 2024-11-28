@@ -26,7 +26,7 @@ module(
 
       this.subject.prefersFullPage();
 
-      assert.ok(this.subject.isFullPagePreferred);
+      assert.true(this.subject.isFullPagePreferred);
 
       this.subject.prefersDrawer();
 
@@ -35,11 +35,11 @@ module(
       this.subject.prefersDrawer();
       Site.currentProp("mobileView", true);
 
-      assert.ok(this.subject.isFullPagePreferred);
+      assert.true(this.subject.isFullPagePreferred);
     });
 
     test("isDrawerPreferred", function (assert) {
-      assert.ok(this.subject.isDrawerPreferred);
+      assert.true(this.subject.isDrawerPreferred);
 
       this.subject.prefersFullPage();
 
@@ -47,7 +47,7 @@ module(
 
       this.subject.prefersDrawer();
 
-      assert.ok(this.subject.isDrawerPreferred);
+      assert.true(this.subject.isDrawerPreferred);
     });
 
     test("lastKnownChatURL", function (assert) {
@@ -76,7 +76,7 @@ module(
       assert.false(this.subject.isFullPageActive);
 
       sinon.stub(this.subject.router, "currentRouteName").value("chat");
-      assert.ok(this.subject.isFullPageActive);
+      assert.true(this.subject.isFullPageActive);
     });
 
     test("didCollapseDrawer", function (assert) {

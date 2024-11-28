@@ -35,7 +35,7 @@ acceptance("Category Edit - Security", function (needs) {
     await click(".row-body .remove-permission");
     await availableGroups.expand();
 
-    assert.ok(
+    assert.true(
       availableGroups.rowByValue("everyone").exists(),
       "everyone has been removed and appears in the available groups"
     );

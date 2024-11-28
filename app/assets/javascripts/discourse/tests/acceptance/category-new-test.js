@@ -92,7 +92,7 @@ acceptance("Category New", function (needs) {
     sinon.stub(DiscourseURL, "routeTo");
 
     await click(".category-back");
-    assert.ok(
+    assert.true(
       DiscourseURL.routeTo.calledWith("/c/testing/11"),
       "back routing works"
     );

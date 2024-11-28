@@ -72,7 +72,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
     assert
       .dom(".topic-post .user-status-message")
       .exists({ count: 3 }, "all posts has user status");
-    assert.ok(
+    assert.true(
       query(".topic-post .user-status-message .emoji").src.includes(
         status.emoji
       ),
@@ -85,7 +85,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
     assert
       .dom(".topic-post .user-status-message")
       .exists({ count: 3 }, "all posts has user status");
-    assert.ok(
+    assert.true(
       query(".topic-post .user-status-message .emoji").src.includes(
         newStatus.emoji
       ),
@@ -100,7 +100,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
     assert
       .dom(".topic-post .user-status-message")
       .exists({ count: 3 }, "all posts has user status");
-    assert.ok(
+    assert.true(
       query(".topic-post .user-status-message .emoji").src.includes(
         status.emoji
       ),
@@ -119,7 +119,7 @@ acceptance("Topic - User Status - live updates", function (needs) {
     assert
       .dom(".topic-post .user-status-message")
       .exists({ count: 3 }, "all posts have user status");
-    assert.ok(
+    assert.true(
       query(".topic-post .user-status-message .emoji").src.includes(
         newStatus.emoji
       ),

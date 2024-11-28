@@ -21,10 +21,10 @@ const FKControlRadioGroupRadio = <template>
           name={{@field.name}}
           type="radio"
           value={{@value}}
-          checked={{eq @groupValue @value}}
+          checked={{eq @field.value @value}}
           id={{uuid}}
           class="form-kit__control-radio"
-          disabled={{@disabled}}
+          disabled={{@field.disabled}}
           ...attributes
           {{on "change" (withEventValue @field.set)}}
         />

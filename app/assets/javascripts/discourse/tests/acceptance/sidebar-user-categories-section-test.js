@@ -973,7 +973,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
+    assert.true(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
     );

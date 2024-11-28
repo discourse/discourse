@@ -124,9 +124,9 @@ module("lib:date-with-zone-helper", function () {
       minute: 36,
       timezone: PARIS,
     });
-    assert.ok(date.isDST());
+    assert.true(date.isDST());
     futureLocalDate = date.add(1, "year");
-    assert.ok(futureLocalDate.isDST());
+    assert.true(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
       "2021-04-25T15:36:00.000+02:00",
@@ -142,7 +142,7 @@ module("lib:date-with-zone-helper", function () {
     });
     assert.false(date.isDST());
     futureLocalDate = date.add(1, "week");
-    assert.ok(futureLocalDate.isDST());
+    assert.true(futureLocalDate.isDST());
     assert.strictEqual(
       futureLocalDate.format(),
       "2020-04-01T15:36:00.000+02:00",
@@ -157,7 +157,7 @@ module("lib:date-with-zone-helper", function () {
       timezone: PARIS,
     });
 
-    assert.ok(date.isDST());
+    assert.true(date.isDST());
     futureLocalDate = date.add(8, "months");
     assert.false(futureLocalDate.isDST());
     assert.strictEqual(

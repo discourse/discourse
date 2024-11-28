@@ -1123,7 +1123,7 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(teardownCalled, "section link teardown callback was called");
+    assert.true(teardownCalled, "section link teardown callback was called");
   });
 });
 

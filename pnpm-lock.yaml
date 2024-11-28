@@ -11,9 +11,9 @@ patchedDependencies:
   babel-plugin-debug-macros@0.3.4:
     hash: wki6cycbrrm5sscamn5w4cujby
     path: patches/babel-plugin-debug-macros@0.3.4.patch
-  content-tag@2.0.3:
-    hash: 7p4u3ktgi6j7plgz7k3eueofqy
-    path: patches/content-tag@2.0.3.patch
+  content-tag@3.0.0:
+    hash: lgdkxhmahesfzwpl4vwprolz5m
+    path: patches/content-tag@3.0.0.patch
   decorator-transforms@2.2.2:
     hash: fjlfhpth5cfhuq4pce5qq7awku
     path: patches/decorator-transforms@2.2.2.patch
@@ -1073,8 +1073,8 @@ importers:
         specifier: ^2.3.0
         version: 2.3.0
       content-tag:
-        specifier: ^2.0.3
-        version: 2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy)
+        specifier: ^3.0.0
+        version: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       decorator-transforms:
         specifier: ^2.2.2
         version: 2.2.2(patch_hash=fjlfhpth5cfhuq4pce5qq7awku)(@babel/core@7.26.0)
@@ -9983,7 +9983,7 @@ snapshots:
     dependencies:
       '@glint/environment-ember-loose': 1.5.0(@glimmer/component@1.1.2(@babel/core@7.26.0))(@glint/template@1.5.0)(ember-cli-htmlbars@6.3.0)(ember-modifier@4.2.0(@babel/core@7.26.0)(ember-source@5.5.0(@babel/core@7.26.0)(@glint/template@1.5.0)(rsvp@4.8.5)))
       '@glint/template': 1.5.0
-      content-tag: 2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy)
+      content-tag: 2.0.3
 
   '@glint/template@1.5.0': {}
 
@@ -11893,9 +11893,9 @@ snapshots:
     dependencies:
       safe-buffer: 5.2.1
 
-  content-tag@2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy): {}
+  content-tag@2.0.3: {}
 
-  content-tag@3.0.0: {}
+  content-tag@3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m): {}
 
   content-type@1.0.5: {}
 
@@ -12502,7 +12502,7 @@ snapshots:
       compression: 1.7.4
       configstore: 5.0.1
       console-ui: 3.1.2
-      content-tag: 2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy)
+      content-tag: 2.0.3
       core-object: 3.1.5
       dag-map: 2.0.2
       diff: 5.2.0
@@ -12646,7 +12646,7 @@ snapshots:
       '@babel/core': 7.26.0(supports-color@8.1.1)
       '@babel/eslint-parser': 7.25.8(@babel/core@7.26.0)(eslint@9.14.0)
       '@glimmer/syntax': 0.92.3
-      content-tag: 2.0.3(patch_hash=7p4u3ktgi6j7plgz7k3eueofqy)
+      content-tag: 2.0.3
       eslint-scope: 7.2.2
       html-tags: 3.3.1
     transitivePeerDependencies:
@@ -12836,7 +12836,7 @@ snapshots:
   ember-template-imports@4.2.0:
     dependencies:
       broccoli-stew: 3.0.0
-      content-tag: 3.0.0
+      content-tag: 3.0.0(patch_hash=lgdkxhmahesfzwpl4vwprolz5m)
       ember-cli-version-checker: 5.1.2
     transitivePeerDependencies:
       - supports-color

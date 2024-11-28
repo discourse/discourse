@@ -11,10 +11,9 @@ acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
 
   test("When SiteSetting.enable_smtp is false", async function (assert) {
     await visit("/g/discourse/manage/email");
-    assert.notOk(
-      query(".user-secondary-navigation").innerText.includes("Email"),
-      "email link is not shown in the sidebar"
-    );
+    assert
+      .dom(".user-secondary-navigation")
+      .doesNotIncludeText("Email", "email link is not shown in the sidebar");
     assert.strictEqual(
       currentRouteName(),
       "group.manage.profile",
@@ -31,10 +30,9 @@ acceptance(
 
     test("When SiteSetting.enable_smtp is true but SiteSetting.enable_imap is false", async function (assert) {
       await visit("/g/discourse/manage/email");
-      assert.ok(
-        query(".user-secondary-navigation").innerText.includes("Email"),
-        "email link is shown in the sidebar"
-      );
+      assert
+        .dom(".user-secondary-navigation")
+        .includesText("Email", "email link is shown in the sidebar");
       assert.strictEqual(
         currentRouteName(),
         "group.manage.email",
@@ -68,10 +66,9 @@ acceptance(
 
     test("enabling SMTP, testing, and saving", async function (assert) {
       await visit("/g/discourse/manage/email");
-      assert.ok(
-        query(".user-secondary-navigation").innerText.includes("Email"),
-        "email link is shown in the sidebar"
-      );
+      assert
+        .dom(".user-secondary-navigation")
+        .includesText("Email", "email link is shown in the sidebar");
       assert
         .dom("#enable_imap")
         .isDisabled("IMAP is disabled until SMTP settings are valid");
@@ -315,14 +312,13 @@ acceptance(
         "imap mailbox is prefilled"
       );
 
-      const regex = /updated: (.*?) by eviltrout/;
       assert.dom(".group-email-last-updated-details.for-imap").exists();
-      assert.ok(
-        regex.test(
-          query(".group-email-last-updated-details.for-imap").innerText.trim()
-        ),
-        "shows last updated imap details"
-      );
+      assert
+        .dom(".group-email-last-updated-details.for-imap")
+        .hasText(
+          "Last updated: Jun 16, 2021 by eviltrout",
+          "shows last updated imap details"
+        );
     });
   }
 );

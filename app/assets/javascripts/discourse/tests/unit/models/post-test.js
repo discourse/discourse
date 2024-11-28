@@ -17,7 +17,7 @@ module("Unit | Model | post", function (hooks) {
 
   test("new_user", function (assert) {
     const post = this.store.createRecord("post", { trust_level: 0 });
-    assert.ok(post.new_user, "post is from a new user");
+    assert.true(post.new_user, "post is from a new user");
 
     post.set("trust_level", 1);
     assert.false(post.new_user, "post is no longer from a new user");

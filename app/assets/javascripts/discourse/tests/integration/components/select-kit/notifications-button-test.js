@@ -29,14 +29,14 @@ module(
         />
       `);
 
-      assert.ok(this.subject.header().value());
+      assert.true(!!this.subject.header().value());
 
-      assert.ok(
+      assert.true(
         this.subject
           .header()
           .label()
           .includes(`${this.i18nPrefix}.regular${this.i18nPostfix}`),
-        "it shows the regular choice when value is not set"
+        "shows the regular choice when value is not set"
       );
 
       assert

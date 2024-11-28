@@ -431,7 +431,7 @@ module("Unit | Model | composer", function (hooks) {
       "composer.title_or_link_placeholder",
       "placeholder invites you to paste a link"
     );
-    assert.ok(composer.canEditTopicFeaturedLink, "can paste link");
+    assert.true(composer.canEditTopicFeaturedLink, "can paste link");
   });
 
   test("targetRecipientsArray contains types", function (assert) {
