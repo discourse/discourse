@@ -44,8 +44,6 @@ export function clearToolbarCallbacks() {
   _createCallbacks = [];
 }
 
-export const composerShortcuts = {};
-
 export function onToolbarCreate(func) {
   deprecated("`onToolbarCreate` is deprecated, use the plugin api instead.", {
     id: "discourse.d-editor.on-toolbar-create",
