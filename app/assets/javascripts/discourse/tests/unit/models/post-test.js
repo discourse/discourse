@@ -43,6 +43,12 @@ module("Unit | Model | post", function (hooks) {
       likeAction: null, // `likeAction` is a tracked property from the model added using `@trackedPostProperty`
     });
 
+    // asserts that Object.keys(post) does not contain "likeAction"
+    assert.false(
+      Object.keys(post).includes("likeAction"),
+      "Object.keys does not enumerate `likeAction`"
+    );
+
     post.updateFromPost(
       this.store.createRecord("post", {
         raw: "different raw",
@@ -131,6 +137,6 @@ module("Unit | Model | post", function (hooks) {
       id: 1173,
     });
 
-    assert.ok(post.likeAction === null, "likeAction was reset to null");
+    assert.strictEqual(post.likeAction, null, "likeAction was reset to null");
   });
 });
