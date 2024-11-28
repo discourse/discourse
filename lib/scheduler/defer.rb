@@ -76,6 +76,7 @@ module Scheduler
     def stop!(finish_work: false)
       if finish_work
         @finish = true
+        @queue.push({ finish: true }, force: true)
         @thread&.join
       end
       @thread.kill if @thread&.alive?
@@ -108,7 +109,9 @@ module Scheduler
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
-      db, job, desc = @queue.shift(block: !non_block).values_at(:db, :job, :desc)
+      db, job, desc, finish = @queue.shift(block: !non_block).values_at(:db, :job, :desc, :finish)
+
+      return if finish
 
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
