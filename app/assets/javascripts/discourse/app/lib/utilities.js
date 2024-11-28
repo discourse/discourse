@@ -85,7 +85,9 @@ export function highlightPost(postNumber) {
   }
 
   if (postNumber > 1) {
+    element.setAttribute("tabindex", "0");
     element.focus();
+    setTimeout(() => element.removeAttribute("tabindex"), 1000);
   }
 }
 
