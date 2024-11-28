@@ -55,8 +55,10 @@ describe "Discovery list", type: :system do
 
       find("#navigation-bar .latest > a").click
 
-      # No bulk select toggle, no actions available in /latest
+      # No bulk select toggle or checkboxes
+      # this action is not available for this user in /latest
       expect(page).to have_no_css(".topic-list-body .bulk-select")
+      expect(page).to have_no_css("button.bulk-select")
     end
   end
 end
