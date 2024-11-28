@@ -528,7 +528,7 @@ export default function (options) {
   async function checkTriggerRule(_opts) {
     const opts = {
       ..._opts,
-      inCodeBlock: options.textManipulation.inCodeBlock,
+      inCodeBlock: () => options.textManipulation.inCodeBlock,
     };
     const shouldTrigger = await options.triggerRule?.(me[0], opts);
     return shouldTrigger ?? true;
