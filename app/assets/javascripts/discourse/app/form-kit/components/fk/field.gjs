@@ -165,6 +165,7 @@ export default class FKField extends Component {
             id=field.id
             name=field.name
             set=field.set
+            value=field.value
           )
         }}
       </this.wrapper>
