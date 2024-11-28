@@ -92,7 +92,7 @@ class MethodProfiler
     Thread.current[:_method_profiler] = transfer ||
       {
         __start: Process.clock_gettime(Process::CLOCK_MONOTONIC),
-        __start_heap_live_slots: GC.stat[:heap_live_slots],
+        __start_gc_heap_live_slots: GC.stat[:heap_live_slots],
       }
   end
 

@@ -126,10 +126,9 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
 
               # MethodProfiler.stop is called after this lambda, so the delta
               # must be computed here.
-              if start_heap_live_slots = data[:__start_heap_live_slots]
-                if heap_live_slots = GC.stat[:heap_live_slots] - start_heap_live_slots
-                  output[:heap_live_slots] = heap_live_slots if heap_live_slots > 0
-                end
+              if data[:__start_gc_heap_live_slots]
+                output[:heap_live_slots] = GC.stat[:heap_live_slots] -
+                  data[:__start_gc_heap_live_slots]
               end
             end
 
