@@ -18,7 +18,6 @@ import {
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import {
   authorizesOneOrMoreImageExtensions,
   IMAGE_MARKDOWN_REGEX,
@@ -139,7 +138,7 @@ export default class ComposerEditor extends Component {
   @observes("composer.focusTarget")
   setFocus() {
     if (this.composer.focusTarget === "editor") {
-      putCursorAtEnd(this.element.querySelector("textarea"));
+      this.textManipulation.putCursorAtEnd();
     }
   }
 
@@ -188,26 +187,38 @@ export default class ComposerEditor extends Component {
 
   @on("didInsertElement")
   _composerEditorInit() {
-    const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    input?.addEventListener(
-      "scroll",
-      this._throttledSyncEditorAndPreviewScroll
-    );
-
     this._registerImageAltTextButtonClick(preview);
-
-    // Focus on the body unless we have a title
-    if (!this.get("composer.model.canEditTitle")) {
-      putCursorAtEnd(input);
-    }
 
     if (this.composer.allowUpload) {
       this.uppyComposerUpload.setup(this.element);
     }
 
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
+  }
+
+  @bind
+  setupEditor(textManipulation) {
+    this.textManipulation = textManipulation;
+
+    const input = this.element.querySelector(".d-editor-input");
+
+    input?.addEventListener(
+      "scroll",
+      this._throttledSyncEditorAndPreviewScroll
+    );
+
+    // Focus on the body unless we have a title
+    if (!this.get("composer.model.canEditTitle")) {
+      textManipulation.putCursorAtEnd();
+    }
+
+    return () => {
+      input?.removeEventListener(
+        "scroll",
+        this._throttledSyncEditorAndPreviewScroll
+      );
+    };
   }
 
   @discourseComputed(
@@ -785,7 +796,6 @@ export default class ComposerEditor extends Component {
 
   @on("willDestroyElement")
   _composerClosed() {
-    const input = this.element.querySelector(".d-editor-input");
     const preview = this.element.querySelector(".d-editor-preview-wrapper");
 
     if (this.composer.allowUpload) {
@@ -801,11 +811,6 @@ export default class ComposerEditor extends Component {
         isTesting() ? 0 : 400
       );
     });
-
-    input?.removeEventListener(
-      "scroll",
-      this._throttledSyncEditorAndPreviewScroll
-    );
 
     preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
     preview?.removeEventListener("click", this._handleAltTextEditButtonClick);

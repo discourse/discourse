@@ -3,6 +3,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
 import toMarkdown from "discourse/lib/to-markdown";
@@ -28,6 +29,8 @@ const OP = {
   ADDED: 2,
 };
 
+const FOUR_SPACES_INDENT = "4-spaces-indent";
+
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
 export function getHead(head, prev) {
@@ -42,6 +45,7 @@ export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
+  @service currentUser;
 
   eventPrefix;
   textarea;
@@ -62,6 +66,11 @@ export default class TextareaTextManipulation {
 
   get value() {
     return this.textarea.value;
+  }
+
+  set value(value) {
+    this.textarea.value = value;
+    this.textarea.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
   // ensures textarea scroll position is correct
@@ -730,6 +739,7 @@ export default class TextareaTextManipulation {
     }
   }
 
+  @bind
   async inCodeBlock() {
     return inCodeBlock(
       this.$textarea.value ?? this.$textarea.val(),
@@ -737,6 +747,7 @@ export default class TextareaTextManipulation {
     );
   }
 
+  @bind
   toggleDirection() {
     let currentDir = this.$textarea.attr("dir")
         ? this.$textarea.attr("dir")
@@ -744,6 +755,69 @@ export default class TextareaTextManipulation {
       newDir = currentDir === "ltr" ? "rtl" : "ltr";
 
     this.$textarea.attr("dir", newDir).focus();
+  }
+
+  @bind
+  applyList(sel, head, exampleKey, opts) {
+    if (sel.value.includes("\n")) {
+      this.applySurround(sel, head, "", exampleKey, opts);
+    } else {
+      const [hval, hlen] = getHead(head);
+      if (sel.start === sel.end) {
+        sel.value = i18n(`composer.${exampleKey}`);
+      }
+
+      const trimmedPre = sel.pre.trim();
+      const number = sel.value.startsWith(hval)
+        ? sel.value.slice(hlen)
+        : `${hval}${sel.value}`;
+      const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
+
+      const trimmedPost = sel.post.trim();
+      const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
+
+      this.value = `${preLines}${number}${post}`;
+      this.selectText(preLines.length, number.length);
+    }
+  }
+
+  @bind
+  formatCode() {
+    const sel = this.getSelected("", { lineVal: true });
+    const selValue = sel.value;
+    const hasNewLine = selValue.includes("\n");
+    const isBlankLine = sel.lineVal.trim().length === 0;
+    const isFourSpacesIndent =
+      this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT;
+
+    if (!hasNewLine) {
+      if (selValue.length === 0 && isBlankLine) {
+        if (isFourSpacesIndent) {
+          const example = i18n(`composer.code_text`);
+          this.value = `${sel.pre}    ${example}${sel.post}`;
+          return this.selectText(sel.pre.length + 4, example.length);
+        } else {
+          return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
+        }
+      } else {
+        return this.applySurround(sel, "`", "`", "code_title");
+      }
+    } else {
+      if (isFourSpacesIndent) {
+        return this.applySurround(sel, "    ", "", "code_text");
+      } else {
+        const preNewline = sel.pre[-1] !== "\n" && sel.pre !== "" ? "\n" : "";
+        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
+        return this.addText(
+          sel,
+          `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`
+        );
+      }
+    }
+  }
+
+  putCursorAtEnd() {
+    putCursorAtEnd(this.textarea);
   }
 
   autocomplete() {
