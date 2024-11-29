@@ -168,7 +168,7 @@ RSpec.describe Email::Styles do
     end
   end
 
-  describe "dedup_css" do
+  describe "deduplicate styles" do
     it "removes double definitions" do
       frag = "<test style='color:green;color:red'>hello</test>"
       styler = Email::Styles.new(frag)

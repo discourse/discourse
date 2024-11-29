@@ -374,18 +374,22 @@ module Email
       end
     end
 
-    def dedup_style(style)
-      style_instructions =
-        style.split(";").map(&:strip).select(&:present?).map { |s| s.split(":", 2).map(&:strip) }
+    def deduplicate_style(style)
       styles = {}
-      style_instructions.each { |key, value| styles[key] = value }
-      styles.map { |k, v| "#{k}:#{v}" }.join(";")
-    rescue StandardError
+
       style
+        .split(";")
+        .select(&:present?)
+        .map { _1.split(":", 2).map(&:strip) }
+        .each { |k, v| styles[k] = v if k.present? && v.present? }
+
+      styles.map { |k, v| "#{k}:#{v}" }.join(";")
     end
 
-    def dedup_styles
-      @fragment.css("[style]").each { |element| element["style"] = dedup_style element["style"] }
+    def deduplicate_styles
+      @fragment
+        .css("[style]")
+        .each { |element| element["style"] = deduplicate_style element["style"] }
     end
 
     def to_html
@@ -394,7 +398,7 @@ module Email
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       strip_classes_and_ids
       replace_relative_urls
-      dedup_styles
+      deduplicate_styles
 
       @fragment.to_html
     end
