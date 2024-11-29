@@ -57,6 +57,7 @@ export function onToolbarCreate(func) {
 export default class DEditor extends Component {
   @service("emoji-store") emojiStore;
   @service modal;
+  @service menu;
 
   editorComponent = TextareaEditor;
   textManipulation;
