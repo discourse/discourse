@@ -122,13 +122,47 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
 
     context "for direct messages" do
       fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user]) }
-      fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel) }
+      fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
 
       it "is urgent" do
         visit("/")
         chat_page.open_from_header
 
         expect(page).to have_css("#c-footer-direct-messages .c-unread-indicator.-urgent")
+      end
+
+      context "with threads" do
+        fab!(:thread) { Fabricate(:chat_thread, channel: dm_channel, original_message: dm_message) }
+
+        before do
+          SiteSetting.chat_threads_enabled = true
+          dm_channel.membership_for(current_user).mark_read!(dm_message.id)
+        end
+
+        it "is urgent for thread mentions" do
+          Jobs.run_immediately!
+
+          thread.membership_for(current_user).update!(
+            notification_level: ::Chat::NotificationLevels.all[:normal],
+          )
+
+          visit("/")
+          chat_page.open_from_header
+
+          expect(page).to have_no_css("#c-footer-direct-messages .c-unread-indicator.-urgent")
+
+          Fabricate(
+            :chat_message_with_service,
+            chat_channel: dm_channel,
+            thread: thread,
+            message: "hello @#{current_user.username}",
+          )
+
+          expect(page).to have_css(
+            "#c-footer-direct-messages .c-unread-indicator.-urgent",
+            text: "1",
+          )
+        end
       end
     end
 

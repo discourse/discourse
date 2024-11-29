@@ -210,12 +210,12 @@ export default class ChatChannelsManager extends Service {
         a: {
           urgent:
             a.tracking.mentionCount + a.tracking.watchedThreadsUnreadCount,
-          unread: a.tracking.unreadCount + a.threadsManager.unreadThreadCount,
+          unread: a.tracking.unreadCount + a.unreadThreadsCountSinceLastViewed,
         },
         b: {
           urgent:
             b.tracking.mentionCount + b.tracking.watchedThreadsUnreadCount,
-          unread: b.tracking.unreadCount + b.threadsManager.unreadThreadCount,
+          unread: b.tracking.unreadCount + b.unreadThreadsCountSinceLastViewed,
         },
       };
 
@@ -253,22 +253,26 @@ export default class ChatChannelsManager extends Service {
         return -1;
       }
 
-      if (
-        a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount > 0 ||
-        b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount > 0
-      ) {
-        return a.tracking.unreadCount + a.tracking.watchedThreadsUnreadCount >
-          b.tracking.unreadCount + b.tracking.watchedThreadsUnreadCount
-          ? -1
-          : 1;
+      const aUrgent =
+        a.tracking.unreadCount +
+        a.tracking.mentionCount +
+        a.tracking.watchedThreadsUnreadCount;
+
+      const bUrgent =
+        b.tracking.unreadCount +
+        b.tracking.mentionCount +
+        b.tracking.watchedThreadsUnreadCount;
+
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
       }
 
       if (
-        a.threadsManager.unreadThreadCount > 0 ||
-        b.threadsManager.unreadThreadCount > 0
+        a.unreadThreadsCountSinceLastViewed > 0 ||
+        b.unreadThreadsCountSinceLastViewed > 0
       ) {
-        return a.threadsManager.unreadThreadCount >
-          b.threadsManager.unreadThreadCount
+        return a.unreadThreadsCountSinceLastViewed >
+          b.unreadThreadsCountSinceLastViewed
           ? -1
           : 1;
       }

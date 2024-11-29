@@ -316,7 +316,12 @@ class CategoriesController < ApplicationController
     page = [1, params[:page].to_i].max
     offset = params[:offset].to_i
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
-    only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
+    only =
+      if params[:only].present?
+        Category.secured(guardian).where(id: params[:only].to_a.map(&:to_i))
+      else
+        Category.secured(guardian)
+      end
     except_ids = params[:except].to_a.map(&:to_i)
     include_uncategorized =
       (

@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.38.0";
+export const PLUGIN_API_VERSION = "1.39.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -119,6 +119,7 @@ import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
+import { _addTrackedPostProperty } from "discourse/models/post";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import {
   addSaveableUserField,
@@ -817,6 +818,17 @@ class PluginApi {
    **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
+  }
+
+  /**
+   * Adds a tracked property to the post model.
+   *
+   * This method is used to mark a property as tracked for post updates.
+   *
+   * @param {string} name - The name of the property to track.
+   */
+  addTrackedPostProperty(name) {
+    _addTrackedPostProperty(name);
   }
 
   /**

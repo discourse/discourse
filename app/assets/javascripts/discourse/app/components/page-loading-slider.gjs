@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
+import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
@@ -23,12 +23,16 @@ export default class PageLoadingSlider extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.loadingSlider.off("stateChange", this, "stateChange");
+    if (this._deferredStateChange) {
+      cancelAnimationFrame(this._deferredStateChange);
+      this._deferredStateChange = null;
+    }
   }
 
   @bind
   stateChanged(loading) {
     if (this._deferredStateChange) {
-      cancel(this._deferredStateChange);
+      cancelAnimationFrame(this._deferredStateChange);
       this._deferredStateChange = null;
     }
 
@@ -36,7 +40,9 @@ export default class PageLoadingSlider extends Component {
       this.state = "loading";
     } else if (loading) {
       this.state = "ready";
-      this._deferredStateChange = next(() => (this.state = "loading"));
+      this._deferredStateChange = requestAnimationFrame(() => {
+        run(() => (this.state = "loading"));
+      });
     } else {
       this.state = "done";
     }

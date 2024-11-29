@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Unit | Model | post", function (hooks) {
   setupTest(hooks);
@@ -32,18 +33,42 @@ module("Unit | Model | post", function (hooks) {
   });
 
   test("updateFromPost", function (assert) {
+    withPluginApi("1.39.0", (api) => {
+      api.addTrackedPostProperty("plugin_property");
+    });
+
     const post = this.store.createRecord("post", {
       post_number: 1,
       raw: "hello world",
+      likeAction: null, // `likeAction` is a tracked property from the model added using `@trackedPostProperty`
     });
+
+    // asserts that Object.keys(post) does not contain "likeAction"
+    assert.false(
+      Object.keys(post).includes("likeAction"),
+      "Object.keys does not enumerate `likeAction`"
+    );
 
     post.updateFromPost(
       this.store.createRecord("post", {
         raw: "different raw",
+        yours: false,
+        likeAction: { count: 1 },
+        plugin_property: "different plugin value",
       })
     );
 
-    assert.strictEqual(post.raw, "different raw", "raw field updated");
+    assert.strictEqual(post.raw, "different raw", "`raw` field was updated");
+    assert.deepEqual(
+      post.likeAction,
+      { count: 1 },
+      "`likeAction` field was updated"
+    );
+    assert.strictEqual(
+      post.plugin_property,
+      "different plugin value",
+      "`plugin_property` field was updated"
+    );
   });
 
   test("destroy by staff", async function (assert) {
@@ -96,5 +121,22 @@ module("Unit | Model | post", function (hooks) {
       "the cooked content changed"
     );
     assert.strictEqual(post.version, 2, "the version number increased");
+  });
+
+  test("likeAction", function (assert) {
+    const post = this.store.createRecord("post", {
+      id: 1173,
+    });
+
+    post.likeAction = { count: 1 };
+    assert.deepEqual(post.likeAction, { count: 1 }, "likeAction set");
+
+    // creating a new record with the same id should reset the likeAction in the original post because instance
+    // is cached and the information required to properly generate the field is not available in the new JSON data
+    this.store.createRecord("post", {
+      id: 1173,
+    });
+
+    assert.strictEqual(post.likeAction, null, "likeAction was reset to null");
   });
 });

@@ -76,7 +76,7 @@ export default class ChatTrackingStateManager extends Service {
 
   get allChannelUrgentCount() {
     return (
-      this.publicChannelMentionCount +
+      this.allChannelMentionCount +
       this.directMessageUnreadCount +
       this.watchedThreadsUnreadCount
     );
