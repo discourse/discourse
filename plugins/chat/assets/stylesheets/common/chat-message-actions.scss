@@ -12,11 +12,6 @@
   border-radius: var(--d-border-radius);
   display: flex;
 
-  .emoji-picker-anchor {
-    position: absolute;
-    height: 34px;
-  }
-
   .link-to-message-btn {
     .d-icon {
       transition: all 0.25s ease-in-out;

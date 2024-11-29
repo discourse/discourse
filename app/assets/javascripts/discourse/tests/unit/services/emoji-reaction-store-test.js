@@ -6,12 +6,10 @@ module("Discourse Chat | Unit | emoji-reaction-store", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings = getOwner(this).lookup("service:site-settings");
     this.emojiReactionStore = getOwner(this).lookup(
       "service:emoji-reaction-store"
     );
 
-    this.emojiReactionStore.siteSettings = this.siteSettings;
     this.emojiReactionStore.reset();
   });
 
@@ -20,6 +18,8 @@ module("Discourse Chat | Unit | emoji-reaction-store", function (hooks) {
   });
 
   test("defaults", function (assert) {
+    console.log(this.emojiReactionStore.favorites);
+
     assert.deepEqual(
       this.emojiReactionStore.favorites,
       this.siteSettings.default_emoji_reactions.split("|").filter((val) => val)

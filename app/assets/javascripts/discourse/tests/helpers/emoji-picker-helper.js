@@ -16,8 +16,13 @@ class EmojiPicker {
 
   async select(emoji) {
     await click(
-      `.emoji-picker__scrollable-content img.emoji[title=":${emoji}:"]`
+      `.emoji-picker__scrollable-content img.emoji[data-emoji="${emoji}"]`
     );
+  }
+
+  async tone(level) {
+    await click(query(".emoji-picker__diversity-trigger", this.element));
+    await click(`.emoji-picker__diversity-menu [data-level="${level}"]`);
   }
 }
 
@@ -27,6 +32,9 @@ export default function picker(selector = ".emoji-picker-content") {
   return {
     async fill(input) {
       await helper.fill(input);
+    },
+    async tone(level) {
+      await helper.tone(level);
     },
     async select(emoji) {
       await helper.select(emoji);

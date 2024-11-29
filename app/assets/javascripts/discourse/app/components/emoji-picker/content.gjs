@@ -150,9 +150,7 @@ export default class EmojiPicker extends Component {
 
   @action
   focusFilter(target) {
-    schedule("afterRender", () => {
-      target?.focus({ preventScroll: true });
-    });
+    target?.focus({ preventScroll: true });
   }
 
   debouncedDidInputFilter(filter = "") {
@@ -293,7 +291,7 @@ export default class EmojiPicker extends Component {
 
       this.args.didSelectEmoji?.(emoji);
 
-      await this.args.close();
+      await this.args.close?.();
     }
   }
 

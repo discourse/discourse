@@ -2,10 +2,12 @@
 // https://github.com/discourse/discourse/blob/892f7e0506f3a4d40d9a59a4c926ff0a2aa0947e/app/assets/javascripts/discourse/app/services/emoji-store.js
 
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 export default class EmojiReactionStore extends Service {
+  @service siteSettings;
+
   @tracked yolo = this.store.getObject(this.USER_EMOJIS_STORE_KEY) ?? [];
 
   STORE_NAMESPACE = "discourse_emoji_reaction_";

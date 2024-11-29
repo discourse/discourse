@@ -56,6 +56,7 @@ export default class EmojiPicker extends Component {
               <DButton
                 class="btn-transparent"
                 @action={{fn this.didRequestFitzpatrickScale fitzpatrick.scale}}
+                data-level={{fitzpatrick.scale}}
               >
                 {{#if (eq fitzpatrick.scale 1)}}
                   {{replaceEmoji ":clap:"}}
