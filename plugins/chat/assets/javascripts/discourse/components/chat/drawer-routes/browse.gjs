@@ -9,7 +9,6 @@ import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 export default class ChatDrawerRoutesBrowse extends Component {
   @service chat;
   @service chatStateManager;
-  @service chatChannelsManager;
   @service chatHistory;
 
   @tracked showThreadFullTitle = false;

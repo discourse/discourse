@@ -8,7 +8,7 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
-import { and, eq } from "truth-helpers";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -174,7 +174,6 @@ export default class ChatChannelRow extends Component {
         (if @channel.focused "focused")
         (if @channel.currentUserMembership.muted "muted")
         (if @options.leaveButton "can-leave")
-        (if (eq this.chat.activeChannel.id @channel.id) "active")
         (if this.channelHasUnread "has-unread")
       }}
       tabindex="0"
