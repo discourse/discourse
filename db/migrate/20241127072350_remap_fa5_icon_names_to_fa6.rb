@@ -714,8 +714,8 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
               "fab-#{FA5_REMAPS[icon_name.sub(/^fab fa-/, "")]}"
             when /^far fa-/
               "far-#{FA5_REMAPS[icon_name.sub(/^far fa-/, "")]}"
-            when /^far fa-/
-              FA5_REMAPS[icon_name.sub(/^far fa-/, "")]
+            when /^fas fa-/
+              FA5_REMAPS[icon_name.sub(/^fas fa-/, "")]
             when /^fa-/
               FA5_REMAPS[icon_name.sub(/^fa-/, "")]
             else
@@ -769,8 +769,8 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
           OR #{column_name} = CONCAT('fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('far-', remaps.from_icon)
           OR #{column_name} = CONCAT('fab-', remaps.from_icon)
-          OR #{column_name} = CONCAT('fab fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('far fa-', remaps.from_icon)
+          OR #{column_name} = CONCAT('fab fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('fas fa-', remaps.from_icon);
       SQL
   end
