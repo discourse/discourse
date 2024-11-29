@@ -686,8 +686,7 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
   end
 
   def down
-    migrate_icon_names(rollback: true)
-    # raise ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 
   def migrate_svg_icon_subset_site_setting
@@ -733,15 +732,8 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
     )
   end
 
-  def migrate_icon_names(rollback: false)
-    mappings =
-      FA5_REMAPS
-        .map do |old, new|
-          from = rollback ? new : old
-          to = rollback ? old : new
-          "('#{from}', '#{to}')"
-        end
-        .join(", ")
+  def migrate_icon_names
+    mappings = FA5_REMAPS.map { |from, to| "('#{from}', '#{to}')" }.join(", ")
 
     tables_to_update = {
       groups: "flair_icon",
