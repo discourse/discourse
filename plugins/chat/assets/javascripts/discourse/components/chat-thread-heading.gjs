@@ -13,9 +13,9 @@ export default class ChatThreadHeading extends Component {
         <div class="chat-thread__heading-icon">
           {{icon "discourse-threads"}}
         </div>
-        <div class="chat-thread__heading-title">
+        <h2 class="chat-thread__heading-title">
           {{replaceEmoji @thread.title}}
-        </div>
+        </h2>
       </div>
     {{/if}}
   </template>
