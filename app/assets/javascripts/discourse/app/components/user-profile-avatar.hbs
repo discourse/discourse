@@ -5,22 +5,22 @@
 >
   {{bound-avatar @user "huge"}}
 
-<div class="user-profile-avatar">
-  <PluginOutlet
-  @name="user-profile-avatar-img-wrapper"
-  @connectorTagName="div"
-  @outletArgs={{hash user=@user}}
->
-  {{bound-avatar @user "huge"}}
-</PluginOutlet>
-
-  <UserAvatarFlair @user={{@user}} />
-  <div>
+  <div class="user-profile-avatar">
     <PluginOutlet
-      @name="user-profile-avatar-flair"
+      @name="user-profile-avatar-img-wrapper"
       @connectorTagName="div"
-      @outletArgs={{hash model=@user}}
-    />
+      @outletArgs={{hash user=@user}}
+    >
+      {{bound-avatar @user "huge"}}
+    </PluginOutlet>
+
+    <UserAvatarFlair @user={{@user}} />
+    <div>
+      <PluginOutlet
+        @name="user-profile-avatar-flair"
+        @connectorTagName="div"
+        @outletArgs={{hash model=@user}}
+      />
+    </div>
   </div>
-</div>
 </PluginOutlet>
