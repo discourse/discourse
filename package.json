@@ -67,7 +67,8 @@
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "content-tag@3.0.0": "patches/content-tag@3.0.0.patch",
-      "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch"
+      "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch",
+      "ember-source@5.12.0": "patches/ember-source@5.12.0.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

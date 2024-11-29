@@ -4,18 +4,18 @@
 
 define("discourse/lib/deprecate-shim", ["exports"], function (exports) {
   exports.applyShim = function () {
-    let handler = () => {};
-    require("@ember/debug/lib/deprecate").registerHandler = (fn) => {
-      const next = handler;
-      handler = (message, options) => fn(message, options, next);
-    };
-
-    require("@ember/debug").deprecate = (message, test, options) => {
-      if (test) {
-        return;
-      }
-      handler(message, options);
-    };
+    // let handler = () => {};
+    // require("@ember/debug/lib/deprecate").registerHandler = (fn) => {
+    //   const next = handler;
+    //   handler = (message, options) => fn(message, options, next);
+    // };
+    //
+    // // require("@ember/debug").deprecate = (message, test, options) => {
+    // //   if (test) {
+    // //     return;
+    // //   }
+    // //   handler(message, options);
+    // // };
 
     function formatMessage(message, options) {
       if (options && options.id) {
