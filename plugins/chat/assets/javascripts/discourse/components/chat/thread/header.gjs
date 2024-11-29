@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { service } from "@ember/service";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -91,7 +92,9 @@ export default class ChatThreadHeader extends Component {
 
       <navbar.Title
         @title={{replaceEmoji this.headerTitle}}
-        @openThreadTitleModal={{this.openThreadTitleModal}}
+        {{on "click" this.openThreadTitleModal}}
+        role={{if this.openThreadTitleModal "button"}}
+        class="clickable"
       />
       <navbar.Actions as |action|>
         <action.ThreadTrackingDropdown @thread={{@thread}} />

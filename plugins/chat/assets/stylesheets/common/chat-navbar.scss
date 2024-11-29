@@ -10,21 +10,6 @@
   &.-clickable {
     cursor: pointer;
   }
-
-  &.-full-title {
-    .c-navbar__title {
-      min-height: var(--chat-header-offset);
-    }
-
-    .c-navbar__title,
-    .c-navbar__title-text {
-      height: auto;
-      overflow: visible;
-      white-space: normal;
-      text-overflow: unset;
-      overflow-wrap: anywhere;
-    }
-  }
 }
 
 .c-navbar {

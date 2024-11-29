@@ -10,17 +10,4 @@
   &__back-button {
     align-self: stretch;
   }
-  &.-full-title {
-    .c-navbar {
-      &__actions,
-      &__back-button {
-        height: calc(var(--chat-header-offset) - 2px) !important;
-      }
-      &__title {
-        padding-block: calc(1rem + 2px);
-      }
-    }
-    left: 0.25rem;
-    width: calc(100% - 0.5rem);
-  }
 }
