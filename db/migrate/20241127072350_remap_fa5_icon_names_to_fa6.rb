@@ -678,13 +678,50 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
     "window-close" => "rectangle-xmark",
     "wine-glass-alt" => "wine-glass-empty",
   }
+  SVG_ICON_SUBSET_SETTING_NAME = "svg_icon_subset"
 
   def up
+    migrate_svg_icon_subset_site_setting
     migrate_icon_names
   end
 
   def down
-    migrate_icon_names(rollback: true)
+    raise ActiveRecord::IrreversibleMigration
+  end
+
+  def migrate_svg_icon_subset_site_setting
+    # name is unique across site settings
+    setting =
+      execute(
+        "SELECT value FROM site_settings WHERE name = '#{SVG_ICON_SUBSET_SETTING_NAME}'",
+      ).first
+    return if !setting
+
+    original_setting_value = setting["value"]
+
+    new_setting_value =
+      original_setting_value
+        .split("|")
+        .map do |icon_name|
+          if icon_name.start_with?("fab-")
+            "fab-#{FA5_REMAPS[icon_name.sub(/^fab-/, "")]}"
+          elsif icon_name.start_with?("far-")
+            "far-#{FA5_REMAPS[icon_name.sub(/^far-/, "")]}"
+          elsif icon_name.start_with?("fab fa-")
+            "fab-#{FA5_REMAPS[icon_name.sub(/^fab fa-/, "")]}"
+          elsif icon_name.start_with?("far fa-")
+            "far-#{FA5_REMAPS[icon_name.sub(/^far fa-/, "")]}"
+          else
+            FA5_REMAPS[icon_name] || icon_name
+          end
+        end
+        .join("|")
+
+    return if new_setting_value == original_setting_value
+
+    execute(
+      "UPDATE site_settings SET value = '#{new_setting_value}' WHERE name = '#{SVG_ICON_SUBSET_SETTING_NAME}'",
+    )
   end
 
   def migrate_icon_names(rollback: false)
@@ -710,15 +747,22 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
           SELECT from_icon, to_icon FROM (VALUES #{mappings}) AS mapping(from_icon, to_icon)
         )
         UPDATE #{table_name}
-        SET #{column_name} = remaps.to_icon
+        SET #{column_name} =
+          CASE
+            WHEN #{column_name} LIKE 'fab-%' THEN CONCAT('fab-', remaps.to_icon)
+            WHEN #{column_name} LIKE 'far-%' THEN CONCAT('far-', remaps.to_icon)
+            WHEN #{column_name} LIKE 'fab fa-%' THEN CONCAT('fab-', remaps.to_icon)
+            WHEN #{column_name} LIKE 'far fa-%' THEN CONCAT('far-', remaps.to_icon)
+            ELSE remaps.to_icon
+          END
         FROM remaps
         WHERE #{column_name} = remaps.from_icon
-          OR #{column_name} = CONCAT('far fa-', remaps.from_icon)
-          OR #{column_name} = CONCAT('fab fa-', remaps.from_icon)
-          OR #{column_name} = CONCAT('fas fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('far-', remaps.from_icon)
-          OR #{column_name} = CONCAT('fab-', remaps.from_icon);
+          OR #{column_name} = CONCAT('fab-', remaps.from_icon)
+          OR #{column_name} = CONCAT('fab fa-', remaps.from_icon)
+          OR #{column_name} = CONCAT('far fa-', remaps.from_icon)
+          OR #{column_name} = CONCAT('fas fa-', remaps.from_icon);
       SQL
   end
 end
