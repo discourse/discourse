@@ -5,9 +5,12 @@ class User::BulkDestroy
 
   params do
     attribute :user_ids, :array
+    attribute :block_ip_and_email, :boolean
 
     validates :user_ids, length: { maximum: 100 }
   end
+
+  options { attribute :actor_ip }
 
   model :users
   policy :can_delete_users
@@ -27,7 +30,7 @@ class User::BulkDestroy
     users.all? { |u| guardian.can_delete_user?(u) }
   end
 
-  def delete(users:, guardian:)
+  def delete(users:, guardian:, options:, params:)
     users
       .find_each
       .with_index(1) do |user, position|
@@ -37,6 +40,8 @@ class User::BulkDestroy
             delete_posts: true,
             prepare_for_destroy: true,
             context: I18n.t("staff_action_logs.bulk_user_delete"),
+            block_ip: params.block_ip_and_email && options.actor_ip != user.ip_address,
+            block_email: params.block_ip_and_email,
           )
 
         if success

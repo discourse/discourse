@@ -196,5 +196,34 @@ describe "Admin Users Page", type: :system do
       expect(page).to have_css(".dialog-body")
       expect(page).to have_content(I18n.t("admin_js.admin.export_csv.success"))
     end
+
+    it "has an option to block IPs and emails" do
+      users[0].update!(ip_address: IPAddr.new("44.22.11.33"))
+
+      admin_users_page.visit
+      admin_users_page.bulk_select_button.click
+
+      admin_users_page.user_row(users[0].id).bulk_select_checkbox.click
+      admin_users_page.bulk_actions_dropdown.expand
+      admin_users_page.bulk_actions_dropdown.option(".bulk-delete").click
+      confirmation_modal.fill_in_confirmation_phase(user_count: 1)
+      confirmation_modal.block_ip_and_email_checkbox.click
+      confirmation_modal.confirm_button.click
+
+      expect(confirmation_modal).to have_successful_log_entry_for_user(
+        user: users[0],
+        position: 1,
+        total: 1,
+      )
+      expect(
+        ScreenedIpAddress.where(
+          ip_address: users[0].ip_address,
+          action_type: ScreenedIpAddress.actions[:block],
+        ),
+      ).to exist
+      expect(
+        ScreenedEmail.where(email: users[0].email, action_type: ScreenedEmail.actions[:block]),
+      ).to exist
+    end
   end
 end
