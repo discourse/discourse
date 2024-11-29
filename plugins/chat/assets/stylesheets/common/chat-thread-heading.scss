@@ -1,0 +1,19 @@
+.chat-thread__heading {
+  padding: 0.5rem 0.5rem 0 0.5rem;
+  display: flex;
+  align-items: baseline;
+}
+
+.chat-thread__heading-icon {
+  color: var(--secondary-low);
+  display: flex;
+  background-color: var(--primary-100);
+  padding: 0.5em;
+  border-radius: 100%;
+}
+
+.chat-thread__heading-title {
+  padding-left: 0.5em;
+  color: var(--secondary-low);
+  margin-bottom: 0;
+}
