@@ -16,4 +16,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-menu-buttons",
   "small-user-attrs",
   "topic-list-columns",
+  "topic-list-header-sortable-column",
 ]);
