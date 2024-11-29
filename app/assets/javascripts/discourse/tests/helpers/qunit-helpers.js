@@ -268,10 +268,10 @@ function cleanupCssGeneratorTags() {
 }
 
 export function discourseModule(name, options) {
-  // deprecated(
-  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
-  //   { since: "2.6.0" }
-  // );
+  deprecated(
+    `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+    { id: "discourse.discourse-module", since: "3.4.0.beta3-dev" }
+  );
 
   if (typeof options === "function") {
     module(name, function (hooks) {
