@@ -528,7 +528,7 @@ export default function (options) {
   async function checkTriggerRule(_opts) {
     const opts = {
       ..._opts,
-      inCodeBlock: () => options.textManipulation.inCodeBlock,
+      inCodeBlock: () => options.textManipulation.inCodeBlock(),
     };
     const shouldTrigger = await options.triggerRule?.(me[0], opts);
     return shouldTrigger ?? true;
@@ -769,7 +769,7 @@ export default function (options) {
             return true;
           }
 
-          term = term = options.textManipulation.value.substring(
+          term = options.textManipulation.value.substring(
             completeStart + (options.key ? 1 : 0),
             cp
           );

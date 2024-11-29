@@ -46,7 +46,7 @@ export function setupHashtagAutocomplete(
   );
 }
 
-export async function hashtagTriggerRule(textaream, { inCodeBlock }) {
+export async function hashtagTriggerRule(textarea, { inCodeBlock }) {
   return !(await inCodeBlock());
 }
 
