@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
