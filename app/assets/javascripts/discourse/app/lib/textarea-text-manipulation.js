@@ -770,8 +770,19 @@ export default class TextareaTextManipulation {
         ? sel.value.slice(hlen)
         : `${hval}${sel.value}`;
 
-      this._insertAt(sel.start, sel.end, number);
-      this.selectText(sel.start + hlen, number.length);
+      const preNewlines = sel.pre.trim() && "\n\n";
+      const postNewlines = sel.post.trim() && "\n\n";
+
+      const textToInsert = `${preNewlines}${number}${postNewlines}`;
+
+      const preChars = sel.pre.length - sel.pre.trimEnd().length;
+      const postChars = sel.post.length - sel.post.trimStart().length;
+
+      this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
+      this.selectText(
+        sel.start + (preNewlines.length - preChars),
+        number.length
+      );
     }
   }
 
@@ -788,7 +799,7 @@ export default class TextareaTextManipulation {
       if (selValue.length === 0 && isBlankLine) {
         if (isFourSpacesIndent) {
           const example = i18n(`composer.code_text`);
-          this._insertAt(sel.start, sel.end, example);
+          this._insertAt(sel.start, sel.end, `    ${example}`);
           return this.selectText(sel.pre.length + 4, example.length);
         } else {
           return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
