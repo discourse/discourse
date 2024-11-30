@@ -73,9 +73,20 @@ class DiscourseCLI < Thor
   end
 
   desc "backup", "Backup a discourse forum"
-  option :s3_uploads, type: :boolean, default: false, desc: "Include s3 uploads in the backup"
+  option :s3_uploads,
+         type: :boolean,
+         default: false,
+         desc: "Include s3 uploads in the backup (ignored when --sql-only is used)"
+  option :sql_only,
+         type: :boolean,
+         default: false,
+         desc: "SQL-only, exclude uploads from the backup"
   def backup(filename = nil)
     load_rails
+
+    if options[:sql_only] && options[:s3_uploads]
+      puts "--sql-only flag overrides --s3-uploads. S3 uploads will not be included in the backup."
+    end
 
     store = BackupRestore::BackupStore.create
 
@@ -91,12 +102,16 @@ class DiscourseCLI < Thor
     end
 
     old_include_s3_uploads_in_backups = SiteSetting.include_s3_uploads_in_backups
-    SiteSetting.include_s3_uploads_in_backups = true if options[:s3_uploads]
+    SiteSetting.include_s3_uploads_in_backups = true if !options[:sql_only] && options[:s3_uploads]
 
     begin
       puts "Starting backup..."
       backuper =
-        BackupRestore::Backuper.new(Discourse.system_user.id, filename: filename_without_extension)
+        BackupRestore::Backuper.new(
+          Discourse.system_user.id,
+          filename: filename_without_extension,
+          with_uploads: !options[:sql_only],
+        )
       backup_filename = backuper.run
       exit(1) unless backuper.success
 
@@ -126,7 +141,14 @@ class DiscourseCLI < Thor
   end
 
   desc "export", "Backup a Discourse forum"
-  option :s3_uploads, type: :boolean, default: false
+  option :s3_uploads,
+         type: :boolean,
+         default: false,
+         desc: "Include s3 uploads in the backup (ignored when --sql-only is used)"
+  option :sql_only,
+         type: :boolean,
+         default: false,
+         desc: "SQL-only, exclude uploads from the backup"
   def export(filename = nil)
     backup(filename)
   end
