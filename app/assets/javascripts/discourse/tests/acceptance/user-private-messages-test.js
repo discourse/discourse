@@ -583,7 +583,7 @@ acceptance(
 
       assert
         .dom(`tr[data-topic-id="1"] .topic-post-badges`)
-        .hasText("1", "displays the right unread posts count badge");
+        .hasText(/1/, "displays the right unread posts count badge");
 
       await visit("/u/charlie/messages/group/awesome_group");
 

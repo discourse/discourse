@@ -204,11 +204,11 @@ acceptance("Search - Anonymous", function (needs) {
     const secondOption = queryAll(contextSelector)[1];
 
     assert
-      .dom(secondOption, ".search-item-prefix")
+      .dom(".search-item-prefix", secondOption)
       .hasText("smth", "second option includes term");
 
     assert
-      .dom(secondOption, ".label-suffix")
+      .dom(".label-suffix", secondOption)
       .hasText(i18n("search.in_this_topic"), "second option includes suffix");
   });
 

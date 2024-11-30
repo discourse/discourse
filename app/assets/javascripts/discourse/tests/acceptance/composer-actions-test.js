@@ -460,7 +460,7 @@ acceptance("Prioritize Username", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]'
+        '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]\n\n'
       );
   });
 });
@@ -488,7 +488,7 @@ acceptance("Prioritize Full Name", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]'
+        '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]\n\n'
       );
   });
 
@@ -499,7 +499,7 @@ acceptance("Prioritize Full Name", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
+        '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]\n\n'
       );
   });
 });
@@ -519,7 +519,7 @@ acceptance("Prioritizing Name fall back", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
+        '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]\n\n'
       );
   });
 });
