@@ -65,7 +65,7 @@ export default class GlimmerSiteHeader extends Component {
     this._itsatrap = null;
 
     window.removeEventListener("scroll", this._recalculateHeaderOffset);
-    this._resizeObserver?.disconnect();
+    this._resizeObserver.disconnect();
   }
 
   get dropDownHeaderEnabled() {
@@ -84,8 +84,12 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  @bind
-  updateOffsets() {
+  @debounce(DEBOUNCE_HEADER_DELAY)
+  _recalculateHeaderOffset() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     // clamping to 0 to prevent negative values (hello, Safari)
     const headerWrapBottom = Math.max(
       0,
@@ -122,16 +126,6 @@ export default class GlimmerSiteHeader extends Component {
     }
   }
 
-  @debounce(DEBOUNCE_HEADER_DELAY)
-  _recalculateHeaderOffset() {
-    this._scheduleUpdateOffsets();
-  }
-
-  @bind
-  _scheduleUpdateOffsets() {
-    schedule("afterRender", this.updateOffsets);
-  }
-
   @action
   setupHeader() {
     this.appEvents.on("user-menu:rendered", this, this.animateMenu);
@@ -158,10 +152,7 @@ export default class GlimmerSiteHeader extends Component {
       const dirs = ["up", "down"];
       this._itsatrap.bind(dirs, (e) => this._handleArrowKeysNav(e));
 
-      this._resizeObserver = new ResizeObserver(() => {
-        this._recalculateHeaderOffset();
-      });
-
+      this._resizeObserver = new ResizeObserver(this._recalculateHeaderOffset);
       this._resizeObserver.observe(document.querySelector(".discourse-root"));
     }
   }
