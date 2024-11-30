@@ -68,11 +68,6 @@ export default class TextareaTextManipulation {
     return this.textarea.value;
   }
 
-  set value(value) {
-    this.textarea.value = value;
-    this.textarea.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
@@ -771,17 +766,12 @@ export default class TextareaTextManipulation {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
-      const trimmedPre = sel.pre.trim();
       const number = sel.value.startsWith(hval)
         ? sel.value.slice(hlen)
         : `${hval}${sel.value}`;
-      const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
-      const trimmedPost = sel.post.trim();
-      const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
-
-      this.value = `${preLines}${number}${post}`;
-      this.selectText(preLines.length, number.length);
+      this._insertAt(sel.start, sel.end, number);
+      this.selectText(sel.start + hlen, number.length);
     }
   }
 
@@ -798,7 +788,7 @@ export default class TextareaTextManipulation {
       if (selValue.length === 0 && isBlankLine) {
         if (isFourSpacesIndent) {
           const example = i18n(`composer.code_text`);
-          this.value = `${sel.pre}    ${example}${sel.post}`;
+          this._insertAt(sel.start, sel.end, example);
           return this.selectText(sel.pre.length + 4, example.length);
         } else {
           return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
