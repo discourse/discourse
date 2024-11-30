@@ -2,7 +2,7 @@ import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 

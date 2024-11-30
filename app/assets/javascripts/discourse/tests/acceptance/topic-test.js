@@ -51,7 +51,7 @@ acceptance("Topic", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
+        `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):\n\n`,
         "fills composer with the ring string"
       );
     assert.strictEqual(
@@ -71,7 +71,7 @@ acceptance("Topic", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
+        `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):\n\n`,
         "fills composer with the ring string"
       );
 

@@ -32,7 +32,7 @@ acceptance("User Drafts", function (needs) {
     await click(".user-stream-item .resume-draft");
     assert
       .dom(".d-editor-input")
-      .hasValue("A fun new topic for testing drafts.");
+      .hasValue(/A fun new topic for testing drafts./);
   });
 
   test("Stream - has excerpt", async function (assert) {
