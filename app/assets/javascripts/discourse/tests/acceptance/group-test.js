@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -186,10 +186,9 @@ acceptance("Group - Authenticated", function (needs) {
         i18n("groups.membership_request.title", { group_name: "Macdonald" })
       );
 
-    assert.strictEqual(
-      query(".request-group-membership-form textarea").value,
-      "Please add me"
-    );
+    assert
+      .dom(".request-group-membership-form textarea")
+      .hasValue("Please add me");
 
     await click(".d-modal__footer .btn-primary");
 

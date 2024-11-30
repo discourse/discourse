@@ -30,21 +30,15 @@ module(
         ".form-template-field__multi-select option:not(.form-template-field__multi-select-placeholder)"
       );
       assert.strictEqual(dropdown.length, 3, "it has 3 choices");
-      assert.strictEqual(
-        dropdown[0].value,
-        "Choice 1",
-        "it has the correct name for choice 1"
-      );
-      assert.strictEqual(
-        dropdown[1].value,
-        "Choice 2",
-        "it has the correct name for choice 2"
-      );
-      assert.strictEqual(
-        dropdown[2].value,
-        "Choice 3",
-        "it has the correct name for choice 3"
-      );
+      assert
+        .dom(dropdown[0])
+        .hasValue("Choice 1", "has the correct name for choice 1");
+      assert
+        .dom(dropdown[1])
+        .hasValue("Choice 2", "has the correct name for choice 2");
+      assert
+        .dom(dropdown[2])
+        .hasValue("Choice 3", "has the correct name for choice 3");
     });
 
     test("renders a multi-select with choices and attributes", async function (assert) {

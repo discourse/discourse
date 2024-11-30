@@ -1,11 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import {
-  acceptance,
-  query,
-  selectText,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, selectText } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Local Dates - quoting", function (needs) {
@@ -47,11 +43,10 @@ acceptance("Local Dates - quoting", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .select-local-date-test");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
+    assert.dom(".d-editor-input").hasValue(
       `[quote=\"uwe_keim, post:1, topic:280\"]
 This is a test [date=2022-06-17 time=10:00:00 timezone="Australia/Brisbane" displayedTimezone="Australia/Perth"]
-[/quote]`,
+[/quote]\n\n`,
       "converts the date to markdown with all options correctly"
     );
   });
@@ -86,11 +81,10 @@ acceptance("Local Dates - quoting range", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_1 .select-local-date-test");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
+    assert.dom(".d-editor-input").hasValue(
       `[quote=\"uwe_keim, post:1, topic:280\"]
 Some text [date-range from=2022-06-17T09:30:00 to=2022-06-18T10:30:00 format="LL" timezone="Australia/Brisbane" timezones="Africa/Accra|Australia/Brisbane|Europe/Paris"]
-[/quote]`,
+[/quote]\n\n`,
       "converts the date range to markdown with all options correctly"
     );
   });
@@ -128,13 +122,12 @@ acceptance(
       await visit("/t/internationalization-localization/280");
       await selectText("#post_1 .select-local-date-test");
       await click(".insert-quote");
-      assert.strictEqual(
-        query(".d-editor-input").value.trim(),
+      assert.dom(".d-editor-input").hasValue(
         `[quote=\"uwe_keim, post:1, topic:280\"]
 Testing countdown [date=2022-06-21 time=09:30:00 format="LL" timezone="Australia/Brisbane" countdown="true"]
 
 Testing recurring [date=2022-06-22 timezone="Australia/Brisbane" recurring="2.weeks"]
-[/quote]`,
+[/quote]\n\n`,
         "converts the dates to markdown with all options correctly"
       );
     });

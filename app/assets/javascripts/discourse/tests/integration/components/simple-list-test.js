@@ -8,7 +8,6 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);
@@ -29,11 +28,9 @@ module("Integration | Component | simple-list", function (hooks) {
       .dom(".values .value")
       .exists({ count: 3 }, "adds the value to the list of values");
 
-    assert.strictEqual(
-      query(".values .value[data-index='2'] .value-input").value,
-      "penar",
-      "it sets the correct value for added item"
-    );
+    assert
+      .dom(".values .value[data-index='2'] .value-input")
+      .hasValue("penar", "sets the correct value for added item");
 
     await fillIn(".add-value-input", "eviltrout");
     await triggerKeyEvent(".add-value-input", "keydown", "Enter");
@@ -76,10 +73,7 @@ module("Integration | Component | simple-list", function (hooks) {
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
     await blur(".values .value[data-index='1'] .value-input");
 
-    assert.strictEqual(
-      query(".values .value[data-index='1'] .value-input").value,
-      "jarek"
-    );
+    assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
   });
 
   test("removing a value", async function (assert) {
@@ -93,11 +87,9 @@ module("Integration | Component | simple-list", function (hooks) {
       .dom(".values .value")
       .exists({ count: 1 }, "removes the value from the list of values");
 
-    assert.strictEqual(
-      query(".values .value[data-index='0'] .value-input").value,
-      "osama",
-      "it removes the correct value"
-    );
+    assert
+      .dom(".values .value[data-index='0'] .value-input")
+      .hasValue("osama", "removes the correct value");
   });
 
   test("delimiter support", async function (assert) {
@@ -114,10 +106,8 @@ module("Integration | Component | simple-list", function (hooks) {
       .dom(".values .value")
       .exists({ count: 3 }, "adds the value to the list of values");
 
-    assert.strictEqual(
-      query(".values .value[data-index='2'] .value-input").value,
-      "eviltrout",
-      "it adds the correct value"
-    );
+    assert
+      .dom(".values .value[data-index='2'] .value-input")
+      .hasValue("eviltrout", "adds the correct value");
   });
 });

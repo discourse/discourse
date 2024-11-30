@@ -83,11 +83,12 @@ acceptance("Search - Anonymous", function (needs) {
     await click(document.activeElement);
     await click(".show-advanced-search");
 
-    assert.strictEqual(
-      query(".full-page-search").value,
-      "dev",
-      "goes to full search page and preserves the search term"
-    );
+    assert
+      .dom(".full-page-search")
+      .hasValue(
+        "dev",
+        "goes to full search page and preserves the search term"
+      );
 
     assert
       .dom(".search-menu .search-menu-panel")
@@ -247,11 +248,12 @@ acceptance("Search - Anonymous", function (needs) {
     await click(document.activeElement);
     await click(".show-advanced-search");
 
-    assert.strictEqual(
-      query(".full-page-search").value,
-      "proper topic:280",
-      "goes to full search page and preserves search term + context"
-    );
+    assert
+      .dom(".full-page-search")
+      .hasValue(
+        "proper topic:280",
+        "goes to full search page and preserves search term + context"
+      );
 
     assert
       .dom(".search-advanced-options")
@@ -621,10 +623,9 @@ acceptance("Search - Authenticated", function (needs) {
     await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", 65); // maps to lowercase a
 
-    assert.true(
-      query(".d-editor-input").value.includes("a link"),
-      "still has the original composer content"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/a link/, "still has the original composer content");
 
     assert.true(
       query(".d-editor-input").value.includes(
@@ -1196,10 +1197,7 @@ acceptance("Search - assistant", function (needs) {
 
     await click(`${firstCategory} .badge-category__name`);
 
-    assert.strictEqual(
-      query("#search-term").value,
-      `sam #${firstCategoryName}`
-    );
+    assert.dom("#search-term").hasValue(`sam #${firstCategoryName}`);
   });
 
   test("topic results - soft loads the topic results after closing the search menu", async function (assert) {

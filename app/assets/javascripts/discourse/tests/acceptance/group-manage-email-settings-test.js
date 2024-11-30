@@ -151,16 +151,12 @@ acceptance(
         );
 
       await click("#prefill_imap_gmail");
-      assert.strictEqual(
-        query("input[name='imap_server']").value,
-        "imap.gmail.com",
-        "prefills IMAP server settings for gmail"
-      );
-      assert.strictEqual(
-        query("input[name='imap_port']").value,
-        "993",
-        "prefills IMAP port settings for gmail"
-      );
+      assert
+        .dom("input[name='imap_server']")
+        .hasValue("imap.gmail.com", "prefills IMAP server settings for gmail");
+      assert
+        .dom("input[name='imap_port']")
+        .hasValue("993", "prefills IMAP port settings for gmail");
       assert
         .dom("#enable_ssl_imap")
         .isChecked("prefills IMAP ssl settings for gmail");
@@ -292,16 +288,12 @@ acceptance(
           "SMTP ssl mode is prefilled"
         );
 
-      assert.strictEqual(
-        query("[name='imap_server']").value,
-        "imap.gmail.com",
-        "imap server is prefilled"
-      );
-      assert.strictEqual(
-        query("[name='imap_port']").value,
-        "993",
-        "imap port is prefilled"
-      );
+      assert
+        .dom("[name='imap_server']")
+        .hasValue("imap.gmail.com", "imap server is prefilled");
+      assert
+        .dom("[name='imap_port']")
+        .hasValue("993", "imap port is prefilled");
       assert.strictEqual(
         selectKit("#imap_mailbox").header().value(),
         "INBOX",
