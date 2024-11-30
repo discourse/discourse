@@ -155,7 +155,7 @@ module("Unit | Utility | url", function (hooks) {
   });
 
   test("routeTo does not rewrite routes started with /my", async function (assert) {
-    logIn();
+    logIn(this.owner);
     sinon.stub(DiscourseURL, "router").get(() => {
       return { currentURL: "/" };
     });

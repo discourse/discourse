@@ -1,8 +1,6 @@
-import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import User from "discourse/models/user";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import ChatMessageInteractor, {
@@ -36,21 +34,12 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
         "function"
       );
 
-      logIn();
-      const currentUser = User.current();
-      getOwner(this).unregister("service:current-user");
-      getOwner(this).register("service:current-user", currentUser, {
-        instantiate: false,
-      });
-
-      const message = new ChatFabricators(getOwner(this)).message({
-        user: currentUser,
-      });
-      const context = "channel";
+      const user = logIn(this.owner);
+      const message = new ChatFabricators(this.owner).message({ user });
       const interactor = new ChatMessageInteractor(
-        getOwner(this),
+        this.owner,
         message,
-        context
+        "channel"
       );
 
       // assert that the initial secondary actions are present
