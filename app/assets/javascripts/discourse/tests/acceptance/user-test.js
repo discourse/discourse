@@ -11,7 +11,6 @@ import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -131,16 +130,14 @@ acceptance(
 
     test("Periods in current user's username don't act like wildcards", async function (assert) {
       await visit("/u/eviltrout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `eviltrout
                 Robin Ward is an admin`,
         "eviltrout profile is shown"
       );
 
       await visit("/u/e.il.rout");
-      assert.strictEqual(
-        query(".user-profile-names .username").textContent.trim(),
+      assert.dom(".user-profile-names .username").hasText(
         `e.il.rout
                 Robin Ward is an admin`,
         "e.il.rout profile is shown"

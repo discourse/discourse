@@ -6,7 +6,6 @@ import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
@@ -183,31 +182,35 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title_with_count", { count: 4 }),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title_with_count", { count: 4 }),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title_with_count", { count: 2 }),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title_with_count", { count: 2 }),
+        "displays the right content on new link"
+      );
 
     await visit("/?f=tracked");
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title_with_count", { count: 3 }),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title_with_count", { count: 3 }),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title_with_count", { count: 1 }),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title_with_count", { count: 1 }),
+        "displays the right content on new link"
+      );
 
     // simulate reading topic id 1
     await publishToMessageBus("/unread", {
@@ -229,17 +232,19 @@ acceptance("Topic Discovery Tracked", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title_with_count", { count: 2 }),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title_with_count", { count: 2 }),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title"),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title"),
+        "displays the right content on new link"
+      );
   });
 
   test("visit discovery page filtered by tag with tracked filter", async function (assert) {
@@ -259,31 +264,35 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     await visit("/tag/some-other-tag");
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title"),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title"),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title_with_count", { count: 1 }),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title_with_count", { count: 1 }),
+        "displays the right content on new link"
+      );
 
     await visit("/tag/some-other-tag?f=tracked");
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title"),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title"),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title"),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title"),
+        "displays the right content on new link"
+      );
   });
 
   test("visit discovery page filtered by category with tracked filter", async function (assert) {
@@ -337,30 +346,34 @@ acceptance("Topic Discovery Tracked", function (needs) {
 
     await visit(`/c/3`);
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title_with_count", { count: 1 }),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title_with_count", { count: 1 }),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title"),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title"),
+        "displays the right content on new link"
+      );
 
     await visit(`/c/3?f=tracked`);
 
-    assert.strictEqual(
-      query("#navigation-bar li.unread").textContent.trim(),
-      i18n("filters.unread.title"),
-      "displays the right content on unread link"
-    );
+    assert
+      .dom("#navigation-bar li.unread")
+      .hasText(
+        i18n("filters.unread.title"),
+        "displays the right content on unread link"
+      );
 
-    assert.strictEqual(
-      query("#navigation-bar li.new").textContent.trim(),
-      i18n("filters.new.title"),
-      "displays the right content on new link"
-    );
+    assert
+      .dom("#navigation-bar li.new")
+      .hasText(
+        i18n("filters.new.title"),
+        "displays the right content on new link"
+      );
   });
 });

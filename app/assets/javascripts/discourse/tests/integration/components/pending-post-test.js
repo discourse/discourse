@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | pending-post", function (hooks) {
   setupRenderingTest(hooks);
@@ -22,10 +21,6 @@ module("Integration | Component | pending-post", function (hooks) {
 
     await render(hbs`<PendingPost @post={{this.post}}/>`);
 
-    assert.strictEqual(
-      query("p.excerpt").textContent.trim(),
-      "bold text",
-      "renders the cooked text"
-    );
+    assert.dom("p.excerpt").hasText("bold text", "renders the cooked text");
   });
 });

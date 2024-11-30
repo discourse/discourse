@@ -257,12 +257,11 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-details-button button.btn-danger");
 
-    assert.strictEqual(
-      query(".dialog-body p:nth-of-type(2)").textContent.trim(),
+    assert.dom(".dialog-body p:nth-of-type(2)").hasText(
       i18n("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
-      "should warn about orphan messages"
+      "warns about orphan messages"
     );
 
     await click(".dialog-footer .btn-default");

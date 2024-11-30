@@ -55,17 +55,19 @@ acceptance(
       await click(".notification.edited a");
       const [v1, v2] = queryAll(".history-modal .revision-content");
 
-      assert.strictEqual(
-        v1.textContent.trim(),
-        "Hello world this is a test",
-        "history modal for the edited post is shown"
-      );
+      assert
+        .dom(v1)
+        .hasText(
+          "Hello world this is a test",
+          "history modal for the edited post is shown"
+        );
 
-      assert.strictEqual(
-        v2.textContent.trim(),
-        "Hello world this is a testThis is an edit!",
-        "history modal for the edited post is shown"
-      );
+      assert
+        .dom(v2)
+        .hasText(
+          "Hello world this is a testThis is an edit!",
+          "history modal for the edited post is shown"
+        );
     });
   }
 );

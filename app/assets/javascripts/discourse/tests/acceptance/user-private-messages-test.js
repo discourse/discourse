@@ -11,7 +11,6 @@ import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -567,11 +566,9 @@ acceptance(
 
         await visit("/u/charlie/messages");
 
-        assert.strictEqual(
-          query(".topic-post-badges").textContent.trim(),
-          "",
-          "does not display unread posts count badge"
-        );
+        assert
+          .dom(".topic-post-badges")
+          .hasText("", "does not display unread posts count badge");
       } finally {
         resetHighestReadCache();
       }
@@ -584,11 +581,9 @@ acceptance(
         .dom(".topic-list-item")
         .exists({ count: 3 }, "displays the right topic list");
 
-      assert.strictEqual(
-        query(`tr[data-topic-id="1"] .topic-post-badges`).textContent.trim(),
-        "1",
-        "displays the right unread posts count badge"
-      );
+      assert
+        .dom(`tr[data-topic-id="1"] .topic-post-badges`)
+        .hasText("1", "displays the right unread posts count badge");
 
       await visit("/u/charlie/messages/group/awesome_group");
 
