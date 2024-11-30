@@ -168,6 +168,24 @@ RSpec.describe Email::Styles do
     end
   end
 
+  describe "deduplicate styles" do
+    it "removes double definitions" do
+      frag = "<test style='color:green;color:red'>hello</test>"
+      styler = Email::Styles.new(frag)
+      styled = styler.to_html
+      styled = Nokogiri::HTML5.fragment(styled)
+      expect(styled.at("test")["style"]).to eq("color:red")
+    end
+    it "handles whitespace correctly" do
+      frag =
+        "<test style=' color :  green ; ; ;   color :    red; background:white;  background:yellow '>hello</test>"
+      styler = Email::Styles.new(frag)
+      styled = styler.to_html
+      styled = Nokogiri::HTML5.fragment(styled)
+      expect(styled.at("test")["style"]).to eq("color:red;background:yellow")
+    end
+  end
+
   describe "dark mode emails" do
     it "adds dark_mode_styles when site setting active" do
       frag = html_fragment('<div class="body">test</div>')
