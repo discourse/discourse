@@ -374,31 +374,12 @@ module Email
       end
     end
 
-    def deduplicate_style(style)
-      styles = {}
-
-      style
-        .split(";")
-        .select(&:present?)
-        .map { _1.split(":", 2).map(&:strip) }
-        .each { |k, v| styles[k] = v if k.present? && v.present? }
-
-      styles.map { |k, v| "#{k}:#{v}" }.join(";")
-    end
-
-    def deduplicate_styles
-      @fragment
-        .css("[style]")
-        .each { |element| element["style"] = deduplicate_style element["style"] }
-    end
-
     def to_html
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       strip_classes_and_ids
       replace_relative_urls
-      deduplicate_styles
 
       @fragment.to_html
     end
