@@ -69,11 +69,6 @@ export default class TextareaTextManipulation {
     return this.textarea.value;
   }
 
-  set value(value) {
-    this.textarea.value = value;
-    this.textarea.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
@@ -841,12 +836,7 @@ export default class TextareaTextManipulation {
   replaceTerm({ start, end, term }) {
     let text = this.value;
     const space = text.substring(end + 1, end + 2) === " " ? "" : " ";
-    text =
-      text.substring(0, start) +
-      term +
-      space +
-      text.substring(end + 1, text.length);
-    this.value = text;
+    this._insertAt(start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
 
