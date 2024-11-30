@@ -356,17 +356,19 @@ acceptance(
       await publishUnreadToMessageBus({ topicId: 1 });
       await publishNewToMessageBus({ topicId: 2 });
 
-      assert.strictEqual(
-        query(".user-nav__messages-new").innerText.trim(),
-        i18n("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.strictEqual(
-        query(".user-nav__messages-unread").innerText.trim(),
-        i18n("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
     });
 
     test("incoming new messages while viewing new", async function (assert) {
@@ -374,21 +376,23 @@ acceptance(
 
       await publishNewToMessageBus({ topicId: 1 });
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        i18n("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
       assert.dom(".show-mores").exists("displays the topic incoming info");
 
       await publishNewToMessageBus({ topicId: 2 });
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        i18n("user.messages.new_with_count", { count: 2 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 2 }),
+          "displays the right count"
+        );
 
       assert.dom(".show-mores").exists("displays the topic incoming info");
     });
@@ -398,11 +402,12 @@ acceptance(
 
       await publishUnreadToMessageBus();
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        i18n("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
       assert.dom(".show-mores").exists("displays the topic incoming info");
     });
@@ -413,35 +418,31 @@ acceptance(
       await publishUnreadToMessageBus({ groupIds: [14], topicId: 1 });
       await publishNewToMessageBus({ groupIds: [14], topicId: 2 });
 
-      assert.strictEqual(
-        query(
-          ".messages-nav .user-nav__messages-group-unread"
-        ).innerText.trim(),
-        i18n("user.messages.unread_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-group-unread")
+        .hasText(
+          i18n("user.messages.unread_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-group-new").innerText.trim(),
-        i18n("user.messages.new_with_count", { count: 1 }),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-group-new")
+        .hasText(
+          i18n("user.messages.new_with_count", { count: 1 }),
+          "displays the right count"
+        );
 
       assert.dom(".show-mores").exists("displays the topic incoming info");
 
       await visit("/u/charlie/messages/unread");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-unread").innerText.trim(),
-        i18n("user.messages.unread"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-unread")
+        .hasText(i18n("user.messages.unread"), "displays the right count");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        i18n("user.messages.new"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(i18n("user.messages.new"), "displays the right count");
     });
 
     test("incoming messages is not tracked on non user messages route", async function (assert) {
@@ -471,11 +472,9 @@ acceptance(
       await click(".btn.dismiss-read");
       await click("#dismiss-read-confirm");
 
-      assert.strictEqual(
-        query(".user-nav__messages-unread").innerText.trim(),
-        i18n("user.messages.unread"),
-        "displays the right count"
-      );
+      assert
+        .dom(".user-nav__messages-unread")
+        .hasText(i18n("user.messages.unread"), "displays the right count");
 
       assert
         .dom(".topic-list-item")
@@ -525,11 +524,9 @@ acceptance(
 
       await click(".btn.dismiss-read");
 
-      assert.strictEqual(
-        query(".messages-nav .user-nav__messages-new").innerText.trim(),
-        i18n("user.messages.new"),
-        "displays the right count"
-      );
+      assert
+        .dom(".messages-nav .user-nav__messages-new")
+        .hasText(i18n("user.messages.new"), "displays the right count");
 
       assert
         .dom(".topic-list-item")

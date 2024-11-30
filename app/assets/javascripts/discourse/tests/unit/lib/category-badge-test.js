@@ -34,11 +34,7 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert
       .dom(label)
       .hasAttribute("title", "cool description", "has the correct title");
-    assert.strictEqual(
-      label.children[0].innerText,
-      "hello",
-      "has the category name"
-    );
+    assert.dom(label.children[0]).hasText("hello", "has the category name");
   });
 
   test("undefined color", function (assert) {

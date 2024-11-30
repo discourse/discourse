@@ -521,10 +521,9 @@ acceptance("Composer", function (needs) {
       // at this point, request is in flight, so post is staged
       assert.dom(".topic-post").exists();
       assert.dom(".topic-post").hasClass("staged");
-      assert.strictEqual(
-        query(".topic-post.staged .cooked").innerText.trim(),
-        "will return empty json"
-      );
+      assert
+        .dom(".topic-post.staged .cooked")
+        .hasText("will return empty json");
 
       return response(200, {});
     });

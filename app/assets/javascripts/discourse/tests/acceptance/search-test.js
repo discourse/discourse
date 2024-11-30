@@ -119,21 +119,20 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "dev");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-prefix"
-      ).innerText.trim(),
-      "dev",
-      "first dropdown item includes correct prefix"
-    );
+      )
+      .hasText("dev", "first dropdown item includes correct prefix");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu .results ul.search-menu-initial-options li:first-child .search-item-slug"
-      ).innerText.trim(),
-      i18n("search.in_topics_posts"),
-      "first dropdown item includes correct suffix"
-    );
+      )
+      .hasText(
+        i18n("search.in_topics_posts"),
+        "first dropdown item includes correct suffix"
+      );
 
     assert
       .dom(".search-menu .search-result-category ul li")
@@ -866,20 +865,15 @@ acceptance("Search - with tagging enabled", function (needs) {
     await visit("/tags/c/bug/dev");
     await click("#search-button");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu .results ul.search-menu-assistant .badge-category__name"
-      ).innerText,
-      "bug",
-      "Category is displayed"
-    );
+      )
+      .hasText("bug", "Category is displayed");
 
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "dev",
-      "Tag is displayed"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-tag")
+      .hasText("dev", "Tag is displayed");
   });
 
   test("initial options - tag and category search scope - updates tag / category combination search suggestion when typing", async function (assert) {
@@ -887,27 +881,19 @@ acceptance("Search - with tagging enabled", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "foo bar");
 
-    assert.strictEqual(
-      query(
-        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
-      ).innerText,
-      "foo bar",
-      "Input is applied to search query"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-prefix")
+      .hasText("foo bar", "Input is applied to search query");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu .results ul.search-menu-assistant .badge-category__name"
-      ).innerText,
-      "bug"
-    );
+      )
+      .hasText("bug");
 
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "dev",
-      "Tag is displayed"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-tag")
+      .hasText("dev", "Tag is displayed");
   });
 
   test("initial options - search history - tag intersection context", async function (assert) {
@@ -923,12 +909,9 @@ acceptance("Search - with tagging enabled", function (needs) {
     await visit("/tags/intersection/dev/foo");
     await click("#search-button");
 
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "tags:dev+foo",
-      "Tags are displayed"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-tag")
+      .hasText("tags:dev+foo", "Tags are displayed");
   });
 
   test("initial options - tag intersection search scope - updates tag intersection search suggestion when typing", async function (assert) {
@@ -936,20 +919,13 @@ acceptance("Search - with tagging enabled", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "foo bar");
 
-    assert.strictEqual(
-      query(
-        ".search-menu .results ul.search-menu-assistant .search-item-prefix"
-      ).innerText,
-      "foo bar",
-      "Input is applied to search query"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-prefix")
+      .hasText("foo bar", "Input is applied to search query");
 
-    assert.strictEqual(
-      query(".search-menu .results ul.search-menu-assistant .search-item-tag")
-        .innerText,
-      "tags:dev+foo",
-      "Tags are displayed"
-    );
+    assert
+      .dom(".search-menu .results ul.search-menu-assistant .search-item-tag")
+      .hasText("tags:dev+foo", "Tags are displayed");
   });
 });
 
@@ -1135,38 +1111,31 @@ acceptance("Search - assistant", function (needs) {
     await click("#search-button");
     await fillIn("#search-term", "#");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu .results ul.search-menu-assistant .search-link .badge-category__name"
-      ).innerText,
-      "support"
-    );
+      )
+      .hasText("support");
   });
 
   test("initial options - shows in: shortcuts", async function (assert) {
     await visit("/");
     await click("#search-button");
     const firstTarget =
-      ".search-menu .results ul.search-menu-assistant .search-link ";
+      ".search-menu .results ul.search-menu-assistant .search-link";
 
     await fillIn("#search-term", "in:");
-    assert.strictEqual(
-      query(firstTarget.concat(".search-item-slug")).innerText,
-      "in:title",
-      "keyword is present in suggestion"
-    );
+    assert
+      .dom(`${firstTarget} .search-item-slug`)
+      .hasText("in:title", "keyword is present in suggestion");
 
     await fillIn("#search-term", "sam in:");
-    assert.strictEqual(
-      query(firstTarget.concat(".search-item-prefix")).innerText,
-      "sam",
-      "term is present in suggestion"
-    );
-    assert.strictEqual(
-      query(firstTarget.concat(".search-item-slug")).innerText,
-      "in:title",
-      "keyword is present in suggestion"
-    );
+    assert
+      .dom(`${firstTarget} .search-item-prefix`)
+      .hasText("sam", "term is present in suggestion");
+    assert
+      .dom(`${firstTarget} .search-item-slug`)
+      .hasText("in:title", "keyword is present in suggestion");
 
     await fillIn("#search-term", "in:mess");
     assert.dom(firstTarget).hasText("in:messages");
@@ -1176,13 +1145,22 @@ acceptance("Search - assistant", function (needs) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "@");
-    const firstUser = query(
+    assert
+      .dom(
+        ".search-menu .results ul.search-menu-assistant .search-item-user .username"
+      )
+      .hasText("TeaMoe");
+
+    const username = document
+      .querySelector(
+        ".search-menu .results ul.search-menu-assistant .search-item-user .username"
+      )
+      .innerText.trim();
+
+    await click(
       ".search-menu .results ul.search-menu-assistant .search-item-user"
     );
-    const username = firstUser.querySelector(".username").innerText.trim();
-    assert.strictEqual(username, "TeaMoe");
 
-    await click(firstUser);
     assert.dom("#search-term").hasValue(`@${username}`);
   });
 
@@ -1244,16 +1222,18 @@ acceptance("Search - assistant", function (needs) {
       .exists({ count: 1 }, "passes the PM search context to the search query");
   });
 
-  test("topic results - updates search term when selecting a initial category option", async function (assert) {
+  test("topic results - updates search term when selecting an initial category option", async function (assert) {
     await visit("/");
     await click("#search-button");
     await fillIn("#search-term", "sam #");
+
     const firstCategory =
       ".search-menu .results ul.search-menu-assistant .search-link";
-    const firstCategoryName = query(
+    const firstCategoryName = document.querySelector(
       `${firstCategory} .badge-category__name`
     ).innerText;
-    await click(firstCategory);
+
+    await click(`${firstCategory} .badge-category__name`);
 
     assert.strictEqual(
       query("#search-term").value,

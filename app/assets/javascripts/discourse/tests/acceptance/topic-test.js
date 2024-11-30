@@ -273,8 +273,7 @@ acceptance("Topic featured links", function (needs) {
   test("remove nofollow attribute", async function (assert) {
     await visit("/t/-/299/1");
 
-    const link = query(".title-wrapper .topic-featured-link");
-    assert.strictEqual(link.innerText, "example.com");
+    assert.dom(".title-wrapper .topic-featured-link").hasText("example.com");
     assert
       .dom(".title-wrapper .topic-featured-link")
       .hasAttribute("rel", "ugc");

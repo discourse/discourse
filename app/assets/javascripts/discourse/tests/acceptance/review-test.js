@@ -4,7 +4,6 @@ import {
   acceptance,
   loggedInUser,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -133,20 +132,10 @@ acceptance("Review", function (needs) {
     assert.dom(`${topic} .reviewable-action.approve`).exists();
     assert.dom(`${topic} .badge-category__name`).doesNotExist();
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
-      "hello"
-    );
+    assert.dom(`${topic} .discourse-tag:nth-of-type(1)`).hasText("hello");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(2)`).hasText("world");
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
-      "world"
-    );
-
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "existing body"
-    );
+    assert.dom(`${topic} .post-body`).hasText("existing body");
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
@@ -164,11 +153,9 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
 
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "existing body",
-      "cancelling does not update the value"
-    );
+    assert
+      .dom(`${topic} .post-body`)
+      .hasText("existing body", "cancelling does not update the value");
 
     await click(`${topic} .reviewable-action.edit`);
     let category = selectKit(`${topic} .category-id .select-kit`);
@@ -193,27 +180,12 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.save-edit`);
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
-      "hello"
-    );
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
-      "world"
-    );
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(3)`).innerText,
-      "monkey"
-    );
+    assert.dom(`${topic} .discourse-tag:nth-of-type(1)`).hasText("hello");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(2)`).hasText("world");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(3)`).hasText("monkey");
 
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "new raw contents"
-    );
-    assert.strictEqual(
-      query(`${topic} .badge-category__name`).innerText.trim(),
-      "support"
-    );
+    assert.dom(`${topic} .post-body`).hasText("new raw contents");
+    assert.dom(`${topic} .badge-category__name`).hasText("support");
   });
 
   test("Reviewables can become stale", async function (assert) {

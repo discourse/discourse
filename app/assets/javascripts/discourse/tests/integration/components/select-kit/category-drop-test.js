@@ -234,13 +234,10 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
     const category = Category.findById(7);
     const row = this.subject.rowByValue(category.id);
-    const topicCount = row.el().querySelector(".topic-count").innerText.trim();
 
-    assert.strictEqual(
-      topicCount,
-      "× 481",
-      "doesn't include the topic count of subcategories"
-    );
+    assert
+      .dom(".topic-count", row.el())
+      .hasText("× 481", "doesn't include the topic count of subcategories");
   });
 
   test("countSubcategories (true)", async function (assert) {
@@ -261,13 +258,10 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
 
     const category = Category.findById(7);
     const row = this.subject.rowByValue(category.id);
-    const topicCount = row.el().querySelector(".topic-count").innerText.trim();
 
-    assert.strictEqual(
-      topicCount,
-      "× 584",
-      "includes the topic count of subcategories"
-    );
+    assert
+      .dom(".topic-count", row.el())
+      .hasText("× 584", "includes the topic count of subcategories");
   });
 
   test("shortcuts:default", async function (assert) {
