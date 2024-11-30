@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
@@ -58,12 +58,9 @@ acceptance("Admin - Users List", function (needs) {
 
     await click(".hide-emails");
 
-    assert.strictEqual(
-      query(".users-list .user:nth-child(1) .email .directory-table__value")
-        .innerText,
-      "",
-      "hides the emails"
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .email .directory-table__value")
+      .hasNoText("hides the emails");
   });
 
   test("switching tabs", async function (assert) {

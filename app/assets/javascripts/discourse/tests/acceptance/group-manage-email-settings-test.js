@@ -111,21 +111,19 @@ acceptance(
       await formKit().submit();
       await click(".group-manage-save");
 
-      assert.strictEqual(
-        query(".group-manage-save-button > span").innerText,
-        "Saved!"
-      );
+      assert.dom(".group-manage-save-button > span").hasText("Saved!");
 
       assert
         .dom("#enable_imap")
         .isEnabled("IMAP is able to be enabled now that SMTP is saved");
 
       await click("#enable_smtp");
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
-        i18n("groups.manage.email.smtp_disable_confirm"),
-        "shows a confirm dialogue warning SMTP settings will be wiped"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          i18n("groups.manage.email.smtp_disable_confirm"),
+          "shows a confirm dialogue warning SMTP settings will be wiped"
+        );
 
       await click(".dialog-footer .btn-primary");
     });
@@ -172,10 +170,7 @@ acceptance(
 
       await click(".group-manage-save");
 
-      assert.strictEqual(
-        query(".group-manage-save-button > span").innerText,
-        "Saved!"
-      );
+      assert.dom(".group-manage-save-button > span").hasText("Saved!");
 
       assert
         .dom(".imap-no-mailbox-selected")
@@ -194,11 +189,12 @@ acceptance(
         .doesNotExist("no longer shows a no mailbox selected message");
 
       await click("#enable_imap");
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
-        i18n("groups.manage.email.imap_disable_confirm"),
-        "shows a confirm dialogue warning IMAP settings will be wiped"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          i18n("groups.manage.email.imap_disable_confirm"),
+          "shows a confirm dialogue warning IMAP settings will be wiped"
+        );
       await click(".dialog-footer .btn-primary");
     });
   }
@@ -349,8 +345,7 @@ acceptance(
       await formKit().field("email_password").fillIn("password");
       await formKit().submit();
 
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
+      assert.dom(".dialog-body").hasText(
         i18n("generic_error_with_reason", {
           error:
             "There was an issue with the SMTP credentials provided, check the username and password and try again.",

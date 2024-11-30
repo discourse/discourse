@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
@@ -35,8 +35,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
 
     assert.strictEqual(notices.length, 2, "Two notices are rendered");
 
-    assert.true(notices[0].innerText.includes("hello"));
-    assert.true(notices[1].innerText.includes("goodbye"));
+    assert.dom(notices[0]).includesText("hello");
+    assert.dom(notices[1]).includesText("goodbye");
   });
 
   test("Notices can be cleared", async function (assert) {

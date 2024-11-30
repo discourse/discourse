@@ -14,10 +14,7 @@ acceptance("Category Edit - Security", function (needs) {
   test("default", async function (assert) {
     await visit("/c/bug/edit/security");
 
-    const firstRow = query(".row-body");
-    const badgeName = firstRow.querySelector(".group-name-label").innerText;
-    assert.strictEqual(badgeName, "everyone");
-
+    assert.dom(".row-body .group-name-label").hasText("everyone");
     assert.dom(".d-icon-square-check").exists({ count: 3 });
   });
 
@@ -57,10 +54,7 @@ acceptance("Category Edit - Security", function (needs) {
 
     const addedRow = [...queryAll(".row-body")].at(-1);
 
-    assert.strictEqual(
-      addedRow.querySelector(".group-name-link").innerText,
-      "staff"
-    );
+    assert.dom(".group-name-link", addedRow).hasText("staff");
     assert.strictEqual(
       addedRow.querySelectorAll(".d-icon-square-check").length,
       3,
@@ -85,10 +79,7 @@ acceptance("Category Edit - Security", function (needs) {
 
     const firstRow = query(".row-body");
 
-    assert.strictEqual(
-      firstRow.querySelector(".group-name-label").innerText,
-      "everyone"
-    );
+    assert.dom(".group-name-label", firstRow).hasText("everyone");
     assert.strictEqual(
       firstRow.querySelectorAll(".d-icon-square-check").length,
       1,

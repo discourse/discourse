@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import Theme from "admin/models/theme";
 
@@ -59,21 +58,18 @@ module("Integration | Component | themes-list-item", function (hooks) {
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
     assert.deepEqual(
-      query(".components")
-        .innerText.trim()
-        .split(",")
-        .map((n) => n.trim())
-        .join(","),
-      this.childrenList
-        .splice(0, 4)
-        .map((theme) => theme.get("name"))
-        .join(","),
+      document
+        .querySelector(".components")
+        .innerText.split(",")
+        .map((n) => n.trim()),
+      this.childrenList.splice(0, 4).map((theme) => theme.get("name")),
       "lists the first 4 children"
     );
-    assert.deepEqual(
-      query(".others-count").innerText.trim(),
-      i18n("admin.customize.theme.and_x_more", { count: 1 }),
-      "shows count of remaining children"
-    );
+    assert
+      .dom(".others-count")
+      .hasText(
+        i18n("admin.customize.theme.and_x_more", { count: 1 }),
+        "shows count of remaining children"
+      );
   });
 });

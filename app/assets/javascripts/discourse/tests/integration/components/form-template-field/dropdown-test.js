@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
@@ -63,11 +63,9 @@ module(
         .dom(".form-template-field__dropdown")
         .exists("a dropdown component exists");
 
-      assert.strictEqual(
-        query(".form-template-field__dropdown-placeholder").innerText,
-        attributes.none_label,
-        "None label is correct"
-      );
+      assert
+        .dom(".form-template-field__dropdown-placeholder")
+        .hasText(attributes.none_label, "None label is correct");
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {

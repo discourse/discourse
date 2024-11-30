@@ -2,7 +2,6 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -28,13 +27,9 @@ acceptance("User Preferences - Security", function (needs) {
   test("recently connected devices", async function (assert) {
     await visit("/u/eviltrout/preferences/security");
 
-    assert.strictEqual(
-      query(
-        ".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device"
-      ).innerText.trim(),
-      "Linux Computer",
-      "it should display active token first"
-    );
+    assert
+      .dom(".auth-tokens > .auth-token:nth-of-type(1) .auth-token-device")
+      .hasText("Linux Computer", "displays active token first");
 
     assert
       .dom(".pref-auth-tokens > a:nth-of-type(1)")

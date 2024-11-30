@@ -3,9 +3,8 @@ import { test } from "qunit";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 acceptance("Poll results", function (needs) {
   needs.user();
@@ -1117,25 +1116,21 @@ acceptance("Poll results", function (needs) {
   test("can load more voters - ranked choice", async function (assert) {
     await visit("/t/load-more-poll-voters-ranked-choice/135");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".poll-container .discourse-poll-ranked_choice-results .tab-container .tab.nav-item.active button"
-      ).innerText,
-      i18n("poll.results.tabs.outcome"),
-      "Outcome tab is active"
-    );
+      )
+      .hasText(i18n("poll.results.tabs.outcome"), "Outcome tab is active");
 
     await click(
       ".poll-container .discourse-poll-ranked_choice-results .tab-container .tab.nav-item:not(.active) button"
     );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".poll-container .discourse-poll-ranked_choice-results .tab-container .tab.nav-item.active button"
-      ).innerText,
-      i18n("poll.results.tabs.votes"),
-      "Votes tab is active"
-    );
+      )
+      .hasText(i18n("poll.results.tabs.votes"), "Votes tab is active");
 
     assert
       .dom(

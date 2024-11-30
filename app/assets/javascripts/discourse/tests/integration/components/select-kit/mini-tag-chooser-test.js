@@ -58,9 +58,7 @@ module(
       await this.subject.fillInFilter("baz");
       await this.subject.selectRowByValue("monkey");
 
-      const error = query(".select-kit-error").innerText;
-      assert.strictEqual(
-        error,
+      assert.dom(".select-kit-error").hasText(
         i18n("select_kit.max_content_reached", {
           count: this.siteSettings.max_tags_per_topic,
         })
@@ -76,9 +74,7 @@ module(
       assert.strictEqual(this.subject.header().value(), "cat,kit");
       await this.subject.expand();
 
-      const error = query(".select-kit-error").innerText;
-      assert.strictEqual(
-        error,
+      assert.dom(".select-kit-error").hasText(
         i18n("select_kit.max_content_reached", {
           count: 0,
         })
