@@ -32,7 +32,7 @@ module PageObjects
       end
 
       def search_input
-        find(".admin-users-list__controls .username input")
+        find(".admin-users-list__search input")
       end
 
       def user_row(id)
@@ -61,6 +61,44 @@ module PageObjects
 
       def has_no_bulk_actions_dropdown?
         has_no_css?(".bulk-select-admin-users-dropdown-trigger")
+      end
+
+      def has_usernames?(usernames)
+        expect(all(".directory-table__cell.username").map(&:text)).to eq(usernames)
+      end
+
+      def has_none_users?
+        has_content?(I18n.t("js.search.no_results"))
+      end
+
+      def click_tab(tab)
+        has_css?(".admin-users-tabs__#{tab}")
+        find(".admin-users-tabs__#{tab}").click
+      end
+
+      def has_active_tab?(tab)
+        has_css?(".admin-users-tabs__#{tab} .active")
+        has_no_css?(".loading-container .visible")
+      end
+
+      def has_no_emails?
+        has_no_css?(".directory-table__column-header--email")
+      end
+
+      def has_emails?
+        has_css?(".directory-table__column-header--email")
+      end
+
+      def click_show_emails
+        find(".admin-users__subheader-show-emails").click
+      end
+
+      def click_send_invites
+        find(".admin-users__header-send-invites").click
+      end
+
+      def click_export
+        find(".admin-users__header-export-users").click
       end
     end
   end

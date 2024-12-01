@@ -6642,6 +6642,7 @@ en:
 
       users:
         title: "Users"
+        description: "View and manage users."
         create: "Add Admin User"
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
