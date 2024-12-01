@@ -1,12 +1,13 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Image aspect ratio", function () {
-  test("it applies the aspect ratio", async function (assert) {
+  test("applies the aspect ratio", async function (assert) {
     await visit("/t/2480");
-    const image = query("#post_3 img[src='/assets/logo.png']");
 
-    assert.strictEqual(image.style.aspectRatio, "690 / 388");
+    assert
+      .dom("#post_3 img[src='/assets/logo.png']")
+      .hasStyle({ aspectRatio: "690 / 388" });
   });
 });

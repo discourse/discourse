@@ -4,7 +4,6 @@ import { module, test } from "qunit";
 import HomeLogo from "discourse/components/header/home-logo";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -178,12 +177,9 @@ module("Integration | Component | home-logo", function (hooks) {
   test("the home logo href url defaults to /", async function (assert) {
     await render(<template><HomeLogo @minimized={{false}} /></template>);
 
-    const anchorElement = query("#site-logo").closest("a");
-    assert.strictEqual(
-      anchorElement.getAttribute("href"),
-      "/",
-      "home logo href equals /"
-    );
+    assert
+      .dom(".home-logo-wrapper-outlet a")
+      .hasAttribute("href", "/", "home logo href equals /");
   });
 
   test("api.registerHomeLogoHrefCallback can be used to change the logo href url", async function (assert) {
@@ -193,11 +189,12 @@ module("Integration | Component | home-logo", function (hooks) {
 
     await render(<template><HomeLogo @minimized={{false}} /></template>);
 
-    const anchorElement = query("#site-logo").closest("a");
-    assert.strictEqual(
-      anchorElement.getAttribute("href"),
-      "https://example.com",
-      "home logo href equals the one set by the callback"
-    );
+    assert
+      .dom(".home-logo-wrapper-outlet a")
+      .hasAttribute(
+        "href",
+        "https://example.com",
+        "home logo href equals the one set by the callback"
+      );
   });
 });

@@ -1,7 +1,6 @@
 import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 
 module(
@@ -89,9 +88,11 @@ module(
         <ThemeSettingsEditor @model={{model}} />
       </template>);
 
-      query(".ace").aceEditor.session.doc.setValue(
-        JSON.stringify([{ setting: "bar", value: "bar" }])
-      );
+      document
+        .querySelector(".ace")
+        .aceEditor.session.doc.setValue(
+          JSON.stringify([{ setting: "bar", value: "bar" }])
+        );
       await click("button#save");
 
       assert
@@ -112,7 +113,7 @@ module(
         <ThemeSettingsEditor @model={{model}} />
       </template>);
 
-      query(".ace").aceEditor.session.doc.setValue(
+      document.querySelector(".ace").aceEditor.session.doc.setValue(
         JSON.stringify([
           { setting: "foo", value: "foo" },
           { setting: "bar", value: "bar" },

@@ -2,11 +2,7 @@ import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { fakeTime, query } from "discourse/tests/helpers/qunit-helpers";
-
-async function mouseenter() {
-  await triggerEvent(query(".user-status-message"), "mousemove");
-}
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-status-message", function (hooks) {
   setupRenderingTest(hooks);
@@ -50,7 +46,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await mouseenter();
+    await triggerEvent(".user-status-message", "mousemove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')
@@ -68,7 +64,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await mouseenter();
+    await triggerEvent(".user-status-message", "mousemove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')
@@ -86,7 +82,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await mouseenter();
+    await triggerEvent(".user-status-message", "mousemove");
 
     assert
       .dom(
@@ -99,7 +95,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     await render(
       hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
-    await mouseenter();
+    await triggerEvent(".user-status-message", "mousemove");
 
     assert
       .dom('[data-content][data-identifier="user-status-message-tooltip"]')

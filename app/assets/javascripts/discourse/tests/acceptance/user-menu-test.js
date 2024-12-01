@@ -19,7 +19,6 @@ import {
   acceptance,
   loggedInUser,
   publishToMessageBus,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -296,34 +295,28 @@ acceptance("User menu", function (needs) {
       expectedTabOrder,
       "data-tab-number of the tabs has no gaps when custom tabs are added and the tabs are in the right order"
     );
-    assert.strictEqual(
-      query(".tabs-list.bottom-tabs .btn").dataset.tabNumber,
-      "9",
-      "bottom tab has the correct data-tab-number"
-    );
+    assert
+      .dom(".tabs-list.bottom-tabs .btn")
+      .hasAttribute(
+        "data-tab-number",
+        "9",
+        "bottom tab has the correct data-tab-number"
+      );
 
-    let customTab1Bubble = query(
-      "#user-menu-button-custom-tab-1 .badge-notification"
-    );
+    assert
+      .dom("#user-menu-button-custom-tab-1 .badge-notification")
+      .hasText("73", "bubble shows the right count");
 
-    assert.dom(customTab1Bubble).hasText("73", "bubble shows the right count");
-
-    const customTab2Bubble = query(
-      "#user-menu-button-custom-tab-2 .badge-notification"
-    );
-
-    assert.dom(customTab2Bubble).hasText("29", "bubble shows the right count");
+    assert
+      .dom("#user-menu-button-custom-tab-2 .badge-notification")
+      .hasText("29", "bubble shows the right count");
 
     await publishToMessageBus(`/notification/${loggedInUser().id}`, {
       unread_high_priority_notifications: 18,
     });
 
-    customTab1Bubble = query(
-      "#user-menu-button-custom-tab-1 .badge-notification"
-    );
-
     assert
-      .dom(customTab1Bubble)
+      .dom("#user-menu-button-custom-tab-1 .badge-notification")
       .hasText(
         "18",
         "displayed bubble count updates when the value is changed"
@@ -421,43 +414,49 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    const summaryLink = query("#quick-access-profile ul li.summary a");
-    assert.true(
-      summaryLink.href.endsWith("/u/eviltrout/summary"),
-      "has a link to the summary page of the user"
-    );
     assert
-      .dom(summaryLink)
+      .dom("#quick-access-profile ul li.summary a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/summary$/,
+        "has a link to the summary page of the user"
+      );
+    assert
+      .dom("#quick-access-profile ul li.summary a")
       .hasText(i18n("user.summary.title"), "summary link has the right label");
     assert
-      .dom(".d-icon-user", summaryLink)
+      .dom("#quick-access-profile ul li.summary a .d-icon-user")
       .exists("summary link has the right icon");
 
-    const activityLink = query("#quick-access-profile ul li.activity a");
-    assert.true(
-      activityLink.href.endsWith("/u/eviltrout/activity"),
-      "has a link to the activity page of the user"
-    );
     assert
-      .dom(activityLink)
+      .dom("#quick-access-profile ul li.activity a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/activity$/,
+        "has a link to the activity page of the user"
+      );
+    assert
+      .dom("#quick-access-profile ul li.activity a")
       .hasText(
         i18n("user.activity_stream"),
         "activity link has the right label"
       );
     assert
-      .dom(".d-icon-bars-staggered", activityLink)
+      .dom("#quick-access-profile ul li.activity a .d-icon-bars-staggered")
       .exists("activity link has the right icon");
 
-    const invitesLink = query("#quick-access-profile ul li.invites a");
-    assert.true(
-      invitesLink.href.endsWith("/u/eviltrout/invited"),
-      "has a link to the invites page of the user"
-    );
     assert
-      .dom(invitesLink)
+      .dom("#quick-access-profile ul li.invites a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/invited$/,
+        "has a link to the invites page of the user"
+      );
+    assert
+      .dom("#quick-access-profile ul li.invites a")
       .hasText(i18n("user.invited.title"), "invites link has the right label");
     assert
-      .dom(".d-icon-user-plus", invitesLink)
+      .dom("#quick-access-profile ul li.invites a .d-icon-user-plus")
       .exists("invites link has the right icon");
 
     await clickOutside();
@@ -470,47 +469,48 @@ acceptance("User menu", function (needs) {
       .dom("#quick-access-profile ul li.invites")
       .doesNotExist("invites link not shown when the user can't invite");
 
-    const draftsLink = query("#quick-access-profile ul li.drafts a");
-    assert.true(
-      draftsLink.href.endsWith("/u/eviltrout/activity/drafts"),
-      "has a link to the drafts page of the user"
-    );
     assert
-      .dom(draftsLink)
+      .dom("#quick-access-profile ul li.drafts a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/activity\/drafts$/,
+        "has a link to the drafts page of the user"
+      );
+    assert
+      .dom("#quick-access-profile ul li.drafts a")
       .hasText(
         i18n("drafts.label_with_count", { count: 13 }),
         "drafts link has the right label with count of the user's drafts"
       );
     assert
-      .dom(".d-icon-user_menu\\.drafts", draftsLink)
+      .dom("#quick-access-profile ul li.drafts a .d-icon-user_menu\\.drafts")
       .exists("drafts link has the right icon");
 
-    const preferencesLink = query("#quick-access-profile ul li.preferences a");
-    assert.true(
-      preferencesLink.href.endsWith("/u/eviltrout/preferences"),
-      "has a link to the preferences page of the user"
-    );
     assert
-      .dom(preferencesLink)
+      .dom("#quick-access-profile ul li.preferences a")
+      .hasAttribute(
+        "href",
+        /\/u\/eviltrout\/preferences$/,
+        "has a link to the preferences page of the user"
+      );
+    assert
+      .dom("#quick-access-profile ul li.preferences a")
       .hasText(
         i18n("user.preferences.title"),
         "preferences link has the right label"
       );
     assert
-      .dom(".d-icon-gear", preferencesLink)
+      .dom("#quick-access-profile ul li.preferences a .d-icon-gear")
       .exists("preferences link has the right icon");
 
-    let doNotDisturbButton = query(
-      "#quick-access-profile ul li.do-not-disturb .btn"
-    );
     assert
-      .dom(doNotDisturbButton)
+      .dom("#quick-access-profile ul li.do-not-disturb .btn")
       .hasText(
         i18n("pause_notifications.label"),
         "Do Not Disturb button has the right label"
       );
     assert
-      .dom(".d-icon-toggle-off", doNotDisturbButton)
+      .dom("#quick-access-profile ul li.do-not-disturb .btn .d-icon-toggle-off")
       .exists("Do Not Disturb button has the right icon");
 
     await clickOutside();
@@ -520,17 +520,14 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    doNotDisturbButton = query(
-      "#quick-access-profile ul li.do-not-disturb .btn"
-    );
     assert
-      .dom(doNotDisturbButton)
+      .dom("#quick-access-profile ul li.do-not-disturb .btn")
       .hasText(
         `${i18n("pause_notifications.label")} 2h`,
         "Do Not Disturb button has the right label when Do Not Disturb is enabled"
       );
     assert
-      .dom(".d-icon-toggle-on", doNotDisturbButton)
+      .dom("#quick-access-profile ul li.do-not-disturb .btn .d-icon-toggle-on")
       .exists(
         "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
       );
@@ -538,17 +535,16 @@ acceptance("User menu", function (needs) {
     assert
       .dom("#quick-access-profile ul li.enable-anonymous .btn")
       .exists("toggle anon button is shown");
-    let toggleAnonButton = query(
-      "#quick-access-profile ul li.enable-anonymous .btn"
-    );
     assert
-      .dom(toggleAnonButton)
+      .dom("#quick-access-profile ul li.enable-anonymous .btn")
       .hasText(
         i18n("switch_to_anon"),
         "toggle anonymous button has the right label when the user isn't anonymous"
       );
     assert
-      .dom(".d-icon-user-secret", toggleAnonButton)
+      .dom(
+        "#quick-access-profile ul li.enable-anonymous .btn .d-icon-user-secret"
+      )
       .exists(
         "toggle anonymous button has the right icon when the user isn't anonymous"
       );
@@ -558,17 +554,14 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    toggleAnonButton = query(
-      "#quick-access-profile ul li.disable-anonymous .btn"
-    );
     assert
-      .dom(toggleAnonButton)
+      .dom("#quick-access-profile ul li.disable-anonymous .btn")
       .hasText(
         i18n("switch_from_anon"),
         "toggle anonymous button has the right label when the user is anonymous"
       );
     assert
-      .dom(".d-icon-ban", toggleAnonButton)
+      .dom("#quick-access-profile ul li.disable-anonymous .btn .d-icon-ban")
       .exists(
         "toggle anonymous button has the right icon when the user is anonymous"
       );
@@ -658,12 +651,11 @@ acceptance("User menu", function (needs) {
         "toggle anon button is not shown if the user is not allowed to post anonymously"
       );
 
-    const logoutButton = query("#quick-access-profile ul li.logout .btn");
     assert
-      .dom(logoutButton)
+      .dom("#quick-access-profile ul li.logout .btn")
       .hasText(i18n("user.log_out"), "logout button has the right label");
     assert
-      .dom(".d-icon-right-from-bracket", logoutButton)
+      .dom("#quick-access-profile ul li.logout .btn .d-icon-right-from-bracket")
       .exists("logout button has the right icon");
   });
 
@@ -687,25 +679,27 @@ acceptance("User menu", function (needs) {
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
-    const item1 = query("#quick-access-profile ul li.test-1-item");
-
     assert
-      .dom(".d-icon-wrench", item1)
+      .dom("#quick-access-profile ul li.test-1-item .d-icon-wrench")
       .exists("The first item's icon is rendered");
-    assert.true(
-      item1.querySelector("a").href.endsWith("/test_1_path"),
-      "The first item's link is present with correct href"
-    );
-
-    const item2 = query("#quick-access-profile ul li.test-2-item");
+    assert
+      .dom("#quick-access-profile ul li.test-1-item a")
+      .hasAttribute(
+        "href",
+        /\/test_1_path$/,
+        "The first item's link is present with correct href"
+      );
 
     assert
-      .dom(".d-icon", item2)
+      .dom("#quick-access-profile ul li.test-2-item .d-icon")
       .doesNotExist("The second item doesn't have an icon");
-    assert.true(
-      item2.querySelector("a").href.endsWith("/test_2_path"),
-      "The second item's link is present with correct href"
-    );
+    assert
+      .dom("#quick-access-profile ul li.test-2-item a")
+      .hasAttribute(
+        "href",
+        /\/test_2_path$/,
+        "The second item's link is present with correct href"
+      );
   });
 
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
@@ -1031,11 +1025,8 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".d-header-icons .current-user button");
 
     await click("#user-menu-button-other-notifications");
-    let othersBadgeNotification = query(
-      "#user-menu-button-other-notifications .badge-notification"
-    );
     assert
-      .dom(othersBadgeNotification)
+      .dom("#user-menu-button-other-notifications .badge-notification")
       .hasText("4", "badge shows the right count");
 
     await click(".user-menu .notifications-dismiss");

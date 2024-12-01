@@ -4,7 +4,7 @@ import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -26,7 +26,7 @@ acceptance("User Preferences - Interface", function (needs) {
       assert.dom(".saved").doesNotExist("hasn't been saved yet");
       await click(".save-changes");
       assert.dom(".saved").exists("it displays the saved message");
-      query(".saved").remove();
+      document.querySelector(".saved").remove();
     };
 
     await visit("/u/eviltrout/preferences/interface");
@@ -213,11 +213,13 @@ acceptance(
 
       await visit("/u/eviltrout/preferences/interface");
       assert.dom(".light-color-scheme").exists("has light scheme dropdown");
-      assert.strictEqual(
-        query(".light-color-scheme .selected-name").dataset.value,
-        session.userColorSchemeId.toString(),
-        "user's selected color scheme is selected value in light scheme dropdown"
-      );
+      assert
+        .dom(".light-color-scheme .selected-name")
+        .hasAttribute(
+          "data-value",
+          session.userColorSchemeId.toString(),
+          "user's selected color scheme is selected value in light scheme dropdown"
+        );
     });
 
     test("display 'Theme default' when default color scheme is not marked as selectable", async function (assert) {
@@ -264,17 +266,19 @@ acceptance(
         assert.dom(".saved").doesNotExist("hasn't been saved yet");
         await click(".save-changes");
         assert.dom(".saved").exists("displays the saved message");
-        query(".saved").remove();
+        document.querySelector(".saved").remove();
       };
 
       await visit("/u/eviltrout/preferences/interface");
       assert.dom(".light-color-scheme").exists("has regular dropdown");
       assert.dom(".dark-color-scheme").exists("has dark color scheme dropdown");
-      assert.strictEqual(
-        query(".dark-color-scheme .selected-name").dataset.value,
-        session.userDarkSchemeId.toString(),
-        "sets site default as selected dark scheme"
-      );
+      assert
+        .dom(".dark-color-scheme .selected-name")
+        .hasAttribute(
+          "data-value",
+          session.userDarkSchemeId.toString(),
+          "sets site default as selected dark scheme"
+        );
       assert
         .dom(".control-group.dark-mode")
         .doesNotExist("does not show disable dark mode checkbox");

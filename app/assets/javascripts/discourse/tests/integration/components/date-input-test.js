@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -24,8 +24,8 @@ module("Integration | Component | date-input", function (hooks) {
       hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
     );
 
-    document.querySelector(".date-picker").value = "2019-01-02";
-    document.querySelector(".date-picker").dispatchEvent(new Event("change"));
+    fillIn(".date-picker", "2019-01-02");
+    triggerEvent(".date-picker", "change");
 
     assert.true(this.date.isSame(DEFAULT_DATE));
   });
@@ -38,8 +38,8 @@ module("Integration | Component | date-input", function (hooks) {
       hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
     );
 
-    document.querySelector(".date-picker").value = "2019-02-02";
-    document.querySelector(".date-picker").dispatchEvent(new Event("change"));
+    fillIn(".date-picker", "2019-02-02");
+    triggerEvent(".date-picker", "change");
 
     assert.true(this.date.isSame(moment("2019-02-02")));
   });

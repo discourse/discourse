@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   setupRenderingTest(hooks);
@@ -44,8 +43,7 @@ module("Discourse Chat | Component | chat-message-reaction", function (hooks) {
   test("reaction’s image", async function (assert) {
     await render(hbs`<ChatMessageReaction @reaction={{hash emoji="heart"}} />`);
 
-    const src = query(".chat-message-reaction img").src;
-    assert.true(/heart\.png/.test(src));
+    assert.dom(".chat-message-reaction img").hasAttribute("src", /heart\.png/);
   });
 
   test("click action", async function (assert) {

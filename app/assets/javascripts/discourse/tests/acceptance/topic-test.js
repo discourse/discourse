@@ -13,7 +13,6 @@ import {
   acceptance,
   chromeTest,
   publishToMessageBus,
-  query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -373,9 +372,9 @@ acceptance("Topic featured links", function (needs) {
     await click(".quote-button .insert-quote");
 
     assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
+      document
+        .querySelector(".d-editor-input")
+        .value.includes('quote="codinghorror said, post:3, topic:280"')
     );
   });
 
@@ -385,9 +384,11 @@ acceptance("Topic featured links", function (needs) {
     await click(".quote-button .insert-quote");
 
     assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="A new topic with a link to another topic, post:3, topic:62"'
-      )
+      document
+        .querySelector(".d-editor-input")
+        .value.includes(
+          'quote="A new topic with a link to another topic, post:3, topic:62"'
+        )
     );
   });
 
@@ -397,9 +398,9 @@ acceptance("Topic featured links", function (needs) {
     await click(".reply");
 
     assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
+      document
+        .querySelector(".d-editor-input")
+        .value.includes('quote="codinghorror said, post:3, topic:280"')
     );
   });
 
@@ -413,9 +414,9 @@ acceptance("Topic featured links", function (needs) {
       await triggerKeyEvent(document, "keypress", "T");
 
       assert.true(
-        query(".d-editor-input").value.includes(
-          'quote="codinghorror said, post:3, topic:280"'
-        )
+        document
+          .querySelector(".d-editor-input")
+          .value.includes('quote="codinghorror said, post:3, topic:280"')
       );
     }
   );
@@ -425,9 +426,9 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 .cooked");
     await click(".quote-button .insert-quote");
     assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="pekka, post:5, topic:280, full:true"'
-      )
+      document
+        .querySelector(".d-editor-input")
+        .value.includes('quote="pekka, post:5, topic:280, full:true"')
     );
   });
 });

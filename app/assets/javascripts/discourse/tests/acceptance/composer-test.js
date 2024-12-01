@@ -25,7 +25,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   metaModifier,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -205,17 +204,16 @@ acceptance("Composer", function (needs) {
       .dom(".d-editor-textarea-wrapper .popup-tip.good")
       .exists("the body is now good");
 
-    const textarea = query("#reply-control .d-editor-input");
+    const textarea = document.querySelector("#reply-control .d-editor-input");
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 
     await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
-    const example = i18n(`composer.bold_text`);
     assert
       .dom("#reply-control .d-editor-input")
       .hasValue(
-        `this is the *content* of a post**${example}**`,
+        `this is the *content* of a post**${i18n("composer.bold_text")}**`,
         "supports keyboard shortcuts"
       );
 
@@ -365,7 +363,8 @@ acceptance("Composer", function (needs) {
     assert
       .dom(".d-editor-input")
       .hasValue(
-        query(".topic-post:nth-of-type(1) .cooked > p").innerText,
+        document.querySelector(".topic-post:nth-of-type(1) .cooked > p")
+          .innerText,
         "composer has contents of post to be edited"
       );
   });
@@ -848,7 +847,7 @@ acceptance("Composer", function (needs) {
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
     assert.true(
-      query(".d-editor-input").value.includes(longText),
+      document.querySelector(".d-editor-input").value.includes(longText),
       "entered text should still be there"
     );
 
@@ -1311,7 +1310,8 @@ acceptance("Composer - current time", function (needs) {
     });
 
     assert.true(
-      query("#reply-control .d-editor-input")
+      document
+        .querySelector("#reply-control .d-editor-input")
         .value.trim()
         .startsWith(`and the time now is: [date=${date}`),
       "adds the current date"

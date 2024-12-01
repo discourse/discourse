@@ -6,7 +6,6 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -67,7 +66,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await simulateKeys(query(".d-editor-input"), "abc @u\r");
+    await simulateKeys(".d-editor-input", "abc @u\r");
 
     assert
       .dom(".d-editor-input")
@@ -78,7 +77,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    await simulateKeys(query(".d-editor-input"), "abc @user a\b\b\r");
+    await simulateKeys(".d-editor-input", "abc @user a\b\b\r");
 
     assert
       .dom(".d-editor-input")
@@ -89,11 +88,9 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "abc @user 123");
-    await setCaretPosition(editor, 9);
-    await simulateKeys(editor, "\b\b\r");
+    await simulateKeys(".d-editor-input", "abc @user 123");
+    await setCaretPosition(".d-editor-input", 9);
+    await simulateKeys(".d-editor-input", "\b\b\r");
 
     assert
       .dom(".d-editor-input")
@@ -108,9 +105,7 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "@u");
+    await simulateKeys(".d-editor-input", "@u");
 
     assert
       .dom(`.autocomplete .emoji[alt='${status.emoji}']`)
@@ -125,16 +120,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, "abc @u");
+    await simulateKeys(".d-editor-input", "abc @u");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
       ["user", "user2", "user_group", "foo"]
     );
 
-    await simulateKeys(editor, "\bf");
+    await simulateKeys(".d-editor-input", "\bf");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),

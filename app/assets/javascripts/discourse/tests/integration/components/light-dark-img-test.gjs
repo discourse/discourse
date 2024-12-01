@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import LightDarkImg from "discourse/components/light-dark-img";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 const lightSrc = { url: "/images/light.jpg", width: 376, height: 500 };
 const darkSrc = { url: "/images/light.jpg", width: 432, height: 298 };
@@ -36,11 +35,9 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").doesNotExist("there are no source tags");
   });
 
@@ -54,11 +51,9 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").doesNotExist("there are no source tags");
   });
 
@@ -81,11 +76,9 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").doesNotExist("there are no source tags");
   });
 
@@ -99,17 +92,17 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").exists("there is a source tag");
-    assert.strictEqual(
-      query("source").getAttribute("srcset"),
-      darkSrc.url,
-      "the source srcset is the dark image"
-    );
+    assert
+      .dom("source")
+      .hasAttribute(
+        "srcset",
+        darkSrc.url,
+        "the source srcset is the dark image"
+      );
   });
 
   test("dark theme with no images provided | dark mode not available", async function (assert) {
@@ -131,11 +124,9 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").doesNotExist("there are no source tags");
   });
 
@@ -149,17 +140,17 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      darkSrc.url,
-      "the img src is the dark image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", darkSrc.url, "the img src is the dark image");
     assert.dom("source").exists("there is a source tag");
-    assert.strictEqual(
-      query("source").getAttribute("srcset"),
-      darkSrc.url,
-      "the source srcset is the dark image"
-    );
+    assert
+      .dom("source")
+      .hasAttribute(
+        "srcset",
+        darkSrc.url,
+        "the source srcset is the dark image"
+      );
   });
 
   test("dark theme with no images provided | dark mode available", async function (assert) {
@@ -181,11 +172,9 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").doesNotExist("there is no picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      lightSrc.url,
-      "the img src is the light image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", lightSrc.url, "the img src is the light image");
     assert.dom("source").doesNotExist("there are no source tags");
   });
 
@@ -199,16 +188,16 @@ module("Integration | Component | light-dark-img", function (hooks) {
 
     assert.dom("picture").exists("there is a picture tag");
     assert.dom("img").exists("there is an img tag");
-    assert.strictEqual(
-      query("img").getAttribute("src"),
-      darkSrc.url,
-      "the img src is the dark image"
-    );
+    assert
+      .dom("img")
+      .hasAttribute("src", darkSrc.url, "the img src is the dark image");
     assert.dom("source").exists("there is a source tag");
-    assert.strictEqual(
-      query("source").getAttribute("srcset"),
-      darkSrc.url,
-      "the source srcset is the dark image"
-    );
+    assert
+      .dom("source")
+      .hasAttribute(
+        "srcset",
+        darkSrc.url,
+        "the source srcset is the dark image"
+      );
   });
 });

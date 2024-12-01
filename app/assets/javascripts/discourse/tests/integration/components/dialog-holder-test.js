@@ -10,7 +10,6 @@ import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | dialog-holder", function (hooks) {
@@ -30,7 +29,10 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
+    assert.true(
+      document.querySelector(".dialog-overlay").offsetWidth > 0,
+      "overlay is visible"
+    );
     assert
       .dom(".dialog-body")
       .hasText("This is an error", "dialog has error message");
@@ -39,11 +41,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await click(".dialog-overlay");
 
     assert.dom("#dialog-holder").exists("element is still in DOM");
-    assert.strictEqual(
-      query(".dialog-overlay").offsetWidth,
-      0,
-      "overlay is not visible"
-    );
+    assert
+      .dom(".dialog-overlay")
+      .hasProperty("offsetWidth", 0, "overlay is not visible");
     assert.dom("#dialog-holder").hasNoText("dialog is empty");
   });
 
@@ -61,7 +61,10 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
+    assert.true(
+      document.querySelector(".dialog-overlay").offsetWidth > 0,
+      "overlay is visible"
+    );
     assert
       .dom(".dialog-body")
       .hasText("This is an error", "dialog has error message");
@@ -72,11 +75,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
     assert.true(cancelCallbackCalled, "cancel callback called");
     assert.dom("#dialog-holder").exists("element is still in DOM");
 
-    assert.strictEqual(
-      query(".dialog-overlay").offsetWidth,
-      0,
-      "overlay is not visible"
-    );
+    assert
+      .dom(".dialog-overlay")
+      .hasProperty("offsetWidth", 0, "overlay is not visible");
 
     assert.dom("#dialog-holder").hasNoText("dialog is empty");
   });
@@ -106,11 +107,9 @@ module("Integration | Component | dialog-holder", function (hooks) {
     await click(".dialog-close");
 
     assert.dom("#dialog-holder").exists("element is still in DOM");
-    assert.strictEqual(
-      query(".dialog-overlay").offsetWidth,
-      0,
-      "overlay is not visible"
-    );
+    assert
+      .dom(".dialog-overlay")
+      .hasProperty("offsetWidth", 0, "overlay is not visible");
     assert.dom("#dialog-holder").hasNoText("dialog is empty");
   });
 

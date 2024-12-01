@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -16,10 +15,9 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      query(".chat-channel-icon.--category-badge").getAttribute("style"),
-      `color: #${channel.chatable.color}`
-    );
+    assert
+      .dom(".chat-channel-icon.--category-badge")
+      .hasAttribute("style", `color: #${channel.chatable.color}`);
   });
 
   test("category channel - escapes label", async function (assert) {

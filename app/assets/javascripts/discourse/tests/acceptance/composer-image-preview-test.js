@@ -1,7 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});
@@ -340,7 +340,9 @@ acceptance("Composer - Image Preview", function (needs) {
       .hasValue(uploads.join("\n"), "Image should be removed from the editor");
 
     assert.false(
-      query(".d-editor-input").value.includes("image_example_0"),
+      document
+        .querySelector(".d-editor-input")
+        .value.includes("image_example_0"),
       "does not have the first image"
     );
 
@@ -368,8 +370,7 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
         "lock",
         (event) => {
           if (event.target.classList.contains("custom-button-class")) {
-            document.querySelector(".d-editor-input").value =
-              "custom button change";
+            fillIn(".d-editor-input", "custom button change");
           }
         }
       );

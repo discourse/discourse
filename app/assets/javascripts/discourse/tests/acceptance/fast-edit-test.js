@@ -4,7 +4,6 @@ import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
   metaModifier,
-  query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -23,7 +22,7 @@ acceptance("Fast Edit", function (needs) {
   test("Fast edit button works", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_1 .cooked p").childNodes[0];
+    const textNode = document.querySelector("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
     await click(".quote-button .quote-edit-label");
@@ -42,7 +41,7 @@ acceptance("Fast Edit", function (needs) {
   test("Works with keyboard shortcut", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_1 .cooked p").childNodes[0];
+    const textNode = document.querySelector("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
 
@@ -77,7 +76,7 @@ acceptance("Fast Edit", function (needs) {
   test("Opens full composer for multi-line selection", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const textNode = query("#post_2 .cooked");
+    const textNode = document.querySelector("#post_2 .cooked");
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -89,8 +88,10 @@ acceptance("Fast Edit", function (needs) {
   test("Works with diacritics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`Je suis désolé, comment ça va?`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    document
+      .querySelector("#post_2 .cooked")
+      .append(`Je suis désolé, comment ça va?`);
+    const textNode = document.querySelector("#post_2 .cooked").childNodes[2];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -101,8 +102,8 @@ acceptance("Fast Edit", function (needs) {
   test("Works with CJK ranges", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`这是一个测试`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    document.querySelector("#post_2 .cooked").append(`这是一个测试`);
+    const textNode = document.querySelector("#post_2 .cooked").childNodes[2];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
@@ -113,8 +114,8 @@ acceptance("Fast Edit", function (needs) {
   test("Works with emoji", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(`This is great 👍`);
-    const textNode = query("#post_2 .cooked").childNodes[2];
+    document.querySelector("#post_2 .cooked").append(`This is great 👍`);
+    const textNode = document.querySelector("#post_2 .cooked").childNodes[2];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");

@@ -1,12 +1,13 @@
 import {
   click,
   fillIn,
+  triggerEvent,
   triggerKeyEvent,
   visit,
   waitUntil,
 } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 import pretender, { response } from "../helpers/create-pretender";
@@ -153,9 +154,7 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
     await click("button.create");
 
     // Work around the lack of CSS transitions in the test env
-    const event = new Event("transitionend");
-    event.propertyName = "height";
-    query("#reply-control").dispatchEvent(event);
+    triggerEvent("#reply-control", "transitionend", { propertyName: "height" });
 
     assert
       .dom(".composer-popup")
