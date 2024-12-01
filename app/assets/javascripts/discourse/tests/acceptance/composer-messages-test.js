@@ -154,7 +154,9 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
     await click("button.create");
 
     // Work around the lack of CSS transitions in the test env
-    triggerEvent("#reply-control", "transitionend", { propertyName: "height" });
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "height",
+    });
 
     assert
       .dom(".composer-popup")

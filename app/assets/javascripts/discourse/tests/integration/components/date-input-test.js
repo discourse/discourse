@@ -24,8 +24,8 @@ module("Integration | Component | date-input", function (hooks) {
       hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
     );
 
-    fillIn(".date-picker", "2019-01-02");
-    triggerEvent(".date-picker", "change");
+    await fillIn(".date-picker", "2019-01-02");
+    await triggerEvent(".date-picker", "change");
 
     assert.true(this.date.isSame(DEFAULT_DATE));
   });
@@ -38,8 +38,8 @@ module("Integration | Component | date-input", function (hooks) {
       hbs`<DateInput @date={{this.date}} @onChange={{this.onChange}} />`
     );
 
-    fillIn(".date-picker", "2019-02-02");
-    triggerEvent(".date-picker", "change");
+    await fillIn(".date-picker", "2019-02-02");
+    await triggerEvent(".date-picker", "change");
 
     assert.true(this.date.isSame(moment("2019-02-02")));
   });

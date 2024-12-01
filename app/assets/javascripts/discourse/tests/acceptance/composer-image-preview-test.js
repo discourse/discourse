@@ -368,9 +368,9 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
         "My Custom Button",
         "custom-button-class",
         "lock",
-        (event) => {
+        async (event) => {
           if (event.target.classList.contains("custom-button-class")) {
-            fillIn(".d-editor-input", "custom button change");
+            await fillIn(".d-editor-input", "custom button change");
           }
         }
       );

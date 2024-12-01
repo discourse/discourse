@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { find, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -14,13 +14,13 @@ module(
       );
 
       assert.strictEqual(
-        document.querySelector(".btn:nth-child(1)").offsetHeight,
-        document.querySelector(".btn:nth-child(2)").offsetHeight,
+        find(".btn:nth-child(1)").offsetHeight,
+        find(".btn:nth-child(2)").offsetHeight,
         "have equal height"
       );
       assert.strictEqual(
-        document.querySelector(".btn:nth-child(1)").offsetHeight,
-        document.querySelector(".btn:nth-child(3)").offsetHeight,
+        find(".btn:nth-child(1)").offsetHeight,
+        find(".btn:nth-child(3)").offsetHeight,
         "have equal height"
       );
     });
@@ -31,8 +31,8 @@ module(
       );
 
       assert.strictEqual(
-        document.querySelector("input").offsetHeight,
-        document.querySelector(".btn").offsetHeight,
+        find("input").offsetHeight,
+        find(".btn").offsetHeight,
         "have equal height"
       );
     });
@@ -43,8 +43,8 @@ module(
       );
 
       assert.strictEqual(
-        document.querySelector("input").offsetHeight,
-        document.querySelector(".combo-box").offsetHeight,
+        find("input").offsetHeight,
+        find(".combo-box").offsetHeight,
         "have equal height"
       );
     });

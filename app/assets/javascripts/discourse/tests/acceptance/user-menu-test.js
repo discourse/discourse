@@ -406,8 +406,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("the profile tab", async function (assert) {
-    const clickOutside = () =>
-      triggerEvent(document.querySelector("header.d-header"), "pointerdown");
+    const clickOutside = () => triggerEvent("header.d-header", "pointerdown");
 
     updateCurrentUser({ draft_count: 13 });
     await visit("/");

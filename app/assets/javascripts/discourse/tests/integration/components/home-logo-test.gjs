@@ -177,9 +177,7 @@ module("Integration | Component | home-logo", function (hooks) {
   test("the home logo href url defaults to /", async function (assert) {
     await render(<template><HomeLogo @minimized={{false}} /></template>);
 
-    assert
-      .dom(".home-logo-wrapper-outlet a")
-      .hasAttribute("href", "/", "home logo href equals /");
+    assert.dom(".title a").hasAttribute("href", "/", "home logo href equals /");
   });
 
   test("api.registerHomeLogoHrefCallback can be used to change the logo href url", async function (assert) {
@@ -190,7 +188,7 @@ module("Integration | Component | home-logo", function (hooks) {
     await render(<template><HomeLogo @minimized={{false}} /></template>);
 
     assert
-      .dom(".home-logo-wrapper-outlet a")
+      .dom(".title a")
       .hasAttribute(
         "href",
         "https://example.com",

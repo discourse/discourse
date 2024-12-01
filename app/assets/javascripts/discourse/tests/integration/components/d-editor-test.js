@@ -60,8 +60,11 @@ module("Integration | Component | d-editor", function (hooks) {
     assert.dom(".d-editor-preview").hasHtml("<p>zogstrip</p>");
   });
 
-  function jumpEnd(selector) {
-    const textarea = document.querySelector(selector);
+  function jumpEnd(textarea) {
+    if (typeof textarea === "string") {
+      textarea = document.querySelector(textarea);
+    }
+
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
     return textarea;

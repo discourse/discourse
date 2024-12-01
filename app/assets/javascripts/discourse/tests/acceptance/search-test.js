@@ -15,8 +15,7 @@ import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
-const clickOutside = () =>
-  triggerEvent(document.querySelector("header.d-header"), "pointerdown");
+const clickOutside = () => triggerEvent("header.d-header", "pointerdown");
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
