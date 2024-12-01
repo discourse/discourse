@@ -1,6 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("EmojiPicker", function (needs) {
   needs.user();
@@ -39,11 +39,12 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      ":grinning:",
-      "it adds the emoji code in the editor when selected"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        ":grinning:",
+        "adds the emoji code in the editor when selected"
+      );
   });
 
   test("emoji picker adds leading whitespace before emoji", async function (assert) {
@@ -54,21 +55,23 @@ acceptance("EmojiPicker", function (needs) {
     await fillIn(".d-editor-input", "This is a test input");
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "This is a test input :grinning:",
-      "it adds the emoji code and a leading whitespace when there is text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "This is a test input :grinning:",
+        "adds the emoji code and a leading whitespace when there is text"
+      );
 
     // Whitespace should not be added on whitespace
     await fillIn(".d-editor-input", "This is a test input ");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "This is a test input :grinning:",
-      "it adds the emoji code and no leading whitespace when user already entered whitespace"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "This is a test input :grinning:",
+        "adds the emoji code and no leading whitespace when user already entered whitespace"
+      );
   });
 
   test("emoji picker has a list of recently used emojis", async function (assert) {
@@ -207,11 +210,12 @@ acceptance("EmojiPicker", function (needs) {
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
-    assert.strictEqual(
-      document.querySelector(".d-editor-input").value,
-      ":smiley:",
-      "Pressing enter inserts the emoji markup in the composer"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        ":smiley:",
+        "Pressing enter inserts the emoji markup in the composer"
+      );
 
     await click("#topic-footer-buttons .btn.create");
     await click(".emoji.btn");

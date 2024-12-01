@@ -34,9 +34,9 @@ module("Integration | Component | date-time-input-range", function (hooks) {
       hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} />`
     );
 
-    assert.strictEqual(fromDateInput().value, "2019-01-29");
+    assert.dom(fromDateInput()).hasValue("2019-01-29");
     assert.strictEqual(fromTimeInput().dataset.name, "14:45");
-    assert.strictEqual(toDateInput().value, "");
+    assert.dom(toDateInput()).hasNoValue();
     assert.strictEqual(toTimeInput().dataset.name, "--:--");
 
     await fillIn(toDateInput(), "2019-01-29");
@@ -81,9 +81,9 @@ module("Integration | Component | date-time-input-range", function (hooks) {
       hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} @timezone="Europe/Paris" />`
     );
 
-    assert.strictEqual(fromDateInput().value, "2019-01-29");
+    assert.dom(fromDateInput()).hasValue("2019-01-29");
     assert.strictEqual(fromTimeInput().dataset.name, "14:45");
-    assert.strictEqual(toDateInput().value, "");
+    assert.dom(toDateInput()).hasNoValue();
     assert.strictEqual(toTimeInput().dataset.name, "--:--");
 
     await fillIn(toDateInput(), "2019-01-29");

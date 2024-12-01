@@ -48,11 +48,12 @@ acceptance("Topic", function (needs) {
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
-      "fills composer with the ring string"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):\n\n`,
+        "fills composer with the ring string"
+      );
     assert.strictEqual(
       selectKit(".category-chooser").header().value(),
       "2",
@@ -67,11 +68,12 @@ acceptance("Topic", function (needs) {
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
-      "fills composer with the ring string"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):\n\n`,
+        "fills composer with the ring string"
+      );
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(

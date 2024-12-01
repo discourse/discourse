@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Grid", function (needs) {
   needs.user();
@@ -30,21 +30,20 @@ acceptance("Composer - Image Grid", function (needs) {
       ".button-wrapper[data-image-index='0'] .wrap-image-grid-button"
     );
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      `[grid]\n${uploads.join("\n")}\n[/grid]`,
-      "Image grid toggles on"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `[grid]\n${uploads.join("\n")}\n[/grid]`,
+        "Image grid toggles on"
+      );
 
     await click(
       ".button-wrapper[data-image-index='0'] .wrap-image-grid-button"
     );
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      uploads.join("\n"),
-      "Image grid toggles off"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(uploads.join("\n"), "Image grid toggles off");
 
     const multipleImages = `![zorro|10x10](upload://zorro.png) ![z2|20x20](upload://zorrito.png)\nand a second group of images\n\n${uploads.join(
       "\n"
@@ -53,8 +52,7 @@ acceptance("Composer - Image Grid", function (needs) {
 
     await click(".image-wrapper:first-child .wrap-image-grid-button");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
+    assert.dom(".d-editor-input").hasValue(
       `[grid]![zorro|10x10](upload://zorro.png) ![z2|20x20](upload://zorrito.png)[/grid]
 and a second group of images
 
@@ -66,11 +64,9 @@ and a second group of images
 
     await click(".image-wrapper:nth-of-type(1) .wrap-image-grid-button");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      multipleImages,
-      "First image grid toggles off"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(multipleImages, "First image grid toggles off");
 
     // Second group of images is in paragraph 2
     assert
@@ -83,8 +79,7 @@ and a second group of images
 
     await click(".d-editor-preview p:nth-child(2) .wrap-image-grid-button");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
+    assert.dom(".d-editor-input").hasValue(
       `![zorro|10x10](upload://zorro.png) ![z2|20x20](upload://zorrito.png)
 and a second group of images
 

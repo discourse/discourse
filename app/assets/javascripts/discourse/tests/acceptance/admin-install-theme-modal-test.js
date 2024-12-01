@@ -1,6 +1,6 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
@@ -20,11 +20,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
     assert.dom(urlInput).hasValue(themeUrl, "url input is filled");
-    assert.strictEqual(
-      query(branchInput).value,
-      "tests-passed",
-      "branch input is filled"
-    );
+    assert.dom(branchInput).hasValue("tests-passed", "branch input is filled");
     assert.dom(publicKey).exists("shows public key");
 
     await click(".d-modal__footer .d-modal-cancel");
