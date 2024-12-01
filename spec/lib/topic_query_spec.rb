@@ -2091,7 +2091,7 @@ RSpec.describe TopicQuery do
       )
     end
 
-    it "includes unread and trakced topics even if they're in a muted category" do
+    it "includes unread and tracked topics even if they're in a muted category" do
       new_topic.update!(category: Fabricate(:category))
       CategoryUser.create!(
         user_id: user.id,

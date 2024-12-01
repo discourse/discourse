@@ -121,7 +121,7 @@ module(
       assert.strictEqual(
         tree.nodes[1].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       await click(tree.nodes[1].element);
@@ -132,7 +132,7 @@ module(
       assert.strictEqual(
         tree.nodes[0].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       assert.true(tree.nodes[1].active);
