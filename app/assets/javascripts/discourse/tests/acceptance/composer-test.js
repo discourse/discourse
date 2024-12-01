@@ -847,10 +847,9 @@ acceptance("Composer", function (needs) {
 
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
-    assert.true(
-      query(".d-editor-input").value.includes(longText),
-      "entered text should still be there"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(longText, "entered text should still be there");
 
     assert
       .dom('.action-title a[href="/t/internationalization-localization/280"]')
