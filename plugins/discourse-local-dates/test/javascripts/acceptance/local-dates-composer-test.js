@@ -134,17 +134,15 @@ acceptance("Local Dates - composer", function (needs) {
 
   test("composer insert current time shortcut", async function (assert) {
     await visit("/t/internationalization-localization/280");
-
     await click("#topic-footer-buttons .btn.create");
-    assert.dom(".d-editor-input").exists("the composer input is visible");
     await fillIn(".d-editor-input", "and the time now is: ");
-
-    const date = moment().format("YYYY-MM-DD");
 
     await triggerKeyEvent(".d-editor-input", "keydown", ".", {
       ...metaModifier,
       shiftKey: true,
     });
+
+    const date = moment().format("YYYY-MM-DD");
 
     assert
       .dom("#reply-control .d-editor-input")

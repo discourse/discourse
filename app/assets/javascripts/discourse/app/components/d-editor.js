@@ -638,7 +638,7 @@ export default class DEditor extends Component {
     this._applyHashtagAutocomplete();
     this._applyMentionAutocomplete();
 
-    const teardownUpstream = this.onSetup?.(textManipulation);
+    const destroyEditor = this.onSetup?.(textManipulation);
 
     scheduleOnce("afterRender", this, this._readyNow);
 
@@ -649,7 +649,7 @@ export default class DEditor extends Component {
 
       textManipulation.autocomplete("destroy");
 
-      teardownUpstream?.();
+      destroyEditor?.();
     };
   }
 
