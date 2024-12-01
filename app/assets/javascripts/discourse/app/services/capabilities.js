@@ -22,7 +22,7 @@ class Capabilities {
   isSafari =
     /Constructor/.test(window.HTMLElement) ||
     window.safari?.pushNotification?.toString() ===
-      "[object SafariRemoteNotification]";
+      "[object SafariRemoteNotification]"; // matches only desktop Safari
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
