@@ -11,7 +11,7 @@
     "@zxing/text-encoding": "^0.9.0",
     "babel-plugin-ember-template-compilation": "^2.3.0",
     "content-tag": "^3.0.0",
-    "decorator-transforms": "^2.2.2",
+    "decorator-transforms": "^2.3.0",
     "discourse-common": "workspace:1.0.0",
     "discourse-widget-hbs": "workspace:1.0.0",
     "ember-cli-htmlbars": "^6.3.0",
