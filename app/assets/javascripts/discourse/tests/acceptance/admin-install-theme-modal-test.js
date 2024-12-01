@@ -80,11 +80,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
   test("modal can be auto-opened with the right query params", async function (assert) {
     await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
     assert.dom(".admin-install-theme-modal").exists("modal is visible");
-    assert.strictEqual(
-      query(".install-theme code").textContent.trim(),
-      "testUrl",
-      "repo url is visible"
-    );
+    assert.dom(".install-theme code").hasText("testUrl", "repo url is visible");
 
     await click(".d-modal-cancel");
     assert.strictEqual(
@@ -103,12 +99,9 @@ acceptance("Admin - Themes - Install modal", function (needs) {
         '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons button'
       )
       .doesNotExist("no install button is shown for installed themes");
-    assert.strictEqual(
-      query(
-        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
-      ).textContent.trim(),
-      i18n("admin.customize.theme.installed")
-    );
+    assert
+      .dom('.popular-theme-item[data-name="Graceful"] .popular-theme-buttons')
+      .hasText(i18n("admin.customize.theme.installed"));
 
     assert
       .dom(

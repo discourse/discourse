@@ -194,12 +194,11 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     const done = assert.async();
     appEvents.on("composer:uploads-aborted", async () => {
       await settled();
-      assert.strictEqual(
-        query(".dialog-body").textContent.trim(),
+      assert.dom(".dialog-body").hasText(
         i18n("post.errors.too_many_dragged_and_dropped_files", {
           count: 2,
         }),
-        "it should warn about too many files added"
+        "warns about too many files added"
       );
 
       await click(".dialog-footer .btn-primary");
@@ -219,15 +218,14 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
 
     appEvents.on("composer:uploads-aborted", async () => {
       await settled();
-      assert.strictEqual(
-        query(".dialog-body").textContent.trim(),
+      assert.dom(".dialog-body").hasText(
         i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             false,
             this.siteSettings
           ).join(", "),
         }),
-        "it should warn about unauthorized extensions"
+        "warns about unauthorized extensions"
       );
 
       await click(".dialog-footer .btn-primary");
@@ -502,11 +500,12 @@ acceptance("Uppy Composer Attachment - Upload Error", function (needs) {
 
     appEvents.on("composer:upload-error", async () => {
       await settled();
-      assert.strictEqual(
-        query(".dialog-body").textContent.trim(),
-        "There was an error uploading the file, the gif was way too cool.",
-        "it should show the error message from the server"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          "There was an error uploading the file, the gif was way too cool.",
+          "shows the error message from the server"
+        );
 
       await click(".dialog-footer .btn-primary");
       done();
@@ -591,11 +590,12 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
 
     appEvents.on("composer:uploads-aborted", async () => {
       await settled();
-      assert.strictEqual(
-        query(".dialog-body").textContent.trim(),
-        "This is an upload handler test for handler-test.png. The file WAS a native file object.",
-        "it should show the dialog triggered by the upload handler"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          "This is an upload handler test for handler-test.png. The file WAS a native file object.",
+          "shows the dialog triggered by the upload handler"
+        );
       await click(".dialog-footer .btn-primary");
       done();
     });

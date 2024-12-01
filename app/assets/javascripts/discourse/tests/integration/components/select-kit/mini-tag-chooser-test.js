@@ -148,10 +148,7 @@ module(
       await render(
         hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=this.hiddenValues}} @value={{this.value}} />`
       );
-      assert.strictEqual(
-        query(".formatted-selection").textContent.trim(),
-        "bar"
-      );
+      assert.dom(".formatted-selection").hasText("bar");
 
       await this.subject.expand();
       assert.deepEqual(

@@ -37,17 +37,16 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
       </AdminPluginConfigArea>
     `);
 
-    assert.strictEqual(
-      document.querySelectorAll(".admin-plugin-inner-sidebar-nav__item").length,
-      3,
-      "it renders the correct number of sidebar nav items (including always adding a Settings link)"
-    );
+    assert
+      .dom(".admin-plugin-inner-sidebar-nav__item")
+      .exists(
+        { count: 3 },
+        "renders the correct number of sidebar nav items (including always adding a Settings link)"
+      );
 
-    assert.strictEqual(
-      document.querySelector(".admin-plugin-config-area").textContent.trim(),
-      "Test content",
-      "it renders the yielded content"
-    );
+    assert
+      .dom(".admin-plugin-config-area")
+      .hasText("Test content", "renders the yielded content");
   });
 
   test("it does not render the nav items in the sidebar when using top mode but it does along the top", async function (assert) {
@@ -70,16 +69,12 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
       </AdminPluginConfigArea>
     `);
 
-    assert.strictEqual(
-      document.querySelectorAll(".admin-plugin-inner-sidebar-nav__item").length,
-      0,
-      "it renders the correct number of sidebar nav items"
-    );
+    assert
+      .dom(".admin-plugin-inner-sidebar-nav__item")
+      .doesNotExist("renders the correct number of sidebar nav items");
 
-    assert.strictEqual(
-      document.querySelector(".admin-plugin-config-area").textContent.trim(),
-      "Test content",
-      "it renders the yielded content"
-    );
+    assert
+      .dom(".admin-plugin-config-area")
+      .hasText("Test content", "renders the yielded content");
   });
 });

@@ -148,38 +148,28 @@ acceptance("Search - Anonymous", function (needs) {
     await visit("/tag/important");
     await click("#search-button");
 
-    assert.strictEqual(
-      query(".search-link .label-suffix").textContent.trim(),
-      i18n("search.in"),
-      "first option includes suffix"
-    );
+    assert
+      .dom(".search-link .label-suffix")
+      .hasText(i18n("search.in"), "first option includes suffix");
 
-    assert.strictEqual(
-      query(".search-link .search-item-tag").textContent.trim(),
-      "important",
-      "first option includes tag"
-    );
+    assert
+      .dom(".search-link .search-item-tag")
+      .hasText("important", "first option includes tag");
 
     await fillIn("#search-term", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
-    assert.strictEqual(
-      secondOption.querySelector(".search-item-prefix").textContent.trim(),
-      "smth",
-      "second option includes term"
-    );
+    assert
+      .dom(".search-item-prefix", secondOption)
+      .hasText("smth", "second option includes term");
 
-    assert.strictEqual(
-      secondOption.querySelector(".label-suffix").textContent.trim(),
-      i18n("search.in"),
-      "second option includes suffix"
-    );
+    assert
+      .dom(".label-suffix", secondOption)
+      .hasText(i18n("search.in"), "second option includes suffix");
 
-    assert.strictEqual(
-      secondOption.querySelector(".search-item-tag").textContent.trim(),
-      "important",
-      "second option includes tag"
-    );
+    assert
+      .dom(".search-item-tag", secondOption)
+      .hasText("important", "second option includes tag");
   });
 
   test("initial options - category search scope", async function (assert) {
@@ -189,23 +179,17 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
-    assert.strictEqual(
-      secondOption.querySelector(".search-item-prefix").textContent.trim(),
-      "smth",
-      "second option includes term"
-    );
+    assert
+      .dom(".search-item-prefix", secondOption)
+      .hasText("smth", "second option includes term");
 
-    assert.strictEqual(
-      secondOption.querySelector(".label-suffix").textContent.trim(),
-      i18n("search.in"),
-      "second option includes suffix"
-    );
+    assert
+      .dom(".label-suffix", secondOption)
+      .hasText(i18n("search.in"), "second option includes suffix");
 
-    assert.strictEqual(
-      secondOption.querySelector(".badge-category__name").textContent.trim(),
-      "bug",
-      "second option includes category slug"
-    );
+    assert
+      .dom(".badge-category__name", secondOption)
+      .hasText("bug", "second option includes category slug");
 
     assert
       .dom(`${contextSelector} span.badge-category__wrapper`)
@@ -219,17 +203,13 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
-    assert.strictEqual(
-      secondOption.querySelector(".search-item-prefix").textContent.trim(),
-      "smth",
-      "second option includes term"
-    );
+    assert
+      .dom(".search-item-prefix", secondOption)
+      .hasText("smth", "second option includes term");
 
-    assert.strictEqual(
-      secondOption.querySelector(".label-suffix").textContent.trim(),
-      i18n("search.in_this_topic"),
-      "second option includes suffix"
-    );
+    assert
+      .dom(".label-suffix", secondOption)
+      .hasText(i18n("search.in_this_topic"), "second option includes suffix");
   });
 
   test("initial options - topic search scope - 'in all topics' searches in all topics", async function (assert) {
@@ -284,21 +264,23 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "@admin");
 
     assert.dom(".search-menu-assistant-item").exists({ count: 2 });
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu-assistant-item:first-child .search-item-slug .label-suffix"
-      ).textContent.trim(),
-      i18n("search.in_topics_posts"),
-      "first result hints at global search"
-    );
+      )
+      .hasText(
+        i18n("search.in_topics_posts"),
+        "first result hints at global search"
+      );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".search-menu-assistant-item:nth-child(2) .search-item-slug .label-suffix"
-      ).textContent.trim(),
-      i18n("search.in_this_topic"),
-      "second result hints at search within current topic"
-    );
+      )
+      .hasText(
+        i18n("search.in_this_topic"),
+        "second result hints at search within current topic"
+      );
   });
 
   test("initial options - user search scope", async function (assert) {
@@ -308,17 +290,16 @@ acceptance("Search - Anonymous", function (needs) {
     await fillIn("#search-term", "smth");
     const secondOption = queryAll(contextSelector)[1];
 
-    assert.strictEqual(
-      secondOption.querySelector(".search-item-prefix").textContent.trim(),
-      "smth",
-      "second option includes term for user-scoped search"
-    );
+    assert
+      .dom(".search-item-prefix", secondOption)
+      .hasText("smth", "second option includes term for user-scoped search");
 
-    assert.strictEqual(
-      secondOption.querySelector(".label-suffix").textContent.trim(),
-      i18n("search.in_posts_by", { username: "eviltrout" }),
-      "second option includes suffix for user-scoped search"
-    );
+    assert
+      .dom(".label-suffix", secondOption)
+      .hasText(
+        i18n("search.in_posts_by", { username: "eviltrout" }),
+        "second option includes suffix for user-scoped search"
+      );
   });
 
   test("topic results", async function (assert) {
@@ -349,22 +330,16 @@ acceptance("Search - Anonymous", function (needs) {
       .dom(".search-menu .search-result-post ul li")
       .exists("clicking second option scopes search to current topic");
 
-    assert.strictEqual(
-      query("#post_7 span.highlighted").textContent.trim(),
-      "a proper",
-      "highlights the post correctly"
-    );
+    assert
+      .dom("#post_7 span.highlighted")
+      .hasText("a proper", "highlights the post correctly");
 
     assert
       .dom(".search-menu .search-context")
       .exists("search context indicator is visible");
 
     await click(".clear-search");
-    assert.strictEqual(
-      query("#search-term").textContent.trim(),
-      "",
-      "clear button works"
-    );
+    assert.dom("#search-term").hasNoText("clear button works");
 
     await click(".search-context");
     assert
@@ -688,21 +663,13 @@ acceptance("Search - Authenticated", function (needs) {
     await visit("/");
     await click("#search-button");
 
-    assert.strictEqual(
-      query(
-        ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
-      ).textContent.trim(),
-      "yellow",
-      "shows first recent search"
-    );
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(1) .search-link")
+      .hasText("yellow", "shows first recent search");
 
-    assert.strictEqual(
-      query(
-        ".search-menu .search-menu-recent li:nth-of-type(2) .search-link"
-      ).textContent.trim(),
-      "blue",
-      "shows second recent search"
-    );
+    assert
+      .dom(".search-menu .search-menu-recent li:nth-of-type(2) .search-link")
+      .hasText("blue", "shows second recent search");
 
     await click(
       ".search-menu .search-menu-recent li:nth-of-type(1) .search-link"
@@ -818,13 +785,9 @@ acceptance("Search - with tagging enabled", function (needs) {
     await fillIn("#search-term", "dev");
     await triggerKeyEvent("#search-term", "keyup", 13);
 
-    assert.strictEqual(
-      query(
-        ".search-menu .results ul li:nth-of-type(1) .discourse-tags"
-      ).textContent.trim(),
-      "devslow",
-      "tags displayed in search results"
-    );
+    assert
+      .dom(".search-menu .results ul li:nth-of-type(1) .discourse-tags")
+      .hasText("devslow", "tags displayed in search results");
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {
@@ -847,9 +810,7 @@ acceptance("Search - with tagging enabled", function (needs) {
       ".search-menu .results ul.search-menu-assistant .search-link";
 
     assert.dom(firstItem).exists();
-
-    const firstTag = query(`${firstItem} .search-item-tag`).textContent.trim();
-    assert.strictEqual(firstTag, "monkey");
+    assert.dom(`${firstItem} .search-item-tag`).hasText("monkey");
   });
 
   test("initial options - search history - tag context", async function (assert) {

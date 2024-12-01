@@ -624,9 +624,9 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesCountSelectors =
-      "#post_1 .topic-map .topic-map__likes-trigger .number";
-    const oldLikesCount = query(likesCountSelectors).textContent;
+    const oldLikesCount = document.querySelector(
+      "#post_1 .topic-map .topic-map__likes-trigger .number"
+    ).textContent;
     const likesChangedFixture = {
       id: 280,
       type: "stats",
@@ -637,7 +637,9 @@ acceptance("Topic stats update automatically", function () {
     // simulate the topic like_count being changed
     await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    assert.dom(likesCountSelectors).hasText(expectedLikesCount);
+    assert
+      .dom("#post_1 .topic-map .topic-map__likes-trigger .number")
+      .hasText(expectedLikesCount);
     assert.notStrictEqual(
       oldLikesCount,
       expectedLikesCount,

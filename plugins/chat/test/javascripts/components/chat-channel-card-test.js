@@ -3,8 +3,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-card", function (hooks) {
@@ -70,10 +69,9 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.membershipsCount = 4;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.strictEqual(
-      query(".chat-channel-card__members").textContent.trim(),
-      i18n("chat.channel.memberships_count", { count: 4 })
-    );
+    assert
+      .dom(".chat-channel-card__members")
+      .hasText(i18n("chat.channel.memberships_count", { count: 4 }));
   });
 
   test("No description", async function (assert) {
@@ -86,10 +84,9 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   test("Description", async function (assert) {
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.strictEqual(
-      query(".chat-channel-card__description").textContent.trim(),
-      this.channel.description
-    );
+    assert
+      .dom(".chat-channel-card__description")
+      .hasText(this.channel.description);
   });
 
   test("Name", async function (assert) {

@@ -39,10 +39,7 @@ acceptance("User Drafts", function (needs) {
   test("Stream - has excerpt", async function (assert) {
     await visit("/u/eviltrout/activity/drafts");
     assert.dom(".user-stream-item").exists("has drafts");
-    assert.strictEqual(
-      query(".user-stream-item:nth-child(3) .category").textContent,
-      "meta"
-    );
+    assert.dom(".user-stream-item:nth-child(3) .category").hasText("meta");
     assert
       .dom(".user-stream-item:nth-child(3) .excerpt")
       .hasHtml(
