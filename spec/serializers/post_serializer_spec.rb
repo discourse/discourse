@@ -590,11 +590,9 @@ RSpec.describe PostSerializer do
         json = serializer.as_json
 
         expect(json[:badges_granted].length).to eq(2)
-        expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to include(ub1.badge_id)
-        expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to include(ub2.badge_id)
+        expect(json[:badges_granted].map { |b| b[:badges][0][:id] }).to contain_exactly(ub1.badge_id, ub2.badge_id)
 
-        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to include(ub1.id)
-        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to include(ub2.id)
+        expect(json[:badges_granted].map { |b| b[:basic_user_badge][:id] }).to contain_exactly(ub1.id, ub2.id)
       end
 
       it "does not return a user badge that has the show_posts flag set to false" do
