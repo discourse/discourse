@@ -24,7 +24,7 @@
     "@ember/optional-features": "^2.2.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
-    "@glimmer/syntax": "^0.92.3",
+    "@glimmer/syntax": "^0.93.1",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~6.0.1",
     "ember-cli-inject-live-reload": "^2.1.0",
