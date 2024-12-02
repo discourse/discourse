@@ -1,6 +1,6 @@
 import { click, fillIn, render } from "@ember/test-helpers";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
+import { TrackedObject } from "tracked-built-ins";
 import UserStatusPicker from "discourse/components/user-status-picker";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 

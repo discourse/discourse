@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray } from "tracked-built-ins";
 import User from "discourse/models/user";
 
 export const REACTIONS = { add: "add", remove: "remove" };

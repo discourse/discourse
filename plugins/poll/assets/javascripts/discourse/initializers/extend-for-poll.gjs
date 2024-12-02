@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedObject } from "tracked-built-ins";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { bind } from "discourse-common/utils/decorators";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";

@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
+import { TrackedArray, TrackedMap } from "tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";

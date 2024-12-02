@@ -1,5 +1,5 @@
 import Service from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 
 /**
  * This service is responsible for rendering glimmer components into HTML generated

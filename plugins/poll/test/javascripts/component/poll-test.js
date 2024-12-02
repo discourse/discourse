@@ -1,8 +1,8 @@
 import EmberObject from "@ember/object";
 import { click, render } from "@ember/test-helpers";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import { TrackedObject } from "tracked-built-ins";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";

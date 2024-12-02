@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { TrackedMap } from "tracked-built-ins";
 
 export default class ChatChannelScrollPositions extends Service {
   @tracked positions = new TrackedMap();

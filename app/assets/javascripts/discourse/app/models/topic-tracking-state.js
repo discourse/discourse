@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
+import { TrackedArray, TrackedMap } from "tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";

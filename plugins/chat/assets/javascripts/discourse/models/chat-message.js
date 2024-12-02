@@ -1,5 +1,5 @@
 import { cached, tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray } from "tracked-built-ins";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import Bookmark from "discourse/models/bookmark";
 import User from "discourse/models/user";

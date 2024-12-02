@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 
 /**
  * Define a tracked property on an object without needing to use the @tracked decorator.

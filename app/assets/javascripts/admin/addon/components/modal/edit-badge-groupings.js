@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray } from "tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 

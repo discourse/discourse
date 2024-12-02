@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 import { eq, gt, has } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";

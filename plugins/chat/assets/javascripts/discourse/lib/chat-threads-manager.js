@@ -1,8 +1,8 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedMap, TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
+import { TrackedMap, TrackedObject } from "tracked-built-ins";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 
 /*

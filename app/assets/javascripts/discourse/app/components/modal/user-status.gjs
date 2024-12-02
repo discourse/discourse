@@ -3,7 +3,7 @@ import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedObject } from "tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
