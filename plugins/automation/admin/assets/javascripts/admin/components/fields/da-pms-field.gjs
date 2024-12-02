@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldLabel from "./da-field-label";

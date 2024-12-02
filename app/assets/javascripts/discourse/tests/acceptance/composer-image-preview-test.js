@@ -1,7 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});
@@ -26,11 +26,9 @@ acceptance("Composer - Image Preview", function (needs) {
   });
 
   const assertImageResized = (assert, uploads) => {
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      uploads.join("\n"),
-      "it resizes uploaded image"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(uploads.join("\n"), "resizes uploaded image");
   };
 
   test("Image resizing buttons", async function (assert) {
@@ -337,16 +335,13 @@ acceptance("Composer - Image Preview", function (needs) {
     //click on the remove button of the first image
     await click(".button-wrapper[data-image-index='0'] .delete-image-button");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      uploads.join("\n"),
-      "Image should be removed from the editor"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(uploads.join("\n"), "Image should be removed from the editor");
 
-    assert.false(
-      query(".d-editor-input").value.includes("image_example_0"),
-      "does not have the first image"
-    );
+    assert
+      .dom(".d-editor-input")
+      .doesNotIncludeValue("image_example_0", "does not have the first image");
 
     assert
       .dom(".d-editor-input")
@@ -395,10 +390,11 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
 
     await click(".custom-button-class");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "custom button change",
-      "The custom button changes the editor input"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "custom button change",
+        "The custom button changes the editor input"
+      );
   });
 });

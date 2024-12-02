@@ -2,8 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 const RANKED_CHOICE_OUTCOME = {
   tied: false,
@@ -47,8 +46,7 @@ module("Poll | Component | poll-results-ranked-choice", function (hooks) {
       .dom("table.poll-results-ranked-choice tr")
       .exists({ count: 3 }, "there are two rounds of ranked choice");
 
-    assert.strictEqual(
-      query("span.poll-results-ranked-choice-info").textContent.trim(),
+    assert.dom("span.poll-results-ranked-choice-info").hasText(
       i18n("poll.ranked_choice.winner", {
         count: this.rankedChoiceOutcome.round_activity.length,
         winner: this.rankedChoiceOutcome.winning_candidate.html,

@@ -3,7 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 
 module("Poll | Component | poll-buttons-dropdown", function (hooks) {
   setupRenderingTest(hooks);
@@ -38,11 +38,12 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
     await click(".widget-dropdown-header");
 
     assert.dom("li.dropdown-menu__item").exists({ count: 2 });
-    assert.strictEqual(
-      query("li.dropdown-menu__item span").textContent.trim(),
-      i18n("poll.export-results.label"),
-      "displays the poll Export action"
-    );
+    assert
+      .dom("li.dropdown-menu__item span")
+      .hasText(
+        i18n("poll.export-results.label"),
+        "displays the poll Export action"
+      );
   });
 
   test("Renders a show-tally button when poll is a bar chart", async function (assert) {
@@ -106,11 +107,12 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
 
     assert.dom(".widget-dropdown-header").doesNotExist();
     assert.dom("button.widget-button").exists({ count: 1 });
-    assert.strictEqual(
-      query("button.widget-button span.d-button-label").textContent.trim(),
-      i18n("poll.breakdown.breakdown"),
-      "displays the poll Close action"
-    );
+    assert
+      .dom("button.widget-button span.d-button-label")
+      .hasText(
+        i18n("poll.breakdown.breakdown"),
+        "displays the poll Close action"
+      );
   });
 
   test("Doesn't render a button when user has no authorised actions", async function (assert) {

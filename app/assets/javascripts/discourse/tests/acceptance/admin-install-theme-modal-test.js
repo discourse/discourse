@@ -1,6 +1,6 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {
@@ -20,11 +20,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
     await click(".install-theme-content .inputs .advanced-repo");
     await fillIn(branchInput, "tests-passed");
     assert.dom(urlInput).hasValue(themeUrl, "url input is filled");
-    assert.strictEqual(
-      query(branchInput).value,
-      "tests-passed",
-      "branch input is filled"
-    );
+    assert.dom(branchInput).hasValue("tests-passed", "branch input is filled");
     assert.dom(publicKey).exists("shows public key");
 
     await click(".d-modal__footer .d-modal-cancel");
@@ -80,11 +76,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
   test("modal can be auto-opened with the right query params", async function (assert) {
     await visit("/admin/customize/themes?repoUrl=testUrl&repoName=testName");
     assert.dom(".admin-install-theme-modal").exists("modal is visible");
-    assert.strictEqual(
-      query(".install-theme code").textContent.trim(),
-      "testUrl",
-      "repo url is visible"
-    );
+    assert.dom(".install-theme code").hasText("testUrl", "repo url is visible");
 
     await click(".d-modal-cancel");
     assert.strictEqual(
@@ -103,12 +95,9 @@ acceptance("Admin - Themes - Install modal", function (needs) {
         '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons button'
       )
       .doesNotExist("no install button is shown for installed themes");
-    assert.strictEqual(
-      query(
-        '.popular-theme-item[data-name="Graceful"] .popular-theme-buttons'
-      ).textContent.trim(),
-      i18n("admin.customize.theme.installed")
-    );
+    assert
+      .dom('.popular-theme-item[data-name="Graceful"] .popular-theme-buttons')
+      .hasText(i18n("admin.customize.theme.installed"));
 
     assert
       .dom(

@@ -6,7 +6,6 @@ import { click, render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | Widget | post", function (hooks) {
@@ -1155,8 +1154,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} />`);
 
-    const link = query(".group-request a");
-    assert.strictEqual(link.innerText.trim(), i18n("groups.requests.handle"));
+    assert.dom(".group-request a").hasText(i18n("groups.requests.handle"));
     assert
       .dom(".group-request a")
       .hasAttribute("href", "/g/testGroup/requests?filter=foo");

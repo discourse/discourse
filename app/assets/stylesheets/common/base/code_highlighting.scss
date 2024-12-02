@@ -8,6 +8,13 @@ em > code {
   color: var(--primary);
 }
 
+a > code {
+  padding: 2px 4px;
+  background: var(--inline-code-bg);
+  white-space: pre-wrap;
+  color: var(--tertiary);
+}
+
 code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);

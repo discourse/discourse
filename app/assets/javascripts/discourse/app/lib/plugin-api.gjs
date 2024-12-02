@@ -434,7 +434,7 @@ class PluginApi {
    *
    * Example: to abort the expected behavior based on a condition
    * ```
-   * api.registerValueTransformer("example-transformer", ({next, context}) => {
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
    *   if (context.property) {
    *     // not calling next() on a behavior transformer aborts executing the expected behavior
    *

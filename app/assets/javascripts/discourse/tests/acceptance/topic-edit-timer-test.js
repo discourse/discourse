@@ -5,7 +5,6 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -159,10 +158,6 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
@@ -172,7 +167,9 @@ acceptance("Topic - Edit timer", function (needs) {
       timeLeft: "in 6 days",
     });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - visible for a private category", async function (assert) {
@@ -196,10 +193,6 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
@@ -209,7 +202,9 @@ acceptance("Topic - Edit timer", function (needs) {
       timeLeft: "in 6 days",
     });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
@@ -237,10 +232,6 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
@@ -250,7 +241,9 @@ acceptance("Topic - Edit timer", function (needs) {
       timeLeft: "in 6 days",
     });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - last custom date and time", async function (assert) {

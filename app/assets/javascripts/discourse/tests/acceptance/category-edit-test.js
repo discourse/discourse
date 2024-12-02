@@ -3,7 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -184,8 +184,7 @@ acceptance("Category Edit", function (needs) {
     await fillIn(".email-in", "duplicate@example.com");
     await click("#save-category");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+    assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
         error: "duplicate email",
       })
@@ -204,8 +203,7 @@ acceptance("Category Edit", function (needs) {
 
     await click("#save-category");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
+    assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
         error: "subcategory nested under another subcategory",
       })

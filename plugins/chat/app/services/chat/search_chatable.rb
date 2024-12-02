@@ -27,6 +27,7 @@ module Chat
 
       after_validation { self.term = term&.downcase&.strip&.gsub(/^[@#]+/, "") }
     end
+
     model :memberships, optional: true
     model :users, optional: true
     model :groups, optional: true

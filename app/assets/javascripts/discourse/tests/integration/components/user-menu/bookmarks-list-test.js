@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -71,16 +71,15 @@ module(
         return response({ notifications: [], bookmarks: [] });
       });
       await render(template);
-      assert.strictEqual(
-        query(".empty-state-title").textContent.trim(),
-        i18n("user.no_bookmarks_title"),
-        "empty state title is shown"
-      );
-      assert.strictEqual(
-        query(".empty-state-body").textContent.trim(),
-        i18n("user.no_bookmarks_body", { icon: "" }).trim(),
-        "empty state body is shown"
-      );
+      assert
+        .dom(".empty-state-title")
+        .hasText(i18n("user.no_bookmarks_title"), "empty state title is shown");
+      assert
+        .dom(".empty-state-body")
+        .hasText(
+          i18n("user.no_bookmarks_body", { icon: "" }),
+          "empty state body is shown"
+        );
       assert
         .dom(".empty-state-body svg.d-icon-bookmark")
         .exists("icon is correctly rendered in the empty state body");

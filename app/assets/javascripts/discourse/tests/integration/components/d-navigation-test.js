@@ -2,7 +2,6 @@ import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | d-navigation", function (hooks) {
   setupRenderingTest(hooks);
@@ -26,9 +25,6 @@ module("Integration | Component | d-navigation", function (hooks) {
     assert
       .dom(".category-row")
       .exists({ count: 1 }, "displays only categories that are not muted");
-    assert.strictEqual(
-      query(".category-row .badge-category span").textContent.trim(),
-      "dev"
-    );
+    assert.dom(".category-row .badge-category span").hasText("dev");
   });
 });

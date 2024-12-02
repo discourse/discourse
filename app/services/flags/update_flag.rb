@@ -19,11 +19,13 @@ class Flags::UpdateFlag
     validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
     validates :applies_to, inclusion: { in: -> { Flag.valid_applies_to_types } }, allow_nil: false
   end
+
   model :flag
   policy :not_system
   policy :not_used
   policy :invalid_access
   policy :unique_name
+
   transaction do
     step :update
     step :log

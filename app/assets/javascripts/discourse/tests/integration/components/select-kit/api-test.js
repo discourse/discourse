@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit, {
   DEFAULT_CONTENT,
   setDefaultState,
@@ -89,7 +88,7 @@ module("Integration | Component | select-kit/api", function (hooks) {
 
     withPluginApi("0.8.43", (api) => {
       api.modifySelectKit("combo-box").onChange((component, value, item) => {
-        query("#test").innerText = item.name;
+        document.querySelector("#test").innerText = item.name;
       });
     });
 

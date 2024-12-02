@@ -2,7 +2,6 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -474,16 +473,15 @@ acceptance("Tag info", function (needs) {
     assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click(".edit-tag");
-    assert.strictEqual(
-      query("#edit-name").value,
-      "happy-monkey",
-      "displays original tag name"
-    );
-    assert.strictEqual(
-      query("#edit-description").value,
-      "happy monkey description",
-      "displays original tag description"
-    );
+    assert
+      .dom("#edit-name")
+      .hasValue("happy-monkey", "displays original tag name");
+    assert
+      .dom("#edit-description")
+      .hasValue(
+        "happy monkey description",
+        "displays original tag description"
+      );
 
     await fillIn("#edit-description", "new description");
     await click(".submit-edit");

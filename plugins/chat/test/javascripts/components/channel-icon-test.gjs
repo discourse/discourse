@@ -79,13 +79,9 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
       ],
     });
     channel.chatable.group = true;
-    const users = channel.chatable.users;
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      parseInt(query(".chat-channel-icon.--users-count").innerText.trim(), 10),
-      users.length
-    );
+    assert.dom(".chat-channel-icon.--users-count").hasText("3");
   });
 });

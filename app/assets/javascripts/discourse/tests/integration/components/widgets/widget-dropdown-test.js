@@ -29,10 +29,6 @@ async function toggle() {
   await click("#my-dropdown .widget-dropdown-header");
 }
 
-function headerLabel() {
-  return query("#my-dropdown .widget-dropdown-header .label").innerText.trim();
-}
-
 function header() {
   return query("#my-dropdown .widget-dropdown-header");
 }
@@ -79,7 +75,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.strictEqual(headerLabel(), "FooBaz");
+    assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("FooBaz");
   });
 
   test("translatedLabel", async function (assert) {
@@ -89,7 +85,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await render(TEMPLATE);
 
-    assert.strictEqual(headerLabel(), this.translatedLabel);
+    assert.dom("#my-dropdown .widget-dropdown-header .label").hasText("BazFoo");
   });
 
   test("content", async function (assert) {
@@ -105,7 +101,10 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
   test("onChange action", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set("onChange", (item) => (query("#test").innerText = item.id));
+    this.set(
+      "onChange",
+      (item) => (document.querySelector("#test").innerText = item.id)
+    );
 
     await render(hbs`
       <div id="test"></div>
@@ -134,7 +133,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     assert.dom("#my-dropdown.closed").exists();
     assert.dom("#my-dropdown .widget-dropdown-body").doesNotExist();
     await toggle();
-    assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
+    assert.dom(rowById(2)).hasText("FooBar");
     assert.dom("#my-dropdown.opened").exists();
     assert.dom("#my-dropdown .widget-dropdown-body").exists();
     await toggle();
@@ -166,7 +165,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.strictEqual(rowById(2).innerText.trim(), "FooBar");
+    assert.dom(rowById(2)).hasText("FooBar");
   });
 
   test("content with label", async function (assert) {
@@ -176,7 +175,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
     await render(TEMPLATE);
 
     await toggle();
-    assert.strictEqual(rowById(1).innerText.trim(), "FooBaz");
+    assert.dom(rowById(1)).hasText("FooBaz");
   });
 
   test("content with icon", async function (assert) {

@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
@@ -18,11 +18,7 @@ acceptance("CustomHTML template", function (needs) {
       "discourse.custom_html_template",
       async () => {
         await visit("/static/faq");
-        assert.strictEqual(
-          query("span.top-span").innerText,
-          "TOP",
-          "it inserted the template"
-        );
+        assert.dom("span.top-span").hasText("TOP", "inserted the template");
       }
     );
   });

@@ -1,6 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import UserChooser from "select-kit/components/user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

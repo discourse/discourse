@@ -58,9 +58,7 @@ module(
       await this.subject.fillInFilter("baz");
       await this.subject.selectRowByValue("monkey");
 
-      const error = query(".select-kit-error").innerText;
-      assert.strictEqual(
-        error,
+      assert.dom(".select-kit-error").hasText(
         i18n("select_kit.max_content_reached", {
           count: this.siteSettings.max_tags_per_topic,
         })
@@ -76,9 +74,7 @@ module(
       assert.strictEqual(this.subject.header().value(), "cat,kit");
       await this.subject.expand();
 
-      const error = query(".select-kit-error").innerText;
-      assert.strictEqual(
-        error,
+      assert.dom(".select-kit-error").hasText(
         i18n("select_kit.max_content_reached", {
           count: 0,
         })
@@ -152,10 +148,7 @@ module(
       await render(
         hbs`<MiniTagChooser @options={{hash allowAny=true hiddenValues=this.hiddenValues}} @value={{this.value}} />`
       );
-      assert.strictEqual(
-        query(".formatted-selection").textContent.trim(),
-        "bar"
-      );
+      assert.dom(".formatted-selection").hasText("bar");
 
       await this.subject.expand();
       assert.deepEqual(

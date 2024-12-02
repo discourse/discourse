@@ -26,7 +26,7 @@ module("Integration | Component | date-time-input", function (hooks) {
 
     await render(hbs`<DateTimeInput @date={{this.date}} />`);
 
-    assert.strictEqual(dateInput().value, "2019-01-29");
+    assert.dom(dateInput()).hasValue("2019-01-29");
     assert.strictEqual(timeInput().dataset.name, "14:45");
   });
 

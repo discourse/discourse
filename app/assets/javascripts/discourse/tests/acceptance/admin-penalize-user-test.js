@@ -4,7 +4,6 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -56,10 +55,7 @@ acceptance("Admin - Suspend User", function (needs) {
 
     await click(".dialog-footer .btn-default");
     assert.dom(".suspend-user-modal").exists();
-    assert.strictEqual(
-      query(".suspend-message").value,
-      "this is an email reason why"
-    );
+    assert.dom(".suspend-message").hasValue("this is an email reason why");
 
     await click(".d-modal-cancel");
     assert.dom(".dialog-body").exists();

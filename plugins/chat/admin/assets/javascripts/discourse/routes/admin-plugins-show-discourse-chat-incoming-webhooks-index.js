@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class DiscourseChatIncomingWebhooksIndex extends DiscourseRoute {

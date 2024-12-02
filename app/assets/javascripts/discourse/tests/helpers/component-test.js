@@ -8,6 +8,7 @@ import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
+import deprecated from "discourse-common/lib/deprecated";
 
 export function setupRenderingTest(hooks) {
   emberSetupRenderingTest(hooks);
@@ -51,6 +52,14 @@ export function setupRenderingTest(hooks) {
 }
 
 export default function (name, hooks, opts) {
+  deprecated(
+    `\`componentTest\` is deprecated. Use QUnit's \`test\` and \`setupRenderingTest\` from "discourse/tests/helpers/component-test" instead.`,
+    {
+      id: "discourse.component-test",
+      since: "3.4.0.beta3-dev",
+    }
+  );
+
   if (opts === undefined) {
     opts = hooks;
   }

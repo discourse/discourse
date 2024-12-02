@@ -3,8 +3,7 @@ import { module, test } from "qunit";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
-let siteSettings = { autohighlight_all_code: true },
-  session = {};
+const siteSettings = { autohighlight_all_code: true };
 
 module("Unit | Utility | highlight-syntax", function (hooks) {
   setupTest(hooks);
@@ -20,14 +19,9 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
       </pre>
     `;
 
-    await highlightSyntax(fixture(), siteSettings, session);
+    await highlightSyntax(fixture(), siteSettings, {});
 
-    assert.strictEqual(
-      document
-        .querySelector("code.lang-ruby.hljs .hljs-keyword")
-        .innerText.trim(),
-      "def"
-    );
+    assert.dom("code.lang-ruby.hljs .hljs-keyword", fixture()).hasText("def");
   });
 
   test("highlighting code with HTML intermingled", async function (assert) {
@@ -43,19 +37,11 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
       </pre>
     `;
 
-    await highlightSyntax(fixture(), siteSettings, session);
+    await highlightSyntax(fixture(), siteSettings, {});
 
-    assert.strictEqual(
-      document
-        .querySelector("code.lang-ruby.hljs .hljs-keyword")
-        .innerText.trim(),
-      "def"
-    );
+    assert.dom("code.lang-ruby.hljs .hljs-keyword", fixture()).hasText("def");
 
     // Checks if HTML structure was preserved
-    assert.strictEqual(
-      document.querySelectorAll("code.lang-ruby.hljs ol li").length,
-      3
-    );
+    assert.dom("code.lang-ruby.hljs ol li", fixture()).exists({ count: 3 });
   });
 });
