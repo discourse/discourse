@@ -1,6 +1,9 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  metaModifier,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Local Dates - composer", function (needs) {
@@ -127,5 +130,25 @@ acceptance("Local Dates - composer", function (needs) {
     assert.dom("input.format-input").hasValue("");
     await click("ul.formats a.moment-format");
     assert.dom("input.format-input").hasValue("LLL");
+  });
+
+  test("composer insert current time shortcut", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+    await fillIn(".d-editor-input", "and the time now is: ");
+
+    await triggerKeyEvent(".d-editor-input", "keydown", ".", {
+      ...metaModifier,
+      shiftKey: true,
+    });
+
+    const date = moment().format("YYYY-MM-DD");
+
+    assert
+      .dom("#reply-control .d-editor-input")
+      .hasValue(
+        new RegExp(`and the time now is: \\[date=${date}`),
+        "it adds the current date"
+      );
   });
 });
