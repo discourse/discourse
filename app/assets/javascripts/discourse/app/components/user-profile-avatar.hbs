@@ -1,10 +1,7 @@
 <PluginOutlet
   @name="user-profile-avatar-wrapper"
-  @connectorTagName="div"
   @outletArgs={{hash user=@user}}
 >
-  {{bound-avatar @user "huge"}}
-
   <div class="user-profile-avatar">
     <PluginOutlet
       @name="user-profile-avatar-img-wrapper"
@@ -17,7 +14,6 @@
     <div>
       <PluginOutlet
         @name="user-profile-avatar-flair"
-        @connectorTagName="div"
         @outletArgs={{hash model=@user}}
       />
     </div>
