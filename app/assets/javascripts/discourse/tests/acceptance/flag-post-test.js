@@ -1,4 +1,4 @@
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -14,15 +14,13 @@ async function openFlagModal() {
 }
 
 async function pressEnter(selector, modifier) {
-  const event = new KeyboardEvent("keydown", {
+  await triggerEvent(selector, "keydown", {
     bubbles: true,
     cancelable: true,
     key: "Enter",
     keyCode: 13,
     [modifier]: true,
   });
-  document.querySelector(selector).dispatchEvent(event);
-  await settled();
 }
 
 acceptance("flagging", function (needs) {

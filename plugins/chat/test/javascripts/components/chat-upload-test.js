@@ -1,4 +1,4 @@
-import { render, settled } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -84,10 +84,7 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
         "sets background to dominant color"
       );
 
-    document
-      .querySelector("img.chat-img-upload")
-      .dispatchEvent(new Event("load")); // Fake that the image has loaded
-    await settled();
+    await triggerEvent("img.chat-img-upload", "load"); // Fake that the image has loaded
 
     assert
       .dom("img.chat-img-upload")
