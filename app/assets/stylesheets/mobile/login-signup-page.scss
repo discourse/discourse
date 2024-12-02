@@ -1,8 +1,24 @@
 // Shared styles
 
+.login-page,
+.signup-page,
+.invite-page {
+  #main-outlet,
+  #main-outlet-wrapper {
+    padding: 0;
+  }
+}
+
 .login-fullpage,
 .signup-fullpage,
 .invites-show {
+  justify-content: flex-start;
+
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc((var(--composer-vh, 1vh) * 100) - var(--header-offset));
+    overflow-y: scroll;
+  }
+
   .signup-body,
   .login-body {
     flex-direction: column;
