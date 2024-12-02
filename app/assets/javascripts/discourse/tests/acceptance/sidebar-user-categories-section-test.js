@@ -8,7 +8,6 @@ import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -433,13 +432,9 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
         "category1 section link is rendered with solid prefix icon color"
       );
 
-    assert.strictEqual(
-      query(
-        `.sidebar-section-link-wrapper[data-category-id="${category1.id}"]`
-      ).textContent.trim(),
-      category1.name,
-      "displays category1's name for the link text"
-    );
+    assert
+      .dom(`.sidebar-section-link-wrapper[data-category-id="${category1.id}"]`)
+      .hasText(category1.name, "displays category1's name for the link text");
 
     await click(
       `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
@@ -890,21 +885,23 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      i18n("sidebar.unread_count", { count: 1 }),
-      `displays 1 unread count for ${category1.slug} section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for ${category1.slug} section link`
+      );
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      i18n("sidebar.unread_count", { count: 2 }),
-      `displays 2 unread count for ${category2.slug} section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.unread_count", { count: 2 }),
+        `displays 2 unread count for ${category2.slug} section link`
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 2,
@@ -915,13 +912,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      i18n("sidebar.new_count", { count: 1 }),
-      `displays 1 new count for ${category1.slug} section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.new_count", { count: 1 }),
+        `displays 1 new count for ${category1.slug} section link`
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -949,13 +947,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
-      ).textContent.trim(),
-      i18n("sidebar.unread_count", { count: 1 }),
-      `displays 1 unread count for ${category2.slug} section link`
-    );
+      )
+      .hasText(
+        i18n("sidebar.unread_count", { count: 1 }),
+        `displays 1 unread count for ${category2.slug} section link`
+      );
   });
 
   test("clean up topic tracking state state changed callbacks when Sidebar is collapsed", async function (assert) {
@@ -973,7 +972,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await click(".btn-sidebar-toggle");
 
-    assert.ok(
+    assert.true(
       Object.keys(topicTrackingState.stateChangeCallbacks).length <
         initialCallbackCount
     );
@@ -1081,29 +1080,26 @@ acceptance(
 
       await visit("/");
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
-        ).textContent.trim(),
-        "2",
-        "count for category1 is 2 because it has 1 unread topic and 1 new topic"
-      );
+        )
+        .hasText(
+          "2",
+          "count for category1 is 2 because it has 1 unread topic and 1 new topic"
+        );
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-content-badge`
-        ).textContent.trim(),
-        "1",
-        "count for category2 is 1 because it has 1 new topic"
-      );
+        )
+        .hasText("1", "count for category2 is 1 because it has 1 new topic");
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           `.sidebar-section-link-wrapper[data-category-id="${category3.id}"] .sidebar-section-link-content-badge`
-        ).textContent.trim(),
-        "1",
-        "count for category3 is 1 because it has 1 unread topic"
-      );
+        )
+        .hasText("1", "count for category3 is 1 because it has 1 unread topic");
     });
 
     test("dot shown next to category link when sidebar_show_count_of_new_items is false", async function (assert) {

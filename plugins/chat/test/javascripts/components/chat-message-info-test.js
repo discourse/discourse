@@ -4,8 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -26,10 +25,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
     assert
       .dom(".chat-message-info__username")
       .hasText(this.message.chatWebhookEvent.username);
-    assert.strictEqual(
-      query(".chat-message-info__bot-indicator").textContent.trim(),
-      i18n("chat.bot")
-    );
+    assert.dom(".chat-message-info__bot-indicator").hasText(i18n("chat.bot"));
   });
 
   test("user", async function (assert) {

@@ -36,7 +36,7 @@ test:
   adapter: postgresql
   database: <%= test_db %>
   min_messages: warning
-  pool: 1
+  pool: 2
   reaping_frequency: 0
   checkout_timeout: <%= ENV["CHECKOUT_TIMEOUT"] || 5 %>
   host_names:

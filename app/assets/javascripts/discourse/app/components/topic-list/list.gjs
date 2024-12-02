@@ -1,18 +1,109 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopicListHeader from "discourse/components/topic-list/topic-list-header";
-import TopicListItem from "discourse/components/topic-list/topic-list-item";
+import Header from "discourse/components/topic-list/header";
+import Item from "discourse/components/topic-list/item";
 import concatClass from "discourse/helpers/concat-class";
+import DAG from "discourse/lib/dag";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import HeaderActivityCell from "./header/activity-cell";
+import HeaderBulkSelectCell from "./header/bulk-select-cell";
+import HeaderLikesCell from "./header/likes-cell";
+import HeaderOpLikesCell from "./header/op-likes-cell";
+import HeaderPostersCell from "./header/posters-cell";
+import HeaderRepliesCell from "./header/replies-cell";
+import HeaderTopicCell from "./header/topic-cell";
+import HeaderViewsCell from "./header/views-cell";
+import ItemActivityCell from "./item/activity-cell";
+import ItemBulkSelectCell from "./item/bulk-select-cell";
+import ItemLikesCell from "./item/likes-cell";
+import ItemOpLikesCell from "./item/op-likes-cell";
+import ItemPostersCell from "./item/posters-cell";
+import ItemRepliesCell from "./item/replies-cell";
+import ItemTopicCell from "./item/topic-cell";
+import ItemViewsCell from "./item/views-cell";
 
 export default class TopicList extends Component {
   @service currentUser;
+  @service topicTrackingState;
 
-  @tracked lastCheckedElementId;
+  @cached
+  get columns() {
+    const defaultColumns = new DAG({
+      // Allow customizations to replace just a header cell or just an item cell
+      onReplaceItem(_, newValue, oldValue) {
+        newValue.header ??= oldValue.header;
+        newValue.item ??= oldValue.item;
+      },
+    });
+
+    if (this.bulkSelectEnabled) {
+      defaultColumns.add("bulk-select", {
+        header: HeaderBulkSelectCell,
+        item: ItemBulkSelectCell,
+      });
+    }
+
+    defaultColumns.add("topic", {
+      header: HeaderTopicCell,
+      item: ItemTopicCell,
+    });
+
+    if (this.args.showPosters) {
+      defaultColumns.add("posters", {
+        header: HeaderPostersCell,
+        item: ItemPostersCell,
+      });
+    }
+
+    defaultColumns.add("replies", {
+      header: HeaderRepliesCell,
+      item: ItemRepliesCell,
+    });
+
+    if (this.args.order === "likes") {
+      defaultColumns.add("likes", {
+        header: HeaderLikesCell,
+        item: ItemLikesCell,
+      });
+    } else if (this.args.order === "op_likes") {
+      defaultColumns.add("op-likes", {
+        header: HeaderOpLikesCell,
+        item: ItemOpLikesCell,
+      });
+    }
+
+    defaultColumns.add("views", {
+      header: HeaderViewsCell,
+      item: ItemViewsCell,
+    });
+
+    defaultColumns.add("activity", {
+      header: HeaderActivityCell,
+      item: ItemActivityCell,
+    });
+
+    const self = this;
+    const context = {
+      get category() {
+        return self.topicTrackingState.get("filterCategory");
+      },
+
+      get filter() {
+        return self.topicTrackingState.get("filter");
+      },
+    };
+
+    return applyValueTransformer(
+      "topic-list-columns",
+      defaultColumns,
+      context
+    ).resolve();
+  }
 
   get selected() {
     return this.args.bulkSelectHelper?.selected;
@@ -30,16 +121,8 @@ export default class TopicList extends Component {
     return !this.bulkSelectEnabled && this.args.canBulkSelect;
   }
 
-  get sortable() {
-    return !!this.args.changeSort;
-  }
-
-  get showLikes() {
-    return this.args.order === "likes";
-  }
-
-  get showOpLikes() {
-    return this.args.order === "op_likes";
+  get showTopicPostBadges() {
+    return this.args.showTopicPostBadges ?? true;
   }
 
   get lastVisitedTopic() {
@@ -83,10 +166,6 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
-  get showTopicPostBadges() {
-    return this.args.showTopicPostBadges ?? true;
-  }
-
   <template>
     {{! template-lint-disable table-groups }}
     <table
@@ -97,21 +176,19 @@ export default class TopicList extends Component {
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
       <thead class="topic-list-header">
-        <TopicListHeader
+        <Header
+          @columns={{this.columns}}
           @canBulkSelect={{@canBulkSelect}}
           @toggleInTitle={{this.toggleInTitle}}
           @category={{@category}}
           @hideCategory={{@hideCategory}}
-          @showPosters={{@showPosters}}
-          @showLikes={{this.showLikes}}
-          @showOpLikes={{this.showOpLikes}}
           @order={{@order}}
           @changeSort={{@changeSort}}
           @ascending={{@ascending}}
-          @sortable={{this.sortable}}
+          @sortable={{@changeSort}}
           @listTitle={{or @listTitle "topic.title"}}
-          @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @bulkSelectHelper={{@bulkSelectHelper}}
+          @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
           @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
           @newListSubset={{@newListSubset}}
@@ -135,20 +212,17 @@ export default class TopicList extends Component {
 
       <tbody class="topic-list-body">
         {{#each @topics as |topic index|}}
-          <TopicListItem
+          <Item
+            @columns={{this.columns}}
             @topic={{topic}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
             @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
-            @showPosters={{@showPosters}}
-            @showLikes={{this.showLikes}}
-            @showOpLikes={{this.showOpLikes}}
             @expandGloballyPinned={{@expandGloballyPinned}}
             @expandAllPinned={{@expandAllPinned}}
             @lastVisitedTopic={{this.lastVisitedTopic}}
             @selected={{this.selected}}
-            @lastCheckedElementId={{this.lastCheckedElementId}}
-            @updateLastCheckedElementId={{fn (mut this.lastCheckedElementId)}}
             @tagsForUser={{@tagsForUser}}
             @focusLastVisitedTopic={{@focusLastVisitedTopic}}
             @index={{index}}

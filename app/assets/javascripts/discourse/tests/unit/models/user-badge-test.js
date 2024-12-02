@@ -12,7 +12,7 @@ module("Unit | Model | user-badge", function (hooks) {
     const userBadge = UserBadge.createFromJson(
       cloneJSON(badgeFixtures["/user_badges"])
     );
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.false(Array.isArray(userBadge), "does not return an array");
     assert.strictEqual(
       userBadge.badge.name,
       "Badge 2",
@@ -34,7 +34,7 @@ module("Unit | Model | user-badge", function (hooks) {
     const userBadges = UserBadge.createFromJson(
       cloneJSON(badgeFixtures["/user-badges/:username"])
     );
-    assert.ok(Array.isArray(userBadges), "returns an array");
+    assert.true(Array.isArray(userBadges), "returns an array");
     assert.strictEqual(
       userBadges[0].granted_by,
       undefined,
@@ -44,17 +44,17 @@ module("Unit | Model | user-badge", function (hooks) {
 
   test("findByUsername", async function (assert) {
     const badges = await UserBadge.findByUsername("anne3");
-    assert.ok(Array.isArray(badges), "returns an array");
+    assert.true(Array.isArray(badges), "returns an array");
   });
 
   test("findByBadgeId", async function (assert) {
     const badges = await UserBadge.findByBadgeId(880);
-    assert.ok(Array.isArray(badges), "returns an array");
+    assert.true(Array.isArray(badges), "returns an array");
   });
 
   test("grant", async function (assert) {
     const userBadge = await UserBadge.grant(1, "username");
-    assert.ok(!Array.isArray(userBadge), "does not return an array");
+    assert.false(Array.isArray(userBadge), "does not return an array");
   });
 
   test("revoke", async function (assert) {
@@ -70,6 +70,6 @@ module("Unit | Model | user-badge", function (hooks) {
     assert.strictEqual(userBadge.is_favorite, undefined);
 
     await userBadge.favorite();
-    assert.ok(userBadge.is_favorite);
+    assert.true(userBadge.is_favorite);
   });
 });

@@ -1,15 +1,3 @@
-.admin-flags {
-  table.d-admin-table {
-    td:first-child {
-      width: 70%;
-
-      @include breakpoint("tablet") {
-        width: auto;
-      }
-    }
-  }
-}
-
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {

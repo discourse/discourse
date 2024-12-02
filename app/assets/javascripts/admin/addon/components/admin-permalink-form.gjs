@@ -45,7 +45,7 @@ export default class AdminFlagsForm extends Component {
       } else if (!isEmpty(this.args.permalink.category_id)) {
         permalinkType = "category";
         permalinkValue = this.args.permalink.category_id;
-      } else if (!isEmpty(this.args.permalink.tag_name)) {
+      } else if (!isEmpty(this.args.permalink.tag_id)) {
         permalinkType = "tag";
         permalinkValue = this.args.permalink.tag_name;
       } else if (!isEmpty(this.args.permalink.external_url)) {

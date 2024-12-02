@@ -1,70 +1,82 @@
-<div class="admin-controls">
-  <nav>
-    <ul class="nav nav-pills">
+<div class="admin-users admin-config-page">
+  <AdminPageHeader
+    @titleLabel="admin.users.title"
+    @descriptionLabel="admin.users.description"
+    @learnMoreUrl="https://meta.discourse.org/t/accessing-a-user-s-admin-page/311859"
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/users/list"
+        @label={{i18n "admin.permalink.title"}}
+      />
+    </:breadcrumbs>
+    <:actions as |actions|>
+      {{#if this.currentUser.can_invite_to_forum}}
+        <actions.Primary
+          @action={{route-action "sendInvites"}}
+          @title="admin.invite.button_title"
+          @label="admin.invite.button_text"
+          class="admin-users__header-send-invites"
+        />
+      {{/if}}
+
+      {{#if this.currentUser.admin}}
+        <actions.Primary
+          @action={{route-action "exportUsers"}}
+          @title="admin.export_csv.button_title.user"
+          @label="admin.export_csv.button_text"
+          class="admin-users__header-export-users"
+        />
+      {{/if}}
+    </:actions>
+    <:tabs>
       <NavItem
         @route="adminUsersList.show"
         @routeParam="active"
         @label="admin.users.nav.active"
-        class="active-users"
+        class="admin-users-tabs__active"
       />
       <NavItem
         @route="adminUsersList.show"
         @routeParam="new"
         @label="admin.users.nav.new"
-        class="new-users"
+        class="admin-users-tabs__new"
       />
       <NavItem
         @route="adminUsersList.show"
         @routeParam="staff"
         @label="admin.users.nav.staff"
-        class="staff-users"
+        class="admin-users-tabs__staff"
       />
       <NavItem
         @route="adminUsersList.show"
         @routeParam="suspended"
         @label="admin.users.nav.suspended"
-        class="suspended-users"
+        class="admin-users-tabs__suspended"
       />
       <NavItem
         @route="adminUsersList.show"
         @routeParam="silenced"
         @label="admin.users.nav.silenced"
-        class="silenced-users"
+        class="admin-users-tabs__silenced"
       />
       <NavItem
         @route="adminUsersList.show"
         @routeParam="staged"
         @label="admin.users.nav.staged"
-        class="staged-users"
+        class="admin-users-tabs__staged"
       />
-      <NavItem @route="groups" @label="groups.index.title" class="groups" />
-      <PluginOutlet @name="admin-users-list-nav-after" />
-
-      <li class="admin-actions">
-        {{#if this.currentUser.can_invite_to_forum}}
-          <DButton
-            @action={{route-action "sendInvites"}}
-            @title="admin.invite.button_title"
-            @icon="user-plus"
-            @label="admin.invite.button_text"
-            class="btn-flat"
-          />
-        {{/if}}
-
-        {{#if this.currentUser.admin}}
-          <DButton
-            @action={{route-action "exportUsers"}}
-            @title="admin.export_csv.button_title.user"
-            @icon="download"
-            @label="admin.export_csv.button_text"
-            class="btn-flat"
-          />
-        {{/if}}
-      </li>
-    </ul>
-  </nav>
+      <NavItem
+        @route="groups"
+        @label="groups.index.title"
+        class="admin-users-tabs__groups"
+      />
+    </:tabs>
+  </AdminPageHeader>
+  <div class="admin-container admin-config-page__main-area">
+  </div>
 </div>
 
-<div class="admin-container">
+<div class="admin-container admin-config-page__main-area">
   {{outlet}}
 </div>

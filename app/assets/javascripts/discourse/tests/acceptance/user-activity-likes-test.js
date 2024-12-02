@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { i18n } from "discourse-i18n";
-import { acceptance, query } from "../helpers/qunit-helpers";
+import { acceptance } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Likes - empty state", function (needs) {
   const currentUser = "eviltrout";
@@ -18,17 +18,17 @@ acceptance("User Activity / Likes - empty state", function (needs) {
 
   test("When looking at own likes page", async function (assert) {
     await visit(`/u/${currentUser}/activity/likes-given`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      i18n("user_activity.no_likes_title")
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(i18n("user_activity.no_likes_title"));
   });
 
   test("When looking at another user's likes page", async function (assert) {
     await visit(`/u/${anotherUser}/activity/likes-given`);
-    assert.equal(
-      query("div.empty-state span.empty-state-title").innerText,
-      i18n("user_activity.no_likes_title_others", { username: anotherUser })
-    );
+    assert
+      .dom("div.empty-state span.empty-state-title")
+      .hasText(
+        i18n("user_activity.no_likes_title_others", { username: anotherUser })
+      );
   });
 });

@@ -10,10 +10,16 @@
       @label={{i18n "admin.dashboard.new_features.title"}}
     />
   </:breadcrumbs>
+  <:actions as |actions|>
+    <actions.Primary
+      @label="admin.new_features.check_for_updates"
+      @action={{this.checkForUpdates}}
+    />
+  </:actions>
 </AdminPageHeader>
 
 <div class="admin-container admin-config-page__main-area">
   <div class="admin-config-area">
-    <DashboardNewFeatures />
+    <DashboardNewFeatures @onCheckForFeatures={{this.bindCheckFeatures}} />
   </div>
 </div>

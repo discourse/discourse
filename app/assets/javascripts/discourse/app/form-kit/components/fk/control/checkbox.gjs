@@ -9,21 +9,23 @@ export default class FKControlCheckbox extends Component {
 
   @action
   handleInput() {
-    this.args.field.set(!this.args.value);
+    this.args.field.set(!this.args.field.value);
   }
 
   <template>
     <FKLabel class="form-kit__control-checkbox-label">
       <input
         type="checkbox"
-        checked={{eq @value true}}
+        checked={{eq @field.value true}}
         class="form-kit__control-checkbox"
-        disabled={{@disabled}}
+        disabled={{@field.disabled}}
         ...attributes
         {{on "change" this.handleInput}}
       />
       <span class="form-kit__control-checkbox-content">
-        <span class="form-kit__control-checkbox-title">{{@field.title}}</span>
+        <span class="form-kit__control-checkbox-title">
+          {{@field.title}}
+        </span>
         {{#if (has-block)}}
           <span class="form-kit__control-checkbox-description">{{yield}}</span>
         {{/if}}

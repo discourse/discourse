@@ -365,7 +365,7 @@ class ApplicationController < ActionController::Base
       Logster.add_to_env(request.env, "username", current_user.username)
       response.headers["X-Discourse-Username"] = current_user.username
     end
-    response.headers["X-Discourse-Route"] = "#{controller_name}/#{action_name}"
+    response.headers["X-Discourse-Route"] = "#{controller_path}/#{action_name}"
   end
 
   def set_mp_snapshot_fields

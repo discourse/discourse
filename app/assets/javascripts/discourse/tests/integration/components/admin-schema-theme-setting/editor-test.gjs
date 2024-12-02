@@ -121,7 +121,7 @@ module(
       assert.strictEqual(
         tree.nodes[1].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       await click(tree.nodes[1].element);
@@ -132,7 +132,7 @@ module(
       assert.strictEqual(
         tree.nodes[0].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       assert.true(tree.nodes[1].active);
@@ -1288,7 +1288,7 @@ module(
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 4);
-      assert.ok(tree.nodes[2].active);
+      assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });

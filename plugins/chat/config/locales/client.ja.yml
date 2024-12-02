@@ -129,6 +129,7 @@ ja:
       header_indicator_preference:
         title: "ヘッダーにアクティビティインジケーターを表示"
         all_new: "すべての新着メッセージ"
+        dm_and_mentions: "ダイレクトメッセージ、メンション、およびウォッチ中スレッド"
         only_mentions: "メンションのみ"
         never: "なし"
       separate_sidebar_mode:
@@ -234,6 +235,7 @@ ja:
       placeholder_channel: "%{channelName} 内でチャット"
       placeholder_thread: "スレッド内でチャット"
       placeholder_users: "%{commaSeparatedNames} とチャット"
+      placeholder_group: "グループチャット"
       placeholder_new_message_disallowed:
         archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません。"
         closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません。"
@@ -428,6 +430,7 @@ ja:
         auto_join_users_info: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。ユーザーが %{category} カテゴリにアクセスできる場合は、このチャンネルに追加します。"
         auto_join_users_info_no_category: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。選択されたカテゴリにユーザーがアクセスできる場合は、このチャンネルに追加します。"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
+        notification_level: "プッシュ通知を送信"
         follow: "参加"
         followed: "参加中"
         mute: "チャンネルをミュート"
@@ -452,6 +455,7 @@ ja:
           title: "チャットメッセージをエクスポートする"
           description: "これによりすべてのチャンネルのすべてのメッセージがエクスポートされます。"
           create_export: "エクスポートを作成"
+          confirm_export: "これにより、すべてのチャンネルからすべてのメッセージがエクスポートされ、その結果が個人メッセージで送信されます。エクスポートしてもよろしいですか？"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
       my_threads:
         title: 自分のスレッド
@@ -470,6 +474,7 @@ ja:
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"
+        channel: "チャンネル"
         confirm_destroy: "この着信 Webhook を削除してもよろしいですか？この操作は元に戻せません。"
         current_emoji: "現在の絵文字"
         description: "説明"
@@ -493,6 +498,8 @@ ja:
         username: "ユーザー名"
         username_instructions: "チャンネルに投稿するボットのユーザー名。空白のままにすると、デフォルトで「システム」になります。"
         instructions: "着信 Webhook は、外部システムが <code>/hooks/:key</code> エンドポイントを介して指定されたチャットチャンネルにボットユーザーとしてメッセージを投稿する際に使用できます。ペイロードは、2000 文字に制限された単一の <code>text</code> パラメーターで構成されます。<br><br>また、Slack 形式の <code>text</code> パラメーターも制限付きでサポートしており、<a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a> のフォーマットに基いてリンクとメンションが抽出されますが、これには、<code>/hooks/:key/slack</code> エンドポイントを使用する必要があります。"
+        saved: "Webhook の変更が保存されました"
+        created: "Webhook が作成されました"
       selection:
         cancel: "キャンセル"
         quote_selection: "トピックで引用"
@@ -563,10 +570,13 @@ ja:
         notifications:
           regular:
             title: "標準"
+            description: "このスレッドで誰かがあなたをメンションすると通知が届きます。"
           tracking:
             title: "追跡中"
+            description: "このスレッドで誰かがあなたをメンションすると通知が届き、スレッドリストに新しい返信の件数が表示されます。"
           watching:
             title: "ウォッチ中"
+            description: "このスレッドのすべての返信に関する通知が届き、スレッドリストに新しい返信の件数が表示されます。"
         participants_other_count:
           other: "+%{count} 件"
       thread_title_toast:
@@ -606,10 +616,6 @@ ja:
           other_html: "<span>%{username}</span> <span>が %{identifier} をパーソナルチャットでメンションしました</span>"
         chat_message: "新しいチャットメッセージ"
         chat_quoted: "%{username} があなたのチャットメッセージを引用しました"
-      titles:
-        chat_mention: "チャットのメンション"
-        chat_invitation: "チャットの招待状"
-        chat_quoted: "チャットが引用されました"
     action_codes:
       chat:
         enabled: '%{who} が<button class="btn-link open-chat">チャット</button>を有効にしました: %{when}'
@@ -640,6 +646,7 @@ ja:
         title: "チャット"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} チャンネルを切り替える"
+          switch__unread_channel_arrows: "%{shortcut} 未読チャンネルを切り替える"
           open_quick_channel_selector: "%{shortcut} クイックチャンネルセレクターを開く"
           open_insert_link_modal: "%{shortcut} ハイパーリンクを挿入する (作成ツールのみ)"
           composer_bold: "%{shortcut} 太字 (作成ツールのみ)"

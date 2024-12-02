@@ -1884,7 +1884,11 @@ en:
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    experimental_full_page_login: "Replace the login/signup modal with a full page login/signup form."
+    full_page_login: "Show the login and signup forms in a full page (when unchecked, users will see the forms in a modal). "
+    show_signup_form_email_instructions: Show email instructions on the signup form.
+    show_signup_form_username_instructions: Show username instructions on the signup form.
+    show_signup_form_full_name_instructions: Show full name instructions on the signup form.
+    show_signup_form_password_instructions: Show password instructions on the signup form.
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -3063,6 +3067,7 @@ en:
     cannot_delete_has_posts:
       one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
       other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
+    cannot_bulk_delete: "One or more users cannot be deleted either because they're an admin, have too many posts or have a very old post."
 
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
@@ -5061,7 +5066,7 @@ en:
       name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes
       long_description: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you’ll also get lots more likes per day.
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, and you’ll also get lots more likes per day.
     leader:
       name: Leader
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> global edit, pin, close, archive, split and merge, more likes
@@ -5535,6 +5540,7 @@ en:
         other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
+    bulk_user_delete: "deleted in a bulk delete operation"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."

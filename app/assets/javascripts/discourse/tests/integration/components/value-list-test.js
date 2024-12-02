@@ -2,7 +2,6 @@ import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | value-list", function (hooks) {
@@ -36,10 +35,7 @@ module("Integration | Component | value-list", function (hooks) {
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
     await blur(".values .value[data-index='1'] .value-input");
 
-    assert.strictEqual(
-      query(".values .value[data-index='1'] .value-input").value,
-      "jarek"
-    );
+    assert.dom(".values .value[data-index='1'] .value-input").hasValue("jarek");
     assert.deepEqual(this.values, "vinkas\njarek", "updates the value list");
   });
 

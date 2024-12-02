@@ -24,15 +24,14 @@ module("Unit | Utility | oneboxer", function (hooks) {
 
     await loadOnebox(element);
 
-    assert.strictEqual(
+    assert.true(
       failedCache["http://somebadurl.com"],
-      true,
       "stores the url as failed in a cache"
     );
     assert.strictEqual(
       loadOnebox(element),
       undefined,
-      "it returns early for a failed cache"
+      "returns early for a failed cache"
     );
   });
 
@@ -42,15 +41,15 @@ module("Unit | Utility | oneboxer", function (hooks) {
 
     await loadOnebox(element);
 
-    assert.ok(
+    assert.true(
       localCache["http://somegoodurl.com"].outerHTML.includes(
         "Yet another collaboration tool"
       ),
       "stores the html of the onebox in a local cache"
     );
-    assert.ok(
+    assert.true(
       loadOnebox(element).includes("Yet another collaboration tool"),
-      "it returns the html from the cache"
+      "returns the html from the cache"
     );
   });
 });

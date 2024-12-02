@@ -4811,6 +4811,9 @@ hr:
         look_and_feel:
           themes:
             title: "Teme"
+        user_fields:
+          type: "Tip"
+          delete: "Pobriši"
       plugins:
         title: "Dodaci"
         name: "Naziv"
@@ -5535,6 +5538,11 @@ hr:
         status: "Statust"
         show_emails: "Pokaži emailove"
         hide_emails: "Sakrij e-poštu"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Pobriši"
         nav:
           new: "Novo"
           active: "Aktivno"
@@ -5807,8 +5815,6 @@ hr:
           confirm_delete: "Jeste li sigurni da želite izbrisati ovaj DiscourSeconnect zapis?"
       user_fields:
         title: "Korisnička polja"
-        help: "Dodaj polja koja korisnici mogu popuniti."
-        create: "Stvori korisnička polja"
         untitled: "Nenaslovljeno"
         name: "Ime polja"
         type: "Tip polja"
@@ -5829,22 +5835,15 @@ hr:
             title: "Neobvezno"
         editable:
           title: "Izmijenjivo nakon registracije"
-          enabled: "izmijenjivo"
-          disabled: "nije izmijenjivo"
         show_on_profile:
           title: "Prikaži na javnom profilu"
-          enabled: "prikazano na profilu"
-          disabled: "nije prikazano na profilu"
         show_on_user_card:
           title: "Prikaži na korisničkoj kartici"
-          enabled: "prikaži na korisničkoj kartici"
-          disabled: "nije prikazano na korisničkoj kartici"
         searchable:
           title: "Može se pretraživati"
-          enabled: "može se pretraživati"
-          disabled: "nije moguće pretraživati"
+          enabled: "Može se pretraživati"
         field_types:
-          text: "Tekst polje"
+          text: "Tekst"
           confirm: "Potvrda"
           dropdown: "Padajući izbornik"
           multiselect: "Višestruki odabir"
@@ -6011,6 +6010,7 @@ hr:
           grant_existing_holders: Dodijelite dodatne značke postojećim nositeljima bedževa
       emoji:
         title: "Emoji"
+        delete: "Pobriši"
         uploading: "Prijenos…"
         name: "Ime"
         group: "Grupa"

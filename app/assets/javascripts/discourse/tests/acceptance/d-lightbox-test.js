@@ -65,7 +65,7 @@ acceptance("Experimental Lightbox - site setting", function (needs) {
     setupPretender(server, helper, singleLargeImageMarkup)
   );
 
-  test("it does not interfere with Magnific when enable_experimental_lightbox is disabled", async function (assert) {
+  test("does not interfere with Magnific when enable_experimental_lightbox is disabled", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
@@ -82,7 +82,7 @@ acceptance("Experimental Lightbox - layout single image", function (needs) {
     setupPretender(server, helper, singleLargeImageMarkup)
   );
 
-  test("it shows the correct elements for a single-image lightbox", async function (assert) {
+  test("shows the correct elements for a single-image lightbox", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
@@ -137,7 +137,7 @@ acceptance("Experimental Lightbox - layout multiple images", function (needs) {
     setupPretender(server, helper, multipleLargeImagesMarkup)
   );
 
-  test("it shows multiple image controls when there's more than one item", async function (assert) {
+  test("shows multiple image controls when there's more than one item", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
@@ -354,7 +354,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).exists();
 
-    assert.ok(
+    assert.true(
       classListAddStub.calledWith("has-lightbox"),
       "adds has-lightbox class to document element"
     );
@@ -363,7 +363,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
 
-    assert.ok(
+    assert.true(
       classListRemoveStub.calledWith("has-lightbox"),
       "removes has-lightbox class from document element"
     );
@@ -390,13 +390,13 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     await click(SELECTORS.FULL_SCREEN_BUTTON);
 
     assert.dom(SELECTORS.LIGHTBOX_CONTAINER).hasClass("is-fullscreen");
-    assert.ok(requestFullscreenStub.calledOnce, "it calls requestFullscreen");
+    assert.true(requestFullscreenStub.calledOnce, "calls requestFullscreen");
 
     await click(SELECTORS.FULL_SCREEN_BUTTON);
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotHaveClass("is-fullscreen");
 
-    assert.ok(exitFullscreenStub.calledOnce, "it calls exitFullscreen");
+    assert.true(exitFullscreenStub.calledOnce, "calls exitFullscreen");
 
     await click(SELECTORS.CLOSE_BUTTON);
 
@@ -418,7 +418,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     // appends and clicks <a download="..." href="..."></a>
     await click(SELECTORS.DOWNLOAD_BUTTON);
 
-    assert.ok(clickStub.called, "The click method was called");
+    assert.true(clickStub.called, "The click method was called");
 
     await click(SELECTORS.CLOSE_BUTTON);
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
@@ -437,7 +437,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
 
     await click(SELECTORS.TAB_BUTTON);
 
-    assert.ok(openStub.called, "The open method was called");
+    assert.true(openStub.called, "The open method was called");
 
     await click(SELECTORS.CLOSE_BUTTON);
 
@@ -899,7 +899,7 @@ acceptance("Experimental Lightbox - conditional buttons", function (needs) {
     setupPretender(server, helper, singleSmallImageMarkup)
   );
 
-  test("it doesn't show the newtab and download buttons to anons if prevent_anons_from_downloading_files is enabled", async function (assert) {
+  test("doesn't show the newtab and download buttons to anons if prevent_anons_from_downloading_files is enabled", async function (assert) {
     this.siteSettings.prevent_anons_from_downloading_files = true;
     await visit("/t/internationalization-localization/280");
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);
@@ -909,7 +909,7 @@ acceptance("Experimental Lightbox - conditional buttons", function (needs) {
     assert.dom(SELECTORS.DOWNLOAD_BUTTON).doesNotExist();
   });
 
-  test("it doesn't show the zoom button if the image is smaller than the viewport", async function (assert) {
+  test("doesn't show the zoom button if the image is smaller than the viewport", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     await click(SELECTORS.DEFAULT_ITEM_SELECTOR);

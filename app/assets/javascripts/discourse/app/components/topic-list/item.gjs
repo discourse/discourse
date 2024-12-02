@@ -6,13 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { eq, gt } from "truth-helpers";
+import { eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import ActivityColumn from "discourse/components/topic-list/activity-column";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
-import PostersColumn from "discourse/components/topic-list/posters-column";
-import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
-import TopicCell from "discourse/components/topic-list/topic-cell";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
 import TopicLink from "discourse/components/topic-list/topic-link";
 import TopicStatus from "discourse/components/topic-status";
@@ -22,14 +18,12 @@ import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
-import icon from "discourse-common/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class TopicListItem extends Component {
+export default class Item extends Component {
   @service historyStore;
   @service site;
   @service siteSettings;
@@ -119,13 +113,11 @@ export default class TopicListItem extends Component {
     if (e.target.checked) {
       this.args.selected.addObject(this.args.topic);
 
-      if (this.args.lastCheckedElementId && e.shiftKey) {
-        const bulkSelects = Array.from(
-          document.querySelectorAll("input.bulk-select")
-        );
+      if (this.args.bulkSelectHelper.lastCheckedElementId && e.shiftKey) {
+        const bulkSelects = [...document.querySelectorAll("input.bulk-select")];
         const from = bulkSelects.indexOf(e.target);
         const to = bulkSelects.findIndex(
-          (el) => el.id === this.args.lastCheckedElementId
+          (el) => el.id === this.args.bulkSelectHelper.lastCheckedElementId
         );
         const start = Math.min(from, to);
         const end = Math.max(from, to);
@@ -136,10 +128,10 @@ export default class TopicListItem extends Component {
           .forEach((checkbox) => checkbox.click());
       }
 
-      this.args.updateLastCheckedElementId(e.target.id);
+      this.args.bulkSelectHelper.lastCheckedElementId = e.target.id;
     } else {
       this.args.selected.removeObject(this.args.topic);
-      this.args.updateLastCheckedElementId(null);
+      this.args.bulkSelectHelper.lastCheckedElementId = null;
     }
   }
 
@@ -223,78 +215,20 @@ export default class TopicListItem extends Component {
         @outletArgs={{hash topic=@topic}}
       />
       {{#if this.site.desktopView}}
-        {{! TODO: column DAG "topic-list-before-columns" }}
-
-        {{#if @bulkSelectEnabled}}
-          <td class="bulk-select topic-list-data">
-            <label for="bulk-select-{{@topic.id}}">
-              <input
-                {{on "click" this.onBulkSelectToggle}}
-                checked={{this.isSelected}}
-                type="checkbox"
-                id="bulk-select-{{@topic.id}}"
-                class="bulk-select"
-              />
-            </label>
-          </td>
-        {{/if}}
-
-        <TopicCell
-          @topic={{@topic}}
-          @showTopicPostBadges={{@showTopicPostBadges}}
-          @hideCategory={{@hideCategory}}
-          @tagsForUser={{@tagsForUser}}
-          @expandPinned={{this.expandPinned}}
-        />
-
-        <PluginOutlet
-          @name="topic-list-after-main-link"
-          @outletArgs={{hash topic=@topic}}
-        />
-
-        {{#if @showPosters}}
-          <PostersColumn @posters={{@topic.featuredUsers}} />
-        {{/if}}
-
-        <PostsCountColumn @topic={{@topic}} />
-
-        {{#if @showLikes}}
-          <td class="num likes topic-list-data">
-            {{#if (gt @topic.like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        {{#if @showOpLikes}}
-          <td class="num likes">
-            {{#if (gt @topic.op_like_count 0)}}
-              <a href={{@topic.summaryUrl}}>
-                {{number @topic.op_like_count}}
-                {{icon "heart"}}
-              </a>
-            {{/if}}
-          </td>
-        {{/if}}
-
-        <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>
-          <PluginOutlet
-            @name="topic-list-before-view-count"
-            @outletArgs={{hash topic=@topic}}
+        {{#each @columns as |entry|}}
+          <entry.value.item
+            @topic={{@topic}}
+            @bulkSelectEnabled={{@bulkSelectEnabled}}
+            @onBulkSelectToggle={{this.onBulkSelectToggle}}
+            @isSelected={{this.isSelected}}
+            @showTopicPostBadges={{@showTopicPostBadges}}
+            @hideCategory={{@hideCategory}}
+            @tagsForUser={{@tagsForUser}}
+            @expandPinned={{this.expandPinned}}
           />
-          {{number @topic.views numberKey="views_long"}}
-        </td>
-
-        <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
-
-        {{! TODO: column DAG "topic-list-after-columns" }}
+        {{/each}}
       {{else}}
         <td class="topic-list-data">
-          {{! TODO: column DAG "topic-list-before-columns" }}
-
           <div class="pull-left">
             {{#if @bulkSelectEnabled}}
               <label for="bulk-select-{{@topic.id}}">

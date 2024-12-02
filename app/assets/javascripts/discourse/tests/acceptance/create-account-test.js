@@ -66,6 +66,50 @@ acceptance("Create Account", function () {
       .hasText(i18n("user.username.required"), "shows signup error");
   });
 
+  test("hidden instructions", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom("#account-email-validation-more-info")
+      .hasText(i18n("user.email.instructions"));
+    assert.dom("#username-validation-more-info").doesNotExist();
+    assert.dom("#password-validation-more-info").doesNotExist();
+    assert.dom("#fullname-validation-more-info").doesNotExist();
+  });
+
+  test("visible instructions", async function (assert) {
+    this.siteSettings.show_signup_form_username_instructions = true;
+    this.siteSettings.show_signup_form_password_instructions = true;
+    this.siteSettings.show_signup_form_full_name_instructions = true;
+
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom("#username-validation-more-info")
+      .hasText(i18n("user.username.instructions"));
+    assert
+      .dom("#password-validation-more-info")
+      .hasText(i18n("user.password.instructions", { count: 10 }));
+    assert
+      .dom("#fullname-validation-more-info")
+      .hasText(i18n("user.name.instructions_required"));
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-password", "supersecurepassword");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.dom("#username-validation").hasText(i18n("user.username.required"));
+
+    // only shows the instructions if the validation is not visible
+    assert.dom("#account-email-validation-more-info").doesNotExist();
+    assert.dom("#username-validation-more-info").doesNotExist();
+    assert.dom("#password-validation-more-info").doesNotExist();
+    assert.dom("#fullname-validation-more-info").exists();
+  });
+
   test("can sign in using a third-party auth", async function (assert) {
     sinon.stub(LoginMethod, "buildPostForm").callsFake((url) => {
       assert.step("buildPostForm");

@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.38.0";
+export const PLUGIN_API_VERSION = "1.39.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -119,6 +119,7 @@ import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
+import { _addTrackedPostProperty } from "discourse/models/post";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import {
   addSaveableUserField,
@@ -297,14 +298,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      const message =
-        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-      deprecated(message, {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      });
-      // eslint-disable-next-line no-console
-      console.debug(consolePrefix(), message);
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -348,14 +348,13 @@ class PluginApi {
       resolverName === "component:topic-list" ||
       resolverName === "component:topic-list-item"
     ) {
-      const message =
-        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-      deprecated(message, {
-        since: "v3.4.0.beta3-dev",
-        id: "discourse.hbr-topic-list-overrides",
-      });
-      // eslint-disable-next-line no-console
-      console.debug(consolePrefix(), message);
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
     }
 
     const klass = this._resolveClass(resolverName, opts);
@@ -435,7 +434,7 @@ class PluginApi {
    *
    * Example: to abort the expected behavior based on a condition
    * ```
-   * api.registerValueTransformer("example-transformer", ({next, context}) => {
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
    *   if (context.property) {
    *     // not calling next() on a behavior transformer aborts executing the expected behavior
    *
@@ -819,6 +818,17 @@ class PluginApi {
    **/
   includePostAttributes(...attributes) {
     includeAttributes(...attributes);
+  }
+
+  /**
+   * Adds a tracked property to the post model.
+   *
+   * This method is used to mark a property as tracked for post updates.
+   *
+   * @param {string} name - The name of the property to track.
+   */
+  addTrackedPostProperty(name) {
+    _addTrackedPostProperty(name);
   }
 
   /**

@@ -655,11 +655,6 @@ es:
           other_html: "<span>%{username}</span> <span>mencionó a %{identifier} en el chat personal</span>"
         chat_message: "Nuevo mensaje de chat"
         chat_quoted: "%{username} citó tu mensaje de chat"
-      titles:
-        chat_mention: "Mención de chat"
-        chat_invitation: "Invitación de chat"
-        chat_quoted: "Chat citado"
-        chat_watched_thread: "Hilo de chat vigilado"
     action_codes:
       chat:
         enabled: '%{who} habilitó el <button class="btn-link open-chat">chat</button> %{when}'

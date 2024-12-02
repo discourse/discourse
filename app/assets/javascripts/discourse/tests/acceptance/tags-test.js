@@ -2,7 +2,6 @@ import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -430,10 +429,9 @@ acceptance("Tag info", function (needs) {
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists("show tag");
-    assert.ok(
-      query(".tag-info .tag-associations").innerText.includes("Gardening"),
-      "show tag group names"
-    );
+    assert
+      .dom(".tag-info .tag-associations")
+      .includesText("Gardening", "show tag group names");
     assert
       .dom(".tag-info .synonyms-list .tag-box")
       .exists({ count: 2 }, "shows the synonyms");
@@ -475,24 +473,19 @@ acceptance("Tag info", function (needs) {
     assert.dom(".tag-info .tag-name").exists("show tag");
 
     await click(".edit-tag");
-    assert.strictEqual(
-      query("#edit-name").value,
-      "happy-monkey",
-      "it displays original tag name"
-    );
-    assert.strictEqual(
-      query("#edit-description").value,
-      "happy monkey description",
-      "it displays original tag description"
-    );
+    assert
+      .dom("#edit-name")
+      .hasValue("happy-monkey", "displays original tag name");
+    assert
+      .dom("#edit-description")
+      .hasValue(
+        "happy monkey description",
+        "displays original tag description"
+      );
 
     await fillIn("#edit-description", "new description");
     await click(".submit-edit");
-    assert.strictEqual(
-      currentURL(),
-      "/tag/happy-monkey",
-      "it doesn't change URL"
-    );
+    assert.strictEqual(currentURL(), "/tag/happy-monkey", "doesn't change URL");
 
     await click(".edit-tag");
     await fillIn("#edit-name", "happy-monkey2");
@@ -500,7 +493,7 @@ acceptance("Tag info", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/tag/happy-monkey2",
-      "it changes URL to new tag path"
+      "changes URL to new tag path"
     );
   });
 

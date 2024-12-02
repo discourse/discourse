@@ -102,6 +102,8 @@ pt_BR:
         label: "Opções"
         ranked_choice:
           abstain: "Abrir mão"
+          highest_priority: "(maior prioridade)"
+          lowest_priority: "(menor prioridade)"
           login: "Entre para votar!"
       error_while_toggling_status: "Desculpe, houve um erro ao mudar o status desta enquete."
       error_while_casting_votes: "Desculpe, houve um erro ao registrar os seus votos."

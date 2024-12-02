@@ -43,10 +43,10 @@ module("Integration | Component | text-field", function (hooks) {
     );
 
     await fillIn(".tf-test", "hello");
-    assert.ok(!this.called);
+    assert.false(this.called);
 
     await fillIn(".tf-test", "new text");
-    assert.ok(this.called);
+    assert.true(this.called);
     assert.strictEqual(this.newValue, "new text");
   });
 
@@ -64,10 +64,10 @@ module("Integration | Component | text-field", function (hooks) {
     );
 
     await fillIn(".tf-test", "old");
-    assert.ok(!this.called);
+    assert.false(this.called);
 
     await fillIn(".tf-test", "no longer old");
-    assert.ok(this.called);
+    assert.true(this.called);
     assert.strictEqual(this.newValue, "no longer old");
   });
 });

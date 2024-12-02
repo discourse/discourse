@@ -6,6 +6,6 @@ acceptance("current-user", function (needs) {
 
   test("currentUser has appEvents", function (assert) {
     let currentUser = this.container.lookup("service:current-user");
-    assert.ok(currentUser.appEvents);
+    assert.notStrictEqual(currentUser.appEvents, undefined);
   });
 });

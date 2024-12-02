@@ -1856,7 +1856,6 @@ fr:
                 one {# jour}
               other {# jours}
             }.
-          edit_link_options: "Modifier les options de lien."
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
           restrict: "Restreindre à"
@@ -5380,6 +5379,13 @@ fr:
             themes_description: "Les thèmes sont des personnalisations étendues qui modifient plusieurs éléments du style de conception de votre forum et incluent souvent également des fonctionnalités front-end supplémentaires."
             new_theme: "Nouveau thème"
             user_selectable: "Sélectionnable par l'utilisateur"
+        user_fields:
+          type: "Type"
+          more_options:
+            title: "Plus d'options"
+            move_up: "Déplacer vers le haut"
+            move_down: "Déplacer vers le bas"
+          delete: "Supprimer"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"
@@ -6262,6 +6268,11 @@ fr:
         status: "Statut"
         show_emails: "Afficher les adresses e-mail"
         hide_emails: "Masquer les adresses e-mail"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Fermer"
+              confirm: "Supprimer"
         nav:
           new: "Nouveau"
           active: "Actifs"
@@ -6541,8 +6552,6 @@ fr:
           confirm_delete: "Voulez-vous vraiment supprimer cet enregistrement DiscourseConnect ?"
       user_fields:
         title: "Champs utilisateurs"
-        help: "Ajoutez des champs que vos utilisateurs pourront remplir."
-        create: "Créer un champ utilisateur"
         untitled: "Sans titre"
         name: "Nom du champ"
         type: "Type du champ"
@@ -6571,22 +6580,15 @@ fr:
           confirmation: "Cela invitera les utilisateurs existants à remplir ce champ et ne leur permettra pas de faire quoi que ce soit d'autre sur votre site tant que le champ ne sera pas rempli. Continuer ?"
         editable:
           title: "Modifiable après l'inscription "
-          enabled: "modifiable"
-          disabled: "non modifiable"
         show_on_profile:
           title: "Afficher sur le profil public "
-          enabled: "affiché dans le profil"
-          disabled: "non affiché dans le profil"
         show_on_user_card:
           title: "Afficher sur la carte de l'utilisateur "
-          enabled: "affiché sur la carte de l'utilisateur"
-          disabled: "non affiché sur la carte de l'utilisateur"
         searchable:
           title: "Indexable"
-          enabled: "indexable"
-          disabled: "non indexable"
+          enabled: "Indexable"
         field_types:
-          text: "Zone de texte"
+          text: "Texte"
           confirm: "Confirmation"
           dropdown: "Menu déroulant"
           multiselect: "Sélection multiple"
@@ -6602,7 +6604,6 @@ fr:
         show_overriden: "Afficher uniquement les textes modifiés"
         show_outdated: "Afficher uniquement les données périmées/invalides"
         show_untranslated: "Afficher uniquement les versions non traduites"
-        only_show_selected_locale: "Afficher uniquement les résultats dans la langue sélectionnée"
         locale: "Langue :"
         more_than_50_results: "Il y a plus de 50 résultats. Veuillez affiner votre recherche."
         no_results: "Aucun texte de site correspondant n'a été trouvé"
@@ -6809,6 +6810,7 @@ fr:
       emoji:
         title: "Émoji"
         add: "Ajouter un émoji"
+        delete: "Supprimer"
         uploading: "Téléversement…"
         name: "Nom"
         group: "Groupe"

@@ -5,7 +5,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -81,14 +81,9 @@ module(
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
       await render(template);
-      const dismissButton = query(
-        ".panel-body-bottom .btn.notifications-dismiss"
-      );
-      assert.strictEqual(
-        dismissButton.textContent.trim(),
-        i18n("user.dismiss"),
-        "dismiss button has a label"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .hasText(i18n("user.dismiss"), "dismiss button has a label");
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .hasAttribute(
@@ -115,7 +110,7 @@ module(
       });
       assert.strictEqual(notificationsFetches, 1);
       await click(".panel-body-bottom .btn.notifications-dismiss");
-      assert.ok(markRead, "request to the server is made");
+      assert.true(markRead, "request to the server is made");
       assert.strictEqual(
         notificationsFetches,
         2,
@@ -213,26 +208,36 @@ module(
       });
       await render(template);
       const items = queryAll("ul li");
-      assert.ok(
-        items[0].textContent.includes("hello world 0011"),
-        "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[1].textContent.includes("Unread notification #01"),
-        "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[2].textContent.includes("Unread notification #02"),
-        "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[3].textContent.includes("hello world 0033"),
-        "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[4].textContent.includes("Read notification #01"),
-        "read notifications come after the pending reviewables and unread notifications"
-      );
+      assert
+        .dom(items[0])
+        .includesText(
+          "hello world 0011",
+          "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[1])
+        .includesText(
+          "Unread notification #01",
+          "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[2])
+        .includesText(
+          "Unread notification #02",
+          "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[3])
+        .includesText(
+          "hello world 0033",
+          "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[4])
+        .includesText(
+          "Read notification #01",
+          "read notifications come after the pending reviewables and unread notifications"
+        );
     });
   }
 );

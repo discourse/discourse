@@ -22,9 +22,9 @@ export default class FKControlQuestion extends Component {
             name={{@field.name}}
             type="radio"
             value="true"
-            checked={{eq @value true}}
+            checked={{eq @field.value true}}
             class="form-kit__control-radio"
-            disabled={{@disabled}}
+            disabled={{@field.disabled}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -44,9 +44,9 @@ export default class FKControlQuestion extends Component {
             name={{@field.name}}
             type="radio"
             value="false"
-            checked={{eq @value false}}
+            checked={{eq @field.value false}}
             class="form-kit__control-radio"
-            disabled={{@disabled}}
+            disabled={{@field.disabled}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}

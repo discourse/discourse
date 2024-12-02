@@ -142,6 +142,45 @@ export default class CreateAccount extends Component.extend(
     return this.siteSettings.full_name_required;
   }
 
+  @discourseComputed(
+    "emailValidation.ok",
+    "emailValidation.reason",
+    "emailValidationVisible"
+  )
+  showEmailValidation(
+    emailValidationOk,
+    emailValidationReason,
+    emailValidationVisible
+  ) {
+    return (
+      emailValidationOk || (emailValidationReason && emailValidationVisible)
+    );
+  }
+
+  @discourseComputed(
+    "passwordValidation.ok",
+    "passwordValidation.reason",
+    "passwordValidationVisible"
+  )
+  showPasswordValidation(
+    passwordValidationOk,
+    passwordValidationReason,
+    passwordValidationVisible
+  ) {
+    return (
+      passwordValidationOk ||
+      (passwordValidationReason && passwordValidationVisible)
+    );
+  }
+
+  @discourseComputed("usernameValidation.reason")
+  showUsernameInstructions(usernameValidationReason) {
+    return (
+      this.siteSettings.show_signup_form_username_instructions &&
+      !usernameValidationReason
+    );
+  }
+
   @discourseComputed("model.authOptions.auth_provider")
   passwordRequired(authProvider) {
     return isEmpty(authProvider);
@@ -221,7 +260,7 @@ export default class CreateAccount extends Component.extend(
   }
 
   @action
-  showPasswordValidation() {
+  togglePasswordValidation() {
     this.set(
       "passwordValidationVisible",
       Boolean(this.passwordValidation.reason)

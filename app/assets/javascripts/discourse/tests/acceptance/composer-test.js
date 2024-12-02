@@ -175,10 +175,10 @@ acceptance("Composer", function (needs) {
     await click("#reply-control button.create");
     assert
       .dom(".title-input .popup-tip.bad")
-      .exists("it shows the empty title error");
+      .exists("shows the empty title error");
     assert
       .dom(".d-editor-textarea-wrapper .popup-tip.bad")
-      .exists("it shows the empty body error");
+      .exists("shows the empty body error");
 
     await fillIn("#reply-title", "this is my new topic title");
     assert
@@ -212,11 +212,12 @@ acceptance("Composer", function (needs) {
     await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
     const example = i18n(`composer.bold_text`);
-    assert.strictEqual(
-      query("#reply-control .d-editor-input").value.trim(),
-      `this is the *content* of a post**${example}**`,
-      "it supports keyboard shortcuts"
-    );
+    assert
+      .dom("#reply-control .d-editor-input")
+      .hasValue(
+        `this is the *content* of a post**${example}**`,
+        "supports keyboard shortcuts"
+      );
 
     await click("#reply-control a.cancel");
     assert.dom(".d-modal").exists("pops up a confirmation dialog");
@@ -256,7 +257,7 @@ acceptance("Composer", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/t/internationalization-localization/280",
-      "it transitions to the newly created topic URL"
+      "transitions to the newly created topic URL"
     );
   });
 
@@ -278,7 +279,7 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "enqueue this content please");
     await click("#reply-control button.create");
     assert.dom(".d-modal").exists("pops up a modal");
-    assert.strictEqual(currentURL(), "/", "it doesn't change routes");
+    assert.strictEqual(currentURL(), "/", "doesn't change routes");
 
     await click(".d-modal__footer button");
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
@@ -294,7 +295,7 @@ acceptance("Composer", function (needs) {
     assert
       .dom("#dialog-holder .dialog-body")
       .hasText("This is a custom response");
-    assert.strictEqual(currentURL(), "/", "it doesn't change routes");
+    assert.strictEqual(currentURL(), "/", "doesn't change routes");
 
     await click(".dialog-footer .btn-primary");
     assert.strictEqual(
@@ -349,22 +350,24 @@ acceptance("Composer", function (needs) {
 
     await click(".d-modal__footer button.keep-editing");
     assert.dom(".discard-draft-modal.modal").doesNotExist();
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "this is the content of my reply",
-      "composer does not switch when using Keep Editing button"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "this is the content of my reply",
+        "composer does not switch when using Keep Editing button"
+      );
 
     await click(".topic-post:nth-of-type(1) button.edit");
     assert.dom(".d-modal__footer button.save-draft").doesNotExist();
     await click(".d-modal__footer button.discard-draft");
     assert.dom(".discard-draft-modal.modal").doesNotExist();
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      query(".topic-post:nth-of-type(1) .cooked > p").innerText,
-      "composer has contents of post to be edited"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        query(".topic-post:nth-of-type(1) .cooked > p").innerText,
+        "composer has contents of post to be edited"
+      );
   });
 
   test("Can Keep Editing when replying on a different topic", async function (assert) {
@@ -380,11 +383,12 @@ acceptance("Composer", function (needs) {
     await click(".d-modal__footer button.keep-editing");
     assert.dom(".discard-draft-modal.modal").doesNotExist();
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "this is the content of my reply",
-      "composer does not switch when using Keep Editing button"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "this is the content of my reply",
+        "composer does not switch when using Keep Editing button"
+      );
   });
 
   test("Posting on a different topic", async function (assert) {
@@ -417,30 +421,26 @@ acceptance("Composer", function (needs) {
     await fillIn(".d-editor-input", "this is the content of the first reply");
 
     await visit("/t/this-is-a-test-topic/9");
-    assert.ok(
+    assert.true(
       currentURL().startsWith("/t/this-is-a-test-topic/9"),
       "moves to second topic"
     );
     await click("#topic-footer-buttons .btn.create");
     assert
       .dom(".discard-draft-modal.modal")
-      .exists("it pops up the discard drafts modal");
+      .exists("pops up the discard drafts modal");
 
     await click(".d-modal__footer button.keep-editing");
 
     assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
     await click("#topic-footer-buttons .btn.create");
-    assert
-      .dom(".discard-draft-modal.modal")
-      .exists("it pops up the modal again");
+    assert.dom(".discard-draft-modal.modal").exists("pops up the modal again");
 
     await click(".d-modal__footer button.discard-draft");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "",
-      "discards draft and reset composer textarea"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasNoValue("discards draft and reset composer textarea");
   });
 
   test("Create an enqueued Reply", async function (assert) {
@@ -466,11 +466,12 @@ acceptance("Composer", function (needs) {
 
     await fillIn(".d-editor-input", "enqueue this content please");
     await click("#reply-control button.create");
-    assert.ok(
-      query(".topic-post:last-of-type .cooked p").innerText !==
+    assert
+      .dom(".topic-post:last-of-type .cooked p")
+      .doesNotIncludeText(
         "enqueue this content please",
-      "it doesn't insert the post"
-    );
+        "doesn't insert the post"
+      );
     assert.dom(".d-modal").exists("pops up a modal");
 
     await click(".d-modal__footer button");
@@ -483,14 +484,16 @@ acceptance("Composer", function (needs) {
 
     assert
       .dom(".topic-post:nth-of-type(1) .post-info.edits")
-      .doesNotExist("it has no edits icon at first");
+      .doesNotExist("has no edits icon at first");
 
     await click(".topic-post:nth-of-type(1) button.show-more-actions");
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("Any plans to support"),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^Any plans to support/,
+        "populates the input with the post text"
+      );
 
     await fillIn(".d-editor-input", "This is the new text for the post");
     await fillIn("#reply-title", "This is the new text for the title");
@@ -498,19 +501,16 @@ acceptance("Composer", function (needs) {
     assert.dom(".d-editor-input").doesNotExist("closes the composer");
     assert
       .dom(".topic-post:nth-of-type(1) .post-info.edits")
-      .exists("it has the edits icon");
-    assert.ok(
-      query("#topic-title h1").innerText.includes(
-        "This is the new text for the title"
-      ),
-      "it shows the new title"
-    );
-    assert.ok(
-      query(".topic-post:nth-of-type(1) .cooked").innerText.includes(
-        "This is the new text for the post"
-      ),
-      "it updates the post"
-    );
+      .exists("has the edits icon");
+    assert
+      .dom("#topic-title h1")
+      .includesText(
+        "This is the new text for the title",
+        "shows the new title"
+      );
+    assert
+      .dom(".topic-post:nth-of-type(1) .cooked")
+      .includesText("This is the new text for the post", "updates the post");
   });
 
   test("Editing a post stages new content", async function (assert) {
@@ -525,10 +525,9 @@ acceptance("Composer", function (needs) {
       // at this point, request is in flight, so post is staged
       assert.dom(".topic-post").exists();
       assert.dom(".topic-post").hasClass("staged");
-      assert.strictEqual(
-        query(".topic-post.staged .cooked").innerText.trim(),
-        "will return empty json"
-      );
+      assert
+        .dom(".topic-post.staged .cooked")
+        .hasText("will return empty json");
 
       return response(200, {});
     });
@@ -543,15 +542,19 @@ acceptance("Composer", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the first post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the first post\./,
+        "populates the input with the post text"
+      );
     await click(".topic-post:nth-of-type(2) button.edit");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the second post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the second post\./,
+        "populates the input with the post text"
+      );
   });
 
   test("Composer with dirty edit can toggle to another edit", async function (assert) {
@@ -562,34 +565,36 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(2) button.edit");
     assert
       .dom(".discard-draft-modal.modal")
-      .exists("it pops up a confirmation dialog");
+      .exists("pops up a confirmation dialog");
 
     await click(".d-modal__footer button.discard-draft");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the second post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the second post\./,
+        "populates the input with the post text"
+      );
   });
 
   test("Composer can toggle between edit and reply", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the first post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the first post\./,
+        "populates the input with the post text"
+      );
     await click(".topic-post:nth-of-type(1) button.reply");
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "",
-      "it clears the input"
-    );
+    assert.dom(".d-editor-input").hasNoValue("clears the input");
     await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the first post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the first post\./,
+        "populates the input with the post text"
+      );
   });
 
   test("Composer can toggle whispers when whisperer user", async function (assert) {
@@ -610,7 +615,7 @@ acceptance("Composer", function (needs) {
 
     assert
       .dom(".composer-actions svg.d-icon-far-eye-slash")
-      .doesNotExist("it removes the whisper mode");
+      .doesNotExist("removes the whisper mode");
 
     await menu.expand();
     await menu.selectRowByName("toggle-whisper");
@@ -619,7 +624,7 @@ acceptance("Composer", function (needs) {
 
     await menu.expand();
 
-    assert.ok(
+    assert.true(
       menu.rowByName("toggle-whisper").exists(),
       "whisper toggling is still present when going fullscreen"
     );
@@ -701,26 +706,23 @@ acceptance("Composer", function (needs) {
     await click("#create-topic");
     assert
       .dom(".reply-details .whisper .d-icon-far-eye-slash")
-      .doesNotExist("it should reset the state of the composer's model");
+      .doesNotExist("should reset the state of the composer's model");
 
     await selectKit(".toolbar-popup-menu-options").expand();
     await selectKit(".toolbar-popup-menu-options").selectRowByName(
       "toggle-invisible"
     );
 
-    assert.ok(
-      query(".reply-details .unlist").innerText.includes(
-        i18n("composer.unlist")
-      ),
-      "it sets the topic to unlisted"
-    );
+    assert
+      .dom(".reply-details .unlist")
+      .includesText(i18n("composer.unlist"), "sets the topic to unlisted");
 
     await visit("/t/this-is-a-test-topic/9");
 
     await click(".topic-post:nth-of-type(1) button.reply");
     assert
       .dom(".reply-details .whisper")
-      .doesNotExist("it should reset the state of the composer's model");
+      .doesNotExist("should reset the state of the composer's model");
   });
 
   test("Composer can toggle whisper when switching from reply to whisper to reply to topic", async function (assert) {
@@ -759,7 +761,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(2) button.edit");
     assert
       .dom(".discard-draft-modal.modal")
-      .exists("it pops up a confirmation dialog");
+      .exists("pops up a confirmation dialog");
     assert.dom(".d-modal__footer button.save-draft").doesNotExist();
     assert
       .dom(".d-modal__footer button.keep-editing")
@@ -768,10 +770,12 @@ acceptance("Composer", function (needs) {
         "has keep editing button"
       );
     await click(".d-modal__footer button.discard-draft");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the second post."),
-      "it populates the input with the post text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^This is the second post\./,
+        "populates the input with the post text"
+      );
   });
 
   test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
@@ -785,7 +789,7 @@ acceptance("Composer", function (needs) {
 
     assert
       .dom(".discard-draft-modal.modal")
-      .exists("it pops up a confirmation dialog");
+      .exists("pops up a confirmation dialog");
     assert
       .dom(".d-modal__footer button.save-draft")
       .hasText(
@@ -799,11 +803,7 @@ acceptance("Composer", function (needs) {
         "has keep editing button"
       );
     await click(".d-modal__footer button.save-draft");
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "",
-      "it clears the composer input"
-    );
+    assert.dom(".d-editor-input").hasNoValue("clears the composer input");
   });
 
   test("Checks for existing draft", async function (assert) {
@@ -847,7 +847,7 @@ acceptance("Composer", function (needs) {
 
     assert.dom(".d-modal__body").doesNotExist("abandon popup shouldn't come");
 
-    assert.ok(
+    assert.true(
       query(".d-editor-input").value.includes(longText),
       "entered text should still be there"
     );
@@ -907,7 +907,7 @@ acceptance("Composer", function (needs) {
       .hasAttribute(
         "placeholder",
         i18n("composer.reply_placeholder"),
-        "it should not block because of missing category"
+        "should not block because of missing category"
       );
   });
 
@@ -1106,10 +1106,9 @@ acceptance("Composer - Error Extensibility", function (needs) {
     await fillIn(".d-editor-input", "this is the *content* of a post");
     await click("#reply-control button.create");
     assert.dom(".dialog-body").exists("pops up an error message");
-    assert.ok(
-      query(".dialog-body").innerText.match(/PLUGIN_ABC ERROR/),
-      "it contains the server side error text"
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(/PLUGIN_ABC ERROR/, "contains the server side error text");
     await click(".dialog-footer .btn-primary");
     assert.dom(".dialog-body").doesNotExist("dismisses the error");
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -1142,10 +1141,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
 
     await settled();
     assert.dom(".d-editor-input").isFocused("composer is open and focused");
-    assert.strictEqual(
-      query("textarea.d-editor-input").value.trim(),
-      "this is appended"
-    );
+    assert.dom("textarea.d-editor-input").hasValue("this is appended");
   });
 
   test("Focusing a composer which is already open", async function (assert) {
@@ -1168,10 +1164,9 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
 
     await settled();
     assert.dom(".d-editor-input").isFocused("composer is open and focused");
-    assert.strictEqual(
-      query("textarea.d-editor-input").value.trim(),
-      "this is some appended text"
-    );
+    assert
+      .dom("textarea.d-editor-input")
+      .hasValue("this is some appended text");
   });
 
   test("Focusing a composer which is not open that has a draft", async function (assert) {
@@ -1186,10 +1181,9 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
 
     await settled();
     assert.dom(".d-editor-input").isFocused("composer is open and focused");
-    assert.strictEqual(
-      query("textarea.d-editor-input").value.trim(),
-      "This is a dirty reply\n\nthis is some appended text"
-    );
+    assert
+      .dom("textarea.d-editor-input")
+      .hasValue("This is a dirty reply\n\nthis is some appended text");
   });
 });
 
@@ -1316,11 +1310,11 @@ acceptance("Composer - current time", function (needs) {
       shiftKey: true,
     });
 
-    const inputValue = query("#reply-control .d-editor-input").value.trim();
-
-    assert.ok(
-      inputValue.startsWith(`and the time now is: [date=${date}`),
-      "it adds the current date"
+    assert.true(
+      query("#reply-control .d-editor-input")
+        .value.trim()
+        .startsWith(`and the time now is: [date=${date}`),
+      "adds the current date"
     );
   });
 });
@@ -1363,7 +1357,9 @@ acceptance("composer buttons API", function (needs) {
       Object.assign({ altKey: true }, metaModifier)
     );
 
-    assert.strictEqual(editor.value, "hello **the** world", "it adds the bold");
+    assert
+      .dom(".d-editor-input")
+      .hasValue("hello **the** world", "adds the bold");
 
     const dropdown = selectKit(".toolbar-popup-menu-options");
     await dropdown.expand();
@@ -1375,14 +1371,14 @@ acceptance("composer buttons API", function (needs) {
         "title",
         i18n("some_title") +
           ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
-        "it shows the title with shortcut"
+        "shows the title with shortcut"
       );
     assert
       .dom(row)
       .hasText(
         i18n("some_label") +
           ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
-        "it shows the label with shortcut"
+        "shows the label with shortcut"
       );
   });
 

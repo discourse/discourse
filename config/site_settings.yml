@@ -614,7 +614,7 @@ login:
     type: host_list
     list_type: simple
   normalize_emails:
-    default: false
+    default: true
   auto_approve_email_domains:
     default: ""
     type: host_list
@@ -631,6 +631,21 @@ login:
     default: 1440
     min: 1
     max: 175200
+  full_page_login:
+    default: false
+    client: true
+  show_signup_form_email_instructions:
+    client: true
+    default: true
+  show_signup_form_username_instructions:
+    client: true
+    default: false
+  show_signup_form_full_name_instructions:
+    client: true
+    default: false
+  show_signup_form_password_instructions:
+    client: true
+    default: false
 
 users:
   min_username_length:
@@ -815,6 +830,9 @@ users:
     default: false
     client: true
   delete_associated_accounts_on_password_reset:
+    default: false
+  enable_user_status:
+    client: true
     default: false
 
 groups:
@@ -2442,6 +2460,7 @@ developer:
     default: "1|2"
     allow_any: false
     refresh: true
+    hidden: true
   warn_critical_js_deprecations:
     default: true
     client: true
@@ -3298,9 +3317,6 @@ dashboard:
     client: true
 
 experimental:
-  experimental_full_page_login:
-    default: false
-    client: true
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -3348,16 +3364,13 @@ experimental:
     hidden: true
   experimental_topics_filter:
     client: true
-    default: false
+    default: true
   enable_rich_text_paste:
     client: true
     default: true
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
-  enable_user_status:
-    client: true
-    default: false
   lazy_load_categories_groups:
     default: ""
     type: group_list

@@ -50,8 +50,10 @@ module(
     test("open", async function (assert) {
       this.manager.open({ context: "chat-composer" });
 
-      assert.ok(this.manager.loading);
-      assert.ok(this.manager.picker);
+      assert.true(this.manager.loading);
+      assert.deepEqual(this.manager.picker, {
+        context: "chat-composer",
+      });
       assert.strictEqual(this.manager.picker.context, "chat-composer");
       assert.deepEqual(this.manager.visibleSections, [
         "favorites",
@@ -62,7 +64,7 @@ module(
       await settled();
 
       assert.deepEqual(this.manager.emojis, emojisResponse());
-      assert.strictEqual(this.manager.loading, false);
+      assert.false(this.manager.loading);
     });
 
     test("closeExisting", async function (assert) {
@@ -91,14 +93,18 @@ module(
     test("close", async function (assert) {
       this.manager.open({ context: "channel-composer" });
 
-      assert.ok(this.manager.picker);
+      assert.deepEqual(this.manager.picker, {
+        context: "channel-composer",
+      });
 
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
       this.manager.close();
 
-      assert.ok(this.manager.closing);
-      assert.ok(this.manager.picker);
+      assert.true(this.manager.closing);
+      assert.deepEqual(this.manager.picker, {
+        context: "channel-composer",
+      });
 
       await settled();
 

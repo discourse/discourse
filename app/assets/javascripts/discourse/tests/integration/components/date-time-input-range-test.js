@@ -34,24 +34,24 @@ module("Integration | Component | date-time-input-range", function (hooks) {
       hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} />`
     );
 
-    assert.strictEqual(fromDateInput().value, "2019-01-29");
+    assert.dom(fromDateInput()).hasValue("2019-01-29");
     assert.strictEqual(fromTimeInput().dataset.name, "14:45");
-    assert.strictEqual(toDateInput().value, "");
+    assert.dom(toDateInput()).hasNoValue();
     assert.strictEqual(toTimeInput().dataset.name, "--:--");
 
     await fillIn(toDateInput(), "2019-01-29");
     const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
     await toTimeSelectKit.expand();
     let rows = toTimeSelectKit.rows();
-    assert.equal(rows[0].dataset.name, "14:45");
-    assert.equal(rows[rows.length - 1].dataset.name, "23:45");
+    assert.dom(rows[0]).hasAttribute("data-name", "14:45");
+    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "23:45");
     await toTimeSelectKit.collapse();
 
     await fillIn(toDateInput(), "2019-01-30");
     await toTimeSelectKit.expand();
     rows = toTimeSelectKit.rows();
-    assert.equal(rows[0].dataset.name, "00:00");
-    assert.equal(rows[rows.length - 1].dataset.name, "23:45");
+    assert.dom(rows[0]).hasAttribute("data-name", "00:00");
+    assert.dom(rows[rows.length - 1]).hasAttribute("data-name", "23:45");
   });
 
   test("setting relativeDate results in correct intervals (4x 15m then 30m)", async function (assert) {
@@ -65,8 +65,8 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
     await toTimeSelectKit.expand();
     let rows = toTimeSelectKit.rows();
-    assert.equal(rows[4].dataset.name, "15:45");
-    assert.equal(rows[5].dataset.name, "16:15");
+    assert.dom(rows[4]).hasAttribute("data-name", "15:45");
+    assert.dom(rows[5]).hasAttribute("data-name", "16:15");
   });
 
   test("timezone support", async function (assert) {
@@ -81,9 +81,9 @@ module("Integration | Component | date-time-input-range", function (hooks) {
       hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} @timezone="Europe/Paris" />`
     );
 
-    assert.strictEqual(fromDateInput().value, "2019-01-29");
+    assert.dom(fromDateInput()).hasValue("2019-01-29");
     assert.strictEqual(fromTimeInput().dataset.name, "14:45");
-    assert.strictEqual(toDateInput().value, "");
+    assert.dom(toDateInput()).hasNoValue();
     assert.strictEqual(toTimeInput().dataset.name, "--:--");
 
     await fillIn(toDateInput(), "2019-01-29");
@@ -91,6 +91,9 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     await toTimeSelectKit.expand();
     await toTimeSelectKit.selectRowByName("19:15");
 
-    assert.equal(this.state.to.toString(), "Tue Jan 29 2019 19:15:00 GMT+0100");
+    assert.strictEqual(
+      this.state.to.toString(),
+      "Tue Jan 29 2019 19:15:00 GMT+0100"
+    );
   });
 });

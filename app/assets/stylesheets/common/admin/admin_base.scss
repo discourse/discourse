@@ -423,6 +423,20 @@ $mobile-breakpoint: 700px;
     color: var(--primary-medium);
   }
 }
+.admin-users-list {
+  &__search {
+    @media screen and (max-width: 500px) {
+      width: 100%;
+    }
+    input {
+      min-width: 15em;
+      @media screen and (max-width: 500px) {
+        box-sizing: border-box;
+        width: 100%;
+      }
+    }
+  }
+}
 
 .ip-lookup {
   position: relative;
@@ -473,7 +487,7 @@ $mobile-breakpoint: 700px;
   }
 
   .username {
-    input {
+    input[type="text"] {
       min-width: 15em;
       @media screen and (max-width: 500px) {
         box-sizing: border-box;
@@ -1078,6 +1092,7 @@ a.inline-editable-field {
 @import "common/admin/badges";
 @import "common/admin/emails";
 @import "common/admin/flags";
+@import "common/admin/user_fields";
 @import "common/admin/json_schema_editor";
 @import "common/admin/schema_field";
 @import "common/admin/staff_logs";
@@ -1101,7 +1116,7 @@ a.inline-editable-field {
 @import "common/admin/admin_section_landing_page";
 @import "common/admin/admin_page_header";
 @import "common/admin/admin_intro";
-@import "common/admin/admin_emojis";
 @import "common/admin/mini_profiler";
 @import "common/admin/schema_theme_setting_editor";
 @import "common/admin/customize_themes_show_schema";
+@import "common/admin/admin_bulk_users_delete_modal";

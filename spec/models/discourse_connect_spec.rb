@@ -119,6 +119,22 @@ RSpec.describe DiscourseConnect do
     expect(user.persisted?).to eq(true)
   end
 
+  it "always creates new users when using plus addressing" do
+    SiteSetting.stubs(:normalize_emails).returns(true)
+
+    existing_user = Fabricate(:user, email: "bob+1@user.com")
+
+    sso = new_discourse_sso
+    sso.username = "test"
+    sso.name = ""
+    sso.email = "bob+2@user.com"
+    sso.external_id = "A"
+    sso.suppress_welcome_message = true
+    user = sso.lookup_or_create_user(ip_address)
+
+    expect(user.id).not_to eq(existing_user.id)
+  end
+
   it "unstaged users" do
     SiteSetting.auth_overrides_name = true
 
@@ -904,7 +920,7 @@ RSpec.describe DiscourseConnect do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(true)
 
-      user.primary_email.update_columns(email: "xXx@themovie.com")
+      user.primary_email.update(email: "xXx@themovie.com")
 
       user = sso.lookup_or_create_user(ip_address)
       expect(user.email).to eq(old_email)

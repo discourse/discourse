@@ -1,12 +1,14 @@
-/* originally based on github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
-
 p > code,
 li > code,
-pre > code,
 strong > code,
 em > code {
-  font-family: ui-monospace, "Cascadia Mono", "Segoe UI Mono", "Liberation Mono",
-    Menlo, Monaco, Consolas, monospace;
+  padding: 2px 4px;
+  background: var(--inline-code-bg);
+  white-space: pre-wrap;
+  color: var(--primary);
+}
+
+code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
   border-radius: var(--d-button-border-radius);
@@ -14,11 +16,10 @@ em > code {
   line-height: calc((13 + 4) / 13);
 }
 
-.hljs {
+pre > code {
   display: block;
   padding: 12px;
-  color: var(--primary-very-high);
-  background-color: var(--hljs-bg);
+  max-height: 500px;
 }
 
 .hljs-comment,

@@ -608,7 +608,6 @@ pl_PL:
       admins: "Odpowiedzialny za konfigurację i utrzymanie tej strony, z dostępem do wszystkich danych członków i aktywności."
       moderators: "Odpowiada za reagowanie na flagi, moderowanie dyskusji i pomaganie członkom w obsłudze ich kont."
       trust_level_0: "Nowi członkowie o ograniczonych możliwościach, którzy uczą się norm i funkcjonalności społeczności."
-      trust_level_1: "Członkowie z większym zaufaniem, którzy wykazali początkowe zaangażowanie, czytając, mogą teraz uzyskać dostęp do większej liczby funkcji. Wszyscy członkowie tej grupy są również członkami grupy trust_level_0."
       trust_level_2: "Aktywni członkowie, którzy konsekwentnie wnosili wkład i uzyskali pełne przywileje. Wszyscy członkowie tej grupy są również członkami grup trust_level_1 i trust_level_0."
       trust_level_3: "Wysoce zaangażowani, długoterminowi współtwórcy, którzy stanowią trzon społeczności i uzyskali ograniczone uprawnienia moderacyjne. Wszyscy członkowie tej grupy są również członkami grup trust_level_2, trust_level_1 i trust_level_0."
       trust_level_4: "Ręcznie awansowani członkowie, uznani za wzorowy wkład i którym powierzono dodatkowe przywileje moderacyjne. Wszyscy członkowie tej grupy są również członkami grup trust_level_3, trust_level_2, trust_level_1 i trust_level_0."

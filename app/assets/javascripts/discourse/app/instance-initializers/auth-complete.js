@@ -69,7 +69,7 @@ export default {
                 ...properties,
               };
 
-              if (siteSettings.experimental_full_page_login) {
+              if (siteSettings.full_page_login) {
                 router.transitionTo("login").then((login) => {
                   Object.keys(loginProps || {}).forEach((key) => {
                     login.controller.set(key, loginProps[key]);
@@ -139,13 +139,14 @@ export default {
                 skipConfirmation: siteSettings.auth_skip_create_confirm,
               };
 
-              if (siteSettings.experimental_full_page_login) {
+              if (siteSettings.full_page_login) {
                 router.transitionTo("signup").then((signup) => {
                   const signupController =
                     signup.controller || owner.lookup("controller:signup");
                   Object.keys(createAccountProps || {}).forEach((key) => {
                     signupController.set(key, createAccountProps[key]);
                   });
+                  signupController.handleSkipConfirmation();
                 });
               } else {
                 modal.show(CreateAccount, { model: createAccountProps });

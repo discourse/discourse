@@ -44,6 +44,11 @@ describe "Admin User Page", type: :system do
       expect(admin_user_page).to have_silence_button
     end
 
+    it "displays username in the title" do
+      expect(page).to have_css(".display-row.username")
+      expect(page.title).to eq("#{user.username} - Admin - Discourse")
+    end
+
     describe "the suspend user modal" do
       it "displays the list of users who share the same IP but are not mods or admins" do
         admin_user_page.click_suspend_button

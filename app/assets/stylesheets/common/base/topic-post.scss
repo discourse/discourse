@@ -847,17 +847,6 @@ aside.quote {
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .topic-body.highlighted,
-  .small-action-desc.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
-  }
-  // Disable animation so deleted status is visible immediately
-  .deleted .topic-body.highlighted {
-    animation: none;
-  }
-}
-
 .small-action-desc,
 .topic-body {
   &:focus-visible {
@@ -932,15 +921,6 @@ aside.quote {
 
 pre {
   max-height: 2000px;
-
-  code {
-    word-wrap: normal;
-    display: block;
-    padding: 0.5em;
-    color: var(--primary);
-    background: var(--blend-primary-secondary-5);
-    max-height: 500px;
-  }
 
   .bidi-warning,
   .bidi-warning span {

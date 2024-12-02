@@ -13,8 +13,8 @@ RSpec.describe Migration::SafeMigrate do
     ActiveRecord::Migrator.new(
       :up,
       migrations,
-      ActiveRecord::Base.connection.schema_migration,
-      ActiveRecord::Base.connection.internal_metadata,
+      ActiveRecord::Base.connection_pool.schema_migration,
+      ActiveRecord::Base.connection_pool.internal_metadata,
       migrations.first.version,
     ).run
   end

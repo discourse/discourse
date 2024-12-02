@@ -2452,6 +2452,9 @@ id:
             post: "post"
             require_message: "Minta pengguna untuk memberikan alasan tambahan"
             require_message_description: "Saat tanda ini dipilih, kolom teks akan ditampilkan bagi pengguna untuk memberikan detail tambahan tentang alasan mereka menandai konten"
+        user_fields:
+          type: "Tipe"
+          delete: "Hapus"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
@@ -2667,6 +2670,11 @@ id:
         last_emailed: "Terakhir Surel Dikirimkan"
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         status: "Status"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Tutup"
+              confirm: "Hapus"
         nav:
           new: "Baru"
           active: "Aktif"
@@ -2800,6 +2808,7 @@ id:
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"
       emoji:
+        delete: "Hapus"
         uploading: "Mengunggah…"
         name: "Nama"
         settings: "Pengaturan"

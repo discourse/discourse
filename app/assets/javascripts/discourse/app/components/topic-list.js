@@ -8,46 +8,34 @@ import {
   tagName,
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import { consolePrefix } from "discourse/lib/source-identifier";
 import LoadMore from "discourse/mixins/load-more";
-import deprecated, {
-  registerDeprecationHandler,
-} from "discourse-common/lib/deprecated";
-import { needsHbrTopicList } from "discourse-common/lib/raw-templates";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-
-registerDeprecationHandler((message, opts) => {
-  if (opts?.id === "discourse.hbr-topic-list-overrides") {
-    needsHbrTopicList(true);
-  }
-});
 
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
 export default class TopicList extends Component.extend(LoadMore) {
   static reopen() {
-    const message =
-      "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-    deprecated(message, {
-      since: "v3.4.0.beta3-dev",
-      id: "discourse.hbr-topic-list-overrides",
-    });
-    // eslint-disable-next-line no-console
-    console.debug(consolePrefix(), message);
+    deprecated(
+      "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
 
     return super.reopen(...arguments);
   }
 
   static reopenClass() {
-    const message =
-      "Modifying topic-list with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.";
-    deprecated(message, {
-      since: "v3.4.0.beta3-dev",
-      id: "discourse.hbr-topic-list-overrides",
-    });
-    // eslint-disable-next-line no-console
-    console.debug(consolePrefix(), message);
+    deprecated(
+      "Modifying topic-list with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
 
     return super.reopenClass(...arguments);
   }
@@ -84,7 +72,9 @@ export default class TopicList extends Component.extend(LoadMore) {
   // for the classNameBindings
   @dependentKeyCompat
   get bulkSelectEnabled() {
-    return this.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.get("canBulkSelect") && this.bulkSelectHelper?.bulkSelectEnabled
+    );
   }
 
   get toggleInTitle() {

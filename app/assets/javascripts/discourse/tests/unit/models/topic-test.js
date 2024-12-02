@@ -28,10 +28,10 @@ module("Unit | Model | topic", function (hooks) {
     assert.false(topic.visited, "not visited unless we've read all the posts");
 
     topic.set("last_read_post_number", 2);
-    assert.ok(topic.visited, "is visited once we've read all the posts");
+    assert.true(topic.visited, "is visited once we've read all the posts");
 
     topic.set("last_read_post_number", 3);
-    assert.ok(
+    assert.true(
       topic.visited,
       "is visited if we've read all the posts and some are deleted at the end"
     );
@@ -238,11 +238,11 @@ module("Unit | Model | topic", function (hooks) {
     assert.strictEqual(topic.invisible, undefined);
 
     const visibleTopic = this.store.createRecord("topic", { visible: true });
-    assert.strictEqual(visibleTopic.visible, true);
-    assert.strictEqual(visibleTopic.invisible, false);
+    assert.true(visibleTopic.visible);
+    assert.false(visibleTopic.invisible);
 
     const invisibleTopic = this.store.createRecord("topic", { visible: false });
-    assert.strictEqual(invisibleTopic.visible, false);
-    assert.strictEqual(invisibleTopic.invisible, true);
+    assert.false(invisibleTopic.visible);
+    assert.true(invisibleTopic.invisible);
   });
 });
