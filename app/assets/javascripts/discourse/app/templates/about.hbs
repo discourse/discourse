@@ -1,6 +1,10 @@
 <PluginOutlet
   @name="about-wrapper"
-  @outletArgs={{hash model=this.model contactInfo=this.contactInfo}}
+  @outletArgs={{hash
+    model=this.model
+    contactInfo=this.contactInfo
+    faqOverridden=this.faqOverridden
+  }}
 >
   {{body-class "about-page"}}
 
