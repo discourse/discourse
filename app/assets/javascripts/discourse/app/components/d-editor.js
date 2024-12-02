@@ -195,9 +195,7 @@ export default class DEditor extends Component {
 
     _createCallbacks.forEach((cb) => cb(toolbar));
 
-    if (this.extraButtons) {
-      this.extraButtons(toolbar);
-    }
+    this.extraButtons?.(toolbar);
 
     const firstButton = toolbar.groups.mapBy("buttons").flat().firstObject;
     if (firstButton) {

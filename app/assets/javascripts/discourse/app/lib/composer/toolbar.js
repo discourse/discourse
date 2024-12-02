@@ -8,16 +8,16 @@ function getButtonLabel(labelKey, defaultLabel) {
 }
 
 export default class Toolbar {
+  context = null;
+  shortcuts = {};
+  groups = [
+    { group: "fontStyles", buttons: [] },
+    { group: "insertions", buttons: [] },
+    { group: "extras", buttons: [] },
+  ];
+
   constructor(opts) {
     const { siteSettings, capabilities } = opts;
-    this.shortcuts = {};
-    this.context = null;
-
-    this.groups = [
-      { group: "fontStyles", buttons: [] },
-      { group: "insertions", buttons: [] },
-      { group: "extras", buttons: [] },
-    ];
 
     const boldLabel = getButtonLabel("composer.bold_label", "B");
     const boldIcon = boldLabel ? null : "bold";
@@ -60,7 +60,7 @@ export default class Toolbar {
     this.addButton({
       id: "blockquote",
       group: "insertions",
-      icon: "quote-right",
+      icon: "quote-left",
       shortcut: "Shift+9",
       preventFocus: true,
       perform: (e) =>
@@ -71,16 +71,6 @@ export default class Toolbar {
     });
 
     if (!capabilities.touch) {
-      this.addButton({
-        id: "code",
-        group: "insertions",
-        shortcut: "E",
-        icon: "code",
-        preventFocus: true,
-        trimLeading: true,
-        perform: (e) => e.formatCode(),
-      });
-
       this.addButton({
         id: "bullet",
         group: "extras",
