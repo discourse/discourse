@@ -198,8 +198,9 @@ GEM
     iso8601 (0.13.0)
     jmespath (1.6.2)
     json (2.8.2)
-    json-schema (5.1.0)
+    json-schema (5.1.1)
       addressable (~> 2.8)
+      bigdecimal (~> 3.1)
     json_schemer (2.3.0)
       bigdecimal
       hana (~> 1.3)
