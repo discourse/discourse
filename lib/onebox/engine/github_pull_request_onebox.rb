@@ -12,8 +12,6 @@ module Onebox
       include Onebox::Mixins::GithubBody
       include Onebox::Mixins::GithubAuthHeader
 
-      GITHUB_COMMENT_REGEX = /(<!--.*?-->\r\n)/
-
       matches_regexp(%r{^https?://(?:www\.)?(?:(?:\w)+\.)?(github)\.com(?:/)?(?:.)*/pull})
       always_https
 
