@@ -5,6 +5,14 @@
   />
 
   {{#if this.site.mobileView}}
+    <PluginOutlet
+      @name="category-list-before-category-mobile"
+      @outletArgs={{hash
+        category=this.category
+        listType=this.listType
+        isMuted=this.isMuted
+      }}
+    />
     <div
       data-category-id={{this.category.id}}
       data-notification-level={{this.category.notificationLevelString}}
@@ -80,11 +88,16 @@
           'has-description'
           'no-description'
         }}
+        {{this.applyValueTransformer
+          'parent-category-row-class'
+          (array)
+          (hash category=this.category)
+        }}
         {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
     >
 
       <PluginOutlet
-        @name="category-list-above-category-section"
+        @name="category-list-before-category-section"
         @outletArgs={{hash category=this.category listType=this.listType}}
       />
 
@@ -148,7 +161,7 @@
       </td>
 
       <PluginOutlet
-        @name="category-list-above-topics-section"
+        @name="category-list-before-topics-section"
         @outletArgs={{hash category=this.category}}
       />
 
@@ -166,7 +179,7 @@
       </td>
 
       <PluginOutlet
-        @name="category-list-below-topics-section"
+        @name="category-list-after-topics-section"
         @outletArgs={{hash category=this.category}}
       />
 
@@ -182,7 +195,7 @@
             {{/each}}
           </td>
           <PluginOutlet
-            @name="category-list-below-latest-section"
+            @name="category-list-after-latest-section"
             @outletArgs={{hash category=this.category}}
           />
         {{/if}}
