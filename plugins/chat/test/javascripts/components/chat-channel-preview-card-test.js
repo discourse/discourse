@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
@@ -29,11 +28,9 @@ module(
     test("channel title", async function (assert) {
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-channel-name__label").innerText,
-        this.channel.title,
-        "it shows the channel title"
-      );
+      assert
+        .dom(".chat-channel-name__label")
+        .hasText(this.channel.title, "shows the channel title");
 
       assert
         .dom(".chat-channel-icon.--category-badge")
@@ -43,11 +40,9 @@ module(
     test("channel description", async function (assert) {
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-channel-preview-card__description").innerText,
-        this.channel.description,
-        "the channel description is shown"
-      );
+      assert
+        .dom(".chat-channel-preview-card__description")
+        .hasText(this.channel.description, "the channel description is shown");
     });
 
     test("no channel description", async function (assert) {

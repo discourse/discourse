@@ -66,13 +66,13 @@ export default class ChatModalThreadSettings extends Component {
         <Input
           name="thread-title"
           class="chat-modal-thread-settings__title-input"
-          maxlength="50"
+          maxlength="100"
           placeholder={{i18n "chat.thread_title_modal.input_placeholder"}}
           @type="text"
           @value={{this.editedTitle}}
         />
         <div class="thread-title-length">
-          <span>{{this.threadTitleLength}}</span>/50
+          <span>{{this.threadTitleLength}}</span>/100
         </div>
 
         {{#if this.currentUser.admin}}

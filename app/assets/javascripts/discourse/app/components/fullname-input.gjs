@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import InputTip from "discourse/components/input-tip";
 import TextField from "discourse/components/text-field";
 import valueEntered from "discourse/helpers/value-entered";
+import { i18n } from "discourse-i18n";
 
 export default class SidebarEditNavigationMenuTagsModal extends Component {
   @service siteSettings;
@@ -16,7 +17,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   get showFullnameInstructions() {
     return (
-      this.siteSettings.signup_form_full_name_instructions &&
+      this.siteSettings.show_signup_form_full_name_instructions &&
       !this.args.nameValidation.reason
     );
   }
@@ -39,7 +40,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
       {{#if this.showFullnameInstructions}}
         <span class="more-info" id="fullname-validation-more-info">
-          {{this.siteSettings.signup_form_full_name_instructions}}
+          {{i18n "user.name.instructions_required"}}
         </span>
       {{else}}
         <InputTip @validation={{@nameValidation}} id="fullname-validation" />

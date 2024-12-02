@@ -56,11 +56,12 @@ acceptance("Topic - Quote button - logged in", function (needs) {
     await selectText("#post_3 aside.onebox p");
     await click(".insert-quote");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]',
-      "quote only contains a link"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="group_moderator, post:3, topic:2480"]\nhttps://example.com/57350945\n[/quote]\n\n',
+        "quote only contains a link"
+      );
   });
 });
 
@@ -145,9 +146,8 @@ acceptance("Topic - Quote button - keyboard shortcut", function (needs) {
     await triggerKeyEvent(document, "keypress", "Q");
     assert.dom(".d-editor-input").exists("the editor is open");
 
-    assert.true(
-      query(".d-editor-input").value.includes("Any plans to support"),
-      "editor includes selected text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(/Any plans to support/, "editor includes selected text");
   });
 });

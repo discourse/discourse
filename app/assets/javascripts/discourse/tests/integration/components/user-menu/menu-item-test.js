@@ -11,7 +11,6 @@ import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -163,20 +162,17 @@ module(
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       await render(template);
-      const label = query("li a .item-label");
-      const description = query("li a .item-description");
 
-      assert.strictEqual(
-        label.textContent.trim(),
-        "osama",
-        "the label's content is the username by default"
-      );
+      assert
+        .dom("li a .item-label")
+        .hasText("osama", "the label's content is the username by default");
 
-      assert.strictEqual(
-        description.textContent.trim(),
-        "This is fancy title <a>!",
-        "the description defaults to the fancy_title"
-      );
+      assert
+        .dom("li a .item-description")
+        .hasText(
+          "This is fancy title <a>!",
+          "the description defaults to the fancy_title"
+        );
     });
 
     test("the description falls back to topic_title from data if fancy_title is absent", async function (assert) {
@@ -187,13 +183,13 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .item-description");
 
-      assert.strictEqual(
-        description.textContent.trim(),
-        "this is title before it becomes fancy <a>!",
-        "topic_title from data is rendered safely"
-      );
+      assert
+        .dom("li a .item-description")
+        .hasText(
+          "this is title before it becomes fancy <a>!",
+          "topic_title from data is rendered safely"
+        );
     });
 
     test("fancy_title is emoji-unescaped", async function (assert) {
@@ -222,13 +218,13 @@ module(
         })
       );
       await render(template);
-      const description = query("li a .item-description");
 
-      assert.strictEqual(
-        description.textContent.trim(),
-        "unsafe title with <a> unescaped emoji",
-        "topic_title is rendered safely"
-      );
+      assert
+        .dom("li a .item-description")
+        .hasText(
+          "unsafe title with <a> unescaped emoji",
+          "topic_title is rendered safely"
+        );
       assert
         .dom(".item-description img.emoji")
         .exists("emoji is rendered correctly");
@@ -305,20 +301,22 @@ module(
       assert
         .dom("li .item-label")
         .hasClass("label-wrapper-1", "label wrapper has additional classes");
-      assert.strictEqual(
-        query("li .item-label").textContent.trim(),
-        "notification label 666 <span>",
-        "label content is customized"
-      );
+      assert
+        .dom("li .item-label")
+        .hasText(
+          "notification label 666 <span>",
+          "label content is customized"
+        );
 
       assert
         .dom(".item-description")
         .hasClass("description-class-1", "description has additional classes");
-      assert.strictEqual(
-        query(".item-description").textContent.trim(),
-        "notification description 123 <script>",
-        "description content is customized"
-      );
+      assert
+        .dom(".item-description")
+        .hasText(
+          "notification description 123 <script>",
+          "description content is customized"
+        );
     });
 
     test("description can be omitted", async function (assert) {
@@ -350,11 +348,9 @@ module(
       assert
         .dom(".item-description")
         .doesNotExist("description is not rendered");
-      assert.strictEqual(
-        query("li").textContent.trim(),
-        "notification label",
-        "only label content is displayed"
-      );
+      assert
+        .dom("li")
+        .hasText("notification label", "only label content is displayed");
     });
 
     test("label can be omitted", async function (assert) {
@@ -383,11 +379,12 @@ module(
       );
 
       await render(template);
-      assert.strictEqual(
-        query("li").textContent.trim(),
-        "notification description",
-        "only notification description is displayed"
-      );
+      assert
+        .dom("li")
+        .hasText(
+          "notification description",
+          "only notification description is displayed"
+        );
       assert.dom(".item-label").doesNotExist("label is not rendered");
     });
   }
@@ -422,15 +419,12 @@ module(
         )
       );
       await render(template);
-      assert.strictEqual(
-        query("li.message .item-description").textContent.trim(),
-        "This is a safe title!"
-      );
-      assert.strictEqual(
-        query("li.message .item-description b").textContent.trim(),
-        "safe",
-        "fancy title is not escaped"
-      );
+      assert
+        .dom("li.message .item-description")
+        .hasText("This is a safe title!");
+      assert
+        .dom("li.message .item-description b")
+        .hasText("safe", "fancy title is not escaped");
     });
   }
 );
@@ -505,10 +499,7 @@ module(
         )
       );
       await render(template);
-      assert.strictEqual(
-        query("li.bookmark .item-label").textContent.trim(),
-        "bookmarkPostAuthor"
-      );
+      assert.dom("li.bookmark .item-label").hasText("bookmarkPostAuthor");
     });
 
     test("item description is the bookmark title", async function (assert) {
@@ -521,10 +512,9 @@ module(
         )
       );
       await render(template);
-      assert.strictEqual(
-        query("li.bookmark .item-description").textContent.trim(),
-        "Custom bookmark title"
-      );
+      assert
+        .dom("li.bookmark .item-description")
+        .hasText("Custom bookmark title");
     });
   }
 );
@@ -589,15 +579,10 @@ module(
       );
       await render(template);
 
-      const label = query("li .item-label");
-      const description = query("li .item-description");
-      assert.strictEqual(
-        label.textContent.trim(),
-        "sayo2",
-        "the label is the flagger_username"
-      );
-      assert.strictEqual(
-        description.textContent.trim(),
+      assert
+        .dom("li .item-label")
+        .hasText("sayo2", "the label is the flagger_username");
+      assert.dom("li .item-description").hasText(
         i18n("user_menu.reviewable.default_item", {
           reviewable_id: this.item.reviewable.id,
         }),
@@ -613,11 +598,9 @@ module(
         })
       );
       await render(template);
-      const label = query("li .item-label");
-      assert.strictEqual(
-        label.textContent.trim(),
-        i18n("user_menu.reviewable.deleted_user")
-      );
+      assert
+        .dom("li .item-label")
+        .hasText(i18n("user_menu.reviewable.deleted_user"));
     });
   }
 );

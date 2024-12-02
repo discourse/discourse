@@ -211,7 +211,7 @@ export default class ComposerEditor extends Component {
 
     // Focus on the body unless we have a title
     if (!this.get("composer.model.canEditTitle")) {
-      textManipulation.putCursorAtEnd();
+      this.textManipulation.putCursorAtEnd();
     }
 
     return () => {

@@ -24,6 +24,7 @@ module Chat
     #   @option params [Array<String>] :usernames
     #   @option params [Array<String>] :groups
     #   @return [Service::Base::Context]
+
     params do
       attribute :usernames, :array
       attribute :groups, :array
@@ -36,11 +37,13 @@ module Chat
         usernames.present? || groups.present?
       end
     end
+
     model :channel
     policy :can_add_users_to_channel
     model :target_users, optional: true
     policy :satisfies_dms_max_users_limit,
            class_name: Chat::DirectMessageChannel::Policy::MaxUsersExcess
+
     transaction do
       step :upsert_memberships
       step :recompute_users_count

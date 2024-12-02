@@ -3,7 +3,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module(
@@ -17,15 +16,12 @@ module(
       });
     });
 
-    const template = hbs`<UserMenu::RepliesNotificationsList/>`;
-
     test("empty state when there are no notifications", async function (assert) {
-      await render(template);
+      await render(hbs`<UserMenu::RepliesNotificationsList/>`);
       assert.dom(".empty-state .empty-state-body").exists();
-      assert.strictEqual(
-        query(".empty-state .empty-state-title").textContent.trim(),
-        i18n("user.no_notifications_title")
-      );
+      assert
+        .dom(".empty-state .empty-state-title")
+        .hasText(i18n("user.no_notifications_title"));
     });
   }
 );

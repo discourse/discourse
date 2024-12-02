@@ -3,7 +3,6 @@ import { skip } from "qunit";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import {
   baseChatPretenders,
@@ -121,11 +120,7 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
     assert
       .dom(".chat-message-container[data-id='175']")
       .exists("it sends the message");
-    assert.strictEqual(
-      query(".chat-composer__input").value,
-      "",
-      "it clears the input"
-    );
+    assert.dom(".chat-composer__input").hasNoValue("clears the input");
   });
 
   skip("Draft with unreliable network", async function (assert) {

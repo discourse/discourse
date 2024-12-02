@@ -138,17 +138,15 @@ module("Unit | Utils | decorators", function (hooks) {
     this.set("name", "Jarek");
     await render(hbs`<EmberObjectComponent @name={{this.name}} />`);
 
-    assert.strictEqual(
-      document.querySelector(".ember-object-component").textContent,
-      "hello, Jarek"
-    );
+    assert.dom(".ember-object-component").hasText("hello, Jarek");
 
     this.set("name", "Joffrey");
-    assert.strictEqual(
-      document.querySelector(".ember-object-component").textContent,
-      "hello, Joffrey",
-      "rerenders the component when arguments change"
-    );
+    assert
+      .dom(".ember-object-component")
+      .hasText(
+        "hello, Joffrey",
+        "rerenders the component when arguments change"
+      );
   });
 
   test("discourseComputed works in native classes", async function (assert) {
@@ -157,17 +155,15 @@ module("Unit | Utils | decorators", function (hooks) {
     this.set("name", "Jarek");
     await render(hbs`<NativeComponent @name={{this.name}} />`);
 
-    assert.strictEqual(
-      document.querySelector(".native-component").textContent,
-      "hello, Jarek"
-    );
+    assert.dom(".native-component").hasText("hello, Jarek");
 
     this.set("name", "Joffrey");
-    assert.strictEqual(
-      document.querySelector(".native-component").textContent,
-      "hello, Joffrey",
-      "rerenders the component when arguments change"
-    );
+    assert
+      .dom(".native-component")
+      .hasText(
+        "hello, Joffrey",
+        "rerenders the component when arguments change"
+      );
   });
 
   test("debounce", async function (assert) {

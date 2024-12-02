@@ -41,6 +41,7 @@ module Chat
       attribute :include_threads, default: false
       attribute :include_read, default: true
     end
+
     model :report
 
     private

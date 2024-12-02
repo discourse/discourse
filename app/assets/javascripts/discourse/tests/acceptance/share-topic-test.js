@@ -1,7 +1,7 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import CategoryFixtures from "discourse/tests/fixtures/category-fixtures";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -37,12 +37,12 @@ acceptance("Share and Invite modal", function (needs) {
       .dom("#modal-alert.alert-warning")
       .doesNotExist("it does not show the alert with restricted groups");
 
-    assert.true(
-      query("input.invite-link").value.includes(
-        "/t/internationalization-localization/280?u=eviltrout"
-      ),
-      "it shows the topic sharing url"
-    );
+    assert
+      .dom("input.invite-link")
+      .includesValue(
+        "/t/internationalization-localization/280?u=eviltrout",
+        "shows the topic sharing url"
+      );
 
     assert
       .dom(".link-share-actions .invite")
@@ -127,10 +127,12 @@ acceptance("Share url with badges disabled - desktop", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-share-and-invite");
 
-    assert.false(
-      query("input.invite-link").value.includes("?u=eviltrout"),
-      "it doesn't add the username param when badges are disabled"
-    );
+    assert
+      .dom("input.invite-link")
+      .doesNotIncludeValue(
+        "?u=eviltrout",
+        "doesn't add the username param when badges are disabled"
+      );
   });
 });
 
@@ -148,9 +150,11 @@ acceptance("With username in share links disabled - desktop", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-share-and-invite");
 
-    assert.false(
-      query("input.invite-link").value.includes("?u=eviltrout"),
-      "it doesn't add the username param when username in share links are disabled"
-    );
+    assert
+      .dom("input.invite-link")
+      .doesNotIncludeValue(
+        "?u=eviltrout",
+        "doesn't add the username param when username in share links are disabled"
+      );
   });
 });

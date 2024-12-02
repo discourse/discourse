@@ -1,7 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -245,10 +245,7 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/3/user1");
     await click(".grant-admin");
     assert.dom(".dialog-content").exists();
-    assert.strictEqual(
-      i18n("admin.user.grant_admin_confirm"),
-      query(".dialog-body").textContent.trim()
-    );
+    assert.dom(".dialog-body").hasText(i18n("admin.user.grant_admin_confirm"));
 
     await click(".dialog-footer .btn-primary");
   });
@@ -277,10 +274,9 @@ acceptance("Admin - User Index", function (needs) {
     await visit("/admin/users/7/jimmy");
     await click(".disable-second-factor");
     assert.dom(".dialog-content").exists();
-    assert.strictEqual(
-      i18n("admin.user.disable_second_factor_confirm"),
-      query(".dialog-body").textContent.trim()
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("admin.user.disable_second_factor_confirm"));
 
     await click(".dialog-footer .btn-primary");
   });

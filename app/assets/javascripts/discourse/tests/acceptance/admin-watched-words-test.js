@@ -1,10 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Watched Words", function (needs) {
@@ -177,9 +173,9 @@ acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
     await click("button.reply-to-post");
     await fillIn(".d-editor-input", "betis betis betis");
 
-    const cooked = query(".d-editor-preview p");
-    const cookedChildren = Array.from(cooked.children);
-    const emojis = cookedChildren.filter((child) => child.nodeName === "IMG");
+    const emojis = [
+      ...document.querySelector(".d-editor-preview p").children,
+    ].filter((child) => child.nodeName === "IMG");
 
     assert.strictEqual(emojis.length, 3, "three emojis have been rendered");
     assert.true(

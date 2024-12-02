@@ -4,7 +4,6 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   acceptance,
   publishToMessageBus,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -413,25 +412,27 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-unread'].group1"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.unread_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for group1 unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for group1 unread inbox filter link"
+        );
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.new_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for group1 new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for group1 new inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 2,
@@ -444,13 +445,14 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.new"),
-        "removes count for group1 new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new"),
+          "removes count for group1 new inbox filter link"
+        );
     });
 
     test("new and unread counts for personal messages", async function (assert) {
@@ -475,15 +477,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.unread_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for the unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for the unread inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 2,
@@ -496,15 +499,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.unread_with_count", {
-          count: 2,
-        }),
-        "displays 2 count for the unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 2,
+          }),
+          "displays 2 count for the unread inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
@@ -517,15 +521,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.new_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for the new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for the new inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
@@ -538,13 +543,14 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
-        ).textContent.trim(),
-        i18n("sidebar.sections.messages.links.new"),
-        "removes the count from the new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new"),
+          "removes the count from the new inbox filter link"
+        );
     });
   }
 );

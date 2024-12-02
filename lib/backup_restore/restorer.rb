@@ -144,6 +144,8 @@ module BackupRestore
     end
 
     def notify_user
+      return if @success && @user_id == Discourse::SYSTEM_USER_ID
+
       if user = User.find_by_email(@user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
         status = @success ? :restore_succeeded : :restore_failed

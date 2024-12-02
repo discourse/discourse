@@ -13,7 +13,6 @@ import {
   acceptance,
   chromeTest,
   publishToMessageBus,
-  query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -48,11 +47,12 @@ acceptance("Topic", function (needs) {
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
-      "fills composer with the ring string"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):\n\n`,
+        "fills composer with the ring string"
+      );
     assert.strictEqual(
       selectKit(".category-chooser").header().value(),
       "2",
@@ -67,11 +67,12 @@ acceptance("Topic", function (needs) {
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
 
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
-      "fills composer with the ring string"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):\n\n`,
+        "fills composer with the ring string"
+      );
 
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
@@ -273,8 +274,7 @@ acceptance("Topic featured links", function (needs) {
   test("remove nofollow attribute", async function (assert) {
     await visit("/t/-/299/1");
 
-    const link = query(".title-wrapper .topic-featured-link");
-    assert.strictEqual(link.innerText, "example.com");
+    assert.dom(".title-wrapper .topic-featured-link").hasText("example.com");
     assert
       .dom(".title-wrapper .topic-featured-link")
       .hasAttribute("rel", "ugc");
@@ -371,11 +371,9 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="codinghorror said, post:3, topic:280"');
   });
 
   test("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
@@ -383,11 +381,11 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_9 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.true(
-      query(".d-editor-input").value.includes(
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
         'quote="A new topic with a link to another topic, post:3, topic:62"'
-      )
-    );
+      );
   });
 
   test("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
@@ -395,11 +393,9 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".reply");
 
-    assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="codinghorror said, post:3, topic:280"'
-      )
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="codinghorror said, post:3, topic:280"');
   });
 
   // Using J/K on Firefox clean the text selection, so this won't work there
@@ -411,11 +407,9 @@ acceptance("Topic featured links", function (needs) {
       await triggerKeyEvent(document, "keypress", "J");
       await triggerKeyEvent(document, "keypress", "T");
 
-      assert.true(
-        query(".d-editor-input").value.includes(
-          'quote="codinghorror said, post:3, topic:280"'
-        )
-      );
+      assert
+        .dom(".d-editor-input")
+        .includesValue('quote="codinghorror said, post:3, topic:280"');
     }
   );
 
@@ -423,11 +417,9 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 .cooked");
     await click(".quote-button .insert-quote");
-    assert.true(
-      query(".d-editor-input").value.includes(
-        'quote="pekka, post:5, topic:280, full:true"'
-      )
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="pekka, post:5, topic:280, full:true"');
   });
 });
 
@@ -625,9 +617,9 @@ acceptance("Topic stats update automatically", function () {
   test("Likes count updates automatically", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const likesCountSelectors =
-      "#post_1 .topic-map .topic-map__likes-trigger .number";
-    const oldLikesCount = query(likesCountSelectors).textContent;
+    const oldLikesCount = document.querySelector(
+      "#post_1 .topic-map .topic-map__likes-trigger .number"
+    ).textContent;
     const likesChangedFixture = {
       id: 280,
       type: "stats",
@@ -638,7 +630,9 @@ acceptance("Topic stats update automatically", function () {
     // simulate the topic like_count being changed
     await publishToMessageBus("/topic/280", likesChangedFixture);
 
-    assert.dom(likesCountSelectors).hasText(expectedLikesCount);
+    assert
+      .dom("#post_1 .topic-map .topic-map__likes-trigger .number")
+      .hasText(expectedLikesCount);
     assert.notStrictEqual(
       oldLikesCount,
       expectedLikesCount,

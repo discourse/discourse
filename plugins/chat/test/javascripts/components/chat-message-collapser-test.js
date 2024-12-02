@@ -2,7 +2,7 @@ import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 const youtubeCooked =
   "<p>written text</p>" +
@@ -107,21 +107,13 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 3, "shows all written text");
-      assert.strictEqual(
-        text[0].innerText,
-        "written text",
-        "first line of written text"
-      );
-      assert.strictEqual(
-        text[1].innerText,
-        "more written text",
-        "third line of written text"
-      );
-      assert.strictEqual(
-        text[2].innerText,
-        "and even more",
-        "fifth line of written text"
-      );
+      assert.dom(text[0]).hasText("written text", "first line of written text");
+      assert
+        .dom(text[1])
+        .hasText("more written text", "third line of written text");
+      assert
+        .dom(text[2])
+        .hasText("and even more", "fifth line of written text");
     });
 
     test("collapses and expands cooked youtube", async function (assert) {
@@ -188,11 +180,9 @@ module(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
       );
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "tomtom.jpeg"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .includesText("tomtom.jpeg");
     });
 
     test("shows number of files for multiple images", async function (assert) {
@@ -203,11 +193,7 @@ module(
         hbs`<ChatMessageCollapser @cooked={{this.cooked}} @uploads={{this.uploads}} />`
       );
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "2 files"
-        )
-      );
+      assert.dom(".chat-message-collapser-link-small").includesText("2 files");
     });
 
     test("collapses and expands images", async function (assert) {
@@ -251,12 +237,10 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("avatar.png"));
+      assert.dom(links[0]).includesText("avatar.png");
       assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
-      assert.true(
-        links[1].innerText.trim().includes("d-logo-sketch-small.png")
-      );
+      assert.dom(links[1]).includesText("d-logo-sketch-small.png");
       assert
         .dom(links[1])
         .hasAttribute("href", "/images/d-logo-sketch-small.png");
@@ -270,9 +254,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 5, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands animated image onebox", async function (assert) {
@@ -325,10 +309,10 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("http://cat1.com"));
+      assert.dom(links[0]).includesText("http://cat1.com");
       assert.dom(links[0]).hasAttribute("href", "http://cat1.com/");
 
-      assert.true(links[1].innerText.trim().includes("http://cat2.com"));
+      assert.dom(links[1]).includesText("http://cat2.com");
       assert.dom(links[1]).hasAttribute("href", "http://cat2.com/");
     });
 
@@ -340,9 +324,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 5, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands image oneboxes", async function (assert) {
@@ -414,12 +398,10 @@ module(
 
       const links = queryAll("a.chat-message-collapser-link-small");
 
-      assert.true(links[0].innerText.trim().includes("shows alt"));
+      assert.dom(links[0]).includesText("shows alt");
       assert.dom(links[0]).hasAttribute("href", "/images/avatar.png");
 
-      assert.true(
-        links[1].innerText.trim().includes("/images/d-logo-sketch-small.png")
-      );
+      assert.dom(links[1]).includesText("/images/d-logo-sketch-small.png");
       assert
         .dom(links[1])
         .hasAttribute("href", "/images/d-logo-sketch-small.png");
@@ -433,9 +415,9 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 6, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[2].innerText, "more written text");
-      assert.strictEqual(text[4].innerText, "and even more");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[2]).hasText("more written text");
+      assert.dom(text[4]).hasText("and even more");
     });
 
     test("collapses and expands images", async function (assert) {
@@ -523,11 +505,9 @@ module(
 
       await render(hbs`<ChatMessageCollapser @cooked={{this.cooked}} />`);
 
-      assert.true(
-        query(".chat-message-collapser-link-small").innerText.includes(
-          "Le tomtom album"
-        )
-      );
+      assert
+        .dom(".chat-message-collapser-link-small")
+        .includesText("Le tomtom album");
     });
 
     test("shows all user written text", async function (assert) {
@@ -538,8 +518,8 @@ module(
       const text = queryAll(".chat-message-collapser p");
 
       assert.strictEqual(text.length, 2, "shows all written text");
-      assert.strictEqual(text[0].innerText, "written text");
-      assert.strictEqual(text[1].innerText, "more written text");
+      assert.dom(text[0]).hasText("written text");
+      assert.dom(text[1]).hasText("more written text");
     });
 
     test("collapses and expands images", async function (assert) {

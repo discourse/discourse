@@ -299,6 +299,7 @@ class PostMover
       end
 
     moved_post.attributes = update
+    moved_post.disable_rate_limits! if @options[:freeze_original]
     moved_post.save(validate: false)
 
     DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)

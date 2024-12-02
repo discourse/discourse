@@ -6,6 +6,10 @@ export default class AdminUserIndexRoute extends DiscourseRoute {
     return this.modelFor("adminUser");
   }
 
+  titleToken() {
+    return this.currentModel.username;
+  }
+
   afterModel(model) {
     if (this.currentUser.admin) {
       return Group.findAll().then((groups) => {

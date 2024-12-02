@@ -6,7 +6,7 @@ import pretender, {
   fixturesByUrl,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -100,11 +100,9 @@ acceptance("User Preferences - Account", function (needs) {
     await click(".delete-account .btn-danger");
     await click(".dialog-footer .btn-danger");
 
-    assert.strictEqual(
-      query(".dialog-body").textContent.trim(),
-      i18n("user.deleted_yourself"),
-      "confirmation dialog is shown"
-    );
+    assert
+      .dom(".dialog-body")
+      .hasText(i18n("user.deleted_yourself"), "confirmation dialog is shown");
 
     await click(".dialog-footer .btn-primary");
 

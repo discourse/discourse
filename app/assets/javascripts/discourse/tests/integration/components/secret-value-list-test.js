@@ -2,7 +2,6 @@ import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 module("Integration | Component | secret-value-list", function (hooks) {
@@ -108,10 +107,9 @@ module("Integration | Component | secret-value-list", function (hooks) {
     );
     await blur(".values .value[data-index='1'] .value-input:first-of-type");
 
-    assert.strictEqual(
-      query(".values .value[data-index='1'] .value-input:first-of-type").value,
-      "changedKey"
-    );
+    assert
+      .dom(".values .value[data-index='1'] .value-input:first-of-type")
+      .hasValue("changedKey");
 
     await fillIn(
       ".values .value[data-index='1'] .value-input:last-of-type",
@@ -119,10 +117,9 @@ module("Integration | Component | secret-value-list", function (hooks) {
     );
     await blur(".values .value[data-index='1'] .value-input:last-of-type");
 
-    assert.strictEqual(
-      query(".values .value[data-index='1'] .value-input:last-of-type").value,
-      "changedValue"
-    );
+    assert
+      .dom(".values .value[data-index='1'] .value-input:last-of-type")
+      .hasValue("changedValue");
     assert.deepEqual(
       this.values,
       "firstKey|FirstValue\nchangedKey|changedValue",

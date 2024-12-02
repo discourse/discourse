@@ -80,23 +80,20 @@ export function highlightPost(postNumber) {
   }
 
   const element = container.querySelector(".topic-body, .small-action-desc");
-  if (!element || element.classList.contains("highlighted")) {
+  if (!element) {
     return;
   }
 
-  element.classList.add("highlighted");
-
   if (postNumber > 1) {
+    // Transport screenreader to correct post by focusing it
     element.setAttribute("tabindex", "0");
+    element.addEventListener(
+      "focusin",
+      () => element.removeAttribute("tabindex"),
+      { once: true }
+    );
     element.focus();
   }
-
-  const removeHighlighted = function () {
-    element.classList.remove("highlighted");
-    element.removeAttribute("tabindex");
-    element.removeEventListener("animationend", removeHighlighted);
-  };
-  element.addEventListener("animationend", removeHighlighted);
 }
 
 export function emailValid(email) {

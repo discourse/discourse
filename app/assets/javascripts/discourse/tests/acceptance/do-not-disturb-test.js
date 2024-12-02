@@ -3,7 +3,6 @@ import { test } from "qunit";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -88,11 +87,12 @@ acceptance("Do not disturb", function (needs) {
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
-    assert.strictEqual(
-      query(".do-not-disturb .relative-date").textContent.trim(),
-      "1h",
-      "the Do Not Disturb button shows how much time is left for DND mode"
-    );
+    assert
+      .dom(".do-not-disturb .relative-date")
+      .hasText(
+        "1h",
+        "the Do Not Disturb button shows how much time is left for DND mode"
+      );
     assert
       .dom(".do-not-disturb .d-icon-toggle-on")
       .exists("the Do Not Disturb button has the toggle-on icon");

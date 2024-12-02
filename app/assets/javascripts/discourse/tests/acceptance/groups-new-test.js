@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 acceptance("New Group - Anonymous", function () {
@@ -69,12 +69,11 @@ acceptance("New Group - Authenticated", function (needs) {
       .dom("groups-new-allow-membership-requests")
       .doesNotExist("it should disable the membership requests checkbox");
 
-    assert.strictEqual(
-      query(
-        ".groups-form-default-notification-level .selected-name .name"
-      ).innerText.trim(),
-      i18n("groups.notifications.watching.title"),
-      "it has a default selection for notification level"
-    );
+    assert
+      .dom(".groups-form-default-notification-level .selected-name .name")
+      .hasText(
+        i18n("groups.notifications.watching.title"),
+        "has a default selection for notification level"
+      );
   });
 });

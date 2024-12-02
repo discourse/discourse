@@ -62,7 +62,9 @@
               />
             {{else}}
               <span class="more-info" id="account-email-validation-more-info">
-                {{this.emailInstructions}}
+                {{#if this.siteSettings.show_signup_form_email_instructions}}
+                  {{i18n "user.email.instructions"}}
+                {{/if}}
               </span>
             {{/if}}
           </div>
@@ -86,7 +88,7 @@
 
             {{#if this.showUsernameInstructions}}
               <span class="more-info" id="username-validation-more-info">
-                {{this.siteSettings.signup_form_username_instructions}}
+                {{i18n "user.username.instructions"}}
               </span>
 
             {{else}}
@@ -144,7 +146,9 @@
                       @validation={{this.passwordValidation}}
                       id="password-validation"
                     />
-                  {{else if this.passwordInstructions}}
+                  {{else if
+                    this.siteSettings.show_signup_form_password_instructions
+                  }}
                     <span class="more-info" id="password-validation-more-info">
                       {{this.passwordInstructions}}
                     </span>

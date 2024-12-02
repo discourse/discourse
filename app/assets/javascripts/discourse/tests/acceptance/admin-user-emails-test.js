@@ -1,34 +1,29 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 function assertNoSecondary(assert) {
-  assert.strictEqual(
-    query(".display-row.email .value a").innerText,
-    "eviltrout@example.com",
-    "it should display the primary email"
-  );
+  assert
+    .dom(".display-row.email .value a")
+    .hasText("eviltrout@example.com", "displays the primary email");
 
-  assert.strictEqual(
-    query(".display-row.secondary-emails .value").innerText.trim(),
-    i18n("user.email.no_secondary"),
-    "it should not display secondary emails"
-  );
+  assert
+    .dom(".display-row.secondary-emails .value")
+    .hasText(
+      i18n("user.email.no_secondary"),
+      "does not display secondary emails"
+    );
 }
 
 function assertMultipleSecondary(assert, firstEmail, secondEmail) {
-  assert.strictEqual(
-    query(".display-row.secondary-emails .value li:first-of-type a").innerText,
-    firstEmail,
-    "it should display the first secondary email"
-  );
+  assert
+    .dom(".display-row.secondary-emails .value li:first-of-type a")
+    .hasText(firstEmail, "displays the first secondary email");
 
-  assert.strictEqual(
-    query(".display-row.secondary-emails .value li:last-of-type a").innerText,
-    secondEmail,
-    "it should display the second secondary email"
-  );
+  assert
+    .dom(".display-row.secondary-emails .value li:last-of-type a")
+    .hasText(secondEmail, "displays the second secondary email");
 }
 
 acceptance("Admin - User Emails", function (needs) {
@@ -45,10 +40,7 @@ acceptance("Admin - User Emails", function (needs) {
 
     assert
       .dom(".display-row.email .value a")
-      .hasText(
-        "markvanlan@example.com",
-        "it should display the user's primary email"
-      );
+      .hasText("markvanlan@example.com", "displays the user's primary email");
 
     assertMultipleSecondary(
       assert,

@@ -12,7 +12,6 @@ import {
   acceptance,
   loggedInUser,
   publishToMessageBus,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -278,13 +277,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       )
       .exists("the users link is marked as active");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
-      ).textContent.trim(),
-      i18n("sidebar.more"),
-      "displays the right count as users link is currently active"
-    );
+      )
+      .hasText(
+        i18n("sidebar.more"),
+        "displays the right count as users link is currently active"
+      );
 
     await visit("/u");
 
@@ -382,13 +382,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       )
       .exists("the groups link is marked as active");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary .sidebar-section-link-content-text"
-      ).textContent.trim(),
-      i18n("sidebar.more"),
-      "displays the right count as groups link is currently active"
-    );
+      )
+      .hasText(
+        i18n("sidebar.more"),
+        "displays the right count as groups link is currently active"
+      );
 
     await visit("/g");
 
@@ -608,32 +609,30 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
     });
     await visit("/");
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link[data-link-name='my-posts']"
-      ).textContent.trim(),
-      i18n("sidebar.sections.community.links.my_posts.content"),
-      "displays the default text when no drafts are present"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='my-posts']")
+      .hasText(
+        i18n("sidebar.sections.community.links.my_posts.content"),
+        "displays the default text when no drafts are present"
+      );
 
     await publishToMessageBus(`/user-drafts/${loggedInUser().id}`, {
       draft_count: 1,
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-text"
-      ).textContent.trim(),
-      i18n("sidebar.sections.community.links.my_posts.content_drafts"),
-      "displays the text that's appropriate for when drafts are present"
-    );
-    assert.strictEqual(
-      query(
+      )
+      .hasText(
+        i18n("sidebar.sections.community.links.my_posts.content_drafts"),
+        "displays the text that's appropriate for when drafts are present"
+      );
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='my-posts'] .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "1",
-      "displays the draft count with no text"
-    );
+      )
+      .hasText("1", "displays the draft count with no text");
   });
 
   test("the invite section link is not visible to people who cannot invite to the forum", async function (assert) {
@@ -847,13 +846,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "3 unread",
-      "displays the right unread count"
-    );
+      )
+      .hasText("3 unread", "displays the right unread count");
 
     // simulate reading topic 2
     await publishToMessageBus("/unread", {
@@ -866,13 +863,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "2 unread",
-      "updates the unread count"
-    );
+      )
+      .hasText("2 unread", "updates the unread count");
 
     // simulate reading topic 3
     await publishToMessageBus("/unread", {
@@ -896,13 +891,14 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       },
     });
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "1 new",
-      "displays the new count once there are no unread topics"
-    );
+      )
+      .hasText(
+        "1 new",
+        "displays the new count once there are no unread topics"
+      );
 
     await publishToMessageBus("/unread", {
       topic_id: 1,
@@ -989,13 +985,11 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       )
       .exists("review link is shown as part of the main section links");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='review'] .sidebar-section-link-content-badge"
-      ).textContent.trim(),
-      "34 pending",
-      "displays the pending reviewable count"
-    );
+      )
+      .hasText("34 pending", "displays the pending reviewable count");
 
     await click(
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
@@ -1025,13 +1019,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
     );
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link[data-link-name='unread']"
-      ).textContent.trim(),
-      "unread topics",
-      "displays the right text for the link"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='unread']")
+      .hasText("unread topics", "displays the right text for the link");
 
     assert
       .dom(".sidebar-section-link[data-link-name='unread']")
@@ -1099,13 +1089,9 @@ acceptance("Sidebar - Logged on user - Community Section", function (needs) {
       "links to the right URL"
     );
 
-    assert.strictEqual(
-      query(
-        ".sidebar-section-link[data-link-name='user-summary']"
-      ).textContent.trim(),
-      "my summary",
-      "displays the right text for the link"
-    );
+    assert
+      .dom(".sidebar-section-link[data-link-name='user-summary']")
+      .hasText("my summary", "displays the right text for the link");
 
     assert
       .dom(".sidebar-section-link[data-link-name='user-summary']")
@@ -1179,13 +1165,14 @@ acceptance(
 
       await visit("/");
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section-link[data-link-name='everything'] .sidebar-section-link-content-badge"
-        ).textContent.trim(),
-        "2",
-        "count is 2 because there's 1 unread topic and 1 new topic"
-      );
+        )
+        .hasText(
+          "2",
+          "count is 2 because there's 1 unread topic and 1 new topic"
+        );
     });
 
     test("dot is shown next to the everything link when sidebar_show_count_of_new_items is false", async function (assert) {

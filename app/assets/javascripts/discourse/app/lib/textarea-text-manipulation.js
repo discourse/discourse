@@ -775,17 +775,23 @@ export default class TextareaTextManipulation {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
-      const trimmedPre = sel.pre.trim();
       const number = sel.value.startsWith(hval)
         ? sel.value.slice(hlen)
         : `${hval}${sel.value}`;
-      const preLines = trimmedPre.length ? `${trimmedPre}\n\n` : "";
 
-      const trimmedPost = sel.post.trim();
-      const post = trimmedPost.length ? `\n\n${trimmedPost}` : trimmedPost;
+      const preNewlines = sel.pre.trim() && "\n\n";
+      const postNewlines = sel.post.trim() && "\n\n";
 
-      this.value = `${preLines}${number}${post}`;
-      this.selectText(preLines.length, number.length);
+      const textToInsert = `${preNewlines}${number}${postNewlines}`;
+
+      const preChars = sel.pre.length - sel.pre.trimEnd().length;
+      const postChars = sel.post.length - sel.post.trimStart().length;
+
+      this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
+      this.selectText(
+        sel.start + (preNewlines.length - preChars),
+        number.length
+      );
     }
   }
 
@@ -802,7 +808,7 @@ export default class TextareaTextManipulation {
       if (selValue.length === 0 && isBlankLine) {
         if (isFourSpacesIndent) {
           const example = i18n(`composer.code_text`);
-          this.value = `${sel.pre}    ${example}${sel.post}`;
+          this._insertAt(sel.start, sel.end, `    ${example}`);
           return this.selectText(sel.pre.length + 4, example.length);
         } else {
           return this.applySurround(sel, "```\n", "\n```", "paste_code_text");
