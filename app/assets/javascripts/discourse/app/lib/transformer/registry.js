@@ -13,9 +13,9 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "invite-simple-mode-topic",
   "mentions-class",
   "more-topics-tabs",
+  "parent-category-row-class-mobile",
+  "parent-category-row-class",
   "post-menu-buttons",
   "small-user-attrs",
   "topic-list-columns",
-  "parent-category-row-class",
-  "parent-category-row-class-mobile",
 ]);
