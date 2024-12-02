@@ -24,9 +24,9 @@
     "esbuild": "^0.24.0",
     "eslint": "^9.14.0",
     "jsdoc": "^4.0.4",
-    "lefthook": "^1.8.4",
+    "lefthook": "^1.8.5",
     "licensee": "^11.1.1",
-    "lint-to-the-future": "^2.4.1",
+    "lint-to-the-future": "^2.5.1",
     "lint-to-the-future-ember-template": "^2.0.0",
     "lint-to-the-future-eslint": "^2.2.0",
     "magnific-popup": "1.1.0",
@@ -45,10 +45,10 @@
     "lint:fix": "concurrently \"npm:lint:*:fix\" --names \"fix:\"",
     "lint:js": "eslint ./app/assets/javascripts $(script/list_bundled_plugins) --cache --no-error-on-unmatched-pattern",
     "lint:js:fix": "eslint --fix ./app/assets/javascripts $(script/list_bundled_plugins) --no-error-on-unmatched-pattern",
-    "lint:hbs": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' $(script/list_bundled_plugins '/assets/javascripts/**/*.{gjs,hbs}') --no-error-on-unmatched-pattern",
-    "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' $(script/list_bundled_plugins '/assets/javascripts/**/*.{gjs,hbs}')  --no-error-on-unmatched-pattern --fix",
-    "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/assets/javascripts/**/*.{js,gjs,hbs}')",
-    "lint:prettier:fix": "pnpm prettier -w 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/assets/javascripts/**/*.{js,gjs,hbs}')",
+    "lint:hbs": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}'",
+    "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' --fix",
+    "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets}/javascripts/**/*.{js,gjs,hbs}')",
+    "lint:prettier:fix": "pnpm prettier -w 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets}/javascripts/**/*.{js,gjs,hbs}')",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
     "lint-progress": "pnpm lttf:output && npx html-pages ./lint-progress --no-cache",
@@ -67,7 +67,7 @@
       "virtual-dom@2.1.1": "patches/virtual-dom@2.1.1.patch",
       "licensee@11.1.1": "patches/licensee@11.1.1.patch",
       "content-tag@3.0.0": "patches/content-tag@3.0.0.patch",
-      "@ember-compat/tracked-built-ins": "patches/@ember-compat__tracked-built-ins.patch"
+      "@ember-compat/tracked-built-ins@0.9.1": "patches/@ember-compat__tracked-built-ins@0.9.1.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

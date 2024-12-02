@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import discourseComputed from "discourse-common/utils/decorators";
 
 const LIST_TYPE = {
@@ -39,5 +40,9 @@ export default class CategoryListItem extends Component {
   @discourseComputed("category.path")
   slugPath(categoryPath) {
     return categoryPath.substring("/c/".length);
+  }
+
+  applyValueTransformer(name, value, context) {
+    return applyValueTransformer(name, value, context);
   }
 }

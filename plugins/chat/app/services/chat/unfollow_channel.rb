@@ -25,6 +25,7 @@ module Chat
 
       validates :channel_id, presence: true
     end
+
     model :channel
     step :unfollow
 

@@ -12,6 +12,7 @@ import DButton from "discourse/components/d-button";
 import FlashMessage from "discourse/components/flash-message";
 import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
+import htmlClass from "discourse/helpers/html-class";
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -261,6 +262,7 @@ export default class DModal extends Component {
       @inline={{@inline}}
       @append={{true}}
     >
+      {{htmlClass "modal-open"}}
       <this.dynamicElement
         class={{concatClass
           "modal"

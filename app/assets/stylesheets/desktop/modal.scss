@@ -1,3 +1,7 @@
+html.modal-open {
+  overflow: hidden;
+}
+
 .d-modal {
   --modal-max-width: 600px;
   --modal-width: 30em; // set in ems to scale with user font-size

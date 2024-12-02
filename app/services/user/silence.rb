@@ -19,6 +19,7 @@ class User::Silence
     validates :other_user_ids, length: { maximum: User::MAX_SIMILAR_USERS }
     validates :post_action, inclusion: { in: %w[delete delete_replies edit] }, allow_blank: true
   end
+
   model :user
   policy :not_silenced_already, class_name: User::Policy::NotAlreadySilenced
   model :users

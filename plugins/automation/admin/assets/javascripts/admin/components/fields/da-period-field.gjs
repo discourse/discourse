@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

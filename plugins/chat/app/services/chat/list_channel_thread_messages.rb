@@ -41,6 +41,7 @@ module Chat
                 },
                 allow_nil: true
     end
+
     model :thread
     policy :can_view_thread
     model :membership, optional: true

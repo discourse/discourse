@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";
@@ -74,9 +74,7 @@ export default class KeyValueField extends BaseField {
 
   get showJsonModalLabel() {
     if (this.keyCount === 0) {
-      return i18n(
-        "discourse_automation.fields.key_value.label_without_count"
-      );
+      return i18n("discourse_automation.fields.key_value.label_without_count");
     } else {
       return i18n("discourse_automation.fields.key_value.label_with_count", {
         count: this.keyCount,
