@@ -4,11 +4,11 @@ import EmberObject from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
+import { TrackedArray } from "tracked-built-ins";
 import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,

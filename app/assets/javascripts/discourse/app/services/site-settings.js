@@ -1,4 +1,4 @@
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedObject } from "tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
 

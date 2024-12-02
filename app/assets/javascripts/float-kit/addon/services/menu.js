@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class Menu extends Service {

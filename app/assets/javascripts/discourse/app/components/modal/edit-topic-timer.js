@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { TrackedObject } from "tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
 import { i18n } from "discourse-i18n";

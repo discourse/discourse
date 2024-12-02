@@ -1,5 +1,5 @@
 import Service, { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";

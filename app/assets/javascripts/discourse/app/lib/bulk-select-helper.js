@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { TrackedArray } from "tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
 

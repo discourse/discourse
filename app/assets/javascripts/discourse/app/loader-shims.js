@@ -5,8 +5,9 @@ import loaderShim from "discourse-common/lib/loader-shim";
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
-  importSync("@ember-compat/tracked-built-ins")
+  importSync("tracked-built-ins")
 );
+loaderShim("tracked-built-ins", () => importSync("tracked-built-ins"));
 loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));

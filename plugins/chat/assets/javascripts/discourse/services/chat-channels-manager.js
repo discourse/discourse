@@ -1,7 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import Promise from "rsvp";
+import { TrackedObject } from "tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse-common/utils/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";

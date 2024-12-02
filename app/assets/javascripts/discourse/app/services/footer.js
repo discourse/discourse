@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedSet } from "tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
