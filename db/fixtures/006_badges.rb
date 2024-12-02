@@ -58,7 +58,7 @@ SQL
     b.trigger = Badge::Trigger::TrustLevelChange
     # allow title for tl3 and above
     b.default_allow_title = id > Badge::Member
-    b.default_icon = "fa-user"
+    b.default_icon = "user"
     b.system = true
   end
 end

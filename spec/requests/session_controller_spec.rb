@@ -672,6 +672,8 @@ RSpec.describe SessionController do
           get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
         end
 
+      p logger.warnings[0]
+
       expect(logger.warnings.length).to eq(0)
       expect(logger.errors.length).to eq(0)
       expect(logger.fatals.length).to eq(0)
