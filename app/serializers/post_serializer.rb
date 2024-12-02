@@ -226,8 +226,9 @@ class PostSerializer < BasicPostSerializer
 
   def badges_granted
     return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
+
     if @topic_view
-      user_badges = @topic_view.post_user_badges.select { |ub| ub.post_id == object.id }
+      user_badges = @topic_view.post_user_badges[object.id] || []
     else
       user_badges = UserBadge.for_post_header_badges([object])
     end

@@ -135,8 +135,6 @@ class TopicView
     @filtered_posts = apply_default_scope(@filtered_posts)
     filter_posts(options)
 
-    @post_user_badges = UserBadge.for_post_header_badges(@posts) if @posts
-
     if @posts && !@skip_custom_fields
       if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
         @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
@@ -208,6 +206,19 @@ class TopicView
   end
 
   def post_user_badges
+    return [] unless SiteSetting.enable_badges && SiteSetting.show_badges_in_post_header
+
+    @post_user_badges ||=
+      begin
+        UserBadge
+          .for_post_header_badges(@posts)
+          .reduce({}) do |hash, user_badge|
+            hash[user_badge.post_id] ||= []
+            hash[user_badge.post_id] << user_badge
+            hash
+          end
+      end
+
     return [] unless @post_user_badges
 
     @post_user_badges
