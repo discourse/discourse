@@ -45,7 +45,12 @@ module Migrations
     loader.log! if ENV["DEBUG"]
 
     loader.inflector.inflect(
-      { "cli" => "CLI", "intermediate_db" => "IntermediateDB", "uploads_db" => "UploadsDB" },
+      {
+        "cli" => "CLI",
+        "id" => "ID",
+        "intermediate_db" => "IntermediateDB",
+        "uploads_db" => "UploadsDB",
+      },
     )
 
     loader.push_dir(File.join(::Migrations.root_path, "lib"), namespace: ::Migrations)
