@@ -70,7 +70,7 @@ acceptance("Category Edit - Security", function (needs) {
     await availableGroups.expand();
     await availableGroups.selectRowByValue("everyone");
 
-    assert.dom(".row-body").exists("adds back the permission tp the list");
+    assert.dom(".row-body").exists("adds back the permission to the list");
 
     assert
       .dom(".row-body[data-group-name='everyone'] .group-name-label")

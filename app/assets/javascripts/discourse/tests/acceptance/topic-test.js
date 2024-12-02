@@ -371,11 +371,9 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.true(
-      document
-        .querySelector(".d-editor-input")
-        .value.includes('quote="codinghorror said, post:3, topic:280"')
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="codinghorror said, post:3, topic:280"');
   });
 
   test("Quoting a quote of a different topic keeps the original topic title", async function (assert) {
@@ -383,13 +381,11 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_9 blockquote");
     await click(".quote-button .insert-quote");
 
-    assert.true(
-      document
-        .querySelector(".d-editor-input")
-        .value.includes(
-          'quote="A new topic with a link to another topic, post:3, topic:62"'
-        )
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        'quote="A new topic with a link to another topic, post:3, topic:62"'
+      );
   });
 
   test("Quoting a quote with the Reply button keeps the original poster name", async function (assert) {
@@ -397,11 +393,9 @@ acceptance("Topic featured links", function (needs) {
     await selectText("#post_5 blockquote");
     await click(".reply");
 
-    assert.true(
-      document
-        .querySelector(".d-editor-input")
-        .value.includes('quote="codinghorror said, post:3, topic:280"')
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="codinghorror said, post:3, topic:280"');
   });
 
   // Using J/K on Firefox clean the text selection, so this won't work there
@@ -413,11 +407,9 @@ acceptance("Topic featured links", function (needs) {
       await triggerKeyEvent(document, "keypress", "J");
       await triggerKeyEvent(document, "keypress", "T");
 
-      assert.true(
-        document
-          .querySelector(".d-editor-input")
-          .value.includes('quote="codinghorror said, post:3, topic:280"')
-      );
+      assert
+        .dom(".d-editor-input")
+        .includesValue('quote="codinghorror said, post:3, topic:280"');
     }
   );
 
@@ -425,11 +417,9 @@ acceptance("Topic featured links", function (needs) {
     await visit("/t/internationalization-localization/280");
     await selectText("#post_5 .cooked");
     await click(".quote-button .insert-quote");
-    assert.true(
-      document
-        .querySelector(".d-editor-input")
-        .value.includes('quote="pekka, post:5, topic:280, full:true"')
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue('quote="pekka, post:5, topic:280, full:true"');
   });
 });
 

@@ -129,8 +129,15 @@ export function updateCurrentUser(properties) {
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
-export function logIn() {
-  return User.resetCurrent(currentUser());
+export function logIn(owner) {
+  const user = User.resetCurrent(currentUser());
+
+  owner?.unregister("service:current-user");
+  owner?.register("service:current-user", user, {
+    instantiate: false,
+  });
+
+  return user;
 }
 
 // Note: Only use if `loggedIn: true` has been used in an acceptance test

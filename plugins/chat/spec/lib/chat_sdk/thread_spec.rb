@@ -46,7 +46,7 @@ describe ChatSDK::Thread do
       end
     end
 
-    context "when the threadind is not enabled" do
+    context "when the threading is not enabled" do
       before { thread_1.channel.update!(threading_enabled: false) }
 
       it "fails" do

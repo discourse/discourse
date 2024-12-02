@@ -2457,6 +2457,7 @@ developer:
     default: "1|2"
     allow_any: false
     refresh: true
+    hidden: true
   warn_critical_js_deprecations:
     default: true
     client: true

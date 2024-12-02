@@ -616,12 +616,12 @@ acceptance("Search - Authenticated", function (needs) {
       .dom(".d-editor-input")
       .hasValue(/a link/, "still has the original composer content");
 
-    assert.true(
-      document
-        .querySelector(".d-editor-input")
-        .value.includes(searchFixtures["search/query"].topics[0].slug),
-      "adds link from search to composer"
-    );
+    assert
+      .dom(".d-editor-input")
+      .includesValue(
+        searchFixtures["search/query"].topics[0].slug,
+        "adds link from search to composer"
+      );
   });
 
   // see https://meta.discourse.org/t/keyboard-navigation-messes-up-the-search-menu/285405
