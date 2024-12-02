@@ -4,7 +4,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module("Integration | Component | invite-panel", function (hooks) {
@@ -31,12 +30,11 @@ module("Integration | Component | invite-panel", function (hooks) {
     await input.expand();
     await input.fillInFilter("eviltrout@example.com");
     await input.selectRowByValue("eviltrout@example.com");
-    assert.dom(".send-invite:disabled").doesNotExist();
+    assert.dom(".send-invite").isEnabled();
 
     await click(".generate-invite-link");
-    assert.strictEqual(
-      query(".invite-link-input").value,
-      "http://example.com/invites/92c297e886a0ca03089a109ccd6be155"
-    );
+    assert
+      .dom(".invite-link-input")
+      .hasValue("http://example.com/invites/92c297e886a0ca03089a109ccd6be155");
   });
 });

@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import copyText from "discourse/lib/copy-text";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 
 @classNames("ip-lookup")
@@ -67,18 +67,18 @@ export default class IpLookup extends Component {
     const location = this.location;
     if (location) {
       if (location.hostname) {
-        text += `${I18n.t("ip_lookup.hostname")}: ${location.hostname}\n`;
+        text += `${i18n("ip_lookup.hostname")}: ${location.hostname}\n`;
       }
 
-      text += I18n.t("ip_lookup.location");
+      text += i18n("ip_lookup.location");
       if (location.location) {
         text += `: ${location.location}\n`;
       } else {
-        text += `: ${I18n.t("ip_lookup.location_not_found")}\n`;
+        text += `: ${i18n("ip_lookup.location_not_found")}\n`;
       }
 
       if (location.organization) {
-        text += I18n.t("ip_lookup.organisation");
+        text += i18n("ip_lookup.organisation");
         text += `: ${location.organization}\n`;
       }
     }
@@ -96,7 +96,7 @@ export default class IpLookup extends Component {
   @action
   deleteOtherAccounts() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("ip_lookup.confirm_delete_other_accounts"),
+      message: i18n("ip_lookup.confirm_delete_other_accounts"),
       didConfirm: () => {
         this.setProperties({
           other_accounts: null,

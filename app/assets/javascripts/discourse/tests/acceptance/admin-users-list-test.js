@@ -1,11 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Users List", function (needs) {
   needs.user();
@@ -14,15 +10,17 @@ acceptance("Admin - Users List", function (needs) {
     await visit("/admin/users/list/active");
 
     assert.dom(".users-list .user").exists();
-    assert.ok(!exists(".user:nth-of-type(1) .email small"), "escapes email");
+    assert
+      .dom(".user:nth-of-type(1) .email small")
+      .doesNotExist("escapes email");
   });
 
   test("searching users with no matches", async function (assert) {
     await visit("/admin/users/list/active");
 
-    await fillIn(".controls.username input", "doesntexist");
+    await fillIn(".admin-users-list__search input", "doesntexist");
 
-    assert.dom(".users-list-container").hasText(I18n.t("search.no_results"));
+    assert.dom(".users-list-container").hasText(i18n("search.no_results"));
   });
 
   test("sorts users", async function (assert) {
@@ -30,23 +28,21 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists();
 
-    await click(".users-list .sortable:nth-child(1)");
-
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        "eviltrout"
-      ),
-      "list should be sorted by username"
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
     );
 
-    await click(".users-list .sortable:nth-child(1)");
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText("eviltrout", "list should be sorted by username");
 
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        "discobot"
-      ),
-      "list should be sorted ascending by username"
+    await click(
+      ".users-list .directory-table__column-header--username.sortable"
     );
+
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText("discobot", "list should be sorted ascending by username");
   });
 
   test("toggles email visibility", async function (assert) {
@@ -54,62 +50,51 @@ acceptance("Admin - Users List", function (needs) {
 
     assert.dom(".users-list .user").exists();
 
-    await click(".show-emails");
+    await click(".admin-users__subheader-show-emails");
 
     assert
       .dom(".users-list .user:nth-child(1) .email")
       .hasText("<small>eviltrout@example.com</small>", "shows the emails");
 
-    await click(".hide-emails");
+    await click(".admin-users__subheader-hide-emails");
 
-    assert.strictEqual(
-      query(".users-list .user:nth-child(1) .email .directory-table__value")
-        .innerText,
-      "",
-      "hides the emails"
-    );
+    assert
+      .dom(".users-list .user:nth-child(1) .email .directory-table__value")
+      .hasNoText("hides the emails");
   });
 
   test("switching tabs", async function (assert) {
     const activeUser = "eviltrout";
     const suspectUser = "sam";
-    const activeTitle = I18n.t("admin.users.titles.active");
-    const suspectTitle = I18n.t("admin.users.titles.new");
+    const activeTitle = i18n("admin.users.titles.active");
+    const suspectTitle = i18n("admin.users.titles.new");
 
     await visit("/admin/users/list/active");
 
-    assert.dom(".admin-title h2").hasText(activeTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        activeUser
-      )
-    );
+    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(activeUser);
 
     await click('a[href="/admin/users/list/new"]');
 
-    assert.dom(".admin-title h2").hasText(suspectTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        suspectUser
-      )
-    );
+    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(suspectUser);
 
     await click(".users-list .sortable:nth-child(4)");
 
-    assert.dom(".admin-title h2").hasText(suspectTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        suspectUser
-      )
-    );
+    assert.dom(".admin-page-subheader__title").hasText(suspectTitle);
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(suspectUser);
 
     await click('a[href="/admin/users/list/active"]');
 
-    assert.dom(".admin-title h2").hasText(activeTitle);
-    assert.ok(
-      query(".users-list .user:nth-child(1) .username").innerText.includes(
-        activeUser
-      )
-    );
+    assert.dom(".admin-page-subheader__title").hasText(activeTitle);
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText(activeUser);
   });
 });

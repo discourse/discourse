@@ -1,11 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Site from "discourse/models/site";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
   needs.settings({
@@ -26,31 +22,11 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
       .sort((a, b) => b.topic_count - a.topic_count);
 
     assert.strictEqual(categorySectionLinks.length, 6);
-
-    assert.strictEqual(
-      categorySectionLinks[0].textContent.trim(),
-      sidebarCategories[0].name
-    );
-
-    assert.strictEqual(
-      categorySectionLinks[1].textContent.trim(),
-      sidebarCategories[1].name
-    );
-
-    assert.strictEqual(
-      categorySectionLinks[2].textContent.trim(),
-      sidebarCategories[2].name
-    );
-
-    assert.strictEqual(
-      categorySectionLinks[3].textContent.trim(),
-      sidebarCategories[3].name
-    );
-
-    assert.strictEqual(
-      categorySectionLinks[4].textContent.trim(),
-      sidebarCategories[4].name
-    );
+    assert.dom(categorySectionLinks[0]).hasText(sidebarCategories[0].name);
+    assert.dom(categorySectionLinks[1]).hasText(sidebarCategories[1].name);
+    assert.dom(categorySectionLinks[2]).hasText(sidebarCategories[2].name);
+    assert.dom(categorySectionLinks[3]).hasText(sidebarCategories[3].name);
+    assert.dom(categorySectionLinks[4]).hasText(sidebarCategories[4].name);
 
     assert
       .dom("a.sidebar-section-link[data-link-name='all-categories']")
@@ -69,31 +45,11 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     const siteCategories = Site.current().categories;
 
     assert.strictEqual(categories.length, 6);
-
-    assert.strictEqual(
-      categories[0].textContent.trim(),
-      siteCategories[0].name
-    );
-
-    assert.strictEqual(
-      categories[1].textContent.trim(),
-      siteCategories[1].name
-    );
-
-    assert.strictEqual(
-      categories[2].textContent.trim(),
-      siteCategories[3].name
-    );
-
-    assert.strictEqual(
-      categories[3].textContent.trim(),
-      siteCategories[4].name
-    );
-
-    assert.strictEqual(
-      categories[4].textContent.trim(),
-      siteCategories[5].name
-    );
+    assert.dom(categories[0]).hasText(siteCategories[0].name);
+    assert.dom(categories[1]).hasText(siteCategories[1].name);
+    assert.dom(categories[2]).hasText(siteCategories[3].name);
+    assert.dom(categories[3]).hasText(siteCategories[4].name);
+    assert.dom(categories[4]).hasText(siteCategories[5].name);
 
     assert
       .dom("a.sidebar-section-link[data-link-name='all-categories']")
@@ -111,9 +67,9 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
     );
 
     assert.strictEqual(categories.length, 4);
-    assert.strictEqual(categories[0].textContent.trim(), "meta");
-    assert.strictEqual(categories[1].textContent.trim(), "blog");
-    assert.strictEqual(categories[2].textContent.trim(), "bug");
+    assert.dom(categories[0]).hasText("meta");
+    assert.dom(categories[1]).hasText("blog");
+    assert.dom(categories[2]).hasText("bug");
 
     assert
       .dom("a.sidebar-section-link[data-link-name='all-categories']")
@@ -133,11 +89,12 @@ acceptance("Sidebar - Anonymous - Categories Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         `.sidebar-section[data-section-name='categories'] .sidebar-section-link[data-link-name='${firstCategory.slug}']`
-      ),
-      "category section link is not shown in sidebar after being marked as uncategorized"
-    );
+      )
+      .doesNotExist(
+        "category section link is not shown in sidebar after being marked as uncategorized"
+      );
   });
 });

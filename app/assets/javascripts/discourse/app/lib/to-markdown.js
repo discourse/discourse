@@ -905,7 +905,7 @@ export default function toMarkdown(html) {
       .replace(/\n{3,}/g, "\n\n")
       .replace(/\t/g, "  ");
     return replacePlaceholders(markdown, placeholders);
-  } catch (err) {
+  } catch {
     return "";
   }
 }

@@ -11,7 +11,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   let linkDidInsert, linkDestroy, sectionDestroy;
@@ -49,8 +49,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
                 action: () => {},
               },
             ];
-
-            willDestroy = () => (sectionDestroy = "section test");
 
             links = [
               new (class extends BaseCustomSidebarSectionLink {
@@ -99,6 +97,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
                 text = "Homepage";
               })(),
             ];
+            willDestroy = () => (sectionDestroy = "section test");
           };
         }
       );
@@ -173,32 +172,29 @@ acceptance("Sidebar - Plugin API", function (needs) {
         "displays first link with correct title attribute"
       );
 
-    assert.true(
-      links[0].href.endsWith("/some-slug/1"),
-      "link has the correct href attribute"
-    );
+    assert
+      .dom(links[0])
+      .hasAttribute(
+        "href",
+        "/t/some-slug/1",
+        "link has the correct href attribute"
+      );
 
     assert
       .dom(links[0].children[0])
       .hasStyle({ color: "rgb(255, 0, 0)" }, "has correct prefix color");
 
-    assert.strictEqual(
-      links[0].children[0].children[0].classList.contains("d-icon-d-chat"),
-      true,
-      "displays prefix icon"
-    );
+    assert
+      .dom(links[0].children[0].children[0])
+      .hasClass("d-icon-d-chat", "displays prefix icon");
 
-    assert.strictEqual(
-      links[0].children[0].children[1].classList.contains("d-icon-lock"),
-      true,
-      "displays prefix icon badge"
-    );
+    assert
+      .dom(links[0].children[0].children[1])
+      .hasClass("d-icon-lock", "displays prefix icon badge");
 
-    assert.strictEqual(
-      links[0].children[2].children[0].classList.contains("d-icon-circle"),
-      true,
-      "displays suffix icon"
-    );
+    assert
+      .dom(links[0].children[2].children[0])
+      .hasClass("d-icon-circle", "displays suffix icon");
 
     assert
       .dom(links[1].children[1])
@@ -420,7 +416,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
             `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           )
           .hasText(
-            I18n.t("sidebar.unread_count", { count: 1 }),
+            i18n("sidebar.unread_count", { count: 1 }),
             "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
           );
 

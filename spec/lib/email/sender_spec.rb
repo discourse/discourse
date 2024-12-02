@@ -591,7 +591,7 @@ RSpec.describe Email::Sender do
       reply.rebake!
       Email::Sender.new(message, :valid_type).send
       expected = <<~HTML
-      <a href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" style=\"text-decoration: none; font-weight: bold; color: #006699;\"><span>#dev</span>
+      <a href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" style=\"text-decoration:none;font-weight:bold;color:#006699\"><span>#dev</span>
       HTML
       expect(message.html_part.body.to_s).to include(expected.chomp)
     end

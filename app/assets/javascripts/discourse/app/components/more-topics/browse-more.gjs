@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class BrowseMore extends Component {
   @service currentUser;
@@ -55,11 +55,11 @@ export default class BrowseMore extends Component {
         });
       }
     } else if (suggestedGroupName) {
-      return I18n.t("user.messages.read_more_in_group", {
+      return i18n("user.messages.read_more_in_group", {
         groupLink: this.groupLink(suggestedGroupName),
       });
     } else {
-      return I18n.t("user.messages.read_more", {
+      return i18n("user.messages.read_more", {
         basePath: getURL(""),
         username: this.currentUser.username,
       });
@@ -91,12 +91,12 @@ export default class BrowseMore extends Component {
         basePath: getURL(""),
       });
     } else if (category) {
-      return I18n.t("topic.read_more_in_category", {
+      return i18n("topic.read_more_in_category", {
         categoryLink: categoryBadgeHTML(category),
         latestLink: getURL("/latest"),
       });
     } else {
-      return I18n.t("topic.read_more", {
+      return i18n("topic.read_more", {
         categoryLink: getURL("/categories"),
         latestLink: getURL("/latest"),
       });

@@ -2,7 +2,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let _newCategoryColor = "0088CC";
 let _newCategoryTextColor = "FFFFFF";
@@ -62,7 +62,7 @@ export default class NewCategory extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("category.create");
+    return i18n("category.create");
   }
 
   groupPermissions() {

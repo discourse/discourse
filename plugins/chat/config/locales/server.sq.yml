@@ -5,8 +5,90 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    chat_separate_sidebar_mode: "Shfaq metoda të posaçme të seksionit anësor për forumin dhe bisedën."
+    chat_enabled: "Aktivizo bisedën."
+    enable_public_channels: "Aktivizo kanalet publike bazuar në kategori."
+    chat_allowed_groups: "Përdoruesit në këto grupe mund të dërgojnë mesazhe. Vëreni që operatorët dhe moderatorët mund të kenë gjithmonë kontroll në bisedë."
+    chat_channel_retention_days: "Mesazhet e bisedës në kanalet më të përdorura ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    chat_dm_retention_days: "Mesazhet e bisedës në kanalet personale të bisedës do të ruhen për disa ditë. Kliko tek '0' për të ruajtur mesazhet në mënyrë të përhershme."
+    chat_auto_silence_duration: "Numri i minutave për të cilat përdoruesi do të ndërpritet kur tejkalon kufirin e normës së krijimit të mesazheve të bisedës. Kliko tek '0' për të çaktivizuar ndërprerjen automatike."
+    chat_allowed_messages_for_trust_level_0: "Numri i mesazheve që u lejohet përdoruesve të nivelit 0 të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_allowed_messages_for_other_trust_levels: "Numri i mesazheve që përdoruesit me nivele limiti 1-4 lejohen të dërgojnë në 30 sekonda. Kliko tek '0' për të çaktivizuar limitin."
+    chat_silence_user_sensitivity: "Mundësia e një përdoruesi të shënuar në bisedë do të ndërpritet automatikisht."
+    chat_auto_silence_from_flags_duration: "Numri i minutave për të cilat përdoruesit do të ndërpriten automatikisht për shkak të mesazheve në bisedën e shënuar."
+    chat_duplicate_message_sensitivity: "Mundësia e një mesazhi të kopjuar nga i njëjti dërgues do të bllokohet në një periudhë të shkurtër. Numri decimal midis 0 dhe 1.0, me 1.0 është rendi më i lartë (bllokon mesazhet më shpesh në një kohë më të shkurtër). Kliko tek `0` për të lejuar mesazhe të kopjuara."
+    chat_minimum_message_length: "Numri minimal i karaktereve për një kanal bisede."
+    chat_allow_uploads: "Lejo ngarkimet në kanalet e bisedës publike dhe kanalet e mesazheve direkte."
+    chat_archive_destination_topic_status: "Statusi që duhet të jetë tema e synuar pasi të përfundojë ruajtja në kanal. Kjo vlen vetëm kur tema e synuar është një temë e re, jo një aktuale."
+    default_emoji_reactions: "Reagimet e parazgjedhura të ikonave për mesazhet e bisedës, Shtoni deri në 5 ikona për reagim të shpejtë."
+    direct_message_enabled_groups: "Lejo përdoruesit brenda këtyre grupeve të krijojnë biseda personale nga përdoruesi në përdorues. Shënim: stafi mund të krijojë gjithmonë biseda personale dhe përdoruesit do të mund t'u përgjigjen bisedave personale të krijuara nga përdoruesit që kanë leje për t'i krijuar ato."
+    chat_message_flag_allowed_groups: "Përdoruesit në këto grupe lejohen të raportojnë mesazhet e bisedës. Vini re se administratorët dhe moderatorët mund të raportojnë gjithmonë mesazhet e bisedës."
+    max_mentions_per_chat_message: "Numri maksimal i njoftimeve me emër që një përdorues mund të përdorë në një mesazh bisede."
+    chat_max_direct_message_users: "Përdoruesit nuk mund të shtojnë më shumë se një numër të caktuar përdoruesish të tjerë kur krijojnë një mesazh të ri direkt. Vendoseni në numrin 0 për të krijuar mesazhe të reja. Stafi është i përjashtuar nga ky cilësim."
+    chat_allow_archiving_channels: "Lejoni stafin të arkivojë mesazhet në një temë kur mbyllni një kanal."
+    chat_editing_grace_period: "Për (numër) sekonda pas dërgimit të një bisede, redaktimi nuk do të shfaqë etiketimin (e redaktuar) nga mesazhi i bisedës."
+    chat_editing_grace_period_max_diff_low_trust: "Numri maksimal i ndryshimeve të karaktereve të lejuara në periudhën e afatit të redaktimit të bisedës, nëse ndryshohet disa herë, shfaq etiketimin (e redaktuar) nga mesazhi i bisedës (niveli i vlefshmërisë 0 dhe 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Numri maksimal i ndryshimeve të karaktereve të lejuara në periudhën e afatit të redaktimit të bisedës, nëse ndryshohet disa herë, shfaq etiketimin (e redaktuar) nga mesazhi i bisedës (niveli i vlefshmërisë 2 e lart)."
+    chat_preferred_index: "Faqja e posaçme kur po shkarkohet /shkruhet në bisedë."
+    errors:
+      chat_default_channel: "Kanali i parazgjedhur i bisedës duhet të jetë një kanal publik."
+      direct_message_enabled_groups_invalid: "Duhet të specifikoni të paktën një grup për këtë cilësim. Nëse nuk dëshironi që askush përveç stafit të dërgojë mesazhe të drejtpërdrejta, krijoni grupin e stafit."
+      chat_upload_not_allowed_secure_uploads: "Shkarkimet në biseda nuk lejohen kur është aktivizuar cilësimi i faqes të shkarkimeve të sigurta."
+  system_messages:
+    private_channel_title: "Kanali %{id}"
+    chat_channel_archive_complete:
+      title: "Arkivi i kanalit të bisedës është shkarkuar."
+      subject_template: "Arkivi i kanalit të bisedës u shkarkua me sukses"
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} ka përfunduar me sukses. Mesazhet u kopjuan në temën [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed:
+      title: "Arkivi i Kanalit të Bisedës nuk është Shkarkuar."
+      subject_template: "Arkivi i Kanalit të Bisedës nuk është shkarkuar."
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} nuk është shkarkuar. Mesazhet %{messages_archived} janë arkivuar. Mesazhet pjesërisht të arkivuara u kopjuan në titull [%{topic_title}](%{topic_url}). Vizito kanalin në %{channel_url} për ta provuar përsëri.
+    chat_channel_archive_failed_no_topic:
+      title: "Arkivi i Kanalit të Bisedës nuk është Shkarkuar."
+      text_body_template: |
+        Arkivimi i kanalit të bisedës %{channel_hashtag_or_name} është shkarkuar. Asnjë mesazh nuk është shkarkuar. Tema nuk u krijua me sukses për arsyet e mëposhtme:
+
+          %{topic_validation_errors}
+
+        Vizitoni kanalin në %{channel_url} për të provuar përsëri.
   chat:
     deleted_chat_username: deleted
+    errors:
+      users_cant_be_added_to_channel: "Përdoruesit nuk mund të shtohen në këtë kanal."
+      channel_new_message_disallowed:
+        archived: "Kanali është i arkivuar, nuk mund të dërgohen mesazhe të reja"
+        closed: "Kanali është i bllokuar, nuk mund të dërgohen mesazhe të reja"
+        read_only: "Kanali vetëm mund të lexohet, nuk mund të dërgohen mesazhe të reja"
+      channel_modify_message_disallowed:
+        archived: "Kanali është i arkivuar, asnjë mesazh nuk mund të ndryshohet ose fshihet"
+        closed: "Kanali është i bllokuar, asnjë mesazh nuk mund të ndryshohet ose fshihet."
+        read_only: "Kanali vetëm mund të lexohet , asnjë mesazh nuk mund të ndryshohet ose fshihet"
+      user_cannot_send_message: "Nuk mund të dërgoni më mesazhe në këtë moment."
+      rate_limit_exceeded: "Ka tejkaluar limitin e mesazheve të bisedës që mund të dërgohen brenda 30 sekondave"
+      channel_cannot_be_archived: "Kanali nuk mund të ruhet në këtë moment, duhet të jetë ose i mbyllur ose i hapur për arkivim."
+      duplicate_message: "Keni postuar një mesazh të njëjtë kohët e fundit."
+      delete_channel_failed: "Fshirja e kanalit nuk u krye, ju lutemi provojeni përsëri."
+      minimum_length_not_met:
+        one: "Mesazhi është shumë i shkurtër, duhet të ketë një minimum të karaktereve %{count} ."
+        other: "Mesazhi është shumë i shkurtër, duhet të ketë një minimum prej %{count} karaktere."
+      message_too_long:
+        one: "Mesazhi është shumë i gjatë, mesazhet duhet të kenë një maksimum prej %{count} karakteresh."
+        other: "Mesazhi është shumë i gjatë, mesazhet duhet të kenë një maksimum prej %{count} karakteresh."
+      draft_too_long: "Mesazhi shembull është shumë i gjatë."
+      max_reactions_limit_reached: "Komente të reja nuk lejohen në këtë mesazh."
+      message_move_invalid_channel: "Kanali kryesor dhe i caktuar duhet të jenë kanale publike."
+      message_move_no_messages_found: "Nuk ka asnjë mesazh me ID të mesazheve të dhëna."
+      cant_update_direct_message_channel: "Veçoritë e kanalit të mesazheve të drejtpërdrejta si emri dhe përshkrimi nuk mund të përditësohen."
+      not_accepting_dms: "Na vjen keq, %{username} nuk pranon mesazhe për momentin."
+      actor_ignoring_target_user: "Keni bllokuar %{username}, kështu që nuk mund t'u dërgoni mesazhe atyre."
+      actor_muting_target_user: "Keni bllokuar %{username}, kështu që nuk mund t'u dërgoni mesazhe atyre."
+      actor_disallowed_dms: "Keni zgjedhur të bllokoni përdoruesit t'ju dërgojnë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund të dërgoni mesazhe të reja të drejtpërdrejta."
+      actor_preventing_target_user_from_dm: "Keni bllokuar %{username} që t'ju dërgojë mesazhe private dhe të drejtpërdrejta, kështu që nuk mund ti dërgoni mesazhe të reja të drejtpërdrejta."
+      user_cannot_send_direct_messages: "Na vjen keq, nuk mund të dërgoni mesazhe të drejtpërdrejta."
     reviewables:
       actions:
         agree_and_suspend:

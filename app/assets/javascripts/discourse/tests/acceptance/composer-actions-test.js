@@ -6,14 +6,12 @@ import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  count,
-  query,
   selectText,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Composer Actions", function (needs) {
   needs.user({
@@ -71,10 +69,9 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".action-title .topic-link")
       .hasAttribute("href", "/t/internationalization-localization/280");
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "test replying to topic when initially replied to post"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("test replying to topic when initially replied to post");
   });
 
   test("replying to post - toggle_whisper for whisperers", async function (assert) {
@@ -91,20 +88,16 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .doesNotExist("whisper icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "whisper icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -132,8 +125,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
 
     assert.strictEqual(categoryChooserReplyArea.header().name(), "faq");
-    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
-    assert.ok(query(".d-editor-input").value.includes(quote));
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
+    assert.dom(".d-editor-input").includesValue(quote);
   });
 
   test("reply_as_new_topic without a new_topic draft", async function (assert) {
@@ -215,8 +208,8 @@ acceptance("Composer Actions", function (needs) {
     await composerActions.selectRowByValue("reply_as_new_topic");
     await composerActions.expand();
 
-    assert.dom(".action-title").hasText(I18n.t("topic.create_long"));
-    assert.ok(query(".d-editor-input").value.includes(quote));
+    assert.dom(".action-title").hasText(i18n("topic.create_long"));
+    assert.dom(".d-editor-input").includesValue(quote);
     assert.strictEqual(composerActions.rowByIndex(0).value(), "reply_to_post");
     assert.strictEqual(composerActions.rowByIndex(1).value(), "reply_to_topic");
     assert.strictEqual(composerActions.rowByIndex(2).value(), "shared_draft");
@@ -231,7 +224,7 @@ acceptance("Composer Actions", function (needs) {
     await click(".usercard-controls .compose-pm .btn-primary");
     await composerActions.expand();
 
-    assert.dom(".action-title").hasText(I18n.t("topic.private_message"));
+    assert.dom(".action-title").hasText(i18n("topic.private_message"));
     assert.strictEqual(composerActions.rowByIndex(0).value(), "create_topic");
     assert.strictEqual(composerActions.rows().length, 1);
   });
@@ -245,20 +238,16 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-anchor"),
-      1,
-      "no-bump icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-anchor")
+      .exists("no-bump icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -269,11 +258,9 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
   });
 
   test("replying to post - whisper and no bump", async function (assert) {
@@ -288,27 +275,21 @@ acceptance("Composer Actions", function (needs) {
     assert
       .dom(".reply-details .whisper .d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-share"),
-      1,
-      "reply icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-share")
+      .exists("reply icon is visible");
 
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_topic_bump");
     await composerActions.expand();
     await composerActions.selectRowByValue("toggle_whisper");
 
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-eye-slash"),
-      1,
-      "whisper icon is visible"
-    );
-    assert.strictEqual(
-      count(".reply-details .no-bump .d-icon-anchor"),
-      1,
-      "no-bump icon is visible"
-    );
+    assert
+      .dom(".composer-actions svg.d-icon-far-eye-slash")
+      .exists("whisper icon is visible");
+    assert
+      .dom(".reply-details .no-bump .d-icon-anchor")
+      .exists("no-bump icon is visible");
     assert
       .dom(".composer-actions svg.d-icon-share")
       .doesNotExist("reply icon is not visible");
@@ -426,19 +407,16 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
     await composerActions.selectRowByValue("shared_draft");
 
     assert.strictEqual(tags.header().value(), "monkey", "tags are not reset");
-    assert.strictEqual(
-      query("#reply-title").value,
-      "This is the new text for the title using 'quotes'"
-    );
+    assert
+      .dom("#reply-title")
+      .hasValue("This is the new text for the title using 'quotes'");
 
     assert
       .dom("#reply-control .btn-primary.create .d-button-label")
-      .hasText(I18n.t("composer.create_shared_draft"));
-    assert.strictEqual(
-      count(".composer-actions svg.d-icon-far-clipboard"),
-      1,
-      "shared draft icon is visible"
-    );
+      .hasText(i18n("composer.create_shared_draft"));
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
   });
 
   test("reply_as_new_topic with new_topic draft", async function (assert) {
@@ -453,14 +431,10 @@ acceptance("Composer Actions With New Topic Draft", function (needs) {
 
     assert
       .dom(".dialog-body")
-      .hasText(I18n.t("composer.composer_actions.reply_as_new_topic.confirm"));
+      .hasText(i18n("composer.composer_actions.reply_as_new_topic.confirm"));
     await click(".dialog-footer .btn-primary");
 
-    assert.ok(
-      query(".d-editor-input").value.startsWith(
-        "Continuing the discussion from"
-      )
-    );
+    assert.dom(".d-editor-input").hasValue(/^Continuing the discussion from/);
   });
 });
 
@@ -482,10 +456,11 @@ acceptance("Prioritize Username", function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await selectText("#post_2 p");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]'
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="james_john, post:2, topic:54079, full:true"]\nThis is a short topic.\n[/quote]\n\n'
+      );
   });
 });
 
@@ -500,30 +475,31 @@ acceptance("Prioritize Full Name", function (needs) {
     await visit("/t/short-topic-with-two-posts/54079");
     await click("article#post_3 button.reply");
 
-    assert.strictEqual(
-      query(".action-title .user-link").innerHTML.trim(),
-      "&lt;h1&gt;Tim Stone&lt;/h1&gt;"
-    );
+    assert
+      .dom(".action-title .user-link")
+      .hasHtml("&lt;h1&gt;Tim Stone&lt;/h1&gt;");
   });
 
   test("Quotes use full name", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
     await selectText("#post_2 p");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]'
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="james, john, the third, post:2, topic:54079, full:true, username:james_john"]\nThis is a short topic.\n[/quote]\n\n'
+      );
   });
 
   test("Quoting a nested quote returns the correct username", async function (assert) {
     await visit("/t/short-topic-with-two-posts/54079");
     await selectText("#post_4 p");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]'
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="james_john, post:2, topic:54079"]\nThis is a short topic.\n[/quote]\n\n'
+      );
   });
 });
 
@@ -539,9 +515,10 @@ acceptance("Prioritizing Name fall back", function (needs) {
     // select a user with no name
     await selectText("#post_1 p");
     await click(".insert-quote");
-    assert.strictEqual(
-      query(".d-editor-input").value.trim(),
-      '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]'
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]\n\n'
+      );
   });
 });

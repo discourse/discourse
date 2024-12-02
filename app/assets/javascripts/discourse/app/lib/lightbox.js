@@ -9,7 +9,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { helperContext } from "discourse-common/lib/helpers";
 import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {
   const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
@@ -57,20 +57,20 @@ export default function lightbox(elem, siteSettings) {
       closeOnContentClick: false,
       removalDelay: isTesting() ? 0 : 300,
       mainClass: "mfp-zoom-in",
-      tClose: I18n.t("lightbox.close"),
+      tClose: i18n("lightbox.close"),
       tLoading: spinnerHTML,
       prependTo: isTesting() && document.getElementById("ember-testing"),
 
       gallery: {
         enabled: true,
-        tPrev: I18n.t("lightbox.previous"),
-        tNext: I18n.t("lightbox.next"),
-        tCounter: I18n.t("lightbox.counter"),
+        tPrev: i18n("lightbox.previous"),
+        tNext: i18n("lightbox.next"),
+        tCounter: i18n("lightbox.counter"),
         navigateByImgClick: imageClickNavigation,
       },
 
       ajax: {
-        tError: I18n.t("lightbox.content_load_error"),
+        tError: i18n("lightbox.content_load_error"),
       },
 
       callbacks: {
@@ -112,7 +112,7 @@ export default function lightbox(elem, siteSettings) {
       },
 
       image: {
-        tError: I18n.t("lightbox.image_load_error"),
+        tError: i18n("lightbox.image_load_error"),
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
           let src = [
@@ -128,7 +128,7 @@ export default function lightbox(elem, siteSettings) {
                 href +
                 '">' +
                 renderIcon("string", "download") +
-                I18n.t("lightbox.download") +
+                i18n("lightbox.download") +
                 "</a>"
             );
           }
@@ -137,7 +137,7 @@ export default function lightbox(elem, siteSettings) {
               item.src +
               '">' +
               renderIcon("string", "image") +
-              I18n.t("lightbox.open") +
+              i18n("lightbox.open") +
               "</a>"
           );
           return src.join(" &middot; ");

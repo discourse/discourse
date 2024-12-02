@@ -52,33 +52,49 @@
           <div class="edit-topic-title">
             <PrivateMessageGlyph @shouldShow={{this.model.isPrivateMessage}} />
 
-            <TextField
-              @id="edit-title"
-              @value={{this.buffered.title}}
-              @maxlength={{this.siteSettings.max_topic_title_length}}
-              @autofocus="true"
-            />
+            <PluginOutlet
+              @name="edit-topic-title"
+              @outletArgs={{hash model=this.model buffered=this.buffered}}
+            >
+              <TextField
+                @id="edit-title"
+                @value={{this.buffered.title}}
+                @maxlength={{this.siteSettings.max_topic_title_length}}
+                @autofocus="true"
+              />
+            </PluginOutlet>
 
             {{#if this.showCategoryChooser}}
-              <CategoryChooser
-                @value={{this.buffered.category_id}}
-                @onChange={{action "topicCategoryChanged"}}
-                class="small"
-              />
+              <PluginOutlet
+                @name="edit-topic-category"
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
+              >
+                <CategoryChooser
+                  @value={{this.buffered.category_id}}
+                  @onChange={{action "topicCategoryChanged"}}
+                  class="small"
+                />
+              </PluginOutlet>
             {{/if}}
 
             {{#if this.canEditTags}}
-              <MiniTagChooser
-                @value={{this.buffered.tags}}
-                @onChange={{action "topicTagsChanged"}}
-                @options={{hash
-                  filterable=true
-                  categoryId=this.buffered.category_id
-                  minimum=this.minimumRequiredTags
-                  filterPlaceholder="tagging.choose_for_topic"
-                  useHeaderFilter=true
-                }}
-              />
+              <PluginOutlet
+                @name="edit-topic-tags"
+                @outletArgs={{hash model=this.model buffered=this.buffered}}
+              >
+                <MiniTagChooser
+                  @value={{this.buffered.tags}}
+                  @onChange={{action "topicTagsChanged"}}
+                  @options={{hash
+                    filterable=true
+                    categoryId=this.buffered.category_id
+                    minimum=this.minimumRequiredTags
+                    filterPlaceholder="tagging.choose_for_topic"
+                    useHeaderFilter=true
+                  }}
+                />
+              </PluginOutlet>
+
             {{/if}}
 
             <span>
@@ -615,9 +631,7 @@
             @replyToPost={{action "replyToPost"}}
           />
         {{else}}
-          <div id="topic-footer-buttons">
-            <AnonymousTopicFooterButtons @topic={{this.model}} />
-          </div>
+          <AnonymousTopicFooterButtons @topic={{this.model}} />
         {{/if}}
       {{/if}}
 

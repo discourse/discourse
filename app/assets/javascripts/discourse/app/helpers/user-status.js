@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default function userStatus(user, { currentUser } = {}) {
   if (!user) {
@@ -13,7 +13,7 @@ export default function userStatus(user, { currentUser } = {}) {
   if (user.admin && currentUser?.staff) {
     return htmlSafe(
       iconHTML("shield-halved", {
-        label: I18n.t("user.admin", { user: name }),
+        label: i18n("user.admin", { user: name }),
       })
     );
   }
@@ -21,7 +21,7 @@ export default function userStatus(user, { currentUser } = {}) {
   if (user.moderator) {
     return htmlSafe(
       iconHTML("shield-halved", {
-        label: I18n.t("user.moderator", { user: name }),
+        label: i18n("user.moderator", { user: name }),
       })
     );
   }

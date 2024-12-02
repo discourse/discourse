@@ -23,6 +23,11 @@ export default class ChatTrackingStateManager extends Service {
 
   // NOTE: In future, we may want to preload some thread tracking state
   // as well, but for now we do that on demand when the user opens a channel,
+  willDestroy() {
+    super.willDestroy(...arguments);
+    cancel(this._onTriggerNotificationDebounceHandler);
+  }
+
   // to avoid having to load all the threads across all channels into memory at once.
   setupWithPreloadedState({ channel_tracking = {} }) {
     this.chatChannelsManager.channels.forEach((channel) => {
@@ -71,7 +76,7 @@ export default class ChatTrackingStateManager extends Service {
 
   get allChannelUrgentCount() {
     return (
-      this.publicChannelMentionCount +
+      this.allChannelMentionCount +
       this.directMessageUnreadCount +
       this.watchedThreadsUnreadCount
     );
@@ -85,11 +90,6 @@ export default class ChatTrackingStateManager extends Service {
     return this.#allChannels.reduce((unreadCount, channel) => {
       return unreadCount + channel.tracking.watchedThreadsUnreadCount;
     }, 0);
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    cancel(this._onTriggerNotificationDebounceHandler);
   }
 
   /**

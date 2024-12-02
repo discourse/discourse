@@ -1369,7 +1369,6 @@ ko:
       location: "위치"
       website: "웹 사이트"
       email_settings: "이메일"
-      hide_profile_and_presence: "내 공개 프로필 및 접속여부 기능 숨기기"
       enable_physical_keyboard: "iPad에서 실제 키보드 지원 활성화"
       text_size:
         title: "텍스트 크기"
@@ -1481,7 +1480,6 @@ ko:
           success: "초대 링크가 성공적으로 생성되었습니다!"
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다"
         invite:
-          instructions: "이 링크를 공유하여 이 사이트의 액세스 권한을 즉시 부여할 수 있습니다."
           expires_in_time: "%{time} 후에 만료"
           expired_at_time: "%{time}에 만료됨"
           copy_link: "링크 복사"
@@ -1495,9 +1493,8 @@ ko:
           add_to_groups: "그룹에 추가"
           expires_after: "다음 후 만료"
           send_invite_email: "저장 및 이메일 전송"
-          save_invite: "저장"
+          update_invite: "업데이트"
           cancel: "취소"
-          invite_saved: "초대가 저장되었습니다."
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -2311,6 +2308,8 @@ ko:
         top: "더 이상 주요 주제가 없습니다."
         bookmarks: "더 이상 북마크한 주제가 없습니다."
     topic_bulk_actions:
+      dismiss:
+        name: "무시"
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -2755,6 +2754,7 @@ ko:
       few_likes_left: "긍정적인 활동에 감사합니다! 오늘 표시할 수 있는 좋아요가 얼마 남지 않았습니다."
       controls:
         reply: "이 게시물에 대한 댓글 작성을 시작합니다"
+        like_action: "좋아요"
         like: "이 게시물에 좋아요 누르기"
         has_liked: "이 게시물을 좋아합니다"
         read_indicator: "이 게시물을 읽은 회원"
@@ -2762,10 +2762,13 @@ ko:
         edit: "이 게시물 편집"
         edit_action: "편집"
         edit_anonymous: "이 게시물을 편집하려면 로그인이 필요합니다."
+        flag_action: "신고"
         flag: "이 게시물에 주의를 주거나 비공개로 알림을 보내기 위해 비공개로 신고합니다"
         delete: "이 게시물 삭제"
         undelete: "이 글 삭제를 취소합니다."
+        share_action: "공유하기"
         share: "이 게시물의 링크 공유"
+        copy_action: "링크 복사"
         more: "더 보기"
         delete_replies:
           confirm: "이 게시물에 대한 댓글을 삭제할까요?"
@@ -2775,6 +2778,7 @@ ko:
             other: "예, %{count}개의 모든 댓글"
           just_the_post: "아니요, 이 게시물만 삭제합니다"
         admin: "게시물 관리자 작업"
+        admin_action: "관리자"
         permanently_delete: "영구 삭제"
         permanently_delete_confirmation: "이 게시물을 영구적으로 삭제할까요? 삭제된 게시물은 복구할 수 없습니다."
         wiki: "위키 만들기"
@@ -3978,6 +3982,9 @@ ko:
         look_and_feel:
           themes:
             title: "테마"
+        user_fields:
+          type: "유형"
+          delete: "삭제하기"
       plugins:
         title: "플러그인"
         name: "이름"
@@ -4674,6 +4681,11 @@ ko:
         status: "상태"
         show_emails: "이메일 표시"
         hide_emails: "이메일 숨기기"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "삭제하기"
         nav:
           new: "신규"
           active: "활성"
@@ -4792,7 +4804,6 @@ ko:
         time_read: "읽은 시간"
         post_edits_count: "게시물 편집"
         anonymize: "사용자 익명화"
-        anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymize this account"
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
@@ -4845,7 +4856,6 @@ ko:
           other: "모든 게시물을 삭제할 수 없습니다. 일부 게시물은 %{count}일 이전에 작성되었습니다. (delete_user_max_post_age 설정)"
         cant_delete_all_too_many_posts:
           other: "이 사용자는 %{count}개 이상의 게시물을 보유하고 있기 때문에 모든 게시물을 삭제할 수 없습니다. (delete_all_posts_max)"
-        delete_confirm_title: "정말로 이 사용자를 삭제하시겠습니까? 이는 영구적입니다!"
         delete_and_block: "이 이메일과 IP 주소를 삭제하고 <b>차단</b>"
         delete_dont_block: "삭제만 하기"
         deleted: "사용자가 삭제되었습니다."
@@ -4929,8 +4939,6 @@ ko:
           confirm_delete: "이 DiscourseConnect 기록을 삭제할까요?"
       user_fields:
         title: "사용자 필드"
-        help: "사용자가 입력할 수 있는 필드를 추가합니다."
-        create: "사용자 필드 생성"
         untitled: "무제"
         name: "필드 이름"
         type: "필드 유형"
@@ -4951,22 +4959,15 @@ ko:
             title: "선택 사항"
         editable:
           title: "가입 후 편집 가능"
-          enabled: "편집 가능"
-          disabled: "편집 불가"
         show_on_profile:
           title: "다른 사람이 프로필을 볼수 있게할까요"
-          enabled: "프로필에 표시"
-          disabled: "프로필에 표시하지 않기"
         show_on_user_card:
           title: "사용자 카드에 표시할까요"
-          enabled: "사용자 카드에 표시"
-          disabled: "사용자 카드에 표시하지 않기"
         searchable:
           title: "검색 가능한가요"
-          enabled: "검색 가능"
-          disabled: "검색 불가"
+          enabled: "검색 가능한가요"
         field_types:
-          text: "텍스트 필드"
+          text: "텍스트"
           confirm: "확인"
           dropdown: "드롭다운"
           multiselect: "다중 선택"
@@ -5136,9 +5137,7 @@ ko:
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여
       emoji:
         title: "이모티콘"
-        help: "모든 사람이 사용할 수 있는 새 이모티콘을 추가하세요. 파일명으로 이모티콘을 만들려면 이름을 입력하지 않고 여러 파일을 한 번에 드래그 앤 드롭하세요. 선택한 그룹은 동시에 추가되는 모든 파일에 사용됩니다. '새 이모티콘 추가'를 클릭하여 파일 선택기를 열 수도 있습니다."
-        add: "새 이모티콘 추가"
-        choose_files: "파일 선택"
+        delete: "삭제하기"
         name: "이름"
         group: "그룹"
         image: "이미지"
@@ -5177,15 +5176,17 @@ ko:
         category_id: "카테고리 ID"
         category_title: "카테고리"
         tag_name: "태그 이름"
+        tag_title: "태그"
         external_url: "외부 또는 상대 URL"
+        user_title: "사용자"
         username: "아이디"
         destination: "대상"
         copy_to_clipboard: "고정 링크를 클립보드에 복사"
         delete_confirm: 이 고정 링크를 삭제할까요?
         form:
           label: "신규:"
-          add: "추가"
-          filter: "검색(URL 또는 외부 URL)"
+          url: "URL"
+          save: "저장"
       reseed:
         action:
           label: "텍스트 대체..."

@@ -121,7 +121,7 @@ function prepareSidebarSectionClass(Section, routerService) {
           return routerService.isActive(link.route, ...models, {
             queryParams,
           });
-        } catch (e) {
+        } catch {
           // false if ember throws an exception while checking the routes
           return false;
         }

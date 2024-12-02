@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThread from "discourse/plugins/chat/discourse/components/chat-thread";
 
@@ -16,26 +15,20 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   @service chatChannelsManager;
   @service chatHistory;
 
-  @tracked showThreadFullTitle = false;
-
-  get showfullTitle() {
-    return this.chatStateManager.isDrawerExpanded && this.showThreadFullTitle;
-  }
-
   get backButton() {
     const link = {
       models: this.chat.activeChannel?.routeModels,
     };
 
     if (this.chatHistory.previousRoute?.name === "chat.channel.threads") {
-      link.title = I18n.t("chat.return_to_threads_list");
+      link.title = i18n("chat.return_to_threads_list");
       link.route = "chat.channel.threads";
     } else if (this.chatHistory.previousRoute?.name === "chat.threads") {
-      link.title = I18n.t("chat.my_threads.title");
+      link.title = i18n("chat.my_threads.title");
       link.route = "chat.threads";
       link.models = [];
     } else {
-      link.title = I18n.t("chat.return_to_channel");
+      link.title = i18n("chat.return_to_channel");
       link.route = "chat.channel";
     }
 
@@ -44,8 +37,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
 
   get threadTitle() {
     return (
-      this.chat.activeChannel?.activeThread?.title ??
-      I18n.t("chat.thread.label")
+      this.chat.activeChannel?.activeThread?.title ?? i18n("chat.thread.label")
     );
   }
 
@@ -70,11 +62,6 @@ export default class ChatDrawerRoutesChannelThread extends Component {
     } catch (error) {
       popupAjaxError(error);
     }
-  }
-
-  @action
-  setFullTitle(value) {
-    this.showThreadFullTitle = value;
   }
 
   <template>
@@ -110,7 +97,6 @@ export default class ChatDrawerRoutesChannelThread extends Component {
                 <ChatThread
                   @thread={{thread}}
                   @targetMessageId={{@params.messageId}}
-                  @setFullTitle={{this.setFullTitle}}
                 />
               {{/if}}
             {{/each}}

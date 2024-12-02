@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "tasks/hashtags" do
-  before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
-  end
-
   describe "hashtag:mark_old_format_for_rebake" do
     fab!(:category) { Fabricate(:category, slug: "support") }
 
@@ -25,7 +20,7 @@ RSpec.describe "tasks/hashtags" do
         cooked: post_1.cooked.gsub(hashtag_html, "<span class=\"hashtag\"'>#support</span>"),
       )
 
-      capture_stdout { Rake::Task["hashtags:mark_old_format_for_rebake"].invoke }
+      capture_stdout { invoke_rake_task("hashtags:mark_old_format_for_rebake") }
 
       [post_1, post_2, post_3].each(&:reload)
 

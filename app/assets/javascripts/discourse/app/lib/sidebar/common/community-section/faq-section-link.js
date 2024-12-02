@@ -1,5 +1,5 @@
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class FAQSectionLink extends BaseSectionLink {
   get renameToGuidelines() {
@@ -22,16 +22,16 @@ export default class FAQSectionLink extends BaseSectionLink {
 
   get title() {
     if (this.renameToGuidelines) {
-      return I18n.t("sidebar.sections.community.links.guidelines.title");
+      return i18n("sidebar.sections.community.links.guidelines.title");
     } else {
-      return I18n.t("sidebar.sections.community.links.faq.title");
+      return i18n("sidebar.sections.community.links.faq.title");
     }
   }
 
   get text() {
     const name = this.renameToGuidelines ? "Guidelines" : this.overridenName;
 
-    return I18n.t(
+    return i18n(
       `sidebar.sections.community.links.${name.toLowerCase()}.content`,
       { defaultValue: name }
     );

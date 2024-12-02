@@ -1,7 +1,7 @@
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
@@ -22,7 +22,7 @@ export default class PinnedOptions extends DropdownSelectBoxComponent {
     const pinned = this.value;
     const globally = pinnedGlobally ? "_globally" : "";
     const state = pinned ? `pinned${globally}` : UNPINNED;
-    const title = I18n.t(`topic_statuses.${state}.title`);
+    const title = i18n(`topic_statuses.${state}.title`);
 
     content.label = htmlSafe(`<span>${title}</span>`);
     content.title = title;
@@ -38,19 +38,19 @@ export default class PinnedOptions extends DropdownSelectBoxComponent {
     return [
       {
         id: PINNED,
-        name: I18n.t(`topic_statuses.pinned${globally}.title`),
+        name: i18n(`topic_statuses.pinned${globally}.title`),
         description: this.site.mobileView
           ? null
-          : I18n.t(`topic_statuses.pinned${globally}.help`),
+          : i18n(`topic_statuses.pinned${globally}.help`),
         icon: "thumbtack",
       },
       {
         id: UNPINNED,
-        name: I18n.t("topic_statuses.unpinned.title"),
+        name: i18n("topic_statuses.unpinned.title"),
         icon: "thumbtack unpinned",
         description: this.site.mobileView
           ? null
-          : I18n.t("topic_statuses.unpinned.help"),
+          : i18n("topic_statuses.unpinned.help"),
       },
     ];
   }

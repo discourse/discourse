@@ -1,10 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Post - History", function (needs) {
   needs.user();
@@ -54,10 +50,10 @@ acceptance("Post - History", function (needs) {
   test("Shows highlighted tag changes", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("article[data-post-id='419'] .edits button");
-    assert.equal(count(".discourse-tag"), 4);
-    assert.equal(count(".discourse-tag.diff-del"), 1);
-    assert.equal(query(".discourse-tag.diff-del").textContent, "tag1");
-    assert.equal(count(".discourse-tag.diff-ins"), 1);
-    assert.equal(query(".discourse-tag.diff-ins").textContent, "tag3");
+    assert.dom(".discourse-tag").exists({ count: 4 });
+    assert.dom(".discourse-tag.diff-del").exists({ count: 1 });
+    assert.dom(".discourse-tag.diff-del").hasText("tag1");
+    assert.dom(".discourse-tag.diff-ins").exists({ count: 1 });
+    assert.dom(".discourse-tag.diff-ins").hasText("tag3");
   });
 });

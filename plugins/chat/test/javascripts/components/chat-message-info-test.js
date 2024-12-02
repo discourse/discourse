@@ -4,8 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
@@ -26,10 +25,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
     assert
       .dom(".chat-message-info__username")
       .hasText(this.message.chatWebhookEvent.username);
-    assert.strictEqual(
-      query(".chat-message-info__bot-indicator").textContent.trim(),
-      I18n.t("chat.bot")
-    );
+    assert.dom(".chat-message-info__bot-indicator").hasText(i18n("chat.bot"));
   });
 
   test("user", async function (assert) {
@@ -52,7 +48,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__date"));
+    assert.dom(".chat-message-info__date").exists();
   });
 
   test("bookmark (with reminder)", async function (assert) {
@@ -66,9 +62,9 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(
-      exists(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
-    );
+    assert
+      .dom(".chat-message-info__bookmark .d-icon-discourse-bookmark-clock")
+      .exists();
   });
 
   test("bookmark (no reminder)", async function (assert) {
@@ -84,7 +80,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__bookmark .d-icon-bookmark"));
+    assert.dom(".chat-message-info__bookmark .d-icon-bookmark").exists();
   });
 
   test("user status", async function (assert) {
@@ -95,7 +91,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     await render(template);
 
-    assert.true(exists(".chat-message-info__status .user-status-message"));
+    assert.dom(".chat-message-info__status .user-status-message").exists();
   });
 
   test("flag status", async function (assert) {
@@ -108,7 +104,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
-      .hasAttribute("title", I18n.t("chat.you_flagged"));
+      .hasAttribute("title", i18n("chat.you_flagged"));
   });
 
   test("reviewable", async function (assert) {
@@ -121,7 +117,7 @@ module("Discourse Chat | Component | chat-message-info", function (hooks) {
 
     assert
       .dom(".chat-message-info__flag > .svg-icon-title")
-      .hasAttribute("title", I18n.t("chat.you_flagged"));
+      .hasAttribute("title", i18n("chat.you_flagged"));
   });
 
   test("with username classes", async function (assert) {

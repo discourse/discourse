@@ -1,12 +1,6 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("EmojiPicker", function (needs) {
   needs.user();
@@ -24,10 +18,10 @@ acceptance("EmojiPicker", function (needs) {
     await click("#topic-footer-buttons .btn.create");
 
     await click("button.emoji.btn");
-    assert.ok(exists(".emoji-picker.opened"), "it opens the picker");
+    assert.dom(".emoji-picker.opened").exists("opens the picker");
 
     await click("button.emoji.btn");
-    assert.notOk(exists(".emoji-picker.opened"), "it closes the picker");
+    assert.dom(".emoji-picker.opened").doesNotExist("closes the picker");
   });
 
   test("filters emoji", async function (assert) {
@@ -45,11 +39,12 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      ":grinning:",
-      "it adds the emoji code in the editor when selected"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        ":grinning:",
+        "adds the emoji code in the editor when selected"
+      );
   });
 
   test("emoji picker adds leading whitespace before emoji", async function (assert) {
@@ -60,21 +55,23 @@ acceptance("EmojiPicker", function (needs) {
     await fillIn(".d-editor-input", "This is a test input");
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "This is a test input :grinning:",
-      "it adds the emoji code and a leading whitespace when there is text"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "This is a test input :grinning:",
+        "adds the emoji code and a leading whitespace when there is text"
+      );
 
     // Whitespace should not be added on whitespace
     await fillIn(".d-editor-input", "This is a test input ");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      query(".d-editor-input").value,
-      "This is a test input :grinning:",
-      "it adds the emoji code and no leading whitespace when user already entered whitespace"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "This is a test input :grinning:",
+        "adds the emoji code and no leading whitespace when user already entered whitespace"
+      );
   });
 
   test("emoji picker has a list of recently used emojis", async function (assert) {
@@ -83,12 +80,11 @@ acceptance("EmojiPicker", function (needs) {
     await click("button.emoji.btn");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-      ),
-      "it shows recent selected emoji"
-    );
+      )
+      .exists("shows recent selected emoji");
 
     assert
       .dom('.emoji-picker .category-button[data-section="recent"]')
@@ -96,12 +92,11 @@ acceptance("EmojiPicker", function (needs) {
 
     await click(".emoji-picker .trash-recent");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".emoji-picker .section.recent .section-group img.emoji[title='grinning']"
-      ),
-      "it has cleared recent emojis"
-    );
+      )
+      .doesNotExist("has cleared recent emojis");
 
     assert
       .dom('.emoji-picker .section[data-section="recent"]')
@@ -119,11 +114,9 @@ acceptance("EmojiPicker", function (needs) {
     await click(".emoji-picker-emoji-area img.emoji[title='sunglasses']");
     await click(".emoji-picker-emoji-area img.emoji[title='grinning']");
 
-    assert.strictEqual(
-      count('.section[data-section="recent"] .section-group img.emoji'),
-      2,
-      "it has multiple recent emojis"
-    );
+    assert
+      .dom('.section[data-section="recent"] .section-group img.emoji')
+      .exists({ count: 2 }, "has multiple recent emojis");
 
     assert
       .dom(".section.recent .section-group img.emoji")
@@ -137,26 +130,32 @@ acceptance("EmojiPicker", function (needs) {
     await click(`.emoji-picker-emoji-area img.emoji[title="sunglasses"]`);
     await click(`.emoji-picker-emoji-area img.emoji[title="grinning"]`);
 
-    let recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "grinning");
-    assert.strictEqual(recent[1].title, "sunglasses");
+    let recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "grinning");
+    assert.dom(recent[1]).hasAttribute("title", "sunglasses");
 
     await click(
       `.section[data-section="recent"] .section-group img.emoji[title="sunglasses"]`
     );
 
     // The order is still the same
-    recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "grinning");
-    assert.strictEqual(recent[1].title, "sunglasses");
+    recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "grinning");
+    assert.dom(recent[1]).hasAttribute("title", "sunglasses");
 
     await click("button.emoji.btn");
     await click("button.emoji.btn");
 
     // but updates when you re-open
-    recent = queryAll(".section.recent .section-group img.emoji");
-    assert.strictEqual(recent[0].title, "sunglasses");
-    assert.strictEqual(recent[1].title, "grinning");
+    recent = document.querySelectorAll(
+      ".section.recent .section-group img.emoji"
+    );
+    assert.dom(recent[0]).hasAttribute("title", "sunglasses");
+    assert.dom(recent[1]).hasAttribute("title", "grinning");
   });
 
   test("emoji picker persists state", async function (assert) {
@@ -211,11 +210,12 @@ acceptance("EmojiPicker", function (needs) {
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
     await triggerKeyEvent(document.activeElement, "keydown", "Enter");
-    assert.strictEqual(
-      document.querySelector(".d-editor-input").value,
-      ":smiley:",
-      "Pressing enter inserts the emoji markup in the composer"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        ":smiley:",
+        "Pressing enter inserts the emoji markup in the composer"
+      );
 
     await click("#topic-footer-buttons .btn.create");
     await click(".emoji.btn");

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;
@@ -26,6 +26,7 @@ export default class ChangeOwnerModal extends Component {
   get selectedPostsCount() {
     return this.args.model.selectedPostsCount;
   }
+
   @action
   async changeOwnershipOfPosts() {
     this.saving = true;
@@ -43,8 +44,8 @@ export default class ChangeOwnerModal extends Component {
         this.args.model.toggleMultiSelect();
       }
       DiscourseURL.routeTo(this.args.model.topic.url);
-    } catch (error) {
-      this.flash = I18n.t("topic.change_owner.error");
+    } catch {
+      this.flash = i18n("topic.change_owner.error");
       this.saving = false;
     }
 

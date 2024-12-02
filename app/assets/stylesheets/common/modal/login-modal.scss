@@ -68,13 +68,6 @@
     display: flex;
     flex-direction: column;
 
-    .input-group {
-      &.create-account-email,
-      &.create-account__username,
-      &.create-account__fullname.required {
-        order: -1;
-      }
-    }
     .create-account-associate-link {
       order: 1;
     }
@@ -98,15 +91,6 @@
     font-size: var(--font-down-1);
     color: var(--primary-medium);
     overflow-wrap: anywhere;
-    transition: opacity 0.2s ease;
-    opacity: 0;
-  }
-
-  .input-group input:focus {
-    & ~ .more-info,
-    & ~ .instructions {
-      opacity: 1;
-    }
   }
 
   .caps-lock-warning {
@@ -258,6 +242,9 @@
   .create-account__password-info {
     display: flex;
     justify-content: space-between;
+    .create-account__password-tip-validation {
+      display: flex;
+    }
   }
 }
 

@@ -4,7 +4,7 @@ import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -35,8 +35,8 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
-    await fillIn(query(".setting input"), "value");
-    await click(query(".setting .d-icon-check"));
+    await fillIn(".setting input", "value");
+    await click(".setting .d-icon-check");
 
     assert.strictEqual(query(".validation-error h1").outerHTML, message);
   });
@@ -55,8 +55,8 @@ module("Integration | Component | site-setting", function (hooks) {
     });
 
     await render(hbs`<SiteSetting @setting={{this.setting}} />`);
-    await fillIn(query(".setting input"), "value");
-    await click(query(".setting .d-icon-check"));
+    await fillIn(".setting input", "value");
+    await click(".setting .d-icon-check");
 
     assert.dom(".validation-error h1").doesNotExist();
   });
@@ -72,13 +72,13 @@ module("Integration | Component | site-setting", function (hooks) {
 
     assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
 
-    await click(query(".file-types-list__button.image"));
+    await click(".file-types-list__button.image");
 
     assert
       .dom(".formatted-selection")
       .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
 
-    await click(query(".file-types-list__button.image"));
+    await click(".file-types-list__button.image");
 
     assert
       .dom(".formatted-selection")
@@ -164,7 +164,7 @@ module(
       await fillIn(".file-size-input", "5000");
 
       assert.dom(".validation-error").hasText(
-        I18n.t("file_size_input.error.size_too_large", {
+        i18n("file_size_input.error.size_too_large", {
           provided_file_size: "4.9 GB",
           max_file_size: "4 MB",
         }),
@@ -188,7 +188,7 @@ module(
       await fillIn(".file-size-input", "100");
 
       assert.dom(".validation-error").hasText(
-        I18n.t("file_size_input.error.size_too_small", {
+        i18n("file_size_input.error.size_too_small", {
           provided_file_size: "100 KB",
           min_file_size: "512 KB",
         }),

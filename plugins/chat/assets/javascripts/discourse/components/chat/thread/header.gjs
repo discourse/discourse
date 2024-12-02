@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -21,23 +23,23 @@ export default class ChatThreadHeader extends Component {
 
     if (prevPage === "chat.channel.threads") {
       route = "chat.channel.threads";
-      title = I18n.t("chat.return_to_threads_list");
+      title = i18n("chat.return_to_threads_list");
       models = this.channel?.routeModels;
     } else if (prevPage === "chat.channel.index" && this.site.desktopView) {
       route = "chat.channel.threads";
-      title = I18n.t("chat.return_to_threads_list");
+      title = i18n("chat.return_to_threads_list");
       models = this.channel?.routeModels;
     } else if (prevPage === "chat.threads") {
       route = "chat.threads";
-      title = I18n.t("chat.my_threads.title");
+      title = i18n("chat.my_threads.title");
       models = [];
     } else if (!this.currentUser.isInDoNotDisturb() && this.unreadCount > 0) {
       route = "chat.channel.threads";
-      title = I18n.t("chat.return_to_threads_list");
+      title = i18n("chat.return_to_threads_list");
       models = this.channel?.routeModels;
     } else {
       route = "chat.channel.index";
-      title = I18n.t("chat.return_to_channel");
+      title = i18n("chat.return_to_channel");
       models = this.channel?.routeModels;
     }
 
@@ -49,7 +51,7 @@ export default class ChatThreadHeader extends Component {
   }
 
   get headerTitle() {
-    return this.args.thread?.title ?? I18n.t("chat.thread.label");
+    return this.args.thread?.title ?? i18n("chat.thread.label");
   }
 
   get unreadCount() {
@@ -69,8 +71,6 @@ export default class ChatThreadHeader extends Component {
     ) {
       return () =>
         this.modal.show(ThreadSettingsModal, { model: this.args.thread });
-    } else {
-      return noop;
     }
   }
 
@@ -91,7 +91,9 @@ export default class ChatThreadHeader extends Component {
 
       <navbar.Title
         @title={{replaceEmoji this.headerTitle}}
-        @openThreadTitleModal={{this.openThreadTitleModal}}
+        {{on "click" (or this.openThreadTitleModal noop)}}
+        role={{if this.openThreadTitleModal "button"}}
+        class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
         <action.ThreadTrackingDropdown @thread={{@thread}} />

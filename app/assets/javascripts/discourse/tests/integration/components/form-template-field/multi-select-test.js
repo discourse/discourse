@@ -2,7 +2,7 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
@@ -22,30 +22,23 @@ module(
       await render(
         hbs`<FormTemplateField::MultiSelect @choices={{this.choices}}/>`
       );
-      assert.ok(
-        exists(".form-template-field__multi-select"),
-        "A multiselect component exists"
-      );
+      assert
+        .dom(".form-template-field__multi-select")
+        .exists("a multiselect component exists");
 
       const dropdown = queryAll(
         ".form-template-field__multi-select option:not(.form-template-field__multi-select-placeholder)"
       );
       assert.strictEqual(dropdown.length, 3, "it has 3 choices");
-      assert.strictEqual(
-        dropdown[0].value,
-        "Choice 1",
-        "it has the correct name for choice 1"
-      );
-      assert.strictEqual(
-        dropdown[1].value,
-        "Choice 2",
-        "it has the correct name for choice 2"
-      );
-      assert.strictEqual(
-        dropdown[2].value,
-        "Choice 3",
-        "it has the correct name for choice 3"
-      );
+      assert
+        .dom(dropdown[0])
+        .hasValue("Choice 1", "has the correct name for choice 1");
+      assert
+        .dom(dropdown[1])
+        .hasValue("Choice 2", "has the correct name for choice 2");
+      assert
+        .dom(dropdown[2])
+        .hasValue("Choice 3", "has the correct name for choice 3");
     });
 
     test("renders a multi-select with choices and attributes", async function (assert) {
@@ -61,16 +54,13 @@ module(
       await render(
         hbs`<FormTemplateField::MultiSelect @choices={{this.choices}} @attributes={{this.attributes}} />`
       );
-      assert.ok(
-        exists(".form-template-field__multi-select"),
-        "A multiselect dropdown component exists"
-      );
+      assert
+        .dom(".form-template-field__multi-select")
+        .exists("a multiselect dropdown component exists");
 
-      assert.strictEqual(
-        query(".form-template-field__multi-select-placeholder").innerText,
-        attributes.none_label,
-        "None label is correct"
-      );
+      assert
+        .dom(".form-template-field__multi-select-placeholder")
+        .hasText(attributes.none_label, "None label is correct");
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {

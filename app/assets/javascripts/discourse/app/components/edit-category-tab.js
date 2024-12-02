@@ -8,7 +8,7 @@ import { propertyEqual } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("li")
 @classNameBindings("active", "tabClassName")
@@ -23,7 +23,7 @@ export default class EditCategoryTab extends Component {
 
   @discourseComputed("tab")
   title(tab) {
-    return I18n.t(`category.${underscore(tab)}`);
+    return i18n(`category.${underscore(tab)}`);
   }
 
   didInsertElement() {

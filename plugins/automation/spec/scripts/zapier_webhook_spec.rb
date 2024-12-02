@@ -22,12 +22,11 @@ describe "ZapierWebhook" do
   end
 
   context "with invalid webhook url" do
-    before do
-      @orig_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @orig_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "logs an error and do nothing" do
       expect { automation.trigger! }.not_to change {

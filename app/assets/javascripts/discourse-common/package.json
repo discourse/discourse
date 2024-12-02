@@ -20,7 +20,7 @@
     "ember-auto-import": "^2.10.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-resolver": "^13.0.2",
+    "ember-resolver": "^13.1.0",
     "handlebars": "^4.7.8",
     "truth-helpers": "workspace:1.0.0"
   },
@@ -32,7 +32,7 @@
     "@types/qunit": "^2.19.12",
     "@types/rsvp": "^4.0.9",
     "broccoli-asset-rev": "^3.0.0",
-    "ember-cli": "~5.12.0",
+    "ember-cli": "~6.0.1",
     "ember-cli-inject-live-reload": "^2.1.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",

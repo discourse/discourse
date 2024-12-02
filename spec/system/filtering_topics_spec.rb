@@ -6,29 +6,21 @@ describe "Filtering topics", type: :system do
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  before { SiteSetting.experimental_topics_filter = true }
-
   it "updates the input field when the query string is changed" do
     sidebar_section = Fabricate(:sidebar_section, user: user)
 
-    sidebar_section_link_1 =
-      Fabricate(
-        :sidebar_section_link,
-        sidebar_section: sidebar_section,
-        linkable: Fabricate(:sidebar_url, name: "filter tags", value: "/filter?q=tag%3Atag1"),
-      )
+    Fabricate(
+      :sidebar_section_link,
+      sidebar_section: sidebar_section,
+      linkable: Fabricate(:sidebar_url, name: "filter tags", value: "/filter?q=tag%3Atag1"),
+    )
 
-    sidebar_section_link_2 =
-      Fabricate(
-        :sidebar_section_link,
-        sidebar_section: sidebar_section,
-        linkable:
-          Fabricate(
-            :sidebar_url,
-            name: "filter categories",
-            value: "/filter?q=category%3Acategory1",
-          ),
-      )
+    Fabricate(
+      :sidebar_section_link,
+      sidebar_section: sidebar_section,
+      linkable:
+        Fabricate(:sidebar_url, name: "filter categories", value: "/filter?q=category%3Acategory1"),
+    )
 
     sign_in(user)
 
@@ -113,6 +105,38 @@ describe "Filtering topics", type: :system do
       expect(topic_list).to have_no_topic(topic_with_tag)
       expect(topic_list).to have_no_topic(topic_with_tag2)
       expect(topic_list).to have_topic(topic_with_tag_and_tag2)
+    end
+  end
+
+  describe "bulk topic selection" do
+    fab!(:user) { Fabricate(:moderator) }
+
+    it "shows the buttons and checkboxes" do
+      topics = Fabricate.times(2, :topic)
+      sign_in(user)
+      visit("/filter")
+
+      find("button.bulk-select").click
+      expect(topic_list).to have_topic_checkbox(topics.first)
+      expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+      topic_list.click_topic_checkbox(topics.first)
+      expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+    end
+
+    context "when on mobile", mobile: true do
+      it "shows the buttons and checkboxes" do
+        topics = Fabricate.times(2, :topic)
+        sign_in(user)
+        visit("/filter")
+
+        find("button.bulk-select").click
+        expect(topic_list).to have_topic_checkbox(topics.first)
+        expect(page).to have_no_css("button.bulk-select-topics-dropdown-trigger")
+
+        topic_list.click_topic_checkbox(topics.first)
+        expect(page).to have_css("button.bulk-select-topics-dropdown-trigger")
+      end
     end
   end
 end

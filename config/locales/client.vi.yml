@@ -1361,7 +1361,6 @@ vi:
       location: "Vị trí"
       website: "Web Site"
       email_settings: "Email"
-      hide_profile_and_presence: "Ẩn hồ sơ công khai và các tính năng hiện diện của tôi"
       enable_physical_keyboard: "Bật hỗ trợ bàn phím vật lý trên iPad"
       text_size:
         title: "Cở chữ"
@@ -1474,7 +1473,6 @@ vi:
           success: "Link mời đã được tạo thành công !"
           error: "Đã xảy ra lỗi khi tạo liên kết Mời"
         invite:
-          instructions: "Chia sẻ liên kết này để cấp quyền truy cập ngay lập tức vào trang web này:"
           expires_in_time: "Hết hạn trong %{time}"
           expired_at_time: "Đã hết hạn vào lúc %{time}"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
@@ -1489,9 +1487,8 @@ vi:
           expires_after: "Hết hạn sau"
           send_invite_email: "Lưu và Gửi Email"
           send_invite_email_instructions: "Hạn chế lời mời vào email để gửi một email mời"
-          save_invite: "Lưu lại"
+          update_invite: "Cập nhật"
           cancel: "Huỷ"
-          invite_saved: "Đã lưu lời mời."
         bulk_invite:
           none: "Không có lời mời để hiển thị trên trang này."
           text: "Mời hàng loạt"
@@ -2352,6 +2349,8 @@ vi:
         top: "Không còn của đề top nào nữa."
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
+      dismiss:
+        name: "Bỏ qua"
       close_topics:
         name: "Đóng"
         optional: (tùy chọn)
@@ -2807,16 +2806,20 @@ vi:
       few_likes_left: "Cám ơn bạn đã chia sẻ cảm nhận! Bạn chỉ còn lại vài lượt like cho ngày hôm nay."
       controls:
         reply: "bắt đầu soản trả lời cho bài viết này"
+        like_action: "Thích"
         like: "like bài viết này"
         has_liked: "bạn đã thích bài viết này"
         read_indicator: "thành viên đã đọc bài đăng này"
+        undo_like_action: "Hủy like"
         undo_like: "hủy like"
         edit: "sửa bài viết này"
         edit_action: "Sửa"
         edit_anonymous: "Xin lỗi, nhưng bạn cần đăng nhập để sửa bài viết này."
+        flag_action: "Gắn cờ"
         flag: "đánh dấu bài viết này để tạo chú ý hoặc gửi một thông báo riêng về nó"
         delete: "xóa bài viết này"
         undelete: "hủy xóa bài viết này"
+        share_action: "Chia sẻ"
         share: "chia sẻ liên kết đến bài viết này"
         more: "Thêm"
         delete_replies:
@@ -2827,6 +2830,7 @@ vi:
             other: "Có, và tất cả %{count} câu trả lời"
           just_the_post: "Không, chỉ xóa chủ đề"
         admin: "quản lý bài viết"
+        admin_action: "Quản trị"
         permanently_delete: "Xóa vĩnh viễn"
         permanently_delete_confirmation: "Bạn có chắc chắn muốn xóa vĩnh viễn bài đăng này không? Bạn sẽ không thể khôi phục nó."
         wiki: "Tạo Wiki"
@@ -4084,6 +4088,9 @@ vi:
         look_and_feel:
           themes:
             title: "Themes"
+        user_fields:
+          type: "Loại"
+          delete: "Xóa"
       plugins:
         title: "Plugin"
         name: "Tên"
@@ -4759,6 +4766,11 @@ vi:
         status: "Trạng thái"
         show_emails: "Hiện địa chỉ Email"
         hide_emails: "Ẩn Email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Đóng"
+              confirm: "Xóa"
         nav:
           new: "Mới"
           active: "Kích hoạt"
@@ -4868,7 +4880,6 @@ vi:
         time_read: "Thời gian đọc"
         post_edits_count: "Sửa Bài Viết"
         anonymize: "Tài khoản Nặc danh"
-        anonymize_confirm: "Bạn CHĂC CHẮN muốn xóa tài khoản nặc danh này? Nó sẽ thay đổi tên đăng nhập và email, và xóa tất cả thông tin trong hồ sơ."
         anonymize_yes: "Đồng ý, đây là tài khoản nặc danh."
         anonymize_failed: "Có vấn đề với những tài khoản nặc danh."
         delete: "Xóa thành viên"
@@ -5001,8 +5012,6 @@ vi:
           delete_sso_record: "Xóa bản ghi SSO"
       user_fields:
         title: "Trường tài khoản"
-        help: "Thêm trường dữ liệu cho người dùng nhập."
-        create: "Tạo trường tài khoản"
         untitled: "Không có tiêu đề"
         name: "Tên Trường"
         type: "Loại Trường"
@@ -5023,19 +5032,10 @@ vi:
             title: "Tùy chọn"
         editable:
           title: "Có thể chỉnh sửa sau khi đăng ký"
-          enabled: "có thể chỉnh sửa"
-          disabled: "không thể chỉnh sửa"
-        show_on_profile:
-          enabled: "hiển thị trong hồ sơ"
-          disabled: "không hiển thị trong hồ sơ"
         show_on_user_card:
           title: "Hiện trên thẻ người dùng"
-          enabled: "hiển trên thẻ người dùng"
-          disabled: "không hiện trên thẻ người dùng"
-        searchable:
-          disabled: "không thể tìm kiếm được"
         field_types:
-          text: "Nội dung chữ"
+          text: "Văn bản"
           confirm: "Xác nhận"
           dropdown: "Xổ xuống"
           multiselect: "Chọn nhiều"
@@ -5207,9 +5207,7 @@ vi:
           grant_existing_holders: Cấp huy hiệu bổ sung cho những chủ sở hữu huy hiệu hiện có
       emoji:
         title: "Emoji"
-        help: "Thêm biểu tượng cảm xúc mới sẽ có sẵn cho tất cả mọi người. Kéo và thả nhiều tệp cùng một lúc mà không cần nhập tên để tạo biểu tượng cảm xúc bằng tên tệp của chúng. Nhóm đã chọn sẽ được sử dụng cho tất cả các tệp được thêm vào cùng một lúc. Bạn cũng có thể nhấp vào 'Thêm biểu tượng cảm xúc mới' để mở bộ chọn tệp."
-        add: "Thêm emoji mới"
-        choose_files: "Chọn tệp"
+        delete: "Xóa"
         uploading: "Đang tải lên…"
         name: "Tên"
         group: "Nhóm"
@@ -5250,14 +5248,15 @@ vi:
         category_title: "Danh mục"
         tag_name: "Tên thẻ"
         external_url: "URL bên ngoài hoặc tương đối"
+        user_title: "Người dùng"
         username: "Tên tài khoản"
         destination: "Điểm đến"
         copy_to_clipboard: "Sao chép Permalink vào Clipboard"
         delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
         form:
           label: "Mới:"
-          add: "Thêm"
-          filter: "Tìm kiếm (URL hoặc External URL)"
+          url: "URL"
+          save: "Lưu lại"
       reseed:
         action:
           label: "Thay thế Văn bản…"

@@ -7,7 +7,7 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import PollOptionRankedChoice from "./poll-option-ranked-choice";
 
 export default class PollOptionsComponent extends Component {
@@ -32,7 +32,7 @@ export default class PollOptionsComponent extends Component {
 
     rankedChoiceDropdownContent.push({
       id: 0,
-      name: I18n.t("poll.options.ranked_choice.abstain"),
+      name: i18n("poll.options.ranked_choice.abstain"),
     });
 
     this.args.options.forEach((option, i) => {
@@ -40,11 +40,11 @@ export default class PollOptionsComponent extends Component {
       let priority = "";
 
       if (i === 0) {
-        priority = ` ${I18n.t("poll.options.ranked_choice.highest_priority")}`;
+        priority = ` ${i18n("poll.options.ranked_choice.highest_priority")}`;
       }
 
       if (i === this.args.options.length - 1) {
-        priority = ` ${I18n.t("poll.options.ranked_choice.lowest_priority")}`;
+        priority = ` ${i18n("poll.options.ranked_choice.lowest_priority")}`;
       }
 
       rankedChoiceDropdownContent.push({

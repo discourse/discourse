@@ -404,7 +404,7 @@ RSpec.describe CategoriesController do
       let!(:category2) { Fabricate(:category, user: admin) }
       let!(:category3) { Fabricate(:category, user: admin) }
 
-      it "paginates results wihen lazy_load_categories is enabled" do
+      it "paginates results when lazy_load_categories is enabled" do
         SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
 
         stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
@@ -416,16 +416,16 @@ RSpec.describe CategoriesController do
         expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
       end
 
-      it "paginates results wihen desktop_category_page_style is categories_only_optimized" do
-        SiteSetting.desktop_category_page_style = "categories_only_optimized"
+      it "paginates results when there are many categories" do
+        stub_const(CategoryList, "MAX_UNOPTIMIZED_CATEGORIES", 2) do
+          stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
 
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=1" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
-
-        stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+          stub_const(CategoryList, "CATEGORIES_PER_PAGE", 2) { get "/categories.json?page=2" }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category_list"]["categories"].count).to eq(2)
+        end
       end
 
       it "does not paginate results by default" do
@@ -1053,6 +1053,17 @@ RSpec.describe CategoriesController do
       expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/top")
     end
 
+    it "includes more_topics_url in the response to /categories_and_hot" do
+      SiteSetting.categories_topics = 5
+
+      Fabricate.times(10, :topic, category: category, like_count: 1000, posts_count: 100)
+      TopicHotScore.update_scores
+
+      get "/categories_and_hot.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["topic_list"]["more_topics_url"]).to start_with("/hot")
+    end
+
     describe "Showing top topics from private categories" do
       it "returns the top topic from the private category when the user is a member" do
         restricted_group = Fabricate(:group)
@@ -1063,6 +1074,26 @@ RSpec.describe CategoriesController do
         sign_in(user)
 
         get "/categories_and_top.json"
+        parsed_topic =
+          response
+            .parsed_body
+            .dig("topic_list", "topics")
+            .detect { |t| t.dig("id") == private_topic.id }
+
+        expect(parsed_topic).to be_present
+      end
+    end
+
+    describe "Showing hot topics from private categories" do
+      it "returns the hot topic from the private category when the user is a member" do
+        restricted_group = Fabricate(:group)
+        private_cat = Fabricate(:private_category, group: restricted_group)
+        private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
+        TopicHotScore.update_scores
+        restricted_group.add(user)
+        sign_in(user)
+
+        get "/categories_and_hot.json"
         parsed_topic =
           response
             .parsed_body
@@ -1531,6 +1562,25 @@ RSpec.describe CategoriesController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["categories"].length).not_to eq(0)
+    end
+
+    it "produces exactly 5 subcategories" do
+      subcategories = Fabricate.times(6, :category, parent_category: category)
+      subcategories[3].update!(read_restricted: true)
+
+      get "/categories/hierarchical_search.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).to eq(7)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(
+        category.id,
+        subcategories[0].id,
+        subcategories[1].id,
+        subcategories[2].id,
+        subcategories[4].id,
+        subcategories[5].id,
+        SiteSetting.uncategorized_category_id,
+      )
     end
 
     it "doesn't produce categories with a very specific term" do

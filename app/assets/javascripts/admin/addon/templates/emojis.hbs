@@ -1,86 +1,33 @@
-<div class="admin-emojis">
-  <div class="admin-emojis__header">
-    <h1>{{i18n "admin.emoji.title"}}</h1>
-    <LinkTo
-      @route="adminSiteSettingsCategory"
-      @model="all_results"
-      @query={{hash filter="emoji"}}
-    >
-      {{i18n "admin.emoji.settings"}}
-    </LinkTo>
-  </div>
-
-  <p class="desc">{{i18n "admin.emoji.help"}}</p>
-
-  <EmojiUploader
-    @emojiGroups={{this.emojiGroups}}
-    @done={{action "emojiUploaded"}}
-  />
-
-  <hr />
-
-  <div class="form-horizontal">
-    <div class="inline-form">
-      <label class="label">Show</label>
-      <ComboBox
-        @value={{this.filter}}
-        @content={{this.sortingGroups}}
-        @nameProperty={{null}}
-        @valueProperty={{null}}
-        @onChange={{action "filterGroups"}}
+<div class="admin-emojis admin-config-page">
+  <AdminPageHeader
+    @titleLabel="admin.emoji.title"
+    @descriptionLabel="admin.emoji.description"
+    @hideTabs={{this.hideTabs}}
+  >
+    <:breadcrumbs>
+      <DBreadcrumbsItem
+        @path="/admin/customize/emojis"
+        @label={{i18n "admin.emoji.title"}}
       />
-    </div>
-  </div>
+    </:breadcrumbs>
+    <:actions as |actions|>
+      <actions.Primary @route="adminEmojis.new" @label="admin.emoji.add" />
+    </:actions>
+    <:tabs>
+      <NavItem
+        @route="adminEmojis.settings"
+        @label="settings"
+        class="admin-emojis-tabs__settings"
+      />
+      <NavItem
+        @route="adminEmojis.index"
+        @label="admin.emoji.title"
+        class="admin-emojis-tabs__emoji"
+      />
+    </:tabs>
+  </AdminPageHeader>
 
-  {{#if this.sortedEmojis}}
-    <table id="custom_emoji" class="d-admin-table">
-      <thead>
-        <tr>
-          <th>{{i18n "admin.emoji.image"}}</th>
-          <th>{{i18n "admin.emoji.name"}}</th>
-          <th>{{i18n "admin.emoji.group"}}</th>
-          <th colspan="3">{{i18n "admin.emoji.created_by"}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each this.sortedEmojis as |e|}}
-          <tr class="d-admin-row__content">
-            <td class="d-admin-row__overview">
-              <img
-                class="emoji emoji-custom"
-                src={{e.url}}
-                title={{e.name}}
-                alt={{i18n "admin.emoji.alt"}}
-              />
-            </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
-                {{i18n "admin.emoji.name"}}
-              </div>
-              :{{e.name}}:
-            </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
-                {{i18n "admin.emoji.group"}}
-              </div>
-              {{e.group}}
-            </td>
-            <td class="d-admin-row__detail">
-              <div class="d-admin-row__mobile-label">
-                {{i18n "admin.emoji.created_by"}}
-              </div>
-              {{e.created_by}}
-            </td>
-            <td class="d-admin-row__controls action">
-              <DButton
-                @action={{fn this.destroyEmoji e}}
-                @icon="trash-can"
-                class="btn-danger"
-              />
-            </td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  {{/if}}
+  <div class="admin-container admin-config-page__main-area">
+    {{outlet}}
+  </div>
 </div>

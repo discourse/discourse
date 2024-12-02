@@ -24,7 +24,7 @@ export default class FKMeta extends Component {
 
         {{#if this.shouldRenderCharCounter}}
           <FKCharCounter
-            @value={{@value}}
+            @value={{@field.value}}
             @minLength={{@field.minLength}}
             @maxLength={{@field.maxLength}}
           />

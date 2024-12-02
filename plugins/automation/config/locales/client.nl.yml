@@ -6,6 +6,11 @@
 
 nl:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
       create: Maken
@@ -14,6 +19,8 @@ nl:
       select_trigger: Selecteer een trigger
       confirm_automation_reset: Deze actie reset script- en triggeropties en de nieuwe toestand wordt opgeslagen. Wil je doorgaan?
       confirm_automation_trigger: Deze actie triggert de automatisering. Wil je doorgaan?
+      no_automation_yet: Je hebt nog geen automatiseringen gemaakt. Kies hieronder een optie om te beginnen.
+      filter_placeholder: Filter op naam of beschrijving...
       edit_automation:
         trigger_section:
           forced: Deze trigger wordt geforceerd door een script.
@@ -143,6 +150,9 @@ nl:
               label: Topic-ID
         post_created_edited:
           fields:
+            original_post_only:
+              label: Alleen origineel bericht
+              description: Wordt alleen getriggerd als het bericht het oorspronkelijke bericht in het topic is
             action_type:
               label: Actietype
               description: "Optioneel: beperk triggering tot alleen gemaakte of bewerkte gebeurtenissen"
@@ -160,6 +170,7 @@ nl:
               description: 'Optioneel: wordt alleen getriggerd als het topic van het bericht een privébericht is in de inbox van deze groep'
             restricted_groups:
               label: Groepen
+              description: Optioneel, wordt alleen getriggerd als het topic van het bericht een privébericht is in een van de groepsinboxen
             ignore_group_members:
               label: Groepsleden negeren
               description: Sla de trigger over als de afzender lid is van de hierboven opgegeven groep
@@ -172,6 +183,9 @@ nl:
             first_topic_only:
               label: Alleen eerste topic
               description: Wordt alleen geactiveerd als het topic het eerste is dat een gebruiker heeft gemaakt
+            skip_via_email:
+              label: "Via e-mail overslaan"
+              description: "Sla de trigger over als het bericht via e-mail is aangemaakt"
           created: Gemaakt
           edited: Bewerkt
         user_updated:
@@ -221,6 +235,9 @@ nl:
             watching_tags:
               label: Tags observeren
               description: Wordt alleen getriggerd als het topic een van deze tags heeft
+            trigger_with_pms:
+              label: Triggeren bij PB's
+              description: Wordt ook getriggerd als de tags in een PB zijn gewijzigd
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -379,6 +396,7 @@ nl:
           fields:
             custom_field_name:
               label: "Naam aangepast gebruikersveld"
+      unnamed_automation: "Naamloze automatisering"
       models:
         script:
           name:

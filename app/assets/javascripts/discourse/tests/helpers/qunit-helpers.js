@@ -82,6 +82,7 @@ import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { clearAuthMethods } from "discourse/models/login-method";
 import { clearNavItems } from "discourse/models/nav-item";
+import { clearAddedTrackedPostProperties } from "discourse/models/post";
 import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
@@ -98,6 +99,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
+import { resetNeedsHbrTopicList } from "discourse-common/lib/raw-templates";
 import { clearResolverOptions } from "discourse-common/resolver";
 import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
@@ -127,8 +129,15 @@ export function updateCurrentUser(properties) {
 }
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
-export function logIn() {
-  return User.resetCurrent(currentUser());
+export function logIn(owner) {
+  const user = User.resetCurrent(currentUser());
+
+  owner?.unregister("service:current-user");
+  owner?.register("service:current-user", user, {
+    instantiate: false,
+  });
+
+  return user;
 }
 
 // Note: Only use if `loggedIn: true` has been used in an acceptance test
@@ -255,6 +264,8 @@ export function testCleanup(container, app) {
   resetWidgetCleanCallbacks();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
+  resetNeedsHbrTopicList();
+  clearAddedTrackedPostProperties();
 }
 
 function cleanupCssGeneratorTags() {
@@ -264,10 +275,10 @@ function cleanupCssGeneratorTags() {
 }
 
 export function discourseModule(name, options) {
-  // deprecated(
-  //   `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
-  //   { since: "2.6.0" }
-  // );
+  deprecated(
+    `${name}: \`discourseModule\` is deprecated. Use QUnit's \`module\` instead.`,
+    { id: "discourse.discourse-module", since: "3.4.0.beta3-dev" }
+  );
 
   if (typeof options === "function") {
     module(name, function (hooks) {

@@ -5,7 +5,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatablesLoader from "./lib/chatables-loader";
 import List from "./list";
 import ListHandler from "./list-handler";
@@ -19,7 +19,7 @@ export default class MembersSelector extends Component {
   @tracked highlightedMember;
   @tracked highlightedChatable;
 
-  placeholder = I18n.t("chat.direct_message_creator.group_name");
+  placeholder = i18n("chat.direct_message_creator.group_name");
 
   get items() {
     return this.chatables.filter(

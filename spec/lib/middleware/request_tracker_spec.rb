@@ -505,19 +505,19 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   describe "rate limiting" do
+    let(:fake_logger) { FakeLogger.new }
+
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
 
-      @orig_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-
+      Rails.logger.broadcast_to(fake_logger)
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
       freeze_time_safe
     end
 
-    after { Rails.logger = @orig_logger }
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     let :middleware do
       app = lambda { |env| [200, {}, ["OK"]] }
@@ -559,7 +559,7 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
+        expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
           warn_count,
         )
         expect(status).to eq(429)
@@ -675,9 +675,7 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
-          0,
-        )
+        expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(0)
         expect(status).to eq(200)
       end
     end
@@ -689,7 +687,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, headers = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
+      expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
       expect(headers["Retry-After"]).to eq("10")
     end
@@ -701,7 +699,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
+      expect(fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
     end
 
@@ -1077,12 +1075,11 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   describe "error handling" do
-    before do
-      @original_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-    end
+    let(:fake_logger) { FakeLogger.new }
 
-    after { Rails.logger = @original_logger }
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "logs requests even if they cause exceptions" do
       app = lambda { |env| raise RateLimiter::LimitExceeded, 1 }
@@ -1090,7 +1087,7 @@ RSpec.describe Middleware::RequestTracker do
       expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
       CachedCounting.flush
       expect(ApplicationRequest.stats).to include("http_total_total" => 1)
-      expect(@fake_logger.warnings).to be_empty
+      expect(fake_logger.warnings).to be_empty
     end
   end
 end

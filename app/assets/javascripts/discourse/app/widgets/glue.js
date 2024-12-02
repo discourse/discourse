@@ -37,7 +37,7 @@ export default class WidgetGlue {
     if (isTesting()) {
       try {
         this.register.lookup("service:store");
-      } catch (e) {
+      } catch {
         return;
       }
     }

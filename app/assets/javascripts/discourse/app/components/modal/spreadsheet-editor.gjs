@@ -16,8 +16,7 @@ import {
   findTableRegex,
   tokenRange,
 } from "discourse/lib/utilities";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class SpreadsheetEditor extends Component {
@@ -80,7 +79,7 @@ export default class SpreadsheetEditor extends Component {
   interceptCloseModal() {
     if (this._hasChanges()) {
       this.dialog.yesNoConfirm({
-        message: I18n.t("table_builder.modal.confirm_close"),
+        message: i18n("table_builder.modal.confirm_close"),
         didConfirm: () => this.args.closeModal(),
       });
     } else {
@@ -149,20 +148,20 @@ export default class SpreadsheetEditor extends Component {
 
     const columns = [
       {
-        title: I18n.t("table_builder.default_header.col_1"),
+        title: i18n("table_builder.default_header.col_1"),
         width: this.defaultColWidth,
       },
       {
-        title: I18n.t("table_builder.default_header.col_2"),
+        title: i18n("table_builder.default_header.col_2"),
         width: this.defaultColWidth,
       },
       {
-        title: I18n.t("table_builder.default_header.col_3"),
+        title: i18n("table_builder.default_header.col_3"),
 
         width: this.defaultColWidth,
       },
       {
-        title: I18n.t("table_builder.default_header.col_4"),
+        title: i18n("table_builder.default_header.col_4"),
 
         width: this.defaultColWidth,
       },
@@ -237,7 +236,6 @@ export default class SpreadsheetEditor extends Component {
       ? `post-${postNumber}-table-export`
       : `post-table-export`;
 
-    // eslint-disable-next-line no-undef
     this.spreadsheet = this.jspreadsheet(this.spreadsheet, {
       data,
       columns,
@@ -270,7 +268,7 @@ export default class SpreadsheetEditor extends Component {
     const newRaw = markdownTable;
 
     const editReason =
-      this.editReason || I18n.t("table_builder.edit.default_edit_reason");
+      this.editReason || i18n("table_builder.edit.default_edit_reason");
     const raw = this.args.model.post.raw;
     const newPostRaw = this.buildUpdatedPost(tableIndex, raw, newRaw);
 
@@ -425,5 +423,5 @@ export default class SpreadsheetEditor extends Component {
 }
 
 function prefixedLocale(localeString) {
-  return I18n.t(`table_builder.spreadsheet.${localeString}`);
+  return i18n(`table_builder.spreadsheet.${localeString}`);
 }

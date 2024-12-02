@@ -7,6 +7,10 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.39.0] - 2024-11-27
+
+- Added `addTrackedPostProperty` which allows plugins/TCs to add a new tracked property to the post model.
+
 ## [1.38.0] - 2024-10-30
 
 - Added `registerMoreTopicsTab` and "more-topics-tabs" value transformer that allows to add or remove new tabs to the "more topics" (suggested/related) area.

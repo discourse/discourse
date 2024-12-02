@@ -5,7 +5,7 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import SelectKitHeaderComponent from "select-kit/components/select-kit/select-kit-header";
 
 @tagName("summary")
@@ -27,11 +27,11 @@ export default class SingleSelectHeader extends SelectKitHeaderComponent {
   @computed("selectedContent.name")
   get name() {
     if (this.selectedContent) {
-      return I18n.t("select_kit.filter_by", {
+      return i18n("select_kit.filter_by", {
         name: this.getName(this.selectedContent),
       });
     } else {
-      return I18n.t("select_kit.select_to_filter");
+      return i18n("select_kit.select_to_filter");
     }
   }
 }

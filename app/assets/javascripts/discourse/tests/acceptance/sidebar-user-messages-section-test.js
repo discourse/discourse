@@ -3,14 +3,11 @@ import { test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   acceptance,
-  count,
-  exists,
   publishToMessageBus,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",
@@ -28,10 +25,9 @@ acceptance(
     test("clicking on section header button", async function (assert) {
       await visit("/");
 
-      assert.ok(
-        !exists(".sidebar-section[data-section-name='messages']"),
-        "does not display messages section in sidebar"
-      );
+      assert
+        .dom(".sidebar-section[data-section-name='messages']")
+        .doesNotExist("does not display messages section in sidebar");
     });
   }
 );
@@ -78,10 +74,7 @@ acceptance(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-header-button"
       );
 
-      assert.ok(
-        exists("#reply-control.private-message"),
-        "it opens the composer"
-      );
+      assert.dom("#reply-control.private-message").exists("opens the composer");
     });
 
     test("clicking on section header link", async function (assert) {
@@ -100,39 +93,36 @@ acceptance(
     test("personal messages section links", async function (assert) {
       await visit("/");
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
-        ),
-        "displays the personal message inbox link"
-      );
+        )
+        .exists("displays the personal message inbox link");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        1,
-        "only displays the personal message inbox link"
-      );
+        )
+        .exists({ count: 1 }, "only displays the personal message inbox link");
 
       await click(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox']"
       );
 
-      assert.ok(
-        exists(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
-        ),
-        "personal message inbox link is marked as active"
-      );
+        )
+        .exists("personal message inbox link is marked as active");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        5,
-        "expands and displays the links for personal messages"
-      );
+        )
+        .exists(
+          { count: 5 },
+          "expands and displays the links for personal messages"
+        );
     });
 
     ["new", "archive", "sent", "unread"].forEach((type) => {
@@ -153,27 +143,26 @@ acceptance(
           `it should transition to user's ${type} personal messages`
         );
 
-        assert.strictEqual(
-          count(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
-          ),
-          2,
-          "only two links are marked as active in the sidebar"
-        );
+          )
+          .exists(
+            { count: 2 },
+            "only two links are marked as active in the sidebar"
+          );
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-inbox'].active"
-          ),
-          "personal message inbox link is marked as active"
-        );
+          )
+          .exists("personal message inbox link is marked as active");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-${type}'].active`
-          ),
-          `personal message ${type} link is marked as active`
-        );
+          )
+          .exists(`personal message ${type} link is marked as active`);
 
         assert
           .dom(
@@ -219,41 +208,36 @@ acceptance(
 
       await visit("/u/eviltrout/messages/group/GrOuP1");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        6,
-        "expands and displays the links for group1 group messages"
-      );
+        )
+        .exists(
+          { count: 6 },
+          "expands and displays the links for group1 group messages"
+        );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
-        ),
-        4,
-        "expands the links for group1 group messages"
-      );
+        )
+        .exists({ count: 4 }, "expands the links for group1 group messages");
 
       await click(
         ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group3"
       );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group1"
-        ),
-        1,
-        "collapses the links for group1 group messages"
-      );
+        )
+        .exists({ count: 1 }, "collapses the links for group1 group messages");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.group3"
-        ),
-        4,
-        "expands the links for group3 group messages"
-      );
+        )
+        .exists({ count: 4 }, "expands the links for group3 group messages");
     });
 
     ["new", "archive", "unread"].forEach((type) => {
@@ -291,27 +275,26 @@ acceptance(
           `it should transition to user's ${type} personal messages`
         );
 
-        assert.strictEqual(
-          count(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link.active"
-          ),
-          2,
-          "only two links are marked as active in the sidebar"
-        );
+          )
+          .exists(
+            { count: 2 },
+            "only two links are marked as active in the sidebar"
+          );
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-inbox'].group1.active"
-          ),
-          "group1 group message inbox link is marked as active"
-        );
+          )
+          .exists("group1 group message inbox link is marked as active");
 
-        assert.ok(
-          exists(
+        assert
+          .dom(
             `.sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-${type}'].group1.active`
-          ),
-          `group1 group message ${type} link is marked as active`
-        );
+          )
+          .exists(`group1 group message ${type} link is marked as active`);
       });
     });
 
@@ -327,29 +310,29 @@ acceptance(
 
       await visit("/t/130");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        5,
-        "5 section links are displayed"
-      );
+        )
+        .exists({ count: 5 }, "5 section links are displayed");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
-        ),
-        1,
-        "personal messages inbox filter links are not shown"
-      );
+        )
+        .exists(
+          { count: 1 },
+          "personal messages inbox filter links are not shown"
+        );
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
-        ),
-        4,
-        "foo_group messages inbox filter links are shown"
-      );
+        )
+        .exists(
+          { count: 4 },
+          "foo_group messages inbox filter links are shown"
+        );
     });
 
     test("viewing personal message topic", async function (assert) {
@@ -364,29 +347,26 @@ acceptance(
 
       await visit("/t/34");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link"
-        ),
-        6,
-        "6 section links are displayed"
-      );
+        )
+        .exists({ count: 6 }, "6 section links are displayed");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.personal-messages"
-        ),
-        5,
-        "personal messages inbox filter links are shown"
-      );
+        )
+        .exists({ count: 5 }, "personal messages inbox filter links are shown");
 
-      assert.strictEqual(
-        count(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link.foo_group"
-        ),
-        1,
-        "foo_group messages inbox filter links are not shown"
-      );
+        )
+        .exists(
+          { count: 1 },
+          "foo_group messages inbox filter links are not shown"
+        );
     });
 
     test("new and unread counts for group messages", async function (assert) {
@@ -432,25 +412,27 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-unread'].group1"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for group1 unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for group1 unread inbox filter link"
+        );
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for group1 new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for group1 new inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.groupChannel(1), {
         topic_id: 2,
@@ -463,13 +445,14 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='group-messages-new'].group1"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new"),
-        "removes count for group1 new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new"),
+          "removes count for group1 new inbox filter link"
+        );
     });
 
     test("new and unread counts for personal messages", async function (assert) {
@@ -494,15 +477,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for the unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for the unread inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 2,
@@ -515,15 +499,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-unread']"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.unread_with_count", {
-          count: 2,
-        }),
-        "displays 2 count for the unread inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.unread_with_count", {
+            count: 2,
+          }),
+          "displays 2 count for the unread inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
@@ -536,15 +521,16 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new_with_count", {
-          count: 1,
-        }),
-        "displays 1 count for the new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new_with_count", {
+            count: 1,
+          }),
+          "displays 1 count for the new inbox filter link"
+        );
 
       await publishToMessageBus(pmTopicTrackingState.userChannel(), {
         topic_id: 3,
@@ -557,13 +543,14 @@ acceptance(
         },
       });
 
-      assert.strictEqual(
-        query(
+      assert
+        .dom(
           ".sidebar-section[data-section-name='messages'] .sidebar-section-link[data-link-name='personal-messages-new']"
-        ).textContent.trim(),
-        I18n.t("sidebar.sections.messages.links.new"),
-        "removes the count from the new inbox filter link"
-      );
+        )
+        .hasText(
+          i18n("sidebar.sections.messages.links.new"),
+          "removes the count from the new inbox filter link"
+        );
     });
   }
 );

@@ -1,4 +1,4 @@
-{{#if model.length}}
+{{#if this.model.length}}
   <table class="automations">
     <thead>
       <tr>
@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      {{#each model as |automation|}}
+      {{#each this.model as |automation|}}
         <tr>
           {{#if automation.script.not_found}}
             <td colspan="5" class="alert alert-danger">

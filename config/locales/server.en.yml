@@ -653,7 +653,7 @@ en:
       moderators: "Responsible for responding to flags, moderating discussions, and helping members with their accounts"
       trust_level_0: "New members with limited abilities, who are learning community norms and functionality"
 
-      trust_level_1: "Members with more trust, who have shown initial engagement by reading hand can now access more functions. All members of this group are also members of the trust_level_0 group."
+      trust_level_1: "Members with more trust, who have shown initial engagement by reading and can now access more functions. All members of this group are also members of the trust_level_0 group."
 
       trust_level_2: "Active members who have consistently contributed overtime and gained full citizenship privileges. All members of this group are also members of the trust_level_1 and trust_level_0 groups."
 
@@ -1877,14 +1877,18 @@ en:
     markdown_linkify_tlds: "List of top level domains that get automatically treated as links"
     markdown_typographer_quotation_marks: "List of double and single quotes replacement pairs"
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the \"arrive at topic\" invite option)"
+    must_approve_users: 'All new users must wait for moderator or admin approval before being allowed to log in. (Note: enabling this setting also removes the "arrive at topic" invite option)'
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
     review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
-    experimental_full_page_login: "Replace the login/signup modal with a full page login/signup form."
+    full_page_login: "Show the login and signup forms in a full page (when unchecked, users will see the forms in a modal). "
+    show_signup_form_email_instructions: Show email instructions on the signup form.
+    show_signup_form_username_instructions: Show username instructions on the signup form.
+    show_signup_form_full_name_instructions: Show full name instructions on the signup form.
+    show_signup_form_password_instructions: Show password instructions on the signup form.
     ga_version: "Version of Google Universal Analytics to use: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -2518,7 +2522,7 @@ en:
     default_code_lang: "Default programming language syntax highlighting applied to markdown code blocks (auto, text, ruby, python etc.). This value must also be present in the `highlighted languages` site setting."
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Apply syntax highlighting to HTML-authored &lt;code&gt; blocks, even if they didn't specify a language. To configure markdown-authored code blocks, use the 'default code lang' setting."
-    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> for a demo"
+    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many languages may impact performance) see: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> for a demo"
     show_copy_button_on_codeblocks: "Add a button to codeblocks to copy the block contents to the user's clipboard."
 
     embed_any_origin: "Allow embeddable content regardless of origin. This is required for mobile apps with static HTML."
@@ -2596,7 +2600,8 @@ en:
 
     default_email_in_reply_to: "Include excerpt of replied to post in emails by default."
 
-    default_hide_profile_and_presence: "Hide user public profile and presence features by default."
+    default_hide_profile: "Hide user public profile by default."
+    default_hide_presence: "Disable presence features by default."
 
     default_other_new_topic_duration_minutes: "Global default condition for which a topic is considered new."
     default_other_auto_track_topics_after_msecs: "Global default time before a topic is automatically tracked."
@@ -2725,6 +2730,8 @@ en:
     experimental_topics_filter: "Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "Replace the default image lightbox with the revamped design."
     experimental_glimmer_topic_list_groups: "Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_post_menu_mode: "Control whether the new 'glimmer' post menu implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    glimmer_post_menu_groups: "Enable the new 'glimmer' post menu implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -3059,6 +3066,7 @@ en:
     cannot_delete_has_posts:
       one: "User %{username} has %{count} post in a public topic or personal message, so they can't be deleted."
       other: "User %{username} has %{count} posts in public topics or personal messages, so they can't be deleted."
+    cannot_bulk_delete: "One or more users cannot be deleted either because they're an admin, have too many posts or have a very old post."
 
   unsubscribe_mailer:
     title: "Unsubscribe Mailer"
@@ -5057,7 +5065,7 @@ en:
       name: Regular
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> recategorize, rename, followed links, wiki, more likes
       long_description: |
-        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, access a private lounge area, and you’ll also get lots more likes per day.
+        This badge is granted when you reach trust level 3. Thanks for being a regular part of our community over a period of months. You’re now one of the most active readers, and a reliable contributor that makes our community great. You can now recategorize and rename topics, take advantage of more powerful spam flags, and you’ll also get lots more likes per day.
     leader:
       name: Leader
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Granted</a> global edit, pin, close, archive, split and merge, more likes
@@ -5531,6 +5539,7 @@ en:
         other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
+    bulk_user_delete: "deleted in a bulk delete operation"
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."

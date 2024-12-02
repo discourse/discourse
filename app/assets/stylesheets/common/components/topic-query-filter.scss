@@ -26,6 +26,10 @@
     color: var(--primary-low-mid);
   }
 
+  &__bulk-action-btn {
+    margin-right: 0.5em;
+  }
+
   input.topic-query-filter__filter-term {
     margin: 0 0.5em 0 0;
     border-color: var(--primary-low-mid);

@@ -10,9 +10,10 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 let transformCallbacks = null;
+
 export function postTransformCallbacks(transformed) {
   if (transformCallbacks === null) {
     return;
@@ -22,6 +23,7 @@ export function postTransformCallbacks(transformed) {
     transformCallbacks[i].call(this, transformed);
   }
 }
+
 export function addPostTransformCallback(callback) {
   transformCallbacks = transformCallbacks || [];
   transformCallbacks.push(callback);
@@ -83,7 +85,7 @@ createWidget("posts-filtered-notice", {
       return [
         h(
           "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies.viewing_subset")
+          i18n("post.filtered_replies.viewing_subset")
         ),
         this.attach("filter-show-all", attrs),
       ];
@@ -96,7 +98,7 @@ createWidget("posts-filtered-notice", {
       return [
         h(
           "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies_viewing", {
+          i18n("post.filtered_replies_viewing", {
             count: sourcePost.reply_count,
           })
         ),
@@ -120,7 +122,7 @@ createWidget("posts-filtered-notice", {
       return [
         h(
           "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies.viewing_summary")
+          i18n("post.filtered_replies.viewing_summary")
         ),
         this.attach("filter-show-all", attrs),
       ];
@@ -130,7 +132,7 @@ createWidget("posts-filtered-notice", {
       return [
         h(
           "span.filtered-replies-viewing",
-          I18n.t("post.filtered_replies.viewing_posts_by", {
+          i18n("post.filtered_replies.viewing_posts_by", {
             post_count: userPostsCount,
           })
         ),
@@ -156,7 +158,7 @@ createWidget("filter-jump-to-post", {
   buildKey: (attrs) => `jump-to-post-${attrs.id}`,
 
   html(attrs) {
-    return I18n.t("post.filtered_replies.post_number", {
+    return i18n("post.filtered_replies.post_number", {
       username: attrs.username,
       post_number: attrs.postNumber,
     });
@@ -176,7 +178,7 @@ createWidget("filter-show-all", {
   },
 
   html() {
-    return [iconNode("up-down"), I18n.t("post.filtered_replies.show_all")];
+    return [iconNode("up-down"), i18n("post.filtered_replies.show_all")];
   },
 
   click() {
@@ -223,6 +225,8 @@ export default createWidget("post-stream", {
         nextPost
       );
       transformed.canCreatePost = attrs.canCreatePost;
+      transformed.prevPost = prevPost;
+      transformed.nextPost = nextPost;
       transformed.mobileView = mobileView;
 
       if (transformed.canManage || transformed.canSplitMergeTopic) {
@@ -258,7 +262,8 @@ export default createWidget("post-stream", {
             new RenderGlimmer(
               this,
               "div.time-gap.small-action",
-              hbs`<TimeGap @daysSince={{@data.daysSince}} />`,
+              hbs`
+                <TimeGap @daysSince={{@data.daysSince}} />`,
               { daysSince }
             )
           );
@@ -277,6 +282,9 @@ export default createWidget("post-stream", {
         );
       } else {
         transformed.showReadIndicator = attrs.showReadIndicator;
+        // The following properties will have to be untangled from the transformed model when
+        // converting this widget to a Glimmer component:
+        // canCreatePost, showReadIndicator, prevPost, nextPost
         result.push(this.attach("post", transformed, { model: post }));
       }
 

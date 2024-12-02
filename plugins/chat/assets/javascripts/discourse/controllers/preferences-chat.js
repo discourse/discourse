@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse-common/config/environment";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 const CHAT_ATTRS = [
@@ -27,43 +27,43 @@ export default class PreferencesChatController extends Controller {
   @service chatAudioManager;
   @service siteSettings;
 
-  subpageTitle = I18n.t("chat.admin.title");
+  subpageTitle = i18n("chat.admin.title");
 
   emailFrequencyOptions = [
-    { name: I18n.t("chat.email_frequency.never"), value: "never" },
-    { name: I18n.t("chat.email_frequency.when_away"), value: "when_away" },
+    { name: i18n("chat.email_frequency.never"), value: "never" },
+    { name: i18n("chat.email_frequency.when_away"), value: "when_away" },
   ];
 
   headerIndicatorOptions = [
     {
-      name: I18n.t("chat.header_indicator_preference.all_new"),
+      name: i18n("chat.header_indicator_preference.all_new"),
       value: HEADER_INDICATOR_PREFERENCE_ALL_NEW,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.dm_and_mentions"),
+      name: i18n("chat.header_indicator_preference.dm_and_mentions"),
       value: HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.only_mentions"),
+      name: i18n("chat.header_indicator_preference.only_mentions"),
       value: HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
     },
     {
-      name: I18n.t("chat.header_indicator_preference.never"),
+      name: i18n("chat.header_indicator_preference.never"),
       value: HEADER_INDICATOR_PREFERENCE_NEVER,
     },
   ];
 
   chatSeparateSidebarModeOptions = [
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.always"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.always"),
       value: "always",
     },
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.fullscreen"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.fullscreen"),
       value: "fullscreen",
     },
     {
-      name: I18n.t("admin.site_settings.chat_separate_sidebar_mode.never"),
+      name: i18n("admin.site_settings.chat_separate_sidebar_mode.never"),
       value: "never",
     },
   ];
@@ -80,7 +80,7 @@ export default class PreferencesChatController extends Controller {
   @discourseComputed
   chatSounds() {
     return Object.keys(CHAT_SOUNDS).map((value) => {
-      return { name: I18n.t(`chat.sounds.${value}`), value };
+      return { name: i18n(`chat.sounds.${value}`), value };
     });
   }
 

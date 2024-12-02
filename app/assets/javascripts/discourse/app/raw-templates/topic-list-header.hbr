@@ -11,7 +11,7 @@
 {{raw-plugin-outlet name="topic-list-header-after-main-link"}}
 {{plugin-outlet name="topic-list-header-after-main-link"}}
 {{#if showPosters}}
-  {{raw "topic-list-header-column" name='posters' screenreaderOnly='true'}}
+  {{raw "topic-list-header-column" order='posters' name='posters' screenreaderOnly='true'}}
 {{/if}}
 {{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies'}}
 {{#if showLikes}}

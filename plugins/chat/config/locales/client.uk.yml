@@ -740,10 +740,10 @@ uk:
         chat_message: "Нове повідомлення в чаті"
         chat_quoted: "%{username} процитував ваше повідомлення в чаті"
       titles:
-        chat_mention: "Згадка в чаті"
-        chat_invitation: "Запрошення до чату"
-        chat_quoted: "Чат процитований"
-        chat_watched_thread: "Потік перегляду чату"
+        chat_mention: "Згадано в чаті"
+        chat_invitation: "Запрошено до чату"
+        chat_quoted: "Процитовано повідомлення чату"
+        chat_watched_thread: "Переглянута гілка чату"
     action_codes:
       chat:
         enabled: '%{who} включив <button class="btn-link open-chat">чат</button> %{when}'
@@ -774,6 +774,7 @@ uk:
         title: "Чат"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Переключити канал"
+          switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
           open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"

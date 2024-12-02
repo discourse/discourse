@@ -9,7 +9,7 @@ import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import {
   CHAT_PANEL,
@@ -35,7 +35,7 @@ export default {
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
             key = CHAT_PANEL;
-            switchButtonLabel = I18n.t("sidebar.panels.chat.label");
+            switchButtonLabel = i18n("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
 
             get switchButtonDefaultUrl() {
@@ -57,8 +57,8 @@ export default {
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           const SidebarChatMyThreadsSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.threads";
-            text = I18n.t("chat.my_threads.title");
-            title = I18n.t("chat.my_threads.title");
+            text = i18n("chat.my_threads.title");
+            title = i18n("chat.my_threads.title");
             name = "user-threads";
             prefixType = "icon";
             prefixValue = "discourse-threads";
@@ -181,7 +181,7 @@ export default {
               get title() {
                 return this.channel.escapedDescription
                   ? htmlSafe(this.channel.escapedDescription)
-                  : `${this.channel.escapedTitle} ${I18n.t("chat.title")}`;
+                  : `${this.channel.escapedTitle} ${i18n("chat.title")}`;
               }
 
               get prefixBadge() {
@@ -248,18 +248,18 @@ export default {
               }
 
               get title() {
-                return I18n.t("chat.chat_channels");
+                return i18n("chat.chat_channels");
               }
 
               get text() {
-                return I18n.t("chat.chat_channels");
+                return i18n("chat.chat_channels");
               }
 
               get actions() {
                 return [
                   {
                     id: "browseChannels",
-                    title: I18n.t("chat.channels_list_popup.browse"),
+                    title: i18n("chat.channels_list_popup.browse"),
                     action: () => this.router.transitionTo("chat.browse.open"),
                   },
                 ];
@@ -293,10 +293,9 @@ export default {
           const SidebarChatDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
             route = "chat.channel";
             suffixType = "icon";
-            suffixCSSClass = "urgent";
             hoverType = "icon";
             hoverValue = "xmark";
-            hoverTitle = I18n.t("chat.direct_messages.close");
+            hoverTitle = i18n("chat.direct_messages.close");
 
             constructor({ channel, chatService, currentUser }) {
               super(...arguments);
@@ -307,7 +306,7 @@ export default {
 
               if (this.oneOnOneMessage) {
                 const user = this.channel.chatable.users[0];
-                if (user.username !== I18n.t("chat.deleted_chat_username")) {
+                if (user.username !== i18n("chat.deleted_chat_username")) {
                   user.statusManager.trackStatus();
                 }
               }
@@ -364,11 +363,11 @@ export default {
 
             get title() {
               if (this.channel.chatable.group) {
-                return I18n.t("chat.placeholder_channel", {
+                return i18n("chat.placeholder_channel", {
                   channelName: this.channel.escapedTitle,
                 });
               } else {
-                return I18n.t("chat.placeholder_users", {
+                return i18n("chat.placeholder_users", {
                   commaSeparatedNames: this.channel.escapedTitle,
                 });
               }
@@ -424,7 +423,18 @@ export default {
             }
 
             get suffixValue() {
-              return this.channel.tracking.unreadCount > 0 ? "circle" : "";
+              return this.channel.tracking.unreadCount > 0 ||
+                this.channel.unreadThreadsCountSinceLastViewed > 0
+                ? "circle"
+                : "";
+            }
+
+            get suffixCSSClass() {
+              return this.channel.tracking.unreadCount > 0 ||
+                this.channel.tracking.mentionCount > 0 ||
+                this.channel.tracking.watchedThreadsUnreadCount > 0
+                ? "urgent"
+                : "unread";
             }
 
             get hoverAction() {
@@ -475,11 +485,11 @@ export default {
             }
 
             get title() {
-              return I18n.t("chat.direct_messages.title");
+              return i18n("chat.direct_messages.title");
             }
 
             get text() {
-              return I18n.t("chat.direct_messages.title");
+              return i18n("chat.direct_messages.title");
             }
 
             get actions() {
@@ -490,7 +500,7 @@ export default {
               return [
                 {
                   id: "startDm",
-                  title: I18n.t("chat.direct_messages.new"),
+                  title: i18n("chat.direct_messages.new"),
                   action: () => {
                     this.modal.show(ChatModalNewMessage);
                   },

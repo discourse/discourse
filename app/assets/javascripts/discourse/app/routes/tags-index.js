@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Tag from "discourse/models/tag";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class TagsIndex extends DiscourseRoute {
   @service router;
@@ -26,7 +26,7 @@ export default class TagsIndex extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("tagging.tags");
+    return i18n("tagging.tags");
   }
 
   setupController(controller, model) {

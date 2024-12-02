@@ -367,7 +367,7 @@ acceptance("Glimmer Topic Timeline", function (needs) {
   test("clicking the timeline padding updates the position", async function (assert) {
     await visit("/t/internationalization-localization/280/2");
     await click(".timeline-scrollarea .timeline-padding");
-    assert.notOk(
+    assert.false(
       currentURL().includes("/280/2"),
       "The position of the currently viewed post has been updated from it's initial position"
     );

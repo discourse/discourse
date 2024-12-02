@@ -2,8 +2,7 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const OPTIONS = [
   { id: "1ddc47be0d2315b9711ee8526ca9d83f", html: "This", votes: 2, rank: 0 },
@@ -45,19 +44,19 @@ module("Poll | Component | poll-info", function (hooks) {
       @voters={{this.voters}}
     />`);
 
-    assert.strictEqual(
-      query(".poll-info_instructions li.multiple-help-text").textContent.trim(),
-      I18n.t("poll.multiple.help.up_to_max_options", {
+    assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
+      i18n("poll.multiple.help.up_to_max_options", {
         count: this.max,
       }).replace(/<\/?[^>]+(>|$)/g, ""),
       "displays the multiple help text"
     );
 
-    assert.strictEqual(
-      query(".poll-info_instructions li.is-public").textContent.trim(),
-      I18n.t("poll.public.title").replace(/<\/?[^>]+(>|$)/g, ""),
-      "displays the public label"
-    );
+    assert
+      .dom(".poll-info_instructions li.is-public")
+      .hasText(
+        i18n("poll.public.title").replace(/<\/?[^>]+(>|$)/g, ""),
+        "displays the public label"
+      );
   });
 
   test("public multiple poll with results only shown on vote", async function (assert) {
@@ -91,26 +90,25 @@ module("Poll | Component | poll-info", function (hooks) {
       @voters={{this.voters}}
     />`);
 
-    assert.strictEqual(
-      query(".poll-info_instructions li.multiple-help-text").textContent.trim(),
-      I18n.t("poll.multiple.help.up_to_max_options", {
+    assert.dom(".poll-info_instructions li.multiple-help-text").hasText(
+      i18n("poll.multiple.help.up_to_max_options", {
         count: this.max,
       }).replace(/<\/?[^>]+(>|$)/g, ""),
       "displays the multiple help text"
     );
 
-    assert.strictEqual(
-      query(
-        ".poll-info_instructions li.results-on-vote span"
-      ).textContent.trim(),
-      I18n.t("poll.results.vote.title").replace(/<\/?[^>]+(>|$)/g, ""),
-      "displays the results on vote label"
-    );
+    assert
+      .dom(".poll-info_instructions li.results-on-vote span")
+      .hasText(
+        i18n("poll.results.vote.title").replace(/<\/?[^>]+(>|$)/g, ""),
+        "displays the results on vote label"
+      );
 
-    assert.strictEqual(
-      query(".poll-info_instructions li.is-public").textContent.trim(),
-      I18n.t("poll.public.title").replace(/<\/?[^>]+(>|$)/g, ""),
-      "displays the public label"
-    );
+    assert
+      .dom(".poll-info_instructions li.is-public")
+      .hasText(
+        i18n("poll.public.title").replace(/<\/?[^>]+(>|$)/g, ""),
+        "displays the public label"
+      );
   });
 });

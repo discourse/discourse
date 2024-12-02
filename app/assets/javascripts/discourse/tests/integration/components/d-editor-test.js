@@ -18,7 +18,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -30,10 +30,9 @@ module("Integration | Component | d-editor", function (hooks) {
     await fillIn(".d-editor-input", "hello **world**");
 
     assert.strictEqual(this.value, "hello **world**");
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>hello <strong>world</strong></p>"
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml("<p>hello <strong>world</strong></p>");
   });
 
   test("links in preview are not tabbable", async function (assert) {
@@ -41,10 +40,11 @@ module("Integration | Component | d-editor", function (hooks) {
 
     await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
-    );
+    assert
+      .dom(".d-editor-preview")
+      .hasHtml(
+        '<p><a href="https://www.discourse.org" tabindex="-1">discourse</a></p>'
+      );
   });
 
   test("updating the value refreshes the preview", async function (assert) {
@@ -52,18 +52,12 @@ module("Integration | Component | d-editor", function (hooks) {
 
     await render(hbs`<DEditor @value={{this.value}} />`);
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>evil trout</p>"
-    );
+    assert.dom(".d-editor-preview").hasHtml("<p>evil trout</p>");
 
     this.set("value", "zogstrip");
     await settled();
 
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      "<p>zogstrip</p>"
-    );
+    assert.dom(".d-editor-preview").hasHtml("<p>zogstrip</p>");
   });
 
   function jumpEnd(textarea) {
@@ -132,7 +126,7 @@ module("Integration | Component | d-editor", function (hooks) {
   testCase(`bold button with no selection`, async function (assert, textarea) {
     await click(`button.bold`);
 
-    const example = I18n.t(`composer.bold_text`);
+    const example = i18n(`composer.bold_text`);
     assert.strictEqual(this.value, `hello world.**${example}**`);
     assert.strictEqual(textarea.selectionStart, 14);
     assert.strictEqual(textarea.selectionEnd, 14 + example.length);
@@ -193,7 +187,7 @@ module("Integration | Component | d-editor", function (hooks) {
     `italic button with no selection`,
     async function (assert, textarea) {
       await click(`button.italic`);
-      const example = I18n.t(`composer.italic_text`);
+      const example = i18n(`composer.italic_text`);
       assert.strictEqual(this.value, `hello world.*${example}*`);
 
       assert.strictEqual(textarea.selectionStart, 13);
@@ -276,7 +270,7 @@ function xyz(x, y, z) {
     const textarea = jumpEnd(query("textarea.d-editor-input"));
 
     await click("button.code");
-    assert.strictEqual(this.value, `    ${I18n.t("composer.code_text")}`);
+    assert.strictEqual(this.value, `    ${i18n("composer.code_text")}`);
 
     this.set("value", "first line\n\nsecond line\n\nthird line");
 
@@ -287,7 +281,7 @@ function xyz(x, y, z) {
     assert.strictEqual(
       this.value,
       `first line
-    ${I18n.t("composer.code_text")}
+    ${i18n("composer.code_text")}
 second line
 
 third line`
@@ -302,7 +296,7 @@ third line`
 
 second line
 
-third line\`${I18n.t("composer.code_title")}\``
+third line\`${i18n("composer.code_title")}\``
     );
     this.set("value", "first line\n\nsecond line\n\nthird line");
 
@@ -312,7 +306,7 @@ third line\`${I18n.t("composer.code_title")}\``
     await click("button.code");
     assert.strictEqual(
       this.value,
-      `first\`${I18n.t("composer.code_title")}\` line
+      `first\`${i18n("composer.code_title")}\` line
 
 second line
 
@@ -361,7 +355,7 @@ third line`
     assert.strictEqual(
       this.value,
       `\`\`\`
-${I18n.t("composer.paste_code_text")}
+${i18n("composer.paste_code_text")}
 \`\`\``
     );
 
@@ -397,7 +391,7 @@ third line
 
     assert.strictEqual(
       this.value,
-      `\`${I18n.t("composer.code_title")}\`first line
+      `\`${i18n("composer.code_title")}\`first line
 second line
 third line`
     );
@@ -405,7 +399,7 @@ third line`
     assert.strictEqual(textarea.selectionStart, 1);
     assert.strictEqual(
       textarea.selectionEnd,
-      I18n.t("composer.code_title").length + 1
+      i18n("composer.code_title").length + 1
     );
 
     this.set("value", "first line\nsecond line\nthird line");
@@ -528,7 +522,7 @@ third line`
   testCase(
     `bullet button with no selection`,
     async function (assert, textarea) {
-      const example = I18n.t("composer.list_item");
+      const example = i18n("composer.list_item");
 
       await click(`button.bullet`);
       assert.strictEqual(this.value, `hello world.\n\n* ${example}`);
@@ -576,7 +570,7 @@ third line`
   );
 
   testCase(`list button with no selection`, async function (assert, textarea) {
-    const example = I18n.t("composer.list_item");
+    const example = i18n("composer.list_item");
 
     await click(`button.list`);
     assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);

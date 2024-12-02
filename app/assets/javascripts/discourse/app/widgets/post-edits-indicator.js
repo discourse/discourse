@@ -1,6 +1,6 @@
 import { longDate } from "discourse/lib/formatter";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function mult(val) {
   return 60 * 50 * 1000 * val;
@@ -43,12 +43,12 @@ export default createWidget("post-edits-indicator", {
       className = `${className || ""} wiki`.trim();
 
       if (attrs.version > 1) {
-        title = I18n.t("post.wiki_last_edited_on", { dateTime: date });
+        title = i18n("post.wiki_last_edited_on", { dateTime: date });
       } else {
-        title = I18n.t("post.wiki.about");
+        title = i18n("post.wiki.about");
       }
     } else {
-      title = I18n.t("post.last_edited_on", { dateTime: date });
+      title = i18n("post.last_edited_on", { dateTime: date });
     }
 
     return this.attach("flat-button", {
@@ -56,7 +56,7 @@ export default createWidget("post-edits-indicator", {
       translatedTitle: title,
       className,
       action: "onPostEditsIndicatorClick",
-      translatedAriaLabel: I18n.t("post.edit_history"),
+      translatedAriaLabel: i18n("post.edit_history"),
       translatedLabel: attrs.version > 1 ? attrs.version - 1 : "",
     });
   },

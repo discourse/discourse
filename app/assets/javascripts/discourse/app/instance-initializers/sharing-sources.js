@@ -1,5 +1,5 @@
 import Sharing from "discourse/lib/sharing";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
@@ -15,14 +15,14 @@ export default {
         )}&text=${encodeURIComponent(text)}`;
       },
       shouldOpenInPopup: true,
-      title: I18n.t("share.twitter"),
+      title: i18n("share.twitter"),
       popupHeight: 265,
     });
 
     Sharing.addSource({
       id: "facebook",
       icon: "fab-facebook",
-      title: I18n.t("share.facebook"),
+      title: i18n("share.facebook"),
       generateUrl(link, title, quote = "") {
         const fb_url = siteSettings.facebook_app_id
           ? `https://www.facebook.com/dialog/share?app_id=${
@@ -38,7 +38,7 @@ export default {
     Sharing.addSource({
       id: "email",
       icon: "envelope",
-      title: I18n.t("share.email"),
+      title: i18n("share.email"),
       generateUrl(link, title, quote = "") {
         const body = quote ? `${quote} \n\n ${link}` : link;
         return (

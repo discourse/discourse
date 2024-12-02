@@ -708,9 +708,9 @@ he:
         chat_message: "הודעת צ׳אט חדשה"
         chat_quoted: "הודעת הצ׳אט שלך צוטטה על ידי %{username}"
       titles:
-        chat_mention: "איזכור בצ׳אט"
-        chat_invitation: "הזמנה לצ׳אט"
-        chat_quoted: "הצ׳אט צוטט"
+        chat_mention: "אזכור בצ׳אט"
+        chat_invitation: "נשלחה הזמנה לערוץ צ׳אט"
+        chat_quoted: "הודעת צ׳אט צוטטה"
         chat_watched_thread: "שרשור צ׳אט במעקב"
     action_codes:
       chat:
@@ -742,6 +742,7 @@ he:
         title: "צ׳אט"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} החלפת ערוץ"
+          switch__unread_channel_arrows: "%{shortcut} החלפת ערוץ לא נקרא"
           open_quick_channel_selector: "%{shortcut} פתיחת בורר הערוצים המהיר"
           open_insert_link_modal: "%{shortcut} הוספת קישור (עורך בלבד)"
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"

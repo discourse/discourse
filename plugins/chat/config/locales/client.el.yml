@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Συνομιλία
   js:
     admin:
       site_settings:
@@ -23,6 +28,12 @@ el:
         add: "Προσθήκη"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
+      channel_open:
+        title: "Άνοιγμα Καναλιού"
+      channel_close:
+        title: "Κλείσιμο Καναλιού"
+      channel_delete:
+        title: "Διαγραφή Καναλιού"
       close: "Κλείσιμο"
       remove: "Αφαίρεση"
       delete: "Σβήσιμο"

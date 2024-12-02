@@ -12,7 +12,7 @@ describe UsersController do
     end
 
     it "triggers the auto-join process" do
-      user = Fabricate(:user, last_seen_at: 1.minute.ago, active: false)
+      user = Fabricate(:user, last_seen_at: 1.minute.ago, active: false, trust_level: 1)
       email_token = Fabricate(:email_token, user: user)
 
       put "/u/activate-account/#{email_token.token}"
@@ -68,7 +68,7 @@ describe UsersController do
       before { sign_in(user) }
 
       it "returns that the user can message themselves" do
-        user.user_option.update!(hide_profile_and_presence: false)
+        user.user_option.update!(hide_profile: false)
         user.user_option.update!(chat_enabled: true)
         get "/u/#{user.username}/card.json"
         expect(response).to be_successful
@@ -76,7 +76,7 @@ describe UsersController do
       end
 
       it "returns that the user can message themselves when the profile is hidden" do
-        user.user_option.update!(hide_profile_and_presence: true)
+        user.user_option.update!(hide_profile: true)
         user.user_option.update!(chat_enabled: true)
         get "/u/#{user.username}/card.json"
         expect(response).to be_successful
@@ -87,7 +87,7 @@ describe UsersController do
     context "when hidden users" do
       before do
         sign_in(another_user)
-        user.user_option.update!(hide_profile_and_presence: true)
+        user.user_option.update!(hide_profile: true)
       end
 
       it "returns the correct partial response when the user has chat enabled" do

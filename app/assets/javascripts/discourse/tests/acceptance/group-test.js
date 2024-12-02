@@ -1,13 +1,8 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership.json", () => {
@@ -30,27 +25,27 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".nav-pills li a[title='Messages']")
-      .doesNotExist("it does not show group messages navigation link");
+      .doesNotExist("does not show group messages navigation link");
 
     await click(".nav-pills li a[title='Activity']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/topics']");
 
-    assert.ok(query(".topic-list"), "it shows the topic list");
-    assert.strictEqual(count(".topic-list-item"), 2, "it lists stream items");
+    assert.dom(".topic-list").exists("shows the topic list");
+    assert.dom(".topic-list-item").exists({ count: 2 }, "lists stream items");
 
     await click(".activity-nav li a[href='/g/discourse/activity/mentions']");
 
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+    assert.dom(".user-stream-item").exists("lists stream items");
     assert
       .dom(".nav-pills li a[title='Edit Group']")
-      .doesNotExist("it should not show messages tab if user is not admin");
+      .doesNotExist("does not show messages tab if user is not admin");
     assert
       .dom(".nav-pills li a[title='Logs']")
-      .doesNotExist("it should not show Logs tab if user is not admin");
-    assert.ok(exists(".user-stream-item"), "it lists stream items");
+      .doesNotExist("does not show Logs tab if user is not admin");
+    assert.dom(".user-stream-item").exists("lists stream items");
 
     const groupDropdown = selectKit(".group-dropdown");
     await groupDropdown.expand();
@@ -59,7 +54,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert.strictEqual(
       groupDropdown.rowByIndex(0).name(),
-      I18n.t("groups.index.all")
+      i18n("groups.index.all")
     );
 
     this.siteSettings.enable_group_directory = false;
@@ -71,7 +66,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".group-dropdown-filter")
-      .doesNotExist("it should not display the default header");
+      .doesNotExist("does not display the default header");
   });
 
   test("Anonymous Viewing Automatic Group", async function (assert) {
@@ -79,7 +74,7 @@ acceptance("Group - Anonymous", function (needs) {
 
     assert
       .dom(".nav-pills li a[title='Manage']")
-      .doesNotExist("it does not show group messages navigation link");
+      .doesNotExist("does not show group messages navigation link");
   });
 });
 
@@ -188,13 +183,12 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom(".d-modal__header .d-modal__title-text")
       .hasText(
-        I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
+        i18n("groups.membership_request.title", { group_name: "Macdonald" })
       );
 
-    assert.strictEqual(
-      query(".request-group-membership-form textarea").value,
-      "Please add me"
-    );
+    assert
+      .dom(".request-group-membership-form textarea")
+      .hasValue("Please add me");
 
     await click(".d-modal__footer .btn-primary");
 
@@ -204,15 +198,15 @@ acceptance("Group - Authenticated", function (needs) {
 
     await click(".group-message-button");
 
-    assert.strictEqual(count("#reply-control"), 1, "it opens the composer");
+    assert.dom("#reply-control").exists("opens the composer");
     const privateMessageUsers = selectKit("#private-message-users");
     assert.strictEqual(
       privateMessageUsers.header().value(),
       "discourse",
-      "it prefills the group name"
+      "prefills the group name"
     );
 
-    assert.ok(!exists(".add-warning"), "groups can't receive warnings");
+    assert.dom(".add-warning").doesNotExist("groups can't receive warnings");
   });
 
   test("Admin viewing group messages when there are no messages", async function (assert) {
@@ -222,8 +216,8 @@ acceptance("Group - Authenticated", function (needs) {
     assert
       .dom("span.empty-state-title")
       .hasText(
-        I18n.t("no_group_messages_title"),
-        "it should display the right text"
+        i18n("no_group_messages_title"),
+        "should display the right text"
       );
   });
 
@@ -235,70 +229,65 @@ acceptance("Group - Authenticated", function (needs) {
       .dom(".topic-list-item .link-top-line")
       .hasText(
         "This is a private message 1",
-        "it should display the list of group topics"
+        "should display the list of group topics"
       );
 
     await click("#search-button");
     await fillIn("#search-term", "something");
 
-    assert.ok(
-      query(".search-menu .btn.search-context"),
-      "'in messages' toggle is active by default"
-    );
+    assert
+      .dom(".search-menu .btn.search-context")
+      .exists("'in messages' toggle is active by default");
   });
 
   test("Admin Viewing Group", async function (assert) {
     await visit("/g/discourse");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user is admin"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user is admin");
 
-    assert.strictEqual(
-      count(".group-message-button"),
-      1,
-      "it displays show group message button"
-    );
+    assert
+      .dom(".group-message-button")
+      .exists("displays show group message button");
     assert
       .dom(".group-info-name")
-      .hasText("Awesome Team", "it should display the group name");
+      .hasText("Awesome Team", "should display the group name");
 
     await click(".group-details-button button.btn-danger");
 
-    assert.strictEqual(
-      query(".dialog-body p:nth-of-type(2)").textContent.trim(),
-      I18n.t("admin.groups.delete_with_messages_confirm", {
+    assert.dom(".dialog-body p:nth-of-type(2)").hasText(
+      i18n("admin.groups.delete_with_messages_confirm", {
         count: 2,
       }),
-      "it should warn about orphan messages"
+      "warns about orphan messages"
     );
 
     await click(".dialog-footer .btn-default");
 
     await visit("/g/discourse/activity/posts");
 
-    assert.ok(
-      ".user-stream-item a.avatar-link[href='/u/awesomerobot']",
-      "avatar link contains href (is tabbable)"
-    );
+    assert
+      .dom(".user-stream-item a.avatar-link")
+      .hasAttribute(
+        "href",
+        "/u/awesomerobot",
+        "avatar link contains href (is tabbable)"
+      );
   });
 
   test("Moderator Viewing Group", async function (assert) {
     await visit("/g/alternative-group");
 
-    assert.strictEqual(
-      count(".nav-pills li a[title='Manage']"),
-      1,
-      "it should show manage group tab if user can_admin_group"
-    );
+    assert
+      .dom(".nav-pills li a[title='Manage']")
+      .exists("shows manage group tab if user can_admin_group");
 
     await click(".group-members-add.btn");
 
     assert
       .dom(".group-add-members-modal #set-owner")
-      .exists("it allows moderators to set group owners");
+      .exists("allows moderators to set group owners");
 
     await click(".group-add-members-modal .modal-close");
 
@@ -307,11 +296,11 @@ acceptance("Group - Authenticated", function (needs) {
 
     assert.strictEqual(
       memberDropdown.rowByIndex(0).name(),
-      I18n.t("groups.members.remove_member")
+      i18n("groups.members.remove_member")
     );
     assert.strictEqual(
       memberDropdown.rowByIndex(1).name(),
-      I18n.t("groups.members.make_owner")
+      i18n("groups.members.make_owner")
     );
   });
 });

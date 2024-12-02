@@ -935,7 +935,6 @@ sw:
         invite_link:
           success: "Kiungo cha Mualiko kimetengenezwa kwa mafanikio!"
         invite:
-          save_invite: "Hifadhi"
           cancel: "Ghairi"
         bulk_invite:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
@@ -1495,6 +1494,8 @@ sw:
         top: "Hakuna mada za juu zingine."
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
+      dismiss:
+        name: "Ondosha..."
       close_topics:
         name: "Funga"
         optional: (sio muhimu)
@@ -1804,21 +1805,26 @@ sw:
       few_likes_left: "Asante kwa kutoa upendo! Umebakiwa na upendo mchache kwa ajili ya leo."
       controls:
         reply: "anza kuandika jibu kwenye mada hii"
+        like_action: "Penda"
         like: "penda hili chapisho"
         has_liked: "umependa chapisho hili"
+        undo_like_action: "Ondoa upendo"
         undo_like: "ondoa upendo"
         edit: "hariri chapisho hili"
         edit_action: "Hariri"
         edit_anonymous: "Samahani, lazima uwe umeingia kuhariri chapisho hili."
+        flag_action: "Bendera"
         flag: "ripoti kwa siri chapisho hili liangaliwe au tuma ujumbe binafsi wa taarifa kuhusiana na hii"
         delete: "futa chapisho hili"
         undelete: "rudisha chapisho hili"
+        share_action: "Shirikisha"
         share: "gawiza kiungo kwenye mada hii"
         more: "Zaidi"
         delete_replies:
           confirm: "Je unataka pia kufuta majibu ya chapisho hili?"
           just_the_post: "Hapana, chapisho hili tu"
         admin: "chapisha vitendo vya kiongozi"
+        admin_action: "Kiongozi"
         wiki: "Tengeneza Wiki"
         unwiki: "Ondoa Wiki"
         convert_to_moderator: "Ongeza Rangi ya Wasaidizi"
@@ -2586,6 +2592,9 @@ sw:
         look_and_feel:
           themes:
             title: "Mandhari"
+        user_fields:
+          type: "Aina"
+          delete: "Futa"
       plugins:
         title: "Programu-jalizi"
         name: "Jina"
@@ -3052,6 +3061,11 @@ sw:
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
         show_emails: "Onyesha Barua Pepe"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Funga"
+              confirm: "Futa"
         nav:
           new: "Mpya"
           active: "Mara kwa Mara"
@@ -3146,7 +3160,6 @@ sw:
         approve_bulk_success: "Umefanikiwa! Watumiaji wamethibitishwa na wamejulishwa."
         time_read: "Mda wa Kusoma"
         anonymize: "Mfanye Mtumiaji Asijulikane"
-        anonymize_confirm: "Una UHAKIKA unataka kufanya hii akaunti iwe ya mtu asiyejulikana? Kitendo hicho kitabadilisha jina la mtumiaji na barua pepe, na kuanzisha upya taarifa zote binafsi."
         anonymize_yes: "Ndio, fanya hii akaunti iwe ya mtu asiyejulikana"
         anonymize_failed: "Tatizo limetokea wakati wa kufanya akaunti iwe ya mtu asiyejulikana."
         delete: "Futa Mtumiaji"
@@ -3240,8 +3253,6 @@ sw:
           external_avatar_url: "Linki au kiungo cha Picha ya Mtumiaji"
       user_fields:
         title: "Sehemu za Watumiaji"
-        help: "Ongeza sehemu za taarifa ambazo watumiaji wanahitaji kujaza."
-        create: "Tengeneza Sehemu za Taarifa za Mtumiaji"
         untitled: "Hakuna Kichwa cha Taarifa"
         name: "Jina la Sehemu ya Taarifa"
         type: "Aina ya Taarifa"
@@ -3262,18 +3273,12 @@ sw:
             title: "Sio muhimu"
         editable:
           title: "Inaweza kufanyiwa uhariri baada ya kujiunga"
-          enabled: "inaweza kufanyiwa uhariri"
-          disabled: "haiwezi kufanyiwa uhariri"
         show_on_profile:
           title: "Imeonyeshwa kwenye maelezo mafupi ya mtumiaji yanayo onwa na umma"
-          enabled: "imeonyeshwa kwenye maelezo mafupi ya mtumiaji"
-          disabled: "haijaonyeshwa kwenye maelezo mafupi ya mtumiaji"
         show_on_user_card:
           title: "Onyesha kwenye kadi ya mtumiaji"
-          enabled: "onyesha kwenye kadi ya mtumiaji"
-          disabled: "usioneshe kwenye kadi ya mtumiaji"
         field_types:
-          text: "Sehemu ya kuweka Taarifa"
+          text: "Neno"
           confirm: "Uhakikisho"
           dropdown: "Shusha Chini"
       site_text:
@@ -3400,7 +3405,7 @@ sw:
             with_time: <span class="username">%{username}</span> kwenye %{time}<span class="time">
       emoji:
         title: "Emoji"
-        add: "Ongeza Emoji Mpya"
+        delete: "Futa"
         name: "Jina"
         group: "Kikundi"
         image: "Picha"
@@ -3432,12 +3437,13 @@ sw:
         post_title: "Ujumbe"
         category_id: "Utambulisho wa kikundi"
         category_title: "Kikundi"
+        user_title: "Mtumiaji"
         username: "Jina la mtumiaji"
         delete_confirm: Una uhakika unataka kufuta hii link kiungo?
         form:
           label: "Mpya:"
-          add: "Ongeza"
-          filter: "Tafuta (URL au Kiungo cha nje)"
+          url: "Anwani ya mtandao"
+          save: "Hifadhi"
       reseed:
         modal:
           categories: "Kategoria"

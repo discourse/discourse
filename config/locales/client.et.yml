@@ -1150,7 +1150,6 @@ et:
         invite_link:
           success: "Kutse link edukalt genereeritud!"
         invite:
-          save_invite: "Salvesta"
           cancel: "Tühista"
         bulk_invite:
           error: "Vabandust, fail peab olema CSV vormingus."
@@ -1686,6 +1685,8 @@ et:
         top: "Rohkem tippteemasid pole."
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
+      dismiss:
+        name: "Ignoreeri"
       close_topics:
         name: "Sulge"
         optional: (valikuline)
@@ -2066,20 +2067,25 @@ et:
       few_likes_left: "Aitäh poolehoiu jagamise eest! Tänaseks on vaid mõned meeldimised jäänud jagada."
       controls:
         reply: "alusta sellele postitusele vastuse koostamist"
+        like_action: "Laigi"
         like: "lisa sellele postitusele \"meeldib\""
         has_liked: "oled sellele postitusele oma meeldimise andnud"
+        undo_like_action: "Tühista meeldimise andmine"
         undo_like: "tühista meeldimise andmine"
         edit: "muuda seda postitust"
         edit_action: "Muuda"
         edit_anonymous: "Vabandame, kuid selle postituse muutmiseks pead olema sisse logitud."
+        flag_action: "Tähis"
         flag: "tähista see postitus privaatselt kui tähelepanu vajav või saada selle kohta privaatne teavitus"
         delete: "kustuta see postitus"
         undelete: "ennista see postitus"
+        share_action: "Jaga"
         share: "jaga viidet sellele postitusele"
         more: "Veel"
         delete_replies:
           just_the_post: "Ei, ainult see postitus"
         admin: "postituse administreerimise tegevused"
+        admin_action: "Admin"
         wiki: "Loo Wiki"
         unwiki: "Eemalda Wiki"
         convert_to_moderator: "Lisa meeskonna värv"
@@ -2931,6 +2937,9 @@ et:
         look_and_feel:
           themes:
             title: "Kujundused"
+        user_fields:
+          type: "Tüüp"
+          delete: "Kustuta"
       plugins:
         title: "Plugin"
         name: "Nimi"
@@ -3379,6 +3388,11 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         show_emails: "Näita meile"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Sulge"
+              confirm: "Kustuta"
         nav:
           new: "Uus"
           active: "Aktiivne"
@@ -3458,7 +3472,6 @@ et:
         approve_bulk_success: "Edu! Kõik kasutajad on heaks kiidetud ja teavitatud."
         time_read: "Lugemise aeg"
         anonymize: "Anonümiseeri kasutaja"
-        anonymize_confirm: "Oled sa KINDEL, et soovid seda kontot anonümiseerida? See võib muuta kasutajanime ja meiliaadressi ja teha puhtaks kogu kasutajaprofiili."
         anonymize_yes: "Jah, anonümiseeri see konto"
         anonymize_failed: "Viga konto anonümiseerimisel."
         delete: "Kustuta kasutaja"
@@ -3553,8 +3566,6 @@ et:
           external_avatar_url: "Profiili pildi URL"
       user_fields:
         title: "Kasutajaväljad"
-        help: "Lisa välju, mida kasutajad saavad täita."
-        create: "Loo kasutajaväli"
         untitled: "Tiitlita"
         name: "Välja nimi"
         type: "Välja tüüp"
@@ -3575,18 +3586,12 @@ et:
             title: "Valikuline"
         editable:
           title: "Muudetav pärast registreerumist"
-          enabled: "muudetav"
-          disabled: "ei ole muudetav"
         show_on_profile:
           title: "Näidata avalikul profiilil"
-          enabled: "näidatav profiilil"
-          disabled: "ei ole näidatav profiilil"
         show_on_user_card:
           title: "Kuva kasutaja profiilil"
-          enabled: "kuvatud kasutaja profiilil"
-          disabled: "ei kuvata kasutaja profiilil"
         field_types:
-          text: "Tekstiväli"
+          text: "Tekst"
           confirm: "Kinnitus"
           dropdown: "Rippmenüü"
       site_text:
@@ -3719,7 +3724,7 @@ et:
             with_time: <span class="username">%{username}</span> ajal <span class="time">%{time}</span>
       emoji:
         title: "Emotikon"
-        add: "Lisa uus emotikon"
+        delete: "Kustuta"
         uploading: "Laen üles..."
         name: "Nimi"
         group: "Grupp"
@@ -3754,12 +3759,13 @@ et:
         post_title: "Postitus"
         category_id: "Foorumi ID"
         category_title: "Foorum"
+        user_title: "Kasutaja"
         username: "Kasutajanimi"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:
           label: "Uus"
-          add: "Lisa"
-          filter: "Otsi (URL või väline URL)"
+          url: "URL"
+          save: "Salvesta"
       reseed:
         modal:
           categories: "Foorumid"

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import Assistant from "./assistant";
 import AssistantItem from "./assistant-item";
 
@@ -78,7 +78,7 @@ export default class InitialOptions extends Component {
   }
 
   topicContextType() {
-    this.suffix = I18n.t("search.in_this_topic");
+    this.suffix = i18n("search.in_this_topic");
   }
 
   privateMessageContextType() {
@@ -137,7 +137,7 @@ export default class InitialOptions extends Component {
   userContextType() {
     this.contextTypeKeyword = "@";
     this.slug = `@${this.search.searchContext.user.username}`;
-    this.suffix = I18n.t("search.in_posts_by", {
+    this.suffix = i18n("search.in_posts_by", {
       username: this.search.searchContext.user.username,
     });
   }

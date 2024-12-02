@@ -4,7 +4,7 @@ import Notification from "discourse/models/notification";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(
@@ -46,7 +46,7 @@ module("Unit | Notification Types | liked", function (hooks) {
     notification.data.count = 2;
     assert.strictEqual(
       director.label,
-      I18n.t("notifications.liked_by_2_users", {
+      i18n("notifications.liked_by_2_users", {
         username: "osama",
         username2: "shrek",
       }),
@@ -56,7 +56,7 @@ module("Unit | Notification Types | liked", function (hooks) {
     notification.data.count = 3;
     assert.strictEqual(
       director.label,
-      I18n.t("notifications.liked_by_multiple_users", {
+      i18n("notifications.liked_by_multiple_users", {
         username: "osama",
         count: 2,
       }),

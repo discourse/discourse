@@ -3,9 +3,6 @@ import { test } from "qunit";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import {
   acceptance,
-  count,
-  exists,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -31,21 +28,20 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.ok(exists(".do-not-disturb-modal"), "modal to choose time appears");
+    assert.dom(".do-not-disturb-modal").exists("modal to choose time appears");
 
     let tiles = queryAll(".do-not-disturb-tile");
-    assert.ok(tiles.length === 4, "There are 4 duration choices");
+    assert.strictEqual(tiles.length, 4, "There are 4 duration choices");
 
     await click(tiles[0]);
 
     assert.dom(".d-modal").doesNotExist("modal is hidden");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
-      ),
-      "dnd icon is present in header"
-    );
+      )
+      .exists("dnd icon is present in header");
   });
 
   test("Can be invoked via keyboard", async function (assert) {
@@ -56,13 +52,10 @@ acceptance("Do not disturb", function (needs) {
     await click("#user-menu-button-profile");
     await click("#quick-access-profile .do-not-disturb .btn");
 
-    assert.ok(exists(".do-not-disturb-modal"), "DND modal is displayed");
-
-    assert.strictEqual(
-      count(".do-not-disturb-tile"),
-      4,
-      "There are 4 duration choices"
-    );
+    assert.dom(".do-not-disturb-modal").exists("DND modal is displayed");
+    assert
+      .dom(".do-not-disturb-tile")
+      .exists({ count: 4 }, "there are 4 duration choices");
 
     await triggerKeyEvent(
       ".do-not-disturb-tile:nth-child(1)",
@@ -74,12 +67,11 @@ acceptance("Do not disturb", function (needs) {
       .dom(".d-modal")
       .doesNotExist("DND modal is hidden after making a choice");
 
-    assert.ok(
-      exists(
+    assert
+      .dom(
         ".header-dropdown-toggle .do-not-disturb-background .d-icon-discourse-dnd"
-      ),
-      "dnd icon is shown in header avatar"
-    );
+      )
+      .exists("dnd icon is shown in header avatar");
   });
 
   test("when turned on, it can be turned off", async function (assert) {
@@ -95,11 +87,12 @@ acceptance("Do not disturb", function (needs) {
 
     await click(".header-dropdown-toggle.current-user button");
     await click("#user-menu-button-profile");
-    assert.strictEqual(
-      query(".do-not-disturb .relative-date").textContent.trim(),
-      "1h",
-      "the Do Not Disturb button shows how much time is left for DND mode"
-    );
+    assert
+      .dom(".do-not-disturb .relative-date")
+      .hasText(
+        "1h",
+        "the Do Not Disturb button shows how much time is left for DND mode"
+      );
     assert
       .dom(".do-not-disturb .d-icon-toggle-on")
       .exists("the Do Not Disturb button has the toggle-on icon");

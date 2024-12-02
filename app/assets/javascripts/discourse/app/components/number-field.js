@@ -4,7 +4,7 @@ import TextField from "discourse/components/text-field";
 import { allowOnlyNumericInput } from "discourse/lib/utilities";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @classNameBindings("invalid")
 export default class NumberField extends TextField {
@@ -59,6 +59,6 @@ export default class NumberField extends TextField {
 
   @discourseComputed("placeholderKey")
   placeholder(key) {
-    return key ? I18n.t(key) : "";
+    return key ? i18n(key) : "";
   }
 }

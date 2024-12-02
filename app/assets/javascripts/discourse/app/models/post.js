@@ -1,5 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject, { get } from "@ember/object";
-import { and, equal, not, or } from "@ember/object/computed";
+import { alias, and, equal, not, or } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
@@ -9,6 +10,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyEqual } from "discourse/lib/computed";
 import { cook } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -17,10 +19,51 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
+
+const pluginTrackedProperties = new Set();
+const trackedPropertiesForPostUpdate = new Set();
+
+/**
+ * @internal
+ * Adds a tracked property to the post model.
+ *
+ * Intended to be used only in the plugin API.
+ *
+ * @param {string} propertyKey - The key of the property to track.
+ */
+export function _addTrackedPostProperty(propertyKey) {
+  pluginTrackedProperties.add(propertyKey);
+}
+
+/**
+ * Clears all tracked properties added using the API
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function clearAddedTrackedPostProperties() {
+  pluginTrackedProperties.clear();
+}
+
+/**
+ * Decorator to mark a property as post property as tracked.
+ *
+ * It extends the standard Ember @tracked behavior to also keep track of the fields
+ * that need to be copied when using `post.updateFromPost`.
+ *
+ * @param {Object} target - The target object.
+ * @param {string} propertyKey - The key of the property to track.
+ * @param {PropertyDescriptor} descriptor - The property descriptor.
+ * @returns {PropertyDescriptor} The updated property descriptor.
+ */
+function trackedPostProperty(target, propertyKey, descriptor) {
+  trackedPropertiesForPostUpdate.add(propertyKey);
+  return tracked(target, propertyKey, descriptor);
+}
 
 export default class Post extends RestModel {
   static munge(json) {
+    json.likeAction ??= null;
     if (json.actions_summary) {
       const lookup = EmberObject.create();
 
@@ -104,17 +147,46 @@ export default class Post extends RestModel {
   }
 
   @service currentUser;
+  @service site;
+
+  // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
+  // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
+  // the standard tracked method because these properties are added to the class prototype and are not enumarated by
+  // object.keys().
+  // See https://github.com/emberjs/ember.js/issues/18220
+  @trackedPostProperty bookmarked;
+  @trackedPostProperty can_delete;
+  @trackedPostProperty can_edit;
+  @trackedPostProperty can_permanently_delete;
+  @trackedPostProperty can_recover;
+  @trackedPostProperty deleted_at;
+  @trackedPostProperty likeAction;
+  @trackedPostProperty post_type;
+  @trackedPostProperty user_deleted;
+  @trackedPostProperty user_id;
+  @trackedPostProperty yours;
 
   customShare = null;
 
+  @alias("can_edit") canEdit; // for compatibility with existing code
   @equal("trust_level", 0) new_user;
   @equal("post_number", 1) firstPost;
   @or("deleted_at", "deletedViaTopic") deleted;
   @not("deleted") notDeleted;
   @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
+  @alias("topic.details.created_by.id") topicCreatedById;
 
   // Posts can show up as deleted if the topic is deleted
   @and("firstPost", "topic.deleted_at") deletedViaTopic;
+
+  constructor() {
+    super(...arguments);
+
+    // adds tracked properties defined by plugin to the instance
+    pluginTrackedProperties.forEach((propertyKey) => {
+      defineTrackedProperty(this, propertyKey);
+    });
+  }
 
   @discourseComputed("url", "customShare")
   shareUrl(url) {
@@ -200,6 +272,112 @@ export default class Post extends RestModel {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
   }
 
+  get canBookmark() {
+    return !!this.currentUser;
+  }
+
+  get canDelete() {
+    return (
+      this.can_delete &&
+      !this.deleted_at &&
+      this.currentUser &&
+      (this.currentUser.staff || !this.user_deleted)
+    );
+  }
+
+  get canDeleteTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_delete;
+  }
+
+  get canEditStaffNotes() {
+    return !!this.topic.details.can_edit_staff_notes;
+  }
+
+  get canFlag() {
+    return !this.topic.deleted && !isEmpty(this.flagsAvailable);
+  }
+
+  get canManage() {
+    return this.currentUser?.canManageTopic;
+  }
+
+  get canPermanentlyDelete() {
+    return (
+      this.deleted &&
+      (this.firstPost
+        ? this.topic.details.can_permanently_delete
+        : this.can_permanently_delete)
+    );
+  }
+
+  get canPublishPage() {
+    return this.firstPost && !!this.topic.details.can_publish_page;
+  }
+
+  get canRecover() {
+    return this.deleted && this.can_recover;
+  }
+
+  get isRecovering() {
+    return !this.deleted && this.can_recover;
+  }
+
+  get canRecoverTopic() {
+    return this.firstPost && this.deleted && this.topic.details.can_recover;
+  }
+
+  get isRecoveringTopic() {
+    return this.firstPost && !this.deleted && this.topic.details.can_recover;
+  }
+
+  get canToggleLike() {
+    return !!this.likeAction?.get("canToggle");
+  }
+
+  get filteredRepliesPostNumber() {
+    return this.topic.get("postStream.filterRepliesToPostNumber");
+  }
+
+  get isWhisper() {
+    return this.post_type === this.site.post_types.whisper;
+  }
+
+  get isModeratorAction() {
+    return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get liked() {
+    return !!this.likeAction?.get("acted");
+  }
+
+  get likeCount() {
+    return this.likeAction?.get("count");
+  }
+
+  /**
+   * Show a "Flag to delete" message if not staff and you can't otherwise delete it.
+   */
+  get showFlagDelete() {
+    return (
+      !this.canDelete &&
+      this.yours &&
+      this.canFlag &&
+      this.currentUser &&
+      !this.currentUser.staff
+    );
+  }
+
+  get showLike() {
+    if (
+      !this.currentUser ||
+      (this.topic?.get("archived") && this.user_id !== this.currentUser.id)
+    ) {
+      return true;
+    }
+
+    return this.likeAction && (this.liked || this.canToggleLike);
+  }
+
   afterUpdate(res) {
     if (res.category) {
       this.site.updateCategory(res.category);
@@ -277,9 +455,9 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to be deleted. Does not call the server, that should be
-    done elsewhere.
-  **/
+   Changes the state of the post to be deleted. Does not call the server, that should be
+   done elsewhere.
+   **/
   setDeletedState(deletedBy) {
     let promise;
     this.set("oldCooked", this.cooked);
@@ -299,7 +477,7 @@ export default class Post extends RestModel {
         this.post_number === 1
           ? "topic.deleted_by_author_simple"
           : "post.deleted_by_author_simple";
-      promise = cook(I18n.t(key)).then((cooked) => {
+      promise = cook(i18n(key)).then((cooked) => {
         this.setProperties({
           cooked,
           can_delete: false,
@@ -316,10 +494,10 @@ export default class Post extends RestModel {
   }
 
   /**
-    Changes the state of the post to NOT be deleted. Does not call the server.
-    This can only be called after setDeletedState was called, but the delete
-    failed on the server.
-  **/
+   Changes the state of the post to NOT be deleted. Does not call the server.
+   This can only be called after setDeletedState was called, but the delete
+   failed on the server.
+   **/
   undoDeleteState() {
     if (this.oldCooked) {
       this.setProperties({
@@ -344,11 +522,15 @@ export default class Post extends RestModel {
   }
 
   /**
-    Updates a post from another's attributes. This will normally happen when a post is loading but
-    is already found in an identity map.
-  **/
+   * Updates a post from another's attributes. This will normally happen when a post is loading but
+   * is already found in an identity map.
+   **/
   updateFromPost(otherPost) {
-    Object.keys(otherPost).forEach((key) => {
+    [
+      ...Object.keys(otherPost),
+      ...trackedPropertiesForPostUpdate,
+      ...pluginTrackedProperties,
+    ].forEach((key) => {
       let value = otherPost[key],
         oldValue = this[key];
 

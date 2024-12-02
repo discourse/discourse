@@ -8,7 +8,7 @@ import {
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered
@@ -87,7 +87,7 @@ export default class PickFilesButton extends Component {
     }
 
     if (!this._haveAcceptedTypes(files)) {
-      const message = I18n.t("pick_files_button.unsupported_file_picked", {
+      const message = i18n("pick_files_button.unsupported_file_picked", {
         types: this.acceptedFileTypesString,
       });
       this.dialog.alert(message);

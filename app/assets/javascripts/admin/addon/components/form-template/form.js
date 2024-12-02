@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import FormTemplateValidationOptionsModal from "admin/components/modal/form-template-validation-options";
 import { templateFormFields } from "admin/lib/template-form-fields";
 import FormTemplate from "admin/models/form-template";
@@ -91,7 +91,7 @@ export default class FormTemplateForm extends Component {
   @action
   onDelete() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.form_templates.delete_confirm"),
+      message: i18n("admin.form_templates.delete_confirm"),
       didConfirm: () => {
         FormTemplate.deleteTemplate(this.args.model.id)
           .then(() => {

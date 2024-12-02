@@ -133,6 +133,7 @@ fr:
       header_indicator_preference:
         title: "Afficher l'indicateur d'activité dans l'en-tête"
         all_new: "Tous les nouveaux messages"
+        dm_and_mentions: "Messages directs, mentions et fils de discussion surveillés"
         only_mentions: "Mentions uniquement"
         never: "Jamais"
       separate_sidebar_mode:
@@ -248,6 +249,7 @@ fr:
       placeholder_channel: "Discuter dans %{channelName}"
       placeholder_thread: "Discuter dans le fil de discussion"
       placeholder_users: "Discuter avec %{commaSeparatedNames}"
+      placeholder_group: "Discuter en groupe"
       placeholder_new_message_disallowed:
         archived: "Le canal est archivé, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
         closed: "Le canal est fermé, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
@@ -458,6 +460,7 @@ fr:
         auto_join_users_info: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie %{category}."
         auto_join_users_info_no_category: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie sélectionnée."
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
+        notification_level: "Envoyer des notifications push"
         follow: "Rejoindre"
         followed: "Rejoint"
         mute: "Mettre le canal en sourdine"
@@ -482,6 +485,7 @@ fr:
           title: "Exporter les messages de la discussion"
           description: "Cela permet d'exporter tous les messages de tous les canaux."
           create_export: "Créer une exportation"
+          confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message personnel. Voulez-vous vraiment exporter ?"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       my_threads:
         title: Mes fils de discussion
@@ -500,6 +504,7 @@ fr:
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"
+        channel: "Canal"
         confirm_destroy: "Voulez-vous vraiment supprimer ce webhook entrant ? Cette action est irréversible."
         current_emoji: "Émoji actuel"
         description: "Description"
@@ -523,6 +528,8 @@ fr:
         username: "Nom d'utilisateur"
         username_instructions: "Nom d'utilisateur du robot qui publie sur le canal. La valeur par défaut est « système » lorsqu'elle est laissée vide."
         instructions: "Les webhooks entrants peuvent être utilisés par des systèmes externes pour publier des messages dans un canal de discussion désigné en tant qu'utilisateur robot via le point de terminaison <code>/hooks/:key</code>. La charge utile se compose d'un seul paramètre <code>texte</code>, qui est limité à 2000 caractères.<br><br>Nous prenons également en charge des paramètres de <code>texte</code> au format Slack limités, en extrayant des liens et des mentions sur la base du format <a href=\"https://api.slack.com/reference/surfaces/formatting\">https://api.slack.com/reference/surfaces/formatting</a>, mais le point de terminaison <code>/hooks/:key/slack</code> doit être utilisé pour cela."
+        saved: "Modifications du webhook enregistrées"
+        created: "Webhook créé"
       selection:
         cancel: "Annuler"
         quote_selection: "Citation dans le sujet"
@@ -600,10 +607,13 @@ fr:
         notifications:
           regular:
             title: "Normal"
+            description: "Recevez une notification lorsque quelqu'un vous mentionne dans ce fil."
           tracking:
             title: "Suivi"
+            description: "Recevez une notification lorsque quelqu'un vous mentionne dans ce fil de discussion et voyez le nombre de nouvelles réponses dans la liste des fils de discussion."
           watching:
             title: "Surveiller"
+            description: "Recevez une notification de toutes les réponses dans ce fil de discussion et consultez le nombre de nouvelles réponses dans la liste des fils de discussion."
         participants_other_count:
           one: "+ %{count}"
           other: "+ %{count}"
@@ -629,6 +639,9 @@ fr:
       chat_invitation: "vous a invité(e) à rejoindre un canal de discussion"
       chat_invitation_html: "<span>%{username}</span> <span>vous a invité(e) à rejoindre un canal de discussion</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_watched_thread_label:
+        one: "%{username} et %{username2}"
+        other: "%{username} et %{count} autres utilisateurs"
       popup:
         chat_mention:
           direct: 'vous a mentionné(e) dans « %{channel} »'
@@ -642,10 +655,6 @@ fr:
           other_html: "<span>%{username}</span> <span>a mentionné %{identifier} dans une discussion privée</span>"
         chat_message: "Nouveau message de discussion"
         chat_quoted: "%{username} a cité votre message de discussion"
-      titles:
-        chat_mention: "Mention de discussion"
-        chat_invitation: "Invitation à rejoindre la discussion"
-        chat_quoted: "Discussion citée"
     action_codes:
       chat:
         enabled: '%{who} a activé la <button class="btn-link open-chat">discussion</button> %{when}'
@@ -676,6 +685,7 @@ fr:
         title: "Discussion"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Changer de canal"
+          switch__unread_channel_arrows: "%{shortcut} Changer de canal non lu"
           open_quick_channel_selector: "%{shortcut} Ouvrir le sélecteur de canal rapide"
           open_insert_link_modal: "%{shortcut} Insérer un lien hypertexte (compositeur uniquement)"
           composer_bold: "%{shortcut} Gras (compositeur uniquement)"

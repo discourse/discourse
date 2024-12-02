@@ -10,10 +10,9 @@ acceptance("Sidebar - Anonymous User", function (needs) {
   test("sidebar is displayed", async function (assert) {
     await visit("/");
 
-    assert.ok(
-      document.body.classList.contains("has-sidebar-page"),
-      "adds sidebar utility class to body"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("has-sidebar-page", "adds sidebar utility class to body");
 
     assert
       .dom(".sidebar-container")

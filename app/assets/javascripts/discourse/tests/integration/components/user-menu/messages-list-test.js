@@ -5,9 +5,9 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getMessage(overrides = {}) {
   return deepMerge(
@@ -107,15 +107,15 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 3);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
 
-    assert.ok(items[2].classList.contains("message"));
+    assert.dom(items[2]).hasClass("message");
   });
 
   test("does not error when there are no group_message_summary notifications", async function (assert) {
@@ -132,11 +132,11 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("message"));
+    assert.dom(items[1]).hasClass("message");
   });
 
   test("does not error when there are no messages", async function (assert) {
@@ -154,13 +154,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 2);
 
-    assert.ok(items[0].classList.contains("notification"));
-    assert.ok(items[0].classList.contains("unread"));
-    assert.ok(items[0].classList.contains("private-message"));
+    assert.dom(items[0]).hasClass("notification");
+    assert.dom(items[0]).hasClass("unread");
+    assert.dom(items[0]).hasClass("private-message");
 
-    assert.ok(items[1].classList.contains("notification"));
-    assert.ok(items[1].classList.contains("read"));
-    assert.ok(items[1].classList.contains("group-message-summary"));
+    assert.dom(items[1]).hasClass("notification");
+    assert.dom(items[1]).hasClass("read");
+    assert.dom(items[1]).hasClass("group-message-summary");
   });
 
   test("merge-sorts group_message_summary notifications and messages", async function (assert) {
@@ -213,54 +213,43 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
 
     assert.strictEqual(items.length, 6);
 
-    assert.strictEqual(
-      items[0].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+    assert.dom(items[0]).hasText(
+      i18n("notifications.group_message_summary", {
         count: 13,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[1].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0003"
-    );
+    assert.dom(items[1]).hasText("mixtape Test Topic 0003");
 
-    assert.strictEqual(
-      items[2].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+    assert.dom(items[2]).hasText(
+      i18n("notifications.group_message_summary", {
         count: 12,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[3].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0002"
-    );
+    assert.dom(items[3]).hasText("mixtape Test Topic 0002");
 
-    assert.strictEqual(
-      items[4].textContent.trim(),
-      I18n.t("notifications.group_message_summary", {
+    assert.dom(items[4]).hasText(
+      i18n("notifications.group_message_summary", {
         count: 11,
         group_name: "jokers",
       })
     );
 
-    assert.strictEqual(
-      items[5].textContent.trim().replaceAll(/\s+/g, " "),
-      "mixtape Test Topic 0001"
-    );
+    assert.dom(items[5]).hasText("mixtape Test Topic 0001");
   });
 
   test("show all button for message notifications", async function (assert) {
     await render(template);
-    const link = query(".panel-body-bottom .show-all");
-    assert.strictEqual(
-      link.title,
-      I18n.t("user_menu.view_all_messages"),
-      "has the correct title"
-    );
+    assert
+      .dom(".panel-body-bottom .show-all")
+      .hasAttribute(
+        "title",
+        i18n("user_menu.view_all_messages"),
+        "has the correct title"
+      );
   });
 
   test("dismiss button", async function (assert) {
@@ -268,16 +257,19 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
       [NOTIFICATION_TYPES.private_message]: 72,
     });
     await render(template);
-    const dismiss = query(".panel-body-bottom .notifications-dismiss");
-    assert.ok(
-      dismiss,
-      "dismiss button is shown if the user has unread private_message notifications"
-    );
-    assert.strictEqual(
-      dismiss.title,
-      I18n.t("user.dismiss_messages_tooltip"),
-      "dismiss button has a title"
-    );
+
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .exists(
+        "dismiss button is shown if the user has unread private_message notifications"
+      );
+    assert
+      .dom(".panel-body-bottom .notifications-dismiss")
+      .hasAttribute(
+        "title",
+        i18n("user.dismiss_messages_tooltip"),
+        "dismiss button has a title"
+      );
 
     this.currentUser.set("grouped_unread_notifications", {});
     await settled();
@@ -297,19 +289,21 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
         read_notifications: [],
       });
     });
+
     await render(template);
-    assert.strictEqual(
-      query(".empty-state-title").textContent.trim(),
-      I18n.t("user.no_messages_title"),
-      "empty state title is shown"
-    );
+
+    assert
+      .dom(".empty-state-title")
+      .hasText(i18n("user.no_messages_title"), "empty state title is shown");
     assert
       .dom(".empty-state-body svg.d-icon-envelope")
       .exists("icon is correctly rendered in the empty state body");
-    const emptyStateBodyLink = query(".empty-state-body a");
-    assert.ok(
-      emptyStateBodyLink.href.endsWith("/about"),
-      "link inside empty state body is rendered"
-    );
+    assert
+      .dom(".empty-state-body a")
+      .hasAttribute(
+        "href",
+        "/about",
+        "link inside empty state body is rendered"
+      );
   });
 });

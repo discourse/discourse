@@ -97,7 +97,7 @@ de:
         description: Ein Thema in ein Banner verwandeln
       gift_exchange:
         title: Austausch von Geschenken
-        description: Ermöglicht das anonyme Paaren von Benutzern einer Gruppe, um sich gegenseitig ein Geschenk zu senden.
+        description: Ermöglicht es, Benutzer einer Gruppe anonym zusammenzubringen, um sich gegenseitig ein Geschenk zu schicken.
         doc: Der Austausch von Geschenken erfordert eine bestehende Gruppe mit mindestens 3 Benutzern. Zum gewählten Datum wird jeder Benutzer der Gruppe mit einem Schenkenden und einem Beschenkten gepaart.
       send_pms:
         title: PN senden
@@ -142,7 +142,7 @@ de:
         button_text: Erledigt
       add_user_to_group_through_custom_field:
         title: "Benutzer über benutzerdefiniertes Benutzerfeld zur Gruppe hinzufügen"
-        description: "Füge Benutzer automatisch zu Gruppen hinzu, wenn sie sich anmelden oder mit einer wiederkehrenden Prüfung"
+        description: "Füge Benutzer automatisch zu Gruppen hinzu – entweder bei ihrer Anmeldung oder durch regelmäßige Überprüfung"
       group_category_notification_default:
         title: "Gruppenkategorie-Benachrichtigungsstandard"
         description: "Die Standardbenachrichtigungsstufe einer Kategorie für Mitglieder einer Gruppe festlegen"

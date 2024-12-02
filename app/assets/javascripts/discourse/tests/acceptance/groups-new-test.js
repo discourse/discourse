@@ -1,11 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("New Group - Anonymous", function () {
   test("As an anon user", async function (assert) {
@@ -24,26 +20,18 @@ acceptance("New Group - Authenticated", function (needs) {
     await visit("/g");
     await click(".groups-header-new");
 
-    assert.strictEqual(
-      count(".group-form-save[disabled]"),
-      1,
-      "save button should be disabled"
-    );
+    assert.dom(".group-form-save").isDisabled("save button is disabled");
 
     await fillIn("input[name='name']", "1");
 
     assert
       .dom(".tip.bad")
       .hasText(
-        I18n.t("admin.groups.new.name.too_short"),
+        i18n("admin.groups.new.name.too_short"),
         "it should show the right validation tooltip"
       );
 
-    assert.strictEqual(
-      count(".group-form-save:disabled"),
-      1,
-      "it should disable the save button"
-    );
+    assert.dom(".group-form-save").isDisabled("disables the save button");
 
     await fillIn(
       "input[name='name']",
@@ -53,7 +41,7 @@ acceptance("New Group - Authenticated", function (needs) {
     assert
       .dom(".tip.bad")
       .hasText(
-        I18n.t("admin.groups.new.name.too_long"),
+        i18n("admin.groups.new.name.too_long"),
         "it should show the right validation tooltip"
       );
 
@@ -62,7 +50,7 @@ acceptance("New Group - Authenticated", function (needs) {
     assert
       .dom(".tip.bad")
       .hasText(
-        I18n.t("admin.groups.new.name.blank"),
+        i18n("admin.groups.new.name.blank"),
         "it should show the right validation tooltip"
       );
 
@@ -71,7 +59,7 @@ acceptance("New Group - Authenticated", function (needs) {
     assert
       .dom(".tip.good")
       .hasText(
-        I18n.t("admin.groups.new.name.available"),
+        i18n("admin.groups.new.name.available"),
         "it should show the right validation tooltip"
       );
 
@@ -81,12 +69,11 @@ acceptance("New Group - Authenticated", function (needs) {
       .dom("groups-new-allow-membership-requests")
       .doesNotExist("it should disable the membership requests checkbox");
 
-    assert.strictEqual(
-      query(
-        ".groups-form-default-notification-level .selected-name .name"
-      ).innerText.trim(),
-      I18n.t("groups.notifications.watching.title"),
-      "it has a default selection for notification level"
-    );
+    assert
+      .dom(".groups-form-default-notification-level .selected-name .name")
+      .hasText(
+        i18n("groups.notifications.watching.title"),
+        "has a default selection for notification level"
+      );
   });
 });

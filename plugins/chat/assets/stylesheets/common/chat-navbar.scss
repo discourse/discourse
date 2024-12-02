@@ -10,20 +10,6 @@
   &.-clickable {
     cursor: pointer;
   }
-
-  &.-full-title {
-    .c-navbar__title {
-      min-height: var(--chat-header-offset);
-    }
-
-    .c-navbar__title,
-    .c-navbar__title-text {
-      height: auto;
-      overflow: visible;
-      white-space: normal;
-      text-overflow: unset;
-    }
-  }
 }
 
 .c-navbar {
@@ -32,13 +18,43 @@
   width: 100%;
   gap: 0.25rem;
   position: relative;
+  container-type: inline-size;
+
+  .is-collapsed & {
+    margin-left: 1rem;
+    &__title {
+      margin-left: 0 !important;
+    }
+
+    &__toggle-drawer-button {
+      &:after {
+        @container (inline-size) {
+          content: "";
+          position: absolute;
+          height: 100%;
+          left: -1rem;
+          width: calc(100cqw - 2.3em + 1rem);
+        }
+
+        &:hover {
+          color: var(--tertiary-hover);
+
+          .d-icon {
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
 
   .single-select-header {
     padding: 0.3675rem 0.584rem;
   }
 
   > .c-navbar__title:first-child {
-    margin-left: 1rem;
+    .chat-drawer & {
+      margin-left: 1rem;
+    }
   }
 }
 

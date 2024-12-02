@@ -1210,7 +1210,6 @@ zh_TW:
       location: "位置"
       website: "網站"
       email_settings: "電子郵件"
-      hide_profile_and_presence: "隱藏我的公開檔案"
       enable_physical_keyboard: "支援iPad外接鍵盤"
       text_size:
         title: "文字大小"
@@ -1314,7 +1313,7 @@ zh_TW:
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
-          save_invite: "保存"
+          update_invite: "更新"
           cancel: "取消"
         bulk_invite:
           none: "此頁面上沒有邀請函顯示。"
@@ -1967,6 +1966,8 @@ zh_TW:
         top: "沒有更多精選話題。"
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
+      dismiss:
+        name: "忽略"
       close_topics:
         name: "關閉"
         optional: (選擇性)
@@ -2354,16 +2355,21 @@ zh_TW:
       few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
       controls:
         reply: "開始編寫對此貼文的回覆"
+        like_action: "讚"
         like: "給此貼文按讚"
         has_liked: "你已對此貼文按讚"
+        undo_like_action: "撤回讚"
         undo_like: "撤回讚"
         edit: "編輯此貼文"
         edit_action: "編輯"
         edit_anonymous: "抱歉，您必須登入以修改貼文。"
+        flag_action: "檢舉"
         flag: "檢舉此貼文或傳送私人通知"
         delete: "刪除此貼文"
         undelete: "復原此貼文"
+        share_action: "分享"
         share: "分享此貼文的連結"
+        copy_action: "複製連結"
         more: "更多"
         delete_replies:
           confirm: "您是否也要刪除所有此貼文底下的回應？"
@@ -2373,6 +2379,7 @@ zh_TW:
             other: "是，包含所有%{count}條回覆"
           just_the_post: "否，僅刪除此貼文。"
         admin: "貼文管理動作"
+        admin_action: "管理員"
         wiki: "做為共筆"
         unwiki: "取消共筆"
         convert_to_moderator: "增加工作人員顏色"
@@ -3363,6 +3370,9 @@ zh_TW:
         look_and_feel:
           themes:
             title: "佈景主題"
+        user_fields:
+          type: "類型"
+          delete: "刪除"
       plugins:
         title: "外掛"
         name: "名稱"
@@ -3964,6 +3974,11 @@ zh_TW:
         status: "狀態"
         show_emails: "顯示電子郵件"
         hide_emails: "隱藏 email"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "關閉"
+              confirm: "刪除"
         nav:
           new: "新使用者"
           active: "啟用的"
@@ -4066,7 +4081,6 @@ zh_TW:
         time_read: "閱讀時間"
         post_edits_count: "編輯貼文"
         anonymize: "匿名使用者"
-        anonymize_confirm: "你確定要將這個帳戶變成匿名？這將改變使用者名和電子郵件，並重置所有個人資料信息。"
         anonymize_yes: "是，將這個帳戶變成匿名"
         anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除使用者"
@@ -4162,8 +4176,6 @@ zh_TW:
           external_avatar_url: "個人資料圖片 URL"
       user_fields:
         title: "使用者欄位"
-        help: "增加欄位讓你的使用者可以填寫"
-        create: "建立使用者欄位"
         untitled: "未命名"
         name: "欄位名稱"
         type: "欄位類別"
@@ -4184,21 +4196,15 @@ zh_TW:
             title: "選擇性"
         editable:
           title: "註冊後可以修改"
-          enabled: "可編輯"
-          disabled: "不可編輯"
         show_on_profile:
           title: "顯示在公開的基本資料裡"
-          enabled: "在基本資料裡顯示"
-          disabled: "不在基本資料裡顯示"
         show_on_user_card:
           title: "在使用者卡片上顯示"
-          enabled: "在使用者卡片上顯示"
-          disabled: "在使用者卡片上隱藏"
         searchable:
           title: "可搜尋"
           enabled: "可搜尋"
         field_types:
-          text: "文字區域"
+          text: "文字"
           confirm: "確認"
           dropdown: "下拉"
       site_text:
@@ -4341,7 +4347,7 @@ zh_TW:
             with_time: <span class="username">%{username}</span> 在 <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
-        add: "新增emoji"
+        delete: "刪除"
         name: "名稱"
         group: "群組"
         image: "圖片"
@@ -4376,12 +4382,14 @@ zh_TW:
         category_id: "分類 ID"
         category_title: "分類"
         tag_name: "標記名稱"
+        tag_title: "標記"
+        user_title: "使用者"
         username: "使用者名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："
-          add: "新增"
-          filter: "搜尋 (網址或外部網址)"
+          url: "網址"
+          save: "保存"
       reseed:
         action:
           label: "取代文字⋯⋯"

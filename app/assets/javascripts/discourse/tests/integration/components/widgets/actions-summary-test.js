@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | actions-summary", function (hooks) {
   setupRenderingTest(hooks);
@@ -18,15 +17,7 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
       hbs`<MountWidget @widget="actions-summary" @args={{this.args}} />`
     );
 
-    assert.strictEqual(
-      count(".post-action .d-icon-trash-can"),
-      1,
-      "it has the deleted icon"
-    );
-    assert.strictEqual(
-      count(".avatar[title=eviltrout]"),
-      1,
-      "it has the deleted by avatar"
-    );
+    assert.dom(".post-action .d-icon-trash-can").exists("has the deleted icon");
+    assert.dom(".avatar[title=eviltrout]").exists("has the deleted by avatar");
   });
 });

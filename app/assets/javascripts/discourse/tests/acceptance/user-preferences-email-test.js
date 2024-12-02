@@ -1,7 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Email", function (needs) {
   needs.user();
@@ -17,14 +17,14 @@ acceptance("User Preferences - Email", function (needs) {
   test("email", async function (assert) {
     await visit("/u/eviltrout/preferences/email");
 
-    assert.ok(exists("#change-email"), "it has the input element");
+    assert.dom("#change-email").exists("has the input element");
 
     await fillIn("#change-email", "invalid-email");
 
     assert
       .dom(".tip.bad")
       .hasText(
-        I18n.t("user.email.invalid"),
+        i18n("user.email.invalid"),
         "it should display invalid email tip"
       );
   });
@@ -32,7 +32,7 @@ acceptance("User Preferences - Email", function (needs) {
   test("email field always shows up", async function (assert) {
     await visit("/u/eviltrout/preferences/email");
 
-    assert.ok(exists("#change-email"), "it has the input element");
+    assert.dom("#change-email").exists("has the input element");
 
     await fillIn("#change-email", "eviltrout@discourse.org");
     await click(".user-preferences button.btn-primary");
@@ -40,6 +40,6 @@ acceptance("User Preferences - Email", function (needs) {
     await visit("/u/eviltrout/preferences");
     await visit("/u/eviltrout/preferences/email");
 
-    assert.ok(exists("#change-email"), "it has the input element");
+    assert.dom("#change-email").exists("has the input element");
   });
 });

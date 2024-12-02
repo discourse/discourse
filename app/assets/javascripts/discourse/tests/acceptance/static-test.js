@@ -5,55 +5,39 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Static pages", function () {
   test("/faq", async function (assert) {
     await visit("/faq");
-    assert.true(
-      document.body.classList.contains("static-faq"),
-      "/faq has the body class"
-    );
+    assert.dom(document.body).hasClass("static-faq", "/faq has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 
   test("/guidelines", async function (assert) {
     await visit("/guidelines");
-    assert.true(
-      document.body.classList.contains("static-guidelines"),
-      "has the body class"
-    );
+    assert
+      .dom(document.body)
+      .hasClass("static-guidelines", "has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 
   test("/conduct", async function (assert) {
     await visit("/conduct");
-    assert.true(
-      document.body.classList.contains("static-conduct"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("static-conduct", "has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 
   test("/tos", async function (assert) {
     await visit("/tos");
-    assert.true(
-      document.body.classList.contains("static-tos"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("static-tos", "has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 
   test("/privacy", async function (assert) {
     await visit("/privacy");
-    assert.true(
-      document.body.classList.contains("static-privacy"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("static-privacy", "has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 
   test("/rules", async function (assert) {
     await visit("/rules");
-    assert.true(
-      document.body.classList.contains("static-rules"),
-      "has the body class"
-    );
+    assert.dom(document.body).hasClass("static-rules", "has the body class");
     assert.dom(".body-page").exists("The content is present");
   });
 

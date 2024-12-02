@@ -14,7 +14,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ThemeSettings from "admin/models/theme-settings";
@@ -63,9 +63,9 @@ export default class AdminCustomizeThemesShowController extends Controller {
       if (fields.length < 1) {
         return;
       }
-      let resultString = I18n.t("admin.customize.theme." + target);
+      let resultString = i18n("admin.customize.theme." + target);
       const formattedFields = fields
-        .map((f) => I18n.t("admin.customize.theme." + f.name + ".text"))
+        .map((f) => i18n("admin.customize.theme." + f.name + ".text"))
         .join(" , ");
       resultString += `: ${formattedFields}`;
       descriptions.push(resultString);
@@ -97,13 +97,13 @@ export default class AdminCustomizeThemesShowController extends Controller {
       preview: null,
       anyValue: false,
       setting: "parent_theme_ids",
-      label: I18n.t("admin.customize.theme.component_on_themes"),
+      label: i18n("admin.customize.theme.component_on_themes"),
       choices: this.availableThemesNames,
       default: this.parentThemesNames.join("|"),
       value: this.parentThemesNames.join("|"),
       defaultValues: this.availableActiveThemesNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all_themes"),
+      setDefaultValuesLabel: i18n("admin.customize.theme.add_all_themes"),
     });
   }
 
@@ -115,13 +115,13 @@ export default class AdminCustomizeThemesShowController extends Controller {
       preview: null,
       anyValue: false,
       setting: "child_theme_ids",
-      label: I18n.t("admin.customize.theme.included_components"),
+      label: i18n("admin.customize.theme.included_components"),
       choices: this.availableComponentsNames,
       default: this.childThemesNames.join("|"),
       value: this.childThemesNames.join("|"),
       defaultValues: this.availableActiveComponentsNames.join("|"),
       allThemes: this.allThemes,
-      setDefaultValuesLabel: I18n.t("admin.customize.theme.add_all"),
+      setDefaultValuesLabel: i18n("admin.customize.theme.add_all"),
     });
   }
 
@@ -354,7 +354,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   editTheme() {
     if (this.get("model.remote_theme.is_git")) {
       this.dialog.confirm({
-        message: I18n.t("admin.customize.theme.edit_confirm"),
+        message: i18n("admin.customize.theme.edit_confirm"),
         didConfirm: () => this.transitionToEditRoute(),
       });
     } else {
@@ -396,7 +396,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   removeUpload(upload) {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.customize.theme.delete_upload_confirm"),
+      message: i18n("admin.customize.theme.delete_upload_confirm"),
       didConfirm: () => this.model.removeField(upload),
     });
   }
@@ -409,7 +409,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @action
   destroyTheme() {
     return this.dialog.yesNoConfirm({
-      message: I18n.t("admin.customize.delete_confirm", {
+      message: i18n("admin.customize.delete_confirm", {
         theme_name: this.get("model.name"),
       }),
       didConfirm: () => {
@@ -439,10 +439,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
       ? this.get("model.parentThemes")
       : this.get("model.childThemes");
 
-    let message = I18n.t(`${this.convertKey}_alert_generic`);
+    let message = i18n(`${this.convertKey}_alert_generic`);
 
     if (relatives && relatives.length > 0) {
-      message = I18n.t(`${this.convertKey}_alert`, {
+      message = i18n(`${this.convertKey}_alert`, {
         relatives: relatives.map((relative) => relative.get("name")).join(", "),
       });
     }

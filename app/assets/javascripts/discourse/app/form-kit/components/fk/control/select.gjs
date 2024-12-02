@@ -19,13 +19,15 @@ export default class FKControlSelect extends Component {
 
   <template>
     <select
-      value={{@value}}
+      value={{@field.value}}
       disabled={{@field.disabled}}
       ...attributes
       class="form-kit__control-select"
       {{on "input" this.handleInput}}
     >
-      {{yield (hash Option=(component FKControlSelectOption selected=@value))}}
+      {{yield
+        (hash Option=(component FKControlSelectOption selected=@field.value))
+      }}
     </select>
   </template>
 }

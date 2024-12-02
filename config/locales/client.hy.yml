@@ -1603,7 +1603,7 @@ hy:
       name:
         title: "Անուն"
         title_optional: "Անուն (ըստ ցանկության)"
-        instructions: "Ձեր անուն ազգանունը (ընտրովի)"
+        instructions: "Ձեր անուն ազգանունը (ըստ ցանկության)"
         instructions_required: "Ձեր անուն ազգանունը"
         too_short: "Ձեր անունը շատ կարճ է"
         ok: "Ձեր անունն ընդունված է"
@@ -1616,6 +1616,7 @@ hy:
         not_available_no_suggestion: "Հասանելի չէ"
         too_short: "Ձեր օգտանունը շատ կարճ է"
         too_long: "Ձեր օգտանունը շատ երկար է"
+        checking: "Ստուգվում է օգտանվան հասանելիությունը..."
         prefilled: "Էլ. հասցեն համընկնում է գրանցված օգտանվան հետ"
         required: "Խնդրում ենք մուտքագրել օգտանուն"
         edit: "Խմբագրել օգտանունը"
@@ -1652,7 +1653,6 @@ hy:
       location: "Վայրը"
       website: "Վեբ Կայք"
       email_settings: "Էլ. հասցե"
-      hide_profile_and_presence: "Թաքցնել իմ հրապարակային պրոֆիլը և ներկայության հատկանիշները"
       enable_physical_keyboard: "Միացնել ֆիզիկական ստեղնաշարի ապահովումը iPad -ի վրա"
       text_size:
         title: "Տեքստի Չափը"
@@ -1770,7 +1770,6 @@ hy:
           success: "Հրավերի հղումը հաջողությամբ գեներացված է!"
           error: "Հրավերի հղում ստեղծելիս սխալ տեղի ունեցավ"
         invite:
-          instructions: "Կիսվեք այս հղումով՝ ակնթարթորեն այս կայք մուտք գործելու համար."
           expires_in_time: "Ժամկետը լրանում է %{time}"
           expired_at_time: "Ժամկետը լրացել է %{time}"
           link_copied: "Հղումը պատճենված է:"
@@ -1786,9 +1785,7 @@ hy:
           expires_after: "Ժամկետը լրանում է"
           send_invite_email: "Պահպանել և Ուղարկել Էլ. նամակ"
           send_invite_email_instructions: "Հրավիրման նամակ ուղարկելու համար սահմանափակեք հրավերը էլեկտրոնային փոստով"
-          save_invite: "Պահպանել"
           cancel: "Չեղարկել"
-          invite_saved: "Հրավերը պահված է:"
         bulk_invite:
           none: "Այս էջում ցուցադրելու հրավերներ չկան:"
           text: "Զանգվածային Հրավեր"
@@ -2066,12 +2063,18 @@ hy:
       not_approved: "Ձեր հաշիվը դեռևս չի հաստատվել: Դուք կստանաք ծանուցում էլ. նամակի միջոցով, երբ այն հաստատվի:"
       google_oauth2:
         name: "Google"
+        title: "Մուտք Google-ով"
+        sr_title: "Մուտք Google-ով"
       twitter:
         name: "Twitter"
+        title: "Մուտք Twitter-ով"
+        sr_title: "Մուտք Twitter-ով"
       instagram:
         name: "Instagram"
       facebook:
         name: "Facebook"
+        title: "Մուտք Facebook-ով"
+        sr_title: "Մուտք Facebook-ով"
       github:
         name: "GitHub"
       discord:
@@ -2535,6 +2538,8 @@ hy:
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
         filter: "Այլևս թեմաներ չկան։"
     topic_bulk_actions:
+      dismiss:
+        name: "Չեղարկել"
       close_topics:
         name: "Փակել"
         optional: (ընտրովի)
@@ -2946,16 +2951,20 @@ hy:
       few_likes_left: "Շնորհակալ ենք տրված հավանումների համար: Այսօր Ձեզ մնացել է միայն մի քանի հավանում:"
       controls:
         reply: "պատասխանել այս գրառմանը"
+        like_action: "Հավանել"
         like: "հավանել այս գրառումը"
         has_liked: "Դուք հավանել եք այս գրառումը"
         read_indicator: "անդամներ, ովքեր կարդում են այս գրառումը"
+        undo_like_action: "Ետարկել հավանումը"
         undo_like: "Ետարկել հավանումը"
         edit: "խմբագրել այս գրառումը"
         edit_action: "Խմբագրել"
         edit_anonymous: "Ներողություն, Դուք պետք է մուտք գործեք՝ այս գրառումը խմբագրելու համար:"
+        flag_action: "Բողոքել"
         flag: "Գաղտնի կերպով բողոքել այս գրառումը կամ ուղարկել դրա մասին գաղտնի ծանուցում"
         delete: "ջնջել այս գրառումը"
         undelete: "վերականգնել այս գրառումը"
+        share_action: "Կիսվել"
         share: "կիսվել այս գրառման հղումով"
         copy_title: "պատճենել այս գրառման հղումը"
         link_copied: "Հղումը պատճենված է:"
@@ -2970,6 +2979,7 @@ hy:
             other: "Այո, և բոլոր %{count} պատասխանները"
           just_the_post: "Ոչ, միայն այս գրառումը"
         admin: "գրառման ադմինի գործողություններ"
+        admin_action: "Ադմին"
         wiki: "Դարձնել Wiki"
         unwiki: "Հանել Wiki-ից"
         convert_to_moderator: "Ավելացնել Անձնակազմի Գույն"
@@ -3615,6 +3625,9 @@ hy:
       no_topics_title: "Դուք դեռևս չեք հրապարակել որևէ թեմա:"
       no_topics_title_others: "%{username} -ը դեռ ոչ մի թեմա չի սկսել"
       no_read_topics_title: "Դուք դեռ ոչ մի թեմա չեք կարդացել"
+    topic_entrance:
+      sr_jump_top_button: "Անցնել առաջին գրառմանը - %{date}"
+      jump_top_button_title: "Անցնել առաջին գրառմանը"
     sidebar:
       unread_count:
         one: "%{count} չկարդացած"
@@ -3825,6 +3838,7 @@ hy:
           name:
             too_short: "Խմբի անունը շատ կարճ է"
             too_long: "Խմբի անունը շատ երկար է"
+            checking: "Ստուգվում է խմբի անվան հասանելիությունը..."
             available: "Խմբի անունը հասանելի է"
             not_available: "Խմբի անունը հասանելի չէ"
             blank: "Խմբի անունը չի կարող դատարկ լինել"
@@ -4037,6 +4051,11 @@ hy:
         look_and_feel:
           themes:
             title: "Թեմաներ"
+        user_fields:
+          type: "Տիպը"
+          more_options:
+            title: "Ավելի շատ տարբերակներ"
+          delete: "Ջնջել"
       plugins:
         title: "Հավելումներ"
         name: "Անուն"
@@ -4661,6 +4680,11 @@ hy:
         status: "Ստատուս"
         show_emails: "Ցուցադրել Էլ. հասցեները"
         hide_emails: "Թաքցնել Էլ. նամակները"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Փակել"
+              confirm: "Ջնջել"
         nav:
           new: "Նոր"
           active: "Ակտիվ"
@@ -4764,7 +4788,6 @@ hy:
         time_read: "Կարդալու Ժամանակը"
         post_edits_count: "Գրառման Խմբագրումներ"
         anonymize: "Անվանազրկել Օգտատիրոջը"
-        anonymize_confirm: "Դուք ՀԱՄՈԶՎԱ՞Ծ ԵՔ., որ ցանկանում եք անվանազրկել այս հաշիվը: Դա կփոփոխի օգտանունը և էլ. հասցեն և կվերասահմանի պրոֆիլի բոլոր տեղեկությունները:"
         anonymize_yes: "Այո, անվանազրկել այս հաշիվը"
         anonymize_failed: "Հաշիվը անվանազրկելիս առաջացել է խնդիր:"
         delete: "Ջնջել Օգտատիրոջը"
@@ -4885,8 +4908,6 @@ hy:
           external_avatar_url: "Պրոֆիլի Նկարի URL"
       user_fields:
         title: "Օգտատիրոջ Դաշտերը"
-        help: "Ավելացրեք դաշտեր, որոնք Ձեր օգտատերերը կարող են լրացնել:"
-        create: "Ստեղծել Օգտատիրոջ Դաշտ"
         untitled: "Անվերնագիր"
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
@@ -4904,17 +4925,8 @@ hy:
         requirement:
           optional:
             title: "Ընտրովի"
-        editable:
-          enabled: "խմբագրելի է"
-          disabled: "խմբագրելի չէ"
-        show_on_profile:
-          enabled: "ցուցադրել պրոֆիլում"
-          disabled: "չցուցադրել պրոֆիլում"
-        show_on_user_card:
-          enabled: "ցուցադրել օգտատիրոջ քարտի վրա"
-          disabled: "չցուցադրել օգտատիրոջ քարտի վրա"
         field_types:
-          text: "Տեքստային Դաշտ"
+          text: "Տեքստ"
           confirm: "Հաստատում"
           dropdown: "Բացվող Ցուցակ"
       site_text:
@@ -5065,7 +5077,7 @@ hy:
           replace_owners: Հեռացնել նախորդ սեփականատիրոջ կրծքանշանը
       emoji:
         title: "Էմոջի"
-        add: "Ավելացնել Նոր Էմոջի"
+        delete: "Ջնջել"
         uploading: "Վերբեռնվում է…"
         name: "Անուն"
         group: "Խումբ"
@@ -5103,13 +5115,15 @@ hy:
         post_title: "Գրառում"
         category_id: "Կատեգորիայի ID"
         category_title: "Կատեգորիա"
+        user_title: "Օգտատեր"
         username: "Օգտանուն"
         destination: "Նպատակներ "
         delete_confirm: 'Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս մշտահղումը:'
+        more_options: "Ավելի շատ տարբերակներ"
         form:
           label: "Նոր՝ "
-          add: "Ավելացնել"
-          filter: "Որոնել (URL կամ Արտաքին URL)"
+          url: "URL"
+          save: "Պահպանել"
       reseed:
         action:
           label: "Փոխարինել Տեքստը..."

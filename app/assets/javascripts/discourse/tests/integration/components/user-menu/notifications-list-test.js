@@ -5,9 +5,9 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 function getNotificationsData() {
   return cloneJSON(NotificationFixtures["/notifications"].notifications);
@@ -67,12 +67,13 @@ module(
 
     test("show all button for all notifications page", async function (assert) {
       await render(template);
-      const showAllBtn = query(".panel-body-bottom .btn.show-all");
-      assert.strictEqual(
-        showAllBtn.title,
-        I18n.t("user_menu.view_all_notifications"),
-        "has the correct title"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.show-all")
+        .hasAttribute(
+          "title",
+          i18n("user_menu.view_all_notifications"),
+          "has the correct title"
+        );
     });
 
     test("has a dismiss button if some notification types have unread notifications", async function (assert) {
@@ -80,19 +81,14 @@ module(
         [NOTIFICATION_TYPES.mentioned]: 1,
       });
       await render(template);
-      const dismissButton = query(
-        ".panel-body-bottom .btn.notifications-dismiss"
-      );
-      assert.strictEqual(
-        dismissButton.textContent.trim(),
-        I18n.t("user.dismiss"),
-        "dismiss button has a label"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .hasText(i18n("user.dismiss"), "dismiss button has a label");
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .hasAttribute(
           "title",
-          I18n.t("user.dismiss_notifications_tooltip"),
+          i18n("user.dismiss_notifications_tooltip"),
           "dismiss button has title attribute"
         );
     });
@@ -114,16 +110,15 @@ module(
       });
       assert.strictEqual(notificationsFetches, 1);
       await click(".panel-body-bottom .btn.notifications-dismiss");
-      assert.ok(markRead, "request to the server is made");
+      assert.true(markRead, "request to the server is made");
       assert.strictEqual(
         notificationsFetches,
         2,
         "notifications list is refreshed"
       );
-      assert.ok(
-        !exists(".panel-body-bottom .btn.notifications-dismiss"),
-        "dismiss button is not shown"
-      );
+      assert
+        .dom(".panel-body-bottom .btn.notifications-dismiss")
+        .doesNotExist("dismiss button is not shown");
     });
 
     test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {
@@ -213,26 +208,36 @@ module(
       });
       await render(template);
       const items = queryAll("ul li");
-      assert.ok(
-        items[0].textContent.includes("hello world 0011"),
-        "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[1].textContent.includes("Unread notification #01"),
-        "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[2].textContent.includes("Unread notification #02"),
-        "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[3].textContent.includes("hello world 0033"),
-        "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
-      );
-      assert.ok(
-        items[4].textContent.includes("Read notification #01"),
-        "read notifications come after the pending reviewables and unread notifications"
-      );
+      assert
+        .dom(items[0])
+        .includesText(
+          "hello world 0011",
+          "the first pending reviewable is displayed 1st because it's most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[1])
+        .includesText(
+          "Unread notification #01",
+          "the first unread notification is displayed 2nd because it's the 2nd most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[2])
+        .includesText(
+          "Unread notification #02",
+          "the second unread notification is displayed 3rd because it's the 3rd most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[3])
+        .includesText(
+          "hello world 0033",
+          "the second pending reviewable is displayed 4th because it's the 4th most recent among pending reviewables and unread notifications"
+        );
+      assert
+        .dom(items[4])
+        .includesText(
+          "Read notification #01",
+          "read notifications come after the pending reviewables and unread notifications"
+        );
     });
   }
 );

@@ -11,7 +11,7 @@ const MAX_JOB_SIZE = 4;
 const MAX_CONCURRENCY = 3;
 
 // max number of jobs stored, first entered jobs will be evicted first
-const MAX_QUEUE_SIZE = 20;
+const MAX_QUEUE_SIZE = 40;
 
 const BULK_REPORTS_ENDPOINT = "/admin/reports/bulk";
 

@@ -38,15 +38,11 @@ module("Unit | Utility | link-mentions", function (hooks) {
     `)[0];
     await linkSeenMentions(root);
 
-    assert.strictEqual(root.querySelector("a").innerText, "@valid_user");
-    assert.strictEqual(root.querySelectorAll("a")[1].innerText, "@valid_group");
-    assert.strictEqual(
-      root.querySelector("a[data-mentionable-user-count]").innerText,
-      "@mentionable_group"
-    );
-    assert.strictEqual(
-      root.querySelector("span.mention").innerHTML,
-      "@invalid"
-    );
+    assert.dom(root.querySelectorAll("a")[0]).hasText("@valid_user");
+    assert.dom(root.querySelectorAll("a")[1]).hasText("@valid_group");
+    assert
+      .dom("a[data-mentionable-user-count]", root)
+      .hasText("@mentionable_group");
+    assert.dom("span.mention", root).hasHtml("@invalid");
   });
 });

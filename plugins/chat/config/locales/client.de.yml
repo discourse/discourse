@@ -274,7 +274,7 @@ de:
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
       return_to_channel: "Zurück zum Kanal"
-      return_to_threads_list: "Zurück zur Themenliste"
+      return_to_threads_list: "Zurück zur Thread-Liste"
       unread_threads_count:
         one: "Du hast %{count} ungelesene Diskussion"
         other: "Du hast %{count} ungelesene Diskussionen"
@@ -610,10 +610,10 @@ de:
             description: "Werde benachrichtigt, wenn dich jemand in diesem Thread erwähnt."
           tracking:
             title: "Verfolgen"
-            description: "Lass dich benachrichtigen, wenn dich jemand in diesem Thema erwähnt und sieh dir die Anzahl der neuen Antworten in der Threadliste an."
+            description: "Lass dich benachrichtigen, wenn dich jemand in diesem Thread erwähnt, und sieh dir die Anzahl der neuen Antworten in der Thread-Liste an."
           watching:
             title: "Beobachten"
-            description: "Lass dich über alle Antworten in diesem Thema benachrichtigen und sieh dir die Anzahl der neuen Antworten in der Threadliste an."
+            description: "Lass dich über alle Antworten in diesem Thread benachrichtigen und sieh dir die Anzahl der neuen Antworten in der Thread-Liste an."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -656,10 +656,10 @@ de:
         chat_message: "Neue Chat-Nachricht"
         chat_quoted: "%{username} hat deine Chat-Nachricht zitiert"
       titles:
-        chat_mention: "Chat-Erwähnung"
-        chat_invitation: "Chat-Einladung"
-        chat_quoted: "Chat zitiert"
-        chat_watched_thread: "Im Chat beobachteter Thread"
+        chat_mention: "Im Chat erwähnt"
+        chat_invitation: "Zum Chat-Kanal eingeladen"
+        chat_quoted: "Chat-Nachricht zitiert"
+        chat_watched_thread: "Beobachteter Chat-Thread"
     action_codes:
       chat:
         enabled: '%{who} hat <button class="btn-link open-chat">Chat</button> aktiviert %{when}'
@@ -690,6 +690,7 @@ de:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Kanal wechseln"
+          switch__unread_channel_arrows: "%{shortcut} Ungelesenen Kanal wechseln"
           open_quick_channel_selector: "%{shortcut} Schnellauswahl für Kanäle öffnen"
           open_insert_link_modal: "%{shortcut} Hyperlink einfügen (nur Composer)"
           composer_bold: "%{shortcut} Fett (nur Composer)"

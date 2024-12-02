@@ -3,7 +3,6 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
@@ -29,7 +28,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.false(exists(".xss"));
+    assert.dom(".xss").doesNotExist();
   });
 
   test("dm channel - one user", async function (assert) {
@@ -42,10 +41,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      query(CHANNEL_NAME_LABEL).innerText.trim(),
-      user.username
-    );
+    assert.dom(CHANNEL_NAME_LABEL).hasText(user.username);
   });
 
   test("dm channel - multiple users", async function (assert) {
@@ -61,10 +57,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      query(CHANNEL_NAME_LABEL).innerText.trim(),
-      users.mapBy("username").join(", ")
-    );
+    assert.dom(CHANNEL_NAME_LABEL).hasText(users.mapBy("username").join(", "));
   });
 
   test("dm channel - self", async function (assert) {
@@ -76,10 +69,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      query(CHANNEL_NAME_LABEL).innerText.trim(),
-      this.currentUser.username
-    );
+    assert.dom(CHANNEL_NAME_LABEL).hasText(this.currentUser.username);
   });
 
   test("dm channel - prefers name", async function (assert) {
@@ -99,10 +89,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
-    assert.strictEqual(
-      query(CHANNEL_NAME_LABEL).innerText.trim(),
-      users.mapBy("name").join(", ")
-    );
+    assert.dom(CHANNEL_NAME_LABEL).hasText(users.mapBy("name").join(", "));
   });
 
   test("unreadIndicator", async function (assert) {
@@ -114,13 +101,13 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
       <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
     </template>);
 
-    assert.true(exists(".chat-channel-unread-indicator"));
+    assert.dom(".chat-channel-unread-indicator").exists();
 
     unreadIndicator = false;
     await render(<template>
       <ChannelName @channel={{channel}} @unreadIndicator={{unreadIndicator}} />
     </template>);
 
-    assert.false(exists(".chat-channel-unread-indicator"));
+    assert.dom(".chat-channel-unread-indicator").doesNotExist();
   });
 });

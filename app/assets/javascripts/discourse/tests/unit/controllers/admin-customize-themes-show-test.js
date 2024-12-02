@@ -62,9 +62,8 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
       "controller:admin-customize-themes-show"
     );
     controller.setProperties({ model: theme });
-    assert.deepEqual(
+    assert.true(
       controller.hasSettings,
-      true,
       "sets the hasSettings property to true with settings"
     );
   });
@@ -80,9 +79,8 @@ module("Unit | Controller | admin-customize-themes-show", function (hooks) {
       "controller:admin-customize-themes-show"
     );
     controller.setProperties({ model: theme });
-    assert.deepEqual(
+    assert.false(
       controller.hasSettings,
-      false,
       "sets the hasSettings property to true with settings"
     );
   });

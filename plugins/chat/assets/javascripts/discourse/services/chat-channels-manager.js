@@ -131,6 +131,10 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
+  get publicMessageChannelsWithActivity() {
+    return this.publicMessageChannels.filter((channel) => channel.hasUnread);
+  }
+
   get publicMessageChannelsByActivity() {
     return this.#sortChannelsByActivity(this.publicMessageChannels);
   }
@@ -143,6 +147,10 @@ export default class ChatChannelsManager extends Service {
         return channel.isDirectMessageChannel && membership.following;
       })
     );
+  }
+
+  get directMessageChannelsWithActivity() {
+    return this.directMessageChannels.filter((channel) => channel.hasUnread);
   }
 
   get truncatedDirectMessageChannels() {
@@ -198,24 +206,37 @@ export default class ChatChannelsManager extends Service {
 
   #sortChannelsByActivity(channels) {
     return channels.sort((a, b) => {
-      // if both channels have mention count, sort by slug
-      // otherwise prioritize channel with mention count
-      if (a.tracking.mentionCount > 0 && b.tracking.mentionCount > 0) {
+      const stats = {
+        a: {
+          urgent:
+            a.tracking.mentionCount + a.tracking.watchedThreadsUnreadCount,
+          unread: a.tracking.unreadCount + a.unreadThreadsCountSinceLastViewed,
+        },
+        b: {
+          urgent:
+            b.tracking.mentionCount + b.tracking.watchedThreadsUnreadCount,
+          unread: b.tracking.unreadCount + b.unreadThreadsCountSinceLastViewed,
+        },
+      };
+
+      // if both channels have urgent count, sort by slug
+      // otherwise prioritize channel with urgent count
+      if (stats.a.urgent > 0 && stats.b.urgent > 0) {
         return a.slug?.localeCompare?.(b.slug);
       }
 
-      if (a.tracking.mentionCount > 0 || b.tracking.mentionCount > 0) {
-        return a.tracking.mentionCount > b.tracking.mentionCount ? -1 : 1;
+      if (stats.a.urgent > 0 || stats.b.urgent > 0) {
+        return stats.a.urgent > stats.b.urgent ? -1 : 1;
       }
 
-      // if both channels have unread count, sort by slug
+      // if both channels have unread messages or threads, sort by slug
       // otherwise prioritize channel with unread count
-      if (a.tracking.unreadCount > 0 && b.tracking.unreadCount > 0) {
+      if (stats.a.unread > 0 && stats.b.unread > 0) {
         return a.slug?.localeCompare?.(b.slug);
       }
 
-      if (a.tracking.unreadCount > 0 || b.tracking.unreadCount > 0) {
-        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
+      if (stats.a.unread > 0 || stats.b.unread > 0) {
+        return stats.a.unread > stats.b.unread ? -1 : 1;
       }
 
       return a.slug?.localeCompare?.(b.slug);
@@ -232,14 +253,34 @@ export default class ChatChannelsManager extends Service {
         return -1;
       }
 
-      if (a.tracking.unreadCount === b.tracking.unreadCount) {
-        return new Date(a.lastMessage.createdAt) >
-          new Date(b.lastMessage.createdAt)
+      const aUrgent =
+        a.tracking.unreadCount +
+        a.tracking.mentionCount +
+        a.tracking.watchedThreadsUnreadCount;
+
+      const bUrgent =
+        b.tracking.unreadCount +
+        b.tracking.mentionCount +
+        b.tracking.watchedThreadsUnreadCount;
+
+      if (aUrgent > 0 || bUrgent > 0) {
+        return aUrgent > bUrgent ? -1 : 1;
+      }
+
+      if (
+        a.unreadThreadsCountSinceLastViewed > 0 ||
+        b.unreadThreadsCountSinceLastViewed > 0
+      ) {
+        return a.unreadThreadsCountSinceLastViewed >
+          b.unreadThreadsCountSinceLastViewed
           ? -1
           : 1;
-      } else {
-        return a.tracking.unreadCount > b.tracking.unreadCount ? -1 : 1;
       }
+
+      return new Date(a.lastMessage.createdAt) >
+        new Date(b.lastMessage.createdAt)
+        ? -1
+        : 1;
     });
   }
 }

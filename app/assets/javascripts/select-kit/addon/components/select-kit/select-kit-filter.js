@@ -8,7 +8,7 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
 @classNames("select-kit-filter")
@@ -41,10 +41,10 @@ export default class SelectKitFilter extends Component.extend(UtilsMixin) {
     }
 
     if (isPresent(placeholder)) {
-      return I18n.t(placeholder);
+      return i18n(placeholder);
     }
 
-    return I18n.t(
+    return i18n(
       this.selectKit.options.allowAny
         ? "select_kit.filter_placeholder_with_any"
         : "select_kit.filter_placeholder"

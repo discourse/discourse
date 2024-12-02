@@ -4,7 +4,6 @@ import { click, fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import widgetHbs from "discourse/widgets/hbs-compiler";
 import RenderGlimmer, {
   registerWidgetShim,
@@ -48,6 +47,7 @@ class DemoWidget extends Widget {
       ),
     ];
   }
+
   dummyAction() {}
 
   @bind
@@ -68,6 +68,11 @@ class DemoComponent extends ClassicComponent {
     super.init(...arguments);
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    DemoComponent.eventLog.push("willDestroy");
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
     DemoComponent.eventLog.push("didInsertElement");
@@ -81,11 +86,6 @@ class DemoComponent extends ClassicComponent {
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
     DemoComponent.eventLog.push("didReceiveAttrs");
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    DemoComponent.eventLog.push("willDestroy");
   }
 }
 
@@ -169,8 +169,8 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         <MountWidget @widget="demo-widget" @args={{hash arg1="val1" dynamicArg=this.dynamicValue}} />`
     );
 
-    assert.true(exists("div.my-widget"), "widget is rendered");
-    assert.true(exists("div.glimmer-content"), "glimmer content is rendered");
+    assert.dom("div.my-widget").exists("widget is rendered");
+    assert.dom("div.glimmer-content").exists("glimmer content is rendered");
     assert
       .dom("div.glimmer-content")
       .hasText("arg1=val1 dynamicArg=", "arguments are passed through");
@@ -200,9 +200,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         {{/unless}}`
     );
 
-    assert.true(exists("div.my-widget"), "widget is rendered");
-    assert.true(exists("div.glimmer-content"), "glimmer content is rendered");
-    assert.true(exists("div.demo-component"), "demo component is rendered");
+    assert.dom("div.my-widget").exists("widget is rendered");
+    assert.dom("div.glimmer-content").exists("glimmer content is rendered");
+    assert.dom("div.demo-component").exists("demo component is rendered");
 
     assert.deepEqual(
       DemoComponent.eventLog,
@@ -261,10 +261,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
         {{/unless}}`
     );
 
-    assert.true(
-      exists("div.demo-component button"),
-      "component button is rendered"
-    );
+    assert
+      .dom("div.demo-component button")
+      .exists("component button is rendered");
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");
@@ -284,10 +283,9 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       .dom(".action-state")
       .hasText("false", "eventTriggered is false in nested component");
 
-    assert.true(
-      exists("div.demo-component button"),
-      "component button is rendered"
-    );
+    assert
+      .dom("div.demo-component button")
+      .exists("component button is rendered");
 
     await click("div.demo-component button");
     assert.true(DemoWidget.actionTriggered, "widget event is triggered");

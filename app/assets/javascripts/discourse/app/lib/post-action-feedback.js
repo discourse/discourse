@@ -1,5 +1,5 @@
 import { SVG_NAMESPACE } from "discourse-common/lib/icon-library";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default function postActionFeedback({
   postId,
@@ -35,13 +35,14 @@ export function recentlyCopied(postId, actionClass) {
   );
 }
 
-export function showAlert(postId, actionClass, messageKey) {
+export function showAlert(postId, actionClass, messageKey, opts = {}) {
   const postSelector = `article[data-post-id='${postId}']`;
-  const actionBtn = document.querySelector(`${postSelector} .${actionClass}`);
+  const actionBtn =
+    opts.actionBtn || document.querySelector(`${postSelector} .${actionClass}`);
 
   actionBtn?.classList.add("post-action-feedback-button");
 
-  createAlert(I18n.t(messageKey), postId, actionBtn);
+  createAlert(i18n(messageKey), postId, actionBtn);
   createCheckmark(actionBtn, actionClass, postId);
   styleBtn(actionBtn);
 }

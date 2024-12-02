@@ -1570,7 +1570,6 @@ sv:
       location: "Plats"
       website: "Webbplats"
       email_settings: "E-post"
-      hide_profile_and_presence: "Dölj min offentliga profil och närvarofunktioner"
       enable_physical_keyboard: "Aktivera stöd för fysiskt tangentbord på iPad"
       text_size:
         title: "Textstorlek"
@@ -1687,7 +1686,6 @@ sv:
           success: "Länk för inbjudan framgångsrikt skapad!"
           error: "Ett fel inträffade vid skapande av inbjudningslänk"
         invite:
-          instructions: "Dela denna länk för att omedelbart bevilja åtkomst till denna webbplats:"
           expires_in_time: "Utgår om %{time}"
           expired_at_time: "Utgår kl. %{time}"
           link_copied: "Länken kopierad!"
@@ -1703,9 +1701,8 @@ sv:
           expires_after: "Förfaller efter"
           send_invite_email: "Spara och skicka e-post"
           send_invite_email_instructions: "Begränsa inbjudan till e-post för att skicka ett inbjudningsmeddelande"
-          save_invite: "Spara"
+          update_invite: "Uppdatera"
           cancel: "Avbryt"
-          invite_saved: "Inbjudan har sparats."
         bulk_invite:
           none: "Inga inbjudningar att visa på denna sida."
           text: "Massinbjudan"
@@ -2738,6 +2735,8 @@ sv:
         bookmarks: "Inga fler bokmärkta ämnen hittades."
         filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
+      dismiss:
+        name: "Avfärda"
       close_topics:
         name: "Stäng"
         optional: (valfri)
@@ -3287,16 +3286,21 @@ sv:
       few_likes_left: "Tack för att du sprider kärleken! Du har bara några få gillningar kvar idag."
       controls:
         reply: "börja skriva ett svar på detta inlägg"
+        like_action: "Gilla"
         like: "gilla detta inlägg"
         has_liked: "du har gillat detta inlägg"
         read_indicator: "användare som läser detta inlägg"
+        undo_like_action: "Ångra gillning"
         undo_like: "ångra gillning"
         edit: "ändra detta inlägg"
         edit_action: "Redigera"
         edit_anonymous: "Tyvärr måste du vara inloggad för att kunna redigera det här inlägget."
+        flag_action: "Flagga"
         flag: "flagga detta inlägg privat för uppmärksamhet eller skicka en privat påminnelse om det"
+        delete_action: "Radera inlägg"
         delete: "radera detta inlägg"
         undelete: "återställ detta inlägg"
+        share_action: "Dela"
         share: "dela en länk till detta inlägg"
         copy_title: "kopiera en länk till detta inlägg till urklipp"
         link_copied: "Länken kopierad!"
@@ -3311,6 +3315,7 @@ sv:
             other: "Ja, och alla %{count} svaren"
           just_the_post: "Nej, bara det här inlägget"
         admin: "administratörsåtgärder för inlägg"
+        admin_action: "Admin"
         permanently_delete: "Radera permanent"
         permanently_delete_confirmation: "Är du säker på att du permanent vill ta bort det här inlägget? Du kommer inte att kunna återställa den."
         wiki: "Skapa wiki"
@@ -4890,6 +4895,9 @@ sv:
           title: "Utseende och känsla"
           themes:
             title: "Teman"
+        user_fields:
+          type: "Typ"
+          delete: "Radera"
       plugins:
         title: "Tillägg"
         name: "Namn"
@@ -5708,6 +5716,11 @@ sv:
         status: "Status"
         show_emails: "Visa e-post"
         hide_emails: "Dölj e-post"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "Stäng"
+              confirm: "Radera"
         nav:
           new: "Ny"
           active: "Aktiv"
@@ -5832,7 +5845,6 @@ sv:
         time_read: "Lästid"
         post_edits_count: "Publicera redigeringar"
         anonymize: "Anonymisera användare"
-        anonymize_confirm: "Är du SÄKER på att du vill anonymisera detta konto? Detta kommer ändra användarnamnet och e-postadressen samt rensa all profilinformation."
         anonymize_yes: "Ja, anonymisera detta konto"
         anonymize_failed: "Ett problem uppstod vid anonymiseringen av kontot"
         delete: "Radera användare"
@@ -5889,7 +5901,6 @@ sv:
         cant_delete_all_too_many_posts:
           one: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
-        delete_confirm_title: "Är du SÄKER på att du vill radera den här användaren? Detta är permanent!"
         delete_confirm: "I allmänhet är det att föredra att anonymisera användare istället för att radera dem, för att undvika att innehåll från befintliga diskussioner tas bort."
         delete_and_block: "Radera och <b>blockera</b> denna e-postadress och IP-adress"
         delete_dont_block: "Radera enbart"
@@ -5982,8 +5993,6 @@ sv:
           confirm_delete: "Är du säker på att du vill radera denna DiscourseConnect-post?"
       user_fields:
         title: "Användarfält"
-        help: "Lägg till fält som dina användare kan fylla i."
-        create: "Skapa ett användarfält"
         untitled: "Namnlös"
         name: "Fältnamn"
         type: "Fälttyp"
@@ -6004,22 +6013,15 @@ sv:
             title: "Valfritt"
         editable:
           title: "Redigerbar efter registrering"
-          enabled: "redigerbar"
-          disabled: "ej redigerbar"
         show_on_profile:
           title: "Visa på offentlig profil"
-          enabled: "visas på profil"
-          disabled: "visas ej på profil"
         show_on_user_card:
           title: "Ska visas på användarkort"
-          enabled: "visas på användarkort"
-          disabled: "visas inte på användarkort"
         searchable:
           title: "Sökbart"
-          enabled: "sökbart"
-          disabled: "inte sökbart"
+          enabled: "Sökbart"
         field_types:
-          text: "Textfält"
+          text: "Text"
           confirm: "Bekräftelse"
           dropdown: "Rullgardinsmeny"
           multiselect: "Multival"
@@ -6202,9 +6204,7 @@ sv:
           grant_existing_holders: Utfärda ytterligare utmärkelser till befintliga utmärkelseinnehavare
       emoji:
         title: "Emoji"
-        help: "Lägg till ny emoji som kommer att vara tillgänglig för alla. Dra och släpp flera filer samtidigt utan att ange ett namn för att skapa emojis med deras filnamn. Den valda gruppen kommer att användas för alla filer som läggs till samtidigt. Du kan också klicka på \"Lägg till ny emoji\" för att öppna filväljaren."
-        add: "Lägg till ny emoji"
-        choose_files: "Välj filer"
+        delete: "Radera"
         uploading: "Laddar upp…"
         name: "Namn"
         group: "Grupp"
@@ -6250,17 +6250,18 @@ sv:
         category_id: "Kategori-ID"
         category_title: "Kategori"
         tag_name: "Namn på tagg"
+        tag_title: "Tagg"
         external_url: "Extern eller relativ URL"
         user_id: "Användar-ID"
+        user_title: "Användare"
         username: "Användarnamn"
         destination: "Mål"
         copy_to_clipboard: "Kopiera permalänk till urklipp"
         delete_confirm: Är du säker på att du vill ta bort den här permalänken?
-        no_permalinks: "Du har inga permalänkar än. Skapa en ny permalänk ovan för att börja se en lista över dina permalänkar här."
         form:
           label: "Ny:"
-          add: "Lägg till"
-          filter: "Sök (URL eller Extern URL)"
+          url: "URL"
+          save: "Spara"
       reseed:
         action:
           label: "Ersätt text..."

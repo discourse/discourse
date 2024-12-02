@@ -1,0 +1,8 @@
+# Non-bundled plugins are gitignore'd, but we want them to
+# show up in search tools / IDEs so we un-ignore them here
+!/plugins/*
+
+# Allow these files to show up in vscode file selector, even
+# though they're not git-tracked
+!/.vscode/settings.json
+!/.vscode/tasks.json

@@ -8,7 +8,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Category from "discourse/models/category";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("tr")
 export default class EmbeddableHost extends Component.extend(
@@ -44,10 +44,12 @@ export default class EmbeddableHost extends Component.extend(
   edit() {
     this.set("editToggled", true);
   }
+
   @action
   onUserChange(user) {
     this.set("user", user);
   }
+
   @action
   save() {
     if (this.cantSave) {
@@ -77,7 +79,7 @@ export default class EmbeddableHost extends Component.extend(
   @action
   delete() {
     return this.dialog.confirm({
-      message: I18n.t("admin.embedding.confirm_delete"),
+      message: i18n("admin.embedding.confirm_delete"),
       didConfirm: () => {
         return this.host.destroyRecord().then(() => {
           this.deleteHost(this.host);

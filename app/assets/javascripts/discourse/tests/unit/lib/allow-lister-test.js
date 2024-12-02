@@ -8,16 +8,17 @@ module("Unit | Utility | allowLister", function (hooks) {
   test("allowLister", function (assert) {
     const allowLister = new AllowLister();
 
-    assert.ok(
+    assert.true(
       Object.keys(allowLister.getAllowList().tagList).length > 1,
-      "should have some defaults"
+      "has some defaults"
     );
 
     allowLister.disable("default");
 
-    assert.ok(
-      Object.keys(allowLister.getAllowList().tagList).length === 0,
-      "should have no defaults if disabled"
+    assert.strictEqual(
+      Object.keys(allowLister.getAllowList().tagList).length,
+      0,
+      "has no defaults if disabled"
     );
 
     allowLister.allowListFeature("test", [

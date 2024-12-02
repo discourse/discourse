@@ -280,10 +280,6 @@ da:
           other_html: "<span>%{username}</span> <span>nævnte %{identifier} i personlig chat</span>"
         chat_message: "Ny chatbesked"
         chat_quoted: "%{username} citerede din chatbesked"
-      titles:
-        chat_mention: "Chatomtale"
-        chat_invitation: "Chatinvitation"
-        chat_quoted: "Chat citeret"
     action_codes:
       chat:
         enabled: '%{who} aktiverede <button class="btn-link open-chat">chat</button> %{when}'

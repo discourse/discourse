@@ -1,11 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 
@@ -97,11 +93,12 @@ acceptance("Second Factor Auth Page", function (needs) {
 
   test("when challenge data fails to load", async function (assert) {
     await visit("/session/2fa?nonce=failed");
-    assert.equal(
-      query(".alert-error").textContent,
-      "could not find an active challenge in your session",
-      "load error message is shown"
-    );
+    assert
+      .dom(".alert-error")
+      .hasText(
+        "could not find an active challenge in your session",
+        "load error message is shown"
+      );
   });
 
   test("default 2FA method", async function (assert) {
@@ -202,7 +199,7 @@ acceptance("Second Factor Auth Page", function (needs) {
       );
 
     await click(".toggle-second-factor-method.totp");
-    assert.ok(exists("form.totp-token"), "TOTP form is now shown");
+    assert.dom("form.totp-token").exists("TOTP form is now shown");
     assert
       .dom(".toggle-second-factor-method.security-key")
       .exists("security key is now shown as alternative method");
@@ -245,34 +242,36 @@ acceptance("Second Factor Auth Page", function (needs) {
   test("2FA action description", async function (assert) {
     await visit("/session/2fa?nonce=ok111111");
 
-    assert.equal(
-      query(".action-description").textContent.trim(),
-      "This is an additional description that can be customized per action",
-      "action description is rendered on the page"
-    );
+    assert
+      .dom(".action-description")
+      .hasText(
+        "This is an additional description that can be customized per action",
+        "action description is rendered on the page"
+      );
   });
 
   test("error when submitting 2FA form", async function (assert) {
     await visit("/session/2fa?nonce=ok110111");
     await fillIn("form.totp-token .second-factor-token-input", WRONG_TOTP);
     await click('form.totp-token .btn-primary[type="submit"]');
-    assert.equal(
-      query(".alert-error").textContent.trim(),
-      "invalid token man",
-      "error message from the server is displayed"
-    );
+    assert
+      .dom(".alert-error")
+      .hasText(
+        "invalid token man",
+        "error message from the server is displayed"
+      );
   });
 
   test("successful 2FA form submit", async function (assert) {
     await visit("/session/2fa?nonce=ok110111");
     await fillIn("form.totp-token .second-factor-token-input", "323421");
     await click('form.totp-token .btn-primary[type="submit"]');
-    assert.equal(
+    assert.strictEqual(
       currentURL(),
       "/",
       "user has been redirected to the redirect_url"
     );
-    assert.equal(callbackCount, 1, "callback request has been performed");
+    assert.strictEqual(callbackCount, 1, "callback request has been performed");
   });
 
   test("sidebar is disabled on 2FA route", async function (assert) {
@@ -280,6 +279,6 @@ acceptance("Second Factor Auth Page", function (needs) {
 
     await visit("/session/2fa?nonce=ok110111");
 
-    assert.notOk(exists(".sidebar-container"), "does not display the sidebar");
+    assert.dom(".sidebar-container").doesNotExist();
   });
 });

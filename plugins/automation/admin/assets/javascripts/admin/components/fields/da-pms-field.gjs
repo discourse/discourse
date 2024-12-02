@@ -7,7 +7,7 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
 import DAFieldLabel from "./da-field-label";
@@ -15,17 +15,17 @@ import DAFieldLabel from "./da-field-label";
 export default class PmsField extends BaseField {
   @service dialog;
 
-  noPmCreatedLabel = I18n.t("discourse_automation.fields.pms.no_pm_created");
+  noPmCreatedLabel = i18n("discourse_automation.fields.pms.no_pm_created");
 
-  prefersEncryptLabel = I18n.t(
+  prefersEncryptLabel = i18n(
     "discourse_automation.fields.pms.prefers_encrypt.label"
   );
 
-  delayLabel = I18n.t("discourse_automation.fields.pms.delay.label");
+  delayLabel = i18n("discourse_automation.fields.pms.delay.label");
 
-  pmTitleLabel = I18n.t("discourse_automation.fields.pms.title.label");
+  pmTitleLabel = i18n("discourse_automation.fields.pms.title.label");
 
-  rawLabel = I18n.t("discourse_automation.fields.pms.raw.label");
+  rawLabel = i18n("discourse_automation.fields.pms.raw.label");
 
   <template>
     <section class="field pms-field">
@@ -153,7 +153,7 @@ export default class PmsField extends BaseField {
   @action
   removePM(pm) {
     this.dialog.yesNoConfirm({
-      message: I18n.t("discourse_automation.fields.pms.confirm_remove_pm"),
+      message: i18n("discourse_automation.fields.pms.confirm_remove_pm"),
       didConfirm: () => {
         return this.args.field.metadata.value.removeObject(pm);
       },

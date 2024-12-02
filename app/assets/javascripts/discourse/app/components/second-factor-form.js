@@ -2,18 +2,18 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class SecondFactorForm extends Component {
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
     switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
-        return I18n.t("login.second_factor_title");
+        return i18n("login.second_factor_title");
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_title");
+        return i18n("login.second_factor_backup_title");
     }
   }
 
@@ -21,11 +21,11 @@ export default class SecondFactorForm extends Component {
   secondFactorDescription(secondFactorMethod) {
     switch (secondFactorMethod) {
       case SECOND_FACTOR_METHODS.TOTP:
-        return I18n.t("login.second_factor_description");
+        return i18n("login.second_factor_description");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
-        return I18n.t("login.security_key_description");
+        return i18n("login.security_key_description");
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
-        return I18n.t("login.second_factor_backup_description");
+        return i18n("login.second_factor_backup_description");
     }
   }
 

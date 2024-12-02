@@ -1,11 +1,7 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -103,7 +99,7 @@ acceptance("Admin - Watched Words", function (needs) {
       .hasText("Discourse");
     assert
       .dom(".watched-words-list .watched-word .case-sensitive")
-      .hasText(I18n.t("admin.watched_words.case_sensitive"));
+      .hasText(i18n("admin.watched_words.case_sensitive"));
 
     await click(".select-kit-header.multi-select-header");
     await fillIn(".select-kit-filter input", "discourse");
@@ -116,7 +112,7 @@ acceptance("Admin - Watched Words", function (needs) {
       .hasText("discourse");
     assert
       .dom(".watched-words-list .watched-word .case-sensitive")
-      .hasText(I18n.t("admin.watched_words.case_sensitive"));
+      .hasText(i18n("admin.watched_words.case_sensitive"));
   });
 
   test("remove words", async function (assert) {
@@ -177,9 +173,9 @@ acceptance("Admin - Watched Words - Emoji Replacement", function (needs) {
     await click("button.reply-to-post");
     await fillIn(".d-editor-input", "betis betis betis");
 
-    const cooked = query(".d-editor-preview p");
-    const cookedChildren = Array.from(cooked.children);
-    const emojis = cookedChildren.filter((child) => child.nodeName === "IMG");
+    const emojis = [
+      ...document.querySelector(".d-editor-preview p").children,
+    ].filter((child) => child.nodeName === "IMG");
 
     assert.strictEqual(emojis.length, 3, "three emojis have been rendered");
     assert.true(

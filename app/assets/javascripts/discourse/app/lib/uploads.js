@@ -2,7 +2,7 @@ import { humanizeList } from "discourse/lib/text";
 import { isAppleDevice } from "discourse/lib/utilities";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -36,7 +36,7 @@ export function markdownNameFromFileName(fileName) {
   let name = fileName.slice(0, fileName.lastIndexOf("."));
 
   if (isAppleDevice() && isGUID(name)) {
-    name = I18n.t("upload_selector.default_image_alt_text");
+    name = i18n("upload_selector.default_image_alt_text");
   }
 
   return name.replace(/\[|\]|\|/g, "");
@@ -48,7 +48,7 @@ export function validateUploadedFiles(files, opts) {
   }
 
   if (files.length > 1) {
-    dialog.alert(I18n.t("post.errors.too_many_uploads"));
+    dialog.alert(i18n("post.errors.too_many_uploads"));
     return false;
   }
 
@@ -79,7 +79,7 @@ export function validateUploadedFile(file, opts) {
   let staff = user && user.staff;
 
   if (!authorizesOneOrMoreExtensions(staff, opts.siteSettings)) {
-    dialog.alert(I18n.t("post.errors.no_uploads_authorized"));
+    dialog.alert(i18n("post.errors.no_uploads_authorized"));
     return false;
   }
 
@@ -99,7 +99,7 @@ export function validateUploadedFile(file, opts) {
   if (opts.imagesOnly) {
     if (!isImage(name) && !isAuthorizedImage(name, staff, opts.siteSettings)) {
       dialog.alert(
-        I18n.t("post.errors.upload_not_authorized", {
+        i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedImagesExtensions(
             staff,
             opts.siteSettings
@@ -110,7 +110,7 @@ export function validateUploadedFile(file, opts) {
     }
   } else if (opts.csvOnly) {
     if (!/\.csv$/i.test(name)) {
-      dialog.alert(I18n.t("user.invited.bulk_invite.error"));
+      dialog.alert(i18n("user.invited.bulk_invite.error"));
       return false;
     }
   } else {
@@ -119,7 +119,7 @@ export function validateUploadedFile(file, opts) {
       !isAuthorizedFile(name, staff, opts.siteSettings)
     ) {
       dialog.alert(
-        I18n.t("post.errors.upload_not_authorized", {
+        i18n("post.errors.upload_not_authorized", {
           authorized_extensions: authorizedExtensions(
             staff,
             opts.siteSettings
@@ -134,7 +134,7 @@ export function validateUploadedFile(file, opts) {
     // ensures that new users can upload a file
     if (user && !user.isAllowedToUploadAFile(opts.type)) {
       dialog.alert(
-        I18n.t(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
+        i18n(`post.errors.${opts.type}_upload_not_allowed_for_new_user`)
       );
       return false;
     }
@@ -143,7 +143,7 @@ export function validateUploadedFile(file, opts) {
   if (file.size === 0) {
     /* eslint-disable no-console */
     console.warn("File with a 0 byte size detected, cancelling upload.", file);
-    dialog.alert(I18n.t("post.errors.file_size_zero"));
+    dialog.alert(i18n("post.errors.file_size_zero"));
     return false;
   }
 
@@ -320,7 +320,7 @@ export function getUploadMarkdown(upload) {
 export function displayErrorForBulkUpload(errors) {
   const fileNames = humanizeList(errors.mapBy("fileName"));
 
-  dialog.alert(I18n.t("post.errors.upload", { file_name: fileNames }));
+  dialog.alert(i18n("post.errors.upload", { file_name: fileNames }));
 }
 
 export function displayErrorForUpload(data, siteSettings, fileName) {
@@ -347,7 +347,7 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
     if (typeof parsedBody === "string") {
       try {
         parsedBody = JSON.parse(parsedBody);
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
@@ -366,25 +366,25 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
   }
 
   // otherwise, display a generic error message
-  dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
+  dialog.alert(i18n("post.errors.upload", { file_name: fileName }));
 }
 
 function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
   switch (status) {
     // didn't get headers from server, or browser refuses to tell us
     case 0:
-      dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
+      dialog.alert(i18n("post.errors.upload", { file_name: fileName }));
       return true;
 
     // entity too large, usually returned from the web server
     case 413:
       const type = uploadTypeFromFileName(fileName);
       if (type === "backup") {
-        dialog.alert(I18n.t("post.errors.backup_too_large"));
+        dialog.alert(i18n("post.errors.backup_too_large"));
       } else {
         const max_size_kb = siteSettings[`max_${type}_size_kb`];
         dialog.alert(
-          I18n.t("post.errors.file_too_large_humanized", {
+          i18n("post.errors.file_too_large_humanized", {
             max_size: I18n.toHumanSize(max_size_kb * 1024),
           })
         );

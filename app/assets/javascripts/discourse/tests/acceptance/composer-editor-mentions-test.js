@@ -67,30 +67,22 @@ acceptance("Composer - editor mentions", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(query(".d-editor-input"), "abc @u\r");
 
-    await simulateKeys(editor, "abc @u\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters", async function (assert) {
     await visit("/");
     await click("#create-topic");
 
-    const editor = query(".d-editor-input");
+    await simulateKeys(query(".d-editor-input"), "abc @user a\b\b\r");
 
-    await simulateKeys(editor, "abc @user a\b\b\r");
-
-    assert.strictEqual(
-      editor.value,
-      "abc @user ",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user ", "replaces mention correctly");
   });
 
   test("selecting user mentions after deleting characters mid sentence", async function (assert) {
@@ -103,11 +95,9 @@ acceptance("Composer - editor mentions", function (needs) {
     await setCaretPosition(editor, 9);
     await simulateKeys(editor, "\b\b\r");
 
-    assert.strictEqual(
-      editor.value,
-      "abc @user 123",
-      "should replace mention correctly"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @user 123", "replaces mention correctly");
   });
 
   test("shows status on search results when mentioning a user", async function (assert) {

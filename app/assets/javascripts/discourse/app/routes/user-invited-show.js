@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Invite from "discourse/models/invite";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class UserInvitedShow extends DiscourseRoute {
   @service router;
@@ -32,7 +32,7 @@ export default class UserInvitedShow extends DiscourseRoute {
   }
 
   titleToken() {
-    return I18n.t("user.invited." + this.inviteFilter + "_tab");
+    return i18n("user.invited." + this.inviteFilter + "_tab");
   }
 
   @action

@@ -8,8 +8,6 @@ import {
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -67,7 +65,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     await click(".new-totp");
-    assert.ok(exists(".qr-code img"), "shows qr code image");
+    assert.dom(".qr-code img").exists("shows qr code image");
 
     await click(".modal a.show-second-factor-key");
     assert
@@ -75,17 +73,19 @@ acceptance("User Preferences - Second Factor", function (needs) {
       .exists("displays second factor key");
 
     await click(".add-totp");
-    assert.ok(
-      query(".alert-error").innerHTML.includes("provide a name and the code"),
-      "shows name/token missing error message"
-    );
+    assert
+      .dom(".alert-error")
+      .includesHtml(
+        "provide a name and the code",
+        "shows name/token missing error message"
+      );
   });
 
   test("second factor security keys", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
 
     await click(".new-security-key");
-    assert.ok(exists("#security-key-name"), "shows security key name input");
+    assert.dom("#security-key-name").exists("shows security key name input");
 
     await fillIn("#security-key-name", "");
 
@@ -94,10 +94,9 @@ acceptance("User Preferences - Second Factor", function (needs) {
     if (typeof PublicKeyCredential !== "undefined") {
       await click(".add-security-key");
 
-      assert.ok(
-        query(".alert-error").innerHTML.includes("provide a name"),
-        "shows name missing error message"
-      );
+      assert
+        .dom(".alert-error")
+        .includesHtml("provide a name", "shows name missing error message");
     }
   });
 

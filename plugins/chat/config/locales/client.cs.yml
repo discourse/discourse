@@ -39,6 +39,12 @@ cs:
       chat_messages_count: "Zprávy v chatu"
       chat_channels_count: "Kanály chatu"
       chat_users_count: "Uživatelé chatu"
+      activities:
+        chat_messages:
+          one: "%{formatted_number} zpráva chatu"
+          few: "%{formatted_number} zprávy chatu"
+          many: "%{formatted_number} zpráv chatu"
+          other: "%{formatted_number} zpráv chatu"
     chat:
       text_copied: Zkopírováno do schránky
       link_copied: Odkaz zkopírován do schránky
@@ -177,7 +183,7 @@ cs:
           settings: Nastavení
       new_message_modal:
         user_search_placeholder: "...přidat další členy"
-        create_group_placeholder: "Název skupinové konverzace (volitelné)"
+        create_group_placeholder: "Název skupinové konverzace (nepovinné)"
         new_group_chat: "Nová skupinová konverzace"
         filter: "Filtr"
         cant_add_more_members: "Byl dosažen maximální počet členů"
@@ -187,6 +193,7 @@ cs:
         title: Nová zpráva
         prefix: "Komu:"
         no_results: Žádné výsledky
+        group_name: "Název skupinové konverzace (nepovinné)"
         members_counter:
           one: "%{count}/%{max} člena"
           few: "%{count}/%{max} členů"

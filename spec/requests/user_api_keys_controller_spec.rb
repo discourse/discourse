@@ -295,24 +295,45 @@ RSpec.describe UserApiKeysController do
       expect(uri.to_s).to include(query_str)
     end
 
-    it "revokes API key when client_id used by another user" do
-      user1 = Fabricate(:trust_level_0)
-      user2 = Fabricate(:trust_level_0)
-      key = Fabricate(:user_api_key, user: user1)
+    context "with a registered client" do
+      let!(:fixed_args) { args }
+      let!(:user) { Fabricate(:user, trust_level: TrustLevel[1]) }
+      let!(:client) do
+        Fabricate(
+          :user_api_key_client,
+          client_id: fixed_args[:client_id],
+          application_name: fixed_args[:application_name],
+          public_key: public_key,
+          auth_redirect: fixed_args[:auth_redirect],
+          scopes: "read",
+        )
+      end
 
-      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-      SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
-      args[:client_id] = key.client_id
-      args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
-      args[:push_url] = "https://push.it/here"
+      before { sign_in(user) }
 
-      sign_in(user2)
+      context "with allowed scopes" do
+        it "does not require allowed_user_api_auth_redirects to contain registered auth_redirect" do
+          post "/user-api-key.json", params: fixed_args
+          expect(response.status).to eq(302)
+        end
 
-      post "/user-api-key.json", params: args
+        it "does not require application_name or public_key params" do
+          post "/user-api-key.json", params: fixed_args.except(:application_name, :public_key)
+          expect(response.status).to eq(302)
+        end
+      end
 
-      expect(response.status).to eq(302)
-      expect(UserApiKey.exists?(key.id)).to eq(false)
+      context "without allowed scopes" do
+        let!(:invalid_scope_args) do
+          fixed_args[:scopes] = "write"
+          fixed_args
+        end
+
+        it "returns a 403" do
+          post "/user-api-key.json", params: invalid_scope_args
+          expect(response.status).to eq(403)
+        end
+      end
     end
   end
 

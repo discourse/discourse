@@ -2,26 +2,6 @@
   --pm-border-radius: 0;
   --pm-padding: 1.25em;
 
-  @keyframes current-user-background-fade-highlight {
-    0% {
-      background-color: var(--secondary);
-      border-color: var(--primary-low);
-    }
-    100% {
-      background-color: var(--tertiary-very-low);
-      border-color: transparent;
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .topic-body.highlighted {
-      animation: none;
-      .regular.contents {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
-    }
-  }
-
   .topic-post {
     margin-bottom: 0.5em;
     &:last-child {
@@ -159,13 +139,6 @@
       background: var(--tertiary-very-low);
       border-color: var(--tertiary-very-low);
     }
-    @media (prefers-reduced-motion: no-preference) {
-      .topic-body.highlighted {
-        .regular.contents {
-          animation: current-user-background-fade-highlight 2.5s ease-out;
-        }
-      }
-    }
     .embedded-posts {
       .topic-body .cooked {
         background: transparent;
@@ -197,9 +170,6 @@
 
     &.current-user-post .topic-body .regular.contents {
       border: 2px dashed var(--tertiary-low);
-      @media (prefers-reduced-motion: no-preference) {
-        animation: background-fade-highlight 2.5s ease-out;
-      }
     }
   }
 

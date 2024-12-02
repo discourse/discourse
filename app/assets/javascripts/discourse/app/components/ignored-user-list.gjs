@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import User from "discourse/models/user";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import IgnoredUserListItem from "./ignored-user-list-item";
 import IgnoreDurationModal from "./modal/ignore-duration-with-username";
 

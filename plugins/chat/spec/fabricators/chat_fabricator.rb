@@ -81,7 +81,8 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
             :in_reply_to,
             :thread,
             :upload_ids,
-            :incoming_chat_webhook
+            :incoming_chat_webhook,
+            :blocks
 
   initialize_with do |transients|
     channel =
@@ -101,6 +102,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
           thread_id: transients[:thread]&.id,
           in_reply_to_id: transients[:in_reply_to]&.id,
           upload_ids: transients[:upload_ids],
+          blocks: transients[:blocks],
         },
         options: {
           process_inline: true,
@@ -171,6 +173,11 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
 
+Fabricator(:chat_message_interaction, class_name: "Chat::MessageInteraction") do
+  message { Fabricate(:chat_message) }
+  user { Fabricate(:user) }
+end
+
 Fabricator(:direct_message, class_name: "Chat::DirectMessage") do
   users { [Fabricate(:user), Fabricate(:user)] }
 end
@@ -220,7 +227,12 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
-  transient :with_replies, :channel, :original_message_user, :old_om, use_service: false
+  transient :with_replies,
+            :channel,
+            :original_message_user,
+            :old_om,
+            use_service: false,
+            notification_level: :tracking
 
   original_message do |attrs|
     Fabricate(
@@ -239,7 +251,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     attrs[:created_at] = 1.week.ago if transients[:old_om]
 
     thread.original_message.update!(**attrs)
-    thread.add(thread.original_message_user)
+    thread.add(thread.original_message_user, notification_level: transients[:notification_level])
 
     if transients[:with_replies]
       Fabricate

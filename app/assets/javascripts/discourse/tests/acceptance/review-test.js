@@ -2,15 +2,11 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
-  exists,
   loggedInUser,
   publishToMessageBus,
-  query,
-  visible,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Review", function (needs) {
   needs.user();
@@ -35,8 +31,8 @@ acceptance("Review", function (needs) {
   test("It returns a list of reviewable items", async function (assert) {
     await visit("/review");
 
-    assert.ok(exists(".reviewable-item"), "has a list of items");
-    assert.ok(exists(user));
+    assert.dom(".reviewable-item").exists("has a list of items");
+    assert.dom(user).exists();
     assert
       .dom(`${user}.reviewable-user`)
       .exists("applies a class for the type");
@@ -64,31 +60,31 @@ acceptance("Review", function (needs) {
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_delete");
 
-    assert.ok(visible(".reject-reason-reviewable-modal"));
-    assert.ok(
-      query(
-        ".reject-reason-reviewable-modal .d-modal__title"
-      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
-      "it opens reject reason modal when user is rejected"
-    );
+    assert.dom(".reject-reason-reviewable-modal").exists();
+    assert
+      .dom(".reject-reason-reviewable-modal .d-modal__title")
+      .includesHtml(
+        i18n("review.reject_reason.title"),
+        "opens reject reason modal when user is rejected"
+      );
 
     await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
-    assert.ok(visible(".reject-reason-reviewable-modal"));
-    assert.ok(
-      query(
-        ".reject-reason-reviewable-modal .d-modal__title"
-      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
-      "it opens reject reason modal when user is rejected and blocked"
-    );
+    assert.dom(".reject-reason-reviewable-modal").exists();
+    assert
+      .dom(".reject-reason-reviewable-modal .d-modal__title")
+      .includesHtml(
+        i18n("review.reject_reason.title"),
+        "opens reject reason modal when user is rejected and blocked"
+      );
   });
 
   test("Settings", async function (assert) {
     await visit("/review/settings");
 
-    assert.ok(exists(".reviewable-score-type"), "has a list of bonuses");
+    assert.dom(".reviewable-score-type").exists("has a list of bonuses");
 
     const field = selectKit(
       ".reviewable-score-type:nth-of-type(1) .field .combo-box"
@@ -97,7 +93,7 @@ acceptance("Review", function (needs) {
     await field.selectRowByValue("5");
     await click(".save-settings");
 
-    assert.ok(exists(".reviewable-settings .saved"), "it saved");
+    assert.dom(".reviewable-settings .saved").exists("it saved");
   });
 
   test("Flag related", async function (assert) {
@@ -107,24 +103,25 @@ acceptance("Review", function (needs) {
       .dom(".reviewable-flagged-post .post-contents .username a[href]")
       .exists("it has a link to the user");
 
-    assert.strictEqual(
-      query(".reviewable-flagged-post .post-body").innerHTML.trim(),
-      "<b>cooked content</b>"
-    );
+    assert
+      .dom(".reviewable-flagged-post .post-body")
+      .hasHtml("<b>cooked content</b>");
 
-    assert.strictEqual(count(".reviewable-flagged-post .reviewable-score"), 2);
+    assert
+      .dom(".reviewable-flagged-post .reviewable-score")
+      .exists({ count: 2 });
   });
 
   test("Flag related", async function (assert) {
     await visit("/review/1");
 
-    assert.ok(exists(".reviewable-flagged-post"), "it shows the flagged post");
+    assert.dom(".reviewable-flagged-post").exists("shows the flagged post");
   });
 
   test("Clicking the buttons triggers actions", async function (assert) {
     await visit("/review");
     await click(`${user} .reviewable-action.approve`);
-    assert.ok(!exists(user), "it removes the reviewable on success");
+    assert.dom(user).doesNotExist("removes the reviewable on success");
   });
 
   test("Editing a reviewable", async function (assert) {
@@ -132,23 +129,13 @@ acceptance("Review", function (needs) {
 
     await visit("/review");
 
-    assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .badge-category__name`));
+    assert.dom(`${topic} .reviewable-action.approve`).exists();
+    assert.dom(`${topic} .badge-category__name`).doesNotExist();
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
-      "hello"
-    );
+    assert.dom(`${topic} .discourse-tag:nth-of-type(1)`).hasText("hello");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(2)`).hasText("world");
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
-      "world"
-    );
-
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "existing body"
-    );
+    assert.dom(`${topic} .post-body`).hasText("existing body");
 
     await click(`${topic} .reviewable-action.edit`);
     await click(`${topic} .reviewable-action.save-edit`);
@@ -166,11 +153,9 @@ acceptance("Review", function (needs) {
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.cancel-edit`);
 
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "existing body",
-      "cancelling does not update the value"
-    );
+    assert
+      .dom(`${topic} .post-body`)
+      .hasText("existing body", "cancelling does not update the value");
 
     await click(`${topic} .reviewable-action.edit`);
     let category = selectKit(`${topic} .category-id .select-kit`);
@@ -187,46 +172,29 @@ acceptance("Review", function (needs) {
     let tags = selectKit(`${topic} .payload-tags .mini-tag-chooser`);
     requests = [];
     await tags.expand();
-    assert.equal(requests.length, 1);
-    assert.equal(requests[0].queryParams.categoryId, "6");
+    assert.strictEqual(requests.length, 1);
+    assert.strictEqual(requests[0].queryParams.categoryId, "6");
     await tags.fillInFilter("monkey");
     await tags.selectRowByValue("monkey");
 
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.save-edit`);
 
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
-      "hello"
-    );
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(2)`).innerText,
-      "world"
-    );
-    assert.strictEqual(
-      query(`${topic} .discourse-tag:nth-of-type(3)`).innerText,
-      "monkey"
-    );
+    assert.dom(`${topic} .discourse-tag:nth-of-type(1)`).hasText("hello");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(2)`).hasText("world");
+    assert.dom(`${topic} .discourse-tag:nth-of-type(3)`).hasText("monkey");
 
-    assert.strictEqual(
-      query(`${topic} .post-body`).innerText.trim(),
-      "new raw contents"
-    );
-    assert.strictEqual(
-      query(`${topic} .badge-category__name`).innerText.trim(),
-      "support"
-    );
+    assert.dom(`${topic} .post-body`).hasText("new raw contents");
+    assert.dom(`${topic} .badge-category__name`).hasText("support");
   });
 
   test("Reviewables can become stale", async function (assert) {
     await visit("/review");
 
-    const reviewable = query(`[data-reviewable-id="1234"]`);
-    assert.notOk(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(
-      count(`[data-reviewable-id="1234"] .status .pending`),
-      1
-    );
+    assert
+      .dom("[data-reviewable-id='1234']")
+      .doesNotHaveClass("reviewable-stale");
+    assert.dom("[data-reviewable-id='1234'] .status .pending").exists();
     assert.dom(".stale-help").doesNotExist();
 
     await publishToMessageBus(`/reviewable_counts/${loggedInUser().id}`, {
@@ -236,14 +204,14 @@ acceptance("Review", function (needs) {
       },
     });
 
-    assert.ok(reviewable.className.includes("reviewable-stale"));
-    assert.strictEqual(count("[data-reviewable-id=1234] .status .approved"), 1);
-    assert.strictEqual(count(".stale-help"), 1);
-    assert.ok(query(".stale-help").innerText.includes("foo"));
+    assert.dom("[data-reviewable-id='1234']").hasClass("reviewable-stale");
+    assert.dom("[data-reviewable-id='1234'] .status .approved").exists();
+    assert.dom(".stale-help").exists();
+    assert.dom(".stale-help").includesText("foo");
 
     await visit("/");
     await visit("/review"); // reload review
 
-    assert.strictEqual(count(".stale-help"), 0);
+    assert.dom(".stale-help").doesNotExist();
   });
 });

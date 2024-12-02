@@ -75,10 +75,10 @@ zh_CN:
     import_error:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
-      screenshot: "导入主题截图时出错。 %{errors}"
-      screenshot_invalid_type: "主题截图必须采用以下格式之一： %{accepted_formats}。截图 %{file_name} 格式无效。"
+      screenshot: "导入主题截图时出错。%{errors}"
+      screenshot_invalid_type: "主题截图必须采用以下格式之一：%{accepted_formats}。截图 %{file_name} 的格式无效。"
       screenshot_invalid_size: "主题截图必须小于 %{max_size}。截图 %{file_name} 太大。"
-      screenshot_invalid_dimensions: "主题截图的最大尺寸必须是 %{max_width}x%{max_height}。截图 %{file_name} 超出了此限制。其尺寸为 %{width}x%{height}。"
+      screenshot_invalid_dimensions: "主题截图的最大尺寸必须为 %{max_width}x%{max_height}。截图 %{file_name} 超出了此限制。它的尺寸为 %{width}x%{height}。"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
       about_json_too_big: "导入错误：about.json 超过上限 %{limit}。"
       about_json_values: "about.json 包含无效值：%{errors}"
@@ -522,7 +522,7 @@ zh_CN:
         other: "%{count} 个用户已被添加到该群组。"
     errors:
       default_notification_level_users_limit:
-        other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组： %{group_name}"
+        other: "无法为大于 %{count} 个用户的群组设置默认通知级别。错误的群组：%{group_name}"
       grant_trust_level_not_valid: "'%{trust_level}' 不是有效的信任级别。"
       can_not_modify_automatic: "您不能修改自动生成的群组"
       member_already_exist:
@@ -554,7 +554,10 @@ zh_CN:
       admins: "负责配置和维护此站点，并有权访问所有成员和活动数据"
       moderators: "负责回应举报、主持讨论并帮助成员管理帐户"
       trust_level_0: "正在学习社区规范和功能的受限新成员"
-      trust_level_1: "已经通过阅读记录展示了初步参与的成员，现在可以访问更多功能。该组的所有成员也属于 trust_level_0 组。"
+      trust_level_1: "信任度较高的成员，通过阅读内容展示了初步参与度，现在可以使用更多功能。这个组别的所有成员同时也属于 trust_level_0 组。"
+      trust_level_2: "在一段时间内持续做出贡献并获得完整公民权限的活跃成员。此群组的所有成员也是 trust_level_1 和 trust_level_0 群组的成员。"
+      trust_level_3: "积极参与的长期贡献者，他们构成了社区的骨干力量，并获得有限的审核权限。此群组的所有成员也是 trust_level_2、trust_level_1 和 trust_level_0 群组的成员。"
+      trust_level_4: "手动提升的成员，他们因杰出的贡献而获得认可并被赋予额外的审核权限。此群组的所有成员也是 trust_level_3、trust_level_2、trust_level_1 和 trust_level_0 群组的成员。"
     request_membership_pm:
       title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
@@ -641,6 +644,7 @@ zh_CN:
               reply_by_email_disabled: "通过电子邮件回复已被禁用。"
               send_to_email_disabled: "抱歉，您不能向该电子邮件发送个人消息。"
               target_user_not_found: "未找到您要向其发送此消息的其中一个用户。"
+              too_large_group: "群组 %{group_name} 的用户数量过多，无法接收消息。限制为 %{limit}。"
               unable_to_update: "更新该话题时出错。"
               unable_to_tag: "给话题添加标签时出错。"
               unable_to_unlist: "抱歉，您不能创建取消公开的话题。"
@@ -667,7 +671,7 @@ zh_CN:
             password:
               common: "是 10000 个最常用的密码之一。请使用一个更安全的密码。"
               same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
-              same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
+              same_as_email: "与您的电子邮件地址相同。请使用一个更安全的密码。"
               same_as_current: "与您当前的密码相同"
               same_as_name: "与您的名字相同。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
@@ -1104,6 +1108,7 @@ zh_CN:
       wrong_move: "举报无法移动"
       system: "系统举报无法更新或删除。"
       used: "举报无法更新或删除，因为已被使用。"
+      unique_name: "举报名称必须唯一"
   reports:
     default:
       labels:
@@ -1178,12 +1183,14 @@ zh_CN:
       yaxis: "天"
       description: "在此期间提升其信任级别的用户量。"
     consolidated_page_views:
-      title_legacy: "合并页面浏览量"
+      title: "旧版综合页面浏览量"
+      title_legacy: "综合页面浏览量"
       xaxis:
         page_view_crawler: "抓取工具"
         page_view_anon: "匿名用户"
         page_view_logged_in: "登录用户"
       yaxis: "天"
+      description: "显示登录用户、匿名用户和抓取工具的页面浏览量的旧版报告。此报告已被“网站流量”报告取代。"
       description_legacy: "登录用户、匿名用户和抓取工具的页面浏览量。"
       labels:
         post: 帖子
@@ -1199,18 +1206,21 @@ zh_CN:
       description: "对常规 API 密钥和用户 API 密钥的 API 请求。"
     consolidated_page_views_browser_detection:
       title: "使用浏览器检测综合页面浏览量（实验性）"
-      title_legacy: "使用浏览器检测综合页面浏览量（实验性）"
+      title_legacy: "包含浏览器检测的综合页面浏览量（实验性）"
       xaxis:
         page_view_anon_browser: "匿名浏览器"
         page_view_logged_in_browser: "已登录浏览器"
         page_view_crawler: "已知爬虫"
         page_view_other: "其他页面浏览量"
       yaxis: "天"
+      description: "登录用户、匿名用户、已知抓取工具等的页面浏览量。此实验性报告在进行计数之前会确保登录/匿名请求来自真实的浏览器。此报告不提供历史数据，如需了解历史数据，请查阅“旧版综合页面浏览量”报告。"
+      description_legacy: "登录用户、匿名用户、已知抓取工具等的页面浏览量。此实验性报告在进行计数之前会确保登录/匿名请求来自真实的浏览器。此报告不提供历史数据，如需了解历史数据，请查阅“综合页面浏览量”报告。"
     site_traffic:
+      title: "网站流量"
       xaxis:
         page_view_anon_browser: "页面浏览量（匿名用户）"
         page_view_logged_in_browser: "页面浏览量（登录用户）"
-        page_view_crawler: "已知爬虫"
+        page_view_crawler: "已知抓取工具"
         page_view_other: "其他流量"
       yaxis: "天"
       description: "登录用户、匿名用户、已知抓取工具和其他流量的页面浏览量。"
@@ -1365,8 +1375,10 @@ zh_CN:
       yaxis: "总页面浏览量"
       description: "来自所有访客的新页面浏览量。"
     page_view_legacy_total_reqs:
+      title: "旧版页面浏览量"
       xaxis: "天"
       yaxis: "总页面浏览量"
+      description: "显示所有访客的新页面浏览量的旧版报告。"
     page_view_logged_in_mobile_reqs:
       title: "登录用户页面浏览量"
       xaxis: "天"
@@ -1676,12 +1688,14 @@ zh_CN:
     markdown_linkify_tlds: "自动被视为链接的顶级网域列表"
     markdown_typographer_quotation_marks: "双引号和单引号替换对的列表"
     post_undo_action_window_mins: "允许撤消对帖子的最近操作（例如，举报等）的分钟数。"
+    must_approve_users: '所有新用户必须等待版主或管理员批准后才能登录。（注意：启用此设置也会移除“直达话题”邀请选项）'
     invite_code: "用户必须输入此代码才能注册帐户，为空时将被忽略（不区分大小写）"
     approve_suspect_users: "将可疑用户添加到审核队列中。可疑用户已进入个人简介/网站，但没有阅读活动。"
     review_every_post: "将每篇新帖子发送到审核队列进行审核。帖子仍会立即发布，并对所有用户可见。警告！由于需要审核的帖子数量可能很大，不建议大流量网站使用此设置。"
     pending_users_reminder_delay_minutes: "如果新用户等待批准的时间超过此分钟数则通知版主。设置为 -1 可禁用通知。"
     persistent_sessions: "当网络浏览器关闭后，用户将保持登录状态"
     maximum_session_age: "自上次访问以来，用户将保持登录状态 n 小时"
+    experimental_full_page_login: "将登录/注册模式替换为整页登录/注册表单。"
     ga_version: "要使用的 Google Universal Analytics 版本：v3 (analytics.js)、v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1695,6 +1709,7 @@ zh_CN:
     blocked_ip_blocks: "Discourse 不应抓取的私有 IP 地址段列表"
     allowed_internal_hosts: "Discourse 可以安全抓取用于 Onebox 处理和其他目的的内部主机列表"
     allowed_onebox_iframes: "通过 Onebox 嵌入允许的 iframe src 网域列表 `*` 将允许所有默认的 Onebox 引擎。"
+    allowed_iframes: "Discourse 可以安全地允许在帖子中使用的 iframe src URL 前缀列表"
     allowed_crawler_user_agents: "应被允许访问网站的网络抓取工具的用户代理。警告！设置此项将禁止此处未列出的所有抓取工具！"
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
@@ -1708,6 +1723,8 @@ zh_CN:
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
     top_menu: "确定首页导航中显示的条目，以及显示顺序。"
+    post_menu: "配置默认帖子菜单项的可见性和顺序。由插件或主题添加的其他菜单项将单独管理，不会出现在此列表中。"
+    post_menu_hidden_items: "除非点击了扩展省略号否则默认在帖子菜单中隐藏的菜单项。由插件或主题添加的附加菜单项将单独管理，不会出现在此列表中。"
     share_links: "确定分享对话框中显示的条目以及显示顺序。"
     allow_username_in_share_links: "允许用户名包含在分享链接中。这对于根据唯一身份访客奖励徽章很有用。"
     site_contact_username: "用于发送所有自动消息的有效管理人员用户名。如果留空，将使用默认系统帐户。"
@@ -1726,6 +1743,7 @@ zh_CN:
     top_page_default_timeframe: "匿名用户的默认顶部页面时间段（会基于登录用户最后一次访问自动为其调整）。"
     moderators_view_emails: "允许版主查看用户电子邮件地址。"
     prioritize_username_in_ux: "在用户页面、用户卡片和帖子上先显示用户名（先显示禁用名称时）"
+    enable_rich_text_paste: "将文本粘贴到编辑器中时启用 HTML 到 Markdown 的自动转换。"
     send_old_credential_reminder_days: "几天后提醒旧凭据"
     email_token_valid_hours: "“忘记密码了”/“激活帐户”令牌的有效期为 (n) 小时。"
     enable_badges: "启用徽章系统，这是一种游戏化形式，旨在强化用户的积极行为。请参阅 Discourse Meta 上的<a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>什么是徽章？</a>了解更多信息。"
@@ -1783,8 +1801,10 @@ zh_CN:
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
     google_oauth2_prompt: "可选的以空格分隔的字符串值列表，指定授权服务器是否提示用户进行重新身份验证和同意。请参阅<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'> https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> 了解可能的值。"
     google_oauth2_hd: "登录将受限的可选 Google Apps 托管网域。请参阅 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> 以了解详情。"
+    google_oauth2_hd_groups: "在进行身份验证时检索用户在托管域上的 Google 群组。检索到的 Google 群组可用于自动授予 Discourse 群组成员资格（请参见群组设置）。有关详情，请参阅 https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "属于 Google Workspace 管理员帐号的电子邮件地址。将与服务帐户凭据一起使用以获取群组信息。"
     google_oauth2_hd_groups_service_account_json: "服务帐户的 JSON 格式密钥信息。将用于获取群组信息。"
+    google_oauth2_verbose_logging: "将详细的 Google OAuth2 相关诊断记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_twitter_logins: "启用 Twitter 身份验证，需要 twitter_consumer_key 和 twitter_consumer_secret。请参阅<a href='https://meta.discourse.org/t/13395' target='_blank'>为 Discourse 配置 Twitter 登录（和丰富的嵌入）</a>。"
     twitter_consumer_key: "Twitter 身份验证的使用者密钥，在 <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> 中注册"
     twitter_consumer_secret: "Twitter 身份验证的使用者密钥代码，在 <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a> 中注册"
@@ -2053,6 +2073,7 @@ zh_CN:
     reset_bounce_score_after_days: "X 天后自动重置退回分数。"
     blocked_attachment_content_types: "用于根据内容类型屏蔽附件的关键字列表。"
     blocked_attachment_filenames: "用于根据文件名屏蔽名单附件的关键字列表。"
+    forwarded_emails_behaviour: "如何处理转发给 Discourse 的电子邮件。<a href='https://meta.discourse.org/t/-/62977' target='_blank'>了解详情</a>"
     always_show_trimmed_content: "始终显示传入电子邮件被修剪的部分。警告：可能会泄露电子邮件地址。"
     trim_incoming_emails: "修剪传入电子邮件的不相关部分。"
     private_email: "不在电子邮件标题或电子邮件正文中包含帖子或话题的内容。注意：还会禁用摘要电子邮件。"
@@ -2171,6 +2192,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子消息包含在电子邮件消息模板中"
+    svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 图标。使用前缀 'fa-' 表示实心图标，使用 'far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
@@ -2180,7 +2202,7 @@ zh_CN:
     default_code_lang: "应用于 Markdown 代码块（auto、text、ruby、python 等）的默认编程语言语法高亮显示。此值还必须存在于 `highlighted languages` 网站设置中。"
     warn_reviving_old_topic_age: "当有人开始回复上次回复时间超过此天数的话题时，将显示警告。设置为 0 将禁用。"
     autohighlight_all_code: "向使用 HTML 编写的 &lt;code&gt; 块应用语法高亮显示，即使这些代码块未指定语言。要配置使用 Markdown 编写的代码块，请使用 'default code lang' 设置。"
-    highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
+    highlighted_languages: "包括语法高亮显示规则。（警告：包含过多语言可能会影响性能）请参阅 <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> 获取演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
     embed_topics_list: "启用 HTML 格式的话题列表嵌入。通过此设置，您可以将论坛中的话题列表以兼容、易用的方式集成到其他网站中。"
@@ -2196,6 +2218,7 @@ zh_CN:
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天未更改的草稿。"
     delete_merged_stub_topics_after_days: "自动删除完全合并的存根话题之前等待的天数。设置为 -1 不会删除。设置为 0 将立即删除。"
+    bootstrap_mode_min_users: '禁用引导模式并移除“使用入门”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/322876">Meta 上的引导模式话题</a>以了解详细信息。'
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
@@ -2244,12 +2267,14 @@ zh_CN:
     disable_mailing_list_mode: "禁止用户启用邮寄名单模式（阻止发送任何邮寄名单电子邮件。）"
     default_email_previous_replies: "在电子邮件中默认包含以前的回复。"
     default_email_in_reply_to: "在电子邮件中默认包含帖子回复节选。"
-    default_hide_profile_and_presence: "默认隐藏用户的公开个人资料和状态功能。"
+    default_hide_profile: "默认隐藏用户公开个人资料。"
+    default_hide_presence: "默认禁用在线状态功能。"
     default_other_new_topic_duration_minutes: "话题被视为新话题的全局默认条件。"
     default_other_auto_track_topics_after_msecs: "话题在被自动跟踪之前的全局默认时间。"
     default_other_notification_level_when_replying: "用户回复话题时的全局默认通知级别。"
     default_other_external_links_in_new_tab: "默认在新标签页中打开外部链接。"
     default_other_enable_quoting: "默认启用高亮显示文本的引用回复。"
+    default_other_enable_smart_lists: "默认情况下，在编辑器中输入时启用智能列表。"
     default_other_enable_defer: "默认启用延迟话题功能。"
     default_other_dynamic_favicon: "在浏览器图标上默认显示新的/更新的话题计数。"
     default_other_skip_new_user_tips: "跳过新用户入门提示和徽章。"
@@ -2306,7 +2331,7 @@ zh_CN:
     suppress_overlapping_tags_in_list: "如果标签与话题标题中的字词完全匹配，则不显示标签"
     remove_muted_tags_from_latest: "不在最新话题列表中显示仅使用已被设为免打扰的标签标记的话题。"
     force_lowercase_tags: "强制所有新标签完全小写。"
-    create_post_for_category_and_tag_changes: "当话题的类别或标签发生变化时创建一篇小的行动帖子"
+    create_post_for_category_and_tag_changes: "当一个话题的类别或标签发生更改时，创建密语帖子，需要启用密语帖子。"
     automatically_clean_unused_tags: "每天自动删除未在任何主题或私信中使用的标签。"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
     company_name: "您的公司或组织的名称。如果留空，将不会提供样板《服务条款》或《隐私声明》。"
@@ -2323,6 +2348,7 @@ zh_CN:
     heading_font: "用于网站上标题的字体。可以通过 `--heading-font-family` CSS 自定义属性替换主题。"
     enable_sitemap: "为您的网站生成网站地图并将其包含在 robots.txt 文件中。"
     sitemap_page_size: "每个网站地图页面中包含的 URL 数量。最大 50.000"
+    enable_user_status: "允许用户设置自定义状态消息（表情符号 + 描述）。"
     enable_user_tips: "启用向用户描述关键功能的新用户提示"
     short_title: "短标题将用于用户的主屏幕、启动器或其他空间可能有限的地方。应被限制为 12 个字符。"
     dashboard_hidden_reports: "允许从信息中心隐藏指定报告。"
@@ -2344,9 +2370,18 @@ zh_CN:
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
+    experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
+    experimental_topics_filter: "在 /filter 下启用实验性话题筛选路由"
+    enable_experimental_lightbox: "将默认图片灯箱替换为全新设计。"
+    experimental_glimmer_topic_list_groups: "启用新的 'glimmer' 话题列表实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    glimmer_post_menu_mode: "控制是否使用新的 'glimmer' 帖子菜单实现。当您的所有主题和插件都准备就绪后，'auto' 将自动启用。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    glimmer_post_menu_groups: "在 'auto' 模式下为指定的用户群组启用新的 'glimmer' 帖子菜单实现。此实现正在积极开发中，不适用于生产环境。在实现最终确定并公布之前，请勿针对其开发主题/插件。"
+    experimental_form_templates: "启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "为指定群组的管理 UI 启用边栏导航，取代顶层管理导航按钮。"
+    lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
+    about_page_hidden_groups: "不在 /about 页面显示特定群组的成员。"
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
@@ -2411,6 +2446,10 @@ zh_CN:
       delete_rejected_email_after_days: "此设置不能设置为低于 delete_email_logs_after_days 设置或大于 %{max}"
       invalid_uncategorized_category_setting: '如果“允许未分类话题”设置未启用，则无法选择“未分类”类别。'
       invalid_search_ranking_weights: "该值对于 search_ranking_weights 网站设置无效。示例：'{0.1,0.2,0.3,1.0}'。注意，每个权重的最大值为 1.0。"
+    keywords:
+      clean_up_inactive_users_after_days: "已停用|闲置|未激活"
+      purge_unactivated_users_grace_period_days: "已停用|闲置|未激活"
+      navigation_menu: "边栏|标题下拉菜单"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4827,7 +4866,7 @@ zh_CN:
           contact_email:
             label: "联系人"
             placeholder: "example@user.com"
-            description: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的关于页面</a>上列出以供紧急联系。"
+            description: "负责此网站的主要联系人的电子邮件地址，用于重要通知，也会在<a href='%{base_path}/about' target='_blank'>您的“关于”页面</a>上列出以供紧急联系。"
       invites:
         title: "邀请管理人员"
         description: "即将完成！让我们邀请一些人来使用有趣的话题和回复帮助<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>培育您的讨论</a>以启动您的社区。"

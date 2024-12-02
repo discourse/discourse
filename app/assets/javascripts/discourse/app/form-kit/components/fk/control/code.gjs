@@ -7,7 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 export default class FKControlCode extends Component {
   static controlType = "code";
 
-  initialValue = this.args.value || "";
+  initialValue = this.args.field.value || "";
 
   @action
   handleInput(content) {

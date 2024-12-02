@@ -6,6 +6,10 @@ export default class ChatDraftsManager extends Service {
 
   drafts = {};
 
+  willDestroy() {
+    cancel(this?._persistHandler);
+  }
+
   async add(message, channelId, threadId) {
     try {
       this.drafts[this.key(channelId, threadId)] = message;
@@ -42,12 +46,8 @@ export default class ChatDraftsManager extends Service {
         threadId,
       });
       message.draftSaved = true;
-    } catch (e) {
+    } catch {
       // We don't want to throw an error if the draft fails to save
     }
-  }
-
-  willDestroy() {
-    cancel(this?._persistHandler);
   }
 }

@@ -16,9 +16,9 @@ module("Integration | Component | user-menu", function (hooks) {
     const activeTab = query(".top-tabs.tabs-list .btn.active");
     assert.strictEqual(activeTab.id, "user-menu-button-all-notifications");
     const notifications = queryAll("#quick-access-all-notifications ul li");
-    assert.ok(notifications[0].classList.contains("edited"));
-    assert.ok(notifications[1].classList.contains("replied"));
-    assert.ok(notifications[2].classList.contains("liked-consolidated"));
+    assert.dom(notifications[0]).hasClass("edited");
+    assert.dom(notifications[1]).hasClass("replied");
+    assert.dom(notifications[2]).hasClass("liked-consolidated");
   });
 
   test("active tab has a11y attributes that indicate it's active", async function (assert) {
@@ -138,10 +138,9 @@ module("Integration | Component | user-menu", function (hooks) {
     this.currentUser.set("can_review", true);
     this.currentUser.set("reviewable_count", 4);
     await render(template);
-    const countBadge = query(
-      "#user-menu-button-review-queue .badge-notification"
-    );
-    assert.strictEqual(countBadge.textContent, "4");
+    assert
+      .dom("#user-menu-button-review-queue .badge-notification")
+      .hasText("4");
 
     this.currentUser.set("reviewable_count", 0);
     await settled();
@@ -315,13 +314,11 @@ module("Integration | Component | user-menu", function (hooks) {
     });
     await render(template);
 
-    const likesCountBadge = query(
-      "#user-menu-button-likes .badge-notification"
-    );
-    assert.strictEqual(
-      likesCountBadge.textContent,
-      (1 + 2 + 3).toString(),
-      "combines unread counts for `liked`, `liked_consolidated` and `reaction` types"
-    );
+    assert
+      .dom("#user-menu-button-likes .badge-notification")
+      .hasText(
+        `${1 + 2 + 3}`,
+        "combines unread counts for `liked`, `liked_consolidated` and `reaction` types"
+      );
   });
 });

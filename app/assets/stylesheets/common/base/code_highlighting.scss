@@ -1,18 +1,25 @@
-/* originally based on github.com style (c) Vasily Polovnyov <vast@whiteants.net> */
-
 p > code,
 li > code,
-pre > code,
 strong > code,
 em > code {
-  color: var(--primary-very-high);
-  background: var(--hljs-bg);
+  padding: 2px 4px;
+  background: var(--inline-code-bg);
+  white-space: pre-wrap;
+  color: var(--primary);
 }
 
-.hljs {
-  display: block;
-  padding: 0.5em;
+code {
   color: var(--primary-very-high);
+  background: var(--hljs-bg);
+  border-radius: var(--d-button-border-radius);
+  font-size: 14px;
+  line-height: calc((13 + 4) / 13);
+}
+
+pre > code {
+  display: block;
+  padding: 12px;
+  max-height: 500px;
 }
 
 .hljs-comment,
@@ -23,12 +30,15 @@ em > code {
   font-style: italic;
 }
 
+.hljs-color {
+  color: var(--hljs-color);
+}
+
 .hljs-keyword,
 .hljs-subst,
 .hljs-request,
 .hljs-status {
-  color: var(--primary-very-high);
-  font-weight: bold;
+  color: var(--hljs-keyword);
 }
 
 .hljs-number {
@@ -43,15 +53,20 @@ em > code {
   color: var(--hljs-string);
 }
 
-.hljs-title,
-.hljs-name,
+.hljs-title {
+  color: var(--hljs-title);
+}
+
+.hljs-name {
+  color: var(--hljs-name);
+}
+
 .hljs-quote,
 .hljs-operator,
 .hljs-selector-pseudo,
 .hljs-selector-tag,
 .hljs-link {
   color: var(--hljs-string);
-  font-weight: bold;
 }
 
 .hljs-subst {
@@ -60,27 +75,34 @@ em > code {
 
 .hljs-literal,
 .hljs-class .hljs-title {
-  color: var(--hljs-literal);
-  font-weight: bold;
+  color: var(--hljs-title);
 }
 
 .hljs-tag,
-.hljs-punctuation,
 .hljs-tag .hljs-title {
   color: var(--hljs-tag);
   font-weight: normal;
 }
 
-.hljs-tag .hljs-attr,
-.hljs-tag .hljs-name {
-  color: var(--hljs-attribute);
+.hljs-punctuation {
+  color: var(--hljs-punctuation);
 }
 
-.hljs-attribute,
+.hljs-attr {
+  color: var(--hljs-attr);
+}
+
 .hljs-selector-attr,
 .hljs-selector-class,
-.hljs-selector-id,
+.hljs-selector-id {
+  color: var(--hljs-attr);
+}
+
 .hljs-variable {
+  color: var(--hljs-variable);
+}
+
+.hljs-attribute {
   color: var(--hljs-attribute);
 }
 
@@ -95,20 +117,21 @@ em > code {
 
 .hljs-built_in,
 .hljs-builtin-name {
-  color: var(--hljs-builtin-name);
+  color: var(--hljs-name);
 }
 
 .hljs-deletion {
   background: var(--danger-low);
+  color: var(--hljs-deletion);
 }
 
 .hljs-addition {
   background: var(--success-low);
+  color: var(--hljs-addition);
 }
 
 .hljs-section {
-  color: var(--hljs-builtin-name);
-  font-weight: bold;
+  color: var(--hljs-name);
 }
 
 .hljs-bullet {

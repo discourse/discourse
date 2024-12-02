@@ -1,11 +1,7 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({
@@ -18,15 +14,14 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   test("topics section link is shown by default ", async function (assert) {
     await visit("/");
 
-    const sectionLinks = queryAll(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link"
-    );
-
-    assert.strictEqual(
-      sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.topics.content"),
-      "displays the topics section link first"
-    );
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='community'] .sidebar-section-link"
+      )
+      .hasText(
+        i18n("sidebar.sections.community.links.topics.content"),
+        "displays the topics section link first"
+      );
   });
 
   test("users section link is not shown when hide_user_profiles_from_public site setting is enabled", async function (assert) {
@@ -34,12 +29,11 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     await visit("/");
 
-    assert.notOk(
-      exists(
+    assert
+      .dom(
         ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='users']"
-      ),
-      "users section link is not shown in sidebar"
-    );
+      )
+      .doesNotExist("users section link is not shown in sidebar");
   });
 
   test("users, about, faq, groups and badges section links are shown in more...", async function (assert) {
@@ -53,34 +47,39 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
       ".sidebar-more-section-links-details-content-main .sidebar-section-link"
     );
 
-    assert.strictEqual(
-      sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.users.content"),
-      "displays the users section link second"
-    );
+    assert
+      .dom(sectionLinks[0])
+      .hasText(
+        i18n("sidebar.sections.community.links.users.content"),
+        "displays the users section link second"
+      );
 
-    assert.strictEqual(
-      sectionLinks[1].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.about.content"),
-      "displays the about section link third"
-    );
+    assert
+      .dom(sectionLinks[1])
+      .hasText(
+        i18n("sidebar.sections.community.links.about.content"),
+        "displays the about section link third"
+      );
 
-    assert.strictEqual(
-      sectionLinks[2].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.faq.content"),
-      "displays the FAQ section link last"
-    );
+    assert
+      .dom(sectionLinks[2])
+      .hasText(
+        i18n("sidebar.sections.community.links.faq.content"),
+        "displays the FAQ section link last"
+      );
 
-    assert.strictEqual(
-      sectionLinks[3].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.groups.content"),
-      "displays the groups section link first"
-    );
+    assert
+      .dom(sectionLinks[3])
+      .hasText(
+        i18n("sidebar.sections.community.links.groups.content"),
+        "displays the groups section link first"
+      );
 
-    assert.strictEqual(
-      sectionLinks[4].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.badges.content"),
-      "displays the badges section link second"
-    );
+    assert
+      .dom(sectionLinks[4])
+      .hasText(
+        i18n("sidebar.sections.community.links.badges.content"),
+        "displays the badges section link second"
+      );
   });
 });

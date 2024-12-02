@@ -1,5 +1,5 @@
 import { and } from "truth-helpers";
-import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
+import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 
 const PostCountOrBadges = <template>
@@ -10,7 +10,7 @@ const PostCountOrBadges = <template>
       @url={{@topic.lastUnreadUrl}}
     />
   {{else}}
-    <PostsCountColumn @topic={{@topic}} @tagName="div" />
+    <ItemRepliesCell @topic={{@topic}} @tagName="div" />
   {{/if}}
 </template>;
 

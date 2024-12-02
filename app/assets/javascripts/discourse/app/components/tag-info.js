@@ -8,7 +8,7 @@ import { tagName } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class TagInfo extends Component {
@@ -28,7 +28,7 @@ export default class TagInfo extends Component {
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
-    return I18n.t("tagging.tag_groups_info", {
+    return i18n("tagging.tag_groups_info", {
       count: tagGroupNames.length,
       tag_groups: tagGroupNames.join(", "),
     });
@@ -36,7 +36,7 @@ export default class TagInfo extends Component {
 
   @discourseComputed("tagInfo.categories")
   categoriesInfo(categories) {
-    return I18n.t("tagging.category_restrictions", {
+    return i18n("tagging.category_restrictions", {
       count: categories.length,
     });
   }
@@ -115,7 +115,7 @@ export default class TagInfo extends Component {
     event?.preventDefault();
 
     this.dialog.yesNoConfirm({
-      message: I18n.t("tagging.delete_synonym_confirm", {
+      message: i18n("tagging.delete_synonym_confirm", {
         tag_name: tag.text,
       }),
       didConfirm: () => {
@@ -163,13 +163,13 @@ export default class TagInfo extends Component {
 
     let confirmText =
       numTopics === 0
-        ? I18n.t("tagging.delete_confirm_no_topics")
-        : I18n.t("tagging.delete_confirm", { count: numTopics });
+        ? i18n("tagging.delete_confirm_no_topics")
+        : i18n("tagging.delete_confirm", { count: numTopics });
 
     if (this.tagInfo.synonyms.length > 0) {
       confirmText +=
         " " +
-        I18n.t("tagging.delete_confirm_synonyms", {
+        i18n("tagging.delete_confirm_synonyms", {
           count: this.tagInfo.synonyms.length,
         });
     }
@@ -181,7 +181,7 @@ export default class TagInfo extends Component {
           await this.tag.destroyRecord();
           this.router.transitionTo("tags.index");
         } catch {
-          this.dialog.alert(I18n.t("generic_error"));
+          this.dialog.alert(i18n("generic_error"));
         }
       },
     });
@@ -191,7 +191,7 @@ export default class TagInfo extends Component {
   addSynonyms() {
     this.dialog.confirm({
       message: htmlSafe(
-        I18n.t("tagging.add_synonyms_explanation", {
+        i18n("tagging.add_synonyms_explanation", {
           count: this.newSynonyms.length,
           tag_name: this.tagInfo.name,
         })
@@ -209,12 +209,12 @@ export default class TagInfo extends Component {
               this.loadTagInfo();
             } else if (response.failed_tags) {
               this.dialog.alert(
-                I18n.t("tagging.add_synonyms_failed", {
+                i18n("tagging.add_synonyms_failed", {
                   tag_names: Object.keys(response.failed_tags).join(", "),
                 })
               );
             } else {
-              this.dialog.alert(I18n.t("generic_error"));
+              this.dialog.alert(i18n("generic_error"));
             }
           })
           .catch(popupAjaxError);

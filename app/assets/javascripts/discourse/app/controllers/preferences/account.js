@@ -12,7 +12,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AccountController extends Controller.extend(
   CanCheckEmails
@@ -58,7 +58,7 @@ export default class AccountController extends Controller.extend(
 
   @discourseComputed()
   nameInstructions() {
-    return I18n.t(
+    return i18n(
       this.siteSettings.full_name_required
         ? "user.name.instructions_required"
         : "user.name.instructions"
@@ -206,18 +206,18 @@ export default class AccountController extends Controller.extend(
   @action
   delete() {
     this.dialog.alert({
-      message: I18n.t("user.delete_account_confirm"),
+      message: i18n("user.delete_account_confirm"),
       buttons: [
         {
           icon: "triangle-exclamation",
-          label: I18n.t("user.delete_account"),
+          label: i18n("user.delete_account"),
           class: "btn-danger",
           action: () => {
             return this.model.delete().then(
               () => {
                 next(() => {
                   this.dialog.alert({
-                    message: I18n.t("user.deleted_yourself"),
+                    message: i18n("user.deleted_yourself"),
                     didConfirm: () =>
                       DiscourseURL.redirectAbsolute(getURL("/")),
                     didCancel: () => DiscourseURL.redirectAbsolute(getURL("/")),
@@ -226,7 +226,7 @@ export default class AccountController extends Controller.extend(
               },
               () => {
                 next(() =>
-                  this.dialog.alert(I18n.t("user.delete_yourself_not_allowed"))
+                  this.dialog.alert(i18n("user.delete_yourself_not_allowed"))
                 );
                 this.set("deleting", false);
               }
@@ -234,7 +234,7 @@ export default class AccountController extends Controller.extend(
           },
         },
         {
-          label: I18n.t("composer.cancel"),
+          label: i18n("composer.cancel"),
         },
       ],
     });
@@ -265,7 +265,7 @@ export default class AccountController extends Controller.extend(
   @action
   exportUserArchive() {
     this.dialog.yesNoConfirm({
-      message: I18n.t("user.download_archive.confirm"),
+      message: i18n("user.download_archive.confirm"),
       didConfirm: () => exportUserArchive(),
     });
   }

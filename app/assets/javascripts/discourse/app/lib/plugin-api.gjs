@@ -3,7 +3,7 @@
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.38.0";
+export const PLUGIN_API_VERSION = "1.39.0";
 
 import $ from "jquery";
 import { h } from "virtual-dom";
@@ -119,6 +119,7 @@ import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
 import { addNavItem } from "discourse/models/nav-item";
+import { _addTrackedPostProperty } from "discourse/models/post";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import {
   addSaveableUserField,
@@ -163,6 +164,12 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+
+const DEPRECATED_POST_MENU_WIDGETS = [
+  "post-menu",
+  "post-user-tip-shim",
+  "small-user-list",
+];
 
 const appliedModificationIds = new WeakMap();
 
@@ -287,6 +294,19 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -324,6 +344,19 @@ class PluginApi {
    * ```
    **/
   modifyClassStatic(resolverName, changes, opts) {
+    if (
+      resolverName === "component:topic-list" ||
+      resolverName === "component:topic-list-item"
+    ) {
+      deprecated(
+        "Modifying topic-list and topic-list-item with `modifyClassStatic` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.hbr-topic-list-overrides",
+        }
+      );
+    }
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -401,7 +434,7 @@ class PluginApi {
    *
    * Example: to abort the expected behavior based on a condition
    * ```
-   * api.registerValueTransformer("example-transformer", ({next, context}) => {
+   * api.registerBehaviorTransformer("example-transformer", ({next, context}) => {
    *   if (context.property) {
    *     // not calling next() on a behavior transformer aborts executing the expected behavior
    *
@@ -418,9 +451,10 @@ class PluginApi {
    * behavior. Notice that this includes the default behavior and if next() is not called in your transformer's callback
    * the default behavior will be completely overridden
    * @param {*} [behaviorCallback.context] the optional context in which the behavior is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerBehaviorTransformer(transformerName, behaviorCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.BEHAVIOR,
       behaviorCallback
@@ -485,9 +519,10 @@ class PluginApi {
    * mutating the input value, return the same output for the same input and not have any side effects.
    * @param {*} valueCallback.value the value to be transformed
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
+   * @returns {boolean} True if the transformer exists, false otherwise.
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(
+    return _registerTransformer(
       transformerName,
       transformerTypes.VALUE,
       valueCallback
@@ -786,6 +821,17 @@ class PluginApi {
   }
 
   /**
+   * Adds a tracked property to the post model.
+   *
+   * This method is used to mark a property as tracked for post updates.
+   *
+   * @param {string} name - The name of the property to track.
+   */
+  addTrackedPostProperty(name) {
+    _addTrackedPostProperty(name);
+  }
+
+  /**
    * Add a new button below a post with your plugin.
    *
    * The `callback` function will be called whenever the post menu is rendered,
@@ -832,6 +878,14 @@ class PluginApi {
    *  }
    **/
   addPostMenuButton(name, callback) {
+    deprecated(
+      "`api.addPostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     apiExtraButtons[name] = callback;
     addButton(name, callback);
   }
@@ -902,6 +956,14 @@ class PluginApi {
    * ```
    **/
   removePostMenuButton(name, callback) {
+    deprecated(
+      "`api.removePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     removeButton(name, callback);
   }
 
@@ -922,6 +984,14 @@ class PluginApi {
    * });
    **/
   replacePostMenuButton(name, widget) {
+    deprecated(
+      "`api.replacePostMenuButton` has been deprecated. Use the value transformer `post-menu-buttons` instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.post-menu-widget-overrides",
+      }
+    );
+
     replaceButton(name, widget);
   }
 
@@ -2241,6 +2311,7 @@ class PluginApi {
   addSaveableUserField(fieldName) {
     addSaveableUserField(fieldName);
   }
+
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
@@ -2503,7 +2574,6 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
-          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
@@ -3331,7 +3401,6 @@ class PluginApi {
     registeredTabs.push(tab);
   }
 
-  // eslint-disable-next-line no-unused-vars
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3345,6 +3414,16 @@ class PluginApi {
     //     }
     //   );
     // }
+
+    if (DEPRECATED_POST_MENU_WIDGETS.includes(widgetName)) {
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.4.0.beta3-dev",
+          id: "discourse.post-menu-widget-overrides",
+        }
+      );
+    }
   }
 }
 
@@ -3395,11 +3474,12 @@ function getPluginApi(version) {
 }
 
 /**
- * withPluginApi(version, apiCodeCallback, opts)
+ * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
  *
- * Helper to version our client side plugin API. Pass the version of the API that your
- * plugin is coded against. If that API is available, the `apiCodeCallback` function will
- * be called with the `PluginApi` object.
+ * @param {number} version - The version of the API that the plugin is coded against.
+ * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {object} [opts] - Optional additional options to pass to the callback function.
+ * @returns {*} The result of the `callback` function, if executed
  */
 export function withPluginApi(version, apiCodeCallback, opts) {
   opts = opts || {};

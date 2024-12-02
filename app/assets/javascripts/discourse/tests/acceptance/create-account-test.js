@@ -7,7 +7,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Create Account", function () {
   test("create an account", async function (assert) {
@@ -48,8 +48,8 @@ acceptance("Create Account", function () {
 
     await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("create account is disabled");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
   });
@@ -63,7 +63,51 @@ acceptance("Create Account", function () {
 
     assert
       .dom("#username-validation")
-      .hasText(I18n.t("user.username.required"), "shows signup error");
+      .hasText(i18n("user.username.required"), "shows signup error");
+  });
+
+  test("hidden instructions", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom("#account-email-validation-more-info")
+      .hasText(i18n("user.email.instructions"));
+    assert.dom("#username-validation-more-info").doesNotExist();
+    assert.dom("#password-validation-more-info").doesNotExist();
+    assert.dom("#fullname-validation-more-info").doesNotExist();
+  });
+
+  test("visible instructions", async function (assert) {
+    this.siteSettings.show_signup_form_username_instructions = true;
+    this.siteSettings.show_signup_form_password_instructions = true;
+    this.siteSettings.show_signup_form_full_name_instructions = true;
+
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom("#username-validation-more-info")
+      .hasText(i18n("user.username.instructions"));
+    assert
+      .dom("#password-validation-more-info")
+      .hasText(i18n("user.password.instructions", { count: 10 }));
+    assert
+      .dom("#fullname-validation-more-info")
+      .hasText(i18n("user.name.instructions_required"));
+
+    await fillIn("#new-account-email", "z@z.co");
+    await fillIn("#new-account-password", "supersecurepassword");
+
+    await click(".d-modal__footer .btn-primary");
+
+    assert.dom("#username-validation").hasText(i18n("user.username.required"));
+
+    // only shows the instructions if the validation is not visible
+    assert.dom("#account-email-validation-more-info").doesNotExist();
+    assert.dom("#username-validation-more-info").doesNotExist();
+    assert.dom("#password-validation-more-info").doesNotExist();
+    assert.dom("#fullname-validation-more-info").exists();
   });
 
   test("can sign in using a third-party auth", async function (assert) {
@@ -103,7 +147,7 @@ acceptance("Create Account - full_name_required", function (needs) {
     await fillIn("#new-account-password", "cool password bro");
 
     await click(".d-modal__footer .btn-primary");
-    assert.dom("#fullname-validation").hasText(I18n.t("user.name.required"));
+    assert.dom("#fullname-validation").hasText(i18n("user.name.required"));
 
     await fillIn("#new-account-name", "Full Name");
 
@@ -119,8 +163,8 @@ acceptance("Create Account - full_name_required", function (needs) {
 
     await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".d-modal__footer .btn-primary:disabled")
-      .exists("create account is disabled");
+      .dom(".d-modal__footer .btn-primary")
+      .isDisabled("create account is disabled");
 
     assert.verifySteps(["request"]);
   });

@@ -3,10 +3,9 @@ import { test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
@@ -26,7 +25,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await displayPollBuilderButton();
 
-    const pollBuilderButtonSelector = `.select-kit-row[data-name='${I18n.t(
+    const pollBuilderButtonSelector = `.select-kit-row[data-name='${i18n(
       "poll.ui_builder.title"
     )}']`;
 
@@ -34,24 +33,21 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
 
     await click(pollBuilderButtonSelector);
 
-    assert.true(
-      exists(".poll-type-value-regular.active"),
-      "regular type is active"
-    );
+    assert
+      .dom(".poll-type-value-regular.active")
+      .exists("regular type is active");
 
     await click(".poll-type-value-multiple");
 
-    assert.true(
-      exists(".poll-type-value-multiple.active"),
-      "multiple type is active"
-    );
+    assert
+      .dom(".poll-type-value-multiple.active")
+      .exists("multiple type is active");
 
     await click(".poll-type-value-regular");
 
-    assert.true(
-      exists(".poll-type-value-regular.active"),
-      "regular type is active"
-    );
+    assert
+      .dom(".poll-type-value-regular.active")
+      .exists("regular type is active");
   });
 
   test("regular user - insufficient trust level", async function (assert) {
@@ -75,7 +71,7 @@ acceptance("Poll Builder - polls are enabled", function (needs) {
     await displayPollBuilderButton();
 
     assert
-      .dom(`.select-kit-row[data-name='${I18n.t("poll.ui_builder.title")}']`)
+      .dom(`.select-kit-row[data-name='${i18n("poll.ui_builder.title")}']`)
       .exists("it shows the builder button");
   });
 });

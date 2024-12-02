@@ -9,12 +9,37 @@ import {
 } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import LoadMore from "discourse/mixins/load-more";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 
 @tagName("table")
 @classNames("topic-list")
 @classNameBindings("bulkSelectEnabled:sticky-header")
 export default class TopicList extends Component.extend(LoadMore) {
+  static reopen() {
+    deprecated(
+      "Modifying topic-list with `reopen` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
+    return super.reopen(...arguments);
+  }
+
+  static reopenClass() {
+    deprecated(
+      "Modifying topic-list with `reopenClass` is deprecated. Use the value transformer `topic-list-columns` and other new topic-list plugin APIs instead.",
+      {
+        since: "v3.4.0.beta3-dev",
+        id: "discourse.hbr-topic-list-overrides",
+      }
+    );
+
+    return super.reopenClass(...arguments);
+  }
+
   @service modal;
   @service router;
   @service siteSettings;
@@ -47,7 +72,9 @@ export default class TopicList extends Component.extend(LoadMore) {
   // for the classNameBindings
   @dependentKeyCompat
   get bulkSelectEnabled() {
-    return this.bulkSelectHelper?.bulkSelectEnabled;
+    return (
+      this.get("canBulkSelect") && this.bulkSelectHelper?.bulkSelectEnabled
+    );
   }
 
   get toggleInTitle() {
@@ -220,6 +247,7 @@ export default class TopicList extends Component.extend(LoadMore) {
       };
 
       onKeyDown("th.sortable", (element) => {
+        e.preventDefault();
         this.changeSort(element.dataset.sortOrder);
         this.rerender();
       });

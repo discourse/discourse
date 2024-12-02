@@ -37,9 +37,17 @@ module PageObjects
           has_no_css?(channel_row_selector(channel))
         end
 
-        def has_unread_channel?(channel, count: nil, wait: Capybara.default_max_wait_time)
+        def has_unread_channel?(
+          channel,
+          count: nil,
+          urgent: false,
+          wait: Capybara.default_max_wait_time
+        )
           unread_indicator_selector =
             "#{channel_row_selector(channel)} .chat-channel-unread-indicator"
+
+          unread_indicator_selector += ".-urgent" if urgent
+
           has_css?(unread_indicator_selector) &&
             if count
               has_css?(

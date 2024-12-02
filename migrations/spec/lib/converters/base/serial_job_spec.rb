@@ -5,20 +5,26 @@ RSpec.describe ::Migrations::Converters::Base::SerialJob do
 
   let(:step) { instance_double(::Migrations::Converters::Base::ProgressStep) }
   let(:item) { "Item" }
-  let(:stats) do
-    instance_double(::Migrations::Converters::Base::ProgressStats, reset!: nil, log_error: nil)
-  end
+  let(:tracker) { instance_double(::Migrations::Converters::Base::StepTracker) }
+  let(:stats) { ::Migrations::Converters::Base::StepStats.new }
 
-  before { allow(::Migrations::Converters::Base::ProgressStats).to receive(:new).and_return(stats) }
+  before do
+    allow(step).to receive(:tracker).and_return(tracker)
+
+    allow(tracker).to receive(:reset_stats!)
+    allow(tracker).to receive(:log_error)
+    allow(tracker).to receive(:stats).and_return(stats)
+  end
 
   describe "#run" do
     it "resets stats and processes item" do
       allow(step).to receive(:process_item).and_return(stats)
 
-      job.run(item)
+      result = job.run(item)
+      expect(result).to eq(stats)
 
-      expect(stats).to have_received(:reset!)
-      expect(step).to have_received(:process_item).with(item, stats)
+      expect(tracker).to have_received(:reset_stats!)
+      expect(step).to have_received(:process_item).with(item)
     end
 
     it "logs error if processing item raises an exception" do
@@ -26,7 +32,7 @@ RSpec.describe ::Migrations::Converters::Base::SerialJob do
 
       job.run(item)
 
-      expect(stats).to have_received(:log_error).with(
+      expect(tracker).to have_received(:log_error).with(
         "Failed to process item",
         exception: an_instance_of(StandardError),
         details: item,

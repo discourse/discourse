@@ -114,6 +114,7 @@ ja:
       topic_html: 'トピック: <span class="topic-title">%{topicTitle}</span>'
       post: "%{username} の投稿 #%{postNumber}"
       close: "閉じる"
+      twitter: "X で共有"
       facebook: "Facebook で共有"
       email: "メールで送信"
       url: "URL をコピーして共有"
@@ -1195,6 +1196,7 @@ ja:
       allow_private_messages: "ほかのユーザーが私に個人メッセージを送信することを許可する"
       external_links_in_new_tab: "すべての外部リンクを新しいタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
+      enable_smart_lists: "コンポーザーに書き込む際にスマートリストを有効にする"
       enable_defer: "トピックを未読としてマークする"
       experimental_sidebar:
         enable: "サイドバーを有効にする"
@@ -1263,6 +1265,7 @@ ja:
       ignored_users: "無視"
       ignored_users_instructions: "これらのユーザーからのすべての投稿、通知、および PM を抑制します。"
       tracked_topics_link: "表示"
+      automatically_unpin_topics: "最後に到達したら、自動的にトピックの固定表示を解除する"
       apps: "アプリ連携"
       revoke_access: "アクセスを取り消す"
       undo_revoke_access: "アクセスの取り消しを元に戻す"
@@ -1535,6 +1538,7 @@ ja:
         add_email: "代替メールアドレスを追加"
         auth_override_instructions: "メールアドレスは認証プロバイダーから更新できます。"
         no_secondary: "セカンダリメールアドレスはありません"
+        instructions: "絶対に公開されません"
         admin_note: "注意: 管理者ユーザーが別の非管理者ユーザーのメールを変更すると、そのユーザーは元のメールアカウントにアクセスできなくなるため、パスワードのリセットメールが新しいアドレスに送信されます。ユーザーのメールアドレスは、パスワードのリセットプロセスが完了するまで変更されません。"
         ok: "確認のためにメールを送信します"
         required: "メールアドレスを入力してください"
@@ -1559,11 +1563,12 @@ ja:
         action: "クリックしてアカウントを有効化する"
         already_done: "このアカウントの確認リンクは無効です。すでにアカウントがアクティブになっている可能性があります。"
         please_continue: "あなたのアカウントは確認されました。ホームページにリダイレクトされます。"
-        continue_button: "終了!"
+        continue_button: "終了！"
         welcome_to: "%{site_name} へようこそ！"
         approval_required: "このフォーラムにアクセスするには、モデレーターがあなたの新規アカウントを手動で承認する必要があります。承認されるとメールで通知されます！"
       name:
         title: "名前"
+        title_optional: "名前 (オプション)"
         instructions: "氏名 (オプション)"
         instructions_required: "氏名"
         required: "名前を入力してください"
@@ -1571,6 +1576,7 @@ ja:
         ok: "その名前で良さそうです"
       username:
         title: "ユーザー名"
+        instructions: "一意の短い名前、スペースの使用不可"
         short_instructions: "@%{username} であなたをメンションできます"
         available: "ユーザー名を使用できます"
         not_available: "利用できません。%{suggestion}を試しますか？"
@@ -1616,7 +1622,7 @@ ja:
       location: "場所"
       website: "ウェブサイト"
       email_settings: "メール"
-      hide_profile_and_presence: "公開プロファイルとプレゼンス機能を非表示にする"
+      hide_profile: "公開プロファイルを非表示にする"
       enable_physical_keyboard: "iPad で物理キーボードのサポートを有効にする"
       text_size:
         title: "テキストサイズ"
@@ -1732,12 +1738,23 @@ ja:
           title: "招待リンク"
           success: "招待リンクが生成されました！"
           error: "招待リンクの生成中にエラーが発生しました"
+        cannot_invite_to_forum: "招待を作成する権限がありません。管理者に問い合わせ、招待権限の付与を依頼してください。"
         invite:
-          instructions: "このサイトへのアクセスを即時に許可するにはこのリンクを共有します:"
+          new_title: "メンバーの招待"
+          edit_title: "招待の編集"
           expires_in_time: "%{time} で期限切れ"
           expired_at_time: "%{time} に期限切れ"
-          copy_link: "リンクをコピーする"
+          create_link_to_invite: "このサイトへのアクセスを即座に許可する共有リンクを作成します。"
+          copy_link_and_share_it: "以下のリンクをコピーして共有し、このサイトへのアクセスを即座に許可します。"
+          copy_link: "リンクをコピー"
           link_copied: "リンクがコピーされました！"
+          share_link: "リンクを共有"
+          link_validity_MF: |
+            リンクは最大 { user_count, plural,
+                other {# 人のユーザー}
+            }が使用できます。有効期間は { duration_days, plural,
+                other {# 日}
+            }です。
           show_advanced: "高度なオプションを表示"
           hide_advanced: "高度なオプションを非表示"
           restrict: "制限する:"
@@ -1747,12 +1764,19 @@ ja:
           max_redemptions_allowed: "最大使用回数"
           add_to_groups: "グループに追加"
           invite_to_topic: "トピックに到着"
+          expires_at: "有効期限"
           expires_after: "有効期限"
+          custom_message: "カスタムメッセージ"
+          custom_message_placeholder: "招待状に個人的なメモを追加してください"
           send_invite_email: "保存してメールを送信"
           send_invite_email_instructions: "招待をメールに制限して、招待メールを送信します"
-          save_invite: "保存"
+          update_invite: "更新"
+          update_invite_and_send_email: "更新してメールを送信"
           cancel: "キャンセル"
-          invite_saved: "招待は保存されました。"
+          create_link: "リンクを作成"
+          create_link_and_send_email: "リンクを作成してメールを送信"
+          invite_saved_without_sending_email: "招待が保存されました。以下のリンクをコピーして共有し、このサイトへのアクセスを即座に許可します。"
+          invite_saved_with_sending_email: "招待メールが送信されました。このサイトへのアクセスを即座に許可するには、以下のリンクをコピーして共有することもできます。"
         bulk_invite:
           none: "このページに表示する招待はありません。"
           text: "一括招待"
@@ -1857,12 +1881,18 @@ ja:
         sent_by: "送信者"
         private_message: "メッセージ"
         the_topic: "トピック"
+      card: "ユーザーカード"
+      profile_link: "%{username}、プロファイルにアクセス"
     user_status:
       save: "保存"
       set_custom_status: "カスタムステータスを設定する"
       what_are_you_doing: "何をしていますか？"
       pause_notifications: "通知を停止する"
       remove_status: "ステータスを削除する"
+    presence_toggle:
+      online: "オンライン"
+      offline: "オフライン"
+      title: "プレゼンス機能の切り替え"
     user_tips:
       button: "了解！"
       skip: "ヒントをスキップ"
@@ -2033,8 +2063,10 @@ ja:
       associate: "アカウントをお持ちですか？<a href='%{associate_link}'>ログイン</a>して %{provider} アカウントにリンクします。"
       activation_title: "アカウントの有効化"
       already_have_account: "すでにアカウントをお持ちですか？"
+      no_account_yet: "アカウントがありませんか？"
       progress_bar:
-        signup: "アカウントを登録"
+        signup: "登録"
+        activate: "アクティベーション"
         approve: "承認"
         login: "ログイン"
     forgot_password:
@@ -2425,6 +2457,7 @@ ja:
           other: "%{count} 件の新着メッセージ通知"
         new_reviewable:
           other: "%{count} 件の新しいレビュー待ち項目"
+      paused: "通知を一時的に停止しました"
       title: "@ユーザー名のメンション、投稿やトピックへの返信、メッセージなどの通知"
       none: "現在、通知を読み込めません。"
       empty: "通知はありません。"
@@ -2796,6 +2829,8 @@ ja:
         bookmarks: "ブックマーク済みのトピックは以上です。"
         filter: "トピックは以上です。"
     topic_bulk_actions:
+      dismiss:
+        name: "閉じる"
       close_topics:
         name: "閉じる"
         note: "注意"
@@ -3267,7 +3302,9 @@ ja:
       show_hidden: "無視したコンテンツを表示します。"
       deleted_by_author_simple: "(作成者が削除した投稿)"
       collapse: "折りたたむ"
+      load_more_replies: "返信をさらに読み込む"
       sr_collapse_replies: "埋め込まれた返信を折りたたむ"
+      sr_load_more_replies: "埋め込み返信をさらに読み込む"
       sr_date: "投稿日"
       sr_expand_replies:
         other: "この投稿には %{count} 件の返信があります"
@@ -3278,6 +3315,8 @@ ja:
       gap:
         other: "%{count} 件の非表示の返信を表示する"
       sr_reply_to: "投稿 #%{post_number} への @%{username} の返信"
+      link_clicked:
+        other: "リンクは %{count} 回クリックされました"
       notice:
         new_user: "%{user} が投稿するのはこれが初めてです。コミュニティーで歓迎しましょう！"
         returning_user: "%{user} を見かけてからしばらく経ちました。最後の投稿は %{time} でした。"
@@ -3331,17 +3370,24 @@ ja:
       few_likes_left: "愛を共有してくれてありがとう！今日は後数個しか「いいね！」できません。"
       controls:
         reply: "この投稿の返信を作成する"
+        like_action: "いいね！"
         like: "この投稿に「いいね！」する"
         has_liked: "この投稿に「いいね！」しました"
         read_indicator: "この投稿を読んだメンバー"
+        undo_like_action: "「いいね！」を取り消す"
         undo_like: "「いいね！」を取り消す"
         edit: "この投稿を編集"
         edit_action: "編集"
         edit_anonymous: "この投稿を編集するには、ログインする必要があります。"
+        flag_action: "通報"
         flag: "この投稿を非公開に通報するか、または非公開の通知を送信する"
+        delete_action: "投稿を削除"
         delete: "この投稿を削除する"
+        undelete_action: "投稿の削除を取り消す"
         undelete: "この投稿の削除を取り消す"
+        share_action: "共有"
         share: "この投稿へのリンクを共有する"
+        copy_action: "リンクをコピー"
         copy_title: "この投稿へのリンクをクリップボードにコピー"
         link_copied: "リンクがコピーされました！"
         more: "もっと"
@@ -3353,6 +3399,7 @@ ja:
             other: "はい。全 %{count} 件の返信も削除"
           just_the_post: "いいえ、この投稿のみ"
         admin: "投稿の管理者操作"
+        admin_action: "管理"
         permanently_delete: "永久に削除"
         permanently_delete_confirmation: "この投稿を永久に削除してよろしいですか？復元できなくなります。"
         wiki: "ウィキにする"
@@ -3521,6 +3568,8 @@ ja:
       badge_colors: "バッジの色"
       background_color: "背景色"
       foreground_color: "前景色"
+      color_used: "使用中の色"
+      predefined_colors: "既定の色オプション"
       name_placeholder: "簡単な名前にしてください"
       color_placeholder: "すべてのウェブ色"
       delete_confirm: "このカテゴリを削除してもよろしいですか？"
@@ -3888,6 +3937,7 @@ ja:
       shortcut_delimiter_or: "%{shortcut1} または %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
+      shortcut_delimiter_newline: "%{shortcut1}<br>%{shortcut2}"
       title: "ショートカットキー"
       short_title: "ショートカット"
       jump_to:
@@ -4144,6 +4194,7 @@ ja:
       dismiss: "閉じる"
     safe_mode:
       enabled: "セーフモードが有効になっています。セーフモードを終了するには、このブラウザウィンドウを閉じてください。"
+    theme_preview_notice: "現在、テーマをプレビューしています。通常のサイト構成に戻るには、このブラウザタブまたはウィンドウを閉じてください。"
     image_removed: "(画像は削除されました)"
     pause_notifications:
       title: "通知を停止する…"
@@ -4332,6 +4383,7 @@ ja:
                 other: "%{count} 保留中"
             invite:
               content: "招待"
+              title: "新しいメンバーの招待"
         global_section: "グローバルセクション、全員が閲覧可能"
       panels:
         forum:
@@ -4482,6 +4534,13 @@ ja:
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
           previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
+          experimental: "実験的"
+          experiment_enabled: "実験的機能を有効にしました。"
+          experiment_disabled: "実験的機能を無効にしました。"
+          experiment_toggled_too_fast: "実験的機能の切り替え操作が速すぎます。数秒待ってから、もう一度お試しください。"
+          experiment_tooltip:
+            title: "実験的機能をお試しください"
+            content: "開発中の最新の機能をぜひお試しください！実験段階であるため、いつか削除される可能性があります。いつでもオプトアウトできます。"
         last_checked: "最終チェック"
         refresh_problems: "更新"
         no_problems: "問題は見つかりませんでした。"
@@ -4598,6 +4657,7 @@ ja:
             publish_read_state: "グループメッセージにグループの既読状態を公開する"
           membership:
             automatic: 自動
+            automatic_tooltip: "このグループは自動であるため削除することはできません。メンバーの追加と削除は自動的に行われます。"
             trust_levels_title: "メンバーが追加されたときにメンバーに自動で付与される信頼トレベル:"
             effects: 効果
             trust_levels_none: "なし"
@@ -4845,6 +4905,8 @@ ja:
           group_name: "グループユーザーイベント"
           user_added_to_group: "ユーザーがグループに追加された"
           user_removed_from_group: "ユーザーがグループから削除された"
+        custom_event:
+          group_name: "カスタムイベント"
         user_promoted_event:
           group_name: "ユーザー昇格イベント"
           user_promoted: "ユーザーが昇格された"
@@ -4939,39 +5001,65 @@ ja:
           screened_ips: "スクリーン対象 IP"
           screened_urls: "スクリーン対象 URL"
           search_logs: "検索ログ"
+          security: "セキュリティの設定"
+          spam: "迷惑行為の設定"
           staff_action_logs: "スタッフの操作ログ"
       section_landing_pages:
         account:
           title: "アカウント"
           backups:
             title: "バックアップ"
+            description: "サイトのデータのバックアップを作成します"
           whats_new:
             title: "新着情報"
+            description: "Discourse の新しいリリースと改善点をご覧ください"
       config_areas:
         about:
           header: "サイトについて"
+          description: "コミュニティーの目的、運営者、および問題が発生した場合の連絡方法がわかるように、このサイトとチームに関する情報をここに入力します。サイトの<a href='%{basePath}/about'>情報ページ</a>に表示されます。"
           general_settings: "一般設定"
           community_name: "コミュニティー名"
           community_name_placeholder: "サンプルコミュニティー"
           community_summary: "コミュニティーの概要"
           community_description: "コミュニティーの説明"
+          community_title: "コミュニティーのタイトル"
+          community_title_help: "ブラウザのタブに表示される、カテゴリやトピックリストなどの主要ページの短い説明です。"
           banner_image: "バナー画像"
+          banner_image_help: |
+            これは情報ページで使用されます。推奨サイズ: 1100x300px。許容される形式: 10MB 以下の JPG、PNG、SVG。
           contact_information: "連絡先情報"
           community_owner: "コミュニティーオーナー"
           community_owner_placeholder: "ジョニー・スミス"
+          community_owner_help: |
+            重要な通知に使用される名前で、/about にも表示されます。公開サイトでは匿名ユーザーに表示されます。
           contact_email: "連絡先メールアドレス"
           contact_email_placeholder: "contact@johnny-smith.com"
+          contact_email_help: |
+            重要な通知に使用されるメールアドレスで、/about にも表示されます。公開サイトでは匿名ユーザーに表示されます。
           contact_url: "連絡先 URL"
           contact_url_placeholder: "https://johnny-smith.com/contact"
+          contact_url_help: |
+            存在する場合、/about の連絡先メールアドレスを置き換え、公開サイトの匿名ユーザーにも表示されます。
           site_contact_name: "サイトの連絡先名"
+          site_contact_name_help: |
+            自動送信メールの from に使用されるスタッフのユーザー名。空欄の場合、デフォルトのシステムアカウントが使用されます。
           site_contact_group: "サイトの連絡先グループ"
+          site_contact_group_help: |
+            自動的に送信されるすべてのプライベートメッセージに招待されるグループ。
           your_organization: "あなたの組織"
+          your_organization_description: "この情報は、サイトの運営者と管轄地域を示すために、利用規約とプライバシーに関する通知に使用されます。"
           company_name: "名前"
-          company_name_placeholder: "Acme 組織"
+          company_name_placeholder: "あいうえお組織"
           company_name_warning: |
             空白の場合、定型の利用規約またはプライバシーに関する通知は提供されません。
           governing_law: "準拠法"
+          governing_law_placeholder: "都道府県または国"
+          governing_law_help: |
+            サイトの法的条件の管轄を指定します。通常、会社が登録または運営されている場所です。
           city_for_disputes: "紛争都市"
+          city_for_disputes_placeholder: "都市"
+          city_for_disputes_help: |
+            このフォーラムに関連する法的紛争を解決するための都市を指定します。
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -4981,6 +5069,7 @@ ja:
           saved: "保存しました！"
         flags:
           header: "モデレーション通報"
+          edit_header: "通報を編集"
           subheader: "Discourse の通報システムは、あなたとあなたのモデレーターチームがコミュニティーの尊厳と健全性を保つためにコンテンツとユーザーの行動を管理する上で役立ちます。デフォルト設定はほとんどのコミュニティーに最適であるため、変更の必要はありません。ただし、サイトに特別な要件がある場合は、不要な通報を無効にし、独自のカスタム通報を追加できます。"
           description: "説明"
           enabled: "有効化？"
@@ -4989,7 +5078,8 @@ ja:
           back: "通報に戻る"
           delete: "削除"
           delete_confirm: '"%{name}" を削除してもよろしいですか？'
-          flags_tab: "旗"
+          flags_tab: "通報"
+          settings: "通報の設定"
           form:
             add_header: "通報を追加"
             edit_header: "通報を編集"
@@ -5009,16 +5099,34 @@ ja:
             non_deletable: "これはシステム通報であるかレビューシステムですでに使用されているため削除できません。無効にすることはできます。"
             require_message: "ユーザーに追加の理由を提供するよう求める"
             require_message_description: "この通報が選択されると、コンテンツを通報する理由に関する追加情報を提供するためのテキストフィールドが表示されます"
+            auto_action_type: "通報されたコンテンツを自動的に非表示にする"
           more_options:
             title: "その他のオプション"
             move_up: "上に移動"
             move_down: "下に移動"
         look_and_feel:
-          title: "外観"
+          title: "外観と使い心地"
+          description: "Discourse サイトをカスタマイズしてブランド化することで、個性的なスタイルを持たせます。"
           themes:
             title: "テーマ"
+            themes_intro: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
+            themes_intro_img_alt: "新しいテーマのプレースホルダー"
+            set_default_theme: "デフォルトに設定"
+            default_theme: "デフォルトのテーマ"
+            themes_description: "テーマは、フォーラムのデザインの複数のスタイル要素を変更する広範なカスタマイズテンプレートであり、多くの場合、フロントエンドの追加機能も含まれています。"
+            new_theme: "新しいテーマ"
+            user_selectable: "ユーザー選択可能"
+        user_fields:
+          type: "タイプ"
+          more_options:
+            title: "その他のオプション"
+            move_up: "上に移動"
+            move_down: "下に移動"
+          delete: "削除"
       plugins:
         title: "プラグイン"
+        installed: "インストール済みのプラグイン"
+        description: "このリストには、インストールした Discourse プラグイン、または Discourse ホスティングにあらかじめインストールされているプラグインが表示されます。"
         name: "名前"
         none_installed: "インストール済みのプラグインはありません。"
         version: "バージョン"
@@ -5180,6 +5288,8 @@ ja:
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"
+          themes_intro_new: "新しいテーマをインストールするか、これらのリソースを使用して独自のテーマを新規作成します。"
+          themes_intro_img_alt: "新しいテーマのプレースホルダー"
           beginners_guide_title: "Discourse テーマの使用に関する初心者ガイド"
           developers_guide_title: "Discourse テーマの開発者ガイド"
           browse_themes: "コミュニティーのテーマを閲覧"
@@ -5227,11 +5337,16 @@ ja:
           convert_theme_alert_generic: "このテーマをコンポーネントに変換してもよろしいですか？"
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
+          set_default_theme: "デフォルトに設定"
+          default_theme: "デフォルトのテーマ"
+          set_default_success: "デフォルトのテーマは %{theme} に設定されました"
+          install_success: "%{theme} が正常にインストールされました！"
           inactive_components: "未使用のコンポーネント:"
           selected:
             other: "%{count} 個選択済み"
           cancel: "キャンセル"
           broken_theme_tooltip: "このテーマの CSS、HTML、または YAML にエラーがあります"
+          broken_theme: "破損したテーマを無効にする"
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"
           updates_available_tooltip: "このテーマの更新があります"
@@ -5297,6 +5412,7 @@ ja:
           update_to_latest: "最新に更新"
           check_for_updates: "アップデートを確認"
           updating: "更新中…"
+          update_success: "%{theme} の更新が完了しました"
           up_to_date: "テーマは最新です。最終確認日:"
           has_overwritten_history: "現在のテーマのバージョンは、Git 履歴が強制プッシュで上書きされたため、存在しなくなりました。"
           add: "追加"
@@ -5683,6 +5799,10 @@ ja:
             custom_emoji_destroy: "カスタム絵文字を削除する"
             delete_post_permanently: "投稿を永久に削除する"
             delete_topic_permanently: "トピックを永久に削除する"
+            tag_group_create: "タググループの作成"
+            tag_group_destroy: "タググループの削除"
+            tag_group_change: "タググループの変更"
+            delete_associated_accounts: "関連アカウントの削除"
         screened_emails:
           title: "スクリーン対象メール"
           description: "誰かが新規アカウントを作成すると、次のメールアドレスがチェックされるか、登録がブロックされるか、ほかの操作が実行されます。"
@@ -5877,6 +5997,11 @@ ja:
         status: "ステータス"
         show_emails: "メールアドレスを表示"
         hide_emails: "メールを非表示"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "クローズ"
+              confirm: "削除"
         nav:
           new: "新規"
           active: "アクティブ"
@@ -5907,6 +6032,9 @@ ja:
         check_sso:
           title: "SSO ペイロードを表示"
           text: "表示"
+        delete_associated_accounts:
+          title: "このユーザーのすべての関連アカウントを削除"
+          text: "関連アカウントの削除"
       user:
         suspend_failed: "このユーザーを凍結中にエラーが発生しました: %{error}"
         unsuspend_failed: "このユーザーの凍結を解除中にエラーが発生しました: %{error}"
@@ -6002,6 +6130,8 @@ ja:
         post_edits_count: "投稿の編集"
         anonymize: "ユーザーを匿名化"
         anonymize_confirm: "このアカウントを匿名化してよろしいですか？ユーザー名とメールアドレスが変更され、すべてのプロファイル情報がリセットされます。"
+        delete_associated_accounts_confirm: "このアカウントからすべての関連アカウントを削除してもよろしいですか？ユーザーのメールアドレスが変更されると、ユーザーはログインできなくなる可能性があります。"
+        disable_second_factor_confirm: "このアカウントの二要素認証を無効にしてもよろしいですか？"
         anonymize_yes: "はい。このアカウントを匿名化する"
         anonymize_failed: "アカウントの匿名化中に問題が発生しました。"
         delete: "ユーザーを削除"
@@ -6146,8 +6276,6 @@ ja:
           confirm_delete: "この DiscourseConnect レコードを削除してもよろしいですか？"
       user_fields:
         title: "ユーザーフィールド"
-        help: "ユーザーが入力できるフィールドを追加します。"
-        create: "ユーザーフィールドを作成"
         untitled: "無題"
         name: "フィールド名"
         type: "フィールドタイプ"
@@ -6176,22 +6304,15 @@ ja:
           confirmation: "これにより、既存のユーザーにこのフィールドへの入力が求められるようになり、フィールドへの入力が完了するまでは、サイト上で他の操作ができなくなります。続行しますか？"
         editable:
           title: "登録後に編集可能"
-          enabled: "編集可能"
-          disabled: "編集不可"
         show_on_profile:
           title: "公開プロファイルに表示"
-          enabled: "プロファイルに表示"
-          disabled: "プロファイル非表示"
         show_on_user_card:
           title: "ユーザーカードに表示"
-          enabled: "ユーザーカードに表示する"
-          disabled: "ユーザーカードに表示しない"
         searchable:
           title: "検索可能"
-          enabled: "検索できる"
-          disabled: "検索できない"
+          enabled: "検索可能"
         field_types:
-          text: "テキストフィールド"
+          text: "テキスト"
           confirm: "確認"
           dropdown: "ドロップダウン"
           multiselect: "複数選択"
@@ -6207,7 +6328,6 @@ ja:
         show_overriden: "上書き部分のみ表示"
         show_outdated: "古い/無効なもののみを表示する"
         show_untranslated: "未翻訳のみを表示"
-        only_show_selected_locale: "選択したロケールの結果のみを表示"
         locale: "言語:"
         more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
         no_results: "一致するサイトテキストは見つかりませんでした"
@@ -6225,6 +6345,7 @@ ja:
         none: "なし"
         save: "保存"
         cancel: "キャンセル"
+        unmask: "入力マスクを解除する"
       site_settings:
         emoji_list:
           invalid_input: "絵文字リストには、有効な絵文字名のみを含める必要があります。例: hugs"
@@ -6316,6 +6437,7 @@ ja:
       badges:
         status: ステータス
         title: バッジ
+        page_description: コミュニティー内での前向きな行動と取り組みを認識、検証、奨励するために、バッジによってユーザーの活動、貢献、および実績を称えます。
         new_badge: 新しいバッジ
         new: 新規
         name: 名前
@@ -6324,6 +6446,7 @@ ja:
         description: 説明
         long_description: 詳しい説明
         badge_type: バッジタイプ
+        group_settings: グループの設定
         badge_grouping: グループ
         badge_groupings:
           modal_title: バッジのグループ
@@ -6386,6 +6509,9 @@ ja:
             with_post: '%{link} で行われた投稿の <span class="username">%{username}</span>'
             with_post_time: '%{link} で <span class="time">%{time}</span> に行われた投稿の <span class="username">%{username}</span>'
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
+        badge_intro:
+          title: "バッジを選択するか新しいバッジを作成してください"
+          description: "既存のバッジを選択してカスタマイズするか、新しいバッジを作成します。"
         mass_award:
           title: 一括授与
           description: 一度に複数のユーザーに同じバッジを授与します。
@@ -6402,12 +6528,16 @@ ja:
           grant_existing_holders: 既存のバッジ保有者に追加のバッジを付与する
       emoji:
         title: "絵文字"
-        help: "誰でも使用できる新しい絵文字を追加します。名前を入力せずに、複数のファイルを一度にドラッグアンドドロップすると、ファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。「新しい絵文字を追加」をクリックして、ファイルピッカーを開くこともできます。"
-        add: "新しい絵文字を追加"
+        description: "誰でも使用できる新しい絵文字を作成します。複数のファイルを選択すると、そのファイル名を使って絵文字を作成できます。同時に追加されるすべてのファイルに、選択されたグループが使用されます。"
+        no_emoji: "カスタム絵文字はまだありません。"
+        add: "絵文字を追加"
+        delete: "削除"
+        back: "絵文字に戻る"
         choose_files: "ファイルを選択"
         uploading: "アップロード中…"
         name: "名前"
         group: "グループ"
+        created_by: "作成者"
         image: "画像"
         alt: "カスタム絵文字のプレビュー"
         delete_confirm: ":%{name}: 絵文字を削除してもよろしいですか？"
@@ -6452,17 +6582,27 @@ ja:
         category_id: "カテゴリ ID"
         category_title: "カテゴリ"
         tag_name: "タグ名"
+        tag_title: "タグ"
         external_url: "外部または相対 URL"
         user_id: "ユーザー ID"
+        user_title: "ユーザー"
         username: "ユーザー名"
         destination: "リンク先"
         copy_to_clipboard: "パーマリンクをクリップボードにコピー"
         delete_confirm: このパーマリンクを削除してもよろしいですか？
-        no_permalinks: "パーマリンクはまだありません。上で新しいパーマリンクを作成すると、ここにパーマリンクのリストが表示されます。"
+        no_permalinks: "パーマリンクはまだありません。"
+        add: "パーマリンクを追加"
+        back: "パーマリンクに戻る"
+        more_options: "その他のオプション"
+        copy_success: "パーマリンクをクリップボードにコピーしました"
         form:
           label: "新規:"
-          add: "追加"
-          filter: "検索 (URL または外部 URL)"
+          add_header: "パーマリンクを追加"
+          edit_header: "パーマリンクを編集"
+          filter: "URL または宛先 URL を検索"
+          url: "URL"
+          permalink_type: "パーマリンクタイプ"
+          save: "保存"
       reseed:
         action:
           label: "テキストを置換..."

@@ -8,7 +8,10 @@ export default class ChatThreadUnreadIndicator extends Component {
   }
 
   get urgentCount() {
-    return this.args.thread.tracking.watchedThreadsUnreadCount;
+    return (
+      this.args.thread.tracking.mentionCount +
+      this.args.thread.tracking.watchedThreadsUnreadCount
+    );
   }
 
   get showUnreadIndicator() {

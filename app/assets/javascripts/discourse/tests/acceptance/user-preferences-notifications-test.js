@@ -2,13 +2,12 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  count,
   fakeTime,
   loggedInUser,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("User notification schedule", function (needs) {
   needs.user();
@@ -78,11 +77,9 @@ acceptance("User notification schedule", function (needs) {
       "None",
       "set monday label to none"
     );
-    assert.strictEqual(
-      count(".day.Monday .select-kit.single-select"),
-      1,
-      "The end time input is hidden"
-    );
+    assert
+      .dom(".day.Monday .select-kit.single-select")
+      .exists({ count: 1 }, "the end time input is hidden");
   });
 
   test("If start time is after end time, end time gets bumped 30 minutes past start time", async function (assert) {
@@ -101,8 +98,8 @@ acceptance("User notification schedule", function (needs) {
     );
 
     await selectKit(".day.Tuesday .ends-at .combobox").expand();
-    assert.ok(
-      !selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
+    assert.false(
+      selectKit(".day.Tuesday .ends-at .combobox").rowByValue(1350).exists(),
       "End time options are limited to + 30 past start time"
     );
   });
@@ -135,19 +132,19 @@ acceptance("User Notifications - Users - Ignore User", function (needs) {
     );
 
     const expected = [
-      I18n.t("time_shortcut.later_today"),
-      I18n.t("time_shortcut.tomorrow"),
-      I18n.t("time_shortcut.later_this_week"),
-      I18n.t("time_shortcut.this_weekend"),
-      I18n.t("time_shortcut.start_of_next_business_week_alt"),
-      I18n.t("time_shortcut.two_weeks"),
-      I18n.t("time_shortcut.next_month"),
-      I18n.t("time_shortcut.two_months"),
-      I18n.t("time_shortcut.three_months"),
-      I18n.t("time_shortcut.four_months"),
-      I18n.t("time_shortcut.six_months"),
-      I18n.t("time_shortcut.one_year"),
-      I18n.t("time_shortcut.forever"),
+      i18n("time_shortcut.later_today"),
+      i18n("time_shortcut.tomorrow"),
+      i18n("time_shortcut.later_this_week"),
+      i18n("time_shortcut.this_weekend"),
+      i18n("time_shortcut.start_of_next_business_week_alt"),
+      i18n("time_shortcut.two_weeks"),
+      i18n("time_shortcut.next_month"),
+      i18n("time_shortcut.two_months"),
+      i18n("time_shortcut.three_months"),
+      i18n("time_shortcut.four_months"),
+      i18n("time_shortcut.six_months"),
+      i18n("time_shortcut.one_year"),
+      i18n("time_shortcut.forever"),
     ];
 
     assert.deepEqual(options, expected, "options are correct");

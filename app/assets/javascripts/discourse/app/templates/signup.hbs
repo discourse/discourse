@@ -51,19 +51,16 @@
             <label class="alt-placeholder" for="new-account-email">
               {{i18n "user.email.title"}}
             </label>
-            {{#if
-              (or
-                this.emailValidation.ok
-                (and this.emailValidationVisible this.emailValidation.reason)
-              )
-            }}
+            {{#if this.showEmailValidation}}
               <InputTip
                 @validation={{this.emailValidation}}
                 id="account-email-validation"
               />
             {{else}}
               <span class="more-info" id="account-email-validation-more-info">
-                {{i18n "user.email.instructions"}}
+                {{#if this.siteSettings.show_signup_form_email_instructions}}
+                  {{i18n "user.email.instructions"}}
+                {{/if}}
               </span>
             {{/if}}
           </div>
@@ -85,11 +82,29 @@
               {{i18n "user.username.title"}}
             </label>
 
-            <InputTip
-              @validation={{this.usernameValidation}}
-              id="username-validation"
-            />
+            {{#if this.showUsernameInstructions}}
+              <span class="more-info" id="username-validation-more-info">
+                {{i18n "user.username.instructions"}}
+              </span>
+
+            {{else}}
+              <InputTip
+                @validation={{this.usernameValidation}}
+                id="username-validation"
+              />
+            {{/if}}
           </div>
+
+          {{#if this.fullnameRequired}}
+            <FullnameInput
+              @nameValidation={{this.nameValidation}}
+              @nameTitle={{this.nameTitle}}
+              @accountName={{this.accountName}}
+              @nameDisabled={{this.nameDisabled}}
+              @onFocusIn={{this.scrollInputIntoView}}
+              class="input-group create-account__fullname required"
+            />
+          {{/if}}
 
           <PluginOutlet
             @name="create-account-before-password"
@@ -105,7 +120,7 @@
           <div class="input-group create-account__password">
             {{#if this.passwordRequired}}
               <PasswordField
-                {{on "focusout" this.showPasswordValidation}}
+                {{on "focusout" this.togglePasswordValidation}}
                 {{on "focusin" this.scrollInputIntoView}}
                 @value={{this.accountPassword}}
                 @capsLockOn={{this.capsLockOn}}
@@ -122,19 +137,17 @@
 
               <div class="create-account__password-info">
                 <div class="create-account__password-tip-validation">
-                  {{#if
-                    (or
-                      this.passwordValidation.ok
-                      (and
-                        this.passwordValidationVisible
-                        this.passwordValidation.reason
-                      )
-                    )
-                  }}
+                  {{#if this.showPasswordValidation}}
                     <InputTip
                       @validation={{this.passwordValidation}}
                       id="password-validation"
                     />
+                  {{else if
+                    this.siteSettings.show_signup_form_password_instructions
+                  }}
+                    <span class="more-info" id="password-validation-more-info">
+                      {{this.passwordInstructions}}
+                    </span>
                   {{/if}}
                   <div
                     class={{concat-class
@@ -196,33 +209,16 @@
             }}
           />
 
-          <div
-            class={{concat-class
-              "input-group"
-              "create-account__fullname"
-              (if this.siteSettings.full_name_required "required")
-            }}
-          >
-            {{#if this.fullnameRequired}}
-              <TextField
-                {{on "focusin" this.scrollInputIntoView}}
-                @disabled={{this.nameDisabled}}
-                @value={{this.accountName}}
-                @id="new-account-name"
-                aria-describedby="fullname-validation fullname-validation-more-info"
-                aria-invalid={{this.nameValidation.failed}}
-                class={{value-entered this.accountName}}
-              />
-              <label class="alt-placeholder" for="new-account-name">
-                {{this.nameTitle}}
-              </label>
-
-              <InputTip
-                @validation={{this.nameValidation}}
-                id="fullname-validation"
-              />
-            {{/if}}
-          </div>
+          {{#if (and this.showFullname (not this.fullnameRequired))}}
+            <FullnameInput
+              @nameValidation={{this.nameValidation}}
+              @nameTitle={{this.nameTitle}}
+              @accountName={{this.accountName}}
+              @nameDisabled={{this.nameDisabled}}
+              @onFocusIn={{this.scrollInputIntoView}}
+              class="input-group create-account__fullname"
+            />
+          {{/if}}
 
           {{#if this.userFields}}
             <div class="user-fields">

@@ -1,5 +1,5 @@
 import Category from "discourse/models/category";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AllCategoriesSectionLink from "../common/all-categories-section-link";
 import SidebarCommonCategoriesSection from "../common/categories-section";
 import Section from "../section";

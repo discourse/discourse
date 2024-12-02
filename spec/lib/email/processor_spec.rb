@@ -105,29 +105,27 @@ RSpec.describe Email::Processor do
     let(:mail2) do
       "Date: Fri, 15 Jan 2016 00:12:43 +0100\nFrom: #{from}\nTo: foo@foo.com\nSubject: BAR BAR\n\nBar bar bar bar?"
     end
+    let(:fake_logger) { FakeLogger.new }
+
+    before { Rails.logger.broadcast_to(fake_logger) }
+
+    after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
     it "sends a rejection email on an unrecognized error" do
-      begin
-        @orig_logger = Rails.logger
-        Rails.logger = @fake_logger = FakeLogger.new
+      Email::Processor.any_instance.stubs(:can_send_rejection_email?).returns(true)
+      Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
 
-        Email::Processor.any_instance.stubs(:can_send_rejection_email?).returns(true)
-        Email::Receiver.any_instance.stubs(:process_internal).raises("boom")
+      Email::Processor.process!(mail)
 
-        Email::Processor.process!(mail)
+      errors = fake_logger.errors
+      expect(errors.size).to eq(1)
+      expect(errors.first).to include("boom")
 
-        errors = @fake_logger.errors
-        expect(errors.size).to eq(1)
-        expect(errors.first).to include("boom")
+      incoming_email = IncomingEmail.last
+      expect(incoming_email.error).to eq("RuntimeError")
+      expect(incoming_email.rejection_message).to be_present
 
-        incoming_email = IncomingEmail.last
-        expect(incoming_email.error).to eq("RuntimeError")
-        expect(incoming_email.rejection_message).to be_present
-
-        expect(EmailLog.last.email_type).to eq("email_reject_unrecognized_error")
-      ensure
-        Rails.logger = @orig_logger
-      end
+      expect(EmailLog.last.email_type).to eq("email_reject_unrecognized_error")
     end
 
     it "sends more than one rejection email per day" do

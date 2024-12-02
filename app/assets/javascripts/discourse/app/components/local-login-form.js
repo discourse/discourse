@@ -9,7 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class LocalLoginForm extends Component {
   @service modal;
@@ -61,7 +61,7 @@ export default class LocalLoginForm extends Component {
     }
 
     if (isEmpty(this.args.loginName)) {
-      this.args.flashChanged(I18n.t("login.blank_username"));
+      this.args.flashChanged(i18n("login.blank_username"));
       this.args.flashTypeChanged("info");
       return;
     }
@@ -80,7 +80,7 @@ export default class LocalLoginForm extends Component {
       if (data.user_found === false) {
         this.args.flashChanged(
           htmlSafe(
-            I18n.t(`${key}_not_found`, {
+            i18n(`${key}_not_found`, {
               email: loginName,
               username: loginName,
             })
@@ -91,7 +91,7 @@ export default class LocalLoginForm extends Component {
         const postfix = data.hide_taken ? "" : "_found";
         this.args.flashChanged(
           htmlSafe(
-            I18n.t(`${key}${postfix}`, {
+            i18n(`${key}${postfix}`, {
               email: loginName,
               username: loginName,
             })

@@ -7,10 +7,21 @@
     }
   }
 
-  .admin-plugins-list {
-    .plugin-version {
+  .d-admin-table.admin-plugins-list {
+    .admin-plugins-list__version {
+      width: 14%;
+
       @include breakpoint("tablet") {
         text-align: right;
+        width: auto;
+      }
+    }
+
+    .d-admin-row__controls {
+      width: 10%;
+
+      @include breakpoint("tablet") {
+        width: auto;
       }
     }
 
@@ -121,12 +132,5 @@
 .admin-plugin-filtered-site-settings {
   &__filter {
     width: 100%;
-  }
-}
-
-.admin-plugin-config-area {
-  &__empty-list {
-    padding: 1em;
-    border: 1px solid var(--primary-low);
   }
 }

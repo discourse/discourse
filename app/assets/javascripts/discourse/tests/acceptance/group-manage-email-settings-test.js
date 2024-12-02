@@ -2,23 +2,18 @@ import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Managing Group Email Settings - SMTP Disabled", function (needs) {
   needs.user();
 
   test("When SiteSetting.enable_smtp is false", async function (assert) {
     await visit("/g/discourse/manage/email");
-    assert.notOk(
-      query(".user-secondary-navigation").innerText.includes("Email"),
-      "email link is not shown in the sidebar"
-    );
+    assert
+      .dom(".user-secondary-navigation")
+      .doesNotIncludeText("Email", "email link is not shown in the sidebar");
     assert.strictEqual(
       currentRouteName(),
       "group.manage.profile",
@@ -35,19 +30,17 @@ acceptance(
 
     test("When SiteSetting.enable_smtp is true but SiteSetting.enable_imap is false", async function (assert) {
       await visit("/g/discourse/manage/email");
-      assert.ok(
-        query(".user-secondary-navigation").innerText.includes("Email"),
-        "email link is shown in the sidebar"
-      );
+      assert
+        .dom(".user-secondary-navigation")
+        .includesText("Email", "email link is shown in the sidebar");
       assert.strictEqual(
         currentRouteName(),
         "group.manage.email",
         "it redirects to the group email page"
       );
-      assert.notOk(
-        exists(".group-manage-email-imap-wrapper"),
-        "does not show IMAP settings"
-      );
+      assert
+        .dom(".group-manage-email-imap-wrapper")
+        .doesNotExist("does not show IMAP settings");
     });
   }
 );
@@ -73,14 +66,12 @@ acceptance(
 
     test("enabling SMTP, testing, and saving", async function (assert) {
       await visit("/g/discourse/manage/email");
-      assert.ok(
-        query(".user-secondary-navigation").innerText.includes("Email"),
-        "email link is shown in the sidebar"
-      );
-      assert.ok(
-        exists("#enable_imap:disabled"),
-        "IMAP is disabled until SMTP settings are valid"
-      );
+      assert
+        .dom(".user-secondary-navigation")
+        .includesText("Email", "email link is shown in the sidebar");
+      assert
+        .dom("#enable_imap")
+        .isDisabled("IMAP is disabled until SMTP settings are valid");
 
       await click("#enable_smtp");
       assert.dom(".group-smtp-email-settings").exists();
@@ -105,8 +96,8 @@ acceptance(
       await formKit().submit();
       assert.form().hasErrors(
         {
-          [I18n.t("groups.manage.email.credentials.username")]: "Required",
-          [I18n.t("groups.manage.email.credentials.password")]: "Required",
+          [i18n("groups.manage.email.credentials.username")]: "Required",
+          [i18n("groups.manage.email.credentials.password")]: "Required",
         },
         "does not allow testing settings if not all fields are filled"
       );
@@ -120,22 +111,19 @@ acceptance(
       await formKit().submit();
       await click(".group-manage-save");
 
-      assert.strictEqual(
-        query(".group-manage-save-button > span").innerText,
-        "Saved!"
-      );
+      assert.dom(".group-manage-save-button > span").hasText("Saved!");
 
-      assert.notOk(
-        exists("#enable_imap:disabled"),
-        "IMAP is able to be enabled now that SMTP is saved"
-      );
+      assert
+        .dom("#enable_imap")
+        .isEnabled("IMAP is able to be enabled now that SMTP is saved");
 
       await click("#enable_smtp");
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
-        I18n.t("groups.manage.email.smtp_disable_confirm"),
-        "shows a confirm dialogue warning SMTP settings will be wiped"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          i18n("groups.manage.email.smtp_disable_confirm"),
+          "shows a confirm dialogue warning SMTP settings will be wiped"
+        );
 
       await click(".dialog-footer .btn-primary");
     });
@@ -150,48 +138,39 @@ acceptance(
       await formKit().submit();
       await click(".group-manage-save");
 
-      assert.notOk(
-        exists("#enable_imap:disabled"),
-        "IMAP is able to be enabled now that IMAP is saved"
-      );
+      assert
+        .dom("#enable_imap")
+        .isEnabled("IMAP is able to be enabled now that IMAP is saved");
 
       await click("#enable_imap");
 
-      assert.ok(
-        exists(".test-imap-settings:disabled"),
-        "does not allow testing settings if not all fields are filled"
-      );
+      assert
+        .dom(".test-imap-settings")
+        .isDisabled(
+          "does not allow testing settings if not all fields are filled"
+        );
 
       await click("#prefill_imap_gmail");
-      assert.strictEqual(
-        query("input[name='imap_server']").value,
-        "imap.gmail.com",
-        "prefills IMAP server settings for gmail"
-      );
-      assert.strictEqual(
-        query("input[name='imap_port']").value,
-        "993",
-        "prefills IMAP port settings for gmail"
-      );
-      assert.ok(
-        exists("#enable_ssl_imap:checked"),
-        "prefills IMAP ssl settings for gmail"
-      );
+      assert
+        .dom("input[name='imap_server']")
+        .hasValue("imap.gmail.com", "prefills IMAP server settings for gmail");
+      assert
+        .dom("input[name='imap_port']")
+        .hasValue("993", "prefills IMAP port settings for gmail");
+      assert
+        .dom("#enable_ssl_imap")
+        .isChecked("prefills IMAP ssl settings for gmail");
       await click(".test-imap-settings");
 
-      assert.ok(exists(".imap-settings-ok"), "tested settings are ok");
+      assert.dom(".imap-settings-ok").exists("tested settings are ok");
 
       await click(".group-manage-save");
 
-      assert.strictEqual(
-        query(".group-manage-save-button > span").innerText,
-        "Saved!"
-      );
+      assert.dom(".group-manage-save-button > span").hasText("Saved!");
 
-      assert.ok(
-        exists(".imap-no-mailbox-selected"),
-        "shows a message saying no IMAP mailbox is selected"
-      );
+      assert
+        .dom(".imap-no-mailbox-selected")
+        .exists("shows a message saying no IMAP mailbox is selected");
 
       await selectKit(
         ".control-group.group-imap-mailboxes .combo-box"
@@ -201,17 +180,17 @@ acceptance(
       ).selectRowByValue("All Mail");
       await click(".group-manage-save");
 
-      assert.notOk(
-        exists(".imap-no-mailbox-selected"),
-        "no longer shows a no mailbox selected message"
-      );
+      assert
+        .dom(".imap-no-mailbox-selected")
+        .doesNotExist("no longer shows a no mailbox selected message");
 
       await click("#enable_imap");
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
-        I18n.t("groups.manage.email.imap_disable_confirm"),
-        "shows a confirm dialogue warning IMAP settings will be wiped"
-      );
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          i18n("groups.manage.email.imap_disable_confirm"),
+          "shows a confirm dialogue warning IMAP settings will be wiped"
+        );
       await click(".dialog-footer .btn-primary");
     });
   }
@@ -282,8 +261,8 @@ acceptance(
     test("prefills smtp and imap saved settings and shows last updated details", async function (assert) {
       await visit("/g/discourse/manage/email");
 
-      assert.notOk(exists("#enable_smtp:disabled"), "SMTP is not disabled");
-      assert.notOk(exists("#enable_imap:disabled"), "IMAP is not disabled");
+      assert.dom("#enable_smtp").isNotDisabled("SMTP is not disabled");
+      assert.dom("#enable_imap").isNotDisabled("IMAP is not disabled");
 
       assert
         .form()
@@ -309,30 +288,25 @@ acceptance(
           "SMTP ssl mode is prefilled"
         );
 
-      assert.strictEqual(
-        query("[name='imap_server']").value,
-        "imap.gmail.com",
-        "imap server is prefilled"
-      );
-      assert.strictEqual(
-        query("[name='imap_port']").value,
-        "993",
-        "imap port is prefilled"
-      );
+      assert
+        .dom("[name='imap_server']")
+        .hasValue("imap.gmail.com", "imap server is prefilled");
+      assert
+        .dom("[name='imap_port']")
+        .hasValue("993", "imap port is prefilled");
       assert.strictEqual(
         selectKit("#imap_mailbox").header().value(),
         "INBOX",
         "imap mailbox is prefilled"
       );
 
-      const regex = /updated: (.*?) by eviltrout/;
       assert.dom(".group-email-last-updated-details.for-imap").exists();
-      assert.ok(
-        regex.test(
-          query(".group-email-last-updated-details.for-imap").innerText.trim()
-        ),
-        "shows last updated imap details"
-      );
+      assert
+        .dom(".group-email-last-updated-details.for-imap")
+        .hasText(
+          "Last updated: Jun 16, 2021 by eviltrout",
+          "shows last updated imap details"
+        );
     });
   }
 );
@@ -363,9 +337,8 @@ acceptance(
       await formKit().field("email_password").fillIn("password");
       await formKit().submit();
 
-      assert.strictEqual(
-        query(".dialog-body").innerText.trim(),
-        I18n.t("generic_error_with_reason", {
+      assert.dom(".dialog-body").hasText(
+        i18n("generic_error_with_reason", {
           error:
             "There was an issue with the SMTP credentials provided, check the username and password and try again.",
         })

@@ -24,8 +24,9 @@ export default class FKControlTextarea extends Component {
     <textarea
       class="form-kit__control-textarea"
       style={{this.style}}
+      disabled={{@field.disabled}}
       ...attributes
       {{on "input" this.handleInput}}
-    >{{@value}}</textarea>
+    >{{@field.value}}</textarea>
   </template>
 }

@@ -2,7 +2,6 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -49,13 +48,9 @@ acceptance("User Profile - Account - User Status", function (needs) {
     assert
       .dom(`.pref-user-status .emoji[alt='${status.emoji}']`)
       .exists("status emoji is correct");
-    assert.equal(
-      query(
-        `.pref-user-status .user-status-message-description`
-      ).innerText.trim(),
-      status.description,
-      "status description is correct"
-    );
+    assert
+      .dom(`.pref-user-status .user-status-message-description`)
+      .hasText(status.description, "status description is correct");
   });
 
   test("doesn't show the pause notifications control group on the user status modal", async function (assert) {
@@ -84,13 +79,9 @@ acceptance("User Profile - Account - User Status", function (needs) {
     assert
       .dom(`.pref-user-status .emoji[alt='${status.emoji}']`)
       .exists("status emoji is correct");
-    assert.equal(
-      query(
-        `.pref-user-status .user-status-message-description`
-      ).innerText.trim(),
-      status.description,
-      "status description is correct"
-    );
+    assert
+      .dom(`.pref-user-status .user-status-message-description`)
+      .hasText(status.description, "status description is correct");
   });
 
   test("the status modal updates status", async function (assert) {
@@ -106,13 +97,9 @@ acceptance("User Profile - Account - User Status", function (needs) {
     assert
       .dom(`.pref-user-status .emoji[alt='${newStatus.emoji}']`)
       .exists("status emoji is correct");
-    assert.equal(
-      query(
-        `.pref-user-status .user-status-message-description`
-      ).innerText.trim(),
-      newStatus.description,
-      "status description is correct"
-    );
+    assert
+      .dom(`.pref-user-status .user-status-message-description`)
+      .hasText(newStatus.description, "status description is correct");
   });
 
   test("the status modal clears status", async function (assert) {

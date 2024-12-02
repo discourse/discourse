@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe "tasks/themes" do
-  before do
-    Rake::Task.clear
-    Discourse::Application.load_tasks
-  end
-
   describe "themes:update" do
     let(:initial_repo) do
       about_json = <<~JSON
@@ -77,7 +72,7 @@ RSpec.describe "tasks/themes" do
       original_remote_version = theme.remote_theme.remote_version
       original_local_version = theme.remote_theme.local_version
 
-      stderr = capture_stderr { capture_stdout { Rake::Task["themes:update"].invoke } }
+      stderr = capture_stderr { capture_stdout { invoke_rake_task("themes:update") } }
 
       expect(stderr.chomp).to eq(
         "[default] Failed to update 'awesome theme' (#{theme.id}): The property at JSON Pointer '/0/title' must be present.",
@@ -111,7 +106,7 @@ RSpec.describe "tasks/themes" do
       original_remote_version = theme.remote_theme.remote_version
       original_local_version = theme.remote_theme.local_version
 
-      capture_stderr { capture_stdout { Rake::Task["themes:update"].invoke } }
+      capture_stderr { capture_stdout { invoke_rake_task("themes:update") } }
 
       theme.reload
 

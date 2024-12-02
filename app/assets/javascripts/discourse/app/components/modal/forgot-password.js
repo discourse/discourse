@@ -9,7 +9,7 @@ import { extractError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class ForgotPassword extends Component {
   @service siteSettings;
@@ -38,7 +38,7 @@ export default class ForgotPassword extends Component {
 
   @action
   help() {
-    this.offerHelp = I18n.t("forgot_password.help", { basePath: getURL("") });
+    this.offerHelp = i18n("forgot_password.help", { basePath: getURL("") });
     this.helpSeen = true;
   }
 
@@ -66,7 +66,7 @@ export default class ForgotPassword extends Component {
         key += "_not_found";
 
         this.flash = htmlSafe(
-          I18n.t(key, {
+          i18n(key, {
             email: emailOrUsername,
             username: emailOrUsername,
           })
@@ -75,7 +75,7 @@ export default class ForgotPassword extends Component {
         key += data.user_found ? "_found" : "";
 
         this.emailOrUsername = "";
-        this.offerHelp = I18n.t(key, {
+        this.offerHelp = i18n(key, {
           email: emailOrUsername,
           username: emailOrUsername,
         });

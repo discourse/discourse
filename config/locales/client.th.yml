@@ -1075,7 +1075,7 @@ th:
           success: "สร้างลิงก์คำเชิญสำเร็จแล้ว!"
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
         invite:
-          save_invite: "บันทึก"
+          update_invite: "อัปเดต"
           cancel: "ยกเลิก"
       password:
         title: "รหัสผ่าน"
@@ -1645,6 +1645,8 @@ th:
         top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
+      dismiss:
+        name: "ซ่อน"
       close_topics:
         name: "ปิด"
         optional: (ทางเลือก)
@@ -1977,12 +1979,15 @@ th:
         like: "ถูกใจโพสต์นี้"
         has_liked: "คุณได้ถูกใจโพสต์นี้แล้ว"
         read_indicator: "สมาชิกที่อ่านโพสต์นี้"
+        undo_like_action: "เลิกถูกใจ"
         undo_like: "เลิกถูกใจ"
         edit: "แก้ไขโพสต์นี้"
         edit_action: "แก้ไข"
         edit_anonymous: "ขออภัย คุณต้องเข้าสู่ระบบเพื่อแก้ไขโพสต์นี้"
+        flag_action: "ธง"
         delete: "ลบโพสต์นี้"
         undelete: "เลิกลบโพสต์นี้"
+        share_action: "แบ่งปัน"
         share: "แบ่งปันลิงก์ไปยังโพสต์นี้"
         more: "อื่นๆ"
         delete_replies:
@@ -1992,6 +1997,7 @@ th:
           all_replies:
             other: "ใช่ และทั้งหมด %{count}คำตอบ"
           just_the_post: "ไม่ แค่โพสต์นี้เท่านั้น"
+        admin_action: "ผู้ดูแลระบบ"
         publish_page: "การเผยแพร่เพจ"
         unhide: "เลิกซ่อน"
         lock_post: "ล็อกโพสต์"
@@ -2724,6 +2730,9 @@ th:
         look_and_feel:
           themes:
             title: "ธีม"
+        user_fields:
+          type: "ชนิด"
+          delete: "ลบ"
       plugins:
         title: "ปลั้กอิน"
         name: "ชื่อ"
@@ -3035,6 +3044,11 @@ th:
         status: "สถานะ"
         show_emails: "แสดงอีเมล"
         hide_emails: "ซ่อนอีเมล"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ลบ"
         nav:
           new: "ใหม่"
           active: "ใช้งานอยู่"
@@ -3155,8 +3169,6 @@ th:
           external_avatar_url: "URL ของรูปโปรไฟล์"
       user_fields:
         title: "ช่องข้อมูลผู้ใช้"
-        help: "เพิ่มช่องที่คุณสามารถใส่ข้อมูลเพิ่มได้"
-        create: "สร้างช่องข้อมูลผู้ใช้"
         untitled: "ไม่ได้ตั้งชื่อ"
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
@@ -3175,18 +3187,10 @@ th:
         requirement:
           optional:
             title: "ทางเลือก"
-        editable:
-          enabled: "แก้ไขได้"
-          disabled: "แก้ไขไม่ได้"
         show_on_profile:
           title: "แสดงในข้อมูลสาธารณะ"
-          enabled: "แสดงแสดงในข้อมูลส่วนตัว"
-          disabled: "ไม่แสดงในข้อมูลส่วนตัว"
-        show_on_user_card:
-          enabled: "แสดงบนการ์ดผู้ใช้"
-          disabled: "ไม่แสดงบนการ์ดผู้ใช้"
         field_types:
-          text: "ช่องข้อความ"
+          text: "ข้อความ"
           confirm: "การยืนยัน"
           dropdown: "ดร็อปดาวน์"
       site_text:
@@ -3290,7 +3294,7 @@ th:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้
       emoji:
         title: "อีโมจิ"
-        add: "เพิ่มอีโมจิใหม่"
+        delete: "ลบ"
         name: "ชื่อ"
         group: "กลุ่ม"
         image: "ภาพ"
@@ -3315,12 +3319,13 @@ th:
         category_id: "หมายเลขหมวดหมู่"
         category_title: "หมวดหมู่"
         tag_name: "ชื่อแท็ก"
+        user_title: "ผู้ใช้"
         username: "ชื่อผู้ใช้"
         delete_confirm: คุณแน่ใจหรือว่าจะลบลิงค์ถาวรนี้?
         form:
           label: "ใหม่:"
-          add: "เพิ่ม"
-          filter: "ค้นหา (URL หรือ ลิงก์ภายนอก)"
+          url: "URL"
+          save: "บันทึก"
       reseed:
         modal:
           categories: "หมวดหมู่"

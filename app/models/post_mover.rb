@@ -7,15 +7,19 @@ class PostMover
     @move_types ||= Enum.new(:new_topic, :existing_topic)
   end
 
-  def initialize(original_topic, user, post_ids, move_to_pm: false)
+  # options:
+  # freeze_original: :boolean  - if true, the original topic will be frozen but not deleted and posts will be "copied" to topic
+  def initialize(original_topic, user, post_ids, move_to_pm: false, options: {})
     @original_topic = original_topic
     @user = user
     @post_ids = post_ids
     @move_to_pm = move_to_pm
+    @options = options
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
     @move_type = PostMover.move_types[:existing_topic]
+    @creating_new_topic = false
     @chronological_order = chronological_order
 
     topic = Topic.find_by_id(id)
@@ -32,6 +36,7 @@ class PostMover
 
   def to_new_topic(title, category_id = nil, tags = nil)
     @move_type = PostMover.move_types[:new_topic]
+    @creating_new_topic = true
 
     post = Post.find_by(id: post_ids.first)
     raise Discourse::InvalidParameters unless post
@@ -88,7 +93,13 @@ class PostMover
     @first_post_number_moved =
       posts.first.is_first_post? ? posts[1]&.post_number : posts.first.post_number
 
-    create_temp_table
+    if @options[:freeze_original] # in this case we need to add the moderator post after the last copied post
+      from_posts = @original_topic.ordered_posts.where("post_number > ?", posts.last.post_number)
+      shift_post_numbers(from_posts) if !moving_all_posts
+
+      @first_post_number_moved = posts.last.post_number + 1
+    end
+
     move_each_post
     handle_moved_references
 
@@ -103,25 +114,6 @@ class PostMover
 
     destination_topic.reload
     destination_topic
-  end
-
-  def create_temp_table
-    DB.exec("DROP TABLE IF EXISTS moved_posts") if Rails.env.test?
-
-    DB.exec <<~SQL
-      CREATE TEMPORARY TABLE moved_posts (
-        old_topic_id INTEGER,
-        old_post_id INTEGER,
-        old_post_number INTEGER,
-        new_topic_id INTEGER,
-        new_topic_title VARCHAR,
-        new_post_id INTEGER,
-        new_post_number INTEGER
-      ) ON COMMIT DROP;
-
-      CREATE INDEX moved_posts_old_post_number ON moved_posts(old_post_number);
-      CREATE INDEX moved_posts_old_post_id ON moved_posts(old_post_id);
-    SQL
   end
 
   def handle_moved_references
@@ -299,15 +291,22 @@ class PostMover
 
     update[:reply_to_user_id] = nil unless @move_map[post.reply_to_post_number]
 
-    post.attributes = update
-    post.save(validate: false)
+    moved_post =
+      if @options[:freeze_original]
+        post.dup
+      else
+        post
+      end
 
-    DiscourseEvent.trigger(:post_moved, post, original_topic.id)
+    moved_post.attributes = update
+    moved_post.save(validate: false)
+
+    DiscourseEvent.trigger(:post_moved, moved_post, original_topic.id)
 
     # Move any links from the post to the new topic
-    post.topic_links.update_all(topic_id: destination_topic.id)
+    moved_post.topic_links.update_all(topic_id: destination_topic.id)
 
-    post
+    moved_post
   end
 
   def move_same_topic(post)
@@ -340,11 +339,17 @@ class PostMover
 
   def store_movement(metadata, new_post)
     metadata[:new_post_id] = new_post.id
+    metadata[:now] = Time.zone.now
+    metadata[:created_new_topic] = @creating_new_topic
 
     DB.exec(<<~SQL, metadata)
-      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number)
-      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number)
+      INSERT INTO moved_posts(old_topic_id, old_post_id, old_post_number, new_topic_id, new_topic_title, new_post_id, new_post_number, created_new_topic, created_at, updated_at)
+      VALUES (:old_topic_id, :old_post_id, :old_post_number, :new_topic_id, :new_topic_title, :new_post_id, :new_post_number, :created_new_topic, :now, :now)
     SQL
+  end
+
+  def shift_post_numbers(from_posts)
+    from_posts.reverse_each { |post| post.update_columns(post_number: post.post_number + 1) }
   end
 
   def move_incoming_emails
@@ -699,10 +704,18 @@ class PostMover
 
   def close_topic_and_schedule_deletion
     @original_topic.update_status("closed", true, @user)
+    return if @options[:freeze_original] # we only close the topic when freezing it
 
     days_to_deleting = SiteSetting.delete_merged_stub_topics_after_days
     if days_to_deleting == 0
-      if Guardian.new(@user).can_delete?(@original_topic)
+      is_allowed_to_delete_after_merge =
+        DiscoursePluginRegistry.apply_modifier(
+          :is_allowed_to_delete_after_merge,
+          Guardian.new(@user).can_delete?(@original_topic),
+          @original_topic,
+          @user,
+        )
+      if is_allowed_to_delete_after_merge
         first_post = @original_topic.ordered_posts.first
 
         PostDestroyer.new(

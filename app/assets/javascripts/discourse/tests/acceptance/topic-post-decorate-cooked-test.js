@@ -14,6 +14,7 @@ acceptance("Acceptance | decorateCookedElement", function () {
         DemoComponent.eventLog.push("created");
         super(...arguments);
       }
+
       willDestroy() {
         super.willDestroy(...arguments);
         DemoComponent.eventLog.push("willDestroy");

@@ -27,7 +27,7 @@ export default class FKControlMenu extends Component {
       @placement="bottom-start"
       @offset={{5}}
       id={{@field.id}}
-      data-value={{@value}}
+      data-value={{@field.value}}
       @modalForMobile={{true}}
     >
       <:trigger>

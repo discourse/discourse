@@ -1,1 +1,38 @@
-<AdminConfigAreas::Flags />
+<AdminPageHeader
+  @titleLabel="admin.config_areas.flags.header"
+  @descriptionLabel="admin.config_areas.flags.subheader"
+  @learnMoreUrl="https://meta.discourse.org/t/moderation-flags/325589"
+  @hideTabs={{this.hideTabs}}
+>
+  <:breadcrumbs>
+    <DBreadcrumbsItem
+      @path="/admin/config/flags"
+      @label={{i18n "admin.config_areas.flags.header"}}
+    />
+  </:breadcrumbs>
+  <:actions as |actions|>
+    <actions.Primary
+      @route="adminConfig.flags.new"
+      @title="admin.config_areas.flags.add"
+      @label="admin.config_areas.flags.add"
+      @disabled={{this.addFlagButtonDisabled}}
+      class="admin-flags__header-add-flag"
+    />
+  </:actions>
+  <:tabs>
+    <NavItem
+      @route="adminConfig.flags.settings"
+      @label="settings"
+      class="admin-flags-tabs__settings"
+    />
+    <NavItem
+      @route="adminConfig.flags.index"
+      @label="admin.config_areas.flags.flags_tab"
+      class="admin-flags-tabs__flags"
+    />
+  </:tabs>
+</AdminPageHeader>
+
+<div class="admin-container admin-config-page__main-area">
+  <AdminConfigAreas::Flags />
+</div>

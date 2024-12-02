@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import I18n from "discourse-i18n";
+import { i18n } from 'discourse-i18n';
 import ComboBox from "select-kit/components/combo-box";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
@@ -32,14 +32,14 @@ export default class PeriodField extends BaseField {
   }
 
   get recurringLabel() {
-    return I18n.t("discourse_automation.triggerables.recurring.every");
+    return i18n("discourse_automation.triggerables.recurring.every");
   }
 
   get replacedContent() {
     return (this.args.field?.extra?.content || []).map((r) => {
       return {
         id: r.id,
-        name: I18n.t(r.name),
+        name: i18n(r.name),
       };
     });
   }

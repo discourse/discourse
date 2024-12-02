@@ -6,8 +6,8 @@ import SearchMenu, {
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/search-test.js. This is simply about the rendering of the
@@ -36,7 +36,7 @@ module("Integration | Component | search-menu", function (hooks) {
       .dom(".show-advanced-search")
       .exists("it shows full page search button");
 
-    assert.notOk(exists(".menu-panel"), "Menu panel is not rendered yet");
+    assert.dom(".menu-panel").doesNotExist("Menu panel is not rendered yet");
 
     await click("#search-term");
 
@@ -46,11 +46,12 @@ module("Integration | Component | search-menu", function (hooks) {
 
     await fillIn("#search-term", "test");
 
-    assert.strictEqual(
-      query(".label-suffix").textContent.trim(),
-      I18n.t("search.in_topics_posts"),
-      "search label reflects context of search"
-    );
+    assert
+      .dom(".label-suffix")
+      .hasText(
+        i18n("search.in_topics_posts"),
+        "search label reflects context of search"
+      );
 
     await triggerKeyEvent("#search-term", "keyup", "Enter");
 
@@ -60,7 +61,7 @@ module("Integration | Component | search-menu", function (hooks) {
 
     await triggerKeyEvent("#search-term", "keydown", "Escape");
 
-    assert.notOk(exists(".menu-panel"), "Menu panel is gone");
+    assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
 
     await click("#search-term");
     await click("#search-term");

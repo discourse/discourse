@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll quote", function (needs) {
   needs.user();
@@ -427,7 +427,7 @@ acceptance("Poll quote", function (needs) {
   test("renders and extends", async function (assert) {
     await visit("/t/-/topic_with_two_quoted_polls");
     await click(".quote-controls");
-    assert.strictEqual(count(".poll"), 2, "polls are rendered");
-    assert.strictEqual(count(".poll-buttons"), 2, "polls are extended");
+    assert.dom(".poll").exists({ count: 2 }, "polls are rendered");
+    assert.dom(".poll-buttons").exists({ count: 2 }, "polls are extended");
   });
 });

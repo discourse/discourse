@@ -18,9 +18,8 @@ import Row from "discourse/form-kit/components/fk/row";
 import FKSection from "discourse/form-kit/components/fk/section";
 import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
-import FKFieldData from "discourse/form-kit/lib/fk-field-data";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 class FKForm extends Component {
   @service dialog;
@@ -65,7 +64,7 @@ class FKForm extends Component {
       transition.abort();
 
       this.dialog.yesNoConfirm({
-        message: I18n.t("form_kit.dirty_form"),
+        message: i18n("form_kit.dirty_form"),
         didConfirm: async () => {
           await this.onReset();
           transition.retry();
@@ -151,15 +150,15 @@ class FKForm extends Component {
       );
     }
 
-    const fieldModel = new FKFieldData(name, field);
-    this.fields.set(name, fieldModel);
+    this.fields.set(name, field);
 
-    return fieldModel;
+    return field;
   }
 
   @action
   unregisterField(name) {
     this.fields.delete(name);
+    this.removeError(name);
   }
 
   @action

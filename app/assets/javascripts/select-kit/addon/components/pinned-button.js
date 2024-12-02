@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import { pluginApiIdentifiers } from "select-kit/components/select-kit";
 
 @classNames("pinned-button")
@@ -16,7 +16,7 @@ export default class PinnedButton extends Component {
     const globally = pinnedGlobally ? "_globally" : "";
     const pinnedKey = pinned ? `pinned${globally}` : "unpinned";
     const key = `topic_statuses.${pinnedKey}.help`;
-    return I18n.t(key);
+    return i18n(key);
   }
 
   @discourseComputed("pinned", "topic.deleted", "topic.unpinned")

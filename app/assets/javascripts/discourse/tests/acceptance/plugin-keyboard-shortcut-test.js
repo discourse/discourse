@@ -3,7 +3,7 @@ import { test } from "qunit";
 import sinon from "sinon";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
@@ -20,10 +20,9 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await triggerKeyEvent(document, "keypress", "]".charCodeAt(0));
 
-    assert.ok(
-      document.querySelector("#added-element"),
-      "the keyboard shortcut callback fires successfully"
-    );
+    assert
+      .dom("#added-element", document.body)
+      .exists("the keyboard shortcut callback fires successfully");
   });
 });
 
@@ -37,7 +36,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
       });
     });
 
-    assert.ok(
+    assert.true(
       spy.calledWith("test-path", "]"),
       "bindToPath is called due to options provided"
     );
@@ -62,13 +61,16 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
 
     assert.dom(".shortcut-category-new_category").exists();
-    assert.strictEqual(count(".shortcut-category-new_category li"), 1);
+    assert.dom(".shortcut-category-new_category li").exists({ count: 1 });
   });
 
   test("a plugin can add a shortcut to and existing category in the shortcut help modal", async function (assert) {
     await visit("/");
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
-    const countBefore = count(".shortcut-category-application li");
+    const countBefore = document.querySelectorAll(
+      ".shortcut-category-application li"
+    ).length;
+
     await click(".modal-close");
 
     withPluginApi("0.8.38", (api) => {
@@ -84,9 +86,8 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
     });
 
     await triggerKeyEvent(document, "keypress", "?".charCodeAt(0));
-    assert.strictEqual(
-      count(".shortcut-category-application li"),
-      countBefore + 1
-    );
+    assert
+      .dom(".shortcut-category-application li")
+      .exists({ count: countBefore + 1 });
   });
 });

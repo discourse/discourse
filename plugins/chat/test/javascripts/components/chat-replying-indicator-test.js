@@ -7,7 +7,6 @@ import {
   joinChannel,
   leaveChannel,
 } from "discourse/tests/helpers/presence-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 async function addUser(id, username, channelName = "/chat-reply/1") {
@@ -44,10 +43,7 @@ module(
 
       await addUser(1, "sam", "/chat-reply/1/thread/1");
 
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        "sam is typing"
-      );
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
     });
 
     test("doesn’t leak in other indicators", async function (assert) {
@@ -81,10 +77,7 @@ module(
 
       await addUser(1, "sam");
 
-      assert.strictEqual(
-        query(".chat-replying-indicator__text").innerText,
-        `sam is typing`
-      );
+      assert.dom(".chat-replying-indicator__text").hasText("sam is typing");
     });
 
     test("displays indicator when 2 or 3 users are replying", async function (assert) {

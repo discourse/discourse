@@ -4,7 +4,7 @@ import schemaAndData from "discourse/tests/fixtures/theme-setting-schema-data";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import AdminSchemaThemeSettingEditor from "admin/components/schema-theme-setting/editor";
 import ThemeSettings from "admin/models/theme-settings";
 
@@ -121,7 +121,7 @@ module(
       assert.strictEqual(
         tree.nodes[1].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       await click(tree.nodes[1].element);
@@ -132,7 +132,7 @@ module(
       assert.strictEqual(
         tree.nodes[0].children.length,
         0,
-        "thie children of an active node aren't shown"
+        "the children of an active node aren't shown"
       );
 
       assert.true(tree.nodes[1].active);
@@ -309,7 +309,7 @@ module(
       await click(tree.nodes[1].children[1].element);
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
       );
@@ -318,7 +318,7 @@ module(
       await click(tree.nodes[1].children[0].element);
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "child 2-2",
         })
       );
@@ -326,7 +326,7 @@ module(
       await click(".--back-btn");
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "item 2",
         })
       );
@@ -464,7 +464,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.string.too_short", {
+        i18n("admin.customize.theme.schema.fields.string.too_short", {
           count: 2,
         })
       );
@@ -475,7 +475,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type integer", async function (assert) {
@@ -520,7 +520,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.theme.schema.fields.number.too_large", {
           count: 10,
         })
       );
@@ -530,7 +530,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.theme.schema.fields.number.too_small", {
           count: 5,
         })
       );
@@ -541,7 +541,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type float", async function (assert) {
@@ -586,7 +586,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_large", {
+        i18n("admin.customize.theme.schema.fields.number.too_large", {
           count: 10.5,
         })
       );
@@ -596,7 +596,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.id.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.number.too_small", {
+        i18n("admin.customize.theme.schema.fields.number.too_small", {
           count: 5.5,
         })
       );
@@ -607,7 +607,7 @@ module(
 
       assert
         .dom(inputFields.fields.id.errorElement)
-        .hasText(I18n.t("admin.customize.theme.schema.fields.required"));
+        .hasText(i18n("admin.customize.theme.schema.fields.required"));
     });
 
     test("input fields of type boolean", async function (assert) {
@@ -755,7 +755,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.not_required_category.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.theme.schema.fields.categories.at_least", {
           count: 2,
         })
       );
@@ -832,7 +832,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_category.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.categories.at_least", {
+        i18n("admin.customize.theme.schema.fields.categories.at_least", {
           count: 1,
         })
       );
@@ -957,7 +957,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.theme.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -972,7 +972,7 @@ module(
       assert
         .dom(inputFields.fields.required_tags_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+          i18n("admin.customize.theme.schema.fields.tags.at_least", {
             count: 2,
           })
         );
@@ -988,7 +988,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_tags.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.tags.at_least", {
+        i18n("admin.customize.theme.schema.fields.tags.at_least", {
           count: 1,
         })
       );
@@ -1040,7 +1040,7 @@ module(
       inputFields.refresh();
 
       assert.dom(inputFields.fields.required_groups.errorElement).hasText(
-        I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+        i18n("admin.customize.theme.schema.fields.groups.at_least", {
           count: 1,
         })
       );
@@ -1066,7 +1066,7 @@ module(
       assert
         .dom(inputFields.fields.groups_with_validations.errorElement)
         .hasText(
-          I18n.t("admin.customize.theme.schema.fields.groups.at_least", {
+          i18n("admin.customize.theme.schema.fields.groups.at_least", {
             count: 2,
           })
         );
@@ -1209,7 +1209,7 @@ module(
       inputFields.refresh();
 
       assert.dom(".--back-btn").hasText(
-        I18n.t("admin.customize.theme.schema.back_button", {
+        i18n("admin.customize.theme.schema.back_button", {
           name: "cool section is no longer cool",
         })
       );
@@ -1288,7 +1288,7 @@ module(
       tree.refresh();
 
       assert.strictEqual(tree.nodes.length, 4);
-      assert.ok(tree.nodes[2].active);
+      assert.true(tree.nodes[2].active);
       assert.dom(tree.nodes[2].textElement).hasText("level1 3");
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });

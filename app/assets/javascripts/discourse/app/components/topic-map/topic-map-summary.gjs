@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
@@ -17,8 +18,7 @@ import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
@@ -28,7 +28,7 @@ const MIN_LIKES_COUNT = 5;
 const MIN_PARTICIPANTS_COUNT = 5;
 const MIN_USERS_COUNT_FOR_AVATARS = 2;
 
-export const MIN_POSTS_COUNT = 5;
+export const MIN_POSTS_COUNT = 3;
 
 export default class TopicMapSummary extends Component {
   @service site;
@@ -74,7 +74,7 @@ export default class TopicMapSummary extends Component {
       return;
     }
 
-    return I18n.t("summary.short_title");
+    return i18n("summary.short_title");
   }
 
   get topRepliesIcon() {
@@ -83,8 +83,8 @@ export default class TopicMapSummary extends Component {
 
   get topRepliesLabel() {
     return this.topRepliesSummaryEnabled
-      ? I18n.t("summary.show_all_label")
-      : I18n.t("summary.short_label");
+      ? i18n("summary.show_all_label")
+      : i18n("summary.short_label");
   }
 
   get loneStat() {
@@ -186,7 +186,7 @@ export default class TopicMapSummary extends Component {
       })
       .catch((error) => {
         this.dialog.alert(
-          I18n.t("generic_error_with_reason", {
+          i18n("generic_error_with_reason", {
             error: `http: ${error.status} - ${error.body}`,
           })
         );
@@ -223,7 +223,7 @@ export default class TopicMapSummary extends Component {
       })
       .catch((error) => {
         this.dialog.alert(
-          I18n.t("generic_error_with_reason", {
+          i18n("generic_error_with_reason", {
             error: `http: ${error.status} - ${error.body}`,
           })
         );
@@ -295,28 +295,33 @@ export default class TopicMapSummary extends Component {
                 "topic_map.menu_titles.replies"
               }}</h3>
             <ConditionalLoadingSpinner @condition={{this.loading}}>
-              <ul>
-                {{#each this.top3LikedPosts as |post|}}
-                  <li>
-                    <a href={{this.postUrl post}}>
-                      <span class="like-section__user">
-                        {{avatar
-                          post.avatar_template
-                          "tiny"
-                          (hash title=post.username)
-                        }}
-                        {{post.username}}
-                      </span>
-                      <span class="like-section__likes">
-                        {{post.like_count}}
-                        {{dIcon "heart"}}</span>
-                      <p>
-                        {{htmlSafe (emojiUnescape post.blurb)}}
-                      </p>
-                    </a>
-                  </li>
-                {{/each}}
-              </ul>
+              <PluginOutlet
+                @name="most-liked-replies"
+                @outletArgs={{hash posts=this.top3LikedPosts}}
+              >
+                <ul>
+                  {{#each this.top3LikedPosts as |post|}}
+                    <li>
+                      <a href={{this.postUrl post}}>
+                        <span class="like-section__user">
+                          {{avatar
+                            post.avatar_template
+                            "tiny"
+                            (hash title=post.username)
+                          }}
+                          {{post.username}}
+                        </span>
+                        <span class="like-section__likes">
+                          {{post.like_count}}
+                          {{dIcon "heart"}}</span>
+                        <p>
+                          {{htmlSafe (emojiUnescape post.blurb)}}
+                        </p>
+                      </a>
+                    </li>
+                  {{/each}}
+                </ul>
+              </PluginOutlet>
             </ConditionalLoadingSpinner>
           </:content>
         </DMenu>

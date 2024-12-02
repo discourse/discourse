@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Pending posts - no existing pending posts", function (needs) {
   needs.user();
@@ -19,6 +19,6 @@ acceptance("Pending posts - existing pending posts", function (needs) {
   test("Navigate to pending posts", async function (assert) {
     await visit("/u/eviltrout");
     await click("[href='/u/eviltrout/activity/pending']");
-    assert.strictEqual(count(".user-stream-item"), 2);
+    assert.dom(".user-stream-item").exists({ count: 2 });
   });
 });

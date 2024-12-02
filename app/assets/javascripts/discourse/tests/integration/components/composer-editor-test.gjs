@@ -3,14 +3,11 @@ import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("warns about users that will not see a mention", async function (assert) {
-    const model = {};
-    const noop = () => {};
     const expectation = (warning) => {
       if (warning.name === "user-no") {
         assert.deepEqual(warning, { name: "user-no", reason: "a reason" });
@@ -32,29 +29,26 @@ module("Integration | Component | ComposerEditor", function (hooks) {
       });
     });
 
-    await render(<template>
-      <ComposerEditor
-        @composer={{model}}
-        @afterRefresh={{noop}}
-        @cannotSeeMention={{expectation}}
-      />
-    </template>);
+    const originalComposerService = this.owner.lookup("service:composer");
+    const composerMockClass = class ComposerMock extends originalComposerService.constructor {
+      cannotSeeMention() {
+        expectation(...arguments);
+      }
+    };
+    this.owner.unregister("service:composer");
+    this.owner.register("service:composer", new composerMockClass(this.owner), {
+      instantiate: false,
+    });
+
+    await render(<template><ComposerEditor /></template>);
 
     await fillIn("textarea", "@user-no @user-ok @user-nope");
   });
 
   test("preview sanitizes HTML", async function (assert) {
-    const model = {};
-    const noop = () => {};
-
-    await render(<template>
-      <ComposerEditor @composer={{model}} @afterRefresh={{noop}} />
-    </template>);
+    await render(<template><ComposerEditor /></template>);
 
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>"&gt;<svg></svg></p>'
-    );
+    assert.dom(".d-editor-preview").hasHtml('<p>"&gt;<svg></svg></p>');
   });
 });

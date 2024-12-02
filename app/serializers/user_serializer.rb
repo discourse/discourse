@@ -90,7 +90,11 @@ class UserSerializer < UserCardSerializer
   end
 
   def groups
-    object.groups.order(:id).visible_groups(scope.user)
+    if scope.user == object
+      object.groups.order(:id).visible_groups(scope.user)
+    else
+      object.groups.order(:id).visible_groups(scope.user).members_visible_groups(scope.user)
+    end
   end
 
   def group_users
@@ -153,7 +157,7 @@ class UserSerializer < UserCardSerializer
         .map do |k|
           {
             id: k.id,
-            application_name: k.application_name,
+            application_name: k.client.application_name,
             scopes: k.scopes.map { |s| I18n.t("user_api_key.scopes.#{s.name}") },
             created_at: k.created_at,
             last_used_at: k.last_used_at,

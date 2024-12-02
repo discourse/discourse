@@ -9,6 +9,14 @@ export default class BasicTopicList extends Component {
 
   @not("loaded") loading;
 
+  init() {
+    super.init(...arguments);
+    const topicList = this.topicList;
+    if (topicList) {
+      this._initFromTopicList(topicList);
+    }
+  }
+
   @discourseComputed("topicList.loaded")
   loaded() {
     let topicList = this.topicList;
@@ -28,14 +36,6 @@ export default class BasicTopicList extends Component {
     if (topicList !== null) {
       this.set("topics", topicList.get("topics"));
       this.rerender();
-    }
-  }
-
-  init() {
-    super.init(...arguments);
-    const topicList = this.topicList;
-    if (topicList) {
-      this._initFromTopicList(topicList);
     }
   }
 

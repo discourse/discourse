@@ -1,11 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 
 acceptance("Theme", function (needs) {
   needs.user();
@@ -189,20 +185,14 @@ acceptance("Theme", function (needs) {
     );
     await click(".install-theme-content button.advanced-repo");
 
-    assert.notOk(
-      exists(
-        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
-      ),
-      "no Git warning is displayed"
-    );
+    assert
+      .dom(".admin-install-theme-modal .d-modal__footer .install-theme-warning")
+      .doesNotExist("no Git warning is displayed");
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-primary");
-    assert.ok(
-      exists(
-        ".admin-install-theme-modal .d-modal__footer .install-theme-warning"
-      ),
-      "Git warning is displayed"
-    );
+    assert
+      .dom(".admin-install-theme-modal .d-modal__footer .install-theme-warning")
+      .exists("Git warning is displayed");
 
     await click(".admin-install-theme-modal .d-modal__footer .btn-danger");
 
@@ -213,29 +203,28 @@ acceptance("Theme", function (needs) {
     await visit("/admin/customize/themes");
 
     await click(".themes-list-container__item .info");
-    assert.ok(
-      query(".control-unit .status-message").innerText.includes(
-        I18n.t("admin.customize.theme.last_attempt")
-      ),
-      "it says that theme is not completely installed"
-    );
+    assert
+      .dom(".control-unit .status-message")
+      .includesText(
+        i18n("admin.customize.theme.last_attempt"),
+        "says that theme is not completely installed"
+      );
 
     await click(".control-unit .btn-primary.finish-install");
 
     assert
       .dom(".show-current-style .title span")
-      .hasText("discourse-complete-theme", "it updates theme title");
+      .hasText("discourse-complete-theme", "updates theme title");
 
-    assert.notOk(
-      query(".metadata.control-unit").innerText.includes(
-        I18n.t("admin.customize.theme.last_attempt")
-      ),
-      "it does not say that theme is not completely installed"
-    );
+    assert
+      .dom(".metadata.control-unit")
+      .doesNotIncludeText(
+        i18n("admin.customize.theme.last_attempt"),
+        "does not say that theme is not completely installed"
+      );
 
-    assert.notOk(
-      query(".control-unit .btn-primary.finish-install"),
-      "it does not show finish install button"
-    );
+    assert
+      .dom(".control-unit .btn-primary.finish-install")
+      .doesNotExist("does not show finish install button");
   });
 });

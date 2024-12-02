@@ -5,13 +5,12 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 acceptance("Topic - Edit timer", function (needs) {
   needs.user();
@@ -159,23 +158,18 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
-    el.innerHTML = I18n.t(
-      "topic.status_update_notice.auto_publish_to_category",
-      {
-        categoryUrl: "/c/dev/7",
-        categoryName: "dev",
-        timeLeft: "in 6 days",
-      }
-    );
+    el.innerHTML = i18n("topic.status_update_notice.auto_publish_to_category", {
+      categoryUrl: "/c/dev/7",
+      categoryName: "dev",
+      timeLeft: "in 6 days",
+    });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - visible for a private category", async function (assert) {
@@ -199,23 +193,18 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
-    el.innerHTML = I18n.t(
-      "topic.status_update_notice.auto_publish_to_category",
-      {
-        categoryUrl: "/c/dev/7",
-        categoryName: "dev",
-        timeLeft: "in 6 days",
-      }
-    );
+    el.innerHTML = i18n("topic.status_update_notice.auto_publish_to_category", {
+      categoryUrl: "/c/dev/7",
+      categoryName: "dev",
+      timeLeft: "in 6 days",
+    });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - visible for an unlisted public topic", async function (assert) {
@@ -243,23 +232,18 @@ acceptance("Topic - Edit timer", function (needs) {
 
     await click("#tap_tile_start_of_next_business_week");
 
-    const text = query(
-      ".edit-topic-timer-modal .topic-timer-info"
-    ).innerText.trim();
-
     // this needs to be done because there is no simple way to get the
     // plain text version of a translation with HTML
     let el = document.createElement("p");
-    el.innerHTML = I18n.t(
-      "topic.status_update_notice.auto_publish_to_category",
-      {
-        categoryUrl: "/c/dev/7",
-        categoryName: "dev",
-        timeLeft: "in 6 days",
-      }
-    );
+    el.innerHTML = i18n("topic.status_update_notice.auto_publish_to_category", {
+      categoryUrl: "/c/dev/7",
+      categoryName: "dev",
+      timeLeft: "in 6 days",
+    });
 
-    assert.strictEqual(text, el.innerText);
+    assert
+      .dom(".edit-topic-timer-modal .topic-timer-info")
+      .hasText(el.innerText);
   });
 
   test("schedule publish to category - last custom date and time", async function (assert) {
@@ -411,13 +395,13 @@ acceptance("Topic - Edit timer", function (needs) {
         el.innerText.trim()
       ),
       [
-        I18n.t("time_shortcut.tomorrow"),
-        I18n.t("time_shortcut.this_weekend"),
-        I18n.t("time_shortcut.start_of_next_business_week"),
-        I18n.t("time_shortcut.two_weeks"),
-        I18n.t("time_shortcut.next_month"),
-        I18n.t("time_shortcut.six_months"),
-        I18n.t("time_shortcut.custom"),
+        i18n("time_shortcut.tomorrow"),
+        i18n("time_shortcut.this_weekend"),
+        i18n("time_shortcut.start_of_next_business_week"),
+        i18n("time_shortcut.two_weeks"),
+        i18n("time_shortcut.next_month"),
+        i18n("time_shortcut.six_months"),
+        i18n("time_shortcut.custom"),
       ]
     );
   });

@@ -68,9 +68,11 @@
     try {
       sheet.innerText = style;
       sheet.innerHTML = style;
+      // eslint-disable-next-line no-unused-vars -- old browsers require binding this variable, even if unused
     } catch (e) {
       try {
         sheet.styleSheet.cssText = style;
+        // eslint-disable-next-line no-unused-vars -- old browser require binding this variable, even if unused
       } catch (ex) {
         return;
       }

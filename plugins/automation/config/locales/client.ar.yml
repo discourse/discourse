@@ -6,6 +6,11 @@
 
 ar:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            delete_automation: حذف الأتمتة
     discourse_automation:
       title: الأتمتة
       create: إنشاء
@@ -14,6 +19,8 @@ ar:
       select_trigger: حدِّد مشغلًا
       confirm_automation_reset: سيؤدي هذا الإجراء إلى إعادة تعيين البرنامج النصي وتشغيل الخيارات، وسيتم حفظ الحالة الجديدة، هل تريد المتابعة؟
       confirm_automation_trigger: سيؤدي هذا الإجراء إلى تشغيل الأتمتة، هل تريد المتابعة؟
+      no_automation_yet: لم تُنشئ أي عمليات أتمتة حتى الآن. حدِّد أحد الخيارات أدناه للبدء.
+      filter_placeholder: التصفية حسب الاسم أو الوصف...
       edit_automation:
         trigger_section:
           forced: يتم فرض هذا المشغِّل بواسطة برنامج نصي.
@@ -147,6 +154,9 @@ ar:
               label: معرِّف الموضوع
         post_created_edited:
           fields:
+            original_post_only:
+              label: المنشور الأصلي فقط
+              description: لن يتم تشغيله إلا إذا كان المنشور هي المنشور الأصلي في الموضوع
             action_type:
               label: نوع الإجراء
               description: "اختياري، تقييد التشغيل إلى الأحداث التي تم إنشاؤها أو تحريرها فقط"
@@ -163,7 +173,8 @@ ar:
               label: المجموعة
               description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة خاصة في البريد الوارد لهذه المجموعة
             restricted_groups:
-              label: مجموعتان
+              label: المجموعات
+              description: اختياري، لن يتم تشغيله إلا إذا كان موضوع المشاركة عبارة عن رسالة خاصة في أحد صناديق البريد الوارد للمجموعة
             ignore_group_members:
               label: تجاهل أعضاء المجموعة
               description: تخطي المشغِّل إذا كان المرسل عضوًا في المجموعة المحدَّدة أعلاه
@@ -176,6 +187,9 @@ ar:
             first_topic_only:
               label: الموضوع الأول فقط
               description: لن يتم تشغيله إلا إذا كان الموضوع هو أول موضوع أنشأه المستخدم
+            skip_via_email:
+              label: "التخطي عبر البريد الإلكتروني"
+              description: "تخطي المشغِّل إذا كان المنشور قد تم إنشاؤه عبر البريد الإلكتروني"
           created: تاريخ الإنشاء
           edited: تاريخ التحرير
         user_updated:
@@ -225,6 +239,9 @@ ar:
             watching_tags:
               label: مراقبة الوسوم
               description: سيتم تشغيل هذا الإعداد فقط إذا كان الموضوع يتضمَّن أيًا من هذه الوسوم
+            trigger_with_pms:
+              label: التشغيل مع الرسائل الخاصة
+              description: سيتم تشغيله حتى لو تم تغيير الوسوم في رسالة خاصة
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -383,6 +400,7 @@ ar:
           fields:
             custom_field_name:
               label: "اسم الحقل المخصَّص للمستخدم"
+      unnamed_automation: "أتمتة دون اسم"
       models:
         script:
           name:

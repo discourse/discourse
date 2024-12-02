@@ -9,7 +9,7 @@ import iconOrImage from "discourse/helpers/icon-or-image";
 import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
 import dIcon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 
 export default class BadgeCard extends Component {

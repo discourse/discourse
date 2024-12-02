@@ -12,6 +12,17 @@ export default class UsersController extends Controller {
   )
   allowPmUsersEnabled;
 
+  init() {
+    super.init(...arguments);
+
+    this.saveAttrNames = [
+      "allow_private_messages",
+      "muted_usernames",
+      "allowed_pm_usernames",
+      "enable_allowed_pm_users",
+    ];
+  }
+
   @computed("model.muted_usernames")
   get mutedUsernames() {
     let usernames = this.model.muted_usernames;
@@ -32,17 +43,6 @@ export default class UsersController extends Controller {
     }
 
     return makeArray(usernames).uniq();
-  }
-
-  init() {
-    super.init(...arguments);
-
-    this.saveAttrNames = [
-      "allow_private_messages",
-      "muted_usernames",
-      "allowed_pm_usernames",
-      "enable_allowed_pm_users",
-    ];
   }
 
   @action

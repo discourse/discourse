@@ -11,7 +11,7 @@ import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 import selectKit from "../helpers/select-kit-helper";
 
 acceptance("Personal Message", function (needs) {
@@ -22,7 +22,7 @@ acceptance("Personal Message", function (needs) {
 
     assert
       .dom("#suggested-topics-title")
-      .hasText(I18n.t("suggested_topics.pm_title"));
+      .hasText(i18n("suggested_topics.pm_title"));
   });
 
   test("redirects to inbox after topic is archived and clears topicList cache", async function (assert) {
@@ -33,7 +33,11 @@ acceptance("Personal Message", function (needs) {
     await click(".archive-topic");
 
     assert.strictEqual(currentURL(), "/u/eviltrout/messages");
-    assert.notOk(getCachedTopicList(session), "topic list cached is cleared");
+    assert.strictEqual(
+      getCachedTopicList(session),
+      undefined,
+      "topic list cached is cleared"
+    );
   });
 });
 

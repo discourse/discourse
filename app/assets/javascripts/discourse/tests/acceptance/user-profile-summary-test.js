@@ -1,15 +1,11 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
-let deleteAndBlock = null;
+let deleteAndBlock;
 
 acceptance("User Profile - Summary", function (needs) {
   needs.user();
@@ -17,13 +13,13 @@ acceptance("User Profile - Summary", function (needs) {
   test("Viewing Summary", async function (assert) {
     await visit("/u/eviltrout/summary");
 
-    assert.ok(exists(".replies-section li a"), "replies");
-    assert.ok(exists(".topics-section li a"), "topics");
-    assert.ok(exists(".links-section li a"), "links");
-    assert.ok(exists(".replied-section .user-info"), "liked by");
-    assert.ok(exists(".liked-by-section .user-info"), "liked by");
-    assert.ok(exists(".liked-section .user-info"), "liked");
-    assert.ok(exists(".badges-section .badge-card"), "badges");
+    assert.dom(".replies-section li a").exists("replies");
+    assert.dom(".topics-section li a").exists("topics");
+    assert.dom(".links-section li a").exists("links");
+    assert.dom(".replied-section .user-info").exists("liked by");
+    assert.dom(".liked-by-section .user-info").exists("liked by");
+    assert.dom(".liked-section .user-info").exists("liked");
+    assert.dom(".badges-section .badge-card").exists("badges");
     assert
       .dom(".top-categories-section .category-link")
       .exists("top categories");
@@ -110,17 +106,21 @@ acceptance("User Profile - Summary - Stats", function (needs) {
   test("Summary Read Times", async function (assert) {
     await visit("/u/eviltrout/summary");
 
-    assert.equal(query(".stats-time-read span").textContent.trim(), "1d");
-    assert.equal(
-      query(".stats-time-read span").title,
-      I18n.t("user.summary.time_read_title", { duration: "1 day" })
-    );
+    assert.dom(".stats-time-read span").hasText("1d");
+    assert
+      .dom(".stats-time-read span")
+      .hasAttribute(
+        "title",
+        i18n("user.summary.time_read_title", { duration: "1 day" })
+      );
 
-    assert.equal(query(".stats-recent-read span").textContent.trim(), "17m");
-    assert.equal(
-      query(".stats-recent-read span").title,
-      I18n.t("user.summary.recent_time_read_title", { duration: "17 mins" })
-    );
+    assert.dom(".stats-recent-read span").hasText("17m");
+    assert
+      .dom(".stats-recent-read span")
+      .hasAttribute(
+        "title",
+        i18n("user.summary.recent_time_read_title", { duration: "17 mins" })
+      );
   });
 });
 
@@ -142,11 +142,7 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     server.delete("/admin/users/5.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
 
-      if (data.block_email || data.block_ip || data.block_urls) {
-        deleteAndBlock = true;
-      } else {
-        deleteAndBlock = false;
-      }
+      deleteAndBlock = !!(data.block_email || data.block_ip || data.block_urls);
 
       return helper.response({});
     });
@@ -161,20 +157,18 @@ acceptance("User Profile - Summary - Admin", function (needs) {
     await click(".btn-delete-user");
     await click(".dialog-footer .btn-primary");
 
-    assert.notOk(deleteAndBlock, "first button does not block user");
+    assert.false(deleteAndBlock, "first button does not block user");
   });
 
   test("Delete and block", async function (assert) {
     await visit("/u/charlie/summary");
     await click(".btn-delete-user");
 
-    assert.equal(
-      query("#dialog-title").textContent,
-      I18n.t("admin.user.delete_confirm_title"),
-      "dialog has a title"
-    );
+    assert
+      .dom("#dialog-title")
+      .hasText(i18n("admin.user.delete_confirm_title"), "dialog has a title");
 
     await click(".dialog-footer .btn-danger");
-    assert.ok(deleteAndBlock, "second button also block user");
+    assert.true(deleteAndBlock, "second button also block user");
   });
 });

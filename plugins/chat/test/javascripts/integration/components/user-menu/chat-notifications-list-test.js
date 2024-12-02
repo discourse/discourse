@@ -3,8 +3,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | chat-notifications-list",
@@ -21,11 +20,10 @@ module(
 
     test("empty state when there are no notifications", async function (assert) {
       await render(template);
-      assert.true(exists(".empty-state .empty-state-body"));
-      assert.strictEqual(
-        query(".empty-state .empty-state-title").textContent.trim(),
-        I18n.t("user_menu.no_chat_notifications_title")
-      );
+      assert.dom(".empty-state .empty-state-body").exists();
+      assert
+        .dom(".empty-state .empty-state-title")
+        .hasText(i18n("user_menu.no_chat_notifications_title"));
     });
   }
 );

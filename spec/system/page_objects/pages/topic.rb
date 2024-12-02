@@ -49,8 +49,24 @@ module PageObjects
         post_by_number(post).has_content? post.raw
       end
 
+      def has_deleted_post?(post)
+        has_css?(".topic-post.deleted:has(#post_#{post.post_number})")
+      end
+
+      def has_no_deleted_post?(post)
+        has_no_css?(".topic-post.deleted:has(#post_#{post.post_number})")
+      end
+
       def has_post_number?(number)
         has_css?("#post_#{number}")
+      end
+
+      def has_replies_expanded?(post)
+        within_post(post) { has_css?(".embedded-posts") }
+      end
+
+      def has_replies_collapsed?(post)
+        within_post(post) { has_no_css?(".embedded-posts") }
       end
 
       def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
@@ -79,22 +95,62 @@ module PageObjects
       end
 
       def click_post_action_button(post, button)
-        case button
-        when :bookmark
-          within_post(post) { find(".bookmark").click }
-        when :reply
-          within_post(post) { find(".post-controls .reply").click }
-        when :flag
-          within_post(post) { find(".post-controls .create-flag").click }
-        when :copy_link
-          within_post(post) { find(".post-controls .post-action-menu__copy-link").click }
-        when :edit
-          within_post(post) { find(".post-controls .edit").click }
+        find_post_action_button(post, button).click
+      end
+
+      def find_post_action_buttons(post)
+        within_post(post) { find(".post-controls .actions") }
+      end
+
+      def find_post_action_button(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { find(button_selector) }
+      end
+
+      def has_post_action_button?(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { has_css?(button_selector) }
+      end
+
+      def has_no_post_action_button?(post, button)
+        button_selector = selector_for_post_action_button(button)
+        within_post(post) { has_no_css?(button_selector) }
+      end
+
+      def has_who_liked_on_post?(post, count: nil)
+        if count
+          return within_post(post) { has_css?(".who-liked a.trigger-user-card", count: count) }
         end
+
+        within_post(post) { has_css?(".who-liked") }
+      end
+
+      def has_no_who_liked_on_post?(post)
+        within_post(post) { has_no_css?(".who-liked") }
+      end
+
+      def has_who_read_on_post?(post, count: nil)
+        if count
+          return within_post(post) { has_css?(".who-read a.trigger-user-card", count: count) }
+        end
+
+        within_post(post) { has_css?(".who-read") }
+      end
+
+      def has_no_who_read_on_post?(post)
+        within_post(post) { has_no_css?(".who-read") }
       end
 
       def expand_post_admin_actions(post)
-        within_post(post) { find(".show-post-admin-menu").click }
+        click_post_action_button(post, :admin)
+      end
+
+      def has_post_admin_menu?()
+        has_css?("[data-content][data-identifier='admin-post-menu']")
+      end
+
+      def has_no_post_admin_menu?()
+        has_no_css?("[data-content][data-identifier='admin-post-menu']")
       end
 
       def click_post_admin_action_button(post, button)
@@ -243,6 +299,7 @@ module PageObjects
       end
 
       def open_flag_topic_modal
+        expect(page).to have_css(".flag-topic", wait: Capybara.default_max_wait_time * 3)
         find(".flag-topic").click
       end
 
@@ -254,6 +311,42 @@ module PageObjects
 
       def within_topic_footer_buttons
         within("#topic-footer-buttons") { yield }
+      end
+
+      def selector_for_post_action_button(button)
+        # TODO (glimmer-post-menu): Replace the selector with the BEM format ones once the glimmer-post-menu replaces the widget post menu
+        case button
+        when :admin
+          ".post-controls .show-post-admin-menu"
+        when :bookmark
+          ".post-controls .bookmark"
+        when :copy_link, :copyLink
+          ".post-controls .post-action-menu__copy-link"
+        when :delete
+          ".post-controls .delete"
+        when :edit
+          ".post-controls .edit"
+        when :flag
+          ".post-controls .create-flag"
+        when :like
+          ".post-controls .toggle-like"
+        when :like_count
+          ".post-controls .like-count"
+        when :read
+          ".post-controls .read-indicator"
+        when :recover
+          ".post-controls .recover"
+        when :replies
+          ".post-controls .show-replies"
+        when :reply
+          ".post-controls .reply"
+        when :share
+          ".post-controls .share"
+        when :show_more
+          ".post-controls .show-more-actions"
+        else
+          raise "Unknown post menu button type: #{button}"
+        end
       end
 
       def is_post_bookmarked(post, bookmarked:, with_reminder: false)

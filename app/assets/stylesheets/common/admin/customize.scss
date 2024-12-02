@@ -65,6 +65,12 @@
   }
 }
 
+.admin-customize.admin-permalinks {
+  .admin-container {
+    padding: 0;
+  }
+}
+
 .admin-customize {
   h1 {
     margin-bottom: 10px;
@@ -797,67 +803,26 @@
   color: var(--primary-medium);
 }
 
-// Permalinks
-.permalinks {
-  .url,
-  .topic,
-  .category,
-  .external_url,
-  .destination,
-  .post {
-    @include ellipsis;
-    max-width: 100px;
-    @include breakpoint(tablet) {
-      max-width: 100%;
-    }
-  }
-
-  &.grid tr.admin-list-item {
-    grid-template-columns: unset;
-  }
-}
-
-.permalink-form {
-  padding: 0.5em 1em 0 1em;
-  margin-top: 1em;
-  background: var(--primary-very-low);
-  .select-kit {
-    max-width: 260px;
-  }
+.admin-permalinks {
   @include breakpoint(tablet) {
-    label {
+    .admin-page-subheader,
+    .admin-config-area,
+    .admin-config-area__primary-content,
+    .loading-container {
       width: 100%;
     }
   }
-}
-
-.permalink-description {
-  color: var(--primary-medium);
-}
-
-.permalink-search {
-  margin-top: 2em;
-  input {
-    min-width: 250px;
-    margin-bottom: 0;
+  .permalink-search input {
+    width: 100%;
   }
 }
-
-table.permalinks {
-  @include breakpoint(tablet, min-width) {
-    td.url,
-    th.url {
-      width: 33%;
-    }
-
-    th.destination,
-    td.destination {
-      width: 60%;
-    }
-  }
-  @include breakpoint(tablet) {
-    td.url .btn-flat {
-      display: none;
+.admin-permalink-item {
+  &__delete.btn,
+  &__delete.btn:hover {
+    border-top: 1px solid var(--primary-low);
+    color: var(--danger);
+    svg {
+      color: var(--danger);
     }
   }
 }

@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | chat-message-text", function (hooks) {
   setupRenderingTest(hooks);
@@ -16,7 +15,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       </ChatMessageText>
     `);
 
-    assert.true(exists(".yield-me"));
+    assert.dom(".yield-me").exists();
   });
 
   test("shows collapsed", async function (assert) {
@@ -29,7 +28,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}} />`
     );
 
-    assert.true(exists(".chat-message-collapser"));
+    assert.dom(".chat-message-collapser").exists();
   });
 
   test("does not collapse a non-image onebox", async function (assert) {
@@ -37,7 +36,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
 
     await render(hbs`<ChatMessageText @cooked={{this.cooked}} />`);
 
-    assert.false(exists(".chat-message-collapser"));
+    assert.dom(".chat-message-collapser").doesNotExist();
   });
 
   test("shows edits - regular message", async function (assert) {
@@ -47,7 +46,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @edited={{true}} />`
     );
 
-    assert.true(exists(".chat-message-edited"));
+    assert.dom(".chat-message-edited").exists();
   });
 
   test("shows edits - collapsible message", async function (assert) {
@@ -60,6 +59,6 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
       hbs`<ChatMessageText @cooked={{this.cooked}} @edited={{true}} />`
     );
 
-    assert.true(exists(".chat-message-edited"));
+    assert.dom(".chat-message-edited").exists();
   });
 });

@@ -53,7 +53,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "a :)\r");
 
-    assert.strictEqual(element.value, "a :sad: ");
+    assert.dom(element).hasValue("a :sad: ");
     assert.strictEqual(element.selectionStart, 8);
     assert.strictEqual(element.selectionEnd, 8);
   });
@@ -70,24 +70,24 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "@\r");
 
-    assert.strictEqual(element.value, "@test1 ");
+    assert.dom(element).hasValue("@test1 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
     await simulateKeys(element, "@2\r");
 
-    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.dom(element).hasValue("@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 14);
     assert.strictEqual(element.selectionEnd, 14);
 
     await setCaretPosition(element, 6);
     await simulateKeys(element, "\b\b");
 
-    assert.strictEqual(element.value, "@tes @test2 ");
+    assert.dom(element).hasValue("@tes @test2 ");
 
     await simulateKey(element, "\r");
 
-    assert.strictEqual(element.value, "@test1 @test2 ");
+    assert.dom(element).hasValue("@test1 @test2 ");
     assert.strictEqual(element.selectionStart, 7);
     assert.strictEqual(element.selectionEnd, 7);
 
@@ -133,7 +133,7 @@ module("Unit | Utility | autocomplete", function (hooks) {
 
     await simulateKeys(element, "@jane d\r");
 
-    assert.strictEqual(element.value, "@jd ");
+    assert.dom(element).hasValue("@jd ");
   });
 
   test("Autocomplete can render on @", async function (assert) {

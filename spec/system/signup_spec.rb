@@ -259,6 +259,26 @@ shared_examples "signup scenarios" do |signup_page_object, login_page_object|
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
+
+  it "correctly loads the invites page" do
+    inviter = Fabricate(:user)
+    invite = Fabricate(:invite, email: "johndoe@example.com", invited_by: inviter)
+    visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+    expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+    find(".invitation-cta__sign-in").click
+
+    if page.has_css?(".d-modal.login-modal", wait: 0)
+      if page.has_css?("html.mobile-view", wait: 0)
+        expect(page).to have_css(".d-modal:not(.is-animating)")
+      end
+      find(".d-modal .modal-close").click
+    else
+      page.go_back
+    end
+
+    expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+  end
 end
 
 describe "Signup", type: :system do
@@ -275,14 +295,14 @@ describe "Signup", type: :system do
   end
 
   context "when fullpage desktop" do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new
   end
 
   context "when fullpage mobile", mobile: true do
-    before { SiteSetting.experimental_full_page_login = true }
+    before { SiteSetting.full_page_login = true }
     include_examples "signup scenarios",
                      PageObjects::Pages::Signup.new,
                      PageObjects::Pages::Login.new

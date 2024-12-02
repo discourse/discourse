@@ -66,25 +66,13 @@ class Upload < ActiveRecord::Base
   scope :with_invalid_etag_verification_status,
         -> { where(verification_status: Upload.verification_statuses[:invalid_etag]) }
 
-  scope :with_invalid_url_verification_status,
-        -> { where(verification_status: Upload.verification_statuses[:invalid_url]) }
-
   def self.verification_statuses
     @verification_statuses ||=
       Enum.new(
         unchecked: 1,
         verified: 2,
-        # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to
-        # the ETag value of the inventory file. A upload with invalid ETag is equivalent to "missing
-        # upload file"
-        invalid_etag: 3,
-        # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a
-        # file in the S3 file store
-        s3_file_missing_confirmed: 4,
-        # Used by S3Inventory to mark S3 Upload records that have an invalid url value compared to
-        # the url value of the inventory file. A upload with invalid URL is equivalent to "file
-        # exists (same ETag), but with a different URL"
-        invalid_url: 5,
+        invalid_etag: 3, # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to the ETag value of the inventory file
+        s3_file_missing_confirmed: 4, # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a file in the S3 file store
       )
   end
 

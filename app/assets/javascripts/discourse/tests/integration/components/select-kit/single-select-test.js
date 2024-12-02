@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },
@@ -45,21 +45,21 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     await this.subject.expand();
 
     const content = this.subject.displayedContent();
-    assert.strictEqual(content.length, 3, "it shows rows");
+    assert.strictEqual(content.length, 3, "shows rows");
     assert.strictEqual(
       content[0].name,
       this.content.firstObject.name,
-      "it has the correct name"
+      "has the correct name"
     );
     assert.strictEqual(
       content[0].id,
       this.content.firstObject.id.toString(),
-      "it has the correct value"
+      "has the correct value"
     );
     assert.strictEqual(
       this.subject.header().value(),
       null,
-      "it doesn't set a value from the content"
+      "doesn't set a value from the content"
     );
   });
 
@@ -71,17 +71,15 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     await this.subject.expand();
 
     const content = this.subject.displayedContent();
-    assert.strictEqual(content.length, 3, "it shows rows");
+    assert.strictEqual(content.length, 3, "shows rows");
 
-    assert
-      .dom(".select-kit-header")
-      .isFocused("it should focus the header first");
+    assert.dom(".select-kit-header").isFocused("focuses the header first");
 
     await tab();
 
     assert
       .dom(".select-kit-row:first-child")
-      .isFocused("it should focus the first row next");
+      .isFocused("focuses the first row next");
 
     await tab();
 
@@ -104,7 +102,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     await this.subject.expand();
 
-    assert.ok(this.subject.isExpanded(), "dropdown is expanded again");
+    assert.true(this.subject.isExpanded(), "dropdown is expanded again");
 
     await tab({ backwards: true });
 
@@ -127,7 +125,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     assert.strictEqual(
       this.subject.header().value(this.content),
       "1",
-      "it selects the correct content to display"
+      "selects the correct content to display"
     );
   });
 
@@ -148,14 +146,14 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     `);
 
     await this.subject.expand();
-    assert.ok(this.subject.filter().exists(), "it shows the filter");
+    assert.true(this.subject.filter().exists(), "shows the filter");
 
     const filter = this.subject.displayedContent()[1].name;
     await this.subject.fillInFilter(filter);
     assert.strictEqual(
       this.subject.displayedContent()[0].name,
       filter,
-      "it filters the list"
+      "filters the list"
     );
   });
 
@@ -182,7 +180,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     assert.strictEqual(
       this.subject.displayedContent().length,
       1,
-      "it returns only 1 result"
+      "returns only 1 result"
     );
   });
 
@@ -232,7 +230,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     const noneRow = this.subject.rowByIndex(0);
     assert.strictEqual(noneRow.value(), null);
-    assert.strictEqual(noneRow.name(), I18n.t("test.none"));
+    assert.strictEqual(noneRow.name(), i18n("test.none"));
   });
 
   test("none:object", async function (assert) {
@@ -283,8 +281,8 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     await this.subject.expand();
 
     const noneRow = this.subject.rowByIndex(0);
-    assert.strictEqual(noneRow.value(), I18n.t("test.none"));
-    assert.strictEqual(noneRow.name(), I18n.t("test.none"));
+    assert.strictEqual(noneRow.value(), i18n("test.none"));
+    assert.strictEqual(noneRow.name(), i18n("test.none"));
     assert.strictEqual(this.value, "foo");
 
     await this.subject.selectRowByIndex(0);
@@ -427,14 +425,14 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
 
     assert
       .dom(this.subject.header().el())
-      .hasAttribute("name", I18n.t("select_kit.select_to_filter"));
+      .hasAttribute("name", i18n("select_kit.select_to_filter"));
 
     await this.subject.expand();
     await this.subject.selectRowByValue(1);
 
     assert.dom(this.subject.header().el()).hasAttribute(
       "name",
-      I18n.t("select_kit.filter_by", {
+      i18n("select_kit.filter_by", {
         name: this.content.firstObject.name,
       })
     );
@@ -474,7 +472,7 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
     const header = query(".select-kit-header").getBoundingClientRect();
     const body = query(".select-kit-body").getBoundingClientRect();
 
-    assert.ok(header.bottom > body.top, "it correctly offsets the body");
+    assert.true(header.bottom > body.top, "correctly offsets the body");
   });
 
   test("options.expandedOnInsert", async function (assert) {

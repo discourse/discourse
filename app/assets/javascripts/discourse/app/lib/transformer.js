@@ -152,6 +152,7 @@ export function _addTransformerName(name, transformerType) {
  * @param {string} transformerName the name of the transformer
  * @param {string} transformerType the type of the transformer being registered
  * @param {function} callback callback that will transform the value.
+ * @returns {boolean} True if the transformer exists, false otherwise.
  */
 export function _registerTransformer(
   transformerName,
@@ -183,6 +184,8 @@ export function _registerTransformer(
       `${prefix}: transformer "${transformerName}" is unknown and will be ignored. ` +
         "Is the name correct? Are you using the correct API for the transformer type?"
     );
+
+    return false;
   }
 
   if (typeof callback !== "function") {
@@ -197,6 +200,8 @@ export function _registerTransformer(
   existingTransformers.push(callback);
 
   transformersRegistry.set(normalizedTransformerName, existingTransformers);
+
+  return true;
 }
 
 export function applyBehaviorTransformer(
@@ -312,10 +317,13 @@ export function applyValueTransformer(
 
   if (
     typeof (context ?? undefined) !== "undefined" &&
-    !(typeof context === "object" && context.constructor === Object)
+    !(
+      typeof context === "object" &&
+      (context.constructor === Object || context.constructor === undefined)
+    )
   ) {
     throw (
-      `${prefix}("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
+      `${prefix}("${transformerName}", ...): context must be a simple JS object/an Ember hash or nullish.\n` +
       "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
       "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
       "and mutating the context directly. Inevitably, this leads to fragile integrations."
@@ -338,7 +346,6 @@ export function applyValueTransformer(
     try {
       const value = valueCallback({ value: newValue, context });
       if (mutable && typeof value !== "undefined") {
-        // eslint-disable-next-line no-console
         throw new Error(
           `${prefix}: transformer "${transformerName}" expects the value to be mutated instead of returned. Remove the return value in your transformer.`
         );

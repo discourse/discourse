@@ -4,7 +4,7 @@ import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminCustomizeEmailTemplatesEditController extends Controller.extend(
   bufferedProperty("emailTemplate")
@@ -48,7 +48,7 @@ export default class AdminCustomizeEmailTemplatesEditController extends Controll
     this.set("saved", false);
 
     this.dialog.yesNoConfirm({
-      title: I18n.t("admin.customize.email_templates.revert_confirm"),
+      title: i18n("admin.customize.email_templates.revert_confirm"),
       didConfirm: () => {
         return this.emailTemplate
           .revert()

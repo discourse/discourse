@@ -3,9 +3,8 @@ import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);
@@ -13,36 +12,36 @@ module("Integration | Component | d-button", function (hooks) {
   test("icon only button", async function (assert) {
     await render(hbs`<DButton @icon="plus" tabindex="3" />`);
 
-    assert.ok(exists("button.btn.btn-icon.no-text"), "it has all the classes");
-    assert.ok(exists("button .d-icon.d-icon-plus"), "it has the icon");
-    assert.dom("button").hasAttribute("tabindex", "3", "it has the tabindex");
+    assert.dom("button.btn.btn-icon.no-text").exists("has all the classes");
+    assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
+    assert.dom("button").hasAttribute("tabindex", "3", "has the tabindex");
   });
 
   test("icon and text button", async function (assert) {
     await render(hbs`<DButton @icon="plus" @label="topic.create" />`);
 
-    assert.ok(exists("button.btn.btn-icon-text"), "it has all the classes");
-    assert.ok(exists("button .d-icon.d-icon-plus"), "it has the icon");
-    assert.ok(exists("button span.d-button-label"), "it has the label");
+    assert.dom("button.btn.btn-icon-text").exists("has all the classes");
+    assert.dom("button .d-icon.d-icon-plus").exists("has the icon");
+    assert.dom("button span.d-button-label").exists("has the label");
   });
 
   test("text only button", async function (assert) {
     await render(hbs`<DButton @label="topic.create" />`);
 
-    assert.ok(exists("button.btn.btn-text"), "it has all the classes");
-    assert.ok(exists("button span.d-button-label"), "it has the label");
+    assert.dom("button.btn.btn-text").exists("has all the classes");
+    assert.dom("button span.d-button-label").exists("has the label");
   });
 
   test("form attribute", async function (assert) {
     await render(hbs`<DButton @form="login-form" />`);
 
-    assert.ok(exists("button[form=login-form]"), "it has the form attribute");
+    assert.dom("button[form=login-form]").exists("has the form attribute");
   });
 
   test("link-styled button", async function (assert) {
     await render(hbs`<DButton @display="link" />`);
 
-    assert.ok(exists("button.btn-link:not(.btn)"), "it has the right classes");
+    assert.dom("button.btn-link:not(.btn)").exists("has the right classes");
   });
 
   test("isLoading button", async function (assert) {
@@ -52,19 +51,15 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert
       .dom("button.is-loading .loading-icon")
-      .exists("it has a spinner showing");
-    assert
-      .dom("button[disabled]")
-      .exists("while loading the button is disabled");
+      .exists("has a spinner showing");
+    assert.dom("button").isDisabled("while loading the button is disabled");
 
     this.set("isLoading", false);
 
     assert
       .dom("button .loading-icon")
-      .doesNotExist("it doesn't have a spinner showing");
-    assert
-      .dom("button:not([disabled])")
-      .exists("while not loading the button is enabled");
+      .doesNotExist("doesn't have a spinner showing");
+    assert.dom("button").isEnabled("while not loading the button is enabled");
   });
 
   test("button without isLoading attribute", async function (assert) {
@@ -72,11 +67,11 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert
       .dom("button.is-loading")
-      .doesNotExist("it doesn't have class is-loading");
+      .doesNotExist("doesn't have class is-loading");
     assert
       .dom("button .loading-icon")
-      .doesNotExist("it doesn't have a spinner showing");
-    assert.notOk(exists("button[disabled]"), "it isn't disabled");
+      .doesNotExist("doesn't have a spinner showing");
+    assert.dom("button").isNotDisabled();
   });
 
   test("isLoading button explicitly set to undefined state", async function (assert) {
@@ -86,11 +81,11 @@ module("Integration | Component | d-button", function (hooks) {
 
     assert
       .dom("button.is-loading")
-      .doesNotExist("it doesn't have class is-loading");
+      .doesNotExist("doesn't have class is-loading");
     assert
       .dom("button .loading-icon")
-      .doesNotExist("it doesn't have a spinner showing");
-    assert.notOk(exists("button[disabled]"), "it isn't disabled");
+      .doesNotExist("doesn't have a spinner showing");
+    assert.dom("button").isNotDisabled();
   });
 
   test("disabled button", async function (assert) {
@@ -98,10 +93,10 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(hbs`<DButton @disabled={{this.disabled}} />`);
 
-    assert.ok(exists("button[disabled]"), "the button is disabled");
+    assert.dom("button").isDisabled();
 
     this.set("disabled", false);
-    assert.ok(exists("button:not([disabled])"), "the button is enabled");
+    assert.dom("button").isEnabled();
   });
 
   test("aria-label", async function (assert) {
@@ -113,7 +108,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("ariaLabel", "test.fooAriaLabel");
 
-    assert.dom("button").hasAria("label", I18n.t("test.fooAriaLabel"));
+    assert.dom("button").hasAria("label", i18n("test.fooAriaLabel"));
 
     this.setProperties({
       ariaLabel: null,
@@ -131,7 +126,7 @@ module("Integration | Component | d-button", function (hooks) {
     );
 
     this.set("title", "test.fooTitle");
-    assert.dom("button").hasAttribute("title", I18n.t("test.fooTitle"));
+    assert.dom("button").hasAttribute("title", i18n("test.fooTitle"));
 
     this.setProperties({
       title: null,
@@ -150,7 +145,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     this.set("label", "test.fooLabel");
 
-    assert.dom("button .d-button-label").hasText(I18n.t("test.fooLabel"));
+    assert.dom("button .d-button-label").hasText(i18n("test.fooLabel"));
 
     this.setProperties({
       label: null,

@@ -75,6 +75,10 @@ fr:
     import_error:
       generic: Une erreur s'est produite lors de l'importation de ce thème
       upload: "Erreur lors de la création de l'élément de téléversement : %{name}. %{errors}"
+      screenshot: "Erreur lors de l'importation des captures d'écran du thème. %{errors}"
+      screenshot_invalid_type: "Les captures d'écran du thème doivent être dans l'un des formats suivants : %{accepted_formats}. La capture d'écran %{file_name} a un format non valide."
+      screenshot_invalid_size: "La taille des captures d'écran du thème doit être inférieure à %{max_size}. La capture d'écran %{file_name} est trop volumineuse."
+      screenshot_invalid_dimensions: "Les captures d'écran du thème doivent mesurer au maximum %{max_width}x%{max_height}. La capture d'écran %{file_name} dépasse cette valeur. Ses dimensions sont %{width}x%{height}."
       about_json: "Erreur d'importation : about.json n'existe pas ou est invalide. Êtes-vous sûr(e) qu'il s'agit d'un thème Discourse ?"
       about_json_too_big: "Erreur d'importation : about.json est supérieur à la limite de %{limit}."
       about_json_values: "about.json contient des valeurs invalides : %{errors}"
@@ -559,6 +563,9 @@ fr:
         one: "%{count} utilisateur a été ajouté au groupe."
         other: "%{count} utilisateurs ont été ajoutés au groupe."
     errors:
+      default_notification_level_users_limit:
+        one: "Le niveau de notification par défaut ne peut pas être défini sur des groupes de plus de %{count} utilisateur. Groupe incorrect : %{group_name}"
+        other: "Le niveau de notification par défaut ne peut pas être défini sur des groupes de plus de %{count} utilisateurs. Groupe incorrect : %{group_name}"
       grant_trust_level_not_valid: "« %{trust_level} » n'est pas un niveau de confiance valide."
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
       member_already_exist:
@@ -586,6 +593,15 @@ fr:
       trust_level_2: "niveau_confiance_2"
       trust_level_3: "niveau_confiance_3"
       trust_level_4: "niveau_confiance_4"
+    default_descriptions:
+      everyone: "Groupe automatique comprenant tous les membres"
+      staff: "Groupe automatique comprenant les administrateurs et les modérateurs"
+      admins: "Responsable de la configuration et de la maintenance de ce site, avec accès à toutes les données des membres et des activités"
+      moderators: "Responsable de répondre aux signalements, de modérer les discussions et d'aider les membres avec leurs comptes"
+      trust_level_0: "Nouveaux membres aux capacités limitées, qui apprennent les normes et les fonctionnalités de la communauté"
+      trust_level_2: "Membres actifs qui ont régulièrement fait des heures supplémentaires et obtenu tous les privilèges de citoyenneté. Tous les membres de ce groupe sont également membres des groupes trust_level_1 et trust_level_0."
+      trust_level_3: "Contributeurs très engagés et de longue date, qui constituent l'épine dorsale de la communauté et qui ont obtenu des privilèges de modération limités. Tous les membres de ce groupe sont également membres des groupes trust_level_2, trust_level_1 et trust_level_0."
+      trust_level_4: "Membres promus manuellement, reconnus pour leurs contributions exemplaires et dotés de privilèges de modération supplémentaires. Tous les membres de ce groupe sont également membres des groupes trust_level_3, trust_level_2, trust_level_1 et trust_level_0."
     request_membership_pm:
       title: "Demande d'adhésion au groupe @%{group_name}"
     request_accepted_pm:
@@ -674,6 +690,7 @@ fr:
               reply_by_email_disabled: "Réponse par e-mail désactivée."
               send_to_email_disabled: "Nous sommes désolés, vous ne pouvez pas faire parvenir de message personnel par e-mail."
               target_user_not_found: "Un des utilisateurs à qui vous envoyez ce message n'a pas été trouvé."
+              too_large_group: "Le groupe : %{group_name}, a trop d'utilisateurs pour recevoir un message. La limite est de %{limit}."
               unable_to_update: "Une erreur s'est produite lors de la mise à jour de ce sujet."
               unable_to_tag: "Une erreur s'est produite lors de l'ajout d'étiquette à ce sujet."
               unable_to_unlist: "Nous sommes désolés, vous ne pouvez pas créer un sujet invisible."
@@ -1164,6 +1181,7 @@ fr:
       wrong_move: "Le signalement ne peut pas être déplacé"
       system: "Le signalement système ne peut pas être mis à jour ou supprimé."
       used: "Le signalement ne peut pas être mis à jour ou supprimé, car il a déjà été utilisé."
+      unique_name: "Le nom du signalement doit être unique"
   reports:
     default:
       labels:
@@ -1238,12 +1256,14 @@ fr:
       yaxis: "Jour"
       description: "Nombre d'utilisateurs ayant augmenté leur niveau de confiance au cours de cette période."
     consolidated_page_views:
+      title: "Pages vues consolidées héritées"
       title_legacy: "Pages vues unifiées"
       xaxis:
         page_view_crawler: "Robots d'indexation"
         page_view_anon: "Utilisateurs anonymes"
         page_view_logged_in: "Utilisateurs connectés"
       yaxis: "Jour"
+      description: "Rapport hérité indiquant les pages vues des utilisateurs connectés, des utilisateurs anonymes et des robots d'exploration. Il a été remplacé par le rapport « Trafic du site »."
       description_legacy: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes et les robots d'indexation."
       labels:
         post: Message
@@ -1266,8 +1286,17 @@ fr:
         page_view_crawler: "Robots d'indexation connus"
         page_view_other: "Autres vues de pages"
       yaxis: "Jour"
+      description: "Pages vues pour les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et autres. Ce rapport expérimental garantit que les requêtes connectées/anonymes proviennent de navigateurs réels avant de les compter. Les données historiques de ce rapport ne sont pas disponibles. Pour les données historiques, consultez le rapport « Pages vues consolidées héritées »."
+      description_legacy: "Pages vues pour les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et autres. Ce rapport expérimental garantit que les requêtes connectées/anonymes proviennent de navigateurs réels avant de les compter. Les données historiques de ce rapport ne sont pas disponibles. Pour les données historiques, consultez le rapport « Pages vues consolidées »."
     site_traffic:
+      title: "Trafic du site"
+      xaxis:
+        page_view_anon_browser: "Pages vues (anonymes)"
+        page_view_logged_in_browser: "Pages vues (connectés)"
+        page_view_crawler: "Robots d'indexation connus"
+        page_view_other: "Autre trafic"
       yaxis: "Jour"
+      description: "Pages vues par les utilisateurs connectés, les utilisateurs anonymes, les robots d'indexation connus et les autres trafics."
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1419,8 +1448,10 @@ fr:
       yaxis: "Total de pages vues"
       description: "Nombre de vues par tous les visiteurs."
     page_view_legacy_total_reqs:
+      title: "Pages vues héritées"
       xaxis: "Jour"
       yaxis: "Total de pages vues"
+      description: "Rapport hérité indiquant le nombre de nouvelles pages vues de tous les visiteurs."
     page_view_logged_in_mobile_reqs:
       title: "Nombre de vues par les utilisateurs connectés"
       xaxis: "Jour"
@@ -1731,12 +1762,14 @@ fr:
     markdown_linkify_tlds: "Liste des domaines de premier niveau qui sont automatiquement traités comme des liens."
     markdown_typographer_quotation_marks: "Liste des paires de remplacement des guillemets doubles et simples"
     post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (« J'aime », signalement, etc.)"
+    must_approve_users: 'Tous les nouveaux utilisateurs doivent attendre l''approbation du modérateur ou de l''administrateur avant d''être autorisés à se connecter. (Remarque : l''activation de ce paramètre supprime également l''option d''invitation « arriver sur le sujet »)'
     invite_code: "Les utilisateurs doivent saisir ce code pour pouvoir créer un compte (cette obligation est ignorée si le champ est laissé vide, insensible à la casse)"
     approve_suspect_users: "Ajouter les utilisateurs suspects à la file des éléments en attente d'examen. Les utilisateurs qui ont renseigné une biographie ou un site Web sur leur profil mais n'ont pas parcouru le forum sont définis comme suspects."
     review_every_post: "Envoyez chaque nouvelle publication à la file des messages en attente d'examen pour modération. Les publications sont toujours publiées immédiatement et sont visibles par tous les utilisateurs. AVERTISSEMENT ! Non recommandé pour les sites à fort trafic en raison du volume potentiel de publications nécessitant un examen."
     pending_users_reminder_delay_minutes: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis ce nombre de minutes. Mettre -1 pour désactiver les notifications."
     persistent_sessions: "Les utilisateurs resteront connectés lorsque le navigateur Web sera fermé"
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
+    experimental_full_page_login: "Remplacez la fenêtre de connexion/inscription par un formulaire de connexion/inscription pleine page."
     ga_version: "Version de Google Universal Analytics à utiliser : v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics, par exemple : UA-12345678-9 ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics, par exemple : monsite.com ; voir <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1750,6 +1783,7 @@ fr:
     blocked_ip_blocks: "Une liste de blocs IP privés qui ne doivent jamais être indexés par Discourse"
     allowed_internal_hosts: "Une liste de domaines internes que Discourse peut indexer en sécurité pour les Onebox et autres"
     allowed_onebox_iframes: "Liste de domaines dans l'attribut « src » des iframes qui sont autorisés dans les prévisualisations Onebox. Le caractère « * » autorise tous les moteurs Onebox par défaut."
+    allowed_iframes: "Une liste de préfixes d'URL iframe src que Discourse peut autoriser en toute sécurité dans les publications"
     allowed_crawler_user_agents: "Les agents utilisateurs des robots d'indexation qui sont autorisés à accéder au site. ATTENTION : CE PARAMÈTRE BLOQUERA TOUS LES ROBOTS D'INDEXATION NON LISTÉS ICI !"
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: 'Agents utilisateurs des robots d''indexation Web dont le débit doit être limité, comme configuré dans le paramètre « slow down crawler rate ». Chaque valeur doit comporter au moins 3 caractères.'
@@ -1763,6 +1797,8 @@ fr:
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
     top_menu: "Déterminez quels éléments apparaissent dans la navigation de la page d'accueil et dans quel ordre."
+    post_menu: "Configurez la visibilité et l'ordre des éléments de menu de publication par défaut. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
+    post_menu_hidden_items: "Les éléments de menu à masquer par défaut dans le menu de publication, à moins que l'on clique sur une ellipse d'extension. Les éléments supplémentaires ajoutés par des extensions ou des thèmes sont gérés séparément et n'apparaîtront pas dans cette liste."
     share_links: "Choisissez les éléments qui apparaissent dans la fenêtre de partage, ainsi que leur ordre."
     allow_username_in_share_links: "Autoriser l'inclusion de noms d'utilisateur dans les liens partagés. Ceci est utile pour attribuer les badges en fonction du nombre de visiteurs uniques."
     site_contact_username: "Un nom d'utilisateur de responsable valide pour envoyer tous les messages automatiques. Si vous laissez ce champ vide, le compte système par défaut sera utilisé."
@@ -1781,6 +1817,7 @@ fr:
     top_page_default_timeframe: "Période de temps par défaut de la première page pour les utilisateurs anonymes (s'ajuste automatiquement pour les utilisateurs connectés en fonction de leur dernière visite)."
     moderators_view_emails: "Autorisez les modérateurs à consulter les adresses e-mail des utilisateurs."
     prioritize_username_in_ux: "Afficher le nom d'utilisateur en premier sur la page d'un utilisateur, sa carte et ses messages (si cette option est désactivée, le nom complet est affiché en premier)"
+    enable_rich_text_paste: "Activez la conversion automatique HTML en Markdown lors du collage de texte dans le compositeur."
     send_old_credential_reminder_days: "Rappeler l'utilisation de vieux identifiants après ce nombre de jours"
     email_token_valid_hours: "Les jetons (tokens) de mot de passe oublié/activation de compte sont valides (n) jours."
     enable_badges: "Activez le système de badges, qui est une forme de gamification visant à renforcer les actions positives des utilisateurs. Voir <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Que sont les badges ?</a> sur Discourse Meta pour en savoir plus."
@@ -1838,8 +1875,10 @@ fr:
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     google_oauth2_prompt: "Liste facultative de valeurs de chaînes de caractères délimitées par des espaces, qui spécifie si le serveur d'autorisation invite l'utilisateur à s'authentifier à nouveau et à donner son consentement. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> pour connaître les valeurs possibles."
     google_oauth2_hd: "Un domaine optionnel Google Apps Hosted auquel la connexion sera limitée. Voir <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> pour obtenir plus de détails."
+    google_oauth2_hd_groups: "Récupérez les groupes Google des utilisateurs sur le domaine hébergé lors de l'authentification. Les groupes Google récupérés peuvent être utilisés pour accorder automatiquement l'adhésion au groupe Discourse (voir les paramètres du groupe). Pour en savoir plus, consultez https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Une adresse e-mail appartenant à un compte administrateur Google Workspace. Elle sera utilisée avec les informations d'identification du compte de service pour récupérer les informations du groupe."
     google_oauth2_hd_groups_service_account_json: "Informations clés au format JSON pour le compte de service. Elles seront utilisées pour récupérer les informations du groupe."
+    google_oauth2_verbose_logging: "Enregistrez les diagnostics détaillés liés à Google OAuth2 dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et twitter_consumer_secret. Voir <a href='https://meta.discourse.org/t/13395' target='_blank'>Configurer la connexion Twitter (avec rich embeds) pour Discourse</a>."
     twitter_consumer_key: "Clé consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret consommateur pour l'authentification Twitter, enregistrée sur <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
@@ -2051,6 +2090,7 @@ fr:
     tos_url: "Si vous disposez déjà de conditions générales d'utilisation hébergées ailleurs que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une politique de confidentialité hébergée ailleurs que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
     log_anonymizer_details: "Indique s'il faut conserver les informations d'un utilisateur dans le journal après son anonymisation."
+    display_eu_visitor_stats: "Affichez le nombre de visiteurs internationaux et européens sur la page /about. L'affichage des statistiques peut prendre quelques minutes après l'activation de ce paramètre."
     newuser_spam_host_threshold: "Combien de fois un nouvel utilisateur peut publier un lien vers le même domaine dans la limite de leur « newuser_spam_host_threshold » messages avant d'être considéré comme du spam."
     allowed_spam_host_domains: "Une liste des domaines exclus des hôtes testés pour spam. Les nouveaux utilisateurs pourront toujours créer des messages contenant des liens vers ces domaines."
     staff_like_weight: "La pondération à accorder aux « J'aime » provenant d'un responsable (les autres « J'aime » ont une pondération de 1)."
@@ -2107,6 +2147,7 @@ fr:
     reset_bounce_score_after_days: "Réinitialiser automatiquement le taux d'e-mails non délivrés après X jours."
     blocked_attachment_content_types: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
     blocked_attachment_filenames: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
+    forwarded_emails_behaviour: "Comment traiter un e-mail transféré vers Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>En savoir plus</a>"
     always_show_trimmed_content: "Toujours montrer la partie réduite des e-mails entrants. ATTENTION : cela peut révéler les adresses e-mail."
     trim_incoming_emails: "Débarrasser les e-mails entrants des passages qui ne sont pas pertinents."
     private_email: "Ne pas inclure le contenu de messages ou de sujets dans le titre ou le corps de l'e-mail. REMARQUE : désactive également les e-mails de résumé."
@@ -2225,6 +2266,7 @@ fr:
     auto_handle_queued_age: "Après tant de jours écoulés, traiter automatiquement les éléments en attente d'examen. Les signalements seront ignorés, les messages et les utilisateurs en attente d'examen seront rejetés. Réglez cette valeur à 0 pour désactiver cette fonction."
     penalty_step_hours: "Durées par défaut de mise en sourdine ou de suspension des utilisateurs, en heures. La première valeur correspond à la première infraction d'un compte, la deuxième valeur à sa deuxième infraction, etc."
     penalty_include_post_message: "Incluez automatiquement la publication incriminée dans le modèle de message électronique lors de la mise en sourdine ou de la suspension d'un utilisateur"
+    svg_icon_subset: "Ajoutez des icônes FontAwesome supplémentaires que vous souhaitez inclure dans vos ressources. Utilisez le préfixe « fa- » pour les icônes pleines, « far- » pour les icônes normales et « fab- » pour les icônes de marque."
     max_prints_per_hour_per_user: "Nombre maximal d'impressions de pages (défini sur 0 pour désactiver l'impression)"
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les e-mails. Décocher pour masquer les noms complets partout."
@@ -2234,7 +2276,7 @@ fr:
     default_code_lang: "Coloration syntaxique par défaut du langage de programmation appliquée aux blocs de code markdown (auto, text, ruby, python, etc.). Cette valeur doit également être présente dans le paramètre de site « highlighted languages »."
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse remonte à plusieurs jours, un avertissement sera affiché. Désactivez la fonctionnalité en indiquant 0."
     autohighlight_all_code: "Appliquez la coloration syntaxique aux blocs &lt;code&gt; créés en HTML, même s'ils ne spécifient pas de langue. Pour configurer des blocs de code créés par Markdown, utilisez le paramètre « default code lang »."
-    highlighted_languages: "Règles de coloration syntaxique supportées. (Attention : supporter trop de langages peut impacter les performances.) Voir : <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo/</a> pour une démonstration."
+    highlighted_languages: "Règles de surlignage de la syntaxe incluses. (Attention : inclure trop de langues peut avoir un impact sur les performances). Consultez <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pour obtenir une démonstration"
     show_copy_button_on_codeblocks: "Afficher un bouton dans les blocs de mise en forme de type « code » permettant de copier le contenu du bloc vers le presse-papier de l'utilisateur."
     embed_any_origin: "Autoriser le contenu intégré, quelle que soit son origine. Cela est nécessaire pour les applications mobiles utilisant du HTML statique."
     embed_topics_list: "Activez l'intégration des listes de sujets au format HTML. Ce paramètre vous permet d'intégrer des listes de sujets de votre forum dans d'autres sites Web de manière compatible et facile à utiliser."
@@ -2250,6 +2292,7 @@ fr:
     notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_drafts_older_than_n_days: "Supprimez les brouillons qui n'ont pas été modifiés depuis plus de (n) jours."
     delete_merged_stub_topics_after_days: "Délai en jours avant la suppression automatique des sujets brouillon entièrement fusionnés. Réglez ce paramètre sur -1 pour ne jamais supprimer. Réglez-le sur 0 pour supprimer immédiatement."
+    bootstrap_mode_min_users: 'Nombre minimal d''utilisateurs requis pour désactiver le mode bootstrap et supprimer le bouton de démarrage (défini sur 0 pour désactiver, peut prendre jusqu''à 24 heures). Consultez <a target="_blank" href="https://meta.discourse.org/t/-/322876">le sujet du mode d''amorçage sur Meta</a> pour obtenir plus de détails.'
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
@@ -2298,12 +2341,14 @@ fr:
     disable_mailing_list_mode: "Interdire aux utilisateurs d'activer le mode « liste de diffusion » (empêche tout e-mail d'être expédié vers une liste de diffusion)."
     default_email_previous_replies: "Inclure par défaut les réponses précédentes dans les e-mails."
     default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les e-mails."
-    default_hide_profile_and_presence: "Masquez le profil public de l'utilisateur et les fonctionnalités de présence par défaut."
+    default_hide_profile: "Masquer le profil public de l'utilisateur par défaut."
+    default_hide_presence: "Désactiver les fonctionnalités de présence par défaut."
     default_other_new_topic_duration_minutes: "Condition par défaut pour considérer un sujet comme nouveau."
     default_other_auto_track_topics_after_msecs: "Durée par défaut après laquelle un sujet est automatiquement suivi."
     default_other_notification_level_when_replying: "Niveau de notification global par défaut quand un utilisateur répond à un sujet."
     default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
     default_other_enable_quoting: "Par défaut, proposer de citer le texte sélectionné."
+    default_other_enable_smart_lists: "Activer les listes intelligentes lors de la saisie dans le compositeur par défaut."
     default_other_enable_defer: "Par défaut, activer le bouton pour reporter un sujet à plus tard."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône du navigateur."
     default_other_skip_new_user_tips: "Ignorer les conseils et badges d'intégration des nouveaux utilisateurs."
@@ -2360,7 +2405,7 @@ fr:
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
-    create_post_for_category_and_tag_changes: "Créer une petite publication d'action lorsque la catégorie ou les balises d'un sujet changent"
+    create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
     automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message privé au quotidien."
     watched_precedence_over_muted: "M'avertir des sujets des catégories ou des étiquettes que je regarde et qui appartiennent également à un sujet que j'ai désactivé"
     company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
@@ -2377,6 +2422,7 @@ fr:
     heading_font: "Police à utiliser pour les titres du site. Les thèmes peuvent remplacer cette police via la propriété personnalisée CSS « --heading-font-family »."
     enable_sitemap: "Générez un sitemap pour votre site et l'inclure dans le fichier robots.txt."
     sitemap_page_size: "Nombre d'URL à inclure dans chaque page de sitemap. Maximum 50 000"
+    enable_user_status: "Autorisez les utilisateurs à définir un message d'état personnalisé (émoji + description)."
     enable_user_tips: "Activer les nouveaux conseils d'utilisation qui décrivent les fonctionnalités clés aux utilisateurs"
     short_title: "Le titre court sera utilisé sur l'écran d'accueil de l'utilisateur, le lanceur d'applications ou d'autres endroits où la place disponible est limitée. Il devrait être limité à 12 caractères."
     dashboard_hidden_reports: "Permettre de masquer les rapports du tableau de bord."
@@ -2398,9 +2444,18 @@ fr:
     navigation_menu: "Spécifiez la barre latérale ou la liste déroulante d'en-tête comme menu de navigation principal de votre site. La barre latérale est recommandée."
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
+    experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
+    experimental_topics_filter: "Active la route de filtrage des sujets expérimentaux vers /filter"
+    enable_experimental_lightbox: "Remplacez la lightbox d'image par défaut par l'apparence remaniée."
+    experimental_glimmer_topic_list_groups: "Activez la nouvelle implémentation de la liste de sujets « glimmer ». Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
+    glimmer_post_menu_mode: "Contrôlez si la nouvelle implémentation du menu de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
+    glimmer_post_menu_groups: "Activez la nouvelle implémentation du menu de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
+    experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. <b>Après activation,</b> gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser / Modèles</a>."
     admin_sidebar_enabled_groups: "Activez la navigation dans la barre latérale pour l'interface utilisateur d'administration pour les groupes spécifiés, qui remplace les boutons de navigation d'administration de niveau supérieur."
+    lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
+    about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."
@@ -2468,6 +2523,10 @@ fr:
       delete_rejected_email_after_days: "Ce paramètre ne peut pas être inférieur au paramètre delete_email_logs_after_days ou supérieur à %{max}"
       invalid_uncategorized_category_setting: 'La catégorie « Sans catégorie » ne peut pas être sélectionnée si « Autoriser les sujets sans catégorie » n''est pas activé.'
       invalid_search_ranking_weights: "La valeur n'est pas valide pour le paramètre du site search_ranking_weights. Exemple : « {0.1,0.2,0.3,1.0} ». Notez que la valeur maximale pour chaque pondération est de 1,0."
+    keywords:
+      clean_up_inactive_users_after_days: "désactivé|inactif|non activé"
+      purge_unactivated_users_grace_period_days: "désactivé|inactif|non activé"
+      navigation_menu: "barre latérale|menu déroulant d'en-tête"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4933,7 +4992,7 @@ fr:
           contact_email:
             label: "Point de contact"
             placeholder: "exemple@utilisateur.com"
-            description: "Adresse e-mail du contact clé responsable de ce site. Utilisé pour les notifications critiques et répertorié sur votre page <a href='%{base_path}/about' target='_blank'>à propos</a> pour les questions urgentes."
+            description: "Adresse e-mail du contact clé responsable de ce site. Utilisé pour les notifications critiques et répertorié sur votre page <a href='%{base_path}/about' target='_blank'>about</a> pour les questions urgentes."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque terminé ! Invitons quelques personnes pour <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>commencer des discussions</a> avec des sujets et réponses intéressantes pour lancer votre communauté."

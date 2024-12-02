@@ -11,8 +11,8 @@ import hideApplicationHeaderButtons from "discourse/helpers/hide-application-hea
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
+import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   class extends Component {
@@ -72,7 +72,7 @@ export default RouteTemplate(
         } else {
           setTimeout(this.loadHomepage, 3000);
         }
-      } catch (error) {
+      } catch {
         this.errorMessage = i18n("user.activate_account.already_done");
       }
     }

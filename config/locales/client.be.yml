@@ -686,7 +686,6 @@ be:
         days_visited: "дзён наведанае"
         account_age_days: "Ўзрост акаўнта ў днях"
         invite:
-          save_invite: "захаваць"
           cancel: "адмяніць"
       password:
         title: "Пароль"
@@ -1136,9 +1135,13 @@ be:
       errors:
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
+        like_action: "Падабайка"
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
+        flag_action: "Пазначыць"
+        share_action: "Падзяліцца"
         more: "Болей"
+        admin_action: "адміністратар"
         delete_topic: "выдаліць тэму"
       actions:
         people:
@@ -1676,6 +1679,9 @@ be:
             invalid_applies_to: "абавязковыя"
             topic: "тэмы"
             post: "паведамленняў"
+        user_fields:
+          type: "Тып"
+          delete: "выдаляць"
       plugins:
         title: "Плагіны"
         name: "Назва"
@@ -2003,6 +2009,11 @@ be:
         id_not_found: "Выбачайце, карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         show_emails: "Паказаць емейл"
+        bulk_actions:
+          delete:
+            confirmation_modal:
+              close: "зачыніць"
+              confirm: "выдаляць"
         nav:
           new: "Новыя"
           active: "актыўныя"
@@ -2126,7 +2137,6 @@ be:
         required:
           enabled: "абавязковыя"
         field_types:
-          text: "тэкставае поле"
           confirm: "пацвярджэнне"
           dropdown: "Выпадаючы спіс"
       site_text:
@@ -2221,6 +2231,7 @@ be:
           sample: "Прыклад:"
       emoji:
         title: "Абразкі"
+        delete: "выдаляць"
         name: "Імя"
         group: "Група"
         image: "Выява"
@@ -2245,12 +2256,13 @@ be:
         post_title: "Паведамленне"
         category_id: "ID катэгорыі"
         category_title: "Катэгорыя"
+        user_title: "карыстальнік"
         username: "Імя карыстальніка"
         delete_confirm: Вы ўпэўненыя, што жадаеце выдаліць гэта пастаянную спасылку?
         form:
           label: "новы:"
-          add: "Дадаць"
-          filter: "Пошук (URL або знешні URL)"
+          url: "URL спасылка"
+          save: "захаваць"
       reseed:
         modal:
           categories: "Катэгорыі"

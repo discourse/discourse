@@ -208,6 +208,9 @@
       .d-icon {
         padding-top: 0;
       }
+      &.enabled .d-icon {
+        color: var(--tertiary);
+      }
     }
 
     .set-user-status {
@@ -235,6 +238,11 @@
       .d-icon-toggle-on {
         color: var(--tertiary);
       }
+    }
+
+    hr {
+      border-top: 1px solid var(--primary-low);
+      width: 100%;
     }
   }
 }

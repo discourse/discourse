@@ -9,7 +9,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import loadAce from "discourse/lib/load-ace-editor";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const WAITER = buildWaiter("ace-editor");
 const COLOR_VARS_REGEX =
@@ -216,7 +216,7 @@ export default class AceEditor extends Component {
           return {
             row,
             column: 0,
-            text: I18n.t("admin.customize.theme.scss_warning_inline"),
+            text: i18n("admin.customize.theme.scss_warning_inline"),
             type: "warning",
           };
         }
@@ -227,7 +227,7 @@ export default class AceEditor extends Component {
 
     this.args.setWarning?.(
       warnings.length
-        ? I18n.t("admin.customize.theme.scss_color_variables_warning")
+        ? i18n("admin.customize.theme.scss_color_variables_warning")
         : false
     );
   }
