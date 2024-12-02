@@ -8,7 +8,6 @@ import { isEmpty } from "@ember/utils";
 import { observes, on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { extractError, throwAjaxError } from "discourse/lib/ajax-error";
-import { propertyNotEqual } from "discourse/lib/computed";
 import { QUOTE_REGEXP } from "discourse/lib/quote";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { emailValid, escapeExpression } from "discourse/lib/utilities";
@@ -73,13 +72,15 @@ const CLOSED = "closed",
   _update_serializer = {
     raw: "reply",
     topic_id: "topic.id",
-    raw_old: "rawOld",
+    original_text: "originalText",
   },
   _edit_topic_serializer = {
     title: "topic.title",
     categoryId: "topic.category.id",
     tags: "topic.tags",
     featuredLink: "topic.featured_link",
+    original_title: "originalTitle",
+    original_tags: "originalTags",
   },
   _draft_serializer = {
     reply: "reply",
@@ -94,6 +95,9 @@ const CLOSED = "closed",
     typingTime: "typingTime",
     postId: "post.id",
     recipients: "targetRecipients",
+    original_text: "originalText",
+    original_title: "originalTitle",
+    original_tags: "originalTags",
   },
   _add_draft_fields = {},
   FAST_REPLY_LENGTH_THRESHOLD = 10000;
@@ -210,8 +214,6 @@ export default class Composer extends RestModel {
   @equal("composeState", FULLSCREEN) viewFullscreen;
   @or("viewOpen", "viewFullscreen") viewOpenOrFullscreen;
   @and("editingPost", "post.firstPost") editingFirstPost;
-  @propertyNotEqual("reply", "originalText") replyDirty;
-  @propertyNotEqual("title", "originalTitle") titleDirty;
 
   @or(
     "creatingTopic",
@@ -225,6 +227,16 @@ export default class Composer extends RestModel {
   canCategorize;
 
   @tracked _categoryId = null;
+
+  @discourseComputed("reply", "originalText")
+  replyDirty(reply, original) {
+    return (reply || "").trim() !== (original || "").trim();
+  }
+
+  @discourseComputed("title", "originalTitle")
+  titleDirty(title, original) {
+    return (title || "").trim() !== (original || "").trim();
+  }
 
   @dependentKeyCompat
   get categoryId() {
@@ -787,6 +799,7 @@ export default class Composer extends RestModel {
     const category = Category.findById(categoryId);
     if (category) {
       this.set("reply", category.topic_template || "");
+      this.set("originalText", category.topic_template || "");
     }
   }
 
@@ -861,6 +874,9 @@ export default class Composer extends RestModel {
       whisper: opts.whisper,
       tags: opts.tags || [],
       noBump: opts.noBump,
+      originalText: opts.originalText,
+      originalTitle: opts.originalTitle,
+      originalTags: opts.originalTags,
     });
 
     if (opts.post) {
@@ -926,6 +942,13 @@ export default class Composer extends RestModel {
             reply: post.raw,
             originalText: post.raw,
           });
+
+          if (post.post_number === 1 && this.canEditTitle) {
+            this.setProperties({
+              originalTitle: post.topic.title,
+              originalTags: post.topic.tags,
+            });
+          }
         });
 
         // edge case ... make a post then edit right away
@@ -945,24 +968,18 @@ export default class Composer extends RestModel {
         });
       });
     } else if (opts.action === REPLY && opts.quote) {
-      this.setProperties({
-        reply: opts.quote,
-        originalText: opts.quote,
-      });
+      this.set("reply", opts.quote);
+      this.set("originalText", opts.quote);
     }
 
     if (opts.title) {
       this.set("title", opts.title);
     }
 
-    const isDraft = opts.draft || opts.skipDraftCheck;
-    this.set("originalText", isDraft ? "" : this.reply);
-
     if (this.canEditTitle) {
       if (isEmpty(this.title) && this.title !== "") {
         this.set("title", "");
       }
-      this.set("originalTitle", this.title);
     }
 
     if (!isEdit(opts.action) || !opts.post) {
@@ -1001,6 +1018,8 @@ export default class Composer extends RestModel {
   clearState() {
     this.setProperties({
       originalText: null,
+      originalTitle: null,
+      originalTags: null,
       reply: null,
       post: null,
       title: null,
@@ -1016,12 +1035,9 @@ export default class Composer extends RestModel {
     });
   }
 
-  @discourseComputed("editConflict", "originalText")
-  rawOld(editConflict, originalText) {
-    return editConflict ? null : originalText;
-  }
-
   editPost(opts) {
+    this.set("composeState", SAVING);
+
     const post = this.post;
     const oldCooked = post.cooked;
     let promise = Promise.resolve();
@@ -1054,14 +1070,19 @@ export default class Composer extends RestModel {
       }
     }
 
-    const props = {
+    let props = {
       edit_reason: opts.editReason,
       image_sizes: opts.imageSizes,
-      cooked: this.getCookedHtml(),
     };
 
     this.serialize(_update_serializer, props);
-    this.set("composeState", SAVING);
+
+    // user clicked "overwrite edits" button
+    if (this.editConflict) {
+      delete props.original_text;
+      delete props.original_title;
+      delete props.original_tags;
+    }
 
     const rollback = throwAjaxError((error) => {
       post.setProperties("cooked", oldCooked);
@@ -1071,7 +1092,8 @@ export default class Composer extends RestModel {
       }
     });
 
-    post.setProperties({ cooked: props.cooked, staged: true });
+    const cooked = this.getCookedHtml();
+    post.setProperties({ cooked, staged: true });
     this.appEvents.trigger("post-stream:refresh", { id: post.id });
 
     return promise
@@ -1292,16 +1314,9 @@ export default class Composer extends RestModel {
       return Promise.resolve();
     }
 
-    this.setProperties({
-      draftSaving: true,
-      draftConflictUser: null,
-    });
+    this.set("draftSaving", true);
 
-    let data = this.serialize(_draft_serializer);
-
-    if (data.postId && !isEmpty(this.originalText)) {
-      data.originalText = this.originalText;
-    }
+    const data = this.serialize(_draft_serializer);
 
     const draftSequence = this.draftSequence;
     this.set("draftSequence", this.draftSequence + 1);
