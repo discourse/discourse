@@ -72,11 +72,6 @@ export default class TextareaTextManipulation {
     return this.textarea.value;
   }
 
-  set value(value) {
-    this.textarea.value = value;
-    this.textarea.dispatchEvent(new Event("change", { bubbles: true }));
-  }
-
   // ensures textarea scroll position is correct
   blurAndFocus() {
     this.textarea?.blur();
