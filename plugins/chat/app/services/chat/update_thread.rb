@@ -26,6 +26,7 @@ module Chat
       validates :thread_id, presence: true
       validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
     end
+
     model :thread
     policy :can_view_channel
     policy :can_edit_thread

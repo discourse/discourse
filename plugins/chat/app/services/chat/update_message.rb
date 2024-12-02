@@ -44,12 +44,14 @@ module Chat
           )
       end
     end
+
     model :message
     model :uploads, optional: true
     step :enforce_membership
     model :membership
     policy :can_modify_channel_message
     policy :can_modify_message
+
     transaction do
       step :modify_message
       step :update_excerpt

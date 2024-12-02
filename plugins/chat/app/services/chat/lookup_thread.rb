@@ -23,6 +23,7 @@ module Chat
 
       validates :thread_id, :channel_id, presence: true
     end
+
     model :thread
     policy :invalid_access
     policy :threading_enabled_for_channel
