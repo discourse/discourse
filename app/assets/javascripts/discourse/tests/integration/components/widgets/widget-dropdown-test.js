@@ -86,14 +86,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
   test("onChange action", async function (assert) {
     this.setProperties(DEFAULT_CONTENT);
-    this.set(
-      "onChange",
-      (item) => (document.querySelector("#test").innerText = item.id)
-    );
+    this.set("onChange", (item) => assert.step(item.id));
 
     await render(hbs`
-      <div id="test"></div>
-
       <MountWidget
         @widget="widget-dropdown"
         @args={{hash
@@ -107,7 +102,7 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
     await click("#my-dropdown .widget-dropdown-header");
     await click("#my-dropdown .widget-dropdown-item.item-2");
-    assert.dom("#test").hasText("2", "calls the onChange actions");
+    assert.verifySteps(["2"], "calls the onChange actions");
   });
 
   test("can be opened and closed", async function (assert) {
