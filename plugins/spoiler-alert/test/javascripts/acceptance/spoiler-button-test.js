@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -29,20 +29,24 @@ acceptance("Spoiler Button", function (needs) {
         "contains the right output"
       );
 
-    let textarea = query(".d-editor-input");
-    assert.strictEqual(
-      textarea.selectionStart,
-      9,
-      "it should start highlighting at the right position"
-    );
-    assert.strictEqual(
-      textarea.selectionEnd,
-      i18n("composer.spoiler_text").length + 9,
-      "it should end highlighting at the right position"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionStart",
+        9,
+        "starts highlighting at the right position"
+      );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionEnd",
+        i18n("composer.spoiler_text").length + 9,
+        "ends highlighting at the right position"
+      );
 
     await fillIn(".d-editor-input", "This is hidden");
 
+    const textarea = document.querySelector(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -56,16 +60,20 @@ acceptance("Spoiler Button", function (needs) {
         "contains the right output"
       );
 
-    assert.strictEqual(
-      textarea.selectionStart,
-      9,
-      "it should start highlighting at the right position"
-    );
-    assert.strictEqual(
-      textarea.selectionEnd,
-      23,
-      "it should end highlighting at the right position"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionStart",
+        9,
+        "starts highlighting at the right position"
+      );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionEnd",
+        23,
+        "ends highlighting at the right position"
+      );
 
     await fillIn(".d-editor-input", "Before this is hidden After");
 
@@ -82,16 +90,20 @@ acceptance("Spoiler Button", function (needs) {
         "contains the right output"
       );
 
-    assert.strictEqual(
-      textarea.selectionStart,
-      16,
-      "it should start highlighting at the right position"
-    );
-    assert.strictEqual(
-      textarea.selectionEnd,
-      30,
-      "it should end highlighting at the right position"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionStart",
+        16,
+        "starts highlighting at the right position"
+      );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionEnd",
+        30,
+        "ends highlighting at the right position"
+      );
 
     await fillIn(".d-editor-input", "Before\nthis is hidden\nAfter");
 
@@ -108,16 +120,20 @@ acceptance("Spoiler Button", function (needs) {
         "contains the right output"
       );
 
-    assert.strictEqual(
-      textarea.selectionStart,
-      16,
-      "it should start highlighting at the right position"
-    );
-    assert.strictEqual(
-      textarea.selectionEnd,
-      30,
-      "it should end highlighting at the right position"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionStart",
+        16,
+        "starts highlighting at the right position"
+      );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionEnd",
+        30,
+        "ends highlighting at the right position"
+      );
 
     // enforce block mode when selected text is multiline
     await fillIn(".d-editor-input", "Before\nthis is\n\nhidden\nAfter");
@@ -135,15 +151,19 @@ acceptance("Spoiler Button", function (needs) {
         "contains the right output"
       );
 
-    assert.strictEqual(
-      textarea.selectionStart,
-      17,
-      "it should start highlighting at the right position"
-    );
-    assert.strictEqual(
-      textarea.selectionEnd,
-      32,
-      "it should end highlighting at the right position"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionStart",
+        17,
+        "starts highlighting at the right position"
+      );
+    assert
+      .dom(".d-editor-input")
+      .hasProperty(
+        "selectionEnd",
+        32,
+        "ends highlighting at the right position"
+      );
   });
 });

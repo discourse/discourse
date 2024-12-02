@@ -1,11 +1,7 @@
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import {
-  acceptance,
-  query,
-  selectText,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, selectText } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -82,12 +78,12 @@ acceptance("Closed Topic - Quote button - logged in", function (needs) {
     assert.dom(".insert-quote").exists("shows the quote button");
 
     await click(".insert-quote");
-    assert.true(
-      query(".d-editor-input")
-        .value.trim()
-        .startsWith("Continuing the discussion from"),
-      "quote action defaults to reply as new topic (since topic is closed)"
-    );
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        /^\s*Continuing the discussion from/,
+        "quote action defaults to reply as new topic (since topic is closed)"
+      );
   });
 });
 

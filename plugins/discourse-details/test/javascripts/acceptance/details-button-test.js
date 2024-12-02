@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -30,7 +30,7 @@ acceptance("Details Button", function (needs) {
 
     await fillIn(".d-editor-input", "This is my title");
 
-    const textarea = query(".d-editor-input");
+    const textarea = document.querySelector(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 
@@ -125,7 +125,7 @@ acceptance("Details Button", function (needs) {
     await categoryChooser.selectRowByValue(2);
     await fillIn(".d-editor-input", multilineInput);
 
-    const textarea = query(".d-editor-input");
+    const textarea = document.querySelector(".d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = textarea.value.length;
 

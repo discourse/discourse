@@ -2,7 +2,6 @@ import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | textarea",
@@ -33,10 +32,9 @@ module(
         .exists("a textarea input component exists");
 
       assert.dom(".form-template-field__label").hasText("My text label");
-      assert.strictEqual(
-        query(".form-template-field__textarea").placeholder,
-        "Enter text here"
-      );
+      assert
+        .dom(".form-template-field__textarea")
+        .hasAttribute("placeholder", "Enter text here");
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {

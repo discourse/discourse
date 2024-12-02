@@ -13,7 +13,6 @@ import {
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import deprecated, {
   withSilencedDeprecations,
@@ -431,17 +430,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       />
     `);
 
-    const otherOutletElement = query(".hello-username");
-    otherOutletElement.someUniqueProperty = true;
+    document.querySelector(".hello-username").someUniqueProperty = true;
 
     this.set("shouldDisplay", true);
     await settled();
     assert.dom(".conditional-render").exists("renders conditional outlet");
 
-    assert.true(
-      query(".hello-username").someUniqueProperty,
-      "other outlet is left untouched"
-    );
+    assert
+      .dom(".hello-username")
+      .hasProperty(
+        "someUniqueProperty",
+        true,
+        "other outlet is left untouched"
+      );
   });
 
   module("deprecated arguments", function (innerHooks) {

@@ -2,7 +2,6 @@ import { render, settled } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
 
 const IMAGE_FIXTURE = {
   id: 290,
@@ -74,23 +73,28 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
     await render(hbs`<ChatUpload @upload={{this.upload}} />`);
 
     assert.dom("img.chat-img-upload").exists("displays as an image");
-    const image = query("img.chat-img-upload");
-    assert.strictEqual(image.loading, "lazy", "is lazy loading");
+    assert
+      .dom("img.chat-img-upload")
+      .hasProperty("loading", "lazy", "is lazy loading");
 
-    assert.strictEqual(
-      image.style.backgroundColor,
-      "rgb(120, 131, 112)",
-      "sets background to dominant color"
-    );
+    assert
+      .dom("img.chat-img-upload")
+      .hasStyle(
+        { backgroundColor: "rgb(120, 131, 112)" },
+        "sets background to dominant color"
+      );
 
-    image.dispatchEvent(new Event("load")); // Fake that the image has loaded
+    document
+      .querySelector("img.chat-img-upload")
+      .dispatchEvent(new Event("load")); // Fake that the image has loaded
     await settled();
 
-    assert.strictEqual(
-      image.style.backgroundColor,
-      "",
-      "removes the background color once the image has loaded"
-    );
+    assert
+      .dom("img.chat-img-upload")
+      .doesNotHaveStyle(
+        "backgroundColor",
+        "removes the background color once the image has loaded"
+      );
   });
 
   test("with a video", async function (assert) {

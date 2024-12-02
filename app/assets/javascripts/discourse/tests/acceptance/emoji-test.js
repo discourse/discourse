@@ -3,7 +3,6 @@ import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   simulateKey,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -61,14 +60,10 @@ acceptance("Emoji", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .btn.create");
 
-    const editor = query(".d-editor-input");
-
-    await simulateKeys(editor, ":s");
-
+    await simulateKeys(".d-editor-input", ":s");
     assert.dom(".autocomplete.ac-emoji").doesNotExist();
 
-    await simulateKey(editor, "w");
-
+    await simulateKey(".d-editor-input", "w");
     assert.dom(".autocomplete.ac-emoji").exists();
   });
 });

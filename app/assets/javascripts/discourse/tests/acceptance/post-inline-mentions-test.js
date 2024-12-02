@@ -4,7 +4,6 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   publishToMessageBus,
-  query,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
@@ -52,13 +51,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.true(
-      statusElement.src.includes(status.emoji),
-      "status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /surfing_man/, "status emoji is correct");
   });
 
   test("inserts user status on message bus message", async function (assert) {
@@ -81,13 +76,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.true(
-      statusElement.src.includes(status.emoji),
-      "status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /surfing_man/, "status emoji is correct");
   });
 
   test("updates user status on message bus message", async function (assert) {
@@ -114,13 +105,9 @@ acceptance("Post inline mentions", function (needs) {
     assert
       .dom(".topic-post .cooked .mention .user-status-message")
       .exists("updated user status is shown");
-    const statusElement = query(
-      ".topic-post .cooked .mention .user-status-message img"
-    );
-    assert.true(
-      statusElement.src.includes(newStatus.emoji),
-      "updated status emoji is correct"
-    );
+    assert
+      .dom(".topic-post .cooked .mention .user-status-message img")
+      .hasAttribute("src", /tooth/, "updated status emoji is correct");
   });
 
   test("removes user status on message bus message", async function (assert) {

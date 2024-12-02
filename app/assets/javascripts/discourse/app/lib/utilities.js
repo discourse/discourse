@@ -204,6 +204,10 @@ export function caretPosition(el) {
 
 // Set the caret's position
 export function setCaretPosition(ctrl, pos) {
+  if (typeof ctrl === "string") {
+    ctrl = document.querySelector(ctrl);
+  }
+
   let range;
   if (ctrl.setSelectionRange) {
     ctrl.focus();

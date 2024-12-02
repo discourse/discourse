@@ -3,8 +3,7 @@ import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { i18n } from 'discourse-i18n';
+import { i18n } from "discourse-i18n";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 module(
@@ -25,10 +24,9 @@ module(
 
       await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-composer__input").placeholder,
-        "Jot something down"
-      );
+      assert
+        .dom(".chat-composer__input")
+        .hasAttribute("placeholder", "Jot something down");
     });
 
     test("direct message to multiple folks shows their names when not a group", async function (assert) {
@@ -48,10 +46,9 @@ module(
 
       await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-composer__input").placeholder,
-        "Chat with Tomtom, Steaky, @zorro"
-      );
+      assert
+        .dom(".chat-composer__input")
+        .hasAttribute("placeholder", "Chat with Tomtom, Steaky, @zorro");
     });
 
     test("direct message to group shows Chat in group", async function (assert) {
@@ -72,10 +69,9 @@ module(
 
       await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-composer__input").placeholder,
-        i18n("chat.placeholder_group")
-      );
+      assert
+        .dom(".chat-composer__input")
+        .hasAttribute("placeholder", i18n("chat.placeholder_group"));
     });
 
     test("message to channel shows send message to channel name", async function (assert) {
@@ -88,10 +84,9 @@ module(
 
       await render(hbs`<Chat::Composer::Channel @channel={{this.channel}} />`);
 
-      assert.strictEqual(
-        query(".chat-composer__input").placeholder,
-        "Chat in #just-cats"
-      );
+      assert
+        .dom(".chat-composer__input")
+        .hasAttribute("placeholder", "Chat in #just-cats");
     });
   }
 );
