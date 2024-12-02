@@ -128,9 +128,9 @@ acceptance("Composer", function (needs) {
   test("Composer height adjustment", async function (assert) {
     await visit("/");
     await click("#create-topic");
-    await triggerEvent(document.querySelector(".grippie"), "mousedown");
-    await triggerEvent(document.querySelector(".grippie"), "mousemove");
-    await triggerEvent(document.querySelector(".grippie"), "mouseup");
+    await triggerEvent(".grippie", "mousedown");
+    await triggerEvent(".grippie", "mousemove");
+    await triggerEvent(".grippie", "mouseup");
     await visit("/"); // reload page
     await click("#create-topic");
 
