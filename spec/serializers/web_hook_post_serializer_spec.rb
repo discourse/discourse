@@ -33,7 +33,6 @@ RSpec.describe WebHookPostSerializer do
       :primary_group_name,
       :flair_name,
       :flair_group_id,
-      :badges_granted,
       :version,
       :user_title,
       :bookmarked,
