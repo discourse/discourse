@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { concat, fn } from "@ember/helper";
+import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -35,8 +35,11 @@ export default class ToolbarPopupmenuOptions extends Component {
       @onRegisterApi={{this.onRegisterApi}}
       @onShow={{@onOpen}}
       @modalForMobile={{true}}
+      @placement="top"
+      @fallbackPlacements={{array "bottom"}}
+      @offset={{5}}
       tabindex="-1"
-      class={{concatClass "toolbar-menu" @className}}
+      class={{concatClass @className}}
     >
       <:content>
         <DropdownMenu as |dropdown|>
