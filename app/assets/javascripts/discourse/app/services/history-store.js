@@ -21,7 +21,7 @@ export default class HistoryStore extends Service {
 
   #routeData = new TrackedMap();
   #uuid;
-  #pendingStore;
+  #pendingStore = DEBUG && isTesting() ? new TrackedMap() : null;
 
   get #currentStore() {
     if (this.#pendingStore) {
@@ -126,7 +126,6 @@ export default class HistoryStore extends Service {
 
     if (DEBUG && isTesting()) {
       // Can't use window.history in tests
-      this.#pendingStore = new TrackedMap();
       return;
     }
 
