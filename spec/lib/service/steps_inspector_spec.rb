@@ -45,22 +45,22 @@ RSpec.describe Service::StepsInspector do
     end
   end
 
-  describe "#inspect" do
-    subject(:output) { inspector.inspect.strip }
+  describe "#execution_flow" do
+    subject(:output) { inspector.execution_flow.strip }
 
     context "when service runs without error" do
       it "outputs all the steps of the service" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ✅
+        [ 4/10] [params] default ✅
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ✅
+        [ 6/10]   [step] in_transaction_step_1 ✅
+        [ 7/10]   [step] in_transaction_step_2 ✅
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise' ✅
-        [10/10] [step] 'final_step' ✅
+        [ 9/10]   [step] might_raise ✅
+        [10/10] [step] final_step ✅
         OUTPUT
       end
     end
@@ -76,16 +76,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ❌
-        [ 3/10] [policy] 'policy'
-        [ 4/10] [params] 'default'
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ❌
+        [ 3/10] [policy] policy
+        [ 4/10] [params] default
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 6/10]   [step] in_transaction_step_1
+        [ 7/10]   [step] in_transaction_step_2
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 9/10]   [step] might_raise
+        [10/10] [step] final_step
         OUTPUT
       end
     end
@@ -101,16 +101,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ❌
-        [ 4/10] [params] 'default'
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ❌
+        [ 4/10] [params] default
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 6/10]   [step] in_transaction_step_1
+        [ 7/10]   [step] in_transaction_step_2
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 9/10]   [step] might_raise
+        [10/10] [step] final_step
         OUTPUT
       end
     end
@@ -120,16 +120,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ❌
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ✅
+        [ 4/10] [params] default ❌
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1'
-        [ 7/10]   [step] 'in_transaction_step_2'
+        [ 6/10]   [step] in_transaction_step_1
+        [ 7/10]   [step] in_transaction_step_2
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 9/10]   [step] might_raise
+        [10/10] [step] final_step
         OUTPUT
       end
     end
@@ -145,16 +145,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ✅
+        [ 4/10] [params] default ✅
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ❌
+        [ 6/10]   [step] in_transaction_step_1 ✅
+        [ 7/10]   [step] in_transaction_step_2 ❌
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise'
-        [10/10] [step] 'final_step'
+        [ 9/10]   [step] might_raise
+        [10/10] [step] final_step
         OUTPUT
       end
     end
@@ -170,16 +170,16 @@ RSpec.describe Service::StepsInspector do
 
       it "shows the failing step" do
         expect(output).to eq <<~OUTPUT.chomp
-        [ 1/10] [options] 'default' ✅
-        [ 2/10] [model] 'model' ✅
-        [ 3/10] [policy] 'policy' ✅
-        [ 4/10] [params] 'default' ✅
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ✅
+        [ 4/10] [params] default ✅
         [ 5/10] [transaction]
-        [ 6/10]   [step] 'in_transaction_step_1' ✅
-        [ 7/10]   [step] 'in_transaction_step_2' ✅
+        [ 6/10]   [step] in_transaction_step_1 ✅
+        [ 7/10]   [step] in_transaction_step_2 ✅
         [ 8/10] [try]
-        [ 9/10]   [step] 'might_raise' 💥
-        [10/10] [step] 'final_step'
+        [ 9/10]   [step] might_raise 💥
+        [10/10] [step] final_step
         OUTPUT
       end
     end
@@ -190,16 +190,16 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [ 1/10] [options] 'default' ✅
-          [ 2/10] [model] 'model' ✅
-          [ 3/10] [policy] 'policy' ✅ ⚠️  <= expected to return false but got true instead
-          [ 4/10] [params] 'default' ✅
+          [ 1/10] [options] default ✅
+          [ 2/10] [model] model ✅
+          [ 3/10] [policy] policy ✅ ⚠️  <= expected to return false but got true instead
+          [ 4/10] [params] default ✅
           [ 5/10] [transaction]
-          [ 6/10]   [step] 'in_transaction_step_1' ✅
-          [ 7/10]   [step] 'in_transaction_step_2' ✅
+          [ 6/10]   [step] in_transaction_step_1 ✅
+          [ 7/10]   [step] in_transaction_step_2 ✅
           [ 8/10] [try]
-          [ 9/10]   [step] 'might_raise' ✅
-          [10/10] [step] 'final_step' ✅
+          [ 9/10]   [step] might_raise ✅
+          [10/10] [step] final_step ✅
           OUTPUT
         end
       end
@@ -216,16 +216,16 @@ RSpec.describe Service::StepsInspector do
 
         it "adapts its output accordingly" do
           expect(output).to eq <<~OUTPUT.chomp
-          [ 1/10] [options] 'default' ✅
-          [ 2/10] [model] 'model' ✅
-          [ 3/10] [policy] 'policy' ❌ ⚠️  <= expected to return true but got false instead
-          [ 4/10] [params] 'default'
+          [ 1/10] [options] default ✅
+          [ 2/10] [model] model ✅
+          [ 3/10] [policy] policy ❌ ⚠️  <= expected to return true but got false instead
+          [ 4/10] [params] default
           [ 5/10] [transaction]
-          [ 6/10]   [step] 'in_transaction_step_1'
-          [ 7/10]   [step] 'in_transaction_step_2'
+          [ 6/10]   [step] in_transaction_step_1
+          [ 7/10]   [step] in_transaction_step_2
           [ 8/10] [try]
-          [ 9/10]   [step] 'might_raise'
-          [10/10] [step] 'final_step'
+          [ 9/10]   [step] might_raise
+          [10/10] [step] final_step
           OUTPUT
         end
       end
@@ -327,6 +327,34 @@ RSpec.describe Service::StepsInspector do
       it "returns an error related to the exception" do
         expect(error).to match(/RuntimeError: BOOM/)
       end
+    end
+  end
+
+  describe "#inspect" do
+    let(:parameter) { nil }
+
+    it "outputs the service class name, the steps results and the specific error" do
+      expect(inspector.inspect).to eq(<<~OUTPUT)
+        Inspecting DummyService result object:
+
+        [ 1/10] [options] default ✅
+        [ 2/10] [model] model ✅
+        [ 3/10] [policy] policy ✅
+        [ 4/10] [params] default ❌
+        [ 5/10] [transaction]
+        [ 6/10]   [step] in_transaction_step_1
+        [ 7/10]   [step] in_transaction_step_2
+        [ 8/10] [try]
+        [ 9/10]   [step] might_raise
+        [10/10] [step] final_step
+
+
+        Why it failed:
+
+        #<ActiveModel::Errors [#<ActiveModel::Error attribute=parameter, type=blank, options={}>]>
+
+        Provided parameters: {"parameter"=>nil}
+      OUTPUT
     end
   end
 end

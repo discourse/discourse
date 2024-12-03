@@ -38,7 +38,7 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}] '#{name}' #{emoji}".rstrip
+      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji}".rstrip
     end
 
     private
@@ -127,14 +127,23 @@ class Service::StepsInspector
     @result = result
   end
 
-  # Inspect the provided result object.
-  # Example output:
-  #   [1/4] [model] 'channel' ✅
-  #   [2/4] [params] 'default' ✅
-  #   [3/4] [policy] 'check_channel_permission' ❌
-  #   [4/4] [step] 'change_status'
-  # @return [String] the steps of the result object with their state
   def inspect
+    output = <<~OUTPUT
+    Inspecting #{result.__service_class__} result object:
+
+    #{execution_flow}
+    OUTPUT
+    output += "\n\nWhy it failed:\n\n#{error}" if error.present?
+    output
+  end
+
+  # Example output:
+  #   [1/4] [model] channel ✅
+  #   [2/4] [params] default ✅
+  #   [3/4] [policy] check_channel_permission ❌
+  #   [4/4] [step] change_status
+  # @return [String] the steps of the result object with their state
+  def execution_flow
     steps
       .map
       .with_index do |step, index|

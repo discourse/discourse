@@ -428,7 +428,10 @@ module Service
 
     # @!visibility private
     def initialize(initial_context = {})
-      @context = Context.build(initial_context.merge(__steps__: self.class.steps))
+      @context =
+        Context.build(
+          initial_context.merge(__steps__: self.class.steps, __service_class__: self.class),
+        )
     end
 
     # @!visibility private
