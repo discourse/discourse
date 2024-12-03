@@ -159,10 +159,13 @@ class Wizard
             show_in_sidebar: true,
           )
 
-        DiscourseFonts.fonts.each do |font|
-          body_font.add_choice(font[:key], label: font[:name])
-          heading_font.add_choice(font[:key], label: font[:name])
-        end
+        DiscourseFonts
+          .fonts
+          .sort_by { |f| f[:name] }
+          .each do |font|
+            body_font.add_choice(font[:key], label: font[:name])
+            heading_font.add_choice(font[:key], label: font[:name])
+          end
 
         current =
           (

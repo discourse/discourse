@@ -86,7 +86,7 @@ module Stylesheet
           .body-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
-          .heading-font-#{font[:key].tr("_", "-")} h2 {
+          .heading-font-#{font[:key].tr("_", "-")} {
             font-family: #{font[:stack]};
           }
         CSS

@@ -5409,7 +5409,7 @@ en:
         title: "Look and feel"
         fields:
           color_scheme:
-            label: "Color scheme"
+            label: "Color palette"
           body_font:
             label: "Body font"
           heading_font:
