@@ -427,11 +427,10 @@ export default class ComposerService extends Service {
         label: "composer.insert_table",
       });
 
-      return options.concat(
-        customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter((o) => o)
-      );
+      return options
+        .concat(customPopupMenuOptions)
+        .map((option) => this._setupPopupMenuOption({ ...option }))
+        .filter(Boolean);
     }
   }
 
