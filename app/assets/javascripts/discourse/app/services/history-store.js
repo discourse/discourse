@@ -111,7 +111,7 @@ export default class HistoryStore extends Service {
    * not available as an event on the router service.
    */
   @bind
-  willResolveModel(transition) {
+  async willResolveModel(transition) {
     if (HANDLED_TRANSITIONS.has(transition)) {
       return;
     }
@@ -141,16 +141,16 @@ export default class HistoryStore extends Service {
     }
 
     this.#pendingStore = pendingStoreForThisTransition;
-    transition
-      .then(() => {
-        this.#uuid = window.history.state?.uuid;
-        this.#routeData.set(this.#uuid, this.#pendingStore);
-        this.#pruneOldData();
-      })
-      .finally(() => {
-        if (pendingStoreForThisTransition === this.#pendingStore) {
-          this.#pendingStore = null;
-        }
-      });
+
+    try {
+      await transition;
+      this.#uuid = window.history.state?.uuid;
+      this.#routeData.set(this.#uuid, this.#pendingStore);
+      this.#pruneOldData();
+    } finally {
+      if (pendingStoreForThisTransition === this.#pendingStore) {
+        this.#pendingStore = null;
+      }
+    }
   }
 }
