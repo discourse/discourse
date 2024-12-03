@@ -1,6 +1,6 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { empty, equal, notEmpty } from "@ember/object/computed";
+import { equal, notEmpty } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -10,6 +10,7 @@ import concatClass from "discourse/helpers/concat-class";
 import element from "discourse/helpers/element";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
+import { bind } from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [
@@ -24,13 +25,16 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
   @equal("args.display", "link") btnLink;
 
-  @empty("computedLabel") noText;
-
   constructor() {
     super(...arguments);
     if (typeof this.args.action === "string") {
       deprecated(...ACTION_AS_STRING_DEPRECATION_ARGS);
     }
+  }
+
+  @bind
+  noText(hasBlock) {
+    return !this.computedLabel && !hasBlock;
   }
 
   get forceDisabled() {
@@ -175,7 +179,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
         @class
         (if @isLoading "is-loading")
         (if this.btnLink "btn-link" "btn")
-        (if this.noText "no-text")
+        (if (this.noText (has-block)) "no-text")
         this.btnType
       }}
       {{! For legacy compatibility. Prefer passing these as html attributes. }}
