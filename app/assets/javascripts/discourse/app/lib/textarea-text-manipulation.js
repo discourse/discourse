@@ -52,12 +52,16 @@ export default class TextareaTextManipulation {
   textarea;
   $textarea;
 
+  autocompleteHandler;
+
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
     this.$textarea = $(textarea);
+
+    this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
 
     generateLinkifyFunction(markdownOptions || {}).then((linkify) => {
       // When pasting links, we should use the same rules to match links as we do when creating links for a cooked post.
@@ -346,13 +350,7 @@ export default class TextareaTextManipulation {
   }
 
   _insertAt(start, end, text) {
-    this.textarea.setSelectionRange(start, end);
-    this.textarea.focus();
-    if (start !== end && text === "") {
-      document.execCommand("delete", false);
-    } else {
-      document.execCommand("insertText", false, text);
-    }
+    insertAtTextarea(this.textarea, start, end, text);
   }
 
   extractTable(text) {
@@ -828,15 +826,28 @@ export default class TextareaTextManipulation {
   autocomplete(options) {
     return this.$textarea.autocomplete(
       options instanceof Object
-        ? { textManipulation: this, ...options }
+        ? { textHandler: this.autocompleteHandler, ...options }
         : options
     );
   }
+}
+
+export class TextareaAutocompleteHandler {
+  textarea;
+  $textarea;
+
+  constructor(textarea) {
+    this.textarea = textarea;
+    this.$textarea = $(textarea);
+  }
+
+  get value() {
+    return this.textarea.value;
+  }
 
   replaceTerm({ start, end, term }) {
-    let text = this.value;
-    const space = text.substring(end + 1, end + 2) === " " ? "" : " ";
-    this._insertAt(start, end + 1, term + space);
+    const space = this.value.substring(end + 1, end + 2) === " " ? "" : " ";
+    insertAtTextarea(this.textarea, start, end + 1, term + space);
     setCaretPosition(this.textarea, start + 1 + term.trim().length);
   }
 
@@ -846,5 +857,22 @@ export default class TextareaTextManipulation {
 
   getCaretCoords(start) {
     return this.$textarea.caretPosition({ pos: start + 1 });
+  }
+
+  async inCodeBlock() {
+    return inCodeBlock(
+      this.$textarea.value ?? this.$textarea.val(),
+      caretPosition(this.$textarea)
+    );
+  }
+}
+
+function insertAtTextarea(textarea, start, end, text) {
+  textarea.setSelectionRange(start, end);
+  textarea.focus();
+  if (start !== end && text === "") {
+    document.execCommand("delete", false);
+  } else {
+    document.execCommand("insertText", false, text);
   }
 }

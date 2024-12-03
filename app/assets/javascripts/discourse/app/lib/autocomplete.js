@@ -1,9 +1,8 @@
-import { getOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import $ from "jquery";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import TextareaTextManipulation from "discourse/lib/textarea-text-manipulation";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import Site from "discourse/models/site";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
@@ -115,9 +114,7 @@ export default function (options) {
   const isInput = me[0].tagName === "INPUT" && !options.treatAsTextarea;
   let inputSelectedItems = [];
 
-  options.textManipulation ??= new TextareaTextManipulation(getOwner(me[0]), {
-    textarea: me[0],
-  });
+  options.textHandler ??= new TextareaAutocompleteHandler(me[0]);
 
   function handlePaste() {
     discourseLater(() => me.trigger("keydown"), 50);
@@ -249,17 +246,17 @@ export default function (options) {
             completeEnd = pos.completeEnd;
           } else {
             completeStart = completeEnd =
-              options.textManipulation.getCaretPosition();
+              options.textHandler.getCaretPosition();
           }
 
-          options.textManipulation.replaceTerm({
+          options.textHandler.replaceTerm({
             start: completeStart,
             end: completeEnd,
             term: (options.preserveKey ? options.key || "" : "") + term,
           });
 
           if (options && options.afterComplete) {
-            options.afterComplete(options.textManipulation.value, event);
+            options.afterComplete(options.textHandler.value, event);
           }
         }
       }
@@ -417,7 +414,7 @@ export default function (options) {
     }
 
     let vOffset = 0;
-    let pos = options.textManipulation.getCaretCoords(completeStart);
+    let pos = options.textHandler.getCaretCoords(completeStart);
 
     if (options.treatAsTextarea) {
       vOffset = -32;
@@ -528,7 +525,7 @@ export default function (options) {
   async function checkTriggerRule(_opts) {
     const opts = {
       ..._opts,
-      inCodeBlock: () => options.textManipulation.inCodeBlock(),
+      inCodeBlock: () => options.textHandler.inCodeBlock(),
     };
     const shouldTrigger = await options.triggerRule?.(me[0], opts);
     return shouldTrigger ?? true;
@@ -547,12 +544,12 @@ export default function (options) {
       return true;
     }
 
-    let cp = options.textManipulation.getCaretPosition();
-    const key = options.textManipulation.value[cp - 1];
+    let cp = options.textHandler.getCaretPosition();
+    const key = options.textHandler.value[cp - 1];
 
     if (options.key) {
       if (options.onKeyUp && key !== options.key) {
-        let match = options.onKeyUp(options.textManipulation.value, cp);
+        let match = options.onKeyUp(options.textHandler.value, cp);
 
         if (match) {
           completeStart = cp - match[0].length;
@@ -564,7 +561,7 @@ export default function (options) {
 
     if (completeStart === null && cp > 0) {
       if (key === options.key) {
-        let prevChar = options.textManipulation.value.charAt(cp - 2);
+        let prevChar = options.textHandler.value.charAt(cp - 2);
         if (
           (await checkTriggerRule()) &&
           (!prevChar || ALLOWED_LETTERS_REGEXP.test(prevChar))
@@ -574,7 +571,7 @@ export default function (options) {
         }
       }
     } else if (completeStart !== null) {
-      let term = options.textManipulation.value.substring(
+      let term = options.textHandler.value.substring(
         completeStart + (options.key ? 1 : 0),
         cp
       );
@@ -587,7 +584,7 @@ export default function (options) {
     let prevIsGood = true;
     let backSpace = opts?.backSpace;
     let completeTermOption = opts?.completeTerm;
-    let caretPos = options.textManipulation.getCaretPosition();
+    let caretPos = options.textHandler.getCaretPosition();
 
     if (backSpace) {
       caretPos -= 1;
@@ -600,12 +597,12 @@ export default function (options) {
 
     while (prevIsGood && caretPos >= 0) {
       caretPos -= 1;
-      prev = options.textManipulation.value[caretPos];
+      prev = options.textHandler.value[caretPos];
 
       stopFound = prev === options.key;
 
       if (stopFound) {
-        prev = options.textManipulation.value[caretPos - 1];
+        prev = options.textHandler.value[caretPos - 1];
         const shouldTrigger = await checkTriggerRule({ backSpace });
 
         if (
@@ -613,7 +610,7 @@ export default function (options) {
           (prev === undefined || ALLOWED_LETTERS_REGEXP.test(prev))
         ) {
           start = caretPos;
-          term = options.textManipulation.value.substring(
+          term = options.textHandler.value.substring(
             caretPos + 1,
             initialCaretPos
           );
@@ -647,7 +644,7 @@ export default function (options) {
           inputSelectedItems.push("");
         }
 
-        const value = options.textManipulation.value;
+        const value = options.textHandler.value;
         if (typeof inputSelectedItems[0] === "string" && value.length > 0) {
           inputSelectedItems.pop();
           inputSelectedItems.push(value);
@@ -688,12 +685,12 @@ export default function (options) {
     }
 
     if (completeStart !== null) {
-      cp = options.textManipulation.getCaretPosition();
+      cp = options.textHandler.getCaretPosition();
 
       // allow people to right arrow out of completion
       if (
         e.which === keys.rightArrow &&
-        options.textManipulation.value[cp] === " "
+        options.textHandler.value[cp] === " "
       ) {
         closeAutocomplete();
         return true;
@@ -769,7 +766,7 @@ export default function (options) {
             return true;
           }
 
-          term = options.textManipulation.value.substring(
+          term = options.textHandler.value.substring(
             completeStart + (options.key ? 1 : 0),
             cp
           );
