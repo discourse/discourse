@@ -703,25 +703,33 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
       original_setting_value
         .split("|")
         .map do |icon_name|
-          found_icon_name =
-            case icon_name
-            when /^fab-/
-              "fab-#{FA5_REMAPS[icon_name.sub(/^fab-/, "")]}"
-            when /^far-/
-              "far-#{FA5_REMAPS[icon_name.sub(/^far-/, "")]}"
-            when /^fab fa-/
-              "fab-#{FA5_REMAPS[icon_name.sub(/^fab fa-/, "")]}"
-            when /^far fa-/
-              "far-#{FA5_REMAPS[icon_name.sub(/^far fa-/, "")]}"
-            when /^fas fa-/
-              FA5_REMAPS[icon_name.sub(/^fas fa-/, "")]
-            when /^fa-/
-              FA5_REMAPS[icon_name.sub(/^fa-/, "")]
-            else
-              FA5_REMAPS[icon_name]
-            end
-          # if not converted, just return the original icon name
-          found_icon_name || icon_name
+          prefix = nil
+
+          case icon_name
+          when /^fab-/
+            prefix = "fab"
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^fab-/, "")]
+          when /^far-/
+            prefix = "far"
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^far-/, "")]
+          when /^fab fa-/
+            prefix = "fab"
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^fab fa-/, "")]
+          when /^far fa-/
+            prefix = "far"
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^far fa-/, "")]
+          when /^fas fa-/
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^fas fa-/, "")]
+          when /^fa-/
+            found_icon_name = FA5_REMAPS[icon_name.sub(/^fa-/, "")]
+          else
+            found_icon_name = FA5_REMAPS[icon_name]
+          end
+
+          return icon_name if found_icon_name.nil?
+          return "#{prefix}-#{found_icon_name}" if prefix
+
+          found_icon_name
         end
         .join("|")
 

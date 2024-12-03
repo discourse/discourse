@@ -82,7 +82,7 @@ RSpec.describe RemapFa5IconNamesToFa6 do
   end
 
   context "when no icon names can be remapped" do
-    let(:icon_names) { ["fal fa-adjust", "heart"] }
+    let(:icon_names) { ["fal fa-adjust", "heart", "far-heart"] }
     let(:site_setting) do
       SiteSetting.create!(
         name: "svg_icon_subset",
