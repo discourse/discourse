@@ -21,14 +21,10 @@ export default class HistoryStore extends Service {
 
   #routeData = new TrackedMap();
   #uuid;
-  #pendingStore;
+  #pendingStore = DEBUG && isTesting() ? new TrackedMap() : null;
 
   get #currentStore() {
-    if (this.#pendingStore) {
-      return this.#pendingStore;
-    }
-
-    return this.#dataFor(this.#uuid);
+    return this.#pendingStore || this.#dataFor(this.#uuid);
   }
 
   /**
@@ -84,10 +80,7 @@ export default class HistoryStore extends Service {
       if (key === undefined) {
         continue;
       }
-      if (key === this.#uuid) {
-        return false;
-      }
-      return true;
+      return key !== this.#uuid;
     }
   }
 
@@ -118,7 +111,7 @@ export default class HistoryStore extends Service {
    * not available as an event on the router service.
    */
   @bind
-  willResolveModel(transition) {
+  async willResolveModel(transition) {
     if (HANDLED_TRANSITIONS.has(transition)) {
       return;
     }
@@ -126,7 +119,6 @@ export default class HistoryStore extends Service {
 
     if (DEBUG && isTesting()) {
       // Can't use window.history in tests
-      this.#pendingStore = new TrackedMap();
       return;
     }
 
@@ -149,16 +141,16 @@ export default class HistoryStore extends Service {
     }
 
     this.#pendingStore = pendingStoreForThisTransition;
-    transition
-      .then(() => {
-        this.#uuid = window.history.state?.uuid;
-        this.#routeData.set(this.#uuid, this.#pendingStore);
-        this.#pruneOldData();
-      })
-      .finally(() => {
-        if (pendingStoreForThisTransition === this.#pendingStore) {
-          this.#pendingStore = null;
-        }
-      });
+
+    try {
+      await transition;
+      this.#uuid = window.history.state?.uuid;
+      this.#routeData.set(this.#uuid, this.#pendingStore);
+      this.#pruneOldData();
+    } finally {
+      if (pendingStoreForThisTransition === this.#pendingStore) {
+        this.#pendingStore = null;
+      }
+    }
   }
 }
