@@ -443,7 +443,7 @@ GEM
       rspec-expectations (~> 3.13)
       rspec-mocks (~> 3.13)
       rspec-support (~> 3.13)
-    rspec-support (3.13.1)
+    rspec-support (3.13.2)
     rss (0.3.1)
       rexml
     rswag-specs (2.16.0)
