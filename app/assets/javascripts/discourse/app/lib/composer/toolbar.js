@@ -17,7 +17,7 @@ export default class Toolbar {
   ];
 
   constructor(opts) {
-    const { siteSettings, capabilities } = opts;
+    const { siteSettings } = opts;
 
     const boldLabel = getButtonLabel("composer.bold_label", "B");
     const boldIcon = boldLabel ? null : "bold";
@@ -70,37 +70,34 @@ export default class Toolbar {
         }),
     });
 
-    if (!capabilities.touch) {
-      this.addButton({
-        id: "list-options",
-        group: "extras",
-        icon: "list",
-        title: "composer.list_title",
-        preventFocus: true,
-        options: [
-          {
-            name: "list-ul",
-            icon: "list-ul",
-            label: "composer.ulist_title",
-            shortcut: "Shift+8",
-            action: (e) => e.applyList("* ", "list_item"),
-            condition: true,
-          },
-          {
-            name: "list-ol",
-            icon: "list-ol",
-            label: "composer.olist_title",
-            shortcut: "Shift+7",
-            action: (e) =>
-              e.applyList(
-                (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-                "list_item"
-              ),
-            condition: true,
-          },
-        ],
-      });
-    }
+    this.addButton({
+      id: "list",
+      group: "extras",
+      icon: "list",
+      title: "composer.list_title",
+      options: [
+        {
+          name: "list-ul",
+          icon: "list-ul",
+          label: "composer.ulist_title",
+          shortcut: "Shift+8",
+          action: (e) => e.applyList("* ", "list_item"),
+          condition: true,
+        },
+        {
+          name: "list-ol",
+          icon: "list-ol",
+          label: "composer.olist_title",
+          shortcut: "Shift+7",
+          action: (e) =>
+            e.applyList(
+              (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+              "list_item"
+            ),
+          condition: true,
+        },
+      ],
+    });
 
     if (siteSettings.support_mixed_text_direction) {
       this.addButton({

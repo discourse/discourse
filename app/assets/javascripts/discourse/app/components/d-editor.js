@@ -192,9 +192,7 @@ export default class DEditor extends Component {
 
   @discourseComputed()
   toolbar() {
-    const toolbar = new Toolbar(
-      this.getProperties("site", "siteSettings", "showLink", "capabilities")
-    );
+    const toolbar = new Toolbar(this.getProperties("siteSettings", "showLink"));
     toolbar.context = this;
 
     _createCallbacks.forEach((cb) => cb(toolbar));

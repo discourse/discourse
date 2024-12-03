@@ -396,22 +396,6 @@ export default class ComposerService extends Service {
         label: "composer.code_title",
       });
 
-      if (this.capabilities.touch) {
-        options.push({
-          name: "apply-unordered-list",
-          action: "applyUnorderedList",
-          icon: "list-ul",
-          label: "composer.ulist_title",
-        });
-
-        options.push({
-          name: "apply-ordered-list",
-          action: "applyOrderedList",
-          icon: "list-ol",
-          label: "composer.olist_title",
-        });
-      }
-
       options.push({
         name: "toggle-whisper",
         action: "toggleWhisper",

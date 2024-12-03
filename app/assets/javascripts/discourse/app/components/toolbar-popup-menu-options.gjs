@@ -38,6 +38,7 @@ export default class ToolbarPopupmenuOptions extends Component {
       @placement="top"
       @fallbackPlacements={{array "bottom"}}
       @offset={{5}}
+      @onKeydown={{@onKeydown}}
       tabindex="-1"
       class={{concatClass @className}}
     >

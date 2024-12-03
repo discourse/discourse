@@ -1,5 +1,5 @@
-[data-identifier="toolbar-menu__more-options"][data-content],
-[data-identifier="toolbar-menu__list-options"][data-content] {
+[data-identifier="toolbar-menu__more"][data-content],
+[data-identifier="toolbar-menu__list"][data-content] {
   z-index: z("composer", "dropdown") + 1;
 
   .d-button-label {
