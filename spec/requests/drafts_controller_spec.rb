@@ -99,7 +99,7 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(404)
     end
 
-    it "checks for an raw conflict on update" do
+    it "checks for a raw conflict on update" do
       sign_in(user)
       post = Fabricate(:post, user:)
 
