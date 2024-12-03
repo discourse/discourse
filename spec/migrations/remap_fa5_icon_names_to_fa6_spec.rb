@@ -91,11 +91,18 @@ RSpec.describe RemapFa5IconNamesToFa6 do
       )
     end
     let(:group) { Fabricate(:group, flair_icon: icon_names.first) }
+    let(:group_2) { Fabricate(:group, flair_icon: icon_names.last) }
     let(:post_action_type) { PostActionType.create!(name_key: "foo", icon: icon_names.first) }
+    let(:post_action_type_2) { PostActionType.create!(name_key: "foo", icon: icon_names.last) }
     let(:badge) { Fabricate(:badge, icon: icon_names.first) }
+    let(:badge_2) { Fabricate(:badge, icon: icon_names.last) }
     let(:sidebar_url) { Fabricate(:sidebar_url, icon: icon_names.first) }
+    let(:sidebar_url_2) { Fabricate(:sidebar_url, icon: icon_names.last) }
     let(:directory_column) do
       DirectoryColumn.create!(enabled: true, position: 1, icon: icon_names.first)
+    end
+    let(:directory_column_2) do
+      DirectoryColumn.create!(enabled: true, position: 1, icon: icon_names.last)
     end
 
     it "does not change any icon column values" do
@@ -107,6 +114,11 @@ RSpec.describe RemapFa5IconNamesToFa6 do
           badge.reload.icon,
           sidebar_url.reload.icon,
           directory_column.reload.icon,
+          group_2.reload.flair_icon,
+          post_action_type_2.reload.icon,
+          badge_2.reload.icon,
+          sidebar_url_2.reload.icon,
+          directory_column_2.reload.icon,
         ]
       }
     end
