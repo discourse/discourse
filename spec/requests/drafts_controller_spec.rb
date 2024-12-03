@@ -145,7 +145,7 @@ RSpec.describe DraftsController do
       expect(response.parsed_body["conflict_user"]["id"]).to eq(post.last_editor.id)
     end
 
-    it "checks for a title conflict on update" do
+    it "checks for a tag conflict on update" do
       sign_in(user)
       post = Fabricate(:post, user:)
 
