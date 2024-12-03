@@ -116,8 +116,8 @@ importers:
         specifier: ^2.8.8
         version: 2.8.8
       puppeteer-core:
-        specifier: ^23.9.0
-        version: 23.9.0
+        specifier: ^23.10.0
+        version: 23.10.0
       squoosh:
         specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
         version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
@@ -2499,8 +2499,8 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@puppeteer/browsers@2.4.1':
-    resolution: {integrity: sha512-0kdAbmic3J09I6dT8e9vE2JOCSt13wHCW5x/ly8TSt2bDtuIWe2TgLZZDHdcziw9AVCzflMAXCrVyRIhIs44Ng==}
+  '@puppeteer/browsers@2.5.0':
+    resolution: {integrity: sha512-6TQAc/5uRILE6deixJ1CR8rXyTbzXIXNgO1D0Woi9Bqicz2FV5iKP3BHYEg6o4UATCMcbQQ0jbmeaOkn/HQk2w==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -5476,9 +5476,6 @@ packages:
   ip@1.1.9:
     resolution: {integrity: sha512-cyRxvOEpNHNtchU3Ln9KC/auJgup87llfQpQ+t5ghoC/UhL16SWzbueiCsdTnWmqAWl7LadfuwhlqmtOaqMHdQ==}
 
-  ip@2.0.1:
-    resolution: {integrity: sha512-lJUL9imLTNi1ZfXT+DU6rBBdbiKGBuay9B6xGSPVjUeQwaH1RIGqef8RZkUtHioLmSNpPR5M4HVKJGm1j8FWVQ==}
-
   ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -7000,8 +6997,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@23.9.0:
-    resolution: {integrity: sha512-hLVrav2HYMVdK0YILtfJwtnkBAwNOztUdR4aJ5YKDvgsbtagNr6urUJk9HyjRA9e+PaLI3jzJ0wM7A4jSZ7Qxw==}
+  puppeteer-core@23.10.0:
+    resolution: {integrity: sha512-7pv6kFget4Iki0RLBDowi35vaccz73XpC6/FAnfCrYa2IXVUlBHfZw+HGWzlvvTGwM9HHd32rgCrIDzil3kj+w==}
     engines: {node: '>=18'}
 
   qs@6.13.0:
@@ -7460,17 +7457,9 @@ packages:
     resolution: {integrity: sha512-DmeAkF6cwM9jSfmp6Dr/5/mfMwb5Z5qRrSXLpo3Fq5SqyU8CMF15jIN4ZhfSwu35ksM1qmHZDQ/DK5XTccSTvA==}
     engines: {node: '>=10.2.0'}
 
-  socks-proxy-agent@8.0.2:
-    resolution: {integrity: sha512-8zuqoLv1aP/66PHF5TqwJ7Czm3Yv32urJQHrVyhD7mmA6d61Zv8cIXQYPTWwmg6qlupnPvs/QKDmfa4P/qct2g==}
-    engines: {node: '>= 14'}
-
   socks-proxy-agent@8.0.4:
     resolution: {integrity: sha512-GNAq/eg8Udq2x0eNiFkr9gRg5bA7PXEWagQdeRX4cPSG+X/8V38v637gim9bjFptMk1QWsCTr0ttrJEiXbNnRw==}
     engines: {node: '>= 14'}
-
-  socks@2.7.1:
-    resolution: {integrity: sha512-7maUZy1N7uo6+WVEX6psASxtNlKaNVMlGQKkG/63nEDdLOWNbiUMoLK7X4uYoLhQstau72mLgfEWcXcwsaHbYQ==}
-    engines: {node: '>= 10.13.0', npm: '>= 3.0.0'}
 
   socks@2.8.3:
     resolution: {integrity: sha512-l5x7VUUWbjVFbafGLxPWkYsHIhEvmF85tbIeFZWc8ZPtoMyybuEhL7Jye/ooC4/d48FgOjSJXgsF/AJPYCW8Zw==}
@@ -10753,7 +10742,7 @@ snapshots:
 
   '@npmcli/agent@2.2.2':
     dependencies:
-      agent-base: 7.1.0(supports-color@8.1.1)
+      agent-base: 7.1.1
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.5(supports-color@8.1.1)
       lru-cache: 10.4.3
@@ -10897,7 +10886,7 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@puppeteer/browsers@2.4.1':
+  '@puppeteer/browsers@2.5.0':
     dependencies:
       debug: 4.3.7(supports-color@8.1.1)
       extract-zip: 2.0.1
@@ -14929,8 +14918,6 @@ snapshots:
 
   ip@1.1.9: {}
 
-  ip@2.0.1: {}
-
   ipaddr.js@1.9.1: {}
 
   is-absolute@1.0.0:
@@ -16186,13 +16173,13 @@ snapshots:
   pac-proxy-agent@7.0.1:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
-      agent-base: 7.1.0(supports-color@8.1.1)
+      agent-base: 7.1.1
       debug: 4.3.7(supports-color@8.1.1)
       get-uri: 6.0.1
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.5(supports-color@8.1.1)
       pac-resolver: 7.0.0
-      socks-proxy-agent: 8.0.2
+      socks-proxy-agent: 8.0.4
     transitivePeerDependencies:
       - supports-color
 
@@ -16436,14 +16423,14 @@ snapshots:
 
   proxy-agent@6.4.0:
     dependencies:
-      agent-base: 7.1.0(supports-color@8.1.1)
+      agent-base: 7.1.1
       debug: 4.3.7(supports-color@8.1.1)
       http-proxy-agent: 7.0.2(supports-color@8.1.1)
       https-proxy-agent: 7.0.5(supports-color@8.1.1)
       lru-cache: 7.18.3
       pac-proxy-agent: 7.0.1
       proxy-from-env: 1.1.0
-      socks-proxy-agent: 8.0.2
+      socks-proxy-agent: 8.0.4
     transitivePeerDependencies:
       - supports-color
 
@@ -16464,9 +16451,9 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@23.9.0:
+  puppeteer-core@23.10.0:
     dependencies:
-      '@puppeteer/browsers': 2.4.1
+      '@puppeteer/browsers': 2.5.0
       chromium-bidi: 0.8.0(devtools-protocol@0.0.1367902)
       debug: 4.3.7(supports-color@8.1.1)
       devtools-protocol: 0.0.1367902
@@ -17016,14 +17003,6 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  socks-proxy-agent@8.0.2:
-    dependencies:
-      agent-base: 7.1.0(supports-color@8.1.1)
-      debug: 4.3.7(supports-color@8.1.1)
-      socks: 2.7.1
-    transitivePeerDependencies:
-      - supports-color
-
   socks-proxy-agent@8.0.4:
     dependencies:
       agent-base: 7.1.1
@@ -17031,11 +17010,6 @@ snapshots:
       socks: 2.8.3
     transitivePeerDependencies:
       - supports-color
-
-  socks@2.7.1:
-    dependencies:
-      ip: 2.0.1
-      smart-buffer: 4.2.0
 
   socks@2.8.3:
     dependencies:
