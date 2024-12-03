@@ -708,28 +708,27 @@ class RemapFa5IconNamesToFa6 < ActiveRecord::Migration[7.1]
           case icon_name
           when /^fab-/
             prefix = "fab"
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^fab-/, "")]
+            lookup_name = icon_name.sub(/^fab-/, "")
           when /^far-/
             prefix = "far"
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^far-/, "")]
+            lookup_name = icon_name.sub(/^far-/, "")
           when /^fab fa-/
             prefix = "fab"
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^fab fa-/, "")]
+            lookup_name = icon_name.sub(/^fab fa-/, "")
           when /^far fa-/
             prefix = "far"
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^far fa-/, "")]
+            lookup_name = icon_name.sub(/^far fa-/, "")
           when /^fas fa-/
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^fas fa-/, "")]
+            lookup_name = icon_name.sub(/^fas fa-/, "")
           when /^fa-/
-            found_icon_name = FA5_REMAPS[icon_name.sub(/^fa-/, "")]
+            lookup_name = icon_name.sub(/^fa-/, "")
           else
-            found_icon_name = FA5_REMAPS[icon_name]
+            lookup_name = icon_name
           end
 
-          return icon_name if found_icon_name.nil?
-          return "#{prefix}-#{found_icon_name}" if prefix
-
-          found_icon_name
+          new_icon_name = FA5_REMAPS[lookup_name] || lookup_name
+          new_icon_name = "#{prefix}-#{new_icon_name}" if prefix
+          new_icon_name
         end
         .join("|")
 
