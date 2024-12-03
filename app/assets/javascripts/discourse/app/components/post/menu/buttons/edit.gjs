@@ -35,7 +35,7 @@ export default class PostMenuEditButton extends Component {
       }}
       ...attributes
       @action={{@buttonActions.editPost}}
-      @icon={{if @post.wiki "far-edit" "pencil-alt"}}
+      @icon={{if @post.wiki "far-edit" "pencil"}}
       @label={{if this.showLabel "post.controls.edit_action"}}
       @title="post.controls.edit"
     />

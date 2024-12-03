@@ -1683,6 +1683,28 @@ RSpec.describe TopicsController do
           expect(response.parsed_body["basic_topic"]).to be_present
         end
 
+        it "prevents conflicts when title was changed" do
+          put "/t/#{topic.slug}/#{topic.id}.json",
+              params: {
+                title: "brand new title",
+                original_title: "another title",
+              }
+
+          expect(response.status).to eq(409)
+          expect(response.parsed_body["errors"].first).to eq(I18n.t("edit_conflict"))
+        end
+
+        it "prevents conflicts when tags were changed" do
+          put "/t/#{topic.slug}/#{topic.id}.json",
+              params: {
+                tags: %w[tag1 tag2],
+                original_tags: %w[tag3 tag4],
+              }
+
+          expect(response.status).to eq(409)
+          expect(response.parsed_body["errors"].first).to eq(I18n.t("edit_conflict"))
+        end
+
         it "throws an error if it could not be saved" do
           PostRevisor.any_instance.stubs(:should_revise?).returns(false)
           put "/t/#{topic.slug}/#{topic.id}.json", params: { title: "brand new title" }

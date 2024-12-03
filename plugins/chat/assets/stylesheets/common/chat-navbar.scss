@@ -5,7 +5,7 @@
   box-sizing: border-box;
   display: flex;
   z-index: z("composer", "content") - 1;
-  padding: 0 1rem;
+  padding: 0 0.67em;
 
   &.-clickable {
     cursor: pointer;
@@ -21,7 +21,6 @@
   container-type: inline-size;
 
   .is-collapsed & {
-    margin-left: 1rem;
     &__title {
       margin-left: 0 !important;
     }
@@ -50,16 +49,11 @@
   .single-select-header {
     padding: 0.3675rem 0.584rem;
   }
-
-  > .c-navbar__title:first-child {
-    .chat-drawer & {
-      margin-left: 1rem;
-    }
-  }
 }
 
 .c-navbar__back-button {
   height: var(--chat-header-offset);
+  padding: 0.5rem 0.8rem 0.5rem 0.25rem;
 }
 
 .c-navbar__channel-title {
