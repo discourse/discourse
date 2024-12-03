@@ -149,7 +149,6 @@ export default class Post extends RestModel {
 
   @service currentUser;
   @service site;
-  @service store;
 
   // Use @trackedPostProperty here instead of Glimmer's @tracked because we need to know which properties are tracked
   // in order to correctly update the post in the updateFromPost method. Currently this is not possible using only
@@ -380,6 +379,7 @@ export default class Post extends RestModel {
     return this.likeAction && (this.liked || this.canToggleLike);
   }
 
+  // Ensure .topic key/value pair is populated for the post
   async ensureTopicLoaded() {
     if (this.topic) {
       return Promise.resolve();
