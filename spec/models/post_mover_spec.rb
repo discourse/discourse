@@ -811,6 +811,21 @@ RSpec.describe PostMover do
             expect(topic).to be_closed
           end
 
+          it "triggers posts_moved DiscourseEvent with correct args" do
+            events =
+              DiscourseEvent.track_events(:posts_moved) do
+                posts_to_move = [p1.id, p2.id, p3.id, p4.id]
+                topic.move_posts(user, posts_to_move, destination_topic_id: destination_topic.id)
+              end
+
+            expect(
+              events.detect do |e|
+                e[:params] ==
+                  [{ destination_topic_id: destination_topic.id, original_topic_id: topic.id }]
+              end,
+            ).to be_present
+          end
+
           it "does not try to move small action posts" do
             small_action =
               Fabricate(
