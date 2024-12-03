@@ -943,12 +943,14 @@ export default class Composer extends RestModel {
             originalText: post.raw,
           });
 
-          if (post.topic && post.post_number === 1 && this.canEditTitle) {
-            this.setProperties({
-              originalTitle: post.topic.title,
-              originalTags: post.topic.tags,
-            });
-          }
+          post.ensureTopicLoaded().then(() => {
+            if (post.post_number === 1 && this.canEditTitle) {
+              this.setProperties({
+                originalTitle: post.topic.title,
+                originalTags: post.topic.tags,
+              });
+            }
+          });
         });
 
         // edge case ... make a post then edit right away
