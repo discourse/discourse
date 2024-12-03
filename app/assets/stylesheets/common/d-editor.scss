@@ -330,8 +330,8 @@
     background-color: transparent;
     color: var(--primary-high);
 
+    // higher specificity
     & {
-      // higher specificity
       border: 0;
     }
 
