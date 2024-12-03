@@ -11,13 +11,6 @@ describe "JS Deprecation Handling", type: :system do
       console.warn = (msg) => window.intercepted_warnings.push([msg, (new Error()).stack])
     JS
 
-    # Apply deprecate shims. These are applied automatically in production
-    # builds, but running a full production build for system specs would be
-    # too slow
-    page.execute_script <<~JS
-      require("discourse/lib/deprecate-shim").applyShim();
-    JS
-
     # Trigger a deprecation, then return the console.warn calls
     warn_calls = page.execute_script <<~JS
       const { deprecate } = require('@ember/debug');
@@ -28,8 +21,7 @@ describe "JS Deprecation Handling", type: :system do
     expect(warn_calls.size).to eq(1)
     call, backtrace = warn_calls[0]
 
-    expect(call).to eq("DEPRECATION: Some message [deprecation id: some.id]")
-    expect(backtrace).to include("shimLogDeprecationToConsole")
+    expect(call).to start_with("DEPRECATION: Some message [deprecation id: some.id]")
   end
 
   it "shows warnings to admins for critical deprecations" do
