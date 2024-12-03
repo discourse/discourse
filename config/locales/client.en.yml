@@ -3816,6 +3816,8 @@ en:
       in_reply_to: "Load parent post"
       view_all_posts: "View all posts"
 
+      badge_granted_tooltip: "%{username} earned the '%{badge_name}' badge for this post!"
+
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -7195,9 +7197,13 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        usage_heading: Usage
         allow_title: Allow badge to be used as a title
         multiple_grant: Can be granted multiple times
+        visibility_heading: Visibility
         listable: Show badge on the public badges page
+        show_in_post_header: Show badge on the post it was granted for
+        show_in_post_header_disabled: Requires both 'Show badge on the public badges page' and 'Show post granting badge on badge page' to be enabled.
         enabled: enabled
         disabled: disabled
         icon: Icon

@@ -1942,6 +1942,7 @@ en:
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
 
     enable_badges: "Enable the badge system, which is a form of gamification to reinforce positive user actions. See <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>What are Badges?</a> on Discourse Meta for more information."
+    show_badges_in_post_header: "When a user earns a badge for a particular post, display the badge in the post header."
     max_favorite_badges: "Maximum number of badges that user can select"
     whispers_allowed_groups: "Allow private communication within topics for members of specified groups."
     hidden_post_visible_groups: "Allow members of these groups to view hidden posts. Staff users can always view hidden posts."

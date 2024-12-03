@@ -1,6 +1,8 @@
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -137,6 +139,29 @@ export default createWidget("poster-name", {
       if (glyph) {
         nameContents.push(glyph);
       }
+    }
+
+    if (attrs.badgesGranted) {
+      const badges = [];
+      attrs.badgesGranted.forEach((badge) => {
+        // Alter the badge description to show that the badge was granted for this post.
+        badge.description = i18n("post.badge_granted_tooltip", {
+          username: attrs.username,
+          badge_name: badge.name,
+        });
+
+        const badgeIcon = new RenderGlimmer(
+          this,
+          `span.user-badge-button-${badge.slug}`,
+          hbs`<UserBadge @badge={{@data.badge}} @user={{@data.user}} @showName={{false}} />`,
+          {
+            badge,
+            user: attrs.user,
+          }
+        );
+        badges.push(badgeIcon);
+      });
+      nameContents.push(h("span.user-badge-buttons", badges));
     }
 
     const afterNameContents =

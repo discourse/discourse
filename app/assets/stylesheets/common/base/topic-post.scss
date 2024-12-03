@@ -259,6 +259,19 @@
     margin-right: auto;
   }
 
+  .user-badge-buttons {
+    margin-left: 15px;
+
+    a {
+      background: none;
+    }
+
+    .user-badge {
+      background: none;
+      border: none;
+    }
+  }
+
   .post-infos {
     display: flex;
     flex: 0 0 auto;
