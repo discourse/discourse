@@ -6,17 +6,8 @@ import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import getUrl from "discourse-common/lib/get-url";
+import { i18n } from "discourse-i18n";
 import { darkLightDiff, drawHeader } from "../../../lib/preview";
-
-export const LOREM = `
-Lorem ipsum dolor sit amet,
-consectetur adipiscing elit.
-Nullam eget sem non elit
-tincidunt rhoncus. Fusce
-velit nisl, porttitor sed
-nisl ac, consectetur interdum
-metus. Fusce in consequat
-augue, vel facilisis felis.`;
 
 const scaled = {};
 
@@ -219,9 +210,18 @@ export default class PreviewBase extends Component {
 
   categories() {
     return [
-      { name: "consecteteur", color: "#652D90" },
-      { name: "ultrices", color: "#3AB54A" },
-      { name: "placerat", color: "#25AAE2" },
+      {
+        name: i18n("wizard.homepage_preview.category_names.icebreakers"),
+        color: "#652D90",
+      },
+      {
+        name: i18n("wizard.homepage_preview.category_names.news"),
+        color: "#3AB54A",
+      },
+      {
+        name: i18n("wizard.homepage_preview.category_names.site_feedback"),
+        color: "#25AAE2",
+      },
     ];
   }
 

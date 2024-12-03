@@ -1,4 +1,5 @@
-import { darkLightDiff, LOREM } from "../../../lib/preview";
+import { i18n } from "discourse-i18n";
+import { darkLightDiff } from "../../../lib/preview";
 import PreviewBaseComponent from "./-preview-base";
 
 export default class HomepagePreview extends PreviewBaseComponent {
@@ -85,11 +86,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
       ctx.font = `Bold ${bodyFontSize * 1.3}em '${font}'`;
       ctx.fillStyle = colors.primary;
       ctx.textAlign = "center";
-      ctx.fillText(
-        category.displayName,
-        boxStartX + boxWidth / 2,
-        boxStartY + 25
-      );
+      ctx.fillText(category.name, boxStartX + boxWidth / 2, boxStartY + 25);
       ctx.textAlign = "left";
 
       if (opts.topics) {
@@ -167,16 +164,16 @@ export default class HomepagePreview extends PreviewBaseComponent {
     drawLine(width / 2, y);
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.displayName, cols[0], textPos);
+      ctx.fillText(category.name, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
+        titles[idx],
         cols[0] - margin * 0.25,
         textPos + categoryHeight * 0.36
       );
@@ -263,16 +260,16 @@ export default class HomepagePreview extends PreviewBaseComponent {
     const titles = this.getTitles();
 
     // Categories
-    this.categories().forEach((category) => {
+    this.categories().forEach((category, idx) => {
       const textPos = y + categoryHeight * 0.35;
       ctx.font = `Bold ${bodyFontSize * 1.1}em '${font}'`;
       ctx.fillStyle = colors.primary;
-      ctx.fillText(category.displayName, cols[0], textPos);
+      ctx.fillText(category.name, cols[0], textPos);
 
       ctx.font = `${bodyFontSize * 0.8}em '${font}'`;
       ctx.fillStyle = textColor;
       ctx.fillText(
-        titles[0],
+        titles[idx],
         cols[0] - margin * 0.25,
         textPos + categoryHeight * 0.36
       );
@@ -332,7 +329,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.displayName,
+        category.name,
         cols[3] + badgeSize * 3,
         y + topicHeight * 0.76
       );
@@ -347,13 +344,20 @@ export default class HomepagePreview extends PreviewBaseComponent {
   }
 
   getTitles() {
-    return LOREM.split(".")
-      .slice(0, 8)
-      .map((t) => t.substring(0, 40));
+    return [
+      i18n("wizard.homepage_preview.topic_titles.what_books"),
+      i18n("wizard.homepage_preview.topic_titles.what_movies"),
+      i18n("wizard.homepage_preview.topic_titles.random_fact"),
+      i18n("wizard.homepage_preview.topic_titles.tv_show"),
+    ];
   }
 
   getDescriptions() {
-    return LOREM.split(".");
+    return [
+      i18n("wizard.homepage_preview.category_descriptions.icebreakers"),
+      i18n("wizard.homepage_preview.category_descriptions.news"),
+      i18n("wizard.homepage_preview.category_descriptions.site_feedback"),
+    ];
   }
 
   renderLatest(ctx, colors, font, width, height) {

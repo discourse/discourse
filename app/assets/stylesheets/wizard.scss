@@ -165,6 +165,12 @@ body.wizard {
     }
   }
 
+  &__field.dropdown-field.dropdown-homepage-style {
+    .wizard-container__dropdown {
+      height: auto;
+    }
+  }
+
   &__step-form {
     display: flex;
   }

@@ -7377,8 +7377,29 @@ en:
           regular: "Regular User"
 
       previews:
-        topic_title: "A discussion topic heading"
+        topic_title: "What books are you reading?"
         share_button: "Share"
         reply_button: "Reply"
         topic_preview: "Topic preview"
         homepage_preview: "Homepage preview"
+
+      homepage_preview:
+        topic_titles:
+          what_books: "What books are you reading?"
+          what_movies: "What movies have you seen recently?"
+          random_fact: "Random fact of the day"
+          tv_show: "Recommend a TV show"
+        topic_ops:
+          what_books: |
+            We all love to read, let's use this topic to share our
+            current or recent reads. I'm a fantasy fan and I've been
+            re-reading The Lord of the Rings for the 100th time.
+            What about you?
+        category_descriptions:
+          icebreakers: "Get to know your fellow community members with fun questions."
+          news: "Discuss the latest news and events."
+          site_feedback: "Share your thoughts on the community and suggest improvements."
+        category_names:
+          icebreakers: "Icebreakers"
+          news: "News"
+          site_feedback: "Site Feedback"

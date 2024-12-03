@@ -1,15 +1,5 @@
 /*eslint no-bitwise:0 */
 
-export const LOREM = `
-Lorem ipsum dolor sit amet,
-consectetur adipiscing elit.
-Nullam eget sem non elit
-tincidunt rhoncus. Fusce
-velit nisl, porttitor sed
-nisl ac, consectetur interdum
-metus. Fusce in consequat
-augue, vel facilisis felis.`;
-
 export function parseColor(color) {
   const m = color.match(/^#([0-9a-f]{6})$/i);
   if (m) {

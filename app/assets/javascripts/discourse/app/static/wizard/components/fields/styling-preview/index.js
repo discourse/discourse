@@ -6,12 +6,6 @@ import { chooseDarker, darkLightDiff } from "../../../lib/preview";
 import HomepagePreview from "./-homepage-preview";
 import PreviewBaseComponent from "./-preview-base";
 
-const LOREM = `
-Lorem ipsum dolor sit amet, consectetur adipiscing.
-Nullam eget sem non elit tincidunt rhoncus. Fusce
-velit nisl, porttitor sed nisl ac, consectetur interdum
-metus. Fusce in consequat augue, vel facilisis felis.`;
-
 export default class Index extends PreviewBaseComponent {
   width = 628;
   height = 322;
@@ -145,8 +139,10 @@ export default class Index extends PreviewBaseComponent {
     ctx.font = `${bodyFontSize}em '${font}'`;
 
     let line = 0;
-    const lines = LOREM.split("\n");
-    for (let i = 0; i < 5; i++) {
+    const lines = i18n("wizard.homepage_preview.topic_ops.what_books").split(
+      "\n"
+    );
+    for (let i = 0; i < lines.length; i++) {
       line = height * 0.35 + i * lineHeight;
       ctx.fillText(lines[i], margin + avatarSize + margin, line);
     }
