@@ -943,7 +943,7 @@ export default class Composer extends RestModel {
             originalText: post.raw,
           });
 
-          if (post.post_number === 1 && this.canEditTitle) {
+          if (post.topic && post.post_number === 1 && this.canEditTitle) {
             this.setProperties({
               originalTitle: post.topic.title,
               originalTags: post.topic.tags,
