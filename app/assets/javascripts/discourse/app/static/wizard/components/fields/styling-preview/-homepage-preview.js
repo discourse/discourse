@@ -413,7 +413,7 @@ export default class HomepagePreview extends PreviewBaseComponent {
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(
-        category.displayName,
+        category.name,
         cols[0] + badgeSize * 2,
         y + rowHeight * 0.73
       );
