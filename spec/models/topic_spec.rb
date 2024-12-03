@@ -3576,4 +3576,35 @@ RSpec.describe Topic do
       end
     end
   end
+
+  describe "#move_posts" do
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:admin)
+
+    fab!(:destination_topic) { Fabricate(:topic) }
+    let(:plugin) { Plugin::Instance.new }
+    let(:modifier) { Proc.new { |options| { freeze_original: true } } }
+
+    it "allows modifications to link_counts" do
+      plugin.register_modifier(:topic_post_mover_additional_options, &modifier)
+
+      PostMover.expects(:new).with(
+        topic,
+        admin,
+        [post.id],
+        move_to_pm: false,
+        options: {
+          freeze_original: true,
+        },
+      )
+      topic.move_posts(admin, [post.id], destination_topic_id: destination_topic)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :topic_post_mover_additional_options,
+        &modifier
+      )
+    end
+  end
 end

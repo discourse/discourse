@@ -1292,12 +1292,19 @@ class Topic < ActiveRecord::Base
   end
 
   def move_posts(moved_by, post_ids, opts)
+    additional_options =
+      DiscoursePluginRegistry.apply_modifier(:topic_post_mover_additional_options, {})
+
+    puts "%%%%%%%%%%%"
+    puts additional_options.inspect
+    puts "%%%%%%%%%%%"
     post_mover =
       PostMover.new(
         self,
         moved_by,
         post_ids,
-        move_to_pm: opts[:archetype].present? && opts[:archetype] == "private_message",
+        move_to_pm: (opts[:archetype].present? && opts[:archetype] == "private_message"),
+        options: additional_options,
       )
 
     if opts[:destination_topic_id]

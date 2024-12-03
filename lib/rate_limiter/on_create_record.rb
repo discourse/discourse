@@ -38,6 +38,9 @@ class RateLimiter
         self.after_create do |*args|
           next if @rate_limits_disabled
 
+          puts "###########"
+          puts limiter_method.inspect
+          puts "###########"
           if rate_limiter = public_send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}

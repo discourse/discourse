@@ -14,7 +14,7 @@ class PostMover
     @user = user
     @post_ids = post_ids
     @move_to_pm = move_to_pm
-    @options = options
+    @options = { freeze_original: true }
   end
 
   def to_topic(id, participants: nil, chronological_order: false)
