@@ -359,7 +359,18 @@ class TopicsController < ApplicationController
 
   def update
     topic = Topic.find_by(id: params[:topic_id])
+
     guardian.ensure_can_edit!(topic)
+
+    original_title = params[:original_title]
+    if original_title.present? && original_title != topic.title
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
+
+    original_tags = params[:original_tags]
+    if original_tags.present? && original_tags.sort != topic.tags.pluck(:name).sort
+      return render_json_error(I18n.t("edit_conflict"), status: 409)
+    end
 
     if params[:category_id] && (params[:category_id].to_i != topic.category_id.to_i)
       if topic.shared_draft
