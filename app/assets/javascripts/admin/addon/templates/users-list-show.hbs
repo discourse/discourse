@@ -20,9 +20,10 @@
 
 <PluginOutlet @name="admin-users-list-show-before" />
 
-<div class="admin-users-list__controls">
-  <div class="admin-users-list__search">
+<div class="d-admin-filter admin-users-list__controls">
+  <div class="admin-filter__input-container admin-users-list__search">
     <input
+      class="admin-filter__input"
       type="text"
       dir="auto"
       placeholder={{this.searchHint}}
