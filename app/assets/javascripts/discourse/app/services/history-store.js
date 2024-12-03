@@ -24,11 +24,7 @@ export default class HistoryStore extends Service {
   #pendingStore = DEBUG && isTesting() ? new TrackedMap() : null;
 
   get #currentStore() {
-    if (this.#pendingStore) {
-      return this.#pendingStore;
-    }
-
-    return this.#dataFor(this.#uuid);
+    return this.#pendingStore || this.#dataFor(this.#uuid);
   }
 
   /**
@@ -84,10 +80,7 @@ export default class HistoryStore extends Service {
       if (key === undefined) {
         continue;
       }
-      if (key === this.#uuid) {
-        return false;
-      }
-      return true;
+      return key !== this.#uuid;
     }
   }
 
