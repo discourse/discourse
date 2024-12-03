@@ -381,63 +381,51 @@ export default class ComposerService extends Service {
     if (composeState === "open" || composeState === "fullscreen") {
       const options = [];
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
-        })
-      );
+      options.push({
+        name: "toggle-invisible",
+        action: "toggleInvisible",
+        icon: "far-eye-slash",
+        label: "composer.toggle_unlisted",
+        condition: "canUnlistTopic",
+      });
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "format-code",
-          action: "applyFormatCode",
-          icon: "code",
-          label: "composer.code_title",
-        })
-      );
+      options.push({
+        name: "format-code",
+        action: "applyFormatCode",
+        icon: "code",
+        label: "composer.code_title",
+      });
 
       if (this.capabilities.touch) {
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-unordered-list",
-            action: "applyUnorderedList",
-            icon: "list-ul",
-            label: "composer.ulist_title",
-          })
-        );
+        options.push({
+          name: "apply-unordered-list",
+          action: "applyUnorderedList",
+          icon: "list-ul",
+          label: "composer.ulist_title",
+        });
 
-        options.push(
-          this._setupPopupMenuOption({
-            name: "apply-ordered-list",
-            action: "applyOrderedList",
-            icon: "list-ol",
-            label: "composer.olist_title",
-          })
-        );
+        options.push({
+          name: "apply-ordered-list",
+          action: "applyOrderedList",
+          icon: "list-ol",
+          label: "composer.olist_title",
+        });
       }
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
+      options.push({
+        name: "toggle-whisper",
+        action: "toggleWhisper",
+        icon: "far-eye-slash",
+        label: "composer.toggle_whisper",
+        condition: "showWhisperToggle",
+      });
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-spreadsheet",
-          action: "toggleSpreadsheet",
-          icon: "table",
-          label: "composer.insert_table",
-        })
-      );
+      options.push({
+        name: "toggle-spreadsheet",
+        action: "toggleSpreadsheet",
+        icon: "table",
+        label: "composer.insert_table",
+      });
 
       return options.concat(
         customPopupMenuOptions
@@ -672,7 +660,7 @@ export default class ComposerService extends Service {
       // event
       // Long term we want to avoid needing this awkwardness and pass
       // the event explicitly
-      return menuItem.action(this.toolbarEvent || toolbarEvent);
+      return menuItem.action(toolbarEvent ?? this.toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins

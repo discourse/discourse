@@ -72,27 +72,33 @@ export default class Toolbar {
 
     if (!capabilities.touch) {
       this.addButton({
-        id: "bullet",
+        id: "list-options",
         group: "extras",
-        icon: "list-ul",
-        shortcut: "Shift+8",
-        title: "composer.ulist_title",
+        icon: "list",
+        title: "composer.list_title",
         preventFocus: true,
-        perform: (e) => e.applyList("* ", "list_item"),
-      });
-
-      this.addButton({
-        id: "list",
-        group: "extras",
-        icon: "list-ol",
-        shortcut: "Shift+7",
-        title: "composer.olist_title",
-        preventFocus: true,
-        perform: (e) =>
-          e.applyList(
-            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-            "list_item"
-          ),
+        options: [
+          {
+            name: "list-ul",
+            icon: "list-ul",
+            label: "composer.ulist_title",
+            shortcut: "Shift+8",
+            action: (e) => e.applyList("* ", "list_item"),
+            condition: true,
+          },
+          {
+            name: "list-ol",
+            icon: "list-ol",
+            label: "composer.olist_title",
+            shortcut: "Shift+7",
+            action: (e) =>
+              e.applyList(
+                (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+                "list_item"
+              ),
+            condition: true,
+          },
+        ],
       });
     }
 
@@ -135,6 +141,7 @@ export default class Toolbar {
       perform: buttonAttrs.perform || function () {},
       trimLeading: buttonAttrs.trimLeading,
       popupMenu: buttonAttrs.popupMenu || false,
+      options: buttonAttrs.options,
       preventFocus: buttonAttrs.preventFocus || false,
       condition: buttonAttrs.condition || (() => true),
       shortcutAction: buttonAttrs.shortcutAction, // (optional) custom shortcut action

@@ -2748,6 +2748,7 @@ en:
       paste_code_text: "type or paste code here"
       upload_title: "Upload"
       upload_description: "enter upload description here"
+      list_title: "List"
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
