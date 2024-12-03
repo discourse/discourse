@@ -141,7 +141,7 @@ export default createWidget("poster-name", {
       }
     }
 
-    if (attrs.badgesGranted) {
+    if (attrs.badgesGranted?.length) {
       const badges = [];
       attrs.badgesGranted.forEach((badge) => {
         // Alter the badge description to show that the badge was granted for this post.
