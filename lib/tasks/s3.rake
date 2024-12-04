@@ -11,17 +11,16 @@ def gzip_s3_path(path)
 end
 
 def existing_assets
-  @existing_assets ||= Set.new(helper.list("assets/").map(&:key))
+  s3_assets_helper.existing_assets
 end
 
 def prefix_s3_path(path)
-  path = File.join(helper.s3_bucket_folder_path, path) if helper.s3_bucket_folder_path
-  path
+  s3_assets_helper.prefix_s3_path(path)
 end
 
 def should_skip?(path)
   return false if ENV["FORCE_S3_UPLOADS"]
-  existing_assets.include?(prefix_s3_path(path))
+  s3_assets_helper.asset_on_s3?(path)
 end
 
 def upload(path, remote_path, content_type, content_encoding = nil)
@@ -48,12 +47,17 @@ def use_db_s3_config
   ENV["USE_DB_S3_CONFIG"]
 end
 
+def s3_assets_helper
+  @s3_assets_helper ||= S3AssetsHelper.new(use_db_s3_config:)
+end
+
 def helper
-  @helper ||= S3Helper.build_from_config(use_db_s3_config: use_db_s3_config)
+  s3_assets_helper.helper
 end
 
 def assets
   cached = Rails.application.assets&.cached
+
   manifest =
     Sprockets::Manifest.new(
       cached,
