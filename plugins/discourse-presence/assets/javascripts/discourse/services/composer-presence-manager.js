@@ -2,63 +2,45 @@ import { cancel, debounce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 
-const PRESENCE_CHANNEL_PREFIX = "/discourse-presence";
-const KEEP_ALIVE_DURATION_SECONDS = 10;
+const KEEP_ALIVE = 10 * 1000; // 10 seconds
 
 export default class ComposerPresenceManager extends Service {
   @service presence;
 
-  willDestroy() {
-    this.leave();
-  }
-
-  notifyState(intent, id) {
-    if (
-      this.siteSettings.allow_users_to_hide_profile &&
-      this.currentUser.user_option.hide_presence
-    ) {
+  notifyState(name, replying = true, keepAlive = KEEP_ALIVE) {
+    if (!replying) {
+      this.leave();
       return;
     }
 
-    if (intent === undefined) {
-      return this.leave();
+    const canHideProfile = this.siteSettings.allow_users_to_hide_profile;
+    const isHidingPresence = this.currentUser.user_option.hide_presence;
+
+    if (canHideProfile && isHidingPresence) {
+      return;
     }
 
-    if (!["reply", "whisper", "edit"].includes(intent)) {
-      throw `Unknown intent ${intent}`;
-    }
+    if (this._name !== name) {
+      this.leave();
 
-    const state = `${intent}/${id}`;
+      this._name = name;
+      this._channel = this.presence.getChannel(name);
+      this._channel.enter();
 
-    if (this._state !== state) {
-      this._enter(intent, id);
-      this._state = state;
-    }
-
-    if (!isTesting()) {
-      this._autoLeaveTimer = debounce(
-        this,
-        this.leave,
-        KEEP_ALIVE_DURATION_SECONDS * 1000
-      );
+      if (!isTesting()) {
+        this._autoLeaveTimer = debounce(this, this.leave, keepAlive);
+      }
     }
   }
 
   leave() {
-    this._presentChannel?.leave();
-    this._presentChannel = null;
-    this._state = null;
     if (this._autoLeaveTimer) {
       cancel(this._autoLeaveTimer);
       this._autoLeaveTimer = null;
     }
-  }
 
-  _enter(intent, id) {
-    this.leave();
-
-    let channelName = `${PRESENCE_CHANNEL_PREFIX}/${intent}/${id}`;
-    this._presentChannel = this.presence.getChannel(channelName);
-    this._presentChannel.enter();
+    this._channel?.leave();
+    this._channel = null;
+    this._name = null;
   }
 }
