@@ -249,9 +249,6 @@
 .title-wrapper {
   display: flex;
   flex-wrap: wrap;
-  button {
-    margin: 0 0.5em 0 0;
-  }
   .topic-statuses {
     line-height: 1.2;
     .d-icon {
@@ -268,7 +265,9 @@
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
-    width: 90%;
+    @media screen and (min-width: 925px) {
+      width: 90%; // topic title isn't full-width on wide screens
+    }
   }
   h1 {
     margin-bottom: 0;
@@ -282,35 +281,65 @@
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
+    gap: 0.5em;
+    width: 100%;
     max-width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width)
     );
-    #edit-title {
-      flex: 1 1 100%;
-    }
-    .category-chooser,
-    .mini-tag-chooser {
-      flex: 1 1 35%;
-      margin: 0 0 9px 0;
-      @media all and (max-width: 500px) {
-        flex: 1 1 100%;
-      }
-    }
-    .mini-tag-chooser {
-      flex: 1 1 54%;
-      margin: 0 0 9px 0;
-      margin-left: 1%; // category at 40%, tag chooser at 58%
-      @media all and (max-width: 500px) {
-        margin-left: 0;
-      }
-    }
-    .edit-controls {
-      flex: 1 1 100%;
-    }
     .select-kit .category-row {
       max-width: unset;
     }
+  }
+
+  .edit-title__wrapper {
+    flex: 1 1 100%;
+    #edit-title {
+      width: 100%;
+      margin: 0;
+    }
+  }
+
+  .edit-category__wrapper {
+    flex: 1 1 5%;
+    @include breakpoint(tablet) {
+      min-width: 0; // allows category name to shrink to fit narrow screens
+    }
+    .select-kit.combo-box.category-chooser {
+      width: 100%;
+    }
+  }
+
+  .edit-tags__wrapper {
+    flex: 1 1 33%;
+    @include breakpoint(tablet) {
+      flex: 1 1 100%; // force full row on narrow screens
+    }
+
+    .mini-tag-chooser {
+      width: 100%;
+    }
+    .select-kit-header--filter {
+      flex-wrap: nowrap; // forces the whole input to wrap if needed, rather than individual tags
+      min-width: 0;
+      @include breakpoint(tablet) {
+        flex-wrap: wrap; // individual tags will need to wrap on narrow screens
+      }
+      button {
+        min-width: 0;
+      }
+    }
+
+    .multi-select-filter {
+      flex-shrink: 0;
+      min-width: 2em; // always provide a minimal space for input
+    }
+  }
+
+  .edit-controls {
+    display: flex;
+    width: 100%;
+    gap: 0.5em;
   }
 }
 
