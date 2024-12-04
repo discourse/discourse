@@ -6,7 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse-common/utils/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
-const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
+const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 
 /*
   The ChatChannelsManager service is responsible for managing the loaded chat channels.
