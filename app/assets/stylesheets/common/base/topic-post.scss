@@ -257,10 +257,15 @@
 
   .names {
     margin-right: auto;
+
+    .first {
+      flex-shrink: 0;
+    }
   }
 
   .user-badge-buttons {
-    margin-left: 15px;
+    display: flex;
+    flex-shrink: 0;
 
     a {
       background: none;
@@ -278,8 +283,9 @@
     align-items: center;
   }
 
-  .user-status-message {
+  .user-status-message-wrap {
     display: flex;
+    flex-shrink: 0;
 
     img.emoji {
       width: 1em;
