@@ -9,11 +9,16 @@ RSpec.describe RemapToFa6IconNames do
       "fa-ambulance" => "truck-medical",
       "far-ambulance" => "far-truck-medical",
       "fab-ambulance" => "fab-truck-medical",
-      "far fa-gear" => "far-gear",
-      "gear" => "gear",
       "far fa-ambulance" => "far-truck-medical",
       "fab fa-ambulance" => "fab-truck-medical",
       "fas fa-ambulance" => "truck-medical",
+      "fa-gear" => "gear",
+      "far-gear" => "far-gear",
+      "fab-gear" => "fab-gear",
+      "far fa-gear" => "far-gear",
+      "fab fa-gear" => "fab-gear",
+      "fas fa-gear" => "gear",
+      "gear" => "gear",
     }
   end
 

@@ -750,7 +750,8 @@ class RemapToFa6IconNames < ActiveRecord::Migration[7.2]
       directory_columns: "icon",
     }
 
-    tables_to_update.each { |table_name, column_name| execute <<~SQL }
+    tables_to_update.each do |table_name, column_name|
+      execute <<~SQL
         WITH remaps AS (
           SELECT from_icon, to_icon FROM (VALUES #{mappings}) AS mapping(from_icon, to_icon)
         )
@@ -772,5 +773,22 @@ class RemapToFa6IconNames < ActiveRecord::Migration[7.2]
           OR #{column_name} = CONCAT('fab fa-', remaps.from_icon)
           OR #{column_name} = CONCAT('fas fa-', remaps.from_icon);
       SQL
+
+      execute <<~SQL
+        UPDATE #{table_name}
+        SET #{column_name} =
+        CASE
+          WHEN #{column_name} LIKE 'fas fa-%' THEN SUBSTRING(#{column_name} FROM 8)
+          WHEN #{column_name} LIKE 'far fa-%' THEN CONCAT('far-', SUBSTRING(#{column_name} FROM 8))
+          WHEN #{column_name} LIKE 'fab fa-%' THEN CONCAT('fab-', SUBSTRING(#{column_name} FROM 8))
+          WHEN #{column_name} LIKE 'fa-%' THEN SUBSTRING(#{column_name} FROM 4)
+          ELSE #{column_name}
+        END
+        WHERE #{column_name} LIKE 'fa-%'
+          OR #{column_name} LIKE 'far fa-%'
+          OR #{column_name} LIKE 'fab fa-%'
+          OR #{column_name} LIKE 'fas fa-%';
+      SQL
+    end
   end
 end
