@@ -887,7 +887,18 @@ export default class Composer extends RestModel {
       });
 
       if (!this.topic) {
-        this.set("topic", opts.post.topic);
+        if (opts.post.topic) {
+          this.set("topic", opts.post.topic);
+        } else {
+          // handles the edge cases where the topic model is not loaded in the post model and the store does not have a
+          // topic for the post, e.g., make a post then edit right away, edit a post outside the post stream, etc.
+          promise = promise.then(async () => {
+            const data = await Topic.find(opts.post.topic_id, {});
+            const topic = this.store.createRecord("topic", data);
+            this.post.set("topic", topic);
+            this.set("topic", topic);
+          });
+        }
       }
     } else if (opts.postId) {
       promise = promise.then(() =>
@@ -943,18 +954,6 @@ export default class Composer extends RestModel {
           reply: post.raw,
           originalText: post.raw,
         });
-
-        // edge case ... make a post then edit right away, edit a post
-        // outside the post stream, etc.
-        // store does not have topic for the post
-        if (this.topic && this.topic.id === this.post.topic_id) {
-          // nothing to do ... we have the right topic
-        } else {
-          const topicData = await Topic.find(this.post.topic_id, {});
-          const topic = this.store.createRecord("topic", topicData);
-          this.post.set("topic", topic);
-          this.set("topic", topic);
-        }
 
         if (post.post_number === 1 && this.canEditTitle) {
           this.setProperties({
