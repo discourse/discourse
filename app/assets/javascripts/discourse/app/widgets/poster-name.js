@@ -141,8 +141,8 @@ export default createWidget("poster-name", {
       }
     }
 
+    const badges = [];
     if (attrs.badgesGranted?.length) {
-      const badges = [];
       attrs.badgesGranted.forEach((badge) => {
         // Alter the badge description to show that the badge was granted for this post.
         badge.description = i18n("post.badge_granted_tooltip", {
@@ -161,7 +161,6 @@ export default createWidget("poster-name", {
         );
         badges.push(badgeIcon);
       });
-      nameContents.push(h("span.user-badge-buttons", badges));
     }
 
     const afterNameContents =
@@ -173,29 +172,31 @@ export default createWidget("poster-name", {
       h("span", { className: classNames.join(" ") }, nameContents),
     ];
 
-    if (!this.settings.showNameAndGroup) {
-      return contents;
-    }
-
-    if (
-      name &&
-      this.siteSettings.display_name_on_posts &&
-      sanitizeName(name) !== sanitizeName(username)
-    ) {
-      contents.push(
-        h(
-          "span.second." + (nameFirst ? "username" : "full-name"),
-          [this.userLink(attrs, nameFirst ? username : name)].concat(
-            afterNameContents
+    if (this.settings.showNameAndGroup) {
+      if (
+        name &&
+        this.siteSettings.display_name_on_posts &&
+        sanitizeName(name) !== sanitizeName(username)
+      ) {
+        contents.push(
+          h(
+            "span.second." + (nameFirst ? "username" : "full-name"),
+            [this.userLink(attrs, nameFirst ? username : name)].concat(
+              afterNameContents
+            )
           )
-        )
-      );
+        );
+      }
+
+      this.buildTitleObject(attrs, contents);
+
+      if (this.siteSettings.enable_user_status) {
+        this.addUserStatus(contents, attrs);
+      }
     }
 
-    this.buildTitleObject(attrs, contents);
-
-    if (this.siteSettings.enable_user_status) {
-      this.addUserStatus(contents, attrs);
+    if (badges.length) {
+      contents.push(h("span.user-badge-buttons", badges));
     }
 
     return contents;
