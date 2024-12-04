@@ -569,7 +569,7 @@ GEM
       raindrops (~> 0.7)
     uniform_notifier (1.16.0)
     uri (1.0.2)
-    useragent (0.16.10)
+    useragent (0.16.11)
     version_gem (1.1.4)
     web-push (3.0.1)
       jwt (~> 2.0)
