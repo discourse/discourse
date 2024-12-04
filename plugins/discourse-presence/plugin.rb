@@ -31,7 +31,7 @@ after_initialize do
       config
     elsif topic_id = channel_name[%r{/discourse-presence/whisper/(\d+)}, 1]
       Topic.find(topic_id) # Just ensure it exists
-      PresenceChannel::Config.new(allowed_group_ids: [::Group::AUTO_GROUPS[:staff]])
+      PresenceChannel::Config.new(allowed_group_ids: SiteSetting.whispers_allowed_groups_map)
     elsif post_id = channel_name[%r{/discourse-presence/edit/(\d+)}, 1]
       post = Post.find(post_id)
       topic = Topic.find(post.topic_id)
@@ -39,8 +39,14 @@ after_initialize do
       config = PresenceChannel::Config.new
       config.allowed_group_ids = [::Group::AUTO_GROUPS[:staff]]
 
-      # Locked and whisper posts are staff only
-      next config if post.locked? || post.whisper?
+      # Locked posts are staff only
+      next config if post.locked?
+
+      # Whispers posts are for allowed whisper groups
+      if post.whisper?
+        config.allowed_group_ids += SiteSetting.whispers_allowed_groups_map
+        next config
+      end
 
       config.allowed_user_ids = [post.user_id]
 
@@ -55,8 +61,8 @@ after_initialize do
         config.allowed_group_ids += SiteSetting.edit_wiki_post_allowed_groups_map
       end
 
-      if !topic.private_message? && SiteSetting.edit_all_post_groups.present?
-        config.allowed_group_ids += SiteSetting.edit_all_post_groups.split("|").map(&:to_i)
+      if !topic.private_message? && SiteSetting.edit_all_post_groups_map.present?
+        config.allowed_group_ids += SiteSetting.edit_all_post_groups_map
       end
 
       if SiteSetting.enable_category_group_moderation? && topic.category
