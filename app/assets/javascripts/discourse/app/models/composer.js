@@ -23,6 +23,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { i18n } from "discourse-i18n";
 
 let _customizations = [];
+
 export function registerCustomizationCallback(cb) {
   _customizations.push(cb);
 }
@@ -804,29 +805,29 @@ export default class Composer extends RestModel {
   }
 
   /**
-    Open a composer
+   Open a composer
 
-    @method open
-    @param {Object} opts
-      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
-      @param {String} opts.draftKey
-      @param {String} opts.draftSequence
-      @param {Post} [opts.post] The post we're replying to, if present
-      @param {Topic} [opts.topic] The topic we're replying to, if present
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-      @param {String} [opts.reply]
-      @param {String} [opts.recipients]
-      @param {Number} [opts.composerTime]
-      @param {Number} [opts.typingTime]
-      @param {Boolean} [opts.whisper]
-      @param {Boolean} [opts.noBump]
-      @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
-      @param {Object} [opts.metaData]
-      @param {Number} [opts.categoryId]
-      @param {Number} [opts.postId]
-      @param {Number} [opts.destinationCategoryId]
-      @param {String} [opts.title]
-  **/
+   @method open
+   @param {Object} opts
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.draftKey
+   @param {String} opts.draftSequence
+   @param {Post} [opts.post] The post we're replying to, if present
+   @param {Topic} [opts.topic] The topic we're replying to, if present
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   @param {String} [opts.reply]
+   @param {String} [opts.recipients]
+   @param {Number} [opts.composerTime]
+   @param {Number} [opts.typingTime]
+   @param {Boolean} [opts.whisper]
+   @param {Boolean} [opts.noBump]
+   @param {String} [opts.archetypeId] One of `site.archetypes` e.g. `regular` or `private_message`
+   @param {Object} [opts.metaData]
+   @param {Number} [opts.categoryId]
+   @param {Number} [opts.postId]
+   @param {Number} [opts.destinationCategoryId]
+   @param {String} [opts.title]
+   **/
   open(opts) {
     let promise = Promise.resolve();
 
@@ -935,37 +936,33 @@ export default class Composer extends RestModel {
       }
       this.setProperties(topicProps);
 
-      promise = promise.then(() => {
-        let rawPromise = this.store.find("post", opts.post.id).then((post) => {
-          this.setProperties({
-            post,
-            reply: post.raw,
-            originalText: post.raw,
-          });
-
-          if (post.post_number === 1 && this.canEditTitle) {
-            this.setProperties({
-              originalTitle: post.topic.title,
-              originalTags: post.topic.tags,
-            });
-          }
+      promise = promise.then(async () => {
+        const post = await this.store.find("post", opts.post.id);
+        this.setProperties({
+          post,
+          reply: post.raw,
+          originalText: post.raw,
         });
 
-        // edge case ... make a post then edit right away
+        // edge case ... make a post then edit right away, edit a post
+        // outside the post stream, etc.
         // store does not have topic for the post
         if (this.topic && this.topic.id === this.post.topic_id) {
           // nothing to do ... we have the right topic
         } else {
-          rawPromise = this.store
-            .find("topic", this.post.topic_id)
-            .then((topic) => {
-              this.set("topic", topic);
-            });
+          const topicData = await Topic.find(this.post.topic_id, {});
+          const topic = this.store.createRecord("topic", topicData);
+          this.set("topic", topic);
         }
 
-        return rawPromise.then(() => {
-          this.appEvents.trigger("composer:reply-reloaded", this);
-        });
+        if (post.post_number === 1 && this.canEditTitle) {
+          this.setProperties({
+            originalTitle: this.topic.title,
+            originalTags: this.topic.tags,
+          });
+        }
+
+        this.appEvents.trigger("composer:reply-reloaded", this);
       });
     } else if (opts.action === REPLY && opts.quote) {
       this.set("reply", opts.quote);
