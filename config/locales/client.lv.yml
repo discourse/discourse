@@ -2519,7 +2519,6 @@ lv:
       with_topics: "%{filter} tēmas"
       with_category: "%{filter} Sadaļas %{category} tēmas"
       filter:
-        title: "Filtrs"
         button:
           label: "Filtrs"
       latest:

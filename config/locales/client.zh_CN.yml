@@ -32,10 +32,10 @@ zh_CN:
       timeline_date: "YYYY 年 MMM"
       long_no_year: "MMM D 日 HH:mm"
       long_no_year_no_time: "MMM D 日"
-      full_no_year_no_time: "MMMM Do 日"
+      full_no_year_no_time: "MMMM D 日"
       long_with_year: "YYYY 年 MMM D 日 HH:mm"
       long_with_year_no_time: "YYYY 年 MMM D 日"
-      full_with_year_no_time: "YYYY 年 MMMM Do 日"
+      full_with_year_no_time: "YYYY 年 MMMM D 日"
       long_date_with_year: "YYYY 年 MMM D 日 LT"
       long_date_without_year: "MMM D 日 LT"
       long_date_with_year_without_time: "YYYY 年 MMM D 日"
@@ -171,7 +171,7 @@ zh_CN:
       broken_theme_alert: "您的网站可能无法运行，因为主题/组件有错误。"
       error_caused_by: "由 '%{name}' 引起。<a target='blank' href='%{path}'>点击此处</a>进行更新、重新配置或禁用。"
       only_admins: "（此消息仅向网站管理员显示）"
-    broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发错误。"
+    broken_decorator_alert: "帖子可能无法正确显示，因为您的网站上的其中一个帖子内容装饰器引发了错误。"
     broken_page_change_alert: "onPageChange 处理程序出错。请查看浏览器开发者工具了解更多信息。"
     broken_plugin_alert: "由插件 '%{name}' 引起"
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
@@ -1117,7 +1117,7 @@ zh_CN:
       preferences:
         title: "偏好设置"
         profile:
-          enforced_required_fields: "在继续使用本网站之前，您需要提供更多信息。"
+          enforced_required_fields: "您需要提供更多信息才能继续使用本网站。"
       feature_topic_on_profile:
         open_search: "选择一个新话题"
         title: "选择一个话题"
@@ -1419,7 +1419,7 @@ zh_CN:
         oauth_enabled_warning: "请注意，一旦您为帐户启用双重身份验证，社交登录将被禁用。"
         use: "使用身份验证器应用"
         enforced_with_oauth_notice: "您需要启用双重身份验证。只有在使用密码登录时，您才会被提示使用此验证方式，而使用外部身份验证或社交登录方式时则不需要。"
-        enforced_notice: "在访问此网站之前，您需要启用双重身份验证。"
+        enforced_notice: "您需要启用双重身份验证才能访问此网站。"
         disable: "禁用"
         disable_confirm: "确定要禁用双重身份验证吗？"
         delete: "删除"
@@ -1958,8 +1958,8 @@ zh_CN:
     home: "首页"
     read_only_mode:
       enabled: "此网站处于只读模式。您可以继续浏览，但是回复、点赞和其他操作暂时被禁用。"
-      login_disabled: "当网站处于只读模式时，登录被禁用。"
-      logout_disabled: "当网站处于只读模式时，退出被禁用。"
+      login_disabled: "网站处于只读模式时登录被禁用。"
+      logout_disabled: "网站处于只读模式时退出登录被禁用。"
     staff_writes_only_mode:
       enabled: "此网站处于管理人员专用模式。请继续浏览，但回复、赞和其他操作仅限于管理人员。"
     logs_error_rate_notice:
@@ -2340,8 +2340,8 @@ zh_CN:
       edit_reason_placeholder: "编辑原因"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
-      reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。拖动或粘贴图片。"
-      reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 进行格式化。"
+      reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
+      reply_placeholder_no_images: "在此处输入。使用 Markdown、BBCode 或 HTML 排版。"
       reply_placeholder_choose_category: "先选择一个类别，然后在此处输入。"
       view_new_post: "查看您的新帖子。"
       saving: "正在保存"
@@ -2489,7 +2489,7 @@ zh_CN:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
-      admin_problems: "网站信息中心的新建议"
+      admin_problems: "网站信息中心有新建议"
       dismiss_confirmation:
         body:
           default:
@@ -2935,7 +2935,7 @@ zh_CN:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳到帖子的原始位置"
-      jump_reply_aria: "跳到 @%{username} 帖子的原始位置"
+      jump_reply_aria: "跳到 @%{username} 的帖子的原始位置"
       jump_reply_button: "跳到帖子"
       deleted: "该话题已被删除"
       slow_mode_update:
@@ -3166,7 +3166,7 @@ zh_CN:
         to_topic_username: "您输入了一个用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
         to_username: "输入您想邀请的人的用户名。我们将向其发送通知，其中包含邀请他们加入此话题的链接。"
         email_placeholder: "name@example.com"
-        success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被确认后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
+        success_email: "我们已向 <b>%{invitee}</b> 发送邀请。在邀请被接受后，我们将通知您。查看您的用户页面上的邀请标签页以跟踪邀请进度。"
         success_username: "我们已邀请该用户加入此话题。"
         error: "抱歉，我们无法邀请此人。也许 Ta 已经被邀请了？（邀请次数受限）"
         success_existing_email: "电子邮件为 <b>%{emailOrUsername}</b> 的用户已存在。我们已邀请该用户加入此话题。"
@@ -3809,7 +3809,6 @@ zh_CN:
       with_topics: "%{filter}话题"
       with_category: "%{filter}%{category}话题"
       filter:
-        title: "筛选器"
         button:
           label: "筛选"
       latest:
@@ -4180,7 +4179,7 @@ zh_CN:
       dismiss: "忽略"
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
-    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器选项卡或窗口以返回到正常网站配置。"
+    theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"
@@ -4905,7 +4904,7 @@ zh_CN:
         events:
           none: "没有相关事件。"
           redeliver: "重新传送"
-          redeliver_failed: "重新递送失败"
+          redeliver_failed: "重新递送失败的事件"
           incoming:
             other: "有 %{count} 个新事件。"
           completed_in:
@@ -5009,7 +5008,7 @@ zh_CN:
           community_summary: "社区摘要"
           community_description: "社区描述"
           community_title: "社区标题"
-          community_title_help: "浏览器选项卡中显示的类别和话题列表等关键页面的简短描述。"
+          community_title_help: "浏览器标签页中显示的类别和话题列表等关键页面的简短描述。"
           banner_image: "横幅图片"
           banner_image_help: |
             这将用于您的“关于”页面。推荐大小：1100x300 像素。接受的类型：JPG、PNG 和 SVG，最大为 10MB。
@@ -5543,7 +5542,7 @@ zh_CN:
         robots:
           title: "替换您的网站的 robots.txt 文件："
           warning: "这将永久替换任何相关的网站设置。"
-          overridden: 您的网站的默认 robots.txt 文件已被覆盖。
+          overridden: 您的网站的默认 robots.txt 文件已被替换。
         email_style:
           title: "电子邮件样式"
           heading: "自定义电子邮件样式"
@@ -5975,6 +5974,7 @@ zh_CN:
         invalid: "抱歉，您不能模拟该用户。"
       users:
         title: "用户"
+        description: "查看和管理用户。"
         create: "添加管理员用户"
         last_emailed: "最后一次发送电子邮件"
         not_found: "抱歉，该用户名在我们的系统中不存在。"
@@ -5984,6 +5984,9 @@ zh_CN:
         show_emails: "显示电子邮件"
         hide_emails: "隐藏电子邮件"
         bulk_actions:
+          title: "批量操作"
+          admin_cant_be_deleted: "无法删除此用户，因为他们是管理员"
+          too_many_or_old_posts: "无法删除此用户，因为他们发帖太多或发帖时间太长"
           delete:
             confirmation_modal:
               close: "关闭"
@@ -6456,6 +6459,7 @@ zh_CN:
         none_selected: "选择一个徽章以开始"
         allow_title: 允许将徽章用作头衔
         multiple_grant: 可以多次授予
+        visibility_heading: 公开范围
         listable: 在公共徽章页面上显示徽章
         enabled: 已启用
         disabled: 已禁用

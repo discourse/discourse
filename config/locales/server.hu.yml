@@ -1760,7 +1760,6 @@ hu:
     pending_users_reminder_delay_minutes: "Értesítse a moderátorokat, ha az új felhasználók ennél több perce várnak jóváhagyásra. Állítsa -1-re az értesítések kikapcsolásához."
     persistent_sessions: "A felhasználók bejelentkezve maradnak a böngésző bezárásakor"
     maximum_session_age: "A felhasználó bejelentkezve marad n órán keresztül az utolsó látogatása óta"
-    experimental_full_page_login: "KÍSÉRLETI: Cserélje ki a bejelentkezési/regisztrációs módot egy teljes oldalas bejelentkezési/regisztrációs űrlapra."
     ga_version: "A használandó Google Universal Analytics verziója: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics követőkód azonosítója, pl.: UA-12345678-9; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1815,7 +1814,6 @@ hu:
     max_favorite_badges: "A felhasználó által választható jelvények maximális száma"
     whispers_allowed_groups: "Privát kommunikáció engedélyezése a témákon belül meghatározott csoportok tagjai számára."
     hidden_post_visible_groups: "Engedélyezze e csoportok tagjainak a rejtett bejegyzések megtekintését. A személyzet felhasználói mindig megtekinthetik a rejtett bejegyzéseket."
-    allow_index_in_robots_txt: "Adja meg a robots.txt fájlban, hogy ezt a webhelyet indexelhetik a webes keresőmotorok. Kivételes esetekben lehetőség van a robots.txt fájl <a href='%{base_path}/admin/customize/robots'>állandó felülírására</a>."
     blocked_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználók nem regisztrálhatnak fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. Példa: mailinator.com|trashmail.net"
     allowed_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználóknak KÖTELEZŐ regisztrálniuk fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. FIGYELMEZTETÉS: A felsorolásban nem szereplő e-mail domainnel rendelkező felhasználók regisztrációja nem lesz engedélyezve!"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
@@ -4527,8 +4525,6 @@ hu:
     regular:
       name: Rendes tag
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Engedélyezve</a> átsorolás, átnevezés, követett linkek, wiki, több kedvelés
-      long_description: |
-        Ezt a jelvényt akkor kapja meg, amikor eléri a 3. bizalmi szintet. Köszönjük, hogy hónapok óta rendszeresen részt vesz a közösségünk építésében. Az egyik legaktívabb olvasónk és megbízható közreműködő, aki nagyszerűvé teszi közösségünket. Mostantól kategorizálhatja és átnevezheti a témákat, használhatja az erősebb spamzászlókat, hozzáférhet privát társalgóhoz és naponta sokkal több kedvelést szerezhet.
     leader:
       name: Vezető
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Engedélyezve</a> globális szerkesztés, kitűzés, lezárás, archiválás, szétválasztás és összevonás, több kedvelés

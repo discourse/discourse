@@ -616,6 +616,11 @@ zh_CN:
           other_html: "<span>%{username}</span> <span>在个人聊天中提及“%{identifier}”</span>"
         chat_message: "新的聊天消息"
         chat_quoted: "%{username} 引用了您的聊天消息"
+      titles:
+        chat_mention: "聊天中提到"
+        chat_invitation: "受邀加入聊天频道"
+        chat_quoted: "引用聊天信息"
+        chat_watched_thread: "已查看聊天话题"
     action_codes:
       chat:
         enabled: '%{who} 于 %{when} 启用了<button class="btn-link open-chat">聊天</button>'

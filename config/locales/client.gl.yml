@@ -2978,7 +2978,6 @@ gl:
       with_topics: "%{filter} temas"
       with_category: "Temas de %{filter} %{category}"
       filter:
-        title: "Filtro"
         button:
           label: "Filtro"
       latest:
@@ -4806,6 +4805,7 @@ gl:
         none_selected: "Seleccione unha insignia para comezar"
         allow_title: Permitir que se use a insignia como un título
         multiple_grant: Pode concederse múltiples veces
+        visibility_heading: Visibilidade
         listable: Amosar a insignia na páxina de insignias públicas
         enabled: activado
         disabled: desactivado

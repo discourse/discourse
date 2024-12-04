@@ -41,6 +41,7 @@ sk:
     default_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s viac možnosťami má nesprávne parametre."
     named_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s názvom <strong>%{name}</strong> s viac možnosťami má nesprávne parametre."
     requires_at_least_1_valid_option: "Musite vybrať aspoň 1 platnú možnosť."
+    requires_that_at_least_one_option_is_ranked: "V prieskumoch s poradím možností musíte zaradiť aspoň jednu možnosť."
     edit_window_expired:
       cannot_edit_default_poll_with_votes: "Po %{minutes} minútach nie je možné anketu upraviť."
       cannot_edit_named_poll_with_votes: "Po viac ako %{minutes} minútach nie je možné zmeniť anketu <strong>${name}</strong>."

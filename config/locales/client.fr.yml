@@ -4047,7 +4047,6 @@ fr:
       with_topics: "Sujets %{filter}"
       with_category: "Sujets %{filter} sur %{category}"
       filter:
-        title: "Filtrer"
         button:
           label: "Filtrer"
       latest:
@@ -6747,6 +6746,7 @@ fr:
         none_selected: "Sélectionnez un badge pour commencer"
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois
+        visibility_heading: Visibilité
         listable: Afficher le badge sur la page publique des badges
         enabled: activé
         disabled: désactivé

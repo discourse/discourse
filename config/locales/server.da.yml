@@ -1368,7 +1368,6 @@ da:
     prioritize_username_in_ux: "Vis brugernavn først på brugersiden, brugerkort og indlæg (når deaktiveret vises navnet først)"
     send_old_credential_reminder_days: "Påmind om gamle legitimationsoplysninger efter dage"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
-    allow_index_in_robots_txt: "Angiv i robots.txt, at dette websted må indekseres af websøgemaskiner. I undtagelsestilfælde kan du permanent <a href='%{base_path}/admin/customize/robots'>tilsidesætte robots.txt</a>."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
@@ -2883,8 +2882,6 @@ da:
     regular:
       name: Regulær
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> omklassificering, omdøbning, fulgte links, wiki, flere 'Synes godt om'
-      long_description: |
-        Dette emblem tildeles, når du når tillidsniveau 3. Tak, fordi du er en fast del af vores fællesskab over en periode på flere måneder. Du er nu en af de mest aktive læsere og en pålidelig bidragyder, der gør vores samfund godt. Du kan nu omklassificere og omdøbe emner, drage fordel af mere kraftfulde anmeldelser, få adgang til et privat loungeområde, og du får også mange flere 'Synes godt om' om dagen.
     leader:
       name: Leder
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Tildelt</a> global redigering, pin, luk, arkiv, split og flet, flere 'Synes godt om'

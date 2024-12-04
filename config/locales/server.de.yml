@@ -1770,7 +1770,11 @@ de:
     pending_users_reminder_delay_minutes: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Minuten auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     persistent_sessions: "Benutzer bleiben angemeldet, wenn der Webbrowser geschlossen wird"
     maximum_session_age: "Benutzer bleiben n Stunden nach ihrem letzten Besuch angemeldet"
-    experimental_full_page_login: "Ersetze den Modal-Dialog für die Anmeldung/Registrierung durch ein ganzseitiges Formular dafür."
+    full_page_login: "Zeige die Anmelde- und Registrierungsformulare auf einer ganzen Seite an (wenn diese Option nicht aktiviert ist, werden die Formulare in einem Modal angezeigt). "
+    show_signup_form_email_instructions: Zeige die E-Mail-Anweisungen auf dem Anmeldeformular an.
+    show_signup_form_username_instructions: Zeige die Anweisungen für den Benutzernamen auf dem Anmeldeformular an.
+    show_signup_form_full_name_instructions: Zeige die vollständigen Anweisungen zum Namen auf dem Anmeldeformular an.
+    show_signup_form_password_instructions: Zeige die Anweisungen zum Passwort auf dem Anmeldeformular an.
     ga_version: "Zu verwendende Version von Google Universal Analytics: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
@@ -1822,10 +1826,11 @@ de:
     send_old_credential_reminder_days: "An alte Anmeldedaten erinnern (nach Tagen)"
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung/Aktivierung eines Kontos sind für (n) Stunden gültig."
     enable_badges: "Aktiviere das Abzeichen-System, das eine Form der Gamification ist, um positive Aktionen der Benutzer zu belohnen. Siehe <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>Was sind Abzeichen?</a> auf Discourse Meta für weitere Informationen."
+    show_badges_in_post_header: "Wenn ein Benutzer für einen bestimmten Beitrag ein Abzeichen erhält, wird das Abzeichen in der Kopfzeile des Beitrags angezeigt."
     max_favorite_badges: "Maximale Anzahl von Abzeichen, die der Benutzer auswählen kann"
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
     hidden_post_visible_groups: "Erlaube Mitgliedern dieser Gruppen, ausgeblendete Beiträge aufzurufen. Team-Mitglieder können jederzeit ausgeblendete Beiträge aufrufen."
-    allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Websuchmaschinen indiziert werden darf. In Ausnahmefällen kannst du die <a href='%{base_path}/admin/customize/robots'>robots.txt dauerhaft überschreiben</a>."
+    allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Seite von Suchmaschinen indiziert werden darf. Du kannst <a href='%{base_path}/admin/customize/robots'>deine robots.txt hier überschreiben.</a> <b>WARNUNG</b>: Falsch konfigurierte Regeln können verhindern, dass deine Website wie erwartet gecrawlt wird."
     blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
     allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domains sind nicht zugelassen!"
     normalize_emails: "Überprüfen, ob normalisierte E-Mail-Adressen einzigartig sind. Bei normalisierten E-Mail-Adressen werden alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen entfernt."
@@ -4592,7 +4597,7 @@ de:
       name: Stammgast
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung verfolgbarer Links, die Umwandlung eines Beitrags in ein Wiki sowie die Vergabe von mehr „Gefällt mir“
       long_description: |
-        Dieses Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr „Gefällt mir“ pro Tag erhalten.
+        Dieses Abzeichen erhältst du, wenn du die Vertrauensstufe 3 erreichst. Vielen Dank, dass du über Monate hinweg ein regelmäßiger Teil unserer Community bist. Du gehörst jetzt zu den aktivsten Lesern und leistest einen zuverlässigen Beitrag, der unsere Community großartig macht. Du kannst jetzt Themen neu kategorisieren und umbenennen, stärkere Spam-Flags nutzen und bekommst außerdem viel mehr Likes pro Tag.
     leader:
       name: Anführer
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Ermöglicht</a> das Bearbeiten aller Beiträge, das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen sowie die Vergabe von mehr „Gefällt mir“

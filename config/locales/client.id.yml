@@ -2045,7 +2045,6 @@ id:
       with_topics: "%{filter} topik"
       with_category: "%{filter} %{category} topik"
       filter:
-        title: "Filter"
         button:
           label: "Filter"
       latest:
