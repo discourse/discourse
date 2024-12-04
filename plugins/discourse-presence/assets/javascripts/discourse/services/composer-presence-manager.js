@@ -9,6 +9,10 @@ export default class ComposerPresenceManager extends Service {
   @service presence;
   @service siteSettings;
 
+  _name;
+  _channel;
+  _autoLeaveTimer;
+
   notifyState(name, replying = true, keepAlive = KEEP_ALIVE) {
     if (!replying) {
       this.leave();
