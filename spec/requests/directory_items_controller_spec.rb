@@ -254,21 +254,31 @@ RSpec.describe DirectoryItemsController do
       end
     end
 
-    it "limits as expected with custom fields" do
+    it "limits as expected when filtering with custom fields" do
       field1 = Fabricate(:user_field, searchable: true)
       users = Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) }
 
       DirectoryItem.refresh!
 
-      users.each do |user|
-        group.add(user)
-        user.set_user_field(field1.id, "red")
+      22.times do |i|
+        users.each do |user|
+          group.add(user)
+          user.set_user_field(field1.id, "red")
+          user.save_custom_fields
+        end
       end
 
-      get "/directory_items.json", params: { period: "all", name: "red" }
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            group: group.name,
+            order: field1.name,
+            user_field_ids: "#{field1.id}",
+            asc: true,
+          }
       json = response.parsed_body
 
-      expect(json["directory_items"].length).to eq(22)
+      expect(json["directory_items"].length).to eq(25)
     end
 
     it "checks group permissions" do
