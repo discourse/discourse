@@ -5,7 +5,9 @@ import { isTesting } from "discourse-common/config/environment";
 const KEEP_ALIVE = 10 * 1000; // 10 seconds
 
 export default class ComposerPresenceManager extends Service {
+  @service currentUser;
   @service presence;
+  @service siteSettings;
 
   notifyState(name, replying = true, keepAlive = KEEP_ALIVE) {
     if (!replying) {
