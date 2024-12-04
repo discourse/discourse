@@ -41,16 +41,18 @@
           </div>
         {{/if}}
 
-        {{#if this.model.automatic}}
-          <DTooltip class="admin-group-automatic-tooltip">
-            <:trigger>
-              {{d-icon "gear"}}
-              {{i18n "admin.groups.manage.membership.automatic"}}
-            </:trigger>
-            <:content>
-              {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
-            </:content>
-          </DTooltip>
+        {{#if this.canManageGroup}}
+          {{#if this.model.automatic}}
+            <DTooltip class="admin-group-automatic-tooltip">
+              <:trigger>
+                {{d-icon "gear"}}
+                {{i18n "admin.groups.manage.membership.automatic"}}
+              </:trigger>
+              <:content>
+                {{i18n "admin.groups.manage.membership.automatic_tooltip"}}
+              </:content>
+            </DTooltip>
+          {{/if}}
         {{/if}}
       </div>
 
