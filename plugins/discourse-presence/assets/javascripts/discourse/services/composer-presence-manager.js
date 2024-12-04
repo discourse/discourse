@@ -26,16 +26,18 @@ export default class ComposerPresenceManager extends Service {
       return;
     }
 
-    if (this._name !== name) {
-      this.leave();
+    if (name === this._name) {
+      return;
+    }
 
-      this._name = name;
-      this._channel = this.presence.getChannel(name);
-      this._channel.enter();
+    this.leave();
 
-      if (!isTesting()) {
-        this._autoLeaveTimer = debounce(this, this.leave, keepAlive);
-      }
+    this._name = name;
+    this._channel = this.presence.getChannel(name);
+    this._channel.enter();
+
+    if (!isTesting()) {
+      this._autoLeaveTimer = debounce(this, this.leave, keepAlive);
     }
   }
 
