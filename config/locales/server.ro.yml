@@ -1838,10 +1838,10 @@ ro:
       long_description: |
         Această insignă este acordată prima dată când editezi una dintre postările tale. Deși nu veți putea să vă editați postările pentru totdeauna, editarea este încurajată - puteți îmbunătăți formatarea, puteți remedia mici erori sau puteți adăuga orice ați ratat când ați postat inițial. Editați pentru a vă îmbunătăți și mai bine postările!
     basic_user:
-      name: Simplu utilizator
+      name: De bază
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">Niveluri de încredere</a> toate funcțiile esențiale ale comunității
       long_description: |
-        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumesc pentru că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori; Ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, marcarea, editarea wiki și abilitatea de a posta mai multe imagini și link-uri.
+        Această insignă este acordată atunci când atingi nivelul de încredere 1. Mulțumim că ai ales și ai citit câteva subiecte pentru a afla despre ce este vorba în comunitatea noastră. Au fost ridicate noi restricții pentru utilizatori, ai primit toate abilitățile comunitare esențiale, cum ar fi mesajele personale, semnalarea, editarea wiki și abilitatea de a publica mai multe imagini și legături.
     member:
       name: Membru
     regular:
