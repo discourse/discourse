@@ -9,7 +9,7 @@ class Service::StepsInspector
   class Step
     attr_reader :step, :result, :nesting_level
 
-    delegate :name, to: :step
+    delegate :name, :result_key, to: :step
     delegate :failure?, :success?, :error, :raised_exception?, to: :step_result, allow_nil: true
 
     def self.for(step, result, nesting_level: 0)
@@ -38,13 +38,18 @@ class Service::StepsInspector
     end
 
     def inspect
-      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji}".rstrip
+      "#{"  " * nesting_level}[#{inspect_type}] #{name} #{emoji} #{runtime}".rstrip
     end
 
     private
 
+    def runtime
+      return unless step_result.__runtime__
+      " (took #{(step_result.__runtime__ * 1000).round(4)} ms)"
+    end
+
     def step_result
-      result["result.#{type}.#{name}"]
+      result[result_key]
     end
 
     def result_emoji
@@ -116,7 +121,7 @@ class Service::StepsInspector
     end
 
     def step_result
-      result["result.#{type}.#{name}"]
+      result[result_key]
     end
   end
 

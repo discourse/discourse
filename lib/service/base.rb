@@ -244,6 +244,7 @@ module Service
       end
 
       def call(instance, context)
+        context[result_key] = Context.build
         ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
       end
     end
@@ -443,7 +444,15 @@ module Service
 
     # @!visibility private
     def run!
-      self.class.steps.each { |step| step.call(self, context) }
+      self.class.steps.each do |step|
+        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        step
+          .call(self, context)
+          .tap do
+            ended_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+            context[step.result_key][:__runtime__] = ended_at - started_at
+          end
+      end
     end
 
     # @!visibility private
