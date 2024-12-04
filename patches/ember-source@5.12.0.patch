@@ -1,3 +1,20 @@
+diff --git a/dist/ember-template-compiler.js b/dist/ember-template-compiler.js
+index 01999af0c4c125af3c713318db7eb85fa492f72d..3edcfd7ca66cfd31d6acde6eff84dcce8d4f0866 100644
+--- a/dist/ember-template-compiler.js
++++ b/dist/ember-template-compiler.js
+@@ -9485,10 +9485,10 @@ var define, require;
+                   return Object.defineProperty(node, "escaped", {
+                     enumerable: !1,
+                     get() {
+-                      return deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), !this.trusting;
++                      return !this.trusting;
+                     },
+                     set(value) {
+-                      deprecate$1("The escaped property on mustache nodes is deprecated, use trusting instead"), this.trusting = !value;
++                      this.trusting = !value;
+                     }
+                   }), node;
+                 }({
 diff --git a/dist/packages/@ember/-internals/deprecations/index.js b/dist/packages/@ember/-internals/deprecations/index.js
 index a6390a7c14f78c4876f97695e057231c1c7ecef0..f62f2d4efbdbf3fb01cd9d1235ac5dc0967a8756 100644
 --- a/dist/packages/@ember/-internals/deprecations/index.js
