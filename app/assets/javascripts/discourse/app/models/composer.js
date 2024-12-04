@@ -952,6 +952,7 @@ export default class Composer extends RestModel {
         } else {
           const topicData = await Topic.find(this.post.topic_id, {});
           const topic = this.store.createRecord("topic", topicData);
+          this.post.set("topic", topic);
           this.set("topic", topic);
         }
 

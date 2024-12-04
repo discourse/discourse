@@ -2,6 +2,7 @@ import { cached } from "@glimmer/tracking";
 import EmberObject, { computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
@@ -461,7 +462,15 @@ export default class Topic extends RestModel {
   }
 
   set details(value) {
-    this._details = value;
+    const TopicDetails = getOwner(this).factoryFor("model:topic-details").class;
+
+    if (value instanceof TopicDetails) {
+      this._details = value;
+      return;
+    }
+
+    // we need to ensure that details is an instance of TopicDetails
+    this._details = this.store.createRecord("topicDetails", value);
   }
 
   @discourseComputed("visible")
